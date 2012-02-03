@@ -1,51 +1,89 @@
 -
-  In order to test attendance process in OpenERP, at the time of login, I use "Sign In/Sign Out" wizard for attendances.
--
-  !record {model: hr.sign.in.out, id: employee_sign_in}:
-    name: Antoine Philippe
-    state: absent
--
-  I click on this wizard to login.
+  In order to test attendance process in OpenERP, I entry of SignIn of employee.
 -
   !python {model: hr.sign.in.out}: |
-    obj_attendance = self.pool.get('hr.employee')
-    emp_ids = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Antoine Philippe")])
-    if emp_ids:
-      employee = obj_attendance.read(cr, uid, emp_ids)[0]
-      self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_ids[0]})
-      self.si_check(cr, uid, [ref("employee_sign_in")])
+    context.update({'emp_id': [ref('hr.employee_al')]}) #TOFIX: emp_ids instead of 'emp_id'
+-
+  !record {model: hr.sign.in.out, id: employee_sign_in}:
+    {}
+-
+  Employee Signs In.
+-
+  !python {model: hr.sign.in.out}: |
+    self.si_check(cr, uid, [ref("employee_sign_in")], context=context)
 -
   I check that Employee is "Present".
 -
-  !assert {model: hr.employee, id: hr.employee3, severity: error, string: Employee should be in present state}:
+  !assert {model: hr.employee, id: hr.employee_al, severity: error, string: Employee should be in present state}:
     - state == 'present'
 -
-  I click on "Sign In" button of this wizard, this will Open a new form which ask for Last Sign Out date.
+  After few seconds, employee sign's out.
 -
   !python {model: hr.sign.in.out}: |
-    obj_attendance = self.pool.get('hr.employee')
-    emp_ids = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Antoine Philippe")])
-    if emp_ids:
-        employee = obj_attendance.read(cr, uid, emp_ids)[0]
-        self.write(cr, uid, [ref('employee_sign_in')], {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_ids[0]})
-        self.si_check(cr, uid, [ref("employee_sign_in")])
+    import time
+    time.sleep(2)
+    self.so_check(cr, uid, [ref("employee_sign_in")], context=context)
 -
-  I select Last Sign Out date.
+  I check that Employee is "Absent".
 -
-  !record {model: hr.sign.in.out.ask, id: hr_sign_in_out_ask_Antoine_Philippe}:
-    last_time: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-    name: Antoine Philippe
+  !assert {model: hr.employee, id: hr.employee_al, severity: error, string: Employee should be in absent state}:
+    - state == 'absent'
 -
-  Now I click on "Sign In" button of this wizard.
+  In order to check that first attendance must be Sign In.
 -
-  !python {model: hr.sign.in.out.ask}: |
-    obj_attendance = self.pool.get('hr.employee')
-    emp_ids = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Antoine Philippe")])
-    if emp_ids:
-        employee = obj_attendance.read(cr, uid, emp_ids)[0]
-        self.write(cr, uid, [ref('hr_sign_in_out_ask_Antoine_Philippe')], {'emp_id': emp_ids[0]})
+  !python {model: hr.attendance}: |
+    import time
+    try:
+      self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 09:59:25'), 'action': 'sign_out'}, None)
+    except Exception, e:
+      assert e[0]=='ValidateError', e
 -
-  Finally i check the employee is present.
+  First of all, Employee Sign's In.
 -
-  !assert {model: hr.employee, id: hr.employee3, severity: error, string: Employee should be in present state}:
-    - state == 'present'
+  !record {model: hr.attendance, id: hr_attendance_0}:
+    employee_id: hr.employee_niv
+    name: !eval time.strftime('%Y-%m-%d 09:59:25')
+    action: 'sign_in'
+-
+  Now Employee is going to Sign In prior to First Sign In.
+-
+   !python {model: hr.attendance}: |
+     import time
+     try:
+       self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 08:59:25'), 'action': 'sign_in'}, None)
+     except Exception, e:
+       assert e[0]=='ValidateError', e
+-
+  After that Employee is going to Sign In after First Sign In.
+-
+   !python {model: hr.attendance}: |
+     import time
+     try:
+       self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 10:59:25'), 'action': 'sign_in'}, None)
+     except Exception, e:
+       assert e[0]=='ValidateError', e
+-
+  After two hours, Employee Sign's Out.
+-
+  !record {model: hr.attendance, id: hr_attendance_1}:
+    employee_id: hr.employee_niv
+    name: !eval time.strftime('%Y-%m-%d 11:59:25')
+    action: 'sign_out'
+-
+  Now Employee is going to Sign Out prior to First Sign Out.
+-
+   !python {model: hr.attendance}: |
+     import time
+     try:
+       self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 10:59:25'), 'action': 'sign_out'}, None)
+     except Exception, e:
+       assert e[0]=='ValidateError', e
+-
+  After that Employee is going to Sign Out After First Sign Out.
+-
+   !python {model: hr.attendance}: |
+     import time
+     try:
+       self.create(cr, uid, {'employee_id': ref('hr.employee_niv'), 'name': time.strftime('%Y-%m-%d 12:59:25'), 'action': 'sign_out'}, None)
+     except Exception, e:
+       assert e[0]=='ValidateError', e

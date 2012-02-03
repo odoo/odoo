@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Project-Id-Version: OpenERP Server 6.1rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-21 12:37+0000\n"
-"PO-Revision-Date: 2011-11-21 12:37+0000\n"
+"POT-Creation-Date: 2012-01-27 18:47+0000\n"
+"PO-Revision-Date: 2012-01-27 18:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,9 +23,14 @@ msgstr "\n"
 "Please define BIC/Swift code on bank for bank type IBAN Account to make valid payments"
 
 #. module: l10n_fr_rib
-#: model:ir.model,name:l10n_fr_rib.model_res_partner_bank
-msgid "Bank Accounts"
-msgstr "Comptes bancaires"
+#: model:res.partner.bank.type,name:l10n_fr_rib.bank_rib
+msgid "RIB and optional IBAN"
+msgstr "RIB et IBAN optionnel"
+
+#. module: l10n_fr_rib
+#: field:res.partner.bank,rib_acc_number:0
+msgid "RIB account number"
+msgstr "Numéro de compte RIB"
 
 #. module: l10n_fr_rib
 #: field:res.partner.bank,bank_code:0
@@ -33,9 +38,10 @@ msgid "Bank Code"
 msgstr "Code banque"
 
 #. module: l10n_fr_rib
-#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_bic_field
-msgid "bank_bic"
-msgstr "bank_bic"
+#: code:addons/l10n_fr_rib/bank.py:55
+#, python-format
+msgid "The RIB key %s does not correspond to the other codes: %s %s %s."
+msgstr "La clé RIB %s ne correspond pas aux autres codes : %s %s %s."
 
 #. module: l10n_fr_rib
 #: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_office_field
@@ -48,13 +54,15 @@ msgid "RIB Bank Code"
 msgstr "Code banque RIB"
 
 #. module: l10n_fr_rib
-#: model:ir.module.module,description:l10n_fr_rib.module_meta_information
-msgid "\n"
-"This module installs the base for RIB bank accounts (French standard for bank accounts). \n"
-"To make it easier to enter RIB data, it will also allow to search for banks by code."
-msgstr "\n"
-"Ce module installe la base pour les comptes bancaires RIB (norme française pour les n° de compte). \n"
-"Pour faciliter la saisie des RIBs, il permet aussi de chercher les banques par code."
+#: code:addons/l10n_fr_rib/bank.py:62
+#, python-format
+msgid "The IBAN %s is not valid."
+msgstr "L'IBAN %s n'est pas valide."
+
+#. module: l10n_fr_rib
+#: model:ir.model,name:l10n_fr_rib.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Comptes bancaires"
 
 #. module: l10n_fr_rib
 #: field:res.partner.bank,office:0
@@ -62,9 +70,9 @@ msgid "Office Code"
 msgstr "Code agence"
 
 #. module: l10n_fr_rib
-#: model:res.partner.bank.type,name:l10n_fr_rib.bank_rib
-msgid "RIB Bank Details"
-msgstr "Relevé d'identité bancaire (RIB)"
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_rib_acc_number_field
+msgid "rib_acc_number"
+msgstr "rib_acc_number"
 
 #. module: l10n_fr_rib
 #: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_bank_code_field
@@ -72,22 +80,9 @@ msgid "bank_code"
 msgstr "bank_code"
 
 #. module: l10n_fr_rib
-#: code:addons/l10n_fr_rib/bank.py:109
-#, python-format
-msgid "\n"
-"The RIB key %s does not correspond to the other codes: %s %s %s."
-msgstr "\n"
-"La clé RIB %s ne correspond pas aux autres codes : %s %s %s."
-
-#. module: l10n_fr_rib
 #: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_key_field
 msgid "key"
 msgstr "key"
-
-#. module: l10n_fr_rib
-#: model:ir.module.module,shortdesc:l10n_fr_rib.module_meta_information
-msgid "French RIB Bank Details"
-msgstr "Relevés d'identité bancaire français (RIB)"
 
 #. module: l10n_fr_rib
 #: help:res.partner.bank,key:0
@@ -95,9 +90,26 @@ msgid "The key is a number allowing to check the correctness of the other codes.
 msgstr "La clé est un nombre permettant de vérifier que les autres codes sont corrects."
 
 #. module: l10n_fr_rib
+#: constraint:res.partner.bank:0
+msgid "Error message in raise"
+msgstr "Error message in raise"
+
+#. module: l10n_fr_rib
 #: field:res.partner.bank,key:0
 msgid "Key"
 msgstr "Clé"
+
+#. module: l10n_fr_rib
+#: code:addons/l10n_fr_rib/bank.py:54
+#: code:addons/l10n_fr_rib/bank.py:61
+#, python-format
+msgid "Error"
+msgstr "Error"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_bic_field
+msgid "bank_bic"
+msgstr "bank_bic"
 
 #. module: l10n_fr_rib
 #: model:res.partner.bank.type,format_layout:l10n_fr_rib.bank_rib
@@ -110,7 +122,7 @@ msgid "Bank"
 msgstr "Banque"
 
 #. module: l10n_fr_rib
-#: model:res.partner.bank.type.field,name:l10n_fr_rib.bank_acc_number_field
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_acc_number_field
 msgid "acc_number"
 msgstr "acc_number"
 

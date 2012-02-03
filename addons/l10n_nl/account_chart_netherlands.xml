@@ -1385,7 +1385,7 @@
 					<field name="name">Debiteuren</field>
 					<field name="code">1300</field>
 					<field name="type">receivable</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="user_type_receivable"/>
 					<field name="reconcile" eval="True"/>
 					<field ref="a_13" name="parent_id"/>
 				</record>
@@ -1458,7 +1458,7 @@
 					<field name="name">Crediteuren</field>
 					<field name="code">1500</field>
 					<field name="type">payable</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="user_type_payable"/>
 					<field name="reconcile" eval="True"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -4352,7 +4352,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
         <record id="btw_I_6" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Inkopen import binnen EU laag</field>
-	    <field name="description">BTW import binnen EU</field>
+	    <field name="description">6% BTW import binnen EU</field>
             <field eval="0.06" name="amount"/>
             <field name="type">percent</field>
             <field eval="True" name="child_depend"/>
@@ -4387,7 +4387,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
         <record id="btw_I_19" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Inkopen import binnen EU hoog</field>
-	    <field name="description">0% BTW import binnen EU</field>
+	    <field name="description">19% BTW import binnen EU</field>
             <field eval="0.19" name="amount"/>
             <field name="type">percent</field>
             <field eval="True" name="child_depend"/>
@@ -4421,9 +4421,9 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				        </record>
         <record id="btw_I_overig" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Inkopen import binnen EU hoog</field>
+            <field name="name">Inkopen import binnen EU overig</field>
 	    <field name="description">0% BTW import binnen EU</field>
-            <field eval="0.19" name="amount"/>
+            <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="True" name="child_depend"/>
             <field eval="omz_code_4b" name="base_code_id"/>
@@ -4432,7 +4432,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
         </record>
 				        <record id="btw_I_overig_1" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
-				            <field name="name">Inkopen import binnen EU hoog(1)</field>
+				            <field name="name">Inkopen import binnen EU overig(1)</field>
 				            <field eval="1.00" name="amount"/>
 				            <field name="type">percent</field>
 				            <field name="parent_id" ref="btw_I_overig"/>
@@ -4444,7 +4444,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				        </record>
 				        <record id="btw_I_overig_2" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
-				            <field name="name">Inkopen import binnen EU hoog(2)</field>
+				            <field name="name">Inkopen import binnen EU overig(2)</field>
 				            <field eval="-1.00" name="amount"/>
 				            <field name="type">percent</field>
 				            <field name="parent_id" ref="btw_I_overig"/>

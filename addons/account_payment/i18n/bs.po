@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-08-02 22:04+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:21+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 06:51+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -40,16 +40,6 @@ msgstr "Odaberite način plaćanja koji će biti primjenjen."
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr ""
-
-#. module: account_payment
-#: model:ir.module.module,description:account_payment.module_meta_information
-msgid ""
-"\n"
-"This module provides :\n"
-"* a more efficient way to manage invoice payment.\n"
-"* a basic mechanism to easily plug various automated payment.\n"
-"    "
 msgstr ""
 
 #. module: account_payment
@@ -82,7 +72,9 @@ msgstr ""
 "minus iznos koji je već u nalogu za plaćanje"
 
 #. module: account_payment
+#: field:payment.line,company_id:0
 #: field:payment.mode,company_id:0
+#: field:payment.order,company_id:0
 msgid "Company"
 msgstr ""
 
@@ -90,6 +82,11 @@ msgstr ""
 #: field:payment.order,date_prefered:0
 msgid "Preferred date"
 msgstr "Poželjni datum"
+
+#. module: account_payment
+#: model:res.groups,name:account_payment.group_account_payment
+msgid "Accounting / Payments"
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -168,6 +165,11 @@ msgstr "Referenca"
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
+msgstr ""
+
+#. module: account_payment
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
 msgstr ""
 
 #. module: account_payment
@@ -300,12 +302,6 @@ msgid "Search Payment Orders"
 msgstr ""
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-
-#. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
 msgstr "Kreirano"
@@ -331,9 +327,11 @@ msgid "Communication Type"
 msgstr "Vrsta veze"
 
 #. module: account_payment
-#: model:ir.module.module,shortdesc:account_payment.module_meta_information
-msgid "Payment Management"
-msgstr "Upravljanje plaćanjem"
+#: field:payment.line,partner_id:0
+#: field:payment.mode,partner_id:0
+#: report:payment.order:0
+msgid "Partner"
+msgstr "Partner"
 
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
@@ -443,7 +441,6 @@ msgstr "Korisnik"
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
-#: model:ir.actions.act_window,name:account_payment.act_account_invoice_2_payment_line
 msgid "Payment Lines"
 msgstr "Stavke plaćanja"
 
@@ -526,14 +523,14 @@ msgid "Invoice Ref"
 msgstr ""
 
 #. module: account_payment
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
+
+#. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
 msgstr "Tvoja Referenca"
-
-#. module: account_payment
-#: field:payment.order,mode:0
-msgid "Payment mode"
-msgstr "Način plaćanja"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -571,6 +568,11 @@ msgid "Cancel"
 msgstr "Odustani"
 
 #. module: account_payment
+#: field:payment.line,bank_id:0
+msgid "Destination Bank Account"
+msgstr ""
+
+#. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
@@ -606,11 +608,6 @@ msgid "Communication 2"
 msgstr "Komunikacija 2"
 
 #. module: account_payment
-#: field:payment.line,bank_id:0
-msgid "Destination Bank account"
-msgstr "Ciljni bankovni račun"
-
-#. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
 msgstr ""
@@ -630,6 +627,11 @@ msgstr "Bankovni račun"
 #: view:payment.order:0
 msgid "Confirm Payments"
 msgstr "Potvrdi plaćanja"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "The date of your Journal Entry is not in the defined period!"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
@@ -699,10 +701,16 @@ msgid "Make Payment"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: report:payment.order:0
-msgid "Partner"
-msgstr "Partner"
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry must receive a value in its "
+"secondary currency"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.order,mode:0
+msgid "Payment mode"
+msgstr "Način plaćanja"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
@@ -730,6 +738,9 @@ msgstr ""
 
 #~ msgid "Suitable bank types"
 #~ msgstr "Pogodni tipovi banaka"
+
+#~ msgid "Payment Management"
+#~ msgstr "Upravljanje plaćanjem"
 
 #~ msgid "_Cancel"
 #~ msgstr "Otkaži"
@@ -762,6 +773,9 @@ msgstr ""
 
 #~ msgid "Pay"
 #~ msgstr "Plati"
+
+#~ msgid "Destination Bank account"
+#~ msgstr "Ciljni bankovni račun"
 
 #~ msgid "Cash Journal for the Payment Mode"
 #~ msgstr "Gotovisnka nalog za kniženje za način plaćanja"

@@ -271,7 +271,7 @@ class idea_idea(osv.osv):
 
         if vals.get('my_vote', False):
             if vals.get('state', state) != 'open':
-                raise osv.except_osv(_("Warning !"), _("Draft/Accepted/Cancelled ideas Could not be voted"))
+                raise osv.except_osv(_("Warning !"), _("You can not vote on a Draft/Accepted/Cancelled ideas."))
 
         res = super(idea_idea, self).write(cr, user, ids, vals, context=context)
         return res

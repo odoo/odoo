@@ -25,7 +25,7 @@ from datetime import datetime, date
 
 from tools.translate import _
 from osv import fields, osv
-from resource.faces import task as Task
+from openerp.addons.resource.faces import task as Task
 
 # I think we can remove this in v6.1 since VMT's improvements in the framework ?
 #class project_project(osv.osv):
@@ -126,7 +126,7 @@ class project(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying the list of projects"),
-        'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive an email each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
 
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -316,7 +316,7 @@ class project(osv.osv):
 
         resource_pool = self.pool.get('resource.resource')
 
-        result = "from resource.faces import *\n"
+        result = "from openerp.addons.resource.faces import *\n"
         result += "import datetime\n"
         for project in self.browse(cr, uid, ids, context=context):
             u_ids = [i.id for i in project.members]
@@ -517,17 +517,10 @@ class task(osv.osv):
         if not project_id:
             return {}
         data = self.pool.get('project.project').browse(cr, uid, [project_id])
-        partner_id=data and data[0].parent_id.partner_id
+        partner_id=data and data[0].partner_id
         if partner_id:
             return {'value':{'partner_id':partner_id.id}}
         return {}
-
-    def _default_project(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if 'project_id' in context and context['project_id']:
-            return int(context['project_id'])
-        return False
 
     def duplicate_task(self, cr, uid, map_ids, context=None):
         for new in map_ids.values():
@@ -642,7 +635,6 @@ class task(osv.osv):
         'progress': 0,
         'sequence': 10,
         'active': True,
-        'project_id': _default_project,
         'user_id': lambda obj, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }

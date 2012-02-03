@@ -171,7 +171,7 @@
                      <field name="state"/>
                     </group>
                     <group col="3" colspan="2">
-                        <button name="action_cancel_inventary" states="draft,confirm,done" string="Cancel Inventory" type="object" icon="gtk-cancel"/>
+                        <button name="action_cancel_inventory" states="draft,confirm,done" string="Cancel Inventory" type="object" icon="gtk-cancel"/>
                         <button name="action_confirm" states="draft" string="Confirm Inventory" type="object" icon="gtk-apply"/>
                         <button name="action_done" states="confirm" string="Validate Inventory" type="object" icon="gtk-jump-to"/>
                         <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
@@ -186,7 +186,6 @@
             <field name="res_model">stock.inventory</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_inventory_tree"/>
-            <field name="context">{'full':'1'}</field>
             <field name="search_view_id" ref="view_inventory_filter" />
             <field name="help">Periodical Inventories are used to count the number of products available per location. You can use it once a year when you do the general inventory or whenever you need it, to correct the current stock level of a product.</field>
         </record>
@@ -217,9 +216,9 @@
                     <group col="2" colspan="2">
                         <separator string="Traceability" colspan="4"/>
                         <button name="action_traceability" icon="gtk-go-up" string="Upstream traceability" type="object"
-                            context="{'type': '','field': ''}" colspan="2"/>
+                             colspan="2"/>
                         <button name="action_traceability" icon="gtk-go-down" string="Downstream traceability" type="object"
-                            context="{'type': 'move_history_ids','field': ''}" colspan="2"/>
+                            context="{'type': 'move_history_ids'}" colspan="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Stock Moves">
@@ -330,8 +329,8 @@
                         <field name="date" colspan="4"/>
                     </group>
                     <group col="2" colspan="2">
-                        <separator string="Traceability" colspan="4"/>
-                        <field name="stock_available" colspan="4"/>
+                        <separator string="Traceability" colspan="2"/>
+                        <field name="stock_available" colspan="2"/>
                         <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}" icon="gtk-go-up" colspan="2"/>
                         <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}" icon="gtk-go-down" colspan="2"/>
                     </group>
@@ -407,7 +406,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_production_lot_tree"/>
             <field name="search_view_id" ref="search_product_lot_filter" />
-            <field name="context">{'full':'1',"search_default_available":1}</field>
+            <field name="context">{"search_default_available":1}</field>
             <field name="help">This is the list of all the production lots (serial numbers) you recorded. When you select a lot, you can get the upstream or downstream traceability of the products contained in lot. By default, the list is filtred on the serial numbers that are available in your warehouse but you can uncheck the 'Available' button to get all the lots you produced, received or delivered to customers.</field>
         </record>
         <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
@@ -584,7 +583,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_location_tree2"/>
             <field name="search_view_id" ref="view_location_search"/>
-            <field name="context">{'full':1, 'search_default_in_location':1}</field>
+            <field name="context">{'search_default_in_location':1}</field>
             <field name="help">Define your locations to reflect your warehouse structure and organization. OpenERP is able to manage physical locations (warehouses, shelves, bin, etc), partner locations (customers, suppliers) and virtual locations which are the counterpart of the stock operations like the manufacturing orders consumptions, inventories, etc. Every stock operation in OpenERP moves the products from one location to another one. For instance, if you receive products from a supplier, OpenERP will move products from the Supplier location to the Stock location. Each report can be performed on physical, partner or virtual locations.</field>
         </record>
         <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_warehouse_config"/>
@@ -682,7 +681,7 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="action_process" states="confirmed,assigned" groups="stock.group_stock_user" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="action_process" states="assigned" groups="stock.group_stock_user" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -709,7 +708,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id}">
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" context="{'address_in_id': address_id}">
                                 <tree colors="grey:scrapped == True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -866,7 +865,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Delivery Orders">
+                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="origin"/>
@@ -902,7 +901,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id, 'picking_type': type}" >
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" context="{'address_out_id': address_id, 'picking_type': type}" >
                                 <tree colors="grey:scrapped==True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -1058,7 +1057,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_available': 1}</field>
+            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_confirmed': 1, 'search_default_available': 1}</field>
             <field name="search_view_id" ref="view_picking_out_search"/>
             <field name="help">This is the list of all delivery orders that have to be prepared, according to your different sales orders and your logistics rules.</field>
         </record>
@@ -1123,7 +1122,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id, 'picking_type': type}" >
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" context="{'address_in_id': address_id, 'picking_type': type}" >
                                 <tree colors="grey:scrapped==True" string="Stock Moves">
                                     <field name="product_id" />
                                     <field name="product_qty" />
@@ -1420,8 +1419,8 @@
                                 icon="gtk-convert" context="{'scrap': True}"
                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
                         <newline/>
-                        <field name="location_id" context="{'full':True}"/>
-                        <field name="location_dest_id" context="{'full':True}"/>
+                        <field name="location_id"/>
+                        <field name="location_dest_id"/>
                         <field name="address_id" context="{'contact_display':'partner'}"/>
 
                     </group>
@@ -1463,7 +1462,7 @@
                     </group>
 
                     <separator colspan="4"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                     <group col="4" colspan="2">
                         <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                         <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
@@ -1608,8 +1607,8 @@
                                 icon="gtk-convert" context="{'scrap': True}"
                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
                         <newline/>
-                        <field name="location_id" context="{'full':True}"/>
-                        <field name="location_dest_id" context="{'full':True}"/>
+                        <field name="location_id"/>
+                        <field name="location_dest_id"/>
                         <field name="address_id" context="{'contact_display':'partner'}"/>
 
                     </group>
@@ -1651,7 +1650,7 @@
                     </group>
 
                     <separator colspan="4"/>
-                    <field name="state"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                     <group col="5" colspan="2">
                         <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                         <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>

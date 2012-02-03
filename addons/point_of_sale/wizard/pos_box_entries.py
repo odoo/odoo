@@ -44,7 +44,6 @@ def get_journal(self, cr, uid, context=None):
     res = [(r['journal_id']) for r in res]
     if not len(res):
         raise osv.except_osv(_('Error !'), _('You do not have any open cash register. You must create a payment method or open a cash register.'))
-    res.insert(0, ('', ''))
     return res
 
 class pos_box_entries(osv.osv_memory):
@@ -70,8 +69,8 @@ class pos_box_entries(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Reason', size=32, required=True),
-        'journal_id': fields.selection(get_journal, "Cash Register", required=True),
-        'product_id': fields.selection(_get_income_product, "Operation", required=True),
+        'journal_id': fields.selection(get_journal, "Cash Register", required=True, size=-1),
+        'product_id': fields.selection(_get_income_product, "Operation", required=True, size=-1),
         'amount': fields.float('Amount', digits=(16, 2), required=True),
         'ref': fields.char('Ref', size=32),
     }

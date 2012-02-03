@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-01-30 18:59+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
 "<openerp@novotrade.hu>\n"
@@ -14,37 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:34+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:07+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: analytic_journal_billing_rate
-#: model:ir.module.module,description:analytic_journal_billing_rate.module_meta_information
-msgid ""
-"\n"
-"\n"
-"    This module allows you to define what is the default invoicing rate for "
-"a specific journal on a given account. This is mostly used when a user "
-"encodes his timesheet: the values are retrieved and the fields are auto-"
-"filled... but the possibility to change these values is still available.\n"
-"\n"
-"    Obviously if no data has been recorded for the current account, the "
-"default value is given as usual by the account data so that this module is "
-"perfectly compatible with older configurations.\n"
-"\n"
-"    "
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
 msgstr ""
-"\n"
-"\n"
-"    Ez a modul lehetővé teszi annak meghatározását, hogy mi a gyűjtőkód "
-"naplójának alapértelmezett számlázási rátája. Leginkább akkor használják, "
-"amikor a felhasználó berögzíti a munkaidő-kimutatását: az értékek feljönnek "
-"és a mezők automatikusan kitöltődnek... De ezeket az értékeket meg lehet "
-"változtatni.\n"
-"\n"
-"    Nyilvánvalóan, ha az aktuális gyűjtőkódra nem vittek be adatot, az "
-"alapértelmezett érték a könyvelési adatokból kerül meghatározásra.\n"
-"\n"
-"    "
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,journal_id:0
@@ -55,6 +31,11 @@ msgstr "Gyűjtőnapló"
 #: model:ir.model,name:analytic_journal_billing_rate.model_account_invoice
 msgid "Invoice"
 msgstr "Számla"
+
+#. module: analytic_journal_billing_rate
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
 
 #. module: analytic_journal_billing_rate
 #: view:analytic_journal_rate_grid:0
@@ -78,21 +59,17 @@ msgid "Invoicing Rate per Journal"
 msgstr "Naplónkénti számlázási ráta"
 
 #. module: analytic_journal_billing_rate
-#: model:ir.module.module,shortdesc:analytic_journal_billing_rate.module_meta_information
-msgid ""
-"Analytic Journal Billing Rate, Define the default invoicing rate for a "
-"specific journal"
-msgstr ""
-"Gyűjtőnapló számlázási ráta. Az adott naplóra meghatározza az "
-"alapértelmezett számlázási rátát."
-
-#. module: analytic_journal_billing_rate
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
 msgstr ""
 "Hiba! A pénznemnek meg kell egyeznie a kiválasztott vállalat pénznemével."
+
+#. module: analytic_journal_billing_rate
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
+msgstr ""
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,rate_id:0
@@ -108,3 +85,37 @@ msgstr "Hiba! Nem hozhat létre rekurzív gyűjtőkódokat."
 #: model:ir.model,name:analytic_journal_billing_rate.model_hr_analytic_timesheet
 msgid "Timesheet Line"
 msgstr "Munkaidő-kimutatás sora"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "    This module allows you to define what is the default invoicing rate for "
+#~ "a specific journal on a given account. This is mostly used when a user "
+#~ "encodes his timesheet: the values are retrieved and the fields are auto-"
+#~ "filled... but the possibility to change these values is still available.\n"
+#~ "\n"
+#~ "    Obviously if no data has been recorded for the current account, the "
+#~ "default value is given as usual by the account data so that this module is "
+#~ "perfectly compatible with older configurations.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "    Ez a modul lehetővé teszi annak meghatározását, hogy mi a gyűjtőkód "
+#~ "naplójának alapértelmezett számlázási rátája. Leginkább akkor használják, "
+#~ "amikor a felhasználó berögzíti a munkaidő-kimutatását: az értékek feljönnek "
+#~ "és a mezők automatikusan kitöltődnek... De ezeket az értékeket meg lehet "
+#~ "változtatni.\n"
+#~ "\n"
+#~ "    Nyilvánvalóan, ha az aktuális gyűjtőkódra nem vittek be adatot, az "
+#~ "alapértelmezett érték a könyvelési adatokból kerül meghatározásra.\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid ""
+#~ "Analytic Journal Billing Rate, Define the default invoicing rate for a "
+#~ "specific journal"
+#~ msgstr ""
+#~ "Gyűjtőnapló számlázási ráta. Az adott naplóra meghatározza az "
+#~ "alapértelmezett számlázási rátát."

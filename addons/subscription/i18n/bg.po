@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-03-01 15:07+0000\n"
 "Last-Translator: Dimitar Markov <dimitar.markov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 04:52+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 05:50+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -79,7 +79,7 @@ msgid "Today"
 msgstr "Днес"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:44
+#: code:addons/subscription/subscription.py:136
 #, python-format
 msgid "Error !"
 msgstr "Грешка !"
@@ -105,14 +105,6 @@ msgstr "Спри"
 #: view:subscription.subscription:0
 msgid "Set to Draft"
 msgstr "Промени в Проект"
-
-#. module: subscription
-#: model:ir.module.module,description:subscription.module_meta_information
-msgid ""
-"Module allows to create new documents and add subscription on that document."
-msgstr ""
-"Модълът позволява създаване на нови документи и добавяне на абонаменти за "
-"този документ."
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -165,14 +157,10 @@ msgid "Name"
 msgstr "Име"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:44
+#: code:addons/subscription/subscription.py:136
 #, python-format
-msgid ""
-"You cannot modify the Object linked to the Document Type!\n"
-"Create another Document instead !"
+msgid "You cannot delete an active subscription !"
 msgstr ""
-"Не можете да промените обекта, свързан с типа на документа!\n"
-" Създайте нов докуметн вместо това!"
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
@@ -276,11 +264,6 @@ msgid "Process"
 msgstr "Процес"
 
 #. module: subscription
-#: model:ir.module.module,shortdesc:subscription.module_meta_information
-msgid "Subscription and recurring operations"
-msgstr "Абонаменти и повтарящи се действия"
-
-#. module: subscription
 #: help:subscription.subscription,doc_source:0
 msgid ""
 "User can choose the source document on which he wants to create documents"
@@ -294,7 +277,7 @@ msgid "Document Types"
 msgstr "Видове документи"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:115
+#: code:addons/subscription/subscription.py:109
 #, python-format
 msgid "Wrong Source Document !"
 msgstr "Грешен документ - изтйоник!"
@@ -317,7 +300,7 @@ msgid "Invoice"
 msgstr "Фактура"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:115
+#: code:addons/subscription/subscription.py:109
 #, python-format
 msgid ""
 "Please provide another source document.\n"
@@ -361,8 +344,25 @@ msgstr "Създадени документи"
 #~ msgid "Subscription document fields"
 #~ msgstr "Полета на абонаментен документ"
 
+#~ msgid ""
+#~ "Module allows to create new documents and add subscription on that document."
+#~ msgstr ""
+#~ "Модълът позволява създаване на нови документи и добавяне на абонаменти за "
+#~ "този документ."
+
 #~ msgid "Subscription document"
 #~ msgstr "Абонаментен документ"
 
+#~ msgid "Subscription and recurring operations"
+#~ msgstr "Абонаменти и повтарящи се действия"
+
 #~ msgid "All Subscriptions"
 #~ msgstr "Всички абонаменти"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot modify the Object linked to the Document Type!\n"
+#~ "Create another Document instead !"
+#~ msgstr ""
+#~ "Не можете да промените обекта, свързан с типа на документа!\n"
+#~ " Създайте нов докуметн вместо това!"

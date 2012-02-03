@@ -57,7 +57,7 @@ task is completed.
     'demo_xml': ['project_mrp_demo.xml'],
     'test': ['test/project_task_procurement.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0031976495453',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

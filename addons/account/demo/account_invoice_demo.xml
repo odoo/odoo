@@ -2,9 +2,9 @@
 <openerp>
 	<data noupdate="1">
 		<record id="demo_invoice_0" model="account.invoice">
-			<field name="date_due">2011-07-21</field>
+			<field name="date_due" eval="time.strftime('%Y')+'-01-30'"/>
 			<field name="payment_term" ref="account.account_payment_term"/>
-			<field name="journal_id" ref="account.refund_expenses_journal"/>
+			<field name="journal_id" ref="account.expenses_journal"/>
 			<field name="currency_id" ref="base.EUR"/>
 			<field name="address_invoice_id" ref="base.res_partner_address_wong"/>
 			<field name="user_id" ref="base.user_demo"/>
@@ -15,7 +15,7 @@
 			<field name="type">in_invoice</field>
 			<field name="account_id" ref="account.a_pay"/>
 			<field eval="0" name="reconciled"/>
-			<field name="date_invoice">2011-06-01</field>
+			<field name="date_invoice" eval="time.strftime('%Y')+'-01-01'"/>
 			<field eval="14.0" name="amount_untaxed"/>
 			<field eval="14.0" name="amount_total"/>
 			<field name="partner_id" ref="base.res_partner_maxtor"/>

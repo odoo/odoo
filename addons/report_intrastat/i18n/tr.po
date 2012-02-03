@@ -6,97 +6,97 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2010-09-09 07:17+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"PO-Revision-Date: 2012-01-25 17:35+0000\n"
+"Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:16+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-01-26 05:27+0000\n"
+"X-Generator: Launchpad (build 14719)\n"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Cancelled Invoice"
-msgstr ""
+msgstr "İptal edilimiş fatura"
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "June"
-msgstr ""
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr "Ülke adı tekil olmalı !"
 
 #. module: report_intrastat
 #: sql_constraint:res.country:0
 msgid "The code of the country must be unique !"
-msgstr ""
+msgstr "Ülke kodu tekil olmak zorunda!"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Disc. (%)"
-msgstr ""
+msgstr "İnd. (%)"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Supplier Invoice"
-msgstr ""
+msgstr "Tedarikçi Faturası"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Birim Fiyatı"
 
 #. module: report_intrastat
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
+"Hata: Varsayılan ölçü birimi ile satış ölçü birimi aynı kategoride bulunmalı."
 
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
 msgid "Import"
-msgstr ""
+msgstr "İçe Aktar"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "VAT :"
-msgstr ""
+msgstr "KDV :"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Document"
-msgstr ""
+msgstr "Belge"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "PRO-FORMA"
-msgstr ""
+msgstr "PROFORMA"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Taxes:"
-msgstr ""
+msgstr "Vergiler:"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "March"
-msgstr ""
+msgstr "Mart"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat.code,description:0
-msgid "Description"
-msgstr ""
+#: selection:report.intrastat,month:0
+msgid "August"
+msgstr "Ağustos"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "May"
-msgstr ""
+msgstr "Mayıs"
 
 #. module: report_intrastat
 #: field:report.intrastat,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tür:"
 
 #. module: report_intrastat
 #: model:ir.actions.report.xml,name:report_intrastat.invoice_intrastat_id
@@ -106,17 +106,17 @@ msgstr ""
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Fatura Tarihi"
 
 #. module: report_intrastat
-#: model:ir.module.module,shortdesc:report_intrastat.module_meta_information
-msgid "Intrastat Reporting - Reporting"
-msgstr ""
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr "Haziran"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tel :"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -187,22 +187,8 @@ msgid "Invoice"
 msgstr ""
 
 #. module: report_intrastat
-#: model:ir.module.module,description:report_intrastat.module_meta_information
-msgid ""
-"\n"
-"    A module that adds intrastat reports.\n"
-"    This module gives the details of the goods traded between the countries "
-"of European Union "
-msgstr ""
-
-#. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_res_country
 msgid "Country"
-msgstr ""
-
-#. module: report_intrastat
-#: sql_constraint:res.country:0
-msgid "The name of the country must be unique !"
 msgstr ""
 
 #. module: report_intrastat
@@ -258,8 +244,9 @@ msgid "November"
 msgstr ""
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "August"
+#: report:account.invoice.intrastat:0
+#: field:report.intrastat.code,description:0
+msgid "Description"
 msgstr ""
 
 #. module: report_intrastat

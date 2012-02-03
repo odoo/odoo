@@ -7,6 +7,10 @@
             web_icon="images/pos.png"
             web_icon_hover="images/pos-hover.png"/>
 
+        <record id="categ_others" model="pos.category">
+          <field name="name">Others</field>
+        </record>
+
         <record model="ir.ui.view" id="view_pos_pos_form">
             <field name="name">pos.order</field>
             <field name="model">pos.order</field>
@@ -158,7 +162,21 @@
         <menuitem parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
         <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
-        <menuitem action="product.product_normal_action" id="menu_pos_products" parent="menu_point_of_sale_product" sequence="2"/>
+        <record id="product_normal_action" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="context" eval="{'default_pos_categ_id': ref('point_of_sale.categ_others')}"/>
+            <field name="view_id" ref="product.product_product_tree_view"/>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
+        </record>
+        <menuitem
+            action="product_normal_action"
+            id="menu_pos_products"
+            parent="menu_point_of_sale_product" sequence="2"/>
 
         <record model="ir.ui.view" id="view_pos_order_line">
             <field name="name">Sale lines</field>

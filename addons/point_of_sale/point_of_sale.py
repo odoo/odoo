@@ -22,12 +22,15 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import logging
 
 import netsvc
 from osv import fields, osv
 from tools.translate import _
 from decimal import Decimal
 import decimal_precision as dp
+
+_logger = logging.getLogger(__name__)
 
 class pos_config_journal(osv.osv):
     """ Point of Sale journal configuration"""
@@ -46,6 +49,15 @@ class pos_order(osv.osv):
     _name = "pos.order"
     _description = "Point of Sale"
     _order = "id desc"
+    
+    def create_from_ui(self, cr, uid, orders, context=None):
+        #_logger.info("orders: %r", orders)
+        list = []
+        for order in orders:
+            list.append(self.create(cr, uid, order, context))
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'pos.order', list[-1], 'paid', cr)
+        return list
 
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
@@ -396,7 +408,7 @@ class pos_order(osv.osv):
             'name': _('Customer Invoice'),
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': res_id,
+            'view_id': [res_id],
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
@@ -732,7 +744,6 @@ class product_product(osv.osv):
     _columns = {
         'income_pdt': fields.boolean('PoS Cash Input', help="This is a product you can use to put cash into a statement for the point of sale backend."),
         'expense_pdt': fields.boolean('PoS Cash Output', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
-        'img': fields.binary('Product Image, must be 50x50', help="Use an image size of 50x50."),
         'pos_categ_id': fields.many2one('pos.category','PoS Category',
             help="If you want to sell this product through the point of sale, select the category it belongs to.")
     }

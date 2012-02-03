@@ -133,7 +133,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         campaign = self.browse(cr, uid, ids[0])
 
         if not campaign.activity_ids:
-            raise osv.except_osv(_("Error"), _("The campaign cannot be started: there are no activities in it"))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started: there are no activities in it."))
 
         has_start = False
         has_signal_without_from = False
@@ -145,7 +145,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                 has_signal_without_from = True
 
         if not has_start and not has_signal_without_from:
-            raise osv.except_osv(_("Error"), _("The campaign cannot be started: it doesn't have any starting activity (or any activity with a signal and no previous activity)"))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started: it doesn't have any starting activity. Modify campaign's activities to mark one as the starting point."))
 
         return self.write(cr, uid, ids, {'state': 'running'})
 
@@ -155,7 +155,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                             [('campaign_id', 'in', ids),
                                             ('state', '=', 'running')])
         if segment_ids :
-            raise osv.except_osv(_("Error"), _("The campaign cannot be marked as done before all segments are done"))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be marked as done before all segments are closed."))
         self.write(cr, uid, ids, {'state': 'done'})
         return True
 
@@ -211,7 +211,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
     # prevent duplication until the server properly duplicates several levels of nested o2m
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_("Operation not supported"), _("Sorry, campaign duplication is not supported at the moment."))
+        raise osv.except_osv(_("Operation not supported"), _("You can not duplicate a campaign, it's not supported yet."))
 
     def _find_duplicate_workitems(self, cr, uid, record, campaign_rec, context=None):
         """Finds possible duplicates workitems for a record in this campaign, based on a uniqueness

@@ -433,9 +433,8 @@ class hr_applicant(crm.crm_case, osv.osv):
                                                      })
                 self.case_close(cr, uid, [applicant.id], *args)
             else:
-                raise osv.except_osv(_('Warning!'),_('You must define Applied Job for Applicant !'))
+                raise osv.except_osv(_('Warning!'),_('You must define Applied Job for this applicant.'))
 
-        
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
         dict_act_window = act_window.read(cr, uid, action_id, [])
         if emp_id:

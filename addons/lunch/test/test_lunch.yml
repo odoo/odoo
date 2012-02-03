@@ -30,7 +30,6 @@
     date: !eval time.strftime('%Y-%m-%d')
     product: 'lunch_product_club1'
     price: 2.75
-    user_id: base.user_root
 
 - |
   I check that lunch order is on draft state after having created it.
@@ -69,7 +68,6 @@
     date: !eval "(datetime.now() + timedelta(2)).strftime('%Y-%m-%d')"
     product: 'lunch_product_club1'
     price: 2.75
-    user_id: base.user_root
 
 - |
   I confirm this order.open wizard and select "Employee Cashbox".

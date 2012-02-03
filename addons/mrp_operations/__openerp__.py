@@ -71,7 +71,7 @@ So that we can compare the theoretic delay and real delay.
              'test/workcenter_operations.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0056233813133',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -2,9 +2,14 @@
   In order to test hr_timesheet_sheet module in OpenERP,
   I create Timesheet and check validation process done by manager.
 -
+  I set TimeSheet allowed difference for company
+-
+  !record {model: res.company, id: base.main_company}:
+    timesheet_max_difference: 1.00
+-
   I assign this product(Service on Timesheet) and journal(Timesheet Journal) to employee "Quentin Paolino"
 -
-  !record {model: hr.employee, id: hr.employee2}:
+  !record {model: hr.employee, id: hr.employee_qdp}:
     product_id: product.product_consultant
     journal_id: hr_timesheet.analytic_journal
 -
@@ -16,7 +21,7 @@
     name: Quentin Paolinon
     state: new
     user_id: base.user_demo
-    employee_id: 'hr.employee2'
+    employee_id: 'hr.employee_qdp'
 -
   Now, at the time of login, I create Attendances and perform "Sign In" action.
 -
@@ -54,8 +59,8 @@
 -
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
-    employee_id: 'hr.employee2'
-    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(min(23,datetime.now().hour+2),min(59,datetime.now().minute+1),min(59,datetime.now().second+1))
+    employee_id: 'hr.employee_qdp'
+    name: !eval (datetime.now() + timedelta(hours=8.25)).strftime('%Y-%m-%d %H:%M:%S')
 -
   I create Timesheet Entry for time spend on today work.
 -
@@ -64,11 +69,10 @@
       - account_id: account.analytic_sednacom
         date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
-        unit_amount: 3.00
+        unit_amount: 6.00
         amount: -90.00
         product_id: product.product_consultant
         general_account_id: account.a_expense
-        user_id: base.user_root
         journal_id: hr_timesheet.analytic_journal
 -
   I confirm my Timesheet at end of period by click on "Confirm" button,
@@ -91,11 +95,10 @@
       - account_id: account.analytic_sednacom
         date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
-        unit_amount: 2.0
+        unit_amount: 2.00
         amount: -90.00
         product_id: product.product_consultant
         general_account_id: account.a_expense
-        user_id: base.user_root
         journal_id: hr_timesheet.analytic_journal
 -
   I tried again to confirm the timesheet after modification.

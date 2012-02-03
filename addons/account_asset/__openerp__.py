@@ -30,6 +30,7 @@
     """,
     "website" : "http://www.openerp.com",
     "category" : "Accounting & Finance",
+    "sequence": 32,
     "init_xml" : [
     ],
     "demo_xml" : [ 'account_asset_demo.xml'
@@ -49,7 +50,7 @@
         "account_asset_invoice_view.xml",
         "report/account_asset_report_view.xml",
     ],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "application": True,
 }

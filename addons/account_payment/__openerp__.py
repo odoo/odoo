@@ -51,11 +51,13 @@ This module provides :
     ],
     'demo_xml': ['account_payment_demo.xml'],
     'test': [
-             'test/account_payment.yml',
-             'test/account_payment_report.yml'
+        'test/account_payment_demo.yml',
+        'test/cancel_payment_order.yml',
+        'test/payment_order_process.yml',
+        'test/account_payment_report.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0061703998541',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

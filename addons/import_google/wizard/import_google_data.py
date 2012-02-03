@@ -100,14 +100,13 @@ class synchronize_google(osv.osv_memory):
         'create_partner': fields.selection([('create_all','Create partner for each contact'),('create_address','Import only address')],'Options'),
         'customer': fields.boolean('Customer', help="Check this box to set newly created partner as Customer."),
         'supplier': fields.boolean('Supplier', help="Check this box to set newly created partner as Supplier."),
-        'group_name': fields.selection(_get_group, "Group Name", size=32,help="Choose which group to import, By default it takes all."),
-        'calendar_name': fields.selection(_get_calendars, "Calendar Name", size=32),
+        'group_name': fields.selection(_get_group, "Group Name",help="Choose which group to import, By default it takes all."),
+        'calendar_name': fields.selection(_get_calendars, "Calendar Name"),
      }
 
     _defaults = {
         'create_partner': 'create_all',
         'group_name': 'all',
-        'calendar_name': 'all',
     }
 
     def import_google(self, cr, uid, ids, context=None):

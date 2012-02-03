@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/selectpartner.dtd">
+<window id="partnerwindowsid" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml" onload="getPartnerList()"
+	title="&title.label;" height="500" width="375">
+<script type="text/javascript" src="chrome://openerp_plugin/content/js/tiny_xmlrpc.js"></script>
+<script type="text/javascript" src="chrome://openerp_plugin/content/js/tools.js"></script>
+<script type="text/javascript" src="chrome://openerp_plugin/content/js/create.js"></script>
+<groupbox id="gpPartner">
+	<hbox>
+		<textbox id="txtselectpartner" class="text-prompt"/>
+		<spacer width="25"/>
+		<button label="&bsearch.label;" image="&imagesearch.value;" oncommand="getPartnerList();"/>
+	</hbox>
+</groupbox>
+<listbox id="listPartnerBox" flex="1" rows="5">
+    <listhead>
+    	<listheader label="&listPartnerName.header;"/>
+    </listhead>
+    <listcols>
+    	<listcol flex="1"/>
+    </listcols>
+</listbox>
+<description></description>
+<hbox>
+  <spacer width="45"/>
+  <button label="cancel" image="&imagecancel.value;" oncommand="close();" />
+  <button label="link" image="&imageok.value;" oncommand="selectPartner();window.close();"/>
+</hbox>
+
+</window>

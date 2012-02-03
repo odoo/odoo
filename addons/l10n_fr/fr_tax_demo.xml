@@ -45,6 +45,24 @@
       <field name="type_tax_use">sale</field>
     </record>
 
+    <record model="account.tax.template" id="tva_specifique_1">
+      <field name="name">TVA collectée (vente) 7,0%</field>
+      <field name="description">24</field>
+      <field name="amount" eval="0.07"/>
+      <field name="type">percent</field>
+      <field name="base_code_id" ref="tax_col_70_ht"/>
+      <field name="tax_code_id" ref="tax_col_70"/>
+
+      <field name="account_collected_id" ref="pcg_445713"/>
+      <field name="account_paid_id" ref="pcg_44571"/>
+
+      <field name="ref_base_code_id" ref="tax_col_70_ht"/>
+      <field name="ref_base_sign" eval="-1"/>
+      <field name="ref_tax_code_id" ref="tax_col_70"/>
+      <field name="ref_tax_sign" eval="-1"/>
+      <field name="type_tax_use">sale</field>
+    </record>
+
     <record model="account.tax.template" id="tva_reduite">
       <field name="name">TVA collectée (vente) 5,5%</field>
       <field name="description">3</field>
@@ -115,6 +133,24 @@
       <field name="ref_base_code_id" ref="tax_acq_85_ht"/>
       <field name="ref_base_sign" eval="-1"/>
       <field name="ref_tax_code_id" ref="tax_acq_85"/>
+      <field name="ref_tax_sign" eval="-1"/>
+      <field name="type_tax_use">purchase</field>
+    </record>
+
+    <record model="account.tax.template" id="tva_acq_specifique_1">
+      <field name="name">TVA acquittée (achat) 7,0%</field>
+      <field name="description">25</field>
+      <field name="amount" eval="0.07"/>
+      <field name="type">percent</field>
+      <field name="base_code_id" ref="tax_acq_70_ht"/>
+      <field name="tax_code_id" ref="tax_acq_70"/>
+
+      <field name="account_collected_id" ref="pcg_44566"/>
+      <field name="account_paid_id" ref="pcg_44566"/>
+
+      <field name="ref_base_code_id" ref="tax_acq_70_ht"/>
+      <field name="ref_base_sign" eval="-1"/>
+      <field name="ref_tax_code_id" ref="tax_acq_70"/>
       <field name="ref_tax_sign" eval="-1"/>
       <field name="type_tax_use">purchase</field>
     </record>
@@ -193,6 +229,24 @@
       <field name="type_tax_use">purchase</field>
     </record>
 
+    <record model="account.tax.template" id="tva_imm_specifique_1">
+      <field name="name">TVA immobilisation (achat) 7,0%</field>
+      <field name="description">26</field>
+      <field name="amount" eval="0.07"/>
+      <field name="type">percent</field>
+      <field name="base_code_id" ref="tax_imm_70_ht"/>
+      <field name="tax_code_id" ref="tax_imm_70"/>
+
+      <field name="account_collected_id" ref="pcg_44562"/>
+      <field name="account_paid_id" ref="pcg_44562"/>
+
+      <field name="ref_base_code_id" ref="tax_imm_70_ht"/>
+      <field name="ref_base_sign" eval="-1"/>
+      <field name="ref_tax_code_id" ref="tax_imm_70"/>
+      <field name="ref_tax_sign" eval="-1"/>
+      <field name="type_tax_use">purchase</field>
+    </record>
+
     <record model="account.tax.template" id="tva_imm_reduite">
       <field name="name">TVA immobilisation (achat) 5,5%</field>
       <field name="description">11</field>
@@ -267,6 +321,24 @@
       <field name="type_tax_use">sale</field>
     </record>
 
+    <record model="account.tax.template" id="tva_intra_specifique_1">
+      <field name="name">TVA due intracommunautaire 7,0%</field>
+      <field name="description">27</field>
+      <field name="amount" eval="-0.07"/>
+      <field name="type">percent</field>
+      <field name="base_code_id" ref="tax_intra_70_ht"/>
+      <field name="tax_code_id" ref="tax_intra_70"/>
+
+      <field name="account_collected_id" ref="pcg_445203"/>
+      <field name="account_paid_id" ref="pcg_4452"/>
+
+      <field name="ref_base_code_id" ref="tax_intra_70_ht"/>
+      <field name="ref_base_sign" eval="-1"/>
+      <field name="ref_tax_code_id" ref="tax_intra_70"/>
+      <field name="ref_tax_sign" eval="-1"/>
+      <field name="type_tax_use">sale</field>
+    </record>
+
     <record model="account.tax.template" id="tva_intra_reduite">
       <field name="name">TVA due intracommunautaire 5,5%</field>
       <field name="description">15</field>
@@ -337,6 +409,24 @@
       <field name="ref_base_code_id" ref="tax_intra_acq_85_ht"/>
       <field name="ref_base_sign" eval="-1"/>
       <field name="ref_tax_code_id" ref="tax_intra_acq_85"/>
+      <field name="ref_tax_sign" eval="-1"/>
+      <field name="type_tax_use">purchase</field>
+    </record>
+
+    <record model="account.tax.template" id="tva_acq_intra_specifique_1">
+      <field name="name">TVA déductible intracommunautaire 7,0%</field>
+      <field name="description">28</field>
+      <field name="amount" eval="0.07"/>
+      <field name="type">percent</field>
+      <field name="base_code_id" ref="tax_intra_acq_70_ht"/>
+      <field name="tax_code_id" ref="tax_intra_acq_70"/>
+
+      <field name="account_collected_id" ref="pcg_445662"/>
+      <field name="account_paid_id" ref="pcg_445662"/>
+
+      <field name="ref_base_code_id" ref="tax_intra_acq_70_ht"/>
+      <field name="ref_base_sign" eval="-1"/>
+      <field name="ref_tax_code_id" ref="tax_intra_acq_70"/>
       <field name="ref_tax_sign" eval="-1"/>
       <field name="type_tax_use">purchase</field>
     </record>

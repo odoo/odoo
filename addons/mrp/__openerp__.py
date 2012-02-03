@@ -26,6 +26,7 @@
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Manufacturing",
+    "sequence": 18,
     "images" : ["images/bill_of_materials.jpeg", "images/manufacturing_order.jpeg", "images/planning_manufacturing_order.jpeg", "images/production_analysis.jpeg", "images/production_dashboard.jpeg","images/routings.jpeg","images/work_centers.jpeg"],
     "depends" : ["procurement", "stock", "resource", "purchase", "product","process"],
     "description": """
@@ -98,7 +99,7 @@ Dashboard provided by this module:
     ],
     'installable': True,
     'application': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0032052481373',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

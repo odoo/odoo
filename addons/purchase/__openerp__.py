@@ -24,6 +24,7 @@
     'name': 'Purchase Management',
     'version': '1.1',
     'category': 'Purchase Management',
+    "sequence": 19,
     'complexity': "easy",
     'description': """
 Purchase module is for generating a purchase order for purchase of goods from a supplier.
@@ -77,7 +78,7 @@ Dashboard for purchase management that includes:
         'purchase_demo.xml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0057234283549',
     'application': True,
 }

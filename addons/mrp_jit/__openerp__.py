@@ -46,7 +46,7 @@ In that case, you can not use priorities any more on the different picking.
     'demo_xml': [],
     'test': ['test/mrp_jit.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0086634760061',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

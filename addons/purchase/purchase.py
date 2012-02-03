@@ -29,6 +29,7 @@ import pooler
 from tools.translate import _
 import decimal_precision as dp
 from osv.orm import browse_record, browse_null
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 #
 # Model definition
@@ -696,100 +697,97 @@ class purchase_order_line(osv.osv):
         default.update({'state':'draft', 'move_ids':[],'invoiced':0,'invoice_lines':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
-    #TOFIX:
-    # - name of method should "onchange_product_id"
-    # - docstring
-    # - merge 'product_uom_change' method
-    # - split into small internal methods for clearity 
-    def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False, fiscal_position=False, date_planned=False,
-            name=False, price_unit=False, notes=False, context={}):
-        if not pricelist:
-            raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist or a supplier in the purchase form !\nPlease set one before choosing a product.'))
-        if not  partner_id:
-            raise osv.except_osv(_('No Partner!'), _('You have to select a partner in the purchase form !\nPlease set one partner before choosing a product.'))
-        if not product:
-            return {'value': {'price_unit': price_unit or 0.0, 'name': name or '',
-                'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
-        res = {}
-        prod= self.pool.get('product.product').browse(cr, uid, product)
-        product_uom_pool = self.pool.get('product.uom')
-        lang=False
-        if partner_id:
-            lang=self.pool.get('res.partner').read(cr, uid, partner_id, ['lang'])['lang']
-        context={'lang':lang}
-        context['partner_id'] = partner_id
+    def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
+            partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
+            name=False, price_unit=False, notes=False, context=None):
+        """
+        onchange handler of product_uom.
+        """
+        if not uom_id:
+            return {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'notes': notes or'', 'product_uom' : uom_id or False}}
+        return self.onchange_product_id(cr, uid, ids, pricelist_id, product_id, qty, uom_id,
+            partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned,
+            name=name, price_unit=price_unit, notes=notes, context=context)
 
-        prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        prod_uom_po = prod.uom_po_id.id
-        if not uom:
-            uom = prod_uom_po
+    def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
+            partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
+            name=False, price_unit=False, notes=False, context=None):
+        """
+        onchange handler of product_id.
+        """
+        if context is None:
+            context = {}
+        
+        res = {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'notes': notes or '', 'product_uom' : uom_id or False}}
+        if not product_id:
+            return res
+
+        product_product = self.pool.get('product.product')
+        product_uom = self.pool.get('product.uom')
+        res_partner = self.pool.get('res.partner')
+        product_supplierinfo = self.pool.get('product.supplierinfo')
+        product_pricelist = self.pool.get('product.pricelist')
+        account_fiscal_position = self.pool.get('account.fiscal.position')
+        account_tax = self.pool.get('account.tax')
+
+        # - check for the presence of partner_id and pricelist_id
+        if not pricelist_id:
+            raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist or a supplier in the purchase form !\nPlease set one before choosing a product.'))
+        if not partner_id:
+            raise osv.except_osv(_('No Partner!'), _('You have to select a partner in the purchase form !\nPlease set one partner before choosing a product.'))
+
+        # - determine name and notes based on product in partner lang.
+        lang = res_partner.browse(cr, uid, partner_id).lang
+        context_partner = {'lang': lang, 'partner_id': partner_id}
+        product = product_product.browse(cr, uid, product_id, context=context_partner)
+        res['value'].update({'name': product.name, 'notes': notes or product.description_purchase})
+        
+        # - set a domain on product_uom
+        res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
+
+        # - check that uom and product uom belong to the same category
+        product_uom_po_id = product.uom_po_id.id
+        if not uom_id:
+            uom_id = product_uom_po_id
+        
+        if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:
+            res['warning'] = {'title': _('Warning'), 'message': _('Selected UOM does not belong to the same category as the product UOM')}
+            uom_id = product_uom_po_id
+
+        res['value'].update({'product_uom': uom_id})
+
+        # - determine product_qty and date_planned based on seller info
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
+
         qty = qty or 1.0
         seller_delay = 0
-        if uom:
-            uom1_cat = prod.uom_id.category_id.id
-            uom2_cat = product_uom_pool.browse(cr, uid, uom).category_id.id
-            if uom1_cat != uom2_cat:
-                uom = False
+        supplierinfo_ids = product_supplierinfo.search(cr, uid, [('name','=',partner_id),('product_id','=',product.id)])
+        for supplierinfo in product_supplierinfo.browse(cr, uid, supplierinfo_ids, context=context):
+            seller_delay = supplierinfo.delay
+            if supplierinfo.product_uom.id != uom_id:
+                res['warning'] = {'title': _('Warning'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }
+            min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
+            if qty < min_qty: # If the supplier quantity is greater than entered from user, set minimal.
+                res['warning'] = {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
+                qty = min_qty
 
-        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context)[0][1]
-        res = {}
-        for s in prod.seller_ids:
-            if s.name.id == partner_id:
-                seller_delay = s.delay
-                if s.product_uom:
-                    temp_qty = product_uom_pool._compute_qty(cr, uid, s.product_uom.id, s.min_qty, to_uom_id=prod.uom_id.id)
-                    uom = s.product_uom.id #prod_uom_po
-                temp_qty = s.min_qty # supplier _qty assigned to temp
-                if qty < temp_qty: # If the supplier quantity is greater than entered from user, set minimal.
-                    qty = temp_qty
-                    res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s, you should not purchase less.') % qty}})
-        qty_in_product_uom = product_uom_pool._compute_qty(cr, uid, uom, qty, to_uom_id=prod.uom_id.id)
-        price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
-                    product, qty_in_product_uom or 1.0, partner_id, {
-                        'uom': uom,
-                        'date': date_order,
-                        })[pricelist]
-        dt = (datetime.now() + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
+        dt = (datetime.strptime(date_order, '%Y-%m-%d') + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
+        res['value'].update({'date_planned': date_planned or dt, 'product_qty': qty})
 
+        # - determine price_unit and taxes_id
+        price = product_pricelist.price_get(cr, uid, [pricelist_id],
+                    product.id, qty or 1.0, partner_id, {'uom': uom_id, 'date': date_order})[pricelist_id]
+        
+        taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
+        fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
+        taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
+        res['value'].update({'price_unit': price, 'taxes_id': taxes_ids})
 
-        res.update({'value': {'price_unit': price, 'name': prod_name,
-            'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
-            'date_planned': date_planned or dt,'notes': notes or prod.description_purchase,
-            'product_qty': qty,
-            'product_uom': prod.uom_id.id}})
-        domain = {}
-
-        taxes = self.pool.get('account.tax').browse(cr, uid,map(lambda x: x.id, prod.supplier_taxes_id))
-        fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
-        res['value']['taxes_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
-        res2 = self.pool.get('product.uom').read(cr, uid, [prod.uom_id.id], ['category_id'])
-        res3 = prod.uom_id.category_id.id
-        domain = {'product_uom':[('category_id','=',res2[0]['category_id'][0])]}
-        if res2[0]['category_id'][0] != res3:
-            raise osv.except_osv(_('Wrong Product UOM !'), _('You have to select a product UOM in the same category than the purchase UOM of the product'))
-
-        res['domain'] = domain
         return res
 
-    #TOFIX:
-    # - merge into 'product_id_change' method
-    def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False, fiscal_position=False, date_planned=False,
-            name=False, price_unit=False, notes=False, context={}):
-        res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
-                partner_id, date_order=date_order, fiscal_position=fiscal_position, date_planned=date_planned,
-            name=name, price_unit=price_unit, notes=notes, context=context)
-        if 'product_uom' in res['value']:
-            if uom and (uom != res['value']['product_uom']) and res['value']['product_uom']:
-                seller_uom_name = self.pool.get('product.uom').read(cr, uid, [res['value']['product_uom']], ['name'])[0]['name']
-                res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier only sells this product by %s') % seller_uom_name }})
-            del res['value']['product_uom']
-        if not uom:
-            res['value']['price_unit'] = 0.0
-        return res
+    product_id_change = onchange_product_id
+    product_uom_change = onchange_product_uom
 
     def action_confirm(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
@@ -828,6 +826,32 @@ class procurement_order(osv.osv):
         po_vals.update({'order_line': [(0,0,line_vals)]})
         return self.pool.get('purchase.order').create(cr, uid, po_vals, context=context)
 
+    def _get_purchase_schedule_date(self, cr, uid, procurement, company, context=None):
+        """Return the datetime value to use as Schedule Date (``date_planned``) for the
+           Purchase Order Lines created to satisfy the given procurement.
+
+           :param browse_record procurement: the procurement for which a PO will be created.
+           :param browse_report company: the company to which the new PO will belong to.
+           :rtype: datetime
+           :return: the desired Schedule Date for the PO lines
+        """
+        procurement_date_planned = datetime.strptime(procurement.date_planned, DEFAULT_SERVER_DATETIME_FORMAT)
+        schedule_date = (procurement_date_planned - relativedelta(days=company.po_lead))
+        return schedule_date
+
+    def _get_purchase_order_date(self, cr, uid, procurement, company, schedule_date, context=None):
+        """Return the datetime value to use as Order Date (``date_order``) for the
+           Purchase Order created to satisfy the given procurement.
+
+           :param browse_record procurement: the procurement for which a PO will be created.
+           :param browse_report company: the company to which the new PO will belong to.
+           :param datetime schedule_date: desired Scheduled Date for the Purchase Order lines.
+           :rtype: datetime
+           :return: the desired Order Date for the PO
+        """
+        seller_delay = int(procurement.product_id.seller_delay)
+        return schedule_date - relativedelta(days=seller_delay)
+
     def make_po(self, cr, uid, ids, context=None):
         """ Make purchase order from procurement
         @return: New created Purchase Orders procurement wise
@@ -847,7 +871,6 @@ class procurement_order(osv.osv):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
             seller_qty = procurement.product_id.seller_qty
-            seller_delay = int(procurement.product_id.seller_delay)
             partner_id = partner.id
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
@@ -860,9 +883,8 @@ class procurement_order(osv.osv):
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner_id, {'uom': uom_id})[pricelist_id]
 
-            order_date = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
-            schedule_date = (order_date - relativedelta(days=company.po_lead))
-            order_dates = schedule_date - relativedelta(days=seller_delay)
+            schedule_date = self._get_purchase_schedule_date(cr, uid, procurement, company, context=context)
+            purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
 
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})
@@ -877,7 +899,7 @@ class procurement_order(osv.osv):
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,
                 'price_unit': price or 0.0,
-                'date_planned': schedule_date.strftime('%Y-%m-%d %H:%M:%S'),
+                'date_planned': schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'move_dest_id': res_id,
                 'notes': product.description_purchase,
                 'taxes_id': [(6,0,taxes)],
@@ -891,7 +913,7 @@ class procurement_order(osv.osv):
                 'location_id': procurement.location_id.id,
                 'warehouse_id': warehouse_id and warehouse_id[0] or False,
                 'pricelist_id': pricelist_id,
-                'date_order': order_dates.strftime('%Y-%m-%d %H:%M:%S'),
+                'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             }

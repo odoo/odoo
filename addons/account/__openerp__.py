@@ -69,6 +69,7 @@ module named account_voucher.
         'wizard/account_period_close_view.xml',
         'account_view.xml',
         'account_report.xml',
+        'account_financial_report_data.xml',
         'wizard/account_report_common_view.xml',
         'wizard/account_invoice_refund_view.xml',
         'wizard/account_fiscalyear_close_state.xml',
@@ -104,7 +105,6 @@ module named account_voucher.
         'account_invoice_view.xml',
         'partner_view.xml',
         'data/account_data.xml',
-        'data/data_financial_report.xml',
         'data/data_account_type.xml',
         'account_invoice_workflow.xml',
         'project/project_view.xml',
@@ -151,7 +151,7 @@ module named account_voucher.
         'test/account_fiscalyear_close_state.yml', #last test, as it will definitively close the demo fiscalyear
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0080331923549',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

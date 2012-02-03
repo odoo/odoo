@@ -21,7 +21,7 @@
 #
 ##############################################################################
 
-import datetime
+import datetime, time
 from itertools import groupby
 from operator import itemgetter
 
@@ -236,6 +236,13 @@ class hr_holidays(osv.osv):
         for id in ids:
             wf_service.trg_delete(uid, 'hr.holidays', id, cr)
             wf_service.trg_create(uid, 'hr.holidays', id, cr)
+        to_unlink = []
+        for record in self.browse(cr, uid, ids, context=context):
+            for record2 in record.linked_request_ids:
+                self.set_to_draft(cr, uid, [record2.id], context=context)
+                to_unlink.append(record2.id)
+        if to_unlink:
+            self.unlink(cr, uid, to_unlink, context=context)
         return True
 
     def holidays_validate(self, cr, uid, ids, context=None):
@@ -349,9 +356,17 @@ resource_calendar_leaves()
 
 
 class hr_employee(osv.osv):
-   _inherit="hr.employee"
+    _inherit="hr.employee"
 
-   def _set_remaining_days(self, cr, uid, empl_id, name, value, arg, context=None):
+    def create(self, cr, uid, vals, context=None):
+        # don't pass the value of remaining leave if it's 0 at the creation time, otherwise it will trigger the inverse
+        # function _set_remaining_days and the system may not be configured for. Note that we don't have this problem on
+        # the write because the clients only send the fields that have been modified.
+        if 'remaining_leaves' in vals and not vals['remaining_leaves']:
+            del(vals['remaining_leaves'])
+        return super(hr_employee, self).create(cr, uid, vals, context=context)
+
+    def _set_remaining_days(self, cr, uid, empl_id, name, value, arg, context=None):
         employee = self.browse(cr, uid, empl_id, context=context)
         diff = value - employee.remaining_leaves
         type_obj = self.pool.get('hr.holidays.status')
@@ -359,7 +374,7 @@ class hr_employee(osv.osv):
         # Find for holidays status
         status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
         if len(status_ids) != 1 :
-            raise osv.except_osv(_('Warning !'),_("To use this feature, you must have only one leave type without the option 'Allow to Override Limit' set. (%s Found).") % (len(status_ids)))
+            raise osv.except_osv(_('Warning !'),_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \nYou may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in 'Human Resources \ Leaves' to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_ids)))
         status_id = status_ids and status_ids[0] or False
         if not status_id:
             return False
@@ -375,7 +390,7 @@ class hr_employee(osv.osv):
         wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
         return True
 
-   def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
+    def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT
                 sum(h.number_of_days) as days,
                 h.employee_id 
@@ -396,8 +411,29 @@ class hr_employee(osv.osv):
                 remaining[employee_id] = 0.0
         return remaining
 
-   _columns = {
+    def _get_leave_status(self, cr, uid, ids, name, args, context=None):
+        holidays_id = self.pool.get('hr.holidays').search(cr, uid, 
+           [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d %H:%M:%S')), 
+            ('date_to','>=',time.strftime('%Y-%m-%d %H:%M:%S')),('type','=','remove'),('state','not in',('cancel','refuse'))],
+           context=context)
+        result = {}
+        for id in ids:
+            result[id] = {
+                'current_leave_state': False,
+                'current_leave_id': False,
+            }
+        for holiday in self.pool.get('hr.holidays').browse(cr, uid, holidays_id, context=context):
+            result[holiday.employee_id.id]['current_leave_state'] = holiday.state
+            result[holiday.employee_id.id]['current_leave_id'] = holiday.holiday_status_id.id
+        return result
+
+    _columns = {
         'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.'),
+        'current_leave_state': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Status", type="selection",
+            selection=[('draft', 'New'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
+            ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')]),
+        'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status'),
+        'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1)
     }
 
 hr_employee()

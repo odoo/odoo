@@ -594,7 +594,7 @@
                 <form string="Bank Statement">
                     <group col="7" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="date" select="1" on_change="onchange_date(date)"/>
+                        <field name="date" select="1" on_change="onchange_date(date, company_id)"/>
                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" select="1" widget="selection"/>
                         <newline/>
                         <field name="period_id"/>
@@ -655,7 +655,8 @@
                 <form string="Bank Statement">
                     <group col="7" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="date" select="1" on_change="onchange_date(date)"/>
+                        <field name="date" select="1" on_change="onchange_date(date, company_id)"/>
+                        <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                         <newline/>
                         <field name="period_id"/>
@@ -1363,7 +1364,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Items">
-                            <field colspan="4" name="line_id" nolabel="1" height="250" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
+                            <field colspan="4" name="line_id" nolabel="1" height="250" widget="one2many_list" context="{'lines':line_id ,'journal':journal_id }">
                                 <form string="Journal Item">
                                     <group col="6" colspan="4">
                                         <field name="name"/>
@@ -2451,7 +2452,8 @@
                     <field name ="seq_journal" groups="base.group_extended"/>
                     <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                     <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
-                    <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
+                    <newline/>
+                    <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}" on_change="onchange_tax_rate(sale_tax_rate)"/>
                     <field name ="purchase_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                     <field name ="complete_tax_set" invisible="1"/>
                     <newline/> <!-- extended view because the web UI is not good for one2many -->
@@ -2619,7 +2621,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                 <form string="Statement">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1" widget="selection"/>
                         <field name="user_id" select="1" readonly="1"/>
                         <field name="period_id" select="1"/>
@@ -2692,7 +2694,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     <group col="6" colspan="4">
                         <group col="2" colspan="2">
                             <separator string="Dates" colspan="4"/>
-                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date)"/>
+                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
                             <field name="closing_date" select="1" readonly="1"/>
                         </group>
                         <group col="2" colspan="2">
@@ -2784,6 +2786,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         <field name="sequence"/>
                         <field name="type"/>
                         <field name="sign"/>
+                        <field name="style_overwrite"/>
                     </group>
                     <notebook colspan="6">
                         <page string="Report">

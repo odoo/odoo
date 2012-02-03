@@ -51,10 +51,14 @@ class account_voucher(osv.osv):
         periods = self.pool.get('account.period').find(cr, uid)
         return periods and periods[0] or False
 
+    def _make_journal_search(self, cr, uid, ttype, context=None):
+        journal_pool = self.pool.get('account.journal')
+        return journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
+
     def _get_journal(self, cr, uid, context=None):
         if context is None: context = {}
-        journal_pool = self.pool.get('account.journal')
         invoice_pool = self.pool.get('account.invoice')
+        journal_pool = self.pool.get('account.journal')
         if context.get('invoice_id', False):
             currency_id = invoice_pool.browse(cr, uid, context['invoice_id'], context=context).currency_id.id
             journal_id = journal_pool.search(cr, uid, [('currency', '=', currency_id)], limit=1)
@@ -67,7 +71,7 @@ class account_voucher(osv.osv):
         ttype = context.get('type', 'bank')
         if ttype in ('payment', 'receipt'):
             ttype = 'bank'
-        res = journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
+        res = self._make_journal_search(cr, uid, ttype, context=context)
         return res and res[0] or False
 
     def _get_tax(self, cr, uid, context=None):
@@ -441,14 +445,14 @@ class account_voucher(osv.osv):
             tr_type = 'purchase'
         else:
             if not journal.default_credit_account_id or not journal.default_debit_account_id:
-                raise osv.except_osv(_('Error !'), _('Please define default credit/debit account on the %s !') % (journal.name))
+                raise osv.except_osv(_('Error !'), _('Please define default credit/debit accounts on the journal "%s" !') % (journal.name))
             account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
             tr_type = 'receipt'
 
         default['value']['account_id'] = account_id
         default['value']['type'] = ttype or tr_type
 
-        vals = self.onchange_journal(cr, uid, ids, journal_id, line_ids, tax_id, partner_id, company_id, context)
+        vals = self.onchange_journal(cr, uid, ids, journal_id, line_ids, tax_id, partner_id, time.strftime('%Y-%m-%d'), price, ttype, company_id, context)
         default['value'].update(vals.get('value'))
 
         return default
@@ -1288,7 +1292,7 @@ class account_voucher_line(osv.osv):
         'account_id':fields.many2one('account.account','Account', required=True),
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
         'untax_amount':fields.float('Untax Amount'),
-        'amount':fields.float('Allocation', digits_compute=dp.get_precision('Account')),
+        'amount':fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'reconcile': fields.boolean('Full Reconcile'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Dr/Cr'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),

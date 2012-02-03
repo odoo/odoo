@@ -1,44 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
-		<!-- add the fields for French RIB to the partner form (subform)-->
-		<record id="view_partner_rib1_form" model="ir.ui.view">
-			<field name="name">res.partner.form.rib1.inherit</field>
-			<field name="model">res.partner</field>
-			<field name="inherit_id" ref="base.view_partner_form" />
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<field name="acc_number" position="before">
-					<newline />
-					<field name="bank_code" />
-					<field name="office" />
-					<newline />
-				</field>
-			</field>
-		</record>
-		<record id="view_partner_rib2_form" model="ir.ui.view">
-			<field name="name">res.partner.form.rib2.inherit</field>
-			<field name="model">res.partner</field>
-			<field name="inherit_id" ref="base.view_partner_form" />
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<field name="acc_number" position="after">
-					<field name="key" />
-				</field>
-			</field>
-		</record>
-		
-		<!-- add the bank code-->
-		<record id="view_res_bank_form" model="ir.ui.view">
-			<field name="name">res.bank.form.rib.inherit</field>
-			<field name="model">res.bank</field>
-			<field name="inherit_id" ref="base.view_res_bank_form" />
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<field name="bic" position="before">
-					<field name="rib_code" />
-				</field>
-			</field>
-		</record>
-	</data>
+    <data>
+        <!-- add the fields for French RIB to the partner form (subform)-->
+        <record id="view_partner_rib1_form" model="ir.ui.view">
+            <field name="name">res.partner.form.rib1.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="/form/notebook/page[@string='Accounting']/field[@name='bank_ids']/form/field[@name='acc_number']" position="before">
+                        <newline />
+                        <field name="bank_code" />
+                        <field name="office" />
+                        <field name="rib_acc_number" />
+                        <field name="key" />
+                        <newline />
+                    </xpath>
+                    <xpath expr="/form/notebook/page[@string='Accounting']/field[@name='bank_ids']/tree/field[@name='acc_number']" position="after">
+                        <field name="rib_acc_number"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- add RIB fields to the form view of res.partner.bank -->
+        <record id="view_partner_bank_rib_form" model="ir.ui.view">
+            <field name="name">res.partner.bank.form.rib.inherit</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="acc_number" position="before">
+                    <field name="bank_code" />
+                    <field name="office" />
+                    <newline />
+                    <field name="rib_acc_number" />
+                    <field name="key" />
+                    <newline />
+                </field>
+            </field>
+        </record>
+
+        <!-- add rib_acc_number to the tree view of res.partner.bank -->
+        <record id="view_partner_bank_rib_tree" model="ir.ui.view">
+            <field name="name">res.partner.bank.tree.rib.inherit</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_tree" />
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="acc_number" position="after">
+                    <field name="rib_acc_number" />
+                </field>
+            </field>
+        </record>
+
+        <!-- add the bank code-->
+        <record id="view_res_bank_form" model="ir.ui.view">
+            <field name="name">res.bank.form.rib.inherit</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="bic" position="before">
+                    <field name="rib_code" />
+                </field>
+            </field>
+        </record>
+    </data>
 </openerp>

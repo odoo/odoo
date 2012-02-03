@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-12-08 16:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"PO-Revision-Date: 2012-01-30 15:24+0000\n"
 "Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-09 04:45+0000\n"
-"X-Generator: Launchpad (build 14450)\n"
+"X-Launchpad-Export-Date: 2012-01-31 05:03+0000\n"
+"X-Generator: Launchpad (build 14734)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -52,16 +52,11 @@ msgid "Analytic Plan"
 msgstr "Analitički plan"
 
 #. module: account_analytic_plans
-#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
-msgid "Multiple-plans management in Analytic Accounting"
-msgstr ""
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
 #: view:account.crossovered.analytic:0
 #: field:account.crossovered.analytic,journal_ids:0
 msgid "Analytic Journal"
-msgstr "Dnevnik analitike"
+msgstr "Analitički Dnevnik"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
@@ -70,10 +65,10 @@ msgid "Analytic Plan Line"
 msgstr "Redak analitičkog plana"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:60
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
 msgid "User Error"
-msgstr ""
+msgstr "Korisnička greška"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
@@ -101,9 +96,9 @@ msgid "Account2 Id"
 msgstr "Konto2 Id"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Account Id"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Broj računa se ne smije ponavljati za jednu organizaciju."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -111,9 +106,11 @@ msgid "Amount"
 msgstr "Iznos"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Code"
-msgstr "Šifra"
+#: constraint:account.journal:0
+msgid ""
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -136,9 +133,19 @@ msgid "Bank Statement Line"
 msgstr "Redak bankovnog izvoda"
 
 #. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid "Define your Analytic Plans"
+msgstr "Definirajte analitičke planove."
+
+#. module: account_analytic_plans
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
-msgstr "Konto analitike"
+msgstr "Račun analitike"
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -149,12 +156,6 @@ msgstr "Šifra dnevnika mora biti jedinstvena (za organizaciju) !"
 #: field:account.crossovered.analytic,ref:0
 msgid "Analytic Account Reference"
 msgstr "Analytic Account Reference"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
@@ -180,20 +181,26 @@ msgstr "Ispis"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+#: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "Postotak"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Account Id"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #, python-format
 msgid "A model having this name and code already exists !"
-msgstr ""
+msgstr "Model sa ovim nazivom i šifrom već postoji !"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
 msgid "No analytic plan defined !"
-msgstr ""
+msgstr "Nije definiran analitički plan !"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
@@ -250,9 +257,11 @@ msgid "Start Date"
 msgstr "Početni datum"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Company"
-msgstr "Organizacija"
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry must receive a value in its "
+"secondary currency"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -275,11 +284,11 @@ msgid "To Date"
 msgstr "To Date"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:483
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr ""
+msgstr "Morate definirati analitičku temeljnicu na '%s' temeljnici!"
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,empty_line:0
@@ -292,47 +301,14 @@ msgid "analytic.plan.create.model.action"
 msgstr "analytic.plan.create.model.action"
 
 #. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Stavka analitike"
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account :"
 msgstr "Konto analitike :"
-
-#. module: account_analytic_plans
-#: model:ir.module.module,description:account_analytic_plans.module_meta_information
-msgid ""
-"This module allows to use several analytic plans, according to the general "
-"journal,\n"
-"so that multiple analytic lines are created when the invoice or the entries\n"
-"are confirmed.\n"
-"\n"
-"For example, you can define the following analytic structure:\n"
-"  Projects\n"
-"      Project 1\n"
-"          SubProj 1.1\n"
-"          SubProj 1.2\n"
-"      Project 2\n"
-"  Salesman\n"
-"      Eric\n"
-"      Fabien\n"
-"\n"
-"Here, we have two plans: Projects and Salesman. An invoice line must\n"
-"be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-"Fabien. The amount can also be split. The following example is for\n"
-"an invoice that touches the two subproject and assigned to one salesman:\n"
-"\n"
-"Plan1:\n"
-"    SubProject 1.1 : 50%\n"
-"    SubProject 1.2 : 50%\n"
-"Plan2:\n"
-"    Eric: 100%\n"
-"\n"
-"So when this line of invoice will be confirmed, it will generate 3 analytic "
-"lines,\n"
-"for one account entry.\n"
-"The analytic plan validates the minimum and maximum percentage at the time "
-"of creation\n"
-"of distribution models.\n"
-"        "
-msgstr ""
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -347,7 +323,7 @@ msgstr "Naziv plana"
 #. module: account_analytic_plans
 #: field:account.analytic.plan,default_instance_id:0
 msgid "Default Entries"
-msgstr "Uobičajene stavke"
+msgstr "Zadani unosi"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_move_line
@@ -365,6 +341,11 @@ msgid "Company must be same for its related account and period."
 msgstr "Company must be same for its related account and period."
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "The date of your Journal Entry is not in the defined period!"
+msgstr "Datum temeljnice je izvan datuma perioda!"
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
 msgstr "Minimalno dozvoljeno (%)"
@@ -375,12 +356,12 @@ msgid "Root account of this plan."
 msgstr "Root account of this plan."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Greška"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -396,7 +377,7 @@ msgstr "Količina"
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #, python-format
 msgid "Please put a name and a code before saving the model !"
-msgstr ""
+msgstr "Molim upišite ime i šifru prije snimanja modela !"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
@@ -404,11 +385,11 @@ msgid "Print Crossovered Analytic"
 msgstr "Print Crossovered Analytic"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:483
 #, python-format
 msgid "No Analytic Journal !"
-msgstr ""
+msgstr "Nema analitičke temeljnice"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
@@ -421,6 +402,11 @@ msgid "Account3 Id"
 msgstr "Konto3 Id"
 
 #. module: account_analytic_plans
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr "Knjiženje na sintetička konta (pogled) nije podržano."
+
+#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
 msgid "Invoice"
 msgstr "Račun"
@@ -429,7 +415,7 @@ msgstr "Račun"
 #: view:account.crossovered.analytic:0
 #: view:analytic.plan.create.model:0
 msgid "Cancel"
-msgstr "Odustani"
+msgstr "Poništi"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
@@ -442,10 +428,10 @@ msgid "Analytic Distribution Lines"
 msgstr "Retci analitičke raspodjele"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "The Total Should be Between %s and %s"
-msgstr ""
+msgstr "Zbroj mora biti između %s i %s"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -486,12 +472,17 @@ msgstr "100.00%"
 #: field:account.move.line,analytics_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "Analytic Distribution"
+msgstr "Analitička raspodjela"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_journal
 msgid "Journal"
 msgstr "Dnevnik"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Code"
+msgstr "Šifra"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
@@ -509,6 +500,19 @@ msgid "Distribution Models"
 msgstr "Modeli raspodjele"
 
 #. module: account_analytic_plans
+#: model:ir.actions.act_window,help:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid ""
+"To setup a multiple analytic plans environment, you must define the root "
+"analytic accounts for each plan set. Then, you must attach a plan set to "
+"your account journals."
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr "Organizacija"
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
 msgstr "Sekvenca"
@@ -519,10 +523,10 @@ msgid "The name of the journal must be unique per company !"
 msgstr "Naziv dnevnika mora biti jedinstven za jednu organizaciju!"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "Value Error"
-msgstr ""
+msgstr "Greška u vrijednosti"
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
@@ -561,3 +565,73 @@ msgstr "Ne može se knjižiti na sintetički konto."
 #~ msgid ""
 #~ "This distribution model has been saved. You will be able to reuse it later."
 #~ msgstr "Model raspodjele je spremljen. Možete ga koristiti kasnije."
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Ovaj modul omogućuje korištenje nekoliko analitičkih planova, prema općoj "
+#~ "temeljnici,\n"
+#~ "tako da se više analitičkih linija kreira kad se potvrdi račun ili stavke.\n"
+#~ "\n"
+#~ "Npr., možete definirati sljedeće analitčke strukture:\n"
+#~ "  Projekti\n"
+#~ "      Projekt 1\n"
+#~ "          Podproj 1.1\n"
+#~ "          PodProj 1.2\n"
+#~ "      Projekt 2\n"
+#~ "  Prodavač\n"
+#~ "      Ante\n"
+#~ "      Đuro\n"
+#~ "\n"
+#~ "Ovdje imamo dva plana: Projekti i Prodavač. Redak računa mora moći\n"
+#~ "upisati analitičke stavke u 2 plana: PodProj 1.1. i Ante.\n"
+#~ "Iznos je moguće i podjeliti. Sljedeći primjeri su za račun koji se tiče dva\n"
+#~ "podprojekta i koji je dodjeljen jedno prodavaču:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    PodProjekt 1.1 : 50%\n"
+#~ "    PodProjekt 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Ante: 100%\n"
+#~ "\n"
+#~ "Kad se potvrdi ovaj redak računa, generirat će se 3 anlitička retka za \n"
+#~ "jednu stavku na kontu.\n"
+#~ "Analitički plan validira minimalni i maksimalni postotak u trenutku "
+#~ "kreiranja modela \n"
+#~ "distribucije.\n"
+#~ "        "
+
+#~ msgid "Multiple-plans management in Analytic Accounting"
+#~ msgstr "Upravljanje višestrukim planovima u analitičkom računovdstvu"
