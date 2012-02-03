@@ -67,8 +67,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_group_vignette">
                                 <div class="oe_group_image">
-<!--                                     <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a> -->
-                                    prout
+                                    Image
                                 </div>
                                 <div class="oe_group_details">
                                     <h4><a type="edit"><field name="name"/></a></h4>
@@ -78,9 +77,6 @@
                                         <li>Joined</li>
                                     </ul>
                                 </div>
-                                <script>
-                                    $('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
-                                </script>
                             </div>
                         </t>
                     </templates>
@@ -172,7 +168,7 @@
             name="See followers"
             res_model="mail.subscription"
             src_model="mail.group"
-            view_mode="tree,form"
+            view_mode="kanban,tree,form"
             view_type="form"/>
 
     </data>

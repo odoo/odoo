@@ -60,6 +60,7 @@ class mail_notification(osv.osv):
         'message_id': fields.many2one('mail.message', string='Message',
                         ondelete='cascade', required=True),
         'read': fields.boolean('Read'),
+        # TODO: add a timestamp ? or use message date ?
     }
     
     _defaults = {
