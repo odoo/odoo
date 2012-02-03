@@ -676,9 +676,15 @@ def fix_view_modes(action):
 class Menu(openerpweb.Controller):
     _cp_path = "/web/menu"
 
-    @openerpweb.jsonrequest
-    def load(self, req):
-        return {'data': self.do_load(req)}
+
+    def do_load_level(self, req, parent_id=False):
+        Menus = req.session.model('ir.ui.menu')
+        context = req.session.eval_context(req.context)
+        menu_ids = Menus.search([('parent_id','=',parent_id)], 0, False, False, context)
+        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'], context)
+        for menu in menu_items:
+            menu['children'] = self.do_load_level(req, parent_id = menu['id'])
+        return menu_items
 
     def do_load(self, req):
         """ Loads all menu items (all applications and their sub-menus).
@@ -688,32 +694,13 @@ class Menu(openerpweb.Controller):
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        Menus = req.session.model('ir.ui.menu')
-        # menus are loaded fully unlike a regular tree view, cause there are
-        # less than 512 items
-        context = req.session.eval_context(req.context)
-        menu_ids = Menus.search([], 0, False, False, context)
-        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'], context)
-        menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, '']}
-        menu_items.append(menu_root)
+        root_children = self.do_load_level(req)
+        root_menu = {'id': False, 'name': 'root', 'parent_id': [-1, ''], 'children' : children }
+        return root_menu
 
-        # make a tree using parent_id
-        menu_items_map = dict((menu_item["id"], menu_item) for menu_item in menu_items)
-        for menu_item in menu_items:
-            if menu_item['parent_id']:
-                parent = menu_item['parent_id'][0]
-            else:
-                parent = False
-            if parent in menu_items_map:
-                menu_items_map[parent].setdefault(
-                    'children', []).append(menu_item)
-
-        # sort by sequence a tree using parent_id
-        for menu_item in menu_items:
-            menu_item.setdefault('children', []).sort(
-                key=operator.itemgetter('sequence'))
-
-        return menu_root
+    @openerpweb.jsonrequest
+    def load(self, req):
+        return {'data': self.do_load(req)}
 
     @openerpweb.jsonrequest
     def action(self, req, menu_id):
