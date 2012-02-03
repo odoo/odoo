@@ -14,7 +14,8 @@ openerp.mail = function(session) {
         template: 'MailTest',
         
         init: function(parent) {
-        },
+            this._super(parent);
+        }
         
         start: function() {
 //             this.$element
@@ -26,7 +27,7 @@ openerp.mail = function(session) {
     
     
     var tv = new mail.ThreadView(this);
-//     tv.appendTo($("div.wall"));
+//     tv.appendTo($("td.oe_form_field_mail.ThreadView"));
 //     tv.appendTo($("body"));
     
 };

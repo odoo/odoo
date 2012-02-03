@@ -57,6 +57,7 @@ class mail_thread(osv.osv):
     # TODO remove this and copy method, this will be replaced by message_load
     _columns = {
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', readonly=True),
+        'thread_view': fields.char('ThreadView', size=64, widget='mail.ThreadView'),
     }
 
     #------------------------------------------------------
