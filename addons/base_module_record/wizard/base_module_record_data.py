@@ -50,7 +50,7 @@ class base_module_data(osv.osv_memory):
 
     _columns = {
         'check_date': fields.datetime('Record from Date', required=True),
-        'objects': fields.many2many('ir.model', 'base_module_record_object_rel', 'objects', 'model_id', 'Objects'),
+        'objects': fields.many2many('ir.model', 'base_module_record_model_rel', 'objects', 'model_id', 'Objects'),
         'filter_cond': fields.selection([('created', 'Created'), ('modified', 'Modified'), ('created_modified', 'Created & Modified')], 'Records only', required=True),
         'info_yaml': fields.boolean('YAML'),
     }
