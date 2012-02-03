@@ -75,7 +75,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                     statement.currency.id, amount, context=ctx)
 
             context.update({'move_line_ids': [line.id]})
-            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'), date=line_date, context=context)
+            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, amount=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'), date=line_date, context=context)
             voucher_res = { 'type':(amount < 0 and 'payment' or 'receipt'),
                             'name': line.name,
                             'partner_id': line.partner_id.id,
@@ -89,11 +89,10 @@ class account_statement_from_invoice_lines(osv.osv_memory):
             voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
 
             voucher_line_dict =  {}
-            if result['value']['line_ids']:
-                for line_dict in result['value']['line_ids']:
-                    move_line = line_obj.browse(cr, uid, line_dict['move_line_id'], context)
-                    if line.move_id.id == move_line.move_id.id:
-                        voucher_line_dict = line_dict
+            for line_dict in result['value']['line_cr_ids'] + result['value']['line_dr_ids']:
+                move_line = line_obj.browse(cr, uid, line_dict['move_line_id'], context)
+                if line.move_id.id == move_line.move_id.id:
+                    voucher_line_dict = line_dict
 
             if voucher_line_dict:
                 voucher_line_dict.update({'voucher_id': voucher_id})

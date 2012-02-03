@@ -1,23 +1,27 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem name="Point of Sale" id="menu_point_root" sequence="21"
+        <menuitem name="PoS Backend" id="menu_point_root" sequence="21"
             icon="terp-partner"
-            groups="group_pos_manager,group_pos_user"
+            groups="group_pos_manager"
             web_icon="images/pos.png"
             web_icon_hover="images/pos-hover.png"/>
+
+        <record id="categ_others" model="pos.category">
+          <field name="name">Others</field>
+        </record>
 
         <record model="ir.ui.view" id="view_pos_pos_form">
             <field name="name">pos.order</field>
             <field name="model">pos.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Order POS">
+                <form string="PoS Orders">
                     <group col="7" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id)" groups="base.group_extended"/>
-                        <button name="invoice" string="Invoice" icon="gtk-apply" type="workflow" states="paid" attrs="{'invisible': ['|',('partner_id','=',False),('state','&lt;&gt;','paid')]}"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
+                        <button name="action_invoice" string="Invoice" icon="gtk-apply" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sale Order">
@@ -49,7 +53,7 @@
 
                             <separator colspan="4"/>
                             <group colspan="4" col="8">
-                                <field name="state" />
+                                <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
                                 <button name="%(action_pos_payment)d" string="Payment" icon="gtk-apply" type="action" states="draft"/>
                                 <button name="refund" string="Return Products" type="object" icon="gtk-ok"
                                     attrs="{'invisible':[('state','=','draft')]}"/>
@@ -59,9 +63,9 @@
                         <page string="Payment">
                             <field name="statement_ids" colspan="4" nolabel="1">
                                 <tree editable="bottom" string="Statement lines">
-                                    <field name="amount"/>
                                     <field name="journal_id"/>
                                     <field name="statement_id" />
+                                    <field name="amount"/>
                                 </tree>
                                 <form string="Statement lines">
                                     <field name="account_id"/>
@@ -99,11 +103,12 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_pos_pos_form">
-            <field name="name">Point of Sale</field>
+            <field name="name">PoS Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="view_pos_pos_form"/>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
             <field name="domain">[]</field>
         </record>
         <record model="ir.ui.view" id="view_pos_order_tree">
@@ -154,10 +159,24 @@
         </record>
 
         <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="10" />
-        <menuitem name="New Sale Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
+        <menuitem parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
         <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
-        <menuitem action="product.product_normal_action" id="menu_pos_products" parent="menu_point_of_sale_product" sequence="2" name="Products"/>
+        <record id="product_normal_action" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="context" eval="{'default_pos_categ_id': ref('point_of_sale.categ_others')}"/>
+            <field name="view_id" ref="product.product_product_tree_view"/>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
+        </record>
+        <menuitem
+            action="product_normal_action"
+            id="menu_pos_products"
+            parent="menu_point_of_sale_product" sequence="2"/>
 
         <record model="ir.ui.view" id="view_pos_order_line">
             <field name="name">Sale lines</field>
@@ -580,6 +599,22 @@
             <field name="domain">[('date_order','like',time.strftime('%Y-%m'))]</field>
         </record>
 
+        <record id="product_normal_form_pos_view" model="ir.ui.view">
+            <field name="name">product.normal.pos.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                  <group name="status" position="after">
+                      <group colspan="2" col="2" name="pos">
+                          <separator string="Point-of-Sale" colspan="2"/>
+                          <field name="pos_categ_id"/>
+                      </group>
+                  </group>
+            </field>
+        </record>
+
+
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.inherit</field>
             <field name="model">product.product</field>
@@ -595,71 +630,42 @@
         </record>
 
         <!-- Categories tree view -->
+        <record id="pos_category_form_view" model="ir.ui.view">
+            <field name="name">pos.category.form</field>
+            <field name="model">pos.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="PoS Categories">
+                    <group colspan="4" col="6">
+                        <field name="name"/>
+                        <field name="parent_id"/>
+                        <field name="sequence"/>
+                    </group>
+                </form>
+            </field>
+        </record>
         <record id="pos_category_tree_view" model="ir.ui.view">
             <field name="name">pos.category.tree</field>
             <field name="model">pos.category</field>
             <field name="type">tree</field>
-            <field name="field_parent">child_id</field>
+            <field name="field_parent" eval="False"/>
             <field name="arch" type="xml">
-                <tree toolbar="True" string="Product Pos Categories">
-                    <field name="name"/>
+                <tree string="PoS Categories">
+                    <field name="sequence" invisible="1"/>
+                    <field name="complete_name"/>
                 </tree>
             </field>
         </record>
         <record id="pos_category_action" model="ir.actions.act_window">
-            <field name="name">Products by POS-Category</field>
+            <field name="name">PoS Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.category</field>
-            <field name="domain">[('parent_id','=',False)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="pos_category_tree_view"/>
-            <field name="help">Here is a list of all your products classified by POS category. You can click a category to get the list of all products linked to this category or to a child of this       category.</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
         </record>
         <menuitem action="pos_category_action" id="menu_pos_category" parent="menu_point_of_sale_product" sequence="0" />
         <!-- END -->
-
-        <record id="product_input_output_form_view" model="ir.ui.view">
-            <field name="name">product.normal.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Product">
-                   <group colspan="4" col="6">
-                    <group colspan="4" col="2">
-                        <separator string="Product Description" colspan="4"/>
-                        <field name="name"  />
-                        <field groups="base.group_extended" name="variants" />
-                    </group>
-                    <group colspan="1" col="2">
-                        <separator string="Codes" colspan="2"/>
-                        <field name="default_code"/>
-                        <field groups="base.group_extended" name="ean13"/>
-                    </group>
-                   </group>
-                   <notebook colspan="4">
-                        <page string="Information">
-                          <group colspan="2" col="2" name="Type">
-                            <separator string="Product Type" colspan="2"/>
-                              <field name="categ_id"/>
-                              <field name="property_account_income" string="Account" required="1"/>
-                              <field name="type"/>
-                            </group>
-                            <group colspan="2" col="2" name="Miscelleanous">
-                              <separator string="Miscelleanous" colspan="2"/>
-                                  <field name="income_pdt"/>
-                                  <field name="expense_pdt"/>
-                                  <field name="company_id" groups="base.group_extended,base.group_multi_company"/>
-                              </group>
-                              <group colspan="2" col="2" name="Prices">
-                                  <separator string="Prices" colspan="2"/>
-                                  <field name="lst_price"/>
-                                  <field name="standard_price"/>
-                             </group>
-                        </page>
-                   </notebook>
-                </form>
-            </field>
-        </record>
 
         <menuitem name="Configuration" parent="menu_point_root"
             id="menu_point_config_product" sequence="25" groups="group_pos_manager"/>
@@ -672,18 +678,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('expense_pdt','=',True)]</field>
             <field name="context">{'default_expense_pdt': True}</field>
-        </record>
-        <record model="ir.actions.act_window.view" id="action_product_input_tree_tag">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="product.product_product_tree_view"/>
-            <field name="act_window_id" ref="action_product_input"/>
-        </record>
-        <record model="ir.actions.act_window.view" id="action_product_input_form_tag">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="product_input_output_form_view"/>
-            <field name="act_window_id" ref="action_product_input"/>
         </record>
         <menuitem
             parent="menu_point_config_product"
@@ -699,18 +693,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('income_pdt','=',True)]</field>
             <field name="context">{'default_income_pdt': True}</field>
-        </record>
-        <record model="ir.actions.act_window.view" id="action_product_output_tree_tag">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="product.product_product_tree_view"/>
-            <field name="act_window_id" ref="action_product_output"/>
-        </record>
-        <record model="ir.actions.act_window.view" id="action_product_output_form_tag">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="product_input_output_form_view"/>
-            <field name="act_window_id" ref="action_product_output"/>
         </record>
         <menuitem
             parent="menu_point_config_product"
@@ -733,7 +715,7 @@
             <field name="res_model">account.journal</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'default_journal_user': 1}</field>
+            <field name="context" eval="{'default_journal_user': 1, 'default_view_id': ref('account.account_journal_bank_view'), 'default_type': 'cash'}"/>
             <field name="domain">[('journal_user','=', 1)]</field>
             <field name="help">Payment methods are defined by accounting journals having the field Payment Method checked.</field>
         </record>
@@ -788,8 +770,6 @@
             <field name="domain">[('origin','like','POS')]</field>
         </record>
 
-        <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_repport_date"
-                id="menu_pos_payment_report_date" parent="menu_point_rep" sequence="8" groups="base.group_extended"/>
         <menuitem icon="STOCK_PRINT" action="action_report_pos_details"
                 id="menu_pos_details" parent="menu_point_rep" sequence="6" />
 
@@ -798,11 +778,15 @@
           <field name="tag">pos.ui</field>
         </record>
 
-        <record id="menu_pos_pos" model="ir.ui.menu">
-          <field name="name">Start Point of Sale</field>
-          <field name="sequence" eval="5"/>
-          <field name="parent_id" ref="menu_point_root"/>
+        <record id="menu_point_root_touchscreen" model="ir.ui.menu">
+          <field name="name">Point of Sale</field>
+          <field name="sequence" eval="20"/>
           <field name="action" ref="action_pos_pos"/>
         </record>
+
+        <!-- use menuitem to add web_icon and web_icon_hover above -->
+        <menuitem id="menu_point_root_touchscreen"
+            web_icon="images/pos.png" web_icon_hover="images/pos-hover.png" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
+
     </data>
 </openerp>

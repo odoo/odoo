@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Claims',
+    'name': 'Claims Management',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'complexity': "easy",
@@ -48,9 +48,11 @@ automatically new claims based on incoming emails.
     'demo_xml': [
         'crm_claim_demo.xml',
     ],
-    'test': ['test/test_crm_claim.yml'],
+    'test': ['test/process/claim.yml',
+             'test/ui/claim_demo.yml'
+             ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00612027414703404749',
     'images': ['images/claim_categories.jpeg','images/claim_stages.jpeg','images/claims.jpeg'],
 }

@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Association profile',
+    'name': 'Associations Management',
     'version': '0.1',
     'category': 'Specific Industry Applications',
     'complexity': "normal",
@@ -36,7 +36,7 @@ It installs the profile for associations to manage events, registrations, member
     'update_xml': ['security/ir.model.access.csv', 'profile_association.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0078696047261',
     'images': ['images/association1.jpeg'],
 }

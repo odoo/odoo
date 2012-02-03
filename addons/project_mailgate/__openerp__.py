@@ -21,11 +21,11 @@
 
 
 {
-    "name": "Project Tasks - Mail Integration",
+    "name": "Tasks-Mail Integration",
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
-    "category": "Hidden",
+    "category": "Project Management",
     'complexity': "easy",
     "images": ["images/project_mailgate_task.jpeg"],
     "depends": ["project", "mail"],
@@ -51,7 +51,7 @@ There are two common alternatives to configure the mailbox integration:
     'demo_xml': [
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '001075048780413258261',
 }
 

@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Project PAD',
+    'name': 'Specifications on PADs',
     'version': '1.0',
-    'category': 'Hidden/Link',
+    "category": "Project Management",
     'complexity': "easy",
     'description': """
 This module adds a PAD in all project kanban views
@@ -35,6 +35,6 @@ This module adds a PAD in all project kanban views
     'update_xml': ['models/project_task.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -41,7 +41,7 @@
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
                                 <field name="warn_manager"/>
                                 <field name="priority"/>
-                                <field name="active"/>
+                                <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                             </group>
                             <newline/>
                             <separator colspan="4"/>
@@ -49,7 +49,7 @@
                                 <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' select="1" readonly="1"/>
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert" groups="base.group_extended"/>
-                                <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
+                                <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
                                 <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending" icon="terp-dialog-close"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
@@ -69,7 +69,7 @@
                         </page>
                         <page string="Billing" groups="account.group_account_invoice">
                             <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Invoice Address"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Contact Address"/>
                             <field name="warn_customer"/>
                             <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                             <newline/>
@@ -110,6 +110,9 @@
                    <group>
                        <filter icon="terp-check" string="Open" name="Current" domain="[('state', '=','open')]" help="Open Projects"/>
                        <filter icon="gtk-media-pause" string="Pending" name="Pending" domain="[('state', '=','pending')]" help="Pending Projects"/>
+                       <filter icon="gtk-media-pause" string="Template"
+                            name="Template" domain="[('state', '=','template')]" help="Templates of Projects"
+                            groups="base.group_extended"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-personal+" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member."/>
                        <separator orientation="vertical"/>
@@ -157,10 +160,7 @@
             <field name="model">project.project</field>
             <field name="type">gantt</field>
             <field name="arch" type="xml">
-                <gantt color="user_id" date_delay="planned_hours" date_start="date_start" string="Projects">
-                    <level object="project.project" link="id" domain="[]">
-                        <field name="complete_name"/>
-                    </level>
+                <gantt date_delay="planned_hours" date_start="date_start" string="Projects">
                 </gantt>
             </field>
         </record>
@@ -313,7 +313,7 @@
             </field>
         </record>
 
-	
+
         <!-- Project Task Kanban View  -->
         <record model="ir.ui.view" id="view_task_kanban">
             <field name="name">project.task.kanban</field>
@@ -350,8 +350,8 @@
                                             <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
                                             <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
                                         </td>
-                                        <td align="left" valign="middle" class="oe_kanban_title3" tooltip="task_details">
-                                            <b><field name="name"/></b>
+                                        <td align="left" valign="middle" class="oe_kanban_title" tooltip="task_details">
+                                            <field name="name"/>
                                         </td>
                                         <td valign="top" width="22">
                                             <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>
@@ -378,6 +378,7 @@
                                                         type="object" class="oe_kanban_button"><t t-esc="time[0]"/></a
                                                     ><b t-if="time[1]" class="oe_kanban_button oe_kanban_button_active"><t t-esc="Math.round(hours)"/></b
                                                 ></t>
+                                                <a name="do_open" states="draft" string="Validate planned time and open task" type="object" class="oe_kanban_button oe_kanban_button_active">!</a>
                                             </span>
                                         </div>
                                         <div class="oe_kanban_clear"/>
@@ -459,7 +460,7 @@
             <field name="type">gantt</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <gantt color="user_id" date_start="date_start" date_stop="date_end" string="Tasks" default_group_by="project_id,user_id">
+                <gantt date_start="date_start" date_stop="date_end" string="Tasks" default_group_by="project_id">
                 </gantt>
             </field>
         </record>
@@ -487,11 +488,6 @@
                         <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
                         <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
-                        <separator orientation="vertical"/>
-                        <filter name="edit"
-                            string="Edit" context="{'set_editable':True,'seq_visible': True}"
-                            icon="gtk-execute"
-                            groups="base.group_extended"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
@@ -526,12 +522,22 @@
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,gantt,graph,kanban</field>
+            <field name="view_mode">kanban,tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
-            <field name="view_id" ref="view_task_tree2"/>
+            <field name="view_id" eval="False"/>
             <field name="context">{"search_default_draft": 1, "search_default_open":1, "search_default_project_id": project_id}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
+        </record>
+        <record id="open_view_task_list_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="action_view_task"/>
+        </record>
+        <record id="open_view_task_list_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_view_task"/>
         </record>
 
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="3"/>
@@ -642,7 +648,7 @@
             <field name="arch" type="xml">
                 <page string="Configuration" position="inside">
                     <separator string="Project Management" colspan="4"/>
-                    <field name="project_time_mode_id"/>
+                    <field name="project_time_mode_id" domain="[('category_id','=','Working Time')]"/>
                     <newline/>
                 </page>
             </field>

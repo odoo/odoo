@@ -56,18 +56,18 @@ class account_change_currency(osv.osv_memory):
             if invoice.company_id.currency_id.id == invoice.currency_id.id:
                 new_price = line.price_unit * rate
                 if new_price <= 0:
-                    raise osv.except_osv(_('Error'), _('New currency is not confirured properly !'))
+                    raise osv.except_osv(_('Error'), _('New currency is not configured properly !'))
 
             if invoice.company_id.currency_id.id != invoice.currency_id.id and invoice.company_id.currency_id.id == new_currency:
                 old_rate = invoice.currency_id.rate
                 if old_rate <= 0:
-                    raise osv.except_osv(_('Error'), _('Currnt currency is not confirured properly !'))
+                    raise osv.except_osv(_('Error'), _('Current currency is not configured properly !'))
                 new_price = line.price_unit / old_rate
 
             if invoice.company_id.currency_id.id != invoice.currency_id.id and invoice.company_id.currency_id.id != new_currency:
                 old_rate = invoice.currency_id.rate
                 if old_rate <= 0:
-                    raise osv.except_osv(_('Error'), _('Current currency is not confirured properly !'))
+                    raise osv.except_osv(_('Error'), _('Current currency is not configured properly !'))
                 new_price = (line.price_unit / old_rate ) * rate
             obj_inv_line.write(cr, uid, [line.id], {'price_unit': new_price})
         obj_inv.write(cr, uid, [invoice.id], {'currency_id': new_currency}, context=context)

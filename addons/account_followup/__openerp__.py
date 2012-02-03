@@ -57,9 +57,12 @@ Note that if you want to check the followup level for a given partner/account en
         'account_followup_data.xml',
     ],
     'demo_xml': [],
-    'test': ['test/account_followup.yml'],
+    'test': [
+        'test/account_followup.yml',
+        'test/account_followup_report.yml',
+    ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0072481076453',
 }
 

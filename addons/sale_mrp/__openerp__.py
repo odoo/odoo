@@ -23,7 +23,7 @@
 {
     'name': 'Sales and MRP Management',
     'version': '1.0',
-    'category': 'Hidden/Link',
+    'category': 'Hidden',
     'complexity': "easy",
     'description': """
 This module provides facility to the user to install mrp and sales modulesat a time.
@@ -39,14 +39,13 @@ It adds sales name and sales Reference on production order.
     'depends': ['mrp', 'sale'],
     'init_xml': [],
     'update_xml': [
-        'security/sale_mrp_security.xml',
         'security/ir.model.access.csv',
         'sale_mrp_view.xml',
     ],
     'demo_xml': [],
     'test':['test/sale_mrp.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': True,
     'certificate': '00395598976683092013',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -22,7 +22,7 @@
 ##############################################################################
 
 {
-    "name" : "Spanish Charts of Accounts (PGCE 2008)",
+    "name" : "Spanish - Accounting (PGCE 2008)",
     "version" : "3.0",
     "author" : "Spanish Localization Team",
     'website' : 'https://launchpad.net/openerp-spain',
@@ -54,7 +54,7 @@ for yearly account reporting (balance, profit & losses).
     "demo_xml" : [],
     "update_xml" : [
     ],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "00408828172062583229",
     'images': ['images/config_chart_l10n_es.jpeg','images/l10n_es_chart.jpeg'],

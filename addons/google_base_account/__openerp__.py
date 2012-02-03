@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Google user',
+    'name': 'Google Users',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'description': """The module adds google user in res user""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -35,7 +35,6 @@
                    ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
-    'certificate': '',
+    'auto_install': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

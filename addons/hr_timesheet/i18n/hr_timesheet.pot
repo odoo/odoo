@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15:20+0000\n"
-"PO-Revision-Date: 2011-01-11 11:15:20+0000\n"
+"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-12-23 09:55+0000\n"
+"PO-Revision-Date: 2011-12-23 09:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_timesheet
-#: model:product.template,name:hr_timesheet.product_consultant_product_template
-msgid "Service on Timesheet"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Wed"
 msgstr ""
@@ -81,14 +76,8 @@ msgid "Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "janvier"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Mon"
 msgstr ""
@@ -96,6 +85,18 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "Sign in"
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
+#, python-format
+msgid "Fri"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.employee,uom_id:0
+msgid "UoM"
 msgstr ""
 
 #. module: hr_timesheet
@@ -119,11 +120,6 @@ msgid "Work done in the last period"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:hr.employee:0
-msgid "Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
-
-#. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
 #: field:hr.sign.out.project,state:0
 msgid "Current state"
@@ -136,13 +132,18 @@ msgid "Employees name"
 msgstr ""
 
 #. module: hr_timesheet
+#: field:hr.sign.out.project,account_id:0
+msgid "Project / Analytic Account"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
 msgid "Print Employees Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:174
-#: code:addons/hr_timesheet/hr_timesheet.py:176
+#: code:addons/hr_timesheet/hr_timesheet.py:175
+#: code:addons/hr_timesheet/hr_timesheet.py:177
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -161,15 +162,10 @@ msgid "No cost unit defined for this employee !"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Tue"
-msgstr ""
-
-#. module: hr_timesheet
-#: field:hr.sign.out.project,account_id:0
-msgid "Analytic Account"
 msgstr ""
 
 #. module: hr_timesheet
@@ -179,8 +175,8 @@ msgid "Warning"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.module.module,shortdesc:hr_timesheet.module_meta_information
-msgid "Human Resources (Timesheet encoding)"
+#: field:hr.analytic.timesheet,partner_id:0
+msgid "Partner"
 msgstr ""
 
 #. module: hr_timesheet
@@ -190,17 +186,22 @@ msgid "Sign In/Out By Project"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Sat"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Sun"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Analytic account"
 msgstr ""
 
 #. module: hr_timesheet
@@ -211,13 +212,9 @@ msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Lines"
-msgstr ""
-
-#. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "juillet"
 msgstr ""
 
 #. module: hr_timesheet
@@ -226,8 +223,10 @@ msgid "Monthly Employees Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "July"
 msgstr ""
@@ -244,36 +243,13 @@ msgid "Categories"
 msgstr ""
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "novembre"
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
-msgid "Through Working Hours you can register your working hours by project every day."
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.module.module,description:hr_timesheet.module_meta_information
-msgid "\n"
-"This module implements a timesheet system. Each employee can encode and\n"
-"track their time spent on the different projects. A project is an\n"
-"analytic account and the time spent on a project generates costs on\n"
-"the analytic account.\n"
-"\n"
-"Lots of reporting on time and employee tracking are provided.\n"
-"\n"
-"It is completely integrated with the cost accounting module. It allows you\n"
-"to set up a management by affair.\n"
-"    "
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
-#, python-format
-msgid "March"
+#: help:hr.employee,product_id:0
+msgid "Specifies employee's designation as a product with type 'service'."
 msgstr ""
 
 #. module: hr_timesheet
@@ -282,14 +258,10 @@ msgid "Total cost"
 msgstr ""
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
-msgid "décembre"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "September"
 msgstr ""
@@ -323,7 +295,7 @@ msgstr ""
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
-msgid "To be invoiced"
+msgid "Invoice Analysis"
 msgstr ""
 
 #. module: hr_timesheet
@@ -338,10 +310,8 @@ msgid "Sign in / Sign out by project"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
-#, python-format
-msgid "Fri"
+#: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
+msgid "Define your Analytic Structure"
 msgstr ""
 
 #. module: hr_timesheet
@@ -350,7 +320,7 @@ msgid "Sign in / Sign out"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:174
+#: code:addons/hr_timesheet/hr_timesheet.py:175
 #, python-format
 msgid "Analytic journal is not defined for employee %s \n"
 "Define an employee for the selected user and assign an analytic journal!"
@@ -367,26 +337,29 @@ msgid "Timesheets"
 msgstr ""
 
 #. module: hr_timesheet
-#: help:hr.employee,product_id:0
-msgid "Specifies employee's designation as a product with type 'service'."
+#: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
+msgid "You should create an analytic account structure depending on your needs to analyse costs and revenues. In OpenERP, analytic accounts are also used to track customer contracts."
 msgstr ""
 
 #. module: hr_timesheet
+#: field:hr.analytic.timesheet,line_id:0
+msgid "Analytic Line"
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
-msgid "août"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "August"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "June"
 msgstr ""
@@ -397,19 +370,15 @@ msgid "Print My Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "mars"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Date"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "November"
 msgstr ""
@@ -425,15 +394,19 @@ msgid "Closing Date"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "October"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "January"
 msgstr ""
@@ -444,8 +417,8 @@ msgid "Key dates"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Thu"
 msgstr ""
@@ -477,13 +450,10 @@ msgid "My Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:account.analytic.account:0
-msgid "Analysis summary"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "December"
 msgstr ""
@@ -505,12 +475,6 @@ msgid "Employees Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "février"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Information"
 msgstr ""
@@ -522,20 +486,14 @@ msgid "Employee"
 msgstr ""
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "avril"
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+msgid "Through this menu you can register and follow your workings hours by project every day."
 msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
 #: field:hr.sign.out.project,server_date:0
 msgid "Current Date"
-msgstr ""
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Anlytic account"
 msgstr ""
 
 #. module: hr_timesheet
@@ -555,8 +513,10 @@ msgid "Invoicing"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "May"
 msgstr ""
@@ -567,20 +527,8 @@ msgid "Total time"
 msgstr ""
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "juin"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "(local time on the server side)"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
-msgid "Working Hours"
 msgstr ""
 
 #. module: hr_timesheet
@@ -589,15 +537,12 @@ msgid "Sign In By Project"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "February"
-msgstr ""
-
-#. module: hr_timesheet
-#: field:hr.analytic.timesheet,line_id:0
-msgid "Analytic line"
 msgstr ""
 
 #. module: hr_timesheet
@@ -611,29 +556,28 @@ msgid "Employees"
 msgstr ""
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
-msgid "octobre"
+#, python-format
+msgid "March"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "April"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:176
+#: code:addons/hr_timesheet/hr_timesheet.py:177
 #, python-format
 msgid "No analytic account defined on the project.\n"
 "Please set one or we can not automatically fill the timesheet."
-msgstr ""
-
-#. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "mai"
 msgstr ""
 
 #. module: hr_timesheet
@@ -670,18 +614,7 @@ msgid "Accounting"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,partner_id:0
-msgid "Partner Id"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Change Work"
-msgstr ""
-
-#. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "septembre"
 msgstr ""
 

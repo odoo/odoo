@@ -171,7 +171,7 @@ class product_uom(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if 'category_id' in vals:
             for uom in self.browse(cr, uid, ids, context=context):
-                if uom.category_id != vals['category_id']:
+                if uom.category_id.id != vals['category_id']:
                     raise osv.except_osv(_('Warning'),_("Cannot change the category of existing UoM '%s'.") % (uom.name,))
         return super(product_uom, self).write(cr, uid, ids, vals, context=context)
 
@@ -212,12 +212,14 @@ class product_category(osv.osv):
     _name = "product.category"
     _description = "Product Category"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', size=64, required=True, translate=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('product.category','Parent Category', select=True),
+        'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
+        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
+        'parent_left': fields.integer('Left Parent', select=1),
+        'parent_right': fields.integer('Right Parent', select=1),
     }
 
 
@@ -225,7 +227,11 @@ class product_category(osv.osv):
         'type' : lambda *a : 'normal',
     }
 
-    _order = "sequence, name"
+    _parent_name = "parent_id"
+    _parent_store = True
+    _parent_order = 'sequence, name'
+    _order = 'parent_left'
+    
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
@@ -251,20 +257,31 @@ product_category()
 class product_template(osv.osv):
     _name = "product.template"
     _description = "Product Template"
+
+    def _get_main_product_supplier(self, cr, uid, product, context=None):
+        """Determines the main (best) product supplier for ``product``, 
+        returning the corresponding ``supplierinfo`` record, or False
+        if none were found. The default strategy is to select the
+        supplier with the highest priority (i.e. smallest sequence).
+
+        :param browse_record product: product to supply
+        :rtype: product.supplierinfo browse_record or False
+        """
+        sellers = [(seller_info.sequence, seller_info)
+                       for seller_info in product.seller_ids or []
+                       if seller_info and isinstance(seller_info.sequence, (int, long))]
+        return sellers and sellers[0][1] or False
+
     def _calc_seller(self, cr, uid, ids, fields, arg, context=None):
         result = {}
         for product in self.browse(cr, uid, ids, context=context):
-            for field in fields:
-                result[product.id] = {field:False}
-            result[product.id]['seller_delay'] = 1
-            if product.seller_ids:
-                partner_list = [(partner_id.sequence, partner_id)
-                                       for partner_id in  product.seller_ids
-                                       if partner_id and isinstance(partner_id.sequence, (int, long))]
-                main_supplier = partner_list and partner_list[0] and partner_list[0][1] or False
-                result[product.id]['seller_delay'] =  main_supplier and main_supplier.delay or 1
-                result[product.id]['seller_qty'] =  main_supplier and main_supplier.qty or 0.0
-                result[product.id]['seller_id'] = main_supplier and main_supplier.name.id or False
+            main_supplier = self._get_main_product_supplier(cr, uid, product, context=context)
+            result[product.id] = {
+                'seller_info_id': main_supplier and main_supplier.id or False,
+                'seller_delay': main_supplier and main_supplier.delay or 1,
+                'seller_qty': main_supplier and main_supplier.qty or 0.0,
+                'seller_id': main_supplier and main_supplier.name.id or False
+            }
         return result
 
     _columns = {
@@ -303,9 +320,10 @@ class product_template(osv.osv):
             help='Coefficient to convert UOM to UOS\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
-        'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_delay", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
-        'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_qty", help="This is minimum quantity to purchase from Main Supplier."),
-        'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_id"),
+        'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", multi="seller_info"),
+        'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
+        'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),
+        'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
         'loc_rack': fields.char('Rack', size=16),
         'loc_row': fields.char('Row', size=16),
@@ -342,7 +360,7 @@ class product_template(osv.osv):
             for product in self.browse(cr, uid, ids, context=context):
                 old_uom = product.uom_po_id
                 if old_uom.category_id.id != new_uom.category_id.id:
-                    raise osv.except_osv(_('UoM categories Mismatch!'), _("New UoM '%s' must belongs to same UoM category '%s' as of old UoM '%s'.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
+                    raise osv.except_osv(_('UoM categories Mismatch!'), _("New UoM '%s' must belong to same UoM category '%s' as of old UoM '%s'. If you need to change the unit of measure, you may desactivate this product from the 'Procurement & Locations' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         return super(product_template, self).write(cr, uid, ids, vals, context=context)
 
     _defaults = {
@@ -406,10 +424,11 @@ class product_product(osv.osv):
             context = {}
         quantity = context.get('quantity') or 1.0
         pricelist = context.get('pricelist', False)
+        partner = context.get('partner', False)
         if pricelist:
             for id in ids:
                 try:
-                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, context=context)[pricelist]
+                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, partner=partner, context=context)[pricelist]
                 except:
                     price = 0.0
                 res[id] = price
@@ -494,7 +513,7 @@ class product_product(osv.osv):
         'lst_price' : fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Sale Price')),
         'code': fields.function(_product_code, type='char', string='Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
-        'default_code' : fields.char('Reference', size=64),
+        'default_code' : fields.char('Reference', size=64, select=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
@@ -503,7 +522,7 @@ class product_product(osv.osv):
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
-        'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True),
+        'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True, select=True),
         'color': fields.integer('Color Index'),
         'product_image': fields.binary('Image'),
     }
@@ -580,19 +599,27 @@ class product_product(osv.osv):
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
-            args=[]
+            args = []
         if name:
             ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
-            if not len(ids):
+            if not ids:
                 ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
-            if not len(ids):
-                ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
-                ids += self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
-            if not len(ids):
-               ptrn=re.compile('(\[(.*?)\])')
-               res = ptrn.search(name)
-               if res:
-                   ids = self.search(cr, user, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
+            if not ids:
+                # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
+                # on a database with thousands of matching products, due to the huge merge+unique needed for the
+                # OR operator (and given the fact that the 'name' lookup results come from the ir.translation table
+                # Performing a quick memory merge of ids in Python will give much better performance
+                ids = set()
+                ids.update(self.search(cr, user, args + [('default_code',operator,name)], limit=limit, context=context))
+                if len(ids) < limit:
+                    # we may underrun the limit because of dupes in the results, that's fine
+                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit-len(ids)), context=context))
+                ids = list(ids)
+            if not ids:
+                ptrn = re.compile('(\[(.*?)\])')
+                res = ptrn.search(name)
+                if res:
+                    ids = self.search(cr, user, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context=context)

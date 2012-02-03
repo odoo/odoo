@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Support for iCal based on Document Management System',
+    'name': 'iCal Support',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Knowledge Management',
     'complexity': "normal",
     'description': """
 Allows to synchronise calendars with others applications.
@@ -38,7 +38,7 @@ Will allow you to synchronise your OpenERP calendars with your phone, outlook, S
     'update_xml': ['document_view.xml', 'security/ir.model.access.csv','document_ics_config_wizard.xml'],
     'demo_xml': ['document_demo.xml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0071242387229',
     'images': ['images/1_config_calendars.jpeg','images/2_doc_type_ics.jpeg'],
 }

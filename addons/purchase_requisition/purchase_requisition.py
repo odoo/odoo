@@ -19,7 +19,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import time
 import netsvc
 
@@ -83,6 +84,89 @@ class purchase_requisition(osv.osv):
         self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True
 
+    def _planned_date(self, requisition, delay=0.0):
+        company = requisition.company_id
+        date_planned = False
+        if requisition.date_start:
+            date_planned = datetime.strptime(requisition.date_start, '%Y-%m-%d %H:%M:%S') - relativedelta(days=company.po_lead)
+        else:
+            date_planned = datetime.today() - relativedelta(days=company.po_lead)
+        if delay:
+            date_planned -= relativedelta(days=delay)
+        return date_planned and date_planned.strftime('%Y-%m-%d %H:%M:%S') or False
+
+    def _seller_details(self, cr, uid, requisition_line, supplier, context=None):
+        product_uom = self.pool.get('product.uom')
+        pricelist = self.pool.get('product.pricelist')
+        supplier_info = self.pool.get("product.supplierinfo")
+        product = requisition_line.product_id
+        default_uom_po_id = product.uom_po_id.id
+        qty = product_uom._compute_qty(cr, uid, requisition_line.product_uom_id.id, requisition_line.product_qty, default_uom_po_id)
+        seller_delay = 0.0
+        seller_price = False
+        seller_qty = False
+        for product_supplier in product.seller_ids:
+            if supplier.id ==  product_supplier.name and qty >= product_supplier.qty:
+                seller_delay = product_supplier.delay
+                seller_qty = product_supplier.qty
+        supplier_pricelist = supplier.property_product_pricelist_purchase or False
+        seller_price = pricelist.price_get(cr, uid, [supplier_pricelist.id], product.id, qty, False, {'uom': default_uom_po_id})[supplier_pricelist.id]
+        if seller_qty:
+            qty = max(qty,seller_qty)
+        date_planned = self._planned_date(requisition_line.requisition_id, seller_delay)
+        return seller_price, qty, default_uom_po_id, date_planned
+
+    def make_purchase_order(self, cr, uid, ids, partner_id, context=None):
+        """
+        Create New RFQ for Supplier
+        """
+        if context is None:
+            context = {}
+        assert partner_id, 'Supplier should be specified'
+        purchase_order = self.pool.get('purchase.order')
+        purchase_order_line = self.pool.get('purchase.order.line')
+        res_partner = self.pool.get('res.partner')
+        fiscal_position = self.pool.get('account.fiscal.position')
+        supplier = res_partner.browse(cr, uid, partner_id, context=context)
+        delivery_address_id = res_partner.address_get(cr, uid, [supplier.id], ['delivery'])['delivery']
+        supplier_pricelist = supplier.property_product_pricelist_purchase or False
+        res = {}
+        for requisition in self.browse(cr, uid, ids, context=context):
+            if supplier.id in filter(lambda x: x, [rfq.state <> 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
+                 raise osv.except_osv(_('Warning'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
+            location_id = requisition.warehouse_id.lot_input_id.id
+            purchase_id = purchase_order.create(cr, uid, {
+                        'origin': requisition.name,
+                        'partner_id': supplier.id,
+                        'partner_address_id': delivery_address_id,
+                        'pricelist_id': supplier_pricelist.id,
+                        'location_id': location_id,
+                        'company_id': requisition.company_id.id,
+                        'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
+                        'requisition_id':requisition.id,
+                        'notes':requisition.description,
+                        'warehouse_id':requisition.warehouse_id.id ,
+            })
+            res[requisition.id] = purchase_id
+            for line in requisition.line_ids:
+                product = line.product_id
+                seller_price, qty, default_uom_po_id, date_planned = self._seller_details(cr, uid, line, supplier, context=context)
+                taxes_ids = product.supplier_taxes_id
+                taxes = fiscal_position.map_tax(cr, uid, supplier.property_account_position, taxes_ids)
+                purchase_order_line.create(cr, uid, {
+                    'order_id': purchase_id,
+                    'name': product.partner_ref,
+                    'product_qty': qty,
+                    'product_id': product.id,
+                    'product_uom': default_uom_po_id,
+                    'price_unit': seller_price,
+                    'date_planned': date_planned,
+                    'notes': product.description_purchase,
+                    'taxes_id': [(6, 0, taxes)],
+                }, context=context)
+                
+        return res
+
 purchase_requisition()
 
 class purchase_requisition_line(osv.osv):
@@ -96,7 +180,7 @@ class purchase_requisition_line(osv.osv):
         'product_uom_id': fields.many2one('product.uom', 'Product UoM'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.related('requisition_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
 
     def onchange_product_id(self, cr, uid, ids, product_id,product_uom_id, context=None):
@@ -133,7 +217,7 @@ class purchase_order(osv.osv):
                             proc_obj.write(cr, uid, proc_ids, {'purchase_id': po.id})
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
-                    self.pool.get('purchase.requisition').write(cr, uid, [po.requisition_id.id], {'state':'done','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
+                    po.requisition_id.tender_done(context=context)
         return res
 
 purchase_order()

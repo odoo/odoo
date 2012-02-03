@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Full Dates on Sales Order',
+    'name': 'Dates on Sales Order',
     'version': '1.0',
     'category': 'Sales Management',
     'complexity': "easy",
@@ -48,7 +48,7 @@ You can add the following additional dates to a sale order:
     ],
     'test': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00867497685972962845',
 }
 

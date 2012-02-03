@@ -7,22 +7,15 @@
              <field name="type">form</field>
              <field name="arch" type="xml">
                 <form string="Document board">
-                     <board style="1-1" >
+                     <board style="2-1" >
                         <column>
                             <action string="New Files"
                                 name="%(document.action_view_all_document_tree1)d"
                                 view_mode="tree,form"/>
-                            <action string="File Size by Month"
-                                name="%(document.action_view_size_month)d"
-                                view_mode="graph,tree"/>
                         </column>
                         <column>
-                            <action string="Files by Resource Type"
-                                name="%(document.action_view_document_by_resourcetype_graph)d"
-                                view_mode="graph,tree"/>
-
-                            <action string="Files by Partner"
-                                name="%(document.action_view_files_by_partner)d"
+                            <action string="File Size by Month"
+                                name="%(document.action_view_size_month)d"
                                 view_mode="graph,tree"/>
                         </column>
                      </board>
@@ -65,7 +58,7 @@
              <field name="type">form</field>
              <field name="arch" type="xml">
                 <form string="Document board">
-                     <board style="1-1">
+                     <board style="2-1">
                         <column>
                             <action string="Wall of Shame"
                                 name="%(document.action_view_wall)d"

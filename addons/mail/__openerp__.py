@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Email Subsystem',
+    'name': 'Emails Management',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Dependency',
     'complexity': "easy",
     'description': """
 A generic email subsystem with message storage and queuing
@@ -64,7 +64,7 @@ The main features are:
         'mail_data.xml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '001056784984222247309',
     'images': ['images/customer_history.jpeg','images/messages_form.jpeg','images/messages_list.jpeg'],
 }

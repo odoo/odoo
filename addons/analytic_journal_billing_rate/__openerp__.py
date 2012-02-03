@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Analytic Journal Billing Rate, Define the default invoicing rate for a specific journal',
+    'name': 'Billing Rates on Contracts',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales Management',
     'description': """
 This module allows you to define what is the default invoicing rate for a specific journal on a given account.
 ==============================================================================================================
@@ -40,7 +40,7 @@ Obviously if no data has been recorded for the current account, the default valu
     'update_xml': ['analytic_journal_billing_rate_view.xml', 'security/ir.model.access.csv'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0030271787965',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

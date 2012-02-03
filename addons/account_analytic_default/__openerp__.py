@@ -22,7 +22,7 @@
 {
     'name'      : 'Account Analytic Defaults',
     'version'   : '1.0',
-    'category'  : 'Hidden',
+    "category": 'Accounting & Finance',
     'complexity': "normal",
     'description': """Set default values for your analytic accounts
 Allows to automatically select analytic accounts based on criterions:
@@ -46,7 +46,7 @@ Allows to automatically select analytic accounts based on criterions:
     ],
     'demo_xml'  : [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0074229833581',
 }
 

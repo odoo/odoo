@@ -22,7 +22,7 @@
 
 
 {
-    'name': 'Calendar Synchronizing',
+    'name': 'Meetings Synchronization',
     'version': '1.1',
     'category': 'Customer Relationship Management',
     'complexity': "normal",
@@ -43,7 +43,7 @@ Caldav features in Meeting.
     'update_xml': ['crm_caldav_view.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '001088048737252670109',
     'images': ['images/caldav_browse_step1.jpeg','images/caldav_browse_step2.jpeg'],
 }

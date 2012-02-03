@@ -7,47 +7,47 @@
             <field eval="[(4, ref('base.group_sale_salesman')),(4, ref('group_project_user'))]" name="groups_id"/>
         </record>
 
-        <record id="res_users_analyst" model="res.users">
-            <field name="name">Phuong</field>
+        <record id="base.user_niv" model="res.users">
+            <field name="name">Nicolas</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]" name="groups_id"/>
-            <field name="login">phu</field>
-            <field name="password">phu</field>
+            <field name="login">niv</field>
+            <field name="password">niv</field>
         </record>
-        <record id="res_users_project_manager" model="res.users">
-            <field name="name">Anthony</field>
+        <record id="base.user_al" model="res.users">
+            <field name="name">Antony</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]" name="groups_id"/>
             <field name="login">al</field>
             <field name="password">al</field>
         </record>
-        <record id="res_users_technical_leader" model="res.users">
+        <record id="base.user_qdp" model="res.users">
             <field name="name">Quentin</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
             <field name="login">qdp</field>
             <field name="password">qdp</field>
         </record>
-        <record id="res_users_developer" model="res.users">
+        <record id="base.user_fpi" model="res.users">
             <field name="name">Francois</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
             <field name="login">fpi</field>
             <field name="password">fpi</field>
         </record>
-        <record id="res_users_designer" model="res.users">
+        <record id="base.user_jth" model="res.users">
             <field name="name">Julien</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
             <field name="login">jth</field>
             <field name="password">jth</field>
         </record>
-        <record id="res_users_tester" model="res.users">
-            <field name="name">Aline</field>
+        <record id="base.user_mit" model="res.users">
+            <field name="name">Minh</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
-            <field name="login">apr</field>
-            <field name="password">apr</field>
+            <field name="login">mit</field>
+            <field name="password">mit</field>
         </record>
-        <record id="res_users_finacial_manager" model="res.users">
-            <field name="name">Fabian</field>
+        <record id="base.user_vad" model="res.users">
+            <field name="name">Valérie</field>
             <field eval="[(6, 0, [ref('base.group_user')])]" name="groups_id"/>
-            <field name="login">fbs</field>
-            <field name="password">fbs</field>
+            <field name="login">vad</field>
+            <field name="password">vad</field>
         </record>
 
         <!-- Projects -->
@@ -57,14 +57,14 @@
             <field name="type">normal</field>
             <field name="description">Integrate a Sale and Warehouse Management.</field>
             <field eval="[(6, 0, [
-                    ref('project.res_users_analyst'),
-                    ref('project.res_users_project_manager'),
-                    ref('project.res_users_technical_leader'),
-                    ref('project.res_users_developer'),
-                    ref('project.res_users_designer'),
-                    ref('project.res_users_tester'),
-                    ref('project.res_users_finacial_manager')])]" name="members"/>
-            <field name="user_id" ref="project.res_users_project_manager"/>
+                    ref('base.user_niv'),
+                    ref('base.user_al'),
+                    ref('base.user_qdp'),
+                    ref('base.user_fpi'),
+                    ref('base.user_jth'),
+                    ref('base.user_mit'),
+                    ref('base.user_vad')])]" name="members"/>
+            <field name="user_id" ref="base.user_al"/>
             <field name="name">Integrate a Sale and Warehouse Management.</field>
         </record>
 
@@ -72,16 +72,19 @@
 
         <record id="project_task_1" model="project.task">
             <field eval="100.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_analyst"/>
+            <field eval="100.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_niv"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Prepare Requirements Document</field>
             <field name="type_id" ref="project_tt_specification"/>
+            <field name="color">3</field>
         </record>
 
         <record id="project_task_2" model="project.task">
             <field eval="80.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_analyst"/>
+            <field eval="80.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_niv"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Make SRS</field>
@@ -90,34 +93,45 @@
 
         <record id="project_task_3" model="project.task">
             <field eval="40.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_project_manager"/>
+            <field eval="40.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_al"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Design Use Cases</field>
+            <field name="date_deadline" eval="time.strftime('%Y-%m-24')"/>
             <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_4" model="project.task">
             <field eval="25.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_project_manager"/>
+            <field eval="25.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_al"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Budget Planning</field>
+            <field name="description">Use the account_budget module</field>
+            <field name="date_deadline" eval="time.strftime('%Y-%m-19')"/>
+            <field name="color">3</field>
             <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_5" model="project.task">
             <field eval="25.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_project_manager"/>
+            <field eval="25.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_al"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Quality Planning</field>
+            <field name="kanban_state">done</field>
+            <field name="priority">0</field>
+            <field name="date_deadline" eval="time.strftime('%Y-%m-%d')"/>
             <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_6" model="project.task">
             <field eval="20.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_project_manager"/>
+            <field eval="20.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_al"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Risk Management Planning</field>
@@ -126,7 +140,8 @@
 
         <record id="project_task_7" model="project.task">
             <field eval="30.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_project_manager"/>
+            <field eval="30.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_al"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Create Project Schedules</field>
@@ -135,16 +150,19 @@
 
         <record id="project_task_8" model="project.task">
             <field eval="10.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_project_manager"/>
+            <field eval="10.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_al"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Dataflow Design</field>
+            <field name="priority">0</field>
             <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_9" model="project.task">
             <field eval="50.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_project_manager"/>
+            <field eval="50.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_al"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">User Interface Design</field>
@@ -153,16 +171,19 @@
 
         <record id="project_task_10" model="project.task">
             <field eval="40.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_developer"/>
+            <field eval="40.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_fpi"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Develop Module in Sale Management</field>
+            <field name="kanban_state">blocked</field>
              <field name="type_id" ref="project_tt_development"/>
         </record>
 
         <record id="project_task_11" model="project.task">
             <field eval="90.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_developer"/>
+            <field eval="90.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_fpi"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Develop module in Warehouse</field>
@@ -173,7 +194,8 @@
         
         <record id="project_task_12" model="project.task">
             <field eval="20.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_developer"/>
+            <field eval="20.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_fpi"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Integrate Modules</field>
@@ -184,7 +206,8 @@
         
         <record id="project_task_13" model="project.task">
             <field eval="50.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_tester"/>
+            <field eval="50.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_mit"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Unit Testing</field>
@@ -195,7 +218,8 @@
 
         <record id="project_task_14" model="project.task">
             <field eval="30.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_tester"/>
+            <field eval="30.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_mit"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Regression Test</field>
@@ -205,7 +229,8 @@
 
         <record id="project_task_15" model="project.task">
             <field eval="15.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_developer"/>
+            <field eval="15.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_fpi"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Documentation</field>
@@ -216,17 +241,20 @@
         <record id="project_task_16" model="project.task">
             <field eval="10" name="sequence"/>
             <field eval="40.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_tester"/>
+            <field eval="40.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_mit"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Performance Tuning</field>
+            <field name="description">Test on Runbot</field>
              <field name="type_id" ref="project_tt_specification"/>
         </record>
         <function model="project.task" name="do_open" eval="[ref('project_task_16')]"/>
 
         <record id="project_task_17" model="project.task">
             <field eval="5.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_analyst"/>
+            <field eval="5.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_niv"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Deploy and Review on Customer System</field>
@@ -236,7 +264,8 @@
 
         <record id="project_task_18" model="project.task">
             <field eval="10.0" name="planned_hours"/>
-            <field name="user_id" ref="project.res_users_analyst"/>
+            <field eval="10.0" name="remaining_hours"/>
+            <field name="user_id" ref="base.user_niv"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Training and Presentation</field>
@@ -329,6 +358,7 @@
             <field name="priority">0</field>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Customer analysis + Architecture</field>
+            <field name="color">3</field>
         </record>
         <record id="project_task_186" model="project.task">
             <field name="sequence">15</field>
@@ -338,6 +368,7 @@
             <field name="user_id" eval="False"/>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Internal testing + Software Install</field>
+            <field name="color">4</field>
         </record>
         <record id="project_task_188" model="project.task">
             <field name="sequence">17</field>

@@ -18,10 +18,10 @@
 #
 ##############################################################################
 {
-    "name": "Visible Discount",
+    "name": "Prices Visible Discounts",
     "version": "1.0",
     "author": "OpenERP SA",
-    "category": "Hidden",
+    'category': 'Sales Management',
     'complexity': "easy",
     "description": """
 This module lets you calculate discounts on Sale Order lines and Invoice lines base on the partner's pricelist.
@@ -37,7 +37,7 @@ Example:
     "depends": ["sale"],
     "demo_xml": [],
     "update_xml": ['product_visible_discount_view.xml'],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "001144718884654279901",
     'images': ['images/pricelists_visible_discount.jpeg'],

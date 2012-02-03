@@ -49,9 +49,9 @@ and categorize your interventions with a channel and a priority level.
     'demo_xml': [
         'crm_helpdesk_demo.xml',
     ],
-    'test': ['test/test_crm_helpdesk.yml'],
+    'test': ['test/process/help-desk.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00830691522781519309',
     'images': ['images/helpdesk_analysis.jpeg','images/helpdesk_categories.jpeg','images/helpdesk_requests.jpeg'],
 }

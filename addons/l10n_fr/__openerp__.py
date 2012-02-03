@@ -26,7 +26,7 @@
 #
 ##############################################################################
 {
-    "name" : "France - Plan Comptable Général",
+    "name" : "France - Accounting",
     "version" : "1.0",
     "author" : "OpenERP SA",
     "website": "http://www.openerp.com",
@@ -37,7 +37,7 @@ This is the module to manage the accounting chart for France in OpenERP.
 
 Credits: Sistheo Zeekom CrysaLEAD
 """,
-    "depends" : ['base', 'account', 'account_chart', 'base_vat'],
+    "depends" : ['base_iban', 'account', 'account_chart', 'base_vat', 'l10n_fr_rib'],
     "init_xml" : [],
     "update_xml" : [
         "fr_report_demo.xml",
@@ -54,7 +54,7 @@ Credits: Sistheo Zeekom CrysaLEAD
     "test": ['test/l10n_fr_report.yml'],
     "demo_xml" : [],
     "certificate" : "00435321693876313629",
-    "active": False,
+    "auto_install": False,
     "installable": True,
     'images': ['images/config_chart_l10n_fr.jpeg','images/l10n_fr_chart.jpeg'],
 }

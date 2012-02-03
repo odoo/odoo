@@ -37,6 +37,7 @@ technical OpenERP documentation at http://doc.openerp.com
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'email_template'],
+    'icon': '/edi/static/src/img/knowledge.png',
     'data': [
         'security/ir.model.access.csv',
     ],
@@ -49,8 +50,11 @@ technical OpenERP documentation at http://doc.openerp.com
     "css": [
         "static/src/css/edi.css"
     ],
+    'qweb': [
+        "static/src/xml/*.xml",
+    ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '002046536359186',
 }
 

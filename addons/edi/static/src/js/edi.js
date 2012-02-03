@@ -1,23 +1,21 @@
 openerp.edi = function(openerp) {
-openerp.web.qweb.add_template("/edi/static/src/xml/edi.xml");
-openerp.web.qweb.add_template("/edi/static/src/xml/edi_account.xml");
-openerp.web.qweb.add_template("/edi/static/src/xml/edi_sale_purchase.xml");
 openerp.edi = {}
 
-openerp.edi.EdiView = openerp.web.Widget.extend({
+openerp.edi.EdiView = openerp.web.OldWidget.extend({
     init: function(parent, db, token) {
         this._super();
         this.db = db;
         this.token = token;
-        this.session = new openerp.web.Connection();
+        this.session = openerp.connection;
         this.template = "EdiEmpty";
         this.content = "";
         this.sidebar = "";
     },
     start: function() {
         this._super();
-        var param = {"db": this.db, "token": this.token};
-        this.rpc('/edi/get_edi_document', param, this.on_document_loaded, this.on_document_failed);
+        var self = this;
+        var param = {"db": self.db, "token": self.token};
+        return self.rpc('/edi/get_edi_document', param, this.on_document_loaded, this.on_document_failed);
     },
     on_document_loaded: function(docs){
         this.doc = docs[0];
@@ -109,35 +107,54 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
     }
 });
 
-openerp.edi.EdiImport = openerp.web.Widget.extend({
+openerp.edi.edi_view = function (db, token) {
+    openerp.connection.bind().then(function () {
+        new openerp.edi.EdiView(null,db,token).appendTo($("body").addClass('openerp'));
+    });
+}
+
+openerp.edi.EdiImport = openerp.web.OldWidget.extend({
     init: function(parent,url) {
         this._super();
         this.url = url;
-        var params = {};
-
-        this.template = "EdiImport";
-        this.session = new openerp.web.Connection();
-        this.login = new openerp.web.Login(this);
-        this.header = new openerp.web.Header(this);
-        this.header.on_logout.add(this.login.on_logout);
     },
     start: function() {
-        this.session.on_session_invalid.add_last(this.do_ask_login)
-        this.session.on_session_valid.add_last(this.do_import);
-        this.header.appendTo($("#oe_header"));
-        this.session.start();
-        this.login.appendTo($('#oe_login'));
+        if (!this.session.session_is_valid()) {
+            this.show_login();
+            this.session.on_session_valid.add({
+                callback: this.proxy('show_import'),
+                unique: true,
+            });
+        } else {
+            this.show_import();
+        }
     },
-    do_ask_login: function() {
-        this.login.do_ask_login(this.do_import);
+
+    show_import: function() {
+        this.destroy_content();
+        this.do_import();
     },
+
+    show_login: function() {
+        this.destroy_content();
+        this.login = new openerp.web.Login(this);
+        this.login.appendTo(this.$element);
+    },
+
+    destroy_content: function() {
+        _.each(_.clone(this.widget_children), function(el) {
+            el.stop();
+        });
+        this.$element.children().remove();
+    },
+
     do_import: function() {
         this.rpc('/edi/import_edi_url', {url: this.url}, this.on_imported, this.on_imported_error);
     },
     on_imported: function(response) {
         if ('action' in response) {
             this.rpc("/web/session/save_session_action", {the_action: response.action}, function(key) {
-                window.location = "/web/webclient/home?debug=1&s_action="+encodeURIComponent(key);
+                window.location = "/web/webclient/home#sa="+encodeURIComponent(key);
             });
         }
         else {
@@ -147,7 +164,7 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
                 buttons: {
                     Ok: function() {
                         $(this).dialog("close");
-                        window.location = "/web/webclient/home";
+                        window.location = "/";
                     }
                 }
             }).html('The document has been successfully imported!');
@@ -160,7 +177,7 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
             msg += "\n Reason:" + response.data.fault_code;
         }
         var params = {error: response, message: msg};
-        $(openerp.web.qweb.render("DialogWarning", params)).dialog({
+        $(openerp.web.qweb.render("CrashManagerWarning", params)).dialog({
             title: "Document Import Notification",
             modal: true,
             buttons: {
@@ -170,5 +187,11 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
     }
 });
 
+openerp.edi.edi_import = function (url) {
+    openerp.connection.bind().then(function () {
+        new openerp.edi.EdiImport(null,url).appendTo($("body").addClass('openerp'));
+    });
 }
+
+};
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

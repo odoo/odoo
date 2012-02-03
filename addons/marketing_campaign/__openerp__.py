@@ -58,9 +58,13 @@ Note: If you need demo data, you can install the marketing_campaign_crm_demo mod
         "security/ir.model.access.csv"
     ],
     'demo_xml': [
+        'marketing_campaign_demo.xml',
     ],
+    'test': [
+        'test/marketing_campaign.yml',
+     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00421723279617928365',
     'images': ['images/campaign.png', 'images/campaigns.jpeg','images/email_account.jpeg','images/email_templates.jpeg','images/segments.jpeg'],
 }

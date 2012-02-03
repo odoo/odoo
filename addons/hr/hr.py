@@ -79,12 +79,28 @@ class hr_job(osv.osv):
             }
         return res
 
+    def _get_job_position(self, cr, uid, ids, context=None):
+        res = []
+        for employee in self.pool.get('hr.employee').browse(cr, uid, ids, context=context):
+            if employee.job_id:
+                res.append(employee.job_id.id)
+        return res
+
     _name = "hr.job"
     _description = "Job Description"
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.function(_no_of_employee, string='Expected Employees', help='Required number of Employees in total for that job.', multi="no_of_employee", store=True),
-        'no_of_employee': fields.function(_no_of_employee, string="No of Employee", help='Number of employee with that job.', multi="no_of_employee", store=True),
+        'expected_employees': fields.function(_no_of_employee, string='Expected Employees', help='Required number of employees in total for that job.',
+            store = {
+                'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
+                'hr.employee': (_get_job_position, ['job_id'], 10),
+            },
+            multi='no_of_employee'),
+        'no_of_employee': fields.function(_no_of_employee, string="Number of Employees", help='Number of employees with that job.',
+            store = {
+                'hr.employee': (_get_job_position, ['job_id'], 10),
+            },
+            multi='no_of_employee'),
         'no_of_recruitment': fields.float('Expected in Recruitment'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
         'description': fields.text('Job Description'),
@@ -98,7 +114,7 @@ class hr_job(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
         'state': 'open',
     }
-    
+
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'The name of the job position must be unique per company!'),
     ]
@@ -158,6 +174,7 @@ class hr_employee(osv.osv):
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
+        'login': fields.related('user_id', 'login', type='char', string='Login', readonly=1),
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -242,7 +259,7 @@ class res_users(osv.osv):
 
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        
+
         # add shortcut unless 'noshortcut' is True in context
         if not(context and context.get('noshortcut', False)):
             data_obj = self.pool.get('ir.model.data')
@@ -254,7 +271,7 @@ class res_users(osv.osv):
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
                 logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
-        
+
         return user_id
 
 res_users()

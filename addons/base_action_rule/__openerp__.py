@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Action Rule',
+    'name': 'Automated Action Rules',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales Management',
     'description': """
 This module allows to implement action rules for any object.
 ============================================================
@@ -45,7 +45,7 @@ trigger an automatic reminder email.
     ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '001017908446466333429',
     'images': ['images/base_action_rule1.jpeg','images/base_action_rule2.jpeg','images/base_action_rule3.jpeg'],
 }

@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Sale FAQ',
+    'name': 'Wiki: Sale FAQ',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'complexity': "easy",
@@ -44,7 +44,7 @@ for Wiki Sale FAQ.
     'demo_xml': [
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00556456617408499693',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

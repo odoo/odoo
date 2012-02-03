@@ -19,8 +19,8 @@
 #
 ##############################################################################
 {
-    'name': 'Belgian Payroll Rules',
-    'category': 'Localization/Payroll',
+    'name': 'Belgium - Payroll',
+    'category': 'Localization',
     'author': 'OpenERP SA',
     'depends': ['hr_payroll'],
     'version': '1.0',
@@ -39,7 +39,7 @@ Belgian Payroll Rules
     * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...
     """,
 
-    'active': False,
+    'auto_install': False,
     'demo': [
      'l10n_be_hr_payroll_demo.xml',
     ],

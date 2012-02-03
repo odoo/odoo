@@ -43,7 +43,7 @@
                 <form string="Accounting Voucher">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
-                        <field name="date" on_change="onchange_date(date, currency_id, amount)"/>
+                        <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
                         <field name="journal_id" widget="selection" select="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
                         <field name="name" colspan="2"/>
@@ -53,7 +53,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Voucher Entry">
-                            <field name="line_ids" on_change="onchange_price(line_ids, tax_id, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_ids" on_change="onchange_price(line_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Voucher Items" editable="bottom">
                                     <field name="account_id"/>
                                     <field name="name"/>
@@ -256,6 +256,20 @@
                 <xpath expr="/form/notebook/page/field[@name='line_ids']/form/field[@name='amount']" position="after">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
+            </field>
+        </record>
+
+        <!-- res.company form view -->
+        <record model="ir.ui.view" id="view_company_inherit_currency_xchange_form">
+            <field name="name">res.company.form.inherit</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="after">
+                      <field name="income_currency_exchange_account_id" colspan="2"/>
+                      <field name="expense_currency_exchange_account_id" colspan="2"/>
+                </field>
             </field>
         </record>
 

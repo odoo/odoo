@@ -19,7 +19,7 @@
 ##############################################################################
 
 {
-    "name":"Margins in Sales Orders",
+    "name": "Margins in Sales Orders",
     "version":"1.0",
     "category" : "Sales Management",
     "description": """
@@ -34,7 +34,7 @@ This gives the profitability by calculating the difference between the Unit Pric
     "demo_xml":[],
     'test': ['test/sale_margin.yml'],
     "update_xml":["security/ir.model.access.csv","sale_margin_view.xml"],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "001165700015525701661",
 }

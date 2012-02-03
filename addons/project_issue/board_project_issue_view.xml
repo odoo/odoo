@@ -56,14 +56,14 @@
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="My Board">
-                    <board style="1-1">
+                <form string="Issues Dashboard">
+                    <board style="2-1">
                         <column>
                             <action name="%(action_view_current_project_issue_tree)d" string="Current Issues"/>
                             <action name="%(action_view_pending_project_issue_tree)d" string="Pending Issues"/>
                         </column>
                         <column>
-	                        <action name="%(action_project_issue_graph_state)d" string="Issues By State" />
+                            <action name="%(action_project_issue_graph_state)d" string="Issues By State" />
                             <action name="%(action_project_issue_graph_stage)d" string="Issues By Stage" />
                         </column>
                     </board>
@@ -80,7 +80,7 @@
             <field name="view_id" ref="board_project_issue_form"/>
         </record>
         <menuitem id="menu_deshboard_project_issue" name="Project Issue Dashboard" parent="project.next_id_86"
-         	icon="terp-graph"
+             icon="terp-graph"
             action="open_board_project_issue"/>
 
     <!-- For Project Dashboard -->
@@ -147,12 +147,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.board_project_form"/>
             <field name="arch" type="xml">
-            	<xpath expr="/form/board/column/action[@string='My Delegated Tasks']" position="after">
-						<action name="%(action_view_my_project_issue_tree)d" string="My Issues"/>
-            	</xpath>
-            	<xpath expr="/form/board/column/action[@string='My Remaining Hours by Project']" position="after">
-						<action name="%(action_view_my_open_project_issue_tree)d" string="My Open Issues by Creation Date"/>
-            	</xpath>
+                <xpath expr="/form/board/column/action[@string='My Delegated Tasks']" position="after">
+                        <action name="%(action_view_my_project_issue_tree)d" string="My Issues" creatable="true"/>
+                </xpath>
+                <xpath expr="/form/board/column/action[@string='My Remaining Hours by Project']" position="after">
+                        <action name="%(action_view_my_open_project_issue_tree)d" string="My Open Issues by Creation Date"/>
+                </xpath>
             </field>
         </record>
 

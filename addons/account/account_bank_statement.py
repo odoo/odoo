@@ -30,10 +30,10 @@ class account_bank_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
         seq = 0
         if 'line_ids' in vals:
+            new_line_ids = []
             for line in vals['line_ids']:
                 seq += 1
                 line[2]['sequence'] = seq
-                vals[seq - 1] = line
         return super(account_bank_statement, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -52,8 +52,9 @@ class account_bank_statement(osv.osv):
         journal_pool = self.pool.get('account.journal')
         journal_type = context.get('journal_type', False)
         journal_id = False
+        company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement',context=context)
         if journal_type:
-            ids = journal_pool.search(cr, uid, [('type', '=', journal_type)])
+            ids = journal_pool.search(cr, uid, [('type', '=', journal_type),('company_id','=',company_id)])
             if ids:
                 journal_id = ids[0]
         return journal_id
@@ -128,7 +129,7 @@ class account_bank_statement(osv.osv):
     _description = "Bank Statement"
     _columns = {
         'name': fields.char('Name', size=64, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself'), # readonly for account_cash_statement
-        'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}),
+        'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}, select=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
             readonly=True, states={'draft':[('readonly',False)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True,
@@ -169,30 +170,31 @@ class account_bank_statement(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement',context=c),
     }
 
-    def onchange_date(self, cr, user, ids, date, context=None):
+    def _check_company_id(self, cr, uid, ids, context=None):
+        for statement in self.browse(cr, uid, ids, context=context):
+            if statement.company_id.id != statement.period_id.company_id.id:
+                return False
+        return True
+
+    _constraints = [
+        (_check_company_id, 'The journal and period chosen have to belong to the same company.', ['journal_id','period_id']),
+    ]
+
+    def onchange_date(self, cr, uid, ids, date, company_id, context=None):
         """
-        Returns a dict that contains new values and context
-        @param cr: A database cursor
-        @param user: ID of the user currently logged in
-        @param date: latest value from user input for field date
-        @param args: other arguments
-        @param context: context arguments, like lang, time zone
-        @return: Returns a dict which contains new values, and context
+            Find the correct period to use for the given date and company_id, return it and set it in the context
         """
         res = {}
         period_pool = self.pool.get('account.period')
 
         if context is None:
             context = {}
-
-        pids = period_pool.search(cr, user, [('date_start','<=',date), ('date_stop','>=',date)])
+        ctx = context.copy()
+        ctx.update({'company_id': company_id})
+        pids = period_pool.find(cr, uid, dt=date, context=ctx)
         if pids:
-            res.update({
-                'period_id':pids[0]
-            })
-            context.update({
-                'period_id':pids[0]
-            })
+            res.update({'period_id': pids[0]})
+            context.update({'period_id': pids[0]})
 
         return {
             'value':res,
@@ -297,7 +299,7 @@ class account_bank_statement(osv.osv):
                 context=context):
             if line.state <> 'valid':
                 raise osv.except_osv(_('Error !'),
-                        _('Journal Item "%s" is not valid') % line.name)
+                        _('Journal item "%s" is not valid.') % line.name)
 
         # Bank statements will not consider boolean on journal entry_posted
         account_move_obj.post(cr, uid, [move_id], context=context)
@@ -308,7 +310,7 @@ class account_bank_statement(osv.osv):
 
     def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
         st = self.browse(cr, uid, st_id, context=context)
-        if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):
+        if not ((abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001) or (abs((st.balance_end or 0.0) - st.balance_end_cash) < 0.0001)):
             raise osv.except_osv(_('Error !'),
                     _('The statement balance is incorrect !\nThe expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
         return True
@@ -352,13 +354,16 @@ class account_bank_statement(osv.osv):
             for st_line in st.line_ids:
                 if st_line.analytic_account_id:
                     if not st.journal_id.analytic_journal_id:
-                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (st.journal_id.name,))
+                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to assign an analytic journal on the '%s' journal!") % (st.journal_id.name,))
                 if not st_line.amount:
                     continue
                 st_line_number = self.get_next_st_line_number(cr, uid, st_number, st_line, context)
                 self.create_move_from_st_line(cr, uid, st_line.id, company_currency_id, st_line_number, context)
 
-            self.write(cr, uid, [st.id], {'name': st_number}, context=context)
+            self.write(cr, uid, [st.id], {
+                    'name': st_number,
+                    'balance_end_real': st.balance_end
+            }, context=context)
             self.log(cr, uid, st.id, _('Statement %s is confirmed, journal items are created.') % (st_number,))
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
@@ -382,8 +387,10 @@ class account_bank_statement(osv.osv):
                 ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
         res = cr.fetchone()
         balance_start = res and res[0] or 0.0
-        account_id = self.pool.get('account.journal').read(cr, uid, journal_id, ['default_debit_account_id'], context=context)['default_debit_account_id']
-        return {'value': {'balance_start': balance_start, 'account_id': account_id}}
+        journal_data = self.pool.get('account.journal').read(cr, uid, journal_id, ['default_debit_account_id', 'company_id'], context=context)
+        account_id = journal_data['default_debit_account_id']
+        company_id = journal_data['company_id']
+        return {'value': {'balance_start': balance_start, 'account_id': account_id, 'company_id': company_id}}
 
     def unlink(self, cr, uid, ids, context=None):
         stat = self.read(cr, uid, ids, ['state'], context=context)
@@ -471,7 +478,7 @@ class account_bank_statement_line(osv.osv):
             'Moves'),
         'ref': fields.char('Reference', size=32),
         'note': fields.text('Notes'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bank statement lines."),
+        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of bank statement lines."),
         'company_id': fields.related('statement_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
     _defaults = {

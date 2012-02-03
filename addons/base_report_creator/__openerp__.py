@@ -23,7 +23,7 @@
 {
     'name': 'Query Builder',
     'version': '1.0',
-    'category': 'Advanced Reporting',
+    'category': 'Reporting',
     'complexity': "expert",
     'description': """
 This module allows you to create any statistic report on several objects.
@@ -47,7 +47,7 @@ the Administration / Customization / Reporting menu.
     ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0031285794149',
     'images': ['images/base_report_creator1.jpeg','images/base_report_creator2.jpeg','images/base_report_creator3.jpeg',],
 }

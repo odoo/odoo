@@ -21,7 +21,7 @@
 #
 ##############################################################################
 {
-    "name" : "Poland - Chart of Accounts",
+    "name" : "Poland - Accounting",
     "version" : "1.0",
     "author" : "Grzegorz Grzelak (Cirrus)",
     "website": "http://www.cirrus.pl",
@@ -38,7 +38,7 @@ VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów zakł
     "demo_xml" : [],
     "update_xml" : ['account_tax_code.xml',"account_chart.xml",
                     'account_tax.xml','l10n_chart_pl_wizard.xml'],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "00885794372803776829",
     'images': ['images/config_chart_l10n_pl.jpeg','images/l10n_pl_chart.jpeg'],

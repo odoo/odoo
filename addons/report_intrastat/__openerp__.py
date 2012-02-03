@@ -23,7 +23,7 @@
 {
     'name': 'Intrastat Reporting',
     'version': '1.0',
-    'category': 'Hidden',
+    "category": 'Accounting & Finance',
     'description': """
 A module that adds intrastat reports.
 =====================================
@@ -41,7 +41,7 @@ This module gives the details of the goods traded between the countries of Europ
     'demo_xml': [],
     'test': ['test/report_intrastat_report.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0056982189085',
     'images': ['images/country_intrastat_code.jpeg','images/intrastat_code.jpeg'],
 }

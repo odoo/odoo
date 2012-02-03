@@ -21,13 +21,13 @@
 
 
 {
-    "name" : "Demo data for Marketing Campaign",
+    "name" : "Marketing Campaign - Demo",
     "version" : "1.0",
     "depends" : ["marketing_campaign",
                  "crm",
                 ],
     "author" : "OpenERP SA",
-    "category": 'Hidden',
+    "category": 'Marketing',
     "description": """
 Demo data for the module marketing_campaign.
 ============================================
@@ -41,7 +41,7 @@ Creates demo data like leads, campaigns and segments for the module marketing_ca
         'marketing_campaign_demo.xml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '001005497972871352957',
     'images': ['images/campaigns.jpeg','images/email_templates.jpeg'],
 }

@@ -21,9 +21,10 @@
 
 
 {
-    'name': 'Todo List based on the GTD methodology',
+    'name': 'Todo Lists',
     'version': '1.0',
     'category': 'Project Management',
+    "sequence": 20,
     'complexity': "easy",
     'description': """
 This module implements all concepts defined by the Getting Things Done methodology.
@@ -57,10 +58,11 @@ performing those tasks.
     ],
     'demo_xml': ['project_gtd_demo.xml'],
     'test':[
-        'test/gtd_test.yml'
+         'test/task_timebox.yml'
     ],
     'installable': True,
-    'active': False,
+    'application': True,
+    'auto_install': False,
     'certificate': '0043525236301',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

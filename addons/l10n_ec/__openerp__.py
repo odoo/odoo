@@ -18,7 +18,7 @@
 #
 ##############################################################################
 {
-    'name': 'Ecuador - Accounting Chart',
+    'name': 'Ecuador - Accounting',
     'version': '1.1',
     'category': 'Localization/Account Charts',
     'description': """

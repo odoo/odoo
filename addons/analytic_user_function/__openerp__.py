@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Human Resources',
+    'name': 'Jobs on Contracts',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales Management',
     'description': """
 This module allows you to define what is the default function of a specific user on a given account.
 ====================================================================================================
@@ -41,7 +41,7 @@ Obviously if no data has been recorded for the current account, the default valu
     'update_xml': ['analytic_user_function_view.xml', 'security/ir.model.access.csv'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0082277138269',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

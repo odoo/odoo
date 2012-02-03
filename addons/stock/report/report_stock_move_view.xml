@@ -44,7 +44,7 @@
          <field name="arch" type="xml">
              <graph string="Moves Analysis" type="bar">
                  <field name="product_id"/>
-                 <field name="day_diff2" operator="+"/>
+                 <field name="product_qty" operator="+"/>
              </graph>
          </field>
     </record>
@@ -55,7 +55,7 @@
          <field name="arch" type="xml">
              <graph string="Moves Analysis" type="bar">
                  <field name="day"/>
-                 <field name="day_diff2" operator="+" string="Delay(Days)"/>
+                 <field name="product_qty" operator="+"/>
              </graph>
          </field>
     </record>
@@ -125,7 +125,7 @@
                     <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <filter string="Stock journal" name="group_stock_journal" icon="terp-folder-orange" context="{'group_by':'stock_journal'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Company" name="group_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Company" name="group_state" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Day Planned"/>
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'date'}" help="Month Planned"/>
@@ -141,7 +141,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id"  ref="view_stock_search"/>
-        <field name="context">{'full':'1','contact_display': 'partner','search_default_done':1,'search_default_year':1, 'search_default_month':1, 'search_default_group_type':1, 'group_by': [], 'group_by_no_leaf':1,}</field>
+        <field name="context">{'contact_display': 'partner','search_default_done':1,'search_default_year':1, 'search_default_month':1, 'search_default_group_type':1, 'group_by': [], 'group_by_no_leaf':1,}</field>
         <field name="help">Moves Analysis allows you to easily check and analyse your company stock moves. Use this report when you want to analyse the different routes taken by your products and inventory management performance.</field>
     </record>
     <menuitem action="action_stock_move_report" id="menu_action_stock_move_report" parent="next_id_61" sequence="3"/>

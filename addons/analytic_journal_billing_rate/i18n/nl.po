@@ -6,44 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-01-12 15:43+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:34+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:07+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: analytic_journal_billing_rate
-#: model:ir.module.module,description:analytic_journal_billing_rate.module_meta_information
-msgid ""
-"\n"
-"\n"
-"    This module allows you to define what is the default invoicing rate for "
-"a specific journal on a given account. This is mostly used when a user "
-"encodes his timesheet: the values are retrieved and the fields are auto-"
-"filled... but the possibility to change these values is still available.\n"
-"\n"
-"    Obviously if no data has been recorded for the current account, the "
-"default value is given as usual by the account data so that this module is "
-"perfectly compatible with older configurations.\n"
-"\n"
-"    "
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
 msgstr ""
-"\n"
-"\n"
-"    Deze module laat u standaard factuurtarief voor een specifiek dagboek op "
-"een gegeven rekening. Dit wordt meestal gebruikt bij het invullen van "
-"urenstaten: de waardes worden opgehaald en automatisch ingevuld... met de "
-"mogelijkheid hiervan af te wijken.\n"
-"\n"
-"    Natuurlijk wordt bij het ontbreken ervan bij de huidige rekening, de "
-"standaard waarde als gebruikelijk bepaald uit de rekening gegevens zodat de "
-"module perfect compatibel blijft met oudere configuraties.\n"
-"\n"
-"    "
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,journal_id:0
@@ -54,6 +30,11 @@ msgstr "Analytisch dagboek"
 #: model:ir.model,name:analytic_journal_billing_rate.model_account_invoice
 msgid "Invoice"
 msgstr "Factuur"
+
+#. module: analytic_journal_billing_rate
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
 
 #. module: analytic_journal_billing_rate
 #: view:analytic_journal_rate_grid:0
@@ -77,15 +58,6 @@ msgid "Invoicing Rate per Journal"
 msgstr "Facturerings factor per dagboek"
 
 #. module: analytic_journal_billing_rate
-#: model:ir.module.module,shortdesc:analytic_journal_billing_rate.module_meta_information
-msgid ""
-"Analytic Journal Billing Rate, Define the default invoicing rate for a "
-"specific journal"
-msgstr ""
-"Kostenplaats dagboek facturatie factor, definieert de standaard facturatie "
-"tarief voor een specifiek dagboek"
-
-#. module: analytic_journal_billing_rate
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
@@ -93,6 +65,11 @@ msgid ""
 msgstr ""
 "Fout! De munteenheid moet hetzelfde zijn als de munteenheid van het "
 "geselecteerde bedrijf"
+
+#. module: analytic_journal_billing_rate
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
+msgstr ""
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,rate_id:0
@@ -119,3 +96,37 @@ msgstr "Urenstaatregel"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ongeldige XML, kan overzicht niet weergeven!"
+
+#~ msgid ""
+#~ "Analytic Journal Billing Rate, Define the default invoicing rate for a "
+#~ "specific journal"
+#~ msgstr ""
+#~ "Kostenplaats dagboek facturatie factor, definieert de standaard facturatie "
+#~ "tarief voor een specifiek dagboek"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "    This module allows you to define what is the default invoicing rate for "
+#~ "a specific journal on a given account. This is mostly used when a user "
+#~ "encodes his timesheet: the values are retrieved and the fields are auto-"
+#~ "filled... but the possibility to change these values is still available.\n"
+#~ "\n"
+#~ "    Obviously if no data has been recorded for the current account, the "
+#~ "default value is given as usual by the account data so that this module is "
+#~ "perfectly compatible with older configurations.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "    Deze module laat u standaard factuurtarief voor een specifiek dagboek op "
+#~ "een gegeven rekening. Dit wordt meestal gebruikt bij het invullen van "
+#~ "urenstaten: de waardes worden opgehaald en automatisch ingevuld... met de "
+#~ "mogelijkheid hiervan af te wijken.\n"
+#~ "\n"
+#~ "    Natuurlijk wordt bij het ontbreken ervan bij de huidige rekening, de "
+#~ "standaard waarde als gebruikelijk bepaald uit de rekening gegevens zodat de "
+#~ "module perfect compatibel blijft met oudere configuraties.\n"
+#~ "\n"
+#~ "    "

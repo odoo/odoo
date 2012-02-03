@@ -1,0 +1,104 @@
+-
+ !record {model: stock.location, id: location_refrigerator}:
+    name: Refrigerator
+    usage: internal
+-
+ !record {model: stock.location, id: location_delivery_counter}:
+    name: Delivery Counter
+    usage: internal
+-
+ !record {model: stock.location, id: location_refrigerator_small}:
+    name: Small Refrigerator
+    usage: internal
+    location_id: location_refrigerator   
+-
+ !record {model: stock.location, id: location_opening}:
+    name: opening
+    usage: inventory
+-
+ !record {model: stock.location, id: location_convenience_shop}:
+    name: Convenient Store
+    chained_auto_packing: auto
+    chained_location_type: fixed
+    usage: supplier
+    chained_location_id: location_refrigerator
+    location_id: stock_location_suppliers
+-
+ !record {model: stock.warehouse, id: warehouse_icecream}:
+    name: Ice Cream Shop
+    lot_input_id: location_refrigerator
+    lot_stock_id: location_refrigerator
+    lot_output_id: location_delivery_counter
+-
+ !record {model: product.product, id: product_icecream}:
+    default_code: 001
+    name: Ice Cream
+    type: product
+    categ_id: product.cat1
+    supply_method: buy
+    list_price: 100.0
+    standard_price: 70.0
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_kgm
+    procure_method: make_to_stock
+    property_stock_inventory: location_opening
+    valuation: real_time
+    cost_method: average
+    property_stock_account_input: account.o_expense
+    property_stock_account_output: account.o_income
+    description: Ice cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
+
+-
+ !record {model: stock.production.lot, id: lot_icecream_0}:
+    name: Lot0 for Ice cream
+    product_id: product_icecream
+-
+ !record {model: stock.production.lot, id: lot_icecream_1}:
+    name: Lot1 for Ice cream
+    product_id: product_icecream
+-
+ !record {model: stock.inventory, id: stock_inventory_icecream}:
+    name: Inventory for icecream
+-
+ !record {model: stock.inventory.line, id: stock_inventory_line_icecream_lot0}:
+    product_id: product_icecream
+    product_uom: product.product_uom_kgm
+    inventory_id: stock_inventory_icecream
+    product_qty: 50.0
+    prod_lot_id: lot_icecream_0
+    location_id: location_refrigerator
+-
+ !record {model: stock.inventory.line, id: stock_inventory_line_icecream_lot1}:
+    product_id: product_icecream
+    product_uom: product.product_uom_kgm
+    inventory_id: stock_inventory_icecream
+    product_qty: 40.0
+    prod_lot_id: lot_icecream_1
+    location_id: location_refrigerator
+        
+-
+ !record {model: stock.picking, id: outgoing_shipment}:
+    type: out
+    location_dest_id: location_delivery_counter
+-
+ !record {model: stock.move, id: outgoing_shipment_icecream}:
+    picking_id: outgoing_shipment
+    product_id: product_icecream
+    product_uom: product.product_uom_kgm
+    product_qty: 130.0
+    location_id: location_refrigerator
+    location_dest_id: location_delivery_counter
+-
+ !record {model: stock.picking, id: incomming_shipment}:
+    type: in
+    invoice_state: 2binvoiced
+    address_id: base.res_partner_address_9
+    location_dest_id: location_refrigerator
+-
+ !record {model: stock.move, id: incomming_shipment_icecream}:
+    picking_id: incomming_shipment
+    product_id: product_icecream
+    product_uom: product.product_uom_kgm
+    product_qty: 50.0
+    location_id: location_convenience_shop
+    location_dest_id: location_refrigerator
