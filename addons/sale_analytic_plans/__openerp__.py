@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Sales Analytic Distribution Management',
+    'name': 'Sales Analytic Distribution',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Sales Management',
     'description': """
 The base module to manage analytic distribution and sales orders.
 =================================================================
@@ -37,7 +37,7 @@ Using this module you will be able to link analytic accounts to sales orders.
     'update_xml': ['sale_analytic_plans_view.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0066055860861',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

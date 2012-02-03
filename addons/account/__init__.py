@@ -29,6 +29,7 @@ import account_bank
 import account_cash_statement
 import account_move_line
 import account_analytic_line
+import account_financial_report
 import wizard
 import report
 import product

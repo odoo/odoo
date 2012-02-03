@@ -23,7 +23,7 @@
     "name": "Master Procurement Schedule",
     "version": "1.2",
     "author": "OpenERP SA and Grzegorz Grzelak (OpenGLOBE)",
-    "category": "Hidden",
+    "category" : "Manufacturing",
     "images": ["images/master_procurement_schedule.jpeg","images/sales_forecast.jpeg","images/stock_planning_line.jpeg","images/stock_sales_period.jpeg"],
     "depends": ["crm", "stock","sale"],
     "complexity": "expert",
@@ -197,7 +197,7 @@ Remarks:
         "wizard/stock_planning_createlines_view.xml",
     ],
     "test": ["test/stock_planning.yml"],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "00872589676639788061",
 }

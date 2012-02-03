@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-04-03 09:28+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"PO-Revision-Date: 2012-01-13 18:32+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:55+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-01-14 05:13+0000\n"
+"X-Generator: Launchpad (build 14664)\n"
+
+#. module: purchase_requisition
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr "Die Bestellreferenz muss je Firma eindeutig sein"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -24,21 +29,26 @@ msgid "In Progress"
 msgstr "In Bearbeitung"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
 #, python-format
 msgid "No Product in Tender"
 msgstr "Kein Produkt in Ausschreibung"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Confirm"
-msgstr "Bestätige"
+#: view:purchase.order:0
+msgid "Requisition"
+msgstr "Bedarfsmeldung"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 #: field:purchase.requisition,user_id:0
 msgid "Responsible"
 msgstr "Verantwortlich"
+
+#. module: purchase_requisition
+#: view:purchase.requisition.partner:0
+msgid "Create Quotation"
+msgstr "Erfasse Angebot"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -53,9 +63,8 @@ msgstr "Status"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
-msgid "Draft"
-msgstr "Entwurf"
+msgid "Purchase Requisition in negociation"
+msgstr "Bedarfsanforderung in Verhandlung"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -63,9 +72,10 @@ msgid "Supplier"
 msgstr "Lieferant"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,exclusive:0
-msgid "Requisition Type"
-msgstr "Bedarfsanforderung Typ"
+#: view:purchase.requisition:0
+#: selection:purchase.requisition,state:0
+msgid "New"
+msgstr "Neu"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -82,6 +92,7 @@ msgstr "Datum Bedarfsmeldung"
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: model:ir.actions.report.xml,name:purchase_requisition.report_purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
+#: model:ir.module.category,name:purchase_requisition.module_category_purchase_requisition
 #: field:product.product,purchase_requisition:0
 #: field:purchase.order,requisition_id:0
 #: view:purchase.requisition:0
@@ -96,15 +107,20 @@ msgid "Purchase Requisition Line"
 msgstr "Bedarfsanforderung Positionen"
 
 #. module: purchase_requisition
+#: view:purchase.order:0
+msgid "Purchase Orders with requisition"
+msgstr "Einkaufsaufträge mit Bedarfsanforderung"
+
+#. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
 #: field:purchase.requisition.line,product_id:0
 msgid "Product"
 msgstr "Produkt"
 
 #. module: purchase_requisition
-#: sql_constraint:purchase.order:0
-msgid "Order Reference must be unique !"
-msgstr "Die Auftragsreferenz muss eindeutig sein!"
+#: view:purchase.requisition:0
+msgid "Quotations"
+msgstr "Angebote"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -120,6 +136,12 @@ msgid ""
 msgstr ""
 "Aktiviere diese Option, damit ein Materialbedarf zuerst eine Bedarfsmeldung "
 "anstelle einer direkten Angebotsanfrage generiert."
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:136
+#, python-format
+msgid "Warning"
+msgstr "Warnung"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -143,6 +165,12 @@ msgid "Multiple Requisitions"
 msgstr "Bedarfsmeldung (Multiple)"
 
 #. module: purchase_requisition
+#: report:purchase.requisition:0
+#: field:purchase.requisition.line,product_uom_id:0
+msgid "Product UoM"
+msgstr "Produkt ME"
+
+#. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Approved by Supplier"
 msgstr "Bestätigung Lieferant"
@@ -153,22 +181,14 @@ msgid "Reset to Draft"
 msgstr "Zurücksetzen auf Entwurf"
 
 #. module: purchase_requisition
-#: model:ir.module.module,description:purchase_requisition.module_meta_information
-msgid ""
-"\n"
-"    This module allows you to manage your Purchase Requisition.\n"
-"    When a purchase order is created, you now have the opportunity to save "
-"the related requisition.\n"
-"    This new object will regroup and will allow you to easily keep track and "
-"order all your purchase orders.\n"
-msgstr ""
-"\n"
-"    Diese Anwendung ermöglicht die Verwaltung von Bedarfsmeldungen an den "
-"Einkauf.\n"
-"    Bei der Erstellung eines Beschaffungsauftrags können Sie nun wahlweise "
-"die korrespondierende Bedarfsmeldung speichern.\n"
-"    Das neue Modul bietet somit ein weiteres Kriterium für die Suche und "
-"Gruppierung von Beschaffungsaufträgen.\n"
+#: view:purchase.requisition:0
+msgid "Current Purchase Requisition"
+msgstr "aktuelle Einkaufsanforderungen"
+
+#. module: purchase_requisition
+#: model:res.groups,name:purchase_requisition.group_purchase_requisition_user
+msgid "User"
+msgstr "Benutzer"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.partner,partner_address_id:0
@@ -179,11 +199,6 @@ msgstr "Anschrift"
 #: report:purchase.requisition:0
 msgid "Order Reference"
 msgstr "Referenz Bestellung"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Start Date"
-msgstr "Von Datum"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -209,10 +224,25 @@ msgid "Quantity"
 msgstr "Menge"
 
 #. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Unassigned  Requisition"
+msgstr "nicht zugeteilte Anforderungen"
+
+#. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Purchase Requisitions"
 msgstr "Bedarfsmeldungen"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:136
+#, python-format
+msgid ""
+"You have already one %s purchase order for this partner, you must cancel "
+"this purchase order to create a new quotation."
+msgstr ""
+"SIe haben bereits einen %s Einkaufsauftrag für diesen Partner, dieser muss "
+"gelöscht werden, bevor ein neuer erstellt werden kann.."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -277,16 +307,20 @@ msgid "Purchase Order"
 msgstr "Beschaffungsauftrag"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
 #, python-format
 msgid "Error!"
 msgstr "Fehler!"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition.line,product_uom_id:0
-msgid "Product UoM"
-msgstr "Produkt ME"
+#: field:purchase.requisition,exclusive:0
+msgid "Requisition Type"
+msgstr "Bedarfsanforderung Typ"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "New Purchase Requisition"
+msgstr "Neue Einkaufsanforderung"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -297,6 +331,11 @@ msgstr "Produkte"
 #: view:purchase.requisition:0
 msgid "Order Date"
 msgstr "Auftragsdatum"
+
+#. module: purchase_requisition
+#: report:purchase.requisition:0
+msgid "]"
+msgstr "]"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -314,9 +353,9 @@ msgid "Purchase Requisition Partner"
 msgstr "Bedarfsmeldung Partner"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "]"
-msgstr "]"
+#: view:purchase.requisition:0
+msgid "Start"
+msgstr "Beginn"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -361,11 +400,6 @@ msgid "Latest Requisition"
 msgstr "Letzte Bedarfsmeldung"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Quotations"
-msgstr "Angebote"
-
-#. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Qty"
 msgstr "Menge"
@@ -376,9 +410,9 @@ msgid "Purchase Requisition (exclusive)"
 msgstr "Bedarfsmeldung (Exklusiv)"
 
 #. module: purchase_requisition
-#: view:purchase.requisition.partner:0
-msgid "Create Quotation"
-msgstr "Erfasse Angebot"
+#: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager
+msgid "Manager"
+msgstr "Manager"
 
 #. module: purchase_requisition
 #: constraint:product.product:0
@@ -412,9 +446,9 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: purchase_requisition
-#: model:ir.module.module,shortdesc:purchase_requisition.module_meta_information
-msgid "Purchase - Purchase Requisition"
-msgstr "Beschaffung - Bedarfsmeldung"
+#: view:purchase.requisition:0
+msgid "Start Date"
+msgstr "Von Datum"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -422,21 +456,34 @@ msgid "Unassigned"
 msgstr "Nicht zugewiesen"
 
 #. module: purchase_requisition
-#: view:purchase.order:0
-msgid "Requisition"
-msgstr "Bedarfsmeldung"
-
-#. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
 msgstr "Beschaffungsaufträge"
 
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:90
-#, python-format
-msgid ""
-"You have already one %s purchase order for this partner, you must cancel "
-"this purchase order to create a new quotation."
-msgstr ""
-"SIe haben bereits einen %s Einkaufsauftrag für diesen Partner, dieser muss "
-"gelöscht werden, bevor ein neuer erstellt werden kann.."
+#~ msgid "Confirm"
+#~ msgstr "Bestätige"
+
+#~ msgid "Draft"
+#~ msgstr "Entwurf"
+
+#~ msgid "Purchase - Purchase Requisition"
+#~ msgstr "Beschaffung - Bedarfsmeldung"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module allows you to manage your Purchase Requisition.\n"
+#~ "    When a purchase order is created, you now have the opportunity to save "
+#~ "the related requisition.\n"
+#~ "    This new object will regroup and will allow you to easily keep track and "
+#~ "order all your purchase orders.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "    Diese Anwendung ermöglicht die Verwaltung von Bedarfsmeldungen an den "
+#~ "Einkauf.\n"
+#~ "    Bei der Erstellung eines Beschaffungsauftrags können Sie nun wahlweise "
+#~ "die korrespondierende Bedarfsmeldung speichern.\n"
+#~ "    Das neue Modul bietet somit ein weiteres Kriterium für die Suche und "
+#~ "Gruppierung von Beschaffungsaufträgen.\n"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Die Auftragsreferenz muss eindeutig sein!"

@@ -7,21 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2011-03-16 00:07+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:41+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:13+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,create_date:0
 #: field:document.webdav.file.property,create_date:0
 msgid "Date Created"
 msgstr "Дата создания"
+
+#. module: document_webdav
+#: model:ir.ui.menu,name:document_webdav.menu_document_props
+msgid "Documents"
+msgstr ""
 
 #. module: document_webdav
 #: constraint:document.directory:0
@@ -64,9 +69,9 @@ msgid "These properties will be added to WebDAV requests"
 msgstr "Эти свойства будут добавлены к запросам WebDAV"
 
 #. module: document_webdav
-#: model:ir.ui.menu,name:document_webdav.menu_file_props
-msgid "DAV properties for documents"
-msgstr "DAV-свойства документа"
+#: model:ir.actions.act_window,name:document_webdav.action_file_props_form
+msgid "DAV Properties for Documents"
+msgstr ""
 
 #. module: document_webdav
 #: code:addons/document_webdav/webdav.py:37
@@ -81,25 +86,8 @@ msgid "Document"
 msgstr "Документ"
 
 #. module: document_webdav
-#: model:ir.module.module,description:document_webdav.module_meta_information
-msgid ""
-" With this module, the WebDAV server for the documents is activated.\n"
-"        You can then use any compatible browser to remotely see the "
-"attachments of OpenObject.\n"
-"\n"
-"        After installation, the webDAV server can be controlled by a "
-"[webdav] section in the server's config.\n"
-"        Server Configuration Parameter:\n"
-"        [webdav]\n"
-"        ; enable = True ; Serve webdav over the http(s) servers\n"
-"        ; vdir = webdav ; the directory that webdav will be served at\n"
-"          ; this default val means that webdav will be\n"
-"          ; on \"http://localhost:8069/webdav/\n"
-"        ; verbose = True ; Turn on the verbose messages of webdav\n"
-"        ; debug = True ; Turn on the debugging messages of webdav\n"
-"          ; since the messages are routed to the python logging, with\n"
-"          ; levels \"debug\" and \"debug_rpc\" respectively, you can leave\n"
-"          ; these options on\n"
+#: model:ir.ui.menu,name:document_webdav.menu_folder_props
+msgid "Folders"
 msgstr ""
 
 #. module: document_webdav
@@ -135,9 +123,9 @@ msgstr ""
 "0.9.4.tar.gz&can=2&q=/"
 
 #. module: document_webdav
-#: model:ir.ui.menu,name:document_webdav.menu_dir_props
-msgid "DAV properties for folders"
-msgstr "DAV-свойства папок"
+#: model:ir.actions.act_window,name:document_webdav.action_dir_props_form
+msgid "DAV Properties for Folders"
+msgstr ""
 
 #. module: document_webdav
 #: view:document.directory:0
@@ -193,9 +181,9 @@ msgid "Creator"
 msgstr "Создатель"
 
 #. module: document_webdav
-#: model:ir.module.module,shortdesc:document_webdav.module_meta_information
-msgid "WebDAV server for Document Management"
-msgstr "Сервер WebDAV для управления документами"
+#: model:ir.ui.menu,name:document_webdav.menu_properties
+msgid "DAV Properties"
+msgstr ""
 
 #. module: document_webdav
 #: sql_constraint:document.directory:0
@@ -207,3 +195,12 @@ msgstr "Каталог должен иметь родителя или хран�
 #: field:document.webdav.file.property,do_subst:0
 msgid "Substitute"
 msgstr "Заменить"
+
+#~ msgid "DAV properties for documents"
+#~ msgstr "DAV-свойства документа"
+
+#~ msgid "WebDAV server for Document Management"
+#~ msgstr "Сервер WebDAV для управления документами"
+
+#~ msgid "DAV properties for folders"
+#~ msgstr "DAV-свойства папок"

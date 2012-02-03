@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14:35+0000\n"
-"PO-Revision-Date: 2011-01-11 11:14:35+0000\n"
+"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"PO-Revision-Date: 2011-12-22 18:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,12 +31,6 @@ msgid "Specifies the amount of quantity to count."
 msgstr ""
 
 #. module: analytic
-#: model:ir.module.module,description:analytic.module_meta_information
-msgid "Module for defining analytic accounting object.\n"
-"    "
-msgstr ""
-
-#. module: analytic
 #: field:account.analytic.account,state:0
 msgid "State"
 msgstr ""
@@ -44,11 +38,6 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Draft"
 msgstr ""
 
 #. module: analytic
@@ -74,13 +63,13 @@ msgid "* When an account is created its in 'Draft' state.                       
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,type:0
-msgid "Account Type"
+#: selection:account.analytic.account,state:0
+msgid "New"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
+#: field:account.analytic.account,type:0
+msgid "Account Type"
 msgstr ""
 
 #. module: analytic
@@ -111,8 +100,10 @@ msgid "Company"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Maximum Quantity"
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid "If you set a company, the currency selected has to be the same as it's currency. \n"
+"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."
 msgstr ""
 
 #. module: analytic
@@ -131,8 +122,8 @@ msgid "Date"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,currency_id:0
-msgid "Account currency"
+#: selection:account.analytic.account,state:0
+msgid "Template"
 msgstr ""
 
 #. module: analytic
@@ -147,8 +138,13 @@ msgid "Calculated by multiplying the quantity and the price given in the Product
 msgstr ""
 
 #. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr ""
+
+#. module: analytic
 #: help:account.analytic.account,quantity_max:0
-msgid "Sets the higher limit of quantity of hours."
+msgid "Sets the higher limit of time to work on the contract."
 msgstr ""
 
 #. module: analytic
@@ -172,8 +168,19 @@ msgid "Error! The currency has to be the same as the currency of the selected co
 msgstr ""
 
 #. module: analytic
+#: field:account.analytic.account,code:0
+msgid "Code/Reference"
+msgstr ""
+
+#. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
+msgstr ""
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid "Error !"
 msgstr ""
 
 #. module: analytic
@@ -197,8 +204,13 @@ msgid "Date End"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Account Code"
+#: field:account.analytic.account,quantity_max:0
+msgid "Maximum Time"
+msgstr ""
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
 msgstr ""
 
 #. module: analytic
@@ -209,8 +221,17 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.module.module,shortdesc:analytic.module_meta_information
 msgid "Analytic Account"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr ""
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
 msgstr ""
 
 #. module: analytic

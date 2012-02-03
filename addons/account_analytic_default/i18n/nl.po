@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-13 05:42+0000\n"
-"Last-Translator: Jan Verlaan @ Veritos <Unknown>\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"PO-Revision-Date: 2012-02-01 08:49+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:25+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
-
-#. module: account_analytic_default
-#: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
-msgid "Account Analytic Default"
-msgstr "Standaard kostenplaats"
+"X-Launchpad-Export-Date: 2012-02-02 05:59+0000\n"
+"X-Generator: Launchpad (build 14738)\n"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -63,6 +58,11 @@ msgstr "Standaard einddatum voor deze kostenplaats"
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
 msgstr "Piklijst"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Comapny"
+msgstr "Bedrijf"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -133,26 +133,14 @@ msgid "Analytic Defaults"
 msgstr "Analytische standaarden"
 
 #. module: account_analytic_default
-#: model:ir.module.module,description:account_analytic_default.module_meta_information
-msgid ""
-"\n"
-"Allows to automatically select analytic accounts based on criterions:\n"
-"* Product\n"
-"* Partner\n"
-"* User\n"
-"* Company\n"
-"* Date\n"
-"    "
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr "Referentie moet uniek zijn per bedrijf!"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Analytical defaults whose end date is greater than today or None"
 msgstr ""
-"\n"
-"Staat automatische selectie toe voor kostenplaatsrekeningen gebaseerd op "
-"criteria:\n"
-"* Produkt\n"
-"* Partner\n"
-"* Gebruiker\n"
-"* Bedrijf\n"
-"* Daum\n"
-"    "
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -219,8 +207,31 @@ msgstr "Verkooporderregel"
 #~ msgid "Analytic Distributions"
 #~ msgstr "Analytische verdelingen"
 
+#~ msgid "Account Analytic Default"
+#~ msgstr "Standaard kostenplaats"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ongeldige XML, kan overzicht niet weergeven!"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allows to automatically select analytic accounts based on criterions:\n"
+#~ "* Product\n"
+#~ "* Partner\n"
+#~ "* User\n"
+#~ "* Company\n"
+#~ "* Date\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Staat automatische selectie toe voor kostenplaatsrekeningen gebaseerd op "
+#~ "criteria:\n"
+#~ "* Produkt\n"
+#~ "* Partner\n"
+#~ "* Gebruiker\n"
+#~ "* Bedrijf\n"
+#~ "* Daum\n"
+#~ "    "

@@ -34,6 +34,7 @@ class stock_move_consume(osv.osv_memory):
         'location_id': fields.many2one('stock.location', 'Location', required=True)
     }
 
+    #TOFIX: product_uom should not have differemt category of default UOM of product. Qty should be convert into UOM of original move line before going in consume and scrap
     def default_get(self, cr, uid, fields, context=None):
         """ Get default values
         @param self: The object pointer.
@@ -204,8 +205,13 @@ class split_in_production_lot(osv.osv_memory):
                     lines = [l for l in data.line_exist_ids if l]
                 else:
                     lines = [l for l in data.line_ids if l]
+                total_move_qty = 0.0
                 for line in lines:
                     quantity = line.quantity
+                    total_move_qty += quantity
+                    if total_move_qty > move_qty:
+                        raise osv.except_osv(_('Processing Error'), _('Production lot quantity %d of %s is larger than available quantity (%d) !') \
+                                % (total_move_qty, move.product_id.name, move_qty))
                     if quantity <= 0 or move_qty == 0:
                         continue
                     quantity_rest -= quantity
@@ -254,7 +260,7 @@ class stock_move_split_lines_exist(osv.osv_memory):
     _name = "stock.move.split.lines"
     _description = "Stock move Split lines"
     _columns = {
-        'name': fields.char('Tracking serial', size=64),
+        'name': fields.char('Production Lot', size=64),
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'wizard_id': fields.many2one('stock.move.split', 'Parent Wizard'),
         'wizard_exist_id': fields.many2one('stock.move.split', 'Parent Wizard (for existing lines)'),

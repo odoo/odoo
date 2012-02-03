@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-10-30 11:59+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:29+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:01+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: board
 #: view:res.log.report:0
@@ -27,22 +27,9 @@ msgid "Menu Create"
 msgstr "Ustvari meni"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-#: model:ir.model,name:board.model_board_note_type
-msgid "Note Type"
-msgstr "Tip opombe"
-
-#. module: board
-#: view:board.note:0
-#: field:board.note,user_id:0
-msgid "Author"
-msgstr "Avtor"
-
-#. module: board
-#: model:ir.module.module,shortdesc:board.module_meta_information
-msgid "Dashboard main module"
-msgstr "Osnovni modul nadzorne plošče"
+#: view:board.menu.create:0
+msgid "Menu Information"
+msgstr "Informacije o meniju"
 
 #. module: board
 #: view:res.users:0
@@ -50,30 +37,25 @@ msgid "Latest Connections"
 msgstr "Zadnje povezave"
 
 #. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
-#, python-format
-msgid "User Error!"
-msgstr "Napaka uporabnika!"
+#: view:res.log.report:0
+msgid "Log created in last month"
+msgstr ""
 
 #. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.open_board_administration_form
-#: model:ir.ui.menu,name:board.menu_board_admin
 msgid "Administration Dashboard"
 msgstr "Nadzorna plošča administracije"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note,note:0
-#: model:ir.model,name:board.model_board_note
-msgid "Note"
-msgstr "Opomba"
-
-#. module: board
-#: view:board.note:0
 #: view:res.log.report:0
 msgid "Group By..."
 msgstr "Združi po ..."
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log created in current year"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -81,7 +63,11 @@ msgid "Board"
 msgstr "Plošča"
 
 #. module: board
-#: view:board.board:0
+#: field:board.menu.create,menu_name:0
+msgid "Menu Name"
+msgstr "Ime Menija"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
 #: view:res.log.report:0
 msgid "Weekly Global Activity"
@@ -104,21 +90,20 @@ msgid "Month"
 msgstr "Mesec"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr "Odpri nadzorno ploščo"
+#: view:res.log.report:0
+msgid "Log created in current month"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
 #: view:res.log.report:0
 msgid "Monthly Activity per Document"
 msgstr "Mesečne aktivnosti na dokument"
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
-msgstr "Analiza dnevnika"
+#: view:board.board:0
+msgid "Configuration Overview"
+msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
@@ -137,7 +122,6 @@ msgid "August"
 msgstr "avgust"
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_user_connection_tree
 msgid "User Connections"
 msgstr "Povezave uporabnika"
@@ -148,25 +132,19 @@ msgid "Creation Date"
 msgstr "Ustvarjeno dne"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_note_form
-#: model:ir.ui.menu,name:board.menu_view_board_note_form
-msgid "Publish a note"
-msgstr "Objavi opombo"
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr "Analiza dnevnika"
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
-msgstr "Informacije o meniju"
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr "Predmet"
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "June"
 msgstr "junij"
-
-#. module: board
-#: field:board.note,type:0
-msgid "Note type"
-msgstr "Tip opombe"
 
 #. module: board
 #: field:board.board,line_ids:0
@@ -179,20 +157,15 @@ msgid "Log Report"
 msgstr "Poročilo dnevnika"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note,date:0
-msgid "Date"
-msgstr "Datum"
+#: code:addons/board/wizard/board_menu_create.py:46
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Prosim vnesite poglede nadzorne plošče!"
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "July"
 msgstr "julij"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Extended Filters..."
-msgstr "Razširjeni filtri..."
 
 #. module: board
 #: view:res.log.report:0
@@ -236,9 +209,9 @@ msgid "January"
 msgstr "januar"
 
 #. module: board
-#: view:board.note:0
-msgid "Notes"
-msgstr "Opombe"
+#: view:board.board:0
+msgid "Users"
+msgstr ""
 
 #. module: board
 #: selection:res.log.report,month:0
@@ -261,15 +234,15 @@ msgstr "april"
 #: view:board.board:0
 #: field:board.board,name:0
 #: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.admin_menu_dasboard
 #: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
 msgstr "Nadzorna plošča"
 
 #. module: board
-#: model:ir.module.module,description:board.module_meta_information
-msgid "Base module for all dashboards."
-msgstr "Osnovni modul za vse nadzorne plošče"
+#: code:addons/board/wizard/board_menu_create.py:45
+#, python-format
+msgid "User Error!"
+msgstr "Napaka uporabnika!"
 
 #. module: board
 #: field:board.board.line,action_id:0
@@ -287,12 +260,11 @@ msgid "Model"
 msgstr "Model"
 
 #. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "Ime Menija"
+#: model:ir.actions.act_window,name:board.board_homepage_action
+msgid "Home Page"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_latest_activities_tree
 msgid "Latest Activities"
 msgstr "Zadnje aktivnosti"
@@ -359,11 +331,6 @@ msgid "May"
 msgstr "maj"
 
 #. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr "Predmet"
-
-#. module: board
 #: view:res.log.report:0
 #: field:res.log.report,name:0
 msgid "Year"
@@ -379,18 +346,6 @@ msgstr "Prekliči"
 msgid "Dashboard View"
 msgstr "Pogled nadzorne plošče"
 
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
-#, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr "Prosim vnesite poglede nadzorne plošče!"
-
-#. module: board
-#: view:board.note:0
-#: field:board.note,name:0
-msgid "Subject"
-msgstr "Zadeva"
-
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -402,6 +357,21 @@ msgstr "Zadeva"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Neveljaven XML za arhitekturo pogleda."
 
+#~ msgid "Author"
+#~ msgstr "Avtor"
+
+#~ msgid "Note"
+#~ msgstr "Opomba"
+
+#~ msgid "Notes"
+#~ msgstr "Opombe"
+
+#~ msgid "Date"
+#~ msgstr "Datum"
+
+#~ msgid "Subject"
+#~ msgstr "Zadeva"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Napačno ime modela v definiciji dejanja."
 
@@ -410,3 +380,24 @@ msgstr "Zadeva"
 
 #~ msgid "board.note.type"
 #~ msgstr "board.note.type"
+
+#~ msgid "Note Type"
+#~ msgstr "Tip opombe"
+
+#~ msgid "Dashboard main module"
+#~ msgstr "Osnovni modul nadzorne plošče"
+
+#~ msgid "Open Dashboard"
+#~ msgstr "Odpri nadzorno ploščo"
+
+#~ msgid "Note type"
+#~ msgstr "Tip opombe"
+
+#~ msgid "Publish a note"
+#~ msgstr "Objavi opombo"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Razširjeni filtri..."
+
+#~ msgid "Base module for all dashboards."
+#~ msgstr "Osnovni modul za vse nadzorne plošče"

@@ -23,7 +23,7 @@
     "name" : "Resource",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category" : "Hidden",
+    "category" : "Hidden/Dependency",
     "website" : "http://www.openerp.com",
     "description": """
 Module for resource management.
@@ -45,8 +45,12 @@ It also manages the leaves of every resource.
     ],
     'demo_xml': ['resource_demo.xml'
     ],
+    'test': [
+        'test/resource.yml',
+        'test/duplicate_resource.yml',
+    ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '00746371192190459469',
     'images': ['images/resource_leaves_calendar.jpeg','images/resource_leaves_form.jpeg'],
 }

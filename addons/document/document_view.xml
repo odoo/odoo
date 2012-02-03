@@ -70,7 +70,7 @@
         <field name="model">document.directory</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Directories" col="6">
+            <form string="Directories" col="4">
                 <field name="name" select="1" colspan="4"/>
                 <field name="parent_id"/>
                 <field name="storage_id" widget="selection" />
@@ -93,7 +93,7 @@
                         <field name="ressource_parent_type_id"/>
                         <field name="ressource_id" select="2" readonly="1"/>
                     </group>
-                    <group colspan="4" col="2" attrs="{'invisible': [('type','!=','ressource'),('resource_parent_type_id','=',False)]}">
+                    <group colspan="4" col="2" attrs="{'invisible': [('type','!=','ressource'),('ressource_parent_type_id','=',False)]}">
                         <field name="resource_find_all" groups="base.group_extended" />
                     </group>
 

@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-    'name': 'Collaborative Content (Wiki)',
+    'name': 'Wiki',
     'version': '1.0.1',
     'category': 'Knowledge Management',
-    'complexity': "easy",
+    'complexity': "normal",
     'description': """
 The base module to manage documents(wiki).
 ==========================================
@@ -49,9 +49,10 @@ Keep track of Wiki groups, pages, and history.
     'demo_xml': ['wiki_demo.xml'],
     'test': ['test/wiki_test00.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0086363630317',
     'web': True,
     'images': ['images/create_index.jpeg','images/page_history.jpeg','images/wiki_groups.jpeg','images/wiki_pages.jpeg'],
+    'js': ['static/src/lib/wiky/wiky.js', 'static/src/js/wiki.js'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

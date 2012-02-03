@@ -19,12 +19,12 @@
 ##############################################################################
 
 {
-    "name" : "Authenticate users with LDAP server",
+    "name" : "Authentication via LDAP",
     "version" : "1.0",
     "depends" : ["base"],
     "images" : ["images/ldap_configuration.jpeg"],
     "author" : "OpenERP SA",
-    'complexity': "easy",
+    'complexity': "expert",
     "description": """
 Adds support for authentication by LDAP server.
 ===============================================
@@ -116,12 +116,13 @@ will disable LDAP authentication if installed at the same time.
 
 
     "website" : "http://www.openerp.com",
-    "category" : "Hidden",
+    "category" : "Tools",
     "data" : [
         "users_ldap_view.xml",
         "user_ldap_installer.xml",
+        "security/ir.model.access.csv",
     ],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "001141446349334700221",
     "external_dependencies" : {

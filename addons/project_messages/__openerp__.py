@@ -26,7 +26,7 @@
     "images": ["images/project_message.jpeg"],
     "depends": ["project"],
     "author": "OpenERP SA",
-    "category": 'Hidden',
+    "category": "Project Management",
     'complexity': "easy",
     "description": """
 This module provides the functionality to send messages within a project.
@@ -41,7 +41,7 @@ it to all the users.
                    'project_messages_view.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00747329574689027469',
 }
 

@@ -20,11 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Fetchmail for Applicants",
+    "name" : "eMail Gateway for Applicants",
     "version" : "1.0",
     "depends" : ["fetchmail", "hr_recruitment"],
     "author" : "OpenERP SA",
-    "category": 'Hidden/Link',
+    "category": "Hidden",
     "description": """
     """,
     'website': 'http://www.openerp.com',
@@ -35,7 +35,7 @@
     'demo_xml': [
     ],
     'installable': True,
-    'active': False,
+    'auto_install': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

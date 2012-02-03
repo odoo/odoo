@@ -31,18 +31,18 @@ class account_analytic_profit(osv.osv_memory):
         'date_to': fields.date('To', required=True),
         'journal_ids': fields.many2many('account.analytic.journal', 'analytic_profit_journal_rel', 'analytic_id', 'journal_id', 'Journal', required=True),
         'employee_ids': fields.many2many('res.users', 'analytic_profit_emp_rel', 'analytic_id', 'emp_id', 'User', required=True),
-                }
+    }
 
     def _date_from(*a):
-        return datetime.datetime.today().strftime('%Y-%m-1')
+        return datetime.date.today().replace(day=1).strftime('%Y-%m-%d')
 
     def _date_to(*a):
-        return datetime.datetime.today().strftime('%Y-%m-%d')
+        return datetime.date.today().strftime('%Y-%m-%d')
 
     _defaults = {
-         'date_from': _date_from,
-         'date_to': _date_to
-                 }
+        'date_from': _date_from,
+        'date_to': _date_to
+    }
 
     def print_report(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('account.analytic.line')

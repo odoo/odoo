@@ -18,7 +18,7 @@
 #
 ##############################################################################
 {
-    "name" : "中国会计科目表",
+    "name" : "中国会计科目表 - Accounting",
     "version" : "1.0",
     "category": "Localization/Account Charts",
     "author" : "openerp-china.org",
@@ -40,7 +40,7 @@
         "l10n_chart_cn_wizard.xml",
     ],
     "license": "GPL-3",
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate": '00925445983542952285',
     'images': ['images/config_chart_l10n_cn.jpeg','images/l10n_cn_chart.jpeg'],

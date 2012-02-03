@@ -23,7 +23,7 @@
 {
     'name': 'OpenOffice Report Designer',
     'version': '0.1',
-    'category': 'Advanced Reporting',
+    'category': 'Reporting',
     'complexity': "normal",
     'description': """
 This module is used along with OpenERP OpenOffice Plugin.
@@ -40,7 +40,7 @@ upload the report using the same wizard.
     'update_xml': ['base_report_designer_installer.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0056379010493',
     'images': ['images/base_report_designer1.jpeg','images/base_report_designer2.jpeg',],
 }

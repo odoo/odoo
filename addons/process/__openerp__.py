@@ -23,7 +23,7 @@
 {
     'name': 'Enterprise Process',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Hidden/Dependency',
     'description': """
 This module shows the basic processes involved in the selected modules and in the sequence they occur.
 ======================================================================================================
@@ -42,7 +42,7 @@ e.g product/process/product_process_xml
     ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0055447636669',
     'images': ['images/process_nodes.jpeg','images/process_transitions.jpeg', 'images/processes.jpeg'],
 }

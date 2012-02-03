@@ -30,9 +30,6 @@ import pooler
 import os
 import tools
 
-import base_module_doc_rst
-
-
 choose_file_form = '''<?xml version="1.0"?>
 <form string="Create Technical Guide in rst format">
     <separator string="Technical Guide in rst format" colspan="4"/>

@@ -155,7 +155,7 @@ class subscription_subscription_history(osv.osv):
     _columns = {
         'date': fields.datetime('Date'),
         'subscription_id': fields.many2one('subscription.subscription', 'Subscription', ondelete='cascade'),
-        'document_id': fields.reference('Source Document', required=True, selection=[('account.invoice','Invoice'),('sale.order','Sale Order')], size=128),
+        'document_id': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
     }
 subscription_subscription_history()
 

@@ -21,9 +21,10 @@
 
 
 {
-    'name': 'Expenses',
+    'name': 'Expenses Management',
     'version': '1.0',
     'category': 'Human Resources',
+    "sequence": 30,
     'complexity': "easy",
     'description': """
 This module aims to manage employee's expenses.
@@ -62,11 +63,13 @@ re-invoice your customer's expenses if your work by project.
     'demo_xml': [
         'hr_expense_demo.xml',
         ],
-    'test': ['test/test_hr_expense.yml',
-             'test/hr_expense_report.yml',
+    'test': [
+             'test/expense_demo.yml',
+             'test/expense_process.yml',
              ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0062479841789',
+    'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

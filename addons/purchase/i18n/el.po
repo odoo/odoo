@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:43+0000\n"
 "PO-Revision-Date: 2010-12-04 09:51+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 04:56+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-01-31 05:01+0000\n"
+"X-Generator: Launchpad (build 14734)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -27,9 +27,8 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:292
-#, python-format
-msgid "You can not confirm purchase order without Purchase Order Lines."
+#: model:process.node,note:purchase.process_node_productrecept0
+msgid "Incoming products to control"
 msgstr ""
 
 #. module: purchase
@@ -45,7 +44,13 @@ msgid "Destination"
 msgstr "Προορισμός"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:721
+#: code:addons/purchase/purchase.py:235
+#, python-format
+msgid "In order to delete a purchase order, it must be cancelled first!"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:772
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
@@ -57,6 +62,21 @@ msgstr ""
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+#: view:purchase.order.line:0
+#: view:purchase.report:0
+#: view:stock.picking:0
+msgid "Group By..."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,create_uid:0
+#: view:purchase.report:0
+#: field:purchase.report,user_id:0
+msgid "Responsible"
 msgstr ""
 
 #. module: purchase
@@ -73,25 +93,9 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,invoice_method:0
-msgid "From Reception"
-msgstr ""
-
-#. module: purchase
 #: view:purchase.order:0
-msgid "Not Invoiced"
+msgid "Approved purchase order"
 msgstr ""
-
-#. module: purchase
-#: field:purchase.order,dest_address_id:0
-msgid "Destination Address"
-msgstr "Διεύθυνση Προορισμού"
-
-#. module: purchase
-#: report:purchase.order:0
-#: field:purchase.report,validator:0
-msgid "Validated By"
-msgstr "Επικυρωμένο Από"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -101,6 +105,17 @@ msgstr "Επικυρωμένο Από"
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
 msgstr "Προμηθευτής"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
+msgid "Pricelists"
+msgstr ""
+
+#. module: purchase
+#: view:stock.picking:0
+msgid "To Invoice"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
@@ -116,20 +131,14 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:735
-#, python-format
-msgid "The selected supplier only sells this product by %s"
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/wizard/purchase_line_invoice.py:156
+#: code:addons/purchase/wizard/purchase_line_invoice.py:145
 #, python-format
 msgid "Supplier Invoices"
 msgstr "Παραστατικά προμηθευτών"
 
 #. module: purchase
-#: sql_constraint:purchase.order:0
-msgid "Order Reference must be unique !"
+#: view:purchase.report:0
+msgid "Purchase Orders Statistics"
 msgstr ""
 
 #. module: purchase
@@ -139,21 +148,25 @@ msgid "From a Pick list"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:660
+#: code:addons/purchase/purchase.py:708
 #, python-format
 msgid "No Pricelist !"
 msgstr "Δεν υπάρχει Τιμοκατάλογος!"
 
 #. module: purchase
-#: field:purchase.order.line,product_qty:0
-#: view:purchase.report:0
-#: field:purchase.report,quantity:0
-msgid "Quantity"
-msgstr "Ποσότητα"
+#: model:ir.model,name:purchase.model_purchase_config_wizard
+msgid "purchase.config.wizard"
+msgstr ""
 
 #. module: purchase
-#: view:purchase.order.line_invoice:0
-msgid "Select an Open Sale Order"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:purchase.purchase_draft
+msgid "Request for Quotations"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.config.wizard,default_method:0
+msgid "Based on Receptions"
 msgstr ""
 
 #. module: purchase
@@ -165,7 +178,11 @@ msgid "Company"
 msgstr "Εταιρία"
 
 #. module: purchase
-#: view:board.board:0
+#: help:res.company,po_lead:0
+msgid "This is the leads/security time for each purchase order."
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
@@ -186,11 +203,6 @@ msgstr "Εξαίρεση Τιμολογίου"
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
 msgstr "Προεπιλεγμένος Τιμοκατάλογος Αγορών"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_current_purchases
-msgid "Current purchases"
-msgstr ""
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -218,25 +230,24 @@ msgid "Fax :"
 msgstr "Φαξ:"
 
 #. module: purchase
-#: help:purchase.order,pricelist_id:0
-msgid ""
-"The pricelist sets the currency used for this purchase order. It also "
-"computes the supplier price for the selected products/quantities."
+#: view:purchase.order:0
+msgid "To Approve"
 msgstr ""
-"Το νόμισμα που χρησιμοποιείται στην παραγγελία ορίζεταο στον τιμοκατάλογο "
-"αγορών. Υπολογίζει επίσης την τιμή του προμηθευτή για τα επιλέγμένα "
-"προϊόντα/ποσότητες."
+
+#. module: purchase
+#: view:res.partner:0
+msgid "Purchase Properties"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
-msgid "Partial Picking"
+msgid "Partial Picking Processing Wizard"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:296
-#, python-format
-msgid "Purchase order '%s' is confirmed."
-msgstr ""
+#: view:purchase.order.line:0
+msgid "History"
+msgstr "Ιστορικό"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -244,26 +255,24 @@ msgid "Approve Purchase"
 msgstr "Έγκριση Αγοράς"
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_approvepurchaseorder0
-#: view:purchase.order:0
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
-msgid "Approved"
-msgstr "Εγκεκριμένη"
-
-#. module: purchase
 #: view:purchase.report:0
-msgid "Reference UOM"
+#: field:purchase.report,day:0
+msgid "Day"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Origin"
-msgstr "Προέλευση"
+#: selection:purchase.order,invoice_method:0
+msgid "Based on generated draft invoice"
+msgstr ""
 
 #. module: purchase
-#: field:purchase.report,product_uom:0
-msgid "Reference UoM"
+#: view:purchase.report:0
+msgid "Order of Day"
+msgstr ""
+
+#. module: purchase
+#: view:board.board:0
+msgid "Monthly Purchases by Category"
 msgstr ""
 
 #. module: purchase
@@ -273,19 +282,21 @@ msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
+msgid "Purchase order which are in draft state"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Origin"
+msgstr "Προέλευση"
+
+#. module: purchase
+#: view:purchase.order:0
 #: field:purchase.order,notes:0
 #: view:purchase.order.line:0
 #: field:purchase.order.line,notes:0
 msgid "Notes"
 msgstr "Σημειώσεις"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:660
-#, python-format
-msgid ""
-"You have to select a pricelist or a supplier in the purchase form !\n"
-"Please set one before choosing a product."
-msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -324,19 +335,15 @@ msgid "Net Total :"
 msgstr "Καθαρό Σύνολο"
 
 #. module: purchase
-#: view:purchase.installer:0
-msgid "Configure Your Purchases Management Application"
-msgstr ""
-
-#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 msgid "Products"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.installer,progress:0
-msgid "Configuration Progress"
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
+#: view:purchase.report:0
+msgid "Total Qty and Amount by month"
 msgstr ""
 
 #. module: purchase
@@ -352,12 +359,6 @@ msgstr ""
 #: selection:purchase.report,state:0
 msgid "Cancelled"
 msgstr "Ακυρωμένη"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:315
-#, python-format
-msgid "Purchase amount over the limit"
-msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -398,26 +399,9 @@ msgid "Manually Corrected"
 msgstr "Διορθωμένη Χειροκίνητα"
 
 #. module: purchase
-#: view:purchase.report:0
-msgid "   Month   "
-msgstr ""
-
-#. module: purchase
 #: view:purchase.order:0
 msgid "Reference"
 msgstr "Παραπομπή"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:244
-#, python-format
-msgid "Cannot delete Purchase Order(s) which are in %s State!"
-msgstr ""
-"Δεν μπορούνε να διαγραφούνε Παραγγελίες που βρίσκονται σε %s κατάσταση"
-
-#. module: purchase
-#: field:purchase.report,dest_address_id:0
-msgid "Dest. Address Contact Name"
-msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
@@ -425,13 +409,23 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,day:0
-msgid "Day"
+#: code:addons/purchase/purchase.py:418
+#, python-format
+msgid "You must first cancel all invoices related to this purchase order."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:344
+#: field:purchase.report,dest_address_id:0
+msgid "Dest. Address Contact Name"
+msgstr ""
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "TVA :"
+msgstr "ΦΠΑ:"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:325
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr ""
@@ -448,21 +442,28 @@ msgid "# of Lines"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:696
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:748
+#: code:addons/purchase/purchase.py:788
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.installer,purchase_analytic_plans:0
-msgid "Purchase Analytic Plans"
+#: field:purchase.order,validator:0
+#: view:purchase.report:0
+msgid "Validated by"
+msgstr "Επικυρωμένο από"
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Order in last month"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_purchase_installer
-msgid "purchase.installer"
+#: code:addons/purchase/purchase.py:411
+#, python-format
+msgid "You must first cancel all receptions related to this purchase order."
 msgstr ""
 
 #. module: purchase
@@ -486,7 +487,18 @@ msgid "It indicates that a picking has been done"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:721
+#: view:purchase.order:0
+msgid "Purchase orders which are in exception state"
+msgstr ""
+
+#. module: purchase
+#: report:purchase.order:0
+#: field:purchase.report,validator:0
+msgid "Validated By"
+msgstr "Επικυρωμένο Από"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:772
 #, python-format
 msgid "Wrong Product UOM !"
 msgstr "Λάθος ΜΟΜ Προϊόντος"
@@ -504,6 +516,11 @@ msgid "Average Price"
 msgstr ""
 
 #. module: purchase
+#: view:stock.picking:0
+msgid "Incoming Shipments already processed"
+msgstr ""
+
+#. module: purchase
 #: report:purchase.order:0
 msgid "Total :"
 msgstr "Σύνολο:"
@@ -515,10 +532,11 @@ msgid "Confirm"
 msgstr "Επιβεβαίωση"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
-#: view:purchase.order:0
-msgid "Invoice Control"
-msgstr "Έλεγχος Τιμολογίων"
+#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
+#: model:ir.ui.menu,name:purchase.menu_action_picking_tree4_picking_to_invoice
+#: selection:purchase.order,invoice_method:0
+msgid "Based on receptions"
+msgstr ""
 
 #. module: purchase
 #: constraint:res.company:0
@@ -531,11 +549,6 @@ msgid "Supplier Reference"
 msgstr ""
 
 #. module: purchase
-#: help:purchase.order,amount_tax:0
-msgid "The tax amount"
-msgstr ""
-
-#. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
 msgid ""
 "A Pick list generates a supplier invoice. Depending on the Invoicing control "
@@ -544,12 +557,18 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
+msgid ""
+"If you set the Invoicing Control on a purchase order as \"Based on Purchase "
+"Order lines\", you can track here all the purchase order lines for which you "
+"have not yet received the supplier invoice. Once you are ready to receive a "
+"supplier invoice, you can generate a draft supplier invoice based on the "
+"lines from this menu."
+msgstr ""
+
+#. module: purchase
 #: view:purchase.order:0
-#: field:purchase.order,state:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,state:0
-#: view:purchase.report:0
-msgid "State"
+msgid "Purchase order which are in the exception state"
 msgstr ""
 
 #. module: purchase
@@ -586,7 +605,7 @@ msgid "Order Lines"
 msgstr "Γραμμές Παραγγελίας"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:662
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid "No Partner!"
 msgstr "Δεν υπάρχει Συνεργάτης!"
@@ -603,14 +622,13 @@ msgid "Total Price"
 msgstr "Συνολική Τιμή"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Untaxed amount"
-msgstr "Καθαρό ποσό"
+#: model:ir.actions.act_window,name:purchase.action_import_create_supplier_installer
+msgid "Create or Import Suppliers"
+msgstr ""
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
-msgid "Pricelists"
+#: view:stock.picking:0
+msgid "Available"
 msgstr ""
 
 #. module: purchase
@@ -619,15 +637,9 @@ msgid "Address Contact Name"
 msgstr ""
 
 #. module: purchase
-#: help:purchase.order,invoice_method:0
-msgid ""
-"From Order: a draft invoice will be pre-generated based on the purchase "
-"order. The accountant will just have to validate this invoice for control.\n"
-"From Picking: a draft invoice will be pre-generated based on validated "
-"receptions.\n"
-"Manual: allows you to generate suppliers invoices by chosing in the "
-"uninvoiced lines of all manual purchase orders."
-msgstr ""
+#: report:purchase.order:0
+msgid "Shipping address :"
+msgstr "Διεύθυνση Αποστολής"
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -635,22 +647,41 @@ msgid "Invoices generated for a purchase order"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:292
-#: code:addons/purchase/purchase.py:362
-#: code:addons/purchase/purchase.py:372
-#: code:addons/purchase/wizard/purchase_line_invoice.py:122
+#: code:addons/purchase/purchase.py:284
+#: code:addons/purchase/purchase.py:347
+#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/wizard/purchase_line_invoice.py:111
 #, python-format
 msgid "Error !"
 msgstr "Σφάλμα:"
 
 #. module: purchase
-#: view:purchase.order.line:0
-msgid "General Information"
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: purchase
-#: view:board.board:0
-msgid "My Board"
+#: code:addons/purchase/purchase.py:710
+#, python-format
+msgid ""
+"You have to select a partner in the purchase form !\n"
+"Please set one partner before choosing a product."
+msgstr ""
+"Πρέπει να επιλέξετε συνεργάτη!\n"
+"Παρακαλώ επιλέξτε συνεργάτη πριν επιλέξετε προϊόν."
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:348
+#, python-format
+msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
+msgid ""
+"The invoice is created automatically if the Invoice control of the purchase "
+"order is 'On picking'. The invoice can also be generated manually by the "
+"accountant (Invoice control = Manual)."
 msgstr ""
 
 #. module: purchase
@@ -667,22 +698,27 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Approved by Supplier"
-msgstr "Εγκεκριμένη από Προμηθευτή"
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
-msgid ""
-"The invoice is created automatically if the Invoice control of the purchase "
-"order is 'On picking'. The invoice can also be generated manually by the "
-"accountant (Invoice control = Manual)."
+#: model:ir.ui.menu,name:purchase.menu_configuration_misc
+msgid "Miscellaneous"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,invoice_method:0
-msgid "From Order"
-msgstr "Από Παραγγελία"
+#: code:addons/purchase/purchase.py:788
+#, python-format
+msgid "The selected supplier only sells this product by %s"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Reference UOM"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,product_qty:0
+#: view:purchase.report:0
+#: field:purchase.report,quantity:0
+msgid "Quantity"
+msgstr "Ποσότητα"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
@@ -690,22 +726,26 @@ msgid "Create invoice"
 msgstr "Δημιουργία Τιμολογίου"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
+msgid "Units of Measure"
+msgstr ""
+
+#. module: purchase
 #: field:purchase.order.line,move_dest_id:0
 msgid "Reservation Destination"
 msgstr "Προορσιμός Κράτησης"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:244
+#: code:addons/purchase/purchase.py:235
 #, python-format
 msgid "Invalid action !"
 msgstr "Άκυρη Ενέργεια!"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
-#: selection:purchase.report,state:0
-msgid "Done"
-msgstr "Ολοκληρώθηκε"
+#: field:purchase.order,fiscal_position:0
+msgid "Fiscal Position"
+msgstr "Φορολογική Θέση"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -719,12 +759,6 @@ msgid "Configuration"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_by_supplier
-#: view:purchase.report:0
-msgid "Purchase by supplier"
-msgstr ""
-
-#. module: purchase
 #: view:purchase.order:0
 msgid "Total amount"
 msgstr "Σύνολικό ποσό"
@@ -735,10 +769,10 @@ msgid "Receptions"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,validator:0
-#: view:purchase.report:0
-msgid "Validated by"
-msgstr "Επικυρωμένο από"
+#: code:addons/purchase/purchase.py:284
+#, python-format
+msgid "You cannot confirm a purchase order without any lines."
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -756,49 +790,24 @@ msgid "RFQ"
 msgstr "ΑΓΠ"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
-msgid "Supplier Invoices to Receive"
-msgstr ""
-
-#. module: purchase
-#: help:purchase.installer,purchase_requisition:0
-msgid ""
-"Manages your Purchase Requisition and allows you to easily keep track and "
-"manage all your purchase orders."
-msgstr ""
-
-#. module: purchase
-#: view:purchase.report:0
-msgid "    Month-1    "
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:373
+#: code:addons/purchase/edi/purchase_order.py:139
 #, python-format
-msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
+msgid "EDI Pricelist (%s)"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,invoice_method:0
-msgid "Manual"
-msgstr "Μη Αυτόματη"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:410
-#, python-format
-msgid "You must first cancel all picking attached to this purchase order."
+#: selection:purchase.order,state:0
+msgid "Waiting Approval"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order.line,date_order:0
-#: field:purchase.report,date:0
-msgid "Order Date"
+#: selection:purchase.report,month:0
+msgid "January"
 msgstr ""
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_productrecept0
-msgid "Incoming products to control"
+#: model:ir.actions.server,name:purchase.ir_actions_server_edi_purchase
+msgid "Auto-email confirmed purchase orders"
 msgstr ""
 
 #. module: purchase
@@ -807,17 +816,25 @@ msgid "Approbation"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-msgid "Purchase Orders Statistics"
+#: report:purchase.order:0
+#: view:purchase.order:0
+#: field:purchase.order,date_order:0
+#: field:purchase.order.line,date_order:0
+#: field:purchase.report,date:0
+#: view:stock.picking:0
+msgid "Order Date"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
-msgid ""
-"If you set the invoicing control on a purchase order as \"Manual\", you can "
-"track here all the purchase order lines for which you have not received the "
-"supplier invoice yet. Once you are ready to receive a supplier invoice, you "
-"can generate a draft supplier invoice based on the lines from this menu."
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_partner
+#: field:purchase.order.line,partner_id:0
+#: view:stock.picking:0
+msgid "Partner"
 msgstr ""
 
 #. module: purchase
@@ -827,8 +844,14 @@ msgid "Draft Invoice"
 msgstr "Πρόχειρο Τιμολόγιο"
 
 #. module: purchase
-#: help:purchase.installer,purchase_analytic_plans:0
-msgid "Manages analytic distribution and purchase orders."
+#: report:purchase.order:0
+#: report:purchase.quotation:0
+msgid "Qty"
+msgstr "Ποσ."
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Month-1"
 msgstr ""
 
 #. module: purchase
@@ -841,18 +864,13 @@ msgstr ""
 "γραμμές παραγγελίας."
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "August"
+#: model:ir.model,name:purchase.model_purchase_order_group
+msgid "Purchase Order Merge"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.installer,purchase_requisition:0
-msgid "Purchase Requisition"
-msgstr ""
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
-msgid "Units of Measure Categories"
+#: view:purchase.report:0
+msgid "Order in  current month"
 msgstr ""
 
 #. module: purchase
@@ -879,12 +897,12 @@ msgid "Invoices"
 msgstr ""
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_purchaseorder0
-msgid "Confirmed purchase order to invoice"
+#: selection:purchase.report,month:0
+msgid "December"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.installer,config_logo:0
+#: field:purchase.config.wizard,config_logo:0
 msgid "Image"
 msgstr ""
 
@@ -894,14 +912,19 @@ msgid "Total Orders Lines by User per month"
 msgstr ""
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Approved purchase orders"
+msgstr ""
+
+#. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,month:0
 msgid "Month"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.report,state:0
-msgid "Waiting Supplier Ack"
+#: model:email.template,subject:purchase.email_template_edi_purchase
+msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 msgstr ""
 
 #. module: purchase
@@ -910,7 +933,6 @@ msgid "Request for Quotation :"
 msgstr "Αίτηση για Προσφορά"
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_waiting
 msgid "Purchase Order Waiting Approval"
 msgstr "Παραγγελίες για Έγκριση"
@@ -918,6 +940,11 @@ msgstr "Παραγγελίες για Έγκριση"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
+msgstr ""
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_purchase_user
+msgid "User"
 msgstr ""
 
 #. module: purchase
@@ -939,10 +966,9 @@ msgstr ""
 "Αυτή έιναι η κατάσταση Λιστών Συλλογής που δημιουργήθηκαν για την αγορά αυτή."
 
 #. module: purchase
-#: model:ir.module.module,shortdesc:purchase.module_meta_information
-#: model:ir.ui.menu,name:purchase.menu_procurement_management
-msgid "Purchase Management"
-msgstr "Διαχείριση Παραγγελιών"
+#: view:stock.picking:0
+msgid "Is a Back Order"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
@@ -951,15 +977,8 @@ msgid "To be reviewed by the accountant."
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
-#: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
-msgid "On Purchase Order Line"
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
-#: model:ir.ui.menu,name:purchase.action_picking_tree4_picking_to_invoice
-msgid "On Receptions"
+#: help:purchase.order,amount_total:0
+msgid "The total amount"
 msgstr ""
 
 #. module: purchase
@@ -986,9 +1005,9 @@ msgid "State of the Purchase Order."
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-msgid "  Year  "
-msgstr ""
+#: field:purchase.order,dest_address_id:0
+msgid "Destination Address"
+msgstr "Διεύθυνση Προορισμού"
 
 #. module: purchase
 #: field:purchase.report,state:0
@@ -996,8 +1015,18 @@ msgid "Order State"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+msgid "Product Categories"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
 msgid "Create invoices"
+msgstr ""
+
+#. module: purchase
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
 msgstr ""
 
 #. module: purchase
@@ -1008,34 +1037,24 @@ msgid "Purchase Order Line"
 msgstr "Γραμμή Παραγγελίας Αγοράς"
 
 #. module: purchase
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr ""
-
-#. module: purchase
 #: view:purchase.order:0
 msgid "Calendar View"
 msgstr "Ημερολογιακή Προβολή"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_purchase_order_group
-msgid "Purchase Order Merge"
+#: selection:purchase.config.wizard,default_method:0
+msgid "Based on Purchase Order Lines"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.quotation:0
-msgid "Regards,"
-msgstr "Με εκτίμηση,"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
-#: view:purchase.report:0
-msgid "Negotiation by Supplier"
+#: help:purchase.order,amount_untaxed:0
+msgid "The amount without tax"
 msgstr ""
 
 #. module: purchase
-#: view:res.partner:0
-msgid "Purchase Properties"
+#: code:addons/purchase/purchase.py:885
+#, python-format
+msgid "PO: %s"
 msgstr ""
 
 #. module: purchase
@@ -1062,14 +1081,8 @@ msgid "Outgoing products to invoice"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.installer:0
-msgid "Configure"
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_qty_per_product
-#: view:purchase.report:0
-msgid "Qty. per product"
+#: selection:purchase.report,month:0
+msgid "August"
 msgstr ""
 
 #. module: purchase
@@ -1093,6 +1106,25 @@ msgid "June"
 msgstr ""
 
 #. module: purchase
+#: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
+msgid ""
+"The invoice is created automatically if the Invoice control of the purchase "
+"order is 'On order'. The invoice can also be generated manually by the "
+"accountant (Invoice control = Manual)."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_email_templates
+#: model:ir.ui.menu,name:purchase.menu_email_templates
+msgid "Email Templates"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.config.wizard,default_method:0
+msgid "Pre-Generate Draft Invoices based on Purchase Orders"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
 msgstr ""
@@ -1103,11 +1135,10 @@ msgid "Manual Invoices"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:318
-#, python-format
-msgid ""
-"Somebody has just confirmed a purchase with an amount over the defined limit"
-msgstr ""
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
+#: view:purchase.order:0
+msgid "Invoice Control"
+msgstr "Έλεγχος Τιμολογίων"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1120,24 +1151,22 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:362
-#: code:addons/purchase/wizard/purchase_line_invoice.py:123
-#, python-format
-msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
-msgstr "Δεν έχει δηλωθεί λογαριασμός εξόδων για το προϊόν: \"%s\" (id:%d)"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:418
-#, python-format
-msgid "You must first cancel all invoices attached to this purchase order."
+#: view:purchase.config.wizard:0
+msgid "Invoicing Control on Purchases"
 msgstr ""
-"Πρέπει πρώτα να ακυρώσετε όλα τα τιμολόγια που συνδέονται με την Παραγγελία "
-"Αγοράς."
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:48
 #, python-format
 msgid "Please select multiple order to merge in the list view."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_import_create_supplier_installer
+msgid ""
+"Create or Import Suppliers and their contacts manually from this form or you "
+"can import your existing partners by CSV spreadsheet from \"Import Data\" "
+"wizard"
 msgstr ""
 
 #. module: purchase
@@ -1161,31 +1190,13 @@ msgid "Compute"
 msgstr "Υπολογισμός"
 
 #. module: purchase
-#: model:ir.module.module,description:purchase.module_meta_information
-msgid ""
-"\n"
-"    Purchase module is for generating a purchase order for purchase of goods "
-"from a supplier.\n"
-"    A supplier invoice is created for the particular order placed\n"
-"    Dashboard for purchase management that includes:\n"
-"    * Current Purchase Orders\n"
-"    * Draft Purchase Orders\n"
-"    * Graph for quantity and amount per month    \n"
-"\n"
-"    "
+#: view:stock.picking:0
+msgid "Incoming Shipments Available"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:696
-#, python-format
-msgid ""
-"The selected supplier has a minimal quantity set to %s, you cannot purchase "
-"less."
-msgstr ""
-
-#. module: purchase
-#: selection:purchase.report,month:0
-msgid "January"
+#: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
+msgid "Address Book"
 msgstr ""
 
 #. module: purchase
@@ -1199,8 +1210,10 @@ msgid "Cancel Purchase Order"
 msgstr "Ακύρωση Παραγγελίας Αγοράς"
 
 #. module: purchase
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
+#: code:addons/purchase/purchase.py:410
+#: code:addons/purchase/purchase.py:417
+#, python-format
+msgid "Unable to cancel this purchase order!"
 msgstr ""
 
 #. module: purchase
@@ -1209,8 +1222,23 @@ msgid "A pick list is generated to track the incoming products."
 msgstr ""
 
 #. module: purchase
+#: help:purchase.order,pricelist_id:0
+msgid ""
+"The pricelist sets the currency used for this purchase order. It also "
+"computes the supplier price for the selected products/quantities."
+msgstr ""
+"Το νόμισμα που χρησιμοποιείται στην παραγγελία ορίζεταο στον τιμοκατάλογο "
+"αγορών. Υπολογίζει επίσης την τιμή του προμηθευτή για τα επιλέγμένα "
+"προϊόντα/ποσότητες."
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_deshboard
 msgid "Dashboard"
+msgstr ""
+
+#. module: purchase
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
 msgstr ""
 
 #. module: purchase
@@ -1220,8 +1248,13 @@ msgid "Products Value"
 msgstr ""
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
-msgid "Pricelists Types"
+#: model:ir.ui.menu,name:purchase.menu_partner_categories_in_form
+msgid "Partner Categories"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,amount_tax:0
+msgid "The tax amount"
 msgstr ""
 
 #. module: purchase
@@ -1231,15 +1264,24 @@ msgid "Quotations"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_po_per_month_tree
-#: view:purchase.report:0
-msgid "Purchase order per month"
+#: help:purchase.order,invoice_method:0
+msgid ""
+"Based on Purchase Order lines: place individual lines in 'Invoice Control > "
+"Based on P.O. lines' from where you can selectively create an invoice.\n"
+"Based on generated invoice: create a draft invoice you can validate later.\n"
+"Based on receptions: let you create an invoice when receptions are validated."
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order.line:0
-msgid "History"
-msgstr "Ιστορικό"
+#: model:ir.actions.act_window,name:purchase.action_supplier_address_form
+msgid "Addresses"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_rfq
+#: model:ir.ui.menu,name:purchase.menu_purchase_rfq
+msgid "Requests for Quotation"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
@@ -1256,6 +1298,11 @@ msgstr ""
 #: help:purchase.order,origin:0
 msgid "Reference of the document that generated this purchase order request."
 msgstr "Παραπομπή στο έγγραφο που δημιούργησε την αίτηση παραγγελίας."
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Purchase orders which are not approved yet."
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,state:0
@@ -1280,9 +1327,16 @@ msgid "Subtotal"
 msgstr "Σύνολο"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.purchase_rfq
-#: model:ir.ui.menu,name:purchase.menu_purchase_rfq
-msgid "Requests for Quotation"
+#: field:purchase.order,warehouse_id:0
+#: view:purchase.report:0
+#: field:purchase.report,warehouse_id:0
+msgid "Warehouse"
+msgstr "Αποθήκη"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:288
+#, python-format
+msgid "Purchase order '%s' is confirmed."
 msgstr ""
 
 #. module: purchase
@@ -1291,32 +1345,47 @@ msgid "Date on which purchase order has been approved"
 msgstr ""
 
 #. module: purchase
+#: view:purchase.order:0
+#: field:purchase.order,state:0
+#: view:purchase.order.line:0
+#: field:purchase.order.line,state:0
+#: view:purchase.report:0
+#: view:stock.picking:0
+msgid "State"
+msgstr ""
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_approvepurchaseorder0
+#: view:purchase.order:0
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
-msgid "Waiting"
-msgstr "Σε αναμονή"
+msgid "Approved"
+msgstr "Εγκεκριμένη"
 
 #. module: purchase
-#: model:product.pricelist.version,name:purchase.ver0
-msgid "Default Purchase Pricelist Version"
-msgstr "Έκδοση (Version) Προεπιλεμένου Τιμοκαταλόγου Αγορών"
-
-#. module: purchase
-#: view:purchase.installer:0
-msgid ""
-"Extend your Purchases Management Application with additional functionalities."
+#: view:purchase.order.line:0
+msgid "General Information"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_install_module
-#: view:purchase.installer:0
-msgid "Purchases Application Configuration"
+#: view:purchase.order:0
+msgid "Not invoiced"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,fiscal_position:0
-msgid "Fiscal Position"
-msgstr "Φορολογική Θέση"
+#: report:purchase.order:0
+#: field:purchase.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Τιμή Μονάδας"
+
+#. module: purchase
+#: view:purchase.order:0
+#: selection:purchase.order,state:0
+#: selection:purchase.order.line,state:0
+#: selection:purchase.report,state:0
+#: view:stock.picking:0
+msgid "Done"
+msgstr "Ολοκληρώθηκε"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1330,8 +1399,8 @@ msgid "Invoice"
 msgstr "Τιμολόγιο"
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "December"
+#: model:process.node,note:purchase.process_node_purchaseorder0
+msgid "Confirmed purchase order to invoice"
 msgstr ""
 
 #. module: purchase
@@ -1355,12 +1424,19 @@ msgid "The supplier approves the Purchase Order."
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/wizard/purchase_order_group.py:80
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: view:purchase.report:0
+#, python-format
 msgid "Purchase Orders"
 msgstr "Παραγγελίες Αγοράς"
+
+#. module: purchase
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -1400,10 +1476,8 @@ msgid "Tél. :"
 msgstr "Τηλ. :"
 
 #. module: purchase
-#: field:purchase.order,create_uid:0
 #: view:purchase.report:0
-#: field:purchase.report,user_id:0
-msgid "Responsible"
+msgid "Order of Month"
 msgstr ""
 
 #. module: purchase
@@ -1418,11 +1492,9 @@ msgid "Search Purchase Order"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,warehouse_id:0
-#: view:purchase.report:0
-#: field:purchase.report,warehouse_id:0
-msgid "Warehouse"
-msgstr "Αποθήκη"
+#: model:ir.actions.act_window,name:purchase.action_purchase_config
+msgid "Set the Default Invoicing Control Method"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
@@ -1442,16 +1514,19 @@ msgid "Date Approved"
 msgstr "Ημερ/νία Έγκρισης"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:417
-#, python-format
-msgid "Could not cancel this purchase order !"
-msgstr "Η Παραγγελία δεν μπορεί να ακυρωθεί!"
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
+msgid "Units of Measure Categories"
+msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Τιμή Μονάδας"
+#: selection:purchase.report,state:0
+msgid "Waiting Supplier Ack"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
+msgid "Based on draft invoices"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1487,8 +1562,16 @@ msgid "Description"
 msgstr "Περιγραφή"
 
 #. module: purchase
-#: help:res.company,po_lead:0
-msgid "This is the leads/security time for each purchase order."
+#: code:addons/purchase/purchase.py:748
+#, python-format
+msgid ""
+"The selected supplier has a minimal quantity set to %s, you should not "
+"purchase less."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Order of Year"
 msgstr ""
 
 #. module: purchase
@@ -1497,14 +1580,19 @@ msgid "Expected Delivery address:"
 msgstr "Αναμενόμενη Διεύθυνση παραλαβής:"
 
 #. module: purchase
+#: view:stock.picking:0
+msgid "Journal"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
 #: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
 msgid "Receptions Analysis"
 msgstr ""
 
 #. module: purchase
-#: help:purchase.order,amount_untaxed:0
-msgid "The amount without tax"
+#: field:res.company,po_lead:0
+msgid "Purchase Lead Time"
 msgstr ""
 
 #. module: purchase
@@ -1521,9 +1609,8 @@ msgid "Delivery"
 msgstr "Παραλαβή"
 
 #. module: purchase
-#: view:board.board:0
-#: model:ir.actions.act_window,name:purchase.purchase_draft
-msgid "Request for Quotations"
+#: view:purchase.order:0
+msgid "Purchase orders which are in done state."
 msgstr ""
 
 #. module: purchase
@@ -1532,14 +1619,24 @@ msgid "Product UOM"
 msgstr "ΜΟΜ Προϊόντων"
 
 #. module: purchase
-#: report:purchase.order:0
 #: report:purchase.quotation:0
-msgid "Qty"
-msgstr "Ποσ."
+msgid "Regards,"
+msgstr "Με εκτίμηση,"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Waiting"
+msgstr "Σε αναμονή"
 
 #. module: purchase
 #: field:purchase.order,partner_address_id:0
 msgid "Address"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.report,product_uom:0
+msgid "Reference UoM"
 msgstr ""
 
 #. module: purchase
@@ -1548,16 +1645,26 @@ msgid "Reservation"
 msgstr "Κράτηση"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
-#: view:purchase.report:0
-msgid "Total Qty and Amount by month"
+#: view:purchase.order:0
+msgid "Purchase orders that include lines not invoiced."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:409
-#, python-format
-msgid "Could not cancel purchase order !"
-msgstr "Η Παραγγελία δεν μπορεί να ακυρωθεί!"
+#: view:purchase.order:0
+msgid "Untaxed amount"
+msgstr "Καθαρό ποσό"
+
+#. module: purchase
+#: view:stock.picking:0
+msgid "Picking to Invoice"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.config.wizard:0
+msgid ""
+"This tool will help you to select the method you want to use to control "
+"supplier invoices."
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
@@ -1569,11 +1676,6 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "February"
-msgstr ""
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
-msgid "Product Categories"
 msgstr ""
 
 #. module: purchase
@@ -1592,14 +1694,9 @@ msgstr "Η Παραπομπή της παραγγελίας σας"
 #: field:purchase.order,minimum_planned_date:0
 #: report:purchase.quotation:0
 #: field:purchase.report,expected_date:0
+#: view:stock.picking:0
 msgid "Expected Date"
 msgstr "Αναμενόμενη Ημερ/νία"
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_total_price_by_product_by_state
-#: view:purchase.report:0
-msgid "Total price by product by state"
-msgstr ""
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1607,15 +1704,12 @@ msgid "TVA:"
 msgstr "ΦΠΑ:"
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order,date_order:0
-msgid "Date Ordered"
-msgstr "Ημερ/νία Παραγγελίας"
-
-#. module: purchase
-#: report:purchase.order:0
-msgid "Shipping address :"
-msgstr "Διεύθυνση Αποστολής"
+#: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
+msgid ""
+"If you set the Invoicing Control on a purchase order as \"Based on "
+"receptions\", you can track here all the product receptions and create "
+"invoices for those receptions."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1649,14 +1743,13 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,name:0
-msgid "Year"
+#: field:purchase.report,negociation:0
+msgid "Purchase-Standard Price"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.report,negociation:0
-msgid "Purchase-Standard Price"
+#: field:purchase.config.wizard,default_method:0
+msgid "Default Invoicing Control Method"
 msgstr ""
 
 #. module: purchase
@@ -1671,14 +1764,19 @@ msgid "Invoicing Control"
 msgstr "Έλεγχος Τιμολογήσεων"
 
 #. module: purchase
+#: view:stock.picking:0
+msgid "Back Orders"
+msgstr ""
+
+#. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
 msgid "Approve"
 msgstr "Έγκριση"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "To Approve"
-msgstr ""
+#: model:product.pricelist.version,name:purchase.ver0
+msgid "Default Purchase Pricelist Version"
+msgstr "Έκδοση (Version) Προεπιλεμένου Τιμοκαταλόγου Αγορών"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1698,7 +1796,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:424
+#: code:addons/purchase/purchase.py:425
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr ""
@@ -1714,9 +1812,16 @@ msgid "Pricelist Versions"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_supplier_address_form
-msgid "Addresses"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
 msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/wizard/purchase_line_invoice.py:112
+#, python-format
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
+msgstr "Δεν έχει δηλωθεί λογαριασμός εξόδων για το προϊόν: \"%s\" (id:%d)"
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -1724,25 +1829,78 @@ msgid "Are you sure you want to merge these orders ?"
 msgstr "Είστε σίγουροι ότι θέλετε να συγχωνεύσετε αυτές τις παραγγελίες;"
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
-#: view:purchase.report:0
-msgid "Group By..."
-msgstr ""
-
-#. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
 msgid "From a purchase order"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-msgid "TVA :"
-msgstr "ΦΠΑ:"
+#: code:addons/purchase/purchase.py:708
+#, python-format
+msgid ""
+"You have to select a pricelist or a supplier in the purchase form !\n"
+"Please set one before choosing a product."
+msgstr ""
 
 #. module: purchase
-#: help:purchase.order,amount_total:0
-msgid "The total amount"
+#: model:email.template,body_text:purchase.email_template_edi_purchase
+msgid ""
+"\n"
+"Hello${object.partner_address_id.name and ' ' or "
+"''}${object.partner_address_id.name or ''},\n"
+"\n"
+"Here is a purchase order confirmation from ${object.company_id.name}:\n"
+"       | Order number: *${object.name}*\n"
+"       | Order total: *${object.amount_total} "
+"${object.pricelist_id.currency_id.name}*\n"
+"       | Order date: ${object.date_order}\n"
+"       % if object.origin:\n"
+"       | Order reference: ${object.origin}\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       | Your reference: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       | Your contact: ${object.validator.name} "
+"${object.validator.user_email and '<%s>'%(object.validator.user_email) or "
+"''}\n"
+"\n"
+"You can view the order confirmation and download it using the following "
+"link:\n"
+"    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+"\n"
+"If you have any question, do not hesitate to contact us.\n"
+"\n"
+"Thank you!\n"
+"\n"
+"\n"
+"--\n"
+"${object.validator.name} ${object.validator.user_email and "
+"'<%s>'%(object.validator.user_email) or ''}\n"
+"${object.company_id.name}\n"
+"% if object.company_id.street:\n"
+"${object.company_id.street or ''}\n"
+"% endif\n"
+"% if object.company_id.street2:\n"
+"${object.company_id.street2}\n"
+"% endif\n"
+"% if object.company_id.city or object.company_id.zip:\n"
+"${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+"% endif\n"
+"% if object.company_id.country_id:\n"
+"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+"or ''} ${object.company_id.country_id.name or ''}\n"
+"% endif\n"
+"% if object.company_id.phone:\n"
+"Phone: ${object.company_id.phone}\n"
+"% endif\n"
+"% if object.company_id.website:\n"
+"${object.company_id.website or ''}\n"
+"% endif\n"
+"            "
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Purchase orders which are in draft state"
 msgstr ""
 
 #. module: purchase
@@ -1751,16 +1909,18 @@ msgid "May"
 msgstr ""
 
 #. module: purchase
-#: field:res.company,po_lead:0
-msgid "Purchase Lead Time"
+#: model:res.groups,name:purchase.group_purchase_manager
+msgid "Manager"
 msgstr ""
 
 #. module: purchase
-#: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
-msgid ""
-"The invoice is created automatically if the Invoice control of the purchase "
-"order is 'On order'. The invoice can also be generated manually by the "
-"accountant (Invoice control = Manual)."
+#: view:purchase.config.wizard:0
+msgid "res_config_contents"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Order in current year"
 msgstr ""
 
 #. module: purchase
@@ -1769,30 +1929,23 @@ msgid "Purchase"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_res_partner
-#: field:purchase.order.line,partner_id:0
-msgid "Partner"
+#: view:purchase.report:0
+#: field:purchase.report,name:0
+msgid "Year"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:662
-#, python-format
-msgid ""
-"You have to select a partner in the purchase form !\n"
-"Please set one partner before choosing a product."
-msgstr ""
-"Πρέπει να επιλέξετε συνεργάτη!\n"
-"Παρακαλώ επιλέξτε συνεργάτη πριν επιλέξετε προϊόν."
-
-#. module: purchase
-#: view:purchase.installer:0
-msgid "title"
+#: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
+#: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
+#: selection:purchase.order,invoice_method:0
+msgid "Based on Purchase Order lines"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_stock_partial_move
-msgid "Partial Move"
-msgstr ""
+#: model:ir.actions.todo.category,name:purchase.category_purchase_config
+#: model:ir.ui.menu,name:purchase.menu_procurement_management
+msgid "Purchase Management"
+msgstr "Διαχείριση Παραγγελιών"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1800,9 +1953,8 @@ msgid "Stock Moves"
 msgstr "Κινήσεις Αποθέματος"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
-msgid "Units of Measure"
+#: view:purchase.order.line_invoice:0
+msgid "Select an Open Sale Order"
 msgstr ""
 
 #. module: purchase
@@ -1818,6 +1970,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
@@ -1846,6 +1999,12 @@ msgstr ""
 
 #~ msgid "Purchase order is confirmed by the user."
 #~ msgstr "Η Παραγγελία Αγοράς επιβεβαιώθηκε από το χρήστη"
+
+#, python-format
+#~ msgid "You must first cancel all invoices attached to this purchase order."
+#~ msgstr ""
+#~ "Πρέπει πρώτα να ακυρώσετε όλα τα τιμολόγια που συνδέονται με την Παραγγελία "
+#~ "Αγοράς."
 
 #~ msgid "Purchase Order lines"
 #~ msgstr "Γραμμές Παραγγελίας Αγοράς"
@@ -1885,6 +2044,12 @@ msgstr ""
 #~ msgid "Planned Date"
 #~ msgstr "Προγραμματισμένη Ημερ/νία"
 
+#~ msgid "Approved by Supplier"
+#~ msgstr "Εγκεκριμένη από Προμηθευτή"
+
+#~ msgid "From Order"
+#~ msgstr "Από Παραγγελία"
+
 #~ msgid "Merge purchases"
 #~ msgstr "Συγχώνευση παραλαβών"
 
@@ -1903,6 +2068,9 @@ msgstr ""
 
 #~ msgid "Packing is created for the products reception control."
 #~ msgstr "Η συσκευασία δημιουργείται για τον έλεγχο παραλαβής προϊόντων."
+
+#~ msgid "Manual"
+#~ msgstr "Μη Αυτόματη"
 
 #~ msgid "Confirming Purchase"
 #~ msgstr "Επιβεβαίωση Παραλάβων"
@@ -1983,6 +2151,10 @@ msgstr ""
 #~ msgid "Control invoices on receptions"
 #~ msgstr "Έλεγχος τιμολογίων κατά την παραλαβή"
 
+#, python-format
+#~ msgid "Could not cancel this purchase order !"
+#~ msgstr "Η Παραγγελία δεν μπορεί να ακυρωθεί!"
+
 #~ msgid ""
 #~ "Module for purchase management\n"
 #~ "    Request for quotation, Create Supplier Invoice, Print Order..."
@@ -1996,6 +2168,10 @@ msgstr ""
 #~ msgid "Confirming Purchase Order"
 #~ msgstr "Επιβεβαίωση Παραγγελιών Αγοράς"
 
+#, python-format
+#~ msgid "Could not cancel purchase order !"
+#~ msgstr "Η Παραγγελία δεν μπορεί να ακυρωθεί!"
+
 #~ msgid "Purchase Invoice"
 #~ msgstr "Τιμολόγιο Αγοράς"
 
@@ -2004,6 +2180,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Πρέπει πρώτα να ακυρώσετε όλες τις συσκευασίες που σχετίζονται με την "
 #~ "παραγγελία αγοράς."
+
+#~ msgid "Date Ordered"
+#~ msgstr "Ημερ/νία Παραγγελίας"
 
 #~ msgid "Request For Quotations"
 #~ msgstr "Αίτηση Προσφορών"
@@ -2030,3 +2209,8 @@ msgstr ""
 
 #~ msgid "Date"
 #~ msgstr "Ημερομηνία"
+
+#, python-format
+#~ msgid "Cannot delete Purchase Order(s) which are in %s State!"
+#~ msgstr ""
+#~ "Δεν μπορούνε να διαγραφούνε Παραγγελίες που βρίσκονται σε %s κατάσταση"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-05-04 10:22+0000\n"
 "Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:37+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -35,7 +35,7 @@ msgstr "调拨"
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "Pushed Flows"
-msgstr "推式流程"
+msgstr "推式流"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -48,6 +48,7 @@ msgid "Parameters"
 msgstr "参数"
 
 #. module: stock_location
+#: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
 msgstr "源库位"
@@ -55,13 +56,13 @@ msgstr "源库位"
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
-msgstr "允许您取消拉式流程相关的调拨"
+msgstr "允许您取消拉式流相关的调拨"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
-msgstr "拉式流程"
+msgstr "拉式流"
 
 #. module: stock_location
 #: constraint:stock.move:0
@@ -99,11 +100,6 @@ msgid "Invoice Status"
 msgstr "发票状态"
 
 #. module: stock_location
-#: help:product.pulled.flow,name:0
-msgid "This field will fill the packing Origin and the name of its moves"
-msgstr "这字段填入源装箱单和它的调拨单名称."
-
-#. module: stock_location
 #: help:stock.location.path,auto:0
 msgid ""
 "This is used to define paths the product has to follow within the location "
@@ -119,29 +115,15 @@ msgstr ""
 "‘自动不加入步骤’ 这库位取代调拨的源库位."
 
 #. module: stock_location
-#: model:ir.module.module,shortdesc:stock_location.module_meta_information
-msgid "Warehouse Locations Paths"
-msgstr "仓库库位路径"
-
-#. module: stock_location
 #: view:product.product:0
 msgid "Conditions"
 msgstr "条件"
 
 #. module: stock_location
-#: model:stock.location,name:stock_location.location_pack_zone
-msgid "Pack Zone"
-msgstr "装箱区"
-
-#. module: stock_location
-#: model:stock.location,name:stock_location.location_gate_b
-msgid "Gate B"
-msgstr "B 大门"
-
-#. module: stock_location
-#: model:stock.location,name:stock_location.location_gate_a
-msgid "Gate A"
-msgstr "A 大门"
+#: model:ir.model,name:stock_location.model_product_product
+#: field:product.pulled.flow,product_id:0
+msgid "Product"
+msgstr "产品"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -151,12 +133,7 @@ msgstr "购买"
 #. module: stock_location
 #: view:product.product:0
 msgid "Pushed flows"
-msgstr "推式流程"
-
-#. module: stock_location
-#: model:stock.location,name:stock_location.location_dispatch_zone
-msgid "Dispatch Zone"
-msgstr "派件区"
+msgstr "推式流"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
@@ -166,13 +143,13 @@ msgstr "库存调拨"
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
-msgstr "拉式流程"
+msgstr "拉式流"
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr "公司"
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "账簿"
 
 #. module: stock_location
 #: view:product.product:0
@@ -216,126 +193,9 @@ msgid "Number of days to do this transition"
 msgstr "过程要的天数"
 
 #. module: stock_location
-#: model:ir.module.module,description:stock_location.module_meta_information
-msgid ""
-"\n"
-"This module supplements the Warehouse application by adding support for per-"
-"product\n"
-"location paths, effectively implementing Push and Pull inventory flows.\n"
-"\n"
-"Typically this could be used to:\n"
-"* Manage product manufacturing chains\n"
-"* Manage default locations per product\n"
-"* Define routes within your warehouse according to business needs, such as:\n"
-"   - Quality Control\n"
-"   - After Sales Services\n"
-"   - Supplier Returns\n"
-"* Help rental management, by generating automated return moves for rented "
-"products\n"
-"\n"
-"Once this module is installed, an additional tab appear on the product form, "
-"where you can add\n"
-"Push and Pull flow specifications. The demo data of  CPU1 product for that "
-"push/pull :\n"
-"\n"
-"Push flows\n"
-"----------\n"
-"Push flows are useful when the arrival of certain products in a given "
-"location should always\n"
-"be followed by a corresponding move to another location, optionally after a "
-"certain delay.\n"
-"The original Warehouse application already supports such Push flow "
-"specifications on the\n"
-"Locations themselves, but these cannot be refined per-product.\n"
-"\n"
-"A push flow specification indicates which location is chained with which "
-"location, and with\n"
-"what parameters. As soon as a given quantity of products is moved in the "
-"source location,\n"
-"a chained move is automatically foreseen according to the parameters set on "
-"the flow specification\n"
-"(destination location, delay, type of move, journal, etc.) The new move can "
-"be automatically\n"
-"processed, or require a manual confirmation, depending on the parameters.\n"
-"\n"
-"Pull flows\n"
-"----------\n"
-"Pull flows are a bit different from Pull flows, in the sense that they are "
-"not related to\n"
-"the processing of product moves, but rather to the processing of procurement "
-"orders.\n"
-"What is being pulled is a need, not directly products.\n"
-"A classical example of Push flow is when you have an Outlet company, with a "
-"parent Company\n"
-"that is responsible for the supplies of the Outlet.\n"
-"\n"
-"  [ Customer ] <- A - [ Outlet ]  <- B -  [ Holding ] <~ C ~ [ Supplier ]\n"
-"\n"
-"When a new procurement order (A, coming from the confirmation of a Sale "
-"Order for example) arrives\n"
-"in the Outlet, it is converted into another procurement (B, via a Push flow "
-"of type 'move')\n"
-"requested from the Holding. When procurement order B is processed by the "
-"Holding company, and\n"
-"if the product is out of stock, it can be converted into a Purchase Order "
-"(C) from the Supplier\n"
-"(Push flow of type Purchase). The result is that the procurement order, the "
-"need, is pushed\n"
-"all the way between the Customer and Supplier.\n"
-"\n"
-"Technically, Pull flows allow to process procurement orders differently, not "
-"only depending on\n"
-"the product being considered, but also depending on which location holds the "
-"\"need\" for that\n"
-"product (i.e. the destination location of that procurement order).\n"
-"\n"
-"Use-Case\n"
-"--------\n"
-"\n"
-"You can use the demo data as follow:\n"
-"  CPU1: Sell some CPU1 from Shop 1 and run the scheduler\n"
-"     - Warehouse: delivery order, Shop 1: reception\n"
-"  CPU3:\n"
-"     - When receiving the product, it goes to Quality Control location then "
-"stored to shelf 2.\n"
-"     - When delivering the customer: Pick List -> Packing -> Delivery Order "
-"from Gate A\n"
-"    "
-msgstr ""
-"\n"
-"这模块对库存管理增加对每种产品的逻辑路径，推式和拉式的库存流程应用.\n"
-"\n"
-"它主要用在:\n"
-"  * 管理产品的生产链.\n"
-"  * 管理每个产品的默认库位.\n"
-"  * 根据业务需要定义您的仓库路线如:\n"
-"      -质量控制\n"
-"      -售后服务\n"
-"      -供应商退货\n"
-"  * 帮助租贷管理,为租用的产品自动生成退还调拨.\n"
-"\n"
-"一旦安装这个模块,在产品界面增加一个标签,您可以加入拉式或推式流程,以产品cpu1为例:\n"
-"  推式流程\n"
-"\n"
-"  在某些产品到达某一规划库位它将调拨到另一个库位,当然这需要经过一段时间.\n"
-"    原来的系统已支持这种拉式的操作(它叫连锁库位)但它不能精确到对每一个产品. \n"
-"    一个推式流程需要指定相对应的连锁库位和一些参数如: \n"
-"      指定源库位的产品数量,连锁调拨是自动按流程规划的参数产生(目标库位,耽搁,调拨的类型,账簿等),\n"
-"      这些调拨可以自动处理也可根据参数人手确认.\n"
-"\n"
-"  拉式流程\n"
-"\n"
-"    它不同与推式流程,从某种意义上说它是不相关产品的调拨,但它是相关需求单处理的部分.\n"
-"      一个典型的例子: [客户] <- A - [直销店] <- B - [仓库] <~ C ~ [供应商]\n"
-"      当有一个需求单(销售单确认要A),来到直销店转到B(通过推式流程\"调拨\"),再转化为对供应商C的采购订单(推式流程为采购).\n"
-"      技术上拉式流程允许您处理不同的需求单,它不仅取决您要什么产品,还要看是哪个库位需要这产品.\n"
-"    案例:\n"
-"      CPU1: 在商店1您销售CPU1并运行日程表(scheduler). \n"
-"        - 仓库送货单,商店1:收货. \n"
-"      CPU3: \n"
-"        - 产品收货时放在货架2 做来料质量检测的临时库位.\n"
-"        - 当给客户送货时: 装箱单 -> 送货单.\n"
-"    "
+#: help:product.pulled.flow,name:0
+msgid "This field will fill the packing Origin and the name of its moves"
+msgstr "这字段填入源装箱单和它的调拨单名称."
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
@@ -362,12 +222,6 @@ msgstr "这些规则确定了产品在整个库位树的正确路径。"
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "手动操作"
-
-#. module: stock_location
-#: model:ir.model,name:stock_location.model_product_product
-#: field:product.pulled.flow,product_id:0
-msgid "Product"
-msgstr "产品"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
@@ -407,11 +261,6 @@ msgid "Pulled from another location via procurement %d"
 msgstr "通过需求%d 拉到另一个库位"
 
 #. module: stock_location
-#: model:stock.location,name:stock_location.stock_location_qualitytest0
-msgid "Quality Control"
-msgstr "质量控制"
-
-#. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
@@ -433,7 +282,7 @@ msgstr "拉式装箱单来自源库位%s, 拉式规则 %s,通过源需求 %s (#%
 #. module: stock_location
 #: field:product.product,path_ids:0
 msgid "Pushed Flow"
-msgstr "推式流程"
+msgstr "推式流"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:89
@@ -454,6 +303,7 @@ msgid "Procurement"
 msgstr "需求单"
 
 #. module: stock_location
+#: field:product.pulled.flow,location_id:0
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
 msgstr "目标库位"
@@ -489,9 +339,9 @@ msgid ""
 msgstr "根据公司,选择您是收货还是发货"
 
 #. module: stock_location
-#: model:stock.location,name:stock_location.location_order
-msgid "Order Processing"
-msgstr "订单处理"
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr ""
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -499,17 +349,15 @@ msgid "Operation"
 msgstr "操作"
 
 #. module: stock_location
-#: view:product.product:0
-#: field:product.product,path_ids:0
 #: view:stock.location.path:0
 msgid "Location Paths"
 msgstr "库位路径"
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr "账簿"
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "公司"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
@@ -535,3 +383,144 @@ msgstr "已开票"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "无效的视图结构xml文件!"
+
+#~ msgid "Gate A"
+#~ msgstr "A 大门"
+
+#~ msgid "Quality Control"
+#~ msgstr "质量控制"
+
+#~ msgid "Gate B"
+#~ msgstr "B 大门"
+
+#~ msgid "Dispatch Zone"
+#~ msgstr "派件区"
+
+#~ msgid "Order Processing"
+#~ msgstr "订单处理"
+
+#~ msgid "Warehouse Locations Paths"
+#~ msgstr "仓库库位路径"
+
+#~ msgid "Pack Zone"
+#~ msgstr "装箱区"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module supplements the Warehouse application by adding support for per-"
+#~ "product\n"
+#~ "location paths, effectively implementing Push and Pull inventory flows.\n"
+#~ "\n"
+#~ "Typically this could be used to:\n"
+#~ "* Manage product manufacturing chains\n"
+#~ "* Manage default locations per product\n"
+#~ "* Define routes within your warehouse according to business needs, such as:\n"
+#~ "   - Quality Control\n"
+#~ "   - After Sales Services\n"
+#~ "   - Supplier Returns\n"
+#~ "* Help rental management, by generating automated return moves for rented "
+#~ "products\n"
+#~ "\n"
+#~ "Once this module is installed, an additional tab appear on the product form, "
+#~ "where you can add\n"
+#~ "Push and Pull flow specifications. The demo data of  CPU1 product for that "
+#~ "push/pull :\n"
+#~ "\n"
+#~ "Push flows\n"
+#~ "----------\n"
+#~ "Push flows are useful when the arrival of certain products in a given "
+#~ "location should always\n"
+#~ "be followed by a corresponding move to another location, optionally after a "
+#~ "certain delay.\n"
+#~ "The original Warehouse application already supports such Push flow "
+#~ "specifications on the\n"
+#~ "Locations themselves, but these cannot be refined per-product.\n"
+#~ "\n"
+#~ "A push flow specification indicates which location is chained with which "
+#~ "location, and with\n"
+#~ "what parameters. As soon as a given quantity of products is moved in the "
+#~ "source location,\n"
+#~ "a chained move is automatically foreseen according to the parameters set on "
+#~ "the flow specification\n"
+#~ "(destination location, delay, type of move, journal, etc.) The new move can "
+#~ "be automatically\n"
+#~ "processed, or require a manual confirmation, depending on the parameters.\n"
+#~ "\n"
+#~ "Pull flows\n"
+#~ "----------\n"
+#~ "Pull flows are a bit different from Pull flows, in the sense that they are "
+#~ "not related to\n"
+#~ "the processing of product moves, but rather to the processing of procurement "
+#~ "orders.\n"
+#~ "What is being pulled is a need, not directly products.\n"
+#~ "A classical example of Push flow is when you have an Outlet company, with a "
+#~ "parent Company\n"
+#~ "that is responsible for the supplies of the Outlet.\n"
+#~ "\n"
+#~ "  [ Customer ] <- A - [ Outlet ]  <- B -  [ Holding ] <~ C ~ [ Supplier ]\n"
+#~ "\n"
+#~ "When a new procurement order (A, coming from the confirmation of a Sale "
+#~ "Order for example) arrives\n"
+#~ "in the Outlet, it is converted into another procurement (B, via a Push flow "
+#~ "of type 'move')\n"
+#~ "requested from the Holding. When procurement order B is processed by the "
+#~ "Holding company, and\n"
+#~ "if the product is out of stock, it can be converted into a Purchase Order "
+#~ "(C) from the Supplier\n"
+#~ "(Push flow of type Purchase). The result is that the procurement order, the "
+#~ "need, is pushed\n"
+#~ "all the way between the Customer and Supplier.\n"
+#~ "\n"
+#~ "Technically, Pull flows allow to process procurement orders differently, not "
+#~ "only depending on\n"
+#~ "the product being considered, but also depending on which location holds the "
+#~ "\"need\" for that\n"
+#~ "product (i.e. the destination location of that procurement order).\n"
+#~ "\n"
+#~ "Use-Case\n"
+#~ "--------\n"
+#~ "\n"
+#~ "You can use the demo data as follow:\n"
+#~ "  CPU1: Sell some CPU1 from Shop 1 and run the scheduler\n"
+#~ "     - Warehouse: delivery order, Shop 1: reception\n"
+#~ "  CPU3:\n"
+#~ "     - When receiving the product, it goes to Quality Control location then "
+#~ "stored to shelf 2.\n"
+#~ "     - When delivering the customer: Pick List -> Packing -> Delivery Order "
+#~ "from Gate A\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "这模块对库存管理增加对每种产品的逻辑路径，推式和拉式的库存流程应用.\n"
+#~ "\n"
+#~ "它主要用在:\n"
+#~ "  * 管理产品的生产链.\n"
+#~ "  * 管理每个产品的默认库位.\n"
+#~ "  * 根据业务需要定义您的仓库路线如:\n"
+#~ "      -质量控制\n"
+#~ "      -售后服务\n"
+#~ "      -供应商退货\n"
+#~ "  * 帮助租贷管理,为租用的产品自动生成退还调拨.\n"
+#~ "\n"
+#~ "一旦安装这个模块,在产品界面增加一个标签,您可以加入拉式或推式流,以产品cpu1为例:\n"
+#~ "  推式流\n"
+#~ "\n"
+#~ "  在某些产品到达某一规划库位它将调拨到另一个库位,当然这需要经过一段时间.\n"
+#~ "    原来的系统已支持这种拉式的操作(它叫连锁库位)但它不能精确到对每一个产品. \n"
+#~ "    一个推式流需要指定相对应的连锁库位和一些参数如: \n"
+#~ "      指定源库位的产品数量,连锁调拨是自动按流程规划的参数产生(目标库位,耽搁,调拨的类型,账簿等),\n"
+#~ "      这些调拨可以自动处理也可根据参数人手确认.\n"
+#~ "\n"
+#~ "  拉式流\n"
+#~ "\n"
+#~ "    它不同与推式流,从某种意义上说它是不相关产品的调拨,但它是相关需求单处理的部分.\n"
+#~ "      一个典型的例子: [客户] <- A - [直销店] <- B - [仓库] <~ C ~ [供应商]\n"
+#~ "      当有一个需求单(销售单确认要A),来到直销店转到B(通过推式流\"调拨\"),再转化为对供应商C的采购订单(推式流为采购).\n"
+#~ "      技术上拉式流允许您处理不同的需求单,它不仅取决您要什么产品,还要看是哪个库位需要这产品.\n"
+#~ "    案例:\n"
+#~ "      CPU1: 在商店1您销售CPU1并运行日程表(scheduler). \n"
+#~ "        - 仓库送货单,商店1:收货. \n"
+#~ "      CPU3: \n"
+#~ "        - 产品收货时放在货架2 做来料质量检测的临时库位.\n"
+#~ "        - 当给客户送货时: 装箱单 -> 送货单.\n"
+#~ "    "

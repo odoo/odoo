@@ -23,7 +23,7 @@
 {
     'name': 'Invoice Picking Directly',
     'version': '1.0',
-    'category': 'Hidden',
+    "category" : "Warehouse Management",
     'complexity': "easy",
     'description': """
 Invoice Wizard for Delivery.
@@ -41,7 +41,7 @@ the invoicing wizard if the delivery is to be invoiced.
     'demo_xml': [],
     'test': ['test/stock_invoice_directly.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0081385081261',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

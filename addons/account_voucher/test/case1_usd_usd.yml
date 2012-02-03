@@ -2,6 +2,15 @@
   In order to check the Account_voucher module with multi-currency in OpenERP, 
   I create 2 Invoices in USD and make 2 Payments in USD based on the currency rating on that particular date
 -
+  I set the income and expense currency accounts on the main company
+-
+  !python {model: res.company}: |
+    from datetime import datetime
+    vals = {
+      'income_currency_exchange_account_id': ref('account.o_expense'),
+      'expense_currency_exchange_account_id': ref('account.o_expense')}
+    self.write(cr, uid, ref('base.main_company'), vals)
+-
   I create currency USD in OpenERP for January of 1.333333 Rate
 -
   !python {model: res.currency.rate}: |
@@ -42,7 +51,7 @@
     name: "cash account in usd"
     code: "Xcash usd"
     type: 'liquidity'
-    user_type: "account.account_type_cash_moves"
+    user_type: "account.data_account_type_cash"
 
 -
   I create a bank journal with USD as currency
@@ -131,39 +140,41 @@
     assert (move_line.debit - move_line.credit == 80), "Invoice move is not correct for debtors account"
 
 -
-  I create the first voucher of payment
-  <create with values 240 USD, journal USD, and fill amounts 180 for the invoice of 200$ and 70 for the invoice of 100$>
+  I set the context that will be used for the encoding of all the vouchers of this file
+-
+  !context
+    'type': 'receipt'
+-
+  I create the first voucher of payment with values 240 USD, journal USD, 
+-
+  !record {model: account.voucher, id: account_voucher_1_case1, view: view_vendor_receipt_form}:
+    account_id: account.cash
+    amount: 240.0
+    company_id: base.main_company
+    journal_id: bank_journal_USD
+    name: 'First payment: Case 1 USD/USD'
+    partner_id: base.res_partner_seagate
+    period_id: account.period_3
+    date: !eval time.strftime("%Y-03-01")
+    payment_option: 'with_writeoff'
+    writeoff_acc_id: account.a_expense
+    comment: 'Write Off'
+
+-
+  I fill amounts 180 for the invoice of 200$ and 70 for the invoice of 100$>
 -
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_seagate"), ref('bank_journal_USD'), 240.00, 2, ttype='receipt', date=False)
-    vals = {
-        'account_id': ref('account.cash'),
-        'amount': 240.00,
-        'company_id': ref('base.main_company'),
-        'currency_id': ref('base.USD'),
-        'journal_id': ref('bank_journal_USD'),
-        'partner_id': ref('base.res_partner_seagate'),
-        'period_id': ref('account.period_3'),
-        'type': 'receipt',
-        'date': time.strftime("%Y-%m-%d"),
-        'payment_option': 'with_writeoff',
-        'writeoff_acc_id': ref('account.a_expense'),
-        'comment': 'Write Off',
-        'name': 'First payment: Case 1 USD/USD',
-    }
-    vals.update(self.onchange_date(cr, uid, [], time.strftime('%Y-03-01'), ref('base.USD'), 240)['value'])
-    if not res['value']['line_cr_ids']:
-      res['value']['line_cr_ids'] = [{'type': 'cr', 'account_id': ref('account.a_recv'),}]
-    for item in res['value']['line_cr_ids']:
-        if item['amount_unreconciled'] == 200.00:
-            item['amount'] = 180.00
+    voucher_id = self.browse(cr, uid, ref('account_voucher_1_case1'))
+    data = []
+    for item in voucher_id.line_cr_ids:
+        if item.amount_unreconciled == 200.00:
+            data += [(item.id, 180.0)]
         else:
-            item['amount'] = 70.00
-    vals['line_cr_ids'] = [(0,0,i) for i in res['value']['line_cr_ids']]
-    id = self.create(cr, uid, vals)
-    voucher_id = self.browse(cr, uid, id)
+            data += [(item.id, 70.0)]
+    for line_id, amount in data:
+        self.pool.get('account.voucher.line').write(cr, uid, [line_id], {'amount': amount})
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
 -
   I check that writeoff amount computed is 10.0
@@ -228,41 +239,35 @@
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
     assert (move_line.amount_residual_currency == 30.0) , "Residual amount is not correct for first Invoice"
 -
-  I create the second voucher of payment
-  <create with values 45 USD, journal USD, and fill amounts 20 for the invoice of 200$ and 30 for the invoice of 100$>
-  
+  I create the second voucher of payment with values 45 USD, journal USD, 
+-
+  !record {model: account.voucher, id: account_voucher_2_case1}:
+    account_id: account.cash
+    amount: 45.0
+    company_id: base.main_company
+    journal_id: bank_journal_USD
+    name: 'Second payment: Case 1'
+    partner_id: base.res_partner_seagate
+    period_id: account.period_3
+    date: !eval time.strftime("%Y-04-01")
+    payment_option: 'with_writeoff'
+    writeoff_acc_id: account.a_expense
+    comment: 'Write Off'
+-
+  I fill amounts 20 for the invoice of 200$ and 30 for the invoice of 100$
 -
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_seagate"), ref('bank_journal_USD'), 45.00, 2, ttype='receipt', date=False)
-    vals = {
-        'account_id': ref('account.cash'),
-        'amount': 45.00,
-        'exchange_acc_id': ref('account.o_expense'),
-        'company_id': ref('base.main_company'),
-        'currency_id': ref('base.USD'),
-        'journal_id': ref('bank_journal_USD'),
-        'partner_id': ref('base.res_partner_seagate'),
-        'period_id': ref('account.period_3'),
-        'type': 'receipt',
-        'date': time.strftime("%Y-%m-%d"),
-        'payment_option': 'with_writeoff',
-        'writeoff_acc_id': ref('account.a_expense'),
-        'comment': 'Write Off',
-        'name': 'Second payment: Case 1',
-    }
-    vals.update(self.onchange_date(cr, uid, [], time.strftime('%Y-04-01'), ref('base.USD'), 45.0)['value'])
-    if not res['value']['line_cr_ids']:
-      res['value']['line_cr_ids'] = [{'type': 'cr', 'account_id': ref('account.a_recv'),}]
-    for item in res['value']['line_cr_ids']:
-        if item['amount_unreconciled'] == 20.00:
-            item['amount'] = 20.00
+    voucher_id = self.browse(cr, uid, ref('account_voucher_2_case1'))
+    data = []
+    for item in voucher_id.line_cr_ids:
+        if item.amount_unreconciled == 20.00:
+            data += [(item.id, 20.0)]
         else:
-            item['amount'] = 30.00
-    vals['line_cr_ids'] = [(0,0,i) for i in res['value']['line_cr_ids']]
-    id = self.create(cr, uid, vals)
-    voucher_id = self.browse(cr, uid, id)
+            data += [(item.id, 30.0)]
+    for line_id, amount in data:
+        self.pool.get('account.voucher.line').write(cr, uid, [line_id], {'amount': amount})
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
 -
   I check that writeoff amount computed is 5.0

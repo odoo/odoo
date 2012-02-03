@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
 "PO-Revision-Date: 2011-04-07 08:52+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:36+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:09+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: product_margin
 #: view:product.product:0
@@ -74,11 +74,6 @@ msgid "Avg. Unit Price"
 msgstr "Media prezo unidade"
 
 #. module: product_margin
-#: model:ir.module.module,shortdesc:product_margin.module_meta_information
-msgid "Margins in Product"
-msgstr "Marxes en produtos"
-
-#. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
 msgstr "Produto"
@@ -100,17 +95,9 @@ msgid "Expected Sale - Turn Over"
 msgstr "Venda prevista - Volume de negocio"
 
 #. module: product_margin
-#: model:ir.module.module,description:product_margin.module_meta_information
-msgid ""
-"\n"
-"Adds a reporting menu in products that computes sales, purchases, margins\n"
-"and other interesting indicators based on invoices. The wizard to launch\n"
-"the report has several options to help you get the data you need.\n"
-msgstr ""
-"\n"
-"Engade un menú de informes ós produtos, que calcula as vendas, as compras, "
-"as marxes e outros indicadores interesantes en base ás facturas. O asistente "
-"ofrécelle varias opcións para axudarlle a obter os datos que precisa.\n"
+#: field:product.product,sale_expected:0
+msgid "Expected Sale"
+msgstr "Venda prevista"
 
 #. module: product_margin
 #: view:product.product:0
@@ -118,9 +105,9 @@ msgid "Standard Price"
 msgstr "Prezo estándar"
 
 #. module: product_margin
-#: field:product.product,sale_expected:0
-msgid "Expected Sale"
-msgstr "Venda prevista"
+#: help:product.product,purchase_num_invoiced:0
+msgid "Sum of Quantity in Supplier Invoices"
+msgstr "Suma da cantidade en facturas provedor"
 
 #. module: product_margin
 #: help:product.product,normal_cost:0
@@ -135,9 +122,10 @@ msgid "Expected Sale - Normal Cost"
 msgstr "Venda prevista - Custo normal"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "Criterios de análise"
+#: field:product.product,purchase_num_invoiced:0
+#: field:product.product,sale_num_invoiced:0
+msgid "# Invoiced"
+msgstr "Nº facturado"
 
 #. module: product_margin
 #: view:product.product:0
@@ -219,11 +207,6 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr "Prezo medio en facturas de provedor "
 
 #. module: product_margin
-#: help:product.product,purchase_num_invoiced:0
-msgid "Sum of Quantity in Supplier Invoices"
-msgstr "Suma da cantidade en facturas provedor"
-
-#. module: product_margin
 #: view:product.margin:0
 msgid "Properties categories"
 msgstr "Categorías das propiedades"
@@ -234,10 +217,9 @@ msgid "Total margin * 100 / Turnover"
 msgstr "Marxe total * 100 / Volume de negocio"
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-#: field:product.product,sale_num_invoiced:0
-msgid "# Invoiced"
-msgstr "Nº facturado"
+#: view:product.product:0
+msgid "Analysis Criteria"
+msgstr "Criterios de análise"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -303,3 +285,17 @@ msgstr "Suma da cantidade en facturas de cliente"
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
 msgstr "Marxe produto"
+
+#~ msgid "Margins in Product"
+#~ msgstr "Marxes en produtos"
+
+#~ msgid ""
+#~ "\n"
+#~ "Adds a reporting menu in products that computes sales, purchases, margins\n"
+#~ "and other interesting indicators based on invoices. The wizard to launch\n"
+#~ "the report has several options to help you get the data you need.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Engade un menú de informes ós produtos, que calcula as vendas, as compras, "
+#~ "as marxes e outros indicadores interesantes en base ás facturas. O asistente "
+#~ "ofrécelle varias opcións para axudarlle a obter os datos que precisa.\n"

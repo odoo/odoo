@@ -28,7 +28,7 @@
 ##############################################################################
 
 {
-    "name" : "Italy - Generic Chart of Accounts",
+    "name" : "Italy - Accounting",
     "version" : "0.1",
     "depends" : ['base_vat','account_chart','base_iban'],
     "author" : "OpenERP Italian Community",
@@ -55,7 +55,7 @@ Italian accounting chart and localization.
     'demo_xml': [
         ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00926677190009155165',
     'images': ['images/config_chart_l10n_it.jpeg','images/l10n_it_chart.jpeg'],
 }

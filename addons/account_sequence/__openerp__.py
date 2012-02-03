@@ -22,7 +22,7 @@
 {
     'name': 'Entries Sequence Numbering',
     'version': '1.1',
-    'category': 'Hidden',
+    "category": 'Accounting & Finance',
     'complexity': "easy",
     'description': """
 This module maintains internal sequence number for accounting entries.
@@ -49,7 +49,7 @@ You can customize the following attributes of the sequence:
     ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '00475376442024623469',
 }
 

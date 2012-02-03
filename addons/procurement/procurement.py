@@ -63,7 +63,6 @@ mrp_property()
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
-
     _columns= {
         'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
     }
@@ -88,8 +87,8 @@ class procurement_order(osv.osv):
         'origin': fields.char('Source Document', size=64,
             help="Reference of the document that created this Procurement.\n"
             "This is automatically completed by OpenERP."),
-        'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
-        'date_planned': fields.datetime('Scheduled date', required=True),
+        'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True, select=True),
+        'date_planned': fields.datetime('Scheduled date', required=True, select=True),
         'date_close': fields.datetime('Date Closed'),
         'product_id': fields.many2one('product.product', 'Product', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True, states={'draft':[('readonly',False)]}, readonly=True),
@@ -136,7 +135,7 @@ class procurement_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'),
-                        _('Cannot delete Procurement Order(s) which are in %s State!') % \
+                        _('Cannot delete Procurement Order(s) which are in %s state!') % \
                         s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
@@ -154,11 +153,11 @@ class procurement_order(osv.osv):
             return {'value': v}
         return {}
 
-    def check_product(self, cr, uid, ids):
+    def check_product(self, cr, uid, ids, context=None):
         """ Checks product type.
         @return: True or False
         """
-        return all(procurement.product_id.type in ('product', 'consu') for procurement in self.browse(cr, uid, ids))
+        return all(proc.product_id.type in ('product', 'consu') for proc in self.browse(cr, uid, ids, context=context))
 
     def check_move_cancel(self, cr, uid, ids, context=None):
         """ Checks if move is cancelled or not.
@@ -174,9 +173,9 @@ class procurement_order(osv.osv):
         """ Checks if move is done or not.
         @return: True or False.
         """
-        if not context:
-            context = {}
-        return all(not procurement.move_id or procurement.move_id.state == 'done' for procurement in self.browse(cr, uid, ids, context=context))
+        return all(proc.product_id.type == 'service' or (proc.move_id and proc.move_id.state == 'done') \
+                    for proc in self.browse(cr, uid, ids, context=context))
+
     #
     # This method may be overrided by objects that override procurement.order
     # for computing their own purpose
@@ -258,26 +257,25 @@ class procurement_order(osv.osv):
 
     def check_produce(self, cr, uid, ids, context=None):
         """ Checks product type.
-        @return: True or Product Id.
+        @return: True or False
         """
-        res = True
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for procurement in self.browse(cr, uid, ids, context=context):
-            if procurement.product_id.product_tmpl_id.supply_method <> 'produce':
-                partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  procurement.product_id.seller_ids if partner_id])
-                if partner_list:
-                    partner = partner_list and partner_list[0] and partner_list[0][1] and partner_list[0][1].name or False
-                    if user.company_id and user.company_id.partner_id:
-                        if partner.id == user.company_id.partner_id.id:
-                            return True
+            product = procurement.product_id
+            #TOFIX: if product type is 'service' but supply_method is 'buy'.
+            if product.supply_method <> 'produce':
+                supplier = product.seller_id
+                if supplier and user.company_id and user.company_id.partner_id:
+                    if supplier.id == user.company_id.partner_id.id:
+                        continue
                 return False
-            if procurement.product_id.product_tmpl_id.type=='service':
-                res = res and self.check_produce_service(cr, uid, procurement, context)
+            if product.type=='service':
+                res = self.check_produce_service(cr, uid, procurement, context)
             else:
-                res = res and self.check_produce_product(cr, uid, procurement, context)
+                res = self.check_produce_product(cr, uid, procurement, context)
             if not res:
                 return False
-        return res
+        return True
 
     def check_buy(self, cr, uid, ids):
         """ Checks product type.
@@ -327,7 +325,7 @@ class procurement_order(osv.osv):
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_qty <= 0.00:
                 raise osv.except_osv(_('Data Insufficient !'),
-                    _('Please check the Quantity in Procurement Order(s), it should not be less than 1!'))
+                    _('Please check the quantity in procurement order(s), it should not be 0 or less!'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
@@ -483,7 +481,7 @@ class StockPicking(osv.osv):
                 if move.state == 'done' and move.procurements:
                     for procurement in move.procurements:
                         wf_service.trg_validate(user, 'procurement.order',
-                                procurement.id, 'button_check', cursor)
+                            procurement.id, 'button_check', cursor)
         return res
 
 StockPicking()
@@ -569,4 +567,12 @@ class stock_warehouse_orderpoint(osv.osv):
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
     
 stock_warehouse_orderpoint()
+
+class product_product(osv.osv):
+    _inherit="product.product"
+    _columns = {
+        'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rule')
+    }
+product_product()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -19,11 +19,11 @@
 #
 ##############################################################################
 {
-    "name" : "Accounting and Financial Management",
+    "name" : "eInvoicing",
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Accounting & Finance',
-    'complexity': "normal",
+    'complexity': "easy",
     "description": """
 Accounting and Financial Management.
 ====================================
@@ -69,6 +69,7 @@ module named account_voucher.
         'wizard/account_period_close_view.xml',
         'account_view.xml',
         'account_report.xml',
+        'account_financial_report_data.xml',
         'wizard/account_report_common_view.xml',
         'wizard/account_invoice_refund_view.xml',
         'wizard/account_fiscalyear_close_state.xml',
@@ -104,6 +105,7 @@ module named account_voucher.
         'account_invoice_view.xml',
         'partner_view.xml',
         'data/account_data.xml',
+        'data/data_account_type.xml',
         'account_invoice_workflow.xml',
         'project/project_view.xml',
         'project/project_report.xml',
@@ -121,8 +123,6 @@ module named account_voucher.
         'ir_sequence_view.xml',
         'company_view.xml',
         'board_account_view.xml',
-        "wizard/account_report_profit_loss_view.xml",
-        "wizard/account_report_balance_sheet_view.xml",
         "edi/invoice_action_data.xml",
         "account_bank_view.xml",
         "account_pre_install.yml"
@@ -141,7 +141,6 @@ module named account_voucher.
         'test/account_change_currency.yml',
         'test/chart_of_account.yml',
         'test/account_period_close.yml',
-        'test/account_fiscalyear_close_state.yml',
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
         'test/account_fiscalyear_close.yml',
@@ -149,9 +148,10 @@ module named account_voucher.
         'test/account_cash_statement.yml',
         'test/test_edi_invoice.yml',
         'test/account_report.yml',
+        'test/account_fiscalyear_close_state.yml', #last test, as it will definitively close the demo fiscalyear
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0080331923549',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

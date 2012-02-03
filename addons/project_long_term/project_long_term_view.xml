@@ -13,10 +13,7 @@
             <field name="model">project.user.allocation</field>
             <field name="type">gantt</field>
             <field name="arch" type="xml">
-              <gantt color="project_id" date_start="date_start" date_stop="date_end" mode="year">
-               <level object="res.users" link="user_id" domain="[]">
-                    <field name="phase_id"/>
-                </level>
+              <gantt date_start="date_start" date_stop="date_end" default_group_by="user_id">
               </gantt>
             </field>
         </record>
@@ -215,10 +212,7 @@
             <field name="type">gantt</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <gantt color="project_id" date_stop="date_end" date_start="date_start" mode="month">
-                    <level object="project.project" link="project_id" domain="[]">
-                        <field name="name"/>
-                    </level>
+                <gantt date_stop="date_end" date_start="date_start" default_group_by="project_id">
                 </gantt>
             </field>
         </record>
@@ -272,23 +266,6 @@
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
 
-
-    # ------------------------------------------------------
-    # Project
-    # ------------------------------------------------------
-
-        <record id="project.view_project_user_form1" model="ir.ui.view">
-            <field name="name">Project Resource Calendar View</field>
-            <field name="model">project.project</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="project.edit_project"/>
-            <field name="arch" type="xml">
-                <field name="effective_hours" position="after">
-                    <field name="resource_calendar_id"/>
-                </field>
-
-            </field>
-       </record>
 
     # ------------------------------------------------------
     # Project Task

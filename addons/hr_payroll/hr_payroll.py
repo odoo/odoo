@@ -298,6 +298,14 @@ class hr_payslip(osv.osv):
                     context=context).company_id.id,
     }
 
+    def _check_dates(self, cr, uid, ids, context=None):
+        for payslip in self.browse(cr, uid, ids, context=context):
+            if payslip.date_from > payslip.date_to:
+                return False
+        return True
+
+    _constraints = [(_check_dates, "Payslip 'Date From' must be before 'Date To'.", ['date_from', 'date_to'])]  
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -577,14 +585,15 @@ class hr_payslip(osv.osv):
                 #check if the rule can be applied
                 if obj_rule.satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
                     #compute the amount of the rule
-                    amount, qty = obj_rule.compute_rule(cr, uid, rule.id, localdict, context=context)
+                    amount, qty, rate = obj_rule.compute_rule(cr, uid, rule.id, localdict, context=context)
                     #check if there is already a rule computed with that code
                     previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
-                    localdict[rule.code] = amount * qty
+                    tot_rule = amount * qty * rate / 100.0
+                    localdict[rule.code] = tot_rule
                     rules[rule.code] = rule
                     #sum the amount for its salary category
-                    localdict = _sum_salary_rule_category(localdict, rule.category_id, (amount * qty) - previous_amount)
+                    localdict = _sum_salary_rule_category(localdict, rule.category_id, tot_rule - previous_amount)
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
                         'salary_rule_id': rule.id,
@@ -608,6 +617,7 @@ class hr_payslip(osv.osv):
                         'amount': amount,
                         'employee_id': contract.employee_id.id,
                         'quantity': qty,
+                        'rate': rate,
                     }
                 else:
                     #blacklist this rule and its children
@@ -712,8 +722,8 @@ class hr_payslip_worked_days(osv.osv):
     _description = 'Payslip Worked Days'
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade'),
-        'sequence': fields.integer('Sequence', required=True,),
+        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade', select=True),
+        'sequence': fields.integer('Sequence', required=True, select=True),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
         'number_of_days': fields.float('Number of Days'),
         'number_of_hours': fields.float('Number of Hours'),
@@ -734,8 +744,8 @@ class hr_payslip_input(osv.osv):
     _description = 'Payslip Input'
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade'),
-        'sequence': fields.integer('Sequence', required=True,),
+        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade', select=True),
+        'sequence': fields.integer('Sequence', required=True, select=True),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
         'amount': fields.float('Amount', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs.SALEURO.amount * contract.wage*0.01."),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=True, help="The contract for which applied this input"),
@@ -754,7 +764,7 @@ class hr_salary_rule(osv.osv):
     _columns = {
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, help="The code of salary rules can be used as reference in computation of other rules. In that case, it is case sensitive."),
-        'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
+        'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence', select=True),
         'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days.WORK100.number_of_days."),
         'category_id':fields.many2one('hr.salary.rule.category', 'Category', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
@@ -762,7 +772,7 @@ class hr_salary_rule(osv.osv):
         'parent_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Rule', select=True),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'condition_select': fields.selection([('none', 'Always True'),('range', 'Range'), ('python', 'Python Expression')], "Condition Based on", required=True),
-        'condition_range':fields.char('Range Based on',size=1024, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all categories code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
+        'condition_range':fields.char('Range Based on',size=1024, readonly=False, help='This will be used to compute the % fields values; in general it is on basic, but you can also use categories code fields in lowercase as a variable names (hra, ma, lta, etc.) and the variable basic.'),
         'condition_python':fields.text('Python Condition', required=True, readonly=False, help='Applied this rule for calculation if condition is true. You can specify condition like basic > 1000.'),#old name = conditions
         'condition_range_min': fields.float('Minimum Range', required=False, help="The minimum amount, applied for this rule."),
         'condition_range_max': fields.float('Maximum Range', required=False, help="The maximum amount, applied for this rule."),
@@ -772,7 +782,7 @@ class hr_salary_rule(osv.osv):
             ('code','Python Code'),
         ],'Amount Type', select=True, required=True, help="The computation method for the rule amount."),
         'amount_fix': fields.float('Fixed Amount', digits_compute=dp.get_precision('Payroll'),),
-        'amount_percentage': fields.float('Percentage (%)', digits_compute=dp.get_precision('Payroll'), help='For example, enter 50.0 to apply a percentage of 50%'),
+        'amount_percentage': fields.float('Percentage (%)', digits_compute=dp.get_precision('Payroll Rate'), help='For example, enter 50.0 to apply a percentage of 50%'),
         'amount_python_compute':fields.text('Python Code'),
         'amount_percentage_base':fields.char('Percentage based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'),
         'child_ids':fields.one2many('hr.salary.rule', 'parent_rule_id', 'Child Salary Rule'),
@@ -838,26 +848,26 @@ result = rules.NET > categories.NET * 0.10''',
     #TODO should add some checks on the type of result (should be float)
     def compute_rule(self, cr, uid, rule_id, localdict, context=None):
         """
-        @param rule_id: id of rule to compute
-        @param localdict: dictionary containing the environement in which to compute the rule
-        @return: returns the result of computation and the quantity as floats
+        :param rule_id: id of rule to compute
+        :param localdict: dictionary containing the environement in which to compute the rule
+        :return: returns a tuple build as the base/amount computed, the quantity and the rate 
+        :rtype: (float, float, float)
         """
         rule = self.browse(cr, uid, rule_id, context=context)
         if rule.amount_select == 'fix':
             try:
-                return rule.amount_fix, eval(rule.quantity, localdict)
+                return rule.amount_fix, eval(rule.quantity, localdict), 100.0
             except:
                 raise osv.except_osv(_('Error'), _('Wrong quantity defined for salary rule %s (%s)')% (rule.name, rule.code))
         elif rule.amount_select == 'percentage':
             try:
-                amount = rule.amount_percentage * eval(rule.amount_percentage_base, localdict) / 100
-                return amount, eval(rule.quantity, localdict)
+                return eval(rule.amount_percentage_base, localdict), eval(rule.quantity, localdict), rule.amount_percentage
             except:
                 raise osv.except_osv(_('Error'), _('Wrong percentage base or quantity defined for salary rule %s (%s)')% (rule.name, rule.code))
         else:
             try:
                 eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
-                return localdict['result'], 'result_qty' in localdict and localdict['result_qty'] or 1.0
+                return localdict['result'], 'result_qty' in localdict and localdict['result_qty'] or 1.0, 'result_rate' in localdict and localdict['result_rate'] or 100.0
             except:
                 raise osv.except_osv(_('Error'), _('Wrong python code defined for salary rule %s (%s) ')% (rule.name, rule.code))
 
@@ -915,14 +925,15 @@ class hr_payslip_line(osv.osv):
         if not ids: return {}
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = float(line.quantity) * line.amount
+            res[line.id] = float(line.quantity) * line.amount * line.rate / 100
         return res
 
     _columns = {
         'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=True, ondelete='cascade'),
         'salary_rule_id':fields.many2one('hr.salary.rule', 'Rule', required=True),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
-        'contract_id':fields.many2one('hr.contract', 'Contract', required=True),
+        'contract_id':fields.many2one('hr.contract', 'Contract', required=True, select=True),
+        'rate': fields.float('Rate (%)', digits_compute=dp.get_precision('Payroll Rate')),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Payroll')),
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Payroll')),
         'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Payroll'),store=True ),
@@ -930,6 +941,7 @@ class hr_payslip_line(osv.osv):
 
     _defaults = {
         'quantity': 1.0,
+        'rate': 100.0,
     }
 
 hr_payslip_line()

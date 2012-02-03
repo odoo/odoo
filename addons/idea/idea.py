@@ -54,7 +54,7 @@ class idea_category(osv.osv):
         'name': fields.char('Category', size=64, required=True),
         'complete_name': fields.function(_categ_name_get_fnc, type="char", string='Name'),
         'summary': fields.text('Summary'),
-        'parent_id': fields.many2one('idea.category', 'Parent Categories', ondelete='set null'),
+        'parent_id': fields.many2one('idea.category', 'Parent Categories', ondelete='set null', select=True),
         'child_ids': fields.one2many('idea.category', 'parent_id', 'Child Categories'),
         'visibility':fields.boolean('Open Idea?', required=False, help="If True creator of the idea will be visible to others"),
     }
@@ -271,7 +271,7 @@ class idea_idea(osv.osv):
 
         if vals.get('my_vote', False):
             if vals.get('state', state) != 'open':
-                raise osv.except_osv(_("Warning !"), _("Draft/Accepted/Cancelled ideas Could not be voted"))
+                raise osv.except_osv(_("Warning !"), _("You can not vote on a Draft/Accepted/Cancelled ideas."))
 
         res = super(idea_idea, self).write(cr, user, ids, vals, context=context)
         return res

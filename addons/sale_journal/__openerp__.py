@@ -23,7 +23,7 @@
     'name': 'Invoicing Journals',
     'version': '1.0',
     'category': 'Sales Management',
-    'complexity': "easy",
+    'complexity': "normal",
     'description': """
 The sales journal modules allows you to categorise your sales and deliveries (picking lists) between different journals.
 ========================================================================================================================
@@ -59,7 +59,7 @@ Some statistics by journals are provided.
     'demo_xml': ['sale_journal_demo.xml'],
     'test': [ ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0077661619085',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

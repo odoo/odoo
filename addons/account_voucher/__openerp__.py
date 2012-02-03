@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "Accounting Voucher Entries",
+    "name" : "eInvoicing & Payments",
     "version" : "1.0",
     "author" : 'OpenERP SA',
     'complexity': "normal",
@@ -32,7 +32,8 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
     * Voucher Receipt
     * Cheque Register
     """,
-    "category" : "Hidden",
+    "category": 'Accounting & Finance',
+    "sequence": 4,
     "website" : "http://tinyerp.com",
     "images" : ["images/customer_payment.jpeg","images/journal_voucher.jpeg","images/sales_receipt.jpeg","images/supplier_voucher.jpeg"],
     "depends" : ["account"],
@@ -67,7 +68,8 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
         "test/case4_cad_chf.yml",
     ],
     'certificate': '0037580727101',
-    "active": False,
+    "auto_install": False,
+    "application": True,
     "installable": True,
 }
 

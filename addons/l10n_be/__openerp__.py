@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{   'name': 'Belgium - Plan Comptable Minimum Normalise',
+{   'name': 'Belgium - Accounting',
     'version': '1.1',
     'category': 'Localization/Account Charts',
     'description': """
@@ -50,6 +50,7 @@ Wizards provided by this module:
     ],
     'init_xml': [],
     'update_xml': [
+        'account_financial_report.xml',
         'account_pcmn_belgium.xml',
         'account_tax_code_template.xml',
         'account_chart_template.xml',

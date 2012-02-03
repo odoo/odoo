@@ -178,13 +178,13 @@ class board_line(osv.osv):
     _columns = {
         'name': fields.char('Title', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order\
-                         when displaying a list of board lines."),
+                         when displaying a list of board lines.", select=True),
         'height': fields.integer('Height'),
         'width': fields.integer('Width'),
         'board_id': fields.many2one('board.board', 'Dashboard', required=True, ondelete='cascade'),
         'action_id': fields.many2one('ir.actions.act_window', 'Action', required=True),
         'position': fields.selection([('left','Left'),
-                                      ('right','Right')], 'Position', required=True)
+                                      ('right','Right')], 'Position', required=True, select=True)
     }
     _defaults = {
         'position': lambda *args: 'left'

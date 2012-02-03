@@ -24,6 +24,7 @@
     'name': 'Purchase Management',
     'version': '1.1',
     'category': 'Purchase Management',
+    "sequence": 19,
     'complexity': "easy",
     'description': """
 Purchase module is for generating a purchase order for purchase of goods from a supplier.
@@ -67,6 +68,7 @@ Dashboard for purchase management that includes:
         'test/process/run_scheduler.yml',
         'test/process/merge_order.yml',
         'test/process/edi_purchase_order.yml',
+        'test/process/invoice_on_poline.yml',
         'test/ui/print_report.yml',
         'test/ui/duplicate_order.yml',
         'test/ui/delete_order.yml',
@@ -76,7 +78,8 @@ Dashboard for purchase management that includes:
         'purchase_demo.xml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0057234283549',
+    'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

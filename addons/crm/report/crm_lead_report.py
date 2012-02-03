@@ -21,7 +21,7 @@
 
 from osv import fields,osv
 import tools
-from crm import crm
+from .. import crm
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -147,6 +147,7 @@ class crm_lead_report(osv.osv):
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
                 FROM
                     crm_lead c
+                WHERE c.active = 'true'
             )""")
 
 crm_lead_report()

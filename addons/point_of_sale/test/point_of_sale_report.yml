@@ -35,29 +35,13 @@
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt report'+format), 'wb+').write(data)
 
 -
- Create a record for the root user in pos.payment.report.user (used by the next python block).
--
-  !record {model: pos.payment.report.user, id: pos_payment_report_user_1}:
-    user_id: []
--
- Print the POS Payment Report through the wizard
+  Print the POS Details Report through the wizard
 -
   !python {model: ir.ui.menu}: |
     import time
     ctx={}
     ctx.update({'model': 'ir.ui.menu','active_ids': []})
-    data_dict = {'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d'), 'user_id': [(6,0,[ref('base.user_root')])] }
-    from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_report_pos_payment_repport_date',wiz_data=data_dict, context=ctx, our_module='point_of_sale')
-
--
- Print the POS Details Report through the wizard
--
-  !python {model: ir.ui.menu}: |
-    import time
-    ctx={}
-    ctx.update({'model': 'ir.ui.menu','active_ids': []})
-    data_dict = {'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d')}
+    data_dict = {'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d'), 'user_ids': [(6,0,[ref('base.user_root')])]}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_report_pos_details',wiz_data=data_dict, context=ctx, our_module='point_of_sale')
 

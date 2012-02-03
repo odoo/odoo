@@ -20,7 +20,7 @@
 ##############################################################################
 import tools
 from osv import fields,osv
-from hr_recruitment import hr_recruitment
+from .. import hr_recruitment
 from decimal_precision import decimal_precision as dp
 
 

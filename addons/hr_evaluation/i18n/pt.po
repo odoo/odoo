@@ -7,25 +7,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
 "PO-Revision-Date: 2010-12-03 07:51+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:41+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2011-12-23 07:14+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
 #. module: hr_evaluation
-#: selection:hr.evaluation.report,state:0
-#: selection:hr_evaluation.evaluation,state:0
-msgid "Plan In Progress"
-msgstr "Plano em curso"
+#: help:hr_evaluation.plan.phase,send_anonymous_manager:0
+msgid "Send an anonymous summary to the manager"
+msgstr "Enviar um resumo anónimo para o gerente"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan.phase,wait:0
-msgid "Wait Previous Phases"
+#: view:hr_evaluation.evaluation:0
+msgid "Start Appraisal"
 msgstr ""
 
 #. module: hr_evaluation
@@ -34,6 +33,11 @@ msgstr ""
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "Agrupar por..."
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal that overpassed the deadline"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -48,23 +52,6 @@ msgid "Progress"
 msgstr "Evolução"
 
 #. module: hr_evaluation
-#: view:board.board:0
-#: model:ir.actions.act_window,name:hr_evaluation.act_hr_evaluation_tree
-msgid "My Evaluation Remaining"
-msgstr ""
-
-#. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:0
-msgid "Legend"
-msgstr "Legenda"
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:311
-#, python-format
-msgid "You cannot start evaluation without Evaluation."
-msgstr ""
-
-#. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "March"
 msgstr "Março"
@@ -75,14 +62,13 @@ msgid "Delay to Start"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: field:hr_evaluation.evaluation,rating:0
-msgid "Appreciation"
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal that are in waiting appreciation state"
 msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:242
-#: code:addons/hr_evaluation/hr_evaluation.py:311
+#: code:addons/hr_evaluation/hr_evaluation.py:244
+#: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "Warning !"
 msgstr "Alerta!"
@@ -95,11 +81,7 @@ msgid "Company"
 msgstr "Empresa"
 
 #. module: hr_evaluation
-#: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
-msgid "Evaluation Interviews"
-msgstr ""
-
-#. module: hr_evaluation
+#: field:hr.evaluation.interview,evaluation_id:0
 #: field:hr_evaluation.plan.phase,survey_id:0
 msgid "Appraisal Form"
 msgstr ""
@@ -111,14 +93,10 @@ msgid "Day"
 msgstr "Dia"
 
 #. module: hr_evaluation
-#: field:hr.evaluation.interview,evaluation_id:0
-msgid "Evaluation Form"
-msgstr "Formulário de avaliação"
-
-#. module: hr_evaluation
-#: help:hr_evaluation.plan.phase,send_anonymous_employee:0
-msgid "Send an anonymous summary to the employee"
-msgstr "Eviar um resumo anónimo ao empregado"
+#: view:hr_evaluation.plan:0
+#: field:hr_evaluation.plan,phase_ids:0
+msgid "Appraisal Phases"
+msgstr ""
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan,month_first:0
@@ -133,16 +111,19 @@ msgid "Notes"
 msgstr "Observações"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-msgid "Interview Request"
-msgstr "Pedido de entrevista"
+#: view:hr_evaluation.plan.phase:0
+msgid "(eval_name)s:Appraisal Name"
+msgstr ""
 
 #. module: hr_evaluation
-#: constraint:hr.employee:0
+#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
 msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
+"Each employee may be assigned an Appraisal Plan. Such a plan defines the "
+"frequency and the way you manage your periodic personnel evaluation. You "
+"will be able to define steps and attach interviews to each step. OpenERP "
+"manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
+"final evaluation by the manager."
 msgstr ""
-"Erro! Não pode seleccionar um departamento cujo gestor é o empregado."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -150,11 +131,14 @@ msgid "Mail Body"
 msgstr "Conteúdo do e-mail"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-#: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_report_all
-#: model:ir.ui.menu,name:hr_evaluation.menu_evaluation_report_all
-msgid "Evaluations Analysis"
-msgstr "Análise das avaliações"
+#: field:hr_evaluation.plan.phase,wait:0
+msgid "Wait Previous Phases"
+msgstr ""
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_evaluation
+msgid "Employee Appraisal"
+msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -163,37 +147,23 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_hr_evaluation_reminder
-msgid "Sends Reminders to employess to fill the evaluations"
-msgstr "Enviar aos empregados lembretes para o preenchimento das avaliações"
-
-#. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
 #: selection:hr_evaluation.evaluation,rating:0
 msgid "Did not meet expectations"
 msgstr "Não correspondeu às expetativas"
 
 #. module: hr_evaluation
+#: view:hr.employee:0
 #: view:hr_evaluation.evaluation:0
+#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Appraisal"
 msgstr "Avaliação"
 
 #. module: hr_evaluation
-#: selection:hr.evaluation.report,month:0
-msgid "July"
-msgstr "Julho"
-
-#. module: hr_evaluation
-#: field:hr_evaluation.plan,month_next:0
-msgid "Periodicity of Evaluations (months)"
-msgstr "periodicidade das avaliações (meses)"
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:242
-#, python-format
-msgid ""
-"You cannot change state, because some appraisal in waiting answer or draft "
-"state"
+#: view:hr_evaluation.plan.phase:0
+msgid "Send to Managers"
 msgstr ""
 
 #. module: hr_evaluation
@@ -202,12 +172,21 @@ msgid "Ending Date"
 msgstr "Data de fim"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_first:0
-msgid "First Evaluation in (months)"
-msgstr "Primeira avaliação em (meses)"
+#: help:hr_evaluation.evaluation,note_action:0
+msgid ""
+"If the evaluation does not meet the expectations, you can proposean action "
+"plan"
+msgstr ""
+"Se o resultado da avaliação não corresponder às expetativas, pode propor um "
+"plano de ação"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:81
+#: view:hr_evaluation.plan.phase:0
+msgid "Send to Employees"
+msgstr "Enviar para os empregados"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:82
 #, python-format
 msgid ""
 "\n"
@@ -228,9 +207,14 @@ msgid ""
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:0
-msgid "Send to Employees"
-msgstr "Enviar para os empregados"
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal that are in Plan In Progress state"
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Reset to Draft"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,deadline:0
@@ -243,39 +227,14 @@ msgid " Month "
 msgstr " Mês "
 
 #. module: hr_evaluation
-#: help:hr_evaluation.plan,month_next:0
-msgid ""
-"The number of month that depicts the delay between each evaluation of this "
-"plan (after the first one)."
+#: view:hr.evaluation.report:0
+msgid "In progress Evaluations"
 msgstr ""
 
 #. module: hr_evaluation
-#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
-msgid "Periodic Evaluations"
-msgstr "Avaliações periódicas"
-
-#. module: hr_evaluation
-#: view:hr.evaluation.reminder:0
-msgid "Send evaluation reminder"
-msgstr "Enviar lembrete da avaliação"
-
-#. module: hr_evaluation
-#: model:ir.module.module,description:hr_evaluation.module_meta_information
-msgid ""
-"\n"
-"          Ability to create employees evaluation.\n"
-"          An evaluation can be created by employee for subordinates,\n"
-"          juniors as well as his manager.The evaluation is done under a "
-"plan\n"
-"          in which various surveys can be created and it can be defined "
-"which\n"
-"          level of employee hierarchy fills what and final review and "
-"evaluation\n"
-"          is done by the manager.Every evaluation filled by the employees "
-"can be viewed\n"
-"          in the form of.Implements a dashboard for My Current Evaluations\n"
-"         "
-msgstr ""
+#: model:ir.model,name:hr_evaluation.model_survey_request
+msgid "survey.request"
+msgstr "survey.request"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -283,7 +242,12 @@ msgid "(date)s: Current Date"
 msgstr "(data)s: Data atual"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:80
+#: help:hr_evaluation.plan.phase,send_anonymous_employee:0
+msgid "Send an anonymous summary to the employee"
+msgstr "Eviar um resumo anónimo ao empregado"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:81
 #, python-format
 msgid "Regarding "
 msgstr ""
@@ -298,11 +262,6 @@ msgid "State"
 msgstr "Estado"
 
 #. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan_phase
-msgid "Evaluation Plan Phase"
-msgstr "Fase do plano de avaliação"
-
-#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 #: field:hr.evaluation.report,employee_id:0
 #: view:hr_evaluation.evaluation:0
@@ -312,9 +271,9 @@ msgid "Employee"
 msgstr "Empregado"
 
 #. module: hr_evaluation
-#: field:hr.evaluation.report,overpass_delay:0
-msgid "Overpassed Deadline"
-msgstr "Prazo ultrapassado"
+#: selection:hr_evaluation.evaluation,state:0
+msgid "New"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,mail_body:0
@@ -336,14 +295,30 @@ msgstr ""
 "esta fase"
 
 #. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Evaluation done in last month"
+msgstr ""
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_mail_compose_message
+msgid "E-mail composition wizard"
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Creation Date"
+msgstr ""
+
+#. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_answer_manager:0
 msgid "Send all answers to the manager"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-msgid "    Month-1    "
-msgstr "    Mês-1    "
+#: selection:hr.evaluation.report,state:0
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Plan In Progress"
+msgstr "Plano em curso"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -351,15 +326,26 @@ msgid "Public Notes"
 msgstr "Notas públicas"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.evaluation,date:0
-msgid "Evaluation Deadline"
-msgstr "Prazo da avaliação"
+#: view:hr.evaluation.interview:0
+msgid "Send Reminder Email"
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+#: field:hr_evaluation.evaluation,rating:0
+msgid "Appreciation"
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Print Interview"
 msgstr "Imprimir a entrevista"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Pending"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,closed:0
@@ -379,21 +365,19 @@ msgid "# of Requests"
 msgstr "Número de pedidos"
 
 #. module: hr_evaluation
-#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_tree
-#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
-#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
-msgid "Evaluations"
-msgstr "Avaliações"
+#: selection:hr.evaluation.report,month:0
+msgid "July"
+msgstr "Julho"
 
 #. module: hr_evaluation
-#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
-msgid ""
-"Each employee may be assigned an evaluation plan. Such a plan defines the "
-"frequency and the way you manage your periodic personnel evaluation. You "
-"will be able to define steps and attach interviews to each step. OpenERP "
-"manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
-"final evaluation by the manager."
+#: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_plans_installer
+msgid "Review Appraisal Plans"
 msgstr ""
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "    Month-1    "
+msgstr "    Mês-1    "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -406,8 +390,13 @@ msgid "Action Plan"
 msgstr "Plano de ação"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:0
-msgid "(eval_name)s:Evaluation Name"
+#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
+msgid "Periodic Appraisal"
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal to close within the next 7 days"
 msgstr ""
 
 #. module: hr_evaluation
@@ -422,9 +411,22 @@ msgid "Significantly exceeds expectations"
 msgstr "Excede significativamente as expetativas"
 
 #. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"Interview Requests are generated automatically by OpenERP according to an "
+"employee's Appraisal Plan. Each user receives automatic emails and requests "
+"to evaluate their colleagues periodically."
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "In progress"
 msgstr "Em curso"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "Interview Request"
+msgstr "Pedido de entrevista"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_answer_employee:0
@@ -444,14 +446,14 @@ msgstr "Dezembro"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
+msgid "Evaluation done in current year"
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
 #: field:hr.evaluation.report,month:0
 msgid "Month"
 msgstr "Mês"
-
-#. module: hr_evaluation
-#: model:ir.module.module,shortdesc:hr_evaluation.module_meta_information
-msgid "Human Resources Evaluation"
-msgstr "Avaliação dos recursos humanos"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -464,25 +466,15 @@ msgid "Mail Settings"
 msgstr "Configurações de correio eletrónico"
 
 #. module: hr_evaluation
-#: field:hr.evaluation.interview,user_to_review_id:0
-msgid "Employee to Interview"
-msgstr "Empregado a entrevistar"
+#: model:ir.actions.act_window,name:hr_evaluation.evaluation_reminders
+msgid "Appraisal Reminders"
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Interview Question"
 msgstr "Pergunta para entrevista"
-
-#. module: hr_evaluation
-#: field:survey.request,is_evaluation:0
-msgid "Is Evaluation?"
-msgstr "É uma avaliação?"
-
-#. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_survey_request
-msgid "survey.request"
-msgstr "survey.request"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,wait:0
@@ -492,29 +484,19 @@ msgid ""
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:0
-msgid "Evaluation Data"
-msgstr ""
+#: view:hr_evaluation.plan.phase:0
+msgid "Legend"
+msgstr "Legenda"
 
 #. module: hr_evaluation
-#: help:hr_evaluation.evaluation,note_action:0
-msgid ""
-"If the evaluation does not meet the expectations, you can proposean action "
-"plan"
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Appraisal in (months)"
 msgstr ""
-"Se o resultado da avaliação não corresponder às expetativas, pode propor um "
-"plano de ação"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
-#: selection:hr_evaluation.evaluation,state:0
 msgid "Draft"
 msgstr "Rascunho"
-
-#. module: hr_evaluation
-#: field:hr_evaluation.evaluation,note_summary:0
-msgid "Evaluation Summary"
-msgstr "Resumo da avaliação"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_anonymous_employee:0
@@ -523,35 +505,23 @@ msgid "Anonymous Summary"
 msgstr "Resumo anónimo"
 
 #. module: hr_evaluation
-#: view:hr.employee:0
-#: view:hr_evaluation.evaluation:0
-msgid "Evaluation"
-msgstr "Avaliação"
-
-#. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "7 Days"
 msgstr "7 dias"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-msgid " Year "
-msgstr " Ano "
+#: field:hr.employee,evaluation_plan_id:0
+#: view:hr_evaluation.plan:0
+#: field:hr_evaluation.plan,name:0
+#: field:hr_evaluation.plan.phase,plan_id:0
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
+msgid "Appraisal Plan"
+msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "August"
 msgstr "Agosto"
-
-#. module: hr_evaluation
-#: view:hr_evaluation.evaluation:0
-msgid "Start Evaluation"
-msgstr "Iniciar a avaliação"
-
-#. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-msgid "To Do"
-msgstr "A fazer"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -598,9 +568,9 @@ msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr "Erro! Não pode criar hierarquias de funcionários com recursividade."
 
 #. module: hr_evaluation
-#: selection:hr.evaluation.report,month:0
-msgid "October"
-msgstr "Outubro"
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan_phase
+msgid "Appraisal Plan Phase"
+msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -608,26 +578,9 @@ msgid "January"
 msgstr "Janeiro"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.reminder:0
-msgid "Send Mail"
-msgstr "Enviar e-mail"
-
-#. module: hr_evaluation
-#: help:hr_evaluation.plan.phase,send_anonymous_manager:0
-msgid "Send an anonymous summary to the manager"
-msgstr "Enviar um resumo anónimo para o gerente"
-
-#. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
-msgid "Interview Evaluation"
-msgstr "Avaliação de entrevista"
-
-#. module: hr_evaluation
-#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_plan_tree
-#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_plan_tree
-msgid "Evaluation Plans"
-msgstr "Planos de avaliação"
+#: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
+msgid "Appraisal Interviews"
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -661,9 +614,16 @@ msgid "Waiting Appreciation"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan.phase,mail_feature:0
-msgid "Send mail for this phase"
-msgstr "Envial e-mail para esta fase"
+#: view:hr.evaluation.report:0
+#: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_report_all
+#: model:ir.ui.menu,name:hr_evaluation.menu_evaluation_report_all
+msgid "Appraisal Analysis"
+msgstr ""
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,date:0
+msgid "Appraisal Deadline"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,rating:0
@@ -671,10 +631,9 @@ msgid "Overall Rating"
 msgstr "Pontuação global"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
-msgid "Late"
-msgstr ""
+#: field:hr_evaluation.plan.phase,email_subject:0
+msgid "char"
+msgstr "caracter"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -693,8 +652,28 @@ msgid "Deadline Date"
 msgstr "Prazo limite"
 
 #. module: hr_evaluation
+#: code:addons/hr_evaluation/wizard/mail_compose_message.py:45
+#, python-format
+msgid ""
+"Hello %s, \n"
+"\n"
+" Kindly post your response for '%s' survey interview. \n"
+"\n"
+" Thanks,"
+msgstr ""
+
+#. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Top-Down Appraisal Requests"
+msgstr ""
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_evaluation_plans_installer
+msgid ""
+"You can define appraisal plans (ex: first interview after 6 months, then "
+"every year). Then, each employee can be linked to an appraisal plan so that "
+"OpenERP can automatically generate interview requests to managers and/or "
+"subordinates."
 msgstr ""
 
 #. module: hr_evaluation
@@ -708,9 +687,9 @@ msgid "Send all answers to the employee"
 msgstr "Enviar ao empregado todas as respostas"
 
 #. module: hr_evaluation
-#: field:hr.employee,evaluation_date:0
-msgid "Next Evaluation Date"
-msgstr "Data da próxima avaliação"
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal Data"
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -721,15 +700,26 @@ msgid "Done"
 msgstr "Feito"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:0
-msgid "Evaluation Plan Phases"
-msgstr "Fases do plano de avaliação"
+#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_plan_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_plan_tree
+msgid "Appraisal Plans"
+msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.reminder:0
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
+msgid "Appraisal Interview"
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Cancel"
 msgstr "Cancelar"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/wizard/mail_compose_message.py:49
+#, python-format
+msgid "Reminder to fill up Survey"
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -737,49 +727,59 @@ msgid "In Progress"
 msgstr "Em curso"
 
 #. module: hr_evaluation
-#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
-msgid ""
-"Interview Requests are generated automatically by OpenERP according to an "
-"employee's evaluation plan. Each user receives automatic emails and requests "
-"to evaluate their colleagues periodically."
+#: view:hr.evaluation.interview:0
+msgid "To Do"
+msgstr "A fazer"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Final Validation Evaluations"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:0
-#: field:hr_evaluation.plan,phase_ids:0
-msgid "Evaluation Phases"
-msgstr "Fases da avaliação"
+#: field:hr_evaluation.plan.phase,mail_feature:0
+msgid "Send mail for this phase"
+msgstr "Envial e-mail para esta fase"
 
 #. module: hr_evaluation
+#: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
-msgid "Current"
-msgstr "Atual"
+msgid "Late"
+msgstr ""
 
 #. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
-msgid "Evaluation Interview"
-msgstr "Entrevista de avaliação"
+#: selection:hr.evaluation.report,month:0
+msgid "October"
+msgstr "Outubro"
 
 #. module: hr_evaluation
-#: field:hr.evaluation.reminder,evaluation_id:0
-msgid "Interview"
-msgstr "Entrevista"
+#: help:hr.employee,evaluation_date:0
+msgid ""
+"The date of the next appraisal is computed by the appraisal plan's dates "
+"(first appraisal + periodicity)."
+msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.reminder:0
-#: model:ir.ui.menu,name:hr_evaluation.menu_eval_send_mail
-msgid "Evaluation Reminders"
-msgstr "Lembretes da avaliação"
+#: field:hr.evaluation.report,overpass_delay:0
+msgid "Overpassed Deadline"
+msgstr "Prazo ultrapassado"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan,month_next:0
+msgid ""
+"The number of month that depicts the delay between each evaluation of this "
+"plan (after the first one)."
+msgstr ""
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,month_next:0
+msgid "Periodicity of Appraisal (months)"
+msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Self Appraisal Requests"
 msgstr "Pedidos de auto-avaliação"
-
-#. module: hr_evaluation
-#: field:hr_evaluation.plan.phase,email_subject:0
-msgid "char"
-msgstr "caracter"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,survey_request_ids:0
@@ -797,11 +797,6 @@ msgid "Internal Notes"
 msgstr "Notas internas"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.evaluation:0
-msgid "Validate Evaluation"
-msgstr ""
-
-#. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Final Interview"
 msgstr "Entrevista final"
@@ -817,19 +812,12 @@ msgid "Bottom-Up Appraisal Requests"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
-msgid "Search Evaluation"
-msgstr "Procurar Avaliação"
-
-#. module: hr_evaluation
-#: field:hr.employee,evaluation_plan_id:0
-#: view:hr_evaluation.plan:0
-#: field:hr_evaluation.plan,name:0
-#: field:hr_evaluation.plan.phase,plan_id:0
-#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
-msgid "Evaluation Plan"
-msgstr "Plano de avaliação"
+#: code:addons/hr_evaluation/hr_evaluation.py:244
+#, python-format
+msgid ""
+"You cannot change state, because some appraisal in waiting answer or draft "
+"state"
+msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -837,14 +825,31 @@ msgid "February"
 msgstr "Fevereiro"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan.phase:0
-msgid "Send to Managers"
+#: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
+msgid "Interview Appraisal"
 msgstr ""
 
 #. module: hr_evaluation
-#: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_send_mail
-msgid "Evaluation Send Mail"
+#: field:survey.request,is_evaluation:0
+msgid "Is Appraisal?"
 msgstr ""
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:320
+#, python-format
+msgid "You cannot start evaluation without Appraisal."
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Evaluation done in current month"
+msgstr ""
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,user_to_review_id:0
+msgid "Employee to Interview"
+msgstr "Empregado a entrevistar"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -852,19 +857,20 @@ msgid "April"
 msgstr "Abril"
 
 #. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_hr_evaluation_evaluation
-msgid "Employee Evaluation"
-msgstr "Avaliação dos empregados"
+#: view:hr_evaluation.plan.phase:0
+msgid "Appraisal Plan Phases"
+msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:0
-msgid "Search Evaluation Plan"
-msgstr "Procurar Plano de Avaliação"
+#: view:hr_evaluation.evaluation:0
+msgid "Validate Appraisal"
+msgstr ""
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:0
-msgid "(months)"
-msgstr "(meses)"
+#: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
+msgid "Search Appraisal"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,sequence:0
@@ -877,6 +883,8 @@ msgid "(user_signature)s: User name"
 msgstr ""
 
 #. module: hr_evaluation
+#: view:board.board:0
+#: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_board
 #: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_hr_evaluation_interview_requests
 msgid "Interview Requests"
@@ -894,10 +902,13 @@ msgid "Year"
 msgstr "Ano"
 
 #. module: hr_evaluation
-#: help:hr.employee,evaluation_date:0
-msgid ""
-"The date of the next evaluation is computed by the evaluation plan's dates "
-"(first evaluation + periodicity)."
+#: field:hr_evaluation.evaluation,note_summary:0
+msgid "Appraisal Summary"
+msgstr ""
+
+#. module: hr_evaluation
+#: field:hr.employee,evaluation_date:0
+msgid "Next Appraisal Date"
 msgstr ""
 
 #~ msgid "Evaluation Type"
@@ -906,11 +917,109 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome de modelo inválido na definição da ação."
 
+#~ msgid "Evaluation Plan Phase"
+#~ msgstr "Fase do plano de avaliação"
+
+#~ msgid "Evaluations"
+#~ msgstr "Avaliações"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML inválido para a arquitetura de vista"
+
+#~ msgid "Is Evaluation?"
+#~ msgstr "É uma avaliação?"
+
+#~ msgid "Human Resources Evaluation"
+#~ msgstr "Avaliação dos recursos humanos"
+
+#~ msgid "Evaluation"
+#~ msgstr "Avaliação"
+
+#~ msgid " Year "
+#~ msgstr " Ano "
+
+#~ msgid "Start Evaluation"
+#~ msgstr "Iniciar a avaliação"
+
+#~ msgid "Interview Evaluation"
+#~ msgstr "Avaliação de entrevista"
+
+#~ msgid "Evaluation Plans"
+#~ msgstr "Planos de avaliação"
+
+#~ msgid "Evaluation Phases"
+#~ msgstr "Fases da avaliação"
+
+#~ msgid "Current"
+#~ msgstr "Atual"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "O nome do Objeto deve começar com x_ e não pode conter nenhum caracter "
 #~ "especial!"
+
+#~ msgid "Interview"
+#~ msgstr "Entrevista"
+
+#~ msgid "Search Evaluation Plan"
+#~ msgstr "Procurar Plano de Avaliação"
+
+#~ msgid "Employee Evaluation"
+#~ msgstr "Avaliação dos empregados"
+
+#~ msgid "Evaluation Plan"
+#~ msgstr "Plano de avaliação"
+
+#~ msgid "Search Evaluation"
+#~ msgstr "Procurar Avaliação"
+
+#~ msgid "(months)"
+#~ msgstr "(meses)"
+
+#~ msgid "Evaluation Form"
+#~ msgstr "Formulário de avaliação"
+
+#~ msgid ""
+#~ "Error ! You cannot select a department for which the employee is the manager."
+#~ msgstr ""
+#~ "Erro! Não pode seleccionar um departamento cujo gestor é o empregado."
+
+#~ msgid "Evaluations Analysis"
+#~ msgstr "Análise das avaliações"
+
+#~ msgid "Sends Reminders to employess to fill the evaluations"
+#~ msgstr "Enviar aos empregados lembretes para o preenchimento das avaliações"
+
+#~ msgid "Periodicity of Evaluations (months)"
+#~ msgstr "periodicidade das avaliações (meses)"
+
+#~ msgid "Periodic Evaluations"
+#~ msgstr "Avaliações periódicas"
+
+#~ msgid "Send evaluation reminder"
+#~ msgstr "Enviar lembrete da avaliação"
+
+#~ msgid "First Evaluation in (months)"
+#~ msgstr "Primeira avaliação em (meses)"
+
+#~ msgid "Evaluation Deadline"
+#~ msgstr "Prazo da avaliação"
+
+#~ msgid "Evaluation Summary"
+#~ msgstr "Resumo da avaliação"
+
+#~ msgid "Send Mail"
+#~ msgstr "Enviar e-mail"
+
+#~ msgid "Evaluation Reminders"
+#~ msgstr "Lembretes da avaliação"
+
+#~ msgid "Evaluation Interview"
+#~ msgstr "Entrevista de avaliação"
+
+#~ msgid "Evaluation Plan Phases"
+#~ msgstr "Fases do plano de avaliação"
+
+#~ msgid "Next Evaluation Date"
+#~ msgstr "Data da próxima avaliação"

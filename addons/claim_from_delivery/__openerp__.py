@@ -18,10 +18,10 @@
 #
 ##############################################################################
 {
-    "name" : "Claim from Delivery",
+    "name" : "Claim on Deliveries",
     "version" : "1.0",
     "author" : "OpenERP SA",
-    "category" : "Hidden",
+    "category" : "Warehouse Management",
     "depends" : ["base", "crm_claim", "stock"],
     "init_xml" : [],
     "demo_xml" : [],
@@ -32,7 +32,7 @@ Create a claim from a delivery order.
 Adds a Claim link to the delivery order.
 ''',
     "update_xml" : ["claim_delivery_view.xml"],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "001101649349223746957",
     'images': ['images/1_claim_link_delivery_order.jpeg'],

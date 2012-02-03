@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-12 15:28+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"PO-Revision-Date: 2012-01-22 19:04+0000\n"
+"Last-Translator: Erwin <erwin@endiansolutions.nl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:37+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-01-23 05:20+0000\n"
+"X-Generator: Launchpad (build 14700)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,9 +22,10 @@ msgid "Parent Directory"
 msgstr "Bovenliggende folder"
 
 #. module: document
-#: model:ir.model,name:document.model_document_configuration
-msgid "Auto Directory Configuration"
-msgstr "Auto map configuratie"
+#: code:addons/document/document_directory.py:276
+#, python-format
+msgid "Directory name contains special characters!"
+msgstr "Mapnaam bevat speciale tekens!"
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -54,12 +55,6 @@ msgid ""
 msgstr ""
 "Veld om te gebruiken als naam bij resource mappen. Indien leeg, dan wordt "
 "\"naam\" gebruikt."
-
-#. module: document
-#: code:addons/document/document_directory.py:276
-#, python-format
-msgid "Directory name contains special characters!"
-msgstr "Mapnaam bevat speciale tekens!"
 
 #. module: document
 #: view:document.directory:0
@@ -98,6 +93,11 @@ msgstr "Maart"
 #: view:document.configuration:0
 msgid "title"
 msgstr "titel"
+
+#. module: document
+#: field:document.directory.dctx,expr:0
+msgid "Expression"
+msgstr "Expressie"
 
 #. module: document
 #: view:document.directory:0
@@ -150,6 +150,10 @@ msgstr "Mapnaam moet uniek zijn"
 
 #. module: document
 #: view:ir.attachment:0
+msgid "Filter on my documents"
+msgstr "Filter op mijn documenten"
+
+#. module: document
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Geïndexeerde inhoud"
@@ -164,17 +168,16 @@ msgstr ""
 "gelokaliseerd. Als onwaar, alleen diegenen die dit als bovenliggende hebben."
 
 #. module: document
+#: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
+msgid "Knowledge Management"
+msgstr "Kennisbeheer"
+
+#. module: document
 #: view:document.directory:0
 #: field:document.storage,dir_ids:0
-#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Mappen"
-
-#. module: document
-#: field:document.configuration,sale_order:0
-msgid "Sale Order"
-msgstr "Verkooporder"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_user
@@ -182,21 +185,11 @@ msgid "Files details by Users"
 msgstr "Bestandsdetails per gebruiker"
 
 #. module: document
-#: field:document.configuration,project:0
-msgid "Project"
-msgstr "Project"
-
-#. module: document
 #: code:addons/document/document_storage.py:573
 #: code:addons/document/document_storage.py:601
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
-
-#. module: document
-#: help:document.configuration,product:0
-msgid "Auto directory configuration for Products."
-msgstr "Auto map configuration voor producten."
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -207,6 +200,11 @@ msgstr "Vindt alle resources"
 #: selection:document.directory,type:0
 msgid "Folders per resource"
 msgstr "Mappen per resource"
+
+#. module: document
+#: view:ir.attachment:0
+msgid "Indexed Content - experimental"
+msgstr "Geïndexeerde inhoud - Experimenteel"
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -241,8 +239,8 @@ msgid "Document directory"
 msgstr "Documentenmap"
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #: code:addons/document/document_directory.py:266
 #: code:addons/document/document_directory.py:271
 #: code:addons/document/document_directory.py:276
@@ -275,9 +273,9 @@ msgid "Storage"
 msgstr "Opslag"
 
 #. module: document
-#: view:document.configuration:0
-msgid "Configure Resource Directory"
-msgstr "Resource map configureren"
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
+msgstr "Resource model"
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -331,11 +329,6 @@ msgstr "Context velden"
 #: field:ir.attachment,store_fname:0
 msgid "Stored Filename"
 msgstr "Opgeslagen bestandsnaam"
-
-#. module: document
-#: field:document.directory,ressource_type_id:0
-msgid "Resource model"
-msgstr "Resource model"
 
 #. module: document
 #: view:document.directory:0
@@ -392,6 +385,15 @@ msgid "Generated Files"
 msgstr "Gegenereerde bestanden"
 
 #. module: document
+#: view:document.configuration:0
+msgid ""
+"When executing this wizard, it will configure your directories automatically "
+"according to modules installed."
+msgstr ""
+"Bij het uitvoeren van deze wizard, zal het automatisch de mappen "
+"configureren op basis van de geïnstalleerde modules."
+
+#. module: document
 #: field:document.directory.content,directory_id:0
 #: field:document.directory.dctx,dir_id:0
 #: model:ir.actions.act_window,name:document.action_document_file_directory_form
@@ -403,9 +405,9 @@ msgid "Directory"
 msgstr "Map"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by Partner"
-msgstr "Bestanden per relatie"
+#: view:document.directory:0
+msgid "Security"
+msgstr "Beveiliging"
 
 #. module: document
 #: field:document.directory,write_uid:0
@@ -419,11 +421,6 @@ msgstr "Laatste wijziging door gebruiker"
 #: model:ir.actions.act_window,name:document.zoom_directory
 msgid "Related Documents"
 msgstr "Gerelateerde documenten"
-
-#. module: document
-#: field:document.configuration,progress:0
-msgid "Configuration Progress"
-msgstr "Configuratievoortgang"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -482,43 +479,6 @@ msgstr ""
 "Definieer woorden in de context, voor alle dochtermappen en bestanden"
 
 #. module: document
-#: model:ir.module.module,description:document.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
-"    * User Authentication\n"
-"    * Document Indexation :- .pptx and .docx files are not support in "
-"windows platform.\n"
-"    * Dashboard for Document that includes:\n"
-"        * New Files (list)\n"
-"        * Files by Resource Type (graph)\n"
-"        * Files by Partner (graph)\n"
-"        * Files by Month (graph)\n"
-"    ATTENTION:\n"
-"    - When you install this module in a running company that have already "
-"PDF files stored into the database,\n"
-"      you will lose them all.\n"
-"    - After installing this module PDF's are no longer stored into the "
-"database,\n"
-"      but in the servers rootpad like /server/bin/filestore.\n"
-msgstr ""
-"Dit is een compleet documentbeheer systeem:\n"
-"    * Gebruikerstoegang\n"
-"    * Document indexering :- .pptx en .docx bestanden wordne niet "
-"ondersteund op windows platform.\n"
-"    * Dashboard voor documenten die bevat:\n"
-"        * Nieuww bestanden (lijst)\n"
-"        * Bestanden per soort resource (grafiek)\n"
-"        * Bestanden per relatie (grafiek)\n"
-"        * Bestanden per maand (grafiek)\n"
-"    LET OP:\n"
-"    - Als u deze module installeert in een draaiend bedrijf dat al PDF "
-"bestanden heeft opgeslagen in de database,\n"
-"      dan raakt u die allemaal kwijt.\n"
-"    - Na installatie van deze module worden PDF's niet langer in de database "
-"opgeslagen, maar in een pad op de server\n"
-"      zoals bijv. /server/bin/filestore.\n"
-
-#. module: document
 #: help:document.storage,online:0
 msgid ""
 "If not checked, media is currently offline and its contents not available"
@@ -566,8 +526,8 @@ msgstr ""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
-msgid "Auto Configure Directory"
-msgstr "Automatische instellingen-map"
+msgid "Configure Directories"
+msgstr "Geconfigureerde mappen"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -597,11 +557,6 @@ msgid ""
 msgstr ""
 "Vink aan als u dezelfde boomstructuur wil gebruiken als het geselecteerde "
 "object in het systeem."
-
-#. module: document
-#: view:document.directory:0
-msgid "Security"
-msgstr "Beveiliging"
 
 #. module: document
 #: help:document.directory,ressource_id:0
@@ -693,24 +648,15 @@ msgid "Database"
 msgstr "Database"
 
 #. module: document
-#: help:document.configuration,project:0
-msgid "Auto directory configuration for Projects."
-msgstr "Auto map configuratie voor projecten."
+#: selection:report.document.user,month:0
+#: selection:report.files.partner,month:0
+msgid "January"
+msgstr "Januari"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Related to"
 msgstr "Gerelateerd aan"
-
-#. module: document
-#: model:ir.module.module,shortdesc:document.module_meta_information
-msgid "Integrated Document Management System"
-msgstr "Geïntegreerd documentbeheersysteem"
-
-#. module: document
-#: view:document.configuration:0
-msgid "Choose the following Resouces to auto directory configuration."
-msgstr "Kies de volgende resources voor auto map configuratie."
 
 #. module: document
 #: view:ir.attachment:0
@@ -733,9 +679,9 @@ msgid "Read Only"
 msgstr "Alleen lezen"
 
 #. module: document
-#: field:document.directory.dctx,expr:0
-msgid "Expression"
-msgstr "Expressie"
+#: model:ir.actions.act_window,name:document.action_document_directory_form
+msgid "Document Directory"
+msgstr "Document mappen"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -747,6 +693,25 @@ msgstr "De mapnaam moet uniek zijn!"
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Gemaakt door"
+
+#. module: document
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr "Volgorde"
+
+#. module: document
+#: view:document.configuration:0
+msgid ""
+"OpenERP's Document Management System supports mapping virtual folders with "
+"documents. The virtual folder of a document can be used to manage the files "
+"attached to the document, or to print and download any report. This tool "
+"will create directories automatically according to modules installed."
+msgstr ""
+"OpenERP's Document Management System ondersteunt het mappen van virtuele "
+"mappen met documenten. De virtuele map van een document kan worden gebruikt "
+"om de bestanden die bij het document behoren te beheren, of om af te drukken "
+"en te downloaden. Deze tool maakt automatisch mappen op basis van "
+"geïnstalleerde modules."
 
 #. module: document
 #: view:board.board:0
@@ -838,14 +803,14 @@ msgid "Month"
 msgstr "Maand"
 
 #. module: document
+#: view:report.document.user:0
+msgid "This Months Files"
+msgstr "Deze maand bestanden"
+
+#. module: document
 #: model:ir.ui.menu,name:document.menu_reporting
 msgid "Reporting"
 msgstr "Overzichten"
-
-#. module: document
-#: field:document.configuration,product:0
-msgid "Product"
-msgstr "Product"
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -894,12 +859,6 @@ msgid "New Files"
 msgstr "Nieuwe bestanden"
 
 #. module: document
-#: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
-msgid "January"
-msgstr "Januari"
-
-#. module: document
 #: view:document.directory:0
 msgid "Static"
 msgstr "Statisch"
@@ -910,13 +869,9 @@ msgid "Files By Partner"
 msgstr "Bestanden per relatie"
 
 #. module: document
-#: help:document.directory.dctx,field:0
-msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
-msgstr ""
-"De naam van het veld. Merk op dat het voorvoegsel \"dctx_\" aan het begin "
-"wordt gezet van de tekst die hier wordt ingevuld."
+#: view:document.configuration:0
+msgid "Configure Direcories"
+msgstr "Geconfigureerde mappen"
 
 #. module: document
 #: view:report.document.user:0
@@ -929,10 +884,9 @@ msgid "Notes"
 msgstr "Notities"
 
 #. module: document
-#: help:document.configuration,sale_order:0
-msgid ""
-"Auto directory configuration for Sale Orders and Quotation with report."
-msgstr "Auto map configuratie voor verkooporders en offerte met overzicht."
+#: model:ir.model,name:document.model_document_configuration
+msgid "Directory Configuration"
+msgstr "Mappen configuratie"
 
 #. module: document
 #: help:document.directory,type:0
@@ -960,6 +914,15 @@ msgstr "Februari"
 #: model:ir.ui.menu,name:document.menu_reports_document_manager1
 msgid "Statistics by User"
 msgstr "Statistieken per gebruiker"
+
+#. module: document
+#: help:document.directory.dctx,field:0
+msgid ""
+"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+"what is typed here."
+msgstr ""
+"De naam van het veld. Merk op dat het voorvoegsel \"dctx_\" aan het begin "
+"wordt gezet van de tekst die hier wordt ingevuld."
 
 #. module: document
 #: field:document.directory,name:0
@@ -996,6 +959,12 @@ msgid "# of Files"
 msgstr "# bestanden"
 
 #. module: document
+#: code:addons/document/document.py:209
+#, python-format
+msgid "(copy)"
+msgstr "(kopie)"
+
+#. module: document
 #: view:document.directory:0
 msgid ""
 "Only members of these groups will have access to this directory and its "
@@ -1018,9 +987,9 @@ msgid "Mime Type"
 msgstr "Mime Type"
 
 #. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
-msgstr "Volgorde"
+#: view:report.document.user:0
+msgid "All Months Files"
+msgstr "Alle maanden bestanden"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -1028,8 +997,8 @@ msgid "Content Name"
 msgstr "Naam inhoud"
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #, python-format
 msgid "File name must be unique!"
 msgstr "Bestandsnaam moet uniek zijn!"
@@ -1051,8 +1020,6 @@ msgid "Directories' Structure"
 msgstr "Mapstructuur"
 
 #. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_document_by_resourcetype_graph
 #: view:report.document.user:0
 msgid "Files by Resource Type"
 msgstr "Bestanden per soort bron"
@@ -1065,6 +1032,7 @@ msgstr "Jaar"
 
 #. module: document
 #: view:document.storage:0
+#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
 #: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
@@ -1152,6 +1120,9 @@ msgstr "Soort document"
 #~ "    * Gebruikersauthenticatie\n"
 #~ "    * Document-indexering\n"
 
+#~ msgid "Integrated Document Management System"
+#~ msgstr "Geïntegreerd documentbeheersysteem"
+
 #~ msgid "History"
 #~ msgstr "Historie"
 
@@ -1166,6 +1137,9 @@ msgstr "Soort document"
 
 #~ msgid "Document Configuration"
 #~ msgstr "Document instellingen"
+
+#~ msgid "Auto Configure Directory"
+#~ msgstr "Automatische instellingen-map"
 
 #~ msgid ""
 #~ "Check this field if you want that the name of the file start by the record "
@@ -1205,6 +1179,62 @@ msgstr "Soort document"
 #~ msgid "Auto Configure"
 #~ msgstr "Automatisch instellen"
 
+#~ msgid "Auto Directory Configuration"
+#~ msgstr "Auto map configuratie"
+
+#~ msgid "Sale Order"
+#~ msgstr "Verkooporder"
+
+#~ msgid "Project"
+#~ msgstr "Project"
+
+#~ msgid "Auto directory configuration for Products."
+#~ msgstr "Auto map configuration voor producten."
+
+#~ msgid "Files by Partner"
+#~ msgstr "Bestanden per relatie"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Configuratievoortgang"
+
+#~ msgid ""
+#~ "This is a complete document management system:\n"
+#~ "    * User Authentication\n"
+#~ "    * Document Indexation :- .pptx and .docx files are not support in "
+#~ "windows platform.\n"
+#~ "    * Dashboard for Document that includes:\n"
+#~ "        * New Files (list)\n"
+#~ "        * Files by Resource Type (graph)\n"
+#~ "        * Files by Partner (graph)\n"
+#~ "        * Files by Month (graph)\n"
+#~ "    ATTENTION:\n"
+#~ "    - When you install this module in a running company that have already "
+#~ "PDF files stored into the database,\n"
+#~ "      you will lose them all.\n"
+#~ "    - After installing this module PDF's are no longer stored into the "
+#~ "database,\n"
+#~ "      but in the servers rootpad like /server/bin/filestore.\n"
+#~ msgstr ""
+#~ "Dit is een compleet documentbeheer systeem:\n"
+#~ "    * Gebruikerstoegang\n"
+#~ "    * Document indexering :- .pptx en .docx bestanden wordne niet "
+#~ "ondersteund op windows platform.\n"
+#~ "    * Dashboard voor documenten die bevat:\n"
+#~ "        * Nieuww bestanden (lijst)\n"
+#~ "        * Bestanden per soort resource (grafiek)\n"
+#~ "        * Bestanden per relatie (grafiek)\n"
+#~ "        * Bestanden per maand (grafiek)\n"
+#~ "    LET OP:\n"
+#~ "    - Als u deze module installeert in een draaiend bedrijf dat al PDF "
+#~ "bestanden heeft opgeslagen in de database,\n"
+#~ "      dan raakt u die allemaal kwijt.\n"
+#~ "    - Na installatie van deze module worden PDF's niet langer in de database "
+#~ "opgeslagen, maar in een pad op de server\n"
+#~ "      zoals bijv. /server/bin/filestore.\n"
+
+#~ msgid "Auto directory configuration for Projects."
+#~ msgstr "Auto map configuratie voor projecten."
+
 #~ msgid ""
 #~ "If you put an object here, this directory template will appear bellow all of "
 #~ "these objects. Don't put a parent directory if you select a parent model."
@@ -1212,3 +1242,16 @@ msgstr "Soort document"
 #~ "Als u hier een object plaatst, zal dit mapsjabloon onderaan al deze objecten "
 #~ "verschijnen. Plaats geen bovenliggende map als u een bovenliggend model "
 #~ "kiest."
+
+#~ msgid "Product"
+#~ msgstr "Product"
+
+#~ msgid ""
+#~ "Auto directory configuration for Sale Orders and Quotation with report."
+#~ msgstr "Auto map configuratie voor verkooporders en offerte met overzicht."
+
+#~ msgid "Configure Resource Directory"
+#~ msgstr "Resource map configureren"
+
+#~ msgid "Choose the following Resouces to auto directory configuration."
+#~ msgstr "Kies de volgende resources voor auto map configuratie."

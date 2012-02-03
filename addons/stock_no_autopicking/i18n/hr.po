@@ -6,67 +6,82 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-08-03 03:13+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"PO-Revision-Date: 2012-01-28 22:01+0000\n"
+"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:33+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-01-29 05:22+0000\n"
+"X-Generator: Launchpad (build 14727)\n"
 
 #. module: stock_no_autopicking
 #: model:ir.model,name:stock_no_autopicking.model_product_product
 msgid "Product"
-msgstr ""
-
-#. module: stock_no_autopicking
-#: model:ir.module.module,description:stock_no_autopicking.module_meta_information
-msgid ""
-"\n"
-"    This module allows an intermediate picking process to provide raw "
-"materials\n"
-"    to production orders.\n"
-"\n"
-"    One example of usage of this module is to manage production made by "
-"your\n"
-"    suppliers (sub-contracting). To achieve this, set the assembled product\n"
-"    which is sub-contracted to \"No Auto-Picking\" and put the location of "
-"the\n"
-"    supplier in the routing of the assembly operation.\n"
-"    "
-msgstr ""
+msgstr "Proizvod"
 
 #. module: stock_no_autopicking
 #: model:ir.model,name:stock_no_autopicking.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Nalog za proizvodnju"
 
 #. module: stock_no_autopicking
 #: field:product.product,auto_pick:0
 msgid "Auto Picking"
-msgstr "Automatski odabir"
+msgstr "Automatski prijenos"
 
 #. module: stock_no_autopicking
 #: help:product.product,auto_pick:0
 msgid "Auto picking for raw materials of production orders."
-msgstr "Automatski odabir sirovina naloga u proizvodnji"
+msgstr "Automatski prijenos sirovina za naloge u proizvodnji"
 
 #. module: stock_no_autopicking
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Greška: Neispravan barkod!"
 
 #. module: stock_no_autopicking
-#: model:ir.module.module,shortdesc:stock_no_autopicking.module_meta_information
-msgid "Stock No Auto-Picking"
-msgstr "Dionica bez automatskog biranja"
+#: sql_constraint:mrp.production:0
+msgid "Reference must be unique per Company!"
+msgstr "Vezna oznaka je već korištena."
 
 #. module: stock_no_autopicking
 #: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero !"
-msgstr ""
+msgid "Order quantity cannot be negative or zero!"
+msgstr "Količina na nalogu mora biti veća od nula."
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Nevažeći XML za arhitekturu prikaza!"
+
+#~ msgid "Stock No Auto-Picking"
+#~ msgstr "Bez prijenosa zaliha"
+
+#~ msgid "Order quantity cannot be negative or zero !"
+#~ msgstr "KOličina na nalogu ne smije biti negativna ili nula!"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module allows an intermediate picking process to provide raw "
+#~ "materials\n"
+#~ "    to production orders.\n"
+#~ "\n"
+#~ "    One example of usage of this module is to manage production made by "
+#~ "your\n"
+#~ "    suppliers (sub-contracting). To achieve this, set the assembled product\n"
+#~ "    which is sub-contracted to \"No Auto-Picking\" and put the location of "
+#~ "the\n"
+#~ "    supplier in the routing of the assembly operation.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Ovaj modul omogućava proces izuzimanja kako bi se osigurale sirovine\n"
+#~ "     za proizvodnju.\n"
+#~ "    Primjer korištenja ovog modula je upravljanje proizvodnjom vašeg "
+#~ "dobavljača\n"
+#~ "    (podugovarač). Kako bi to ostvarili postavite sastavljeni artikl koji je "
+#~ "predmet \n"
+#~ "    podugovaranja na \"Bez prijenosa\" i usmjerite lokaciju dobavljača prema "
+#~ "\n"
+#~ "    operaciji sastavljanja.\n"
+#~ "    "
