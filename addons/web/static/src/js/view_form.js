@@ -689,13 +689,17 @@ openerp.web.form.compute_domain = function(expr, fields) {
                     stack.push(!top);
                     continue;
                 default:
-                    throw new Error('Unknown domain operator ' + ex);
+                    throw new Error(_.str.sprintf(
+                        _t("Unknown operator %s in domain %s"),
+                        ex, JSON.stringify(expr)));
             }
         }
 
         var field = fields[ex[0]];
         if (!field) {
-            throw new Error("Domain references unknown field : " + ex[0]);
+            throw new Error(_.str.sprintf(
+                _t("Unknown field %s in domain %s"),
+                ex[0], JSON.stringify(expr)));
         }
         var field_value = field.get_value ? fields[ex[0]].get_value() : fields[ex[0]].value;
         var op = ex[1];
@@ -731,7 +735,9 @@ openerp.web.form.compute_domain = function(expr, fields) {
                 stack.push(!_(val).contains(field_value));
                 break;
             default:
-                console.warn("Unsupported operator in modifiers :", op);
+                console.warn(
+                    _t("Unsupported operator %s in domain %s"),
+                    op, JSON.stringify(expr));
         }
     }
     return _.all(stack, _.identity);
