@@ -110,7 +110,7 @@ class event_event(osv.osv):
         list_users=[]
         event = self.browse(cr, uid, ids, context=context)
         name_event = event[0].name 
-        dic_courses= [{'fullname' :name_event,'shortname' :'','summary':event[0].note,'categoryid':1}]
+        dic_courses= [{'fullname' :name_event,'shortname' :'','startdate':event[0].date_begin,'summary':event[0].note,'categoryid':1}]
         #create a dict course
         moodle_pool = self.pool.get('event.moodle')
         response_courses = moodle_pool.create_moodle_courses(cr,uid,[1],dic_courses)
