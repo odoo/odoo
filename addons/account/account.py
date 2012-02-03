@@ -3356,14 +3356,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         # because we can't rely on the value current_num as,
         # its possible that we already have bank journals created (e.g. by the creation of res.partner.bank) 
         # and the next number for account code might have been already used before for journal
-        journal_count = 0
         for num in xrange(current_num, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
-            journal_code = _('BNK')[:3] + str(current_num + journal_count)
+            journal_code = _('BNK')[:3] + str(num)
             ids = obj_journal.search(cr, uid, [('code', '=', journal_code), ('company_id', '=', company_id)], context=context)
             if not ids:
                 break
-            journal_count += 1
         else:
             raise osv.except_osv(_('Error'), _('Cannot generate an unused journal code.'))
 
