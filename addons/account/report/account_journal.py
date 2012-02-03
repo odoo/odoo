@@ -30,8 +30,9 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             context = {}
         super(journal_print, self).__init__(cr, uid, name, context=context)
         self.period_ids = []
+        self.last_move_id = False
         self.journal_ids = []
-        self.sort_selection = 'date'
+        self.sort_selection = 'am.name'
         self.localcontext.update({
             'time': time,
             'lines': self.lines,
@@ -47,6 +48,10 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'display_currency':self._display_currency,
             'get_sortby': self._get_sortby,
             'get_target_move': self._get_target_move,
+            'check_last_move_id': self.check_last_move_id,
+            'set_last_move_id': self.set_last_move_id,
+            'tax_codes': self.tax_codes,
+            'sum_vat': self._sum_vat,
     })
 
     def set_context(self, objects, data, ids, report_type=None):
@@ -65,6 +70,39 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             res = self.cr.fetchall()
             self.period_ids, self.journal_ids = zip(*res)
         return super(journal_print, self).set_context(objects, data, ids, report_type=report_type)
+
+    def set_last_move_id(self, move_id):
+        self.last_move_id = move_id
+
+    def check_last_move_id(self, move_id):
+        '''
+        return True if we need to draw a gray line above this line, used to separate moves
+        '''
+        if self.last_move_id:
+            return not(self.last_move_id == move_id)
+        return False
+
+    def tax_codes(self, period_id, journal_id):
+        ids_journal_period = self.pool.get('account.journal.period').search(self.cr, self.uid, 
+            [('journal_id', '=', journal_id), ('period_id', '=', period_id)])
+        self.cr.execute(
+            'select distinct tax_code_id from account_move_line ' \
+            'where period_id=%s and journal_id=%s and tax_code_id is not null and state<>\'draft\'',
+            (period_id, journal_id)
+        )
+        ids = map(lambda x: x[0], self.cr.fetchall())
+        tax_code_ids = []
+        if ids:
+            self.cr.execute('select id from account_tax_code where id in %s order by code', (tuple(ids),))
+            tax_code_ids = map(lambda x: x[0], self.cr.fetchall())
+        tax_codes = self.pool.get('account.tax.code').browse(self.cr, self.uid, tax_code_ids)
+        return tax_codes
+
+    def _sum_vat(self, period_id, journal_id, tax_code_id):
+        self.cr.execute('select sum(tax_amount) from account_move_line where ' \
+                        'period_id=%s and journal_id=%s and tax_code_id=%s and state<>\'draft\'',
+                        (period_id, journal_id, tax_code_id))
+        return self.cr.fetchone()[0] or 0.0
 
     def _sum_debit(self, period_id=False, journal_id=False):
         if journal_id and isinstance(journal_id, int):
@@ -118,7 +156,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         if self.target_move == 'posted':
             move_state = ['posted']
 
-        self.cr.execute('SELECT l.id FROM account_move_line l, account_move am WHERE l.move_id=am.id AND am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ORDER BY l.'+ self.sort_selection + ', l.move_id',(tuple(move_state), period_id, tuple(journal_id) ))
+        self.cr.execute('SELECT l.id FROM account_move_line l, account_move am WHERE l.move_id=am.id AND am.state IN %s AND l.period_id=%s AND l.journal_id IN %s ' + self.query_get_clause + ' ORDER BY '+ self.sort_selection + ', l.move_id',(tuple(move_state), period_id, tuple(journal_id) ))
         ids = map(lambda x: x[0], self.cr.fetchall())
         return obj_mline.browse(self.cr, self.uid, ids)
 
@@ -155,5 +193,6 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return 'Date'
 
 report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header='internal')
+report_sxw.report_sxw('report.account.journal.period.print.sale.purchase', 'account.journal.period', 'addons/account/report/account_journal_sale_purchase.rml', parser=journal_print, header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

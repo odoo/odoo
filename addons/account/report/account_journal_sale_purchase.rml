@@ -126,7 +126,7 @@
     <blockTableStyle id="Table4Total">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="8,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="12,0"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -212,13 +212,15 @@
     <para style="Standard"><font color="white">[[lines(o.period_id.id, o.journal_id.id) or removeParentNode('story') ]][[ set_last_move_id(False)]]</font></para>
     <section>
         <para style="Standard"><font color="white">[[  display_currency(data) == False or removeParentNode('section') ]]</font></para>
-        <blockTable rowHeights="0.55cm" colWidths="55.0,45.0,50.0,95.0,160.0,70.0,70.0" style="Table1">
+        <blockTable rowHeights="0.55cm" colWidths="55.0,45.0,50.0,80.0,110.0,15.0,50.0,70.0,70.0" style="Table1">
           <tr>
             <td><para style="P10a">Move</para></td>
             <td><para style="P10a">Date</para></td>
             <td><para style="P10a">Account</para></td>
             <td><para style="P10a">Partner</para></td>
             <td><para style="P10a">Label</para></td>
+            <td><para style="P10a">VAT</para></td>
+            <td><para style="P11"></para></td>
             <td><para style="P10b">Debit</para></td>
             <td><para style="P10b">Credit</para></td>
           </tr>
@@ -230,24 +232,28 @@
               <td><para style="P8">[[ not check_last_move_id(line.move_id.id) and removeParentNode('blockTable') ]]</para></td>
             </tr>
           </blockTable>
-          <blockTable rowHeights="0.55cm" colWidths="55.0,45.0,50.0,95.0,160.0,70.0,70.0" style="Table_no_lines">
+          <blockTable rowHeights="0.55cm" colWidths="55.0,45.0,50.0,80.0,110.0,15.0,50.0,70.0,70.0" style="Table_no_lines">
           <tr>
             <td><para style="terp_default_8">[[ line.move_id.name &lt;&gt; '/' and line.move_id.name or ('*'+str(line.move_id.id)) ]]</para></td>
             <td><para style="terp_default_8">[[ formatLang(line.date,date=True) ]]</para></td> 
             <td><para style="terp_default_8">[[ line.account_id.code ]]</para></td>
-            <td><para style="terp_default_8">[[ line.partner_id and strip_name(line.partner_id.name,23) ]]</para></td>
-            <td><para style="terp_default_8">[[ strip_name(line.name,35) ]]</para></td>
+            <td><para style="terp_default_8">[[ line.partner_id and strip_name(line.partner_id.name,17) ]]</para></td>
+            <td><para style="terp_default_8">[[ strip_name(line.name,25) ]]</para></td>
+            <td><para style="P8">[[ line.tax_code_id and (line.tax_code_id.code + ':') ]]</para></td>
+            <td><para style="terp_default_8">[[ line.tax_amount and formatLang(line.tax_amount, currency_obj=company.currency_id) ]]</para></td>
             <td><para style="P8">[[ formatLang(line.debit, currency_obj=company.currency_id) ]]</para></td>
             <td><para style="P8">[[ formatLang(line.credit, currency_obj=company.currency_id) ]]</para></td>
           </tr>
           </blockTable>
           <para style="terp_default_8">[[ set_last_move_id(line.move_id.id) ]]</para>
         </section>
-           <blockTable rowHeights="0.55cm" colWidths="55.0,45.0,50.0,95.0,160.0,70.0,70.0" style="Table4Total">
+           <blockTable rowHeights="0.55cm" colWidths="55.0,45.0,50.0,80.0,110.0,15.0,50.0,70.0,70.0" style="Table4Total">
            <tr>
             <td><para style="P11"></para></td>
             <td><para style="P11"></para></td>
             <td><para style="P11"></para></td>
+            <td><para style="P11"><font color="white"></font></para></td>
+            <td><para style="P11"><font color="white"></font></para></td>
             <td><para style="P11"><font color="white"></font></para></td>
             <td><para style="P12">Total:</para></td>
             <td><para style="P12">[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id), currency_obj=company.currency_id) ]]</para></td>
@@ -258,13 +264,15 @@
 
     <section>
       <para style="Standard"><font color="white">[[  display_currency(data) or removeParentNode('section') ]]</font></para>
-      <blockTable rowHeights="0.55cm" colWidths="55.0,45.0,50.0,70.0,130.0,70.0,70.0,70.0" style="Table1">
+      <blockTable rowHeights="0.55cm" colWidths="55.0,45.0,50.0,70.0,70.0,10.0,50.0,70.0,70.0,70.0" style="Table1">
       <tr>
         <td><para style="P10a">Move</para></td>
         <td><para style="P10a">Date</para></td>
         <td><para style="P10a">Account</para></td>
         <td><para style="P10a">Partner</para></td>
         <td><para style="P10a">Label</para></td>
+        <td><para style="P10a">VAT</para></td>
+        <td><para style="P11"></para></td>
         <td><para style="P10b">Debit</para></td>
         <td><para style="P10b">Credit</para></td>
         <td><para style="P10b">Currency</para></td>
@@ -277,13 +285,15 @@
             <td><para style="P8">[[ not check_last_move_id(line.move_id.id) and removeParentNode('blockTable') ]]</para></td>
           </tr>
         </blockTable>
-        <blockTable rowHeights="0.55cm" colWidths="55.0,45.0,50.0,70.0,130.0,70.0,70.0,70.0" style="Table_no_lines">
+        <blockTable rowHeights="0.55cm" colWidths="55.0,45.0,50.0,70.0,70.0,10.0,50.0,70.0,70.0,70.0" style="Table_no_lines">
           <tr>
            <td><para style="terp_default_8">[[ line.move_id.name &lt;&gt; '/' and line.move_id.name or ('*'+str(line.move_id.id)) ]]</para></td>
            <td><para style="terp_default_8">[[ formatLang(line.date,date=True) ]]</para></td> 
            <td><para style="terp_default_8">[[ line.account_id.code ]]</para></td>
            <td><para style="terp_default_8">[[ line.partner_id and strip_name(line.partner_id.name,17) ]]</para></td>
-           <td><para style="terp_default_8">[[ strip_name(line.name,28) ]]</para></td>
+           <td><para style="terp_default_8">[[ strip_name(line.name,17) ]]</para></td>
+           <td><para style="terp_default_8">[[ line.tax_code_id and (line.tax_code_id.code + ':') ]]</para></td>
+           <td><para style="P8">[[ line.tax_amount and formatLang(line.tax_amount, currency_obj=company.currency_id) ]]</para></td>
            <td><para style="P8">[[ formatLang(line.debit, currency_obj=company.currency_id) ]]</para></td>
            <td><para style="P8">[[ formatLang(line.credit, currency_obj=company.currency_id) ]]</para></td>
            <td><para style="P8">[[ line.currency_id and formatLang(line.amount_currency, currency_obj=line.currency_id) or '' ]]</para></td>
@@ -291,11 +301,13 @@
         </blockTable>
         <para style="terp_default_8">[[ set_last_move_id(line.move_id.id) ]]</para>
       </section>
-      <blockTable rowHeights="0.55cm" colWidths="55.0,45.0,50.0,70.0,130.0,70.0,70.0,70.0" style="Table4Total">
+      <blockTable rowHeights="0.55cm" colWidths="55.0,45.0,50.0,70.0,70.0,10.0,50.0,70.0,70.0,70.0" style="Table4Total">
         <tr>
           <td><para style="P11"></para></td>
           <td><para style="P11"></para></td>
           <td><para style="P11"></para></td>
+          <td><para style="P11"><font color="white"></font></para></td>
+          <td><para style="P11"><font color="white"></font></para></td>
           <td><para style="P11"><font color="white"></font></para></td>
           <td><para style="P12">Total:</para></td>
           <td><para style="P12">[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id), currency_obj=company.currency_id) ]]</para></td>
@@ -304,6 +316,31 @@
           <td><para style="P12"> <!--o.journal_id.currency and formatLang((sum_debit(o.period_id.id, o.journal_id.id) - sum_credit(o.period_id.id, o.journal_id.id))) ]] [[ o.journal_id.currency and o.journal_id.currency.symbol --></para></td>
         </tr>
       </blockTable>
+    </section>
+
+    <para style="P9">
+      <font color="white"> </font>
+    </para>
+    <para style="P9">
+      <font color="white"> </font>
+    </para>
+    <section>
+        <para alignment="LEFT">
+        </para>
+        <blockTable colWidths="15.0,80.0,20.0,182.0" style="Table1" repeatRows="1">
+          <tr>
+            <td><para style="P12"></para></td>
+            <td><para style="P12">VAT Declaration</para></td>
+            <td><para style="P12"></para></td>
+            <td><para style="P12"></para></td>
+          </tr>
+          <tr>
+            <td><para style="terp_default_8">[[ repeatIn(tax_codes(o.period_id.id,o.journal_id.id), 't') ]][[ t.code + ': ' ]]</para></td>
+            <td><para style="P8">[[ formatLang(sum_vat( o.period_id.id, o.journal_id.id, t.id)) ]]</para></td>
+            <td><para style="P11"><font color="white"> </font></para></td>
+            <td><para style="terp_default_8">[[ t.name ]]</para></td>
+          </tr>
+        </blockTable>
     </section>
   </story>
 </document>
