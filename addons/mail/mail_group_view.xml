@@ -38,7 +38,7 @@
                     <field name="type"/>
                     <field name="need_action"/>
                     <field name="model"/>
-                    <field name="res_id" groups="base.group_extended"/>
+                    <field name="res_id"/>
                 </form>
             </field>
         </record>
@@ -106,13 +106,15 @@
                         <field name="public" nolabel="1" colspan="1"/>
                         <label string="This group is visible by non members" colspan="2"/>
                     </group>
-                    <newline/>
-<!--                    <button name="action_follow" type="object" context="{}"
-                            string="Follow" icon="gtk-go-forward" colspan="1"/>
-                    <button name="action_unfollow" type="object" context="{}"
-                            string="Unfollow" icon="gtk-go-forward" colspan="1"/>
-                    <button name="action_see_followers" type="object" context="{}"
-                            string="See followers" icon="gtk-go-forward" colspan="1"/>-->
+                    <separator string="Actions" colspan="4"/>
+                    <group colspan="2" col="2">
+                        <button name="action_follow" type="object" context="{}"
+                            string="Follow" icon="gtk-go-forward" colspan="2"/>
+                        <button name="action_unfollow" type="object" context="{}"
+                            string="Unfollow" icon="gtk-go-forward" colspan="2"/>
+                    </group>
+                    <separator string="Messages" colspan="4"/>
+                    <field name="message_ids_tmp"/>
                 </form>
             </field>
         </record>
@@ -163,14 +165,15 @@
         <!-- left-side Tmp: temporary Groups link to see groups !-->
         <menuitem id="mg_groups_tmp" name="Groups" parent="mg_tmp" action="action_view_groups"/>
 
-<!--        <act_window
-            context="{'search_default__id': [active_id], 'default_project_id': active_id}"
-            id="act_project_project_2_project_task_all"
-            name="Tasks"
-            res_model="project.task"
-            src_model="project.project"
-            view_mode="tree,form,calendar,graph"
-            view_type="form"/>-->
+        <act_window
+            context="{}"
+            domain="[('res_model', '=', active_model), ('res_id', '=', active_id)]"
+            id="act_group_see_followers"
+            name="See followers"
+            res_model="mail.subscription"
+            src_model="mail.group"
+            view_mode="tree,form"
+            view_type="form"/>
 
     </data>
 </openerp>

@@ -26,7 +26,7 @@ openerp.mail = function(session) {
     });
     
     
-    var tv = new mail.ThreadView(this);
+//     var tv = new mail.ThreadView(this);
 //     tv.appendTo($("td.oe_form_field_mail.ThreadView"));
 //     tv.appendTo($("body"));
     

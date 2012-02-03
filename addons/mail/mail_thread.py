@@ -53,13 +53,22 @@ class mail_thread(osv.osv):
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
-
+    
+    def _get_message_ids(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for thread in self.browse(cr, uid, ids, context=context):
+            records = self.message_load(cr, uid, [thread.id], context=context)
+            res[thread.id] = [obj.id for obj in records]
+        return res
+    
     # TODO remove this and copy method, this will be replaced by message_load
     _columns = {
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', readonly=True),
+        'message_ids_tmp': fields.function(_get_message_ids, method=True,
+                        type='one2many', obj='mail.message', string='Temp messages'),
         'thread_view': fields.char('ThreadView', size=64, widget='mail.ThreadView'),
     }
-
+    
     #------------------------------------------------------
     # Generic message api
     #------------------------------------------------------
@@ -247,7 +256,7 @@ class mail_thread(osv.osv):
         msg_ids = []
         for id in ids:
             msg_ids += msg_obj.search(cr, uid, ['&', ('res_id', '=', id), ('model', '=', self._name)], context=context)
-        msgs = msg_obj.browse(cr, uid, ids)
+        msgs = msg_obj.browse(cr, uid, msg_ids)
         return msgs
 
     #------------------------------------------------------
@@ -522,7 +531,7 @@ class mail_thread(osv.osv):
         sub_ids = []
         for id in ids:
             sub_ids += subscription_obj.search(cr, uid, ['&', '&', ('res_model', '=', self._name), ('res_id', '=', id), ('user_id', '=', subscriber_id)], context=context)
-        subscription_obj.unlink(cr, uid, ids, context=context)
+        subscription_obj.unlink(cr, uid, sub_ids, context=context)
         return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
