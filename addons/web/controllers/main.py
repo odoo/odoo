@@ -695,7 +695,7 @@ class Menu(openerpweb.Controller):
         :rtype: dict('children': menu_nodes)
         """
         root_children = self.do_load_level(req)
-        root_menu = {'id': False, 'name': 'root', 'parent_id': [-1, ''], 'children' : children }
+        root_menu = {'id': False, 'name': 'root', 'parent_id': [-1, ''], 'children': root_children}
         return root_menu
 
     @openerpweb.jsonrequest
