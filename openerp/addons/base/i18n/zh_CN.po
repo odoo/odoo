@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-12-22 20:22+0000\n"
-"PO-Revision-Date: 2012-02-02 05:50+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"PO-Revision-Date: 2012-02-04 04:30+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-02 05:58+0000\n"
+"X-Launchpad-Export-Date: 2012-02-05 04:48+0000\n"
 "X-Generator: Launchpad (build 14738)\n"
 
 #. module: base
@@ -1434,6 +1434,22 @@ msgid ""
 "database,\n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 msgstr ""
+"\n"
+"这是个完整的文档管理系统。\n"
+"==============================================\n"
+"\n"
+"    用户访问权限\n"
+"    文档索引: 尚不支持Windows平台上的pptx和docx文件\n"
+"    文档仪表盘包括：\n"
+"        新文档列表\n"
+"        按资源类型分组的文档图表\n"
+"        按业务伙伴分组的文档图表\n"
+"        按月分组的文件大小图表\n"
+"\n"
+"注意：\n"
+"    如果你的公司已经运行OpenERP并在系统中存储了pdf文件，这些文件都会丢失。\n"
+"    安装了此模块以后pdf文件讲不再存在数据库中\n"
+"    而是存储在服务器的根目录如 server/bin/filestore。\n"
 
 #. module: base
 #: view:res.lang:0
@@ -1499,6 +1515,13 @@ msgid ""
 "Web.\n"
 "    "
 msgstr ""
+"\n"
+"这是个示例模块，用于演示在XML的表单视图中使用HTML标签。\n"
+"============================================================================="
+"\n"
+"\n"
+"用HTML标签创建一个简单的表单视图。只在OpenERP的Web界面可用。\n"
+"    "
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_purchase_management
@@ -1577,6 +1600,18 @@ msgid ""
 "    - You can define new types of events in\n"
 "        Association / Configuration / Types of Events\n"
 msgstr ""
+"\n"
+"组织和管理线下活动\n"
+"======================================\n"
+"\n"
+"此模块使您能够\n"
+"    管理线下活动和报名\n"
+"    用电子邮件自动确认和发送通知给活动的报名者\n"
+"    ......\n"
+"\n"
+"注意：\n"
+"    你可以用以下菜单定义新的线下活动类型\n"
+"        联盟/配置/活动类型\n"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_tools
@@ -1621,7 +1656,7 @@ msgstr "如果用户在修改相同的对象，不显示这个log"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu
 msgid "Luxembourg - Accounting"
-msgstr ""
+msgstr "卢森堡 - 会计"
 
 #. module: base
 #: model:res.country,name:base.tp
@@ -1678,6 +1713,17 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"此模块向您的当前数据库添加了通用的分享工具\n"
+"========================================================================\n"
+"\n"
+"它在OpenERP的Web界面上增加了“分享”按钮，用于向同事、客户或朋友分享OpenERP的任意数据。\n"
+"\n"
+"系统将自动创建用户和组，并分配对应的权限和规则，使得分享用户只能访问被分享的数据。\n"
+"\n"
+"这个功能对协同工作、知识分享、与其他公司同步很有用。\n"
+"\n"
+"    "
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -1694,6 +1740,11 @@ msgid ""
 "    Apply Different Category for the product.\n"
 "    "
 msgstr ""
+"\n"
+"    这是一个管理午餐的模块\n"
+"    管理午餐订单，现金划拨，钱箱，外卖品种等的信息。\n"
+"   支持不同类型的外卖品种。\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.kg
@@ -1751,6 +1802,33 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"业务伙伴增值税号检查\n"
+"========================================\n"
+"\n"
+"安装了这个模块以后，针对支持此功能的国家，业务伙伴的增值税号\n"
+"字段会增加验证。国家作为税号的前两位，例如''BE0477472701\"符\n"
+"合比利时的验证规则。\n"
+"\n"
+"有两级的税号验证规则：\n"
+"\n"
+"  默认的，使用一个简单的此国家的离线验证\n"
+"规则，一般只检查税号长度。这样很快且总\n"
+"是可用，但允许输入一个假的或者过期的税号。\n"
+"\n"
+" 当\"在线检查“被激活后（在用户所在的国家那\n"
+"里设置），税号会被发送到在线的EU VIES数据\n"
+"库上，会验证是否是一个真实存在的分配给某个\n"
+"欧洲公司的税号。这种验证比简单的离线验证\n"
+"慢一些，需要连接外部网络，或许有时不可用。\n"
+"如果服务不可用或不支持所选国家（如非欧洲国家），\n"
+"会使用简单的验证规则。\n"
+"\n"
+"现在支持的国家有欧洲国家和一些非欧洲国家如智利、\n"
+"哥伦比亚、墨西哥、挪威和俄罗斯。对于不支持的国家，\n"
+"只会检查国家代码。\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.sequence:0
@@ -1763,7 +1841,7 @@ msgid ""
 "Helps you get the most out of your points of sales with fast sale encoding, "
 "simplified payment mode encoding, automatic picking lists generation and "
 "more."
-msgstr ""
+msgstr "帮您完成销售网点的快速录入订单，简单的付款方式、自动生成发货单等。"
 
 #. module: base
 #: model:res.country,name:base.mv
@@ -1785,6 +1863,16 @@ msgid ""
 "The managers can obtain an easy view of best ideas from all the users.\n"
 "Once installed, check the menu 'Ideas' in the 'Tools' main menu."
 msgstr ""
+"\n"
+"此模块用于管理公司内部的创新。\n"
+"============================================================================="
+"===============\n"
+"\n"
+"每个人都可以针对特定主题发布创意。\n"
+"然后，，其他用户可以评论或为该创意投票。\n"
+"每个创意会根据投票有个分数。\n"
+"经理可以看到所有用户的最佳创意。\n"
+"安装后，进入工具主菜单下的创意菜单。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_caldav
@@ -1797,6 +1885,12 @@ msgid ""
 "on a remote server.\n"
 "    "
 msgstr ""
+"\n"
+"在项目任务和Caldav Vtodo之间同步。\n"
+"======================================================\n"
+"\n"
+"用Caldav功能你可以在远端服务器上查看并修改日程。\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_rule
@@ -1953,6 +2047,13 @@ msgid ""
 "Accounting chart and localization for Ecuador.\n"
 "    "
 msgstr ""
+"\n"
+"这是用于管理厄瓜多尔科目表的基础模块\n"
+"============================================================================="
+"=\n"
+"\n"
+"厄瓜多尔的科目表和本地化模块\n"
+"    "
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:38
@@ -2016,6 +2117,10 @@ msgid ""
 "today don't come with any additional paid permission for online use of "
 "'private modules'."
 msgstr ""
+"\n"
+"巴西的本地化模块\n"
+"==========================================\n"
+"此模块包含巴西的科目表和税设置"
 
 #. module: base
 #: view:res.request:0
@@ -2063,7 +2168,7 @@ msgstr "树形列表"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_multicurrency
 msgid "Multi-Currency in Analytic"
-msgstr ""
+msgstr "成本科目的多币种管理"
 
 #. module: base
 #: view:base.language.export:0
@@ -2080,7 +2185,7 @@ msgstr "视图模式"
 msgid ""
 "Display this bank account on the footer of printed documents like invoices "
 "and sales orders."
-msgstr ""
+msgstr "把这个银行账号显示在打印的单据上，如发票或销售订单。"
 
 #. module: base
 #: view:base.language.import:0
@@ -2141,6 +2246,26 @@ msgid ""
 "Some statistics by journals are provided.\n"
 "    "
 msgstr ""
+"\n"
+"销售台帐功能允许你用不同的台帐对销售订单和发货进行分类。\n"
+"\n"
+"此模块有助于分部门管理的大公司。\n"
+"\n"
+"你可以按不同的目的设置台账，例如：\n"
+"    区分不同部门的销售\n"
+"    区分卡车或快递的发货单\n"
+"\n"
+"台帐有个负责人并有以下几个状态：\n"
+"    草稿，开放，取消，完成。\n"
+"\n"
+"可以在不同的台账上做批量操作，如一次性确认所有订单、确认发货、开发票等。\n"
+"\n"
+"还支持批量生成发票，可以按业务伙伴或订单配置，例如：\n"
+"    每天开票\n"
+"    每月结算\n"
+"\n"
+"按台账做统计分析的功能\n"
+"    "
 
 #. module: base
 #: field:res.company,logo:0
@@ -2150,7 +2275,7 @@ msgstr "徽标"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cr
 msgid "Costa Rica - Accounting"
-msgstr ""
+msgstr "哥斯达黎加 - 会计"
 
 #. module: base
 #: view:ir.module.module:0
@@ -2176,6 +2301,20 @@ msgid ""
 "re-invoice your customer's expenses if your work by project.\n"
 "    "
 msgstr ""
+"\n"
+"此模块用于管理员工的费用报销。\n"
+"===============================================\n"
+"\n"
+"实现了整个流程：\n"
+"    新建报销单\n"
+"    员工确认整张报销单\n"
+"    由他的经理批准\n"
+"    由会计批准并生成发票\n"
+"    按发票 支付给员工\n"
+"\n"
+"这个模块也使用成本科目，并兼容按工时开票的功能。所以如\n"
+"果你用项目管理的方式，也可以自动重新对你客户的费用开票。\n"
+"    "
 
 #. module: base
 #: field:ir.values,action_id:0
@@ -2292,6 +2431,15 @@ msgid ""
 "system to store and search in your CV base.\n"
 "    "
 msgstr ""
+"\n"
+"管理岗位和招聘流程\n"
+"==================================================\n"
+"\n"
+"它集成了问卷模块用于定义不同岗位的面试。\n"
+"此模块集成了邮件功能从而自动跟踪发送到\n"
+" jobs@YOURCOMPANY.com的邮件。他也\n"
+"集成了文档管理功能用于存储和搜索简历。\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_widget_wizard
@@ -2301,7 +2449,7 @@ msgstr "首页部件管理"
 #. module: base
 #: field:res.company,rml_header1:0
 msgid "Report Header / Company Slogan"
-msgstr ""
+msgstr "报表页眉/公司标识"
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -2365,13 +2513,22 @@ msgid ""
 "and categorize your interventions with a channel and a priority level.\n"
 "    "
 msgstr ""
+"\n"
+"客服管理\n"
+"===================\n"
+"\n"
+"例如记录和处理问题，客服是跟踪你处理过程的\n"
+"良好工具。这个菜单更适合口头沟通，并不需要\n"
+"和具体的问题相关。选择一个客户，添加日志并\n"
+"用渠道和优先级对问题进行分类。\n"
+"    "
 
 #. module: base
 #: help:ir.filters,user_id:0
 msgid ""
 "The user this filter is available to. Keep empty to make it available to all "
 "users."
-msgstr ""
+msgstr "这个过滤条件所属的用户。设为空则所有用户可用。"
 
 #. module: base
 #: sql_constraint:ir.ui.view_sc:0
@@ -2392,6 +2549,15 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"此模块用于资源管理\n"
+"===============================\n"
+"\n"
+"资源可以排程（任务中的人或生产订单中的加工中心）。\n"
+"此模块管理每个资源的日程表。\n"
+"还管理资源的休假。\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.rule:0
@@ -2432,6 +2598,11 @@ msgid ""
 "\n"
 "Configure servers and trigger synchronization with its database objects.\n"
 msgstr ""
+"\n"
+"同步所有对象\n"
+"=================================\n"
+"\n"
+"配置服务器并触发他们数据库对象的同步。\n"
 
 #. module: base
 #: model:res.country,name:base.mg
@@ -2483,6 +2654,12 @@ msgid ""
 "orders.\n"
 "    "
 msgstr ""
+"\n"
+"管理销售订单的成本科目\n"
+"=================================================================\n"
+"\n"
+"用此模块你可以为销售订单指定成本科目\n"
+"    "
 
 #. module: base
 #: field:ir.actions.url,target:0
@@ -2569,7 +2746,7 @@ msgstr "服务器动作"
 #. module: base
 #: help:ir.actions.client,params:0
 msgid "Arguments sent to the client along withthe view tag"
-msgstr ""
+msgstr "和视图标签一起发送给客户端的参数"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_gtd
@@ -2600,6 +2777,21 @@ msgid ""
 "performing those tasks.\n"
 "    "
 msgstr ""
+"\n"
+"此模块实现了GTD方法中的所有概念\n"
+"============================================================================="
+"======\n"
+"\n"
+"此模块基于任务实现了一个简单的个人待办事件管理。它在\n"
+"项目管理功能上添加了一个可编辑的任务列表，只有很少的必输字段。\n"
+"\n"
+"待办事项清单基于GTD方法。这个风靡全球的方法用于提高个人时间管理效率。\n"
+"\n"
+"搞定（简称GTD）由David Allen提出，并被写成一本同名书籍。\n"
+"\n"
+"GTD的模式是一个人需要通过外部工具记录把任务从大脑中移出去。\n"
+"这样，大脑不需要记录需要做的事情，只需要关注于完成这些事情。\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -2679,7 +2871,7 @@ msgstr "继承"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_chart
 msgid "Template of Charts of Accounts"
-msgstr ""
+msgstr "科目表模版"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pad_project
@@ -2689,6 +2881,9 @@ msgid ""
 "==================================================\n"
 "    "
 msgstr ""
+"\n"
+"此模块为所有项目的看板视图添加了一个PAD\n"
+"    "
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_report_designer
@@ -2743,6 +2938,8 @@ msgid ""
 "The wizard to launch the report has several options to help you get the data "
 "you need.\n"
 msgstr ""
+"\n"
+"在产品上添加了一个报表菜单，用于根据发票计算销售、采购、利润和其他有趣的指标。\n"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:330
@@ -2759,7 +2956,7 @@ msgstr "错误！"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_rib
 msgid "French RIB Bank Details"
-msgstr ""
+msgstr "法国RIB银行信息"
 
 #. module: base
 #: view:res.lang:0
@@ -2831,7 +3028,7 @@ msgstr "孟加拉"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_retro_planning
 msgid "Project Retro-planning"
-msgstr ""
+msgstr "项目管理 - 反推计划"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_planning
@@ -2861,6 +3058,8 @@ msgid ""
 "\n"
 "The decimal precision is configured per company.\n"
 msgstr ""
+"\n"
+"配置针对不同用途的价格小数位数：财务、销售、采购等\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -2878,11 +3077,14 @@ msgid ""
 "że wszystkie towary są w obrocie hurtowym.\n"
 "    "
 msgstr ""
+"\n"
+"此模块用于管理波兰的科目表\n"
+"    "
 
 #. module: base
 #: field:ir.actions.client,params_store:0
 msgid "Params storage"
-msgstr ""
+msgstr "参数存储"
 
 #. module: base
 #: code:addons/base/module/module.py:398
@@ -2913,6 +3115,16 @@ msgid ""
 "since it's the same which has been renamed.\n"
 "    "
 msgstr ""
+"\n"
+"此模块允许用户对客户进行分级\n"
+"=================================================================\n"
+"\n"
+"他使用原来的分级模块里的参数条件并做了些增强。有了新的问卷概\n"
+"念后，你可以把问题放在问卷内并把它用于某个客户。\n"
+"\n"
+"它也替换了CRM&SRM模块里的分级功能，因为重复了。\n"
+"    注意，此模块与segmentation模块不兼容。因为它就是被重命名的segmentation模块。\n"
+"    "
 
 #. module: base
 #: code:addons/report_sxw.py:435
@@ -3028,11 +3240,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    \n"
+"比利时的发票模块 \n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wiki_quality_manual
 msgid "Wiki: Quality Manual"
-msgstr ""
+msgstr "维基：质量手册"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -3107,7 +3324,7 @@ msgstr "选择项表达式不是有效的 Python 表达式。请提供一个按�
 #. module: base
 #: model:res.groups,name:base.group_survey_user
 msgid "Survey / User"
-msgstr ""
+msgstr "问卷用户"
 
 #. module: base
 #: view:ir.module.module:0
@@ -3151,6 +3368,12 @@ msgid ""
 "for Wiki FAQ.\n"
 "    "
 msgstr ""
+"\n"
+"此模块提供了一个维基常见问题模版\n"
+"=========================================\n"
+"\n"
+"它提供了示例数据，为常见问题创建了一个维基组和维基页面\n"
+"    "
 
 #. module: base
 #: view:ir.actions.server:0
@@ -3318,6 +3541,37 @@ msgid ""
 "    * Graph of Sales by Product's Category in last 90 days\n"
 "    "
 msgstr ""
+"\n"
+"管理报价和销售订单的基本模块。\n"
+"======================================================\n"
+"\n"
+"审批工作流：报价 -> 订单 -> 发票\n"
+"\n"
+"开票方式\n"
+"------------\n"
+"    按订单开票（发货前或发货后）\n"
+"    按发货开票\n"
+"    按工时开票\n"
+"    预付款发票\n"
+"-------------\n"
+"业务伙伴参数：发货、开票、贸易条款\n"
+"----------------------------\n"
+"产品库存和价格\n"
+"----------------------------\n"
+"发货策略\n"
+"----------------------------\n"
+"整体发货\n"
+"分批发货\n"
+"运费\n"
+"\n"
+"销售管理仪表盘包括\n"
+"---------------------------------\n"
+"报价单\n"
+"每月销售\n"
+"3个月内按销售员的销售图表\n"
+"3个月内按客户的销售图表\n"
+"30天内按产品类别的销售图表\n"
+"    "
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -3341,6 +3595,13 @@ msgid ""
 "Canadian accounting charts and localizations.\n"
 "    "
 msgstr ""
+"\n"
+"此模块用于管理法语和英语的加拿大科目表\n"
+"============================================================================="
+"==============\n"
+"\n"
+"加拿大科目表和本地化\n"
+"    "
 
 #. module: base
 #: view:base.module.import:0
@@ -3373,6 +3634,8 @@ msgid ""
 "    * the Tax Code Chart for Luxembourg\n"
 "    * the main taxes used in Luxembourg"
 msgstr ""
+"\n"
+"卢森堡科目表"
 
 #. module: base
 #: field:ir.module.module,demo:0
@@ -3397,6 +3660,14 @@ msgid ""
 "module 'share'.\n"
 "    "
 msgstr ""
+"\n"
+"此模块实现了门户功能，自定义外部用户访问你的OpenERP数据库。\n"
+"\n"
+"门户定义了自定义的用户菜单和访问权限，只针对一组特定用\n"
+"户（需要访问此门户的人）。还为门户用户指定了用户组（在门户\n"
+"上添加的用户组会自动指定给门户用户）。此功能在和分享功能\n"
+"联用的时候非常纠结。\n"
+"    "
 
 #. module: base
 #: selection:res.request,priority:0
@@ -3502,11 +3773,18 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
+"\n"
+"管理发票付款的模块\n"
+"=================================\n"
+"此模块提供了：\n"
+"管理发票付款的更高效方式\n"
+"一个基本的机制用于插接更多自动付款功能\n"
+"    "
 
 #. module: base
 #: view:ir.rule:0
 msgid "Interaction between rules"
-msgstr ""
+msgstr "规则间的联动"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_invoice_layout
@@ -3528,11 +3806,24 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"此模块增加了一些用于自定义发票格式的功能。\n"
+"=========================================================================\n"
+"\n"
+"安装此模块后可以：\n"
+"    对发票行重新排序\n"
+"    添加标题，描述行，小计行\n"
+"    画横线和强制分页\n"
+"\n"
+"另外，还有个选项使您能够在所选发票上打印一段特殊的话。此功能\n"
+"非常适合在年底在发票上附上祝词或提醒。\n"
+"\n"
+"    "
 
 #. module: base
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "错误，您不能创建循环引用的会员用户"
 
 #. module: base
 #: view:res.payterm:0
@@ -3564,7 +3855,7 @@ msgid ""
 "You can install new modules in order to activate new features, menu, reports "
 "or data in your OpenERP instance. To install some modules, click on the "
 "button \"Install\" from the form view and then click on \"Start Upgrade\"."
-msgstr ""
+msgstr "安装新模块可以向当前数据库增加新功能、菜单和报表。要安装新模块，请单击安装按钮。"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -3580,6 +3871,9 @@ msgid ""
 "        OpenERP Web chat module.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP官方在线客服模块\n"
+"        "
 
 #. module: base
 #: field:res.partner.address,title:0
@@ -3638,7 +3932,7 @@ msgstr "增值税编号，如该业务伙伴适用于增值税，请选择。用
 #. module: base
 #: selection:ir.sequence,implementation:0
 msgid "Standard"
-msgstr ""
+msgstr "标准"
 
 #. module: base
 #: model:ir.model,name:base.model_maintenance_contract
@@ -3666,7 +3960,7 @@ msgstr "公司名称"
 msgid ""
 "Invalid value for reference field \"%s.%s\" (last part must be a non-zero "
 "integer): \"%s\""
-msgstr ""
+msgstr "引用型字段\"%s.%s\"值错误，（最后一部分必须是非0的整数）: \"%s\""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -3706,6 +4000,12 @@ msgid ""
 "templates to target objects.\n"
 "    "
 msgstr ""
+"\n"
+"    会计科目、税、日记账、科目模版、成本科\n"
+"        目和成本日记账的多语言支持。\n"
+"    设置向导的修改\n"
+"        复制科目表、税、税码和财务结构的翻译到对应的对象\n"
+"    "
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -3750,6 +4050,9 @@ msgid ""
 "        OpenERP Web mobile.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP移动客户端\n"
+"        "
 
 #. module: base
 #: view:res.lang:0
@@ -3817,7 +4120,7 @@ msgid ""
 "Agrega una nomenclatura contable para Honduras. También incluye impuestos y "
 "la moneda Lempira. -- Adds accounting chart for Honduras.  It also includes "
 "taxes and the Lempira currency"
-msgstr ""
+msgstr "洪都拉斯科目表"
 
 #. module: base
 #: selection:ir.actions.act_window,view_type:0
@@ -3838,6 +4141,9 @@ msgid ""
 "Italian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"意大利科目表\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.me
@@ -3847,12 +4153,12 @@ msgstr "黑山共和国"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document_ics
 msgid "iCal Support"
-msgstr ""
+msgstr "iCal支持"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail
 msgid "Email Gateway"
-msgstr ""
+msgstr "邮件网关"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:440
@@ -3861,6 +4167,8 @@ msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
 "%s: %s"
 msgstr ""
+"向SMTP服务器 '%s'发送邮件失败。\n"
+"%s: %s"
 
 #. module: base
 #: view:ir.cron:0
@@ -3876,7 +4184,7 @@ msgstr "分类"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_mobile
 msgid "OpenERP Web mobile"
-msgstr ""
+msgstr "OpenERP移动客户端"
 
 #. module: base
 #: view:base.language.import:0
@@ -3900,6 +4208,15 @@ msgid ""
 "user rights to Demo user.\n"
 "    "
 msgstr ""
+"\n"
+"财务用户权限\n"
+"=========================\n"
+"\n"
+"此模块给admin用户所有财务功能，如会计凭证、科目表的权限。\n"
+"\n"
+"它给管理员用户分配了财务经理和财务用户权限，给demo用户\n"
+"分配了财务用户权限。\n"
+"    "
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -3971,7 +4288,7 @@ msgstr "葡萄牙"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_share
 msgid "Share any Document"
-msgstr ""
+msgstr "共享任意文档"
 
 #. module: base
 #: field:ir.module.module,certificate:0
@@ -4021,7 +4338,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it
 msgid "Italy - Accounting"
-msgstr ""
+msgstr "意大利——会计支持"
 
 #. module: base
 #: field:ir.actions.act_window,help:0
@@ -4064,7 +4381,7 @@ msgstr "异或"
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_charts
 msgid "Account Charts"
-msgstr ""
+msgstr "科目表"
 
 #. module: base
 #: view:res.request:0
@@ -4137,7 +4454,7 @@ msgstr ""
 msgid ""
 "Your OpenERP Publisher's Warranty Contract unique key, also called serial "
 "number."
-msgstr ""
+msgstr "您的 OpenERP 发布者保障合同唯一键，也叫做序列号。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -4213,7 +4530,7 @@ msgstr "摘要"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden_dependency
 msgid "Dependency"
-msgstr ""
+msgstr "依赖"
 
 #. module: base
 #: field:multi_company.default,expression:0
@@ -4285,7 +4602,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense
 msgid "Expenses Management"
-msgstr ""
+msgstr "报销管理"
 
 #. module: base
 #: view:workflow.activity:0
@@ -4296,7 +4613,7 @@ msgstr "传入转换"
 #. module: base
 #: field:ir.values,value_unpickle:0
 msgid "Default value or action reference"
-msgstr ""
+msgstr "默认值或动作引用"
 
 #. module: base
 #: model:res.country,name:base.sr
