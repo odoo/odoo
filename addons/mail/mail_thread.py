@@ -66,7 +66,8 @@ class mail_thread(osv.osv):
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', readonly=True),
         'message_ids_social': fields.function(_get_message_ids, method=True,
                         type='one2many', obj='mail.message', string='Temp messages',
-                        widget='mail.ThreadView'),
+                        ),
+                        #widget='mail.ThreadView'),
     }
     
     #------------------------------------------------------
@@ -523,7 +524,17 @@ class mail_thread(osv.osv):
             sub_ids = subscription_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', '=', id)], context=context)
             subs = subscription_obj.browse(cr, uid, sub_ids, context=context)
         return subs
-
+    
+    def message_is_subscriber(self, cr, uid, ids, context=None):
+        print uid
+        print ids
+        subs = self.message_get_subscribers(cr, uid, ids, context=context)
+        for sub in subs:
+            print sub
+            print sub.user_id
+            if sub.user_id == uid: return True
+        return False
+    
     def message_subscribe(self, cr, uid, ids, context=None):
         subscription_obj = self.pool.get('mail.subscription')
         subscriber_id = uid # TODO

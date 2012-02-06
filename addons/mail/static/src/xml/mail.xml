@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
     
-    <div t-name="MailTest">
-        <button type="button" class="oe_mail_action_follow">
-            Follow
-<!--             <img src="/edi/static/src/img/pdf.png"/> -->
-        </button>
-        <button type="button" class="oe_mail_action_unfollow">
-            Unfollow
-<!--             <img src="/edi/static/src/img/pdf.png"/> -->
-        </button>
-        <p>Bladivoctock !</p>
-        <t t-if="type=='comment'">Blougiboulga !!</t>
-        <p>Ouagadougou</p>
+    <div t-name="ThreadView">
+        <div class="oe_mail_actions">
+            <button type="button" class="oe_mail_action_follow">Follow</button>
+            <button type="button" class="oe_mail_action_unfollow">Unfollow</button>
+        </div>
+        <div class="oe_mail_comment">
+            <textarea rows="2" cols="15">Type your comment</textarea>
+            <button type="button" class="oe_mail_action_comment">Post comment</button>
+        </div>
+        <div>
+            <p>
+            <t t-if="tmp=='comment'">Variable tmp valant comment</t>
+            <t t-if="tmp=='note'">Variable tmp valant note</t>
+            </p>
+        </div>
     </div>
-    
-<!--    <t t-extend="ViewManagerAction">
-        <t t-jquery=".oe-shortcut-toggle" t-operation="after">
-            <a class="oe-share_link" href="#share_link" title="Follow">Follow</a>
-            <a class="oe-share" href="#share" title="Unfollow">Unfollow</a>
-        </t>
-    </t>-->
     
 </template>
