@@ -84,82 +84,59 @@ class project(osv.osv):
             val['pricelist_id'] = pricelist_id
         return {'value': val}
 
-    def _get_childs(self, cr, uid, ids, childs,context=None):
-        cr.execute("""SELECT id FROM project_project WHERE analytic_account_id IN (
-                        SELECT id FROM account_analytic_account WHERE parent_id = (
-	                        SELECT  analytic_account_id FROM project_project project
-		                        LEFT JOIN account_analytic_account account ON account.id = project.analytic_account_id
-		                        WHERE project.id = %s
-                            )
-                        )"""%(ids)) 
-        for child in cr.fetchall():
-            if child[0] not in childs: childs.append(child[0])
-            self._get_childs( cr, uid, child[0], childs,context)
-        return childs
+    def _get_projects_from_tasks(self, cr, uid, task_ids, context=None):
+        tasks = self.pool.get('project.task').browse(cr, uid, task_ids, context=context)
+        project_ids = [task.project_id.id for task in tasks]
+        return self.pool.get('project.project')._get_project_and_parents(cr, uid, project_ids, context)
 
+    def _get_project_and_parents(self, cr, uid, ids, context=None):
+        """ return the project ids and all their parent projects """
+        res = set(ids)
+        while ids:
+            cr.execute("""
+                SELECT DISTINCT parent.id
+                FROM project_project project, project_project parent, account_analytic_account account
+                WHERE project.analytic_account_id = account.id
+                AND parent.analytic_account_id = account.parent_id
+                AND project.id IN %s
+                """, (tuple(ids),))
+            ids = map(lambda t: t[0], cr.fetchall())
+            res.update(ids)
+        return list(res)
 
-    def _get_parents(self, cr, uid, ids, parents,context=None):
-        for project in self.read(cr, uid, ids, ['id', 'parent_id'],context):
-            if project.get('parent_id'):
-                cr.execute('''SELECT id FROM project_project WHERE analytic_account_id = '%s' '''%project.get('parent_id')[0])
-                for child in cr.fetchall():
-                    if child[0] not in parents: parents.append(child[0])
-                    child_rec= self.read(cr, uid, child[0], ['id', 'parent_id'],context)
-                    if child_rec.get('parent_id'):
-                        parents = self._get_parents(cr, uid, [child[0]], parents,context)
-        return parents
-
-    def _get_project(self,cr, ids):
-        cr.execute('''SELECT project_id, sum(planned_hours), sum(total_hours), sum(effective_hours), SUM(remaining_hours)
-                      FROM project_task WHERE project_id in %s AND state<>'cancelled'
-                      GROUP BY project_id''', (tuple(ids),))
-        return cr
+    def _get_project_and_children(self, cr, uid, ids, context=None):
+        """ return the project ids and all their children projects """
+        res = set(ids)
+        while ids:
+            cr.execute("""
+                SELECT project.id
+                FROM project_project project, project_project parent, account_analytic_account account
+                WHERE project.analytic_account_id = account.id
+                AND parent.analytic_account_id = account.parent_id
+                AND parent.id IN %s
+                """, (tuple(ids),))
+            ids = map(lambda t: t[0], cr.fetchall())
+            res.update(ids)
+        return list(res)
 
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
-        res = {}.fromkeys(ids, 0.0)
-        if not ids:
-            return res
-        parents = self._get_parents(cr, uid, ids, ids,context)
-        cr = self._get_project(cr,ids)
-        progress = dict(map(lambda x: (x[0], (x[1] or 0.0 ,x[2] or 0.0 ,x[3] or 0.0 ,x[4] or 0.0)), cr.fetchall()))
-        for project in self.browse(cr, uid, parents, context=context):
-            childs = []
-            childs = self._get_childs(cr, uid, project.id, childs,context)
-            s = progress.get(project.id, (0.0,0.0,0.0,0.0))
-            res[project.id] = {
-                'planned_hours': s[0],
-                'effective_hours': s[2],
-                'total_hours': s[1],
-                'progress_rate': s[1] and round(100.0*s[2]/s[1],2) or 0.0
-            }
-            
-            if childs:
-                cr = self._get_project(cr, childs)
-                child_progress = dict(map(lambda x: (x[0], (x[1] or 0.0 ,x[2] or 0.0 ,x[3] or 0.0 ,x[4] or 0.0)), cr.fetchall()))
-                planned_hours, effective_hours, total_hours, rnd= 0.0, 0.0,0.0, 0.0
-                for child in childs:
-                    ch_vals = child_progress.get(child, (0.0,0.0,0.0,0.0))
-                    planned_hours, effective_hours, total_hours = planned_hours+ch_vals[0], effective_hours+ch_vals[2] , total_hours+ch_vals[1]
-                if res.get(project.id).get('planned_hours')+ planned_hours > 0:
-                    rnd = round(( res.get(project.id).get('effective_hours')+effective_hours)/(res.get(project.id).get('planned_hours')+ planned_hours)*100,2) or 0.0
-                res[project.id] = {
-                    'planned_hours': res.get(project.id).get('planned_hours')+ planned_hours,
-                    'effective_hours': res.get(project.id).get('effective_hours')+ effective_hours,
-                    'total_hours': res.get(project.id).get('total_hours')+ total_hours,
-                    'progress_rate':  rnd
-                }
+        res = {}
+        for id in ids:
+            project_ids = self._get_project_and_children(cr, uid, [id], context)
+            cr.execute("""SELECT
+                COALESCE(SUM(planned_hours), 0.0) AS planned_hours,
+                COALESCE(SUM(total_hours), 0.0) AS total_hours,
+                COALESCE(SUM(effective_hours), 0.0) AS effective_hours
+                FROM project_task WHERE project_id IN %s AND state <> 'cancelled'
+                """, (tuple(project_ids),))
+            r = cr.dictfetchone()
+            if r['total_hours']:
+                r['progress_rate'] = round(100.0 * r['effective_hours'] / r['total_hours'], 2)
+            else:
+                r['progress_rate'] = 100.0
+            res[id] = r
+            print ">>> _progress_rate(%s) from projects %s\n>>>     %s" % (id, project_ids, res[id])
         return res
-
-    def _get_project_task(self, cr, uid, ids, context=None):
-        result = {}
-        for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
-            if task.project_id: 
-                result[task.project_id.id] = True
-                if task.project_id.parent_id:
-                    cr.execute('''SELECT id FROM project_project WHERE analytic_account_id = '%s' '''%task.project_id.parent_id.id)
-                    for parent in cr.fetchall():
-                        result[parent[0]] = True
-        return result.keys()
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for proj in self.browse(cr, uid, ids):
@@ -180,15 +157,15 @@ class project(osv.osv):
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
         'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
-                'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks', 'parent_id', 'child_ids'], 10),
-                'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
+                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
+                'project.task': (_get_projects_from_tasks, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
         'effective_hours': fields.function(_progress_rate, multi="progress", string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects."),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
         'total_hours': fields.function(_progress_rate, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
             store = {
-                'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks','parent_id', 'child_ids'], 10),
-                'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
+                'project.project': (_get_project_and_parents, ['tasks','parent_id', 'child_ids'], 10),
+                'project.task': (_get_projects_from_tasks, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
         'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo."),
         'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
