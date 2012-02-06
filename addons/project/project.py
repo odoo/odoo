@@ -218,6 +218,7 @@ class project(osv.osv):
         default = default or {}
         context['active_test'] = False
         default['state'] = 'open'
+        default['line_ids'] = []
         if not default.get('name', False):
             default['name'] = proj.name + _(' (copy)')
         res = super(project, self).copy(cr, uid, id, default, context)
