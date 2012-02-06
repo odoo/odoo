@@ -22,6 +22,7 @@
 from osv import fields, osv
 import xmlrpclib
 import string
+import time
 import random
 from random import sample
 
@@ -109,8 +110,12 @@ class event_event(osv.osv):
     def button_confirm(self, cr, uid, ids, context=None):
         list_users=[]
         event = self.browse(cr, uid, ids, context=context)
-        name_event = event[0].name 
-        dic_courses= [{'fullname' :name_event,'shortname' :'','startdate':event[0].date_begin,'summary':event[0].note,'categoryid':1}]
+        name_event = event[0].name
+        date = event[0].date_begin
+        date=time.strptime(date,'%Y-%m-%d %H:%M:%S')
+        date = int (time.mktime(date))
+        #moodle use time() to store the date
+        dic_courses= [{'fullname' :name_event,'shortname' :'','startdate':date,'summary':event[0].note,'categoryid':1}]
         #create a dict course
         moodle_pool = self.pool.get('event.moodle')
         response_courses = moodle_pool.create_moodle_courses(cr,uid,[1],dic_courses)
@@ -120,19 +125,20 @@ class event_event(osv.osv):
            name_user=moodle_pool.make_username(registration.name,response_courses[0]['id'])
            moodle_pool.check_email(registration.email)
            passwd=moodle_pool.create_password()
-           dic_users={
-           'username' : name_user,
-           'password' : passwd,
-           'city' : registration.city,
-           'firstname' : registration.name ,
-           'lastname': '',
-           'email': registration.email
-           }
-           #create a dictionary for an user
-           list_users.append(dic_users)
-           #add the dictionary in a list 
-           self.pool.get('event.registration').write(cr,uid,[registration.id],{'moodle_user_password':passwd,'moodle_users':name_user})
-           #write in database the password and the username
+           if registration.state=='confirmed':
+               dic_users={
+               'username' : name_user,
+               'password' : passwd,
+               'city' : registration.city,
+               'firstname' : registration.name ,
+               'lastname': '',
+               'email': registration.email
+               }
+               #create a dictionary for an user
+               list_users.append(dic_users)
+               #add the dictionary in a list 
+               self.pool.get('event.registration').write(cr,uid,[registration.id],{'moodle_user_password':passwd,'moodle_users':name_user})
+               #write in database the password and the username
         response_user = moodle_pool.create_moodle_user(cr,uid,[1],list_users)
         #create users in moodle
         enrolled =[]
@@ -152,7 +158,8 @@ class event_registration(osv.osv):
     _inherit = "event.registration"
     _columns={
     'moodle_user_password': fields.char('password for moodle user', 128),
-    'moodle_users': fields.char('moodle username', 128)
+    'moodle_users': fields.char('moodle username', 128),
+    'moodle_users_id': fields.char('moodle username', 128)
     }
     def check_confirm(self, cr, uid, ids, context=None):
         register = self.browse(cr, uid, ids, context=context)
@@ -176,7 +183,17 @@ class event_registration(osv.osv):
             'roleid' :'5',
             'userid' :response_user[0]['id'],#use the response of the create user
             'courseid' :register[0].event_id.moodle_id
-            }]   
+            }]
             moodle_pool.moodle_enrolled(cr,uid,[1],enrolled)
 
         return super(event_registration, self).check_confirm(cr, uid, ids, context)
+
+
+    def onchange_moodle_name(self,cr,uid,ids,context=None):
+        moodle_name = self.browse(cr, uid, ids, context=context)
+        print moodle_name
+        print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+        if moodle_name:
+                print moodle_name[0].moodle_users
+                print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+

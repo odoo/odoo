@@ -7,15 +7,23 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="event.view_event_registration_form" />
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@string='Extra Info']" position="after">
+                <xpath expr="/form/notebook/page[@string='Emails']" position="after">
                     <page string="Moodle">
-                        <field name="moodle_users" readonly='1' colspan="2"/>
                         <field name="moodle_user_password" readonly='1' colspan="2"/>
                     </page>
                 </xpath>
                 <field name="email" position="replace"/>
                 <field name="phone" position="after"  >
                      <field name="email" required="1" />
+                </field>
+
+                <field name="partner_id" position="after"  >
+                     <field name="moodle_users"  on_change="onchange_moodle_name()"/>
+                </field>
+
+                <field name="name" position="replace"/>
+                <field name="origin" position="after"  >
+                     <field name="name" required="1" />
                 </field>
             </field>
         </record>
