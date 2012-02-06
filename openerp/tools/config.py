@@ -184,6 +184,12 @@ class configmanager(object):
         group.add_option('--log-response', action="append_const", dest="log_handler", const="openerp.netsvc.rpc.response:DEBUG", help='shortcut for --log-handler=openerp.netsvc.rpc.response:DEBUG')
         group.add_option('--log-web', action="append_const", dest="log_handler", const="openerp.addons.web.common.http:DEBUG", help='shortcut for --log-handler=openerp.addons.web.common.http:DEBUG')
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="openerp.sql_db:DEBUG", help='shortcut for --log-handler=openerp.sql_db:DEBUG')
+        # For backward-compatibility, map the old log levels to something
+        # quite close.
+        levels = ['info', 'debug_rpc', 'warn', 'test', 'critical',
+            'debug_sql', 'error', 'debug', 'debug_rpc_answer', 'notset']
+        group.add_option('--log-level', dest='log_level', type='choice', choices=levels,
+            my_default='info', help='specify the level of the logging. Accepted values: ' + str(levels) + ' (deprecated option).')
 
         parser.add_option_group(group)
 
@@ -369,7 +375,7 @@ class configmanager(object):
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
                 'static_http_enable', 'static_http_document_root', 'static_http_url_prefix',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler'
+                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level'
                 ]
 
         for arg in keys:
