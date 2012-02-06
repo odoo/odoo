@@ -105,6 +105,8 @@ class ResPartnerBank(osv.osv):
     def _check_postal_num(self, cursor, uid, ids):
         banks = self.browse(cursor, uid, ids)
         for b in banks:
+            if not b.post_number:
+                return True
             return self._check_9_pos_postal_num(b.post_number) or \
                    self._check_5_pos_postal_num(b.post_number)
 
