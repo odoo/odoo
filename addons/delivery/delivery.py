@@ -105,9 +105,6 @@ class delivery_carrier(osv.osv):
         for record in self.browse(cr, uid, ids, context=context):
             grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
 
-            if grid_id and not (record.normal_price or record.free_if_more_than):
-                grid_pool.unlink(cr, uid, grid_id, context=context)
-
             if not (record.normal_price or record.free_if_more_than):
                 continue
 
