@@ -66,6 +66,8 @@ def extract_qweb(fileobj, keywords, comment_tags, options):
         if len(text) > 1: # Avoid mono-char tokens like ':' ',' etc.
             result.append((lineno, None, text, [TRANSLATION_FLAG_COMMENT]))
 
+    # not using elementTree.iterparse because we need to skip sub-trees in case
+    # the ancestor element had a reason to be skipped
     def iter_elements(current_element):
         for el in current_element:
             if "t-js" not in el.attrib and \
