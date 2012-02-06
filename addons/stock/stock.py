@@ -2452,7 +2452,7 @@ class stock_move(osv.osv):
                 quantity = move.product_qty
 
             uos_qty = quantity / move_qty * move.product_uos_qty
-            location_dest_id = move.product_id.property_stock_production or move.location_dest_id
+            location_dest_id = move.location_dest_id
             if quantity_rest > 0:
                 default_val = {
                     'product_qty': quantity,
