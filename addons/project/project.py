@@ -105,37 +105,48 @@ class project(osv.osv):
         return list(res)
 
     def _get_project_and_children(self, cr, uid, ids, context=None):
-        """ return the project ids and all their children projects """
-        res = set(ids)
+        """ retrieve all children projects of project ids;
+            return a dictionary mapping each project to its parent project (or None)
+        """
+        res = dict.fromkeys(ids, None)
         while ids:
             cr.execute("""
-                SELECT project.id
+                SELECT project.id, parent.id
                 FROM project_project project, project_project parent, account_analytic_account account
                 WHERE project.analytic_account_id = account.id
                 AND parent.analytic_account_id = account.parent_id
                 AND parent.id IN %s
                 """, (tuple(ids),))
-            ids = map(lambda t: t[0], cr.fetchall())
-            res.update(ids)
-        return list(res)
+            dic = dict(cr.fetchall())
+            res.update(dic)
+            ids = dic.keys()
+        return res
 
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
-        res = {}
+        child_parent = self._get_project_and_children(cr, uid, ids, context)
+        # compute planned_hours, total_hours, effective_hours specific to each project
+        cr.execute("""
+            SELECT project_id, COALESCE(SUM(planned_hours), 0.0),
+                COALESCE(SUM(total_hours), 0.0), COALESCE(SUM(effective_hours), 0.0)
+            FROM project_task WHERE project_id IN %s AND state <> 'cancelled'
+            GROUP BY project_id
+            """, (tuple(child_parent.keys()),))
+        # aggregate results into res
+        res = dict([(id, {'planned_hours':0.0,'total_hours':0.0,'effective_hours':0.0}) for id in ids])
+        for id, planned, total, effective in cr.fetchall():
+            # add the values specific to id to all parent projects of id in the result
+            while id:
+                if id in ids:
+                    res[id]['planned_hours'] += planned
+                    res[id]['total_hours'] += total
+                    res[id]['effective_hours'] += effective
+                id = child_parent[id]
+        # compute progress rates
         for id in ids:
-            project_ids = self._get_project_and_children(cr, uid, [id], context)
-            cr.execute("""SELECT
-                COALESCE(SUM(planned_hours), 0.0) AS planned_hours,
-                COALESCE(SUM(total_hours), 0.0) AS total_hours,
-                COALESCE(SUM(effective_hours), 0.0) AS effective_hours
-                FROM project_task WHERE project_id IN %s AND state <> 'cancelled'
-                """, (tuple(project_ids),))
-            r = cr.dictfetchone()
-            if r['total_hours']:
-                r['progress_rate'] = round(100.0 * r['effective_hours'] / r['total_hours'], 2)
+            if res[id]['total_hours']:
+                res[id]['progress_rate'] = round(100.0 * res[id]['effective_hours'] / res[id]['total_hours'], 2)
             else:
-                r['progress_rate'] = 100.0
-            res[id] = r
-            print ">>> _progress_rate(%s) from projects %s\n>>>     %s" % (id, project_ids, res[id])
+                res[id]['progress_rate'] = 100.0
         return res
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
