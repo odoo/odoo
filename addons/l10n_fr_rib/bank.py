@@ -31,18 +31,17 @@ class res_partner_bank(osv.osv):
         """Check the RIB key"""
         for bank_acc in self.browse(cr, uid, ids):
             # Ignore the accounts of type other than rib
-            if bank_acc.state !='rib':
+            if bank_acc.state != 'rib':
                 continue
             # Fail if the needed values are empty of too short 
             if (not bank_acc.bank_code
             or len(bank_acc.bank_code) != 5
             or not bank_acc.office or len(bank_acc.office) != 5
-            or not bank_acc.acc_number or len(bank_acc.acc_number) != 11
+            or not bank_acc.rib_acc_number or len(bank_acc.rib_acc_number) != 11
             or not bank_acc.key or len(bank_acc.key) != 2):
                 return False
             # Get the rib data (without the key)
-            rib = "%s%s%s" % (bank_acc.bank_code, bank_acc.office,
-                              bank_acc.acc_number)
+            rib = "%s%s%s" % (bank_acc.bank_code, bank_acc.office, bank_acc.rib_acc_number)
             # Translate letters into numbers according to a specific table
             #    (notice how s -> 2)
             table = dict((ord(a), b) for a, b in zip(
@@ -51,7 +50,12 @@ class res_partner_bank(osv.osv):
             # compute the key	
             key = 97 - (100 * int(rib)) % 97
             if int(bank_acc.key) != key:
-                return False
+                raise osv.except_osv(_('Error'),
+                    _("The RIB key %s does not correspond to the other codes: %s %s %s.") % \
+                        (bank_acc.key, bank_acc.bank_code, bank_acc.office, bank_acc.rib_acc_number) )
+            if bank_acc.acc_number:
+                if not self.is_iban_valid(cr, uid, bank_acc.acc_number):
+                    raise osv.except_osv(_('Error'), _("The IBAN %s is not valid.") % bank_acc.acc_number)
         return True
 
     def onchange_bank_id(self, cr, uid, ids, bank_id, context=None):
@@ -66,31 +70,17 @@ class res_partner_bank(osv.osv):
         return result
 
     _columns = {
+        'acc_number': fields.char('Account Number', size=64, required=False),
+        'rib_acc_number': fields.char('RIB account number', size=11, readonly=True,),
         'bank_code': fields.char('Bank Code', size=64, readonly=True,),
         'office': fields.char('Office Code', size=5, readonly=True,),
         'key': fields.char('Key', size=2, readonly=True,
                            help="The key is a number allowing to check the "
                                 "correctness of the other codes."),
     }
-    
-    def _construct_constraint_msg(self, cr, uid, ids, context=None):
-        """Quote the data in the warning message"""
-        # Only process the first id
-        if type(ids) not in (int, long):
-            id = ids[0]
-        rib = self.browse(cr, uid, id, context=context)
-        if rib:
-            return (_("\nThe RIB key %s does not correspond to the other "
-                        "codes: %s %s %s.") %
-                        (rib.key, 
-                        rib.bank_code, 
-                        rib.office,
-                        rib.acc_number) )
 
-    _constraints = [(_check_key,
-                     _construct_constraint_msg,
-                     ["key"])]
-    
+    _constraints = [(_check_key, 'The RIB and/or IBAN is not valid', ['rib_acc_number', 'bank_code', 'office', 'key'])]
+
 res_partner_bank()
 
 class res_bank(osv.osv):

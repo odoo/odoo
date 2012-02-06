@@ -94,27 +94,34 @@ class res_partner_bank(osv.osv):
             vals['acc_number'] = _pretty_iban(vals['acc_number'])
         return super(res_partner_bank, self).write(cr, uid, ids, vals, context)
 
+    def is_iban_valid(self, cr, uid, iban, context=None):
+        """ Check if IBAN is valid or not
+            @param iban: IBAN as string
+            @return: True if IBAN is valid, False otherwise
+        """
+        iban = _format_iban(iban).lower()
+        if iban[:2] in _ref_iban and len(iban) != len(_format_iban(_ref_iban[iban[:2]])):
+            return False
+        #the four first digits have to be shifted to the end
+        iban = iban[4:] + iban[:4]
+        #letters have to be transformed into numbers (a = 10, b = 11, ...)
+        iban2 = ""
+        for char in iban:
+            if char.isalpha():
+                iban2 += str(ord(char)-87)
+            else:
+                iban2 += char
+        #iban is correct if modulo 97 == 1
+        return int(iban2) % 97 == 1
+
     def check_iban(self, cr, uid, ids, context=None):
         '''
         Check the IBAN number
         '''
         for bank_acc in self.browse(cr, uid, ids, context=context):
-            if bank_acc.state<>'iban':
+            if bank_acc.state != 'iban':
                 continue
-            iban = _format_iban(bank_acc.acc_number).lower()
-            if iban[:2] in _ref_iban and len(iban) != len(_format_iban(_ref_iban[iban[:2]])):
-                return False
-            #the four first digits have to be shifted to the end
-            iban = iban[4:] + iban[:4]
-            #letters have to be transformed into numbers (a = 10, b = 11, ...)
-            iban2 = ""
-            for char in iban:
-                if char.isalpha():
-                    iban2 += str(ord(char)-87)
-                else:
-                    iban2 += char
-            #iban is correct if modulo 97 == 1
-            if not int(iban2) % 97 == 1:
+            if not self.is_iban_valid(cr, uid, bank_acc.acc_number, context=context):
                 return False
         return True
 

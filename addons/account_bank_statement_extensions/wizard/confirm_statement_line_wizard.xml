@@ -35,7 +35,6 @@
     </record>
 
     <record model="ir.values" id="action_confirm_statement_line_values">
-      <field name="object" eval="1" />
       <field name="name">Confirm selected statement lines</field>
       <field name="key2">client_action_multi</field>
       <field name="value" eval="'ir.actions.act_window,' +str(ref('action_confirm_statement_line'))" />

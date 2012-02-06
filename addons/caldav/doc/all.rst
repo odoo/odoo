@@ -19,9 +19,6 @@ Some modules need to be installed at the OpenERP server. These are:
             underlying code. Will also cause document, document_webdav
             to be installed.
     - crm_caldav: Optional, will export the CRM Meetings as a calendar.
-    - project_caldav: Optional, will export project tasks as calendar.
-    - http_well_known: Optional, experimental. Will ease bootstrapping,
-            but only when a DNS srv record is also used.
 
 These will also install a reference setup of the folders, ready to go.
 The administrator of OpenERP can add more calendars and structure, if

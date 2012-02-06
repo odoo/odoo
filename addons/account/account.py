@@ -274,11 +274,11 @@ class account_account(osv.osv):
                         tuple
         """
         mapping = {
-            'balance': "COALESCE(SUM(l.debit),0) " \
-                       "- COALESCE(SUM(l.credit), 0) as balance",
+            'balance': "COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance",
             'debit': "COALESCE(SUM(l.debit), 0) as debit",
             'credit': "COALESCE(SUM(l.credit), 0) as credit",
-            'foreign_balance': "COALESCE(SUM(l.amount_currency), 0) as foreign_balance",
+            # by convention, foreign_balance is 0 when the account has no secondary currency, because the amounts may be in different currencies
+            'foreign_balance': "(SELECT CASE WHEN currency_id IS NULL THEN 0 ELSE COALESCE(SUM(l.amount_currency), 0) END FROM account_account WHERE id IN (l.account_id)) as foreign_balance",
         }
         #get all the necessary accounts
         children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
@@ -305,7 +305,7 @@ class account_account(osv.osv):
             # ON l.account_id = tmp.id
             # or make _get_children_and_consol return a query and join on that
             request = ("SELECT l.account_id as id, " +\
-                       ', '.join(map(mapping.__getitem__, mapping.keys())) +
+                       ', '.join(mapping.values()) +
                        " FROM account_move_line l" \
                        " WHERE l.account_id IN %s " \
                             + filters +
@@ -1773,6 +1773,7 @@ class account_tax_code(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'sign': fields.float('Coefficent for parent', required=True, help='You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set 1/-1 if you want to add/substract it.'),
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
+        'sequence': fields.integer('Sequence', help="Determine the display order in the report 'Accounting \ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
     }
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
@@ -3356,13 +3357,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         # because we can't rely on the value current_num as,
         # its possible that we already have bank journals created (e.g. by the creation of res.partner.bank) 
         # and the next number for account code might have been already used before for journal
-        journal_count = 0
-        while True:
-            journal_code = _('BNK') + str(current_num + journal_count)
+        for num in xrange(current_num, 100):
+            # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
+            journal_code = _('BNK')[:3] + str(num)
             ids = obj_journal.search(cr, uid, [('code', '=', journal_code), ('company_id', '=', company_id)], context=context)
             if not ids:
                 break
-            journal_count += 1
+        else:
+            raise osv.except_osv(_('Error'), _('Cannot generate an unused journal code.'))
 
         vals = {
                 'name': line['acc_name'],
