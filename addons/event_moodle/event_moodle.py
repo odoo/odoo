@@ -111,9 +111,9 @@ class event_moodle(osv.osv):
         return passwd
         # create a random password
     def check_email(self,email):
-    """
-    check is email is true
-    """
+        """
+        check is email is true
+        """
         if email:
             if (email.count('@')!=1 and email.count('.')<1):
                     raise osv.except_osv(_('Error!'),_("Your email '%s' is wrong") % (email))
@@ -141,10 +141,10 @@ class event_event(osv.osv):
     'moodle_id' :fields.integer('Moodle id'),
     }
     def button_confirm(self, cr, uid, ids, context=None):
-    """
-    create moodle courses ,users and match them when an event is confirmed
-    if the event_registration is not confirmed then it doesn t nothing
-    """
+        """
+        create moodle courses ,users and match them when an event is confirmed
+        if the event_registration is not confirmed then it doesn t nothing
+        """
         list_users=[]
         event = self.browse(cr, uid, ids, context=context)
         name_event = event[0].name
@@ -201,9 +201,9 @@ class event_registration(osv.osv):
     'moodle_check_user':fields.char('check user',128)
     }
     def check_confirm(self, cr, uid, ids, context=None):
-    """
-    create a user and match to a course if the event is already confirmed
-    """
+        """
+        create a user and match to a course if the event is already confirmed
+        """
         register = self.browse(cr, uid, ids, context=context)
         if register[0].event_id.state =='confirm':
             moodle_pool = self.pool.get('event.moodle')
