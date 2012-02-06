@@ -14,6 +14,7 @@ openerp.mail = function(session) {
 //             this.timeout;
             this._super.apply(this, arguments);
             this.ds = new session.web.DataSet(this, this.view.model);
+            this.ds_sub = new session.web.DataSet(this, 'mail.subscription');
         },
         
         start: function() {
@@ -54,13 +55,16 @@ openerp.mail = function(session) {
         },
         
         do_follow: function () {
-            var self = this;
             console.log('Follow');
+            console.log(this);
+            this.ds_sub.create({'res_model': this.view.model, 'user_id': this.session.uid, 'res_id': this.view.datarecord.id}).then(
+                console.log('Subscription done'));
         },
         
         do_unfollow: function () {
-            var self = this;
             console.log('Unfollow');
+            return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).then(
+                console.log('Unfollowing'));
         }
     });
     
