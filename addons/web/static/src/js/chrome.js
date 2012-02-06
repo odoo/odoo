@@ -141,12 +141,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
 });
 
 openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
-    init: function() {
-        this._super();
-        openerp.connection.on_rpc_error.add(this.on_rpc_error);
-    },
     on_rpc_error: function(error) {
-        this.error = error;
         if (error.data.fault_code) {
             var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
             if (split.length > 1) {
@@ -195,7 +190,7 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
             };
         }
         var dialog = new openerp.web.Dialog(this, {
-            title: "OpenERP " + _.str.capitalize(this.error.type),
+            title: "OpenERP " + _.str.capitalize(error.type),
             width: '80%',
             height: '50%',
             min_width: '800px',
@@ -1112,8 +1107,17 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
         self.menu.start();
     },
     show_common: function() {
+        var self = this;
         if (!this.crashmanager) {
             this.crashmanager =  new openerp.web.CrashManager();
+            openerp.connection.on_rpc_error.add(this.crashmanager.on_rpc_error);
+            window.onerror = function (message, file, line) {
+                self.crashmanager.on_traceback({
+                    type: _t("Client Error"),
+                    message: message,
+                    data: {debug: file + ':' + line}
+                });
+            }
         }
         this.notification = new openerp.web.Notification(this);
         this.notification.appendTo(this.$element);
