@@ -1883,7 +1883,7 @@ class account_tax(osv.osv):
 
     }
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'Tax Name must be unique per company!'),
+        ('description_company_uniq', 'unique(description, company_id)', 'The description must be unique per company!'),
     ]
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
