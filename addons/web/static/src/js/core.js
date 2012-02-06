@@ -393,7 +393,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.qweb_mutex = new $.Mutex();
     },
     bind: function(origin) {
-        var window_origin = location.protocol+"//"+location.host;
+        var window_origin = location.protocol+"//"+location.host, self=this;
         this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
         this.prefix = this.origin;
         this.server = this.origin; // keep chs happy
@@ -405,8 +405,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.user_context= {};
         this.db = false;
         this.openerp_entreprise = false;
-        this.module_list = [];
-        this.module_loaded = {"web": true};
+        this.module_list = openerp._modules.slice();
+        this.module_loaded = {};
+        _(this.module_list).each(function (mod) {
+            self.module_loaded[mod] = true;
+        });
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
@@ -694,10 +697,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     load_modules: function(no_session_valid_signal) {
         var self = this;
         return this.rpc('/web/session/modules', {}).pipe(function(result) {
-            var lang = self.user_context.lang;
-            var params = { mods: ["web"].concat(result), lang: lang};
+            var lang = self.user_context.lang,
+                all_modules = _.uniq(self.module_list.concat(result));
+            var params = { mods: all_modules, lang: lang};
             var to_load = _.difference(result, self.module_list).join(',');
-            self.module_list = result;
+            self.module_list = all_modules;
             return $.when(
                 self.rpc('/web/webclient/csslist', {mods: to_load}, self.do_load_css),
                 self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
