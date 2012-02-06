@@ -162,7 +162,7 @@ class event_event(osv.osv):
            name_user=moodle_pool.make_username(registration.name,response_courses[0]['id'])
            moodle_pool.check_email(registration.email)
            passwd=moodle_pool.create_password()
-           if registration.state=='confirmed':
+           if registration.state=='open':
            #confirm if the registrator is confirmed
                dic_users={
                'username' : name_user,
@@ -200,7 +200,7 @@ class event_registration(osv.osv):
     'moodle_users_id': fields.char('moodle username', 128),
     'moodle_check_user':fields.char('check user',128)
     }
-    def check_confirm(self, cr, uid, ids, context=None):
+    def case_open(self, cr, uid, ids, context=None):
         """
         create a user and match to a course if the event is already confirmed
         """
@@ -213,7 +213,7 @@ class event_registration(osv.osv):
             'username' : name_user,
             'password' : passwd,
             'city' : register[0].city,
-            'firstname' : register[0].name, 
+            'firstname' : register[0].name,
             'lastname': '',
             'email': register[0].email
             }]
