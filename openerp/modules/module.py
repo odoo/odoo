@@ -139,6 +139,9 @@ To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
         mod = imp.load_module('openerp.addons.' + module_part, f, path, descr)
         if not is_shadowing:
             sys.modules[module_part] = mod
+            for k in sys.modules.keys():
+                if k.startswith('openerp.addons.' + module_part):
+                    sys.modules[k[len('openerp.addons.'):]] = sys.modules[k]
         sys.modules['openerp.addons.' + module_part] = mod
         return mod
 
@@ -328,7 +331,6 @@ def load_information_from_description_file(module):
                 'description': '',
                 'icon': get_module_icon(module),
                 'installable': True,
-                'auto_install': False,
                 'license': 'AGPL-3',
                 'name': False,
                 'post_load': None,
@@ -341,8 +343,11 @@ def load_information_from_description_file(module):
                 'depends data demo test init_xml update_xml demo_xml'.split(),
                 iter(list, None)))
 
-            with tools.file_open(terp_file) as terp_f:
-                info.update(eval(terp_f.read()))
+            f = tools.file_open(terp_file)
+            try:
+                info.update(eval(f.read()))
+            finally:
+                f.close()
 
             if 'active' in info:
                 # 'active' has been renamed 'auto_install'
