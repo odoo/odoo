@@ -2473,6 +2473,7 @@ class stock_move(osv.osv):
                 update_val = {
                         'product_qty' : quantity_rest,
                         'product_uos_qty' : uos_qty_rest,
+                        'location_id': location_id or move.location_id.id,
                 }
                 self.write(cr, uid, [move.id], update_val)
 
