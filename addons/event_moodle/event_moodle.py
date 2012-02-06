@@ -38,11 +38,19 @@ class event_moodle(osv.osv):
 
     url=''
     def configure_moodle(self,cr,uid,ids,context=None):
+        """
+        Use to configure moodle
+        """
         self.write(cr,uid,[1],{'id':1})
         #save information that you need to create the url
         return {'type': 'ir.actions.act_window_close'}
         #use to quit the wizard
+
     def make_url(self,cr,uid,ids,context=None):
+        """
+        create the good url with the information of the configuration
+        @return url for moodle connexion
+        """
         config_moodle = self.browse(cr, uid, ids, context=context)
         if config_moodle[0].moodle_username and config_moodle[0].moodle_password:
             url='http://'+config_moodle[0].serveur_moodle+'/moodle/webservice/xmlrpc/simpleserver.php?wsusername='+config_moodle[0].moodle_username+'&wspassword='+config_moodle[0].moodle_password
@@ -54,7 +62,13 @@ class event_moodle(osv.osv):
         self.url = url
         return url
     #create a good url for xmlrpc connect
+
     def create_moodle_user(self,cr,uid,ids,dic_user):
+        """
+        create a moodle user
+        @param dic_user : is a list of dictonnaries with the moodle information
+        @return a liste of dictonaries with the create user id
+        """
         self.make_url(cr,uid,ids,context=None)
         sock = xmlrpclib.ServerProxy(self.url)
         #connect to moodle
@@ -62,6 +76,11 @@ class event_moodle(osv.osv):
         #add user un moodle and return list of id and username
 
     def create_moodle_courses(self,cr,uid,ids,courses):
+        """
+        create a mmodle course
+        @param courses : is a list of dictionaries with the moodle course information
+        @return a list of dictionaries with the create course id
+        """
         self.make_url(cr,uid,ids,context=None)
         sock = xmlrpclib.ServerProxy(self.url)
         #connect to moodle
@@ -69,6 +88,10 @@ class event_moodle(osv.osv):
         #add course un moodle
 
     def moodle_enrolled(self,cr,uid,ids,enrolled):
+        """
+        this method is used to match a course with users
+        @param enrolled : list of dictonaries with the course id and the user id
+        """
         self.make_url(cr,uid,ids,context=None)
         sock = xmlrpclib.ServerProxy(self.url)
         #connect to moodle
@@ -76,6 +99,9 @@ class event_moodle(osv.osv):
         #add enrolled un moodle
 
     def create_password(self):
+        """
+        create a random password
+        """
         rand = string.ascii_letters + string.digits
         length=8
         while length > len(rand):
@@ -85,11 +111,18 @@ class event_moodle(osv.osv):
         return passwd
         # create a random password
     def check_email(self,email):
+    """
+    check is email is true
+    """
         if email:
             if (email.count('@')!=1 and email.count('.')<1):
                     raise osv.except_osv(_('Error!'),_("Your email '%s' is wrong") % (email))
 
     def make_username(self,username,response_courses):
+        """
+        create a moodle username with a random number for the uniqueness
+        @return the moodle username
+        """
         if username:
             username=username.replace(" ","_")
                    #remove space in the name
@@ -108,6 +141,10 @@ class event_event(osv.osv):
     'moodle_id' :fields.integer('Moodle id'),
     }
     def button_confirm(self, cr, uid, ids, context=None):
+    """
+    create moodle courses ,users and match them when an event is confirmed
+    if the event_registration is not confirmed then it doesn t nothing
+    """
         list_users=[]
         event = self.browse(cr, uid, ids, context=context)
         name_event = event[0].name
@@ -126,6 +163,7 @@ class event_event(osv.osv):
            moodle_pool.check_email(registration.email)
            passwd=moodle_pool.create_password()
            if registration.state=='confirmed':
+           #confirm if the registrator is confirmed
                dic_users={
                'username' : name_user,
                'password' : passwd,
@@ -159,9 +197,13 @@ class event_registration(osv.osv):
     _columns={
     'moodle_user_password': fields.char('password for moodle user', 128),
     'moodle_users': fields.char('moodle username', 128),
-    'moodle_users_id': fields.char('moodle username', 128)
+    'moodle_users_id': fields.char('moodle username', 128),
+    'moodle_check_user':fields.char('check user',128)
     }
     def check_confirm(self, cr, uid, ids, context=None):
+    """
+    create a user and match to a course if the event is already confirmed
+    """
         register = self.browse(cr, uid, ids, context=context)
         if register[0].event_id.state =='confirm':
             moodle_pool = self.pool.get('event.moodle')
