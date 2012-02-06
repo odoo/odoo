@@ -256,14 +256,9 @@ class mail_thread(osv.osv):
         msg_obj = self.pool.get('mail.message')
         msg_ids = []
         for id in ids:
-            print id
-            print self._name
-            print context
             msg_ids += msg_obj.search(cr, uid, ['&', ('res_id', '=', id), ('model', '=', self._name)], context=context)
-        print msg_ids
         #msgs = msg_obj.browse(cr, uid, msg_ids)
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
-        print msgs
         return msgs
 
     #------------------------------------------------------
@@ -526,13 +521,8 @@ class mail_thread(osv.osv):
         return subs
     
     def message_is_subscriber(self, cr, uid, ids, context=None):
-        print uid
-        print ids
-        subs = self.message_get_subscribers(cr, uid, ids, context=context)
-        for sub in subs:
-            print sub
-            print sub.user_id
-            if sub.user_id == uid: return True
+        for subscription in self.message_get_subscribers(cr, uid, ids, context=context):
+            if subscription.user_id == uid: return True
         return False
     
     def message_subscribe(self, cr, uid, ids, context=None):

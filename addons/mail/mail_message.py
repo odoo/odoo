@@ -26,6 +26,7 @@ import email
 import logging
 import re
 import time
+import datetime
 from email.header import decode_header
 from email.message import Message
 
@@ -91,7 +92,8 @@ class mail_message_common(osv.osv_memory):
     }
 
     _defaults = {
-        'subtype': 'plain'
+        'subtype': 'plain',
+        'date': (lambda *a: datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
     }
 
 class mail_message(osv.osv):
@@ -196,12 +198,14 @@ class mail_message(osv.osv):
     #------------------------------------------------------
     
     def create(self, cr, uid, vals, context=None):
-        print vals
         msg_id = super(mail_message, self).create(cr, uid, vals, context)
         # push the message to suscribed users
         subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
-        sub_ids = subscription_obj.search(cr, uid, ['&', ('res_model', '=', vals['model']), ('user_id', '=', uid)], context=context)
+        sub_ids = subscription_obj.search(cr, uid, ['&', '&',
+                        ('res_model', '=', vals['model']),
+                        ('user_id', '=', uid),
+                        ('res_id', '=', vals['res_id'])], context=context)
         subs = subscription_obj.browse(cr, uid, sub_ids, context=context)
         for sub in subs:
             notification_obj.create(cr, uid, {'user_id': sub.user_id, 'message_id': msg_id}, context=context)

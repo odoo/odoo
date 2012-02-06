@@ -11,13 +11,13 @@ openerp.mail = function(session) {
         template: 'ThreadView',
         
         init: function() {
-            console.log('Entering init');
-//             this.timeout;
+            this.timeout;
             this.follow_state = 0;
             this._super.apply(this, arguments);
+            /* DataSets */
             this.ds = new session.web.DataSet(this, this.view.model);
             this.ds_sub = new session.web.DataSet(this, 'mail.subscription');
-            console.log('Leaving init');
+            this.ds_msg = new session.web.DataSet(this, 'mail.message');
         },
         
         start: function() {
@@ -29,27 +29,14 @@ openerp.mail = function(session) {
             self.$element.find('button.oe_mail_action_follow').hide();
             self.$element.find('button.oe_mail_action_unfollow').bind('click', function () { self.do_unfollow(); });
             self.$element.find('button.oe_mail_action_unfollow').hide();
+            self.$element.find('button.oe_mail_action_comment').bind('click', function () { self.do_comment(); });
             /* find wich (un)follow buttons to show */
             var call_res = this.ds.call('message_is_subscriber', [[this.session.uid]]).then(function (records) {
-                console.log('Pouet');
-                console.log(records);
-                console.log('Pouet2');
                 if (records == true) { self.follow_state = 1; console.log('brout!'); self.$element.find('button.oe_mail_action_unfollow').show(); }
                 else { self.follow_state = 0; console.log('proutch!');  self.$element.find('button.oe_mail_action_follow').show(); }
                 });
             console.log(call_res);
             console.log('Leaving start');
-        },
-        
-        render: function() {
-            console.log('Entering render');
-//             this._super.apply(this, arguments);
-            var template = this.template;
-            var render_res = session.web.qweb.render(template, {
-                'tmp': 'comment',
-                });
-            console.log('Leaving render');
-            return render_res;
         },
         
         stop: function () {
@@ -78,11 +65,14 @@ openerp.mail = function(session) {
 //             this.$element.empty();
             var self = this;
             _(records).each(function (record) {
-                $('<div>').text(record.user_id[1]).appendTo(self.$element);
-//                 $('<div>').text(record.user_id['1']).appendTo(self.$element);
-//                 $('<div style="width:75%;">').text(record.body_text).appendTo(self.$element);
-                $('<div>').text(record.body_text).appendTo(self.$element);
-//                 $('<p>').text(record.user_id).appendTo(self.$element);
+                var template = 'ThreadMsgView';
+                var render_res = session.web.qweb.render(template, {
+                    'record': record,
+                    });
+                $('<div>').html(render_res).appendTo(self.$element);
+//                 $('<div>').text(record.user_id[1]).appendTo(self.$element);
+//                 $('<div>').text(record.date).appendTo(self.$element);
+//                 $('<div>').text(record.body_text).appendTo(self.$element);
             });
 //             this.timeout = setTimeout(this.proxy('fetch_messages'), 5000);
         },
@@ -102,7 +92,13 @@ openerp.mail = function(session) {
             this.$element.find('button.oe_mail_action_unfollow').hide();
             return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).then(
                 console.log('Unfollowing'));
-        }
+        },
+        
+        do_comment: function () {
+            console.log('Comment');
+            var body_text = this.$element.find('textarea').val();
+            return this.ds_msg.call('create', [{'model': this.view.model, 'user_id': this.session.uid, 'res_id': this.view.datarecord.id, 'body_text': body_text, 'subject': 'Reply comment'}]).then(console.log('Comment posted'));
+        },
     });
     
 };

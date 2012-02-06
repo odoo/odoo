@@ -12,9 +12,26 @@
         </div>
         <div>
             <p>
-            <t t-if="tmp=='comment'">Variable tmp valant comment</t>
-            <t t-if="tmp=='note'">Variable tmp valant note</t>
+            <t t-if="follow_state == 0">00000000</t>
+            <t t-if="follow_state == 1">11111111</t>
+            <t t-if="follow_state == '0'">00000000</t>
+            <t t-if="follow_state == '1'">11111111</t>
+            <t t-if="this.follow_state == 0">00000000</t>
+            <t t-if="this.follow_state == 1">11111111</t>
+            <t t-if="this.follow_state == '0'">00000000</t>
+            <t t-if="this.follow_state == '1'">11111111</t>
             </p>
+        </div>
+    </div>
+    
+    <div t-name="ThreadMsgView">
+        <div class="ThreadMsgView">
+            <div class="oe_mail_msg_image">Image</div>
+            <div class="oe_mail_msg">
+                <span class="oe_mail_msg_body"><t t-esc="record.body_text"/></span><br />
+                <span class="oe_mail_msg_author"><t t-esc="record.user_id[1]"/></span><br />
+                <span class="oe_mail_msg_date"><t t-esc="record.date"/></span>
+            </div>
         </div>
     </div>
     

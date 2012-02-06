@@ -74,6 +74,7 @@ The main features are:
         'images/messages_list.jpeg',
     ],
     'css': [
+        'static/src/css/mail.css',
         'static/src/css/mail_group.css',
     ],
     'js': [
