@@ -1247,9 +1247,14 @@ class stock_picking(osv.osv):
             for move in too_few:
                 product_qty = move_product_qty[move.id]
                 if not new_picking:
+                    new_picking_name = pick.name
+                    self.write(cr, uid, [pick.id], 
+                               {'name': sequence_obj.get(cr, uid,
+                                            'stock.picking.%s'%(pick.type)),
+                               })
                     new_picking = self.copy(cr, uid, pick.id,
                             {
-                                'name': sequence_obj.get(cr, uid, 'stock.picking.%s'%(pick.type)),
+                                'name': new_picking_name,
                                 'move_lines' : [],
                                 'state':'draft',
                             })
