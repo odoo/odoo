@@ -54,7 +54,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'other': fields.char('Other Qlf', size=16, help="Description of a Identification Type"),
     }
 
-    def _get_tax_code(cr, uid, ids, context=None):
+    def _get_tax_code(self, cr, uid, context=None):
         obj_tax_code = self.pool.get('account.tax.code')
         obj_user = self.pool.get('res.users')
         company_id = obj_user.browse(cr, uid, uid, context=context).company_id.id
