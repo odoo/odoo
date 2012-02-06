@@ -32,11 +32,11 @@ class mail_subscription(osv.osv):
     - res_id: ID of resource OR
     - res_domain: a domain filtering followed objects - currently removed
     """
-    
     _name = 'mail.subscription'
     _rec_name = 'id'
     _columns = {
-        'res_model': fields.char('Related Document Model', size=128, select=1, required=True),
+        'res_model': fields.char('Related Document Model', size=128,
+                        select=1, required=True),
         'res_id': fields.integer('Related Document ID', select=1),
         #'res_domain': fields.char('res_domain', size=256),
         'user_id': fields.integer('Related User ID', select=1, required=True),
@@ -60,9 +60,7 @@ class mail_notification(osv.osv):
         'read': fields.boolean('Read'),
         # TODO: add a timestamp ? or use message date ?
     }
-    
     _defaults = {
         'read': False,
     }
-
 mail_notification()

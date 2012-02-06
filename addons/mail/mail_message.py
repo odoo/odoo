@@ -183,6 +183,7 @@ class mail_message(osv.osv):
                         ('notification', 'Notification'),
                         ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
         'need_action': fields.boolean('Need action', help="Asks the user to perform an action"),
+        'need_action_user_id': fields.many2one('res.users', 'Action user', help="User requested to perform an action"),
     }
 
     _defaults = {
@@ -195,6 +196,7 @@ class mail_message(osv.osv):
     #------------------------------------------------------
     
     def create(self, cr, uid, vals, context=None):
+        print vals
         msg_id = super(mail_message, self).create(cr, uid, vals, context)
         # push the message to suscribed users
         subscription_obj = self.pool.get('mail.subscription')

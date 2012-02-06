@@ -2,7 +2,17 @@
 <template>
     
     <div t-name="MailTest">
-        vdvgfxdfxdfv
+        <button type="button" class="oe_mail_action_follow">
+            Follow
+<!--             <img src="/edi/static/src/img/pdf.png"/> -->
+        </button>
+        <button type="button" class="oe_mail_action_unfollow">
+            Unfollow
+<!--             <img src="/edi/static/src/img/pdf.png"/> -->
+        </button>
+        <p>Bladivoctock !</p>
+        <t t-if="type=='comment'">Blougiboulga !!</t>
+        <p>Ouagadougou</p>
     </div>
     
 <!--    <t t-extend="ViewManagerAction">
