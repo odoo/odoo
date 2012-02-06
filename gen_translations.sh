@@ -31,19 +31,26 @@ shift $((OPTIND-1))
 
 if [ -n "$do_all" ]
 then
+    if [ "x$(which msgcat)" = "x" ]
+    then
+        echo "The msgcat command from the gettext tools is required."
+        echo "On a Debian/Ubuntu system you may install gettext via 'sudo apt-get install gettext'"
+        exit 1
+    fi
+
     echo "Extracting all web addons translations"
     executable=$0
     target_dir=${1:-./addons}
     echo "Using target dir: ${target_dir}"
-    for mod in $(find ${target_dir} -type d -name 'static' -exec sh -c 'basename `dirname {}`' \;); do
+    for mod in $(find ${target_dir} -type d -name 'static' -exec sh -c 'basename $(dirname {})' \;); do
        echo ${mod}
        mod_pot=${target_dir}/${mod}/i18n/${mod}.pot
        web_pot=${mod_pot}.web 
-       mkdir -p `dirname ${web_pot}`
+       mkdir -p $(dirname ${web_pot})
        $executable ${target_dir}/${mod} ${web_pot} 
        if [ -f "${mod_pot}" ]; then
          echo "Merging with existing PO file: ${mod_pot}"
-         msgcat -o "${mod_pot}.tmp" ${mod_pot} ${web_pot}
+         msgcat --force-po -o "${mod_pot}.tmp" ${mod_pot} ${web_pot}
          mv ${mod_pot}.tmp ${mod_pot}
          rm ${web_pot}
        else
