@@ -722,7 +722,24 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                     throw "Record not correctly loaded";
                 }
             }
+            var sort_fields = self._sort,
+                    compare = function (v1, v2) {
+                        return (v1 < v2) ? -1
+                             : (v1 > v2) ? 1
+                             : 0;
+                    };
+            records.sort(function (a, b) {
+                return _.reduce(sort_fields, function (acc, field) {
+                    if (acc) { return acc; }
 
+                    var sign = 1;
+                    if (field[0] === '-') {
+                        sign = -1;
+                        field = field.slice(1);
+                    }
+                    return sign * compare(a[field], b[field]);
+                }, 0);
+            });
             completion.resolve(records);
         };
         if(to_get.length > 0) {
