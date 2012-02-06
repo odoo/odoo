@@ -33,7 +33,7 @@ if [ -n "$do_all" ]
 then
     if [ "x$(which msgcat)" = "x" ]
     then
-        echo "The msgcat command from the gettext tools is required."
+        echo "The msgcat command from the gettext tools is required in the PATH."
         echo "On a Debian/Ubuntu system you may install gettext via 'sudo apt-get install gettext'"
         exit 1
     fi
