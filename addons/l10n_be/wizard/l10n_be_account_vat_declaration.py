@@ -42,7 +42,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
     _columns = {
         'name': fields.char('File Name', size=32),
         'period_id': fields.many2one('account.period','Period', required=True),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], help="Keep empty to use the user's company"),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], help="Keep empty to use the user's company", required=True),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
         'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a resitution is to made or not?'),
@@ -53,12 +53,21 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'identification_type': fields.selection([('tin','TIN'), ('nvat','NVAT'), ('other','Other')], 'Identification Type', required=True),
         'other': fields.char('Other Qlf', size=16, help="Description of a Identification Type"),
     }
+
+    def _get_tax_code(cr, uid, ids, context=None):
+        obj_tax_code = self.pool.get('account.tax.code')
+        obj_user = self.pool.get('res.users')
+        company_id = obj_user.browse(cr, uid, uid, context=context).company_id.id
+        tax_code_ids = obj_tax_code.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', False)], context=context)
+        return tax_code_ids and tax_code_ids[0] or False
+
     _defaults = {
         'msg': 'Save the File with '".xml"' extension.',
         'file_save': _get_xml_data,
         'name': 'vat_declaration.xml',
-        'identification_type': 'tin',
-        'vat_declarations_nbr': 0,
+        'identification_type': 'nvat',
+        'vat_declarations_nbr': 1,
+        'tax_code_id': _get_tax_code,
     }
 
     def create_xml(self, cr, uid, ids, context=None):
@@ -82,7 +91,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         vat_no = vat_no.replace(' ','').upper()
         vat = vat_no[2:]
 
-        tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
+        tax_code_ids = obj_tax_code.search(cr, uid, [('parent_id','child_of',data_tax.tax_code_id.id), ('company_id','=',obj_company.id)], context=context)
         ctx = context.copy()
         data  = self.read(cr, uid, ids)[0]
         ctx['period_id'] = data['period_id'][0] #added context here

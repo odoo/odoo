@@ -15,18 +15,20 @@
                 <form string="Periodical VAT Declaration">
                     <group>
                         <group colspan="4">
-                            <separator string="Declare Periodical VAT" colspan="4"/><newline/>
-                            <field name="vat_declarations_nbr"/>
+                            <separator string="Declare Periodical VAT" colspan="4"/>
                             <field name="period_id" widget="selection"/>
-                            <field name="identification_type"/>
-                            <field name="other" attrs="{'invisible':[('identification_type','!=','other')], 'required':[('identification_type','=','other')]}"/>
                             <field name="tax_code_id" string="Company" widget="selection" groups="base.group_multi_company"/>
                             <newline/>
+                            <separator string="Advanced Options" colspan="4"/>
                             <field name="ask_restitution"/>
                             <field name="ask_payment"/>
                             <field name="client_nihil" string="Is Last Declaration"/><label/>
+                            <field name="vat_declarations_nbr" invisible="1"/>
+                            <!-- should be unused ?
+                            <field name="identification_type"/>
+                            <field name="other" attrs="{'invisible':[('identification_type','!=','other')], 'required':[('identification_type','=','other')]}"/> -->
                         </group>
-                        <group colspan="4">
+                        <group colspan="4" groups="base.group_extended">
                             <separator string="Comments" colspan="4"/>
                             <field colspan="4" name="comments" nolabel="1"/>
                         </group>
