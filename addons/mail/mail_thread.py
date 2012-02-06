@@ -58,7 +58,7 @@ class mail_thread(osv.osv):
         res = {}
         for thread in self.browse(cr, uid, ids, context=context):
             records = self.message_load(cr, uid, [thread.id], context=context)
-            res[thread.id] = [obj.id for obj in records]
+            res[thread.id] = [obj['id'] for obj in records]
         return res
     
     # TODO remove this and copy method, this will be replaced by message_load
@@ -255,8 +255,14 @@ class mail_thread(osv.osv):
         msg_obj = self.pool.get('mail.message')
         msg_ids = []
         for id in ids:
+            print id
+            print self._name
+            print context
             msg_ids += msg_obj.search(cr, uid, ['&', ('res_id', '=', id), ('model', '=', self._name)], context=context)
-        msgs = msg_obj.browse(cr, uid, msg_ids)
+        print msg_ids
+        #msgs = msg_obj.browse(cr, uid, msg_ids)
+        msgs = msg_obj.read(cr, uid, msg_ids, context=context)
+        print msgs
         return msgs
 
     #------------------------------------------------------

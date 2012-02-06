@@ -36,27 +36,25 @@ class mail_subscription(osv.osv):
     _name = 'mail.subscription'
     _rec_name = 'id'
     _columns = {
-        'res_model': fields.char('Related Document model', size=128, select=1),
+        'res_model': fields.char('Related Document Model', size=128, select=1, required=True),
         'res_id': fields.integer('Related Document ID', select=1),
         #'res_domain': fields.char('res_domain', size=256),
-        'user_id': fields.integer('Related User ID', select=1),
+        'user_id': fields.integer('Related User ID', select=1, required=True),
     }
-    
     _defaults = {
     }
-
 mail_subscription()
 
 class mail_notification(osv.osv):
     """
     TODO
     """
-    
     _name = 'mail.notification'
     _rec_name = 'id'
+    _log_access = False
     _columns = {
         'user_id': fields.many2one('res.users', string='User',
-                        ondelete='cascade', required=True),
+                        ondelete='cascade', required=True, select=1),
         'message_id': fields.many2one('mail.message', string='Message',
                         ondelete='cascade', required=True),
         'read': fields.boolean('Read'),
