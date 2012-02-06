@@ -248,6 +248,7 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
         this.model = model;
         this.context = context || {};
         this.index = null;
+        this._sort = [];
     },
     previous: function () {
         this.index -= 1;
@@ -496,6 +497,31 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
             return new openerp.web.CompoundContext(this.context, request_context);
         }
         return this.context;
+    },
+    /**
+     * Reads or changes sort criteria on the dataset.
+     *
+     * If not provided with any argument, serializes the sort criteria to
+     * an SQL-like form usable by OpenERP's ORM.
+     *
+     * If given a field, will set that field as first sorting criteria or,
+     * if the field is already the first sorting criteria, will reverse it.
+     *
+     * @param {String} [field] field to sort on, reverses it (toggle from ASC to DESC) if already the main sort criteria
+     * @param {Boolean} [force_reverse=false] forces inserting the field as DESC
+     * @returns {String|undefined}
+     */
+    sort: function (field, force_reverse) {
+        if (!field) {
+            return openerp.web.serialize_sort(this._sort);
+        }
+        var reverse = force_reverse || (this._sort[0] === field);
+        this._sort.splice.apply(
+            this._sort, [0, this._sort.length].concat(
+                _.without(this._sort, field, '-' + field)));
+
+        this._sort.unshift((reverse ? '-' : '') + field);
+        return undefined;
     }
 });
 openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
@@ -541,7 +567,6 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
     init: function(parent, model, context, domain) {
         this._super(parent, model, context);
         this.domain = domain || [];
-        this._sort = [];
         this.offset = 0;
         // subset records[offset:offset+limit]
         // is it necessary ?
@@ -582,31 +607,6 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
             return new openerp.web.CompoundDomain(this.domain, other_domain);
         }
         return this.domain;
-    },
-    /**
-     * Reads or changes sort criteria on the dataset.
-     *
-     * If not provided with any argument, serializes the sort criteria to
-     * an SQL-like form usable by OpenERP's ORM.
-     *
-     * If given a field, will set that field as first sorting criteria or,
-     * if the field is already the first sorting criteria, will reverse it.
-     *
-     * @param {String} [field] field to sort on, reverses it (toggle from ASC to DESC) if already the main sort criteria
-     * @param {Boolean} [force_reverse=false] forces inserting the field as DESC
-     * @returns {String|undefined}
-     */
-    sort: function (field, force_reverse) {
-        if (!field) {
-            return openerp.web.serialize_sort(this._sort);
-        }
-        var reverse = force_reverse || (this._sort[0] === field);
-        this._sort.splice.apply(
-            this._sort, [0, this._sort.length].concat(
-                _.without(this._sort, field, '-' + field)));
-
-        this._sort.unshift((reverse ? '-' : '') + field);
-        return undefined;
     },
     unlink: function(ids, callback, error_callback) {
         var self = this;
@@ -722,6 +722,24 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                     throw "Record not correctly loaded";
                 }
             }
+            var sort_fields = self._sort,
+                    compare = function (v1, v2) {
+                        return (v1 < v2) ? -1
+                             : (v1 > v2) ? 1
+                             : 0;
+                    };
+            records.sort(function (a, b) {
+                return _.reduce(sort_fields, function (acc, field) {
+                    if (acc) { return acc; }
+
+                    var sign = 1;
+                    if (field[0] === '-') {
+                        sign = -1;
+                        field = field.slice(1);
+                    }
+                    return sign * compare(a[field], b[field]);
+                }, 0);
+            });
             completion.resolve(records);
         };
         if(to_get.length > 0) {

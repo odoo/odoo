@@ -1235,6 +1235,8 @@ label.error {
 
 
 .openerp label.oe_label_help, .openerp label.oe_label,
+.openerp .oe_form_paragraph,
+.openerp .oe_form_field_statusbar,
 .openerp .oe_forms input[type="text"],
 .openerp .oe_forms input[type="password"],
 .openerp .oe_forms input[type="file"],
@@ -1310,6 +1312,13 @@ label.error {
     display: inline;
     margin: 0 0.5em 0 0;
 }
+
+.openerp .oe_forms .oe-listview th.oe-sortable .ui-icon,
+.openerp .oe_forms .oe-listview th.oe-sortable .ui-icon {
+    height: 100%;
+    margin-top: -9px;
+}
+
 
 /* Uneditable Form View */
 .openerp .oe_form_readonly {
@@ -1890,7 +1899,7 @@ label.error {
     text-align: left;
     border-bottom: 1px solid #CFCCCC;
 }
-.oe-number{
+.openerp .oe-treeview-table .oe-number {
    text-align: right !important;
 }
 .treeview-tr span, .treeview-td span {

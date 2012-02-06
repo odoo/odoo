@@ -247,8 +247,8 @@ openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loadin
 
         this.count += increment;
         if (this.count > 0) {
-            //this.$element.html(QWeb.render("Loading", {}));
-            $(".loading",this.$element).html("Loading ("+this.count+")");
+            $(".loading",this.$element).text(_.str.sprintf(
+                _t("Loading (%d)"), this.count));
             $(".loading",this.$element).show();
             this.widget_parent.$element.addClass('loading');
         } else {
