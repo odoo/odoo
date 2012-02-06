@@ -50,7 +50,7 @@ class Logger(object):
 
         log = logging.getLogger(__name__ + '.deprecated.' + ustr(name))
 
-        if level in [LOG_DEBUG_RPC, LOG_TEST] and not hasattr(log, level):
+        if level in [LOG_TEST] and not hasattr(log, level):
             fct = lambda msg, *args, **kwargs: log.log(getattr(logging, level.upper()), msg, *args, **kwargs)
             setattr(log, level, fct)
 
