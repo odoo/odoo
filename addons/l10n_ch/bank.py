@@ -21,6 +21,7 @@
 
 from tools.translate import _
 from osv import fields, osv
+import re
 
 class Bank(osv.osv):
     """Inherit res.bank class in order to add swiss specific field"""
@@ -42,8 +43,8 @@ class ResPartnerBank(osv.osv):
 
     _columns = {
         'name': fields.char('Description', size=128, required=True),
-        'post_number': fields.char('Post number', size=64),
-        'bvr_adherent_num': fields.char('BVR adherent number', size=11),
+        'post_number': fields.char('Post number', size=64, help="Postal number 0x-xxxxxx-x or xxxxx"),
+        'bvr_adherent_num': fields.char('Bank BVR adherent number', size=11, help="Your Bank adherent number to be printed in references of your BVR. This is not a postal account number."),
         'dta_code': fields.char('DTA code', size=5),
         'print_bank': fields.boolean('Print Bank on BVR'),
         'print_account': fields.boolean('Print Account Number on BVR'),
@@ -68,10 +69,49 @@ class ResPartnerBank(osv.osv):
 
     def _prepare_name(self, bank):
         "Hook to get bank number of bank account"
-        res = super(ResPartnerBank, self)._prepare_name(bank)
+        res = u''
+        if bank.acc_number:
+            res = super(ResPartnerBank, self)._prepare_name(bank) or u''
         if bank.post_number:
-            res =  u"%s - %s" % (res, bank.post_number)
+            if res:
+                res =  u"%s - %s" % (res, bank.post_number)
+            else:
+                res = bank.post_number
         return res
+
+    def _check_9_pos_postal_num(self, number):
+        """
+        check if a postal number in format xx-xxxxxx-x is correct,
+        return true if it matches the pattern
+        and if check sum mod10 is ok
+        """
+        from tools import mod10r
+        pattern = r'^[0-9]{2}-[0-9]{1,6}-[0-9]$'
+        if not re.search(pattern, number):
+            return False
+        num, checksum = (number.replace('-','')[:-1], number[-1:])
+        return mod10r(num)[-1:] == checksum
+
+
+    def _check_5_pos_postal_num(self, number):
+        """
+        check if a postal number on 5 positions is correct
+        """
+        pattern = r'^[0-9]{1,5}$'
+        if not re.search(pattern, number):
+            return False
+        return True
+
+    def _check_postal_num(self, cursor, uid, ids):
+        banks = self.browse(cursor, uid, ids)
+        for b in banks:
+            return self._check_9_pos_postal_num(b.post_number) or \
+                   self._check_5_pos_postal_num(b.post_number)
+
+ 
+    _constraints = [(_check_postal_num,
+                    'Please enter a correct postal number. (01-23456-5 or 12345)',
+                    ['post_number'])]    
 
     _sql_constraints = [('bvr_adherent_uniq', 'unique (bvr_adherent_num)',
         'The BVR adherent number must be unique !')]
