@@ -146,7 +146,7 @@ class project(osv.osv):
             if res[id]['total_hours']:
                 res[id]['progress_rate'] = round(100.0 * res[id]['effective_hours'] / res[id]['total_hours'], 2)
             else:
-                res[id]['progress_rate'] = 100.0
+                res[id]['progress_rate'] = 0.0
         return res
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
