@@ -722,6 +722,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                     throw "Record not correctly loaded";
                 }
             }
+
             completion.resolve(records);
         };
         if(to_get.length > 0) {
