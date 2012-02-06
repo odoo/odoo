@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2012-01-12 22:03+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
+"PO-Revision-Date: 2012-02-04 12:46+0000\n"
+"Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-31 06:32+0000\n"
-"X-Generator: Launchpad (build 14734)\n"
+"X-Launchpad-Export-Date: 2012-02-05 05:08+0000\n"
+"X-Generator: Launchpad (build 14738)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -62,7 +62,7 @@ msgstr "إلغاء الطلب"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Configure Sales Order Logistics"
-msgstr ""
+msgstr "قم بتكوين امر للمبيعات سوقية"
 
 #. module: sale
 #: code:addons/sale/sale.py:638
@@ -178,7 +178,7 @@ msgstr "نسبة الخصم (%)"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_forceassignation0
 msgid "Force Assignation"
-msgstr ""
+msgstr "تخصيص نفاذ"
 
 #. module: sale
 #: help:sale.make.invoice,grouped:0
@@ -222,11 +222,13 @@ msgid ""
 "The invoice is created automatically if the shipping policy is 'Invoice from "
 "pick' or 'Invoice on order after delivery'."
 msgstr ""
+"يتم عمل الفاتورة تلقائيًا اذا كانت سياسة الشحن ‘فاتورة بالاختيار‘ او ‘فاتورة "
+"بعد تسليم البضاعة‘."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
-msgstr ""
+msgstr "تُنشأ المبيعات الفاتورة"
 
 #. module: sale
 #: view:sale.order:0
@@ -309,6 +311,8 @@ msgid ""
 "There is no income category account defined in default Properties for "
 "Product Category or Fiscal Position is not defined !"
 msgstr ""
+"لا يوجد حساب تصنيف للايراد محدد في الخصائص الافتراضية لتصنيف المنتج او لم "
+"يُحدد الوضع المالي !"
 
 #. module: sale
 #: view:sale.installer:0
@@ -318,13 +322,13 @@ msgstr "ضبط الإعدادات"
 #. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "انك تحاول تخصيص الكثير من غير المنتج نفسه"
 
 #. module: sale
 #: code:addons/sale/sale.py:655
 #, python-format
 msgid "invalid mode for test_state"
-msgstr ""
+msgstr "الإسلوب غير صالح لحالة الاختبار"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -372,7 +376,7 @@ msgstr "أمر تسليم فقط"
 #. module: sale
 #: report:sale.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "TVA :"
 
 #. module: sale
 #: help:sale.order.line,delay:0
@@ -401,7 +405,7 @@ msgstr "وحدة القياس"
 #. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr ""
+msgstr "عدد الطرود/عدد الحزم"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -436,6 +440,8 @@ msgid ""
 "Select a product of type service which is called 'Advance Product'. You may "
 "have to create it and set it as a default value on this field."
 msgstr ""
+"اختار منتج من نوع الخدمة التي تسمى ‘منتج مدفوع مقدما‘. قد تقوم بإنشائها "
+"ووضعها كقيمة افتراضية في هذا الحق."
 
 #. module: sale
 #: report:sale.order:0
@@ -487,7 +493,7 @@ msgstr "تاريخ التأكيد"
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
 msgid "Allotment Partner"
-msgstr ""
+msgstr "حصة الشريك"
 
 #. module: sale
 #: sql_constraint:sale.order:0
@@ -527,6 +533,8 @@ msgid ""
 "Incoterm which stands for 'International Commercial terms' implies its a "
 "series of sales terms which are used in the commercial transaction."
 msgstr ""
+"تشير كلمة انكوترم لـ ‘مصطلحات تجارية دولية‘ وتتضمن مسلسلها من مصطلحات "
+"المبيعات المستخدمة في الصفقات التجارية."
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -573,7 +581,7 @@ msgstr "المخزن"
 #. module: sale
 #: report:sale.order:0
 msgid "Order N°"
-msgstr ""
+msgstr "ترتيب بالعدد"
 
 #. module: sale
 #: field:sale.order,order_line:0
@@ -583,7 +591,7 @@ msgstr "سطور الأوامر"
 #. module: sale
 #: view:sale.order:0
 msgid "Untaxed amount"
-msgstr ""
+msgstr "المبلغ بدون ضرائب"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
@@ -635,7 +643,7 @@ msgstr "قائمة الأسعار"
 #: view:sale.report:0
 #: field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "# للكمية"
 
 #. module: sale
 #: view:sale.order:0
@@ -1036,7 +1044,7 @@ msgstr "تاريخ الأمر"
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
 msgid "Document of the move to the output or to the customer."
-msgstr ""
+msgstr "وثيقة الانتقال الى الخروج او اللى العميل."
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
@@ -1188,7 +1196,7 @@ msgstr "وحدة القياس المرجعية"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr ""
+msgstr "ينشأ خط طلب البيع الفاتورة"
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1267,7 +1275,7 @@ msgstr "تمّ"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_installer
 msgid "sale.installer"
-msgstr ""
+msgstr "مثبت البيع"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_invoice0
@@ -1308,7 +1316,7 @@ msgstr "سياسة الالتقاط"
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
 msgid "Document of the move to the customer."
-msgstr ""
+msgstr "وثيقة الانتقال إلى العميل."
 
 #. module: sale
 #: help:sale.order,amount_untaxed:0
@@ -1329,7 +1337,7 @@ msgstr "فاتورة الدفع المقدم للمبيعات"
 #. module: sale
 #: field:sale.order,incoterm:0
 msgid "Incoterm"
-msgstr ""
+msgstr "مصطلحات تجارية مشتركة"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1347,12 +1355,12 @@ msgstr "الفواتير"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
 msgid "Cancel Assignation"
-msgstr ""
+msgstr "إلغي التخصيص"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_picking_policy
 msgid "sale.config.picking_policy"
-msgstr ""
+msgstr "المبيعات.تكوين.اختيار_سياسة"
 
 #. module: sale
 #: help:sale.order,state:0
@@ -1368,7 +1376,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
-msgstr ""
+msgstr "فاتورة لـ"
 
 #. module: sale
 #: report:sale.order:0
@@ -1393,7 +1401,7 @@ msgstr "وحدة القياس للمنتج"
 #. module: sale
 #: view:sale.order:0
 msgid "Logistic"
-msgstr ""
+msgstr "سوقية"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1439,7 +1447,7 @@ msgstr "حالات"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "الدقة_التكوين_المحتويات"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -1465,6 +1473,8 @@ msgid ""
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
 msgstr ""
+"بالاعتماد على تكوين مكان الصادر, تم عمل الانتقال بين المنطقة المصدرة والعميل "
+"عن طريق امر التسليم تلقائيًا او يدويًا."
 
 #. module: sale
 #: code:addons/sale/sale.py:1165
@@ -1564,7 +1574,7 @@ msgstr "   الشهر   "
 #. module: sale
 #: field:sale.report,date_confirm:0
 msgid "Date Confirm"
-msgstr ""
+msgstr "تأكيد التاريخ"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1674,6 +1684,8 @@ msgid ""
 "soon as possible when one product is available or you wait that all products "
 "are available.."
 msgstr ""
+"تُستخدم سياسة الشحن في تكوين لكل امر اذا كنت تريد التسليم في اقرب وقت ممكن "
+"عندما يكون المنتج الواحد متاح اما ان تناظر انت تكون كل المنتجات متاحة.."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1792,7 +1804,7 @@ msgstr "مبلغ الضرائب"
 #. module: sale
 #: view:sale.order:0
 msgid "Packings"
-msgstr ""
+msgstr "الطرود"
 
 #. module: sale
 #: field:sale.config.picking_policy,progress:0
@@ -1949,7 +1961,7 @@ msgstr "يجب تعيين دفعة إنتاج لهذا المنتج"
 #. module: sale
 #: field:sale.order.line,sequence:0
 msgid "Layout Sequence"
-msgstr ""
+msgstr "تسلسل التخطيط"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_shop_form
@@ -2059,7 +2071,7 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation N°"
-msgstr ""
+msgstr "اقتباس بالعدد"
 
 #. module: sale
 #: field:sale.order,picked_rate:0
