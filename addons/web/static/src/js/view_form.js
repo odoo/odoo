@@ -103,10 +103,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$element.html(this.rendered);
         this.root_frame.$element = $(".oe_form_root_frame_placeholder", this.$element);
         this.root_frame.render_element();
+        this.root_frame.start();
         
-        _.each(this.widgets, function(w) {
-            w.start();
-        });
         this.$form_header = this.$element.find('.oe_form_header:first');
         this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
@@ -908,6 +906,13 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
 	        });
 	    });
     },
+    start: function() {
+	    _.each(this.table, function(row) {
+	        _.each(row, function(td) {
+	        	td.start();
+	        });
+	    });
+    },
     add_row: function(){
         if (this.table.length) {
             this.set_row_cells_with(this.table[this.table.length - 1]);
@@ -1028,6 +1033,9 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
                 gravity: 's'
             });
         }
+	    _.each(this.pages, function(page) {
+        	page.start();
+	    });
     },
     do_select_first_visible_tab: function() {
         for (var i = 0; i < this.pages.length; i++) {
