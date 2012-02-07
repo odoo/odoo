@@ -125,7 +125,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
                         'city': city,
                         'country_code': country_code,
                         'email': email,
-                        'phone': phone,
+                        'phone': phone.replace('.','').replace('/',''),
                         'send_ref': send_ref,
                         'quarter': quarter,
                         'month': starting_month,
@@ -189,7 +189,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         for item in cases_list:
             grid_amount_data = {
                     'code': str(int(item['code'])),
-                    'amount': str(item['sum_period']),
+                    'amount': str(abs(item['sum_period'])),
                     }
             data_of_file += '\n\t\t\t<ns2:Amount GridNumber="%(code)s">%(amount)s</ns2:Amount''>' % (grid_amount_data)
             
