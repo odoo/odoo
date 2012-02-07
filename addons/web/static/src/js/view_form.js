@@ -93,7 +93,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         if (data) {
             this.fields_order = [];
             this.fields_view = data;
-            var frame = new (this.registry.get_object('frame'))(this, this.fields_view.arch);
+            var frame = instanciate_widget(this.registry.get_object('frame'), this, this.fields_view.arch);
 
             this.rendered = QWeb.render(this.form_template, { 'frame': frame, 'widget': this });
         }
@@ -946,14 +946,14 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
                 node.attrs.nolabel = '1';
             }
         }
-        var widget = new (this.view.registry.get_any(
-                [node.attrs.widget, type.type, node.tag])) (this.view, node);
+        var widget = instanciate_widget(this.view.registry.get_any(
+                [node.attrs.widget, type.type, node.tag]), this.view, node);
         if (node.tag == 'field') {
             if (!this.view.default_focus_field || node.attrs.default_focus == '1') {
                 this.view.default_focus_field = widget;
             }
             if (node.attrs.nolabel != '1') {
-                var label = new (this.view.registry.get_object('label')) (this.view, node);
+                var label = instanciate_widget(this.view.registry.get_object('label'), this.view, node);
                 label["for"] = widget;
                 this.add_widget(label, widget.colspan + 1);
             }
@@ -986,7 +986,7 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
         for (var i = 0; i < node.children.length; i++) {
             var n = node.children[i];
             if (n.tag == "page") {
-                var page = new (this.view.registry.get_object('notebookpage'))(
+                var page = instanciate_widget(this.view.registry.get_object('notebookpage'),
                         this.view, n, this, this.pages.length);
                 this.pages.push(page);
             }
@@ -3221,7 +3221,7 @@ openerp.web.form.WidgetHtml = openerp.web.form.Widget.extend({
                 $into.text(child);
             } else if (child.tag === 'field') {
                 $into.append(
-                    new (self.view.registry.get_object('frame'))(
+                    instanciate_widget(self.view.registry.get_object('frame'),
                         self.view, {tag: 'ueule', attrs: {}, children: [child] })
                             .render());
             } else {
@@ -3269,6 +3269,10 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'statusbar': 'openerp.web.form.FieldStatus',
     'html': 'openerp.web.form.WidgetHtml'
 });
+
+var instanciate_widget = function(claz, view, node, o1, o2) {
+	return new (claz)(view, node, o1, o2);
+}
 
 
 };
