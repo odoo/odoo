@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="event_sale_order">
+             <field name="name">event.product</field>
+             <field name="model">product.product</field>
+             <field name="type">form</field>
+             <field name="inherit_id" ref="product.product_normal_form_view" />
+             <field name="arch" type="xml">
+                <field name='purchase_ok' position='after'>
+                    <field name="event_ok"/>
+                </field>
+             </field>
+        </record>
+    </data>
+</openerp>
