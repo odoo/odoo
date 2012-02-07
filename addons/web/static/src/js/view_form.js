@@ -798,8 +798,10 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
         this.$element.toggle(!this.invisible);
     },
     render: function() {
-        var template = this.template;
-        return QWeb.render(template, { "widget": this });
+        return QWeb.render(this.template, { "widget": this });
+    },
+    render_element: function() {
+    	this.$element.html(this.render());
     },
     do_attach_tooltip: function(widget, trigger, options) {
         widget = widget || this;
