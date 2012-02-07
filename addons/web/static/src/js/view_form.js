@@ -759,13 +759,9 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
         this.always_invisible = (this.modifiers.invisible && this.modifiers.invisible === true);
         this.type = this.type || node.tag;
         this.element_name = this.element_name || this.type;
-        this.element_class = [
-            'formview', this.view.view_id, this.element_name,
-            this.view.widgets_counter++].join("_");
 
         this._super(view);
 
-        this.view.widgets[this.element_class] = this;
         this.children = node.children;
         this.colspan = parseInt(node.attrs.colspan || 1, 10);
         this.decrease_max_width = 0;
@@ -3271,7 +3267,11 @@ openerp.web.form.widgets = new openerp.web.Registry({
 });
 
 var instanciate_widget = function(claz, view, node, o1, o2) {
-	return new (claz)(view, node, o1, o2);
+	var widget = new (claz)(view, node, o1, o2);
+	widget.element_class = ['formview', view.view_id, widget.element_name,
+    	view.widgets_counter++].join("_");
+    view.widgets[widget.element_class] = widget;
+    return widget;
 }
 
 
