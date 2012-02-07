@@ -7,7 +7,7 @@
             <button type="button" class="oe_mail_action_unfollow">Unfollow</button>
         </div>
         <div class="oe_mail_comment">
-            <textarea rows="2" cols="15">Type your comment</textarea>
+            <textarea rows="3" cols="15">Type your comment</textarea><br />
             <button type="button" class="oe_mail_action_comment">Post comment</button>
         </div>
         <div>
@@ -25,12 +25,14 @@
     </div>
     
     <div t-name="ThreadMsgView">
-        <div class="ThreadMsgView">
+        <div class="oe_mail_msg">
             <div class="oe_mail_msg_image">Image</div>
-            <div class="oe_mail_msg">
-                <span class="oe_mail_msg_body"><t t-esc="record.body_text"/></span><br />
-                <span class="oe_mail_msg_author"><t t-esc="record.user_id[1]"/></span><br />
-                <span class="oe_mail_msg_date"><t t-esc="record.date"/></span>
+            <div class="oe_mail_msg_content">
+                <p class="oe_mail_msg_p">
+                    <span class="oe_mail_msg_body"><t t-esc="record.body_text"/></span><br />
+                    <span class="oe_mail_msg_author"><t t-esc="record.user_id[1]"/></span><br />
+                    <span class="oe_mail_msg_date"><t t-esc="record.date"/></span>
+                </p>
             </div>
         </div>
     </div>
