@@ -86,7 +86,7 @@ class project(osv.osv):
 
     def _get_projects_from_tasks(self, cr, uid, task_ids, context=None):
         tasks = self.pool.get('project.task').browse(cr, uid, task_ids, context=context)
-        project_ids = [task.project_id.id for task in tasks]
+        project_ids = [task.project_id.id for task in tasks if task.project_id]
         return self.pool.get('project.project')._get_project_and_parents(cr, uid, project_ids, context)
 
     def _get_project_and_parents(self, cr, uid, ids, context=None):
