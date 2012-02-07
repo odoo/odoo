@@ -146,6 +146,7 @@ class event_event(osv.osv):
         if the event_registration is not confirmed then it doesn t nothing
         """
         list_users=[]
+        userid = []
         event = self.browse(cr, uid, ids, context=context)
         name_event = event[0].name
         date = event[0].date_begin
@@ -164,23 +165,40 @@ class event_event(osv.osv):
            passwd=moodle_pool.create_password()
            if registration.state=='open':
            #confirm if the registrator is confirmed
-               dic_users={
-               'username' : name_user,
-               'password' : passwd,
-               'city' : registration.city,
-               'firstname' : registration.name ,
-               'lastname': '',
-               'email': registration.email
-               }
-               #create a dictionary for an user
-               list_users.append(dic_users)
-               #add the dictionary in a list 
-               self.pool.get('event.registration').write(cr,uid,[registration.id],{'moodle_user_password':passwd,'moodle_users':name_user})
-               #write in database the password and the username
+               if registration.moodle_users_id == 0:
+                   dic_users={
+                   'username' : name_user,
+                   'password' : passwd,
+                   'city' : registration.city,
+                   'firstname' : registration.name ,
+                   'lastname': '',
+                   'email': registration.email
+                   }
+                   #create a dictionary for an user
+                   list_users.append(dic_users)
+                   #add the dictionary in a list 
+               else:
+                   userid = []
+                   userid.append(registration.moodle_users_id)
         response_user = moodle_pool.create_moodle_user(cr,uid,[1],list_users)
         #create users in moodle
         enrolled =[]
+
+        for list in userid:
+            self.pool.get('event.registration').write(cr,uid,[registration.id],{'moodle_users_id':list,'moodle_user_password':passwd,'moodle_users':name_user})
+            #write in database the password and the username and the id
+            enrolled=[{
+            'roleid' :'5',
+            'userid' :list,
+            'courseid' :response_courses[0]['id']
+            }]
+            moodle_pool.moodle_enrolled(cr,uid,[1],enrolled)
+            #link a course with users
+
+
         for dic in response_user:
+            self.pool.get('event.registration').write(cr,uid,[registration.id],{'moodle_users_id':dic['id'],'moodle_user_password':passwd,'moodle_users':name_user})
+            #write in database the password and the username and the id
             enrolled=[{
             'roleid' :'5',
             'userid' :dic['id'],
@@ -197,45 +215,82 @@ class event_registration(osv.osv):
     _columns={
     'moodle_user_password': fields.char('password for moodle user', 128),
     'moodle_users': fields.char('moodle username', 128),
-    'moodle_users_id': fields.char('moodle username', 128),
-    'moodle_check_user':fields.char('check user',128)
+    'moodle_users_id': fields.integer('moodle uid'),
+    'moodle_check_user':fields.char('Moodle username',128,help='Try to find an existing username')
+    }
+    _defaults={
+    'moodle_check_user':''
     }
     def case_open(self, cr, uid, ids, context=None):
         """
         create a user and match to a course if the event is already confirmed
         """
         register = self.browse(cr, uid, ids, context=context)
-        if register[0].event_id.state =='confirm':
+        if register[0].event_id.state =='confirm': 
             moodle_pool = self.pool.get('event.moodle')
-            name_user = moodle_pool.make_username(register[0].name,register[0].event_id.moodle_id)
-            passwd=moodle_pool.create_password()
-            dic_users=[{
-            'username' : name_user,
-            'password' : passwd,
-            'city' : register[0].city,
-            'firstname' : register[0].name,
-            'lastname': '',
-            'email': register[0].email
-            }]
-            #create a dictionary for an use
-            response_user = moodle_pool.create_moodle_user(cr,uid,[1],dic_users)
-            self.pool.get('event.registration').write(cr,uid,ids,{'moodle_user_password':passwd,'moodle_users':name_user})
-            #write in database the password and the username
-            enrolled=[{
-            'roleid' :'5',
-            'userid' :response_user[0]['id'],#use the response of the create user
-            'courseid' :register[0].event_id.moodle_id
-            }]
-            moodle_pool.moodle_enrolled(cr,uid,[1],enrolled)
+            print 
+            if register[0].moodle_users_id ==0:
+                moodle_pool = self.pool.get('event.moodle')
+                name_user = moodle_pool.make_username(register[0].name,register[0].event_id.moodle_id)
+                passwd=moodle_pool.create_password()
+                dic_users=[{
+                'username' : name_user,
+                'password' : passwd,
+                'city' : register[0].city,
+                'firstname' : register[0].name,
+                'lastname': '',
+                'email': register[0].email
+                }]
+                #create a dictionary for an use
+                response_user = moodle_pool.create_moodle_user(cr,uid,[1],dic_users)
+                self.pool.get('event.registration').write(cr,uid,ids,{'moodle_users_id':response_user[0]['id'],'moodle_user_password':passwd,'moodle_users':name_user})
+                #write in database the password and the username
+                enrolled=[{
+                'roleid' :'5',
+                'userid' :response_user[0]['id'],#use the response of the create user
+                'courseid' :register[0].event_id.moodle_id
+                }]
+            else:
+                enrolled=[{
+                'roleid' :'5',
+                'userid' :register[0].moodle_users_id,
+                'courseid' :register[0].event_id.moodle_id
+                }]
 
+            print enrolled
+            print'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+            moodle_pool.moodle_enrolled(cr,uid,[1],enrolled)
         return super(event_registration, self).check_confirm(cr, uid, ids, context)
 
 
-    def onchange_moodle_name(self,cr,uid,ids,context=None):
-        moodle_name = self.browse(cr, uid, ids, context=context)
-        print moodle_name
-        print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-        if moodle_name:
-                print moodle_name[0].moodle_users
-                print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+    def onchange_moodle_name(self,cr,uid,ids,moodle_check_user,context=None):
+        req_sql="select moodle_users,moodle_users_id from event_registration"
+        cr.execute(req_sql)
+        sql_res = cr.dictfetchall()
+        res = {}
+        username_id = 0
+        for username in sql_res:
+            if username['moodle_users'] == moodle_check_user:
+               username_id=username['moodle_users_id']
+               res = {'value' :{'moodle_users_id': username_id}}
+            else:
+               res = {'value' :{'moodle_users_id': 0}}
+        return res
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

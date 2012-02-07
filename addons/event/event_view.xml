@@ -312,7 +312,7 @@
             <field name="arch" type="xml">
                 <form string="Registration">
                     <group col="6" colspan="4">
-                        <field name="event_id" on_change="onchange_event(event_id, partner_invoice_id)" domain="[('state','in',('draft','confirm'))]"/>
+                        <field name="event_id" on_change="onchange_event(event_id)" domain="[('state','in',('draft','confirm'))]"/>
                         <field name="date" />
                         <field name="date_deadline" />
                         <field name="origin"/>
