@@ -103,8 +103,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.root_frame.render_element();
         
         _.each(this.widgets, function(w) {
-        	w.$element = self.$element.find(
-				'.' + w.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
             w.start();
         });
         this.$form_header = this.$element.find('.oe_form_header:first');
@@ -1000,6 +998,14 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
                 this.pages.push(page);
             }
         }
+    },
+    render_element: function() {
+    	this._super();
+    	var self = this;
+	    _.each(this.pages, function(page) {
+        	page.$element = self.$element.find('.' + page.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
+        	page.render_element();
+	    });
     },
     start: function() {
         var self = this;
