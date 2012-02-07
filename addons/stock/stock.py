@@ -1269,9 +1269,10 @@ class stock_picking(osv.osv):
                     move_obj.copy(cr, uid, move.id, defaults)
                 move_obj.write(cr, uid, [move.id],
                         {
-                            'product_qty' : move.product_qty - partial_qty[move.id],
+                            'product_qty': move.product_qty - partial_qty[move.id],
                             'product_uos_qty': move.product_qty - partial_qty[move.id], #TODO: put correct uos_qty
-                            
+                            'prodlot_id': False,
+                            'tracking_id': False,
                         })
 
             if new_picking:
@@ -2573,8 +2574,10 @@ class stock_move(osv.osv):
                 complete.append(self.browse(cr, uid, new_move))
             self.write(cr, uid, [move.id],
                     {
-                        'product_qty' : move.product_qty - product_qty,
-                        'product_uos_qty':move.product_qty - product_qty,
+                        'product_qty': move.product_qty - product_qty,
+                        'product_uos_qty': move.product_qty - product_qty,
+                        'prodlot_id': False,
+                        'tracking_id': False,
                     })
 
 
