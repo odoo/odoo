@@ -99,6 +99,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
         this.$element.html(this.rendered);
         _.each(this.widgets, function(w) {
+        	w.$element = self.$element.find(
+				'.' + w.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
             w.start();
         });
         this.$form_header = this.$element.find('.oe_form_header:first');
@@ -780,12 +782,7 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
             this.align = 'center';
         }
 
-
         this.width = this.node.attrs.width;
-    },
-    start: function() {
-        this.$element = this.view.$element.find(
-            '.' + this.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
     },
     stop: function() {
         this._super.apply(this, arguments);
