@@ -91,19 +91,19 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_loaded: function(data) {
         var self = this;
         if (!data) {
-        	throw "No data provided."
+        	throw "No data provided.";
+        }
+        if (this.root_frame) {
+        	throw "Form view does not support multiple calls to on_loaded";
         }
         this.fields_order = [];
         this.fields_view = data;
-        var frame = instanciate_widget(this.registry.get_object('frame'), this, this.fields_view.arch);
-        this.root_frame = frame;
 
         this.rendered = QWeb.render(this.form_template, {'widget': this});
-            
         this.$element.html(this.rendered);
-        this.root_frame.$element = $(".oe_form_root_frame_placeholder", this.$element);
-        this.root_frame.render_element();
-        this.root_frame.start();
+        
+        this.root_frame = instanciate_widget(this.registry.get_object('frame'), this, this.fields_view.arch);
+        this.root_frame.appendTo($(".oe_form_header", this.$element));
         
         this.$form_header = this.$element.find('.oe_form_header:first');
         this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
@@ -799,11 +799,8 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
     update_dom: function() {
         this.$element.toggle(!this.invisible);
     },
-    render: function() {
-        return QWeb.render(this.form_template, { "widget": this });
-    },
     render_element: function() {
-    	this.$element.html(this.render());
+    	this.$element.html(QWeb.render(this.form_template, { "widget": this }));
     },
     do_attach_tooltip: function(widget, trigger, options) {
         widget = widget || this;
@@ -1194,12 +1191,15 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
             this.nowrap = true;
         }
     },
-    render: function () {
+    render_element: function() {
+    	var rendered;
         if (this['for'] && this.type !== 'label') {
-            return QWeb.render(this.form_template, {widget: this['for']});
+            rendered = QWeb.render(this.form_template, {widget: this['for']});
+        } else {
+	        // Actual label widgets should not have a false and have type label
+	        rendered = QWeb.render(this.form_template, {widget: this});
         }
-        // Actual label widgets should not have a false and have type label
-        return QWeb.render(this.form_template, {widget: this});
+    	this.$element.html(rendered);
     },
     start: function() {
         this._super();
@@ -3233,10 +3233,11 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.WidgetHtml = openerp.web.form.Widget.extend({
-    render: function () {
+    render_element: function () {
         var $root = $('<div class="oe_form_html_view">');
         this.render_children(this, $root);
-        return $root.html();
+        var rendered = $root.html();
+        this.$element.html(rendered);
     },
     render_children: function (object, $into) {
         var self = this,
@@ -3245,10 +3246,9 @@ openerp.web.form.WidgetHtml = openerp.web.form.Widget.extend({
             if (typeof child === 'string') {
                 $into.text(child);
             } else if (child.tag === 'field') {
-                $into.append(
-                    instanciate_widget(self.view.registry.get_object('frame'),
-                        self.view, {tag: 'ueule', attrs: {}, children: [child] })
-                            .render());
+            	var widget = instanciate_widget(self.view.registry.get_object('frame'),
+                        self.view, {tag: 'ueule', attrs: {}, children: [child] });
+                widget.appendTo($into);
             } else {
                 var $child = $(document.createElement(child.tag))
                         .attr(child.attrs)
