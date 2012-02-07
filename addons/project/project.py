@@ -697,7 +697,7 @@ class task(osv.osv):
     def set_normal_priority(self, cr, uid, ids, *args):
         """Set task priority to normal
         """
-        return self.set_priority(cr, uid, ids, '3')
+        return self.set_priority(cr, uid, ids, '2')
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
