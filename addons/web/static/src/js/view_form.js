@@ -316,6 +316,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             try {
                 var response = {}, can_process_onchange = $.Deferred();
                 processed = processed || [];
+                processed.push(widget.name);
                 var on_change = widget.node.attrs.on_change;
                 if (on_change) {
                     var change_spec = self.parse_on_change(on_change, widget);
@@ -394,11 +395,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 // If field is not defined in the view, just ignore it
                 if (field) {
                     var value = result.value[f];
-                    processed.push(field.name);
                     if (field.get_value() != value) {
                         field.set_value(value);
                         field.dirty = true;
-                        if (_.indexOf(processed, field.name) < 0) {
+                        if (!_.contains(processed, field.name)) {
                             this.do_onchange(field, processed);
                         }
                     }
