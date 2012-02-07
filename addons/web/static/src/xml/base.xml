@@ -743,7 +743,6 @@
             </t>
         </div>
     </div>
-    <t t-raw="frame.render()"/>
 </t>
 <t t-name="One2Many.formview" t-extend="FormView">
     <t t-jquery=".oe_form_buttons" t-operation="inner">
@@ -836,7 +835,8 @@
         </li>
     </ul>
     <t t-foreach="widget.pages" t-as="page">
-        <t t-raw="page.render()"/>
+    	<div t-att-class="page.element_class">
+    	</div>
     </t>
 </t>
 <t t-name="WidgetNotebook.tooltip">
@@ -853,9 +853,7 @@
     </t>
 </t>
 <t t-name="WidgetNotebookPage">
-    <div>
-        <t t-call="WidgetFrame"/>
-    </div>
+	<t t-call="WidgetFrame"/>
 </t>
 <t t-name="WidgetSeparator">
     <div t-if="widget.orientation !== 'vertical'" t-att-class="'separator ' + widget.orientation">
