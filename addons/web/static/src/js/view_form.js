@@ -94,10 +94,14 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.fields_order = [];
             this.fields_view = data;
             var frame = instanciate_widget(this.registry.get_object('frame'), this, this.fields_view.arch);
+            this.root_frame = frame;
 
-            this.rendered = QWeb.render(this.form_template, { 'frame': frame, 'widget': this });
+            this.rendered = QWeb.render(this.form_template, {'widget': this});
         }
         this.$element.html(this.rendered);
+        this.root_frame.$element = $(".oe_form_root_frame_placeholder", this.$element);
+        this.root_frame.render_element();
+        
         _.each(this.widgets, function(w) {
         	w.$element = self.$element.find(
 				'.' + w.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
