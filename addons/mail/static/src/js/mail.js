@@ -70,9 +70,6 @@ openerp.mail = function(session) {
                     'record': record,
                     });
                 $('<div>').html(render_res).appendTo(self.$element);
-//                 $('<div>').text(record.user_id[1]).appendTo(self.$element);
-//                 $('<div>').text(record.date).appendTo(self.$element);
-//                 $('<div>').text(record.body_text).appendTo(self.$element);
             });
 //             this.timeout = setTimeout(this.proxy('fetch_messages'), 5000);
         },

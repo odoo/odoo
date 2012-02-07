@@ -162,7 +162,7 @@ class mail_message(osv.osv):
                 msg_txt += message.subject
             result[message.id] = msg_txt
         return result
-
+    
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Related partner'),
         'user_id': fields.many2one('res.users', 'Related user', readonly=1),
@@ -182,15 +182,14 @@ class mail_message(osv.osv):
         'type': fields.selection([
                         ('email', 'e-mail'),
                         ('comment', 'Comment'),
-                        ('notification', 'Notification'),
+                        ('notification', 'System notification'),
                         ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
-        'need_action': fields.boolean('Need action', help="Asks the user to perform an action"),
-        'need_action_user_id': fields.many2one('res.users', 'Action user', help="User requested to perform an action"),
+        'need_action_user_id': fields.many2one('res.users', 'Action by user', help="User requested to perform an action"),
     }
-
+        
     _defaults = {
         'state': 'received',
-        'type': 'notification',
+        'type': 'comment',
     }
 
     #------------------------------------------------------
@@ -220,72 +219,6 @@ class mail_message(osv.osv):
         # TODO / REMARK: classify based on res_model / res_id to have a 1_level hierarchy ?
         
         return notifications
-    
-    
-    #------------------------------------------------------
-    # Note specific api
-    #------------------------------------------------------
-    
-    #def tmp_backup(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        #if not context or not context.has_key('filter_search'):
-            #return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
-        
-        ## get subscriptions
-        #sub_obj = self.pool.get('mail.subscription')
-        #sub_ids = sub_obj.search(cr, uid, [('user_id', '=', uid)])
-        #subs = sub_obj.browse(cr, uid, sub_ids)
-        
-        ## stock tweets to find
-        #res_model_ids_dict = {}
-        #res_model_all_list = []
-        
-        ## check all subscriptions
-        #for sub in subs:
-            #if sub.res_model and sub.res_id == 0 and sub.res_domain == False:
-                #print "s-1"
-                #if sub.res_model not in res_model_all_list:
-                    #res_model_all_list.append(sub.res_model)
-            #elif sub.res_model and sub.res_id:
-                #print "s-2"
-                #if res_model_ids_dict.has_key(sub.res_model):
-                    #res_model_ids_dict[sub.res_model].append(sub.res_id)
-                #else:
-                    #res_model_ids_dict[sub.res_model] = [sub.res_id]
-            #elif sub.res_model and sub.res_domain:
-                #print "s-3"
-                #res_obj = self.pool.get(sub.res_model)
-                #print sub.res_domain
-                ##res_ids = res_obj.search(cr, uid, [('id', 'in', [1,2])])
-                #res_ids = res_obj.search(cr, uid, eval(sub.res_domain))
-                #if res_model_ids_dict.has_key(sub.res_model):
-                    #res_model_ids_dict[sub.res_model] += res_ids
-                #else:
-                    #res_model_ids_dict[sub.res_model] = res_ids
-                #print 'cacaprout'
-            #else:
-                #print 'erreur !!!'
-                #print sub
-        
-        ## add fully-followed domains
-        #args.append('|')
-        #args.append(['model', 'in', res_model_all_list])
-        
-        ## add partially-followed domains
-        #for x in range(0, len(res_model_ids_dict.keys())-1):
-            #args.append('|')
-        
-        #for res_model in res_model_ids_dict.keys():
-            #if res_model not in res_model_all_list:
-                #args.append('&')
-                #args.append(['model', '=', res_model])
-                #args.append(['res_id', 'in', res_model_ids_dict[res_model]])
-        
-        #if context and context.has_key('filter_search'):
-            #pass
-        #else:
-            #args = []
-        #print args
-        #return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit,order=order, context=context, count=count)
     
     #------------------------------------------------------
     # E-Mail api

@@ -1,60 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
-        <!-- mail.message tree: tweet-type view !-->
-        <record model="ir.ui.view" id="view_tweet_tree">
-            <field name="name">mail.message.tree_tweet</field>
-            <field name="model">mail.message</field>
-            <field name="type">tree</field>
-            <field name="sequence">15</field>
-            <field name="arch" type="xml">
-                <tree string="Tweets">
-                    <field name="date"/>
-                    <field name="subject"/>
-                    <field name="user_id"/>
-                    <field name="model" invisible="1"/>
-                    <field name="res_id" invisible="1"/>
-                </tree>
-            </field>
-        </record>
-
-        <!-- mail.message form: tweet-type view !-->
-        <record model="ir.ui.view" id="view_tweet_form">
-            <field name="name">mail.message.form_tweet</field>
-            <field name="model">mail.message</field>
-            <field name="type">form</field>
-            <field name="sequence">15</field>
-            <field name="arch" type="xml">
-                <form string="Tweet">
-                    <group colspan="4" col="6">
-                       <field name="subject" colspan="4"/>
-                       <field name="date"/>
-                       <field name="user_id" string="User" readonly="0"/>
-                       <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
-                    </group>
-                    <field name="body_text"/>
-                    <field name="body_html"/>
-                    <field name="type"/>
-                    <field name="need_action"/>
-                    <field name="model"/>
-                    <field name="res_id"/>
-                </form>
-            </field>
-        </record>
-
-        <!-- mail.message search: tweet-type view !-->
-        <record model="ir.ui.view" id="view_tweet_search">
-            <field name="name">mail.message.search_tweet</field>
-            <field name="model">mail.message</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Tweet Search">
-                    <field name="user_id" string="User"/>
-                </search>
-            </field>
-        </record>
-
+        
        <!-- Group Kanban View  !-->
         <record model="ir.ui.view" id="view_group_kanban">
             <field name="name">mail.group.kanban</field>
@@ -72,7 +19,6 @@
                                 <div class="oe_group_details">
                                     <h4><a type="edit"><field name="name"/></a></h4>
                                     <ul>
-                                        <li t-if="record.name.raw_value"><field name="name"/></li>
                                         <li><a name="action_group_join" string="Join" type="object">Join</a></li>
                                         <li>Joined</li>
                                     </ul>
@@ -102,11 +48,11 @@
                         <field name="public" nolabel="1" colspan="1"/>
                         <label string="This group is visible by non members" colspan="2"/>
                     </group>
+                    <separator string="Test actions" colspan="4"/>
+                    <button name="action_test" string="Test" type="object" icon="gtk-go-forward" colspan="2"/>
+                    <button name="action_null" string="Test2" type="object" icon="gtk-go-forward" colspan="2"/>
                     <separator string="OpenChatter" colspan="4"/>
-                    <button name="action_test" string="Test" type="object" icon="gtk-go-forward" />
-                    <button name="action_null" string="Test2" type="object" icon="gtk-go-forward" />
-                    <separator string="OpenChatter" colspan="4"/>
-<!--                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/> -->
+                    <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -117,25 +63,6 @@
             <field name="res_model">mail.group</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-        </record>
-
-        <record id="action_view_tweets" model="ir.actions.act_window">
-            <field name="name">Messages</field>
-            <field name="res_model">mail.message</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'filter_search': True, 'tree_view_ref': 'mail.view_tweet_tree', 'form_view_ref': 'mail.view_tweet_form'}</field>
-            <field name="search_view_id" ref="view_tweet_search"/>
-        </record>
-
-        <record id="action_view_mytweets" model="ir.actions.act_window">
-            <field name="name">Messages</field>
-            <field name="res_model">mail.message</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'filter_search': True, 'tree_view_ref': 'mail.view_tweet_tree', 'form_view_ref': 'mail.view_tweet_form'}</field>
-            <field name="search_view_id" ref="view_tweet_search"/>
-            <field name="domain">[('user_id', '=', uid)]</field>
         </record>
 
         <!-- toplevel menu -->

@@ -61,9 +61,8 @@ class mail_thread(osv.osv):
             res[thread.id] = [obj['id'] for obj in records]
         return res
     
-    # TODO remove this and copy method, this will be replaced by message_load
+    # OpenSocial: removed message_ids and copy method, this will be replaced by message_load
     _columns = {
-        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', readonly=True),
         'message_ids_social': fields.function(_get_message_ids, method=True,
                         type='one2many', obj='mail.message', string='Temp messages',
                         ),
@@ -81,23 +80,12 @@ class mail_thread(osv.osv):
                 ret_dict[model_name] = model._description        
         return ret_dict
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        """Overrides default copy method to empty the thread of
-           messages attached to this record, as the copied object
-           will have its own thread and does not have to share it.
-        """
-        if default is None:
-            default = {}
-        default.update({
-            'message_ids': [],
-        })
-        return super(mail_thread, self).copy(cr, uid, id, default, context=context)
-
-    def message_append(self, cr, uid, threads, subject, body_text=None, type='email', email_to=False,
-                email_from=False, email_cc=None, email_bcc=None, reply_to=None,
-                email_date=None, message_id=False, references=None,
-                attachments=None, body_html=None, subtype=None, headers=None,
-                original=None, context=None):
+    def message_append(self, cr, uid, threads, subject, body_text=None,
+                        type='email', need_action_user_id=False,
+                        email_to=False, email_from=False, email_cc=None, email_bcc=None,
+                        reply_to=None, email_date=None, message_id=False, references=None,
+                        attachments=None, body_html=None, subtype=None, headers=None,
+                        original=None, context=None):
         """Creates a new mail.message attached to the current mail.thread,
            containing all the details passed as parameters.  All attachments
            will be attached to the thread record as well as to the actual
@@ -130,7 +118,7 @@ class mail_thread(osv.osv):
                              to determine the model of the thread to
                              update (instead of the current model).
         """
-        if context is None:
+        if context is None: 
             context = {}
         if attachments is None:
             attachments = {}
@@ -179,6 +167,7 @@ class mail_thread(osv.osv):
                 'attachment_ids': [(6, 0, to_attach)],
                 'state': 'received',
                 'type': type,
+                'need_action_user_id': need_action_user_id,
             }
 
             if email_from:
@@ -227,12 +216,13 @@ class mail_thread(osv.osv):
                                 to determine the model of the thread to
                                 update (instead of the current model).
         """
-        # 6.2 Social feature: add default email type for old API
+        # 6.2 OpenSocial feature: add default email type for old API
         if not 'type' in msg_dict: msg_dict['type'] = 'email'
         return self.message_append(cr, uid, ids,
                             subject = msg_dict.get('subject'),
                             body_text = msg_dict.get('body_text'),
                             type = msg_dict.get('type'),
+                            need_action_user_id = msg_dict.get('need_action_user_id'),
                             email_to = msg_dict.get('to'),
                             email_from = msg_dict.get('from'),
                             email_cc = msg_dict.get('cc'),
@@ -250,14 +240,22 @@ class mail_thread(osv.osv):
                             context = context)
 
     # Message loading
-    def message_load(self, cr, uid, ids, context=None):
-        """ Social feature added this method
-        loading message: search in mail.messages where res_id = ids, (res_)model = current model """
+    def message_load_ids(self, cr, uid, ids, context=None):
+        """ OpenSocial feature added this method
+        get ids of thread messages
+        """
         msg_obj = self.pool.get('mail.message')
+        msg_ids = [msg_obj.search(cr, uid, ['&', ('res_id', '=', id), ('model', '=', self._name)], context=context) for id in ids]
+        return msg_ids[0]
+        
+    def message_load(self, cr, uid, ids, context=None):
+        """ OpenSocial feature added this method
+        loading message: search in mail.messages where res_id = ids, (res_)model = current model
+        """
         msg_ids = []
+        msg_obj = self.pool.get('mail.message')
         for id in ids:
             msg_ids += msg_obj.search(cr, uid, ['&', ('res_id', '=', id), ('model', '=', self._name)], context=context)
-        #msgs = msg_obj.browse(cr, uid, msg_ids)
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
         return msgs
 
@@ -507,12 +505,30 @@ class mail_thread(osv.osv):
     #------------------------------------------------------
     # Note specific
     #------------------------------------------------------
-    def message_append_note(self, cr, uid, ids, subject, body, type='notification', context=None):
-        return self.message_append(cr, uid, ids, subject, body_text=body, type=type, context=context)
-
+    
+    def message_append_note(self, cr, uid, ids, subject, body, type='notification', need_action=False,
+                                need_action_user_id=False, context=None):
+        return self.message_append(cr, uid, ids, subject, body_text=body, type=type, need_action=need_action,
+                                need_action_user_id=need_action_user_id, context=context)
+    
+    # old log overrided method: now calls message_append_note
+    def log(self, cr, uid, id, message, secondary=False, context=None):
+        """ OpenSocial add: new res_log implementation
+        A res.log is now a mail.message, as all messages in OpenERP
+        It has a notification type.
+        It can have a need_action flag attached if an user
+        has to perform a given action.
+        See mail.message, mail.subscription and mail.notification for more details.
+        """
+        if context and context.get('disable_log'):
+            #return True # old behavior
+            print 'Log diabled, but we do not care currently about that. We want you to have our logs !'
+        return self.message_append_note(cr, uid, [id], 'System notification', message, context=context)
+    
     #------------------------------------------------------
     # Subscription mechanism
     #------------------------------------------------------
+    
     def message_get_subscribers(self, cr, uid, ids, context=None):
         subscription_obj = self.pool.get('mail.subscription')
         for id in ids:
