@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2012-02-03 13:53+0000\n"
+"PO-Revision-Date: 2012-02-06 07:26+0000\n"
 "Last-Translator: Gregor Ljubič (radioglas.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-04 06:05+0000\n"
-"X-Generator: Launchpad (build 14738)\n"
+"X-Launchpad-Export-Date: 2012-02-07 05:05+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -1474,7 +1474,7 @@ msgstr ""
 #: code:addons/sale/sale.py:1165
 #, python-format
 msgid "Cannot delete a sales order line which is %s !"
-msgstr ""
+msgstr "Ne morem izbrisati naročila, ki je %s!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1532,6 +1532,8 @@ msgid ""
 "Gives the margin of profitability by calculating the difference between Unit "
 "Price and Cost Price."
 msgstr ""
+"Nudi razliko v ceni (RVC) dobičkonosnosti, z izračunom razlike med nabavno "
+"in prodajno ceno."
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1592,6 +1594,11 @@ msgid ""
 "\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"Izbrali ste količino %d enot.\n"
+"Ampak to ni v skladu z izbrano embalažo.\n"
+"Tukaj je predlog količine glede na pakiranje:\n"
+"\n"
+"EAN: %s količina: %s tip od ul: %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1816,7 +1823,7 @@ msgstr "Prodaja proizvodov"
 #. module: sale
 #: field:sale.order,date_order:0
 msgid "Ordered Date"
-msgstr ""
+msgstr "Datum naročila"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_form
@@ -1833,7 +1840,7 @@ msgstr "Direktna dostava"
 #. module: sale
 #: field:sale.installer,sale_journal:0
 msgid "Invoicing journals"
-msgstr ""
+msgstr "Dnevnik faktur"
 
 #. module: sale
 #: field:sale.advance.payment.inv,product_id:0
@@ -1844,7 +1851,7 @@ msgstr "Avans Produkta"
 #: view:sale.report:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped Qty"
-msgstr ""
+msgstr "Dobavljena količina"
 
 #. module: sale
 #: view:sale.open.invoice:0
@@ -1865,7 +1872,7 @@ msgstr ""
 #. module: sale
 #: view:sale.installer:0
 msgid "Configure Your Sales Management Application"
-msgstr ""
+msgstr "Konfiguracije Vaše Aplikacije za Urejanje Prodaje"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -1875,7 +1882,7 @@ msgstr "Prodajni nalogi v teku"
 #. module: sale
 #: field:sale.installer,sale_layout:0
 msgid "Sales Order Layout Improvement"
-msgstr ""
+msgstr "Izboljšana postavitev modula Prodaje"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:63
@@ -1915,7 +1922,7 @@ msgstr "Potrjena naročilnica za račun"
 #: code:addons/sale/sale.py:290
 #, python-format
 msgid "Cannot delete Sales Order(s) which are already confirmed !"
-msgstr ""
+msgstr "Ne morem izbrisati naročila, ki je že potrjeno"
 
 #. module: sale
 #: code:addons/sale/sale.py:322
@@ -1947,7 +1954,7 @@ msgstr "Dostavljeno"
 #: code:addons/sale/sale.py:1115
 #, python-format
 msgid "Not enough stock !"
-msgstr ""
+msgstr "Ni dovolj na zalogi!"
 
 #. module: sale
 #: constraint:stock.move:0
@@ -1957,7 +1964,7 @@ msgstr "Morate določiti proizvodno serijo tega artikla"
 #. module: sale
 #: field:sale.order.line,sequence:0
 msgid "Layout Sequence"
-msgstr ""
+msgstr "Zaporedje postavitve"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_shop_form
@@ -1988,7 +1995,7 @@ msgstr ""
 #. module: sale
 #: help:sale.installer,sale_order_dates:0
 msgid "Adds commitment, requested and effective dates on Sales Orders."
-msgstr ""
+msgstr "Doda obveznosti, zahteve in datum uveljavitve za naročila."
 
 #. module: sale
 #: view:sale.order:0
@@ -2013,6 +2020,8 @@ msgid ""
 "Allows you to group and invoice your delivery orders according to different "
 "invoicing types: daily, weekly, etc."
 msgstr ""
+"Dovoli vam združiti in zaračunati vašo naročeno dostavo glede na različne "
+"vrste računov: dnevno, tedensko itd."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2027,7 +2036,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.picking_policy,step:0
 msgid "Steps To Deliver a Sales Order"
-msgstr ""
+msgstr "Postopki za Dostavo Naročila"
 
 #. module: sale
 #: view:sale.order:0
@@ -2051,6 +2060,7 @@ msgstr "Plačilni pogoj"
 msgid ""
 "Provides some features to improve the layout of the Sales Order reports."
 msgstr ""
+"Ponuja nekatere funkcije za izboljšanje postavitve prodajnih poročil."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all

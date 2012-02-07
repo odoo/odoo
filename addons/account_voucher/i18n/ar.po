@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2012-01-05 14:55+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
+"PO-Revision-Date: 2012-02-06 10:59+0000\n"
+"Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-31 05:48+0000\n"
-"X-Generator: Launchpad (build 14734)\n"
+"X-Launchpad-Export-Date: 2012-02-07 05:05+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -80,6 +80,13 @@ msgid ""
 "    * Cheque Register\n"
 "    "
 msgstr ""
+"تتضمن وحدة قياس الحساب كل المتطلبات الاساسية لـ\n"
+"مدخلات القسيمة للبنك, نقدًا, مبيعات, المشتريات, المدى الواسع, كونترا, "
+"الخ...\n"
+"مدخل القسيمة\n"
+"استلام القسيمة\n"
+"سجل الشيكات\n"
+"    "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -120,6 +127,9 @@ msgid ""
 "automatically and you can record the customer payment related to this sales "
 "receipt."
 msgstr ""
+"عند بيعك للمنتجات للعميل, يمكنك اعطائه استلام مبيعات او فاتورة. عند تأكيد "
+"استلام المبيعات, تنشأ عناصر يومية تلقائيًا ويمكنك تسجيل دفع العميل المتعلقة "
+"بإستلام المبيعات."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -142,7 +152,7 @@ msgstr "حفظ كمسودة"
 #. module: account_voucher
 #: help:account.voucher,reference:0
 msgid "Transaction reference number."
-msgstr ""
+msgstr "رقم مرجع المعاملة."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_view_account_voucher_unreconcile
@@ -152,7 +162,7 @@ msgstr "إلغاء تسوية القيود"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Statistics"
-msgstr ""
+msgstr "احصائيات القسيمة"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -186,7 +196,7 @@ msgstr "حساب"
 #. module: account_voucher
 #: field:account.voucher,line_dr_ids:0
 msgid "Debits"
-msgstr ""
+msgstr "الخصوم"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
@@ -200,6 +210,9 @@ msgid ""
 "customer as well as payment delays. The tool search can also be used to "
 "personalise your Invoices reports and so, match this analysis to your needs."
 msgstr ""
+"من هذا التقرير, يمكن ان يكون لك لمحة عامة للمبلغ الذي تم عمل له فاتورة "
+"لعميلك بالإضافة الى المؤخرات. يمكن استخدام اداة البحث لتشخص تقارير فواتيرك "
+"وكذلك, مطابقة تلك التحليلات لاحتياجاتك."
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0
@@ -298,7 +311,7 @@ msgstr "المبلغ (حرفياً) :"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr ""
+msgstr "# لخطوط القسيمة"
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
@@ -334,12 +347,12 @@ msgstr "حساب :"
 #: selection:account.voucher,type:0
 #: selection:sale.receipt.report,type:0
 msgid "Receipt"
-msgstr ""
+msgstr "استلام"
 
 #. module: account_voucher
 #: report:voucher.print:0
 msgid "On Account of :"
-msgstr ""
+msgstr "بسبب:"
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
@@ -349,7 +362,7 @@ msgstr "إعدام المبلغ"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sales Lines"
-msgstr ""
+msgstr "خطوط المبيعات"
 
 #. module: account_voucher
 #: report:voucher.print:0
@@ -372,7 +385,7 @@ msgstr "المحافظة"
 #. module: account_voucher
 #: model:ir.module.module,shortdesc:account_voucher.module_meta_information
 msgid "Accounting Voucher Entries"
-msgstr ""
+msgstr "مدخلات قسيمة المحاسبية"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -418,7 +431,7 @@ msgstr "مذكرة"
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipt"
-msgstr ""
+msgstr "استلام المبيعات"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:779
@@ -429,7 +442,7 @@ msgstr "لا يمكن إجراء هذه العملية!"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Bill Information"
-msgstr ""
+msgstr "بيانات الوثيقة"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -445,7 +458,7 @@ msgstr "إلغاء التسوية"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
-msgstr ""
+msgstr "متوسط تأخير المستحقات"
 
 #. module: account_voucher
 #: view:account.invoice:0
@@ -458,7 +471,7 @@ msgstr "دفع الفاتورة"
 #: code:addons/account_voucher/account_voucher.py:1045
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
-msgstr ""
+msgstr "لا يوجد قانون قاعدة الحساب و قانون ضريبة الحساب!"
 
 #. module: account_voucher
 #: field:account.voucher,tax_amount:0
@@ -468,7 +481,7 @@ msgstr "قيمة الضريبة"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Entry"
-msgstr ""
+msgstr "مدخل القسيمة"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -482,7 +495,7 @@ msgstr "شريك"
 #. module: account_voucher
 #: field:account.voucher,payment_option:0
 msgid "Payment Difference"
-msgstr ""
+msgstr "اختلاف الدفع"
 
 #. module: account_voucher
 #: constraint:account.bank.statement.line:0
@@ -500,7 +513,7 @@ msgstr "للمراجعة"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Expense Lines"
-msgstr ""
+msgstr "خطوط المصروفات"
 
 #. module: account_voucher
 #: field:account.statement.from.invoice,line_ids:0
@@ -518,7 +531,7 @@ msgstr "ديسمبر"
 #: view:account.voucher.line:0
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
-msgstr ""
+msgstr "خطوط القسيمة"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -542,7 +555,7 @@ msgstr "الدائنون و المدينون"
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
-msgstr ""
+msgstr "ادفع لاحقًا او أرصدة مجموعة"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -707,7 +720,7 @@ msgstr "قم بتعريف التتابع في اليومية!"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
-msgstr ""
+msgstr "افتح المدخلات اليومية المزودة"
 
 #. module: account_voucher
 #: report:voucher.print:0
@@ -739,7 +752,7 @@ msgstr "الإجمالي دون الضرائب"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Bill Date"
-msgstr ""
+msgstr "تاريخ الفاتورة"
 
 #. module: account_voucher
 #: help:account.voucher,state:0
@@ -758,7 +771,7 @@ msgstr ""
 #: view:account.voucher:0
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr ""
+msgstr "القسيمة المحاسبية"
 
 #. module: account_voucher
 #: field:account.voucher,number:0
@@ -778,14 +791,14 @@ msgstr "سبتمبر"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sales Information"
-msgstr ""
+msgstr "بيانات المبيعات"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipt Analysis"
-msgstr ""
+msgstr "تحليل استلام المبيعات"
 
 #. module: account_voucher
 #: field:account.voucher.line,voucher_id:0
@@ -830,13 +843,13 @@ msgstr "عناصر اليومية"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payment"
-msgstr ""
+msgstr "دفع العميل"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_account_statement_from_invoice
 msgid "Import Invoices in Statement"
-msgstr ""
+msgstr "فواتير الاستيراد في بيان"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -939,12 +952,12 @@ msgstr "فبراير"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Supplier Invoices and Outstanding transactions"
-msgstr ""
+msgstr "الفواتير المزودة و المعاملات المعلقة"
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
 msgid "Write-Off Comment"
-msgstr ""
+msgstr "شطب التعليق"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -960,7 +973,7 @@ msgstr "النوع الإفتراضي"
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
 msgid "Entries by Statement from Invoices"
-msgstr ""
+msgstr "مدخلات عن طريق بيان من الفواتير"
 
 #. module: account_voucher
 #: field:account.voucher,move_id:0
@@ -975,7 +988,7 @@ msgstr "حالة القيد"
 #. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
-msgstr ""
+msgstr "تاريخ فعال للمدخلات المحاسبية"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -994,12 +1007,12 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
 msgid "Untax Amount"
-msgstr ""
+msgstr "كمية بدون ضريبة"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_sale_receipt_report
 msgid "Sales Receipt Statistics"
-msgstr ""
+msgstr "إحصائيات استلام المبيعات"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
