@@ -704,8 +704,10 @@ class mrp_production(osv.osv):
                         consumed_products[consumed_product.product_id.id] = rest_consumed
 
             for raw_product in production.move_lines:
+                count =0
                 for f in production.product_lines:
-                    if f.product_id.id == raw_product.product_id.id:
+                    if f.product_id.id == raw_product.product_id.id and count== 0:
+                        count +=1
                         consumed_qty = consumed_products.get(raw_product.product_id.id, 0)
                         if consumed_qty == 0:
                             consumed_qty = production_qty * f.product_qty / production.product_qty
