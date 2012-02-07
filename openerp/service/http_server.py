@@ -62,7 +62,28 @@ except ImportError:
 
 _logger = logging.getLogger(__name__)
 
-class StaticHTTPHandler(FixSendError, HttpOptions, HTTPHandler):
+# TODO delete this for 6.2, it is still needed for 6.1.
+class HttpLogHandler:
+    """ helper class for uniform log handling
+    Please define self._logger at each class that is derived from this
+    """
+    _logger = None
+    
+    def log_message(self, format, *args):
+        self._logger.debug(format % args) # todo: perhaps other level
+
+    def log_error(self, format, *args):
+        self._logger.error(format % args)
+        
+    def log_exception(self, format, *args):
+        self._logger.exception(format, *args)
+
+    def log_request(self, code='-', size='-'):
+        self._logger.debug('"%s" %s %s',
+            self.requestline, str(code), str(size))
+
+class StaticHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler):
+    _logger = logging.getLogger(__name__)
 
     _HTTP_OPTIONS = { 'Allow': ['OPTIONS', 'GET', 'HEAD'] }
 
