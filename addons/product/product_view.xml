@@ -544,7 +544,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Supplier Information">
-                    <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
+                    <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" options='{"quick_create": false}'/>
                     <field name="sequence"/>
                     <field name="product_name" groups="base.group_extended"/>
                     <field name="product_code" groups="base.group_extended"/>
