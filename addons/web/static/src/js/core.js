@@ -1147,7 +1147,7 @@ openerp.web.OldWidget = openerp.web.Widget.extend({
         if (this.template)
             return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
         return null;
-    },
+    }
 });
 
 openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.web.TranslationDataBase# */{
