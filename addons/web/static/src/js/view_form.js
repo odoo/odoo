@@ -898,6 +898,16 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
         }
         this.set_row_cells_with(this.table[this.table.length - 1]);
     },
+    render_element: function() {
+    	this._super();
+    	var self = this;
+	    _.each(this.table, function(row) {
+	        _.each(row, function(td) {
+	        	td.$element = self.$element.find('.' + td.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
+	        	td.render_element();
+	        });
+	    });
+    },
     add_row: function(){
         if (this.table.length) {
             this.set_row_cells_with(this.table[this.table.length - 1]);
