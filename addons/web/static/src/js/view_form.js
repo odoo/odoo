@@ -901,7 +901,7 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
     	var self = this;
 	    _.each(this.table, function(row) {
 	        _.each(row, function(td) {
-	        	td.$element = self.$element.find('.' + td.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
+	        	td.$element = self.$element.find('.' + td.element_class);
 	        	td.render_element();
 	        });
 	    });
@@ -1010,7 +1010,7 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
     	this._super();
     	var self = this;
 	    _.each(this.pages, function(page) {
-        	page.$element = self.$element.find('.' + page.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
+        	page.$element = self.$element.find('.' + page.element_class);
         	page.render_element();
 	    });
     },
@@ -3297,8 +3297,8 @@ openerp.web.form.widgets = new openerp.web.Registry({
 
 var instanciate_widget = function(claz, view, node, o1, o2) {
 	var widget = new (claz)(view, node, o1, o2);
-	widget.element_class = ['formview', view.view_id, widget.element_name,
-    	view.widgets_counter++].join("_");
+	widget.element_class = (['formview', view.view_id, widget.element_name,
+    	view.widgets_counter++].join("_")).replace(/[^\r\n\f0-9A-Za-z_-]/g, "_");
     view.widgets[widget.element_class] = widget;
     return widget;
 }
