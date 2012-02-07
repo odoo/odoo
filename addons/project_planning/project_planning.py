@@ -49,6 +49,11 @@ class report_account_analytic_planning(osv.osv):
     _name = "report_account_analytic.planning"
     _description = "Planning"
 
+    def emp_to_users(self, cr, uid, ids, context=None):
+        employees = self.pool.get('hr.employee').browse(cr, uid, ids, context=context)
+        user_ids = [e.user_id.id for e in employees if e.user_id]
+        return user_ids
+
     def _child_compute(self, cr, uid, ids, name, args, context=None):
         obj_dept = self.pool.get('hr.department')
         obj_user = self.pool.get('res.users')
@@ -64,15 +69,13 @@ class report_account_analytic_planning(osv.osv):
             ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)], context=context)
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'], context=context)
-                children = map(lambda x: x['member_ids'], data_dept)
-                children = tools.flatten(children)
+                emp_children = map(lambda x: x['member_ids'], data_dept)
+                emp_children = tools.flatten(emp_children)
+                children = self.emp_to_users(cr, uid, emp_children, context=context)
                 children = obj_user.search(cr, uid, [('id', 'in', children),('active', '=', True)], context=context)
                 if user_id in children:
                     children.remove(user_id)
-                child_ids.extend(tools.flatten(children))
-                set = {}
-                map(set.__setitem__, child_ids, [])
-                child_ids = set.keys()
+                child_ids = list(set(child_ids + children))
             result[user_id] = child_ids
         return result
 
