@@ -137,9 +137,9 @@ class l10n_be_vat_declaration(osv.osv_memory):
                      }
         
         data_of_file = """<?xml version="1.0"?>
-<VATConsignment xmlns="http://www.minfin.fgov.be/VATConsignment" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" VATDeclarationsNbr="%(vat_declarations_nbr)s">
-    <Representative>
-        <RepresentativeID identificationType="%(type)s" issuedBy="%(issued_by)s" otherQlf="%(other)s">%(vat_no)s</RepresentativeID>
+<ns2:VATConsignment xmlns="http://www.minfin.fgov.be/InputCommon" xmlns:ns2="http://www.minfin.fgov.be/VATConsignment" VATDeclarationsNbr="1">
+    <ns2:Representative>
+        <RepresentativeID identificationType="%(type)s" issuedBy="%(issued_by)s" otherQlf="%(other)s">%(only_vat)s</RepresentativeID>
         <Name>%(cmpny_name)s</Name>
         <Street>%(address)s</Street>
         <PostCode>%(post_code)s</PostCode>
@@ -147,12 +147,10 @@ class l10n_be_vat_declaration(osv.osv_memory):
         <CountryCode>%(country_code)s</CountryCode>
         <EmailAddress>%(email)s</EmailAddress>
         <Phone>%(phone)s</Phone>
-    </Representative>
-    <RepresentativeReference></RepresentativeReference>
-    <VATDeclaration SequenceNumber="1" DeclarantReference="%(send_ref)s">
-        <ReplacedVATDeclaration></ReplacedVATDeclaration>
-        <Declarant>
-            <VATNUMBER xmlns="http://www.minfin.fgov.be/InputCommon">%(only_vat)s</VATNUMBER>
+    </ns2:Representative>
+    <ns2:VATDeclaration SequenceNumber="1" DeclarantReference="%(send_ref)s">
+        <ns2:Declarant>
+            <VATNumber xmlns="http://www.minfin.fgov.be/InputCommon">%(only_vat)s</VATNumber>
             <Name>%(cmpny_name)s</Name>
             <Street>%(address)s</Street>
             <PostCode>%(post_code)s</PostCode>
@@ -160,26 +158,26 @@ class l10n_be_vat_declaration(osv.osv_memory):
             <CountryCode>%(country_code)s</CountryCode>
             <EmailAddress>%(email)s</EmailAddress>
             <Phone>%(phone)s</Phone>
-        </Declarant>
-        <Period>
+        </ns2:Declarant>
+        <ns2:Period>
     """ % (file_data)
          
         if starting_month != ending_month:
             #starting month and ending month of selected period are not the same
             #it means that the accounting isn't based on periods of 1 month but on quarters
-            data_of_file += '\t\t<Quarter>%(quarter)s</Quarter>\n\t\t' % (file_data)
+            data_of_file += '\t\t<ns2:Quarter>%(quarter)s</ns2:Quarter>\n\t\t' % (file_data)
         else:
-            data_of_file += '\t\t<Month>%(month)s</Month>\n\t\t' % (file_data)
-        data_of_file += '\t<Year>%(year)s</Year>' % (file_data)
-        data_of_file += '\n\t\t</Period>\n'
+            data_of_file += '\t\t<ns2:Month>%(month)s</ns2:Month>\n\t\t' % (file_data)
+        data_of_file += '\t<ns2:Year>%(year)s</ns2:Year>' % (file_data)
+        data_of_file += '\n\t\t</ns2:Period>\n'
         
-        data_of_file += '\t\t<Data>\t'
+        data_of_file += '\t\t<ns2:Data>\t'
         cases_list = []
         for item in tax_info:
             if item['code'] == '91' and ending_month != 12:
                 #the tax code 91 can only be send for the declaration of December
                 continue
-            if item['code']:
+            if item['code'] and item['sum_period']:
                 if item['code'] == 'VI':
                     if item['sum_period'] >= 0:
                         item['code'] = '71'
@@ -191,16 +189,15 @@ class l10n_be_vat_declaration(osv.osv_memory):
         for item in cases_list:
             grid_amount_data = {
                     'code': str(int(item['code'])),
-                    'amount': str(abs(int(round(item['sum_period']*100)))),
+                    'amount': str(item['sum_period']),
                     }
-            data_of_file += '\n\t\t\t<Amount GridNumber="%(code)s">%(amount)s</Amount''>' % (grid_amount_data)
+            data_of_file += '\n\t\t\t<ns2:Amount GridNumber="%(code)s">%(amount)s</ns2:Amount''>' % (grid_amount_data)
             
-        data_of_file += '\n\t\t</Data>'
-        data_of_file += '\n\t\t<ClientListingNihil>%(client_nihil)s</ClientListingNihil>' % (file_data)
-        data_of_file += '\n\t\t<Ask Restitution="%(ask_restitution)s" Payment="%(ask_payment)s"/>' % (file_data)
-        data_of_file += '\n\t\t<FileAttachment>''</FileAttachment>'
-        data_of_file += '\n\t\t<Comment>%(comments)s</Comment>' % (file_data)
-        data_of_file += '\n\t</VATDeclaration> \n</VATConsignment>'
+        data_of_file += '\n\t\t</ns2:Data>'
+        data_of_file += '\n\t\t<ns2:ClientListingNihil>%(client_nihil)s</ns2:ClientListingNihil>' % (file_data)
+        data_of_file += '\n\t\t<ns2:Ask Restitution="%(ask_restitution)s" Payment="%(ask_payment)s"/>' % (file_data)
+        data_of_file += '\n\t\t<ns2:Comment>%(comments)s</ns2:Comment>' % (file_data)
+        data_of_file += '\n\t</ns2:VATDeclaration> \n</ns2:VATConsignment>'
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_vat_save')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context['file_save'] = data_of_file
