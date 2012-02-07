@@ -50,5 +50,10 @@
         <field name="groups" eval="[(4, ref('base.group_hr_user'))]"/>
     </record>
     
+    <record id="base.group_user" model="res.groups">
+        <field name="name">Employee</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_survey_user'))]"/>
+    </record>
+    
     </data>
 </openerp>
