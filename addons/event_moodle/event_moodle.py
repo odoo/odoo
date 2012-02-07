@@ -226,9 +226,12 @@ class event_registration(osv.osv):
         create a user and match to a course if the event is already confirmed
         """
         register = self.browse(cr, uid, ids, context=context)
+        print'<<<<<<<<<<<<<<<<<<<<<<<<'
+        print register[0].event_id.state
         if register[0].event_id.state =='confirm': 
             moodle_pool = self.pool.get('event.moodle')
-            print 
+            print register[0].moodle_users_id
+            print '<<<<<<<<<<<<<<<<<<<<<<<<<<<'
             if register[0].moodle_users_id ==0:
                 moodle_pool = self.pool.get('event.moodle')
                 name_user = moodle_pool.make_username(register[0].name,register[0].event_id.moodle_id)
@@ -256,27 +259,23 @@ class event_registration(osv.osv):
                 'userid' :register[0].moodle_users_id,
                 'courseid' :register[0].event_id.moodle_id
                 }]
-
-            print enrolled
-            print'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+                print 'ok>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
             moodle_pool.moodle_enrolled(cr,uid,[1],enrolled)
-        return super(event_registration, self).check_confirm(cr, uid, ids, context)
+        return super(event_registration, self).case_open(cr, uid, ids, context)
 
 
     def onchange_moodle_name(self,cr,uid,ids,moodle_check_user,context=None):
-        req_sql="select moodle_users,moodle_users_id from event_registration"
+        req_sql="select name,email,phone,city,street,moodle_users,moodle_users_id from event_registration"
         cr.execute(req_sql)
         sql_res = cr.dictfetchall()
         res = {}
-        username_id = 0
         for username in sql_res:
             if username['moodle_users'] == moodle_check_user:
-               username_id=username['moodle_users_id']
-               res = {'value' :{'moodle_users_id': username_id}}
+                res = {'value' :{'moodle_users_id': username['moodle_users_id'],'name':username['name'],'email':username['email'],'phone':username['phone'],'city':username['city'],'street':username['street']}}
+                return res
             else:
                res = {'value' :{'moodle_users_id': 0}}
         return res
-
 
 
 
