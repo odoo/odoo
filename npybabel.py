@@ -17,6 +17,10 @@ XMLJS_EXPR = re.compile(r"""(?:\_t *\( *((?:"(?:[^"\\]|\\.)*")|(?:'(?:[^'\\]|\\.
 
 TRANSLATION_FLAG_COMMENT = "openerp-web"
 
+# List of etree._Element subclasses that we choose to ignore when parsing XML.
+# We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
+SKIPPED_ELEMENT_TYPES = (elt._Comment, elt._ProcessingInstruction, elt.CommentBase, elt.PIBase)
+
 def extract_xmljs(fileobj, keywords, comment_tags, options):
     """Extract messages from Javascript code embedded into XML documents.
     This complements the ``extract_javascript`` extractor which works
@@ -70,6 +74,7 @@ def extract_qweb(fileobj, keywords, comment_tags, options):
     # the ancestor element had a reason to be skipped
     def iter_elements(current_element):
         for el in current_element:
+            if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
             if "t-js" not in el.attrib and \
                     not ("t-jquery" in el.attrib and "t-operation" not in el.attrib) and \
                     not ("t-translation" in el.attrib and el.attrib["t-translation"].strip() == "off"):
