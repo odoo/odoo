@@ -90,14 +90,16 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     on_loaded: function(data) {
         var self = this;
-        if (data) {
-            this.fields_order = [];
-            this.fields_view = data;
-            var frame = instanciate_widget(this.registry.get_object('frame'), this, this.fields_view.arch);
-            this.root_frame = frame;
-
-            this.rendered = QWeb.render(this.form_template, {'widget': this});
+        if (!data) {
+        	throw "No data provided."
         }
+        this.fields_order = [];
+        this.fields_view = data;
+        var frame = instanciate_widget(this.registry.get_object('frame'), this, this.fields_view.arch);
+        this.root_frame = frame;
+
+        this.rendered = QWeb.render(this.form_template, {'widget': this});
+            
         this.$element.html(this.rendered);
         this.root_frame.$element = $(".oe_form_root_frame_placeholder", this.$element);
         this.root_frame.render_element();
