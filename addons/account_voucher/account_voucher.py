@@ -27,6 +27,20 @@ from osv import osv, fields
 import decimal_precision as dp
 from tools.translate import _
 
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'income_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Income Currency Rate",
+            domain="[('type', '=', 'other')]",),
+        'expense_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Expense Currency Rate",
+            domain="[('type', '=', 'other')]",),
+    }
+
+res_company()
 
 class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
@@ -1486,19 +1500,5 @@ def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
             results.append(result)
     return results
 
-class res_company(osv.osv):
-    _inherit = "res.company"
-    _columns = {
-        'income_currency_exchange_account_id': fields.many2one(
-            'account.account',
-            string="Income Currency Rate",
-            domain="[('type', '=', 'other')]",),
-        'expense_currency_exchange_account_id': fields.many2one(
-            'account.account',
-            string="Expense Currency Rate",
-            domain="[('type', '=', 'other')]",),
-    }
-
-res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
