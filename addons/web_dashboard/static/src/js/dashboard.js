@@ -313,7 +313,7 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
                     name: record.action_id[1],
                     done: record.state !== 'open',
                     to_do: record.state === 'open',
-                    category: record['category_id'][1] || "Uncategorized"
+                    category: record['category_id'][1] || _t("Uncategorized")
                 }
             })
             .groupBy(function (record) {return record.category})
