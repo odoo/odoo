@@ -1233,18 +1233,34 @@ openerp.web.qweb.default_dict = {
     '_' : _,
     '_t' : openerp.web._t
 };
-openerp.web.qweb.format_text_node = function (s) {
-    // Note that 'this' is the Qweb Node of the text
-    var translation = this.node.parentNode.attributes['t-translation'];
-    if (translation && translation.value === 'off') {
-        return s;
+openerp.web.qweb.preprocess_node = function() {
+    // Note that 'this' is the Qweb Node
+    switch (this.node.nodeType) {
+        case 3:
+        case 4:
+            // Text and CDATAs
+            var translation = this.node.parentNode.attributes['t-translation'];
+            if (translation && translation.value === 'off') {
+                return;
+            }
+            var ts = _.str.trim(this.node.data);
+            if (ts.length === 0) {
+                return;
+            }
+            var tr = openerp.web._t(ts);
+            if (tr !== ts) {
+                this.node.data = tr;
+            }
+            break;
+        case 1:
+            // Element
+            var attr, attrs = ['label', 'title', 'alt'];
+            while (attr = attrs.pop()) {
+                if (this.attributes[attr]) {
+                    this.attributes[attr] = openerp.web._t(this.attributes[attr]);
+                }
+            }
     }
-    var ts = _.str.trim(s);
-    if (ts.length === 0) {
-        return s;
-    }
-    var tr = openerp.web._t(ts);
-    return tr === ts ? s : tr;
 };
 
 /** Jquery extentions */
