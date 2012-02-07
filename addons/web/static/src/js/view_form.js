@@ -748,7 +748,7 @@ openerp.web.form.compute_domain = function(expr, fields) {
 };
 
 openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.form.Widget# */{
-    template: 'Widget',
+    form_template: 'Widget',
     /**
      * @constructs openerp.web.form.Widget
      * @extends openerp.web.OldWidget
@@ -800,7 +800,7 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
         this.$element.toggle(!this.invisible);
     },
     render: function() {
-        return QWeb.render(this.template, { "widget": this });
+        return QWeb.render(this.form_template, { "widget": this });
     },
     render_element: function() {
     	this.$element.html(this.render());
@@ -813,7 +813,7 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
                 delayOut: 0,
                 fade: true,
                 title: function() {
-                    var template = widget.template + '.tooltip';
+                    var template = widget.form_template + '.tooltip';
                     if (!QWeb.has_template(template)) {
                         template = 'WidgetLabel.tooltip';
                     }
@@ -878,7 +878,7 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
 });
 
 openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
-    template: 'WidgetFrame',
+    form_template: 'WidgetFrame',
     init: function(view, node) {
         this._super(view, node);
         this.columns = parseInt(node.attrs.col || 4, 10);
@@ -989,11 +989,11 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
 });
 
 openerp.web.form.WidgetGroup = openerp.web.form.WidgetFrame.extend({
-    template: 'WidgetGroup'
+    form_template: 'WidgetGroup'
 }),
 
 openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
-    template: 'WidgetNotebook',
+    form_template: 'WidgetNotebook',
     init: function(view, node) {
         this._super(view, node);
         this.pages = [];
@@ -1049,7 +1049,7 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
 });
 
 openerp.web.form.WidgetNotebookPage = openerp.web.form.WidgetFrame.extend({
-    template: 'WidgetNotebookPage',
+    form_template: 'WidgetNotebookPage',
     init: function(view, node, notebook, index) {
         this.notebook = notebook;
         this.index = index;
@@ -1071,7 +1071,7 @@ openerp.web.form.WidgetNotebookPage = openerp.web.form.WidgetFrame.extend({
 });
 
 openerp.web.form.WidgetSeparator = openerp.web.form.Widget.extend({
-    template: 'WidgetSeparator',
+    form_template: 'WidgetSeparator',
     init: function(view, node) {
         this._super(view, node);
         this.orientation = node.attrs.orientation || 'horizontal';
@@ -1083,7 +1083,7 @@ openerp.web.form.WidgetSeparator = openerp.web.form.Widget.extend({
 });
 
 openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
-    template: 'WidgetButton',
+    form_template: 'WidgetButton',
     init: function(view, node) {
         this._super(view, node);
         this.force_disabled = false;
@@ -1173,14 +1173,14 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
 });
 
 openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
-    template: 'WidgetLabel',
+    form_template: 'WidgetLabel',
     init: function(view, node) {
         this.element_name = 'label_' + node.attrs.name;
 
         this._super(view, node);
 
         if (this.node.tag == 'label' && (this.align === 'left' || this.node.attrs.colspan || (this.string && this.string.length > 32))) {
-            this.template = "WidgetParagraph";
+            this.form_template = "WidgetParagraph";
             this.colspan = parseInt(this.node.attrs.colspan || 1, 10);
             // Widgets default to right-aligned, but paragraph defaults to
             // left-aligned
@@ -1196,10 +1196,10 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
     },
     render: function () {
         if (this['for'] && this.type !== 'label') {
-            return QWeb.render(this.template, {widget: this['for']});
+            return QWeb.render(this.form_template, {widget: this['for']});
         }
         // Actual label widgets should not have a false and have type label
-        return QWeb.render(this.template, {widget: this});
+        return QWeb.render(this.form_template, {widget: this});
     },
     start: function() {
         this._super();
@@ -1329,7 +1329,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
 });
 
 openerp.web.form.FieldChar = openerp.web.form.Field.extend({
-    template: 'FieldChar',
+    form_template: 'FieldChar',
     init: function (view, node) {
         this._super(view, node);
         this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
@@ -1374,7 +1374,7 @@ openerp.web.form.FieldID = openerp.web.form.FieldChar.extend({
 });
 
 openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
-    template: 'FieldEmail',
+    form_template: 'FieldEmail',
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('button').click(this.on_button_clicked);
@@ -1389,7 +1389,7 @@ openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
 });
 
 openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
-    template: 'FieldUrl',
+    form_template: 'FieldUrl',
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('button').click(this.on_button_clicked);
@@ -1512,7 +1512,7 @@ openerp.web.DateWidget = openerp.web.DateTimeWidget.extend({
 });
 
 openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
-    template: "EmptyComponent",
+    form_template: "EmptyComponent",
     build_widget: function() {
         return new openerp.web.DateTimeWidget(this);
     },
@@ -1549,7 +1549,7 @@ openerp.web.form.FieldDate = openerp.web.form.FieldDatetime.extend({
 });
 
 openerp.web.form.FieldText = openerp.web.form.Field.extend({
-    template: 'FieldText',
+    form_template: 'FieldText',
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('textarea').change(this.on_ui_change);
@@ -1610,7 +1610,7 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
-    template: 'FieldBoolean',
+    form_template: 'FieldBoolean',
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
@@ -1634,7 +1634,7 @@ openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.FieldProgressBar = openerp.web.form.Field.extend({
-    template: 'FieldProgressBar',
+    form_template: 'FieldProgressBar',
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('div').progressbar({
@@ -1658,7 +1658,7 @@ openerp.web.form.FieldTextXml = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
-    template: 'FieldSelection',
+    form_template: 'FieldSelection',
     init: function(view, node) {
         var self = this;
         this._super(view, node);
@@ -1764,7 +1764,7 @@ openerp.web.form.dialog = function(content, options) {
 };
 
 openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
-    template: 'FieldMany2One',
+    form_template: 'FieldMany2One',
     init: function(view, node) {
         this._super(view, node);
         this.limit = 7;
@@ -2133,7 +2133,7 @@ var commands = {
     }
 };
 openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
-    template: 'FieldOne2Many',
+    form_template: 'FieldOne2Many',
     multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
@@ -2500,7 +2500,7 @@ openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
 });
 
 openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
-    template: 'FieldMany2Many',
+    form_template: 'FieldMany2Many',
     multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
@@ -2949,7 +2949,7 @@ openerp.web.form.FormOpenDataset = openerp.web.ProxyDataSet.extend({
 });
 
 openerp.web.form.FieldReference = openerp.web.form.Field.extend({
-    template: 'FieldReference',
+    form_template: 'FieldReference',
     init: function(view, node) {
         this._super(view, node);
         this.fields_view = {
@@ -3095,7 +3095,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
-    template: 'FieldBinaryFile',
+    form_template: 'FieldBinaryFile',
     update_dom: function() {
         this._super.apply(this, arguments);
         this.$element.find('.oe-binary-file-set, .oe-binary-file-clear').toggle(!this.readonly);
@@ -3133,7 +3133,7 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
 });
 
 openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
-    template: 'FieldBinaryImage',
+    form_template: 'FieldBinaryImage',
     start: function() {
         this._super.apply(this, arguments);
         this.$image = this.$element.find('img.oe-binary-image');
@@ -3168,7 +3168,7 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
 });
 
 openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
-    template: "EmptyComponent",
+    form_template: "EmptyComponent",
     start: function() {
         this._super();
         this.selected_value = null;
