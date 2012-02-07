@@ -50,7 +50,7 @@ It also manages the leaves of every resource.
         'test/duplicate_resource.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '00746371192190459469',
     'images': ['images/resource_leaves_calendar.jpeg','images/resource_leaves_form.jpeg'],
 }

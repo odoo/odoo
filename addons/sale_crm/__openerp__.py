@@ -22,7 +22,7 @@
 {
     'name': 'Opportunity to Quotation',
     'version': '1.0',
-    'category': 'Hidden/Links',
+    'category': 'Hidden',
     'complexity': "easy",
     'description': """
 This module adds a shortcut on one or several opportunity cases in the CRM.
@@ -51,7 +51,7 @@ crm modules.
     'demo_xml': [],
     'test': ['test/sale_crm.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': True,
     'certificate': '0064360130141',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

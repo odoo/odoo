@@ -46,7 +46,7 @@ Worklogs can be maintained to signify number of hours spent by users to handle a
     'demo_xml': [
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00856032058128997037',
 }
 

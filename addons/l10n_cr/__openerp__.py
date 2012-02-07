@@ -67,7 +67,7 @@ http://translations.launchpad.net/openerp-costa-rica
     ],
     'license': 'Other OSI approved licence',
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00531476623680631853',
     'images': ['images/config_chart_l10n_cr.jpeg','images/l10n_cr_chart.jpeg'],
 }

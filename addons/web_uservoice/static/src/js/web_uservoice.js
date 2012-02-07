@@ -1,7 +1,7 @@
 
 openerp.web_uservoice = function(instance) {
 
-instance.web_uservoice.UserVoice = instance.web.Widget.extend({
+instance.web_uservoice.UserVoice = instance.web.OldWidget.extend({
     template: 'Header-UserVoice',
     default_forum: '77459',
 

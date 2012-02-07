@@ -1064,6 +1064,7 @@ class account_move_line(osv.osv):
 
             elif field == 'statement_id':
                 f.set('domain', "[('state', '!=', 'confirm'),('journal_id.type', '=', 'bank')]")
+                f.set('invisible', 'True')
 
             elif field == 'date':
                 f.set('on_change', 'onchange_date(date)')

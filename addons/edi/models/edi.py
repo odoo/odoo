@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
+#    Copyright (c) 2011-2012 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -39,7 +39,7 @@ from tools.safe_eval import safe_eval as eval
 _logger = logging.getLogger(__name__)
 
 EXTERNAL_ID_PATTERN = re.compile(r'^([^.:]+)(?::([^.]+))?\.(\S+)$')
-EDI_VIEW_WEB_URL = '%s/edi/view?debug=1&db=%s&token=%s'
+EDI_VIEW_WEB_URL = '%s/edi/view?db=%s&token=%s'
 EDI_PROTOCOL_VERSION = 1 # arbitrary ever-increasing version number
 EDI_GENERATOR = 'OpenERP ' + release.major_version
 EDI_GENERATOR_VERSION = release.version_info
