@@ -60,11 +60,12 @@ class report_account_analytic_planning(osv.osv):
         result = {}
         for user_id in ids:
             child_ids = []
-            cr.execute('SELECT dept.id FROM hr_department AS dept \
-                        LEFT JOIN hr_employee AS emp ON dept.manager_id = emp.id \
-                        WHERE emp.id IN \
-                            (SELECT emp.id FROM hr_employee \
-                                JOIN resource_resource r ON r.id = emp.resource_id WHERE r.user_id=' + str(user_id) + ') ')
+            cr.execute("""SELECT dept.id FROM hr_department AS dept
+                LEFT JOIN hr_employee AS emp ON dept.manager_id = emp.id
+                WHERE emp.id IN
+                    (SELECT emp.id FROM hr_employee
+                        JOIN resource_resource r ON r.id = emp.resource_id WHERE r.user_id = %s)
+                """, (user_id,))
             mgnt_dept_ids = [x[0] for x in cr.fetchall()]
             ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)], context=context)
             if ids_dept:
