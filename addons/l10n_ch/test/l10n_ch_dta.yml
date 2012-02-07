@@ -16,7 +16,7 @@
     address_contact_id: base.res_partner_address_8
     address_invoice_id: base.res_partner_address_8
     reference_type: bvr
-    reference: 111111111111111111111111111111 
+    reference: 11111111111111111111 
     date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
     period_id: account.period_1
     #invoice_line: 
@@ -65,7 +65,7 @@
     amount_currency: 7000
     bank_id: l10n_ch.agro_bank
     #bank_statement_line_id
-    communication: "111111111111111111111111111111"
+    communication: "11111111111111111111"
     #communication2
     company_currency: base.EUR
     #create_date
@@ -76,7 +76,7 @@
     #ml_date_created
     #ml_inv_ref
     #ml_maturity_date
-    move_line_id: !ref {model: account.move.line, search: "[('ref','=','111111111111111111111111111111')]"}
+    move_line_id: !ref {model: account.move.line, search: "[('ref','=','11111111111111111111')]"}
     #name  (reference)
     order_id: dta_payment_order
     partner_id: base.res_partner_agrolait
@@ -152,7 +152,7 @@
 #    wiz = self.browse(cr, uid, wiz_id)
 #    
 #    line_obj = self.pool.get('payment.line')
-#    pay_line_ids = line_obj.search(cr, uid, [('communication','=','111111111111111111111111111111'),('amount','=','7000')])
+#    pay_line_ids = line_obj.search(cr, uid, [('communication','=','11111111111111111111'),('amount','=','7000')])
 #    
 #    data = { 'lines': [(6, 0, [pay_line_ids[0]])],}
 #    wiz.write(data)
