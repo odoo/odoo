@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2010-11-27 06:32+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:46+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -31,12 +31,6 @@ msgstr "Confirmat"
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
 msgstr "Poziţii bugetare"
-
-#. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "The General Budget '%s' has no Accounts!"
-msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -56,7 +50,7 @@ msgstr "Validare utilizator"
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
 msgid "Print Summary"
-msgstr ""
+msgstr "Printare Rezumat"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
@@ -97,7 +91,7 @@ msgstr "Monedă:"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
 msgid "Account Budget crossvered report"
-msgstr ""
+msgstr "Raport amestecat al Bugetului Contului"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -131,10 +125,20 @@ msgid ""
 "revenue per analytic account and monitor its evolution based on the actuals "
 "realised during that period."
 msgstr ""
+"Un buget este o estimare a venitului si cheltuielilor companiei "
+"dumneavoastra pentru o anumita perioada in viitor. Avand un buget, o "
+"companie poate privi cu atentie la cat de multi bani primieste intr-o "
+"anumita perioada si poate gasi cea mai buna modalitate de a-i imparti intre "
+"diverse categorii. Daca tineti evidenta unde merg banii dumneavoastra, scade "
+"posibilitatea de a cheltui in exces, si creste posibilitatea de a va "
+"indeplini obiectivele financiare. Puteti estima un buget detaliind venitul "
+"estimat per cont analitic si sa monitorizati evolutia lui pe baza celor "
+"realizate in acea perioada."
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "The Budget '%s' has no accounts!"
 msgstr ""
 
 #. module: account_budget
@@ -152,7 +156,7 @@ msgstr "Descriere"
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Currency"
-msgstr ""
+msgstr "Monedă"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -164,17 +168,17 @@ msgstr "Total :"
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Companie"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "To Approve"
-msgstr ""
+msgstr "De aprobat"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Resetare la Ciorna"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -199,7 +203,7 @@ msgstr "Gata"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Practical Amt"
-msgstr ""
+msgstr "Suma realista"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -219,7 +223,7 @@ msgstr "Dată de sfârșit"
 #: model:ir.model,name:account_budget.model_account_budget_analytic
 #: model:ir.model,name:account_budget.model_account_budget_report
 msgid "Account Budget report for analytic account"
-msgstr ""
+msgstr "Raportul Bugetului contului pentru contul analitic"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -235,7 +239,7 @@ msgstr "Nume"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
+msgstr "Linie Buget"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -274,7 +278,7 @@ msgstr "Cod"
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
-msgstr ""
+msgstr "Acest wizard se foloseste pentru a printa bugetul"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
@@ -289,11 +293,9 @@ msgid "Budgets"
 msgstr "Bugete"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Acest wizard este folosit pentru a imprima rezumatul bugetelor"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -303,7 +305,7 @@ msgstr "Anulat"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr ""
+msgstr "Aprobati"
 
 #. module: account_budget
 #: field:crossovered.budget,date_from:0
@@ -329,13 +331,13 @@ msgstr "Începutul perioadei"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
-msgstr ""
+msgstr "Cont Buget mixt raport sumar"
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Theoretical Amt"
-msgstr ""
+msgstr "Suma teoretica"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -375,7 +377,7 @@ msgstr "Buget :"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Planned Amt"
-msgstr ""
+msgstr "Suma planificata"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -409,7 +411,7 @@ msgstr "Anulare"
 #. module: account_budget
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Eroare! Nu puteti crea conturi analitice recursive"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -567,3 +569,60 @@ msgstr ""
 
 #~ msgid "Select period"
 #~ msgstr "Selectare perioadă"
+
+#~ msgid ""
+#~ "This module allows accountants to manage analytic and crossovered budgets.\n"
+#~ "\n"
+#~ "Once the Master Budgets and the Budgets are defined (in "
+#~ "Accounting/Budgets/),\n"
+#~ "the Project Managers can set the planned amount on each Analytic Account.\n"
+#~ "\n"
+#~ "The accountant has the possibility to see the total of amount planned for "
+#~ "each\n"
+#~ "Budget and Master Budget in order to ensure the total planned is not\n"
+#~ "greater/lower than what he planned for this Budget/Master Budget. Each list "
+#~ "of\n"
+#~ "record can also be switched to a graphical view of it.\n"
+#~ "\n"
+#~ "Three reports are available:\n"
+#~ "    1. The first is available from a list of Budgets. It gives the "
+#~ "spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
+#~ "\n"
+#~ "    2. The second is a summary of the previous one, it only gives the "
+#~ "spreading, for the selected Budgets, of the Analytic Accounts.\n"
+#~ "\n"
+#~ "    3. The last one is available from the Analytic Chart of Accounts. It "
+#~ "gives the spreading, for the selected Analytic Accounts, of the Master "
+#~ "Budgets per Budgets.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Acest modul permite contabililor sa gestioneze bugete analitice si mixte. \n"
+#~ "Odata ce Bugetul Principal si Bugetele sunt definite (in "
+#~ "Contabilitate/Bugete), \n"
+#~ "Managerii de proiect pot seta suma planificata in fiecare Cont Analitic.\n"
+#~ "Contabilul are posibilitatea de a vedea totalul sumei planificate pentru "
+#~ "fiecare \n"
+#~ "Buget si Buget Principal pentru a se asigura ca totalul planificat nu este "
+#~ "mai \n"
+#~ "mare/mic decat ceea ce a planificat el pentru acest Buget/Buget Principal. "
+#~ "Fiecare \n"
+#~ "lista a inregistrarii se poate schimba intr-o vizualizare grafica. \n"
+#~ "Sunt disponibile trei rapoarte: \n"
+#~ "          1. Primul este disponibil dintr-o lista cu Bugete. Da extinderea, "
+#~ "pentru aceste Bugete, a Conturilor Analitice per Bugete Principale. \n"
+#~ "          2. Al doilea este un rezumat al primului, si doar da extinderea, "
+#~ "pentru Bugetele selectate, a Conturilor Analitice.\n"
+#~ "          3. Ultimul este disponibil din Planul Analitic de Conturi. Da "
+#~ "extinderea, pentru Conturile Analitice selectate, a Bugetelor Principale per "
+#~ "Bugete.\n"
+#~ "\n"
+
+#, python-format
+#~ msgid "The General Budget '%s' has no Accounts!"
+#~ msgstr "Bugetul General '%s' nu are nici un Cont!"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr ""
+#~ "Eroare! Moneda trebuie sa fie aceeasi ca si moneda companiei selectate"

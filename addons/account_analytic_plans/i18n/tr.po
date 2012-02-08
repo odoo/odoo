@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2012-01-25 00:10+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-26 05:27+0000\n"
-"X-Generator: Launchpad (build 14719)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:31+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -80,11 +80,6 @@ msgid "Ok"
 msgstr "Tamam"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
 msgstr "Model Planı"
@@ -142,9 +137,16 @@ msgid "Invalid BBA Structured Communication !"
 msgstr "Geçersiz BBA Yapılı İletişim !"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Analiz Hesabı"
+#: constraint:account.bank.statement:0
+msgid "The journal and period chosen have to belong to the same company."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -183,11 +185,6 @@ msgstr "Yazdır"
 #: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "Yüzde"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Hesap No"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:221
@@ -246,6 +243,14 @@ msgid "Invoice Line"
 msgstr "Fatura Kalemi"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Currency"
 msgstr "Para Birimi"
@@ -256,11 +261,9 @@ msgid "Start Date"
 msgstr "Başlangıç Tarihi"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Hesap No"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -284,7 +287,7 @@ msgstr "Tarihine kadar"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:341
-#: code:addons/account_analytic_plans/account_analytic_plans.py:483
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "'%s' Yevmiyesinde bir analiz yevmiyesi tanımlamalısınız!"
@@ -335,16 +338,6 @@ msgid "Account1 Id"
 msgstr "Hesap1 No"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr "Yevmiye Girişinizin tarihi tanımlanan dönemle uyuşmuyor!"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
 msgstr "İzin verilen enaz (%)"
@@ -368,6 +361,11 @@ msgid "Save This Distribution as a Model"
 msgstr "Bu dağıtımı Model olarak kaydet"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
 msgstr "Miktar"
@@ -385,10 +383,15 @@ msgstr "Çarpraz Analiz Yazdır"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:341
-#: code:addons/account_analytic_plans/account_analytic_plans.py:483
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Analiz Yevmiyesi yok !"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Analiz Hesabı"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
@@ -420,6 +423,11 @@ msgstr "Vazgeç"
 #: field:account.analytic.plan.instance,account4_ids:0
 msgid "Account4 Id"
 msgstr "Hesap4 No"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -507,6 +515,11 @@ msgid ""
 msgstr ""
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Company"
 msgstr "Firma"
@@ -527,16 +540,17 @@ msgstr "Yevmiye adı her firmada benzersiz olmalı."
 msgid "Value Error"
 msgstr "Değer Hatası"
 
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Hesap Görünümünde hareket oluşturamazsınız."
-
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
 
 #~ msgid "Multiple-plans management in Analytic Accounting"
 #~ msgstr "Analiz Hesabında çoklu plan yönetimi"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
 
 #~ msgid ""
 #~ "This module allows to use several analytic plans, according to the general "
@@ -605,3 +619,9 @@ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
 #~ "Analitik plan, dağıtım modelleri oluşturulurken enaz ve ençok yüzdeleri\n"
 #~ "doğrular.\n"
 #~ "        "
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
+
+#~ msgid "The date of your Journal Entry is not in the defined period!"
+#~ msgstr "Yevmiye Girişinizin tarihi tanımlanan dönemle uyuşmuyor!"

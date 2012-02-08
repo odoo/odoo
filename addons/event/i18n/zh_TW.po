@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-09-27 07:58+0000\n"
 "Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:56+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:06+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: event
 #: view:event.event:0
@@ -75,6 +75,11 @@ msgid "_Close"
 msgstr "結束(_C)"
 
 #. module: event
+#: model:event.event,name:event.event_0
+msgid "Concert of Bon Jovi"
+msgstr "Bon Jovi 演唱會"
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Invoiced Registrations only"
 msgstr ""
@@ -95,13 +100,10 @@ msgid "Quantity"
 msgstr "數量"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:50
-#: code:addons/event/wizard/event_make_invoice.py:54
-#: code:addons/event/wizard/event_make_invoice.py:58
-#: code:addons/event/wizard/event_make_invoice.py:62
+#: code:addons/event/wizard/event_make_invoice.py:63
 #, python-format
-msgid "Warning !"
-msgstr "警告！"
+msgid "Registration doesn't have any partner to invoice."
+msgstr ""
 
 #. module: event
 #: field:event.event,company_id:0
@@ -195,6 +197,11 @@ msgid "Mail Auto Confirm"
 msgstr "郵件自動確認"
 
 #. module: event
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "歌劇門票"
+
+#. module: event
 #: code:addons/event/event.py:125
 #: view:event.event:0
 #, python-format
@@ -220,10 +227,9 @@ msgid "Event Dashboard"
 msgstr "活動儀錶板"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:63
-#, python-format
-msgid "Registration doesn't have any partner to invoice."
-msgstr ""
+#: model:event.event,name:event.event_1
+msgid "Opera of Verdi"
+msgstr "威爾第歌劇"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -276,9 +282,9 @@ msgid "Draft"
 msgstr "草案"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Events States"
-msgstr ""
+#: field:event.type,name:0
+msgid "Event type"
+msgstr "活動類型"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -342,6 +348,15 @@ msgstr "活動開立發票"
 #: help:event.registration,nb_register:0
 msgid "Number of Registrations or Tickets"
 msgstr "登記或門票數量"
+
+#. module: event
+#: code:addons/event/wizard/event_make_invoice.py:50
+#: code:addons/event/wizard/event_make_invoice.py:54
+#: code:addons/event/wizard/event_make_invoice.py:58
+#: code:addons/event/wizard/event_make_invoice.py:62
+#, python-format
+msgid "Warning !"
+msgstr "警告！"
 
 #. module: event
 #: view:event.registration:0
@@ -550,9 +565,9 @@ msgid "Mailing"
 msgstr ""
 
 #. module: event
-#: field:event.type,name:0
-msgid "Event type"
-msgstr "活動類型"
+#: view:report.event.registration:0
+msgid "Events States"
+msgstr ""
 
 #. module: event
 #: view:board.board:0
@@ -734,6 +749,11 @@ msgstr ""
 #: selection:report.event.registration,month:0
 msgid "June"
 msgstr "六月"
+
+#. module: event
+#: model:product.template,name:event.event_product_0_product_template
+msgid "Ticket for Concert"
+msgstr ""
 
 #. module: event
 #: field:event.registration,write_date:0
@@ -979,6 +999,11 @@ msgid "Speaker"
 msgstr "講者"
 
 #. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on ERP Buisness"
+msgstr "企業資源計劃（ERP）業務會議"
+
+#. module: event
 #: view:event.registration:0
 msgid "Reply"
 msgstr "回覆"
@@ -1039,6 +1064,11 @@ msgstr "活動登記"
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
 msgstr ""
+
+#. module: event
+#: model:product.template,name:event.event_product_2_product_template
+msgid "Ticket for Conference"
+msgstr "會議門票"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type_association
@@ -1237,9 +1267,6 @@ msgstr ""
 #~ msgid "Current Events"
 #~ msgstr "當前活動"
 
-#~ msgid "Ticket for Opera"
-#~ msgstr "歌劇門票"
-
 #~ msgid "Last 30 Days"
 #~ msgstr "最後三十日"
 
@@ -1255,26 +1282,14 @@ msgstr ""
 #~ msgid "Current"
 #~ msgstr "當前"
 
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "企業資源計劃（ERP）業務會議"
-
 #~ msgid "Details"
 #~ msgstr "詳情"
 
-#~ msgid "Ticket for Conference"
-#~ msgstr "會議門票"
-
 #~ msgid "Providee Minimum Number of Registrations"
 #~ msgstr "提供最少登記數"
-
-#~ msgid "Concert of Bon Jovi"
-#~ msgstr "Bon Jovi 演唱會"
 
 #~ msgid "Speaker who are giving speech on event."
 #~ msgstr "活動演講講者"
 
 #~ msgid "Last 7 Days"
 #~ msgstr "最後七日"
-
-#~ msgid "Opera of Verdi"
-#~ msgstr "威爾第歌劇"

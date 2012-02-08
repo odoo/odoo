@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2009-09-08 14:51+0000\n"
 "Last-Translator: vir (Open ERP) <vir@tinyerp.com>\n"
 "Language-Team: Hindi <hi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:51+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:31+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -93,6 +93,7 @@ msgid "Free"
 msgstr "स्वतंत्र"
 
 #. module: account_payment
+#: view:payment.order.create:0
 #: field:payment.order.create,entries:0
 msgid "Entries"
 msgstr ""
@@ -107,11 +108,6 @@ msgstr ""
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "अन्तिम तिथि"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr ""
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -176,6 +172,13 @@ msgstr ""
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "भुगतान आदेश"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -345,6 +348,14 @@ msgid "Amount to be paid"
 msgstr "राशि का भुगतान किया जाना"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
 msgstr ""
@@ -447,7 +458,7 @@ msgstr ""
 
 #. module: account_payment
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
+msgid "You can not create journal items on an account of type view."
 msgstr ""
 
 #. module: account_payment
@@ -575,6 +586,11 @@ msgid "Information"
 msgstr ""
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
 msgid ""
 "A payment order is a payment request from your company to pay a supplier "
@@ -622,11 +638,6 @@ msgstr ""
 #. module: account_payment
 #: view:payment.order:0
 msgid "Confirm Payments"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
 msgstr ""
 
 #. module: account_payment
@@ -686,6 +697,11 @@ msgid "Order"
 msgstr ""
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr ""
@@ -694,13 +710,6 @@ msgstr ""
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
 msgstr ""
 
 #. module: account_payment
@@ -716,11 +725,6 @@ msgstr ""
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
 msgstr ""
 
 #~ msgid "Suitable bank types"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2012-01-14 15:07+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-15 05:19+0000\n"
-"X-Generator: Launchpad (build 14664)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:05+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: event
 #: view:event.event:0
@@ -75,6 +75,11 @@ msgid "_Close"
 msgstr "Beenden"
 
 #. module: event
+#: model:event.event,name:event.event_0
+msgid "Concert of Bon Jovi"
+msgstr "Konzert von Bon Jovi"
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Invoiced Registrations only"
 msgstr "Nur Fakturierte Registrierungen"
@@ -95,13 +100,10 @@ msgid "Quantity"
 msgstr "Menge"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:50
-#: code:addons/event/wizard/event_make_invoice.py:54
-#: code:addons/event/wizard/event_make_invoice.py:58
-#: code:addons/event/wizard/event_make_invoice.py:62
+#: code:addons/event/wizard/event_make_invoice.py:63
 #, python-format
-msgid "Warning !"
-msgstr "Warnung !"
+msgid "Registration doesn't have any partner to invoice."
+msgstr "Teilnehmer hat keinen Partner zwecks Abrechnung"
 
 #. module: event
 #: field:event.event,company_id:0
@@ -197,6 +199,11 @@ msgid "Mail Auto Confirm"
 msgstr "Automatische Mail Benachrichtigung"
 
 #. module: event
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "Ticket für Oper"
+
+#. module: event
 #: code:addons/event/event.py:125
 #: view:event.event:0
 #, python-format
@@ -222,10 +229,9 @@ msgid "Event Dashboard"
 msgstr "Pinnwand Veranstaltungen"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:63
-#, python-format
-msgid "Registration doesn't have any partner to invoice."
-msgstr "Teilnehmer hat keinen Partner zwecks Abrechnung"
+#: model:event.event,name:event.event_1
+msgid "Opera of Verdi"
+msgstr "Verdi Oper"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -280,9 +286,9 @@ msgid "Draft"
 msgstr "Entwurf"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Events States"
-msgstr "Veranstaltungen je Status"
+#: field:event.type,name:0
+msgid "Event type"
+msgstr "Veranstaltungstyp"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -346,6 +352,15 @@ msgstr "Abrechnung Veranstaltung"
 #: help:event.registration,nb_register:0
 msgid "Number of Registrations or Tickets"
 msgstr "Anzahl vorhandene Plätze"
+
+#. module: event
+#: code:addons/event/wizard/event_make_invoice.py:50
+#: code:addons/event/wizard/event_make_invoice.py:54
+#: code:addons/event/wizard/event_make_invoice.py:58
+#: code:addons/event/wizard/event_make_invoice.py:62
+#, python-format
+msgid "Warning !"
+msgstr "Warnung !"
 
 #. module: event
 #: view:event.registration:0
@@ -564,9 +579,9 @@ msgid "Mailing"
 msgstr "Mailversand"
 
 #. module: event
-#: field:event.type,name:0
-msgid "Event type"
-msgstr "Veranstaltungstyp"
+#: view:report.event.registration:0
+msgid "Events States"
+msgstr "Veranstaltungen je Status"
 
 #. module: event
 #: view:board.board:0
@@ -755,6 +770,11 @@ msgstr ""
 #: selection:report.event.registration,month:0
 msgid "June"
 msgstr "Juni"
+
+#. module: event
+#: model:product.template,name:event.event_product_0_product_template
+msgid "Ticket for Concert"
+msgstr "Ticket für Konzert"
 
 #. module: event
 #: field:event.registration,write_date:0
@@ -1002,6 +1022,11 @@ msgid "Speaker"
 msgstr "Referent"
 
 #. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on ERP Buisness"
+msgstr "Konferenz ERP"
+
+#. module: event
 #: view:event.registration:0
 msgid "Reply"
 msgstr "Antwort"
@@ -1065,6 +1090,11 @@ msgstr "Anmeldung Veranstaltung"
 msgid "This email will be sent when someone subscribes to the event."
 msgstr ""
 "Dieses Email wird versendet, wenn sich jemand für einen Event anmeldet"
+
+#. module: event
+#: model:product.template,name:event.event_product_2_product_template
+msgid "Ticket for Conference"
+msgstr "Karten für Konferenz"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type_association
@@ -1278,9 +1308,6 @@ msgstr ""
 #~ msgid "Ok"
 #~ msgstr "OK"
 
-#~ msgid "Ticket for Opera"
-#~ msgstr "Ticket für Oper"
-
 #~ msgid "Invoice Rejected"
 #~ msgstr "Rechnung abgelehnt"
 
@@ -1313,9 +1340,6 @@ msgstr ""
 
 #~ msgid "Error Messages"
 #~ msgstr "Fehlermeldungen"
-
-#~ msgid "Ticket for Concert"
-#~ msgstr "Ticket für Konzert"
 
 #~ msgid "Communication history"
 #~ msgstr "Kommunikation Historie"
@@ -1409,20 +1433,8 @@ msgstr ""
 #~ "Dieses EMail wird versandt, wenn die Veranstaltung bestätigt wird oder "
 #~ "jemand sich anmeldet oder für eine Erinnerung"
 
-#~ msgid "Ticket for Conference"
-#~ msgstr "Karten für Konferenz"
-
-#~ msgid "Opera of Verdi"
-#~ msgstr "Verdi Oper"
-
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "Konferenz ERP"
-
 #~ msgid "Badge"
 #~ msgstr "Namensschild"
-
-#~ msgid "Concert of Bon Jovi"
-#~ msgstr "Konzert von Bon Jovi"
 
 #~ msgid "The event limit is reached. What do you want to do?"
 #~ msgstr "Die Event Begrenzung ist erreicht. Wass wollen Sie tun?"

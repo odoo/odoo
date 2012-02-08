@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2012-01-13 20:36+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-14 05:12+0000\n"
-"X-Generator: Launchpad (build 14664)\n"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "No Account Manager"
-msgstr "Kein Konto Mananger"
+"X-Launchpad-Export-Date: 2012-02-08 05:30+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -52,11 +47,13 @@ msgid "Pending contracts to renew with your customer"
 msgstr "Verträge, die zu erneuern sind"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:551
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:722
-#, python-format
-msgid "AccessError"
-msgstr "Verbindungsfehler"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
+"verrechenbare Zeiten (Stunden/Tage) vom Journal 'General', wenn die "
+"Verrechnung auf Analyse Konten beruht"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -176,15 +173,6 @@ msgid "Contracts to Renew"
 msgstr "Zu erneuernde Verträge"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
-msgstr ""
-"verrechenbare Zeiten (Stunden/Tage) vom Journal 'General', wenn die "
-"Verrechnung auf Analyse Konten beruht"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
 msgstr "Theoretische Marge"
@@ -248,13 +236,6 @@ msgid "Invoiced Amount"
 msgstr "Rechnungsbetrag"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:552
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:723
-#, python-format
-msgid "You try to bypass an access rule (Document type: %s)."
-msgstr "Sie versuchen eine Zugriffsregel zu umgehen (Dokumententyp: %s)."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
 msgstr "Datum letzte Berechnung"
@@ -273,13 +254,6 @@ msgstr "Marge (%)"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Realisierte Marge"
-
-#. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "Fehler! Die Währung muss der Währung der gewählten Firma entsprechen"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -381,6 +355,11 @@ msgstr "Zugehöriger Partner"
 #: view:account.analytic.account:0
 msgid "Open"
 msgstr "Offen"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts that are not assigned to an account manager."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
@@ -490,6 +469,10 @@ msgstr ""
 #~ msgid "Revenue per Hours (real)"
 #~ msgstr "Vergütung pro Stunde"
 
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "Sie versuchen eine Zugriffsregel zu umgehen (Dokumententyp: %s)."
+
 #~ msgid "Overpassed Accounts"
 #~ msgstr "Überschrittene Konten"
 
@@ -504,6 +487,10 @@ msgstr ""
 
 #~ msgid "Billing"
 #~ msgstr "Abrechnung"
+
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "Verbindungsfehler"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
@@ -532,5 +519,13 @@ msgstr ""
 #~ "\n"
 #~ "Die Auswertung kann je Benutzer oder nach Monaten erfolgen.\n"
 
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Fehler! Die Währung muss der Währung der gewählten Firma entsprechen"
+
 #~ msgid "report_account_analytic"
 #~ msgstr "Weitere Auswertungen Projektanalyse"
+
+#~ msgid "No Account Manager"
+#~ msgstr "Kein Konto Mananger"

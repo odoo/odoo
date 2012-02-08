@@ -86,7 +86,7 @@ class project(osv.osv):
 
     def _get_projects_from_tasks(self, cr, uid, task_ids, context=None):
         tasks = self.pool.get('project.task').browse(cr, uid, task_ids, context=context)
-        project_ids = [task.project_id.id for task in tasks]
+        project_ids = [task.project_id.id for task in tasks if task.project_id]
         return self.pool.get('project.project')._get_project_and_parents(cr, uid, project_ids, context)
 
     def _get_project_and_parents(self, cr, uid, ids, context=None):
@@ -697,7 +697,7 @@ class task(osv.osv):
     def set_normal_priority(self, cr, uid, ids, *args):
         """Set task priority to normal
         """
-        return self.set_priority(cr, uid, ids, '3')
+        return self.set_priority(cr, uid, ids, '2')
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:

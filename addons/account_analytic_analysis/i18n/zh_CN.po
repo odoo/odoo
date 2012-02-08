@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-04-12 18:24+0000\n"
 "Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:50+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "No Account Manager"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-02-08 05:31+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -49,11 +44,11 @@ msgid "Pending contracts to renew with your customer"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:551
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:722
-#, python-format
-msgid "AccessError"
-msgstr "访问错误"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -163,13 +158,6 @@ msgid "Contracts to Renew"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
 msgstr "理论的差额"
@@ -229,13 +217,6 @@ msgid "Invoiced Amount"
 msgstr "已开票金额"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:552
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:723
-#, python-format
-msgid "You try to bypass an access rule (Document type: %s)."
-msgstr "您尝试跳过访问规则（文档类型：%s）。"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
 msgstr "最近的已发票日期"
@@ -254,13 +235,6 @@ msgstr "实际利润(%)"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "实际利润"
-
-#. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "错误！货币必须是所选公司的本位币"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -355,6 +329,11 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Open"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts that are not assigned to an account manager."
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -462,6 +441,14 @@ msgstr "这项的成本合计,它包括实际成本(发票)和间接成本,如�
 #~ msgid "report_account_analytic"
 #~ msgstr "辅助核算项目报表"
 
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "您尝试跳过访问规则（文档类型：%s）。"
+
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "访问错误"
+
 #~ msgid "Billing"
 #~ msgstr "收费"
 
@@ -483,6 +470,11 @@ msgstr "这项的成本合计,它包括实际成本(发票)和间接成本,如�
 #~ "此模块在分析会计视图为公司的项目经理显示重要的数据,增加菜单为管理者显示有关信息。\n"
 #~ "\n"
 #~ "你可以查看会计分析报表如：用户- wise 或月度-wise\n"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "错误！货币必须是所选公司的本位币"
 
 #~ msgid ""
 #~ "Number of hours (from journal of type 'general') that can be invoiced if you "

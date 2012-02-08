@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2012-01-05 20:55+0000\n"
-"Last-Translator: kifcaliph <kifcaliph@hotmail.com>\n"
+"Last-Translator: kifcaliph <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-06 04:49+0000\n"
-"X-Generator: Launchpad (build 14637)\n"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "No Account Manager"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-02-08 05:30+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -29,12 +24,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr ""
+msgstr "حسب الصيغة: سعر الفاتورة الأعلى - المبلغ المفوتر."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
-msgstr ""
+msgstr "تاريخ اخر عمل تم انجازه في تلك المحاسبة."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -49,10 +44,10 @@ msgid "Pending contracts to renew with your customer"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:551
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:722
-#, python-format
-msgid "AccessError"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -78,12 +73,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
-msgstr ""
+msgstr "تاريخ آخر فاتورة"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theorial Revenue - Total Costs"
-msgstr ""
+msgstr "الحساب بإستخدام الصيغة: الايرادات النظرية-القيمة الكلية"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
@@ -116,7 +111,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
-msgstr ""
+msgstr "الايرادات النظرية"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
@@ -129,6 +124,8 @@ msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
 msgstr ""
+"اذا كانت الفاتورة من التكاليف,فهي تكون بتاريخ لاخر عمل او تكلفة التي تم "
+"اضافتها للفاتورة."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -138,7 +135,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
 msgid "Date of Last Cost/Work"
-msgstr ""
+msgstr "تاريخ اخر تكلفة/عمل"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
@@ -163,16 +160,9 @@ msgid "Contracts to Renew"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
-msgstr ""
+msgstr "هامش النظرية"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -185,7 +175,7 @@ msgid ""
 "Based on the costs you had on the project, what would have been the revenue "
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
-msgstr ""
+msgstr "استنادًا الى التكاليف التي صرفتها على المشروع, ماكان"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -195,12 +185,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr ""
+msgstr "كمية غير مضافة للفاتورة"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr ""
+msgstr "الحساب بإستخدام الصيغة: كمية ماتم اضفته للفاتورة-التكاليف الكلية."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -216,29 +206,22 @@ msgstr "المستخدم"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
+msgstr "الحساب بإستخدام صيغة: (الهامش الحقيقي/التكاليف الكلية)*100."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
 msgid "Hours Summary by User"
-msgstr ""
+msgstr "ملخص الساعات للمستخدم"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:552
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:723
-#, python-format
-msgid "You try to bypass an access rule (Document type: %s)."
-msgstr ""
+msgstr "كمية الفاتورة"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr ""
+msgstr "تاريخ تكلفة اخر ماتم اضافته للفاتورة"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -248,29 +231,22 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
-msgstr ""
+msgstr "معدل الهامش الحقيقي (%)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "خطأ! العملة لابد و أن تكون مثل العملة للشركة المختارة"
+msgstr "الهامش الحقيقي"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr ""
+msgstr "الكمية الكلية ماتم أضافته للعميل لهذا الحساب."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr ""
+msgstr "ملخص الساعات للشهر"
 
 #. module: account_analytic_analysis
 #: constraint:account.analytic.account:0
@@ -280,7 +256,7 @@ msgstr "خطأ! لا يمكنك إنشاء حسابات تحليلية متكر�
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
 msgid "Remaining Revenue"
-msgstr ""
+msgstr "الايرادات المتبقية"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -300,6 +276,8 @@ msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
 msgstr ""
+"اذا كانت الفاتورة من حساب تحليلي, يمكن عمل فاتورة للكمية المتبقية للعميل "
+"استنادًا الى التكاليف الكلية."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
@@ -309,7 +287,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
 msgid "Total Costs"
-msgstr ""
+msgstr "التكاليف الكلية"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -340,7 +318,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "All Uninvoiced Entries"
-msgstr ""
+msgstr "كل المدخلات التي لم يتم عمل لها فاتورة"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -358,6 +336,11 @@ msgid "Open"
 msgstr ""
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts that are not assigned to an account manager."
+msgstr ""
+
+#. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
@@ -370,9 +353,91 @@ msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
 msgstr ""
+"المجموع الكلي للتكاليف لهذا الحساب. ويتضمن التكاليف الحقيقية(من الفواتير) "
+"والتكاليف الغير مباشرة, مثل الوقت المقضي في سجلات الدوام ."
 
 #~ msgid "Remaining Hours"
 #~ msgstr "الساعات المتبقية"
 
 #~ msgid "Billing"
 #~ msgstr "عمليات الفواتير"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "خطأ! العملة لابد و أن تكون مثل العملة للشركة المختارة"
+
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "خطأ الوصول"
+
+#~ msgid "Uninvoiced Hours"
+#~ msgstr "الساعات الغير مضافة للفاتورة"
+
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "انك تحاول تجاوز قاعدة الوصول (نوع الوثيقة%s)"
+
+#~ msgid "report_account_analytic"
+#~ msgstr "التقرير_الحساب_التحليل"
+
+#~ msgid "Invoiced Hours"
+#~ msgstr "ساعات المضاف للفاتورة"
+
+#~ msgid "Revenue per Hours (real)"
+#~ msgstr "الايرادات لكل الساعات (الحقيقي)"
+
+#~ msgid "Overpassed Accounts"
+#~ msgstr "ألحسابات الاكثر مرورًا"
+
+#~ msgid "Analytic accounts"
+#~ msgstr "الحسابات التحليلية"
+
+#~ msgid "Hours Tot"
+#~ msgstr "الساعات الكلية"
+
+#~ msgid ""
+#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
+#~ "invoice based on analytic account."
+#~ msgstr ""
+#~ "عدد الساعات (من اليومية لنموذج‘عام‘) والتي يمكن اضافتها للفاتورة اذا كانت "
+#~ "فاتورتك مستندة الى حساب تحليلي."
+
+#~ msgid "Computed using the formula: Invoiced Amount / Hours Tot."
+#~ msgstr ""
+#~ "الحساب بإستخدام الصيغة: الكمية التي تم عمل لها فاتورة/ الساعات الكلية."
+
+#~ msgid ""
+#~ "Number of hours that can be invoiced plus those that already have been "
+#~ "invoiced."
+#~ msgstr ""
+#~ "عدد الساعات التي يمكن فوترتها بالإضافة إلى تلك التي تمت فوترتها بالفعل."
+
+#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
+#~ msgstr "حسب الصيغة: أعلى حد للكمية - المجموع الكلي للساعات."
+
+#~ msgid "Date of the last invoice created for this analytic account."
+#~ msgstr "تاريخ إنشاء آخر فاتورة لهذا الحساب التحليلي."
+
+#~ msgid ""
+#~ "\n"
+#~ "This module is for modifying account analytic view to show\n"
+#~ "important data to project manager of services companies.\n"
+#~ "Adds menu to show relevant information to each manager..\n"
+#~ "\n"
+#~ "You can also view the report of account analytic summary\n"
+#~ "user-wise as well as month wise.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "هذه النموذجيات لتعديل عرض تحليلي للحساب ليبين البيانات المهمة لمدير المشروع "
+#~ "فى الشركات الخدمية.\n"
+#~ "ويضيف قائمة ليوضح المعلومات ذات الصلة لكل مدير..\n"
+#~ "يمكنك ايضًا عرض تقرير الملخص التحليلي للحساب\n"
+#~ "من ناحية المستخدم بالاضافة الى من ناحية الشهر.\n"
+
+#~ msgid ""
+#~ "Number of hours you spent on the analytic account (from timesheet). It "
+#~ "computes on all journal of type 'general'."
+#~ msgstr ""
+#~ "عدد الساعات التي قضيتها في الحساب التحليلي (سجل الدوام ). فهي تحسب على كافة "
+#~ "اليومية للنموذج‘عام‘."

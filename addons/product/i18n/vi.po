@@ -7,78 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-06-04 14:36+0000\n"
 "Last-Translator: OpenBMS JSC <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:49+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:29+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Max. Margin"
-msgstr "Max. Margin"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Base Price"
-msgstr "Giá cơ bản"
-
-#. module: product
-#: field:product.product,partner_ref:0
-msgid "Customer ref"
-msgstr "Tham chiếu khách hàng"
-
-#. module: product
-#: field:product.uom,factor:0
-#: field:product.uom,factor_inv:0
-msgid "Ratio"
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the supplier "
-"Product UoM if not empty, in the default unit of measure of the product "
-"otherwise."
-msgstr ""
-
-#. module: product
-#: selection:product.template,type:0
-msgid "Service"
-msgstr "Dịch vụ"
-
-#. module: product
-#: help:product.template,purchase_ok:0
-msgid ""
-"Determine if the product is visible in the list of products within a "
-"selection from a purchase order line."
-msgstr ""
-"Xác định xem sản phẩm có hiển thị trong danh sách sản phẩm trong vòng lựa "
-"chọn từ một dòng của đơn đặt hàng."
-
-#. module: product
-#: help:product.supplierinfo,name:0
-msgid "Supplier of this product"
-msgstr "Nhà cung cấp của sản phẩm này"
-
-#. module: product
-#: model:process.node,note:product.process_node_supplier0
-msgid "Supplier name, price, product code, ..."
-msgstr "tên NCC, giá, mã sản phẩm, ..."
-
-#. module: product
-#: help:pricelist.partnerinfo,min_quantity:0
-msgid ""
-"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
-"any or in the default UoM of the product otherrwise."
-msgstr ""
-"Số lượng tối thiểu để kích hoạt các quy tắc này, thể hiện trong các đơn vị "
-"cung cấp số đo nếu có hoặc trong các đơn vị đo mặc định của các sản phẩm "
-"khác khôn ngoan."
+#: model:product.template,name:product.product_product_ram512_product_template
+msgid "DDR 512MB PC400"
+msgstr "DDR 512MB PC400"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -86,25 +28,13 @@ msgid "Number of Layers"
 msgstr "số lớp"
 
 #. module: product
-#: field:product.template,weight_net:0
-msgid "Net weight"
-msgstr "Khối lượng tịnh"
-
-#. module: product
-#: help:product.pricelist.version,active:0
+#: constraint:product.pricelist.item:0
 msgid ""
-"When a version is duplicated it is set to non active, so that the dates do "
-"not overlaps with original version. You should change the dates and "
-"reactivate the pricelist"
+"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+"Item!"
 msgstr ""
-"Khi một phiên bản được chép lại, nó được cài đặt không hoạt động để các ngày "
-"không trùng lắp với phiên bản gốc. Bạn nên thay đổi các ngày và kích hoạt "
-"lại bảng giá"
-
-#. module: product
-#: field:product.price.type,field:0
-msgid "Product Field"
-msgstr "Lĩnh vực sản phẩm"
+"Lỗi! Bạn không thể chỉ định bảng giá chính là bảng giá khác trong các mục "
+"bảng giá!"
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
@@ -130,146 +60,19 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.supplierinfo,product_uom:0
-msgid "Supplier UoM"
-msgstr ""
+#: model:product.category,name:product.cat1
+msgid "Sellable"
+msgstr "Có thể bán"
 
 #. module: product
-#: help:product.pricelist.item,price_round:0
-msgid ""
-"Sets the price so that it is a multiple of this value.\n"
-"Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
-"Định giá để giá là một bội số của giá trị này.\n"
-"Làm tròn số được áp dụng sau khi chiết khấu và trước khi phụ phí.\n"
-"Để có các giá kết thúc bằng 9.99, đặt làm tròn 10 và phụ phí -0.01"
-
-#. module: product
-#: field:product.supplierinfo,name:0
-msgid "Supplier"
-msgstr "Nhà cung cấp"
-
-#. module: product
-#: model:product.template,name:product.product_consultant_product_template
-msgid "Service on Timesheet"
-msgstr ""
-
-#. module: product
-#: help:product.price.type,field:0
-msgid "Associated field in the product form."
-msgstr "Lĩnh vực liên quan trong hình thức sản phẩm."
-
-#. module: product
-#: view:product.product:0
-msgid "Unit of Measure"
-msgstr ""
-
-#. module: product
-#: field:product.template,procure_method:0
-msgid "Procurement Method"
-msgstr ""
-
-#. module: product
-#: report:product.pricelist:0
-msgid "Printing Date"
-msgstr ""
-
-#. module: product
-#: field:product.product,qty_available:0
-msgid "Quantity On Hand"
-msgstr ""
-
-#. module: product
-#: view:product.pricelist:0
-msgid "Products Price List"
-msgstr "Bảng giá sản phẩm"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_cm
-msgid "cm"
-msgstr ""
-
-#. module: product
-#: field:product.price.type,name:0
-msgid "Price Name"
-msgstr "Tên giá"
-
-#. module: product
-#: code:addons/product/pricelist.py:178
-#, python-format
-msgid "Warning !"
-msgstr "Cảnh báo !"
-
-#. module: product
-#: field:product.pricelist,company_id:0
-#: field:product.pricelist.item,company_id:0
-#: field:product.pricelist.version,company_id:0
-#: view:product.product:0
-#: field:product.supplierinfo,company_id:0
-#: field:product.template,company_id:0
-msgid "Company"
-msgstr "Công ty"
-
-#. module: product
-#: help:product.template,weight_net:0
-msgid "The net weight in Kg."
-msgstr "Khối lượng tịnh theo Kg."
-
-#. module: product
-#: help:product.template,seller_delay:0
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the reception of goods for this product and for the default supplier. It "
-"is used by the scheduler to order requests based on reordering delays."
-msgstr ""
-"Đây là thời gian chờ đợi trung bình tính theo ngày kể từ ngày xác nhận đơn "
-"đặt hàng đến ngày nhận được hàng đặt đối với sản phẩm này và cho nhà cung "
-"cấp mặc định. Nó được dùng để đặt yêu cầu dựa trên thời gian chờ đội tái đặt "
-"hàng."
+#: model:product.template,name:product.product_product_mb2_product_template
+msgid "Mainboard ASUStek A7V8X-X"
+msgstr "Mainboard ASUStek A7V8X-X"
 
 #. module: product
 #: help:product.template,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr "Đây là số lượng tối thiểu để mua từ Nhà cung cấp Chính."
-
-#. module: product
-#: help:product.product,incoming_qty:0
-msgid ""
-"Quantity of products that are planned to arrive.\n"
-"In a context with a single Stock Location, this includes goods arriving to "
-"this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods arriving to the "
-"Stock Location of this Warehouse, or any of its children.\n"
-"In a context with a single Shop, this includes goods arriving to the Stock "
-"Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods arriving to any Stock Location typed as "
-"'internal'."
-msgstr ""
-
-#. module: product
-#: help:product.template,seller_id:0
-msgid "Main Supplier who has highest priority in Supplier List."
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-msgid "Services"
-msgstr "Các dịch vụ"
-
-#. module: product
-#: help:product.template,list_price:0
-msgid ""
-"Base price for computing the customer price. Sometimes called the catalog "
-"price."
-msgstr ""
-"Giá cơ bản để tính giá bán cho khách hàng. Đôi khi được gọi là giá catalog."
-
-#. module: product
-#: code:addons/product/pricelist.py:376
-#, python-format
-msgid "Partner section of the product form"
-msgstr "Mục đối tác của form sản phẩm"
 
 #. module: product
 #: model:product.uom,name:product.uom_day
@@ -282,21 +85,9 @@ msgid "UoM"
 msgstr "Đơn vị đo"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_form_config_action
-msgid "Create or Import Products"
-msgstr ""
-
-#. module: product
-#: help:product.template,supply_method:0
-msgid ""
-"Produce will generate production order or tasks, according to the product "
-"type. Buy will trigger purchase orders when requested."
-msgstr ""
-
-#. module: product
-#: help:product.pricelist.version,date_start:0
-msgid "Starting date for this pricelist version to be valid."
-msgstr "Ngày bắt đầu để phiên bản bảng giá này có hiệu lực."
+#: model:product.template,name:product.product_product_pc2_product_template
+msgid "Basic+ PC (assembly on order)"
+msgstr "Cơ bản + PC (lắp ráp về trật tự)"
 
 #. module: product
 #: field:product.product,incoming_qty:0
@@ -304,61 +95,12 @@ msgid "Incoming"
 msgstr "Số lượng vào"
 
 #. module: product
-#: selection:product.template,procure_method:0
-msgid "Make to Stock"
-msgstr "Sản xuất theo nhu cầu dự báo"
-
-#. module: product
-#: constraint:product.template:0
+#: help:res.partner,property_product_pricelist:0
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+"This pricelist will be used, instead of the default one, for sales to the "
+"current partner"
 msgstr ""
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Suppliers"
-msgstr "Các nhà cung cấp"
-
-#. module: product
-#: field:product.pricelist.item,name:0
-msgid "Rule Name"
-msgstr "Tên quy tắc"
-
-#. module: product
-#: view:product.product:0
-msgid "To Purchase"
-msgstr ""
-
-#. module: product
-#: field:product.supplierinfo,product_code:0
-msgid "Supplier Product Code"
-msgstr ""
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Rules Test Match"
-msgstr "Kiểm tra quy tắc phù hợp"
-
-#. module: product
-#: field:product.pricelist.item,base_pricelist_id:0
-msgid "If Other Pricelist"
-msgstr "Nếu bảng giá khác"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_normal_action
-#: model:ir.actions.act_window,name:product.product_normal_action_puchased
-#: model:ir.actions.act_window,name:product.product_normal_action_sell
-#: model:ir.actions.act_window,name:product.product_normal_action_tree
-#: model:ir.ui.menu,name:product.menu_products
-#: view:product.product:0
-msgid "Products"
-msgstr "Sản phẩm"
-
-#. module: product
-#: model:product.uom.categ,name:product.uom_categ_length
-msgid "Length / Distance"
-msgstr ""
+"Bảng giá này sẽ được sử dụng, thay vì mặc định, để bán cho đối tác hiện tại"
 
 #. module: product
 #: field:product.template,seller_qty:0
@@ -366,50 +108,24 @@ msgid "Supplier Quantity"
 msgstr "Chất lượng cung ứng"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "New Price ="
-msgstr "Giá mới ="
-
-#. module: product
-#: model:ir.model,name:product.model_pricelist_partnerinfo
-msgid "pricelist.partnerinfo"
-msgstr "pricelist.partnerinfo"
-
-#. module: product
-#: field:product.template,uom_po_id:0
-msgid "Purchase Unit of Measure"
-msgstr ""
-
-#. module: product
 #: selection:product.template,mes_type:0
 msgid "Fixed"
 msgstr "Cố định"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr "Các loại đơn vị đo"
+#: code:addons/product/pricelist.py:178
+#, python-format
+msgid "Warning !"
+msgstr "Cảnh báo !"
 
 #. module: product
-#: help:product.pricelist.item,product_id:0
-msgid ""
-"Set a product if this rule only apply to one product. Keep empty for all "
-"products"
-msgstr ""
-"Thiết lập một sản phẩm nếu quy tắc này chỉ áp dụng đối với một sản phẩm. Để "
-"trống cho tất cả sản phẩm"
-
-#. module: product
-#: help:product.packaging,rows:0
-msgid "The number of layers on a pallet or box"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_type
-#: field:product.pricelist,type:0
-msgid "Pricelist Type"
-msgstr "Loại bảng giá"
+#: model:ir.actions.report.xml,name:product.report_product_pricelist
+#: model:ir.model,name:product.model_product_pricelist
+#: field:product.product,price:0
+#: field:product.product,pricelist_id:0
+#: view:product.supplierinfo:0
+msgid "Pricelist"
+msgstr "Bảng giá"
 
 #. module: product
 #: view:product.product:0
@@ -418,15 +134,9 @@ msgid "Base Prices"
 msgstr "Giá cơ bản"
 
 #. module: product
-#: field:product.product,color:0
-msgid "Color Index"
-msgstr ""
-
-#. module: product
-#: view:product.template:0
-#: field:product.template,type:0
-msgid "Product Type"
-msgstr "Loại sản phẩm"
+#: field:product.pricelist.item,name:0
+msgid "Rule Name"
+msgstr "Tên quy tắc"
 
 #. module: product
 #: field:product.product,code:0
@@ -435,75 +145,19 @@ msgid "Reference"
 msgstr "Tham chiếu"
 
 #. module: product
-#: field:product.packaging,width:0
-msgid "Width"
-msgstr "Chiều rộng"
-
-#. module: product
-#: view:product.product:0
-msgid "Characteristics"
-msgstr ""
-
-#. module: product
-#: field:product.template,sale_ok:0
-msgid "Can be Sold"
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-msgid "Group by..."
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,description_sale:0
-msgid "Sale Description"
-msgstr "Mô tả bán hàng"
-
-#. module: product
-#: field:product.template,produce_delay:0
-msgid "Manufacturing Lead Time"
-msgstr "Thời gian sản xuất sản phẩm"
-
-#. module: product
-#: field:product.supplierinfo,pricelist_ids:0
-msgid "Supplier Pricelist"
-msgstr "Bảng giá nhà cung cấp"
-
-#. module: product
-#: view:product.packaging:0
-#: view:product.product:0
-msgid "Pallet Dimension"
-msgstr "Kích thước pallet"
-
-#. module: product
-#: code:addons/product/product.py:175
-#, python-format
-msgid "Warning"
-msgstr ""
-
-#. module: product
-#: field:product.pricelist.item,base:0
-msgid "Based on"
-msgstr "Dựa trên"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_ton
-msgid "t"
-msgstr ""
-
-#. module: product
-#: help:pricelist.partnerinfo,price:0
+#: help:pricelist.partnerinfo,min_quantity:0
 msgid ""
-"This price will be considered as a price for the supplier UoM if any or the "
-"default Unit of Measure of the product otherwise"
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
 msgstr ""
+"Số lượng tối thiểu để kích hoạt các quy tắc này, thể hiện trong các đơn vị "
+"cung cấp số đo nếu có hoặc trong các đơn vị đo mặc định của các sản phẩm "
+"khác khôn ngoan."
 
 #. module: product
-#: model:product.uom,name:product.product_uom_kgm
-msgid "kg"
-msgstr ""
+#: model:product.template,name:product.product_product_24_product_template
+msgid "Keyboard"
+msgstr "Bàn phím"
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -519,41 +173,9 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.template,sale_delay:0
-msgid "Customer Lead Time"
-msgstr "Thời gian giao hàng"
-
-#. module: product
-#: model:process.transition,name:product.process_transition_supplierofproduct0
-msgid "Supplier of the product"
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen"
 msgstr ""
-
-#. module: product
-#: help:product.template,cost_method:0
-msgid ""
-"Standard Price: the cost price is fixed and recomputed periodically (usually "
-"at the end of the year), Average Price: the cost price is recomputed at each "
-"reception of products."
-msgstr ""
-"Giá chuẩn: giá vốn là cố định và được tính lại định kỳ (thông thường vào "
-"cuối năm), Giá trung bình: giá vốn được tính lại theo từng lần tiếp nhận sản "
-"phẩm."
-
-#. module: product
-#: field:product.pricelist,name:0
-msgid "Pricelist Name"
-msgstr "Tên bảng giá"
-
-#. module: product
-#: model:product.price.type,name:product.list_price
-#: field:product.product,lst_price:0
-msgid "Public Price"
-msgstr "Giá công bố"
-
-#. module: product
-#: field:product.template,seller_ids:0
-msgid "Partners"
-msgstr "Đối tác"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -561,85 +183,19 @@ msgid "Average Price"
 msgstr "Giá trung bình"
 
 #. module: product
-#: field:product.template,uos_id:0
-msgid "Unit of Sale"
-msgstr "Đơn vị bán"
-
-#. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "Làm tròn chính xác"
-
-#. module: product
 #: help:product.pricelist.item,name:0
 msgid "Explicit rule name for this pricelist line."
 msgstr "Tên quy tắc rõ ràng cho dòng bảng giá này."
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Min. Margin"
-msgstr "Min. Margin"
+#: model:product.template,name:product.product_product_cpu1_product_template
+msgid "Processor AMD Athlon XP 1800+"
+msgstr "Processor AMD Athlon XP 1800+"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "* ( 1 + "
-msgstr "* ( 1 + "
-
-#. module: product
-#: help:product.template,product_manager:0
-msgid "This is use as task responsible"
-msgstr ""
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Rounding Method"
-msgstr "Phương pháp làm tròn"
-
-#. module: product
-#: field:product.category,child_id:0
-msgid "Child Categories"
-msgstr "Loại trẻ em"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,state:0
-msgid "Status"
-msgstr "Tình trạng"
-
-#. module: product
-#: field:product.pricelist.item,price_round:0
-msgid "Price Rounding"
-msgstr "Làm tròn giá"
-
-#. module: product
-#: sql_constraint:product.uom:0
-msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
-
-#. module: product
-#: help:product.packaging,height:0
-msgid "The height of the package"
-msgstr "Chiều cao của gói hàng"
-
-#. module: product
-#: code:addons/product/product.py:345
-#, python-format
-msgid ""
-"New UoM '%s' must belongs to same UoM category '%s' as of old UoM '%s'."
-msgstr ""
-
-#. module: product
-#: model:product.pricelist.type,name:product.pricelist_type_sale
-#: field:res.partner,property_product_pricelist:0
-msgid "Sale Pricelist"
-msgstr "Bảng giá bán"
-
-#. module: product
-#: view:product.product:0
-#: field:product.ul,type:0
-msgid "Type"
-msgstr "Loại"
+#: model:product.template,name:product.product_product_20_product_template
+msgid "HDD on demand"
+msgstr "HDD theo yêu cầu"
 
 #. module: product
 #: field:product.price_list,price_list:0
@@ -647,9 +203,9 @@ msgid "PriceList"
 msgstr "Bảng giá"
 
 #. module: product
-#: help:product.packaging,weight:0
-msgid "The weight of a full package, pallet or box."
-msgstr ""
+#: view:product.template:0
+msgid "UOM"
+msgstr "ĐVĐ"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
@@ -657,68 +213,14 @@ msgid "PCE"
 msgstr "PCE"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_pricelist_action2
-#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
-#: model:ir.ui.menu,name:product.menu_product_pricelist_action2
-#: model:ir.ui.menu,name:product.menu_product_pricelist_main
-msgid "Pricelists"
-msgstr "Bảng giá"
-
-#. module: product
 #: view:product.template:0
 msgid "Miscelleanous"
 msgstr "Khác"
 
 #. module: product
-#: code:addons/product/product.py:143
-#, python-format
-msgid "Error !"
-msgstr ""
-
-#. module: product
-#: report:product.pricelist:0
-msgid "Price List Name"
-msgstr ""
-
-#. module: product
-#: help:product.pricelist.item,base:0
-msgid "The mode for computing the price for this rule."
-msgstr "Phương thức tính giá cho quy tắc này."
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_form_action
-#: model:ir.ui.menu,name:product.next_id_16
-#: view:product.uom:0
-msgid "Units of Measure"
-msgstr "Đơn vị đo"
-
-#. module: product
-#: view:product.price_list:0
-msgid "Print"
-msgstr "In"
-
-#. module: product
-#: field:product.supplierinfo,delay:0
-msgid "Delivery Lead Time"
-msgstr ""
-
-#. module: product
-#: field:product.supplierinfo,min_qty:0
-msgid "Minimal Quantity"
-msgstr "Số lượng tối thiểu"
-
-#. module: product
-#: view:product.product:0
-msgid "Miscellaneous"
-msgstr "Linh tinh"
-
-#. module: product
-#: help:product.uom,active:0
-msgid ""
-"By unchecking the active field you can disable a unit of measure without "
-"deleting it."
-msgstr ""
+#: model:product.template,name:product.product_product_worker0_product_template
+msgid "Worker"
+msgstr "Công nhân"
 
 #. module: product
 #: help:product.template,sale_ok:0
@@ -730,58 +232,26 @@ msgstr ""
 "trong một lựa chọn từ một đường để bán."
 
 #. module: product
-#: field:product.template,seller_delay:0
-msgid "Supplier Lead Time"
-msgstr "Thời gian chờ đợi nhận hàng"
-
-#. module: product
-#: help:product.supplierinfo,product_code:0
-msgid ""
-"This supplier's product code will be used when printing a request for "
-"quotation. Keep empty to use the internal one."
-msgstr ""
-
-#. module: product
 #: model:product.pricelist.version,name:product.ver0
 msgid "Default Public Pricelist Version"
 msgstr "Phiên bản bảng giá công bố mặc định"
 
 #. module: product
-#: field:product.pricelist.type,key:0
-msgid "Key"
-msgstr "Chính"
+#: selection:product.template,cost_method:0
+msgid "Standard Price"
+msgstr "Giá chuẩn"
 
 #. module: product
-#: field:product.pricelist.item,price_version_id:0
-msgid "Price List Version"
-msgstr "Phiên bản bảng giá"
+#: model:product.pricelist.type,name:product.pricelist_type_sale
+#: field:res.partner,property_product_pricelist:0
+msgid "Sale Pricelist"
+msgstr "Bảng giá bán"
 
 #. module: product
-#: field:product.product,virtual_available:0
-msgid "Quantity Available"
-msgstr ""
-
-#. module: product
-#: help:product.pricelist.item,sequence:0
-msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation "
-"gives highest priority to lowest sequence and stops as soon as a matching "
-"item is found."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.report.xml,name:product.report_product_pricelist
-#: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
-#: field:product.product,pricelist_id:0
-#: view:product.supplierinfo:0
-msgid "Pricelist"
-msgstr "Bảng giá"
-
-#. module: product
-#: selection:product.template,type:0
-msgid "Consumable"
-msgstr "Có thể tiêu thụ"
+#: view:product.template:0
+#: field:product.template,type:0
+msgid "Product Type"
+msgstr "Loại sản phẩm"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_form_config_action
@@ -796,53 +266,15 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  e.g: 1 * (đơn vị) = ratio * (đơn vị tham chiếu)"
 
 #. module: product
-#: help:product.template,weight:0
-msgid "The gross weight in Kg."
-msgstr "Khối lượng gộp tính theo Kg."
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Box"
-msgstr "Hộp"
-
-#. module: product
-#: code:addons/product/product.py:400
+#: code:addons/product/product.py:418
 #, python-format
 msgid "Products: "
 msgstr "Sản phẩm: "
 
 #. module: product
-#: model:product.uom,name:product.uom_hour
-msgid "Hour"
-msgstr "Giờ"
-
-#. module: product
 #: field:product.category,parent_id:0
 msgid "Parent Category"
 msgstr "Chuyên mục"
-
-#. module: product
-#: selection:product.template,state:0
-msgid "In Development"
-msgstr "Đang phát triển"
-
-#. module: product
-#: help:product.pricelist.type,key:0
-msgid ""
-"Used in the code to select specific prices based on the context. Keep "
-"unchanged."
-msgstr ""
-"Được sử dụng trong các mã để chọn các giá đặc biệt theo ngữ cảnh. Giữ nguyên."
-
-#. module: product
-#: field:product.packaging,weight:0
-msgid "Total Package Weight"
-msgstr "Tổng khối lượng đóng gói"
-
-#. module: product
-#: view:product.product:0
-msgid "Context..."
-msgstr ""
 
 #. module: product
 #: help:product.template,procure_method:0
@@ -856,55 +288,14 @@ msgstr ""
 "yêu cầu mua hàng."
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement"
-msgstr "Thu mua"
+#: model:process.node,note:product.process_node_supplier0
+msgid "Supplier name, price, product code, ..."
+msgstr "tên NCC, giá, mã sản phẩm, ..."
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_category_action
-#: model:ir.ui.menu,name:product.menu_products_category
-msgid "Products by Category"
-msgstr "Sản phẩm theo chủng loại"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Weights"
-msgstr "Khối lượng"
-
-#. module: product
-#: field:product.uom,category_id:0
-msgid "UoM Category"
-msgstr "Loại đơn vị đo"
-
-#. module: product
-#: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
-msgid "Product Variant"
-msgstr "Sản phẩm biến thể"
-
-#. module: product
-#: help:product.supplierinfo,product_name:0
-msgid ""
-"This supplier's product name will be used when printing a request for "
-"quotation. Keep empty to use the internal one."
-msgstr ""
-
-#. module: product
-#: field:product.packaging,ul:0
-msgid "Type of Package"
-msgstr "Loại đóng gói"
-
-#. module: product
-#: field:product.template,loc_rack:0
-msgid "Rack"
-msgstr "Giá"
-
-#. module: product
-#: selection:product.ul,type:0
-msgid "Pack"
-msgstr "Gói"
+#: model:product.template,name:product.product_product_hdd3_product_template
+msgid "HDD Seagate 7200.8 160GB"
+msgstr "HDD Seagate 7200.8 160GB"
 
 #. module: product
 #: field:product.product,ean13:0
@@ -912,70 +303,9 @@ msgid "EAN13"
 msgstr "EAN13"
 
 #. module: product
-#: view:product.uom:0
-msgid "Ratio & Precision"
-msgstr ""
-
-#. module: product
-#: code:addons/product/product.py:641
-#, python-format
-msgid " (copy)"
-msgstr ""
-
-#. module: product
 #: field:product.template,seller_id:0
 msgid "Main Supplier"
 msgstr "Nhà Cung Cấp Chính"
-
-#. module: product
-#: help:product.template,type:0
-msgid ""
-"Will change the way procurements are processed. Consumable are product where "
-"you don't manage stock."
-msgstr ""
-
-#. module: product
-#: model:product.uom.categ,name:product.product_uom_categ_kgm
-msgid "Weight"
-msgstr "Khối lượng"
-
-#. module: product
-#: help:product.uom,category_id:0
-msgid ""
-"Quantity conversions may happen automatically between Units of Measure in "
-"the same category, according to their respective ratios."
-msgstr ""
-
-#. module: product
-#: field:product.template,supply_method:0
-msgid "Supply method"
-msgstr "Phương thức cung cấp"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_category_action
-msgid ""
-"Here is a list of all your products classified by category. You can click a "
-"category to get the list of all products linked to this category or to a "
-"child of this category."
-msgstr ""
-
-#. module: product
-#: selection:product.template,state:0
-msgid "Obsolete"
-msgstr "Lỗi thời"
-
-#. module: product
-#: model:process.node,name:product.process_node_supplier0
-#: view:product.supplierinfo:0
-msgid "Supplier Information"
-msgstr "Thông tin nhà cung cấp"
-
-#. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the product "
-"without removing it."
-msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_ul_form_action
@@ -986,46 +316,6 @@ msgstr ""
 #: view:product.ul:0
 msgid "Packaging"
 msgstr "Đóng gói"
-
-#. module: product
-#: field:product.price.type,currency_id:0
-#: report:product.pricelist:0
-#: field:product.pricelist,currency_id:0
-msgid "Currency"
-msgstr "Loại tiền"
-
-#. module: product
-#: help:product.price.type,currency_id:0
-msgid "The currency the field is expressed in."
-msgstr "Loại tiền được thể hiện bằng."
-
-#. module: product
-#: help:product.uom,rounding:0
-msgid ""
-"The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
-"that cannot be further split, such as a piece."
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Descriptions"
-msgstr "Mô tả"
-
-#. module: product
-#: field:product.pricelist.version,date_start:0
-msgid "Start Date"
-msgstr "Ngày bắt đầu"
-
-#. module: product
-#: view:res.partner:0
-msgid "Sales Properties"
-msgstr "Sở hữu bán hàng"
-
-#. module: product
-#: field:product.template,loc_row:0
-msgid "Row"
-msgstr "Hàng"
 
 #. module: product
 #: view:product.product:0
@@ -1040,60 +330,14 @@ msgid ""
 msgstr "Quy tắc này chỉ áp dụng nếu đối tác mua/bán nhiều hơn số lượng này."
 
 #. module: product
-#: selection:product.template,cost_method:0
-msgid "Standard Price"
-msgstr "Giá chuẩn"
+#: model:product.template,name:product.product_product_woodmm0_product_template
+msgid "Wood 2mm"
+msgstr "gỗ 2mm"
 
 #. module: product
-#: help:product.pricelist,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the pricelist "
-"without removing it."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_category_action_form
-#: model:ir.ui.menu,name:product.menu_product_category_action_form
-#: view:product.category:0
-msgid "Product Categories"
-msgstr "Loại sản phẩm"
-
-#. module: product
-#: field:product.uom,uom_type:0
-msgid "UoM Type"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_uom
-msgid "Product Unit of Measure"
-msgstr "Đơn vị đo sản phẩm"
-
-#. module: product
-#: help:product.template,uom_po_id:0
-msgid ""
-"Default Unit of Measure used for purchase orders. It must be in the same "
-"category than the default unit of measure."
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "This comes from the product form."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action
-#: model:ir.actions.act_window,help:product.product_normal_action_sell
-msgid ""
-"You must define a Product for everything you buy or sell. Products can be "
-"raw materials, stockable products, consumables or services. The Product form "
-"contains detailed information about your products related to procurement "
-"logistics, sales price, product category, suppliers and so on."
-msgstr ""
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Products Listprices Items"
-msgstr "Các mục bảng giá sản phẩm"
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Số lượng-1"
 
 #. module: product
 #: help:product.packaging,ul_qty:0
@@ -1101,53 +345,16 @@ msgid "The number of packages by layer"
 msgstr "Số lượng các gói của lớp"
 
 #. module: product
-#: help:product.uom,factor_inv:0
-msgid ""
-"How many times this UoM is bigger than the reference UoM in this category:\n"
-"1 * (this unit) = ratio * (reference unit)"
-msgstr ""
-
-#. module: product
-#: help:product.packaging,width:0
-msgid "The width of the package"
-msgstr "Chiều rộng của gói"
-
-#. module: product
 #: field:product.packaging,qty:0
 msgid "Quantity by Package"
 msgstr "Số lượng gói"
 
 #. module: product
-#: view:product.uom:0
-msgid "Unit of Measure Properties"
-msgstr ""
-
-#. module: product
-#: help:product.template,standard_price:0
-msgid ""
-"Product's cost for accounting stock valuation. It is the base price for the "
-"supplier price."
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,qty:0
-msgid "This is a quantity which is converted into Default Uom."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid ""
-"Create and manage the units of measure you want to be used in your system. "
-"You can define a conversion rate between several Units of Measure within the "
-"same category."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_ul_form_action
-msgid ""
-"Create and manage your packaging dimensions and types you want to be "
-"maintained in your system."
-msgstr ""
+#: view:product.product:0
+#: view:product.template:0
+#: field:product.template,state:0
+msgid "Status"
+msgstr "Tình trạng"
 
 #. module: product
 #: help:product.template,categ_id:0
@@ -1160,76 +367,25 @@ msgid "Outgoing"
 msgstr "Số lượng ra"
 
 #. module: product
-#: selection:product.template,supply_method:0
-msgid "Buy"
-msgstr "Mua"
-
-#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference UoM for this category"
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_product_pricelist_version
-#: view:product.pricelist:0
-#: view:product.pricelist.version:0
-msgid "Pricelist Version"
-msgstr "Phiên bản bảng giá"
+#: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
+msgid "Public Price"
+msgstr "Giá công bố"
 
 #. module: product
-#: help:product.packaging,sequence:0
-msgid "Gives the sequence order when displaying a list of packaging."
+#: field:product.price_list,qty5:0
+msgid "Quantity-5"
+msgstr "Số lượng-5"
+
+#. module: product
+#: model:product.category,name:product.product_category_10
+msgid "IT components"
 msgstr ""
-
-#. module: product
-#: selection:product.category,type:0
-#: selection:product.template,state:0
-msgid "Normal"
-msgstr "Bình thường"
-
-#. module: product
-#: code:addons/product/pricelist.py:178
-#, python-format
-msgid ""
-"At least one pricelist has no active version !\n"
-"Please create or activate one."
-msgstr ""
-
-#. module: product
-#: field:product.pricelist.item,price_max_margin:0
-msgid "Max. Price Margin"
-msgstr "Max. Price Margin"
-
-#. module: product
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Bán hàng & Mua hàng"
-
-#. module: product
-#: help:product.packaging,weight_ul:0
-msgid "The weight of the empty UL"
-msgstr "Khối lượng của UL trống"
-
-#. module: product
-#: help:product.packaging,code:0
-msgid "The code of the transport unit."
-msgstr "Mã của đơn vị vận chuyển."
-
-#. module: product
-#: view:product.uom:0
-msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
-
-#. module: product
-#: code:addons/product/pricelist.py:375
-#, python-format
-msgid "Other Pricelist"
-msgstr "Bảng giá khác"
-
-#. module: product
-#: view:product.price.type:0
-msgid "Products Price Type"
-msgstr "Loại giá sản phẩm"
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -1237,37 +393,13 @@ msgid "Product Manager"
 msgstr "Giám đốc sản phẩm"
 
 #. module: product
-#: selection:product.uom,uom_type:0
-msgid "Smaller than the reference UoM"
+#: field:product.supplierinfo,product_name:0
+msgid "Supplier Product Name"
 msgstr ""
 
 #. module: product
-#: field:product.product,price_extra:0
-msgid "Variant Price Extra"
-msgstr "Giá biến động bổ sung"
-
-#. module: product
-#: model:ir.model,name:product.model_product_supplierinfo
-msgid "Information about a product supplier"
-msgstr "Thông tin về nhà cung cấp sản phẩm"
-
-#. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.uom,active:0
-msgid "Active"
-msgstr "Hiệu lực"
-
-#. module: product
-#: field:product.product,price_margin:0
-msgid "Variant Price Margin"
-msgstr "Biên độ biến động giá"
-
-#. module: product
-#: field:product.supplierinfo,product_name:0
-msgid "Supplier Product Name"
+#: model:product.template,name:product.product_product_pc3_product_template
+msgid "Medium PC"
 msgstr ""
 
 #. module: product
@@ -1294,24 +426,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.template,rental:0
-msgid "Can be Rent"
-msgstr ""
-
-#. module: product
-#: model:product.price.type,name:product.standard_price
-#: field:product.template,standard_price:0
-msgid "Cost Price"
-msgstr "Giá vốn"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,description_purchase:0
-msgid "Purchase Description"
-msgstr "Mô tả mua hàng"
-
-#. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
 msgstr ""
@@ -1319,13 +433,9 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
-msgid "Second UoM"
-msgstr "Đơn vị đo thứ hai"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_template_action_tree
-msgid "Product Templates"
-msgstr ""
+#: field:product.template,description_sale:0
+msgid "Sale Description"
+msgstr "Mô tả bán hàng"
 
 #. module: product
 #: view:product.product:0
@@ -1339,65 +449,9 @@ msgid "The length of the package"
 msgstr "Chiều dài của gói"
 
 #. module: product
-#: field:product.pricelist.item,price_min_margin:0
-msgid "Min. Price Margin"
-msgstr "Min. Price Margin"
-
-#. module: product
-#: field:product.pricelist.version,items_id:0
-msgid "Price List Items"
-msgstr "Các món trong bảng giá"
-
-#. module: product
-#: field:product.template,weight:0
-msgid "Gross weight"
-msgstr "Khối lượng gộp"
-
-#. module: product
-#: field:product.packaging,weight_ul:0
-msgid "Empty Package Weight"
-msgstr "Khối lượng vỏ không"
-
-#. module: product
-#: model:ir.model,name:product.model_product_category
-#: field:product.pricelist.item,categ_id:0
-msgid "Product Category"
-msgstr "Loại sản phẩm"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_price_type_action
-#: model:ir.ui.menu,name:product.menu_product_price_type
-msgid "Price Types"
-msgstr ""
-
-#. module: product
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-"Lỗi! Bạn không thể chỉ định bảng giá chính là bảng giá khác trong các mục "
-"bảng giá!"
-
-#. module: product
-#: field:product.template,mes_type:0
-msgid "Measure Type"
-msgstr "Loại đo lường"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action
-msgid ""
-"There can be more than one version of a pricelist. Here you can create and "
-"manage new versions of a price list. Some examples of versions: 2010, 2011, "
-"Summer Promotion, etc."
-msgstr ""
-
-#. module: product
-#: help:product.uom,factor:0
-msgid ""
-"How many times this UoM is smaller than the reference UoM in this category:\n"
-"1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+#: help:product.template,weight_net:0
+msgid "The net weight in Kg."
+msgstr "Khối lượng tịnh theo Kg."
 
 #. module: product
 #: help:product.template,state:0
@@ -1405,51 +459,10 @@ msgid "Tells the user if he can use the product or not."
 msgstr "Thông báo cho người sử dụng biết có thể sử dụng sản phẩm hay không."
 
 #. module: product
-#: selection:product.template,type:0
-msgid "Stockable Product"
-msgstr "Sản phẩm có thể lưu trữ"
-
-#. module: product
 #: field:pricelist.partnerinfo,min_quantity:0
 #: field:product.supplierinfo,qty:0
 msgid "Quantity"
 msgstr "Số lượng"
-
-#. module: product
-#: field:product.packaging,code:0
-msgid "Code"
-msgstr "Mã"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_gram
-msgid "g"
-msgstr ""
-
-#. module: product
-#: view:product.supplierinfo:0
-msgid "Seq"
-msgstr "Trình tự"
-
-#. module: product
-#: view:product.price_list:0
-msgid "Calculate Product Price per unit base on pricelist version."
-msgstr ""
-
-#. module: product
-#: selection:product.template,mes_type:0
-msgid "Variable"
-msgstr "Thay đổi"
-
-#. module: product
-#: help:product.template,uom_id:0
-msgid "Default Unit of Measure used for all stock operation."
-msgstr ""
-"Đơn vị đo mặc định dùng cho tất cả các hoạt động liên quan đến hàng tồn kho."
-
-#. module: product
-#: model:ir.model,name:product.model_product_ul
-msgid "Shipping Unit"
-msgstr "Đơn vị vận chuyển"
 
 #. module: product
 #: field:product.packaging,height:0
@@ -1462,59 +475,14 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "Ngày hết hiệu lực của phiên bản bảng giá này."
 
 #. module: product
-#: field:pricelist.partnerinfo,suppinfo_id:0
-msgid "Partner Information"
-msgstr "Thông tin đối tác"
-
-#. module: product
-#: selection:product.category,type:0
-msgid "View"
-msgstr ""
-
-#. module: product
 #: model:product.category,name:product.cat0
 msgid "All products"
 msgstr "Tất cả sản phẩm"
 
 #. module: product
-#: view:product.price_list:0
-msgid "Close"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_pricelist_item
-msgid "Pricelist item"
-msgstr "Mục bảng giá"
-
-#. module: product
-#: help:product.price.type,name:0
-msgid "Name of this kind of price."
-msgstr "Tên của loại giá này."
-
-#. module: product
-#: model:product.pricelist,name:product.list0
-msgid "Public Pricelist"
-msgstr "Bảng giá công bố"
-
-#. module: product
-#: field:product.product,product_image:0
-msgid "Image"
-msgstr ""
-
-#. module: product
-#: selection:product.ul,type:0
-#: model:product.uom.categ,name:product.product_uom_categ_unit
-msgid "Unit"
-msgstr "Đơn vị"
-
-#. module: product
-#: help:product.template,produce_delay:0
-msgid ""
-"Average delay in days to produce this product. This is only for the "
-"production order and, if it is a multi-level bill of material, it's only for "
-"the level of this product. Different lead times will be summed for all "
-"levels and purchase orders."
-msgstr ""
+#: model:ir.model,name:product.model_pricelist_partnerinfo
+msgid "pricelist.partnerinfo"
+msgstr "pricelist.partnerinfo"
 
 #. module: product
 #: field:product.price_list,qty2:0
@@ -1522,10 +490,9 @@ msgid "Quantity-2"
 msgstr "Số lượng-2"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Information"
-msgstr "Thông tin"
+#: field:product.price_list,qty3:0
+msgid "Quantity-3"
+msgstr "Số lượng-3"
 
 #. module: product
 #: view:product.product:0
@@ -1538,25 +505,9 @@ msgid "Quantity-4"
 msgstr "Số lượng-4"
 
 #. module: product
-#: field:product.price_list,qty5:0
-msgid "Quantity-5"
-msgstr "Số lượng-5"
-
-#. module: product
-#: view:product.packaging:0
-msgid "Other Info"
-msgstr "Thông tin khác"
-
-#. module: product
-#: model:product.uom,name:product.product_uom_meter
-msgid "m"
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Delays"
-msgstr "Chậm trễ"
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Bán hàng & Mua hàng"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
@@ -1564,24 +515,559 @@ msgid "Working Time"
 msgstr "Thời gian làm việc"
 
 #. module: product
-#: view:product.product:0
-msgid "Default UOM"
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
+msgid ""
+"A price list contains rules to be evaluated in order to compute the purchase "
+"or sales price for all the partners assigned to a price list. Price lists "
+"have several versions (2010, 2011, Promotion of February 2010, etc.) and "
+"each version has several rules. Example: the customer price of a product "
+"category will be based on the supplier price multiplied by 1.80."
 msgstr ""
 
 #. module: product
-#: view:product.product:0
-msgid "Both stockable and consumable products"
+#: model:product.template,name:product.product_product_metalcleats0_product_template
+msgid "Metal Cleats"
 msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:175
+#, python-format
+msgid "Cannot change the category of existing UoM '%s'."
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_uom_categ
+msgid "Product uom categ"
+msgstr "Sản phẩm  Đơn vị đo  Chủng loại"
+
+#. module: product
+#: model:product.ul,name:product.product_ul_box
+msgid "Box 20x20x40"
+msgstr ""
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Price Computation"
+msgstr "Price Computation"
+
+#. module: product
+#: model:res.groups,name:product.group_uos
+msgid "Product UoS View"
+msgstr ""
+
+#. module: product
+#: field:product.template,purchase_ok:0
+msgid "Can be Purchased"
+msgstr "Có thể mua"
+
+#. module: product
+#: model:product.template,name:product.product_product_cpu2_product_template
+msgid "High speed processor config"
+msgstr ""
+
+#. module: product
+#: model:process.transition,note:product.process_transition_supplierofproduct0
+msgid ""
+"1 or several supplier(s) can be linked to a product. All information stands "
+"in the product form."
+msgstr ""
+
+#. module: product
+#: help:product.uom,category_id:0
+msgid ""
+"Quantity conversions may happen automatically between Units of Measure in "
+"the same category, according to their respective ratios."
+msgstr ""
+
+#. module: product
+#: help:product.packaging,width:0
+msgid "The width of the package"
+msgstr "Chiều rộng của gói"
+
+#. module: product
+#: selection:product.category,type:0
+msgid "View"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_template_action_tree
+msgid "Product Templates"
+msgstr ""
+
+#. module: product
+#: field:product.category,parent_left:0
+msgid "Left Parent"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_restaurantexpenses0_product_template
+msgid "Restaurant Expenses"
+msgstr ""
+
+#. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr ""
+
+#. module: product
+#: constraint:product.packaging:0
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Lỗi: mã EAN không hợp lệ"
+
+#. module: product
+#: field:product.pricelist.item,min_quantity:0
+msgid "Min. Quantity"
+msgstr "Số lượng tối thiểu"
+
+#. module: product
+#: model:ir.model,name:product.model_product_price_type
+msgid "Price Type"
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:363
+#, python-format
+msgid ""
+"New UoM '%s' must belong to same UoM category '%s' as of old UoM '%s'. If "
+"you need to change the unit of measure, you may desactivate this product "
+"from the 'Procurement & Locations' tab and create a new one."
+msgstr ""
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Max. Margin"
+msgstr "Max. Margin"
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Base Price"
+msgstr "Giá cơ bản"
+
+#. module: product
+#: model:product.template,name:product.product_consultant_product_template
+msgid "Service on Timesheet"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_fan2_product_template
+msgid "Silent fan"
+msgstr ""
+
+#. module: product
+#: help:product.supplierinfo,name:0
+msgid "Supplier of this product"
+msgstr "Nhà cung cấp của sản phẩm này"
+
+#. module: product
+#: help:product.pricelist.version,active:0
+msgid ""
+"When a version is duplicated it is set to non active, so that the dates do "
+"not overlaps with original version. You should change the dates and "
+"reactivate the pricelist"
+msgstr ""
+"Khi một phiên bản được chép lại, nó được cài đặt không hoạt động để các ngày "
+"không trùng lắp với phiên bản gốc. Bạn nên thay đổi các ngày và kích hoạt "
+"lại bảng giá"
+
+#. module: product
+#: model:product.template,name:product.product_product_kitshelfofcm0_product_template
+msgid "KIT Shelf of 100cm"
+msgstr ""
+
+#. module: product
+#: field:product.supplierinfo,name:0
+msgid "Supplier"
+msgstr "Nhà cung cấp"
+
+#. module: product
+#: field:product.product,qty_available:0
+msgid "Quantity On Hand"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_26_product_template
+msgid "Kit Keyboard + Mouse"
+msgstr ""
+
+#. module: product
+#: field:product.price.type,name:0
+msgid "Price Name"
+msgstr "Tên giá"
+
+#. module: product
+#: model:product.template,name:product.product_product_arm_product_template
+msgid "Cabinet"
+msgstr ""
+
+#. module: product
+#: help:product.product,incoming_qty:0
+msgid ""
+"Quantity of products that are planned to arrive.\n"
+"In a context with a single Stock Location, this includes goods arriving to "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods arriving to the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location typed as "
+"'internal'."
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_woodentable0_product_template
+msgid "Wooden Table"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_cpu3_product_template
+msgid "Processor AMD Athlon XP 2200+"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.action_product_price_list
+#: model:ir.model,name:product.model_product_price_list
+#: view:product.price_list:0
+#: report:product.pricelist:0
+#: field:product.pricelist.version,pricelist_id:0
+msgid "Price List"
+msgstr "Bảng giá"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Suppliers"
+msgstr "Các nhà cung cấp"
+
+#. module: product
+#: view:product.product:0
+msgid "To Purchase"
+msgstr ""
+
+#. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "New Price ="
+msgstr "Giá mới ="
+
+#. module: product
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_accessories
+msgid "Accessories"
+msgstr "Phụ kiện"
+
+#. module: product
+#: field:product.template,sale_delay:0
+msgid "Customer Lead Time"
+msgstr "Thời gian giao hàng"
+
+#. module: product
+#: model:product.template,name:product.product_product_25_product_template
+msgid "Mouse"
+msgstr ""
+
+#. module: product
+#: help:product.template,uos_id:0
+msgid ""
+"Used by companies that manage two units of measure: invoicing and inventory "
+"management. For example, in food industries, you will manage a stock of ham "
+"but invoice in Kg. Keep empty to use the default UOM."
+msgstr ""
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Min. Margin"
+msgstr "Min. Margin"
+
+#. module: product
+#: field:product.category,child_id:0
+msgid "Child Categories"
+msgstr "Loại trẻ em"
+
+#. module: product
+#: field:product.pricelist.version,date_end:0
+msgid "End Date"
+msgstr "Ngày kết thúc"
+
+#. module: product
+#: view:product.price_list:0
+msgid "Print"
+msgstr "In"
+
+#. module: product
+#: view:product.product:0
+#: field:product.ul,type:0
+msgid "Type"
+msgstr "Loại"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
+#: model:ir.ui.menu,name:product.menu_product_pricelist_action2
+#: model:ir.ui.menu,name:product.menu_product_pricelist_main
+msgid "Pricelists"
+msgstr "Bảng giá"
+
+#. module: product
+#: field:product.product,partner_ref:0
+msgid "Customer ref"
+msgstr "Tham chiếu khách hàng"
+
+#. module: product
+#: view:product.product:0
+msgid "Miscellaneous"
+msgstr "Linh tinh"
+
+#. module: product
+#: field:product.pricelist.type,key:0
+msgid "Key"
+msgstr "Chính"
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Rules Test Match"
+msgstr "Kiểm tra quy tắc phù hợp"
+
+#. module: product
+#: help:product.pricelist.item,product_id:0
+msgid ""
+"Set a product if this rule only apply to one product. Keep empty for all "
+"products"
+msgstr ""
+"Thiết lập một sản phẩm nếu quy tắc này chỉ áp dụng đối với một sản phẩm. Để "
+"trống cho tất cả sản phẩm"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
+msgstr "Thu mua & Địa điểm"
+
+#. module: product
+#: model:product.template,name:product.product_product_kitchendesignproject0_product_template
+msgid "Kitchen Design Project"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.uom_hour
+msgid "Hour"
+msgstr "Giờ"
+
+#. module: product
+#: selection:product.template,state:0
+msgid "In Development"
+msgstr "Đang phát triển"
+
+#. module: product
+#: code:addons/product/product.py:363
+#, python-format
+msgid "UoM categories Mismatch!"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_shelfofcm1_product_template
+msgid "Shelf of 200cm"
+msgstr ""
+
+#. module: product
+#: view:product.uom:0
+msgid "Ratio & Precision"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_gram
+msgid "g"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_11
+msgid "IT components kits"
+msgstr ""
+
+#. module: product
+#: selection:product.category,type:0
+#: selection:product.template,state:0
+msgid "Normal"
+msgstr "Bình thường"
+
+#. module: product
+#: model:process.node,name:product.process_node_supplier0
+#: view:product.supplierinfo:0
+msgid "Supplier Information"
+msgstr "Thông tin nhà cung cấp"
+
+#. module: product
+#: field:product.price.type,currency_id:0
+#: report:product.pricelist:0
+#: field:product.pricelist,currency_id:0
+msgid "Currency"
+msgstr "Loại tiền"
+
+#. module: product
+#: model:product.template,name:product.product_product_ram_product_template
+msgid "DDR 256MB PC400"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model:ir.ui.menu,name:product.menu_product_category_action_form
+#: view:product.category:0
+msgid "Product Categories"
+msgstr "Loại sản phẩm"
+
+#. module: product
+#: view:product.uom:0
+msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid ""
+"Create and manage the units of measure you want to be used in your system. "
+"You can define a conversion rate between several Units of Measure within the "
+"same category."
+msgstr ""
+
+#. module: product
+#: field:product.packaging,weight:0
+msgid "Total Package Weight"
+msgstr "Tổng khối lượng đóng gói"
+
+#. module: product
+#: field:product.template,seller_info_id:0
+msgid "unknown"
+msgstr ""
+
+#. module: product
+#: help:product.packaging,code:0
+msgid "The code of the transport unit."
+msgstr "Mã của đơn vị vận chuyển."
+
+#. module: product
+#: help:product.template,standard_price:0
+msgid ""
+"Product's cost for accounting stock valuation. It is the base price for the "
+"supplier price."
+msgstr ""
+
+#. module: product
+#: view:product.price.type:0
+msgid "Products Price Type"
+msgstr "Loại giá sản phẩm"
+
+#. module: product
+#: field:product.product,price_extra:0
+msgid "Variant Price Extra"
+msgstr "Giá biến động bổ sung"
+
+#. module: product
+#: model:product.template,name:product.product_product_fan_product_template
+msgid "Regular case fan 80mm"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_supplierinfo
+msgid "Information about a product supplier"
+msgstr "Thông tin về nhà cung cấp sản phẩm"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+#: field:product.template,description_purchase:0
+msgid "Purchase Description"
+msgstr "Mô tả mua hàng"
+
+#. module: product
+#: constraint:product.pricelist.version:0
+msgid "You cannot have 2 pricelist versions that overlap!"
+msgstr "Bạn không thể có 2 phiên bản bảng giá chồng chéo nhau!"
+
+#. module: product
+#: help:product.supplierinfo,delay:0
+msgid ""
+"Lead time in days between the confirmation of the purchase order and the "
+"reception of the products in your warehouse. Used by the scheduler for "
+"automatic computation of the purchase order planning."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action
+msgid ""
+"There can be more than one version of a pricelist. Here you can create and "
+"manage new versions of a price list. Some examples of versions: 2010, 2011, "
+"Summer Promotion, etc."
+msgstr ""
+
+#. module: product
+#: selection:product.template,type:0
+msgid "Stockable Product"
+msgstr "Sản phẩm có thể lưu trữ"
+
+#. module: product
+#: field:product.packaging,code:0
+msgid "Code"
+msgstr "Mã"
+
+#. module: product
+#: view:product.supplierinfo:0
+msgid "Seq"
+msgstr "Trình tự"
+
+#. module: product
+#: view:product.price_list:0
+msgid "Calculate Product Price per unit base on pricelist version."
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_ul
+msgid "Shipping Unit"
+msgstr "Đơn vị vận chuyển"
+
+#. module: product
+#: field:pricelist.partnerinfo,suppinfo_id:0
+msgid "Partner Information"
+msgstr "Thông tin đối tác"
 
 #. module: product
 #: selection:product.ul,type:0
-msgid "Pallet"
-msgstr "Palet"
+#: model:product.uom.categ,name:product.product_uom_categ_unit
+msgid "Unit"
+msgstr "Đơn vị"
 
 #. module: product
-#: model:process.node,note:product.process_node_product0
-msgid "Creation of the product"
-msgstr ""
+#: view:product.product:0
+#: view:product.template:0
+msgid "Information"
+msgstr "Thông tin"
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Products Listprices Items"
+msgstr "Các mục bảng giá sản phẩm"
+
+#. module: product
+#: view:product.packaging:0
+msgid "Other Info"
+msgstr "Thông tin khác"
+
+#. module: product
+#: field:product.pricelist.version,items_id:0
+msgid "Price List Items"
+msgstr "Các món trong bảng giá"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
@@ -1598,99 +1084,14 @@ msgid "Bigger than the reference UoM"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action2
-#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
-msgid ""
-"A price list contains rules to be evaluated in order to compute the purchase "
-"or sales price for all the partners assigned to a price list. Price lists "
-"have several versions (2010, 2011, Promotion of February 2010, etc.) and "
-"each version has several rules. Example: the customer price of a product "
-"category will be based on the supplier price multiplied by 1.80."
+#: field:product.category,parent_right:0
+msgid "Right Parent"
 msgstr ""
 
 #. module: product
-#: field:product.packaging,ul_qty:0
-msgid "Package by layer"
-msgstr "Đóng gói theo lớp"
-
-#. module: product
-#: view:product.uom.categ:0
-msgid "Units of Measure categories"
-msgstr "Các loại đơn vị đo"
-
-#. module: product
-#: field:pricelist.partnerinfo,price:0
-msgid "Unit Price"
-msgstr "Giá đơn vị"
-
-#. module: product
-#: field:product.template,warranty:0
-msgid "Warranty (months)"
-msgstr "Bảo hành (tháng)"
-
-#. module: product
-#: help:product.pricelist.item,categ_id:0
-msgid ""
-"Set a category of product if this rule only apply to products of a category "
-"and his children. Keep empty for all products"
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_product_product
-#: model:ir.ui.menu,name:product.prod_config_main
-#: model:process.node,name:product.process_node_product0
-#: model:process.process,name:product.process_process_productprocess0
-#: field:product.packaging,product_id:0
-#: field:product.pricelist.item,product_id:0
 #: view:product.product:0
-#: field:product.supplierinfo,product_id:0
-#: model:res.request.link,name:product.req_link_product
-msgid "Product"
-msgstr "Sản phẩm"
-
-#. module: product
-#: help:product.template,sale_delay:0
-msgid ""
-"This is the average delay in days between the confirmation of the customer "
-"order and the delivery of the finished products. It's the time you promise "
-"to your customers."
+msgid "To Sell"
 msgstr ""
-
-#. module: product
-#: code:addons/product/product.py:175
-#, python-format
-msgid "Cannot change the category of existing UoM '%s'."
-msgstr ""
-
-#. module: product
-#: field:product.packaging,ean:0
-msgid "EAN"
-msgstr "EAN"
-
-#. module: product
-#: view:product.template:0
-msgid "Product Description"
-msgstr "Mô tả sản phẩm"
-
-#. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
-msgstr ""
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid " ) + "
-msgstr " ) + "
-
-#. module: product
-#: model:ir.model,name:product.model_product_uom_categ
-msgid "Product uom categ"
-msgstr "Sản phẩm  Đơn vị đo  Chủng loại"
-
-#. module: product
-#: field:product.price_list,qty3:0
-msgid "Quantity-3"
-msgstr "Số lượng-3"
 
 #. module: product
 #: help:product.product,outgoing_qty:0
@@ -1707,19 +1108,9 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: selection:product.template,supply_method:0
-msgid "Produce"
-msgstr "Sản xuất"
-
-#. module: product
-#: selection:product.template,procure_method:0
-msgid "Make to Order"
-msgstr "Sản xuất theo đơn đặt hàng"
-
-#. module: product
-#: view:product.template:0
-msgid "UOM"
-msgstr "ĐVĐ"
+#: model:product.category,name:product.product_category_services0
+msgid "Marketable Services"
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
@@ -1727,43 +1118,9 @@ msgid "Price Surcharge"
 msgstr "Phụ thu"
 
 #. module: product
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "Bạn không thể có 2 phiên bản bảng giá chồng chéo nhau!"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.action_product_price_list
-#: model:ir.model,name:product.model_product_price_list
-#: view:product.price_list:0
-#: report:product.pricelist:0
-#: field:product.pricelist.version,pricelist_id:0
-msgid "Price List"
-msgstr "Bảng giá"
-
-#. module: product
-#: field:product.product,variants:0
-msgid "Variants"
-msgstr "Biến thể"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Price Computation"
-msgstr "Price Computation"
-
-#. module: product
-#: model:res.groups,name:product.group_uos
-msgid "Product UoS View"
+#: model:product.template,name:product.product_product_mb1_product_template
+msgid "Mainboard ASUStek A7N8X"
 msgstr ""
-
-#. module: product
-#: field:product.template,loc_case:0
-msgid "Case"
-msgstr "Trường hợp"
-
-#. module: product
-#: field:product.pricelist.version,date_end:0
-msgid "End Date"
-msgstr "Ngày kết thúc"
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1785,9 +1142,570 @@ msgid "Name"
 msgstr "Tên"
 
 #. module: product
-#: field:product.template,purchase_ok:0
-msgid "Can be Purchased"
-msgstr "Có thể mua"
+#: model:product.template,name:product.product_product_woodlintelm0_product_template
+msgid "Wood Lintel 4m"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
+msgid ""
+"You must define a Product for everything you buy or sell. Products can be "
+"raw materials, stockable products, consumables or services. The Product form "
+"contains detailed information about your products related to procurement "
+"logistics, sales price, product category, suppliers and so on."
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_kgm
+msgid "kg"
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_meter
+msgid "m"
+msgstr ""
+
+#. module: product
+#: selection:product.template,state:0
+msgid "Obsolete"
+msgstr "Lỗi thời"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_km
+msgid "km"
+msgstr ""
+
+#. module: product
+#: help:product.template,cost_method:0
+msgid ""
+"Standard Price: the cost price is fixed and recomputed periodically (usually "
+"at the end of the year), Average Price: the cost price is recomputed at each "
+"reception of products."
+msgstr ""
+"Giá chuẩn: giá vốn là cố định và được tính lại định kỳ (thông thường vào "
+"cuối năm), Giá trung bình: giá vốn được tính lại theo từng lần tiếp nhận sản "
+"phẩm."
+
+#. module: product
+#: help:product.category,sequence:0
+msgid ""
+"Gives the sequence order when displaying a list of product categories."
+msgstr ""
+
+#. module: product
+#: field:product.uom,factor:0
+#: field:product.uom,factor_inv:0
+msgid "Ratio"
+msgstr ""
+
+#. module: product
+#: help:product.template,purchase_ok:0
+msgid ""
+"Determine if the product is visible in the list of products within a "
+"selection from a purchase order line."
+msgstr ""
+"Xác định xem sản phẩm có hiển thị trong danh sách sản phẩm trong vòng lựa "
+"chọn từ một dòng của đơn đặt hàng."
+
+#. module: product
+#: field:product.template,weight_net:0
+msgid "Net weight"
+msgstr "Khối lượng tịnh"
+
+#. module: product
+#: field:product.packaging,width:0
+msgid "Width"
+msgstr "Chiều rộng"
+
+#. module: product
+#: help:product.price.type,field:0
+msgid "Associated field in the product form."
+msgstr "Lĩnh vực liên quan trong hình thức sản phẩm."
+
+#. module: product
+#: view:product.product:0
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: product
+#: field:product.template,procure_method:0
+msgid "Procurement Method"
+msgstr ""
+
+#. module: product
+#: report:product.pricelist:0
+msgid "Printing Date"
+msgstr ""
+
+#. module: product
+#: field:product.template,uos_id:0
+msgid "Unit of Sale"
+msgstr "Đơn vị bán"
+
+#. module: product
+#: help:product.template,seller_delay:0
+msgid ""
+"This is the average delay in days between the purchase order confirmation "
+"and the reception of goods for this product and for the default supplier. It "
+"is used by the scheduler to order requests based on reordering delays."
+msgstr ""
+"Đây là thời gian chờ đợi trung bình tính theo ngày kể từ ngày xác nhận đơn "
+"đặt hàng đến ngày nhận được hàng đặt đối với sản phẩm này và cho nhà cung "
+"cấp mặc định. Nó được dùng để đặt yêu cầu dựa trên thời gian chờ đội tái đặt "
+"hàng."
+
+#. module: product
+#: help:product.template,seller_id:0
+msgid "Main Supplier who has highest priority in Supplier List."
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_services
+#: view:product.product:0
+msgid "Services"
+msgstr "Các dịch vụ"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_form_config_action
+msgid "Create or Import Products"
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.item,base_pricelist_id:0
+msgid "If Other Pricelist"
+msgstr "Nếu bảng giá khác"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_puchased
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
+#: model:ir.actions.act_window,name:product.product_normal_action_tree
+#: model:ir.ui.menu,name:product.menu_products
+#: model:ir.ui.menu,name:product.prod_config_main
+#: view:product.product:0
+msgid "Products"
+msgstr "Sản phẩm"
+
+#. module: product
+#: help:product.packaging,rows:0
+msgid "The number of layers on a pallet or box"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,base:0
+msgid "The mode for computing the price for this rule."
+msgstr "Phương thức tính giá cho quy tắc này."
+
+#. module: product
+#: view:product.packaging:0
+#: view:product.product:0
+msgid "Pallet Dimension"
+msgstr "Kích thước pallet"
+
+#. module: product
+#: code:addons/product/product.py:668
+#, python-format
+msgid " (copy)"
+msgstr ""
+
+#. module: product
+#: field:product.template,seller_ids:0
+msgid "Partners"
+msgstr "Đối tác"
+
+#. module: product
+#: help:product.template,sale_delay:0
+msgid ""
+"This is the average delay in days between the confirmation of the customer "
+"order and the delivery of the finished products. It's the time you promise "
+"to your customers."
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Second UoM"
+msgstr "Đơn vị đo thứ hai"
+
+#. module: product
+#: code:addons/product/product.py:143
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_uom_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_form_action
+#: model:ir.ui.menu,name:product.next_id_16
+#: view:product.uom:0
+msgid "Units of Measure"
+msgstr "Đơn vị đo"
+
+#. module: product
+#: field:product.supplierinfo,min_qty:0
+msgid "Minimal Quantity"
+msgstr "Số lượng tối thiểu"
+
+#. module: product
+#: model:product.category,name:product.product_category_pc
+msgid "PC"
+msgstr ""
+
+#. module: product
+#: help:product.supplierinfo,product_code:0
+msgid ""
+"This supplier's product code will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+
+#. module: product
+#: selection:product.template,procure_method:0
+msgid "Make to Stock"
+msgstr "Sản xuất theo nhu cầu dự báo"
+
+#. module: product
+#: field:product.pricelist.item,price_version_id:0
+msgid "Price List Version"
+msgstr "Phiên bản bảng giá"
+
+#. module: product
+#: field:product.product,virtual_available:0
+msgid "Quantity Available"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
+
+#. module: product
+#: selection:product.template,type:0
+msgid "Consumable"
+msgstr "Có thể tiêu thụ"
+
+#. module: product
+#: help:product.price.type,currency_id:0
+msgid "The currency the field is expressed in."
+msgstr "Loại tiền được thể hiện bằng."
+
+#. module: product
+#: help:product.template,weight:0
+msgid "The gross weight in Kg."
+msgstr "Khối lượng gộp tính theo Kg."
+
+#. module: product
+#: model:product.template,name:product.product_product_sidepanel0_product_template
+msgid "Side Panel"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement"
+msgstr "Thu mua"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Weights"
+msgstr "Khối lượng"
+
+#. module: product
+#: field:product.uom,category_id:0
+msgid "UoM Category"
+msgstr "Loại đơn vị đo"
+
+#. module: product
+#: field:product.template,loc_rack:0
+msgid "Rack"
+msgstr "Giá"
+
+#. module: product
+#: field:product.template,uom_po_id:0
+msgid "Purchase Unit of Measure"
+msgstr ""
+
+#. module: product
+#: field:product.template,supply_method:0
+msgid "Supply method"
+msgstr "Phương thức cung cấp"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_category_action
+msgid ""
+"Here is a list of all your products classified by category. You can click a "
+"category to get the list of all products linked to this category or to a "
+"child of this category."
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Group by..."
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_cpu_gen_product_template
+msgid "Regular processor config"
+msgstr ""
+
+#. module: product
+#: help:product.template,type:0
+msgid ""
+"Will change the way procurements are processed. Consumable are product where "
+"you don't manage stock."
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.version,date_start:0
+msgid "Start Date"
+msgstr "Ngày bắt đầu"
+
+#. module: product
+#: help:product.template,produce_delay:0
+msgid ""
+"Average delay in days to produce this product. This is only for the "
+"production order and, if it is a multi-level bill of material, it's only for "
+"the level of this product. Different lead times will be summed for all "
+"levels and purchase orders."
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_pc1_product_template
+msgid "Basic PC"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the pricelist "
+"without removing it."
+msgstr ""
+
+#. module: product
+#: model:product.uom,name:product.product_uom_cm
+msgid "cm"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_uom
+msgid "Product Unit of Measure"
+msgstr "Đơn vị đo sản phẩm"
+
+#. module: product
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "Làm tròn chính xác"
+
+#. module: product
+#: view:product.uom:0
+msgid "Unit of Measure Properties"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_shelf1_product_template
+msgid "Rack 200cm"
+msgstr ""
+
+#. module: product
+#: selection:product.template,supply_method:0
+msgid "Buy"
+msgstr "Mua"
+
+#. module: product
+#: view:product.uom.categ:0
+msgid "Units of Measure categories"
+msgstr "Các loại đơn vị đo"
+
+#. module: product
+#: help:product.packaging,weight_ul:0
+msgid "The weight of the empty UL"
+msgstr "Khối lượng của UL trống"
+
+#. module: product
+#: model:product.template,name:product.product_product_woodmm10_product_template
+msgid "Wood 10mm"
+msgstr ""
+
+#. module: product
+#: selection:product.uom,uom_type:0
+msgid "Smaller than the reference UoM"
+msgstr ""
+
+#. module: product
+#: field:product.price.type,active:0
+#: field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0
+#: field:product.product,active:0
+#: field:product.uom,active:0
+msgid "Active"
+msgstr "Hiệu lực"
+
+#. module: product
+#: field:product.product,price_margin:0
+msgid "Variant Price Margin"
+msgstr "Biên độ biến động giá"
+
+#. module: product
+#: sql_constraint:product.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr ""
+
+#. module: product
+#: help:product.packaging,ean:0
+msgid "The EAN code of the package unit."
+msgstr "Mã EAN của đơn vị đóng gói."
+
+#. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid "This comes from the product form."
+msgstr ""
+
+#. module: product
+#: field:product.packaging,weight_ul:0
+msgid "Empty Package Weight"
+msgstr "Khối lượng vỏ không"
+
+#. module: product
+#: field:product.price.type,field:0
+msgid "Product Field"
+msgstr "Lĩnh vực sản phẩm"
+
+#. module: product
+#: field:product.template,mes_type:0
+msgid "Measure Type"
+msgstr "Loại đo lường"
+
+#. module: product
+#: help:product.uom,factor:0
+msgid ""
+"How many times this UoM is smaller than the reference UoM in this category:\n"
+"1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_price_type_action
+#: model:ir.ui.menu,name:product.menu_product_price_type
+msgid "Price Types"
+msgstr ""
+
+#. module: product
+#: help:product.template,uom_id:0
+msgid "Default Unit of Measure used for all stock operation."
+msgstr ""
+"Đơn vị đo mặc định dùng cho tất cả các hoạt động liên quan đến hàng tồn kho."
+
+#. module: product
+#: model:product.category,name:product.product_category_misc0
+msgid "Misc"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_pc4_product_template
+msgid "Customizable PC"
+msgstr ""
+
+#. module: product
+#: field:pricelist.partnerinfo,price:0
+msgid "Unit Price"
+msgstr "Giá đơn vị"
+
+#. module: product
+#: model:product.category,name:product.product_category_7
+#: model:product.template,name:product.product_product_1_product_template
+msgid "Onsite Intervention"
+msgstr ""
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "Public Pricelist"
+msgstr "Bảng giá công bố"
+
+#. module: product
+#: model:product.category,name:product.product_category_marketableproduct0
+msgid "Marketable Products"
+msgstr ""
+
+#. module: product
+#: field:product.supplierinfo,product_code:0
+msgid "Supplier Product Code"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Default UOM"
+msgstr ""
+
+#. module: product
+#: selection:product.ul,type:0
+msgid "Pallet"
+msgstr "Palet"
+
+#. module: product
+#: field:product.packaging,ul_qty:0
+msgid "Package by layer"
+msgstr "Đóng gói theo lớp"
+
+#. module: product
+#: field:product.template,warranty:0
+msgid "Warranty (months)"
+msgstr "Bảo hành (tháng)"
+
+#. module: product
+#: help:product.pricelist.item,categ_id:0
+msgid ""
+"Set a category of product if this rule only apply to products of a category "
+"and his children. Keep empty for all products"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_product
+#: model:process.node,name:product.process_node_product0
+#: model:process.process,name:product.process_process_productprocess0
+#: field:product.packaging,product_id:0
+#: field:product.pricelist.item,product_id:0
+#: view:product.product:0
+#: field:product.supplierinfo,product_id:0
+#: model:res.request.link,name:product.req_link_product
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: product
+#: selection:product.template,supply_method:0
+msgid "Produce"
+msgstr "Sản xuất"
+
+#. module: product
+#: selection:product.template,procure_method:0
+msgid "Make to Order"
+msgstr "Sản xuất theo đơn đặt hàng"
+
+#. module: product
+#: help:product.template,supply_method:0
+msgid ""
+"Produce will generate production order or tasks, according to the product "
+"type. Buy will trigger purchase orders when requested."
+msgstr ""
+
+#. module: product
+#: field:product.product,variants:0
+msgid "Variants"
+msgstr "Biến thể"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_category_action
+#: model:ir.ui.menu,name:product.menu_products_category
+msgid "Products by Category"
+msgstr "Sản phẩm theo chủng loại"
 
 #. module: product
 #: field:product.template,uos_coeff:0
@@ -1795,19 +1713,557 @@ msgid "UOM -> UOS Coeff"
 msgstr "ĐVT -> Hệ số đơn vị bán"
 
 #. module: product
-#: help:res.partner,property_product_pricelist:0
-msgid ""
-"This pricelist will be used, instead of the default one, for sales to the "
-"current partner"
+#: help:product.supplierinfo,sequence:0
+msgid "Assigns the priority to the list of product supplier."
 msgstr ""
-"Bảng giá này sẽ được sử dụng, thay vì mặc định, để bán cho đối tác hiện tại"
 
 #. module: product
-#: model:process.transition,note:product.process_transition_supplierofproduct0
-msgid ""
-"1 or several supplier(s) can be linked to a product. All information stands "
-"in the product form."
+#: field:product.template,uom_id:0
+msgid "Default Unit Of Measure"
 msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_tow1_product_template
+msgid "ATX Mid-size Tower"
+msgstr ""
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "Rounding Method"
+msgstr "Phương pháp làm tròn"
+
+#. module: product
+#: model:product.category,name:product.product_category_assembly
+msgid "Assembly Service"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.report.xml,name:product.report_product_label
+msgid "Products Labels"
+msgstr "Nhãn sản phẩm"
+
+#. module: product
+#: model:product.ul,name:product.product_ul_big_box
+msgid "Box 30x40x60"
+msgstr ""
+
+#. module: product
+#: selection:product.template,type:0
+msgid "Service"
+msgstr "Dịch vụ"
+
+#. module: product
+#: help:product.packaging,height:0
+msgid "The height of the package"
+msgstr "Chiều cao của gói hàng"
+
+#. module: product
+#: view:product.pricelist:0
+msgid "Products Price List"
+msgstr "Bảng giá sản phẩm"
+
+#. module: product
+#: field:product.pricelist,company_id:0
+#: field:product.pricelist.item,company_id:0
+#: field:product.pricelist.version,company_id:0
+#: view:product.product:0
+#: field:product.supplierinfo,company_id:0
+#: field:product.template,company_id:0
+msgid "Company"
+msgstr "Công ty"
+
+#. module: product
+#: help:product.template,list_price:0
+msgid ""
+"Base price for computing the customer price. Sometimes called the catalog "
+"price."
+msgstr ""
+"Giá cơ bản để tính giá bán cho khách hàng. Đôi khi được gọi là giá catalog."
+
+#. module: product
+#: code:addons/product/pricelist.py:376
+#, python-format
+msgid "Partner section of the product form"
+msgstr "Mục đối tác của form sản phẩm"
+
+#. module: product
+#: help:product.price.type,name:0
+msgid "Name of this kind of price."
+msgstr "Tên của loại giá này."
+
+#. module: product
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.version,date_start:0
+msgid "Starting date for this pricelist version to be valid."
+msgstr "Ngày bắt đầu để phiên bản bảng giá này có hiệu lực."
+
+#. module: product
+#: help:product.template,uom_po_id:0
+msgid ""
+"Default Unit of Measure used for purchase orders. It must be in the same "
+"category than the default unit of measure."
+msgstr ""
+
+#. module: product
+#: model:product.template,description:product.product_product_cpu1_product_template
+msgid "This product is configured with example of push/pull flows"
+msgstr ""
+
+#. module: product
+#: field:product.packaging,length:0
+msgid "Length"
+msgstr "Chiều dài"
+
+#. module: product
+#: model:product.uom.categ,name:product.uom_categ_length
+msgid "Length / Distance"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_0_product_template
+msgid "Onsite Senior Intervention"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_type
+#: field:product.pricelist,type:0
+msgid "Pricelist Type"
+msgstr "Loại bảng giá"
+
+#. module: product
+#: model:product.category,name:product.product_category_otherproducts0
+msgid "Other Products"
+msgstr ""
+
+#. module: product
+#: field:product.product,color:0
+msgid "Color Index"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "Characteristics"
+msgstr ""
+
+#. module: product
+#: field:product.template,sale_ok:0
+msgid "Can be Sold"
+msgstr ""
+
+#. module: product
+#: field:product.template,produce_delay:0
+msgid "Manufacturing Lead Time"
+msgstr "Thời gian sản xuất sản phẩm"
+
+#. module: product
+#: field:product.supplierinfo,pricelist_ids:0
+msgid "Supplier Pricelist"
+msgstr "Bảng giá nhà cung cấp"
+
+#. module: product
+#: code:addons/product/product.py:175
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.item,base:0
+msgid "Based on"
+msgstr "Dựa trên"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_ton
+msgid "t"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_rawmaterial0
+msgid "Raw Materials"
+msgstr ""
+
+#. module: product
+#: help:product.template,product_manager:0
+msgid "This is use as task responsible"
+msgstr ""
+
+#. module: product
+#: field:product.pricelist,name:0
+msgid "Pricelist Name"
+msgstr "Tên bảng giá"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_version
+#: view:product.pricelist:0
+#: view:product.pricelist.version:0
+msgid "Pricelist Version"
+msgstr "Phiên bản bảng giá"
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid "* ( 1 + "
+msgstr "* ( 1 + "
+
+#. module: product
+#: help:product.packaging,weight:0
+msgid "The weight of a full package, pallet or box."
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_hdd2_product_template
+msgid "HDD Seagate 7200.8 120GB"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_employee0_product_template
+msgid "Employee"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_shelfofcm0_product_template
+msgid "Shelf of 100cm"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_category
+#: field:product.pricelist.item,categ_id:0
+msgid "Product Category"
+msgstr "Loại sản phẩm"
+
+#. module: product
+#: report:product.pricelist:0
+msgid "Price List Name"
+msgstr ""
+
+#. module: product
+#: field:product.supplierinfo,delay:0
+msgid "Delivery Lead Time"
+msgstr ""
+
+#. module: product
+#: help:product.uom,active:0
+msgid ""
+"By unchecking the active field you can disable a unit of measure without "
+"deleting it."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
+msgid "UoM Categories"
+msgstr ""
+
+#. module: product
+#: field:product.template,seller_delay:0
+msgid "Supplier Lead Time"
+msgstr "Thời gian chờ đợi nhận hàng"
+
+#. module: product
+#: selection:product.ul,type:0
+msgid "Box"
+msgstr "Hộp"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_ul_form_action
+msgid ""
+"Create and manage your packaging dimensions and types you want to be "
+"maintained in your system."
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_rearpanelarm1_product_template
+msgid "Rear Panel SHE200"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.type,key:0
+msgid ""
+"Used in the code to select specific prices based on the context. Keep "
+"unchanged."
+msgstr ""
+"Được sử dụng trong các mã để chọn các giá đặc biệt theo ngữ cảnh. Giữ nguyên."
+
+#. module: product
+#: view:product.product:0
+msgid "Context..."
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_hdd1_product_template
+msgid "HDD Seagate 7200.8 80GB"
+msgstr ""
+
+#. module: product
+#: help:product.supplierinfo,qty:0
+msgid "This is a quantity which is converted into Default Uom."
+msgstr ""
+
+#. module: product
+#: field:product.packaging,ul:0
+msgid "Type of Package"
+msgstr "Loại đóng gói"
+
+#. module: product
+#: selection:product.ul,type:0
+msgid "Pack"
+msgstr "Gói"
+
+#. module: product
+#: model:product.category,name:product.product_category_4
+msgid "Dello Computer"
+msgstr ""
+
+#. module: product
+#: model:product.uom.categ,name:product.product_uom_categ_kgm
+msgid "Weight"
+msgstr "Khối lượng"
+
+#. module: product
+#: model:product.template,name:product.product_product_22_product_template
+msgid "Processor on demand"
+msgstr ""
+
+#. module: product
+#: model:process.transition,name:product.process_transition_supplierofproduct0
+msgid "Supplier of the product"
+msgstr ""
+
+#. module: product
+#: field:product.product,product_image:0
+msgid "Image"
+msgstr ""
+
+#. module: product
+#: field:product.uom,uom_type:0
+msgid "UoM Type"
+msgstr ""
+
+#. module: product
+#: help:product.product,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
+msgstr ""
+
+#. module: product
+#: help:product.uom,rounding:0
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
+"that cannot be further split, such as a piece."
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Descriptions"
+msgstr "Mô tả"
+
+#. module: product
+#: field:product.template,loc_row:0
+msgid "Row"
+msgstr "Hàng"
+
+#. module: product
+#: model:product.template,name:product.product_product_rearpanelarm0_product_template
+msgid "Rear Panel SHE100"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_23_product_template
+msgid "Complete PC With Peripherals"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_hotelexpenses0_product_template
+msgid "Hotel Expenses"
+msgstr ""
+
+#. module: product
+#: help:product.uom,factor_inv:0
+msgid ""
+"How many times this UoM is bigger than the reference UoM in this category:\n"
+"1 * (this unit) = ratio * (reference unit)"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_shelf0_product_template
+msgid "Rack 100cm"
+msgstr ""
+
+#. module: product
+#: help:product.packaging,sequence:0
+msgid "Gives the sequence order when displaying a list of packaging."
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.item,price_round:0
+msgid "Price Rounding"
+msgstr "Làm tròn giá"
+
+#. module: product
+#: code:addons/product/pricelist.py:178
+#, python-format
+msgid ""
+"At least one pricelist has no active version !\n"
+"Please create or activate one."
+msgstr ""
+
+#. module: product
+#: field:product.pricelist.item,price_max_margin:0
+msgid "Max. Price Margin"
+msgstr "Max. Price Margin"
+
+#. module: product
+#: help:product.supplierinfo,product_name:0
+msgid ""
+"This supplier's product name will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+
+#. module: product
+#: selection:product.template,mes_type:0
+msgid "Variable"
+msgstr "Thay đổi"
+
+#. module: product
+#: field:product.template,rental:0
+msgid "Can be Rent"
+msgstr ""
+
+#. module: product
+#: model:product.price.type,name:product.standard_price
+#: field:product.template,standard_price:0
+msgid "Cost Price"
+msgstr "Giá vốn"
+
+#. module: product
+#: field:product.pricelist.item,price_min_margin:0
+msgid "Min. Price Margin"
+msgstr "Min. Price Margin"
+
+#. module: product
+#: field:product.template,weight:0
+msgid "Gross weight"
+msgstr "Khối lượng gộp"
+
+#. module: product
+#: model:product.template,name:product.product_product_assemblysection0_product_template
+msgid "Assembly Section"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_3
+msgid "Computer Stuff"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_8
+msgid "Phone Help"
+msgstr ""
+
+#. module: product
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+#: field:product.supplierinfo,sequence:0
+msgid "Sequence"
+msgstr "Trình tự"
+
+#. module: product
+#: model:product.template,name:product.product_assembly_product_template
+msgid "Assembly Service Cost"
+msgstr ""
+
+#. module: product
+#: view:product.price_list:0
+msgid "Close"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_item
+msgid "Pricelist item"
+msgstr "Mục bảng giá"
+
+#. module: product
+#: model:product.template,name:product.product_product_21_product_template
+msgid "RAM on demand"
+msgstr ""
+
+#. module: product
+#: view:res.partner:0
+msgid "Sales Properties"
+msgstr "Sở hữu bán hàng"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Delays"
+msgstr "Chậm trễ"
+
+#. module: product
+#: view:product.product:0
+msgid "Both stockable and consumable products"
+msgstr ""
+
+#. module: product
+#: model:process.node,note:product.process_node_product0
+msgid "Creation of the product"
+msgstr ""
+
+#. module: product
+#: field:pricelist.partnerinfo,name:0
+#: field:product.packaging,name:0
+#: report:product.pricelist:0
+#: view:product.product:0
+#: view:product.template:0
+#: field:product.template,description:0
+msgid "Description"
+msgstr "Mô tả"
+
+#. module: product
+#: field:product.packaging,ean:0
+msgid "EAN"
+msgstr "EAN"
+
+#. module: product
+#: view:product.template:0
+msgid "Product Description"
+msgstr "Mô tả sản phẩm"
+
+#. module: product
+#: view:product.pricelist.item:0
+msgid " ) + "
+msgstr " ) + "
+
+#. module: product
+#: field:product.template,volume:0
+msgid "Volume"
+msgstr "Thể tích"
+
+#. module: product
+#: field:product.template,loc_case:0
+msgid "Case"
+msgstr "Trường hợp"
+
+#. module: product
+#: view:product.product:0
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant"
+msgstr "Sản phẩm biến thể"
+
+#. module: product
+#: model:product.category,name:product.product_category_shelves0
+msgid "Shelves"
+msgstr ""
+
+#. module: product
+#: code:addons/product/pricelist.py:375
+#, python-format
+msgid "Other Pricelist"
+msgstr "Bảng giá khác"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -1829,35 +2285,9 @@ msgid "Palletization"
 msgstr "Lưu trữ và vận chuyển hàng bằng palet"
 
 #. module: product
-#: field:product.packaging,length:0
-msgid "Length"
-msgstr "Chiều dài"
-
-#. module: product
-#: code:addons/product/product.py:345
-#, python-format
-msgid "UoM categories Mismatch!"
-msgstr ""
-
-#. module: product
-#: field:product.template,volume:0
-msgid "Volume"
-msgstr "Thể tích"
-
-#. module: product
-#: help:product.supplierinfo,sequence:0
-msgid "Assigns the priority to the list of product supplier."
-msgstr ""
-
-#. module: product
-#: field:product.template,uom_id:0
-msgid "Default Unit Of Measure"
-msgstr ""
-
-#. module: product
-#: help:product.packaging,ean:0
-msgid "The EAN code of the package unit."
-msgstr "Mã EAN của đơn vị đóng gói."
+#: help:product.template,volume:0
+msgid "The volume in m3."
+msgstr "Thể tích tính theo m3."
 
 #. module: product
 #: selection:product.template,state:0
@@ -1865,28 +2295,10 @@ msgid "End of Lifecycle"
 msgstr "Kết thúc vòng đời"
 
 #. module: product
-#: field:pricelist.partnerinfo,name:0
-#: field:product.packaging,name:0
-#: report:product.pricelist:0
-#: view:product.product:0
-#: view:product.template:0
-#: field:product.template,description:0
-msgid "Description"
-msgstr "Mô tả"
-
-#. module: product
 #: help:product.product,packaging:0
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,delay:0
-msgid ""
-"Lead time in days between the confirmation of the purchase order and the "
-"reception of the products in your warehouse. Used by the scheduler for "
-"automatic computation of the purchase order planning."
 msgstr ""
 
 #. module: product
@@ -1897,28 +2309,25 @@ msgid "Pricelist Versions"
 msgstr "Phiên bản bảng giá"
 
 #. module: product
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
+#: model:product.template,name:product.product_product_span100_product_template
+msgid "Shelf Panel"
 msgstr ""
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-#: field:product.supplierinfo,sequence:0
-msgid "Sequence"
-msgstr "Trình tự"
+#: help:product.pricelist.item,price_round:0
+msgid ""
+"Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+msgstr ""
+"Định giá để giá là một bội số của giá trị này.\n"
+"Làm tròn số được áp dụng sau khi chiết khấu và trước khi phụ phí.\n"
+"Để có các giá kết thúc bằng 9.99, đặt làm tròn 10 và phụ phí -0.01"
 
 #. module: product
 #: field:product.template,list_price:0
 msgid "Sale Price"
 msgstr "Giá bán"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Thu mua & Địa điểm"
 
 #. module: product
 #: constraint:product.category:0
@@ -1931,22 +2340,9 @@ msgid "Category Type"
 msgstr ""
 
 #. module: product
-#: model:product.uom,name:product.product_uom_km
-msgid "km"
-msgstr ""
-
-#. module: product
-#: help:product.template,uos_id:0
-msgid ""
-"Used by companies that manage two units of measure: invoicing and inventory "
-"management. For example, in food industries, you will manage a stock of ham "
-"but invoice in Kg. Keep empty to use the default UOM."
-msgstr ""
-
-#. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Số lượng-1"
+#: model:product.category,name:product.cat2
+msgid "Private"
+msgstr "Bí mật"
 
 #. module: product
 #: help:product.template,uos_coeff:0
@@ -1958,34 +2354,8 @@ msgstr ""
 " ĐVB = ĐVĐ * Hệ số"
 
 #. module: product
-#: constraint:product.packaging:0
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Lỗi: mã EAN không hợp lệ"
-
-#. module: product
-#: field:product.pricelist.item,min_quantity:0
-msgid "Min. Quantity"
-msgstr "Số lượng tối thiểu"
-
-#. module: product
-#: model:ir.actions.report.xml,name:product.report_product_label
-msgid "Products Labels"
-msgstr "Nhãn sản phẩm"
-
-#. module: product
-#: help:product.template,volume:0
-msgid "The volume in m3."
-msgstr "Thể tích tính theo m3."
-
-#. module: product
-#: model:ir.model,name:product.model_product_price_type
-msgid "Price Type"
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-msgid "To Sell"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
 msgstr ""
 
 #. module: product
@@ -1993,17 +2363,8 @@ msgstr ""
 msgid "Price Discount"
 msgstr "Chiết khấu"
 
-#. module: product
-#: help:product.category,sequence:0
-msgid ""
-"Gives the sequence order when displaying a list of product categories."
-msgstr ""
-
 #~ msgid "Customer Price"
 #~ msgstr "Giá bán"
-
-#~ msgid "Sellable"
-#~ msgstr "Có thể bán"
 
 #~ msgid "Number of Layer"
 #~ msgstr "Số lớp"
@@ -2013,9 +2374,6 @@ msgstr ""
 
 #~ msgid "In Production"
 #~ msgstr "Đang sản xuất"
-
-#~ msgid "Accessories"
-#~ msgstr "Phụ kiện"
 
 #~ msgid "Can be sold"
 #~ msgstr "Có thể bán"
@@ -2034,9 +2392,6 @@ msgstr ""
 
 #~ msgid "Prices & Suppliers"
 #~ msgstr "Giá & Nhà cung cấp"
-
-#~ msgid "Private"
-#~ msgstr "Bí mật"
 
 #~ msgid "Rentable Product"
 #~ msgstr "Sản phẩm có thể cho thuê"
@@ -2105,6 +2460,9 @@ msgstr ""
 
 #~ msgid "Virtual Stock"
 #~ msgstr "Số lượng hàng ảo"
+
+#~ msgid "Units of Measure Categories"
+#~ msgstr "Các loại đơn vị đo"
 
 #~ msgid "Prices Computations"
 #~ msgstr "Bảng tính giá"
@@ -2308,17 +2666,11 @@ msgstr ""
 #~ msgid "KGM"
 #~ msgstr "KGM"
 
-#~ msgid "Keyboard"
-#~ msgstr "Bàn phím"
-
 #~ msgid "Extended Filters..."
 #~ msgstr "Bộ lọc mở rộng..."
 
 #~ msgid "Error ! You can not create recursive categories."
 #~ msgstr "Lỗi ! Bạn không thể tạo ra loại đệ quy."
-
-#~ msgid "Basic+ PC (assembly on order)"
-#~ msgstr "Cơ bản + PC (lắp ráp về trật tự)"
 
 #~ msgid ""
 #~ "Error: The default UOM and the Supplier Product UOM must be in the same "
@@ -2326,24 +2678,3 @@ msgstr ""
 #~ msgstr ""
 #~ "Lỗi: Đơn vị đo lường và mặc định của Nhà cung cấp sản phẩm của đơn vị đo "
 #~ "phải được trong cùng thể loại."
-
-#~ msgid "Mainboard ASUStek A7V8X-X"
-#~ msgstr "Mainboard ASUStek A7V8X-X"
-
-#~ msgid "DDR 512MB PC400"
-#~ msgstr "DDR 512MB PC400"
-
-#~ msgid "Processor AMD Athlon XP 1800+"
-#~ msgstr "Processor AMD Athlon XP 1800+"
-
-#~ msgid "HDD on demand"
-#~ msgstr "HDD theo yêu cầu"
-
-#~ msgid "Wood 2mm"
-#~ msgstr "gỗ 2mm"
-
-#~ msgid "Worker"
-#~ msgstr "Công nhân"
-
-#~ msgid "HDD Seagate 7200.8 160GB"
-#~ msgstr "HDD Seagate 7200.8 160GB"

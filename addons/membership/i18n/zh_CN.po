@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-13 06:21+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:57+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:07+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -109,9 +109,19 @@ msgid "Non Member"
 msgstr "非会员"
 
 #. module: membership
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "基础会员"
+
+#. module: membership
 #: view:res.partner:0
 msgid "All Members"
 msgstr "全部会员"
+
+#. module: membership
+#: field:res.partner,membership_stop:0
+msgid "Stop membership date"
+msgstr "停止会员日期"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -152,6 +162,11 @@ msgstr "商会伙伴"
 #: view:res.partner:0
 msgid "Supplier Partners"
 msgstr ""
+
+#. module: membership
+#: field:report.membership,num_invoiced:0
+msgid "# Invoiced"
+msgstr "# 已开票"
 
 #. module: membership
 #: constraint:account.invoice:0
@@ -322,9 +337,9 @@ msgid "July"
 msgstr "7月"
 
 #. module: membership
-#: field:report.membership,num_invoiced:0
-msgid "# Invoiced"
-msgstr "# 已开票"
+#: model:product.template,name:membership.membership_0_product_template
+msgid "Golden Membership"
+msgstr "金牌会员"
 
 #. module: membership
 #: help:res.partner,associate_member:0
@@ -778,9 +793,9 @@ msgid "May"
 msgstr "5月"
 
 #. module: membership
-#: field:res.partner,membership_stop:0
-msgid "Stop membership date"
-msgstr "停止会员日期"
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr "银牌会员"
 
 #. module: membership
 #: view:product.product:0
@@ -974,12 +989,6 @@ msgstr "已实现收入"
 #~ msgid "Error: BVR reference is required."
 #~ msgstr "错误：需要BVR参照"
 
-#~ msgid "Golden Membership"
-#~ msgstr "金牌会员"
-
-#~ msgid "Silver Membership"
-#~ msgstr "银牌会员"
-
 #~ msgid "Last 30 Days"
 #~ msgstr "最近30天"
 
@@ -988,9 +997,6 @@ msgstr "已实现收入"
 
 #~ msgid "Extended Filters..."
 #~ msgstr "增加筛选条件"
-
-#~ msgid "Basic Membership"
-#~ msgstr "基础会员"
 
 #~ msgid ""
 #~ "\n"

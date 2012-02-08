@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Project-Id-Version: OpenERP Server 6.1rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-08 00:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,6 +19,12 @@ msgstr ""
 #: constraint:res.partner.bank:0
 msgid "\n"
 "Please define BIC/Swift code on bank for bank type IBAN Account to make valid payments"
+msgstr ""
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:139
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it"
 msgstr ""
 
 #. module: base_iban
@@ -52,7 +58,7 @@ msgid "country_id"
 msgstr ""
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:130
+#: code:addons/base_iban/base_iban.py:136
 #, python-format
 msgid "The IBAN does not seem to be correct. You should have entered something like this %s"
 msgstr ""
@@ -63,7 +69,7 @@ msgid "IBAN"
 msgstr ""
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:131
+#: code:addons/base_iban/base_iban.py:140
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr ""
@@ -71,5 +77,10 @@ msgstr ""
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
+msgstr ""
+
+#. module: base_iban
+#: constraint:res.partner.bank:0
+msgid "The RIB and/or IBAN is not valid"
 msgstr ""
 

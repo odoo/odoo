@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2010-12-17 09:57+0000\n"
 "Last-Translator: Niels Huylebroeck <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:07+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:14+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -111,11 +111,6 @@ msgid "Ok"
 msgstr "Ok"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "U kan geen boekingen maken op een afgesloten rekening."
-
-#. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
 msgstr ""
@@ -145,6 +140,13 @@ msgstr "Saldo > 0"
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Totaal debet"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -321,6 +323,14 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
 msgstr "Mails versturen"
@@ -333,13 +343,6 @@ msgstr "Aanmaning statistieken per relatie"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
 msgstr ""
 
 #. module: account_followup
@@ -409,7 +412,7 @@ msgstr "Boekingen"
 
 #. module: account_followup
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
+msgid "You can not create journal items on an account of type view."
 msgstr ""
 
 #. module: account_followup
@@ -420,11 +423,6 @@ msgstr "Stuur bevestigings e-mail"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
 msgstr ""
 
 #. module: account_followup
@@ -537,6 +535,11 @@ msgstr ""
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
+msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
 msgstr ""
 
 #. module: account_followup
@@ -686,6 +689,11 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
 msgstr ""
@@ -723,11 +731,6 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
 msgstr ""
 
 #~ msgid "All payable entries"
@@ -796,6 +799,9 @@ msgstr ""
 #, python-format
 #~ msgid "Follwoup Summary"
 #~ msgstr "Samenvatting aanmaningen"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "U kan geen boekingen maken op een afgesloten rekening."
 
 #~ msgid ""
 #~ "\n"

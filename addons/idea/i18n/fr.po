@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-11 00:33+0000\n"
 "Last-Translator: Quentin THEURET <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:48+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:27+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
@@ -83,11 +83,6 @@ msgstr ""
 #. module: idea
 #: view:report.vote:0
 msgid "Open Date"
-msgstr ""
-
-#. module: idea
-#: view:report.vote:0
-msgid "Idea Vote created in curren year"
 msgstr ""
 
 #. module: idea
@@ -625,14 +620,6 @@ msgid "Refused"
 msgstr "Refusée"
 
 #. module: idea
-#: code:addons/idea/idea.py:274
-#, python-format
-msgid "Draft/Accepted/Cancelled ideas Could not be voted"
-msgstr ""
-"Vous ne pouvez pas voter pour des idées au statut "
-"Brouillon/Acceptée/Annulée/Refusée"
-
-#. module: idea
 #: view:idea.vote:0
 msgid "Vote date"
 msgstr "Date du vote"
@@ -673,6 +660,11 @@ msgid "Vote Status"
 msgstr "Statut du vote"
 
 #. module: idea
+#: view:report.vote:0
+msgid "Idea Vote created in current year"
+msgstr ""
+
+#. module: idea
 #: field:idea.idea,vote_avg:0
 msgid "Average Score"
 msgstr "Moyenne des scores"
@@ -709,6 +701,12 @@ msgstr "Publier le vote"
 #: field:report.vote,year:0
 msgid "Year"
 msgstr "Année"
+
+#. module: idea
+#: code:addons/idea/idea.py:274
+#, python-format
+msgid "You can not vote on a Draft/Accepted/Cancelled ideas."
+msgstr ""
 
 #. module: idea
 #: view:idea.select:0
@@ -774,6 +772,12 @@ msgstr "Sélectionner l'idée pour le vote"
 
 #~ msgid "Vots Statistics"
 #~ msgstr "Statistiques de vote"
+
+#, python-format
+#~ msgid "Draft/Accepted/Cancelled ideas Could not be voted"
+#~ msgstr ""
+#~ "Vous ne pouvez pas voter pour des idées au statut "
+#~ "Brouillon/Acceptée/Annulée/Refusée"
 
 #~ msgid "    Today    "
 #~ msgstr "    Aujourd'hui    "

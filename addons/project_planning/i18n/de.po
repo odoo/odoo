@@ -7,22 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2012-01-13 18:38+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-14 05:13+0000\n"
-"X-Generator: Launchpad (build 14664)\n"
-
-#. module: project_planning
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "Fehler! Die Währung muss der Währung des Unternehmens entsprechen"
+"X-Launchpad-Export-Date: 2012-02-08 06:07+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,tasks:0
@@ -172,9 +165,9 @@ msgid "Extra Info"
 msgstr "Extra Information"
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "To :"
-msgstr "An:"
+#: field:report_account_analytic.planning,total_planned:0
+msgid "Total Planned"
+msgstr "Gesamt Auslastung"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,timesheet:0
@@ -261,9 +254,9 @@ msgid "Planning"
 msgstr "Auslastungsplanung"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,total_planned:0
-msgid "Total Planned"
-msgstr "Gesamt Auslastung"
+#: report:report_account_analytic.planning.print:0
+msgid "To :"
+msgstr "An:"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -290,13 +283,9 @@ msgid "Delegate"
 msgstr "Delegiere"
 
 #. module: project_planning
-#: help:report_account_analytic.planning.user,free:0
-msgid ""
-"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
-"without Tasks + Holiday Leaves)"
-msgstr ""
-"Berechnet in Arbeitstagen - (verplante Zeit für konkrete Aufgaben + "
-"verplante Zeit ohne konkrete Aufgaben + Urlaubszeit)"
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr "Analyse Planung"
 
 #. module: project_planning
 #: help:report_account_analytic.planning,business_days:0
@@ -358,9 +347,13 @@ msgstr ""
 "zugewiesenen Aufgabenauslastung, ausgedrückt in Tagen."
 
 #. module: project_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
-msgstr "Analyse Planung"
+#: help:report_account_analytic.planning.user,free:0
+msgid ""
+"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
+"without Tasks + Holiday Leaves)"
+msgstr ""
+"Berechnet in Arbeitstagen - (verplante Zeit für konkrete Aufgaben + "
+"verplante Zeit ohne konkrete Aufgaben + Urlaubszeit)"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
@@ -630,3 +623,8 @@ msgstr ""
 #~ "Zum Monatsende kann der Projektmanager dann überprüfen, inwieweit die "
 #~ "geplanten Zeiten mit tatsächlich erfassten (und abrechenbaren) Zeiten "
 #~ "übereinstimmen oder in welcher Höhe eine Abweichung vorliegt.\n"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Fehler! Die Währung muss der Währung des Unternehmens entsprechen"

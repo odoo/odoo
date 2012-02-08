@@ -6,20 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-19 19:06+0000\n"
 "Last-Translator: Mihai Satmarean <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:53+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:02+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
 msgstr "Referinţa comenzii"
+
+#. module: delivery
+#: model:product.template,name:delivery.delivery_product_product_template
+msgid "Delivery by Poste"
+msgstr "Livrare prin poştă"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -30,23 +35,17 @@ msgstr "Destinaţie"
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr "Masă metă"
+msgstr "Greutate netă"
 
 #. module: delivery
 #: view:stock.picking:0
 msgid "Delivery Order"
-msgstr "Comandă de livrare"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No price available !"
-msgstr ""
+msgstr "Ordin de livrare"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
+msgstr "Linie grila de livrare"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -84,7 +83,7 @@ msgstr "Propretăţi livrări"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr "Preluari a fi facturate"
+msgstr "Ridicarile care vor fi facturate"
 
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
@@ -95,6 +94,7 @@ msgstr ""
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
 msgstr ""
+"Da ordinea secventei atunci cand afiseaza o lista a grilei de livrare"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -111,7 +111,7 @@ msgstr "Ordin de livrare:"
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
 msgid "Variable Factor"
-msgstr ""
+msgstr "Factor variabil"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
@@ -124,8 +124,8 @@ msgstr ""
 "Lista de preţuri de livrare vă permite pentru să calculaţi costul şi preţul "
 "de vânzare al livrării în funcţie de greutatea produselor şi alte criterii. "
 "Puteţi defini mai multe liste de preţuri pentru o metoda de livrare, pentru "
-"fiecare ţară sau o zonă într-o anumită ţară definită printr-o plajă de "
-"coduri poştale."
+"fiecare ţară sau o zonă într-o anumită ţară definită printr-o gamă de coduri "
+"poştale."
 
 #. module: delivery
 #: field:delivery.carrier,amount:0
@@ -146,7 +146,13 @@ msgstr "Fix"
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
-msgstr "Metodă livrare"
+msgstr "Metoda de livrare"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No price available!"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -154,15 +160,9 @@ msgid "Stock Move"
 msgstr "Mişcare stoc"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
-
-#. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "Ref urmarire transportator"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
@@ -183,7 +183,7 @@ msgstr "Definiţie grilă"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Cancel"
-msgstr "_Renunță"
+msgstr "_Anulează"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -223,6 +223,12 @@ msgid "Delivery Grid"
 msgstr "Grilă livrare"
 
 #. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No line matched this product or order in the choosed delivery grid."
+msgstr ""
+
+#. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
 msgstr "Facturat către:"
@@ -230,12 +236,12 @@ msgstr "Facturat către:"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr "Listă preluare"
+msgstr "Listă ridicare"
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr "Grilă livrări"
+msgstr "Grile livrare"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
@@ -250,7 +256,7 @@ msgstr "Nume"
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr ""
+msgstr "Incepe arhivarea"
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
@@ -276,14 +282,16 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
+"Daca campul activ este setat pe Fals, va va permite sa ascundeti grila de "
+"livrare fara a o sterge."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
-msgstr ""
+msgstr "De arhivat"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:143
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "Default price"
 msgstr ""
@@ -316,7 +324,7 @@ msgstr "Greutăţi"
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
 msgid "Number of Packages"
-msgstr "Numărul de ambalaje"
+msgstr "Numar pachete"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -346,10 +354,10 @@ msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid available !"
-msgstr ""
+msgstr "Nici o grila disponibila !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -357,11 +365,11 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "Order not in draft state !"
-msgstr ""
+msgstr "Comanda nu este in starea de ciorna !"
 
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
@@ -397,7 +405,7 @@ msgstr "Condiţie"
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
-msgstr "Preț cost"
+msgstr "Preţ de cost"
 
 #. module: delivery
 #: field:delivery.define.delivery.steps.wizard,picking_policy:0
@@ -413,7 +421,7 @@ msgstr "Variabilă"
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
+msgstr "Metoda de livrare folosita va fi folosita la facturarea la ridicare."
 
 #. module: delivery
 #: sql_constraint:stock.picking:0
@@ -453,6 +461,7 @@ msgstr ""
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Completati acest camp daca planuiti sa facturati livrarea pe baza ridicarii."
 
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
@@ -460,7 +469,7 @@ msgid "Cancel"
 msgstr "Renunță"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:131
+#: code:addons/delivery/delivery.py:130
 #, python-format
 msgid "Free if more than %.2f"
 msgstr ""
@@ -481,12 +490,12 @@ msgstr ""
 #. module: delivery
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Vânzări & Aprovizionare"
+msgstr "Vânzări & Achiziţii"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
-msgstr ""
+msgstr "<="
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -501,7 +510,7 @@ msgstr ""
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "Create Deliveries"
-msgstr ""
+msgstr "Creare Livrari"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -521,6 +530,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
+"Daca campul activ este setat pe Fals, va va permite sa ascundeti "
+"transportatorul fara a-l sterge."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -536,10 +547,10 @@ msgid "Price"
 msgstr "Preţ"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "Nici o grila nu se potriveste cu acest transportator !"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -550,7 +561,7 @@ msgstr "Livrare"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Weight * Volume"
-msgstr "Masă * Volum"
+msgstr "Greutate * Volum"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -561,7 +572,7 @@ msgstr "="
 #: code:addons/delivery/stock.py:90
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "Transportatorul %s (id: %d) nu are nici o grila de livrari!"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -598,11 +609,12 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
+"Starea comenzii trebuie sa fie ciorna pentru a putea adauga linii de livrare."
 
 #. module: delivery
 #: constraint:res.partner:0
@@ -612,12 +624,12 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,sequence:0
 msgid "Sequence"
-msgstr "Secvenţa"
+msgstr "Secvenţă"
 
 #. module: delivery
 #: field:delivery.grid.line,list_price:0
 msgid "Sale Price"
-msgstr "Preț Vânzare"
+msgstr "Pret de vanzare"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_cost
@@ -655,14 +667,8 @@ msgstr "Tip preţ"
 #~ msgid "Notes"
 #~ msgstr "Note"
 
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Referinţa la Comandă trebuie să fie unică!"
-
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "Eroare ! Nu puteţi crea membri asociaţi recursiv."
-
-#~ msgid "Delivery by Poste"
-#~ msgstr "Livrare prin poştă"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -675,3 +681,46 @@ msgstr "Tip preţ"
 
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "Codul TVA (CIF) nu pare a fi corect."
+
+#, python-format
+#~ msgid "No line matched this order in the choosed delivery grids !"
+#~ msgstr ""
+#~ "Nici o linie nu se potriveste cu aceasta comanda in grilele de livrare alese "
+#~ "!"
+
+#~ msgid ""
+#~ "Create and manage the delivery methods you need for your sales activities. "
+#~ "Each delivery method can be assigned to a price list which computes the "
+#~ "price of the delivery according to the products sold or delivered."
+#~ msgstr ""
+#~ "Creeaza si gestioneaza metodele de livrare de care aveti nevoie in "
+#~ "activitatile dumneavoastra de vanzare. Fiecare metoda de livrare poate fi "
+#~ "altribuita unei liste de preturi care calculeaza pretul livrarii in functie "
+#~ "de produsele vandute sau livrate."
+
+#, python-format
+#~ msgid "No price available !"
+#~ msgstr "Nu este disponibil nici un pret !"
+
+#~ msgid "Carriers and deliveries"
+#~ msgstr "Transportatori si livrari"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Referinţa comenzii trebuie să fie unică!"
+
+#~ msgid ""
+#~ "Allows you to add delivery methods in sale orders and picking.\n"
+#~ "     You can define your own carrier and delivery grids for prices.\n"
+#~ "     When creating invoices from picking, OpenERP is able to add and compute "
+#~ "the shipping line.\n"
+#~ "\n"
+#~ "     "
+#~ msgstr ""
+#~ "Va permite sa adaugati metode de vanzare in ordinele de vanzare si "
+#~ "ridicare.\n"
+#~ "     Puteti defini propriul transportator si grilele de livrare pentru "
+#~ "preturi.\n"
+#~ "     Atunci cand creati facturi la ridicare, OpenERP poate aduna si calcula "
+#~ "linia de livrare.\n"
+#~ "\n"
+#~ "     "

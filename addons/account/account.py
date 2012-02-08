@@ -661,7 +661,7 @@ class account_account(osv.osv):
                 # Allow the write if the value is the same
                 for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'])]:
                     if vals['company_id']!=i:
-                        raise osv.except_osv(_('Warning !'), _('You cannot modify the company as its related to existing journal items.'))
+                        raise osv.except_osv(_('Warning !'), _('You cannot change the owner company of an account that already contains journal items.'))
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context=context)
         if 'type' in vals.keys():
@@ -1078,6 +1078,8 @@ class account_period(osv.osv):
         return super(account_period, self).write(cr, uid, ids, vals, context=context)
 
     def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
+        if period_from_id == period_to_id:
+            return period_from_id
         period_from = self.browse(cr, uid, period_from_id)
         period_date_start = period_from.date_start
         company1_id = period_from.company_id.id
@@ -1341,7 +1343,8 @@ class account_move(osv.osv):
                 if not top_common:
                     top_common = top_account
                 elif top_account.id != top_common.id:
-                    raise osv.except_osv(_('Error !'), _('You cannot validate a journal entry because account "%s" does not belong to chart of accounts "%s"!' % (account.name, top_common.name)))
+                    raise osv.except_osv(_('Error !'),
+                                         _('You cannot validate this journal entry because account "%s" does not belong to chart of accounts "%s"!') % (account.name, top_common.name))
         return self.post(cursor, user, ids, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -1883,7 +1886,7 @@ class account_tax(osv.osv):
 
     }
     _sql_constraints = [
-        ('description_company_uniq', 'unique(description, company_id)', 'The description must be unique per company!'),
+        ('name_company_uniq', 'unique(name, company_id)', 'Tax Name must be unique per company!'),
     ]
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
