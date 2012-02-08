@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-13 15:29+0000\n"
 "Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:08+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:44+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -121,9 +121,11 @@ msgid "Define attendance reason"
 msgstr "Definisci Motivi Presenza"
 
 #. module: hr_attendance
-#: field:hr.sign.in.out,state:0
-msgid "Current state"
-msgstr "Stato Attuale"
+#: code:addons/hr_attendance/report/attendance_by_month.py:184
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
+#, python-format
+msgid "Attendances By Month"
+msgstr "Presenze per mese"
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,name:0
@@ -153,12 +155,7 @@ msgid "Ending Date"
 msgstr "Data finale"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Employee attendance"
-msgstr "Presenza Dipendente"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:136
+#: code:addons/hr_attendance/hr_attendance.py:140
 #, python-format
 msgid "Warning"
 msgstr "Attenzione"
@@ -177,10 +174,7 @@ msgstr "Una entrata deve essere registrata appena dopo un'uscita"
 
 #. module: hr_attendance
 #: field:hr.employee,state:0
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
 msgid "Attendance"
 msgstr "Presenze"
 
@@ -467,7 +461,7 @@ msgid "Employee"
 msgstr "Dipendente"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:136
+#: code:addons/hr_attendance/hr_attendance.py:140
 #, python-format
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
@@ -486,6 +480,13 @@ msgstr "Ultima Uscita"
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Recorded"
 msgstr "Data Registrata"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
+msgid "Attendances"
+msgstr "Presenze"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -537,11 +538,9 @@ msgid "Employee attendances"
 msgstr "Presenze Dipendenti"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:184
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-#, python-format
-msgid "Attendances By Month"
-msgstr "Presenze per mese"
+#: field:hr.sign.in.out,state:0
+msgid "Current state"
+msgstr "Stato Attuale"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -620,15 +619,15 @@ msgstr "hr.sign.in.out.ask"
 #~ msgid "Action's type"
 #~ msgstr "Tipo Azione"
 
-#~ msgid "Attendances"
-#~ msgstr "Presenze"
-
 #~ msgid ""
 #~ "You did not signed in the last time. Please enter the date and time you "
 #~ "signed in."
 #~ msgstr ""
 #~ "L'ultima volta non hai registrato l'entrata. Insrisci data e ora dell'ultimo "
 #~ "ingresso"
+
+#~ msgid "Employee attendance"
+#~ msgstr "Presenza Dipendente"
 
 #~ msgid "This module aims to manage employee's attendances."
 #~ msgstr "Questo modulo mira a gestire le presenze dei dipendenti"

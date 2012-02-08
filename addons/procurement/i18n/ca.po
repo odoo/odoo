@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-02-12 22:35+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:20+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:59+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -83,8 +83,8 @@ msgid "Compute Stock Minimum Rules Only"
 msgstr "Calcula només regles d'estoc mínim"
 
 #. module: procurement
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
+#: view:procurement.order:0
+msgid "Temporary Procurement Exceptions"
 msgstr ""
 
 #. module: procurement
@@ -199,7 +199,7 @@ msgid "Automatic orderpoint"
 msgstr "Generació de comanda automàtica"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:122
+#: code:addons/procurement/schedulers.py:123
 #, python-format
 msgid ""
 "Here is the procurement scheduling report.\n"
@@ -213,11 +213,6 @@ msgid ""
 "\n"
 "        Exceptions:\n"
 msgstr ""
-
-#. module: procurement
-#: field:mrp.property,composition:0
-msgid "Properties composition"
-msgstr "Composició de propietats"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -309,7 +304,7 @@ msgid "Best price (not yet active!)"
 msgstr "Millor preu (encara no actiu!)"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:110
+#: code:addons/procurement/schedulers.py:111
 #, python-format
 msgid "PROC %d: from stock - %3.2f %-5s - %s"
 msgstr ""
@@ -385,14 +380,23 @@ msgid "References"
 msgstr "Referències"
 
 #. module: procurement
+#: view:product.product:0
+#: field:product.product,orderpoint_ids:0
+msgid "Minimum Stock Rule"
+msgstr ""
+
+#. module: procurement
 #: view:res.company:0
 msgid "Configuration"
 msgstr "Configuració"
 
 #. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
-msgstr "Qtat. múltiple"
+#: code:addons/procurement/procurement.py:328
+#, python-format
+msgid ""
+"Please check the quantity in procurement order(s), it should not be 0 or "
+"less!"
+msgstr ""
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -498,14 +502,9 @@ msgid "plus"
 msgstr "més"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:328
-#, python-format
-msgid ""
-"Please check the Quantity in Procurement Order(s), it should not be less "
-"than 1!"
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
 msgstr ""
-"Comproveu la quantitat en la(s) ordre(s) de proveïment, no hauria de ser "
-"inferior a 1!"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -607,7 +606,7 @@ msgid "No minimum orderpoint rule defined."
 msgstr "No hi ha cap regla de punt de reposició definida"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:183
+#: code:addons/procurement/schedulers.py:151
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "Ord. proveïment automàtica: %s"
@@ -673,10 +672,9 @@ msgid "Date Closed"
 msgstr "Data de tancament"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s State!"
-msgstr "No es pot eliminar ordre(s) de proveïment que estan en estat %s!"
+#: field:mrp.property,composition:0
+msgid "Properties composition"
+msgstr "Composició de propietats"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:327
@@ -782,6 +780,7 @@ msgstr "Excepcions proveïment"
 #: model:ir.actions.act_window,name:procurement.act_stock_warehouse_2_stock_warehouse_orderpoint
 #: model:ir.actions.act_window,name:procurement.action_orderpoint_form
 #: model:ir.ui.menu,name:procurement.menu_stock_order_points
+#: view:product.product:0
 #: view:stock.warehouse.orderpoint:0
 msgid "Minimum Stock Rules"
 msgstr "Regles d'estoc mínim"
@@ -792,11 +791,17 @@ msgid "Close Move at end"
 msgstr "Tanca moviment al final"
 
 #. module: procurement
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
+msgstr "Qtat. múltiple"
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Scheduled Date"
 msgstr "Data planificada"
 
 #. module: procurement
+#: model:ir.model,name:procurement.model_product_product
 #: field:make.procurement,product_id:0
 #: view:procurement.order:0
 #: field:procurement.order,product_id:0
@@ -892,8 +897,9 @@ msgid "MRP & Logistics Scheduler"
 msgstr "Planificador de MRP i logística"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Temporary Procurement Exceptions"
+#: code:addons/procurement/procurement.py:138
+#, python-format
+msgid "Cannot delete Procurement Order(s) which are in %s state!"
 msgstr ""
 
 #. module: procurement
@@ -997,13 +1003,18 @@ msgid "Procurement started late"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:184
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/schedulers.py:152
 #, python-format
 msgid "SCHEDULER"
 msgstr "PLANIFICADOR"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:87
+#: code:addons/procurement/schedulers.py:88
 #, python-format
 msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr ""
@@ -1020,6 +1031,18 @@ msgstr ""
 
 #~ msgid "Current"
 #~ msgstr "Actual"
+
+#, python-format
+#~ msgid ""
+#~ "Please check the Quantity in Procurement Order(s), it should not be less "
+#~ "than 1!"
+#~ msgstr ""
+#~ "Comproveu la quantitat en la(s) ordre(s) de proveïment, no hauria de ser "
+#~ "inferior a 1!"
+
+#, python-format
+#~ msgid "Cannot delete Procurement Order(s) which are in %s State!"
+#~ msgstr "No es pot eliminar ordre(s) de proveïment que estan en estat %s!"
 
 #~ msgid ""
 #~ "When the virtual stock goes belong the Min Quantity, OpenERP generates a "

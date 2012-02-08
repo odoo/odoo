@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2011-01-18 04:54+0000\n"
 "Last-Translator: ryanlin <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:19+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:58+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -25,8 +25,7 @@ msgid ""
 msgstr "如果“有效”字段设为false，它对信息进行隐藏但不删除它。"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:0
-#: field:hr.recruitment.stage,requirements:0
+#: view:hr.recruitment.stage:0 field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
 msgstr "必备条件"
 
@@ -63,10 +62,8 @@ msgid "Filter and view on next actions and date"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,department_id:0
+#: view:hr.applicant:0 field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,department_id:0
 msgid "Department"
 msgstr "部门"
 
@@ -91,8 +88,7 @@ msgid "Pending Jobs"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,company_id:0
-#: view:hr.recruitment.report:0
+#: field:hr.applicant,company_id:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,company_id:0
 msgid "Company"
 msgstr "公司"
@@ -100,6 +96,12 @@ msgstr "公司"
 #. module: hr_recruitment
 #: view:hired.employee:0
 msgid "No"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:436
+#, python-format
+msgid "You must define Applied Job for this applicant."
 msgstr ""
 
 #. module: hr_recruitment
@@ -128,15 +130,13 @@ msgid "Partner Contact Name"
 msgstr "联系人姓名"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: view:hr.recruitment.partner.create:0
+#: view:hr.applicant:0 view:hr.recruitment.partner.create:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
 msgid "Create Partner"
 msgstr "创建业务伙伴"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,day:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,day:0
 msgid "Day"
 msgstr "天数"
 
@@ -186,14 +186,12 @@ msgid "Next Actions"
 msgstr "下一操作"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0
-#: view:hr.recruitment.report:0
+#: field:hr.applicant,salary_expected:0 view:hr.recruitment.report:0
 msgid "Expected Salary"
 msgstr "期望的薪酬"
 
 #. module: hr_recruitment
-#: field:hr.applicant,job_id:0
-#: field:hr.recruitment.report,job_id:0
+#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
 msgstr "申请的职位"
 
@@ -208,8 +206,7 @@ msgid "Color Index"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:board.board:0
-#: view:hr.applicant:0
+#: view:board.board:0 view:hr.applicant:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_applicants_status
 msgid "Applicants Status"
 msgstr "申请人状态"
@@ -258,8 +255,7 @@ msgid "Avg Proposed Salary"
 msgstr "平均提议的薪酬"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.recruitment.report,available:0
+#: view:hr.applicant:0 field:hr.recruitment.report,available:0
 msgid "Availability"
 msgstr "有效"
 
@@ -297,7 +293,7 @@ msgid "Recruitments Statistics"
 msgstr "招聘统计"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:477
+#: code:addons/hr_recruitment/hr_recruitment.py:476
 #, python-format
 msgid "Changed Stage to: %s"
 msgstr ""
@@ -323,8 +319,7 @@ msgid "Job Description"
 msgstr "职位描述"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,source_id:0
+#: view:hr.applicant:0 field:hr.applicant,source_id:0
 msgid "Source"
 msgstr ""
 
@@ -340,10 +335,8 @@ msgid "A partner is already defined on this job request."
 msgstr "业务伙伴已定义职务空缺申请。"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
-#: selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
 msgid "New"
 msgstr "新建"
 
@@ -388,8 +381,7 @@ msgid ""
 msgstr "定义您招聘流程的阶段如：电话联系，首次面谈，第二次面谈，拒绝录用。"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,create_date:0
+#: view:hr.applicant:0 field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
 msgid "Creation Date"
 msgstr "创建日期"
@@ -406,8 +398,7 @@ msgid "Planned Date"
 msgstr "计划的日期"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,priority:0
+#: view:hr.applicant:0 field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
 msgstr "评价"
@@ -423,19 +414,15 @@ msgid "Print Interview"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,stage_id:0
+#: view:hr.applicant:0 field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,stage_id:0
 #: view:hr.recruitment.stage:0
 msgid "Stage"
 msgstr "阶段"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
-#: selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
 msgid "Pending"
 msgstr "待处理"
 
@@ -525,8 +512,7 @@ msgid "Qualification"
 msgstr "资格"
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_id:0
-#: view:hr.recruitment.report:0
+#: field:hr.applicant,partner_id:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr "业务伙伴"
@@ -599,8 +585,7 @@ msgid "Recruitment during last month"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,month:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,month:0
 msgid "Month"
 msgstr "月份"
 
@@ -630,8 +615,7 @@ msgid "Yes"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0
-#: view:hr.recruitment.report:0
+#: field:hr.applicant,salary_proposed:0 view:hr.recruitment.report:0
 msgid "Proposed Salary"
 msgstr "提议薪酬"
 
@@ -677,8 +661,7 @@ msgid "Group By ..."
 msgstr "分组..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
+#: view:hr.applicant:0 selection:hr.applicant,state:0
 msgid "In Progress"
 msgstr "进行中"
 
@@ -711,8 +694,7 @@ msgid "Degrees"
 msgstr "学历"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0
-#: field:hr.recruitment.report,date_closed:0
+#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
 msgid "Closed"
 msgstr "已结束"
 
@@ -763,10 +745,8 @@ msgid "August"
 msgstr "8月"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:0
-#: view:hr.recruitment.report:0
+#: view:hr.applicant:0 field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
@@ -862,8 +842,7 @@ msgid "Not Good"
 msgstr "不好"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date:0
-#: field:hr.recruitment.report,date:0
+#: field:hr.applicant,date:0 field:hr.recruitment.report,date:0
 msgid "Date"
 msgstr "日期"
 
@@ -920,20 +899,12 @@ msgid "Partner Contact"
 msgstr "业务伙伴联系方式"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:436
-#, python-format
-msgid "You must define Applied Job for Applicant !"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
 msgid "Contract Proposed"
 msgstr "合同建议"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,state:0
-#: view:hr.recruitment.report:0
+#: view:hr.applicant:0 field:hr.applicant,state:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,state:0
 msgid "State"
 msgstr "状态"
@@ -949,14 +920,12 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,year:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,year:0
 msgid "Year"
 msgstr "年"
 
 #. module: hr_recruitment
-#: view:hired.employee:0
-#: view:hr.recruitment.job2phonecall:0
+#: view:hired.employee:0 view:hr.recruitment.job2phonecall:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
 msgstr "取消"
@@ -988,8 +957,7 @@ msgid "Gives the sequence order when displaying a list of degrees."
 msgstr "定义一个显示学历列表的序列"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,user_id:0
+#: view:hr.applicant:0 field:hr.applicant,user_id:0
 #: view:hr.recruitment.report:0
 msgid "Responsible"
 msgstr "负责人"
@@ -1057,8 +1025,7 @@ msgid "Word of Mouth"
 msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0
-#: selection:hr.recruitment.report,state:0
+#: selection:hr.applicant,state:0 selection:hr.recruitment.report,state:0
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
 msgid "Refused"
 msgstr "已拒绝"
@@ -1070,8 +1037,7 @@ msgid "Applicant '%s' is being hired."
 msgstr "申请人 '%s'被录用。"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
+#: selection:hr.applicant,state:0 view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
 msgid "Hired"
 msgstr "录用"
@@ -1098,8 +1064,7 @@ msgid "February"
 msgstr "2月"
 
 #. module: hr_recruitment
-#: field:hr.applicant,name:0
-#: field:hr.recruitment.degree,name:0
+#: field:hr.applicant,name:0 field:hr.recruitment.degree,name:0
 #: field:hr.recruitment.stage,name:0
 msgid "Name"
 msgstr "姓名"

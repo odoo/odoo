@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-01-12 19:03+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:47+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -116,10 +116,19 @@ msgid "Conditions"
 msgstr "Condizioni"
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_product_product
-#: field:product.pulled.flow,product_id:0
-msgid "Product"
-msgstr "Prodotto"
+#: model:stock.location,name:stock_location.location_pack_zone
+msgid "Pack Zone"
+msgstr ""
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_b
+msgid "Gate B"
+msgstr "Cancello B"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_a
+msgid "Gate A"
+msgstr "Cancello A"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -129,6 +138,11 @@ msgstr "Acquista"
 #. module: stock_location
 #: view:product.product:0
 msgid "Pushed flows"
+msgstr ""
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_dispatch_zone
+msgid "Dispatch Zone"
 msgstr ""
 
 #. module: stock_location
@@ -142,10 +156,10 @@ msgid "Pulled flows"
 msgstr ""
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr ""
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "Azienda"
 
 #. module: stock_location
 #: view:product.product:0
@@ -217,9 +231,20 @@ msgid ""
 msgstr ""
 
 #. module: stock_location
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr ""
+
+#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Operazione Manuale"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_product_product
+#: field:product.pulled.flow,product_id:0
+msgid "Product"
+msgstr "Prodotto"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
@@ -258,6 +283,11 @@ msgstr "Prodotti"
 #, python-format
 msgid "Pulled from another location via procurement %d"
 msgstr ""
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.stock_location_qualitytest0
+msgid "Quality Control"
+msgstr "Controllo qualità"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
@@ -340,8 +370,8 @@ msgstr ""
 "In funzione dell'azienda, scegliere dove volete ricevere o inviare prodotti"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
+#: model:stock.location,name:stock_location.location_order
+msgid "Order Processing"
 msgstr ""
 
 #. module: stock_location
@@ -355,10 +385,10 @@ msgid "Location Paths"
 msgstr "Localizzazione Percorsi"
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr "Azienda"
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr ""
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
@@ -389,12 +419,3 @@ msgstr ""
 
 #~ msgid "stock.location.path"
 #~ msgstr "stock.location.path"
-
-#~ msgid "Quality Control"
-#~ msgstr "Controllo qualità"
-
-#~ msgid "Gate A"
-#~ msgstr "Cancello A"
-
-#~ msgid "Gate B"
-#~ msgstr "Cancello B"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-11-22 19:07+0000\n"
 "Last-Translator: Milan Milosevic <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:07+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:15+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -110,11 +110,6 @@ msgid "Ok"
 msgstr "OK"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Ne možete da napravite poteznu liniju na zatvorenim računima."
-
-#. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
 msgstr ""
@@ -144,6 +139,13 @@ msgstr "Balans > 0"
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Ukupno duguje"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -324,6 +326,14 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
 msgstr "Pošalji el.poštu"
@@ -336,13 +346,6 @@ msgstr "Statistike praćenja po partneru"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
 msgstr ""
 
 #. module: account_followup
@@ -416,8 +419,8 @@ msgstr "Stavke dnevnika"
 
 #. module: account_followup
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Preduzeće mora biti isto za sve vezane račune i periode."
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -427,11 +430,6 @@ msgstr "Pošalji E-mail potvrdu"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
 msgstr ""
 
 #. module: account_followup
@@ -544,6 +542,11 @@ msgstr "Maksimalan nivo praćenja"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
+msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
 msgstr ""
 
 #. module: account_followup
@@ -695,6 +698,11 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
 msgstr "%(linija)e: poslate iz glavnine"
@@ -733,11 +741,6 @@ msgstr "Datum poslednjeg praćenja"
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
 msgstr "Kriterijum praćenja"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Ne možete napraviti poteznu liniju na računu po viđenju"
 
 #, python-format
 #~ msgid "Follwoup Summary"
@@ -971,6 +974,9 @@ msgstr "Ne možete napraviti poteznu liniju na računu po viđenju"
 #~ msgid "Print Follow Ups & Send Mails"
 #~ msgstr "Odstampaj Pracenja & Posalji Meilove"
 
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Ne možete da napravite poteznu liniju na zatvorenim računima."
+
 #~ msgid "Accounting follow-ups management"
 #~ msgstr "Uređivanje naloga praćenja"
 
@@ -980,11 +986,17 @@ msgstr "Ne možete napraviti poteznu liniju na računu po viđenju"
 #~ msgid "Sub-Total:"
 #~ msgstr "Pod-total"
 
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Preduzeće mora biti isto za sve vezane račune i periode."
+
 #~ msgid "Followup Lines"
 #~ msgstr "Linije praćenja"
 
 #~ msgid "Follow-Up Lines"
 #~ msgstr "Linije praćenja"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Ne možete napraviti poteznu liniju na računu po viđenju"
 
 #~ msgid ""
 #~ "\n"

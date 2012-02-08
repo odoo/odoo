@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-12-08 17:51+0000\n"
 "Last-Translator: Tomislav Bosnjakovic <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:47+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -122,10 +122,19 @@ msgid "Conditions"
 msgstr "Uvjeti"
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_product_product
-#: field:product.pulled.flow,product_id:0
-msgid "Product"
-msgstr "Proizvod"
+#: model:stock.location,name:stock_location.location_pack_zone
+msgid "Pack Zone"
+msgstr "Pack Zone"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_b
+msgid "Gate B"
+msgstr "Gate B"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_a
+msgid "Gate A"
+msgstr "Gate A"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -138,6 +147,11 @@ msgid "Pushed flows"
 msgstr "Pushed flows"
 
 #. module: stock_location
+#: model:stock.location,name:stock_location.location_dispatch_zone
+msgid "Dispatch Zone"
+msgstr "Dispečerska zona"
+
+#. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
 msgstr "Skladišni prijenosi"
@@ -148,10 +162,10 @@ msgid "Pulled flows"
 msgstr "Pulled flows"
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr "Dnevnik"
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "Organizacija"
 
 #. module: stock_location
 #: view:product.product:0
@@ -223,9 +237,20 @@ msgstr ""
 "stablu"
 
 #. module: stock_location
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr ""
+
+#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Ručna operacija"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_product_product
+#: field:product.pulled.flow,product_id:0
+msgid "Product"
+msgstr "Proizvod"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
@@ -264,6 +289,11 @@ msgstr "Proizvodi"
 #, python-format
 msgid "Pulled from another location via procurement %d"
 msgstr ""
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.stock_location_qualitytest0
+msgid "Quality Control"
+msgstr "Kontrola kvalitete"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
@@ -345,9 +375,9 @@ msgstr ""
 "Ovisno o organizaciji, odaberite što želite za prijem/isporuku proizvoda"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
+#: model:stock.location,name:stock_location.location_order
+msgid "Order Processing"
+msgstr "Proces naručivanja"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -360,10 +390,10 @@ msgid "Location Paths"
 msgstr "Putanje između lokacija"
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr "Organizacija"
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "Dnevnik"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
@@ -394,21 +424,3 @@ msgstr "Fakturirano"
 
 #~ msgid "Stock Location Paths"
 #~ msgstr "Putovi između lokacija zaliha"
-
-#~ msgid "Pack Zone"
-#~ msgstr "Pack Zone"
-
-#~ msgid "Gate B"
-#~ msgstr "Gate B"
-
-#~ msgid "Gate A"
-#~ msgstr "Gate A"
-
-#~ msgid "Dispatch Zone"
-#~ msgstr "Dispečerska zona"
-
-#~ msgid "Quality Control"
-#~ msgstr "Kontrola kvalitete"
-
-#~ msgid "Order Processing"
-#~ msgstr "Proces naručivanja"

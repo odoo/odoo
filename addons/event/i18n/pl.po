@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-11-05 14:37+0000\n"
 "Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:56+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:06+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: event
 #: view:event.event:0
@@ -75,6 +75,11 @@ msgid "_Close"
 msgstr "_Zamknij"
 
 #. module: event
+#: model:event.event,name:event.event_0
+msgid "Concert of Bon Jovi"
+msgstr "Koncert Bon Jovi"
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Invoiced Registrations only"
 msgstr ""
@@ -95,13 +100,10 @@ msgid "Quantity"
 msgstr "Ilość"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:50
-#: code:addons/event/wizard/event_make_invoice.py:54
-#: code:addons/event/wizard/event_make_invoice.py:58
-#: code:addons/event/wizard/event_make_invoice.py:62
+#: code:addons/event/wizard/event_make_invoice.py:63
 #, python-format
-msgid "Warning !"
-msgstr "Ostrzeżenie !"
+msgid "Registration doesn't have any partner to invoice."
+msgstr ""
 
 #. module: event
 #: field:event.event,company_id:0
@@ -195,6 +197,11 @@ msgid "Mail Auto Confirm"
 msgstr "Autopotwierdzenie maila"
 
 #. module: event
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "Bilet do opery"
+
+#. module: event
 #: code:addons/event/event.py:125
 #: view:event.event:0
 #, python-format
@@ -220,9 +227,8 @@ msgid "Event Dashboard"
 msgstr "Konsola wydarzeń"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:63
-#, python-format
-msgid "Registration doesn't have any partner to invoice."
+#: model:event.event,name:event.event_1
+msgid "Opera of Verdi"
 msgstr ""
 
 #. module: event
@@ -276,9 +282,9 @@ msgid "Draft"
 msgstr "Projekt"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Events States"
-msgstr ""
+#: field:event.type,name:0
+msgid "Event type"
+msgstr "Typ wydarzenia"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -342,6 +348,15 @@ msgstr "Wydarzenia do fakturowania"
 #: help:event.registration,nb_register:0
 msgid "Number of Registrations or Tickets"
 msgstr ""
+
+#. module: event
+#: code:addons/event/wizard/event_make_invoice.py:50
+#: code:addons/event/wizard/event_make_invoice.py:54
+#: code:addons/event/wizard/event_make_invoice.py:58
+#: code:addons/event/wizard/event_make_invoice.py:62
+#, python-format
+msgid "Warning !"
+msgstr "Ostrzeżenie !"
 
 #. module: event
 #: view:event.registration:0
@@ -550,9 +565,9 @@ msgid "Mailing"
 msgstr "Wysyłanie wiadomości"
 
 #. module: event
-#: field:event.type,name:0
-msgid "Event type"
-msgstr "Typ wydarzenia"
+#: view:report.event.registration:0
+msgid "Events States"
+msgstr ""
 
 #. module: event
 #: view:board.board:0
@@ -736,6 +751,11 @@ msgstr ""
 #: selection:report.event.registration,month:0
 msgid "June"
 msgstr "Czerwiec"
+
+#. module: event
+#: model:product.template,name:event.event_product_0_product_template
+msgid "Ticket for Concert"
+msgstr "Bilet na koncert"
 
 #. module: event
 #: field:event.registration,write_date:0
@@ -981,6 +1001,11 @@ msgid "Speaker"
 msgstr "Wykładowca"
 
 #. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on ERP Buisness"
+msgstr ""
+
+#. module: event
 #: view:event.registration:0
 msgid "Reply"
 msgstr "Odpowiedz"
@@ -1041,6 +1066,11 @@ msgstr ""
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
 msgstr ""
+
+#. module: event
+#: model:product.template,name:event.event_product_2_product_template
+msgid "Ticket for Conference"
+msgstr "Bilet na konferencję"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type_association
@@ -1260,18 +1290,12 @@ msgstr ""
 #~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
 #~ "specjalnych !"
 
-#~ msgid "Concert of Bon Jovi"
-#~ msgstr "Koncert Bon Jovi"
-
 #~ msgid "Create Invoices"
 #~ msgstr "Utwórz faktury"
 
 #, python-format
 #~ msgid "Error!"
 #~ msgstr "Błąd!"
-
-#~ msgid "Ticket for Opera"
-#~ msgstr "Bilet do opery"
 
 #~ msgid "Configuration"
 #~ msgstr "Konfiguracja"
@@ -1281,9 +1305,6 @@ msgstr ""
 
 #~ msgid "Registration Invoiced"
 #~ msgstr "Rejestracja zafakturowana"
-
-#~ msgid "Ticket for Concert"
-#~ msgstr "Bilet na koncert"
 
 #~ msgid "Parent Category"
 #~ msgstr "Kategoria nadrzędna"
@@ -1309,9 +1330,6 @@ msgstr ""
 
 #~ msgid "Send Reminder"
 #~ msgstr "Wyślij przypomnienie"
-
-#~ msgid "Ticket for Conference"
-#~ msgstr "Bilet na konferencję"
 
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "Błąd: Niedozwolony kod EAN"

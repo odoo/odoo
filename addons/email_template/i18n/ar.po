@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2012-01-07 22:39+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-08 05:04+0000\n"
-"X-Generator: Launchpad (build 14640)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:57+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: email_template
 #: field:email.template,subtype:0
@@ -27,13 +27,7 @@ msgstr ""
 #: field:email.template,report_name:0
 #: field:email_template.preview,report_name:0
 msgid "Report Filename"
-msgstr ""
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:217
-#, python-format
-msgid "Deletion of Record failed"
-msgstr ""
+msgstr "ابلغ عن اسم الملف"
 
 #. module: email_template
 #: view:email.template:0
@@ -115,10 +109,10 @@ msgstr "رد على"
 #: field:email.template,auto_delete:0
 #: field:email_template.preview,auto_delete:0
 msgid "Auto Delete"
-msgstr ""
+msgstr "حذف ذاتي"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:217
+#: code:addons/email_template/email_template.py:218
 #, python-format
 msgid "Warning"
 msgstr "تحذير"
@@ -234,7 +228,7 @@ msgstr ""
 #. module: email_template
 #: view:email.template:0
 msgid "Preview Template"
-msgstr ""
+msgstr "عاين القالب"
 
 #. module: email_template
 #: field:email.template,null_value:0
@@ -246,7 +240,7 @@ msgstr ""
 #: field:email.template,sub_object:0
 #: field:email_template.preview,sub_object:0
 msgid "Sub-model"
-msgstr ""
+msgstr "النموذج الفرعي"
 
 #. module: email_template
 #: help:email.template,track_campaign_item:0
@@ -295,7 +289,7 @@ msgstr ""
 #. module: email_template
 #: view:email.template:0
 msgid "Note: This is Raw HTML."
-msgstr ""
+msgstr "ملحوظة: انه خام اللغة المستخدمة لإنشاء صفحات الانترنت."
 
 #. module: email_template
 #: view:email.template:0
@@ -321,7 +315,7 @@ msgid "Original version of the message, as it was sent on the network"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:229
+#: code:addons/email_template/email_template.py:230
 #, python-format
 msgid "(copy)"
 msgstr ""
@@ -362,7 +356,7 @@ msgstr ""
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template
 msgid "Email Templates"
-msgstr ""
+msgstr "قوالب البريد الإلكتروني"
 
 #. module: email_template
 #: field:email.template,date:0
@@ -390,7 +384,7 @@ msgstr ""
 #: view:email.template:0
 #: view:email_template.preview:0
 msgid "Body (Text)"
-msgstr ""
+msgstr "الهيئة(النص)"
 
 #. module: email_template
 #: view:email.template:0
@@ -398,10 +392,10 @@ msgid "Advanced Options"
 msgstr "خيارات متقدمة"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:196
+#: code:addons/email_template/email_template.py:183
 #, python-format
 msgid "Send Mail (%s)"
-msgstr ""
+msgstr "ارسل بريد (%s)"
 
 #. module: email_template
 #: field:email.template,body_html:0
@@ -570,17 +564,17 @@ msgstr "الاسم"
 #: field:email.template,track_campaign_item:0
 #: field:email_template.preview,track_campaign_item:0
 msgid "Resource Tracking"
-msgstr ""
+msgstr "متابعة المصدر"
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template_preview
 msgid "Email Template Preview"
-msgstr ""
+msgstr "لمحة عامة عن قالب البريد الالكتروني"
 
 #. module: email_template
 #: view:email_template.preview:0
 msgid "Email Preview"
-msgstr ""
+msgstr "لمحة عامة عن البريد الالكتروني"
 
 #. module: email_template
 #: help:email.template,message_id:0
@@ -642,6 +636,12 @@ msgstr ""
 #. module: email_template
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:218
+#, python-format
+msgid "Deletion of the action record failed."
 msgstr ""
 
 #. module: email_template
@@ -833,3 +833,506 @@ msgstr ""
 #, python-format
 #~ msgid "No Description"
 #~ msgstr "لا وصف"
+
+#, python-format
+#~ msgid ""
+#~ "No personal email accounts are configured for you. \n"
+#~ "Either ask admin to enforce an account for this template or get yourself a "
+#~ "personal email account."
+#~ msgstr ""
+#~ "لا يوجد حسابات بريد الكتروني تم تكوينها لك.\n"
+#~ "إما ان تسأل المدير ان يفرض الحساب لهذا القالب او احصل بنفسك على حساب بريد "
+#~ "الكتروني شخصي."
+
+#~ msgid "Email Content  "
+#~ msgstr "محتوى البريد الإلكتروني  "
+
+#~ msgid "Personal Emails"
+#~ msgstr "بريد الكتروني شخصي"
+
+#~ msgid "Permanently delete emails after sending"
+#~ msgstr "إحذف دائمًا الإيميل بعد ارساله"
+
+#, python-format
+#~ msgid "Emails for multiple items saved in outbox."
+#~ msgstr "تم حفظ الايميلات ذات الايميلات المتعدةة في الصندوق الصادر."
+
+#~ msgid "Email Account Configuration"
+#~ msgstr "تكوين حساب البريد الإلكتروني"
+
+#~ msgid "Send mail Wizard"
+#~ msgstr "ارسل معالج للبريد الالكتروني"
+
+#~ msgid "Plain Text & HTML with no attachments"
+#~ msgstr "اللغة المستخدمة لإنشاء صفحات الإنترنت ونص واضح بدون مرفقات"
+
+#~ msgid "HTML code"
+#~ msgstr "كود HTML"
+
+#~ msgid "Email Account"
+#~ msgstr "حساب البريد الإلكتروني"
+
+#~ msgid ""
+#~ "Carbon Copy address(es), comma-separated. Placeholders can be used here. "
+#~ "e.g. ${object.email_cc}"
+#~ msgstr ""
+#~ "ينسخ الكربون العناوين, مفصولة بفواصل. يمكن استخدام النائبين هنا. "
+#~ "مثال.(البريد الالكتروني.المشروع_ن.ك)$"
+
+#~ msgid ""
+#~ "The description is used as the Sender name along with the provided From "
+#~ "Email, unless it is already specified in the From Email, e.g: John Doe "
+#~ "<john@doe.com>"
+#~ msgstr ""
+#~ "أُستخدم الوصف كإسم الراسل جانب إلى المُعطى من البريد الإلكتروني, على الاقل "
+#~ "تُحدد بالفعل في البريد الإلكتروني, مثال: جون دو <john@doe.com>"
+
+#~ msgid "Send all mails"
+#~ msgstr "ارسل كل البريد الالكتروني"
+
+#, python-format
+#~ msgid "Deletion of Record failed"
+#~ msgstr "حذف الحقل المسجل"
+
+#~ msgid ""
+#~ "Select if this mail account does not belong to specific user but to the "
+#~ "organization as a whole. eg: info@companydomain.com"
+#~ msgstr ""
+#~ "اختار اذا حساب البريد هذا اذا لم يكن منتمي لمستخدم محدد ولكن اذا كانت لمنظمة "
+#~ "ككل. مثال: info@companydomain.com"
+
+#~ msgid "Send now"
+#~ msgstr "ارسل الآن"
+
+#~ msgid "Server Reference of mail"
+#~ msgstr "مرجع خدمة البريد الإلكتروني"
+
+#, python-format
+#~ msgid "Email sending failed for one or more objects."
+#~ msgstr "فشل فشل ارسال البريد الإلكتروني لمسروع او اكثر."
+
+#~ msgid ""
+#~ "The default language for the email. Placeholders can be used here. eg. "
+#~ "${object.partner_id.lang}"
+#~ msgstr ""
+#~ "اللغة الإفتراضية للبريد الإلكتروني. يمكن استخدام النائبين هنا. مثال "
+#~ "(شريكزالمشروع_تعريف.اللغة)$"
+
+#~ msgid "Approve Account"
+#~ msgstr "الموافقة على الحساب"
+
+#~ msgid ""
+#~ "Add here all attachments of the current document you want to include in the "
+#~ "Email."
+#~ msgstr ""
+#~ "اضف هنا جميع المرفقات للوثيقة الحالية التي تريد ان تضعها في البريد "
+#~ "الإلكتروني هنا."
+
+#~ msgid "Both HTML & Text (Mixed)"
+#~ msgstr "كلاً من اللغة المستخدمة لإنشاء صفحات الإنترنت و النص (مخلط)"
+
+#~ msgid "Referred Document"
+#~ msgstr "الوثيقة المشارة"
+
+#~ msgid "Complete Success"
+#~ msgstr "استكمال النجاح"
+
+#~ msgid ""
+#~ "When you choose relationship fields this field will specify the sub value "
+#~ "you can use."
+#~ msgstr ""
+#~ "اعند اختيارك حقول العلاقة ذلك الحقل سيحدد القيمة الفرعيه الممكن ان تستخدمها."
+
+#~ msgid "Wizard Complete"
+#~ msgstr "اكتمال المعالجة"
+
+#~ msgid "From Email"
+#~ msgstr "من البريد الإلكتروني"
+
+#~ msgid "Body(Text)"
+#~ msgstr "الهيئة(النص)"
+
+#~ msgid "Company Emails"
+#~ msgstr "البريد الإلكتروني للشركة"
+
+#~ msgid "Attached Files"
+#~ msgstr "الملفات المرفقة"
+
+#~ msgid "No of requested Mails"
+#~ msgstr "عدد الايميلات المطلوبة"
+
+#~ msgid "Both HTML & Text (Alternative)"
+#~ msgstr "كلاً من اللغة المستخدمة لإنشاء صفحات الإنترنت والنص (البديل)"
+
+#~ msgid "Standard Body (Text)"
+#~ msgstr "معيار الهيئة (النص)"
+
+#~ msgid ""
+#~ "Tip: Multiple emails are sent in the same language (the first one is "
+#~ "proposed). We suggest you send emails in groups according to language."
+#~ msgstr ""
+#~ "نصيحة: تم ارسال البريد الالكتروني المتعدد بنفس اللغة (الأولى منها مقترحة). "
+#~ "نقترح ان تقوم برسال البريد الالكتروني في مجموعات على حسب اللغة."
+
+#, python-format
+#~ msgid "Mail from Account %s successfully Sent."
+#~ msgstr "تم ارسال البريد من الحساب %s بنجاح."
+
+#~ msgid "Body (Text-Web Client Only)"
+#~ msgstr "الهيئة(النص-عميل على شبكة الانترنت فقط)"
+
+#, python-format
+#~ msgid ""
+#~ "Mail from Account %s failed. Probable Reason: Server Send Error\n"
+#~ " Description: %s"
+#~ msgstr ""
+#~ "فشل الايميل من الحساب %s. السبب المحتمل: ارسلت الخدمة خطأ\n"
+#~ "الوصف: %s"
+
+#~ msgid ""
+#~ "The address recipients should reply to, if different from the From address. "
+#~ "Placeholders can be used here."
+#~ msgstr ""
+#~ "يجب ان يتم الرد من عناوين المستقبلن, اذا اختلفت من العنوان. يمكن استخدام "
+#~ "النائبين هنا."
+
+#~ msgid ""
+#~ "Blind Carbon Copy address(es), comma-separated. Placeholders can be used "
+#~ "here. e.g. ${object.email_bcc}"
+#~ msgstr ""
+#~ "ينسخ الكربون الغامق العناوين, مفصولة بفواصل. يمكن استخدام النائبين هنا. "
+#~ "مثال: (المشروع.البريد_bcc)"
+
+#~ msgid "Insert Simple Field"
+#~ msgstr "أضف حقل بسيط"
+
+#~ msgid "Body(Html)"
+#~ msgstr "الهيئة(اللغة المستخدمة لإنشاء صفحة الانترنت)"
+
+#, python-format
+#~ msgid "Out going connection test failed"
+#~ msgstr "فشل الذهاب الى اختبار الاتصال"
+
+#, python-format
+#~ msgid " (Email Attachment)"
+#~ msgstr " (مرفق البريد الالكتروني)"
+
+#~ msgid "Standard Body"
+#~ msgstr "معيار الهيئة"
+
+#~ msgid "The text version of the mail"
+#~ msgstr "إصدار النص للبريد"
+
+#~ msgid "Mako Templates"
+#~ msgstr "قوالب ماكو"
+
+#~ msgid "Sub Field"
+#~ msgstr "حقل فرعي"
+
+#~ msgid "Attach my signature to mail"
+#~ msgstr "ارفق توقيعي إلى البريد الالكتروني"
+
+#~ msgid "Test Outgoing Connection"
+#~ msgstr "اختبار الاتصال الصادر"
+
+#~ msgid ""
+#~ "The address recipients should reply to, if different from the From address. "
+#~ "Placeholders can be used here. e.g. ${object.email_reply_to}"
+#~ msgstr ""
+#~ "يجب ان يتم الرد من قبل عنواين المستقبلين, اذا اختلفت من العنوان. يمكن ان "
+#~ "يُستخدم النائبين هنا. مثال (المشروع.البريد الالكتروني_الرد_إلى)"
+
+#~ msgid ""
+#~ "Button in the side bar of the form view of this Resource that will invoke "
+#~ "the Window Action"
+#~ msgstr ""
+#~ "اضغط على الشريط الجانبي من عرض الشكل من ذلك المصدر التي تستدعي نافذة العمل"
+
+#~ msgid "Expression Builder"
+#~ msgstr "مُنشيء التعبير"
+
+#~ msgid "Body (Plain Text)"
+#~ msgstr "الهيئة (kw fsd'("
+
+#~ msgid "Body (Raw HTML)"
+#~ msgstr "الهيئة (صريح اللغة المستخدمة لإنشاء صفحات الانترنت)"
+
+#~ msgid "Suspend Account"
+#~ msgstr "الحساب المعلق"
+
+#~ msgid "HTML Body"
+#~ msgstr "هيئة اللغة المستخدمة لإنشاء صفحات الانترنت"
+
+#~ msgid ""
+#~ "Copy and paste the value in the location you want to use a system value."
+#~ msgstr "انسخ والصق القيمة في المكان الذي تريده لاستخدام قيمة النظام."
+
+#~ msgid "This Value is used if the field is empty"
+#~ msgstr "أُستخدمت هذه القيمة اذا الحقل فارغًا"
+
+#~ msgid ""
+#~ "When a relation field is used this field will show you the type of field you "
+#~ "have selected"
+#~ msgstr ""
+#~ "عند استخدام الحقل المرتبط لهذا الحقل سيعرض لك نوع الحقل التي قمت بإختياره"
+
+#~ msgid "Multiple Mail Wizard Step 1"
+#~ msgstr "خطوة 1 لمعالج البريد المتعدد"
+
+#~ msgid "Related User"
+#~ msgstr "مستخدم مرتبط"
+
+#~ msgid "Rec/Sent Date"
+#~ msgstr "تاريخ الارسال/الاستلام"
+
+#~ msgid "Report to send"
+#~ msgstr "ابلغ عن ارسال"
+
+#~ msgid "Body (Rich Text Clients Only)"
+#~ msgstr "الهيئة (عملاء النص الوفير فقط("
+
+#~ msgid "No of generated Mails"
+#~ msgstr "عدد البريد المجمعة"
+
+#~ msgid "Initiated"
+#~ msgstr "شرع"
+
+#~ msgid "Mail Contents"
+#~ msgstr "محتويات البريد"
+
+#~ msgid "HTML, otherwise Text"
+#~ msgstr "اللغة المستخدمة لإنشاء صفحات الانترنت, على خلاف النص"
+
+#~ msgid "The template name must be unique !"
+#~ msgstr "يجب ان يكون اسم القالب فريدًا !"
+
+#~ msgid "the signature from the User details will be appended to the mail"
+#~ msgstr "سيتم إلحاق التوقيع من تفاصيل المستخدم إلى البريد"
+
+#~ msgid "Model Internal Name"
+#~ msgstr "اسم النموذج الداخلي"
+
+#~ msgid "Message-ID"
+#~ msgstr "تعريف الرسالة"
+
+#~ msgid "Applicable for inward items only"
+#~ msgstr "وتنطبق على البنود الاساسية فقط"
+
+#~ msgid ""
+#~ "After clicking send all mails, mails will be sent to outbox and cleared in "
+#~ "next Send/Recieve"
+#~ msgstr ""
+#~ "بعد الضغط على ارسل لكل البريد, سيُرسل البريد لصندوق الصادر ثم تمحو في "
+#~ "الارسال/الاستلام التالي"
+
+#, python-format
+#~ msgid "Email Template"
+#~ msgstr "قالب البريد الإلكتروني"
+
+#, python-format
+#~ msgid ""
+#~ "Mail from Account %s failed. Probable Reason:MIME Error\n"
+#~ "Description: %s"
+#~ msgstr ""
+#~ "فشل البريد من حساب %s. السبب المحتمل:خطأ ايمائي\n"
+#~ "وصف: %s"
+
+#~ msgid "Request Re-activation"
+#~ msgstr "طلب اعادة تنشيط"
+
+#~ msgid "Send/Receive"
+#~ msgstr "ارسل/استلم"
+
+#~ msgid ""
+#~ "Only users from these groups will be allowed to send mails from this Template"
+#~ msgstr ""
+#~ "سيسمح فقط للمستخدمي كم تلك المجموعات لارسال البريد الالكتروني من هذا القالب"
+
+#~ msgid "From Account"
+#~ msgstr "من الحساب"
+
+#~ msgid "Intermixed content"
+#~ msgstr "محتوى مختلط"
+
+#~ msgid "The subject of email. Placeholders can be used here."
+#~ msgstr "موضوع البريد الالكتروني. ويمكن استخدا العناصر النائبة عنه هنا."
+
+#~ msgid "Report File Name"
+#~ msgstr "ابلع عن اسم الملف"
+
+#~ msgid "Allowed User Groups"
+#~ msgstr "مجموعات المستخدم المسموحة"
+
+#~ msgid "Error: You are not allowed to have more than 1 account."
+#~ msgstr "خطأ: غير مسموح ان يكون لديك اكثر من حساب 1."
+
+#, python-format
+#~ msgid "%s (Email Attachment)"
+#~ msgstr "%s (مرفق البريد الالكتروني)"
+
+#~ msgid "Body (HTML-Web Client Only)"
+#~ msgstr ""
+#~ "هيئة (اللغة المستخدمة لإنشاء صفحات الانترنت- عميل على شبكة الانترنت فقط)"
+
+#, python-format
+#~ msgid "Copy of template "
+#~ msgstr "نسخة من القالب "
+
+#~ msgid "Text, otherwise HTML"
+#~ msgstr "النص, وبطريقة اخرى اللغة المستخدمة لإنشاء صفحات الانترنت"
+
+#~ msgid "Email Templates for Models"
+#~ msgstr "قوالب البريد الالكتروني عن المجموعات"
+
+#~ msgid "Discard Mail"
+#~ msgstr "تجاهل البريد"
+
+#, python-format
+#~ msgid ""
+#~ "Server Send Error\n"
+#~ "Description: %s"
+#~ msgstr ""
+#~ "خطأ ارسال الخدمة\n"
+#~ "الوصف: %s"
+
+#~ msgid "Email Mailbox"
+#~ msgstr "صندوق البريد الالكتروني"
+
+#~ msgid "Date on which Email Sent or Received"
+#~ msgstr "وقت ارسال او استلام البريد الالكتروني"
+
+#~ msgid "Enter name of outgoing server, eg: smtp.yourdomain.com"
+#~ msgstr "ادخل اسم الخدمة الخارجة, مثال:smtp.yourdomain.com"
+
+#~ msgid ""
+#~ "Name of the generated report file. Placeholders can be used in the filename. "
+#~ "eg: 2009_SO003.pdf"
+#~ msgstr ""
+#~ "اسم ملف التقرير المُنشأ. ويمكن استخدام العناصر النائبة في اسم الملف. مثال: "
+#~ "2009_pdf.300os"
+
+#~ msgid "Email Template for OpenERP"
+#~ msgstr "قالب البريد الالكتروني لـOpenERP"
+
+#, python-format
+#~ msgid "SMTP Test Connection Was Successful"
+#~ msgstr "تم نجاح اتصال اختبار  SMTP"
+
+#, python-format
+#~ msgid "Missing mail account"
+#~ msgstr "فقد حساب البريد"
+
+#~ msgid ""
+#~ "You may attach existing files to this template, so they will be added in all "
+#~ "emails created from this template"
+#~ msgstr ""
+#~ "ربما ترفق الملفات لهذا القالب, كذلك سيتم اضافتهم في جميع البريد الالكتروني "
+#~ "المُنشأة من هذا القالب"
+
+#, python-format
+#~ msgid ""
+#~ "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
+#~ "Error: %s"
+#~ msgstr ""
+#~ "فشل ارسال البريد %s. السبب المحتمل:غير قادر على تسجيل الدخول للخدمة\n"
+#~ "خطأ: %s"
+
+#~ msgid ""
+#~ "Specify the Message-ID SMTP header to use in outgoing emails. Please note "
+#~ "that this overrides the Resource tracking option! Placeholders can be used "
+#~ "here."
+#~ msgstr ""
+#~ "حدد تعريف الرسالة  رأسي SMTP لاستخدامه في البريد الالكتروني الخارج. الرجاء "
+#~ "ملاحظة تجاوز خيار تتبع المصدر! يمكن استخدام العناصر النائبة هنا."
+
+#~ msgid "Action that will open this email template on Resource records"
+#~ msgstr "سيقوم الاجراء بفتح قالب البريد الالكتروني هذا على مسجلات المصدر"
+
+#~ msgid "CC"
+#~ msgstr "ن.ك"
+
+#~ msgid "Templating Language"
+#~ msgstr "لغة القالب"
+
+#~ msgid ""
+#~ "The Message-ID header value, if you need tospecify it, for example to "
+#~ "automatically recognize the replies later. Placeholders can be used here."
+#~ msgstr ""
+#~ "القيمة الرأسية لترعيف الرسالة, اذا كنت تريد تحليلها, على سبيل المثال للتعرف "
+#~ "تلقائيًا على الردود مؤخرًا. يمكن استخدام العناصر النائبة هنا."
+
+#~ msgid "Recipient (To)"
+#~ msgstr "المستلم (الى)"
+
+#~ msgid "This is the wizard for sending mail"
+#~ msgstr "يكون هذا المعالج لارسال البريد"
+
+#~ msgid "Emails will be sent from this approved account."
+#~ msgstr "سيتم ارسال البريد الالكتروني من الحساب المقبول هذا."
+
+#~ msgid ""
+#~ "The Recipient of email. Placeholders can be used here. e.g. "
+#~ "${object.email_to}"
+#~ msgstr ""
+#~ "مستلم البريد الالكتروني. يمكن استخدام العناصر النائبة هنا. مثال "
+#~ "(موضوع.البريد الالكتروني_إلى)$"
+
+#~ msgid "Body (HTML)"
+#~ msgstr "هيئة (اللغة المستخدمة لإنشاء صفحات الانترنت)"
+
+#~ msgid "Corporate"
+#~ msgstr "dahv;"
+
+#, python-format
+#~ msgid "Core connection for the given ID does not exist"
+#~ msgstr "الاتصال الاساسي للهوية المعطاه غير موجود"
+
+#~ msgid "Existing files"
+#~ msgstr "الملفات الموجودة"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Email Template is extraction of Power Email basically just to send the "
+#~ "emails.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    قالب البريد الالكتروني مستخلص من طاقة البريد الالكتروني أساسًا لارسال "
+#~ "البريد الالكتروني.\n"
+#~ "    "
+
+#, python-format
+#~ msgid ""
+#~ "Mail from Account %s failed on login. Probable Reason:Could not login to "
+#~ "server\n"
+#~ "Error: %s"
+#~ msgstr ""
+#~ "فشل بريد الحساب%s من تسجيل الدخول. السبب المحتمل: غير قدر على تسجيل الدخول "
+#~ "للخدمة\n"
+#~ "خطأ: %s"
+
+#~ msgid "Another setting already exists with this email ID !"
+#~ msgstr "يوجد بالفعل ضبط اخر مع هوية هذا البريد الالكتروني !"
+
+#~ msgid "Simple Mail Wizard Step 1"
+#~ msgstr "معالج البريد البسيط خطوة 1"
+
+#~ msgid "Mail Format"
+#~ msgstr "تشكيل البريد"
+
+#~ msgid "Company Accounts"
+#~ msgstr "حسابات الشكة"
+
+#~ msgid "Enter port number, eg: 25 or 587"
+#~ msgstr "ادخل رقم المنفذ, مثال: 25 او 587"
+
+#, python-format
+#~ msgid "email-template"
+#~ msgstr "قالب-البريد الالكتروني"
+
+#, python-format
+#~ msgid "Mail from Account %s failed. Probable Reason:Account not approved"
+#~ msgstr "فشل البريد من الحساب %s. السبب المحتمل:الحساب غير مقبول"
+
+#~ msgid "Has Attachments"
+#~ msgstr "به مرفقات"

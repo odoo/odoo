@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2012-01-25 00:14+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-26 05:28+0000\n"
-"X-Generator: Launchpad (build 14719)\n"
+"X-Launchpad-Export-Date: 2012-02-08 06:08+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -27,6 +27,11 @@ msgstr "Hesap Dizisi Uygulama Yapılandırması"
 #: constraint:account.move:0
 msgid ""
 "You can not create more than one move per period on centralized journal"
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
 msgstr ""
 
 #. module: account_sequence
@@ -76,11 +81,6 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
-
-#. module: account_sequence
 #: help:account.journal,internal_sequence_id:0
 msgid ""
 "This sequence will be used to maintain the internal number for the journal "
@@ -106,8 +106,8 @@ msgstr "İç Sayı"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: account_sequence
 #: help:account.sequence.installer,padding:0
@@ -125,8 +125,8 @@ msgstr "Ad"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr "Yevmiye Girişinizin tarihi tanımlanan dönemle uyuşmuyor!"
+msgid "You can not create journal items on closed account."
+msgstr ""
 
 #. module: account_sequence
 #: constraint:account.journal:0
@@ -178,8 +178,16 @@ msgstr "Yevmiye adı her firmada benzersiz olmalı."
 #. module: account_sequence
 #: constraint:account.move.line:0
 msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
 msgstr ""
 
 #. module: account_sequence
@@ -207,11 +215,6 @@ msgstr "Yevmiye"
 msgid "You can enhance the Account Sequence Application by installing ."
 msgstr "Hesap Dizisi Uygulamasını kurarak geliştirebilirsiniz."
 
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Hesap Görünümünde hareket oluşturamazsınız."
-
 #~ msgid "Entries Sequence Numbering"
 #~ msgstr "Giriş Dizi Numaralandırılması"
 
@@ -227,13 +230,25 @@ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
 #~ msgid "Configuration Progress"
 #~ msgstr "Yapılandırma İlerleyişi"
 
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
+
 #~ msgid ""
 #~ "You cannot create more than one move per period on centralized journal"
 #~ msgstr ""
 #~ "Merkezilendirilmiş yevmiyelerde bir dönem için birden fazla hareket "
 #~ "yaratamazsınız."
 
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
+
 #~ msgid ""
 #~ "You cannot create entries on different periods/journals in the same move"
 #~ msgstr ""
 #~ "Aynı hareket için farklı dönemler/yevmiyeler e ait girişler oluşturamazsınız."
+
+#~ msgid "The date of your Journal Entry is not in the defined period!"
+#~ msgstr "Yevmiye Girişinizin tarihi tanımlanan dönemle uyuşmuyor!"

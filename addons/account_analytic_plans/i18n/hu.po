@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-02-09 11:58+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
 "<openerp@novotrade.hu>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:51+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:31+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -82,11 +82,6 @@ msgid "Ok"
 msgstr "Rendben"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Nem könyvelhet lezárt számlára."
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
 msgstr "Modellterv"
@@ -144,9 +139,16 @@ msgid "Invalid BBA Structured Communication !"
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Gyűjtőkód"
+#: constraint:account.bank.statement:0
+msgid "The journal and period chosen have to belong to the same company."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -185,11 +187,6 @@ msgstr "Nyomtatás"
 #: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "Százalék"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Gyűjtőkód azonosító"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:221
@@ -249,6 +246,14 @@ msgid "Invoice Line"
 msgstr "Számlasor"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Currency"
 msgstr "Pénznem"
@@ -259,11 +264,9 @@ msgid "Start Date"
 msgstr "Kezdő dátum"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Gyűjtőkód azonosító"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -287,7 +290,7 @@ msgstr "Záró dátum"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:341
-#: code:addons/account_analytic_plans/account_analytic_plans.py:483
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "A(z) '%s' naplóhoz meg kell határoznia egy gyűjtőnaplót!"
@@ -338,16 +341,6 @@ msgid "Account1 Id"
 msgstr "1.gyűjtőkód azonosító"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "A kapcsolt számla és az időszak vállalatának ugyanannak kell lennie."
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
 msgstr "Min. engedélyezett (%)"
@@ -371,6 +364,11 @@ msgid "Save This Distribution as a Model"
 msgstr "Felosztás mentése modellként"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
 msgstr "Mennyiség"
@@ -388,10 +386,15 @@ msgstr ""
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:341
-#: code:addons/account_analytic_plans/account_analytic_plans.py:483
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Nincs gyűjtőnapló!"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Gyűjtőkód"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
@@ -423,6 +426,11 @@ msgstr "Mégse"
 #: field:account.analytic.plan.instance,account4_ids:0
 msgid "Account4 Id"
 msgstr "4.gyűjtőkód azonosító"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -510,6 +518,11 @@ msgid ""
 msgstr ""
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Company"
 msgstr "Vállalat"
@@ -530,10 +543,14 @@ msgstr "A napló nevének egyedinek kell lennie!"
 msgid "Value Error"
 msgstr "Értékhiba"
 
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Nem könyvelhet gyűjtő típusú számlára."
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Nem könyvelhet lezárt számlára."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Nem könyvelhet gyűjtő típusú számlára."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "A kapcsolt számla és az időszak vállalatának ugyanannak kell lennie."
 
 #~ msgid ""
 #~ "This module allows to use several analytic plans, according to the general "

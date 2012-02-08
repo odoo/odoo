@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-03-10 19:19+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:47+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -125,10 +125,19 @@ msgid "Conditions"
 msgstr "Condicións"
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_product_product
-#: field:product.pulled.flow,product_id:0
-msgid "Product"
-msgstr "Produto"
+#: model:stock.location,name:stock_location.location_pack_zone
+msgid "Pack Zone"
+msgstr "Zona empaquetado"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_b
+msgid "Gate B"
+msgstr "Porta B"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_a
+msgid "Gate A"
+msgstr "Porta A"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -141,6 +150,11 @@ msgid "Pushed flows"
 msgstr "Fluxos empuxados"
 
 #. module: stock_location
+#: model:stock.location,name:stock_location.location_dispatch_zone
+msgid "Dispatch Zone"
+msgstr "Zona de expedición"
+
+#. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
 msgstr "Movemento de stock"
@@ -151,10 +165,10 @@ msgid "Pulled flows"
 msgstr "Fluxos arrastrados"
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr "Diario"
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "Compañía"
 
 #. module: stock_location
 #: view:product.product:0
@@ -228,9 +242,20 @@ msgstr ""
 "Estas regras fixan a ruta correcta do produto en toda a árbore de lugares."
 
 #. module: stock_location
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr ""
+
+#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Operación manual"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_product_product
+#: field:product.pulled.flow,product_id:0
+msgid "Product"
+msgstr "Produto"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
@@ -269,6 +294,11 @@ msgstr "Produtos"
 #, python-format
 msgid "Pulled from another location via procurement %d"
 msgstr "Arrastrado desde outro lugar mediante abastecemento %d"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.stock_location_qualitytest0
+msgid "Quality Control"
+msgstr "Control de calidade"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
@@ -354,9 +384,9 @@ msgstr ""
 "Segundo a compañía, seleccionar se desexa recibir ou enviar produtos."
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
+#: model:stock.location,name:stock_location.location_order
+msgid "Order Processing"
+msgstr "Procesando pedido"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -369,10 +399,10 @@ msgid "Location Paths"
 msgstr "Rutas de lugares"
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr "Compañía"
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "Diario"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
@@ -388,18 +418,6 @@ msgstr "Facturado"
 
 #~ msgid "Warehouse Locations Paths"
 #~ msgstr "Camiños nos lugares de almacén"
-
-#~ msgid "Pack Zone"
-#~ msgstr "Zona empaquetado"
-
-#~ msgid "Dispatch Zone"
-#~ msgstr "Zona de expedición"
-
-#~ msgid "Gate A"
-#~ msgstr "Porta A"
-
-#~ msgid "Gate B"
-#~ msgstr "Porta B"
 
 #~ msgid ""
 #~ "\n"
@@ -533,9 +551,3 @@ msgstr "Facturado"
 #~ "Calidade e almacénase na plataforma 2.- Cando se entrega ó cliente: Lista de "
 #~ "Selección -> Embalaxe -> Orde de Entrega desde a porta A\n"
 #~ "    "
-
-#~ msgid "Quality Control"
-#~ msgstr "Control de calidade"
-
-#~ msgid "Order Processing"
-#~ msgstr "Procesando pedido"

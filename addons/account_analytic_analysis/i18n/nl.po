@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-01-13 18:39+0000\n"
 "Last-Translator: Jan Verlaan <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:50+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "No Account Manager"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-02-08 05:30+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -49,11 +44,11 @@ msgid "Pending contracts to renew with your customer"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:551
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:722
-#, python-format
-msgid "AccessError"
-msgstr "Toegangsfout"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -165,13 +160,6 @@ msgid "Contracts to Renew"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
 msgstr "Theoretische marge"
@@ -234,13 +222,6 @@ msgid "Invoiced Amount"
 msgstr "Gefactureerd bedrag"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:552
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:723
-#, python-format
-msgid "You try to bypass an access rule (Document type: %s)."
-msgstr "U probeert een toegangsregel te omzeilen (Document type: %s)."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
 msgstr "Datum van laatste gefactureerde kosten"
@@ -259,15 +240,6 @@ msgstr "Werkelijke marge (%)"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Werkelijke marge"
-
-#. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
-"Fout! De munteenheid moet hetzelfde zijn als de munteenheid van het "
-"geselecteerde bedrijf"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -367,6 +339,11 @@ msgid "Open"
 msgstr ""
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts that are not assigned to an account manager."
+msgstr ""
+
+#. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
@@ -414,6 +391,10 @@ msgstr ""
 
 #~ msgid "My Accounts"
 #~ msgstr "Mijn kostenplaatsen"
+
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "U probeert een toegangsregel te omzeilen (Document type: %s)."
 
 #~ msgid "report_account_analytic"
 #~ msgstr "report_account_analytic"
@@ -501,6 +482,17 @@ msgstr ""
 
 #~ msgid "Billing"
 #~ msgstr "Facturatie"
+
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "Toegangsfout"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr ""
+#~ "Fout! De munteenheid moet hetzelfde zijn als de munteenheid van het "
+#~ "geselecteerde bedrijf"
 
 #~ msgid ""
 #~ "\n"

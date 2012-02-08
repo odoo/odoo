@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
+"POT-Creation-Date: 2012-02-08 00:49+0000\n"
 "PO-Revision-Date: 2011-12-06 10:24+0000\n"
 "Last-Translator: lholivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:51+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:01+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0
@@ -64,6 +64,11 @@ msgid "Work Centers Utilisation"
 msgstr "Occupation du poste de charge"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_sugar_product_template
+msgid "Sugar"
+msgstr ""
+
+#. module: mrp
 #: report:mrp.production.order:0
 msgid "No. Of Cycles"
 msgstr "Nombre de Cycles"
@@ -72,6 +77,11 @@ msgstr "Nombre de Cycles"
 #: field:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of Cycles"
 msgstr "Nombre de cycles"
+
+#. module: mrp
+#: model:product.uom.categ,name:mrp.product_uom_categ_fluid
+msgid "Fluid"
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_minimumstockprocure0
@@ -97,7 +107,7 @@ msgstr "Coût horaire"
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Uom"
-msgstr "Coût unitaire"
+msgstr "Prix de revient par UdM"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -190,6 +200,11 @@ msgstr "Etat"
 #: field:mrp.workcenter,costs_hour:0
 msgid "Cost per hour"
 msgstr "Coût horaire"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_orange_product_template
+msgid "Orange"
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemts0
@@ -301,9 +316,10 @@ msgid "Partner Ref"
 msgstr "Réf partenaire"
 
 #. module: mrp
-#: selection:mrp.workcenter.load,measure_unit:0
-msgid "Amount in hours"
-msgstr "Montant en heures"
+#: field:mrp.production,origin:0
+#: report:mrp.production.order:0
+msgid "Source Document"
+msgstr "Document d'origine"
 
 #. module: mrp
 #: field:mrp.production,product_lines:0
@@ -324,6 +340,11 @@ msgstr "Référence vers une position dans un plan externe."
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr "Vous essayez d'affecter un lot qui n'est pas pour ce produit."
+
+#. module: mrp
+#: model:product.template,name:mrp.product_cloth_product_template
+msgid "Cloth"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -673,6 +694,11 @@ msgid "Ready"
 msgstr "Prêt"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_buttons_product_template
+msgid "Shirt Buttons"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.production,routing_id:0
 msgid ""
 "The list of operations (list of work centers) to produce the finished "
@@ -737,7 +763,6 @@ msgid "Per month"
 msgstr "Par mois"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:603
 #: code:addons/mrp/wizard/change_production_qty.py:78
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #, python-format
@@ -763,6 +788,7 @@ msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:734
+#: code:addons/mrp/mrp.py:762
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -1016,42 +1042,6 @@ msgid "BOM Name"
 msgstr "Nom de la nomenclature"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:762
-#, python-format
-msgid ""
-"You are going to produce total %s quantities of \"%s\".\n"
-"But you can produce upto total %s quantities.' % (production_qty, prod_name, "
-"rest_qty)))\n"
-"                if rest_qty > 0 :\n"
-"                    stock_mov_obj.action_consume(cr, uid, "
-"[produce_product.id], (subproduct_factor * production_qty), "
-"context=context)\n"
-"\n"
-"        for raw_product in production.move_lines2:\n"
-"            new_parent_ids = []\n"
-"            parent_move_ids = [x.id for x in raw_product.move_history_ids]\n"
-"            for final_product in production.move_created_ids2:\n"
-"                if final_product.id not in parent_move_ids:\n"
-"                    new_parent_ids.append(final_product.id)\n"
-"            for new_parent_id in new_parent_ids:\n"
-"                stock_mov_obj.write(cr, uid, [raw_product.id], "
-"{'move_history_ids': [(4,new_parent_id)]})\n"
-"\n"
-"        wf_service = netsvc.LocalService(\"workflow\")\n"
-"        wf_service.trg_validate(uid, 'mrp.production', production_id, "
-"'button_produce_done', cr)\n"
-"        return True\n"
-"\n"
-"    def _costs_generate(self, cr, uid, production):\n"
-"        \"\"\" Calculates total costs at the end of the production.\n"
-"        @param production: Id of production order.\n"
-"        @return: Calculated amount.\n"
-"        \"\"\"\n"
-"        amount = 0.0\n"
-"        analytic_line_obj = self.pool.get('account.analytic.line"
-msgstr ""
-
-#. module: mrp
 #: view:mrp.production:0
 msgid "Start Production"
 msgstr "Démarrer la Production"
@@ -1147,11 +1137,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 msgid "Manufacturing Orders in Progress"
 msgstr "Ordres de fabrication en cours"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_production_action4
-msgid "Manufacturing Orders Waiting Products"
-msgstr "Ordres de fabrication en attente de produits"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1308,6 +1293,11 @@ msgid "Revisions"
 msgstr "Révisions"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_shirt_product_template
+msgid "Shirt"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.production,priority:0
 msgid "Priority"
 msgstr "Priorité"
@@ -1349,6 +1339,11 @@ msgstr ""
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
 msgstr "Jours de sécurité pour chaque opération de production."
+
+#. module: mrp
+#: model:product.template,name:mrp.product_water_product_template
+msgid "Water"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1455,6 +1450,12 @@ msgid "Pending"
 msgstr "En attente"
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:603
+#, python-format
+msgid "Couldn't find a bill of material for this product."
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom,active:0
 #: field:mrp.routing,active:0
 msgid "Active"
@@ -1524,10 +1525,9 @@ msgid "Done"
 msgstr "Terminé"
 
 #. module: mrp
-#: field:mrp.production,origin:0
-#: report:mrp.production.order:0
-msgid "Source Document"
-msgstr "Document d'origine"
+#: model:ir.actions.act_window,name:mrp.mrp_production_action4
+msgid "Manufacturing Orders Waiting Products"
+msgstr "Ordres de fabrication en attente de produits"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1750,6 +1750,14 @@ msgstr ""
 "L'UdM (unité de mesure) est l'unité de mesure pour la gestion des stocks"
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:734
+#, python-format
+msgid ""
+"You are going to consume total %s quantities of \"%s\".\n"
+"But you can only consume up to total %s quantities."
+msgstr ""
+
+#. module: mrp
 #: model:process.transition,note:mrp.process_transition_bom0
 msgid ""
 "The Bill of Material is the product's decomposition. The components (that "
@@ -1768,6 +1776,11 @@ msgstr ""
 #: view:mrp.workcenter:0
 msgid "Company"
 msgstr "Société"
+
+#. module: mrp
+#: selection:mrp.workcenter.load,measure_unit:0
+msgid "Amount in hours"
+msgstr "Montant en heures"
 
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
@@ -1824,7 +1837,7 @@ msgstr "Valide du"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Normal BoM"
-msgstr "Nomemclature normale"
+msgstr "Nomenclature normale"
 
 #. module: mrp
 #: field:res.company,manufacturing_lead:0
@@ -1945,51 +1958,6 @@ msgid "Starting Date"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:734
-#, python-format
-msgid ""
-"You are going to consume total %s quantities of \"%s\".\n"
-"But you can consume upto total %s quantities.' % (qty, prod_name, "
-"qty_avail)))\n"
-"                    if qty <= 0.0:\n"
-"                        # we already have more qtys consumed than we need \n"
-"                        continue\n"
-"\n"
-"                    raw_product[0].action_consume(qty, "
-"raw_product[0].location_id.id, context=context)\n"
-"\n"
-"        if production_mode == 'consume_produce':\n"
-"            # To produce remaining qty of final product\n"
-"            #vals = {'state':'confirmed'}\n"
-"            #final_product_todo = [x.id for x in "
-"production.move_created_ids]\n"
-"            #stock_mov_obj.write(cr, uid, final_product_todo, vals)\n"
-"            #stock_mov_obj.action_confirm(cr, uid, final_product_todo, "
-"context)\n"
-"            produced_products = {}\n"
-"            for produced_product in production.move_created_ids2:\n"
-"                if produced_product.scrapped:\n"
-"                    continue\n"
-"                if not produced_products.get(produced_product.product_id.id, "
-"False):\n"
-"                    produced_products[produced_product.product_id.id] = 0\n"
-"                produced_products[produced_product.product_id.id] += "
-"produced_product.product_qty\n"
-"\n"
-"            for produce_product in production.move_created_ids:\n"
-"                produced_qty = "
-"produced_products.get(produce_product.product_id.id, 0)\n"
-"                subproduct_factor = self._get_subproduct_factor(cr, uid, "
-"production.id, produce_product.id, context=context)\n"
-"                rest_qty = (subproduct_factor * production.product_qty) - "
-"produced_qty\n"
-"\n"
-"                if rest_qty < production_qty:\n"
-"                    prod_name = produce_product.product_id.name_get()[0][1]\n"
-"                    raise osv.except_osv(_('Warning!"
-msgstr ""
-
-#. module: mrp
 #: field:mrp.workcenter,time_stop:0
 msgid "Time after prod."
 msgstr "Temps après prod."
@@ -2039,6 +2007,11 @@ msgstr "Gamme parente"
 #: help:mrp.workcenter,time_start:0
 msgid "Time in hours for the setup."
 msgstr "Temps en Heures pour la mise en place"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_orangejuice_product_template
+msgid "Orange Juice"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom.revision,bom_id:0
@@ -2132,6 +2105,19 @@ msgstr ""
 "Les composants des nomenclatures sont les composants et les sous-produits "
 "utilisés pour générer les nomenclatures maîtresses. Utilisez ce menu pour "
 "chercher dans quelle nomenclature un composant particulier est utilisé."
+
+#. module: mrp
+#: model:product.uom,name:mrp.product_uom_litre
+msgid "Litre"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:762
+#, python-format
+msgid ""
+"You are going to produce total %s quantities of \"%s\".\n"
+"But you can only produce up to total %s quantities."
+msgstr ""
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct0

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2011-02-08 07:35+0000\n"
 "Last-Translator: moelyana <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:01+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:38+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -27,8 +27,7 @@ msgid "Allocation Type"
 msgstr "Jenis Alokasi"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr "Menunggu Persetujuan Kedua"
 
@@ -53,8 +52,7 @@ msgid "Allocation Mode"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,department_id:0
+#: view:hr.holidays:0 field:hr.holidays,department_id:0
 msgid "Department"
 msgstr "Departmen"
 
@@ -64,8 +62,7 @@ msgid "Requests Approve"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Refused"
 msgstr "Ditolak"
 
@@ -73,6 +70,11 @@ msgstr "Ditolak"
 #: help:hr.holidays,category_id:0
 msgid "Category of Employee"
 msgstr "Kategori Karyawan"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid " Month-1"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -137,11 +139,15 @@ msgid "Summary Of Leaves"
 msgstr "Ikhtisar Dari Cuti"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: view:hr.holidays:0
+#: selection:hr.employee,current_leave_state:0 view:hr.holidays:0
 #: selection:hr.holidays,state:0
 msgid "Approved"
 msgstr "Disetujui"
+
+#. module: hr_holidays
+#: field:hr.employee,last_login:0
+msgid "Latest Connection"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -149,7 +155,7 @@ msgid "Refuse"
 msgstr "Tolak"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:337
+#: code:addons/hr_holidays/hr_holidays.py:344
 #, python-format
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
@@ -192,8 +198,7 @@ msgid "Leaves by Department"
 msgstr "Cuti dari Departemen"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "Dibatalkan"
 
@@ -229,7 +234,7 @@ msgid "Validation"
 msgstr "Validasi"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:362
+#: code:addons/hr_holidays/hr_holidays.py:377
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -252,8 +257,7 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
-#: view:hr.holidays.status:0
-#: field:hr.holidays.status,name:0
+#: view:hr.holidays.status:0 field:hr.holidays.status,name:0
 #: field:hr.holidays.summary.dept,holiday_type:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
@@ -263,7 +267,7 @@ msgstr "Jenis Cuti"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:199
-#: code:addons/hr_holidays/hr_holidays.py:337
+#: code:addons/hr_holidays/hr_holidays.py:344
 #, python-format
 msgid "Warning!"
 msgstr "Peringatan!"
@@ -297,7 +301,7 @@ msgid "Confirm"
 msgstr "Konfirmasi"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:369
+#: code:addons/hr_holidays/hr_holidays.py:384
 #, python-format
 msgid "Leave Request for %s"
 msgstr ""
@@ -308,8 +312,7 @@ msgid "Remaining Leaves"
 msgstr "Sisa Cuti"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,state:0
+#: view:hr.holidays:0 field:hr.holidays,state:0
 msgid "State"
 msgstr "Status"
 
@@ -319,17 +322,14 @@ msgid "Total holidays by type"
 msgstr "Total liburan menurut jenis"
 
 #. module: hr_holidays
-#: view:hr.employee:0
-#: view:hr.holidays:0
-#: field:hr.holidays,employee_id:0
+#: view:hr.employee:0 view:hr.holidays:0 field:hr.holidays,employee_id:0
 #: field:hr.holidays.remaining.leaves.user,name:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
 msgstr "Karyawan"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "New"
 msgstr ""
 
@@ -365,17 +365,29 @@ msgstr ""
 "Error! Tanggal mulai cuti l harus lebih rendah dari Tanggal akhir cuti"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:367
+#: code:addons/hr_holidays/hr_holidays.py:382
 #, python-format
 msgid "Allocation for %s"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,number_of_days:0
+#: view:hr.holidays:0 field:hr.holidays,number_of_days:0
 #: field:hr.holidays,number_of_days_temp:0
 msgid "Number of Days"
 msgstr "Jumlah Hari"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:377
+#, python-format
+msgid ""
+"The feature behind the field 'Remaining Legal Leaves' can only be used when "
+"there is only one leave type with the option 'Allow to Override Limit' "
+"unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
+"decide on which leave type the update has to be done. \n"
+"You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
+"Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
+"the employees if the configuration does not allow to use this field."
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -397,8 +409,7 @@ msgstr ""
 "dari validator kedua"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Waiting Approval"
 msgstr "Menunggu Persetujuan"
 
@@ -422,13 +433,6 @@ msgid "Linked Requests"
 msgstr "Linked Permintaan"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: selection:hr.holidays.summary.dept,holiday_type:0
-#: selection:hr.holidays.summary.employee,holiday_type:0
-msgid "Validated"
-msgstr "Sudah DIvalidasi"
-
-#. module: hr_holidays
 #: field:hr.holidays,parent_id:0
 msgid "Parent"
 msgstr "Induk"
@@ -436,6 +440,11 @@ msgstr "Induk"
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Lavender"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Month"
 msgstr ""
 
 #. module: hr_holidays
@@ -457,8 +466,7 @@ msgid "Employee's Holidays"
 msgstr "Liburan Karyawan"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,category_id:0
+#: view:hr.holidays:0 field:hr.holidays,category_id:0
 msgid "Category"
 msgstr "Kategori"
 
@@ -503,8 +511,7 @@ msgid "Holiday"
 msgstr "Hari Libur"
 
 #. module: hr_holidays
-#: field:hr.holidays,case_id:0
-#: field:hr.holidays.status,categ_id:0
+#: field:hr.holidays,case_id:0 field:hr.holidays.status,categ_id:0
 msgid "Meeting"
 msgstr "Pertemuan"
 
@@ -551,8 +558,7 @@ msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.employee:0
-#: field:hr.employee,remaining_leaves:0
+#: view:hr.employee:0 field:hr.employee,remaining_leaves:0
 msgid "Remaining Legal Leaves"
 msgstr ""
 
@@ -572,6 +578,11 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
 msgstr "Ikthtisar Cuti"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Holidays during last month"
+msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -629,8 +640,7 @@ msgid "Compensatory Days"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,notes:0
+#: view:hr.holidays:0 field:hr.holidays,notes:0
 msgid "Reasons"
 msgstr "Alasan"
 
@@ -641,8 +651,7 @@ msgid "Leaves Analysis"
 msgstr "Analisa Cuti"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0
-#: view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "Batal"
 
@@ -656,16 +665,13 @@ msgstr ""
 "Cuti dari Dinas"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:362
-#, python-format
-msgid ""
-"To use this feature, you must have only one leave type without the option "
-"'Allow to Override Limit' set. (%s Found)."
-msgstr ""
+#: view:hr.holidays:0 selection:hr.holidays.summary.dept,holiday_type:0
+#: selection:hr.holidays.summary.employee,holiday_type:0
+msgid "Validated"
+msgstr "Sudah DIvalidasi"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: selection:hr.holidays,type:0
+#: view:hr.holidays:0 selection:hr.holidays,type:0
 msgid "Allocation Request"
 msgstr "Permintaan Alokasi"
 
@@ -681,8 +687,7 @@ msgid "Apply Double Validation"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0
-#: view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "Cetak"
 
@@ -703,8 +708,7 @@ msgid "By Employee Category"
 msgstr "Berdasarkan Kategori Karyawan"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: selection:hr.holidays,type:0
+#: view:hr.holidays:0 selection:hr.holidays,type:0
 msgid "Leave Request"
 msgstr "Permohonan Cuti"
 
@@ -758,11 +762,6 @@ msgstr "Sisa Cuti"
 #: field:hr.holidays.summary.dept,depts:0
 msgid "Department(s)"
 msgstr "Departemen"
-
-#. module: hr_holidays
-#: view:hr.holidays:0
-msgid "This Month"
-msgstr "Bulan Ini"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id2:0
@@ -839,7 +838,7 @@ msgid "Approve"
 msgstr "Disetujui"
 
 #. module: hr_holidays
-#: field:hr.holidays,date_from:0
+#: view:hr.holidays:0 field:hr.holidays,date_from:0
 msgid "Start Date"
 msgstr "Tanggal Mulai"
 
@@ -869,6 +868,11 @@ msgstr "Manajer"
 #: view:hr.holidays:0
 msgid "To Confirm"
 msgstr "Untuk Dikonfirmasi"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Year"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -907,6 +911,9 @@ msgstr "Untuk Disetujui"
 
 #~ msgid "Human Resources: Holidays management"
 #~ msgstr "Sumber Daya Manusia: Manajemen Liburan"
+
+#~ msgid "This Month"
+#~ msgstr "Bulan Ini"
 
 #~ msgid "This area is automaticly filled by the user who validate the leave"
 #~ msgstr ""

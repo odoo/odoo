@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2009-10-22 14:29+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:08+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:44+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -121,9 +121,11 @@ msgid "Define attendance reason"
 msgstr "Definēt apmeklējuma iemeslu"
 
 #. module: hr_attendance
-#: field:hr.sign.in.out,state:0
-msgid "Current state"
-msgstr "Statuss"
+#: code:addons/hr_attendance/report/attendance_by_month.py:184
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
+#, python-format
+msgid "Attendances By Month"
+msgstr "Apmeklējumi Mēneša skatījumā"
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,name:0
@@ -153,12 +155,7 @@ msgid "Ending Date"
 msgstr "Beigu Datums"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Employee attendance"
-msgstr "Darbinieka ierašanās darbā"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:136
+#: code:addons/hr_attendance/hr_attendance.py:140
 #, python-format
 msgid "Warning"
 msgstr "Brīdinājums"
@@ -177,10 +174,7 @@ msgstr "Reģistrācijai sistēmā jāseko secīgi pēc iziešanas no sistēmas!"
 
 #. module: hr_attendance
 #: field:hr.employee,state:0
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
 msgid "Attendance"
 msgstr "Ierašanās Darbā"
 
@@ -465,7 +459,7 @@ msgid "Employee"
 msgstr "Darbinieks"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:136
+#: code:addons/hr_attendance/hr_attendance.py:140
 #, python-format
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
@@ -485,6 +479,13 @@ msgstr "Pagājušo reizi Iziets no sistēmas"
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Recorded"
 msgstr "Datums, kad ievadīts"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
+msgid "Attendances"
+msgstr "Apmeklējumi"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -536,11 +537,9 @@ msgid "Employee attendances"
 msgstr "Darbinieku apmeklējumi"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:184
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-#, python-format
-msgid "Attendances By Month"
-msgstr "Apmeklējumi Mēneša skatījumā"
+#: field:hr.sign.in.out,state:0
+msgid "Current state"
+msgstr "Statuss"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -582,6 +581,9 @@ msgstr "hr.sign.in.out.ask"
 #~ msgstr ""
 #~ "Kļūda! Nevar izvēlēties nodaļu, kurai darbinieks pats ir nodaļas vadītājs."
 
+#~ msgid "Employee attendance"
+#~ msgstr "Darbinieka ierašanās darbā"
+
 #~ msgid ""
 #~ "\n"
 #~ "    This module aims to manage employee's attendances.\n"
@@ -601,9 +603,6 @@ msgstr "hr.sign.in.out.ask"
 
 #~ msgid "Employee ID"
 #~ msgstr "Darbinieka ID"
-
-#~ msgid "Attendances"
-#~ msgstr "Apmeklējumi"
 
 #~ msgid "Action's type"
 #~ msgstr "Darbības tips"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2012-01-13 18:37+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-14 05:12+0000\n"
-"X-Generator: Launchpad (build 14664)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:39+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
@@ -106,9 +106,8 @@ msgstr "Oktober"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
-msgid "Year"
-msgstr "Jahr"
+msgid "Timesheet/Task hours Report Per Month"
+msgstr "Arbeitstunden und Aufgaben nach Monat"
 
 #. module: project_timesheet
 #: view:project.project:0
@@ -131,6 +130,12 @@ msgstr "Analytisches Projektkonto"
 #: field:report.timesheet.task.user,task_hrs:0
 msgid "Task Hours"
 msgstr "Stunden"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:0
+#: field:report.timesheet.task.user,year:0
+msgid "Year"
+msgstr "Jahr"
 
 #. module: project_timesheet
 #: constraint:project.project:0
@@ -300,15 +305,9 @@ msgid "Task hours of last month"
 msgstr "Aufgaben Stunden des Vormonats"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:59
-#, python-format
-msgid ""
-"No product defined on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-"Kein Produkt für den Mitarbeiter definiert.\n"
-"Tragen Sie einen Wert ein beim Mitarbeiter unter dem Tabulator "
-"'Zeiterfassung'"
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "März"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
@@ -336,14 +335,21 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "März"
+#: code:addons/project_timesheet/project_timesheet.py:247
+#, python-format
+msgid "Invalid Analytic Account !"
+msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Arbeitstunden und Aufgaben nach Monat"
+#: code:addons/project_timesheet/project_timesheet.py:59
+#, python-format
+msgid ""
+"No product defined on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
+"Kein Produkt für den Mitarbeiter definiert.\n"
+"Tragen Sie einen Wert ein beim Mitarbeiter unter dem Tabulator "
+"'Zeiterfassung'"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:54
@@ -363,6 +369,13 @@ msgstr "Rechnungsstellung"
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
 msgstr "Error! Sie können keine rekursive assoziierte Mitglieder anlegen."
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:247
+#, python-format
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state"
+msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0

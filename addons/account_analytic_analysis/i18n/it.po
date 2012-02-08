@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-01-13 18:03+0000\n"
 "Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:50+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "No Account Manager"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-02-08 05:30+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -50,11 +45,11 @@ msgid "Pending contracts to renew with your customer"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:551
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:722
-#, python-format
-msgid "AccessError"
-msgstr "Errore di Accesso"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -166,13 +161,6 @@ msgid "Contracts to Renew"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
 msgstr "Margine teorico"
@@ -236,14 +224,6 @@ msgid "Invoiced Amount"
 msgstr "Importo Fatturato"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:552
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:723
-#, python-format
-msgid "You try to bypass an access rule (Document type: %s)."
-msgstr ""
-"Stai cercando di bypassare una regola di accesso (Tipo Documento: %s)."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
 msgstr "Data dell'ultimo costo fatturato"
@@ -262,15 +242,6 @@ msgstr "Tasso di margine reale (%)"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Margine reale"
-
-#. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
-"Errore! La valuta deve essere la stessa di quella impostata nell'azienda "
-"selezionata"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -367,6 +338,11 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Open"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts that are not assigned to an account manager."
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -503,8 +479,17 @@ msgstr ""
 #~ msgid "Overpassed Accounts"
 #~ msgstr "Conti oltrepassati"
 
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr ""
+#~ "Stai cercando di bypassare una regola di accesso (Tipo Documento: %s)."
+
 #~ msgid "Billing"
 #~ msgstr "Fatturando"
+
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "Errore di Accesso"
 
 #~ msgid ""
 #~ "\n"
@@ -523,3 +508,10 @@ msgstr ""
 #~ "\n"
 #~ "E' inoltre possibile visulizzare il report riepilogativo di conti analitici\n"
 #~ "in modalità utente così come in modalità mensile.\n"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr ""
+#~ "Errore! La valuta deve essere la stessa di quella impostata nell'azienda "
+#~ "selezionata"

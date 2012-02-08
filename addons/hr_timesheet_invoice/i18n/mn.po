@@ -16,15 +16,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-11-25 19:13+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:53+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:33+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -73,9 +73,9 @@ msgid "Daily Timesheets for this year"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.line:0
-msgid "To Invoice"
-msgstr "Нэхэмжлэх"
+#: view:account.analytic.account:0
+msgid "Re-open project"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
@@ -163,11 +163,6 @@ msgid "Invoiced Amount"
 msgstr "Нэхэмжилсэн дүн"
 
 #. module: hr_timesheet_invoice
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Uninvoiced line with billing rate"
 msgstr "Тооцооны хэмжээтэй нэхэмжлээгүй бичлэг"
@@ -186,11 +181,6 @@ msgstr "Төсөл"
 #: field:report.account.analytic.line.to.invoice,amount:0
 msgid "Amount"
 msgstr "Дүн"
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Reactivate Account"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: sql_constraint:account.move.line:0
@@ -379,6 +369,16 @@ msgid "Error !"
 msgstr "Алдаа!"
 
 #. module: hr_timesheet_invoice
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
+msgid "Gratis"
+msgstr "Үнэгүй бэлэг"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.line:0
+msgid "To Invoice"
+msgstr "Нэхэмжлэх"
+
+#. module: hr_timesheet_invoice
 #: help:account.analytic.account,to_invoice:0
 msgid ""
 "Fill this field if you plan to automatically generate invoices based on the "
@@ -451,11 +451,6 @@ msgid "Analytic lines to invoice report"
 msgstr "Аналитик мөрүүдийг нэхэмжлэлийн тайлан дээр харах"
 
 #. module: hr_timesheet_invoice
-#: field:report_timesheet.invoice,amount_invoice:0
-msgid "To invoice"
-msgstr "Нэхэмжлэх"
-
-#. module: hr_timesheet_invoice
 #: field:account.analytic.account,to_invoice:0
 msgid "Invoice on Timesheet & Costs"
 msgstr ""
@@ -508,6 +503,14 @@ msgid "Invoice contract"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,month:0
 #: view:report.timesheet.line:0
 #: field:report.timesheet.line,month:0
@@ -525,11 +528,6 @@ msgstr "Валют"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
 msgid "Journal Items"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
-msgid "90%"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -553,6 +551,7 @@ msgid "Non Assigned timesheets to users"
 msgstr "Хэрэглэгчид оноогоогүй цаг бүртгэл"
 
 #. module: hr_timesheet_invoice
+#: view:account.analytic.line:0
 #: field:report.timesheet.line,invoice_id:0
 msgid "Invoiced"
 msgstr "Нэхэмжилсэн"
@@ -561,6 +560,13 @@ msgstr "Нэхэмжилсэн"
 #: field:report.analytic.account.close,quantity_max:0
 msgid "Max. Quantity"
 msgstr "Хамгийн их тоо хэмжээ"
+
+#. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:132
@@ -624,7 +630,7 @@ msgid "October"
 msgstr "10 сар"
 
 #. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
 msgid "50%"
 msgstr "50%"
 
@@ -681,9 +687,9 @@ msgid "Extended Filters..."
 msgstr "Өргөтгөсөн хайлт..."
 
 #. module: hr_timesheet_invoice
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr ""
+#: field:report_timesheet.invoice,amount_invoice:0
+msgid "To invoice"
+msgstr "Нэхэмжлэх"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -712,11 +718,6 @@ msgid "Total:"
 msgstr "Бүгд:"
 
 #. module: hr_timesheet_invoice
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
 #: selection:report.timesheet.line,month:0
 #: selection:report_timesheet.account,month:0
@@ -726,16 +727,14 @@ msgid "January"
 msgstr "1 сар"
 
 #. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Credit"
 msgstr "Кредит"
-
-#. module: hr_timesheet_invoice
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:108
@@ -758,6 +757,11 @@ msgstr ""
 #: field:report.analytic.account.close,balance:0
 msgid "Balance"
 msgstr "Тэнцэл"
+
+#. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,quantity:0
@@ -883,6 +887,11 @@ msgstr ""
 "Аналитик данс маягтын 'Харилцагч' буюу 'Үйлчлүүлэгч', 'Борлуулалтын үнийн "
 "санал' талбарыг бөглөнө үү:\n"
 "%s"
+
+#. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
@@ -1119,13 +1128,6 @@ msgid "Timesheet lines in this month"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Invoicing Statistics"
 msgstr ""
@@ -1160,11 +1162,6 @@ msgstr "Он"
 msgid "Timesheet lines during last 7 days"
 msgstr ""
 
-#. module: hr_timesheet_invoice
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr ""
-
 #, python-format
 #~ msgid "Analytic account incomplete"
 #~ msgstr "Бүрэн биш аналитик данс"
@@ -1189,9 +1186,6 @@ msgstr ""
 
 #~ msgid "Employee"
 #~ msgstr "Ажилтан"
-
-#~ msgid "Gratis"
-#~ msgstr "Үнэгүй бэлэг"
 
 #, python-format
 #~ msgid "You can not modify an invoiced analytic line!"

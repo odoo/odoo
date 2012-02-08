@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-03-01 18:21+0000\n"
 "Last-Translator: Dimitar Markov <dimitar.markov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:46+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -31,12 +31,6 @@ msgstr "Потвърден"
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
 msgstr "Бюджетни позиции"
-
-#. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "The General Budget '%s' has no Accounts!"
-msgstr "Основният Бюджет '%s' няма регистрирани сметки!"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -141,9 +135,10 @@ msgstr ""
 "развитието му на базата на actuals реализирани през този период."
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr "Този помощник се използва за печат на обобщени бюджети"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "The Budget '%s' has no accounts!"
+msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -297,12 +292,9 @@ msgid "Budgets"
 msgstr "Бюджети"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
-"Грешка! Валутата трябва да бъде същата като валутата на избраната компания"
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Този помощник се използва за печат на обобщени бюджети"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -578,9 +570,19 @@ msgstr ""
 #~ "бюджет.\n"
 #~ "\n"
 
+#, python-format
+#~ msgid "The General Budget '%s' has no Accounts!"
+#~ msgstr "Основният Бюджет '%s' няма регистрирани сметки!"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Невалидно име на модел при задаването на действие."
 
 #, python-format
 #~ msgid "No Dotations or Master Budget Expenses Found on Budget %s!"
 #~ msgstr "Няма регистрирани дотации или Главни бюджетни разходи в Бюджет %s!"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr ""
+#~ "Грешка! Валутата трябва да бъде същата като валутата на избраната компания"

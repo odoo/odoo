@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2012-01-20 15:40+0000\n"
 "Last-Translator: Milan Milosevic <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-21 05:41+0000\n"
-"X-Generator: Launchpad (build 14700)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:00+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -27,6 +27,12 @@ msgstr ""
 "\n"
 "Molimo definišite BIC/Swift kod banke za tip IBAN račun za izvršenje "
 "validnih uplata/isplata."
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:139
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it"
+msgstr ""
 
 #. module: base_iban
 #: model:res.partner.bank.type,format_layout:base_iban.bank_iban
@@ -59,7 +65,7 @@ msgid "country_id"
 msgstr "country_id"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:130
+#: code:addons/base_iban/base_iban.py:136
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like "
@@ -72,7 +78,7 @@ msgid "IBAN"
 msgstr "IBAN"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:131
+#: code:addons/base_iban/base_iban.py:140
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr "IBAN je neispravan, trebalo bi da počinje sa kodom države"
@@ -81,6 +87,11 @@ msgstr "IBAN je neispravan, trebalo bi da počinje sa kodom države"
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
 msgstr "IBAN račun"
+
+#. module: base_iban
+#: constraint:res.partner.bank:0
+msgid "The RIB and/or IBAN is not valid"
+msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Nevažeći XML za pregled arhitekture"

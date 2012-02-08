@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2009-09-08 16:42+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-31 05:01+0000\n"
-"X-Generator: Launchpad (build 14734)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:03+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -35,25 +35,16 @@ msgid "Invoiced & Paid"
 msgstr "인보이스됨 & 지불됨"
 
 #. module: purchase
-#: field:purchase.order,location_id:0
-#: view:purchase.report:0
+#: field:purchase.order,location_id:0 view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
 msgstr "목적지"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:235
+#: code:addons/purchase/purchase.py:236
 #, python-format
 msgid "In order to delete a purchase order, it must be cancelled first!"
 msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:772
-#, python-format
-msgid ""
-"You have to select a product UOM in the same category than the purchase UOM "
-"of the product"
-msgstr "상품의 구매 UOM과 같은 카테고리에 있는 상품 UOM을 선택하십시오."
 
 #. module: purchase
 #: help:purchase.report,date:0
@@ -61,16 +52,13 @@ msgid "Date on which this document has been created"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
-#: view:purchase.report:0
+#: view:purchase.order:0 view:purchase.order.line:0 view:purchase.report:0
 #: view:stock.picking:0
 msgid "Group By..."
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,create_uid:0
-#: view:purchase.report:0
+#: field:purchase.order,create_uid:0 view:purchase.report:0
 #: field:purchase.report,user_id:0
 msgid "Responsible"
 msgstr ""
@@ -94,10 +82,8 @@ msgid "Approved purchase order"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,partner_id:0
-#: view:purchase.order.line:0
-#: view:purchase.report:0
+#: view:purchase.order:0 field:purchase.order,partner_id:0
+#: view:purchase.order.line:0 view:purchase.report:0
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
 msgstr "공급자"
@@ -144,7 +130,7 @@ msgid "From a Pick list"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:708
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid "No Pricelist !"
 msgstr "가격리스트가 없음!"
@@ -155,8 +141,7 @@ msgid "purchase.config.wizard"
 msgstr ""
 
 #. module: purchase
-#: view:board.board:0
-#: model:ir.actions.act_window,name:purchase.purchase_draft
+#: view:board.board:0 model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
 msgstr ""
 
@@ -166,10 +151,8 @@ msgid "Based on Receptions"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,company_id:0
-#: field:purchase.order.line,company_id:0
-#: view:purchase.report:0
-#: field:purchase.report,company_id:0
+#: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
+#: view:purchase.report:0 field:purchase.report,company_id:0
 msgid "Company"
 msgstr ""
 
@@ -190,8 +173,7 @@ msgid "Set to Draft"
 msgstr "초안으로 설정"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Invoice Exception"
 msgstr "인보이스 예외"
 
@@ -246,8 +228,7 @@ msgid "Approve Purchase"
 msgstr "구매 승인"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,day:0
+#: view:purchase.report:0 field:purchase.report,day:0
 msgid "Day"
 msgstr ""
 
@@ -282,10 +263,8 @@ msgid "Origin"
 msgstr "기원"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,notes:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,notes:0
+#: view:purchase.order:0 field:purchase.order,notes:0
+#: view:purchase.order.line:0 field:purchase.order.line,notes:0
 msgid "Notes"
 msgstr "노트"
 
@@ -295,10 +274,8 @@ msgid "September"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order,amount_tax:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,taxes_id:0
+#: report:purchase.order:0 field:purchase.order,amount_tax:0
+#: view:purchase.order.line:0 field:purchase.order.line,taxes_id:0
 msgid "Taxes"
 msgstr "세금"
 
@@ -306,16 +283,14 @@ msgstr "세금"
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
 #: model:process.node,name:purchase.process_node_purchaseorder0
-#: field:procurement.order,purchase_id:0
-#: view:purchase.order:0
+#: field:procurement.order,purchase_id:0 view:purchase.order:0
 #: model:res.request.link,name:purchase.req_link_purchase_order
 #: field:stock.picking,purchase_id:0
 msgid "Purchase Order"
 msgstr "구매 주문"
 
 #. module: purchase
-#: field:purchase.order,name:0
-#: view:purchase.order.line:0
+#: field:purchase.order,name:0 view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
 msgstr "주문 참조"
@@ -328,6 +303,7 @@ msgstr "순 합계:"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
+#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
 msgid "Products"
 msgstr ""
 
@@ -345,8 +321,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
 msgstr "취소됨"
@@ -357,14 +332,12 @@ msgid "Convert to Purchase Order"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,pricelist_id:0
-#: field:purchase.report,pricelist_id:0
+#: field:purchase.order,pricelist_id:0 field:purchase.report,pricelist_id:0
 msgid "Pricelist"
 msgstr "가격리스트"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Shipping Exception"
 msgstr "선적 예외"
 
@@ -400,7 +373,7 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:418
+#: code:addons/purchase/purchase.py:419
 #, python-format
 msgid "You must first cancel all invoices related to this purchase order."
 msgstr ""
@@ -416,7 +389,7 @@ msgid "TVA :"
 msgstr "TVA :"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:325
+#: code:addons/purchase/purchase.py:326
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr ""
@@ -427,22 +400,20 @@ msgid "Analytic Account"
 msgstr "분석 계정"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,nbr:0
+#: view:purchase.report:0 field:purchase.report,nbr:0
 msgid "# of Lines"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:748
-#: code:addons/purchase/purchase.py:788
+#: code:addons/purchase/purchase.py:754 code:addons/purchase/purchase.py:769
+#: code:addons/purchase/purchase.py:772
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,validator:0
-#: view:purchase.report:0
+#: field:purchase.order,validator:0 view:purchase.report:0
 msgid "Validated by"
 msgstr "검증한 이"
 
@@ -452,7 +423,7 @@ msgid "Order in last month"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:411
+#: code:addons/purchase/purchase.py:412
 #, python-format
 msgid "You must first cancel all receptions related to this purchase order."
 msgstr ""
@@ -483,16 +454,9 @@ msgid "Purchase orders which are in exception state"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.report,validator:0
+#: report:purchase.order:0 field:purchase.report,validator:0
 msgid "Validated By"
 msgstr "검증한 이"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:772
-#, python-format
-msgid "Wrong Product UOM !"
-msgstr "잘못된 상품 UOM !"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
@@ -501,8 +465,7 @@ msgid "Confirmed"
 msgstr "확정됨"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_average:0
+#: view:purchase.report:0 field:purchase.report,price_average:0
 msgid "Average Price"
 msgstr ""
 
@@ -596,7 +559,7 @@ msgid "Order Lines"
 msgstr "주문 라인"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:737
 #, python-format
 msgid "No Partner!"
 msgstr "파트너가 없음!"
@@ -607,8 +570,7 @@ msgid "Fax:"
 msgstr "팩스:"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_total:0
+#: view:purchase.report:0 field:purchase.report,price_total:0
 msgid "Total Price"
 msgstr ""
 
@@ -638,9 +600,8 @@ msgid "Invoices generated for a purchase order"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:284
-#: code:addons/purchase/purchase.py:347
-#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/purchase.py:285 code:addons/purchase/purchase.py:348
+#: code:addons/purchase/purchase.py:359
 #: code:addons/purchase/wizard/purchase_line_invoice.py:111
 #, python-format
 msgid "Error !"
@@ -652,7 +613,7 @@ msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:737
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
@@ -660,7 +621,7 @@ msgid ""
 msgstr "구매 양식에서 파트너를 선택하십시오!"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:348
+#: code:addons/purchase/purchase.py:349
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr ""
@@ -692,7 +653,7 @@ msgid "Miscellaneous"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:788
+#: code:addons/purchase/purchase.py:769
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr ""
@@ -703,8 +664,7 @@ msgid "Reference UOM"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order.line,product_qty:0
-#: view:purchase.report:0
+#: field:purchase.order.line,product_qty:0 view:purchase.report:0
 #: field:purchase.report,quantity:0
 msgid "Quantity"
 msgstr "수량"
@@ -726,7 +686,7 @@ msgid "Reservation Destination"
 msgstr "예약 목적지"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:235
+#: code:addons/purchase/purchase.py:236
 #, python-format
 msgid "Invalid action !"
 msgstr "유효하지 않은 액션!"
@@ -758,7 +718,7 @@ msgid "Receptions"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:284
+#: code:addons/purchase/purchase.py:285
 #, python-format
 msgid "You cannot confirm a purchase order without any lines."
 msgstr ""
@@ -805,12 +765,9 @@ msgid "Approbation"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: view:purchase.order:0
-#: field:purchase.order,date_order:0
-#: field:purchase.order.line,date_order:0
-#: field:purchase.report,date:0
-#: view:stock.picking:0
+#: report:purchase.order:0 view:purchase.order:0
+#: field:purchase.order,date_order:0 field:purchase.order.line,date_order:0
+#: field:purchase.report,date:0 view:stock.picking:0
 msgid "Order Date"
 msgstr ""
 
@@ -821,8 +778,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
-#: field:purchase.order.line,partner_id:0
-#: view:stock.picking:0
+#: field:purchase.order.line,partner_id:0 view:stock.picking:0
 msgid "Partner"
 msgstr ""
 
@@ -833,8 +789,7 @@ msgid "Draft Invoice"
 msgstr "초안 인보이스"
 
 #. module: purchase
-#: report:purchase.order:0
-#: report:purchase.quotation:0
+#: report:purchase.order:0 report:purchase.quotation:0
 msgid "Qty"
 msgstr "수량"
 
@@ -861,8 +816,7 @@ msgid "Order in  current month"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,delay_pass:0
+#: view:purchase.report:0 field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
 msgstr ""
 
@@ -878,8 +832,7 @@ msgid "Procurement"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,invoice_ids:0
+#: view:purchase.order:0 field:purchase.order,invoice_ids:0
 msgid "Invoices"
 msgstr ""
 
@@ -904,8 +857,7 @@ msgid "Approved purchase orders"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,month:0
+#: view:purchase.report:0 field:purchase.report,month:0
 msgid "Month"
 msgstr ""
 
@@ -935,8 +887,7 @@ msgid "User"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,shipped:0
-#: field:purchase.order,shipped_rate:0
+#: field:purchase.order,shipped:0 field:purchase.order,shipped_rate:0
 msgid "Received"
 msgstr "수령함"
 
@@ -973,14 +924,12 @@ msgid "Taxes :"
 msgstr "세금:"
 
 #. module: purchase
-#: field:purchase.order,invoiced_rate:0
-#: field:purchase.order.line,invoiced:0
+#: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "인보이스됨"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,category_id:0
+#: view:purchase.report:0 field:purchase.report,category_id:0
 msgid "Category"
 msgstr ""
 
@@ -1006,6 +955,11 @@ msgid "Product Categories"
 msgstr ""
 
 #. module: purchase
+#: selection:purchase.config.wizard,default_method:0
+msgid "Pre-Generate Draft Invoices based on Purchase Orders"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
 msgid "Create invoices"
 msgstr ""
@@ -1017,8 +971,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
-#: view:purchase.order.line:0
-#: field:stock.move,purchase_line_id:0
+#: view:purchase.order.line:0 field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
 msgstr "구매 주문 라인"
 
@@ -1038,7 +991,13 @@ msgid "The amount without tax"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:885
+#: code:addons/purchase/purchase.py:754
+#, python-format
+msgid "Selected UOM does not belong to the same category as the product UOM"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:907
 #, python-format
 msgid "PO: %s"
 msgstr ""
@@ -1106,11 +1065,6 @@ msgid "Email Templates"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.config.wizard,default_method:0
-msgid "Pre-Generate Draft Invoices based on Purchase Orders"
-msgstr ""
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
 msgstr ""
@@ -1125,6 +1079,11 @@ msgstr ""
 #: view:purchase.order:0
 msgid "Invoice Control"
 msgstr "인보이스 컨트롤"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
+msgid "UoM Categories"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1196,8 +1155,7 @@ msgid "Cancel Purchase Order"
 msgstr "구매 주문 취소"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:410
-#: code:addons/purchase/purchase.py:417
+#: code:addons/purchase/purchase.py:411 code:addons/purchase/purchase.py:418
 #, python-format
 msgid "Unable to cancel this purchase order!"
 msgstr ""
@@ -1225,8 +1183,7 @@ msgid "Reference must be unique per Company!"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_standard:0
+#: view:purchase.report:0 field:purchase.report,price_standard:0
 msgid "Products Value"
 msgstr ""
 
@@ -1241,8 +1198,7 @@ msgid "The tax amount"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.report:0
+#: view:purchase.order:0 view:purchase.report:0
 msgid "Quotations"
 msgstr ""
 
@@ -1272,8 +1228,7 @@ msgid "Products by Category"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,delay:0
+#: view:purchase.report:0 field:purchase.report,delay:0
 msgid "Days to Validate"
 msgstr ""
 
@@ -1307,14 +1262,13 @@ msgid "Subtotal"
 msgstr "소계"
 
 #. module: purchase
-#: field:purchase.order,warehouse_id:0
-#: view:purchase.report:0
+#: field:purchase.order,warehouse_id:0 view:purchase.report:0
 #: field:purchase.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "창고"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:288
+#: code:addons/purchase/purchase.py:289
 #, python-format
 msgid "Purchase order '%s' is confirmed."
 msgstr ""
@@ -1325,19 +1279,15 @@ msgid "Date on which purchase order has been approved"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,state:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,state:0
-#: view:purchase.report:0
-#: view:stock.picking:0
+#: view:purchase.order:0 field:purchase.order,state:0
+#: view:purchase.order.line:0 field:purchase.order.line,state:0
+#: view:purchase.report:0 view:stock.picking:0
 msgid "State"
 msgstr ""
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
-#: view:purchase.order:0
-#: selection:purchase.order,state:0
+#: view:purchase.order:0 selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Approved"
 msgstr "승인됨"
@@ -1353,16 +1303,13 @@ msgid "Not invoiced"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order.line,price_unit:0
+#: report:purchase.order:0 field:purchase.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "유닛 가격"
 
 #. module: purchase
-#: view:purchase.order:0
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
-#: selection:purchase.report,state:0
+#: view:purchase.order:0 selection:purchase.order,state:0
+#: selection:purchase.order.line,state:0 selection:purchase.report,state:0
 #: view:stock.picking:0
 msgid "Done"
 msgstr "완료"
@@ -1386,15 +1333,13 @@ msgstr ""
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
-#: view:purchase.order:0
-#: view:purchase.order.group:0
+#: view:purchase.order:0 view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
 msgstr "취소"
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
+#: view:purchase.order:0 view:purchase.order.line:0
 msgid "Purchase Order Lines"
 msgstr ""
 
@@ -1445,8 +1390,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Request for Quotation"
 msgstr "견적 요청"
 
@@ -1466,8 +1410,7 @@ msgid "Our Order Reference"
 msgstr "주문 참조"
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
+#: view:purchase.order:0 view:purchase.order.line:0
 msgid "Search Purchase Order"
 msgstr ""
 
@@ -1488,15 +1431,9 @@ msgid "Date Req."
 msgstr "날짜 참조"
 
 #. module: purchase
-#: field:purchase.order,date_approve:0
-#: field:purchase.report,date_approve:0
+#: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
 msgid "Date Approved"
 msgstr "승인된 날짜"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -1514,16 +1451,21 @@ msgid "Delivery & Invoicing"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:772
+#, python-format
+msgid ""
+"The selected supplier has a minimal quantity set to %s %s, you should not "
+"purchase less."
+msgstr ""
+
+#. module: purchase
 #: field:purchase.order.line,date_planned:0
 msgid "Scheduled Date"
 msgstr ""
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
-#: field:purchase.order,product_id:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,product_id:0
-#: view:purchase.report:0
+#: field:purchase.order,product_id:0 view:purchase.order.line:0
+#: field:purchase.order.line,product_id:0 view:purchase.report:0
 #: field:purchase.report,product_id:0
 msgid "Product"
 msgstr "상품"
@@ -1535,19 +1477,10 @@ msgid "Confirmation"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order.line,name:0
+#: report:purchase.order:0 field:purchase.order.line,name:0
 #: report:purchase.quotation:0
 msgid "Description"
 msgstr "설명"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:748
-#, python-format
-msgid ""
-"The selected supplier has a minimal quantity set to %s, you should not "
-"purchase less."
-msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1604,8 +1537,7 @@ msgid "Regards,"
 msgstr "귀하"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Waiting"
 msgstr "대기"
 
@@ -1670,10 +1602,8 @@ msgid "Your Order Reference"
 msgstr "귀하의 주문 참조"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,minimum_planned_date:0
-#: report:purchase.quotation:0
-#: field:purchase.report,expected_date:0
+#: view:purchase.order:0 field:purchase.order,minimum_planned_date:0
+#: report:purchase.quotation:0 field:purchase.report,expected_date:0
 #: view:stock.picking:0
 msgid "Expected Date"
 msgstr "예상되는 날짜"
@@ -1776,7 +1706,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:425
+#: code:addons/purchase/purchase.py:426
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr ""
@@ -1797,7 +1727,7 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/purchase.py:359
 #: code:addons/purchase/wizard/purchase_line_invoice.py:112
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
@@ -1814,7 +1744,7 @@ msgid "From a purchase order"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:708
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
@@ -1909,8 +1839,7 @@ msgid "Purchase"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,name:0
+#: view:purchase.report:0 field:purchase.report,name:0
 msgid "Year"
 msgstr ""
 
@@ -1999,6 +1928,10 @@ msgstr ""
 #~ "피킹으로부터: 초안 인보이스가 확인된 수령으로부터 미리 생성됩니다.\n"
 #~ "수작업: 어떤 인보이스도 미리 생성되지 않습니다. 회계사무원이 수작업으로 인코드해야 합니다."
 
+#, python-format
+#~ msgid "Wrong Product UOM !"
+#~ msgstr "잘못된 상품 UOM !"
+
 #~ msgid "Invoice based on deliveries"
 #~ msgstr "배송에 기초한 인보이스"
 
@@ -2066,6 +1999,12 @@ msgstr ""
 
 #~ msgid "Partner Ref."
 #~ msgstr "파트너 참조"
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a product UOM in the same category than the purchase UOM "
+#~ "of the product"
+#~ msgstr "상품의 구매 UOM과 같은 카테고리에 있는 상품 UOM을 선택하십시오."
 
 #~ msgid "Purchase order"
 #~ msgstr "구매 주문"
