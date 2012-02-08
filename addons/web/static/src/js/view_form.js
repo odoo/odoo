@@ -3122,10 +3122,19 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
     },
     on_save_as: function() {
-        var url = '/web/binary/saveas?session_id=' + this.session.session_id + '&model=' +
-            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
-            '&filename_field=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime());
-        window.open(url);
+        $.blockUI();
+        this.session.get_file({
+            url: '/web/binary/saveas_ajax',
+            data: {data: JSON.stringify({
+                model: this.view.dataset.model,
+                id: (this.view.datarecord.id || ''),
+                field: this.name,
+                filename_field: (this.node.attrs.filename || ''),
+                context: this.view.dataset.get_context()
+            })},
+            complete: $.unblockUI,
+            error: openerp.webclient.crashmanager.on_rpc_error
+        });
     },
     on_clear: function() {
         if (this.value !== false) {
