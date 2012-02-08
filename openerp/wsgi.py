@@ -43,6 +43,8 @@ import openerp.modules
 import openerp.tools.config as config
 import service.websrv_lib as websrv_lib
 
+_logger = logging.getLogger(__name__)
+
 # XML-RPC fault codes. Some care must be taken when changing these: the
 # constants are also defined client-side and must remain in sync.
 # User code must use the exceptions defined in ``openerp.exceptions`` (not
@@ -421,13 +423,13 @@ def serve():
     port = config['xmlrpc_port']
     try:
         import werkzeug.serving
-        httpd = werkzeug.serving.make_server(interface, port, application, threaded=False)
-        logging.getLogger('wsgi').info('HTTP service (werkzeug) running on %s:%s', interface, port)
+        httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
+        _logger.info('HTTP service (werkzeug) running on %s:%s', interface, port)
     except ImportError:
         import wsgiref.simple_server
-        logging.getLogger('wsgi').warn('Werkzeug module unavailable, falling back to wsgiref.')
+        _logger.warning('Werkzeug module unavailable, falling back to wsgiref.')
         httpd = wsgiref.simple_server.make_server(interface, port, application)
-        logging.getLogger('wsgi').info('HTTP service (wsgiref) running on %s:%s', interface, port)
+        _logger.info('HTTP service (wsgiref) running on %s:%s', interface, port)
 
     httpd.serve_forever()
 
@@ -473,7 +475,7 @@ def on_starting(server):
                 msg = """
 The `web` module is provided by the addons found in the `openerp-web` project.
 Maybe you forgot to add those addons in your addons_path configuration."""
-            logging.exception('Failed to load server-wide module `%s`.%s', m, msg)
+            _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
 
 # Install our own signal handler on the master process.
 def when_ready(server):
@@ -503,7 +505,7 @@ def post_request(worker, req, environ):
     import psutil
     rss, vms = psutil.Process(os.getpid()).get_memory_info()
     if vms > config['virtual_memory_reset']:
-        logging.getLogger('wsgi.worker').info('Virtual memory consumption '
+        _logger.info('Virtual memory consumption '
             'too high, rebooting the worker.')
         worker.alive = False # Commit suicide after the request.
 
@@ -515,7 +517,7 @@ def make_winch_handler(server):
 
 # SIGXCPU (exceeded CPU time) signal handler will raise an exception.
 def time_expired(n, stack):
-    logging.getLogger('wsgi.worker').info('CPU time limit exceeded.')
+    _logger.info('CPU time limit exceeded.')
     raise Exception('CPU time limit exceeded.') # TODO one of openerp.exception
 
 # Kill gracefuly the workers (e.g. because we want to clear their cache).

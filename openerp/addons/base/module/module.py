@@ -40,6 +40,8 @@ from tools.translate import _
 
 from osv import fields, osv, orm
 
+_logger = logging.getLogger(__name__)
+
 ACTION_DICT = {
     'view_type': 'form',
     'view_mode': 'form',
@@ -88,7 +90,6 @@ class module_category(osv.osv):
 class module(osv.osv):
     _name = "ir.module.module"
     _description = "Module"
-    __logger = logging.getLogger('base.' + _name)
 
     @classmethod
     def get_module_info(cls, name):
@@ -97,8 +98,8 @@ class module(osv.osv):
             info = addons.load_information_from_description_file(name)
             info['version'] = release.major_version + '.' + info['version']
         except Exception:
-            cls.__logger.debug('Error when trying to fetch informations for '
-                                'module %s', name, exc_info=True)
+            _logger.debug('Error when trying to fetch informations for '
+                          'module %s', name, exc_info=True)
         return info
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context=None):
@@ -156,14 +157,14 @@ class module(osv.osv):
                 for um in menu_obj.browse(cr, uid, imd_models.get('ir.ui.menu', []), context=context):
                     res_mod_dic['menus_by_module'].append(um.complete_name)
             except KeyError, e:
-                self.__logger.warning(
-                            'Data not found for items of %s', module_rec.name)
+                _logger.warning(
+                      'Data not found for items of %s', module_rec.name)
             except AttributeError, e:
-                self.__logger.warning(
-                            'Data not found for items of %s %s', module_rec.name, str(e))
+                _logger.warning(
+                      'Data not found for items of %s %s', module_rec.name, str(e))
             except Exception, e:
-                self.__logger.warning('Unknown error while fetching data of %s',
-                            module_rec.name, exc_info=True)
+                _logger.warning('Unknown error while fetching data of %s',
+                      module_rec.name, exc_info=True)
         for key, value in res.iteritems():
             for k, v in res[key].iteritems():
                 res[key][k] = "\n".join(sorted(v))
@@ -514,8 +515,8 @@ class module(osv.osv):
                 with open(fname, 'wb') as fp:
                     fp.write(zip_content)
             except Exception:
-                self.__logger.exception('Error when trying to create module '
-                                        'file %s', fname)
+                _logger.exception('Error when trying to create module '
+                                  'file %s', fname)
                 raise orm.except_orm(_('Error'), _('Can not create the module file:\n %s') % (fname,))
             terp = self.get_module_info(mod.name)
             self.write(cr, uid, mod.id, self.get_values_from_terp(terp))
@@ -568,7 +569,6 @@ class module(osv.osv):
     def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
         if context is None:
             context = {}
-        logger = logging.getLogger('i18n')
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)
             lang_obj = pool.get('res.lang')
@@ -592,7 +592,7 @@ class module(osv.osv):
                     iso_lang2 = iso_lang.split('_')[0]
                     f2 = addons.get_module_resource(mod.name, 'i18n', iso_lang2 + '.po')
                     if f2:
-                        logger.info('module %s: loading base translation file %s for language %s', mod.name, iso_lang2, lang)
+                        _logger.info('module %s: loading base translation file %s for language %s', mod.name, iso_lang2, lang)
                         tools.trans_load(cr, f2, lang, verbose=False, context=context)
                         context2['overwrite'] = True
                 # Implementation notice: we must first search for the full name of
@@ -602,23 +602,22 @@ class module(osv.osv):
                     iso_lang = iso_lang.split('_')[0]
                     f = addons.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
                 if f:
-                    logger.info('module %s: loading translation file (%s) for language %s', mod.name, iso_lang, lang)
+                    _logger.info('module %s: loading translation file (%s) for language %s', mod.name, iso_lang, lang)
                     tools.trans_load(cr, f, lang, verbose=False, context=context2)
                 elif iso_lang != 'en':
-                    logger.warning('module %s: no translation for language %s', mod.name, iso_lang)
+                    _logger.warning('module %s: no translation for language %s', mod.name, iso_lang)
 
     def check(self, cr, uid, ids, context=None):
-        logger = logging.getLogger('init')
         for mod in self.browse(cr, uid, ids, context=context):
             if not mod.description:
-                logger.warn('module %s: description is empty !', mod.name)
+                _logger.warning('module %s: description is empty !', mod.name)
 
             if not mod.certificate or not mod.certificate.isdigit():
-                logger.info('module %s: no quality certificate', mod.name)
+                _logger.info('module %s: no quality certificate', mod.name)
             else:
                 val = long(mod.certificate[2:]) % 97 == 29
                 if not val:
-                    logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
+                    _logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
     def root_menus(self, cr, uid, ids, context=None):

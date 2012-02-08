@@ -19,7 +19,7 @@ from lxml import etree
 unsafe_eval = eval
 from safe_eval import safe_eval as eval
 
-logger_channel = 'tests'
+_logger = logging.getLogger(__name__)
 
 class YamlImportException(Exception):
     pass
@@ -133,7 +133,6 @@ class YamlInterpreter(object):
         self.filename = filename
         self.assert_report = TestReport()
         self.noupdate = noupdate
-        self.logger = logging.getLogger("%s.%s" % (logger_channel, self.module))
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
         self.context = {} # opererp context
@@ -163,7 +162,7 @@ class YamlInterpreter(object):
                         ['&', ('name', '=', module), ('state', 'in', ['installed'])])
                 assert module_count == 1, 'The ID "%s" refers to an uninstalled module.' % (xml_id,)
         if len(id) > 64: # TODO where does 64 come from (DB is 128)? should be a constant or loaded form DB
-            self.logger.log(logging.ERROR, 'id: %s is to long (max: 64)', id)
+            _logger.error('id: %s is to long (max: 64)', id)
 
     def get_id(self, xml_id):
         if xml_id is False or xml_id is None:
@@ -219,7 +218,7 @@ class YamlInterpreter(object):
             level = severity
             levelname = logging.getLevelName(level)
         self.assert_report.record(False, levelname)
-        self.logger.log(level, msg, *args)
+        _logger.log(level, msg, *args)
         if level >= config['assert_exit_level']:
             raise YamlImportAbortion('Severe assertion failure (%s), aborting.' % levelname)
         return
@@ -241,7 +240,7 @@ class YamlInterpreter(object):
             assertion, expressions = node, []
 
         if self.isnoupdate(assertion) and self.mode != 'init':
-            self.logger.warn('This assertion was not evaluated ("%s").' % assertion.string)
+            _logger.warning('This assertion was not evaluated ("%s").', assertion.string)
             return
         model = self.get_model(assertion.model)
         ids = self._get_assertion_id(assertion)
@@ -260,7 +259,7 @@ class YamlInterpreter(object):
                     try:
                         success = unsafe_eval(test, self.eval_context, RecordDictWrapper(record))
                     except Exception, e:
-                        self.logger.debug('Exception during evaluation of !assert block in yaml_file %s.', self.filename, exc_info=True)
+                        _logger.debug('Exception during evaluation of !assert block in yaml_file %s.', self.filename, exc_info=True)
                         raise YamlImportAbortion(e)
                     if not success:
                         msg = 'Assertion "%s" FAILED\ntest: %s\n'
@@ -348,7 +347,7 @@ class YamlInterpreter(object):
                 view_id = etree.fromstring(view['arch'].encode('utf-8'))
 
             record_dict = self._create_record(model, fields, view_id, default=default)
-            self.logger.debug("RECORD_DICT %s" % record_dict)
+            _logger.debug("RECORD_DICT %s" % record_dict)
             id = self.pool.get('ir.model.data')._update(self.cr, 1, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
@@ -519,7 +518,7 @@ class YamlInterpreter(object):
 
     def process_python(self, node):
         def log(msg, *args):
-            self.logger.log(logging.TEST, msg, *args)
+            _logger.log(logging.TEST, msg, *args)
         python, statements = node.items()[0]
         model = self.get_model(python.model)
         statements = statements.replace("\r\n", "\n")
@@ -532,7 +531,7 @@ class YamlInterpreter(object):
             self._log_assert_failure(python.severity, 'AssertionError in Python code %s: %s', python.name, e)
             return
         except Exception, e:
-            self.logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)
+            _logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)
             raise
         else:
             self.assert_report.record(True, python.severity)
@@ -754,7 +753,7 @@ class YamlInterpreter(object):
             if len(ids):
                 self.pool.get(node.model).unlink(self.cr, self.uid, ids)
         else:
-            self.logger.log(logging.TEST, "Record not deleted.")
+            _logger.log(logging.TEST, "Record not deleted.")
 
     def process_url(self, node):
         self.validate_xml_id(node.id)
@@ -843,9 +842,9 @@ class YamlInterpreter(object):
             try:
                 self._process_node(node)
             except YamlImportException, e:
-                self.logger.exception(e)
+                _logger.exception(e)
             except Exception, e:
-                self.logger.exception(e)
+                _logger.exception(e)
                 raise
 
     def _process_node(self, node):
@@ -889,14 +888,14 @@ class YamlInterpreter(object):
     def _log(self, node, is_preceded_by_comment):
         if is_comment(node):
             is_preceded_by_comment = True
-            self.logger.log(logging.TEST, node)
+            _logger.log(logging.TEST, node)
         elif not is_preceded_by_comment:
             if isinstance(node, types.DictionaryType):
                 msg = "Creating %s\n with %s"
                 args = node.items()[0]
-                self.logger.log(logging.TEST, msg, *args)
+                _logger.log(logging.TEST, msg, *args)
             else:
-                self.logger.log(logging.TEST, node)
+                _logger.log(logging.TEST, node)
         else:
             is_preceded_by_comment = False
         return is_preceded_by_comment

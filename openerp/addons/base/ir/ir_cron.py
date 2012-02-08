@@ -37,6 +37,8 @@ from tools import DEFAULT_SERVER_DATETIME_FORMAT
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
 
+_logger = logging.getLogger(__name__)
+
 def str2tuple(s):
     return eval('tuple(%s)' % (s or ''))
 
@@ -87,8 +89,6 @@ class ir_cron(osv.osv):
         'doall' : lambda *a: 1
     }
 
-    _logger = logging.getLogger('cron')
-
     def _check_args(self, cr, uid, ids, context=None):
         try:
             for this in self.browse(cr, uid, ids, context):
@@ -114,7 +114,7 @@ class ir_cron(osv.osv):
 
         """
         cr.rollback()
-        self._logger.exception("Call of self.pool.get('%s').%s(cr, uid, *%r) failed in Job %s" % (model_name, method_name, args, job_id))
+        _logger.exception("Call of self.pool.get('%s').%s(cr, uid, *%r) failed in Job %s" % (model_name, method_name, args, job_id))
 
     def _callback(self, cr, uid, model_name, method_name, args, job_id):
         """ Run the method associated to a given job
@@ -131,15 +131,14 @@ class ir_cron(osv.osv):
         if model and hasattr(model, method_name):
             method = getattr(model, method_name)
             try:
-                netsvc.log('cron', (cr.dbname,uid,'*',model_name,method_name)+tuple(args), channel=logging.DEBUG,
-                            depth=(None if self._logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='object.execute')
-                logger = logging.getLogger('execution time')
-                if logger.isEnabledFor(logging.DEBUG):
+                log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
+                netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname,uid,'*',model_name,method_name)+tuple(args), depth=log_depth)
+                if _logger.isEnabledFor(logging.DEBUG):
                     start_time = time.time()
                 method(cr, uid, *args)
-                if logger.isEnabledFor(logging.DEBUG):
+                if _logger.isEnabledFor(logging.DEBUG):
                     end_time = time.time()
-                    logger.log(logging.DEBUG, '%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
+                    _logger.debug('%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
             except Exception, e:
                 self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
 
@@ -224,7 +223,7 @@ class ir_cron(osv.osv):
                 except psycopg2.OperationalError, e:
                     if e.pgcode == '55P03':
                         # Class 55: Object not in prerequisite state; 55P03: lock_not_available
-                        self._logger.debug('Another process/thread is already busy executing job `%s`, skipping it.', job['name'])
+                        _logger.debug('Another process/thread is already busy executing job `%s`, skipping it.', job['name'])
                         continue
                     else:
                         # Unexpected OperationalError
@@ -240,7 +239,7 @@ class ir_cron(osv.osv):
                 task_thread.setDaemon(False)
                 openerp.cron.take_thread_slot()
                 task_thread.start()
-                self._logger.debug('Cron execution thread for job `%s` spawned', job['name'])
+                _logger.debug('Cron execution thread for job `%s` spawned', job['name'])
 
             # Find next earliest job ignoring currently processed jobs (by this and other cron threads)
             find_next_time_query = """SELECT min(nextcall) AS min_next_call
@@ -261,7 +260,7 @@ class ir_cron(osv.osv):
             openerp.cron.schedule_wakeup(next_call, db_name)
 
         except Exception, ex:
-            self._logger.warning('Exception in cron:', exc_info=True)
+            _logger.warning('Exception in cron:', exc_info=True)
 
         finally:
             cr.commit()

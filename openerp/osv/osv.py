@@ -55,7 +55,6 @@ base_cache_signaling_sequence = None
 
 class object_proxy(object):
     def __init__(self):
-        self.logger = logging.getLogger('web-services')
         global service
         service = self
 
@@ -140,7 +139,7 @@ class object_proxy(object):
                                         tr(osv_pool._sql_error[key], 'sql_constraint') or inst[0])
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
-                    self.logger.debug("IntegrityError", exc_info=True)
+                    _logger.debug("IntegrityError", exc_info=True)
                     try:
                         errortxt = inst.pgerror.replace('«','"').replace('»','"')
                         if '"public".' in errortxt:
@@ -161,7 +160,7 @@ class object_proxy(object):
                 else:
                     netsvc.abort_response(1, _('Integrity Error'), 'warning', inst[0])
             except Exception:
-                self.logger.exception("Uncaught exception")
+                _logger.exception("Uncaught exception")
                 raise
 
         return wrapper
@@ -218,7 +217,7 @@ class object_proxy(object):
                     raise except_osv('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
                 res = self.execute_cr(cr, uid, obj, method, *args, **kw)
                 if res is None:
-                    self.logger.warning('The method %s of the object %s can not return `None` !', method, obj)
+                    _logger.warning('The method %s of the object %s can not return `None` !', method, obj)
                 cr.commit()
             except Exception:
                 cr.rollback()

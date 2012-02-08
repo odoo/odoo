@@ -35,6 +35,8 @@ from tools.translate import _
 import openerp
 import openerp.exceptions
 
+_logger = logging.getLogger(__name__)
+
 class groups(osv.osv):
     _name = "res.groups"
     _description = "Access Groups"
@@ -462,7 +464,7 @@ class users(osv.osv):
                                                                    user_agent_env['base_location'])
                     cr.commit()
                 except Exception:
-                    logging.getLogger('res.users').exception("Failed to update web.base.url configuration parameter")
+                    _logger.exception("Failed to update web.base.url configuration parameter")
                 finally:
                     cr.close()
         return uid
