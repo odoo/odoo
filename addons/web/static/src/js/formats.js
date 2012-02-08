@@ -176,12 +176,17 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
                 throw new Error(value + " is not a correct float");
             return parsed;
         case 'float_time':
+            var factor = 1;
+            if (value[0] === '-') {
+                value = value.slice(1);
+                factor = -1;
+            }
             var float_time_pair = value.split(":");
             if (float_time_pair.length != 2)
-                return openerp.web.parse_value(value, {type: "float"});
+                return factor * openerp.web.parse_value(value, {type: "float"});
             var hours = openerp.web.parse_value(float_time_pair[0], {type: "integer"});
             var minutes = openerp.web.parse_value(float_time_pair[1], {type: "integer"});
-            return hours + (minutes / 60);
+            return factor * (hours + (minutes / 60));
         case 'progressbar':
             return openerp.web.parse_value(value, {type: "float"});
         case 'datetime':
