@@ -112,6 +112,10 @@ class l10n_be_vat_declaration(osv.osv_memory):
         ending_month = account_period.date_stop[5:7]
         quarter = str(((int(starting_month) - 1) / 3) + 1)
     
+        if not email:
+            raise osv.except_osv(_('Data Insufficient!'),_('No email address associated with the company.'))
+        if not phone:
+            raise osv.except_osv(_('Data Insufficient!'),_('No phone associated with the company.'))
         file_data = {
                         'vat_declarations_nbr': str(data['vat_declarations_nbr']),
                         'type': type.upper(),
