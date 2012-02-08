@@ -254,6 +254,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      * @param {Object} mapping a mapping of keys to object-paths
      */
     init: function (mapping) {
+        this.parent = null;
         this.map = mapping || {};
     },
     /**
@@ -269,6 +270,9 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
     get_object: function (key, silent_error) {
         var path_string = this.map[key];
         if (path_string === undefined) {
+            if (this.parent) {
+                return this.parent.get_object(key, silent_error);
+            }
             if (silent_error) { return void 'nooo'; }
             throw new openerp.web.KeyNotFound(key);
         }
@@ -327,8 +331,9 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      * @param {Object} [mapping={}] a mapping of keys to object-paths
      */
     clone: function (mapping) {
-        return new openerp.web.Registry(
-            _.extend({}, this.map, mapping || {}));
+        var child = new openerp.web.Registry(mapping);
+        child.parent = this;
+        return child;
     }
 });
 

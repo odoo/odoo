@@ -6,6 +6,7 @@ $(document).ready(function () {
             window.openerp.web.core(openerp);
             openerp.web.Foo = {};
             openerp.web.Bar = {};
+            openerp.web.Foo2 = {};
         }
     });
     test('key fetch', function () {
@@ -29,5 +30,26 @@ $(document).ready(function () {
         reg.add('foo', 'openerp.web.Foo')
            .add('bar', 'openerp.web.Bar');
         strictEqual(reg.get_object('bar'), openerp.web.Bar);
+    });
+    test('extension', function () {
+        var reg = new openerp.web.Registry({
+            foo: 'openerp.web.Foo',
+            bar: 'openerp.web.Bar'
+        });
+
+        var reg2 = reg.clone({ 'foo': 'openerp.web.Foo2' });
+        strictEqual(reg.get_object('foo'), openerp.web.Foo);
+        strictEqual(reg2.get_object('foo'), openerp.web.Foo2);
+    });
+    test('remain-linked', function () {
+        var reg = new openerp.web.Registry({
+            foo: 'openerp.web.Foo',
+            bar: 'openerp.web.Bar'
+        });
+
+        var reg2 = reg.clone();
+        reg.add('foo2', 'openerp.web.Foo2');
+        strictEqual(reg.get_object('foo2'), openerp.web.Foo2);
+        strictEqual(reg2.get_object('foo2'), openerp.web.Foo2);
     });
 });
