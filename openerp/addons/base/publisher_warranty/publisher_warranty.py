@@ -317,13 +317,25 @@ def get_sys_logs(cr, uid):
 
     dbuuid = pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
     db_create_date = pool.get('ir.config_parameter').get_param(cr, uid, 'database.create_date')
+    limit_date = datetime.datetime.now()
+    limit_date = limit_date - datetime.timedelta(15)
+    limit_date_str = limit_date.strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
     nbr_users = pool.get("res.users").search(cr, uid, [], count=True)
+    nbr_active_users = pool.get("res.users").search(cr, uid, [("date", ">=", limit_date_str)], count=True)
+    nbr_share_users = False
+    nbr_active_share_users = False
+    if "share" in pool.get("res.users")._all_columns:
+        nbr_share_users = pool.get("res.users").search(cr, uid, [("share", "=", True)], count=True)
+        nbr_active_share_users = pool.get("res.users").search(cr, uid, [("share", "=", True), ("date", ">=", limit_date_str)], count=True)
     contractosv = pool.get('publisher_warranty.contract')
     contracts = contractosv.browse(cr, uid, contractosv.search(cr, uid, []))
     user = pool.get("res.users").browse(cr, uid, uid)
     msg = {
         "dbuuid": dbuuid,
         "nbr_users": nbr_users,
+        "nbr_active_users": nbr_active_users,
+        "nbr_share_users": nbr_share_users,
+        "nbr_active_share_users": nbr_active_share_users,
         "dbname": cr.dbname,
         "db_create_date": db_create_date,
         "version": release.version,

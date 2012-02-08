@@ -22,9 +22,8 @@
 """ Models registries.
 
 """
-import threading
-
 import logging
+import threading
 
 import openerp.sql_db
 import openerp.osv.orm
@@ -32,6 +31,8 @@ import openerp.cron
 import openerp.tools
 import openerp.modules.db
 import openerp.tools.config
+
+_logger = logging.getLogger(__name__)
 
 class Registry(object):
     """ Model registry for a particular database.
@@ -53,8 +54,7 @@ class Registry(object):
         cr = self.db.cursor()
         has_unaccent = openerp.modules.db.has_unaccent(cr)
         if openerp.tools.config['unaccent'] and not has_unaccent:
-            logger = logging.getLogger('unaccent')
-            logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
+            _logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
         self.has_unaccent = openerp.tools.config['unaccent'] and has_unaccent
         cr.close()
 

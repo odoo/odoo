@@ -22,10 +22,14 @@ workers = 4
 # Some application-wide initialization is needed.
 on_starting = openerp.wsgi.on_starting
 when_ready = openerp.wsgi.when_ready
+pre_request = openerp.wsgi.pre_request
+post_request = openerp.wsgi.post_request
 
 # openerp request-response cycle can be quite long for
 # big reports for example
 timeout = 240
+
+max_requests = 2000
 
 # Equivalent of --load command-line option
 openerp.conf.server_wide_modules = ['web']
@@ -51,6 +55,5 @@ conf['addons_path'] = '/home/openerp/addons/trunk,/home/openerp/web/trunk/addons
 
 # If --static-http-enable is used, path for the static web directory
 #conf['static_http_document_root'] = '/var/www'
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

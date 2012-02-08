@@ -40,6 +40,8 @@ from tools.translate import _
 
 from osv import fields, osv, orm
 
+_logger = logging.getLogger(__name__)
+
 ACTION_DICT = {
     'view_type': 'form',
     'view_mode': 'form',
@@ -88,7 +90,6 @@ class module_category(osv.osv):
 class module(osv.osv):
     _name = "ir.module.module"
     _description = "Module"
-    __logger = logging.getLogger('base.' + _name)
 
     @classmethod
     def get_module_info(cls, name):
@@ -97,8 +98,8 @@ class module(osv.osv):
             info = addons.load_information_from_description_file(name)
             info['version'] = release.major_version + '.' + info['version']
         except Exception:
-            cls.__logger.debug('Error when trying to fetch informations for '
-                                'module %s', name, exc_info=True)
+            _logger.debug('Error when trying to fetch informations for '
+                          'module %s', name, exc_info=True)
         return info
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context=None):
@@ -156,14 +157,14 @@ class module(osv.osv):
                 for um in menu_obj.browse(cr, uid, imd_models.get('ir.ui.menu', []), context=context):
                     res_mod_dic['menus_by_module'].append(um.complete_name)
             except KeyError, e:
-                self.__logger.warning(
-                            'Data not found for items of %s', module_rec.name)
+                _logger.warning(
+                      'Data not found for items of %s', module_rec.name)
             except AttributeError, e:
-                self.__logger.warning(
-                            'Data not found for items of %s %s', module_rec.name, str(e))
+                _logger.warning(
+                      'Data not found for items of %s %s', module_rec.name, str(e))
             except Exception, e:
-                self.__logger.warning('Unknown error while fetching data of %s',
-                            module_rec.name, exc_info=True)
+                _logger.warning('Unknown error while fetching data of %s',
+                      module_rec.name, exc_info=True)
         for key, value in res.iteritems():
             for k, v in res[key].iteritems():
                 res[key][k] = "\n".join(sorted(v))
@@ -192,6 +193,10 @@ class module(osv.osv):
         'sequence': fields.integer('Sequence'),
         'dependencies_id': fields.one2many('ir.module.module.dependency',
             'module_id', 'Dependencies', readonly=True),
+        'auto_install': fields.boolean('Automatic Installation',
+            help='An auto-installable module is automatically installed by the '
+            'system when all its dependencies are satisfied. '
+            'If the module has no dependency, it is always installed.'),
         'state': fields.selection([
             ('uninstallable','Not Installable'),
             ('uninstalled','Not Installed'),
@@ -318,20 +323,27 @@ class module(osv.osv):
         return demo
 
     def button_install(self, cr, uid, ids, context=None):
-        model_obj = self.pool.get('ir.model.data')
+
+        # Mark the given modules to be installed.
         self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
 
-        categ = model_obj.get_object(cr, uid, 'base', 'module_category_hidden_links', context=context)
-        todo = []
-        for mod in categ.module_ids:
-            if mod.state=='uninstalled':
-                ok = True
-                for dep in mod.dependencies_id:
-                    ok = ok and (dep.state in ('to install','installed'))
-                if ok:
-                    todo.append(mod.id)
-        if todo:
-            self.button_install(cr, uid, todo, context=context)
+        # Mark (recursively) the newly satisfied modules to also be installed:
+
+        # Select all auto-installable (but not yet installed) modules.
+        domain = [('state', '=', 'uninstalled'), ('auto_install', '=', True),]
+        uninstalled_ids = self.search(cr, uid, domain, context=context)
+        uninstalled_modules = self.browse(cr, uid, uninstalled_ids, context=context)
+
+        # Keep those with all their dependencies satisfied.
+        def all_depencies_satisfied(m):
+            return all(x.state in ('to install', 'installed', 'to upgrade') for x in m.dependencies_id)
+        to_install_modules = filter(all_depencies_satisfied, uninstalled_modules)
+        to_install_ids = map(lambda m: m.id, to_install_modules)
+
+        # Mark them to be installed.
+        if to_install_ids:
+            self.button_install(cr, uid, to_install_ids, context=context)
+
         return dict(ACTION_DICT, name=_('Install'))
 
     def button_immediate_install(self, cr, uid, ids, context=None):
@@ -439,6 +451,7 @@ class module(osv.osv):
             'complexity': terp.get('complexity', ''),
             'sequence': terp.get('sequence', 100),
             'application': terp.get('application', False),
+            'auto_install': terp.get('auto_install', False),
         }
 
     # update the list of available packages
@@ -502,8 +515,8 @@ class module(osv.osv):
                 with open(fname, 'wb') as fp:
                     fp.write(zip_content)
             except Exception:
-                self.__logger.exception('Error when trying to create module '
-                                        'file %s', fname)
+                _logger.exception('Error when trying to create module '
+                                  'file %s', fname)
                 raise orm.except_orm(_('Error'), _('Can not create the module file:\n %s') % (fname,))
             terp = self.get_module_info(mod.name)
             self.write(cr, uid, mod.id, self.get_values_from_terp(terp))
@@ -556,7 +569,6 @@ class module(osv.osv):
     def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
         if context is None:
             context = {}
-        logger = logging.getLogger('i18n')
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)
             lang_obj = pool.get('res.lang')
@@ -580,7 +592,7 @@ class module(osv.osv):
                     iso_lang2 = iso_lang.split('_')[0]
                     f2 = addons.get_module_resource(mod.name, 'i18n', iso_lang2 + '.po')
                     if f2:
-                        logger.info('module %s: loading base translation file %s for language %s', mod.name, iso_lang2, lang)
+                        _logger.info('module %s: loading base translation file %s for language %s', mod.name, iso_lang2, lang)
                         tools.trans_load(cr, f2, lang, verbose=False, context=context)
                         context2['overwrite'] = True
                 # Implementation notice: we must first search for the full name of
@@ -590,23 +602,22 @@ class module(osv.osv):
                     iso_lang = iso_lang.split('_')[0]
                     f = addons.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
                 if f:
-                    logger.info('module %s: loading translation file (%s) for language %s', mod.name, iso_lang, lang)
+                    _logger.info('module %s: loading translation file (%s) for language %s', mod.name, iso_lang, lang)
                     tools.trans_load(cr, f, lang, verbose=False, context=context2)
                 elif iso_lang != 'en':
-                    logger.warning('module %s: no translation for language %s', mod.name, iso_lang)
+                    _logger.warning('module %s: no translation for language %s', mod.name, iso_lang)
 
     def check(self, cr, uid, ids, context=None):
-        logger = logging.getLogger('init')
         for mod in self.browse(cr, uid, ids, context=context):
             if not mod.description:
-                logger.warn('module %s: description is empty !', mod.name)
+                _logger.warning('module %s: description is empty !', mod.name)
 
             if not mod.certificate or not mod.certificate.isdigit():
-                logger.info('module %s: no quality certificate', mod.name)
+                _logger.info('module %s: no quality certificate', mod.name)
             else:
                 val = long(mod.certificate[2:]) % 97 == 29
                 if not val:
-                    logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
+                    _logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
     def root_menus(self, cr, uid, ids, context=None):

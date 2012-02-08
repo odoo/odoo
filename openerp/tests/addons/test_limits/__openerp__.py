@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'test-exceptions',
+    'name': 'test-limits',
     'version': '0.1',
     'category': 'Tests',
-    'description': """A module to generate exceptions.""",
+    'description': """A module with dummy methods.""",
     'author': 'OpenERP SA',
     'maintainer': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'data': ['view.xml'],
+    'data': [],
     'installable': True,
     'auto_install': False,
 }

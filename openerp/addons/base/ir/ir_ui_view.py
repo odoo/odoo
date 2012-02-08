@@ -27,6 +27,8 @@ import tools
 import os
 import logging
 
+_logger = logging.getLogger(__name__)
+
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
@@ -72,7 +74,6 @@ class view(osv.osv):
     _order = "priority,name"
 
     def _check_xml(self, cr, uid, ids, context=None):
-        logger = logging.getLogger('init')
         for view in self.browse(cr, uid, ids, context):
             eview = etree.fromstring(view.arch.encode('utf8'))
             frng = tools.file_open(os.path.join('base','rng','view.rng'))
@@ -81,7 +82,7 @@ class view(osv.osv):
                 relaxng = etree.RelaxNG(relaxng_doc)
                 if not relaxng.validate(eview):
                     for error in relaxng.error_log:
-                        logger.error(tools.ustr(error))
+                        _logger.error(tools.ustr(error))
                     return False
             finally:
                 frng.close()

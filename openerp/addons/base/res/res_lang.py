@@ -29,6 +29,8 @@ import tools
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
 
+_logger = logging.getLogger(__name__)
+
 class lang(osv.osv):
     _name = "res.lang"
     _description = "Languages"
@@ -64,7 +66,6 @@ class lang(osv.osv):
     def load_lang(self, cr, uid, lang, lang_name=None):
         # create the language with locale information
         fail = True
-        logger = logging.getLogger('i18n')
         iso_lang = tools.get_iso_codes(lang)
         for ln in tools.get_locales(lang):
             try:
@@ -76,7 +77,7 @@ class lang(osv.osv):
         if fail:
             lc = locale.getdefaultlocale()[0]
             msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
-            logger.warning(msg, lang, lc)
+            _logger.warning(msg, lang, lc)
 
         if not lang_name:
             lang_name = tools.get_languages().get(lang, lang)

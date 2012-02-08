@@ -23,6 +23,8 @@
 import openerp.modules
 import logging
 
+_logger = logging.getLogger(__name__)
+
 def is_initialized(cr):
     """ Check if a database has been initialized for the ORM.
 
@@ -43,7 +45,7 @@ def initialize(cr):
     f = openerp.modules.get_module_resource('base', 'base.sql')
     if not f:
         m = "File not found: 'base.sql' (provided by module 'base')."
-        logging.getLogger('init').critical(m)
+        _logger.critical(m)
         raise IOError(m)
     base_sql_file = openerp.tools.misc.file_open(f)
     try:
@@ -66,7 +68,7 @@ def initialize(cr):
         category_id = create_categories(cr, categories)
 
         if info['installable']:
-            if info['active']:
+            if info['auto_install'] and not info['depends']:
                 state = 'to install'
             else:
                 state = 'uninstalled'
@@ -75,11 +77,12 @@ def initialize(cr):
 
         cr.execute('INSERT INTO ir_module_module \
                 (author, website, name, shortdesc, description, \
-                    category_id, state, certificate, web, license, complexity, application, icon, sequence) \
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+                    category_id, auto_install, state, certificate, web, license, complexity, application, icon, sequence) \
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
             info['author'],
             info['website'], i, info['name'],
-            info['description'], category_id, state, info['certificate'],
+            info['description'], category_id,
+            info['auto_install'], state, info['certificate'],
             info['web'],
             info['license'],
             info['complexity'], info['application'], info['icon'],

@@ -89,7 +89,7 @@
                         <field name="view" readonly="0"/>
                         <field name="context_lang" readonly="0"/>
                         <field name="context_tz" readonly="0"/>
-                        <field name="menu_tips" readonly="0"/>
+                        <field name="menu_tips" readonly="0" groups="base.group_no_one"/>
                     </group>
                     <group name="default_filters" colspan="2" col="2">
                         <separator string="Default Filters" colspan="2"/>
@@ -208,7 +208,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context" eval="{'default_partner_id':ref('base.main_partner'), 'company_hide':False, 'default_company_id':ref('base.main_company'), 'search_default_my_bank':1}"/>
-            <field name="help">Configure your company's bank account and select those that must appear on the report footer. You can reorder bank accounts from the list view. If you use the accounting application of OpenERP, journals and accounts will be created automatically based on these data.</field>
+            <field name="help">Configure your company's bank accounts and select those that must appear on the report footer. You can reorder bank accounts from the list view. If you use the accounting application of OpenERP, journals and accounts will be created automatically based on these data.</field>
         </record>
 
 
@@ -272,6 +272,9 @@
                             <separator string="Accounting" colspan="4"/>
                             <field name="currency_id" colspan="2"/>
                             <newline/>
+                        </page>
+                        <page string="Bank Accounts" groups="base.group_extended">
+                          <field name="bank_ids" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>

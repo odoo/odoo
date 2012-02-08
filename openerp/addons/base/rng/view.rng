@@ -413,7 +413,18 @@
         <rng:element name="notebook">
             <rng:ref name="overload"/>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
-            <rng:optional><rng:attribute name="tabpos"/></rng:optional>
+            <rng:optional>
+              <rng:attribute name="tabpos">
+                <!-- position of the notebook's tabs bar, support is
+                     optional and implementation-dependent -->
+                <rng:choice>
+                  <rng:value>up</rng:value>
+                  <rng:value>down</rng:value>
+                  <rng:value>left</rng:value>
+                  <rng:value>right</rng:value>
+                </rng:choice>
+              </rng:attribute>
+            </rng:optional>
             <rng:oneOrMore>
                 <rng:ref name="page"/>
             </rng:oneOrMore>

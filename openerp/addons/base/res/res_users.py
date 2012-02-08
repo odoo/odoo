@@ -35,6 +35,8 @@ from tools.translate import _
 import openerp
 import openerp.exceptions
 
+_logger = logging.getLogger(__name__)
+
 class groups(osv.osv):
     _name = "res.groups"
     _description = "Access Groups"
@@ -254,8 +256,9 @@ class users(osv.osv):
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
             help="The default language used in the graphical user interface, when translations are available. To add a new language, you can use the 'Load an Official Translation' wizard available from the 'Administration' menu."),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
-            help="The user's timezone, used to perform timezone conversions "
-                 "between the server and the client."),
+            help="The user's timezone, used to output proper date and time values inside printed reports. "
+                 "It is important to set a value for this field. You should use the same timezone "
+                 "that is otherwise used to pick and render date and time values: your computer's timezone."),
         'view': fields.function(_get_interface_type, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
                                 string='Interface', help="OpenERP offers a simplified and an extended user interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier to use. You can switch to the other interface from the User/Preferences menu at any time."),
@@ -461,7 +464,7 @@ class users(osv.osv):
                                                                    user_agent_env['base_location'])
                     cr.commit()
                 except Exception:
-                    logging.getLogger('res.users').exception("Failed to update web.base.url configuration parameter")
+                    _logger.exception("Failed to update web.base.url configuration parameter")
                 finally:
                     cr.close()
         return uid

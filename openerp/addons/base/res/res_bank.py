@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class Bank(osv.osv):
     _description='Bank'
@@ -117,14 +118,13 @@ class res_partner_bank(osv.osv):
                 value = address.get(field, value)
         return value
 
-    _rec_name = 'acc_number'
     _columns = {
         'name': fields.char('Bank Account', size=64), # to be removed in v6.2 ?
         'acc_number': fields.char('Account Number', size=64, required=True),
         'bank': fields.many2one('res.bank', 'Bank'),
         'bank_bic': fields.char('Bank Identifier Code', size=16),
         'bank_name': fields.char('Bank Name', size=32),
-        'owner_name': fields.char('Account Owner Name', size=64),
+        'owner_name': fields.char('Account Owner Name', size=128),
         'street': fields.char('Street', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
@@ -141,6 +141,7 @@ class res_partner_bank(osv.osv):
         'sequence': fields.integer('Sequence'),
         'footer': fields.boolean("Display on Reports", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
     }
+
     _defaults = {
         'owner_name': lambda obj, cursor, user, context: obj._default_value(
             cursor, user, 'name', context=context),
@@ -183,9 +184,12 @@ class res_partner_bank(osv.osv):
                 if type_ids:
                     t = bank_type_obj.browse(cr, uid, type_ids[0], context=context)
                     try:
+                        # avoid the default format_layout to result in "False: ..."
+                        if not val._data[val.id]['bank_name']:
+                            val._data[val.id]['bank_name'] = _('BANK')
                         result = t.format_layout % val._data[val.id]
                     except:
-                        result += ' [Formating Error]'
+                        result += ' [Formatting Error]'
                         raise
             res.append((val.id, result))
         return res

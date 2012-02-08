@@ -48,13 +48,15 @@ import logging
 import openerp.modules.db
 import openerp.modules.graph
 
+_logger = logging.getLogger(__name__)
+
 _ad = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons') # default addons path (base)
 ad_paths = []
 
 # Modules already loaded
 loaded = []
 
-logger = netsvc.Logger()
+_logger = logging.getLogger(__name__)
 
 class AddonsImportHook(object):
     """
@@ -98,8 +100,7 @@ class AddonsImportHook(object):
             try:
                 # Check if the bare module name clashes with another module.
                 f, path, descr = imp.find_module(module_parts[0])
-                logger = logging.getLogger('init')
-                logger.warning("""
+                _logger.warning("""
 Ambiguous import: the OpenERP module `%s` is shadowed by another
 module (available at %s).
 To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
@@ -135,9 +136,12 @@ To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
 
         # Note: we don't support circular import.
         f, path, descr = imp.find_module(module_part, ad_paths)
-        mod = imp.load_module(module_name, f, path, descr)
+        mod = imp.load_module('openerp.addons.' + module_part, f, path, descr)
         if not is_shadowing:
             sys.modules[module_part] = mod
+            for k in sys.modules.keys():
+                if k.startswith('openerp.addons.' + module_part):
+                    sys.modules[k[len('openerp.addons.'):]] = sys.modules[k]
         sys.modules['openerp.addons.' + module_part] = mod
         return mod
 
@@ -174,7 +178,7 @@ def get_module_path(module, downloaded=False, display_warning=True):
     if downloaded:
         return opj(_ad, module)
     if display_warning:
-        logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
+        _logger.warning('module %s: module not found', module)
     return False
 
 
@@ -317,9 +321,9 @@ def load_information_from_description_file(module):
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
             # default values for descriptor
             info = {
-                'active': False,
                 'application': False,
                 'author': '',
+                'auto_install': False,
                 'category': 'Uncategorized',
                 'certificate': None,
                 'complexity': 'normal',
@@ -327,6 +331,7 @@ def load_information_from_description_file(module):
                 'description': '',
                 'icon': get_module_icon(module),
                 'installable': True,
+                'auto_install': False,
                 'license': 'AGPL-3',
                 'name': False,
                 'post_load': None,
@@ -339,14 +344,21 @@ def load_information_from_description_file(module):
                 'depends data demo test init_xml update_xml demo_xml'.split(),
                 iter(list, None)))
 
-            with tools.file_open(terp_file) as terp_f:
-                info.update(eval(terp_f.read()))
+            f = tools.file_open(terp_file)
+            try:
+                info.update(eval(f.read()))
+            finally:
+                f.close()
+
+            if 'active' in info:
+                # 'active' has been renamed 'auto_install'
+                info['auto_install'] = info['active']
 
             return info
 
     #TODO: refactor the logger in this file to follow the logging guidelines
     #      for 6.0
-    logging.getLogger('modules').debug('module %s: no descriptor file'
+    _logger.debug('module %s: no descriptor file'
         ' found: __openerp__.py or __terp__.py (deprecated)', module)
     return {}
 
@@ -360,8 +372,7 @@ def init_module_models(cr, module_name, obj_list):
     TODO better explanation of _auto_init and init.
 
     """
-    logger.notifyChannel('init', netsvc.LOG_INFO,
-        'module %s: creating or updating database tables' % module_name)
+    _logger.info('module %s: creating or updating database tables', module_name)
     todo = []
     for obj in obj_list:
         result = obj._auto_init(cr, {'module': module_name})
@@ -389,13 +400,13 @@ def register_module_classes(m):
     def log(e):
         mt = isinstance(e, zipimport.ZipImportError) and 'zip ' or ''
         msg = "Couldn't load %smodule %s" % (mt, m)
-        logger.notifyChannel('init', netsvc.LOG_CRITICAL, msg)
-        logger.notifyChannel('init', netsvc.LOG_CRITICAL, e)
+        _logger.critical(msg)
+        _logger.critical(e)
 
     global loaded
     if m in loaded:
         return
-    logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: registering objects' % m)
+    _logger.info('module %s: registering objects', m)
     mod_path = get_module_path(m)
 
     initialize_sys_path()
