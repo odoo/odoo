@@ -1208,9 +1208,7 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
     add_module_translation: function(mod) {
         var self = this;
         _.each(mod.messages, function(message) {
-            if (self.db[message.id] === undefined) {
-                self.db[message.id] = message.string;
-            }
+            self.db[message.id] = message.string;
         });
     },
     build_translation_function: function() {
