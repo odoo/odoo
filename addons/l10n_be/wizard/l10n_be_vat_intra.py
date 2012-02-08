@@ -52,7 +52,7 @@ class partner_vat_intra(osv.osv_memory):
     '''
     ),
         'period_ids': fields.many2many('account.period', 'account_period_rel', 'acc_id', 'period_id', 'Period (s)', help = 'Select here the period(s) you want to include in your intracom declaration'),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], help="Keep empty to use the user's company"),
+        'tax_code_id': fields.many2one('account.tax.code', 'Company', domain=[('parent_id', '=', False)], help="Keep empty to use the user's company", required=True),
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
         'mand_id' : fields.char('MandataireId', size=14, required=True,  help="This identifies the representative of the sending company. This is a string of 14 characters"),
         'msg': fields.text('File created', size=14, readonly=True),
@@ -64,11 +64,19 @@ class partner_vat_intra(osv.osv_memory):
         'other': fields.char('Other Qlf', size=16, help="Description of Identification Type"),
         }
 
+    def _get_tax_code(self, cr, uid, context=None):
+        obj_tax_code = self.pool.get('account.tax.code')
+        obj_user = self.pool.get('res.users')
+        company_id = obj_user.browse(cr, uid, uid, context=context).company_id.id
+        tax_code_ids = obj_tax_code.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', False)], context=context)
+        return tax_code_ids and tax_code_ids[0] or False
+
     _defaults = {
         'country_ids': _get_europe_country,
         'file_save': _get_xml_data,
-        'name': 'vat_Intra.xml',
-        'identification_type': 'tin',
+        'name': 'vat_intra.xml',
+        'identification_type': 'nvat',
+        'tax_code_id': _get_tax_code,
     }
 
     def _get_datas(self, cr, uid, ids, context=None):
@@ -86,7 +94,7 @@ class partner_vat_intra(osv.osv_memory):
         obj_partner_add = self.pool.get('res.partner.address')
 
         xmldict = {}
-        post_code = street = city = country = p_list = data_clientinfo = ''
+        post_code = street = city = country = data_clientinfo = ''
         seq = amount_sum = 0
 
         wiz_data = self.browse(cr, uid, ids[0], context=context)
@@ -95,12 +103,12 @@ class partner_vat_intra(osv.osv_memory):
         comments = wiz_data.comments
 
         if wiz_data.tax_code_id:
-            data_cmpny = wiz_data.tax_code_id.company_id
+            data_company = wiz_data.tax_code_id.company_id
         else:
-            data_cmpny = obj_user.browse(cr, uid, uid, context=context).company_id
+            data_company = obj_user.browse(cr, uid, uid, context=context).company_id
         
         # Get Company vat
-        company_vat = data_cmpny.partner_id.vat
+        company_vat = data_company.partner_id.vat
         if not company_vat:
             raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
         company_vat = company_vat.replace(' ','').upper()
@@ -119,9 +127,9 @@ class partner_vat_intra(osv.osv_memory):
         seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
         dnum = company_vat[2:] + seq_declarantnum[-4:]
 
-        addr = obj_partner.address_get(cr, uid, [data_cmpny.partner_id.id], ['invoice'])
-        email = data_cmpny.partner_id.email or ''
-        phone = data_cmpny.partner_id.phone or ''
+        addr = obj_partner.address_get(cr, uid, [data_company.partner_id.id], ['invoice'])
+        email = data_company.partner_id.email or ''
+        phone = data_company.partner_id.phone or ''
 
         if addr.get('invoice',False):
             ads = obj_partner_add.browse(cr, uid, [addr['invoice']])[0]
@@ -142,7 +150,7 @@ class partner_vat_intra(osv.osv_memory):
         if not phone:
             raise osv.except_osv(_('Data Insufficient!'),_('No phone associated with the company.'))
         xmldict.update({
-                        'company_name': data_cmpny.name,
+                        'company_name': data_company.name,
                         'company_vat': company_vat, 
                         'vatnum':  company_vat[2:],
                         'mand_id': wiz_data.mand_id, 
@@ -173,19 +181,18 @@ class partner_vat_intra(osv.osv_memory):
                       LEFT JOIN res_partner p ON (l.partner_id = p.id)
                       WHERE t.code IN %s
                        AND l.period_id IN %s
-                      GROUP BY p.name, l.partner_id, p.vat, intra_code''', (codes, tuple([p.id for p in wiz_data.period_ids])))            
+                       AND t.company_id = %s
+                      GROUP BY p.name, l.partner_id, p.vat, intra_code''', (codes, tuple([p.id for p in wiz_data.period_ids]), data_company.id))
 
         p_count = 0
 
         for row in cr.dictfetchall():
             if not row['vat']:
-                p_list += str(row['partner_name']) + ', '
+                row['vat'] = ''
                 p_count += 1
-                continue
 
             seq += 1
-            amt = row['amount'] or 0
-            amt = int(round(amt * 100))
+            amt = row['amount'] or 0.0
             amount_sum += amt
 
             intra_code = row['intra_code'] == '44' and 'S' or (row['intra_code'] == '46L' and 'L' or (row['intra_code'] == '46T' and 'T' or ''))
@@ -245,6 +252,8 @@ class partner_vat_intra(osv.osv_memory):
 
         data_clientinfo = ''
         for client in xml_data['clientlist']:
+            if not client['vatnum']:
+                raise osv.except_osv(_('Data Insufficient!'),_('No vat number defined for %s') % client['partner_name'])
             data_clientinfo +='\n\t\t<ns2:IntraClient SequenceNumber="%(seq)s">\n\t\t\t<ns2:CompanyVATNumber issuedBy="%(country)s">%(vatnum)s</ns2:CompanyVATNumber>\n\t\t\t<ns2:Code>%(code)s</ns2:Code>\n\t\t\t<ns2:Amount>%(amount)s</ns2:Amount>\n\t\t\t</ns2:IntraClient>' % (client)
 
         data_decl = '\n\t<ns2:IntraListing SequenceNumber="1" ClientsNbr="%(clientnbr)s" DeclarantReference="%(dnum)s" AmountSum="%(amountsum)s">' % (xml_data)
@@ -291,7 +300,7 @@ class vat_intra_print(report_sxw.rml_parse):
             'time': time,
         })
         
-report_sxw.report_sxw('report.partner.vat.intra.print', 'partner.vat.intra', 'addons/l10n_be/wizard/l10n_be_vat_intra_print.rml', parser=vat_intra_print)
+report_sxw.report_sxw('report.partner.vat.intra.print', 'partner.vat.intra', 'addons/l10n_be/wizard/l10n_be_vat_intra_print.rml', parser=vat_intra_print, header="internal")
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
