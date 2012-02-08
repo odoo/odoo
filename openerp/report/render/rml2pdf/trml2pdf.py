@@ -218,7 +218,7 @@ class _rml_styles(object,):
             if sname in self.styles_obj:
                 style = self.styles_obj[sname]
             else:
-                sys.stderr.write('Warning: style not found, %s - setting default!\n' % (node.get('style'),) )
+                _logger.warning('Warning: style not found, %s - setting default!\n' % (node.get('style'),) )
         if not style:
             style = self.default_style['Normal']
         para_update = self._para_style_update(node)
