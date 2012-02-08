@@ -2230,7 +2230,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
 
         this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views, {});
         this.viewmanager.template = 'One2Many.viewmanager';
-        this.viewmanager.registry = openerp.web.views.clone({
+        this.viewmanager.registry = openerp.web.views.extend({
             list: 'openerp.web.form.One2ManyListView',
             form: 'openerp.web.form.One2ManyFormView',
             page: 'openerp.web.PageView'
