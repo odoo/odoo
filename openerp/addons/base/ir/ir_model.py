@@ -146,6 +146,10 @@ class ir_model(osv.osv):
     def write(self, cr, user, ids, vals, context=None):
         if context:
             context.pop('__last_update', None)
+        # Filter out operations 4 link from field id, because openerp-web
+        # always write (4,id,False) even for non dirty items
+        if 'field_id' in vals:
+            vals['field_id'] = [op for op in vals['field_id'] if op[0] != 4]
         return super(ir_model,self).write(cr, user, ids, vals, context)
 
     def create(self, cr, user, vals, context=None):
