@@ -224,9 +224,9 @@ class db(netsvc.ExportService):
     
             if not data or res:
                 _logger.error(
-                        'DUMP DB: %s failed! Please verify the configuration of the database password on the server. '\
-                        'It should be provided as a -w <PASSWD> command-line option, or as `db_password` in the '\
-                        'server configuration file.\n %s'  % (db_name, data))
+                        'DUMP DB: %s failed! Please verify the configuration of the database password on the server. '
+                        'It should be provided as a -w <PASSWD> command-line option, or as `db_password` in the '
+                        'server configuration file.\n %s', db_name, data)
                 raise Exception, "Couldn't dump database"
             _logger.info('DUMP DB successful: %s', db_name)
     
@@ -239,7 +239,7 @@ class db(netsvc.ExportService):
             self._set_pg_psw_env_var()
 
             if self.exp_db_exist(db_name):
-                _logger.warning('RESTORE DB: %s already exists' % (db_name,))
+                _logger.warning('RESTORE DB: %s already exists', db_name)
                 raise Exception, "Database already exists"
 
             self._create_empty_database(db_name)
@@ -268,7 +268,7 @@ class db(netsvc.ExportService):
             res = stdout.close()
             if res:
                 raise Exception, "Couldn't restore database"
-            _logger.info('RESTORE DB: %s' % (db_name))
+            _logger.info('RESTORE DB: %s', db_name)
 
             return True
         finally:
@@ -451,8 +451,7 @@ GNU Public Licence.
 
             backup_directory = os.path.join(tools.config['root_path'], 'backup', time.strftime('%Y-%m-%d-%H-%M'))
             if zips and not os.path.isdir(backup_directory):
-                _logger.info('create a new backup directory to \
-                                store the old modules: %s', backup_directory)
+                _logger.info('create a new backup directory to store the old modules: %s', backup_directory)
                 os.makedirs(backup_directory)
 
             for module in zips:
@@ -678,7 +677,7 @@ class report_spool(netsvc.ExportService):
             self._reports[id]['state'] = True
         except Exception, exception:
 
-            _logger.exception('Exception: %s\n', str(exception))
+            _logger.exception('Exception: %s\n', exception)
             if hasattr(exception, 'name') and hasattr(exception, 'value'):
                 self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
             else:
@@ -715,7 +714,7 @@ class report_spool(netsvc.ExportService):
                 self._reports[id]['format'] = format
                 self._reports[id]['state'] = True
             except Exception, exception:
-                _logger.exception('Exception: %s\n', str(exception))
+                _logger.exception('Exception: %s\n', exception)
                 if hasattr(exception, 'name') and hasattr(exception, 'value'):
                     self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
                 else:

@@ -131,7 +131,7 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
                     _logger.debug("Netrpc: %d threads", len(self.threads))
             self.socket.close()
         except Exception, e:
-            _logger.warning("Netrpc: closing because of exception %s" % str(e))
+            _logger.warning("Netrpc: closing because of exception %s", e)
             self.socket.close()
             return False
 
