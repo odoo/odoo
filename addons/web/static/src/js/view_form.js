@@ -1197,6 +1197,11 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
 
         this._super(view, node);
 
+        if (this.node.tag == 'label' && !this.string && this.node.children.length) {
+            this.string = this.node.children[0];
+            this.align = 'left';
+        }
+
         if (this.node.tag == 'label' && (this.align === 'left' || this.node.attrs.colspan || (this.string && this.string.length > 32))) {
             this.template = "WidgetParagraph";
             this.colspan = parseInt(this.node.attrs.colspan || 1, 10);
@@ -1205,6 +1210,8 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
             if (isNaN(parseFloat(this.node.attrs.align))) {
                 this.align = 'left';
             }
+
+            this.multilines = this.string && _.str.lines(this.string).length > 1;
         } else {
             this.colspan = 1;
             this.width = '1%';
