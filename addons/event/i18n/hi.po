@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-08-03 06:14+0000\n"
 "Last-Translator: vir (Open ERP) <vir@tinyerp.com>\n"
 "Language-Team: Hindi <hi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:56+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:06+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: event
 #: view:event.event:0
@@ -76,6 +76,11 @@ msgid "_Close"
 msgstr ""
 
 #. module: event
+#: model:event.event,name:event.event_0
+msgid "Concert of Bon Jovi"
+msgstr "Bon jovi का समारोह"
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Invoiced Registrations only"
 msgstr ""
@@ -96,12 +101,9 @@ msgid "Quantity"
 msgstr ""
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:50
-#: code:addons/event/wizard/event_make_invoice.py:54
-#: code:addons/event/wizard/event_make_invoice.py:58
-#: code:addons/event/wizard/event_make_invoice.py:62
+#: code:addons/event/wizard/event_make_invoice.py:63
 #, python-format
-msgid "Warning !"
+msgid "Registration doesn't have any partner to invoice."
 msgstr ""
 
 #. module: event
@@ -196,6 +198,11 @@ msgid "Mail Auto Confirm"
 msgstr ""
 
 #. module: event
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "ओपेरा के लिए टिकट"
+
+#. module: event
 #: code:addons/event/event.py:125
 #: view:event.event:0
 #, python-format
@@ -221,10 +228,9 @@ msgid "Event Dashboard"
 msgstr ""
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:63
-#, python-format
-msgid "Registration doesn't have any partner to invoice."
-msgstr ""
+#: model:event.event,name:event.event_1
+msgid "Opera of Verdi"
+msgstr "Verdi के ओपेरा"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -277,8 +283,8 @@ msgid "Draft"
 msgstr ""
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Events States"
+#: field:event.type,name:0
+msgid "Event type"
 msgstr ""
 
 #. module: event
@@ -342,6 +348,15 @@ msgstr ""
 #. module: event
 #: help:event.registration,nb_register:0
 msgid "Number of Registrations or Tickets"
+msgstr ""
+
+#. module: event
+#: code:addons/event/wizard/event_make_invoice.py:50
+#: code:addons/event/wizard/event_make_invoice.py:54
+#: code:addons/event/wizard/event_make_invoice.py:58
+#: code:addons/event/wizard/event_make_invoice.py:62
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: event
@@ -551,8 +566,8 @@ msgid "Mailing"
 msgstr ""
 
 #. module: event
-#: field:event.type,name:0
-msgid "Event type"
+#: view:report.event.registration:0
+msgid "Events States"
 msgstr ""
 
 #. module: event
@@ -734,6 +749,11 @@ msgstr ""
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "June"
+msgstr ""
+
+#. module: event
+#: model:product.template,name:event.event_product_0_product_template
+msgid "Ticket for Concert"
 msgstr ""
 
 #. module: event
@@ -980,6 +1000,11 @@ msgid "Speaker"
 msgstr ""
 
 #. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on ERP Buisness"
+msgstr "ईआरपी व्यापार पर सम्मेलन"
+
+#. module: event
 #: view:event.registration:0
 msgid "Reply"
 msgstr ""
@@ -1039,6 +1064,11 @@ msgstr ""
 #. module: event
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
+msgstr ""
+
+#. module: event
+#: model:product.template,name:event.event_product_2_product_template
+msgid "Ticket for Conference"
 msgstr ""
 
 #. module: event
@@ -1235,32 +1265,20 @@ msgstr ""
 #~ msgid "Error ! You cannot create recursive sections."
 #~ msgstr "त्रुटि! आप पुनरावर्ती वर्गों नहीं बना सकते."
 
-#~ msgid "Concert of Bon Jovi"
-#~ msgstr "Bon jovi का समारोह"
-
 #~ msgid "Ending date"
 #~ msgstr "समाप्त होने की तारीख"
 
 #~ msgid "Invoice Rejected"
 #~ msgstr "चालान अस्वीकृत"
 
-#~ msgid "Ticket for Opera"
-#~ msgstr "ओपेरा के लिए टिकट"
-
 #~ msgid "Ok"
 #~ msgstr "ठीक"
-
-#~ msgid "Opera of Verdi"
-#~ msgstr "Verdi के ओपेरा"
 
 #~ msgid "Actions"
 #~ msgstr "क्रियाएं"
 
 #~ msgid "Payments"
 #~ msgstr "भुगतान"
-
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "ईआरपी व्यापार पर सम्मेलन"
 
 #~ msgid "Badge Title"
 #~ msgstr "बिल्ला शीर्षक"

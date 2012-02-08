@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-23 09:54+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2010-10-26 08:16+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-24 05:54+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:41+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -22,8 +22,7 @@ msgid "Openerp user"
 msgstr "Użytkownik OpenERP"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,requirements:0
+#: view:hr.job:0 field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "Wymagania"
 
@@ -50,8 +49,7 @@ msgid "Human Resources"
 msgstr "Kadry"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
 msgstr "Grupuj wg..."
 
@@ -71,11 +69,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
-#: view:res.users:0
+#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
+#: field:hr.job,department_id:0 view:res.users:0
 msgid "Department"
 msgstr "Dział"
 
@@ -95,9 +90,7 @@ msgid "In Recruitment"
 msgstr "W trakcie rekrutacji"
 
 #. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Firma"
@@ -132,8 +125,7 @@ msgid "Parent Department"
 msgstr "Dział nadrzędny"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,notes:0
+#: view:hr.employee:0 field:hr.employee,notes:0
 msgid "Notes"
 msgstr "Uwagi"
 
@@ -174,8 +166,7 @@ msgstr ""
 "użytkownika systemu OpenERP (i jego prawa) z pracownikiem."
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Recruitement"
 msgstr "W trakcie rekrutacji"
 
@@ -215,8 +206,7 @@ msgid "Child Categories"
 msgstr "Kategorie podrzędne"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,description:0
+#: view:hr.job:0 field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "Opis stanowiska"
@@ -232,8 +222,7 @@ msgid "My Departments Employee"
 msgstr "Pracownicy mojego działu"
 
 #. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Pracownik"
@@ -265,9 +254,7 @@ msgid "Human Resources Dashboard"
 msgstr "Konsola kadr"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
 msgstr "Stanowisko"
 
@@ -282,8 +269,7 @@ msgid "Configuration"
 msgstr "Konfiguracja"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,category_ids:0
+#: view:hr.employee:0 field:hr.employee,category_ids:0
 msgid "Categories"
 msgstr "Kategorie"
 
@@ -414,6 +400,11 @@ msgid "HR Manager Dashboard"
 msgstr "Konsola Dyrektora kadr"
 
 #. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr "Działy podrzędne"
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Status"
 msgstr "Stan"
@@ -495,8 +486,7 @@ msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,state:0
+#: view:hr.job:0 field:hr.job,state:0
 msgid "State"
 msgstr ""
 
@@ -571,8 +561,7 @@ msgid "Job Name"
 msgstr ""
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Position"
 msgstr ""
 
@@ -613,10 +602,8 @@ msgid "Gender"
 msgstr "Płeć"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0 view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -647,9 +634,9 @@ msgid "Creation of a OpenERP user"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,child_ids:0
-msgid "Child Departments"
-msgstr "Działy podrzędne"
+#: field:hr.employee,login:0
+msgid "Login"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -668,8 +655,7 @@ msgid "Other Id"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
+#: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
 msgstr ""
 
@@ -684,8 +670,7 @@ msgid "My Departments Jobs"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
+#: field:hr.department,manager_id:0 view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Menedżer"

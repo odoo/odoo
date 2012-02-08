@@ -180,20 +180,21 @@ class email_template(osv.osv):
             src_obj = template.model_id.model
             model_data_id = data_obj._get_id(cr, uid, 'mail', 'email_compose_message_wizard_form')
             res_id = data_obj.browse(cr, uid, model_data_id, context=context).res_id
+            button_name = _('Send Mail (%s)') % template.name
             vals['ref_ir_act_window'] = action_obj.create(cr, uid, {
-                 'name': template.name,
+                 'name': button_name,
                  'type': 'ir.actions.act_window',
                  'res_model': 'mail.compose.message',
                  'src_model': src_obj,
                  'view_type': 'form',
-                 'context': "{'mail.compose.message.mode':'mass_mail'}",
+                 'context': "{'mail.compose.message.mode':'mass_mail', 'mail.compose.template_id' : %d}" % (template.id),
                  'view_mode':'form,tree',
                  'view_id': res_id,
                  'target': 'new',
                  'auto_refresh':1
             }, context)
             vals['ref_ir_value'] = self.pool.get('ir.values').create(cr, uid, {
-                 'name': _('Send Mail (%s)') % template.name,
+                 'name': button_name,
                  'model': src_obj,
                  'key2': 'client_action_multi',
                  'value': "ir.actions.act_window," + str(vals['ref_ir_act_window']),

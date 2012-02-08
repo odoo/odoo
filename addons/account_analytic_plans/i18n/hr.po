@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-12-22 07:32+0000\n"
-"Last-Translator: Tomislav Bosnjakovic <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-01-30 15:24+0000\n"
+"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:51+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:31+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -81,11 +81,6 @@ msgid "Ok"
 msgstr "U redu"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Ne možete kreirati stavke prometa za zatvoreni račun."
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
 msgstr "Plan modela"
@@ -98,7 +93,7 @@ msgstr "Konto2 Id"
 #. module: account_analytic_plans
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Broj računa se ne smije ponavljati za jednu organizaciju."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -135,7 +130,7 @@ msgstr "Redak bankovnog izvoda"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
 msgid "Define your Analytic Plans"
-msgstr ""
+msgstr "Definirajte analitičke planove."
 
 #. module: account_analytic_plans
 #: constraint:account.invoice:0
@@ -143,9 +138,16 @@ msgid "Invalid BBA Structured Communication !"
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Račun analitike"
+#: constraint:account.bank.statement:0
+msgid "The journal and period chosen have to belong to the same company."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -184,11 +186,6 @@ msgstr "Ispis"
 #: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "Postotak"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Account Id"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:221
@@ -247,6 +244,14 @@ msgid "Invoice Line"
 msgstr "Stavka računa"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Currency"
 msgstr "Valuta"
@@ -257,11 +262,9 @@ msgid "Start Date"
 msgstr "Početni datum"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Account Id"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -285,7 +288,7 @@ msgstr "To Date"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:341
-#: code:addons/account_analytic_plans/account_analytic_plans.py:483
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "Morate definirati analitičku temeljnicu na '%s' temeljnici!"
@@ -303,7 +306,7 @@ msgstr "analytic.plan.create.model.action"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Stavka analitike"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -336,16 +339,6 @@ msgid "Account1 Id"
 msgstr "Konto1 Id"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Company must be same for its related account and period."
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
 msgstr "Minimalno dozvoljeno (%)"
@@ -369,6 +362,11 @@ msgid "Save This Distribution as a Model"
 msgstr "Save This Distribution as a Model"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
 msgstr "Količina"
@@ -386,10 +384,15 @@ msgstr "Print Crossovered Analytic"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:341
-#: code:addons/account_analytic_plans/account_analytic_plans.py:483
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Nema analitičke temeljnice"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Račun analitike"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
@@ -404,7 +407,7 @@ msgstr "Konto3 Id"
 #. module: account_analytic_plans
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "Knjiženje na sintetička konta (pogled) nije podržano."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -421,6 +424,11 @@ msgstr "Poništi"
 #: field:account.analytic.plan.instance,account4_ids:0
 msgid "Account4 Id"
 msgstr "Konto4 Id"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -472,7 +480,7 @@ msgstr "100.00%"
 #: field:account.move.line,analytics_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "Analytic Distribution"
+msgstr "Analitička raspodjela"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_journal
@@ -508,6 +516,11 @@ msgid ""
 msgstr ""
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Company"
 msgstr "Organizacija"
@@ -527,11 +540,6 @@ msgstr "Naziv dnevnika mora biti jedinstven za jednu organizaciju!"
 #, python-format
 msgid "Value Error"
 msgstr "Greška u vrijednosti"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Ne može se knjižiti na sintetički konto."
 
 #~ msgid "Select Information"
 #~ msgstr "Odaberi informacije"
@@ -565,6 +573,15 @@ msgstr "Ne može se knjižiti na sintetički konto."
 #~ msgid ""
 #~ "This distribution model has been saved. You will be able to reuse it later."
 #~ msgstr "Model raspodjele je spremljen. Možete ga koristiti kasnije."
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Ne možete kreirati stavke prometa za zatvoreni račun."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Company must be same for its related account and period."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Ne može se knjižiti na sintetički konto."
 
 #~ msgid ""
 #~ "This module allows to use several analytic plans, according to the general "
@@ -635,3 +652,6 @@ msgstr "Ne može se knjižiti na sintetički konto."
 
 #~ msgid "Multiple-plans management in Analytic Accounting"
 #~ msgstr "Upravljanje višestrukim planovima u analitičkom računovdstvu"
+
+#~ msgid "The date of your Journal Entry is not in the defined period!"
+#~ msgstr "Datum temeljnice je izvan datuma perioda!"

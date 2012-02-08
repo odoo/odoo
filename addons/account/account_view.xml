@@ -594,7 +594,7 @@
                 <form string="Bank Statement">
                     <group col="7" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="date" select="1" on_change="onchange_date(date)"/>
+                        <field name="date" select="1" on_change="onchange_date(date, company_id)"/>
                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" select="1" widget="selection"/>
                         <newline/>
                         <field name="period_id"/>
@@ -655,7 +655,8 @@
                 <form string="Bank Statement">
                     <group col="7" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="date" select="1" on_change="onchange_date(date)"/>
+                        <field name="date" select="1" on_change="onchange_date(date, company_id)"/>
+                        <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                         <newline/>
                         <field name="period_id"/>
@@ -2620,7 +2621,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                 <form string="Statement">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1" widget="selection"/>
                         <field name="user_id" select="1" readonly="1"/>
                         <field name="period_id" select="1"/>
@@ -2693,7 +2694,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     <group col="6" colspan="4">
                         <group col="2" colspan="2">
                             <separator string="Dates" colspan="4"/>
-                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date)"/>
+                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
                             <field name="closing_date" select="1" readonly="1"/>
                         </group>
                         <group col="2" colspan="2">
@@ -2785,6 +2786,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         <field name="sequence"/>
                         <field name="type"/>
                         <field name="sign"/>
+                        <field name="style_overwrite"/>
                     </group>
                     <notebook colspan="6">
                         <page string="Report">

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-02-01 05:18+0000\n"
 "Last-Translator: Cristi Harjoi <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:17+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:56+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: sale_layout
 #: sql_constraint:sale.order:0
@@ -35,7 +35,7 @@ msgstr "Titlu"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Disc. (%)"
-msgstr "Disc. (%)"
+msgstr "Disc. (%) (discount)"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -55,12 +55,12 @@ msgstr "Număr comandă"
 #. module: sale_layout
 #: field:sale.order,abstract_line_ids:0
 msgid "Order Lines"
-msgstr "Poziţii comandă"
+msgstr "Linii Comandă"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Disc.(%)"
-msgstr "Disc.(%)"
+msgstr "Disc.(%) (Discount)"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -70,12 +70,12 @@ msgstr "Preţ unitar"
 #. module: sale_layout
 #: view:sale.order:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Linii factură"
 
 #. module: sale_layout
 #: view:sale.order:0
 msgid "UoM"
-msgstr "UM"
+msgstr "UdeM (Unitate de masură)"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -105,7 +105,7 @@ msgstr "Cantitate"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Quotation N°"
-msgstr "Nr. Ofertă"
+msgstr "Număr cotatie"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -115,7 +115,7 @@ msgstr "TVA"
 #. module: sale_layout
 #: view:sale.order:0
 msgid "Make Invoice"
-msgstr "Crează factura"
+msgstr "Creează factura"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -145,7 +145,7 @@ msgstr "Data comenzii"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Shipping address :"
-msgstr "Adresă expediere:"
+msgstr "Adresă de expediere:"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -186,7 +186,7 @@ msgstr "Referinţa dvs."
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Quotation Date"
-msgstr "Data ofertei"
+msgstr "Dată cotatie"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -196,7 +196,7 @@ msgstr "TVA :"
 #. module: sale_layout
 #: view:sale.order:0
 msgid "Qty"
-msgstr "Cant."
+msgstr "Cantitate"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -206,17 +206,17 @@ msgstr "Stări"
 #. module: sale_layout
 #: view:sale.order:0
 msgid "Sales order lines"
-msgstr ""
+msgstr "Linii comandă de vanzare"
 
 #. module: sale_layout
 #: model:ir.actions.report.xml,name:sale_layout.sale_order_1
 msgid "Order with Layout"
-msgstr ""
+msgstr "Comandă cu format"
 
 #. module: sale_layout
 #: view:sale.order:0
 msgid "Extra Info"
-msgstr "Alte informatii"
+msgstr "Informaţii suplimentare"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -226,12 +226,12 @@ msgstr "Taxe :"
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
 msgid "Page Break"
-msgstr "Întrerupere de pagină"
+msgstr "Întrerupere pagină"
 
 #. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order
 msgid "Sales Order"
-msgstr "Ordin de vânzare"
+msgstr "Comandă de vânzare"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -246,7 +246,7 @@ msgstr "Preț"
 #. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Linie comandă de vânzare"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -256,8 +256,42 @@ msgstr "Mişcări stoc"
 #~ msgid "Automatic Declaration"
 #~ msgstr "Declaraţie automată"
 
+#~ msgid "Layout Type"
+#~ msgstr "Tip de format"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module provides features to improve the layout of the Sales Order.\n"
+#~ "\n"
+#~ "    It gives you the possibility to\n"
+#~ "        * order all the lines of a sales order\n"
+#~ "        * add titles, comment lines, sub total lines\n"
+#~ "        * draw horizontal lines and put page breaks\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Acest modul oferă caracteristici pentru imbunătătirea formatului "
+#~ "Comenzii de vanzare.\n"
+#~ "\n"
+#~ "    Vă dă posibilitatea de a\n"
+#~ "        * ordona toate liniile unei comenzi de vanzare\n"
+#~ "        * adăuga titluri, linii de comentarii, linii pentru subtotal\n"
+#~ "        * schita linii orizontale si de a pune intreruperi de pagină\n"
+#~ "\n"
+#~ "    "
+
 #~ msgid "Seq."
-#~ msgstr "Secv."
+#~ msgstr "Secvență"
+
+#~ msgid "Manual Description"
+#~ msgstr "Descriere manuală"
 
 #~ msgid "Order Reference must be unique !"
-#~ msgstr "Referinţa la Comandă trebuie să fie unică!"
+#~ msgstr "Referinţa comenzii trebuie să fie unică !"
+
+#~ msgid "Sale Order Layout"
+#~ msgstr "Format Comandă de vanzare"
+
+#~ msgid "Sale Order Lines"
+#~ msgstr "Linii comenzi de vanzare"

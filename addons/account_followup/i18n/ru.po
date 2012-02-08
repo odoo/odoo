@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-11-11 15:21+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:06+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:14+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -111,11 +111,6 @@ msgid "Ok"
 msgstr "OK"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Нельзя сделать действие по закрытому счету."
-
-#. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
 msgstr ""
@@ -145,6 +140,13 @@ msgstr "Баланс > 0"
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Всего по дебету"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -322,6 +324,14 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
 msgstr "Отправить письма"
@@ -334,13 +344,6 @@ msgstr "Статистика напоминаний по контрагента�
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
 msgstr ""
 
 #. module: account_followup
@@ -408,8 +411,8 @@ msgstr "Элементы журнала"
 
 #. module: account_followup
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Для счета и периода должна быть одна компания."
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -419,11 +422,6 @@ msgstr "Отправить подтверждение по эл.почте"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
 msgstr ""
 
 #. module: account_followup
@@ -536,6 +534,11 @@ msgstr "Максимальный уровень напоминаний."
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
+msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
 msgstr ""
 
 #. module: account_followup
@@ -687,6 +690,11 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
 msgstr ""
@@ -725,11 +733,6 @@ msgstr ""
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
 msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Нельзя создать операцию по счету с типом Вид."
 
 #~ msgid "All payable entries"
 #~ msgstr "Все проводки к оплате"
@@ -779,6 +782,9 @@ msgstr "Нельзя создать операцию по счету с типо
 #~ msgid "Lines"
 #~ msgstr "Линии"
 
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Нельзя сделать действие по закрытому счету."
+
 #~ msgid "Currency"
 #~ msgstr "Валюта"
 
@@ -790,6 +796,9 @@ msgstr "Нельзя создать операцию по счету с типо
 #~ "Все эл. письма были отправлены контрагентам:.\n"
 #~ "\n"
 
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Для счета и периода должна быть одна компания."
+
 #, python-format
 #~ msgid ""
 #~ "E-Mail not sent to following Partners, Email not available !\n"
@@ -797,6 +806,9 @@ msgstr "Нельзя создать операцию по счету с типо
 #~ msgstr ""
 #~ "Нет эл. адресов, эл. письма не отосланы следующим контрагентам !\n"
 #~ "\n"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Нельзя создать операцию по счету с типом Вид."
 
 #, python-format
 #~ msgid ""

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-10-27 08:07+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:50+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:00+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -22,6 +22,12 @@ msgid ""
 "\n"
 "Please define BIC/Swift code on bank for bank type IBAN Account to make "
 "valid payments"
+msgstr ""
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:139
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it"
 msgstr ""
 
 #. module: base_iban
@@ -55,7 +61,7 @@ msgid "country_id"
 msgstr "country_id"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:130
+#: code:addons/base_iban/base_iban.py:136
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like "
@@ -68,7 +74,7 @@ msgid "IBAN"
 msgstr "IBAN"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:131
+#: code:addons/base_iban/base_iban.py:140
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr ""
@@ -77,6 +83,11 @@ msgstr ""
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
 msgstr "IBAN konto"
+
+#. module: base_iban
+#: constraint:res.partner.bank:0
+msgid "The RIB and/or IBAN is not valid"
+msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Vigane XML vaate arhitektuurile!"

@@ -100,7 +100,7 @@ You can use the demo data as follow:
             'test/stock_location_pull_flow.yml',
             'test/stock_location_push_flow.yml',
     ],
-    'active': False,
+    'auto_install': False,
     'certificate': '0046505115101',
 }
 

@@ -69,7 +69,7 @@ The dashboard for auction includes:
 
     'installable': True,
     'auction': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0039333102717',
     'images': ['images/auction1.jpeg','images/auction2.jpeg','images/auction3.jpeg'],
 }

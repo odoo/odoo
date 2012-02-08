@@ -6,25 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2009-09-08 16:33+0000\n"
 "Last-Translator: filsys <office@filsystem.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:12+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:48+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produs"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Fixed"
-msgstr ""
+msgstr "Fix"
 
 #. module: mrp_subproduct
 #: sql_constraint:mrp.bom:0
@@ -33,16 +33,19 @@ msgid ""
 "You should install the mrp_subproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
+"Toate cantitățile de produse trebuie să fie mai mari ca 0.\n"
+"Trebuie să instalați modulul mrp_subproduct dacă doriți să gestionați "
+"produse suplimentare in LdM!"
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
 msgid "sub products"
-msgstr ""
+msgstr "subproduse"
 
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Comandă de fabricație"
 
 #. module: mrp_subproduct
 #: constraint:mrp.bom:0
@@ -52,32 +55,32 @@ msgstr ""
 #. module: mrp_subproduct
 #: view:mrp.bom:0
 msgid "Sub Products"
-msgstr ""
+msgstr "Sub-produse"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,subproduct_type:0
 msgid "Quantity Type"
-msgstr ""
+msgstr "Tipul cantitătii"
 
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "Listă de materiale"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_qty:0
 msgid "Product Qty"
-msgstr ""
+msgstr "Cantitate Produs"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
 msgid "Product UOM"
-msgstr ""
+msgstr "UdeM Produs"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,bom_id:0
 msgid "BoM"
-msgstr ""
+msgstr "LdM"
 
 #. module: mrp_subproduct
 #: sql_constraint:mrp.production:0
@@ -87,17 +90,17 @@ msgstr ""
 #. module: mrp_subproduct
 #: field:mrp.bom,sub_products:0
 msgid "sub_products"
-msgstr ""
+msgstr "sub_produse"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Variable"
-msgstr ""
+msgstr "Variabil(ă)"
 
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
 msgid "Sub Product"
-msgstr ""
+msgstr "Sub-Produs"
 
 #. module: mrp_subproduct
 #: constraint:mrp.production:0
@@ -120,3 +123,36 @@ msgstr ""
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows you to produce several products from one production "
+#~ "order.\n"
+#~ "You can configure sub-products in the bill of material.\n"
+#~ "Without this module:\n"
+#~ "    A + B + C -> D\n"
+#~ "With this module:\n"
+#~ "    A + B + C -> D + E\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Acest modul vă permite să produceti mai multe produse dintr-o singură "
+#~ "comandă de productie.\n"
+#~ "Puteti configura sub-produse in lista de materiale.\n"
+#~ "Fără acest modul:\n"
+#~ "    A + B + C -> D\n"
+#~ "Cu acest modul:\n"
+#~ "    A + B + C -> D + E\n"
+#~ "    "
+
+#~ msgid ""
+#~ "MRP Sub Product - To produce several products from one production order"
+#~ msgstr ""
+#~ "Sub Product MRP - Pentru a produce mai multe produse dintr-o comandă de "
+#~ "productie"
+
+#~ msgid "Order quantity cannot be negative or zero !"
+#~ msgstr "Cantitatea comandată nu poate fi negativă sau zero !"
+
+#~ msgid "Error ! You can not create recursive BoM."
+#~ msgstr "Eroare ! Nu puteţi crea o LdM recursivă."

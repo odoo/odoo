@@ -6,48 +6,50 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-01-12 11:09+0000\n"
-"Last-Translator: Arif Aydogmus <arifaydogmus@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-01-23 22:01+0000\n"
+"Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:03+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:13+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:125
+#: code:addons/base_vat/base_vat.py:141
 #, python-format
 msgid ""
 "This VAT number does not seem to be valid.\n"
 "Note: the expected format is %s"
 msgstr ""
+"Bu VAT numarası geçerli değil gibi gözüküyor.\n"
+"Not: Beklenen biçim %s"
 
 #. module: base_vat
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Şirket adı tekil olmalı !"
 
 #. module: base_vat
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Hata ! kendini çağıran ilişkili üyeler oluşturamazsınız."
 
 #. module: base_vat
 #: field:res.company,vat_check_vies:0
 msgid "VIES VAT Check"
-msgstr ""
+msgstr "VIES VAT Kontrolü"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Şirketler"
 
 #. module: base_vat
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Hata! özyinelemeli şirketler oluşturamazsınız."
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -68,6 +70,8 @@ msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
 msgstr ""
+"Eğer seçilirse, Carinin VAT numarası basit biçim onayı yerine Avrupa Birliği "
+"VIES servisinden kontrol edilecek."
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0

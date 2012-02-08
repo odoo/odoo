@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-02-01 05:01+0000\n"
 "Last-Translator: Cristi Harjoi <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:50+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:00+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -22,6 +22,12 @@ msgid ""
 "\n"
 "Please define BIC/Swift code on bank for bank type IBAN Account to make "
 "valid payments"
+msgstr ""
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:139
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it"
 msgstr ""
 
 #. module: base_iban
@@ -37,12 +43,12 @@ msgstr ""
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
 msgid "zip"
-msgstr "Cod poştal"
+msgstr "cod poştal"
 
 #. module: base_iban
 #: help:res.partner.bank,iban:0
 msgid "International Bank Account Number"
-msgstr "Numar international de cont bancar (IBAN)"
+msgstr "Numar International de Cont Bancar"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -52,10 +58,10 @@ msgstr "Conturi bancare"
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_country_field
 msgid "country_id"
-msgstr "country_id"
+msgstr "country_id (id_tara)"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:130
+#: code:addons/base_iban/base_iban.py:136
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like "
@@ -68,7 +74,7 @@ msgid "IBAN"
 msgstr "IBAN"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:131
+#: code:addons/base_iban/base_iban.py:140
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr ""
@@ -78,32 +84,31 @@ msgstr ""
 msgid "IBAN Account"
 msgstr "Cont IBAN"
 
-#~ msgid "iban"
-#~ msgstr "IBAN"
-
-#~ msgid "bic"
-#~ msgstr "BIC"
+#. module: base_iban
+#: constraint:res.partner.bank:0
+msgid "The RIB and/or IBAN is not valid"
+msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
 
-#~ msgid "acc_number"
-#~ msgstr "Număr cont"
+#, python-format
+#~ msgid "The IBAN is invalid, It should begin with the country code"
+#~ msgstr "IBAN-ul este invalid. Ar trebui să înceapă cu codul țării."
 
 #, python-format
 #~ msgid ""
 #~ "The IBAN does not seems to be correct. You should have entered something "
 #~ "like this %s"
 #~ msgstr ""
-#~ "IBAN-ul nu pare corect. Ar fi trebuit ca valoarea introdusă să fie de forma "
-#~ "%s"
+#~ "IBAN-ul nu pare a fi corect. Ar fi trebuit ca valoarea introdusă să fie de "
+#~ "forma %s"
 
-#~ msgid "Create IBAN bank accounts"
-#~ msgstr "Crearea de conturi bancare IBAN"
+#~ msgid "iban"
+#~ msgstr "iban"
 
-#, python-format
-#~ msgid "The IBAN is invalid, It should begin with the country code"
-#~ msgstr "IBAN-ul este invalid. Ar fi trebuit să înceapă cu codul țării."
+#~ msgid "bic"
+#~ msgstr "bic"
 
 #~ msgid ""
 #~ "\n"
@@ -113,7 +118,13 @@ msgstr "Cont IBAN"
 #~ "    "
 #~ msgstr ""
 #~ "\n"
-#~ "Acest modul instalează baza pentru conturi bancare IBAN și verifică "
-#~ "validitatea acestora.\n"
+#~ "Acest modul instalează baza pentru conturi bancare IBAN (Numar International "
+#~ "de cont bancar) și verifică validitatea acestora.\n"
 #~ "\n"
 #~ "    "
+
+#~ msgid "acc_number"
+#~ msgstr "acc_number (numar_cont)"
+
+#~ msgid "Create IBAN bank accounts"
+#~ msgstr "Creare conturi bancare IBAN"

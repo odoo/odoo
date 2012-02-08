@@ -68,7 +68,7 @@ re-invoice your customer's expenses if your work by project.
              'test/expense_process.yml',
              ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0062479841789',
     'application': True,
 }

@@ -52,7 +52,7 @@ actions(Sign in/Sign out) performed by them.
         'test/hr_attendance_report.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0063495605613',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

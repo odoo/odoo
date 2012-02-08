@@ -43,7 +43,7 @@ Ce  Module charge le modèle du plan de comptes standard Marocain et permet de g
 
                     ],
     "demo_xml" : [],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "00599614652359069981",
     'images': ['images/config_chart_l10n_ma.jpeg','images/l10n_ma_chart.jpeg'],

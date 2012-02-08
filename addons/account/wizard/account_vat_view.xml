@@ -13,10 +13,11 @@
                 <newline/>
                 <field name="chart_tax_id" widget='selection'/>
                 <field name="fiscalyear_id"/>
+                <field name="display_detail"/>
                 <!--- <field name="based_on"/>--> <!-- the option based_on 'payment' is probably not fully compliant with what the users understand with that term. So, currently, it's seems better to remove it from the view to avoid further problems -->
                 <separator string="Periods"  colspan="4"/>
-                <field name="period_from"  domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" />
-                <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" />
+                <field name="period_from"  domain="[('fiscalyear_id', '=', fiscalyear_id)]"/>
+                <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]"/>
                 <group col="2" colspan="4">
                     <button icon='gtk-cancel' special="cancel"  string="Cancel" />
                     <button name="create_vat" string="Print Tax Statement" colspan="1" type="object" icon="gtk-ok"/>
