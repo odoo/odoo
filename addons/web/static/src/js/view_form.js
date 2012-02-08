@@ -314,7 +314,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var self = this;
         return this.on_change_mutex.exec(function() {
             try {
+                var response = {}, can_process_onchange = $.Deferred();
                 processed = processed || [];
+                processed.push(widget.name);
                 var on_change = widget.node.attrs.on_change;
                 if (on_change) {
                     var change_spec = self.parse_on_change(on_change, widget);
@@ -323,18 +325,60 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                             url: '/web/dataset/onchange',
                             async: false
                         };
-                        return self.rpc(ajax, {
+                        can_process_onchange = self.rpc(ajax, {
                             model: self.dataset.model,
                             method: change_spec.method,
                             args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
                             context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
-                        }).pipe(function(response) {
-                            return self.on_processed_onchange(response, processed);
+                        }).then(function(r) {
+                            _.extend(response, r);
                         });
                     } else {
                         console.warn("Wrong on_change format", on_change);
                     }
                 }
+                // fail if onchange failed
+                if (can_process_onchange.isRejected()) {
+                    return can_process_onchange;
+                }
+
+                if (widget.field['change_default']) {
+                    var fieldname = widget.name, value;
+                    if (response.value && (fieldname in response.value)) {
+                        // Use value from onchange if onchange executed
+                        value = response.value[fieldname];
+                    } else {
+                        // otherwise get form value for field
+                        value = self.fields[fieldname].get_on_change_value();
+                    }
+                    var condition = fieldname + '=' + value;
+
+                    if (value) {
+                        can_process_onchange = self.rpc({
+                            url: '/web/dataset/call',
+                            async: false
+                        }, {
+                            model: 'ir.values',
+                            method: 'get_defaults',
+                            args: [self.model, condition]
+                        }).then(function (results) {
+                            if (!results.length) { return; }
+                            if (!response.value) {
+                                response.value = {};
+                            }
+                            for(var i=0; i<results.length; ++i) {
+                                // [whatever, key, value]
+                                var triplet = results[i];
+                                response.value[triplet[1]] = triplet[2];
+                            }
+                        });
+                    }
+                }
+                if (can_process_onchange.isRejected()) {
+                    return can_process_onchange;
+                }
+
+                return self.on_processed_onchange(response, processed);
             } catch(e) {
                 console.error(e);
                 return $.Deferred().reject();
@@ -351,11 +395,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 // If field is not defined in the view, just ignore it
                 if (field) {
                     var value = result.value[f];
-                    processed.push(field.name);
                     if (field.get_value() != value) {
                         field.set_value(value);
                         field.dirty = true;
-                        if (_.indexOf(processed, field.name) < 0) {
+                        if (!_.contains(processed, field.name)) {
                             this.do_onchange(field, processed);
                         }
                     }
@@ -3079,10 +3122,19 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
     },
     on_save_as: function() {
-        var url = '/web/binary/saveas?session_id=' + this.session.session_id + '&model=' +
-            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
-            '&filename_field=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime());
-        window.open(url);
+        $.blockUI();
+        this.session.get_file({
+            url: '/web/binary/saveas_ajax',
+            data: {data: JSON.stringify({
+                model: this.view.dataset.model,
+                id: (this.view.datarecord.id || ''),
+                field: this.name,
+                filename_field: (this.node.attrs.filename || ''),
+                context: this.view.dataset.get_context()
+            })},
+            complete: $.unblockUI,
+            error: openerp.webclient.crashmanager.on_rpc_error
+        });
     },
     on_clear: function() {
         if (this.value !== false) {

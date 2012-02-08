@@ -102,7 +102,7 @@ class Domain(BaseDomain):
         string.
 
         :param session: the OpenERP Session to use when evaluating the domain
-        :type session: openerpweb.openerpweb.OpenERPSession
+        :type session: web.common.session.OpenERPSession
         :param str domain_string: a non-literal domain in string form
         :param str key: key used to retrieve the domain string
         """
@@ -150,7 +150,7 @@ class Context(BaseContext):
         string.
 
         :param session: the OpenERP Session to use when evaluating the context
-        :type session: openerpweb.openerpweb.OpenERPSession
+        :type session: web.common.session.OpenERPSession
         :param str context_string: a non-literal context in string form
         :param str key: key used to retrieve the context string
         """

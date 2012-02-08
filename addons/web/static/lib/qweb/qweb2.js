@@ -55,7 +55,7 @@ var QWeb2 = {
             if (o !== null && o !== undefined) {
                 if (o.constructor === Array) {
                     if (o[1] !== null && o[1] !== undefined) {
-                        return ' ' + o[0] + '="' + this.html_escape(o[1], true) + '"';
+                        return this.format_attribute(o[0], o[1]);
                     }
                 } else if (typeof o === 'object') {
                     var r = '';
@@ -68,6 +68,9 @@ var QWeb2 = {
                 }
             }
             return '';
+        },
+        format_attribute: function(name, value) {
+            return ' ' + name + '="' + this.html_escape(value, true) + '"';
         },
         extend: function(dst, src, exclude) {
             for (var p in src) {
@@ -193,7 +196,7 @@ QWeb2.Engine = (function() {
         this.reserved_words = QWeb2.RESERVED_WORDS.slice(0);
         this.actions_precedence = QWeb2.ACTIONS_PRECEDENCE.slice(0);
         this.word_replacement = QWeb2.tools.extend({}, QWeb2.WORD_REPLACEMENT);
-        this.format_text_node = null;
+        this.preprocess_node = null;
         for (var i = 0; i < arguments.length; i++) {
             this.add_template(arguments[i]);
         }
@@ -437,6 +440,9 @@ QWeb2.Element = (function() {
                 }
             }
         }
+        if (this.engine.preprocess_node) {
+            this.engine.preprocess_node.call(this);
+        }
     }
 
     QWeb2.tools.extend(Element.prototype, {
@@ -472,11 +478,7 @@ QWeb2.Element = (function() {
             switch (this.node.nodeType) {
                 case 3:
                 case 4:
-                    var text = this.node.data;
-                    if (this.engine.format_text_node) {
-                        text = this.engine.format_text_node.call(this, text);
-                    }
-                    this.top_string(text);
+                    this.top_string(this.node.data);
                 break;
                 case 1:
                     this.compile_element();

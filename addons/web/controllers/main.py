@@ -244,7 +244,7 @@ class WebClient(openerpweb.Controller):
             transs[addon_name] = transl
             addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
             for l in langs:
-                f_name = os.path.join(addons_path, addon_name, "po", l + ".po")
+                f_name = os.path.join(addons_path, addon_name, "i18n", l + ".po")
                 if not os.path.exists(f_name):
                     continue
                 try:
@@ -253,7 +253,7 @@ class WebClient(openerpweb.Controller):
                 except Exception:
                     continue
                 for x in po:
-                    if x.id and x.string:
+                    if x.id and x.string and "openerp-web" in x.auto_comments:
                         transl["messages"].append({'id': x.id, 'string': x.string})
         return {"modules": transs,
                 "lang_parameters": lang_obj}
@@ -1255,6 +1255,37 @@ class Binary(openerpweb.Controller):
             return req.make_response(filecontent,
                 [('Content-Type', 'application/octet-stream'),
                  ('Content-Disposition', 'attachment; filename="%s"' % filename)])
+
+    @openerpweb.httprequest
+    def saveas_ajax(self, req, data, token):
+        jdata = simplejson.loads(data)
+        model = jdata['model']
+        field = jdata['field']
+        id = jdata.get('id', None)
+        filename_field = jdata.get('filename_field', None)
+        context = jdata.get('context', dict())
+
+        context = req.session.eval_context(context)
+        Model = req.session.model(model)
+        fields = [field]
+        if filename_field:
+            fields.append(filename_field)
+        if id:
+            res = Model.read([int(id)], fields, context)[0]
+        else:
+            res = Model.default_get(fields, context)
+        filecontent = base64.b64decode(res.get(field, ''))
+        if not filecontent:
+            raise ValueError("No content found for field '%s' on '%s:%s'" %
+                (field, model, id))
+        else:
+            filename = '%s_%s' % (model.replace('.', '_'), id)
+            if filename_field:
+                filename = res.get(filename_field, '') or filename
+            return req.make_response(filecontent,
+                headers=[('Content-Type', 'application/octet-stream'),
+                        ('Content-Disposition', 'attachment; filename="%s"' % filename)],
+                cookies={'fileToken': int(token)})
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):
