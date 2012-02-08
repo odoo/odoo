@@ -424,7 +424,7 @@ class _rml_canvas(object):
                 flow.drawOn(self.canvas,infos['x'],infos['y'])
                 infos['height']-=h
             else:
-                raise ValueError, "Not enough space"
+                raise ValueError("Not enough space")
 
     def _line_mode(self, node):
         ljoin = {'round':1, 'mitered':0, 'bevelled':2}

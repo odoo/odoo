@@ -267,7 +267,7 @@ class report_custom(report_int):
                     else:
                         try:
                             row.append(float(r[j]))
-                        except:
+                        except Exception:
                             row.append(r[j])
                 results2.append(row)
             if report['type']=='pie':

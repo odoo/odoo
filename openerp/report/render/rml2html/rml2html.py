@@ -98,7 +98,7 @@ class _flowable(object):
                     try:
                         if new_child.get('style').find('terp_tblheader')!= -1:
                             new_node.tag = 'th'
-                    except:
+                    except Exception:
                         pass
         process(node,new_node)
         if new_node.get('colWidths',False):
