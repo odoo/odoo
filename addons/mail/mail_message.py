@@ -222,9 +222,13 @@ class mail_message(osv.osv):
         notification_ids = notification_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
         
-        # TODO / REMARK: classify based on res_model / res_id to have a 1_level hierarchy ?
+        msg_ids = [notification.message_id.id for notification in notifications]
+        msgs = self.read(cr, uid, msg_ids, context=context)
+        print msgs
         
-        return notifications
+        # TODO / REMARK: classify based on res_model / res_id to have a 1_level hierarchy ?
+            
+        return msgs
     
     #------------------------------------------------------
     # E-Mail api

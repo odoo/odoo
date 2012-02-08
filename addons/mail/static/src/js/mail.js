@@ -97,7 +97,44 @@ openerp.mail = function(session) {
 
         init: function() {
             this._super.apply(this, arguments);
-            alert('Cacaboudin !!');
+            /* DataSets */
+            this.ds_msg = new session.web.DataSet(this, 'mail.message');
+        },
+
+        start: function() {
+            var self = this;
+            this._super.apply(this, arguments);
+            self.$element.find('button.oe_mail_action_comment').bind('click', function () { self.do_comment(); });
+            this.ds_msg.call('get_pushed_messages', []).then(
+                this.proxy('display_records'));
+        },
+        
+        stop: function () {
+            this._super();
+        },
+
+        fetch_messages: function () {
+            return this.ds_msg.call('get_pushed_messages', []).then(
+                this.proxy('display_records'));
+        },
+        
+        display_records: function (records) {
+            this.$element.find('div.oe_mail_comments').empty();
+            var self = this;
+            _(records).each(function (record) {
+                var template = 'ThreadMsgView';
+                var render_res = session.web.qweb.render(template, {
+                    'record': record,
+                    });
+                $('<div class="oe_mail_msg">').html(render_res).appendTo(self.$element.find('div.oe_mail_comments'));
+            });
+//             this.timeout = setTimeout(this.proxy('fetch_messages'), 5000);
+        },
+
+        do_comment: function () {
+            var body_text = this.$element.find('textarea').val();
+            return this.ds.call('message_append_note', [[this.view.datarecord.id], 'Reply comment', body_text, type='comment']).then(
+                this.proxy('fetch_messages'));
         },
     });
 };
