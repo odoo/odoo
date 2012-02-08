@@ -49,9 +49,7 @@
                         <label string="This group is visible by non members" colspan="2"/>
                     </group>
                     <separator string="Test actions" colspan="4"/>
-                    <button name="action_test" string="Test" type="object" icon="gtk-go-forward" colspan="2"/>
                     <button name="action_null" string="Test2" type="object" icon="gtk-go-forward" colspan="2"/>
-                    <separator string="OpenChatter" colspan="4"/>
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
@@ -83,16 +81,6 @@
         <menuitem id="mg_msg" name="Messages" parent="mg_tmp" action="action_view_all_message"/>
         <!-- left-side Tmp: temporary Groups link to see groups !-->
         <menuitem id="mg_groups_tmp" name="Groups" parent="mg_tmp" action="action_view_groups"/>
-
-        <act_window
-            context="{}"
-            domain="[('res_model', '=', active_model), ('res_id', '=', active_id)]"
-            id="act_group_see_followers"
-            name="See followers"
-            res_model="mail.subscription"
-            src_model="mail.group"
-            view_mode="kanban,tree,form"
-            view_type="form"/>
 
     </data>
 </openerp>

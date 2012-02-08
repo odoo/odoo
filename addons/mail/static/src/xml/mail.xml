@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
     
-    <div t-name="ThreadView">
+    <div t-name="ThreadView" class="oe_mail_main">
+        <div class="separator horizontal">OpenSocial</div>
         <div class="oe_mail_actions">
             <button type="button" class="oe_mail_action_follow">Follow</button>
             <button type="button" class="oe_mail_action_unfollow">Unfollow</button>
         </div>
-        <div class="oe_mail_comment">
+        <div class="oe_mail_post_comment">
             <textarea rows="3" cols="15">Type your comment</textarea><br />
             <button type="button" class="oe_mail_action_comment">Post comment</button>
         </div>
-    </div>
-    
-    <div t-name="ThreadMsgView">
-        <div class="oe_mail_msg">
-<!--             <p style="border: 3px solid #332299;"> -->
-                    zmeofizepofinzepfoiznepfoizpfozeinfpzoeinfpoznf zfe zef zef ze fz efz efz ef zef ze fz efznf zfe zef zef ze fz efz efz ef zef ze fz efznf zfe zef zef ze fz efz efz ef zef ze fz ef
-<!--             </p> -->
-            <div class="oe_mail_msg_image">Image</div>
-            <div class="oe_mail_msg_content">
-                <p class="oe_mail_msg_p">
-                    zmeofizepofinzepfoiznepfoizpfozeinfpzoeinfpoznf zfe zef zef ze fz efz efz ef zef ze fz efznf zfe zef zef ze fz efz efz ef zef ze fz efznf zfe zef zef ze fz efz efz ef zef ze fz ef
-<!--                     <t t-raw="record.body_text"/> -->
-<!--                     <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span><br /> -->
-<!--                     <span class="oe_mail_msg_author"><t t-raw="record.user_id[1]"/></span><br /> -->
-<!--                     <span class="oe_mail_msg_date"><t t-raw="record.date"/></span> -->
-                </p>
-            </div>
+        <div class="oe_mail_comments">
         </div>
     </div>
+    
+    <t t-name="ThreadMsgView">
+        <div class="oe_mail_msg_image">Image</div>
+        <div class="oe_mail_msg_content">
+            <p class="oe_mail_msg_p">
+                <t t-if="record.type == 'notification'">
+                    <span class="oe_mail_msg_author">OpenERP System Notification</span>
+                </t>
+                <t t-if="record.type == 'comment'">
+                    <span class="oe_mail_msg_author"><t t-raw="record.user_id[1]"/></span>
+                </t>
+                <t t-if="record.type == 'email'">
+                    <span class="oe_mail_msg_author"><t t-raw="record.user_id[1]"/></span>
+                </t>
+                <t t-if="record.need_action_user_id != false">- <span class="oe_mail_msg_need_action">Need action</span></t>
+                <br />
+                <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span><br />
+                <span class="oe_mail_msg_date"><t t-raw="record.date"/></span>
+           </p>
+        </div>
+    </t>
     
 </template>

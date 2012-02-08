@@ -50,5 +50,15 @@
             <field name="act_window_id" ref="action_view_mailgate_thread"/>
         </record>
 
+        <act_window
+            context="{}"
+            domain="[('res_model', '=', active_model), ('res_id', '=', active_id)]"
+            id="act_thread_see_followers"
+            name="See followers"
+            res_model="mail.subscription"
+            src_model="mail.thread"
+            view_mode="tree,form"
+            view_type="form"/>
+    
     </data>
 </openerp>

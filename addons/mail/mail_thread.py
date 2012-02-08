@@ -506,10 +506,8 @@ class mail_thread(osv.osv):
     # Note specific
     #------------------------------------------------------
     
-    def message_append_note(self, cr, uid, ids, subject, body, type='notification', need_action=False,
-                                need_action_user_id=False, context=None):
-        return self.message_append(cr, uid, ids, subject, body_text=body, type=type, need_action=need_action,
-                                need_action_user_id=need_action_user_id, context=context)
+    def message_append_note(self, cr, uid, ids, subject, body, type='notification', need_action_user_id=False, context=None):
+        return self.message_append(cr, uid, ids, subject, body_text=body, type=type, need_action_user_id=need_action_user_id, context=context)
     
     # old log overrided method: now calls message_append_note
     def log(self, cr, uid, id, message, secondary=False, context=None):
@@ -523,8 +521,17 @@ class mail_thread(osv.osv):
         if context and context.get('disable_log'):
             #return True # old behavior
             print 'Log diabled, but we do not care currently about that. We want you to have our logs !'
-        return self.message_append_note(cr, uid, [id], 'System notification', message, context=context)
+        #return self.message_append_note(cr, uid, [id], 'System notification', message, context=context)
     
+    def message_mark_done(self, cr, uid, ids, context=None):
+        """ OpenSocial add: mark a need_action message sa done
+        Find by: res_id (thread id), model (self._name), need_action_user_id != false
+        """
+        msg_obj = self.pool.get('mail.message')
+        for id in ids:
+             msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', '=', id), ('model', '=', self._name)], context=context)
+             msg_obj.write(cr, uid, msg_ids, {'need_action_user_id': False}, context=context)
+            
     #------------------------------------------------------
     # Subscription mechanism
     #------------------------------------------------------

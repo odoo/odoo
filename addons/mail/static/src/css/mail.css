@@ -1,13 +1,25 @@
 /** ThreadView widget **/
 
-.oe_mail_comment {
+.oe_mail_main {
+}
+
+.oe_mail_actions {
+    padding-bottom: 10px;
+}
+
+.oe_mail_post_comment {
     width: 65%;
-    border: 4px solid #770033;
+    padding-bottom: 10px;
+}
+
+.oe_mail_comments {
+    width: 65%;
 }
 
 .oe_mail_msg {
-    width: 80%;
-    border: 4px solid #998877;
+    width: 65%;
+/*     border: 1px solid #998877; */
+    padding: 10px 0px 10px 0px;
 }
 
 .oe_mail_msg:after {
@@ -18,27 +30,32 @@
 
 .oe_mail_msg_image {
     float: left;
-    width: 10%;
+    width: 9%;
 }
 
 .oe_mail_msg_content {
-    float: right;
-    width: 80%;
-    border: 4px solid #557722;
+    width: 89%;
+    margin-left: 10%;
+/*     border: 1px solid #557722; */
+    overflow: hidden;
+}
+
+.oe_mail_msg_p {
+    padding: 0;
+    margin: 0;
 }
 
 .oe_mail_msg_body {
 }
 
 .oe_mail_msg_author {
+    color: #4E43E7;
+}
+
+.oe_mail_msg_need_action {
+    color: #C03000;
 }
 
 .oe_mail_msg_date {
-}
-
-.oe_mail_msg_p {
-    padding: 0;
-    margin: 0;
-    width: 25%;
-    word-wrap: break-word;
+    color: #4E43E7;
 }

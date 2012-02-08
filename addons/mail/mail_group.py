@@ -49,12 +49,6 @@ class mail_group(osv.osv):
         
         return True
     
-    def action_test(self, cr, uid, ids, context={}):
-        for o in self.browse(cr, uid, ids):
-            message = _('You are doing things with the group %s, wooooh !') % (o.name,)
-            self.log(cr, uid, o.id, message)
-        return True
-    
     def action_null(self, cr, uid, ids, context={}):
         return True
     

@@ -197,17 +197,23 @@ class mail_message(osv.osv):
     #------------------------------------------------------
     
     def create(self, cr, uid, vals, context=None):
+        # OpenSocial: notifications do not come from any user but from system
+        if vals['type'] == 'notification': vals['user_id'] = False
+        need_action_pushed = False
         msg_id = super(mail_message, self).create(cr, uid, vals, context)
         # push the message to suscribed users
         subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
-        sub_ids = subscription_obj.search(cr, uid, ['&', '&',
+        sub_ids = subscription_obj.search(cr, uid, ['&',
                         ('res_model', '=', vals['model']),
-                        ('user_id', '=', uid),
                         ('res_id', '=', vals['res_id'])], context=context)
         subs = subscription_obj.browse(cr, uid, sub_ids, context=context)
         for sub in subs:
             notification_obj.create(cr, uid, {'user_id': sub.user_id, 'message_id': msg_id}, context=context)
+            if vals['need_action_user_id'] == sub.user_id: need_action_pushed = True
+        # push to need_action_user_id if user does not follow the object
+        if vals['need_action_user_id'] != False and not need_action_pushed:
+            notification_obj.create(cr, uid, {'user_id': vals['need_action_user_id'], 'message_id': msg_id}, context=context)
         return msg_id
     
     def get_pushed_messages(self, cr, uid, context=None):
