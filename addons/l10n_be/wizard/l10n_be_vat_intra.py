@@ -159,16 +159,22 @@ class partner_vat_intra(osv.osv_memory):
                         'issued_by': issued_by,
                         })
         
-        codes = ('44', '46L', '46T')
-        cr.execute('''SELECT p.name As partner_name, l.partner_id AS partner_id, p.vat AS vat, t.code AS intra_code, SUM(l.tax_amount) AS amount
+        codes = ('44', '46L', '46T', '48s44', '48s46L', '48s46T')
+        cr.execute('''SELECT p.name As partner_name, l.partner_id AS partner_id, p.vat AS vat, 
+                      (CASE WHEN t.code = '48s44' THEN '44'
+                            WHEN t.code = '48s46L' THEN '46L'
+                            WHEN t.code = '48s46T' THEN '46T'
+                       ELSE t.code END) AS intra_code,
+                      SUM(CASE WHEN t.code in ('48s44','48s46L','48s46T') THEN -l.tax_amount ELSE l.tax_amount END) AS amount
                       FROM account_move_line l
                       LEFT JOIN account_tax_code t ON (l.tax_code_id = t.id)
                       LEFT JOIN res_partner p ON (l.partner_id = p.id)
                       WHERE t.code IN %s
                        AND l.period_id IN %s
-                      GROUP BY p.name, l.partner_id, p.vat, t.code''', (codes, tuple([p.id for p in wiz_data.period_ids])))            
+                      GROUP BY p.name, l.partner_id, p.vat, intra_code''', (codes, tuple([p.id for p in wiz_data.period_ids])))            
 
         p_count = 0
+
         for row in cr.dictfetchall():
             if not row['vat']:
                 p_list += str(row['partner_name']) + ', '
