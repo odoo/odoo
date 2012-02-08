@@ -175,10 +175,22 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 
     name = os.path.normpath(name)
 
-    # Check for a zipfile in the path
+    # Give higher priority to module directories, which is
+    # a more common case than zipped modules.
+    if os.path.isfile(name):
+        fo = file(name, mode)
+        if pathinfo:
+            return fo, name
+        return fo
+
+    # Support for loading modules in zipped form.
+    # This will not work for zipped modules that are sitting
+    # outside of known addons paths. 
     head = name
     zipname = False
-    name2 = False
+    # FIXME: implement chrooting inside addons paths and fix
+    # for incorrect path_info behavior. Work in progress by
+    # Florent X linked to bug 928376
     while True:
         head, tail = os.path.split(head)
         if not tail:
@@ -200,14 +212,8 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
                     return fo, name
                 return fo
             except Exception:
-                name2 = os.path.normpath(os.path.join(head + '.zip', zipname))
                 pass
-    for i in (name2, name):
-        if i and os.path.isfile(i):
-            fo = file(i, mode)
-            if pathinfo:
-                return fo, i
-            return fo
+
     if os.path.splitext(name)[1] == '.rml':
         raise IOError, 'Report %s doesn\'t exist or deleted : ' %str(name)
     raise IOError, 'File not found : %s' % name
