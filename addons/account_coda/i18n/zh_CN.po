@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-31 05:46+0000\n"
-"X-Generator: Launchpad (build 14734)\n"
+"X-Launchpad-Export-Date: 2012-02-08 06:56+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_coda
 #: help:account.coda,journal_id:0
@@ -24,7 +24,6 @@ msgid "Bank Journal"
 msgstr "银行日记账"
 
 #. module: account_coda
-#: view:account.coda:0
 #: field:account.coda.import,note:0
 msgid "Log"
 msgstr "日志"
@@ -41,16 +40,19 @@ msgstr "归档结帐"
 
 #. module: account_coda
 #: view:account.coda:0
+#: view:coda.bank.account:0
+#: view:coda.bank.statement:0
+#: view:coda.bank.statement.line:0
 msgid "Group By..."
 msgstr "分组..."
 
 #. module: account_coda
-#: field:account.coda.import,awaiting_account:0
+#: field:coda.bank.account,awaiting_account:0
 msgid "Default Account for Unrecognized Movement"
 msgstr "默认科目无法识别的记帐"
 
 #. module: account_coda
-#: help:account.coda,date:0
+#: field:account.coda,date:0
 msgid "Import Date"
 msgstr "导入日期"
 
@@ -85,6 +87,9 @@ msgstr "针对没有银行帐号或指定支付地点的业务伙伴，这里设
 #. module: account_coda
 #: view:account.coda:0
 #: field:account.coda,company_id:0
+#: field:coda.bank.account,company_id:0
+#: field:coda.bank.statement,company_id:0
+#: field:coda.bank.statement.line,company_id:0
 msgid "Company"
 msgstr "公司"
 
@@ -107,8 +112,7 @@ msgid "User"
 msgstr "用户"
 
 #. module: account_coda
-#: view:account.coda:0
-#: field:account.coda,date:0
+#: field:coda.bank.statement,date:0
 msgid "Date"
 msgstr "日期"
 
@@ -123,7 +127,7 @@ msgid "coda for an Account"
 msgstr "科目结账"
 
 #. module: account_coda
-#: field:account.coda.import,def_payable:0
+#: field:coda.bank.account,def_payable:0
 msgid "Default Payable Account"
 msgstr "默认应付帐款科目"
 
@@ -205,6 +209,7 @@ msgid "Coda File"
 msgstr "结账文件"
 
 #. module: account_coda
+#: model:ir.actions.act_window,name:account_coda.act_coda_bank_statement_goto_account_bank_statement
 #: model:ir.model,name:account_coda.model_account_bank_statement
 msgid "Bank Statement"
 msgstr "银行对账单"
@@ -226,7 +231,7 @@ msgid "Click on 'New' to select your file :"
 msgstr "点击“新建”，选择您的文件"
 
 #. module: account_coda
-#: field:account.coda.import,def_receivable:0
+#: field:coda.bank.account,def_receivable:0
 msgid "Default Receivable Account"
 msgstr "默认的应收账款"
 
@@ -256,7 +261,8 @@ msgid "Coda Import"
 msgstr "导入结账"
 
 #. module: account_coda
-#: view:account.coda:0
-#: field:account.coda,journal_id:0
+#: field:coda.bank.account,journal:0
+#: view:coda.bank.statement:0
+#: field:coda.bank.statement,journal_id:0
 msgid "Journal"
 msgstr "账簿"

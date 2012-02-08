@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-31 06:12+0000\n"
-"X-Generator: Launchpad (build 14734)\n"
+"X-Launchpad-Export-Date: 2012-02-08 07:21+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:188
@@ -29,8 +29,7 @@ msgstr ""
 "asemenea probleme."
 
 #. module: hr_timesheet_sheet
-#: field:hr.analytic.timesheet,sheet_id:0
-#: field:hr.attendance,sheet_id:0
+#: field:hr.analytic.timesheet,sheet_id:0 field:hr.attendance,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.account,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.day,sheet_id:0
 msgid "Sheet"
@@ -48,8 +47,7 @@ msgid "No employee defined for your user !"
 msgstr "Nici un angajat nu este definit pentru utilizatorul dumneavoastra !"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:hr_timesheet_sheet.sheet:0
+#: view:hr.timesheet.report:0 view:hr_timesheet_sheet.sheet:0
 #: view:timesheet.report:0
 msgid "Group By..."
 msgstr "Grupează după..."
@@ -62,8 +60,7 @@ msgstr "Prezenta totală"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
-#: field:hr_timesheet_sheet.sheet,department_id:0
-#: view:timesheet.report:0
+#: field:hr_timesheet_sheet.sheet,department_id:0 view:timesheet.report:0
 #: field:timesheet.report,department_id:0
 msgid "Department"
 msgstr "Departament"
@@ -79,7 +76,7 @@ msgid "Today"
 msgstr "Astazi"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:188
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:274
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f !"
@@ -87,23 +84,19 @@ msgstr ""
 "Va rugam sa verificati ca diferenta totala a foii sa fie mai mica de %.2f !"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "March"
 msgstr "Martie"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,company_id:0
-#: field:hr_timesheet_sheet.sheet,company_id:0
-#: view:timesheet.report:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,company_id:0
+#: field:hr_timesheet_sheet.sheet,company_id:0 view:timesheet.report:0
 #: field:timesheet.report,company_id:0
 msgid "Company"
 msgstr "Companie"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:hr_timesheet_sheet.sheet:0
+#: view:hr.timesheet.report:0 view:hr_timesheet_sheet.sheet:0
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_timesheet_report
@@ -118,8 +111,7 @@ msgid "Set to Draft"
 msgstr "Setare pe Ciorna"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,date_to:0
-#: field:timesheet.report,date_to:0
+#: field:hr_timesheet_sheet.sheet,date_to:0 field:timesheet.report,date_to:0
 msgid "Date to"
 msgstr "Data pana la"
 
@@ -134,10 +126,8 @@ msgid "Validate"
 msgstr "Validare"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,day:0
-#: selection:res.company,timesheet_range:0
-#: view:timesheet.report:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,day:0
+#: selection:res.company,timesheet_range:0 view:timesheet.report:0
 #: field:timesheet.report,day:0
 msgid "Day"
 msgstr "Zi"
@@ -153,8 +143,8 @@ msgid "Total Cost"
 msgstr "Cost total"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:614
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:634
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:619
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:639
 #, python-format
 msgid "UserError"
 msgstr "EroareUtilizator"
@@ -166,8 +156,8 @@ msgid "Refuse"
 msgstr "Refuz"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:614
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:634
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:619
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:639
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates!"
@@ -200,8 +190,7 @@ msgid "You can not sign in from an other date than today"
 msgstr "Nu puteti semna de intrare in alta data decat astazi"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
+#: view:hr.timesheet.report:0 view:timesheet.report:0
 msgid " Month-1 "
 msgstr " Luna-1 "
 
@@ -211,7 +200,7 @@ msgid "Validation"
 msgstr "Validare"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:188
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:274
 #, python-format
 msgid "Warning !"
 msgstr "Avertisment !"
@@ -222,10 +211,8 @@ msgid "Employee's timesheet entry"
 msgstr "Inregistrare foaie de pontaj angajat"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,account_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,account_id:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,account_id:0
+#: view:timesheet.report:0 field:timesheet.report,account_id:0
 msgid "Analytic Account"
 msgstr "Cont analitic"
 
@@ -257,8 +244,7 @@ msgstr "Foi de pontaj"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
-#: view:timesheet.report:0
-#: selection:timesheet.report,state:0
+#: view:timesheet.report:0 selection:timesheet.report,state:0
 msgid "Confirmed"
 msgstr "Confirmat"
 
@@ -326,8 +312,7 @@ msgid "Error! You can not create recursive companies."
 msgstr "Eroare! Nu puteti crea companii recursive."
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,state:0
-#: view:timesheet.report:0
+#: field:hr_timesheet_sheet.sheet,state:0 view:timesheet.report:0
 #: field:timesheet.report,state:0
 msgid "State"
 msgstr "Stare"
@@ -360,18 +345,18 @@ msgid "My Total Attendances By Week"
 msgstr "Prezentele mele totale pe Saptamana"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:155
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:160
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:162
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:164
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:171
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:173
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:175
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:177
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:232
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:500
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:610
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:641
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:241
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:246
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:248
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:250
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:257
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:259
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:261
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:263
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:318
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:548
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:615
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:646
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error !"
@@ -394,8 +379,7 @@ msgid "Hours"
 msgstr "Ore"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,cost:0
+#: view:timesheet.report:0 field:timesheet.report,cost:0
 msgid "#Cost"
 msgstr "#Cost"
 
@@ -412,8 +396,8 @@ msgid "No employee defined"
 msgstr "Nici un angajat definit"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:369
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:371
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:455
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:457
 #, python-format
 msgid "Invalid action !"
 msgstr "Actiune invalida !"
@@ -424,8 +408,7 @@ msgid "The project manager validates the timesheets."
 msgstr "Managerul de proiect valideaza foile de pontaj."
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "July"
 msgstr "Iulie"
 
@@ -456,14 +439,14 @@ msgid "Daily View"
 msgstr "Vizualizare zilnica"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,quantity:0
+#: view:timesheet.report:0 field:timesheet.report,quantity:0
 msgid "#Quantity"
 msgstr "#Cantitate"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_timesheet:0
 #: field:hr_timesheet_sheet.sheet,total_timesheet_day:0
+#: view:hr_timesheet_sheet.sheet.day:0
 #: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
 msgid "Total Timesheet"
 msgstr "Total foaie de pontaj"
@@ -479,8 +462,7 @@ msgid "Sign In"
 msgstr "Intrare"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,total_timesheet:0
+#: view:timesheet.report:0 field:timesheet.report,total_timesheet:0
 msgid "#Total Timesheet"
 msgstr "#Total Foaie de pontaj"
 
@@ -496,14 +478,12 @@ msgid "Go to:"
 msgstr "Mergeti la:"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "September"
 msgstr "Septembrie"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "December"
 msgstr "Decembrie"
 
@@ -513,17 +493,14 @@ msgid "It will open your current timesheet"
 msgstr "Va deschie foaia dumneavoastra de pontaj curenta"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,month:0
-#: selection:res.company,timesheet_range:0
-#: view:timesheet.report:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,month:0
+#: selection:res.company,timesheet_range:0 view:timesheet.report:0
 #: field:timesheet.report,month:0
 msgid "Month"
 msgstr "Luna"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,total_diff:0
+#: view:timesheet.report:0 field:timesheet.report,total_diff:0
 msgid "#Total Diff"
 msgstr "#Total diferenta"
 
@@ -572,8 +549,7 @@ msgstr ""
 "cautare."
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: selection:timesheet.report,state:0
+#: view:timesheet.report:0 selection:timesheet.report,state:0
 msgid "Draft"
 msgstr "Ciorna"
 
@@ -604,14 +580,12 @@ msgid "Week"
 msgstr "Saptamana"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "August"
 msgstr "August"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "June"
 msgstr "Iunie"
 
@@ -621,7 +595,7 @@ msgid "Current Status"
 msgstr "Status curent"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:641
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:646
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet !"
 msgstr ""
@@ -634,34 +608,29 @@ msgid "Timesheets by Period"
 msgstr "Foaie de pontaj dupa Perioada"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,user_id:0
-#: field:hr_timesheet_sheet.sheet,user_id:0
-#: view:timesheet.report:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,user_id:0
+#: field:hr_timesheet_sheet.sheet,user_id:0 view:timesheet.report:0
 #: field:timesheet.report,user_id:0
 msgid "User"
 msgstr "Utilizator"
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Account"
 msgstr "Foaie de pontaj dupa Cont"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,date:0
-#: field:hr_timesheet_sheet.sheet.day,name:0
+#: field:hr.timesheet.report,date:0 field:hr_timesheet_sheet.sheet.day,name:0
 msgid "Date"
 msgstr "Data"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "November"
 msgstr "Noiembrie"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: view:timesheet.report:0
+#: view:hr.timesheet.report:0 view:timesheet.report:0
 msgid "Extended Filters..."
 msgstr "Filtre extinse..."
 
@@ -681,8 +650,7 @@ msgid "My Total Attendance By Week"
 msgstr "Prezenta mea totala pe Saptamana"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "October"
 msgstr "Octombrie"
 
@@ -698,8 +666,7 @@ msgstr ""
 "generand costuri in contul analitic implicat."
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "January"
 msgstr "Ianuarie"
 
@@ -719,10 +686,8 @@ msgid "Quantity"
 msgstr "Cantitate"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,general_account_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,general_account_id:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,general_account_id:0
+#: view:timesheet.report:0 field:timesheet.report,general_account_id:0
 msgid "General Account"
 msgstr "Cont General"
 
@@ -741,13 +706,13 @@ msgstr ""
 "pentru o foaie. Setati pe 0 daca nu doriti nici un control."
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0
-#: field:hr_timesheet_sheet.sheet,period_ids:0
+#: view:hr_timesheet_sheet.sheet:0 field:hr_timesheet_sheet.sheet,period_ids:0
+#: view:hr_timesheet_sheet.sheet.day:0
 msgid "Period"
 msgstr "Perioada"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:500
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:548
 #, python-format
 msgid "You can not modify an entry in a confirmed timesheet !"
 msgstr ""
@@ -762,8 +727,7 @@ msgid "My Timesheet"
 msgstr "Foaia mea de pontaj"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: selection:timesheet.report,state:0
+#: view:timesheet.report:0 selection:timesheet.report,state:0
 msgid "Done"
 msgstr "Efectuat"
 
@@ -854,10 +818,8 @@ msgid "Timesheet Line"
 msgstr "Linie Foaie de pontaj"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,product_id:0
-#: view:timesheet.report:0
-#: field:timesheet.report,product_id:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,product_id:0
+#: view:timesheet.report:0 field:timesheet.report,product_id:0
 msgid "Product"
 msgstr "Produs"
 
@@ -869,8 +831,7 @@ msgid "Attendances"
 msgstr "Prezente"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,name:0
-#: field:timesheet.report,name:0
+#: field:hr.timesheet.report,name:0 field:timesheet.report,name:0
 msgid "Description"
 msgstr "Descriere"
 
@@ -880,8 +841,7 @@ msgid "The employee periodically confirms his own timesheets."
 msgstr "Angajatul isi confirma periodic propriile foi de pontaj."
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "May"
 msgstr "Mai"
 
@@ -932,8 +892,7 @@ msgid "Absent"
 msgstr "Absent"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "February"
 msgstr "Februarie"
 
@@ -948,8 +907,7 @@ msgid "Information of time spent on a service"
 msgstr "Informatii despre timpul petrecut cu un service"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0
-#: selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
 msgid "April"
 msgstr "Aprilie"
 
@@ -974,14 +932,12 @@ msgid "Analytic accounts"
 msgstr "Conturi analitice"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,to_invoice:0
+#: view:timesheet.report:0 field:timesheet.report,to_invoice:0
 msgid "Type of Invoicing"
 msgstr "Tip de facturare"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,total_attendance:0
+#: view:timesheet.report:0 field:timesheet.report,total_attendance:0
 msgid "#Total Attendance"
 msgstr "#Total Prezenta"
 
@@ -1002,16 +958,13 @@ msgid "Hr Timesheet"
 msgstr "Foaie de pontaj Resurse umane"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0
-#: field:hr.timesheet.report,year:0
-#: view:timesheet.report:0
-#: field:timesheet.report,year:0
+#: view:hr.timesheet.report:0 field:hr.timesheet.report,year:0
+#: view:timesheet.report:0 field:timesheet.report,year:0
 msgid "Year"
 msgstr "An"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-#: selection:hr_timesheet_sheet.sheet,state:0
+#: view:hr.timesheet.current.open:0 selection:hr_timesheet_sheet.sheet,state:0
 msgid "Open"
 msgstr "Deschis"
 

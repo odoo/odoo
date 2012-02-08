@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-31 06:26+0000\n"
-"X-Generator: Launchpad (build 14734)\n"
+"X-Launchpad-Export-Date: 2012-02-08 07:34+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -27,7 +27,7 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:916
+#: code:addons/project/project.py:951
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr "The task '%s' has been delegated to %s."
@@ -56,7 +56,7 @@ msgid "Deadlines"
 msgstr "Үргэлжлэх хугацаа"
 
 #. module: project
-#: code:addons/project/project.py:120
+#: code:addons/project/project.py:155
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Үйлдлийг зөвшөөрөөгүй!"
@@ -91,8 +91,7 @@ msgid "Hours to Validate"
 msgstr "Хянах цаг"
 
 #. module: project
-#: field:project.project,progress_rate:0
-#: view:report.project.task.user:0
+#: field:project.project,progress_rate:0 view:report.project.task.user:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
 msgstr "Явц"
@@ -154,8 +153,7 @@ msgstr ""
 "the customer when a task is closed."
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "My Tasks"
 msgstr "Миний даалгаврууд"
 
@@ -165,10 +163,8 @@ msgid "Error ! You cannot create recursive tasks."
 msgstr "Алдаа ! Та рекурсив цэс үүсгэж болохгүй!"
 
 #. module: project
-#: field:project.task,company_id:0
-#: field:project.task.work,company_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,company_id:0
+#: field:project.task,company_id:0 field:project.task.work,company_id:0
+#: view:report.project.task.user:0 field:report.project.task.user,company_id:0
 msgid "Company"
 msgstr "Компани"
 
@@ -230,14 +226,13 @@ msgid "User you want to delegate this task to"
 msgstr ""
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,day:0
+#: view:report.project.task.user:0 field:report.project.task.user,day:0
 #: field:task.by.days,day:0
 msgid "Day"
 msgstr "Өдөр"
 
 #. module: project
-#: code:addons/project/project.py:816
+#: code:addons/project/project.py:851
 #, python-format
 msgid "The task '%s' is done"
 msgstr "'%s' дууссан даалгавар"
@@ -256,8 +251,7 @@ msgstr "Ноорог даалгавар"
 #: model:ir.model,name:project.model_project_task
 #: field:project.task.history,task_id:0
 #: field:project.task.history.cumulative,task_id:0
-#: field:project.task.work,task_id:0
-#: view:report.project.task.user:0
+#: field:project.task.work,task_id:0 view:report.project.task.user:0
 msgid "Task"
 msgstr "Даалгавар"
 
@@ -279,9 +273,7 @@ msgid "Project Task Work"
 msgstr "Төслийн ажлын даалгавар"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task,notes:0
+#: view:project.project:0 view:project.task:0 field:project.task,notes:0
 msgid "Notes"
 msgstr "Тэмдэглэл"
 
@@ -296,8 +288,7 @@ msgid "Invoice Address"
 msgstr "Нэхэмжлэх хаяг"
 
 #. module: project
-#: field:project.task,name:0
-#: field:report.project.task.user,name:0
+#: field:project.task,name:0 field:report.project.task.user,name:0
 msgid "Task Summary"
 msgstr "Даалгаврын товч утга"
 
@@ -307,8 +298,7 @@ msgid "Not a Template Task"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: view:res.partner:0
+#: view:project.task:0 view:res.partner:0
 msgid "Start Task"
 msgstr "Даалгаврыг эхлэх"
 
@@ -327,12 +317,10 @@ msgstr ""
 "Хөл болон толгойд зориулсан автомат хувьсагчид. Ижил бичиглэл ашиглана."
 
 #. module: project
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
+#: selection:project.task,state:0 selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
 #: selection:project.vs.hours,state:0
-#: selection:report.project.task.user,state:0
-#: selection:task.by.days,state:0
+#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
 msgid "Cancelled"
 msgstr "Цуцалсан"
 
@@ -343,8 +331,7 @@ msgid "My Open Tasks"
 msgstr "Миний нээлттэй даалгаврууд"
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,warn_header:0
+#: view:project.project:0 field:project.project,warn_header:0
 msgid "Mail Header"
 msgstr "Мэйлийн толгой"
 
@@ -375,8 +362,7 @@ msgid "Task is Completed"
 msgstr "Даалгавар дууссан"
 
 #. module: project
-#: field:project.task,date_end:0
-#: field:report.project.task.user,date_end:0
+#: field:project.task,date_end:0 field:report.project.task.user,date_end:0
 msgid "Ending Date"
 msgstr "Дуусах огноо"
 
@@ -391,9 +377,7 @@ msgid "Delegates tasks to the other user"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: view:report.project.task.user:0
+#: view:project.project:0 view:project.task:0 view:report.project.task.user:0
 msgid "Group By..."
 msgstr "Бүлэглэх..."
 
@@ -430,7 +414,7 @@ msgid "Reactivate Project"
 msgstr "Төслийг дахин нээх"
 
 #. module: project
-#: code:addons/project/project.py:794
+#: code:addons/project/project.py:829
 #, python-format
 msgid "Task '%s' closed"
 msgstr "Хаагдсан '%s' даалгавар"
@@ -452,23 +436,19 @@ msgid "Planning"
 msgstr "Төлөвлөгөө"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,date_deadline:0
+#: view:project.task:0 field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
 msgstr "Товлосон хугацаа"
 
 #. module: project
-#: view:project.task.delegate:0
-#: view:project.task.reevaluate:0
+#: view:project.task.delegate:0 view:project.task.reevaluate:0
 msgid "_Cancel"
 msgstr "_Цуцлах"
 
 #. module: project
-#: model:ir.model,name:project.model_res_partner
-#: view:project.project:0
-#: field:project.task,partner_id:0
-#: view:report.project.task.user:0
+#: model:ir.model,name:project.model_res_partner view:project.project:0
+#: field:project.task,partner_id:0 view:report.project.task.user:0
 #: field:report.project.task.user,partner_id:0
 msgid "Partner"
 msgstr "Харилцагч"
@@ -479,8 +459,7 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr "Алдаа! Та цикл хэлбэрийн аналитик данс үүсгэх боломжгүй."
 
 #. module: project
-#: code:addons/project/project.py:221
-#: code:addons/project/project.py:260
+#: code:addons/project/project.py:264 code:addons/project/project.py:303
 #, python-format
 msgid " (copy)"
 msgstr " (хувилах)"
@@ -492,8 +471,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,nbr:0
+#: view:report.project.task.user:0 field:report.project.task.user,nbr:0
 msgid "# of tasks"
 msgstr "# даалгаврын"
 
@@ -508,8 +486,7 @@ msgid "Reevaluate Task"
 msgstr "Даалгаврыг дахин үнэлэх"
 
 #. module: project
-#: field:project.vs.hours,user_id:0
-#: field:report.project.task.user,user_id:0
+#: field:project.vs.hours,user_id:0 field:report.project.task.user,user_id:0
 msgid "Assigned To"
 msgstr ""
 
@@ -529,7 +506,7 @@ msgid "Reset as Project"
 msgstr "Төслийн дахин эхлүүлэх"
 
 #. module: project
-#: selection:project.vs.hours,state:0
+#: view:project.project:0 selection:project.vs.hours,state:0
 msgid "Template"
 msgstr "Загвар"
 
@@ -559,8 +536,7 @@ msgid "From draft state, it will come into the open state."
 msgstr "Ноорог төлвөөс нээлттэй төлөвт шилжинэ."
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,no_of_days:0
+#: view:report.project.task.user:0 field:report.project.task.user,no_of_days:0
 msgid "# of Days"
 msgstr "# Өдрийн"
 
@@ -620,7 +596,7 @@ msgid "Reevaluate"
 msgstr "Дахин үнэлэх"
 
 #. module: project
-#: code:addons/project/project.py:769
+#: code:addons/project/project.py:804
 #, python-format
 msgid "Send Email after close task"
 msgstr ""
@@ -637,18 +613,15 @@ msgid "Medium"
 msgstr "Дундаж"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,remaining_hours:0
+#: view:project.task:0 field:project.task,remaining_hours:0
 #: field:project.task.reevaluate,remaining_hours:0
-#: field:project.vs.hours,remaining_hours:0
-#: view:report.project.task.user:0
+#: field:project.vs.hours,remaining_hours:0 view:report.project.task.user:0
 #: field:report.project.task.user,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "Үлдсэн цаг"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.work:0
+#: view:project.task:0 view:project.task.work:0
 msgid "Task Work"
 msgstr "Даалгаврын ажил"
 
@@ -688,8 +661,7 @@ msgid "Delegated Title"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 #: view:report.project.task.user:0
 msgid "My Projects"
 msgstr "Миний төслүүд"
@@ -705,34 +677,29 @@ msgid "July"
 msgstr "7 сар"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_definitions
-#: view:res.company:0
+#: model:ir.ui.menu,name:project.menu_definitions view:res.company:0
 msgid "Configuration"
 msgstr "Тохиргоо"
 
 #. module: project
-#: field:project.task,date_start:0
-#: field:report.project.task.user,date_start:0
+#: field:project.task,date_start:0 field:report.project.task.user,date_start:0
 msgid "Starting Date"
 msgstr "Эхлэл Огноо"
 
 #. module: project
-#: code:addons/project/project.py:281
+#: code:addons/project/project.py:324
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
-#: view:project.project:0
-#: field:project.task.type,project_ids:0
+#: view:project.project:0 field:project.task.type,project_ids:0
 #, python-format
 msgid "Projects"
 msgstr "Төслүүд"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,type_id:0
+#: view:project.task:0 field:project.task,type_id:0
 #: field:project.task.history,type_id:0
 #: field:project.task.history.cumulative,type_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,type_id:0
+#: view:report.project.task.user:0 field:report.project.task.user,type_id:0
 msgid "Stage"
 msgstr "Үе"
 
@@ -745,7 +712,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:903
 #, python-format
 msgid "The task '%s' is opened."
 msgstr "Нээсэн '%s' даалгавар"
@@ -812,23 +779,20 @@ msgstr "Delegate"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_template_project
+#: view:project.project:0
 msgid "Templates of Projects"
 msgstr "Төслийн загвар"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
 #: model:ir.ui.menu,name:project.menu_project_management
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task,project_id:0
+#: view:project.project:0 view:project.task:0 field:project.task,project_id:0
 #: field:project.task.delegate,project_id:0
 #: field:project.task.history.cumulative,project_id:0
-#: field:project.vs.hours,project:0
-#: view:report.project.task.user:0
+#: field:project.vs.hours,project:0 view:report.project.task.user:0
 #: field:report.project.task.user,project_id:0
 #: model:res.request.link,name:project.req_link_project
-#: field:res.users,context_project_id:0
-#: field:task.by.days,project_id:0
+#: field:res.users,context_project_id:0 field:task.by.days,project_id:0
 msgid "Project"
 msgstr "Төсөл"
 
@@ -872,9 +836,7 @@ msgstr "Төслийн даалгавар шилжүүлэх"
 #: model:ir.ui.menu,name:project.menu_tasks_config
 #: model:ir.ui.menu,name:project.project_report_task
 #: model:process.process,name:project.process_process_tasksprocess0
-#: view:project.task:0
-#: view:res.partner:0
-#: field:res.partner,task_ids:0
+#: view:project.task:0 view:res.partner:0 field:res.partner,task_ids:0
 msgid "Tasks"
 msgstr "Даалгаврууд"
 
@@ -942,8 +904,7 @@ msgid "Computed as: Time Spent / Total Time."
 msgstr "Бодолт: Зарцуулсан хугацаа / Нийт хугацаа."
 
 #. module: project
-#: view:project.task.history.cumulative:0
-#: view:report.project.task.user:0
+#: view:project.task.history.cumulative:0 view:report.project.task.user:0
 #: field:report.project.task.user,month:0
 msgid "Month"
 msgstr "Сар"
@@ -962,8 +923,7 @@ msgstr "Даалгаврын үе"
 #. module: project
 #: field:project.task,planned_hours:0
 #: field:project.task.delegate,planned_hours:0
-#: field:project.vs.hours,planned_hours:0
-#: view:report.project.task.user:0
+#: field:project.vs.hours,planned_hours:0 view:report.project.task.user:0
 #: field:report.project.task.user,hours_planned:0
 msgid "Planned Hours"
 msgstr "Төлөвлөсөн цаг"
@@ -984,14 +944,12 @@ msgid "Long Term Planning"
 msgstr "Удаан хугацааны төлөвлөгөө"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 msgid "Start Date"
 msgstr "Эхлэх огноо"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,parent_ids:0
+#: view:project.task:0 field:project.task,parent_ids:0
 msgid "Parent Tasks"
 msgstr "Эцэг даалгавар"
 
@@ -1021,8 +979,7 @@ msgid "Helps accountants manage analytic and crossover budgets."
 msgstr ""
 
 #. module: project
-#: field:project.task,priority:0
-#: field:report.project.task.user,priority:0
+#: field:project.task,priority:0 field:report.project.task.user,priority:0
 msgid "Priority"
 msgstr "Урьтамж"
 
@@ -1047,8 +1004,7 @@ msgid "Member"
 msgstr "Гишүүн"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "Project Tasks"
 msgstr "Төслийн даалгаврууд"
 
@@ -1059,11 +1015,8 @@ msgstr ""
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.vs.hours,state:0
-#: selection:report.project.task.user,state:0
-#: selection:task.by.days,state:0
+#: view:project.task:0 selection:project.vs.hours,state:0
+#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
 msgid "Draft"
 msgstr "Ноорог"
 
@@ -1091,23 +1044,18 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: field:project.task,manager_id:0
+#: view:project.project:0 field:project.task,manager_id:0
 msgid "Project Manager"
 msgstr "Төслийн Менежер"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: selection:project.task,state:0
+#: view:project.project:0 view:project.task:0 selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.vs.hours,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: selection:task.by.days,state:0
+#: selection:project.vs.hours,state:0 view:report.project.task.user:0
+#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
 msgid "Pending"
 msgstr "Шийд хүлээсэн"
 
@@ -1128,8 +1076,7 @@ msgid "Configure"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,complete_name:0
+#: view:project.project:0 field:project.project,complete_name:0
 msgid "Project Name"
 msgstr "Төслийн нэр"
 
@@ -1195,7 +1142,7 @@ msgid "Customer Email"
 msgstr "Үйлчлүүлэгчийн Эмэйл"
 
 #. module: project
-#: code:addons/project/project.py:186
+#: code:addons/project/project.py:229
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr "Төсөл '%s' хаагдлаа."
@@ -1243,15 +1190,14 @@ msgid "When task is completed, it will come into the done state."
 msgstr "Даалгавар дууссан үед дууссан төлөвтэй болно."
 
 #. module: project
-#: code:addons/project/project.py:208
+#: code:addons/project/project.py:251
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr "Төсөл '%s' нээгдлээ."
 
 #. module: project
 #: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
+#: field:project.task.history.cumulative,date:0 field:project.task.work,date:0
 msgid "Date"
 msgstr "Огноо"
 
@@ -1311,8 +1257,7 @@ msgid "History"
 msgstr "Түүх"
 
 #. module: project
-#: field:project.task,user_id:0
-#: view:report.project.task.user:0
+#: field:project.task,user_id:0 view:report.project.task.user:0
 msgid "Assigned to"
 msgstr "Хариуцагч"
 
@@ -1348,22 +1293,17 @@ msgid "Month works"
 msgstr "Сарын ажлууд"
 
 #. module: project
-#: field:project.project,priority:0
-#: field:project.project,sequence:0
-#: field:project.task,sequence:0
-#: field:project.task.type,sequence:0
+#: field:project.project,priority:0 field:project.project,sequence:0
+#: field:project.task,sequence:0 field:project.task.type,sequence:0
 msgid "Sequence"
 msgstr "Дараалал"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,state:0
+#: view:project.task:0 field:project.task,state:0
 #: field:project.task.history,state:0
 #: field:project.task.history.cumulative,state:0
-#: field:project.vs.hours,state:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,state:0
-#: field:task.by.days,state:0
+#: field:project.vs.hours,state:0 view:report.project.task.user:0
+#: field:report.project.task.user,state:0 field:task.by.days,state:0
 msgid "State"
 msgstr "Төлөв"
 
@@ -1376,7 +1316,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:827
+#: code:addons/project/project.py:862
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "Даалгавар '%s' явц"
@@ -1395,24 +1335,19 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: selection:project.task,state:0
+#: view:project.project:0 view:project.task:0 selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
-#: selection:task.by.days,state:0
+#: view:report.project.task.user:0 selection:report.project.task.user,state:0
+#: view:res.partner:0 selection:task.by.days,state:0
 msgid "Done"
 msgstr "Дууссан"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 msgid "Cancel"
 msgstr "Цуцлах"
 
@@ -1423,8 +1358,7 @@ msgstr "Хаах"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
-#: view:project.project:0
-#: selection:project.vs.hours,state:0
+#: view:project.project:0 selection:project.vs.hours,state:0
 msgid "Open"
 msgstr "Нээх"
 
@@ -1441,13 +1375,11 @@ msgid "ID: %(task_id)s"
 msgstr "ID: %(task_id)s"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
+#: view:project.task:0 selection:project.task,state:0
 #: selection:project.task.history,state:0
 #: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:report.project.task.user,state:0
-#: selection:task.by.days,state:0
+#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
 msgid "In Progress"
 msgstr "Явж байна"
 
@@ -1566,8 +1498,7 @@ msgid "My Remaining Hours by Project"
 msgstr "Төсөлд үлдсэн хугацаа"
 
 #. module: project
-#: field:project.task,description:0
-#: view:project.task.type:0
+#: field:project.task,description:0 view:project.task.type:0
 #: field:project.task.type,description:0
 msgid "Description"
 msgstr "Тайлбар"
@@ -1621,8 +1552,7 @@ msgid "Assign To"
 msgstr "Эзэн оноох"
 
 #. module: project
-#: field:project.project,effective_hours:0
-#: field:project.task.work,hours:0
+#: field:project.project,effective_hours:0 field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Зарцуулсан хугацаа"
 
@@ -1666,8 +1596,7 @@ msgid "Customer"
 msgstr "Үйлчлүүлэгч"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 #: field:project.task.history,end_date:0
 #: field:project.task.history.cumulative,end_date:0
 msgid "End Date"
@@ -1680,8 +1609,7 @@ msgstr "2 сар"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_task_by_days_graph
-#: model:ir.model,name:project.model_task_by_days
-#: view:task.by.days:0
+#: model:ir.model,name:project.model_task_by_days view:task.by.days:0
 msgid "Task By Days"
 msgstr "Даалгаврыг өдрүүдээр харуулах"
 
@@ -1709,8 +1637,7 @@ msgid "Encode your working hours."
 msgstr "Ажлын цагаа оруулах."
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,year:0
+#: view:report.project.task.user:0 field:report.project.task.user,year:0
 msgid "Year"
 msgstr "Он"
 
@@ -1740,8 +1667,7 @@ msgid "Hours Spent"
 msgstr "Зарцуулсан цаг"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 msgid "Miscelleanous"
 msgstr "Бусад"
 
@@ -1761,14 +1687,13 @@ msgid "Spent Hours"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:924
+#: code:addons/project/project.py:959
 #, python-format
 msgid "The task '%s' is pending."
 msgstr "Даалгавар '%s' хүлээгдэж байна."
 
 #. module: project
-#: field:project.task,total_hours:0
-#: field:project.vs.hours,total_hours:0
+#: field:project.task,total_hours:0 field:project.vs.hours,total_hours:0
 #: view:report.project.task.user:0
 #: field:report.project.task.user,total_hours:0
 msgid "Total Hours"
@@ -1838,7 +1763,7 @@ msgid "Validation State"
 msgstr "Батлагдсан төлөв"
 
 #. module: project
-#: code:addons/project/project.py:847
+#: code:addons/project/project.py:882
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Даалгавар '%s' цуцлагдсан."
@@ -1856,8 +1781,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: model:res.groups,name:project.group_project_manager
+#: view:project.project:0 model:res.groups,name:project.group_project_manager
 msgid "Manager"
 msgstr "Менежер"
 
@@ -1867,7 +1791,7 @@ msgid "Create Date"
 msgstr "Үүсэх огноо"
 
 #. module: project
-#: code:addons/project/project.py:855
+#: code:addons/project/project.py:890
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr "Даалгавар '%s'-г цуцалсан."
@@ -1893,8 +1817,7 @@ msgid "Automatically synchronizes project tasks and crm cases."
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,type_ids:0
+#: view:project.project:0 field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Даалгаврын үе"
@@ -1905,8 +1828,7 @@ msgid "Delegate your task to the other user"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,warn_footer:0
+#: view:project.project:0 field:project.project,warn_footer:0
 msgid "Mail Footer"
 msgstr "Мэйлийн хөл"
 

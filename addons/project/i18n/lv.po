@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-31 06:26+0000\n"
-"X-Generator: Launchpad (build 14734)\n"
+"X-Launchpad-Export-Date: 2012-02-08 07:34+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -28,7 +28,7 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr "Ievietot uzdevuma aprakstu lietotāja uzdevumā"
 
 #. module: project
-#: code:addons/project/project.py:916
+#: code:addons/project/project.py:951
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr "Uzdevums '%s' tika deliģēts %s."
@@ -60,7 +60,7 @@ msgid "Deadlines"
 msgstr "Termiņi"
 
 #. module: project
-#: code:addons/project/project.py:120
+#: code:addons/project/project.py:155
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Darbība nav atļauta!"
@@ -95,8 +95,7 @@ msgid "Hours to Validate"
 msgstr "Nepastiprinātās Stundas"
 
 #. module: project
-#: field:project.project,progress_rate:0
-#: view:report.project.task.user:0
+#: field:project.project,progress_rate:0 view:report.project.task.user:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
 msgstr "Progress"
@@ -160,8 +159,7 @@ msgstr ""
 "darbs ir pabeigts."
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "My Tasks"
 msgstr "Mani Uzdevumi"
 
@@ -171,10 +169,8 @@ msgid "Error ! You cannot create recursive tasks."
 msgstr "Kļūda! Nedrīkst veidot rekursīvus uzdevumus."
 
 #. module: project
-#: field:project.task,company_id:0
-#: field:project.task.work,company_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,company_id:0
+#: field:project.task,company_id:0 field:project.task.work,company_id:0
+#: view:report.project.task.user:0 field:report.project.task.user,company_id:0
 msgid "Company"
 msgstr "Uzņēmums"
 
@@ -236,14 +232,13 @@ msgid "User you want to delegate this task to"
 msgstr "Lietotājs, kuram gribat deliģēt šo uzdevumu"
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,day:0
+#: view:report.project.task.user:0 field:report.project.task.user,day:0
 #: field:task.by.days,day:0
 msgid "Day"
 msgstr "Diena"
 
 #. module: project
-#: code:addons/project/project.py:816
+#: code:addons/project/project.py:851
 #, python-format
 msgid "The task '%s' is done"
 msgstr "Uzdevums '%s' izpildīts"
@@ -262,8 +257,7 @@ msgstr "Uzdevums (Melnraksts)"
 #: model:ir.model,name:project.model_project_task
 #: field:project.task.history,task_id:0
 #: field:project.task.history.cumulative,task_id:0
-#: field:project.task.work,task_id:0
-#: view:report.project.task.user:0
+#: field:project.task.work,task_id:0 view:report.project.task.user:0
 msgid "Task"
 msgstr "Uzdevums"
 
@@ -287,9 +281,7 @@ msgid "Project Task Work"
 msgstr "Projekta uzdevumu darbs"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task,notes:0
+#: view:project.project:0 view:project.task:0 field:project.task,notes:0
 msgid "Notes"
 msgstr "Piezīmes"
 
@@ -304,8 +296,7 @@ msgid "Invoice Address"
 msgstr "Rēķina Adrese"
 
 #. module: project
-#: field:project.task,name:0
-#: field:report.project.task.user,name:0
+#: field:project.task,name:0 field:report.project.task.user,name:0
 msgid "Task Summary"
 msgstr "Uzdevuma kopsavilkums"
 
@@ -315,8 +306,7 @@ msgid "Not a Template Task"
 msgstr "Nav sagataves uzdevums"
 
 #. module: project
-#: view:project.task:0
-#: view:res.partner:0
+#: view:project.task:0 view:res.partner:0
 msgid "Start Task"
 msgstr "Sākt Uzdevumu"
 
@@ -338,12 +328,10 @@ msgstr ""
 "pieraksts."
 
 #. module: project
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
+#: selection:project.task,state:0 selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
 #: selection:project.vs.hours,state:0
-#: selection:report.project.task.user,state:0
-#: selection:task.by.days,state:0
+#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
 msgid "Cancelled"
 msgstr "Atcelts"
 
@@ -354,8 +342,7 @@ msgid "My Open Tasks"
 msgstr "Mani nepabeigtie uzdevumi"
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,warn_header:0
+#: view:project.project:0 field:project.project,warn_header:0
 msgid "Mail Header"
 msgstr "Iestarpinājums e-pasta sākumā"
 
@@ -386,8 +373,7 @@ msgid "Task is Completed"
 msgstr "Uzdevums ir pabeigts"
 
 #. module: project
-#: field:project.task,date_end:0
-#: field:report.project.task.user,date_end:0
+#: field:project.task,date_end:0 field:report.project.task.user,date_end:0
 msgid "Ending Date"
 msgstr "Beigu Datums"
 
@@ -402,9 +388,7 @@ msgid "Delegates tasks to the other user"
 msgstr "Nodod uzdevumu citam lietotājam"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: view:report.project.task.user:0
+#: view:project.project:0 view:project.task:0 view:report.project.task.user:0
 msgid "Group By..."
 msgstr "Grupēt pēc..."
 
@@ -443,7 +427,7 @@ msgid "Reactivate Project"
 msgstr "Aktivizēt Projektu no jauna"
 
 #. module: project
-#: code:addons/project/project.py:794
+#: code:addons/project/project.py:829
 #, python-format
 msgid "Task '%s' closed"
 msgstr "Uzdevums '%s' pabeigts"
@@ -465,23 +449,19 @@ msgid "Planning"
 msgstr "Plānošana"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,date_deadline:0
+#: view:project.task:0 field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
 msgstr "Termiņš"
 
 #. module: project
-#: view:project.task.delegate:0
-#: view:project.task.reevaluate:0
+#: view:project.task.delegate:0 view:project.task.reevaluate:0
 msgid "_Cancel"
 msgstr "_Atcelt"
 
 #. module: project
-#: model:ir.model,name:project.model_res_partner
-#: view:project.project:0
-#: field:project.task,partner_id:0
-#: view:report.project.task.user:0
+#: model:ir.model,name:project.model_res_partner view:project.project:0
+#: field:project.task,partner_id:0 view:report.project.task.user:0
 #: field:report.project.task.user,partner_id:0
 msgid "Partner"
 msgstr "Partneris"
@@ -492,8 +472,7 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr "Kļūda! Nedrīkst veidot rekursīvus analītiskos kontus"
 
 #. module: project
-#: code:addons/project/project.py:221
-#: code:addons/project/project.py:260
+#: code:addons/project/project.py:264 code:addons/project/project.py:303
 #, python-format
 msgid " (copy)"
 msgstr " (kopija)"
@@ -506,8 +485,7 @@ msgstr ""
 "Uzskaita un palīdz lietotājiem kodēt un validēt laika tabulas un apmeklējumu."
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,nbr:0
+#: view:report.project.task.user:0 field:report.project.task.user,nbr:0
 msgid "# of tasks"
 msgstr "Uzd. skaits"
 
@@ -522,8 +500,7 @@ msgid "Reevaluate Task"
 msgstr "Pārvērtēt uzdevumu"
 
 #. module: project
-#: field:project.vs.hours,user_id:0
-#: field:report.project.task.user,user_id:0
+#: field:project.vs.hours,user_id:0 field:report.project.task.user,user_id:0
 msgid "Assigned To"
 msgstr "Piesaistīts"
 
@@ -543,7 +520,7 @@ msgid "Reset as Project"
 msgstr "Atjaunot kā Projektu"
 
 #. module: project
-#: selection:project.vs.hours,state:0
+#: view:project.project:0 selection:project.vs.hours,state:0
 msgid "Template"
 msgstr "Sagatave"
 
@@ -573,8 +550,7 @@ msgid "From draft state, it will come into the open state."
 msgstr "No melnraksta uz atvērtu."
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,no_of_days:0
+#: view:report.project.task.user:0 field:report.project.task.user,no_of_days:0
 msgid "# of Days"
 msgstr "Dienu skaits"
 
@@ -637,7 +613,7 @@ msgid "Reevaluate"
 msgstr "Pārvērtēt"
 
 #. module: project
-#: code:addons/project/project.py:769
+#: code:addons/project/project.py:804
 #, python-format
 msgid "Send Email after close task"
 msgstr "Nosūtīt e-pastu pēc uzdevumu pabeigšanas"
@@ -654,18 +630,15 @@ msgid "Medium"
 msgstr "Vidējs"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,remaining_hours:0
+#: view:project.task:0 field:project.task,remaining_hours:0
 #: field:project.task.reevaluate,remaining_hours:0
-#: field:project.vs.hours,remaining_hours:0
-#: view:report.project.task.user:0
+#: field:project.vs.hours,remaining_hours:0 view:report.project.task.user:0
 #: field:report.project.task.user,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "Atlikušās Stundas"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.work:0
+#: view:project.task:0 view:project.task.work:0
 msgid "Task Work"
 msgstr "Darba uzdevuma Darbi"
 
@@ -707,8 +680,7 @@ msgid "Delegated Title"
 msgstr "Deleģētais Nosaukums"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 #: view:report.project.task.user:0
 msgid "My Projects"
 msgstr "Mani Projekti"
@@ -724,34 +696,29 @@ msgid "July"
 msgstr "Jūlijs"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_definitions
-#: view:res.company:0
+#: model:ir.ui.menu,name:project.menu_definitions view:res.company:0
 msgid "Configuration"
 msgstr "Konfigurācija"
 
 #. module: project
-#: field:project.task,date_start:0
-#: field:report.project.task.user,date_start:0
+#: field:project.task,date_start:0 field:report.project.task.user,date_start:0
 msgid "Starting Date"
 msgstr "Sākuma Datums"
 
 #. module: project
-#: code:addons/project/project.py:281
+#: code:addons/project/project.py:324
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
-#: view:project.project:0
-#: field:project.task.type,project_ids:0
+#: view:project.project:0 field:project.task.type,project_ids:0
 #, python-format
 msgid "Projects"
 msgstr "Projekti"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,type_id:0
+#: view:project.task:0 field:project.task,type_id:0
 #: field:project.task.history,type_id:0
 #: field:project.task.history.cumulative,type_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,type_id:0
+#: view:report.project.task.user:0 field:report.project.task.user,type_id:0
 msgid "Stage"
 msgstr "Posms"
 
@@ -767,7 +734,7 @@ msgstr ""
 "uzdevuma izpildes progresam."
 
 #. module: project
-#: code:addons/project/project.py:868
+#: code:addons/project/project.py:903
 #, python-format
 msgid "The task '%s' is opened."
 msgstr "Uzdevums '%s' nav pabeigts"
@@ -836,23 +803,20 @@ msgstr "Deleģēt"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_template_project
+#: view:project.project:0
 msgid "Templates of Projects"
 msgstr "Projektu sagataves"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
 #: model:ir.ui.menu,name:project.menu_project_management
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task,project_id:0
+#: view:project.project:0 view:project.task:0 field:project.task,project_id:0
 #: field:project.task.delegate,project_id:0
 #: field:project.task.history.cumulative,project_id:0
-#: field:project.vs.hours,project:0
-#: view:report.project.task.user:0
+#: field:project.vs.hours,project:0 view:report.project.task.user:0
 #: field:report.project.task.user,project_id:0
 #: model:res.request.link,name:project.req_link_project
-#: field:res.users,context_project_id:0
-#: field:task.by.days,project_id:0
+#: field:res.users,context_project_id:0 field:task.by.days,project_id:0
 msgid "Project"
 msgstr "Projekts"
 
@@ -896,9 +860,7 @@ msgstr "Projekta uzdevumu deliģēšana"
 #: model:ir.ui.menu,name:project.menu_tasks_config
 #: model:ir.ui.menu,name:project.project_report_task
 #: model:process.process,name:project.process_process_tasksprocess0
-#: view:project.task:0
-#: view:res.partner:0
-#: field:res.partner,task_ids:0
+#: view:project.task:0 view:res.partner:0 field:res.partner,task_ids:0
 msgid "Tasks"
 msgstr "Uzdevumi"
 
@@ -976,8 +938,7 @@ msgid "Computed as: Time Spent / Total Time."
 msgstr "Aprēķināts kā: Patērētais Laiks / Kopējo Laiku."
 
 #. module: project
-#: view:project.task.history.cumulative:0
-#: view:report.project.task.user:0
+#: view:project.task.history.cumulative:0 view:report.project.task.user:0
 #: field:report.project.task.user,month:0
 msgid "Month"
 msgstr "Mēnesis"
@@ -996,8 +957,7 @@ msgstr "Uzdevuma posms"
 #. module: project
 #: field:project.task,planned_hours:0
 #: field:project.task.delegate,planned_hours:0
-#: field:project.vs.hours,planned_hours:0
-#: view:report.project.task.user:0
+#: field:project.vs.hours,planned_hours:0 view:report.project.task.user:0
 #: field:report.project.task.user,hours_planned:0
 msgid "Planned Hours"
 msgstr "Plānotās Stundas"
@@ -1018,14 +978,12 @@ msgid "Long Term Planning"
 msgstr "Ilgtermiņa plānošana"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 msgid "Start Date"
 msgstr "Sākuma Datums"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,parent_ids:0
+#: view:project.task:0 field:project.task,parent_ids:0
 msgid "Parent Tasks"
 msgstr "Virsuzdevumi"
 
@@ -1055,8 +1013,7 @@ msgid "Helps accountants manage analytic and crossover budgets."
 msgstr "Palīdz grāmatvežiem pārvaldīt analītiskos un salīdzinošos budžetus"
 
 #. module: project
-#: field:project.task,priority:0
-#: field:report.project.task.user,priority:0
+#: field:project.task,priority:0 field:report.project.task.user,priority:0
 msgid "Priority"
 msgstr "Prioritāte"
 
@@ -1081,8 +1038,7 @@ msgid "Member"
 msgstr "Dalībnieks"
 
 #. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
+#: view:project.task:0 view:project.task.history.cumulative:0
 msgid "Project Tasks"
 msgstr "Projekta uzdevumi"
 
@@ -1093,11 +1049,8 @@ msgstr "Kļūda! Nevar izveidot rekursīvus asociētos dalībniekus."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.vs.hours,state:0
-#: selection:report.project.task.user,state:0
-#: selection:task.by.days,state:0
+#: view:project.task:0 selection:project.vs.hours,state:0
+#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
 msgid "Draft"
 msgstr "Melnraksts"
 
@@ -1125,23 +1078,18 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-#: field:project.task,manager_id:0
+#: view:project.project:0 field:project.task,manager_id:0
 msgid "Project Manager"
 msgstr "Projektu Vadītājs"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: selection:project.task,state:0
+#: view:project.project:0 view:project.task:0 selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.vs.hours,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: selection:task.by.days,state:0
+#: selection:project.vs.hours,state:0 view:report.project.task.user:0
+#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
 msgid "Pending"
 msgstr "Gaida"
 
@@ -1162,8 +1110,7 @@ msgid "Configure"
 msgstr "Konfigurēt"
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,complete_name:0
+#: view:project.project:0 field:project.project,complete_name:0
 msgid "Project Name"
 msgstr "Projekta Nosaukums"
 
@@ -1233,7 +1180,7 @@ msgid "Customer Email"
 msgstr "Klienta e-pasts"
 
 #. module: project
-#: code:addons/project/project.py:186
+#: code:addons/project/project.py:229
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr "Projekts '%s' ir pabeigts."
@@ -1283,15 +1230,14 @@ msgid "When task is completed, it will come into the done state."
 msgstr "Kad uzdevums ir paveikts, tas tiek atzīmēts kā paveikts."
 
 #. module: project
-#: code:addons/project/project.py:208
+#: code:addons/project/project.py:251
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr "Projets '%s' ir sākts"
 
 #. module: project
 #: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
+#: field:project.task.history.cumulative,date:0 field:project.task.work,date:0
 msgid "Date"
 msgstr "Datums"
 
@@ -1351,8 +1297,7 @@ msgid "History"
 msgstr "Vēsture"
 
 #. module: project
-#: field:project.task,user_id:0
-#: view:report.project.task.user:0
+#: field:project.task,user_id:0 view:report.project.task.user:0
 msgid "Assigned to"
 msgstr "Piešķirts"
 
@@ -1395,22 +1340,17 @@ msgid "Month works"
 msgstr "Mēneša darbi"
 
 #. module: project
-#: field:project.project,priority:0
-#: field:project.project,sequence:0
-#: field:project.task,sequence:0
-#: field:project.task.type,sequence:0
+#: field:project.project,priority:0 field:project.project,sequence:0
+#: field:project.task,sequence:0 field:project.task.type,sequence:0
 msgid "Sequence"
 msgstr "Secība"
 
 #. module: project
-#: view:project.task:0
-#: field:project.task,state:0
+#: view:project.task:0 field:project.task,state:0
 #: field:project.task.history,state:0
 #: field:project.task.history.cumulative,state:0
-#: field:project.vs.hours,state:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,state:0
-#: field:task.by.days,state:0
+#: field:project.vs.hours,state:0 view:report.project.task.user:0
+#: field:report.project.task.user,state:0 field:task.by.days,state:0
 msgid "State"
 msgstr "Stāvoklis"
 
@@ -1426,7 +1366,7 @@ msgstr ""
 "vidējos darba uzdevumu izpildes termiņu rādītājus."
 
 #. module: project
-#: code:addons/project/project.py:827
+#: code:addons/project/project.py:862
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "Uzdevuma '%s' progress"
@@ -1448,24 +1388,19 @@ msgstr ""
 "ietvaros."
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: selection:project.task,state:0
+#: view:project.project:0 view:project.task:0 selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
-#: selection:task.by.days,state:0
+#: view:report.project.task.user:0 selection:report.project.task.user,state:0
+#: view:res.partner:0 selection:task.by.days,state:0
 msgid "Done"
 msgstr "Pabeigts"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 msgid "Cancel"
 msgstr "Atcelt"
 
@@ -1476,8 +1411,7 @@ msgstr "Aizvērt"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
-#: view:project.project:0
-#: selection:project.vs.hours,state:0
+#: view:project.project:0 selection:project.vs.hours,state:0
 msgid "Open"
 msgstr "Atvērt"
 
@@ -1495,13 +1429,11 @@ msgid "ID: %(task_id)s"
 msgstr "ID: %(task_id)s"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
+#: view:project.task:0 selection:project.task,state:0
 #: selection:project.task.history,state:0
 #: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:report.project.task.user,state:0
-#: selection:task.by.days,state:0
+#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
 msgid "In Progress"
 msgstr "Progresā"
 
@@ -1628,8 +1560,7 @@ msgid "My Remaining Hours by Project"
 msgstr "Atlikušās stundas pēc projekta"
 
 #. module: project
-#: field:project.task,description:0
-#: view:project.task.type:0
+#: field:project.task,description:0 view:project.task.type:0
 #: field:project.task.type,description:0
 msgid "Description"
 msgstr "Apraksts"
@@ -1683,8 +1614,7 @@ msgid "Assign To"
 msgstr "Piešķirt"
 
 #. module: project
-#: field:project.project,effective_hours:0
-#: field:project.task.work,hours:0
+#: field:project.project,effective_hours:0 field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Patērētais Laiks"
 
@@ -1731,8 +1661,7 @@ msgid "Customer"
 msgstr "Klients"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 #: field:project.task.history,end_date:0
 #: field:project.task.history.cumulative,end_date:0
 msgid "End Date"
@@ -1745,8 +1674,7 @@ msgstr "Februāris"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_task_by_days_graph
-#: model:ir.model,name:project.model_task_by_days
-#: view:task.by.days:0
+#: model:ir.model,name:project.model_task_by_days view:task.by.days:0
 msgid "Task By Days"
 msgstr "Uzdevumi pa dienām"
 
@@ -1775,8 +1703,7 @@ msgid "Encode your working hours."
 msgstr "Ievadiet savas darba stundas."
 
 #. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,year:0
+#: view:report.project.task.user:0 field:report.project.task.user,year:0
 msgid "Year"
 msgstr "Gads"
 
@@ -1806,8 +1733,7 @@ msgid "Hours Spent"
 msgstr "Pavadītas Stundas"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
+#: view:project.project:0 view:project.task:0
 msgid "Miscelleanous"
 msgstr "Dažādi"
 
@@ -1827,14 +1753,13 @@ msgid "Spent Hours"
 msgstr "Iztērētās stundas"
 
 #. module: project
-#: code:addons/project/project.py:924
+#: code:addons/project/project.py:959
 #, python-format
 msgid "The task '%s' is pending."
 msgstr "Uzdevums '%s' neizlemts."
 
 #. module: project
-#: field:project.task,total_hours:0
-#: field:project.vs.hours,total_hours:0
+#: field:project.task,total_hours:0 field:project.vs.hours,total_hours:0
 #: view:report.project.task.user:0
 #: field:report.project.task.user,total_hours:0
 msgid "Total Hours"
@@ -1911,7 +1836,7 @@ msgid "Validation State"
 msgstr "Apstiprinājuma Statuss"
 
 #. module: project
-#: code:addons/project/project.py:847
+#: code:addons/project/project.py:882
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Uzdevums '%s' atcelts"
@@ -1931,8 +1856,7 @@ msgstr ""
 "uzdevumu, padarīto darbu"
 
 #. module: project
-#: view:project.project:0
-#: model:res.groups,name:project.group_project_manager
+#: view:project.project:0 model:res.groups,name:project.group_project_manager
 msgid "Manager"
 msgstr "Vadītājs"
 
@@ -1942,7 +1866,7 @@ msgid "Create Date"
 msgstr "Izveidošanas datums"
 
 #. module: project
-#: code:addons/project/project.py:855
+#: code:addons/project/project.py:890
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr "Uzdevums '%s' ir atcelts."
@@ -1968,8 +1892,7 @@ msgid "Automatically synchronizes project tasks and crm cases."
 msgstr "Automātiski sinhronizē projektu uzdevumus un crm lietas."
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,type_ids:0
+#: view:project.project:0 field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Uzdevumu posmi"
@@ -1980,8 +1903,7 @@ msgid "Delegate your task to the other user"
 msgstr "Piešķirt uzdevumu citam lietotājam"
 
 #. module: project
-#: view:project.project:0
-#: field:project.project,warn_footer:0
+#: view:project.project:0 field:project.project,warn_footer:0
 msgid "Mail Footer"
 msgstr "Iestarpinājums e-pasta beigās"
 

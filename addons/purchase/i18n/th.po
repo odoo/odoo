@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-31 06:31+0000\n"
-"X-Generator: Launchpad (build 14734)\n"
+"X-Launchpad-Export-Date: 2012-02-08 07:39+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -38,8 +38,7 @@ msgid "Invoiced & Paid"
 msgstr "แจ้งหนี้และชำระเงินแล้ว"
 
 #. module: purchase
-#: field:purchase.order,location_id:0
-#: view:purchase.report:0
+#: field:purchase.order,location_id:0 view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
 msgstr "ปลายทาง"
@@ -93,8 +92,7 @@ msgid "Destination Address"
 msgstr "ที่อยู่ปลายทาง"
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.report,validator:0
+#: report:purchase.order:0 field:purchase.report,validator:0
 msgid "Validated By"
 msgstr "ตรวจสอบโดย"
 
@@ -104,10 +102,8 @@ msgid "Stock Invoice Onshipping"
 msgstr "อยู่ระหว่างการจัดส่ง"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,partner_id:0
-#: view:purchase.order.line:0
-#: view:purchase.report:0
+#: view:purchase.order:0 field:purchase.order,partner_id:0
+#: view:purchase.order.line:0 view:purchase.report:0
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
 msgstr "ผู้จัดจำหน่าย"
@@ -146,14 +142,13 @@ msgid "From a Pick list"
 msgstr "สร้างจากใบรับ/จ่ายสินค้า"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:708
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid "No Pricelist !"
 msgstr "ไม่มีรายการาคา!"
 
 #. module: purchase
-#: field:purchase.order.line,product_qty:0
-#: view:purchase.report:0
+#: field:purchase.order.line,product_qty:0 view:purchase.report:0
 #: field:purchase.report,quantity:0
 msgid "Quantity"
 msgstr "จำนวน"
@@ -164,10 +159,8 @@ msgid "Select an Open Sale Order"
 msgstr "เลือกใบสั่งขายสถานะเปิด"
 
 #. module: purchase
-#: field:purchase.order,company_id:0
-#: field:purchase.order.line,company_id:0
-#: view:purchase.report:0
-#: field:purchase.report,company_id:0
+#: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
+#: view:purchase.report:0 field:purchase.report,company_id:0
 msgid "Company"
 msgstr "บริษัท"
 
@@ -183,8 +176,7 @@ msgid "Set to Draft"
 msgstr "กำหนดให้เป็นแบบร่าง"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Invoice Exception"
 msgstr "ยกเว้นใบแจ้งหนี้"
 
@@ -237,7 +229,7 @@ msgid "Partial Picking"
 msgstr "ทยอยส่ง"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:288
+#: code:addons/purchase/purchase.py:289
 #, python-format
 msgid "Purchase order '%s' is confirmed."
 msgstr "ใบสั่งซื้อ '%s' นี้ถูกยืนยันแล้ว"
@@ -249,8 +241,7 @@ msgstr "อนุมัติการสั่งซื้อ"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
-#: view:purchase.order:0
-#: selection:purchase.order,state:0
+#: view:purchase.order:0 selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Approved"
 msgstr "อนุมัติแล้ว"
@@ -276,15 +267,13 @@ msgid "Purchases"
 msgstr "ประวัติใบสั่งซื้อ"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,notes:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,notes:0
+#: view:purchase.order:0 field:purchase.order,notes:0
+#: view:purchase.order.line:0 field:purchase.order.line,notes:0
 msgid "Notes"
 msgstr "บันทึก"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:708
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
@@ -299,10 +288,8 @@ msgid "September"
 msgstr "กันยายน"
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order,amount_tax:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,taxes_id:0
+#: report:purchase.order:0 field:purchase.order,amount_tax:0
+#: view:purchase.order.line:0 field:purchase.order.line,taxes_id:0
 msgid "Taxes"
 msgstr "ภาษี"
 
@@ -310,16 +297,14 @@ msgstr "ภาษี"
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
 #: model:process.node,name:purchase.process_node_purchaseorder0
-#: field:procurement.order,purchase_id:0
-#: view:purchase.order:0
+#: field:procurement.order,purchase_id:0 view:purchase.order:0
 #: model:res.request.link,name:purchase.req_link_purchase_order
 #: field:stock.picking,purchase_id:0
 msgid "Purchase Order"
 msgstr "ใบสั่งซื้อ"
 
 #. module: purchase
-#: field:purchase.order,name:0
-#: view:purchase.order.line:0
+#: field:purchase.order,name:0 view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
 msgstr "เลขที่"
@@ -337,6 +322,7 @@ msgstr "ตั้งค่าแอพพลิเคชั่นการจั
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
+#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
 msgid "Products"
 msgstr "สินค้า"
 
@@ -356,8 +342,7 @@ msgstr ""
 "หรือเลือกจากจำนวนสินค้าที่สั่ง"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
 msgstr "ยกเลิกแล้ว"
@@ -374,14 +359,12 @@ msgid "Convert to Purchase Order"
 msgstr "แปลงเป็นใบสั่งซื้อ"
 
 #. module: purchase
-#: field:purchase.order,pricelist_id:0
-#: field:purchase.report,pricelist_id:0
+#: field:purchase.order,pricelist_id:0 field:purchase.report,pricelist_id:0
 msgid "Pricelist"
 msgstr "รายการราคา"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Shipping Exception"
 msgstr "ยกเว้นการจัดส่งสินค้า"
 
@@ -433,13 +416,12 @@ msgid "Stock Move"
 msgstr "รายการเคลื่อนไหวสินค้า"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,day:0
+#: view:purchase.report:0 field:purchase.report,day:0
 msgid "Day"
 msgstr "วัน"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:325
+#: code:addons/purchase/purchase.py:326
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr "ใบสั่งซื้อ '%s' ถูกเปลี่ยนเป็นสถานะฉบับร่างแล้ว"
@@ -450,14 +432,13 @@ msgid "Analytic Account"
 msgstr "วิเคราะห์บัญชี"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,nbr:0
+#: view:purchase.report:0 field:purchase.report,nbr:0
 msgid "# of Lines"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:748
-#: code:addons/purchase/purchase.py:788
+#: code:addons/purchase/purchase.py:754 code:addons/purchase/purchase.py:769
+#: code:addons/purchase/purchase.py:772
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
@@ -506,8 +487,7 @@ msgid "Confirmed"
 msgstr "ยืนยันแล้ว"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_average:0
+#: view:purchase.report:0 field:purchase.report,price_average:0
 msgid "Average Price"
 msgstr "ราคาเฉลี่ย"
 
@@ -555,12 +535,9 @@ msgstr ""
 "จากการสินค้าที่ได้รับ หรือเลือกจากจำนวนสินค้าที่สั่งซื้อ"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,state:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,state:0
-#: view:purchase.report:0
-#: view:stock.picking:0
+#: view:purchase.order:0 field:purchase.order,state:0
+#: view:purchase.order.line:0 field:purchase.order.line,state:0
+#: view:purchase.report:0 view:stock.picking:0
 msgid "State"
 msgstr "สถานะ"
 
@@ -600,7 +577,7 @@ msgid "Order Lines"
 msgstr "รายการสั่งซื้อ"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:737
 #, python-format
 msgid "No Partner!"
 msgstr "ไม่พบผู้จัดจำหน่าย!"
@@ -611,8 +588,7 @@ msgid "Fax:"
 msgstr "แฟกซ์ :"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_total:0
+#: view:purchase.report:0 field:purchase.report,price_total:0
 msgid "Total Price"
 msgstr "ราคารวม"
 
@@ -655,9 +631,8 @@ msgid "Invoices generated for a purchase order"
 msgstr "ใบแจ้งหนี้ที่สร้างขึ้นสำหรับการสั่งซื้อ"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:284
-#: code:addons/purchase/purchase.py:347
-#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/purchase.py:285 code:addons/purchase/purchase.py:348
+#: code:addons/purchase/purchase.py:359
 #: code:addons/purchase/wizard/purchase_line_invoice.py:111
 #, python-format
 msgid "Error !"
@@ -687,7 +662,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:788
+#: code:addons/purchase/purchase.py:769
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr ""
@@ -716,16 +691,14 @@ msgid "Reservation Destination"
 msgstr "ปลายทางการจอง"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:235
+#: code:addons/purchase/purchase.py:236
 #, python-format
 msgid "Invalid action !"
 msgstr "การกระทำไม่ถูกต้อง !"
 
 #. module: purchase
-#: view:purchase.order:0
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
-#: selection:purchase.report,state:0
+#: view:purchase.order:0 selection:purchase.order,state:0
+#: selection:purchase.order.line,state:0 selection:purchase.report,state:0
 #: view:stock.picking:0
 msgid "Done"
 msgstr "เสร็จสมบูรณ์"
@@ -758,8 +731,7 @@ msgid "Receptions"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,validator:0
-#: view:purchase.report:0
+#: field:purchase.order,validator:0 view:purchase.report:0
 msgid "Validated by"
 msgstr "ตรวจสอบแล้ว โดย"
 
@@ -796,7 +768,7 @@ msgid "    Month-1    "
 msgstr "    เดือน - 1    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:348
+#: code:addons/purchase/purchase.py:349
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr ""
@@ -819,12 +791,9 @@ msgstr ""
 "คุณต้องยกเลิกใบรับ/จ่ายสินค้าทั้งหมดที่เกี่ยวข้องกับใบสั่งซื้อนี้ก่อน"
 
 #. module: purchase
-#: report:purchase.order:0
-#: view:purchase.order:0
-#: field:purchase.order,date_order:0
-#: field:purchase.order.line,date_order:0
-#: field:purchase.report,date:0
-#: view:stock.picking:0
+#: report:purchase.order:0 view:purchase.order:0
+#: field:purchase.order,date_order:0 field:purchase.order.line,date_order:0
+#: field:purchase.report,date:0 view:stock.picking:0
 msgid "Order Date"
 msgstr "วันที่สั่งซื้อ"
 
@@ -886,8 +855,7 @@ msgid "Units of Measure Categories"
 msgstr "หมวดหมู่ของหน่วยนับ"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,delay_pass:0
+#: view:purchase.report:0 field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
 msgstr "วันที่จัดส่งสินค้า"
 
@@ -903,8 +871,7 @@ msgid "Procurement"
 msgstr "ใบจัดหาสินค้า"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,invoice_ids:0
+#: view:purchase.order:0 field:purchase.order,invoice_ids:0
 msgid "Invoices"
 msgstr "ใบแจ้งหนี้"
 
@@ -924,8 +891,7 @@ msgid "Total Orders Lines by User per month"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,month:0
+#: view:purchase.report:0 field:purchase.report,month:0
 msgid "Month"
 msgstr "เดือน"
 
@@ -950,8 +916,7 @@ msgid "Total Untaxed amount"
 msgstr "รวมจำนวนเงิน(ไม่รวมภาษี)"
 
 #. module: purchase
-#: field:purchase.order,shipped:0
-#: field:purchase.order,shipped_rate:0
+#: field:purchase.order,shipped:0 field:purchase.order,shipped_rate:0
 msgid "Received"
 msgstr "สินค้าที่ได้รับ"
 
@@ -990,14 +955,12 @@ msgid "Taxes :"
 msgstr "ภาษี :"
 
 #. module: purchase
-#: field:purchase.order,invoiced_rate:0
-#: field:purchase.order.line,invoiced:0
+#: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "แจ้งหนี้แล้ว"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,category_id:0
+#: view:purchase.report:0 field:purchase.report,category_id:0
 msgid "Category"
 msgstr "หมวดหมู่"
 
@@ -1024,8 +987,7 @@ msgstr "สร้างใบแจ้งหนี้"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
-#: view:purchase.order.line:0
-#: field:stock.move,purchase_line_id:0
+#: view:purchase.order.line:0 field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
 msgstr "รายการสั่งซื้อ"
 
@@ -1142,7 +1104,7 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/purchase.py:359
 #: code:addons/purchase/wizard/purchase_line_invoice.py:112
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
@@ -1234,8 +1196,7 @@ msgid "Dashboard"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_standard:0
+#: view:purchase.report:0 field:purchase.report,price_standard:0
 msgid "Products Value"
 msgstr ""
 
@@ -1245,8 +1206,7 @@ msgid "Pricelists Types"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.report:0
+#: view:purchase.order:0 view:purchase.report:0
 msgid "Quotations"
 msgstr ""
 
@@ -1267,8 +1227,7 @@ msgid "Products by Category"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,delay:0
+#: view:purchase.report:0 field:purchase.report,delay:0
 msgid "Days to Validate"
 msgstr ""
 
@@ -1305,8 +1264,7 @@ msgid "Date on which purchase order has been approved"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Waiting"
 msgstr "กำลังรอ"
 
@@ -1351,15 +1309,13 @@ msgstr ""
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
-#: view:purchase.order:0
-#: view:purchase.order.group:0
+#: view:purchase.order:0 view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
+#: view:purchase.order:0 view:purchase.order.line:0
 msgid "Purchase Order Lines"
 msgstr ""
 
@@ -1405,8 +1361,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Request for Quotation"
 msgstr ""
 
@@ -1416,8 +1371,7 @@ msgid "Tél. :"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,create_uid:0
-#: view:purchase.report:0
+#: field:purchase.order,create_uid:0 view:purchase.report:0
 #: field:purchase.report,user_id:0
 msgid "Responsible"
 msgstr ""
@@ -1428,14 +1382,12 @@ msgid "Our Order Reference"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
+#: view:purchase.order:0 view:purchase.order.line:0
 msgid "Search Purchase Order"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,warehouse_id:0
-#: view:purchase.report:0
+#: field:purchase.order,warehouse_id:0 view:purchase.report:0
 #: field:purchase.report,warehouse_id:0
 msgid "Warehouse"
 msgstr ""
@@ -1452,8 +1404,7 @@ msgid "Date Req."
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,date_approve:0
-#: field:purchase.report,date_approve:0
+#: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
 msgid "Date Approved"
 msgstr ""
 
@@ -1464,8 +1415,7 @@ msgid "Could not cancel this purchase order !"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order.line,price_unit:0
+#: report:purchase.order:0 field:purchase.order.line,price_unit:0
 msgid "Unit Price"
 msgstr ""
 
@@ -1480,11 +1430,8 @@ msgid "Scheduled Date"
 msgstr ""
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
-#: field:purchase.order,product_id:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,product_id:0
-#: view:purchase.report:0
+#: field:purchase.order,product_id:0 view:purchase.order.line:0
+#: field:purchase.order.line,product_id:0 view:purchase.report:0
 #: field:purchase.report,product_id:0
 msgid "Product"
 msgstr ""
@@ -1496,8 +1443,7 @@ msgid "Confirmation"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order.line,name:0
+#: report:purchase.order:0 field:purchase.order.line,name:0
 #: report:purchase.quotation:0
 msgid "Description"
 msgstr ""
@@ -1537,8 +1483,7 @@ msgid "Delivery"
 msgstr ""
 
 #. module: purchase
-#: view:board.board:0
-#: model:ir.actions.act_window,name:purchase.purchase_draft
+#: view:board.board:0 model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
 msgstr ""
 
@@ -1548,8 +1493,7 @@ msgid "Product UOM"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: report:purchase.quotation:0
+#: report:purchase.order:0 report:purchase.quotation:0
 msgid "Qty"
 msgstr ""
 
@@ -1604,10 +1548,8 @@ msgid "Your Order Reference"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,minimum_planned_date:0
-#: report:purchase.quotation:0
-#: field:purchase.report,expected_date:0
+#: view:purchase.order:0 field:purchase.order,minimum_planned_date:0
+#: report:purchase.quotation:0 field:purchase.report,expected_date:0
 #: view:stock.picking:0
 msgid "Expected Date"
 msgstr ""
@@ -1666,8 +1608,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,name:0
+#: view:purchase.report:0 field:purchase.report,name:0
 msgid "Year"
 msgstr ""
 
@@ -1715,7 +1656,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:425
+#: code:addons/purchase/purchase.py:426
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr ""
@@ -1741,9 +1682,7 @@ msgid "Are you sure you want to merge these orders ?"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
-#: view:purchase.report:0
+#: view:purchase.order:0 view:purchase.order.line:0 view:purchase.report:0
 #: view:stock.picking:0
 msgid "Group By..."
 msgstr ""
@@ -1788,13 +1727,12 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
-#: field:purchase.order.line,partner_id:0
-#: view:stock.picking:0
+#: field:purchase.order.line,partner_id:0 view:stock.picking:0
 msgid "Partner"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:737
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"

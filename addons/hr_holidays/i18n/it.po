@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-31 06:09+0000\n"
-"X-Generator: Launchpad (build 14734)\n"
+"X-Launchpad-Export-Date: 2012-02-08 07:18+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -28,8 +28,7 @@ msgid "Allocation Type"
 msgstr "Tipo assegnazione"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr "In attesa della seconda approvazione"
 
@@ -54,14 +53,12 @@ msgid "Sick Leave"
 msgstr "Permesso per malattia"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,department_id:0
+#: view:hr.holidays:0 field:hr.holidays,department_id:0
 msgid "Department"
 msgstr "Dipartimento"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Refused"
 msgstr "Rifiutato"
 
@@ -131,8 +128,7 @@ msgid "Summary Of Leaves"
 msgstr "Riepilogo permessi"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: view:hr.holidays:0
+#: selection:hr.employee,current_leave_state:0 view:hr.holidays:0
 #: selection:hr.holidays,state:0
 msgid "Approved"
 msgstr "Approvato"
@@ -143,7 +139,7 @@ msgid "Refuse"
 msgstr "Rifiuta"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:337
+#: code:addons/hr_holidays/hr_holidays.py:344
 #, python-format
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
@@ -168,8 +164,7 @@ msgid "Leaves by Department"
 msgstr "Permessi per Dipartimento"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "Annullato"
 
@@ -203,8 +198,7 @@ msgstr "HR: Report di riepilogo ferie per impiegato"
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
-#: view:hr.holidays.status:0
-#: field:hr.holidays.status,name:0
+#: view:hr.holidays.status:0 field:hr.holidays.status,name:0
 #: field:hr.holidays.summary.dept,holiday_type:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
@@ -214,7 +208,7 @@ msgstr "Tipo di permesso"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:199
-#: code:addons/hr_holidays/hr_holidays.py:337
+#: code:addons/hr_holidays/hr_holidays.py:344
 #, python-format
 msgid "Warning!"
 msgstr "Attenzione!"
@@ -346,8 +340,7 @@ msgid "Remaining Leaves"
 msgstr "Permessi rimanenti"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,state:0
+#: view:hr.holidays:0 field:hr.holidays,state:0
 msgid "State"
 msgstr "Stato"
 
@@ -357,9 +350,7 @@ msgid "Total holidays by type"
 msgstr "Totale ferie per tipo"
 
 #. module: hr_holidays
-#: view:hr.employee:0
-#: view:hr.holidays:0
-#: field:hr.holidays,employee_id:0
+#: view:hr.employee:0 view:hr.holidays:0 field:hr.holidays,employee_id:0
 #: field:hr.holidays.remaining.leaves.user,name:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
@@ -397,8 +388,7 @@ msgstr ""
 "Errore! La data inizio permesso deve essere minori di quella della fine."
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,number_of_days:0
+#: view:hr.holidays:0 field:hr.holidays,number_of_days:0
 #: field:hr.holidays,number_of_days_temp:0
 msgid "Number of Days"
 msgstr "Numero Giorni"
@@ -423,8 +413,7 @@ msgstr ""
 "convalidate da un secondo convalidatore"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Waiting Approval"
 msgstr "In attesa di approvazione"
 
@@ -474,8 +463,7 @@ msgid "Employee's Holidays"
 msgstr "Ferie dell'impiegato"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,category_id:0
+#: view:hr.holidays:0 field:hr.holidays,category_id:0
 msgid "Category"
 msgstr "Categoria"
 
@@ -515,8 +503,7 @@ msgid "Holiday"
 msgstr "Ferie"
 
 #. module: hr_holidays
-#: field:hr.holidays,case_id:0
-#: field:hr.holidays.status,categ_id:0
+#: field:hr.holidays,case_id:0 field:hr.holidays.status,categ_id:0
 msgid "Meeting"
 msgstr ""
 
@@ -615,8 +602,7 @@ msgid "General"
 msgstr "Generale"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,notes:0
+#: view:hr.holidays:0 field:hr.holidays,notes:0
 msgid "Reasons"
 msgstr "Motivazioni"
 
@@ -627,8 +613,7 @@ msgid "Leaves Analysis"
 msgstr "Analisi permessi"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0
-#: view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -642,15 +627,13 @@ msgstr ""
 "/ Permessi per reparto"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: selection:hr.holidays.summary.dept,holiday_type:0
+#: view:hr.holidays:0 selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Validated"
 msgstr "Convalidata"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: selection:hr.holidays,type:0
+#: view:hr.holidays:0 selection:hr.holidays,type:0
 msgid "Allocation Request"
 msgstr "Richiesta assegnazione"
 
@@ -666,8 +649,7 @@ msgid "Apply Double Validation"
 msgstr "Applica doppia convalida"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0
-#: view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "Stampa"
 
@@ -688,8 +670,7 @@ msgid "By Employee Category"
 msgstr "Per categoria d'impiegato"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: selection:hr.holidays,type:0
+#: view:hr.holidays:0 selection:hr.holidays,type:0
 msgid "Leave Request"
 msgstr "Richiesta permesso"
 
@@ -808,7 +789,7 @@ msgid "Approve"
 msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays,date_from:0
+#: view:hr.holidays:0 field:hr.holidays,date_from:0
 msgid "Start Date"
 msgstr "Data inizio"
 

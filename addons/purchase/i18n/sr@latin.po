@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-31 06:31+0000\n"
-"X-Generator: Launchpad (build 14734)\n"
+"X-Launchpad-Export-Date: 2012-02-08 07:39+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -36,8 +36,7 @@ msgid "Invoiced & Paid"
 msgstr "Račun izdat&Plaćeno"
 
 #. module: purchase
-#: field:purchase.order,location_id:0
-#: view:purchase.report:0
+#: field:purchase.order,location_id:0 view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
 msgstr "Odredište"
@@ -84,8 +83,7 @@ msgid "Destination Address"
 msgstr "Adresa odredišta"
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.report,validator:0
+#: report:purchase.order:0 field:purchase.report,validator:0
 msgid "Validated By"
 msgstr "Potvrđeno od"
 
@@ -95,10 +93,8 @@ msgid "Stock Invoice Onshipping"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,partner_id:0
-#: view:purchase.order.line:0
-#: view:purchase.report:0
+#: view:purchase.order:0 field:purchase.order,partner_id:0
+#: view:purchase.order.line:0 view:purchase.report:0
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
 msgstr "Dobavljač"
@@ -134,14 +130,13 @@ msgid "From a Pick list"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:708
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid "No Pricelist !"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order.line,product_qty:0
-#: view:purchase.report:0
+#: field:purchase.order.line,product_qty:0 view:purchase.report:0
 #: field:purchase.report,quantity:0
 msgid "Quantity"
 msgstr "Količina"
@@ -152,10 +147,8 @@ msgid "Select an Open Sale Order"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,company_id:0
-#: field:purchase.order.line,company_id:0
-#: view:purchase.report:0
-#: field:purchase.report,company_id:0
+#: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
+#: view:purchase.report:0 field:purchase.report,company_id:0
 msgid "Company"
 msgstr ""
 
@@ -171,8 +164,7 @@ msgid "Set to Draft"
 msgstr "Postavi u 'Pripremu'"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Invoice Exception"
 msgstr "Iznimka u fakturi"
 
@@ -225,7 +217,7 @@ msgid "Partial Picking"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:288
+#: code:addons/purchase/purchase.py:289
 #, python-format
 msgid "Purchase order '%s' is confirmed."
 msgstr ""
@@ -237,8 +229,7 @@ msgstr "Odobri nabavku"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
-#: view:purchase.order:0
-#: selection:purchase.order,state:0
+#: view:purchase.order:0 selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Approved"
 msgstr "Odobreno"
@@ -264,15 +255,13 @@ msgid "Purchases"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,notes:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,notes:0
+#: view:purchase.order:0 field:purchase.order,notes:0
+#: view:purchase.order.line:0 field:purchase.order.line,notes:0
 msgid "Notes"
 msgstr "Napomene"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:708
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
@@ -285,10 +274,8 @@ msgid "September"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order,amount_tax:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,taxes_id:0
+#: report:purchase.order:0 field:purchase.order,amount_tax:0
+#: view:purchase.order.line:0 field:purchase.order.line,taxes_id:0
 msgid "Taxes"
 msgstr "Porezi"
 
@@ -296,16 +283,14 @@ msgstr "Porezi"
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
 #: model:process.node,name:purchase.process_node_purchaseorder0
-#: field:procurement.order,purchase_id:0
-#: view:purchase.order:0
+#: field:procurement.order,purchase_id:0 view:purchase.order:0
 #: model:res.request.link,name:purchase.req_link_purchase_order
 #: field:stock.picking,purchase_id:0
 msgid "Purchase Order"
 msgstr "Nabavni nalog"
 
 #. module: purchase
-#: field:purchase.order,name:0
-#: view:purchase.order.line:0
+#: field:purchase.order,name:0 view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
 msgstr "Referenca naloga"
@@ -323,6 +308,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
+#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
 msgid "Products"
 msgstr ""
 
@@ -339,8 +325,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
 msgstr "Otkazano"
@@ -357,14 +342,12 @@ msgid "Convert to Purchase Order"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,pricelist_id:0
-#: field:purchase.report,pricelist_id:0
+#: field:purchase.order,pricelist_id:0 field:purchase.report,pricelist_id:0
 msgid "Pricelist"
 msgstr "Cenovnik"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Shipping Exception"
 msgstr "Otpremni Izuzeci"
 
@@ -416,13 +399,12 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,day:0
+#: view:purchase.report:0 field:purchase.report,day:0
 msgid "Day"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:325
+#: code:addons/purchase/purchase.py:326
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr ""
@@ -433,14 +415,13 @@ msgid "Analytic Account"
 msgstr "Analitički konto"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,nbr:0
+#: view:purchase.report:0 field:purchase.report,nbr:0
 msgid "# of Lines"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:748
-#: code:addons/purchase/purchase.py:788
+#: code:addons/purchase/purchase.py:754 code:addons/purchase/purchase.py:769
+#: code:addons/purchase/purchase.py:772
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
@@ -489,8 +470,7 @@ msgid "Confirmed"
 msgstr "Potvrđeno"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_average:0
+#: view:purchase.report:0 field:purchase.report,price_average:0
 msgid "Average Price"
 msgstr ""
 
@@ -535,12 +515,9 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,state:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,state:0
-#: view:purchase.report:0
-#: view:stock.picking:0
+#: view:purchase.order:0 field:purchase.order,state:0
+#: view:purchase.order.line:0 field:purchase.order.line,state:0
+#: view:purchase.report:0 view:stock.picking:0
 msgid "State"
 msgstr ""
 
@@ -578,7 +555,7 @@ msgid "Order Lines"
 msgstr "Redovi naloga"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:737
 #, python-format
 msgid "No Partner!"
 msgstr ""
@@ -589,8 +566,7 @@ msgid "Fax:"
 msgstr "Faks:"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_total:0
+#: view:purchase.report:0 field:purchase.report,price_total:0
 msgid "Total Price"
 msgstr "Ukupna Cena"
 
@@ -627,9 +603,8 @@ msgid "Invoices generated for a purchase order"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:284
-#: code:addons/purchase/purchase.py:347
-#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/purchase.py:285 code:addons/purchase/purchase.py:348
+#: code:addons/purchase/purchase.py:359
 #: code:addons/purchase/wizard/purchase_line_invoice.py:111
 #, python-format
 msgid "Error !"
@@ -659,7 +634,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:788
+#: code:addons/purchase/purchase.py:769
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr ""
@@ -688,16 +663,14 @@ msgid "Reservation Destination"
 msgstr "Odredište rezervacije"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:235
+#: code:addons/purchase/purchase.py:236
 #, python-format
 msgid "Invalid action !"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
-#: selection:purchase.report,state:0
+#: view:purchase.order:0 selection:purchase.order,state:0
+#: selection:purchase.order.line,state:0 selection:purchase.report,state:0
 #: view:stock.picking:0
 msgid "Done"
 msgstr "Završeno"
@@ -730,8 +703,7 @@ msgid "Receptions"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,validator:0
-#: view:purchase.report:0
+#: field:purchase.order,validator:0 view:purchase.report:0
 msgid "Validated by"
 msgstr "Overeno od strane"
 
@@ -768,7 +740,7 @@ msgid "    Month-1    "
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:348
+#: code:addons/purchase/purchase.py:349
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr ""
@@ -790,12 +762,9 @@ msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: view:purchase.order:0
-#: field:purchase.order,date_order:0
-#: field:purchase.order.line,date_order:0
-#: field:purchase.report,date:0
-#: view:stock.picking:0
+#: report:purchase.order:0 view:purchase.order:0
+#: field:purchase.order,date_order:0 field:purchase.order.line,date_order:0
+#: field:purchase.report,date:0 view:stock.picking:0
 msgid "Order Date"
 msgstr ""
 
@@ -859,8 +828,7 @@ msgid "Units of Measure Categories"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,delay_pass:0
+#: view:purchase.report:0 field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
 msgstr ""
 
@@ -876,8 +844,7 @@ msgid "Procurement"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,invoice_ids:0
+#: view:purchase.order:0 field:purchase.order,invoice_ids:0
 msgid "Invoices"
 msgstr ""
 
@@ -897,8 +864,7 @@ msgid "Total Orders Lines by User per month"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,month:0
+#: view:purchase.report:0 field:purchase.report,month:0
 msgid "Month"
 msgstr ""
 
@@ -923,8 +889,7 @@ msgid "Total Untaxed amount"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,shipped:0
-#: field:purchase.order,shipped_rate:0
+#: field:purchase.order,shipped:0 field:purchase.order,shipped_rate:0
 msgid "Received"
 msgstr "Primljeno"
 
@@ -963,14 +928,12 @@ msgid "Taxes :"
 msgstr "Porezi"
 
 #. module: purchase
-#: field:purchase.order,invoiced_rate:0
-#: field:purchase.order.line,invoiced:0
+#: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Fakturisano"
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,category_id:0
+#: view:purchase.report:0 field:purchase.report,category_id:0
 msgid "Category"
 msgstr ""
 
@@ -997,8 +960,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
-#: view:purchase.order.line:0
-#: field:stock.move,purchase_line_id:0
+#: view:purchase.order.line:0 field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
 msgstr "Red nabavnog naloga"
 
@@ -1115,7 +1077,7 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:358
+#: code:addons/purchase/purchase.py:359
 #: code:addons/purchase/wizard/purchase_line_invoice.py:112
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
@@ -1207,8 +1169,7 @@ msgid "Dashboard"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,price_standard:0
+#: view:purchase.report:0 field:purchase.report,price_standard:0
 msgid "Products Value"
 msgstr ""
 
@@ -1218,8 +1179,7 @@ msgid "Pricelists Types"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.report:0
+#: view:purchase.order:0 view:purchase.report:0
 msgid "Quotations"
 msgstr ""
 
@@ -1240,8 +1200,7 @@ msgid "Products by Category"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,delay:0
+#: view:purchase.report:0 field:purchase.report,delay:0
 msgid "Days to Validate"
 msgstr ""
 
@@ -1285,8 +1244,7 @@ msgid "Date on which purchase order has been approved"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Waiting"
 msgstr "Čekanje"
 
@@ -1331,15 +1289,13 @@ msgstr ""
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
-#: view:purchase.order:0
-#: view:purchase.order.group:0
+#: view:purchase.order:0 view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
 msgstr "Odustani"
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
+#: view:purchase.order:0 view:purchase.order.line:0
 msgid "Purchase Order Lines"
 msgstr ""
 
@@ -1385,8 +1341,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Request for Quotation"
 msgstr "Zahtjev za ponudu"
 
@@ -1396,8 +1351,7 @@ msgid "Tél. :"
 msgstr "Tel. :"
 
 #. module: purchase
-#: field:purchase.order,create_uid:0
-#: view:purchase.report:0
+#: field:purchase.order,create_uid:0 view:purchase.report:0
 #: field:purchase.report,user_id:0
 msgid "Responsible"
 msgstr ""
@@ -1408,14 +1362,12 @@ msgid "Our Order Reference"
 msgstr "Naša referenca naloga"
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
+#: view:purchase.order:0 view:purchase.order.line:0
 msgid "Search Purchase Order"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,warehouse_id:0
-#: view:purchase.report:0
+#: field:purchase.order,warehouse_id:0 view:purchase.report:0
 #: field:purchase.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "Skladište"
@@ -1432,8 +1384,7 @@ msgid "Date Req."
 msgstr "Datum upita"
 
 #. module: purchase
-#: field:purchase.order,date_approve:0
-#: field:purchase.report,date_approve:0
+#: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
 msgid "Date Approved"
 msgstr "Datum odobrenja"
 
@@ -1444,8 +1395,7 @@ msgid "Could not cancel this purchase order !"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order.line,price_unit:0
+#: report:purchase.order:0 field:purchase.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "Jedinična cena"
 
@@ -1460,11 +1410,8 @@ msgid "Scheduled Date"
 msgstr ""
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
-#: field:purchase.order,product_id:0
-#: view:purchase.order.line:0
-#: field:purchase.order.line,product_id:0
-#: view:purchase.report:0
+#: field:purchase.order,product_id:0 view:purchase.order.line:0
+#: field:purchase.order.line,product_id:0 view:purchase.report:0
 #: field:purchase.report,product_id:0
 msgid "Product"
 msgstr "Proizvod"
@@ -1476,8 +1423,7 @@ msgid "Confirmation"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0
-#: field:purchase.order.line,name:0
+#: report:purchase.order:0 field:purchase.order.line,name:0
 #: report:purchase.quotation:0
 msgid "Description"
 msgstr "Opis"
@@ -1517,8 +1463,7 @@ msgid "Delivery"
 msgstr "Isporuka"
 
 #. module: purchase
-#: view:board.board:0
-#: model:ir.actions.act_window,name:purchase.purchase_draft
+#: view:board.board:0 model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
 msgstr ""
 
@@ -1528,8 +1473,7 @@ msgid "Product UOM"
 msgstr "Proizvod UOM"
 
 #. module: purchase
-#: report:purchase.order:0
-#: report:purchase.quotation:0
+#: report:purchase.order:0 report:purchase.quotation:0
 msgid "Qty"
 msgstr "Količina"
 
@@ -1584,10 +1528,8 @@ msgid "Your Order Reference"
 msgstr "Referenca vašeg naloga"
 
 #. module: purchase
-#: view:purchase.order:0
-#: field:purchase.order,minimum_planned_date:0
-#: report:purchase.quotation:0
-#: field:purchase.report,expected_date:0
+#: view:purchase.order:0 field:purchase.order,minimum_planned_date:0
+#: report:purchase.quotation:0 field:purchase.report,expected_date:0
 #: view:stock.picking:0
 msgid "Expected Date"
 msgstr "Očekivani datum"
@@ -1646,8 +1588,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,name:0
+#: view:purchase.report:0 field:purchase.report,name:0
 msgid "Year"
 msgstr ""
 
@@ -1695,7 +1636,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:425
+#: code:addons/purchase/purchase.py:426
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr ""
@@ -1721,9 +1662,7 @@ msgid "Are you sure you want to merge these orders ?"
 msgstr "Da li ste sigurni da želite ujediniti ove narudzbe?"
 
 #. module: purchase
-#: view:purchase.order:0
-#: view:purchase.order.line:0
-#: view:purchase.report:0
+#: view:purchase.order:0 view:purchase.order.line:0 view:purchase.report:0
 #: view:stock.picking:0
 msgid "Group By..."
 msgstr ""
@@ -1768,13 +1707,12 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
-#: field:purchase.order.line,partner_id:0
-#: view:stock.picking:0
+#: field:purchase.order.line,partner_id:0 view:stock.picking:0
 msgid "Partner"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:737
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"

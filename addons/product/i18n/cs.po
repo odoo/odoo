@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-31 06:23+0000\n"
-"X-Generator: Launchpad (build 14734)\n"
+"X-Launchpad-Export-Date: 2012-02-08 07:31+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: product
@@ -259,7 +259,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  např.: 1 * (tato jednotka) = koeficient * (referenční jednotka)"
 
 #. module: product
-#: code:addons/product/product.py:400
+#: code:addons/product/product.py:418
 #, python-format
 msgid "Products: "
 msgstr "Výrobky: "
@@ -1223,6 +1223,7 @@ msgid "Main Supplier who has highest priority in Supplier List."
 msgstr "Hlavní dodavatel, který má nejvyšší prioritu v Seznamu dodavatelů."
 
 #. module: product
+#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Služby"
@@ -1238,6 +1239,7 @@ msgstr "Pokud jiný ceník"
 #: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_products
+#: model:ir.ui.menu,name:product.prod_config_main
 #: view:product.product:0
 msgid "Products"
 msgstr "Výrobky"
@@ -1259,7 +1261,7 @@ msgid "Pallet Dimension"
 msgstr "Rozměry palety"
 
 #. module: product
-#: code:addons/product/product.py:641
+#: code:addons/product/product.py:668
 #, python-format
 msgid " (copy)"
 msgstr " (kopie)"
@@ -1619,7 +1621,6 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
-#: model:ir.ui.menu,name:product.prod_config_main
 #: model:process.node,name:product.process_node_product0
 #: model:process.process,name:product.process_process_productprocess0
 #: field:product.packaging,product_id:0
