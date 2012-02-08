@@ -45,14 +45,6 @@ class except_osv(Exception):
 
 service = None
 
-# Inter-process signaling:
-# The `base_registry_signaling` sequence indicates the whole registry
-# must be reloaded.
-# The `base_cache_signaling sequence` indicates all caches must be
-# invalidated (i.e. cleared).
-base_registry_signaling_sequence = None
-base_cache_signaling_sequence = None
-
 class object_proxy(object):
     def __init__(self):
         global service
@@ -176,39 +168,7 @@ class object_proxy(object):
 
     @check
     def execute(self, db, uid, obj, method, *args, **kw):
-
-        # Check if the model registry must be reloaded (e.g. after the
-        # database has been updated by another process).
-        cr = pooler.get_db(db).cursor()
-        registry_reloaded = False
-        try:
-            cr.execute('select last_value from base_registry_signaling')
-            r = cr.fetchone()[0]
-            global base_registry_signaling_sequence
-            if base_registry_signaling_sequence != r:
-                _logger.info("Reloading the model registry after database signaling.")
-                base_registry_signaling_sequence = r
-                # Don't run the cron in the Gunicorn worker.
-                openerp.modules.registry.RegistryManager.new(db, pooljobs=False)
-                registry_reloaded = True
-        finally:
-            cr.close()
-
-        # Check if the model caches must be invalidated (e.g. after a write
-        # occured on another process). Don't clear right after a registry
-        # has been reload.
-        cr = pooler.get_db(db).cursor()
-        try:
-            cr.execute('select last_value from base_cache_signaling')
-            r = cr.fetchone()[0]
-            global base_cache_signaling_sequence
-            if base_cache_signaling_sequence != r and not registry_reloaded:
-                _logger.info("Invalidating all model caches after database signaling.")
-                base_cache_signaling_sequence = r
-                registry = openerp.modules.registry.RegistryManager.get(db, pooljobs=False)
-                registry.clear_caches()
-        finally:
-            cr.close()
+        openerp.modules.registry.RegistryManager.check_registry_signaling(db)
 
         cr = pooler.get_db(db).cursor()
         try:
@@ -224,6 +184,8 @@ class object_proxy(object):
                 raise
         finally:
             cr.close()
+
+        openerp.modules.registry.RegistryManager.signal_caches_change(db)
         return res
 
     def exec_workflow_cr(self, cr, uid, obj, method, *args):

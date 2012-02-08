@@ -353,7 +353,9 @@ CREATE TABLE ir_model_data (
 -- The `base_cache_signaling sequence` indicates all caches must be
 -- invalidated (i.e. cleared).
 CREATE SEQUENCE base_registry_signaling INCREMENT BY 1 START WITH 1;
+SELECT nextval('base_registry_signaling');
 CREATE SEQUENCE base_cache_signaling INCREMENT BY 1 START WITH 1;
+SELECT nextval('base_cache_signaling');
 
 ---------------------------------
 -- Users
