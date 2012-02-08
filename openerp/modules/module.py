@@ -332,6 +332,7 @@ def load_information_from_description_file(module):
                 'description': '',
                 'icon': get_module_icon(module),
                 'installable': True,
+                'auto_install': False,
                 'license': 'AGPL-3',
                 'name': False,
                 'post_load': None,
