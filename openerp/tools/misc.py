@@ -181,11 +181,20 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 
 
 def _fileopen(path, mode, basedir, pathinfo):
-    head = os.path.normpath(path)
     name = os.path.normpath(os.path.join(basedir, path))
-    name2 = False
+    # Give higher priority to module directories, which is
+    # a more common case than zipped modules.
+    if os.path.isfile(name):
+        fo = open(name, mode)
+        if pathinfo:
+            return (fo, name)
+        return fo
+
+    # Support for loading modules in zipped form.
+    # This will not work for zipped modules that are sitting
+    # outside of known addons paths.
+    head = os.path.normpath(path)
     zipname = False
-    # Check for a zipfile in the path, but stop at the 'basedir' level
     while os.sep in head:
         head, tail = os.path.split(head)
         if not tail:
@@ -208,14 +217,7 @@ def _fileopen(path, mode, basedir, pathinfo):
                     return (fo, name)
                 return fo
             except Exception:
-                name2 = os.path.normpath(os.path.join(zpath, zipname))
-    # Look for a normal file
-    for fname in (name2, name):
-        if fname and os.path.isfile(fname):
-            fo = open(fname, mode)
-            if pathinfo:
-                return (fo, fname)
-            return fo
+                pass
     # Not found
     if name.endswith('.rml'):
         raise IOError('Report %r doesn\'t exist or deleted' % name)
