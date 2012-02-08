@@ -138,9 +138,9 @@ class partner_vat_intra(osv.osv_memory):
         if not country:
             country = company_vat[:2]
         if not email:
-            raise osv.except_osv(_('Data Insufficient!'),_('No email address asociated with the company.'))
+            raise osv.except_osv(_('Data Insufficient!'),_('No email address associated with the company.'))
         if not phone:
-            raise osv.except_osv(_('Data Insufficient!'),_('No phone asociated with the company.'))
+            raise osv.except_osv(_('Data Insufficient!'),_('No phone associated with the company.'))
         xmldict.update({
                         'company_name': data_cmpny.name,
                         'company_vat': company_vat, 
