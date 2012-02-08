@@ -242,7 +242,7 @@ openerp.web.page = function (openerp) {
             }
         }
     });
-    openerp.web.page.readonly = openerp.web.form.widgets.clone({
+    openerp.web.page.readonly = openerp.web.form.widgets.extend({
         'frame': 'openerp.web.page.WidgetFrameReadonly',
         'char': 'openerp.web.page.FieldCharReadonly',
         'id': 'openerp.web.page.FieldCharReadonly',

@@ -37,7 +37,7 @@ $(document).ready(function () {
             bar: 'openerp.web.Bar'
         });
 
-        var reg2 = reg.clone({ 'foo': 'openerp.web.Foo2' });
+        var reg2 = reg.extend({ 'foo': 'openerp.web.Foo2' });
         strictEqual(reg.get_object('foo'), openerp.web.Foo);
         strictEqual(reg2.get_object('foo'), openerp.web.Foo2);
     });
@@ -47,7 +47,7 @@ $(document).ready(function () {
             bar: 'openerp.web.Bar'
         });
 
-        var reg2 = reg.clone();
+        var reg2 = reg.extend();
         reg.add('foo2', 'openerp.web.Foo2');
         strictEqual(reg.get_object('foo2'), openerp.web.Foo2);
         strictEqual(reg2.get_object('foo2'), openerp.web.Foo2);

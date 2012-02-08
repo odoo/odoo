@@ -328,12 +328,22 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      * Creates and returns a copy of the current mapping, with the provided
      * mapping argument added in (replacing existing keys if needed)
      *
+     * Parent and child remain linked, a new key in the parent (which is not
+     * overwritten by the child) will appear in the child.
+     *
      * @param {Object} [mapping={}] a mapping of keys to object-paths
      */
-    clone: function (mapping) {
+    extend: function (mapping) {
         var child = new openerp.web.Registry(mapping);
         child.parent = this;
         return child;
+    },
+    /**
+     * @deprecated use Registry#extend
+     */
+    clone: function (mapping) {
+        console.warn('Registry#clone is deprecated, use Registry#extend');
+        return this.extend(mapping);
     }
 });
 
