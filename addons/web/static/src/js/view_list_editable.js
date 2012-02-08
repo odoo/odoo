@@ -386,7 +386,7 @@ openerp.web.list_editable = function (openerp) {
         template: 'ListView.row.frame'
     });
     var form_widgets = openerp.web.form.widgets;
-    openerp.web.list.form.widgets = form_widgets.clone({
+    openerp.web.list.form.widgets = form_widgets.extend({
         'frame': 'openerp.web.list.form.WidgetFrame'
     });
     // All form widgets inherit a problematic behavior from
