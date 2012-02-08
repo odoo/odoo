@@ -44,10 +44,8 @@ import posixpath
 import urllib
 import os
 import logging
-from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
 
 from websrv_lib import *
-import openerp.netsvc as netsvc
 import openerp.tools as tools
 
 try:
