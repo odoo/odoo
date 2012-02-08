@@ -101,7 +101,12 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             formatted[0] = openerp.web.insert_thousand_seps(formatted[0]);
             return formatted.join(l10n.decimal_point);
         case 'float_time':
-            return _.str.sprintf("%02d:%02d",
+            var pattern = '%02d:%02d';
+            if (value < 0) {
+                value = Math.abs(value);
+                pattern = '-' + pattern;
+            }
+            return _.str.sprintf(pattern,
                     Math.floor(value),
                     Math.round((value % 1) * 60));
         case 'many2one':
