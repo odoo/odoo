@@ -66,7 +66,6 @@ class simple(render.render):
         return self.result.getvalue()
 
 if __name__=='__main__':
-    import time
     s = simple()
     s.xml = '''<test>
         <author-list>

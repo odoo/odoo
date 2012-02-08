@@ -20,9 +20,7 @@
 ##############################################################################
 
 from openerp.report.render.rml2pdf import utils
-from lxml import etree
 import copy
-import openerp.pooler  as pooler
 import base64
 import cStringIO
 import re

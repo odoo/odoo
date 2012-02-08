@@ -22,9 +22,7 @@
 
 import sys
 import StringIO
-import copy
 from lxml import etree
-import base64
 
 import utils
 

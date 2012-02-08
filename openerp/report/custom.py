@@ -21,7 +21,6 @@
 
 import os
 import time
-import openerp.netsvc as netsvc
 
 import openerp.tools as tools
 from openerp.tools.safe_eval import safe_eval as eval
@@ -67,7 +66,6 @@ class report_custom(report_int):
     #
     def _row_get(self, cr, uid, objs, fields, conditions, row_canvas=None, group_by=None):
         result = []
-        tmp = []
         for obj in objs:
             tobreak = False
             for cond in conditions:
@@ -365,7 +363,6 @@ class report_custom(report_int):
         order_date['Y'] = lambda x : x
 
         abscissa = []
-        tmp = {}
         
         idx = 0 
         date_idx = None

@@ -39,7 +39,7 @@ import sys
 import cStringIO
 from lxml import etree
 import copy
-import utils
+
 from openerp.report.render.rml2pdf import utils
 
 class _flowable(object):
