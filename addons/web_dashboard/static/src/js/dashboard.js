@@ -10,7 +10,7 @@ if (!openerp.web_dashboard) {
 openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.form_template = 'DashBoard';
+        this.template = 'DashBoard';
         this.actions_attrs = {};
         this.action_managers = [];
     },
@@ -225,7 +225,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             });
         }
     },
-    render_element: function() {
+    render: function() {
         // We should start with three columns available
         for (var i = this.node.children.length; i < 3; i++) {
             this.node.children.push({
@@ -234,8 +234,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
                 children: []
             });
         }
-        var rendered = QWeb.render(this.form_template, this);
-        this.$element.html(rendered);
+        return QWeb.render(this.template, this);
     },
     do_reload: function() {
         var view_manager = this.view.widget_parent,
@@ -245,7 +244,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
     }
 });
 openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
-    render_element: function() {
+    render: function() {
         if (this.node.tag == 'hpaned') {
             this.node.attrs.style = '2-1';
         } else if (this.node.tag == 'vpaned') {
@@ -264,7 +263,7 @@ openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
                 }
             }
         });
-        this._super(this);
+        return this._super(this, arguments);
     }
 });
 

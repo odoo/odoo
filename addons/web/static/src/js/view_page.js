@@ -68,13 +68,13 @@ openerp.web.page = function (openerp) {
     openerp.web.page = {};
 
     openerp.web.page.WidgetFrameReadonly = openerp.web.form.WidgetFrame.extend({
-        form_template: 'WidgetFrame.readonly'
+        template: 'WidgetFrame.readonly'
     });
     openerp.web.page.FieldReadonly = openerp.web.form.Field.extend({
 
     });
     openerp.web.page.FieldCharReadonly = openerp.web.page.FieldReadonly.extend({
-        form_template: 'FieldChar.readonly',
+        template: 'FieldChar.readonly',
         init: function(view, node) {
             this._super(view, node);
             this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
@@ -90,7 +90,7 @@ openerp.web.page = function (openerp) {
         }
     });
     openerp.web.page.FieldURIReadonly = openerp.web.page.FieldCharReadonly.extend({
-        form_template: 'FieldURI.readonly',
+        template: 'FieldURI.readonly',
         scheme: null,
         set_value: function (value) {
             var displayed = this._super.apply(this, arguments);
@@ -117,7 +117,7 @@ openerp.web.page = function (openerp) {
         }
     });
     openerp.web.page.FieldSelectionReadonly = openerp.web.page.FieldReadonly.extend({
-        form_template: 'FieldChar.readonly',
+        template: 'FieldChar.readonly',
         init: function(view, node) {
             // lifted straight from r/w version
             var self = this;
@@ -222,7 +222,7 @@ openerp.web.page = function (openerp) {
         }
     });
     openerp.web.page.FieldBinaryFileReadonly = openerp.web.form.FieldBinary.extend({
-        form_template: 'FieldURI.readonly',
+        template: 'FieldURI.readonly',
         start: function() {
             this._super.apply(this, arguments);
             var self = this;

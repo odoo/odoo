@@ -1043,19 +1043,27 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
     },
     on_inserted: function(element, widget) {},
     /**
-     * Renders the element. The default implementation renders the widget using QWeb,
-     * `this.template` must be defined. The context given to QWeb contains the "widget"
-     * key that references `this`.
+     * Renders the element and insert the result of the render() method in this.$element.
      */
     render_element: function() {
-        var rendered = null;
-        if (this.template)
-            rendered = openerp.web.qweb.render(this.template, {widget: this});
+        var rendered = this.render();
         if (rendered) {
             var elem = $(rendered);
             this.$element.replaceWith(elem);
             this.$element = elem;
         }
+        return this;
+    },
+    /**
+     * Renders the widget using QWeb, `this.template` must be defined.
+     * The context given to QWeb contains the "widget" key that references `this`.
+     *
+     * @param {Object} additional Additional context arguments to pass to the template.
+     */
+    render: function (additional) {
+        if (this.template)
+            return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+        return null;
     },
     /**
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
@@ -1133,20 +1141,6 @@ openerp.web.OldWidget = openerp.web.Widget.extend({
         this.element_id = this.element_id || _.uniqueId('widget-');
         var tmp = document.getElementById(this.element_id);
         this.$element = tmp ? $(tmp) : $(document.createElement(this.tag_name));
-    },
-    render_element: function() {
-        var rendered = this.render();
-        if (rendered) {
-            var elem = $(rendered);
-            this.$element.replaceWith(elem);
-            this.$element = elem;
-        }
-        return this;
-    },
-    render: function (additional) {
-        if (this.template)
-            return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
-        return null;
     }
 });
 
