@@ -350,7 +350,8 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
                 event_obj['end_date'] = new Date(event_obj['start_date']);
                 event_obj['end_date'].addHours(1);
             } else {
-                event_obj['end_date'].addSeconds(-1);
+                event_obj['start_date'].addHours(8);
+                event_obj['end_date'].addHours(-4);
             }
             this.do_create_event_with_formdialog(event_id, event_obj);
             // return false;
