@@ -63,24 +63,5 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
-        <!-- toplevel menu -->
-        <menuitem id="mail_group" name="Feeds" action="action_view_groups"/>
-
-        <!-- left-side menu: Feeds !-->
-        <menuitem id="mg_feeds" name="Feeds"  parent="mail_group" action="action_view_mytweets"/>
-        <menuitem id="mg_feeds_my" name="My feeds" parent="mg_feeds" action="action_view_mytweets"/>
-        <menuitem id="mg_feeds_all" name="All feeds" parent="mg_feeds" action="action_view_tweets"/>
-
-        <!-- left-side menu: Groups !-->
-        <menuitem id="mg_groups" name="Groups"  parent="mail_group" action="action_view_groups"/>
-        <menuitem id="mg_groups_all" name="All groups"  parent="mg_groups" action="action_view_groups"/>
-
-        <!-- left-side menu: Tmp !-->
-        <menuitem id="mg_tmp" name="Tmp"  parent="mail_group" action="action_view_all_message"/>
-        <!-- left-side Tmp: temporary Messages link to create a message !-->
-        <menuitem id="mg_msg" name="Messages" parent="mg_tmp" action="action_view_all_message"/>
-        <!-- left-side Tmp: temporary Groups link to see groups !-->
-        <menuitem id="mg_groups_tmp" name="Groups" parent="mg_tmp" action="action_view_groups"/>
-
     </data>
 </openerp>

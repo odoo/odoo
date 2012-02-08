@@ -1,13 +1,14 @@
 openerp.mail = function(session) {
     
     var mail = session.mail = {};
-    
+
+    /* Add ThreadView widget to registry */
     session.web.form.widgets.add(
         'ThreadView', 'openerp.mail.ThreadView');
     session.web.page.readonly.add(
         'ThreadView', 'openerp.mail.ThreadView');
 
-    /* ThreadView Widget: thread of comments */
+    /* ThreadView widget: thread of comments */
     mail.ThreadView = session.web.form.Field.extend({
         // QWeb template to use when rendering the object
         template: 'ThreadView',
@@ -86,6 +87,19 @@ openerp.mail = function(session) {
         },
     });
     
+    /* Add WallView widget to registry */
+    session.web.client_actions.add('mail.all_feeds', 'session.mail.WallView');
+    
+    /* WallView widget: a wall of messages */
+    mail.WallView = session.web.Widget.extend({
+        // QWeb template to use when rendering the object
+        template: 'WallView',
+
+        init: function() {
+            this._super.apply(this, arguments);
+            alert('Cacaboudin !!');
+        },
+    });
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
