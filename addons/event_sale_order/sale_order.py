@@ -44,13 +44,12 @@ class sale_order_line(osv.osv):
                 }
             return res
 
+    def button_confirm(self,cr,uid,ids,context=None):
+        registration = self.browse(cr,uid,ids,context=None)
+        for registration in registration:
+            self.pool.get('event.registration').create(cr,uid,{'name':registration.product_id.name,'nb_register':1,'event_id':registration.event.id})
+        return super(sale_order_line, self).button_confirm(cr, uid, ids, context)
+
 sale_order_line()
 
-class sale_order(osv.osv):
-    _inherit='sale.order'
-    _columns={
-    }
-    def order_confirm(self,cr,uid,ids,context=None):
-        return super(sale_order, self).order_confirm(cr, uid, ids, context)
-sale_order()
 
