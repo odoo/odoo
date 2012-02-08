@@ -82,7 +82,7 @@ class NumberedCanvas(canvas.Canvas):
     def showPage(self):
         self._currentPage +=1
         if not self._flag:
-           self._pageCount += 1
+            self._pageCount += 1
         else:
             self.pages.update({self._currentPage:self._pageCount})
         self._codes.append({'code': self._code, 'stack': self._codeStack})

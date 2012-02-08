@@ -336,8 +336,8 @@ class _rml_stylesheet(object):
             attr = {}
             attrs = ps.attributes
             for i in range(attrs.length):
-                 name = attrs.item(i).localName
-                 attr[name] = ps.get(name)
+                name = attrs.item(i).localName
+                attr[name] = ps.get(name)
             attrs = []
             for a in attr:
                 if a in self._tags:

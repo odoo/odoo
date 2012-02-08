@@ -228,7 +228,7 @@ class document(object):
                                 if not isinstance(datas[atr['value']], (str, unicode)):
                                     txt = str(datas[atr['value']])
                                 else:
-                                     txt = datas[atr['value']]
+                                    txt = datas[atr['value']]
                                 el.text = txt
                             else:
                                 for el_cld in node:
