@@ -189,26 +189,37 @@ def init_logger():
     handler.setFormatter(formatter)
 
     # Configure handlers
-    logconfig = tools.config['log_handler']
+    default_config = [
+        'openerp.netsvc.rpc.request:INFO',
+        'openerp.netsvc.rpc.response:INFO',
+        'openerp.addons.web.common.http:INFO',
+        'openerp.addons.web.common.openerplib:INFO',
+        'openerp.sql_db:INFO',
+        ':INFO',
+    ]
+
     if tools.config['log_level'] == 'info':
         pseudo_config = []
     elif tools.config['log_level'] == 'debug_rpc':
-        pseudo_config = ['openerp.netsvc.rpc.request:DEBUG']
+        pseudo_config = ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG']
     elif tools.config['log_level'] == 'debug_rpc_answer':
-        pseudo_config = ['openerp.netsvc.rpc.request:DEBUG', 'openerp.netsvc.rpc.response:DEBUG']
+        pseudo_config = ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG', 'openerp.netsvc.rpc.response:DEBUG']
     elif tools.config['log_level'] == 'debug':
         pseudo_config = ['openerp:DEBUG']
-    elif tools.config['log_level'] == 'critical':
-        pseudo_config = ['openerp:CRITICAL']
     elif tools.config['log_level'] == 'test':
         pseudo_config = ['openerp:TEST']
-    elif tools.config['log_level'] == 'error':
-        pseudo_config = ['openerp:ERROR']
     elif tools.config['log_level'] == 'warn':
         pseudo_config = ['openerp:WARNING']
+    elif tools.config['log_level'] == 'error':
+        pseudo_config = ['openerp:ERROR']
+    elif tools.config['log_level'] == 'critical':
+        pseudo_config = ['openerp:CRITICAL']
     elif tools.config['log_level'] == 'debug_sql':
         pseudo_config = ['openerp.sql_db:DEBUG']
-    for logconfig_item in logconfig + pseudo_config:
+
+    logconfig = tools.config['log_handler']
+
+    for logconfig_item in default_config + pseudo_config + logconfig:
         loggername, level = logconfig_item.split(':')
         level = getattr(logging, level, logging.INFO)
         logger = logging.getLogger(loggername)
@@ -218,7 +229,7 @@ def init_logger():
         if loggername != '':
             logger.propagate = False
 
-    for logconfig_item in logconfig + pseudo_config:
+    for logconfig_item in default_config + pseudo_config + logconfig:
         _logger.debug('logger level set: "%s"', logconfig_item)
 
 # A alternative logging scheme for automated runs of the
