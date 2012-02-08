@@ -27,7 +27,6 @@ import random
 from random import sample
 
 class event_moodle(osv.osv):
-    """ Event Type """
     _name = 'event.moodle'
     _columns = {
         'moodle_username' : fields.char('Moodle username', 128,help="You can also connect with your username that you define when you create a tokken"),
@@ -226,12 +225,8 @@ class event_registration(osv.osv):
         create a user and match to a course if the event is already confirmed
         """
         register = self.browse(cr, uid, ids, context=context)
-        print'<<<<<<<<<<<<<<<<<<<<<<<<'
-        print register[0].event_id.state
         if register[0].event_id.state =='confirm': 
             moodle_pool = self.pool.get('event.moodle')
-            print register[0].moodle_users_id
-            print '<<<<<<<<<<<<<<<<<<<<<<<<<<<'
             if register[0].moodle_users_id ==0:
                 moodle_pool = self.pool.get('event.moodle')
                 name_user = moodle_pool.make_username(register[0].name,register[0].event_id.moodle_id)
@@ -259,7 +254,6 @@ class event_registration(osv.osv):
                 'userid' :register[0].moodle_users_id,
                 'courseid' :register[0].event_id.moodle_id
                 }]
-                print 'ok>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
             moodle_pool.moodle_enrolled(cr,uid,[1],enrolled)
         return super(event_registration, self).case_open(cr, uid, ids, context)
 

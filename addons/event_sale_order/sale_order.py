@@ -21,12 +21,36 @@
 
 
 from osv import fields, osv
-class event_sale_order(osv.osv):
-    _name= 'event.sale_order'
-event_sale_order()
 class product(osv.osv):
     _inherit='product.product'
     _columns={
-    'event_ok':fields.boolean('Event')
+    'event_ok':fields.boolean('Event'),
+    'event_type':fields.many2one('event.type','Type of event'),
     }
 product()
+
+class sale_order_line(osv.osv):
+    _inherit='sale.order.line'
+    _columns={
+    'event':fields.many2one('event.event','Event'),
+    'event_type':fields.char('event_type',128),
+    }
+    def onchange_product(self,cr,uid,ids,product):
+        product = self.pool.get('product.product').browse(cr, uid, product)
+        if product.event_type:
+            res={'value' : {
+                            'event_type':product.event_type.name
+                           }
+                }
+            return res
+
+sale_order_line()
+
+class sale_order(osv.osv):
+    _inherit='sale.order'
+    _columns={
+    }
+    def order_confirm(self,cr,uid,ids,context=None):
+        return super(sale_order, self).order_confirm(cr, uid, ids, context)
+sale_order()
+
