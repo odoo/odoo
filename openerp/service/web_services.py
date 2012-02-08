@@ -50,6 +50,8 @@ from openerp.service import http_server
     procedures to be called. Each method has its own arguments footprint.
 """
 
+_logger = logging.getLogger(__name__)
+
 RPC_VERSION_1 = {'server_version': '6.1', 'protocol_version': 1}
 
 # This should be moved to openerp.modules.db, along side initialize().
@@ -83,7 +85,7 @@ def _initialize_db(serv, id, db_name, demo, lang, user_password):
         cr.close()
     except Exception, e:
         serv.actions[id].update(clean=False, exception=e)
-        logging.getLogger('db.create').exception('CREATE DATABASE failed:')
+        _logger.exception('CREATE DATABASE failed:')
         serv.actions[id]['traceback'] = traceback.format_exc()
         if cr:
             cr.close()
@@ -134,7 +136,7 @@ class db(netsvc.ExportService):
 
         self._create_empty_database(db_name)
 
-        logging.getLogger('db.create').info('CREATE DATABASE %s', db_name.lower())
+        _logger.info('CREATE DATABASE %s', db_name.lower())
         create_thread = threading.Thread(target=_initialize_db,
                 args=(self, id, db_name, demo, lang, user_password))
         create_thread.start()
@@ -150,7 +152,7 @@ class db(netsvc.ExportService):
 
         self.actions[id] = {'clean': False}
 
-        logging.getLogger('db.create').info('CREATE DATABASE %s', db_name.lower())
+        _logger.info('CREATE DATABASE %s', db_name.lower())
         self._create_empty_database(db_name)
         _initialize_db(self, id, db_name, demo, lang, user_password)
         return True
@@ -173,7 +175,6 @@ class db(netsvc.ExportService):
     def exp_drop(self, db_name):
         openerp.modules.registry.RegistryManager.delete(db_name)
         sql_db.close_db(db_name)
-        logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
         cr = db.cursor()
@@ -182,101 +183,100 @@ class db(netsvc.ExportService):
             try:
                 cr.execute('DROP DATABASE "%s"' % db_name)
             except Exception, e:
-                logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                        'DROP DB: %s failed:\n%s' % (db_name, e))
+                _logger.error('DROP DB: %s failed:\n%s', db_name, e)
                 raise Exception("Couldn't drop database %s: %s" % (db_name, e))
             else:
-                logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                    'DROP DB: %s' % (db_name))
+                _logger.info('DROP DB: %s', db_name)
         finally:
             cr.close()
         return True
 
+
     def _set_pg_psw_env_var(self):
-        if os.name == 'nt' and not os.environ.get('PGPASSWORD', ''):
+        # see http://www.postgresql.org/docs/8.4/static/libpq-envars.html
+        # FIXME: This is not thread-safe, and should never be enabled for
+        # SaaS (giving SaaS users the super-admin password is not a good idea
+        # anyway)
+        if tools.config['db_password'] and not os.environ.get('PGPASSWORD', ''):
             os.environ['PGPASSWORD'] = tools.config['db_password']
             self._pg_psw_env_var_is_set = True
 
     def _unset_pg_psw_env_var(self):
-        if os.name == 'nt' and self._pg_psw_env_var_is_set:
+        if self._pg_psw_env_var_is_set:
             os.environ['PGPASSWORD'] = ''
 
     def exp_dump(self, db_name):
-        logger = netsvc.Logger()
-
-        self._set_pg_psw_env_var()
-
-        cmd = ['pg_dump', '--format=c', '--no-owner']
-        if tools.config['db_user']:
-            cmd.append('--username=' + tools.config['db_user'])
-        if tools.config['db_host']:
-            cmd.append('--host=' + tools.config['db_host'])
-        if tools.config['db_port']:
-            cmd.append('--port=' + str(tools.config['db_port']))
-        cmd.append(db_name)
-
-        stdin, stdout = tools.exec_pg_command_pipe(*tuple(cmd))
-        stdin.close()
-        data = stdout.read()
-        res = stdout.close()
-        if res:
-            logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                    'DUMP DB: %s failed\n%s' % (db_name, data))
-            raise Exception, "Couldn't dump database"
-        logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                'DUMP DB: %s' % (db_name))
-
-        self._unset_pg_psw_env_var()
-
-        return base64.encodestring(data)
+        try:
+            self._set_pg_psw_env_var()
+            cmd = ['pg_dump', '--format=c', '--no-owner']
+            if tools.config['db_user']:
+                cmd.append('--username=' + tools.config['db_user'])
+            if tools.config['db_host']:
+                cmd.append('--host=' + tools.config['db_host'])
+            if tools.config['db_port']:
+                cmd.append('--port=' + str(tools.config['db_port']))
+            cmd.append(db_name)
+    
+            stdin, stdout = tools.exec_pg_command_pipe(*tuple(cmd))
+            stdin.close()
+            data = stdout.read()
+            res = stdout.close()
+    
+            if not data or res:
+                _logger.error(
+                        'DUMP DB: %s failed! Please verify the configuration of the database password on the server. '\
+                        'It should be provided as a -w <PASSWD> command-line option, or as `db_password` in the '\
+                        'server configuration file.\n %s'  % (db_name, data))
+                raise Exception, "Couldn't dump database"
+            _logger.info('DUMP DB successful: %s', db_name)
+    
+            return base64.encodestring(data)
+        finally:
+            self._unset_pg_psw_env_var()
 
     def exp_restore(self, db_name, data):
-        logger = netsvc.Logger()
+        try:
+            self._set_pg_psw_env_var()
 
-        self._set_pg_psw_env_var()
+            if self.exp_db_exist(db_name):
+                _logger.warning('RESTORE DB: %s already exists' % (db_name,))
+                raise Exception, "Database already exists"
 
-        if self.exp_db_exist(db_name):
-            logger.notifyChannel("web-services", netsvc.LOG_WARNING,
-                    'RESTORE DB: %s already exists' % (db_name,))
-            raise Exception, "Database already exists"
+            self._create_empty_database(db_name)
 
-        self._create_empty_database(db_name)
+            cmd = ['pg_restore', '--no-owner']
+            if tools.config['db_user']:
+                cmd.append('--username=' + tools.config['db_user'])
+            if tools.config['db_host']:
+                cmd.append('--host=' + tools.config['db_host'])
+            if tools.config['db_port']:
+                cmd.append('--port=' + str(tools.config['db_port']))
+            cmd.append('--dbname=' + db_name)
+            args2 = tuple(cmd)
 
-        cmd = ['pg_restore', '--no-owner']
-        if tools.config['db_user']:
-            cmd.append('--username=' + tools.config['db_user'])
-        if tools.config['db_host']:
-            cmd.append('--host=' + tools.config['db_host'])
-        if tools.config['db_port']:
-            cmd.append('--port=' + str(tools.config['db_port']))
-        cmd.append('--dbname=' + db_name)
-        args2 = tuple(cmd)
+            buf=base64.decodestring(data)
+            if os.name == "nt":
+                tmpfile = (os.environ['TMP'] or 'C:\\') + os.tmpnam()
+                file(tmpfile, 'wb').write(buf)
+                args2=list(args2)
+                args2.append(' ' + tmpfile)
+                args2=tuple(args2)
+            stdin, stdout = tools.exec_pg_command_pipe(*args2)
+            if not os.name == "nt":
+                stdin.write(base64.decodestring(data))
+            stdin.close()
+            res = stdout.close()
+            if res:
+                raise Exception, "Couldn't restore database"
+            _logger.info('RESTORE DB: %s' % (db_name))
 
-        buf=base64.decodestring(data)
-        if os.name == "nt":
-            tmpfile = (os.environ['TMP'] or 'C:\\') + os.tmpnam()
-            file(tmpfile, 'wb').write(buf)
-            args2=list(args2)
-            args2.append(' ' + tmpfile)
-            args2=tuple(args2)
-        stdin, stdout = tools.exec_pg_command_pipe(*args2)
-        if not os.name == "nt":
-            stdin.write(base64.decodestring(data))
-        stdin.close()
-        res = stdout.close()
-        if res:
-            raise Exception, "Couldn't restore database"
-        logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                'RESTORE DB: %s' % (db_name))
-
-        self._unset_pg_psw_env_var()
-
-        return True
+            return True
+        finally:
+            self._unset_pg_psw_env_var()
 
     def exp_rename(self, old_name, new_name):
         openerp.modules.registry.RegistryManager.delete(old_name)
         sql_db.close_db(old_name)
-        logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
         cr = db.cursor()
@@ -285,16 +285,14 @@ class db(netsvc.ExportService):
             try:
                 cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
             except Exception, e:
-                logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                        'RENAME DB: %s -> %s failed:\n%s' % (old_name, new_name, e))
+                _logger.error('RENAME DB: %s -> %s failed:\n%s', old_name, new_name, e)
                 raise Exception("Couldn't rename database %s to %s: %s" % (old_name, new_name, e))
             else:
                 fs = os.path.join(tools.config['root_path'], 'filestore')
                 if os.path.exists(os.path.join(fs, old_name)):
                     os.rename(os.path.join(fs, old_name), os.path.join(fs, new_name))
 
-                logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                    'RENAME DB: %s -> %s' % (old_name, new_name))
+                _logger.info('RENAME DB: %s -> %s', old_name, new_name)
         finally:
             cr.close()
         return True
@@ -317,13 +315,13 @@ class db(netsvc.ExportService):
                     import pwd
                     db_user = pwd.getpwuid(os.getuid())[0]
                 if not db_user:
-                    cr.execute("select decode(usename, 'escape') from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (tools.config["db_name"],))
+                    cr.execute("select usename from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (tools.config["db_name"],))
                     res = cr.fetchone()
                     db_user = res and str(res[0])
                 if db_user:
-                    cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in %s order by datname", (db_user, templates_list))
+                    cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in %s order by datname", (db_user, templates_list))
                 else:
-                    cr.execute("select decode(datname, 'escape') from pg_database where datname not in %s order by datname", (templates_list,))
+                    cr.execute("select datname from pg_database where datname not in %s order by datname", (templates_list,))
                 res = [str(name) for (name,) in cr.fetchall()]
             except Exception:
                 res = []
@@ -351,10 +349,9 @@ class db(netsvc.ExportService):
         from openerp.osv.orm import except_orm
         from openerp.osv.osv import except_osv
 
-        l = netsvc.Logger()
         for db in databases:
             try:
-                l.notifyChannel('migration', netsvc.LOG_INFO, 'migrate database %s' % (db,))
+                _logger.info('migrate database %s', db)
                 tools.config['update']['base'] = True
                 pooler.restart_pool(db, force_demo=False, update_module=True)
             except except_orm, inst:
@@ -362,14 +359,11 @@ class db(netsvc.ExportService):
             except except_osv, inst:
                 netsvc.abort_response(1, inst.name, 'warning', inst.value)
             except Exception:
-                import traceback
-                tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
-                l.notifyChannel('web-services', netsvc.LOG_ERROR, tb_s)
+                _logger.exception('Exception in migrate_databases:')
                 raise
         return True
 
 class common(netsvc.ExportService):
-    _logger = logging.getLogger('web-services')
 
     def __init__(self,name="common"):
         netsvc.ExportService.__init__(self,name)
@@ -394,7 +388,7 @@ class common(netsvc.ExportService):
         # the res.users model
         res = security.login(db, login, password)
         msg = res and 'successful login' or 'bad login or password'
-        self._logger.info("%s from '%s' using database '%s'", msg, login, db.lower())
+        _logger.info("%s from '%s' using database '%s'", msg, login, db.lower())
         return res or False
 
     def exp_authenticate(self, db, login, password, user_agent_env):
@@ -441,7 +435,6 @@ GNU Public Licence.
 
 
     def exp_get_migration_scripts(self, contract_id, contract_password):
-        l = netsvc.Logger()
         import openerp.tools.maintenance as tm
         try:
             rc = tm.remote_contract(contract_id, contract_password)
@@ -450,7 +443,7 @@ GNU Public Licence.
             if rc.status != 'full':
                 raise tm.RemoteContractException('Can not get updates for a partial contract')
 
-            l.notifyChannel('migration', netsvc.LOG_INFO, 'starting migration with contract %s' % (rc.name,))
+            _logger.info('starting migration with contract %s', rc.name)
 
             zips = rc.retrieve_updates(rc.id, openerp.modules.get_modules_with_version())
 
@@ -458,12 +451,12 @@ GNU Public Licence.
 
             backup_directory = os.path.join(tools.config['root_path'], 'backup', time.strftime('%Y-%m-%d-%H-%M'))
             if zips and not os.path.isdir(backup_directory):
-                l.notifyChannel('migration', netsvc.LOG_INFO, 'create a new backup directory to \
-                                store the old modules: %s' % (backup_directory,))
+                _logger.info('create a new backup directory to \
+                                store the old modules: %s', backup_directory)
                 os.makedirs(backup_directory)
 
             for module in zips:
-                l.notifyChannel('migration', netsvc.LOG_INFO, 'upgrade module %s' % (module,))
+                _logger.info('upgrade module %s', module)
                 mp = openerp.modules.get_module_path(module)
                 if mp:
                     if os.path.isdir(mp):
@@ -480,7 +473,7 @@ GNU Public Licence.
                     try:
                         base64_decoded = base64.decodestring(zips[module])
                     except Exception:
-                        l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to read the module %s' % (module,))
+                        _logger.error('unable to read the module %s', module)
                         raise
 
                     zip_contents = StringIO(base64_decoded)
@@ -489,13 +482,13 @@ GNU Public Licence.
                         try:
                             tools.extract_zip_file(zip_contents, tools.config['addons_path'] )
                         except Exception:
-                            l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to extract the module %s' % (module, ))
+                            _logger.error('unable to extract the module %s', module)
                             rmtree(module)
                             raise
                     finally:
                         zip_contents.close()
                 except Exception:
-                    l.notifyChannel('migration', netsvc.LOG_ERROR, 'restore the previous version of the module %s' % (module, ))
+                    _logger.error('restore the previous version of the module %s', module)
                     nmp = os.path.join(backup_directory, module)
                     if os.path.isdir(nmp):
                         copytree(nmp, tools.config['addons_path'])
@@ -507,9 +500,7 @@ GNU Public Licence.
         except tm.RemoteContractException, e:
             netsvc.abort_response(1, 'Migration Error', 'warning', str(e))
         except Exception, e:
-            import traceback
-            tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
-            l.notifyChannel('migration', netsvc.LOG_ERROR, tb_s)
+            _logger.exception('Exception in get_migration_script:')
             raise
 
     def exp_get_server_environment(self):
@@ -540,12 +531,11 @@ GNU Public Licence.
         return tools.config.get('login_message', False)
 
     def exp_set_loglevel(self, loglevel, logger=None):
-        l = netsvc.Logger()
-        l.set_loglevel(int(loglevel), logger)
+        # TODO Previously, the level was set on the now deprecated
+        # `openerp.netsvc.Logger` class.
         return True
 
     def exp_get_stats(self):
-        import threading
         res = "OpenERP server: %d threads\n" % threading.active_count()
         res += netsvc.Server.allStats()
         return res
@@ -560,9 +550,8 @@ GNU Public Licence.
         return os.times()
 
     def exp_get_sqlcount(self):
-        logger = logging.getLogger('db.cursor')
-        if not logger.isEnabledFor(logging.DEBUG_SQL):
-            logger.warning("Counters of SQL will not be reliable unless DEBUG_SQL is set at the server's config.")
+        if not logging.getLogger('openerp.sql_db').isEnabledFor(logging.DEBUG):
+            _logger.warning("Counters of SQL will not be reliable unless logger openerp.sql_db is set to level DEBUG or higer.")
         return sql_db.sql_counter
 
 
@@ -678,8 +667,6 @@ class report_spool(netsvc.ExportService):
         self._reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
 
         cr = pooler.get_db(db).cursor()
-        import traceback
-        import sys
         try:
             obj = netsvc.LocalService('report.'+object)
             (result, format) = obj.create(cr, uid, ids, datas, context)
@@ -691,14 +678,11 @@ class report_spool(netsvc.ExportService):
             self._reports[id]['state'] = True
         except Exception, exception:
 
-            tb = sys.exc_info()
-            tb_s = "".join(traceback.format_exception(*tb))
-            logger = netsvc.Logger()
-            logger.notifyChannel('web-services', netsvc.LOG_ERROR,
-                    'Exception: %s\n%s' % (str(exception), tb_s))
+            _logger.exception('Exception: %s\n', str(exception))
             if hasattr(exception, 'name') and hasattr(exception, 'value'):
                 self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
             else:
+                tb = sys.exc_info()
                 self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
             self._reports[id]['state'] = True
         cr.commit()
@@ -721,8 +705,6 @@ class report_spool(netsvc.ExportService):
 
         def go(id, uid, ids, datas, context):
             cr = pooler.get_db(db).cursor()
-            import traceback
-            import sys
             try:
                 obj = netsvc.LocalService('report.'+object)
                 (result, format) = obj.create(cr, uid, ids, datas, context)
@@ -733,15 +715,11 @@ class report_spool(netsvc.ExportService):
                 self._reports[id]['format'] = format
                 self._reports[id]['state'] = True
             except Exception, exception:
-
-                tb = sys.exc_info()
-                tb_s = "".join(traceback.format_exception(*tb))
-                logger = netsvc.Logger()
-                logger.notifyChannel('web-services', netsvc.LOG_ERROR,
-                        'Exception: %s\n%s' % (str(exception), tb_s))
+                _logger.exception('Exception: %s\n', str(exception))
                 if hasattr(exception, 'name') and hasattr(exception, 'value'):
                     self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
                 else:
+                    tb = sys.exc_info()
                     self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
                 self._reports[id]['state'] = True
             cr.commit()

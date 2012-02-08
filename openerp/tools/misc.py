@@ -37,7 +37,6 @@ import socket
 import sys
 import threading
 import time
-import warnings
 import zipfile
 from collections import defaultdict
 from datetime import datetime
@@ -66,7 +65,7 @@ from cache import *
 # There are moved to loglevels until we refactor tools.
 from openerp.loglevels import get_encodings, ustr, exception_to_unicode
 
-_logger = logging.getLogger('tools')
+_logger = logging.getLogger(__name__)
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 # We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
@@ -706,7 +705,7 @@ def logged(f):
 
         vector.append('  result: %s' % pformat(res))
         vector.append('  time delta: %s' % (time.time() - timeb4))
-        loglevels.Logger().notifyChannel('logged', loglevels.LOG_DEBUG, '\n'.join(vector))
+        _logger.debug('\n'.join(vector))
         return res
 
     return wrapper
@@ -876,8 +875,8 @@ def detect_server_timezone():
     try:
         import pytz
     except Exception:
-        loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_WARNING,
-            "Python pytz module is not available. Timezone will be set to UTC by default.")
+        _logger.warning("Python pytz module is not available. "
+            "Timezone will be set to UTC by default.")
         return 'UTC'
 
     # Option 1: the configuration option (did not exist before, so no backwards compatibility issue)
@@ -910,15 +909,14 @@ def detect_server_timezone():
         if value:
             try:
                 tz = pytz.timezone(value)
-                loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_INFO,
-                    "Using timezone %s obtained from %s." % (tz.zone,source))
+                _logger.info("Using timezone %s obtained from %s.", tz.zone, source)
                 return value
             except pytz.UnknownTimeZoneError:
-                loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_WARNING,
-                    "The timezone specified in %s (%s) is invalid, ignoring it." % (source,value))
+                _logger.warning("The timezone specified in %s (%s) is invalid, ignoring it.", source, value)
 
-    loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_WARNING,
-        "No valid timezone could be detected, using default UTC timezone. You can specify it explicitly with option 'timezone' in the server configuration.")
+    _logger.warning("No valid timezone could be detected, using default UTC "
+        "timezone. You can specify it explicitly with option 'timezone' in "
+        "the server configuration.")
     return 'UTC'
 
 def get_server_timezone():

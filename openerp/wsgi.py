@@ -43,6 +43,8 @@ import openerp.modules
 import openerp.tools.config as config
 import service.websrv_lib as websrv_lib
 
+_logger = logging.getLogger(__name__)
+
 # XML-RPC fault codes. Some care must be taken when changing these: the
 # constants are also defined client-side and must remain in sync.
 # User code must use the exceptions defined in ``openerp.exceptions`` (not
@@ -422,12 +424,12 @@ def serve():
     try:
         import werkzeug.serving
         httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
-        logging.getLogger('wsgi').info('HTTP service (werkzeug) running on %s:%s', interface, port)
+        _logger.info('HTTP service (werkzeug) running on %s:%s', interface, port)
     except ImportError:
         import wsgiref.simple_server
-        logging.getLogger('wsgi').warn('Werkzeug module unavailable, falling back to wsgiref.')
+        _logger.warning('Werkzeug module unavailable, falling back to wsgiref.')
         httpd = wsgiref.simple_server.make_server(interface, port, application)
-        logging.getLogger('wsgi').info('HTTP service (wsgiref) running on %s:%s', interface, port)
+        _logger.info('HTTP service (wsgiref) running on %s:%s', interface, port)
 
     httpd.serve_forever()
 
@@ -473,18 +475,50 @@ def on_starting(server):
                 msg = """
 The `web` module is provided by the addons found in the `openerp-web` project.
 Maybe you forgot to add those addons in your addons_path configuration."""
-            logging.exception('Failed to load server-wide module `%s`.%s', m, msg)
+            _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
 
 # Install our own signal handler on the master process.
 def when_ready(server):
     # Hijack gunicorn's SIGWINCH handling; we can choose another one.
     signal.signal(signal.SIGWINCH, make_winch_handler(server))
 
+# Install limits on virtual memory and CPU time consumption.
+def pre_request(worker, req):
+    import os
+    import psutil
+    import resource
+    import signal
+    # VMS and RLIMIT_AS are the same thing: virtual memory, a.k.a. address space
+    rss, vms = psutil.Process(os.getpid()).get_memory_info()
+    soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+    resource.setrlimit(resource.RLIMIT_AS, (config['virtual_memory_limit'], hard))
+
+    r = resource.getrusage(resource.RUSAGE_SELF)
+    cpu_time = r.ru_utime + r.ru_stime
+    signal.signal(signal.SIGXCPU, time_expired)
+    soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
+    resource.setrlimit(resource.RLIMIT_CPU, (cpu_time + config['cpu_time_limit'], hard))
+
+# Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
+def post_request(worker, req, environ):
+    import os
+    import psutil
+    rss, vms = psutil.Process(os.getpid()).get_memory_info()
+    if vms > config['virtual_memory_reset']:
+        _logger.info('Virtual memory consumption '
+            'too high, rebooting the worker.')
+        worker.alive = False # Commit suicide after the request.
+
 # Our signal handler will signal a SGIQUIT to all workers.
 def make_winch_handler(server):
     def handle_winch(sig, fram):
         server.kill_workers(signal.SIGQUIT) # This is gunicorn specific.
     return handle_winch
+
+# SIGXCPU (exceeded CPU time) signal handler will raise an exception.
+def time_expired(n, stack):
+    _logger.info('CPU time limit exceeded.')
+    raise Exception('CPU time limit exceeded.') # TODO one of openerp.exception
 
 # Kill gracefuly the workers (e.g. because we want to clear their cache).
 # This is done by signaling a SIGWINCH to the master process, so it can be

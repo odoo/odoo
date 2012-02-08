@@ -674,6 +674,7 @@
         <record id="nl" model="res.country">
             <field name="name">Netherlands</field>
             <field name="code">nl</field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />            
         </record>
         <record id="no" model="res.country">
             <field name="name">Norway</field>

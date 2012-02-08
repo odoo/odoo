@@ -46,6 +46,8 @@ import openerp.wsgi
     low-level behavior of the wire.
 """
 
+_logger = logging.getLogger(__name__)
+
 def start_services():
     """ Start all services.
 
@@ -80,9 +82,8 @@ def stop_services():
     openerp.netsvc.Server.quitAll()
     openerp.wsgi.stop_server()
     config = openerp.tools.config
-    logger = logging.getLogger('server')
-    logger.info("Initiating shutdown")
-    logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
+    _logger.info("Initiating shutdown")
+    _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
     logging.shutdown()
 
     # Manually join() all threads before calling sys.exit() to allow a second signal
