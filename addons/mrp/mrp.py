@@ -731,7 +731,7 @@ class mrp_production(osv.osv):
                     if qty > qty_avail:
                         # if qtys we have to consume is more than qtys available to consume
                         prod_name = scheduled.product_id.name_get()[0][1]
-                        raise osv.except_osv(_('Warning!'), _('You are going to consume total %s quantities of "%s".\nBut you can consume upto total %s quantities.' % (qty, prod_name, qty_avail)))
+                        raise osv.except_osv(_('Warning!'), _('You are going to consume total %s quantities of "%s".\nBut you can only consume up to total %s quantities.') % (qty, prod_name, qty_avail))
                     if qty <= 0.0:
                         # we already have more qtys consumed than we need 
                         continue
@@ -759,7 +759,7 @@ class mrp_production(osv.osv):
 
                 if rest_qty < production_qty:
                     prod_name = produce_product.product_id.name_get()[0][1]
-                    raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can produce upto total %s quantities.' % (production_qty, prod_name, rest_qty)))
+                    raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can only produce up to total %s quantities.') % (production_qty, prod_name, rest_qty))
                 if rest_qty > 0 :
                     stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), context=context)
 
