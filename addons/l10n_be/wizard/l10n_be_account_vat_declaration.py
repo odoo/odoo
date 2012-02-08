@@ -125,7 +125,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
                         'city': city,
                         'country_code': country_code,
                         'email': email,
-                        'phone': phone.replace('.','').replace('/',''),
+                        'phone': phone.replace('.','').replace('/','').replace('(','').replace(')','').replace(' ',''),
                         'send_ref': send_ref,
                         'quarter': quarter,
                         'month': starting_month,
