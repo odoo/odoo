@@ -168,8 +168,6 @@ class object_proxy(object):
 
     @check
     def execute(self, db, uid, obj, method, *args, **kw):
-        openerp.modules.registry.RegistryManager.check_registry_signaling(db)
-
         cr = pooler.get_db(db).cursor()
         try:
             try:
@@ -184,8 +182,6 @@ class object_proxy(object):
                 raise
         finally:
             cr.close()
-
-        openerp.modules.registry.RegistryManager.signal_caches_change(db)
         return res
 
     def exec_workflow_cr(self, cr, uid, obj, method, *args):
