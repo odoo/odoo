@@ -22,7 +22,7 @@
              <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
                     <field name="product_id" on_change="onchange_product(product_id)"/>
-                    <field name="event_type"/>
+                    <field name="event_type" invisible="1"/>
                     <field name="event" domain="[('type', '=', event_type )]"/>
                 </xpath>
              </field>

@@ -47,7 +47,17 @@ class sale_order_line(osv.osv):
     def button_confirm(self,cr,uid,ids,context=None):
         registration = self.browse(cr,uid,ids,context=None)
         for registration in registration:
-            self.pool.get('event.registration').create(cr,uid,{'name':registration.product_id.name,'nb_register':1,'event_id':registration.event.id})
+            self.pool.get('event.registration').create(cr,uid,{
+            'name':registration.order_id.partner_invoice_id.name,
+            'partner_id':registration.order_id.partner_id.id,
+            'email':registration.order_id.partner_id.email,
+            'phone':registration.order_id.partner_id.phone,
+            'street':registration.order_id.partner_invoice_id.street,
+            'city':registration.order_id.partner_invoice_id.city,
+            'origin':registration.order_id.name,
+            'nb_register':1,
+            'event_id':registration.event.id,
+            })
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context)
 
 sale_order_line()
