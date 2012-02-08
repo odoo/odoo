@@ -6,30 +6,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-03-03 10:18+0000\n"
-"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-07 10:59+0000\n"
+"Last-Translator: Miro Glavić <glavicmiro@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:08+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:44+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
 msgid "Time Tracking"
-msgstr ""
+msgstr "Praćenje vremena"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupiraj po..."
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Today"
-msgstr ""
+msgstr "Danas"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -41,7 +41,7 @@ msgstr "Ožujak"
 msgid ""
 "You did not sign out the last time. Please enter the date and time you "
 "signed out."
-msgstr ""
+msgstr "Niste se odjavili. Upišite vrijeme odjave."
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -62,7 +62,7 @@ msgstr ""
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
 #, python-format
 msgid "The sign-out date must be in the past"
-msgstr ""
+msgstr "Ne možete se odjaviti u budućnosti."
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -80,13 +80,13 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.action.reason:0
 msgid "Attendance reasons"
-msgstr ""
+msgstr "Razlozi prisustva"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 #: field:hr.attendance,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dan"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -96,40 +96,42 @@ msgstr "Prisutan"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_sign_in_out_ask
 msgid "Ask for Sign In Out"
-msgstr ""
+msgstr "Pitaj za prijavu i odjavu"
 
 #. module: hr_attendance
 #: field:hr.attendance,action_desc:0
 #: model:ir.model,name:hr_attendance.model_hr_action_reason
 msgid "Action Reason"
-msgstr ""
+msgstr "Razlog akcije"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out:0
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
 msgid "Define attendance reason"
-msgstr ""
+msgstr "Definirajte razloge prisutnosti"
 
 #. module: hr_attendance
-#: field:hr.sign.in.out,state:0
-msgid "Current state"
+#: code:addons/hr_attendance/report/attendance_by_month.py:184
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
+#, python-format
+msgid "Attendances By Month"
 msgstr ""
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,name:0
 #: field:hr.sign.in.out.ask,name:0
 msgid "Employees name"
-msgstr ""
+msgstr "Imena zaposlenih"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
 msgid "Attendance Reasons"
-msgstr ""
+msgstr "Razlozi prisutnosti"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
@@ -147,12 +149,7 @@ msgid "Ending Date"
 msgstr "Do datuma"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Employee attendance"
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:136
+#: code:addons/hr_attendance/hr_attendance.py:140
 #, python-format
 msgid "Warning"
 msgstr "Upozorenje"
@@ -161,22 +158,19 @@ msgstr "Upozorenje"
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
 #, python-format
 msgid "The Sign-in date must be in the past"
-msgstr ""
+msgstr "Ne možete se prijaviti u budućnosti."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
 #, python-format
 msgid "A sign-in must be right after a sign-out !"
-msgstr ""
+msgstr "Prijava je moguća nakon odjave."
 
 #. module: hr_attendance
 #: field:hr.employee,state:0
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
 msgid "Attendance"
-msgstr ""
+msgstr "Prisutnost"
 
 #. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
@@ -188,7 +182,7 @@ msgstr ""
 #: view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "Print"
-msgstr ""
+msgstr "Ispis"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -198,12 +192,12 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
 msgid "Attendances By Week"
-msgstr ""
+msgstr "Prisutnost po tjenima"
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "Greška u redoslijedu prijava i odjava."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -257,12 +251,12 @@ msgstr "Prosinac"
 #. module: hr_attendance
 #: field:hr.attendance.month,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mjesec"
 
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
 msgid "Action Type"
-msgstr ""
+msgstr "Vrsta akcije"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -273,13 +267,13 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "My Attendance"
-msgstr ""
+msgstr "Moje prisutnosti"
 
 #. module: hr_attendance
 #: help:hr.attendance,action_desc:0
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr ""
+msgstr "Razlozi prijava i odjava za prekovremene sate"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -289,7 +283,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_sign_in_out
 msgid "Sign In Sign Out"
-msgstr ""
+msgstr "Prijava Odjava"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:105
@@ -300,7 +294,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_sigh_in_out
 #, python-format
 msgid "Sign in / Sign out"
-msgstr ""
+msgstr "Prijava / Odjava"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -315,18 +309,18 @@ msgstr ""
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "August"
-msgstr ""
+msgstr "Kolovoz"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
 #, python-format
 msgid "A sign-out must be right after a sign-in !"
-msgstr ""
+msgstr "Odjava je moguća samo nakon prijave!"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "June"
-msgstr ""
+msgstr "Lipanj"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_error
@@ -336,55 +330,55 @@ msgstr ""
 #. module: hr_attendance
 #: field:hr.attendance,name:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "November"
-msgstr ""
+msgstr "Studeni"
 
 #. module: hr_attendance
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Greška ! Ne možete kreirati rekurzivnu hijerarhiju zaposlenika."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "October"
-msgstr ""
+msgstr "Listopad"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "January"
-msgstr ""
+msgstr "Siječanj"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Sign in"
-msgstr ""
+msgstr "Prijava"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 msgid "Analysis Information"
-msgstr ""
+msgstr "Analiza grešaka"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out:0
 msgid "Sign-Out Entry must follow Sign-In."
-msgstr ""
+msgstr "Odjava mora slijediti prijavu."
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Attendance Errors"
-msgstr ""
+msgstr "Greške evidencije prisutnosti"
 
 #. module: hr_attendance
 #: field:hr.attendance,action:0
 #: selection:hr.attendance,action:0
 msgid "Action"
-msgstr ""
+msgstr "Akcija"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out:0
@@ -404,7 +398,7 @@ msgstr ""
 #: field:hr.sign.in.out,emp_id:0
 #: field:hr.sign.in.out.ask,emp_id:0
 msgid "Empoyee ID"
-msgstr ""
+msgstr "ID Zaposlenog"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -413,12 +407,12 @@ msgstr ""
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Cancel"
-msgstr ""
+msgstr "Odustani"
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
 msgid "Specifies the reason for Signing In/Signing Out."
-msgstr ""
+msgstr "Razlog prijave/odjave"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -436,12 +430,12 @@ msgstr ""
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Sign out"
-msgstr ""
+msgstr "Odjava"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Delay"
-msgstr ""
+msgstr "Odgoda"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -450,7 +444,7 @@ msgid "Employee"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:136
+#: code:addons/hr_attendance/hr_attendance.py:140
 #, python-format
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
@@ -461,7 +455,7 @@ msgstr ""
 #: view:hr.sign.in.out.ask:0
 #: field:hr.sign.in.out.ask,last_time:0
 msgid "Your last sign out"
-msgstr ""
+msgstr "Posljednja odjava"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -469,20 +463,27 @@ msgid "Date Recorded"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
+msgid "Attendances"
+msgstr ""
+
+#. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "May"
-msgstr ""
+msgstr "Svibanj"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 msgid "Your last sign in"
-msgstr ""
+msgstr "Vaša zadnja prijava"
 
 #. module: hr_attendance
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
 msgid "Sign Out"
-msgstr ""
+msgstr "Odjava"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
@@ -496,34 +497,32 @@ msgstr ""
 #. module: hr_attendance
 #: field:hr.attendance,employee_id:0
 msgid "Employee's Name"
-msgstr ""
+msgstr "Zaposleni"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
 msgid "Absent"
-msgstr ""
+msgstr "Odsutan"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "February"
-msgstr ""
+msgstr "Veljača"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Employee attendances"
-msgstr ""
+msgstr "Prisutnosti zaposlenih"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:184
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-#, python-format
-msgid "Attendances By Month"
-msgstr ""
+#: field:hr.sign.in.out,state:0
+msgid "Current state"
+msgstr "Trenutno stanje"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "April"
-msgstr ""
+msgstr "Travanj"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -546,9 +545,12 @@ msgstr ""
 #. module: hr_attendance
 #: field:hr.attendance.month,year:0
 msgid "Year"
-msgstr ""
+msgstr "Godina"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 msgid "hr.sign.in.out.ask"
 msgstr ""
+
+#~ msgid "Employee attendance"
+#~ msgstr "Prisutnost zaposlenih"

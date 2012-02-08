@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2009-09-08 16:38+0000\n"
 "Last-Translator: Freerk Kalsbeek (Mindswitch BV) <f.kalsbeek@mindswitch.nl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:12+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:48+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -50,6 +50,12 @@ msgid ""
 "date on the production lot in order to know if whether the repair should be "
 "invoiced to the customer or not."
 msgstr ""
+"Met reparatieorders kunt u uw product reparaties beheren. In een "
+"reparatieorder, kunt u details van de onderdelen die u wilt verwijderen, "
+"toevoegen of vervangen vastleggen en de tijd vastleggen die u besteed aan de "
+"verschillende handelingen. De reparatieorder maakt gebruik van de garantie "
+"datum op de productie partij om te bepalen of de reparatie moet worden "
+"gefactureerd aan de klant of niet."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -69,6 +75,10 @@ msgid ""
 "that you can select the locations in the Info tab, if you have the extended "
 "view."
 msgstr ""
+"Vink dit aan als u de levering wilt beheren als het product is gerepareerd. "
+"Indien aangevinkt, wordt een picklijst gemaakt met het geselecteerde "
+"product. Merk op dat u de locaties kunt selecteren in het tabblad Info als u "
+"de uitgebreide weergave heeft."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
@@ -93,7 +103,7 @@ msgid "Group by partner invoice address"
 msgstr "Groupeer op relatie factuuradres"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:433
+#: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "Geen producten bij vergoedingen gedefineerd"
@@ -162,7 +172,7 @@ msgid "Net Total :"
 msgstr "Netto totaal :"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:433
+#: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "Warning !"
 msgstr "Waarschuwing !"
@@ -183,10 +193,11 @@ msgid "Move"
 msgstr "Verplaatsing"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:368
+#: code:addons/mrp_repair/mrp_repair.py:370
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr ""
+"U moet een partner factuur adres van het reparatie formulier selecteren !"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
@@ -200,10 +211,10 @@ msgid "Quotation / Order"
 msgstr "Offerte / Order"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:335
+#: code:addons/mrp_repair/mrp_repair.py:337
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Waarschuwing"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -214,7 +225,7 @@ msgstr "Extra info"
 #: field:mrp.repair.fee,repair_id:0
 #: field:mrp.repair.line,repair_id:0
 msgid "Repair Order Reference"
-msgstr ""
+msgstr "Reparatie order referentie"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
@@ -222,10 +233,10 @@ msgid "Draft"
 msgstr "Concept"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:382
+#: code:addons/mrp_repair/mrp_repair.py:384
 #, python-format
 msgid "No account defined for partner \"%s\"."
-msgstr ""
+msgstr "Geen rekening voor voor partner \"%s\" gedefinieerd."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -277,12 +288,13 @@ msgid "Shipping address :"
 msgstr "Afleveradres :"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:382
-#: code:addons/mrp_repair/mrp_repair.py:411
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:334
+#: code:addons/mrp_repair/mrp_repair.py:384
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Fout !"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
@@ -300,6 +312,14 @@ msgid ""
 "                  \n"
 "* The 'Cancelled' state is set automatically when user cancel repair order."
 msgstr ""
+" * De 'Concept' status wordt automatisch ingesteld als concept bij een "
+"reparatie order in concept status.                          \n"
+"* De 'Bevestigd' status wordt automatisch ingesteld als bevestigd bij een "
+"reparatie order in bevestigde status.                          \n"
+"* De 'Gereed' status wordt automatisch ingesteld als gereed bij een "
+"reparatie order in gereed status.                          \n"
+"* De 'Geannuleerd' status wordt automatisch ingesteld als de gebruiker de "
+"order annuleert."
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -312,6 +332,8 @@ msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
 msgstr ""
+"Deze handeling zal het reparatieproces annuleren, maar zal niet de factuur "
+"annuleren. Wilt u doorgaan?"
 
 #. module: mrp_repair
 #: field:mrp.repair,pricelist_id:0
@@ -328,17 +350,17 @@ msgstr "Offerte notities"
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Waarschuwing!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Search Reair Orders"
-msgstr ""
+msgstr "Zoek reparatieorders"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Add)"
-msgstr ""
+msgstr "(Toevoegen)"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_line
@@ -374,10 +396,10 @@ msgid "Canceled"
 msgstr "Geannuleerd"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:335
+#: code:addons/mrp_repair/mrp_repair.py:337
 #, python-format
 msgid "Production lot is required for opration line with product '%s'"
-msgstr ""
+msgstr "Productie partij is verplicht voor de regel met product '%s'"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -414,7 +436,7 @@ msgstr "Maak facturen"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Remove)"
-msgstr ""
+msgstr "(Verwijderen)"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -424,17 +446,17 @@ msgstr "Voeg toe"
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
 msgid "Do you really want to create the invoice(s) ?"
-msgstr ""
+msgstr "Wilt u echt de facturen aanmaken?"
 
 #. module: mrp_repair
 #: field:mrp.repair,name:0
 msgid "Repair Reference"
-msgstr ""
+msgstr "Reparatie referentie"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
 msgid "Repair Order"
-msgstr ""
+msgstr "Reparatie order"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -444,7 +466,7 @@ msgstr "In reparatie"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Ready To Repair"
-msgstr ""
+msgstr "Gereed voor reparatie"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
@@ -459,7 +481,7 @@ msgstr "Garantie limiet"
 #. module: mrp_repair
 #: field:mrp.repair,default_address_id:0
 msgid "unknown"
-msgstr ""
+msgstr "Onbekend"
 
 #. module: mrp_repair
 #: field:mrp.repair,product_id:0
@@ -480,11 +502,17 @@ msgstr "De prijslijst komt standaard van de geselecteerde relatie"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
+msgstr "Kosten reperatie regel"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:334
+#, python-format
+msgid "You cannot confirm a repair order which has no line."
 msgstr ""
 
 #. module: mrp_repair
@@ -513,16 +541,16 @@ msgid "End Repair"
 msgstr "Stop reparatie"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:411
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "Geen rekening gedefinieerd voor product \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Quotations"
-msgstr ""
+msgstr "Offertes"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,product_uom_qty:0
@@ -540,7 +568,7 @@ msgstr "Start reparatie"
 #: field:mrp.repair,state:0
 #: field:mrp.repair.line,state:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -619,7 +647,7 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
 msgid "Create Invoice"
-msgstr ""
+msgstr "Maak factuur"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0
@@ -636,7 +664,7 @@ msgstr "Bewerkingregels"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "invoiced"
-msgstr ""
+msgstr "gefaktureerd"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -674,7 +702,7 @@ msgstr "Belastingen:"
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
 msgid "Picking"
-msgstr ""
+msgstr "Levering"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -685,13 +713,13 @@ msgstr "Onbelast bedrag"
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID is not Found"
-msgstr ""
+msgstr "Actieve ID is niet gevonden"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr ""
+msgstr "Reparatieorder is gefactureerd"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -767,7 +795,7 @@ msgid "Ready to Repair"
 msgstr "Gereed voor reparatie"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:368
+#: code:addons/mrp_repair/mrp_repair.py:370
 #, python-format
 msgid "No partner !"
 msgstr "Geen relatie !"
@@ -782,3 +810,28 @@ msgstr "Geen relatie !"
 
 #~ msgid "Make invoices"
 #~ msgstr "Maak Facturen"
+
+#~ msgid ""
+#~ "\n"
+#~ "           The aim is to have a complete module to manage all products "
+#~ "repairs. The following topics should be covered by this module:\n"
+#~ "           * Add/remove products in the reparation\n"
+#~ "           * Impact for stocks\n"
+#~ "           * Invoicing (products and/or services)\n"
+#~ "           * Warranty concept\n"
+#~ "           * Repair quotation report\n"
+#~ "           * Notes for the technician and for the final customer\n"
+#~ msgstr ""
+#~ "\n"
+#~ "           Het is de bedoeling om een ​​complete module voor alle producten "
+#~ "reparaties te beheren. De volgende onderwerpen moeten worden gedekt door "
+#~ "deze module:\n"
+#~ "            * Toevoegen/Verwijderen producten voor reparatie\n"
+#~ "            * Impact voor voorraad\n"
+#~ "            * Facturatie (producten en/of diensten)\n"
+#~ "            * Garanties\n"
+#~ "            * Reparatie offerte rapport\n"
+#~ "            * Noot voor de technicus en voor de uiteindelijke klant\n"
+
+#~ msgid "Products Repairs Module - Manage All products Repairs"
+#~ msgstr "Productie reparatie module - Beheer alle product reparaties"

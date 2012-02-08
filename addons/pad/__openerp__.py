@@ -18,7 +18,7 @@ Lets the company customize which Pad installation should be used to link to new 
         'res_company.xml'
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'web': True,
     'certificate' : '001183545978470526509',
     'js': ['static/src/js/pad.js'],

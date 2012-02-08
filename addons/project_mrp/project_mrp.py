@@ -96,11 +96,12 @@ class sale_order(osv.osv):
                 res_sale[item['sale_id']]['number_of_done'] += item['total']
 
         for sale in self.browse(cr, uid, ids, context=context):
-            res_sale[sale.id]['number_of_stockable'] -= res_sale[sale.id]['total_no_task']
-            #adjust previously percentage because now we must also count the product of type service
-            res[sale.id] = res[sale.id] * float(res_sale[sale.id]['number_of_stockable']) / (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task'])
-            #add the task
-            res[sale.id] += res_sale[sale.id]['number_of_done'] * 100 /  (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task'])
+            if 'number_of_stockable' in res_sale[sale.id]:
+                res_sale[sale.id]['number_of_stockable'] -= res_sale[sale.id]['total_no_task']
+                #adjust previously percentage because now we must also count the product of type service
+                res[sale.id] = res[sale.id] * float(res_sale[sale.id]['number_of_stockable']) / (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task'])
+                #add the task
+                res[sale.id] += res_sale[sale.id]['number_of_done'] * 100 /  (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task'])
         return res
 
     _columns = {

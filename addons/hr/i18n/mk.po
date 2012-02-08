@@ -1,0 +1,881 @@
+# Macedonian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"PO-Revision-Date: 2012-02-07 18:36+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Macedonian <mk@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:41+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
+
+#. module: hr
+#: model:process.node,name:hr.process_node_openerpuser0
+msgid "Openerp user"
+msgstr "OpenERP kорисник"
+
+#. module: hr
+#: view:hr.job:0 field:hr.job,requirements:0
+msgid "Requirements"
+msgstr "Потреби"
+
+#. module: hr
+#: constraint:hr.department:0
+msgid "Error! You can not create recursive departments."
+msgstr "Грешка! Не можете да креирате рекурзивни сектори."
+
+#. module: hr
+#: model:process.transition,name:hr.process_transition_contactofemployee0
+msgid "Link the employee to information"
+msgstr "Врска од вработениот до дадената информација"
+
+#. module: hr
+#: field:hr.employee,sinid:0
+msgid "SIN No"
+msgstr "Број на Осигурување"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_main
+#: model:ir.ui.menu,name:hr.menu_hr_management
+#: model:ir.ui.menu,name:hr.menu_hr_root
+msgid "Human Resources"
+msgstr "Човечки Ресурси"
+
+#. module: hr
+#: view:hr.employee:0 view:hr.job:0
+msgid "Group By..."
+msgstr "Групирај По..."
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.view_department_form_installer
+msgid "Create Your Departments"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"Job Positions are used to define jobs and their requirements. You can keep "
+"track of the number of employees you have per job position and how many you "
+"expect in the future. You can also attach a survey to a job position that "
+"will be used in the recruitment process to evaluate the applicants for this "
+"job position."
+msgstr ""
+"Работните позиции се користат за дефинирање на работните места и нивните "
+"обврски. Со оваа функционалност можете да ги следите и групирате вработените "
+"според одредена работна позиција, како и да имате увид колку дополнително "
+"вработени се очекува да се вклучат на тоа работно место. Можете да додадете "
+"и интервју за одредена работна позиција, кое ќе се користи како евалуациска "
+"алатка за идните апликанти на ова работно место."
+
+#. module: hr
+#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
+#: field:hr.job,department_id:0 view:res.users:0
+msgid "Department"
+msgstr "Сектор"
+
+#. module: hr
+#: view:hr.job:0
+msgid "Mark as Old"
+msgstr "Обележи како Старо"
+
+#. module: hr
+#: view:hr.job:0
+msgid "Jobs"
+msgstr "Работни Места"
+
+#. module: hr
+#: view:hr.job:0
+msgid "In Recruitment"
+msgstr "Во процес на вработување"
+
+#. module: hr
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
+#: field:hr.job,company_id:0
+msgid "Company"
+msgstr "Фирма"
+
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Expected in Recruitment"
+msgstr "Очекуван Број"
+
+#. module: hr
+#: model:ir.actions.todo.category,name:hr.category_hr_management_config
+msgid "HR Management"
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,partner_id:0
+msgid ""
+"Partner that is related to the current employee. Accounting transaction will "
+"be written on this partner belongs to employee."
+msgstr ""
+"Партнерот кој е асоциран со одредениот вработен.Трансакциските налози "
+"(сметководство) кои ќе бидат запишани кон овој партнер ќе му припаднат на "
+"одредениот вработен."
+
+#. module: hr
+#: model:process.transition,name:hr.process_transition_employeeuser0
+msgid "Link a user to an employee"
+msgstr "Го поврзува корисникот (корисничкото име во системот) со вработениот"
+
+#. module: hr
+#: field:hr.department,parent_id:0
+msgid "Parent Department"
+msgstr "Главен Сектор"
+
+#. module: hr
+#: view:hr.employee:0 field:hr.employee,notes:0
+msgid "Notes"
+msgstr "Забелешки"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Married"
+msgstr "Оженет / Омажена"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_create_hr_employee_installer
+msgid ""
+"Create employees form and link them to an OpenERP user if you want them to "
+"access this instance. Categories can be set on employees to perform massive "
+"operations on all the employees of the same category, i.e. allocating "
+"holidays."
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Your Company's Department Structure is used to manage all documents related "
+"to employees by departments: expenses and timesheet validation, leaves "
+"management, recruitments, etc."
+msgstr ""
+"Структурната поделба по сектори  ви овозможува да раководите со сите "
+"документи поврзани со вработените во одделен сектор како што се: трошоци и "
+"валидација на завршени работни задачи, отсуства, дополнителни вработувања "
+"итн."
+
+#. module: hr
+#: field:hr.employee,color:0
+msgid "Color Index"
+msgstr ""
+
+#. module: hr
+#: model:process.transition,note:hr.process_transition_employeeuser0
+msgid ""
+"The Related user field on the Employee form allows to link the OpenERP user "
+"(and her rights) to the employee."
+msgstr ""
+"Даденото корисничко поле во формуларот за вработени, може да ви помогне да "
+"го поврзете корисникот (корисничкото име) на OpenERP (вклучувајќи ги "
+"неговите/нејзиние кориснички права) со одреден вработен."
+
+#. module: hr
+#: view:hr.job:0 selection:hr.job,state:0
+msgid "In Recruitement"
+msgstr "Во процес на вработување"
+
+#. module: hr
+#: field:hr.employee,identification_id:0
+msgid "Identification No"
+msgstr "Број на Л. Карта"
+
+#. module: hr
+#: selection:hr.employee,gender:0
+msgid "Female"
+msgstr "Женски"
+
+#. module: hr
+#: help:hr.job,expected_employees:0
+msgid "Required number of employees in total for that job."
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
+msgid "Attendance"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Social IDs"
+msgstr "Број на Социјално осигурување"
+
+#. module: hr
+#: field:hr.employee,work_phone:0
+msgid "Work Phone"
+msgstr "Службен Телефон"
+
+#. module: hr
+#: field:hr.employee.category,child_ids:0
+msgid "Child Categories"
+msgstr "Под-Категорија"
+
+#. module: hr
+#: view:hr.job:0 field:hr.job,description:0
+#: model:ir.model,name:hr.model_hr_job
+msgid "Job Description"
+msgstr "Опис на Работно Место"
+
+#. module: hr
+#: field:hr.employee,work_location:0
+msgid "Office Location"
+msgstr "Локација на Канцеларијата"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "My Departments Employee"
+msgstr "Вработени во вашиот (мојот) сектор"
+
+#. module: hr
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
+#: model:process.node,name:hr.process_node_employee0
+msgid "Employee"
+msgstr "Вработен"
+
+#. module: hr
+#: model:process.node,note:hr.process_node_employeecontact0
+msgid "Other information"
+msgstr "Останати информации"
+
+#. module: hr
+#: field:hr.employee,work_email:0
+msgid "Work E-mail"
+msgstr "Службен Е-Маил"
+
+#. module: hr
+#: field:hr.employee,birthday:0
+msgid "Date of Birth"
+msgstr "Датум на Раѓање"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_reporting
+msgid "Reporting"
+msgstr "Известувања"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
+msgid "Human Resources Dashboard"
+msgstr "Главна Табла за приказ на информациите поврзани со Човечките Ресурси"
+
+#. module: hr
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
+msgid "Job"
+msgstr "Работно Место"
+
+#. module: hr
+#: field:hr.department,member_ids:0
+msgid "Members"
+msgstr "Членови"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_configuration
+msgid "Configuration"
+msgstr "Конфигурација"
+
+#. module: hr
+#: view:hr.employee:0 field:hr.employee,category_ids:0
+msgid "Categories"
+msgstr "Категории"
+
+#. module: hr
+#: field:hr.job,expected_employees:0
+msgid "Expected Employees"
+msgstr "Потребен број"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Divorced"
+msgstr "Разведен / Разведена"
+
+#. module: hr
+#: field:hr.employee.category,parent_id:0
+msgid "Parent Category"
+msgstr "Главна (Во) Категорија"
+
+#. module: hr
+#: constraint:hr.employee.category:0
+msgid "Error ! You cannot create recursive Categories."
+msgstr "Грешка! Не можете да креирате рекурзивни категории."
+
+#. module: hr
+#: view:hr.department:0
+#: model:ir.actions.act_window,name:hr.open_module_tree_department
+#: model:ir.ui.menu,name:hr.menu_hr_department_tree
+#: field:res.users,context_department_id:0
+msgid "Departments"
+msgstr "Сектори"
+
+#. module: hr
+#: model:process.node,name:hr.process_node_employeecontact0
+msgid "Employee Contact"
+msgstr "Контакт на вработениот"
+
+#. module: hr
+#: view:board.board:0
+msgid "My Board"
+msgstr "Моја Табла"
+
+#. module: hr
+#: selection:hr.employee,gender:0
+msgid "Male"
+msgstr "Машки"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
+msgstr "Категории на вработените"
+
+#. module: hr
+#: view:hr.employee.category:0
+#: model:ir.model,name:hr.model_hr_employee_category
+msgid "Employee Category"
+msgstr "Категорија на вработениот"
+
+#. module: hr
+#: model:process.process,name:hr.process_process_employeecontractprocess0
+msgid "Employee Contract"
+msgstr "Договори на врабтениот"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "hr.department"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_create_hr_employee_installer
+msgid "Create your Employees"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee.category,name:0
+msgid "Category"
+msgstr "Категорија"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid ""
+"Here you can manage your work force by creating employees and assigning them "
+"specific properties in the system. Maintain all employee related information "
+"and keep track of anything that needs to be recorded for them. The personal "
+"information tab will help you maintain their identity data. The Categories "
+"tab gives you the opportunity to assign them related employee categories "
+"depending on their position and activities within the company. A category "
+"can be a seniority level within the company or a department. The Timesheets "
+"tab allows to assign them a specific timesheet and analytic journal where "
+"they will be able to enter time through the system. In the note tab, you can "
+"enter text data that should be recorded for a specific employee."
+msgstr ""
+"Тука можете да раководите со целиот ваш човечки потенцијал, додавајќи им "
+"специфични рољи и улоги на системот. Со оваа алатка можете да ги одржувате "
+"ажуриран сите информации поврзани со вашите вработени. Делот за Лични "
+"Информации ќе ви помогне да ги ажурирате личните податоци додека делот за "
+"Категории ви дава можност да ги категоризирате вработените врз основа на "
+"нивната позиција и активностите кои ги извршуваат. Роковникот ви овозожува "
+"да додавате специфични предефинирани времиња за изведба (на работните "
+"задачи), водење на аналитички дневник (според кој би можеле да ја дефинирате "
+"продуктивноста и ангажманот на вработените). Во делот за Забелешки можете да "
+"додадете забелешка поврзана со одреден вработен."
+
+#. module: hr
+#: help:hr.employee,bank_account_id:0
+msgid "Employee bank salary account"
+msgstr "Трансакциска сметка на вработениот"
+
+#. module: hr
+#: field:hr.department,note:0
+msgid "Note"
+msgstr "Забелешка"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_employee_tree
+msgid "Employees Structure"
+msgstr "Структура на вработените"
+
+#. module: hr
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Contact Information"
+msgstr "Контакт Информации"
+
+#. module: hr
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "Службена Адреса"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr_manager
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
+msgid "HR Manager Dashboard"
+msgstr ""
+"Главна Табла за приказ на информациите поврзани со Менаџерите на Човечките "
+"Ресурси"
+
+#. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr "Под-Сектор"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Status"
+msgstr "Статус"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_tree
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
+msgid "Categories structure"
+msgstr "Структура на категориите"
+
+#. module: hr
+#: field:hr.employee,partner_id:0
+msgid "unknown"
+msgstr "непознато"
+
+#. module: hr
+#: help:hr.job,no_of_employee:0
+msgid "Number of employees with that job."
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,ssnid:0
+msgid "SSN No"
+msgstr "Матичен Број"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Active"
+msgstr "Активен"
+
+#. module: hr
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "Грешка! Не можете да креирате рекурзивна хиерархија на вработените."
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action2
+msgid "Subordonate Hierarchy"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid ""
+"Your departments structure is used to manage all documents related to "
+"employees by departments: expenses and timesheet validation, leaves "
+"management, recruitments, etc."
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,bank_account_id:0
+msgid "Bank Account Number"
+msgstr "Банкарска Сметка"
+
+#. module: hr
+#: view:hr.department:0
+msgid "Companies"
+msgstr "Фирми"
+
+#. module: hr
+#: model:process.transition,note:hr.process_transition_contactofemployee0
+msgid ""
+"In the Employee form, there are different kind of information like Contact "
+"information."
+msgstr ""
+"Во формуларот за Вработени, постојат повеќе видови на информации како: "
+"Контакт Информации итн."
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard
+msgid "Dashboard"
+msgstr ""
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "Old"
+msgstr "Стара"
+
+#. module: hr
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: hr
+#: view:hr.job:0 field:hr.job,state:0
+msgid "State"
+msgstr "Статус"
+
+#. module: hr
+#: field:hr.employee,marital:0
+msgid "Marital Status"
+msgstr "Брачна Состојба"
+
+#. module: hr
+#: model:ir.model,name:hr.model_ir_actions_act_window
+msgid "ir.actions.act_window"
+msgstr ""
+
+#. module: hr
+#: model:process.node,note:hr.process_node_employee0
+msgid "Employee form and structure"
+msgstr "Структура на вработените"
+
+#. module: hr
+#: field:hr.employee,photo:0
+msgid "Photo"
+msgstr "Фотографија"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_users
+msgid "res.users"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Personal Information"
+msgstr "Лични Информации"
+
+#. module: hr
+#: field:hr.employee,city:0
+msgid "City"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,passport_id:0
+msgid "Passport No"
+msgstr "Број на Пасош"
+
+#. module: hr
+#: field:hr.employee,mobile_phone:0
+msgid "Work Mobile"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee.category:0
+msgid "Employees Categories"
+msgstr "Категории на вработените"
+
+#. module: hr
+#: field:hr.employee,address_home_id:0
+msgid "Home Address"
+msgstr "Домашна Адреса"
+
+#. module: hr
+#: view:hr.job:0
+msgid "Description"
+msgstr "Опис"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Single"
+msgstr "Неженет / Немажена"
+
+#. module: hr
+#: field:hr.job,name:0
+msgid "Job Name"
+msgstr "Работно Место"
+
+#. module: hr
+#: view:hr.job:0 selection:hr.job,state:0
+msgid "In Position"
+msgstr "На Позиција"
+
+#. module: hr
+#: view:hr.department:0
+msgid "department"
+msgstr "Сектор"
+
+#. module: hr
+#: field:hr.employee,country_id:0
+msgid "Nationality"
+msgstr "Националност"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
+msgid "Leaves"
+msgstr ""
+
+#. module: hr
+#: view:board.board:0
+msgid "HR Manager Board"
+msgstr ""
+"Табла за приказ на информациите и раководење со секторот Човечките Ресурси"
+
+#. module: hr
+#: field:hr.employee,resource_id:0
+msgid "Resource"
+msgstr "Ресурс"
+
+#. module: hr
+#: field:hr.department,complete_name:0
+#: field:hr.employee.category,complete_name:0
+msgid "Name"
+msgstr "Име"
+
+#. module: hr
+#: field:hr.employee,gender:0
+msgid "Gender"
+msgstr "Пол"
+
+#. module: hr
+#: view:hr.employee:0 view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0 view:hr.job:0
+#: field:hr.job,employee_ids:0
+#: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
+#: model:ir.actions.act_window,name:hr.open_view_employee_list
+#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
+#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
+msgid "Employees"
+msgstr "Вработени"
+
+#. module: hr
+#: help:hr.employee,sinid:0
+msgid "Social Insurance Number"
+msgstr "Број на Социјално Осигуруванје"
+
+#. module: hr
+#: field:hr.department,name:0
+msgid "Department Name"
+msgstr "Име на Секторот"
+
+#. module: hr
+#: help:hr.employee,ssnid:0
+msgid "Social Security Number"
+msgstr "Број на Социјално Осигурување"
+
+#. module: hr
+#: model:process.node,note:hr.process_node_openerpuser0
+msgid "Creation of a OpenERP user"
+msgstr "Креирање на OpenERP корисник"
+
+#. module: hr
+#: field:hr.employee,login:0
+msgid "Login"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Job Information"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_hr_job
+#: model:ir.ui.menu,name:hr.menu_hr_job
+msgid "Job Positions"
+msgstr "Работна Позиција"
+
+#. module: hr
+#: field:hr.employee,otherid:0
+msgid "Other Id"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:0 field:hr.employee,coach_id:0
+msgid "Coach"
+msgstr "Тренер/Тутор"
+
+#. module: hr
+#: sql_constraint:hr.job:0
+msgid "The name of the job position must be unique per company!"
+msgstr ""
+
+#. module: hr
+#: view:hr.job:0
+msgid "My Departments Jobs"
+msgstr ""
+
+#. module: hr
+#: field:hr.department,manager_id:0 view:hr.employee:0
+#: field:hr.employee,parent_id:0
+msgid "Manager"
+msgstr "Менаџер"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Widower"
+msgstr "Вдовец / Вдовица"
+
+#. module: hr
+#: field:hr.employee,child_ids:0
+msgid "Subordinates"
+msgstr "Подредени"
+
+#. module: hr
+#: field:hr.job,no_of_employee:0
+msgid "Number of Employees"
+msgstr ""
+
+#~ msgid "Simplifies the management of employee's attendances."
+#~ msgstr ""
+#~ "Го упростува процесот за раководење и следење на присутноста на вработените."
+
+#~ msgid "Holidays"
+#~ msgstr "Отсуства"
+
+#~ msgid "title"
+#~ msgstr "Назив"
+
+#~ msgid "Employee Marital Status"
+#~ msgstr "Брачната состојба на вработените"
+
+#~ msgid "Tracks employee leaves, allocation requests and planning."
+#~ msgstr ""
+#~ "Ги мониторира отсуствата на вработените, побарувања за распределба и "
+#~ "планирање."
+
+#~ msgid "Employee Passport Information"
+#~ msgstr "Информации за пасошот на вработениот"
+
+#~ msgid "Generic Payroll system."
+#~ msgstr "Генерички систем за Плати"
+
+#~ msgid "Employee's Contracts"
+#~ msgstr "Работни Договори за вработените"
+
+#~ msgid ""
+#~ "Error ! You cannot select a department for which the employee is the manager."
+#~ msgstr ""
+#~ "Грешка! Не можете да одберете сектор во кој вработениот во исто време е и "
+#~ "Менаџер."
+
+#~ msgid "Position"
+#~ msgstr "Позиција"
+
+#~ msgid "Employee Hierarchy"
+#~ msgstr "Хиерархија на Вработените"
+
+#~ msgid ""
+#~ "Tracks and helps employees encode and validate timesheets and attendances."
+#~ msgstr ""
+#~ "Ги следи и ви помага при зумаризацијата и валидацијата на работното време и "
+#~ "присутноста на работното место."
+
+#~ msgid "Periodic Evaluations"
+#~ msgstr "Периодични Евалуации"
+
+#~ msgid "Timesheets"
+#~ msgstr "Следење на времето за извршување на работните задачи"
+
+#~ msgid "No of Employee"
+#~ msgstr "Моментален Број"
+
+#~ msgid "Number of employee with that job."
+#~ msgstr "Број на вработени на одреденото работно место/позиција."
+
+#~ msgid ""
+#~ "You can enhance the base HR Application by installing few HR-related "
+#~ "functionalities."
+#~ msgstr ""
+#~ "Можете да ја збогатите базичната Апликација за Човечки Ресурси со "
+#~ "инсталација на дополнителни функционалности поврзани со оваа апликација."
+
+#~ msgid "Image"
+#~ msgstr "Слика"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Процес на Конфигурација"
+
+#~ msgid "It is linked with manager of Department"
+#~ msgstr "Поврзано е со Раководниот/Менаџерски Сектор"
+
+#~ msgid ""
+#~ "Lets you create and manage the periodic evaluation and performance review of "
+#~ "employees."
+#~ msgstr ""
+#~ "Ви овозможува да креирате и раководите со периодичните проценки во "
+#~ "перформансите на вработените."
+
+#~ msgid "Recruitment Process"
+#~ msgstr "Процес на Вработување"
+
+#~ msgid "Holidays / Leaves Management"
+#~ msgstr "Раководење/Поставување на Празниците / Отсуствата"
+
+#~ msgid "Configure"
+#~ msgstr "Конфигурирај"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Module for human resource management. You can manage:\n"
+#~ "    * Employees and hierarchies : You can define your employee with User and "
+#~ "display hierarchies\n"
+#~ "    * HR Departments\n"
+#~ "    * HR Jobs\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    \\n\n"
+#~ "    Module for human resource management. You can manage:\\n\n"
+#~ "    * Employees and hierarchies : You can define your employee with User and "
+#~ "display hierarchies\\n\n"
+#~ "    * HR Departments\\n\n"
+#~ "    * HR Jobs\\n\n"
+#~ "    "
+
+#~ msgid "Status Description"
+#~ msgstr "Опис на Статусот"
+
+#~ msgid "Required number of Employees in total for that job."
+#~ msgstr "Вкупен број на вработени за извршување на одредена работна задача."
+
+#~ msgid "Helps you manage and streamline your recruitment process."
+#~ msgstr ""
+#~ "Ви асистира при раководењето и подобрувањето на процесот на вработување."
+
+#~ msgid ""
+#~ "Tracks and manages employee expenses, and can automatically re-invoice "
+#~ "clients if the expenses are project-related."
+#~ msgstr ""
+#~ "Ги следи трошоците поврзани со вработените и ви дава можност за автоматско "
+#~ "фактурирање (ре-фактурирање) на клиентите доколку истите трошоци се поврзани "
+#~ "со одреден проект/работа извршена за споменатите клиенти."
+
+#~ msgid "Current Activity"
+#~ msgstr "Тековна Активност"
+
+#~ msgid "Payroll Accounting"
+#~ msgstr "Сметководство поврзано со Плати"
+
+#~ msgid "Attendances"
+#~ msgstr "Редовност"
+
+#~ msgid "Payroll"
+#~ msgstr "Платен Список"
+
+#~ msgid "Extends employee profiles to help manage their contracts."
+#~ msgstr ""
+#~ "Го проширува профилот на вработените и помага при управувањето со нивните "
+#~ "договори/зделки."
+
+#~ msgid "Current"
+#~ msgstr "Тековен"
+
+#~ msgid "Human Resources Application Configuration"
+#~ msgstr "Конфигурација на Бизнис Апликацијата за Човечки Ресурси"
+
+#~ msgid "Mobile"
+#~ msgstr "Мобилен"
+
+#~ msgid "Expenses"
+#~ msgstr "Трошоци"
+
+#~ msgid "Configure Your Human Resources Application"
+#~ msgstr "Конфигурирајте ја Апликацијата за Човечки Ресурси"
+
+#~ msgid "Generic Payroll system Integrated with Accountings."
+#~ msgstr ""
+#~ "Генерички систем на Платните Списоци интегрирани со Сметководствената Бизнис "
+#~ "Апликација."

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-03-03 15:08+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
 "<openerp@novotrade.hu>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:53+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:33+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -64,9 +64,9 @@ msgid "Daily Timesheets for this year"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.line:0
-msgid "To Invoice"
-msgstr "Számlázandó"
+#: view:account.analytic.account:0
+msgid "Re-open project"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
@@ -154,11 +154,6 @@ msgid "Invoiced Amount"
 msgstr "Kiszámlázott összeg"
 
 #. module: hr_timesheet_invoice
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Uninvoiced line with billing rate"
 msgstr "Nem számlázott sor számlázási rátával"
@@ -177,11 +172,6 @@ msgstr "Projekt"
 #: field:report.account.analytic.line.to.invoice,amount:0
 msgid "Amount"
 msgstr "Összeg"
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Reactivate Account"
-msgstr "Gyűjtőkód újraaktíválása"
 
 #. module: hr_timesheet_invoice
 #: sql_constraint:account.move.line:0
@@ -370,6 +360,16 @@ msgid "Error !"
 msgstr "Hiba !"
 
 #. module: hr_timesheet_invoice
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
+msgid "Gratis"
+msgstr "Ingyen"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.line:0
+msgid "To Invoice"
+msgstr "Számlázandó"
+
+#. module: hr_timesheet_invoice
 #: help:account.analytic.account,to_invoice:0
 msgid ""
 "Fill this field if you plan to automatically generate invoices based on the "
@@ -442,11 +442,6 @@ msgid "Analytic lines to invoice report"
 msgstr "Kiszámlázandó gyűjtőkód tételek kimutatása"
 
 #. module: hr_timesheet_invoice
-#: field:report_timesheet.invoice,amount_invoice:0
-msgid "To invoice"
-msgstr "Számlázandó"
-
-#. module: hr_timesheet_invoice
 #: field:account.analytic.account,to_invoice:0
 msgid "Invoice on Timesheet & Costs"
 msgstr ""
@@ -499,6 +494,14 @@ msgid "Invoice contract"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,month:0
 #: view:report.timesheet.line:0
 #: field:report.timesheet.line,month:0
@@ -516,11 +519,6 @@ msgstr "Pénznem"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
 msgid "Journal Items"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
-msgid "90%"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -544,6 +542,7 @@ msgid "Non Assigned timesheets to users"
 msgstr "Felhasználóhoz nem hozzárendelt munkaidő-kimutatások"
 
 #. module: hr_timesheet_invoice
+#: view:account.analytic.line:0
 #: field:report.timesheet.line,invoice_id:0
 msgid "Invoiced"
 msgstr "Számlázott"
@@ -552,6 +551,13 @@ msgstr "Számlázott"
 #: field:report.analytic.account.close,quantity_max:0
 msgid "Max. Quantity"
 msgstr "Max. mennyiség"
+
+#. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:132
@@ -615,7 +621,7 @@ msgid "October"
 msgstr "Október"
 
 #. module: hr_timesheet_invoice
-#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
 msgid "50%"
 msgstr "50%"
 
@@ -672,9 +678,9 @@ msgid "Extended Filters..."
 msgstr "Kiterjesztett szűrők…"
 
 #. module: hr_timesheet_invoice
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr ""
+#: field:report_timesheet.invoice,amount_invoice:0
+msgid "To invoice"
+msgstr "Számlázandó"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -703,11 +709,6 @@ msgid "Total:"
 msgstr "Összesen:"
 
 #. module: hr_timesheet_invoice
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
 #: selection:report.timesheet.line,month:0
 #: selection:report_timesheet.account,month:0
@@ -717,17 +718,14 @@ msgid "January"
 msgstr "Január"
 
 #. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Credit"
 msgstr "Követel"
-
-#. module: hr_timesheet_invoice
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
-"Hiba! A pénznemnek meg kell egyeznie a kiválasztott vállalat pénznemével."
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:108
@@ -750,6 +748,11 @@ msgstr ""
 #: field:report.analytic.account.close,balance:0
 msgid "Balance"
 msgstr "Egyenleg"
+
+#. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,quantity:0
@@ -880,6 +883,11 @@ msgstr ""
 "Kérem, töltse ki a partner vagy vevő és az eladási árlista mezőt az alábbi "
 "gyűjtőkód űrlapján:\n"
 "%s"
+
+#. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
@@ -1118,13 +1126,6 @@ msgid "Timesheet lines in this month"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Invoicing Statistics"
 msgstr ""
@@ -1157,11 +1158,6 @@ msgstr "Év"
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Timesheet lines during last 7 days"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
 msgstr ""
 
 #~ msgid "Sale Pricelist"
@@ -1202,8 +1198,14 @@ msgstr ""
 #~ msgid "Invoice on analytic lines"
 #~ msgstr "Számla gyűjtőkód tételek alapján"
 
-#~ msgid "Gratis"
-#~ msgstr "Ingyen"
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr ""
+#~ "Hiba! A pénznemnek meg kell egyeznie a kiválasztott vállalat pénznemével."
+
+#~ msgid "Reactivate Account"
+#~ msgstr "Gyűjtőkód újraaktíválása"
 
 #~ msgid ""
 #~ "\n"

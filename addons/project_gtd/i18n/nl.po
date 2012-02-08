@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2011-01-18 14:55+0000\n"
 "Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:59+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:37+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -57,10 +57,9 @@ msgid "Pending Tasks"
 msgstr ""
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr "Er zijn geen onderliggende timeboxen!"
+#: view:project.task:0
+msgid "Next"
+msgstr "Volgende"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -94,10 +93,8 @@ msgid "Pending"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0
-#: field:project.gtd.timebox,name:0
-#: view:project.task:0
-#: field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
+#: view:project.task:0 field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "Timebox"
 
@@ -182,6 +179,11 @@ msgid "Contexts"
 msgstr "Contexten"
 
 #. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_car
+msgid "Car"
+msgstr "Auto"
+
+#. module: project_gtd
 #: view:project.task:0
 msgid "Show Context"
 msgstr ""
@@ -211,16 +213,16 @@ msgstr ""
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0
-#: field:project.gtd.context,name:0
+#: view:project.gtd.context:0 field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr "Context"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
-msgstr "Volgende"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
+msgstr "Er zijn geen onderliggende timeboxen!"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
@@ -233,8 +235,7 @@ msgid "Office"
 msgstr "Kantoor"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0
-#: field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "Reeks"
 
@@ -277,6 +278,11 @@ msgstr "Haal uit timebox"
 #: help:project.task,context_id:0
 msgid "The context place where user has to treat task"
 msgstr "De context plaats waar de gebruiker de taak moet behandelen"
+
+#. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_home
+msgid "Home"
+msgstr "Thuis"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
@@ -435,9 +441,6 @@ msgstr "Vorige"
 #~ msgid "This Month"
 #~ msgstr "Deze maand"
 
-#~ msgid "Car"
-#~ msgstr "Auto"
-
 #~ msgid ""
 #~ "\n"
 #~ "This module implements all concepts defined by the Getting Things Done\n"
@@ -471,6 +474,3 @@ msgstr "Vorige"
 #~ "werkelijk\n"
 #~ "uitvoeren van die taken.\n"
 #~ "    "
-
-#~ msgid "Home"
-#~ msgstr "Thuis"

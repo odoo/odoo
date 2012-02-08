@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-14 18:20+0000\n"
 "Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:56+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:06+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -109,9 +109,19 @@ msgid "Non Member"
 msgstr "Niet-lid"
 
 #. module: membership
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "Standaard lidmaatschap"
+
+#. module: membership
 #: view:res.partner:0
 msgid "All Members"
 msgstr "Alle leden"
+
+#. module: membership
+#: field:res.partner,membership_stop:0
+msgid "Stop membership date"
+msgstr "Einddatum lidmaatschap"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -152,6 +162,11 @@ msgstr "Geassocieerde relatie"
 #: view:res.partner:0
 msgid "Supplier Partners"
 msgstr ""
+
+#. module: membership
+#: field:report.membership,num_invoiced:0
+msgid "# Invoiced"
+msgstr "# Gefactureerd"
 
 #. module: membership
 #: constraint:account.invoice:0
@@ -328,9 +343,9 @@ msgid "July"
 msgstr "Juli"
 
 #. module: membership
-#: field:report.membership,num_invoiced:0
-msgid "# Invoiced"
-msgstr "# Gefactureerd"
+#: model:product.template,name:membership.membership_0_product_template
+msgid "Golden Membership"
+msgstr "Gouden lidmaatschap"
 
 #. module: membership
 #: help:res.partner,associate_member:0
@@ -794,9 +809,9 @@ msgid "May"
 msgstr "Mei"
 
 #. module: membership
-#: field:res.partner,membership_stop:0
-msgid "Stop membership date"
-msgstr "Einddatum lidmaatschap"
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr "Zilver lidmaatschap"
 
 #. module: membership
 #: view:product.product:0
@@ -1002,14 +1017,8 @@ msgstr "Ontvangen inkomsten"
 #~ msgid "Last 30 Days"
 #~ msgstr "Laatste 30 Dagen"
 
-#~ msgid "Golden Membership"
-#~ msgstr "Gouden lidmaatschap"
-
 #~ msgid "Extended Filters..."
 #~ msgstr "Uitgebreide filters..."
-
-#~ msgid "Basic Membership"
-#~ msgstr "Standaard lidmaatschap"
 
 #~ msgid "Last 365 Days"
 #~ msgstr "Laatste 365 dagen"
@@ -1020,9 +1029,6 @@ msgstr "Ontvangen inkomsten"
 #~ msgstr ""
 #~ "Fout ! U kunt de hoofd prijslijst niet als andere prijslijst toekennen in "
 #~ "prijslijst item!"
-
-#~ msgid "Silver Membership"
-#~ msgstr "Zilver lidmaatschap"
 
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-01-13 06:54+0000\n"
 "Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:46+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -31,12 +31,6 @@ msgstr "Confirmé"
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
 msgstr "Positions Budgétaires"
-
-#. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "The General Budget '%s' has no Accounts!"
-msgstr "Le Budget Général '%s' n'a pas de COmptes !"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -142,9 +136,10 @@ msgstr ""
 "période."
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr "Cet assistant est utilisé pour imprimer un résumé des budgets"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "The Budget '%s' has no accounts!"
+msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -298,13 +293,9 @@ msgid "Budgets"
 msgstr "Budgets"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
-"Erreur! La monnaie doit être la même que la monnaie de la société "
-"sélectionnée"
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Cet assistant est utilisé pour imprimer un résumé des budgets"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -502,6 +493,10 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom du Modèle non valide pour la définition de l'action."
 
+#, python-format
+#~ msgid "The General Budget '%s' has no Accounts!"
+#~ msgstr "Le Budget Général '%s' n'a pas de COmptes !"
+
 #~ msgid "Budget Dotation"
 #~ msgstr "Dotation du Budget"
 
@@ -563,3 +558,10 @@ msgstr ""
 #~ "    3. Le dernier rapport provient du plan comptable analytique. Il donne la "
 #~ "répartition, pour les comptes analytiques, des Budgets maitres par budget.\n"
 #~ "\n"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr ""
+#~ "Erreur! La monnaie doit être la même que la monnaie de la société "
+#~ "sélectionnée"

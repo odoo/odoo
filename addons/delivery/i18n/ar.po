@@ -6,65 +6,64 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2009-02-03 06:25+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-08 02:51+0000\n"
+"Last-Translator: kifcaliph <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:52+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:02+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
-msgstr ""
+msgstr "مرجع الأمر"
+
+#. module: delivery
+#: model:product.template,name:delivery.delivery_product_product_template
+msgid "Delivery by Poste"
+msgstr "التسليم عن طريق هيئة البريد"
 
 #. module: delivery
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Destination"
-msgstr ""
+msgstr "المقصد"
 
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr ""
+msgstr "الوزن الصافي"
 
 #. module: delivery
 #: view:stock.picking:0
 msgid "Delivery Order"
-msgstr ""
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No price available !"
-msgstr ""
+msgstr "أمر التسليم"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
+msgstr "خط شبكة التسليم"
 
 #. module: delivery
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Delivery grids"
-msgstr ""
+msgstr "شبكات التسليم"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
 msgid "Volume"
-msgstr ""
+msgstr "حجم"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr ""
+msgstr "خط التسليم"
 
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
@@ -74,17 +73,17 @@ msgstr ""
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr ""
+msgstr "امر تسليم"
 
 #. module: delivery
 #: view:res.partner:0
 msgid "Deliveries Properties"
-msgstr ""
+msgstr "خصائص التسليمات"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr ""
+msgstr "اختيار ما تريد عمل له فاتورة"
 
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
@@ -94,24 +93,24 @@ msgstr ""
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr ""
+msgstr "وتعطي امر المتتابعة عند عرض قائمة شبكة التسليم."
 
 #. module: delivery
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
-msgstr ""
+msgstr "بلدان"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr ""
+msgstr "أمر التوصيل :"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
 msgid "Variable Factor"
-msgstr ""
+msgstr "عامل متغير"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
@@ -130,7 +129,7 @@ msgstr ""
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
 msgid "Fixed"
-msgstr ""
+msgstr "ثابت"
 
 #. module: delivery
 #: field:delivery.carrier,name:0
@@ -141,59 +140,59 @@ msgstr ""
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
+msgstr "طريقة التوصيل"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No price available!"
 msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr ""
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
+msgstr "حركة مخزن"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "مرجع تعقب الناقل"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
 msgid "Net Weight"
-msgstr ""
+msgstr "صافي الوزن"
 
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Grid Lines"
-msgstr ""
+msgstr "خطوط الشبكة"
 
 #. module: delivery
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Grid definition"
-msgstr ""
+msgstr "تعريف الشبكة"
 
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Cancel"
-msgstr ""
+msgstr "ال_غاء"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
 msgid "Operator"
-msgstr ""
+msgstr "عملية"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "شريك"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "أمر المبيعات"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form1
@@ -205,7 +204,7 @@ msgstr ""
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Lot"
-msgstr ""
+msgstr "دفعة"
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -215,37 +214,43 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
+msgstr "شبكة التسليم"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No line matched this product or order in the choosed delivery grid."
 msgstr ""
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
-msgstr ""
+msgstr "الفاتورة لـ"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "قائمة الالتقاط"
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr ""
+msgstr "شبكات التسليم"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
 msgid "Make Delievery"
-msgstr ""
+msgstr "قم بالتسلم"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
 msgid "Name"
-msgstr ""
+msgstr "الاسم"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr ""
+msgstr "ابدأ الرمز"
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
@@ -258,12 +263,12 @@ msgstr ""
 #: code:addons/delivery/stock.py:89
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "تحذير"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr ""
+msgstr "شبكية"
 
 #. module: delivery
 #: help:delivery.grid,active:0
@@ -271,14 +276,15 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
+"اذا كان الحقل النشط خاطيء, ستسمح لك بإخفاء شبكة التسليم بدون ازالتها."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
-msgstr ""
+msgstr "إلى الرمز"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:143
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "Default price"
 msgstr ""
@@ -296,22 +302,22 @@ msgstr ""
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Date"
-msgstr ""
+msgstr "تاريخ الأمر"
 
 #. module: delivery
 #: field:delivery.grid,name:0
 msgid "Grid Name"
-msgstr ""
+msgstr "اسم الشبكية"
 
 #. module: delivery
 #: view:stock.move:0
 msgid "Weights"
-msgstr ""
+msgstr "الأوزان"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
 msgid "Number of Packages"
-msgstr ""
+msgstr "عدد العبوات"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -320,7 +326,7 @@ msgstr ""
 #: field:stock.move,weight:0
 #: field:stock.picking,weight:0
 msgid "Weight"
-msgstr ""
+msgstr "الوزن"
 
 #. module: delivery
 #: help:delivery.carrier,use_detailed_pricelist:0
@@ -341,22 +347,22 @@ msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid available !"
-msgstr ""
+msgstr "لا يوجد شبكة متاحة !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
-msgstr ""
+msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "Order not in draft state !"
-msgstr ""
+msgstr "الامر غير موجود في حالة السحب !"
 
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
@@ -366,33 +372,33 @@ msgstr ""
 #. module: delivery
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "انت تحاول تخصيص الكثير من ما هو دون المنتج نفسه"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
 #: field:delivery.grid,active:0
 msgid "Active"
-msgstr ""
+msgstr "نشط"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Shipping Date"
-msgstr ""
+msgstr "تاريخ الشحن"
 
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr ""
+msgstr "منتج التسليم"
 
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Condition"
-msgstr ""
+msgstr "شرط"
 
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
-msgstr ""
+msgstr "سعر التكلفة"
 
 #. module: delivery
 #: field:delivery.define.delivery.steps.wizard,picking_policy:0
@@ -403,12 +409,12 @@ msgstr ""
 #: selection:delivery.grid.line,price_type:0
 #: field:delivery.grid.line,type:0
 msgid "Variable"
-msgstr ""
+msgstr "متغير"
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
+msgstr "سيستخدم اسلوب التسليم عندما تكون الفاتورة بالإختيار."
 
 #. module: delivery
 #: sql_constraint:stock.picking:0
@@ -418,12 +424,12 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
-msgstr ""
+msgstr "القيمة القصوى"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Quantity"
-msgstr ""
+msgstr "كمية"
 
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
@@ -447,7 +453,7 @@ msgstr ""
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr ""
+msgstr "اكمل هذا الحقل اذا كنت تخطط لعمل فاتورة  للشحن بناءًا على الإختيار."
 
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
@@ -455,7 +461,7 @@ msgid "Cancel"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:131
+#: code:addons/delivery/delivery.py:130
 #, python-format
 msgid "Free if more than %.2f"
 msgstr ""
@@ -476,17 +482,17 @@ msgstr ""
 #. module: delivery
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr ""
+msgstr "المبيعات و المشتريات"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
-msgstr ""
+msgstr "<="
 
 #. module: delivery
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "يجب تعيين دفعة إنتاج لهذا المنتج"
 
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
@@ -496,19 +502,19 @@ msgstr ""
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "Create Deliveries"
-msgstr ""
+msgstr "انشأ تسليمات"
 
 #. module: delivery
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"
-msgstr ""
+msgstr "حالات"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
-msgstr ""
+msgstr "وصف"
 
 #. module: delivery
 #: help:delivery.carrier,active:0
@@ -516,41 +522,42 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
+"اذا كان الحقل النشط خاطيء, ستسمح لك بإخفاء ناقل التسليك بدون إزالتها."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr ""
+msgstr "قائمة اسعار التسليم"
 
 #. module: delivery
 #: field:delivery.carrier,price:0
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
-msgstr ""
+msgstr "السعر"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "لا توجد شبكة متوافقة مع هذا الناقل !"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr ""
+msgstr "التسليم"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Weight * Volume"
-msgstr ""
+msgstr "الوزن * المقدار"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "="
-msgstr ""
+msgstr "="
 
 #. module: delivery
 #: code:addons/delivery/stock.py:90
@@ -580,24 +587,24 @@ msgstr ""
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
 msgid "Carrier"
-msgstr ""
+msgstr "الناقل"
 
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Apply"
-msgstr ""
+msgstr "تطبيق"
 
 #. module: delivery
 #: field:sale.order,id:0
 msgid "ID"
-msgstr ""
+msgstr "معرّف"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
+msgstr "يُسجل حالة الامر ليضيف خطوط التسليم."
 
 #. module: delivery
 #: constraint:res.partner:0
@@ -607,18 +614,18 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "مسلسل"
 
 #. module: delivery
 #: field:delivery.grid.line,list_price:0
 msgid "Sale Price"
-msgstr ""
+msgstr "سعر البيع"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_cost
 #: view:sale.order:0
 msgid "Delivery Costs"
-msgstr ""
+msgstr "تكاليف التسليم"
 
 #. module: delivery
 #: selection:delivery.define.delivery.steps.wizard,picking_policy:0
@@ -633,4 +640,24 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
-msgstr ""
+msgstr "نوع السعر"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "لا بدّ أن يكون مرجع الأمر فريداً"
+
+#, python-format
+#~ msgid "No price available !"
+#~ msgstr "السعر غير متاح!"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "خطأ! لا يمكنك إنشاء أعضاء ذوي ارتباطات متداخلة."
+
+#, python-format
+#~ msgid "No line matched this order in the choosed delivery grids !"
+#~ msgstr "لا يوجد خط متوافق مع هذا الامر في شبكات التسليم المختارة !"
+
+#~ msgid "Carrier Partner"
+#~ msgstr "الشريك الناقل"
+
+#~ msgid "Carriers and deliveries"
+#~ msgstr "الناقلات و التسليمات"

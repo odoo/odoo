@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-23 09:54+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2009-10-08 08:10+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-24 05:54+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:41+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -23,8 +23,7 @@ msgid "Openerp user"
 msgstr "Openerp Lietotājs"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,requirements:0
+#: view:hr.job:0 field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "Prasības"
 
@@ -51,8 +50,7 @@ msgid "Human Resources"
 msgstr "Personāla Vadība"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
 msgstr "Grupēt pēc..."
 
@@ -76,11 +74,8 @@ msgstr ""
 "citus darbiniekus darbā."
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
-#: view:res.users:0
+#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
+#: field:hr.job,department_id:0 view:res.users:0
 msgid "Department"
 msgstr "Departaments"
 
@@ -100,9 +95,7 @@ msgid "In Recruitment"
 msgstr "Pieņemti Darbā"
 
 #. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Uzņēmums"
@@ -137,8 +130,7 @@ msgid "Parent Department"
 msgstr "VirsNodaļa"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,notes:0
+#: view:hr.employee:0 field:hr.employee,notes:0
 msgid "Notes"
 msgstr "Piezīmes"
 
@@ -182,8 +174,7 @@ msgstr ""
 "izvēlētajam darbiniekam."
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Recruitement"
 msgstr "Tiek Pieņemts Darbā"
 
@@ -223,8 +214,7 @@ msgid "Child Categories"
 msgstr "Apakškategorijas"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,description:0
+#: view:hr.job:0 field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "Darba Apraksts"
@@ -240,8 +230,7 @@ msgid "My Departments Employee"
 msgstr "Manas Nodaļas Darbinieks"
 
 #. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Darbinieks"
@@ -273,9 +262,7 @@ msgid "Human Resources Dashboard"
 msgstr "Personāla Vadības Instrumentu Panelis"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
 msgstr "Amats"
 
@@ -290,8 +277,7 @@ msgid "Configuration"
 msgstr "Konfigurācija"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,category_ids:0
+#: view:hr.employee:0 field:hr.employee,category_ids:0
 msgid "Categories"
 msgstr "Kategorijas"
 
@@ -431,6 +417,11 @@ msgid "HR Manager Dashboard"
 msgstr "Personāla Vadītāja Rīku Panelis"
 
 #. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr "Apakšnodaļas"
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Status"
 msgstr "Stāvoklis"
@@ -514,8 +505,7 @@ msgid "You can not have two users with the same login !"
 msgstr "Nevar būt divi lietotāji ar vienādu pieteikuma vārdu!"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,state:0
+#: view:hr.job:0 field:hr.job,state:0
 msgid "State"
 msgstr "Statuss"
 
@@ -590,8 +580,7 @@ msgid "Job Name"
 msgstr "Amata Nosaukums"
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Position"
 msgstr "Amatā"
 
@@ -632,10 +621,8 @@ msgid "Gender"
 msgstr "Dzimums"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0 view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -666,9 +653,9 @@ msgid "Creation of a OpenERP user"
 msgstr "OpenERP lietotāja izveide"
 
 #. module: hr
-#: field:hr.department,child_ids:0
-msgid "Child Departments"
-msgstr "Apakšnodaļas"
+#: field:hr.employee,login:0
+msgid "Login"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -687,8 +674,7 @@ msgid "Other Id"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
+#: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
 msgstr "Skolotājs"
 
@@ -703,8 +689,7 @@ msgid "My Departments Jobs"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
+#: field:hr.department,manager_id:0 view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Vadītājs"

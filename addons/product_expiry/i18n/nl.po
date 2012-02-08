@@ -7,26 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-01-17 09:07+0000\n"
 "Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:15+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
-
-#. module: product_expiry
-#: field:stock.production.lot,alert_date:0
-msgid "Alert Date"
-msgstr "Signalering datum"
-
-#. module: product_expiry
-#: view:product.product:0
-#: view:stock.production.lot:0
-msgid "Dates"
-msgstr "Data"
+"X-Launchpad-Export-Date: 2012-02-08 05:53+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
@@ -34,13 +23,93 @@ msgid "Production lot"
 msgstr "Productie partij"
 
 #. module: product_expiry
-#: help:product.product,use_time:0
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Ham"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "Koemelk"
+
+#. module: product_expiry
+#: field:product.product,life_time:0
+msgid "Product Life Time"
+msgstr "Product levensduur"
+
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
 msgid ""
-"The number of days before a production lot starts deteriorating without "
-"becoming dangerous."
+"The date on which the lot starts deteriorating without becoming dangerous."
 msgstr ""
-"Het aantal dagen voordat een productie partij begint te verslechteren zonder "
-"gevaarlijk te worden."
+"De datum waarop de partij begint te verslechteren zonder gevaarlijk te "
+"worden."
+
+#. module: product_expiry
+#: field:product.product,use_time:0
+msgid "Product Use Time"
+msgstr "Product gebruiksduur"
+
+#. module: product_expiry
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of serial number and internal reference must be unique !"
+msgstr ""
+"De combinatie van serienummer en interne referentie moet uniek zijn !"
+
+#. module: product_expiry
+#: help:stock.production.lot,removal_date:0
+msgid "The date on which the lot should be removed."
+msgstr "De datum waarop de partij moet worden verwijderd."
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr "Product"
+
+#. module: product_expiry
+#: help:product.product,alert_time:0
+msgid ""
+"The number of days after which an alert should be notified about the "
+"production lot."
+msgstr ""
+"Het aantal dagen waarna een signalering moet plaatsvinden over de productie "
+"partij."
+
+#. module: product_expiry
+#: field:product.product,removal_time:0
+msgid "Product Removal Time"
+msgstr "Product verwijdertijd"
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+msgid "Removal Date"
+msgstr "Verwijderdatum"
+
+#. module: product_expiry
+#: help:stock.production.lot,life_date:0
+msgid ""
+"The date on which the lot may become dangerous and should not be consumed."
+msgstr ""
+"De datum waarop de partij gevaarlijk wordt en niet meer moet worden "
+"geconsumeerd."
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_pain_product_template
+msgid "Bread"
+msgstr "Brood"
+
+#. module: product_expiry
+#: model:product.uom,name:product_expiry.product_uom_ltr
+#: model:product.uom.categ,name:product_expiry.product_uom_categ_vol
+msgid "LTR"
+msgstr "LTR"
+
+#. module: product_expiry
+#: view:product.product:0
+#: view:stock.production.lot:0
+msgid "Dates"
+msgstr "Data"
 
 #. module: product_expiry
 #: field:stock.production.lot,life_date:0
@@ -53,45 +122,9 @@ msgid "Best before Date"
 msgstr "Tenminste houdbaar tot datum"
 
 #. module: product_expiry
-#: help:product.product,life_time:0
-msgid ""
-"The number of days before a production lot may become dangerous and should "
-"not be consumed."
-msgstr ""
-"Het aantal dagen voordat een productie partij gevaarlijk wordt en niet meer "
-"moet worden geconsumeerd."
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_product_product
-msgid "Product"
-msgstr "Product"
-
-#. module: product_expiry
-#: help:stock.production.lot,use_date:0
-msgid ""
-"The date on which the lot starts deteriorating without becoming dangerous."
-msgstr ""
-"De datum waarop de partij begint te verslechteren zonder gevaarlijk te "
-"worden."
-
-#. module: product_expiry
-#: field:product.product,life_time:0
-msgid "Product Life Time"
-msgstr "Product levensduur"
-
-#. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product Removal Time"
-msgstr "Product verwijdertijd"
-
-#. module: product_expiry
-#: help:product.product,alert_time:0
-msgid ""
-"The number of days after which an alert should be notified about the "
-"production lot."
-msgstr ""
-"Het aantal dagen waarna een signalering moet plaatsvinden over de productie "
-"partij."
+#: model:product.template,name:product_expiry.product_product_jambon_product_template
+msgid "French cheese Camenbert"
+msgstr "Franse Camenbert kaas"
 
 #. module: product_expiry
 #: help:product.product,removal_time:0
@@ -100,34 +133,32 @@ msgstr ""
 "Het aantal dagen voordat een productie partij moet worden weggeruimd."
 
 #. module: product_expiry
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "Signalering datum"
+
+#. module: product_expiry
+#: help:product.product,use_time:0
+msgid ""
+"The number of days before a production lot starts deteriorating without "
+"becoming dangerous."
+msgstr ""
+"Het aantal dagen voordat een productie partij begint te verslechteren zonder "
+"gevaarlijk te worden."
+
+#. module: product_expiry
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Fout: ongeldige ean code"
 
 #. module: product_expiry
-#: help:stock.production.lot,life_date:0
+#: help:product.product,life_time:0
 msgid ""
-"The date on which the lot may become dangerous and should not be consumed."
+"The number of days before a production lot may become dangerous and should "
+"not be consumed."
 msgstr ""
-"De datum waarop de partij gevaarlijk wordt en niet meer moet worden "
-"geconsumeerd."
-
-#. module: product_expiry
-#: field:product.product,use_time:0
-msgid "Product Use Time"
-msgstr "Product gebruiksduur"
-
-#. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-msgid "Removal Date"
-msgstr "Verwijderdatum"
-
-#. module: product_expiry
-#: sql_constraint:stock.production.lot:0
-msgid ""
-"The combination of serial number and internal reference must be unique !"
-msgstr ""
-"De combinatie van serienummer en interne referentie moet uniek zijn !"
+"Het aantal dagen voordat een productie partij gevaarlijk wordt en niet meer "
+"moet worden geconsumeerd."
 
 #. module: product_expiry
 #: help:stock.production.lot,alert_date:0
@@ -142,25 +173,8 @@ msgstr ""
 msgid "Product Alert Time"
 msgstr "Product signalering tijd"
 
-#. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid "The date on which the lot should be removed."
-msgstr "De datum waarop de partij moet worden verwijderd."
-
-#~ msgid "Ham"
-#~ msgstr "Ham"
-
 #~ msgid "Products date of expiry"
 #~ msgstr "Producten vervaldatum"
-
-#~ msgid "Cow milk"
-#~ msgstr "Koemelk"
-
-#~ msgid "Bread"
-#~ msgstr "Brood"
-
-#~ msgid "LTR"
-#~ msgstr "LTR"
 
 #~ msgid ""
 #~ "Track different dates on products and production lots:\n"
@@ -176,6 +190,3 @@ msgstr "De datum waarop de partij moet worden verwijderd."
 #~ " - wegruimen datum\n"
 #~ " - signalering datum\n"
 #~ "Gebruikt, bijvoorbeeld in de voedingsindustrie."
-
-#~ msgid "French cheese Camenbert"
-#~ msgstr "Franse Camenbert kaas"

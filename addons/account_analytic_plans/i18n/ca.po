@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-08-17 20:37+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:51+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:31+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -81,11 +81,6 @@ msgid "Ok"
 msgstr "D'acord"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "No podeu crear una anotació en un compte tancat."
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
 msgstr "Pla del model"
@@ -143,9 +138,16 @@ msgid "Invalid BBA Structured Communication !"
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Compte analític"
+#: constraint:account.bank.statement:0
+msgid "The journal and period chosen have to belong to the same company."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -184,11 +186,6 @@ msgstr "Imprimeix"
 #: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "Percentatge"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Id compte"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:221
@@ -249,6 +246,14 @@ msgid "Invoice Line"
 msgstr "Línia de factura"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Currency"
 msgstr "Divises"
@@ -259,11 +264,9 @@ msgid "Start Date"
 msgstr "Data inicial"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Id compte"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -287,7 +290,7 @@ msgstr "Fins la data"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:341
-#: code:addons/account_analytic_plans/account_analytic_plans.py:483
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "Heu de definir un diari analític al diari '%s'!"
@@ -338,16 +341,6 @@ msgid "Account1 Id"
 msgstr "Id compte1"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "L'empresa ha de ser la mateixa per al compte i període relacionats."
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
 msgstr "Mínim permès (%)"
@@ -371,6 +364,11 @@ msgid "Save This Distribution as a Model"
 msgstr "Desa aquesta distribució com un model"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
 msgstr "Quantitat"
@@ -388,10 +386,15 @@ msgstr "Imprimeix analítica creuada"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:341
-#: code:addons/account_analytic_plans/account_analytic_plans.py:483
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Sense diari analític!"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Compte analític"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
@@ -423,6 +426,11 @@ msgstr "Cancel·la"
 #: field:account.analytic.plan.instance,account4_ids:0
 msgid "Account4 Id"
 msgstr "Id compte4"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -510,6 +518,11 @@ msgid ""
 msgstr ""
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Company"
 msgstr "Companyia"
@@ -529,11 +542,6 @@ msgstr "El nom del diari ha de ser únic per companyia!"
 #, python-format
 msgid "Value Error"
 msgstr "Valor erroni"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "No podeu crear una anotació en un compte de tipus vista."
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -647,6 +655,9 @@ msgstr "No podeu crear una anotació en un compte de tipus vista."
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom de model no vàlid en la definició de l'acció."
 
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "No podeu crear una anotació en un compte tancat."
+
 #~ msgid ""
 #~ "This module allows to use several analytic plans, according to the general "
 #~ "journal,\n"
@@ -714,3 +725,9 @@ msgstr "No podeu crear una anotació en un compte de tipus vista."
 #~ "El pla analític valida el percentatge mínim i màxim en el moment de creació "
 #~ "dels models de distribució.\n"
 #~ "        "
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "L'empresa ha de ser la mateixa per al compte i període relacionats."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "No podeu crear una anotació en un compte de tipus vista."

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-12-19 11:59+0000\n"
 "Last-Translator: Tomislav Bosnjakovic <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:58+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:36+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
@@ -268,6 +268,7 @@ msgid "Items"
 msgstr "Articles"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax5
 #: field:auction.dates,seller_costs:0
 msgid "Seller Costs"
 msgstr "Coûts des vendeurs"
@@ -478,6 +479,11 @@ msgid "Object Category"
 msgstr ""
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id4
+msgid "VAT 12%"
+msgstr ""
+
+#. module: auction
 #: view:auction.dates:0
 msgid "Buyer Invoices"
 msgstr ""
@@ -641,6 +647,11 @@ msgid "March"
 msgstr ""
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax4
+msgid "Seller Costs1"
+msgstr ""
+
+#. module: auction
 #: field:auction.deposit,create_uid:0
 #: field:auction.lots,create_uid:0
 msgid "Created by"
@@ -784,6 +795,11 @@ msgid "Auction Name"
 msgstr "Nom de l'Enchère"
 
 #. module: auction
+#: model:account.tax,name:auction.tax_seller
+msgid "Seller Costs (12%)"
+msgstr ""
+
+#. module: auction
 #: field:aie.category,parent_id:0
 msgid "Parent aie Category"
 msgstr ""
@@ -839,6 +855,11 @@ msgid "Account tax for author commission"
 msgstr ""
 
 #. module: auction
+#: model:product.template,name:auction.monproduit_product_template
+msgid "Oeuvres a 21%"
+msgstr "Oeuvres à 21%"
+
+#. module: auction
 #: field:report.object.encoded,adj:0
 msgid "Adj."
 msgstr "Adj."
@@ -890,8 +911,8 @@ msgid "To pay ("
 msgstr ""
 
 #. module: auction
-#: model:ir.model,name:auction.model_auction_lots
-msgid "Auction Object"
+#: model:account.tax,name:auction.tax_buyer
+msgid "Buyer Costs (20%)"
 msgstr ""
 
 #. module: auction
@@ -1138,6 +1159,11 @@ msgstr "Catégorie de l'objet"
 #: view:auction.taken:0
 msgid "Mark Lots"
 msgstr "Marquer les Lots"
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_lots
+msgid "Auction Object"
+msgstr ""
 
 #. module: auction
 #: field:auction.lots,obj_num:0
@@ -1408,6 +1434,11 @@ msgid "Beginning of the auction"
 msgstr "Début de la vente"
 
 #. module: auction
+#: help:auction.pay.buy,statement_id3:0
+msgid "Third Bank Statement For Buyer"
+msgstr ""
+
+#. module: auction
 #: view:report.auction:0
 #: field:report.auction,month:0
 #: field:report.auction.object.date,month:0
@@ -1449,6 +1480,11 @@ msgstr ""
 #: view:auction.lots.make.invoice.buyer:0
 msgid "Create invoices"
 msgstr "Créer les factures"
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id5
+msgid "VAT 5%"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_buyer_map
@@ -1508,6 +1544,11 @@ msgid "Exposition Dates"
 msgstr ""
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax1
+msgid "TVA"
+msgstr ""
+
+#. module: auction
 #: field:auction.lots,important:0
 msgid "To be Emphatized"
 msgstr ""
@@ -1516,6 +1557,11 @@ msgstr ""
 #: report:buyer.list:0
 msgid "Total:"
 msgstr "Total :"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax2
+msgid "TVA1"
+msgstr ""
 
 #. module: auction
 #: view:report.auction.object.date:0
@@ -1742,6 +1788,11 @@ msgid "Seller price"
 msgstr "Prix du vendeur"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax20
+msgid "Frais de vente0"
+msgstr ""
+
+#. module: auction
 #: model:ir.actions.report.xml,name:auction.buy_id_list
 msgid "Buyer List"
 msgstr "Liste des Acheteurs"
@@ -1765,8 +1816,18 @@ msgid "Seller Price"
 msgstr ""
 
 #. module: auction
-#: help:auction.pay.buy,statement_id3:0
-msgid "Third Bank Statement For Buyer"
+#: model:account.tax,name:auction.auction_tax6
+msgid "Frais de vente"
+msgstr ""
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id1
+msgid "VAT 1%"
+msgstr ""
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax
+msgid "Droit d'auteur"
 msgstr ""
 
 #. module: auction
@@ -1808,6 +1869,11 @@ msgstr "Derniers dépôts"
 #: report:auction.total.rml:0
 msgid "# of items:"
 msgstr "# d'articles :"
+
+#. module: auction
+#: model:account.tax,name:auction.tax_buyer_author
+msgid "Author rights (4%)"
+msgstr ""
 
 #. module: auction
 #: field:report.object.encoded,estimation:0
@@ -1949,6 +2015,11 @@ msgid "Lots able"
 msgstr ""
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id3
+msgid "VAT 10%"
+msgstr ""
+
+#. module: auction
 #: field:auction.artists,name:0
 msgid "Artist/Author Name"
 msgstr "Nom Artiste/Auteur"
@@ -1959,6 +2030,7 @@ msgid "December"
 msgstr ""
 
 #. module: auction
+#: view:auction.deposit:0
 #: field:auction.lots,image:0
 msgid "Image"
 msgstr "Image"
@@ -1972,6 +2044,11 @@ msgstr ""
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lot_category
 msgid "Auction Lots Category"
+msgstr ""
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id2
+msgid "VAT 20%"
 msgstr ""
 
 #. module: auction
@@ -2079,6 +2156,7 @@ msgid "Not sold"
 msgstr "Non Vendu"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax3
 #: field:auction.dates,buyer_costs:0
 msgid "Buyer Costs"
 msgstr "Coût de l'acheteur"
@@ -2467,9 +2545,6 @@ msgstr "Historique de la vente"
 
 #~ msgid "Unclassified objects"
 #~ msgstr "Objets inclassifiés"
-
-#~ msgid "Oeuvres a 21%"
-#~ msgstr "Oeuvres à 21%"
 
 #~ msgid "Antique/Carpet and textilles"
 #~ msgstr "Antiquités/Tapis et Textiles"

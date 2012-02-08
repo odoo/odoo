@@ -59,7 +59,7 @@ Note that:
              'test/ui/duplicate_event.yml',
              'test/ui/demo_data.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0083059161581',
     'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg'],
 }

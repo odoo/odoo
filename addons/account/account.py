@@ -274,11 +274,11 @@ class account_account(osv.osv):
                         tuple
         """
         mapping = {
-            'balance': "COALESCE(SUM(l.debit),0) " \
-                       "- COALESCE(SUM(l.credit), 0) as balance",
+            'balance': "COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance",
             'debit': "COALESCE(SUM(l.debit), 0) as debit",
             'credit': "COALESCE(SUM(l.credit), 0) as credit",
-            'foreign_balance': "COALESCE(SUM(l.amount_currency), 0) as foreign_balance",
+            # by convention, foreign_balance is 0 when the account has no secondary currency, because the amounts may be in different currencies
+            'foreign_balance': "(SELECT CASE WHEN currency_id IS NULL THEN 0 ELSE COALESCE(SUM(l.amount_currency), 0) END FROM account_account WHERE id IN (l.account_id)) as foreign_balance",
         }
         #get all the necessary accounts
         children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
@@ -305,7 +305,7 @@ class account_account(osv.osv):
             # ON l.account_id = tmp.id
             # or make _get_children_and_consol return a query and join on that
             request = ("SELECT l.account_id as id, " +\
-                       ', '.join(map(mapping.__getitem__, mapping.keys())) +
+                       ', '.join(mapping.values()) +
                        " FROM account_move_line l" \
                        " WHERE l.account_id IN %s " \
                             + filters +
@@ -381,8 +381,9 @@ class account_account(osv.osv):
 
     def _get_level(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        accounts = self.browse(cr, uid, ids, context=context)
-        for account in accounts:
+        for account in self.browse(cr, uid, ids, context=context):
+            #we may not know the level of the parent at the time of computation, so we
+            # can't simply do res[account.id] = account.parent_id.level + 1
             level = 0
             parent = account.parent_id
             while parent:
@@ -660,7 +661,7 @@ class account_account(osv.osv):
                 # Allow the write if the value is the same
                 for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'])]:
                     if vals['company_id']!=i:
-                        raise osv.except_osv(_('Warning !'), _('You cannot modify the company as its related to existing journal items.'))
+                        raise osv.except_osv(_('Warning !'), _('You cannot change the owner company of an account that already contains journal items.'))
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context=context)
         if 'type' in vals.keys():
@@ -1077,6 +1078,8 @@ class account_period(osv.osv):
         return super(account_period, self).write(cr, uid, ids, vals, context=context)
 
     def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
+        if period_from_id == period_to_id:
+            return period_from_id
         period_from = self.browse(cr, uid, period_from_id)
         period_date_start = period_from.date_start
         company1_id = period_from.company_id.id
@@ -1330,16 +1333,18 @@ class account_move(osv.osv):
 
     def button_validate(self, cursor, user, ids, context=None):
         for move in self.browse(cursor, user, ids, context=context):
-            top = None
+            # check that all accounts have the same topmost ancestor
+            top_common = None
             for line in move.line_id:
                 account = line.account_id
-                while account:
-                    account2 = account
-                    account = account.parent_id
-                if not top:
-                    top = account2.id
-                elif top<>account2.id:
-                    raise osv.except_osv(_('Error !'), _('You can not validate a journal entry unless all journal items belongs to the same chart of accounts !'))
+                top_account = account
+                while top_account.parent_id:
+                    top_account = top_account.parent_id
+                if not top_common:
+                    top_common = top_account
+                elif top_account.id != top_common.id:
+                    raise osv.except_osv(_('Error !'),
+                                         _('You cannot validate this journal entry because account "%s" does not belong to chart of accounts "%s"!') % (account.name, top_common.name))
         return self.post(cursor, user, ids, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -1771,6 +1776,7 @@ class account_tax_code(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'sign': fields.float('Coefficent for parent', required=True, help='You can specify here the coefficient that will be used when consolidating the amount of this case into its parent. For example, set 1/-1 if you want to add/substract it.'),
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
+        'sequence': fields.integer('Sequence', help="Determine the display order in the report 'Accounting \ Reporting \ Generic Reporting \ Taxes \ Taxes Report'"),
     }
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
@@ -2524,7 +2530,11 @@ class account_account_template(osv.osv):
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context.copy()
         ctx.update({'defer_parent_store_computation': True})
-        children_acc_template = self.search(cr, uid, ['|', ('chart_template_id','=', chart_template_id),'&',('parent_id','child_of', [template.account_root_id.id]),('chart_template_id','=', False), ('nocreate','!=',True)], order='id')
+        level_ref = {}
+        children_acc_criteria = [('chart_template_id','=', chart_template_id)]
+        if template.account_root_id.id:
+            children_acc_criteria = ['|'] + children_acc_criteria + ['&',('parent_id','child_of', [template.account_root_id.id]),('chart_template_id','=', False)]
+        children_acc_template = self.search(cr, uid, [('nocreate','!=',True)] + children_acc_criteria, order='id')
         for account_template in self.browse(cr, uid, children_acc_template, context=context):
             # skip the root of COA if it's not the main one
             if (template.account_root_id.id == account_template.id) and template.parent_id:
@@ -2537,6 +2547,14 @@ class account_account_template(osv.osv):
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits and account_template.type != 'view':
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
+            parent_id = account_template.parent_id and ((account_template.parent_id.id in acc_template_ref) and acc_template_ref[account_template.parent_id.id]) or False
+            #the level as to be given as well at the creation time, because of the defer_parent_store_computation in
+            #context. Indeed because of this, the parent_left and parent_right are not computed and thus the child_of
+            #operator does not return the expected values, with result of having the level field not computed at all.
+            if parent_id:
+                level = parent_id in level_ref and level_ref[parent_id] + 1 or obj_acc._get_level(cr, uid, [parent_id], 'level', None, context=context)[parent_id] + 1
+            else:
+                level = 0
             vals={
                 'name': (template.account_root_id.id == account_template.id) and company_name or account_template.name,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
@@ -2547,12 +2565,14 @@ class account_account_template(osv.osv):
                 'shortcut': account_template.shortcut,
                 'note': account_template.note,
                 'financial_report_ids': account_template.financial_report_ids and [(6,0,[x.id for x in account_template.financial_report_ids])] or False,
-                'parent_id': account_template.parent_id and ((account_template.parent_id.id in acc_template_ref) and acc_template_ref[account_template.parent_id.id]) or False,
+                'parent_id': parent_id,
                 'tax_ids': [(6,0,tax_ids)],
                 'company_id': company_id,
+                'level': level,
             }
             new_account = obj_acc.create(cr, uid, vals, context=ctx)
             acc_template_ref[account_template.id] = new_account
+            level_ref[new_account] = level
 
         #reactivate the parent_store functionnality on account_account
         obj_acc._parent_store_compute(cr)
@@ -2982,7 +3002,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_templ_obj = self.pool.get('account.tax.template')
 
         if 'bank_accounts_id' in fields:
-            res.update({'bank_accounts_id': [{'acc_name': _('Cash'), 'account_type': 'cash'}]})
+            res.update({'bank_accounts_id': [{'acc_name': _('Cash'), 'account_type': 'cash'},{'acc_name': _('Bank'), 'account_type': 'bank'}]})
         if 'company_id' in fields:
             res.update({'company_id': self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0].company_id.id})
         if 'seq_journal' in fields:
@@ -3340,13 +3360,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         # because we can't rely on the value current_num as,
         # its possible that we already have bank journals created (e.g. by the creation of res.partner.bank) 
         # and the next number for account code might have been already used before for journal
-        journal_count = 0
-        while True:
-            journal_code = _('BNK') + str(current_num + journal_count)
+        for num in xrange(current_num, 100):
+            # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
+            journal_code = _('BNK')[:3] + str(num)
             ids = obj_journal.search(cr, uid, [('code', '=', journal_code), ('company_id', '=', company_id)], context=context)
             if not ids:
                 break
-            journal_count += 1
+        else:
+            raise osv.except_osv(_('Error'), _('Cannot generate an unused journal code.'))
 
         vals = {
                 'name': line['acc_name'],

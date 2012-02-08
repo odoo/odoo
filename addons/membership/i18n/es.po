@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-13 18:52+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:57+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 05:07+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -110,9 +110,19 @@ msgid "Non Member"
 msgstr "No socio"
 
 #. module: membership
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "Socio básico"
+
+#. module: membership
 #: view:res.partner:0
 msgid "All Members"
 msgstr "Todos socios"
+
+#. module: membership
+#: field:res.partner,membership_stop:0
+msgid "Stop membership date"
+msgstr "Fecha final de afiliación"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -153,6 +163,11 @@ msgstr "Empresa beneficiaria."
 #: view:res.partner:0
 msgid "Supplier Partners"
 msgstr ""
+
+#. module: membership
+#: field:report.membership,num_invoiced:0
+msgid "# Invoiced"
+msgstr "Núm. facturado"
 
 #. module: membership
 #: constraint:account.invoice:0
@@ -331,9 +346,9 @@ msgid "July"
 msgstr "Julio"
 
 #. module: membership
-#: field:report.membership,num_invoiced:0
-msgid "# Invoiced"
-msgstr "Núm. facturado"
+#: model:product.template,name:membership.membership_0_product_template
+msgid "Golden Membership"
+msgstr "Socio oro"
 
 #. module: membership
 #: help:res.partner,associate_member:0
@@ -797,9 +812,9 @@ msgid "May"
 msgstr "Mayo"
 
 #. module: membership
-#: field:res.partner,membership_stop:0
-msgid "Stop membership date"
-msgstr "Fecha final de afiliación"
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr "Socio plata"
 
 #. module: membership
 #: view:product.product:0
@@ -1009,23 +1024,14 @@ msgstr "Ingreso realizado"
 #~ "¡Error!  No puede asignar la tarifa principal como otra tarifa en un "
 #~ "elemento de la tarifa."
 
-#~ msgid "Golden Membership"
-#~ msgstr "Socio oro"
-
 #~ msgid "Extended Filters..."
 #~ msgstr "Filtros extendidos..."
 
 #~ msgid "Last 30 Days"
 #~ msgstr "Últimos 30 días"
 
-#~ msgid "Basic Membership"
-#~ msgstr "Socio básico"
-
 #~ msgid "Last 365 Days"
 #~ msgstr "Últimos 365 días"
-
-#~ msgid "Silver Membership"
-#~ msgstr "Socio plata"
 
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "¡Error! No puede crear miembros asociados recursivos."

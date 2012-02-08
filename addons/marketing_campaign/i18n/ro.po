@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-12-29 07:15+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-30 05:39+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-08 06:03+0000\n"
+"X-Generator: Launchpad (build 14747)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -40,16 +40,6 @@ msgstr ""
 msgid "The To/From Activity of transition must be of the same Campaign "
 msgstr ""
 "Activitatea tranzitiei Catre/De la trebuie sa apartina aceleiasi Campanii "
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:148
-#, python-format
-msgid ""
-"The campaign cannot be started: it doesn't have any starting activity (or "
-"any activity with a signal and no previous activity)"
-msgstr ""
-"Campania nu poate fi inceputa: nu are nici o acitivitate de inceput (sau "
-"orice alta activitate cu un semnal si nici o activitate precedenta)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
@@ -125,27 +115,10 @@ msgid "Sync mode: only records created after last sync"
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.activity,condition:0
+#: model:email.template,body_text:marketing_campaign.email_template_2
 msgid ""
-"Python expression to decide whether the activity can be executed, otherwise "
-"it will be deleted or cancelled.The expression may use the following "
-"[browsable] variables:\n"
-"   - activity: the campaign activity\n"
-"   - workitem: the campaign workitem\n"
-"   - resource: the resource object this campaign item represents\n"
-"   - transitions: list of campaign transitions outgoing from this activity\n"
-"...- re: Python regular expression module"
+"Hello, We are happy to announce that you now become our Silver Partner."
 msgstr ""
-"Expresia Python decide daca activitatea poate fi executata, iar daca nu va "
-"fi stearsa sau anulata. Expresia poate folosi urmatoarele variabile [care "
-"pot fi rasfoite]:\n"
-"\t- activitatea: activitatea campaniei\n"
-"\t- elementul activitatii: elementul activitatii campaniei\n"
-"\t- resursa: obiectul resursa pe care il reprezinta acest element al "
-"campaniei\n"
-"\t- tranzitii: lista cu tranzitiile campaniei care rezulta din aceasta "
-"activitate\n"
-"\t- re: modulul expresiei obisnuite Python"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -207,16 +180,15 @@ msgid "Last Synchronization"
 msgstr "Ultima sincronizare"
 
 #. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:214
+#, python-format
+msgid "You can not duplicate a campaign, it's not supported yet."
+msgstr ""
+
+#. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Year(s)"
 msgstr "An(i)"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:214
-#, python-format
-msgid "Sorry, campaign duplication is not supported at the moment."
-msgstr ""
-"Ne pare rau, dar copierea campaniei nu este acceptata in acest moment."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_last_date:0
@@ -277,9 +249,9 @@ msgid "Campaign"
 msgstr "Campanie"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,start:0
-msgid "Start"
-msgstr "Start"
+#: model:email.template,subject:marketing_campaign.email_template_3
+msgid "Congratulation! You become our Gold Partner."
+msgstr ""
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -338,6 +310,11 @@ msgstr "Partener"
 #: view:marketing.campaign.activity:0
 msgid "Transitions"
 msgstr "Tranzitii"
+
+#. module: marketing_campaign
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr ""
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
@@ -431,9 +408,10 @@ msgid "Interval Unit"
 msgstr "Unitate interval"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,country_id:0
-msgid "Country"
-msgstr "Tara"
+#: code:addons/marketing_campaign/marketing_campaign.py:792
+#, python-format
+msgid "Email Preview"
+msgstr "Previzualizare email"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_id:0
@@ -478,6 +456,13 @@ msgid "Campaign Segment"
 msgstr "Segmentul campaniei"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
+#: view:marketing.campaign.segment:0
+#: view:marketing.campaign.workitem:0
+msgid "Cancel"
+msgstr "Anuleaza"
+
+#. module: marketing_campaign
 #: help:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid ""
 "By activating this option, workitems that aren't executed because the "
@@ -501,6 +486,11 @@ msgstr "Elemente ale activitatii"
 #: field:marketing.campaign,fixed_cost:0
 msgid "Fixed Cost"
 msgstr "Costuri fixe"
+
+#. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_2
+msgid "Congratulation! You become now our Silver Partner."
+msgstr ""
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -713,6 +703,14 @@ msgid "The report to generate when this activity is activated"
 msgstr "Raportul care trebuie creat atunci cand activitatea este activata"
 
 #. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:148
+#, python-format
+msgid ""
+"The campaign cannot be started: it doesn't have any starting activity. "
+"Modify campaign's activities to mark one as the starting point."
+msgstr ""
+
+#. module: marketing_campaign
 #: field:marketing.campaign,unique_field_id:0
 msgid "Unique Field"
 msgstr ""
@@ -781,6 +779,11 @@ msgid "Automatic transition"
 msgstr "Tranzitie automata"
 
 #. module: marketing_campaign
+#: field:marketing.campaign.activity,start:0
+msgid "Start"
+msgstr "Start"
+
+#. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 #: view:res.partner:0
 msgid "History"
@@ -835,11 +838,9 @@ msgid "Operation not supported"
 msgstr "Operatiunea nu este acceptata"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
-#: view:marketing.campaign.workitem:0
-msgid "Cancel"
-msgstr "Anuleaza"
+#: model:email.template,body_text:marketing_campaign.email_template_3
+msgid "Hello, We are happy to announce that you become our Gold Partner."
+msgstr ""
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -854,23 +855,44 @@ msgstr ""
 "campaniei "
 
 #. module: marketing_campaign
+#: help:marketing.campaign.activity,condition:0
+msgid ""
+"Python expression to decide whether the activity can be executed, otherwise "
+"it will be deleted or cancelled.The expression may use the following "
+"[browsable] variables:\n"
+"   - activity: the campaign activity\n"
+"   - workitem: the campaign workitem\n"
+"   - resource: the resource object this campaign item represents\n"
+"   - transitions: list of campaign transitions outgoing from this activity\n"
+"...- re: Python regular expression module"
+msgstr ""
+"Expresia Python decide daca activitatea poate fi executata, iar daca nu va "
+"fi stearsa sau anulata. Expresia poate folosi urmatoarele variabile [care "
+"pot fi rasfoite]:\n"
+"\t- activitatea: activitatea campaniei\n"
+"\t- elementul activitatii: elementul activitatii campaniei\n"
+"\t- resursa: obiectul resursa pe care il reprezinta acest element al "
+"campaniei\n"
+"\t- tranzitii: lista cu tranzitiile campaniei care rezulta din aceasta "
+"activitate\n"
+"\t- re: modulul expresiei obisnuite Python"
+
+#. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Synchronize Manually"
 msgstr "Sincronizati manual"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:158
-#, python-format
-msgid "The campaign cannot be marked as done before all segments are done"
-msgstr ""
-"Campania nu poate fi marcata ca efectuata inainte ca toate segmentele sa fie "
-"efectuate"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,res_id:0
 msgid "Resource ID"
 msgstr "ID resursa"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:136
+#, python-format
+msgid "The campaign cannot be started: there are no activities in it."
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
@@ -948,6 +970,11 @@ msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "Dupa %(interval_nbr)d %(interval_type)s"
 
 #. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_1
+msgid "Welcome in OpenERP Partner Channel!"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
 msgid "Marketing Campaign"
 msgstr "Campania de marketing"
@@ -990,21 +1017,14 @@ msgid "Sync mode: only records updated after last sync"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:792
-#, python-format
-msgid "Email Preview"
-msgstr "Previzualizare email"
+#: field:campaign.analysis,country_id:0
+msgid "Country"
+msgstr "Tara"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,signal:0
 msgid "Signal"
 msgstr "Semnal"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:136
-#, python-format
-msgid "The campaign cannot be started: there are no activities in it"
-msgstr "Campania nu poate incepe: nu exista activitati in ea"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
@@ -1016,6 +1036,12 @@ msgstr ""
 #: selection:campaign.analysis,month:0
 msgid "April"
 msgstr "Aprilie"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:158
+#, python-format
+msgid "The campaign cannot be marked as done before all segments are closed."
+msgstr ""
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -1096,10 +1122,23 @@ msgid "Cost"
 msgstr "Cost"
 
 #. module: marketing_campaign
+#: model:email.template,body_text:marketing_campaign.email_template_1
+msgid "Hello, We are very happy to send Welcome message."
+msgstr ""
+
+#. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,year:0
 msgid "Year"
 msgstr "An"
+
+#, python-format
+#~ msgid ""
+#~ "The campaign cannot be started: it doesn't have any starting activity (or "
+#~ "any activity with a signal and no previous activity)"
+#~ msgstr ""
+#~ "Campania nu poate fi inceputa: nu are nici o acitivitate de inceput (sau "
+#~ "orice alta activitate cu un semnal si nici o activitate precedenta)"
 
 #, python-format
 #~ msgid ""
@@ -1118,6 +1157,11 @@ msgstr "An"
 
 #~ msgid "This Year"
 #~ msgstr "Anul acesta"
+
+#, python-format
+#~ msgid "Sorry, campaign duplication is not supported at the moment."
+#~ msgstr ""
+#~ "Ne pare rau, dar copierea campaniei nu este acceptata in acest moment."
 
 #~ msgid ""
 #~ "The generated workitems will be linked to the partner related to the record. "
@@ -1195,3 +1239,13 @@ msgstr "An"
 
 #~ msgid "Email Templates for Models"
 #~ msgstr "Sabloane email pentru modele"
+
+#, python-format
+#~ msgid "The campaign cannot be marked as done before all segments are done"
+#~ msgstr ""
+#~ "Campania nu poate fi marcata ca efectuata inainte ca toate segmentele sa fie "
+#~ "efectuate"
+
+#, python-format
+#~ msgid "The campaign cannot be started: there are no activities in it"
+#~ msgstr "Campania nu poate incepe: nu exista activitati in ea"
