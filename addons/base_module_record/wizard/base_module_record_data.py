@@ -29,24 +29,6 @@ from tools.translate import _
 class base_module_data(osv.osv_memory):
     _name = 'base.module.data'
     _description = "Base Module Data"
-        
-    def default_get(self, cr, uid, fields, context=None):
-         mod = self.pool.get('ir.model')
-         res = super(base_module_data, self).default_get(cr, uid, fields, context=context)
-         
-         list = ('ir.ui.view', 'ir.ui.menu', 'ir.model', 'ir.model.fields', 'ir.model.access',\
-            'res.partner', 'res.partner.address', 'res.partner.category', 'workflow',\
-            'workflow.activity', 'workflow.transition', 'ir.actions.server', 'ir.server.object.lines')
-         if 'objects' in fields:
-             res.update({'objects': mod.search(cr, uid, [('model', 'in', list)])})
-         cr.execute('select max(create_date) from ir_model_data')
-         c = (cr.fetchone())[0].split('.')[0]
-         c = time.strptime(c, "%Y-%m-%d %H:%M:%S")
-         sec = c.tm_sec!=59 and c.tm_sec + 1
-         c = (c[0], c[1], c[2], c[3], c[4], sec, c[6], c[7], c[8])
-         if 'check_date' in fields:
-             res.update({'check_date': time.strftime("%Y-%m-%d %H:%M:%S",c)})
-         return res
 
     _columns = {
         'check_date': fields.datetime('Record from Date', required=True),
@@ -54,8 +36,16 @@ class base_module_data(osv.osv_memory):
         'filter_cond': fields.selection([('created', 'Created'), ('modified', 'Modified'), ('created_modified', 'Created & Modified')], 'Records only', required=True),
         'info_yaml': fields.boolean('YAML'),
     }
+
+    def _get_default_objects(self, cr, uid, context=None):
+        names = ('ir.ui.view', 'ir.ui.menu', 'ir.model', 'ir.model.fields', 'ir.model.access',
+            'res.partner', 'res.partner.address', 'res.partner.category', 'workflow',
+            'workflow.activity', 'workflow.transition', 'ir.actions.server', 'ir.server.object.lines')
+        return self.pool.get('ir.model').search(cr, uid, [('model', 'in', names)])
+
     _defaults = {
         'check_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'objects': _get_default_objects,
         'filter_cond': 'created',
     }
     
@@ -101,41 +91,25 @@ class base_module_data(osv.osv_memory):
         if len(mod.recording_data):
             if data['info_yaml']:
                 res=self._create_yaml(cr, uid, data, context)
-                model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'module_create_xml_view')], context=context)
-                resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-                return {
-                    'name': _('Message'),
-                    'context':  {
-                        'default_res_text': tools.ustr(res['res_text']),
-                        },
-                    'view_type': 'form',
-                    'view_mode': 'form',
-                    'res_model': 'base.module.record.data',
-                    'views': [(resource_id, 'form')],
-                    'type': 'ir.actions.act_window',
-                    'target': 'new',
-                }
             else:
                 res=self._create_xml(cr, uid, data, context)
-                model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'module_create_xml_view')], context=context)
-                resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-                return {
-                    'name': _('Message'),
-                    'context':  {
-                        'default_res_text': tools.ustr(res['res_text']),
-                        },
-                    'view_type': 'form',
-                    'view_mode': 'form',
-                    'res_model': 'base.module.record.data',
-                    'views': [(resource_id, 'form')],
-                    'type': 'ir.actions.act_window',
-                    'target': 'new',
-                }
+            model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'module_create_xml_view')], context=context)
+            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+            return {
+                'name': _('Data Recording'),
+                'context': {'default_res_text': tools.ustr(res['res_text'])},
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'base.module.record.data',
+                'views': [(resource_id, 'form')],
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+            }
+
         model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'module_recording_message_view')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        
         return {
-            'name': _('Message'),
+            'name': _('Module Recording'),
             'context': context,
             'view_type': 'form',
             'view_mode': 'form',
@@ -143,8 +117,8 @@ class base_module_data(osv.osv_memory):
             'views': [(resource_id, 'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
-        }      
-        
+        }
+
 base_module_data()
 
 class base_module_record_data(osv.osv_memory):
