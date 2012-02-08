@@ -70,7 +70,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY'
     ] if x in opmap))
 
-_logger = logging.getLogger('safe_eval')
+_logger = logging.getLogger(__name__)
 
 def _get_opcodes(codeobj):
     """_get_opcodes(codeobj) -> [opcodes]
@@ -206,8 +206,9 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         # isinstance() does not work below, we want *exactly* the dict class
         if (globals_dict is not None and type(globals_dict) is not dict) \
             or (locals_dict is not None and type(locals_dict) is not dict):
-            logging.getLogger('safe_eval').warning('Looks like you are trying to pass a dynamic environment,"\
-                              "you should probably pass nocopy=True to safe_eval()')
+            _logger.warning(
+                "Looks like you are trying to pass a dynamic environment, "
+                "you should probably pass nocopy=True to safe_eval().")
 
         globals_dict = dict(globals_dict)
         if locals_dict is not None:

@@ -24,7 +24,7 @@ import time
 
 import openerp
 
-_logger = logging.getLogger('ir_sequence')
+_logger = logging.getLogger(__name__)
 
 class ir_sequence_type(openerp.osv.osv.osv):
     _name = 'ir.sequence.type'

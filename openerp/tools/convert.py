@@ -29,10 +29,13 @@ import re
 # for eval context:
 import time
 import openerp.release as release
+
+_logger = logging.getLogger(__name__)
+
 try:
     import pytz
 except:
-    logging.getLogger("init").warning('could not find pytz library, please install it')
+    _logger.warning('could not find pytz library, please install it')
     class pytzclass(object):
         all_timezones=[]
     pytz=pytzclass()
@@ -135,8 +138,7 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
             try:
                 return unsafe_eval(a_eval, idref2)
             except Exception:
-                logger = logging.getLogger('init')
-                logger.warning('could not eval(%s) for %s in %s' % (a_eval, node.get('name'), context), exc_info=True)
+                _logger.warning('could not eval(%s) for %s in %s' % (a_eval, node.get('name'), context), exc_info=True)
                 return ""
         if t == 'xml':
             def _process(s, idref):
@@ -228,7 +230,6 @@ class assertion_report(object):
         return res
 
 class xml_import(object):
-    __logger = logging.getLogger('tools.convert.xml_import')
     @staticmethod
     def nodeattr2bool(node, attr, default=False):
         if not node.get(attr):
@@ -258,7 +259,7 @@ class xml_import(object):
                     # client-side, so in that case we keep the original context string
                     # as it is. We also log it, just in case.
                     context = ctx
-                    logging.getLogger("init").debug('Context value (%s) for element with id "%s" or its data node does not parse '\
+                    _logger.debug('Context value (%s) for element with id "%s" or its data node does not parse '\
                                                     'at server-side, keeping original string, in case it\'s meant for client side only',
                                                     ctx, node.get('id','n/a'), exc_info=True)
         return context
@@ -281,7 +282,7 @@ form: module.record_id""" % (xml_id,)
                 assert modcnt == 1, """The ID "%s" refers to an uninstalled module""" % (xml_id,)
 
         if len(id) > 64:
-            self.logger.error('id: %s is to long (max: 64)', id)
+            _logger.error('id: %s is to long (max: 64)', id)
 
     def _tag_delete(self, cr, rec, data_node=None):
         d_model = rec.get("model",'')
@@ -486,9 +487,9 @@ form: module.record_id""" % (xml_id,)
             # Some domains contain references that are only valid at runtime at
             # client-side, so in that case we keep the original domain string
             # as it is. We also log it, just in case.
-            logging.getLogger("init").debug('Domain value (%s) for element with id "%s" does not parse '\
-                                            'at server-side, keeping original string, in case it\'s meant for client side only',
-                                            domain, xml_id or 'n/a', exc_info=True)
+            _logger.debug('Domain value (%s) for element with id "%s" does not parse '\
+                'at server-side, keeping original string, in case it\'s meant for client side only',
+                domain, xml_id or 'n/a', exc_info=True)
         res = {
             'name': name,
             'type': type,
@@ -593,7 +594,7 @@ form: module.record_id""" % (xml_id,)
                     pid = res[0]
                 else:
                     # the menuitem does't exist but we are in branch (not a leaf)
-                    self.logger.warning('Warning no ID for submenu %s of menu %s !', menu_elem, str(m_l))
+                    _logger.warning('Warning no ID for submenu %s of menu %s !', menu_elem, str(m_l))
                     pid = self.pool.get('ir.ui.menu').create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
             values['parent_id'] = pid
         else:
@@ -733,7 +734,7 @@ form: module.record_id""" % (xml_id,)
                           ' obtained count: %d\n'       \
                           % (rec_string, count, len(ids))
                     sevval = getattr(logging, severity.upper())
-                    self.logger.log(sevval, msg)
+                    _logger.log(sevval, msg)
                     if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
                         raise Exception('Severe assertion failure')
@@ -765,7 +766,7 @@ form: module.record_id""" % (xml_id,)
                           ' obtained value: %r\n'       \
                           % (rec_string, etree.tostring(test), expected_value, expression_value)
                     sevval = getattr(logging, severity.upper())
-                    self.logger.log(sevval, msg)
+                    _logger.log(sevval, msg)
                     if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
                         raise Exception('Severe assertion failure')
@@ -876,11 +877,11 @@ form: module.record_id""" % (xml_id,)
 
     def parse(self, de):
         if not de.tag in ['terp', 'openerp']:
-            self.logger.error("Mismatch xml format")
+            _logger.error("Mismatch xml format")
             raise Exception( "Mismatch xml format: only terp or openerp as root tag" )
 
         if de.tag == 'terp':
-            self.logger.warning("The tag <terp/> is deprecated, use <openerp/>")
+            _logger.warning("The tag <terp/> is deprecated, use <openerp/>")
 
         for n in de.findall('./data'):
             for rec in n:
@@ -888,17 +889,16 @@ form: module.record_id""" % (xml_id,)
                     try:
                         self._tags[rec.tag](self.cr, rec, n)
                     except:
-                        self.__logger.error('Parse error in %s:%d: \n%s',
-                                            rec.getroottree().docinfo.URL,
-                                            rec.sourceline,
-                                            etree.tostring(rec).strip(), exc_info=True)
+                        _logger.error('Parse error in %s:%d: \n%s',
+                                      rec.getroottree().docinfo.URL,
+                                      rec.sourceline,
+                                      etree.tostring(rec).strip(), exc_info=True)
                         self.cr.rollback()
                         raise
         return True
 
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False):
 
-        self.logger = logging.getLogger('init')
         self.mode = mode
         self.module = module
         self.cr = cr
@@ -931,7 +931,6 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         encoding: utf-8'''
     if not idref:
         idref={}
-    logger = logging.getLogger('init')
     model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
     #remove folder path from model
     head, model = os.path.split(model)
@@ -956,7 +955,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
                         reader.next()
 
     if not (mode == 'init' or 'id' in fields):
-        logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
+        _logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
         return
 
     uid = 1
@@ -967,7 +966,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         try:
             datas.append(map(lambda x: misc.ustr(x), line))
         except:
-            logger.error("Cannot import the line: %s", line)
+            _logger.error("Cannot import the line: %s", line)
     result, rows, warning_msg, dummy = pool.get(model).import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
     if result < 0:
         # Report failed import and abort module install
@@ -988,9 +987,8 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
     try:
         relaxng.assert_(doc)
     except Exception:
-        logger = loglevels.Logger()
-        logger.notifyChannel('init', loglevels.LOG_ERROR, 'The XML file does not fit the required schema !')
-        logger.notifyChannel('init', loglevels.LOG_ERROR, misc.ustr(relaxng.error_log.last_error))
+        _logger.error('The XML file does not fit the required schema !')
+        _logger.error(misc.ustr(relaxng.error_log.last_error))
         raise
 
     if idref is None:

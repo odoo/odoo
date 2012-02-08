@@ -21,12 +21,8 @@
 
 import sys
 import logging
-import warnings
 
 LOG_NOTSET = 'notset'
-LOG_DEBUG_SQL = 'debug_sql'
-LOG_DEBUG_RPC_ANSWER = 'debug_rpc_answer'
-LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
 LOG_TEST = 'test'
 LOG_INFO = 'info'
@@ -34,32 +30,27 @@ LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
 LOG_CRITICAL = 'critical'
 
-logging.DEBUG_RPC_ANSWER = logging.DEBUG - 4
-logging.addLevelName(logging.DEBUG_RPC_ANSWER, 'DEBUG_RPC_ANSWER')
-logging.DEBUG_RPC = logging.DEBUG - 2
-logging.addLevelName(logging.DEBUG_RPC, 'DEBUG_RPC')
-logging.DEBUG_SQL = logging.DEBUG_RPC - 3
-logging.addLevelName(logging.DEBUG_SQL, 'DEBUG_SQL')
-
 logging.TEST = logging.INFO - 5
 logging.addLevelName(logging.TEST, 'TEST')
 
+_logger = logging.getLogger(__name__)
+
 class Logger(object):
     def __init__(self):
-        warnings.warn("The netsvc.Logger API shouldn't be used anymore, please "
-                      "use the standard `logging.getLogger` API instead",
-                      PendingDeprecationWarning, stacklevel=2)
+        _logger.warning(
+            "The netsvc.Logger API shouldn't be used anymore, please "
+            "use the standard `logging.getLogger` API instead.")
         super(Logger, self).__init__()
 
     def notifyChannel(self, name, level, msg):
-        warnings.warn("notifyChannel API shouldn't be used anymore, please use "
-                      "the standard `logging` module instead",
-                      PendingDeprecationWarning, stacklevel=2)
+        _logger.warning(
+            "notifyChannel API shouldn't be used anymore, please use "
+            "the standard `logging` module instead.")
         from service.web_services import common
 
-        log = logging.getLogger(ustr(name))
+        log = logging.getLogger(__name__ + '.deprecated.' + ustr(name))
 
-        if level in [LOG_DEBUG_RPC, LOG_TEST] and not hasattr(log, level):
+        if level in [LOG_TEST] and not hasattr(log, level):
             fct = lambda msg, *args, **kwargs: log.log(getattr(logging, level.upper()), msg, *args, **kwargs)
             setattr(log, level, fct)
 
