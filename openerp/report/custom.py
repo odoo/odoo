@@ -221,7 +221,7 @@ class report_custom(report_int):
                     res_dic[prev].append(line)
                 else:
                     prev = line[groupby]
-                    if res_dic.has_key(line[groupby]):
+                    if line[groupby] in res_dic:
                         res_dic[line[groupby]].append(line)
                     else:
                         res_dic[line[groupby]] = []
@@ -389,7 +389,7 @@ class report_custom(report_int):
         if date_idx != None:
             for r in results:
                 key = process_date['Y'](r[date_idx])
-                if not data_by_year.has_key(key):
+                if key not in data_by_year:
                     data_by_year[key] = []
                 for i in range(len(r)):
                     r[i] = fct[i](r[i])
@@ -407,14 +407,14 @@ class report_custom(report_int):
             for d in data_by_year[line]:
                 for idx in range(len(fields)-1):
                     fields_bar.append({})
-                    if fields_bar[idx].has_key(d[0]):
+                    if d[0] in fields_bar[idx]:
                         fields_bar[idx][d[0]] += d[idx+1]
                     else:
                         fields_bar[idx][d[0]] = d[idx+1]
             for idx  in range(len(fields)-1):
                 data = {}
                 for k in fields_bar[idx].keys():
-                    if data.has_key(k):
+                    if k in data:
                         data[k] += fields_bar[idx][k]
                     else:
                         data[k] = fields_bar[idx][k]
@@ -488,7 +488,7 @@ class report_custom(report_int):
         if date_idx != None:
             for r in results:
                 key = process_date['Y'](r[date_idx])
-                if not data_by_year.has_key(key):
+                if key not in data_by_year:
                     data_by_year[key] = []
                 for i in range(len(r)):
                     r[i] = fct[i](r[i])
@@ -507,14 +507,14 @@ class report_custom(report_int):
             for d in data_by_year[line]:
                 for idx in range(len(fields)-1):
                     fields_bar.append({})
-                    if fields_bar[idx].has_key(d[0]):
+                    if d[0] in fields_bar[idx]:
                         fields_bar[idx][d[0]] += d[idx+1]
                     else:
                         fields_bar[idx][d[0]] = d[idx+1]
             for idx  in range(len(fields)-1):
                 data = {}
                 for k in fields_bar[idx].keys():
-                    if data.has_key(k):
+                    if k in data:
                         data[k] += fields_bar[idx][k]
                     else:
                         data[k] = fields_bar[idx][k]

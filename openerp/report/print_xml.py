@@ -200,7 +200,7 @@ class document(object):
                     else:
                         args = []
                     # get the object
-                    if attrs.has_key('model'):
+                    if 'model' in attrs:
                         obj = self.pool.get(attrs['model'])
                     else:
                         if isinstance(browser, list):
@@ -209,7 +209,7 @@ class document(object):
                             obj = browser._table
 
                     # get the ids
-                    if attrs.has_key('ids'):
+                    if 'ids' in attrs:
                         ids = self.eval(browser, attrs['ids'])
                     else:
                         if isinstance(browser, list):
