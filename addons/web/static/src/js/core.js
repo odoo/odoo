@@ -291,6 +291,21 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
         return object_match;
     },
     /**
+     * Checks if the registry contains an object mapping for this key.
+     *
+     * @param {String} key key to look for
+     */
+    contains: function (key) {
+        if (key === undefined) { return false; }
+        if (key in this.map) {
+            return true
+        }
+        if (this.parent) {
+            return this.parent.contains(key);
+        }
+        return false;
+    },
+    /**
      * Tries a number of keys, and returns the first object matching one of
      * the keys.
      *
@@ -303,7 +318,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
     get_any: function (keys) {
         for (var i=0; i<keys.length; ++i) {
             var key = keys[i];
-            if (key === undefined || !(key in this.map)) {
+            if (!this.contains(key)) {
                 continue;
             }
 

@@ -52,4 +52,22 @@ $(document).ready(function () {
         strictEqual(reg.get_object('foo2'), openerp.web.Foo2);
         strictEqual(reg2.get_object('foo2'), openerp.web.Foo2);
     });
+    test('multiget', function () {
+        var reg = new openerp.web.Registry({
+            foo: 'openerp.web.Foo',
+            bar: 'openerp.web.Bar'
+        });
+
+        strictEqual(reg.get_any(['qux', 'grault', 'bar', 'foo']),
+                    openerp.web.Bar);
+    });
+    test('extended-multiget', function () {
+        var reg = new openerp.web.Registry({
+            foo: 'openerp.web.Foo',
+            bar: 'openerp.web.Bar'
+        });
+        var reg2 = reg.extend();
+        strictEqual(reg2.get_any(['qux', 'grault', 'bar', 'foo']),
+                    openerp.web.Bar);
+    });
 });
