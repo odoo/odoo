@@ -143,6 +143,7 @@ class RegistryManager(object):
     # must be reloaded.
     # The `base_cache_signaling sequence` indicates all caches must be
     # invalidated (i.e. cleared).
+    # TODO per registry
     base_registry_signaling_sequence = 1
     base_cache_signaling_sequence = 1
 
@@ -279,10 +280,19 @@ class RegistryManager(object):
                 cr = openerp.sql_db.db_connect(db_name).cursor()
                 try:
                     pass
-                    # cr.execute("select nextval('base_registry_signaling')")
-                    # cls.base_cache_signaling to = result
+                    # cr.execute("select nextval('base_cache_signaling')")
+                    # cls.base_cache_signaling_sequence to = result
                 finally:
                     cr.close()
                 registry.reset_any_cache_cleared()
+
+    @classmethod
+    def signal_registry_change(cls, db_name):
+        cr = openerp.sql_db.db_connect(db_name).cursor()
+        try:
+            cr.execute("select nextval('base_registry_signaling')")
+        finally:
+            cr.close()
+        #cls.base_registry_signaling_sequence to = result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
