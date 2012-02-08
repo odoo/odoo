@@ -108,7 +108,7 @@ class report_custom(report_int):
                     key = levels.keys()
                 for l in key:
                     objs = eval('obj.'+l,{'obj': obj})
-                    if not isinstance(objs, browse_record_list) and type(objs) <> type([]):
+                    if not isinstance(objs, (browse_record_list, list)):
                         objs = [objs]
                     field_new = []
                     cond_new = []
