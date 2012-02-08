@@ -676,15 +676,9 @@ def fix_view_modes(action):
 class Menu(openerpweb.Controller):
     _cp_path = "/web/menu"
 
-
-    def do_load_level(self, req, parent_id=False):
-        Menus = req.session.model('ir.ui.menu')
-        context = req.session.eval_context(req.context)
-        menu_ids = Menus.search([('parent_id','=',parent_id)], 0, False, False, context)
-        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'], context)
-        for menu in menu_items:
-            menu['children'] = self.do_load_level(req, parent_id = menu['id'])
-        return menu_items
+    @openerpweb.jsonrequest
+    def load(self, req):
+        return {'data': self.do_load(req)}
 
     def do_load(self, req):
         """ Loads all menu items (all applications and their sub-menus).
@@ -694,13 +688,45 @@ class Menu(openerpweb.Controller):
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        root_children = self.do_load_level(req)
-        root_menu = {'id': False, 'name': 'root', 'parent_id': [-1, ''], 'children': root_children}
-        return root_menu
+        s = req.session
+        context = s.eval_context(req.context)
+        Menus = s.model('ir.ui.menu')
+        # If a menu action is defined use its domain to get the root menu items
+        user_menu_id = s.model('res.users').read([s._uid], ['menu_id'], context)[0]['menu_id']
+        if user_menu_id:
+            user_menu_domain = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'], context)[0]['domain']
+            user_menu_domain = ast.literal_eval(user_menu_domain)
+            root_menu_ids = Menus.search(user_menu_domain, 0, False, False, context)
+            menu_items = Menus.read(root_menu_ids, ['name', 'sequence', 'parent_id'], context)
+            menu_root = {'id': -2, 'name': 'root', 'parent_id': [-1, ''], 'children' : menu_items}
+            menu_roots = [menu_root] + menu_items
+        else:
+            menu_roots = [{'id': False, 'name': 'root', 'parent_id': [-1, '']}]
 
-    @openerpweb.jsonrequest
-    def load(self, req):
-        return {'data': self.do_load(req)}
+
+        # menus are loaded fully unlike a regular tree view, cause there are a
+        # limited number of items (752 when all 6.1 addons are installed)
+        menu_ids = Menus.search([], 0, False, False, context)
+        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'], context)
+        menu_items.extend(menu_roots)
+
+        # make a tree using parent_id
+        menu_items_map = dict((menu_item["id"], menu_item) for menu_item in menu_items)
+        for menu_item in menu_items:
+            if menu_item['parent_id']:
+                parent = menu_item['parent_id'][0]
+            else:
+                parent = False
+            if parent in menu_items_map:
+                menu_items_map[parent].setdefault(
+                    'children', []).append(menu_item)
+
+        # sort by sequence a tree using parent_id
+        for menu_item in menu_items:
+            menu_item.setdefault('children', []).sort(
+                key=operator.itemgetter('sequence'))
+
+        return menu_root
 
     @openerpweb.jsonrequest
     def action(self, req, menu_id):
