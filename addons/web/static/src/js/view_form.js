@@ -121,6 +121,15 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.sidebar.attachments = new openerp.web.form.SidebarAttachments(this.sidebar, this);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
+
+            this.sidebar.add_section(_t('Customize'), 'customize');
+            this.sidebar.add_items('customize', [{
+                label: _t('Set Default'),
+                form: this,
+                callback: function (item) {
+                    item.form.open_defaults_dialog();
+                }
+            }]);
         }
         this.has_been_loaded.resolve();
     },
@@ -631,6 +640,67 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     sidebar_context: function () {
         return this.do_save().pipe(_.bind(function() {return this.get_fields_values();}, this));
+    },
+    open_defaults_dialog: function () {
+        var self = this;
+        var fields = _.chain(this.fields)
+            .map(function (field, name) {
+                var value = field.get_value();
+                // ignore fields which are empty, invisible, readonly, o2m
+                // or m2m
+                if (!value
+                        || field.invisible
+                        || field.readonly
+                        || field.field.type === 'one2many'
+                        || field.field.type === 'many2many') {
+                    return false;
+                }
+                return {
+                    name: name,
+                    string: field.string,
+                    value: value,
+                    // convert undefined to false
+                    change_default: !!field.field.change_default
+                }
+            })
+            .compact()
+            .sortBy(function (field) { return field.string; })
+            .value();
+        var conditions = _.chain(fields)
+            .filter(function (field) { return field.change_default; })
+            .value();
+
+        var d = new openerp.web.Dialog(this, {
+            title: _t("Set Default"),
+            args: {
+                fields: fields,
+                conditions: conditions
+            },
+            buttons: [
+                {text: _t("Close"), click: function () { d.close(); }},
+                {text: _t("Save default"), click: function () {
+                    var $defaults = d.$element.find('#formview_default_fields');
+                    var field_to_set = $defaults.val();
+                    if (!field_to_set) {
+                        $defaults.parent().addClass('invalid');
+                        return;
+                    }
+                    var condition = d.$element.find('#formview_default_conditions').val(),
+                        all_users = d.$element.find('#formview_default_all').is(':checked');
+                    new openerp.web.DataSet(self, 'ir.values').call(
+                        'set_default', [
+                            self.dataset.model,
+                            field_to_set,
+                            self.fields[field_to_set].get_value(),
+                            all_users,
+                            false,
+                            condition || false
+                    ]).then(function () { d.close(); });
+                }}
+            ]
+        });
+        d.template = 'FormView.set_default';
+        d.open();
     }
 });
 openerp.web.FormDialog = openerp.web.Dialog.extend({
