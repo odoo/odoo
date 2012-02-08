@@ -1078,6 +1078,8 @@ class account_period(osv.osv):
         return super(account_period, self).write(cr, uid, ids, vals, context=context)
 
     def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
+        if period_from_id == period_to_id:
+            return period_from_id
         period_from = self.browse(cr, uid, period_from_id)
         period_date_start = period_from.date_start
         company1_id = period_from.company_id.id
