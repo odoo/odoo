@@ -34,15 +34,25 @@ class sale_order_line(osv.osv):
     _columns={
     'event':fields.many2one('event.event','Event'),
     'event_type':fields.char('event_type',128),
+    'event_ok':fields.boolean('event_ok'),
     }
-    def onchange_product(self,cr,uid,ids,product):
-        product = self.pool.get('product.product').browse(cr, uid, product)
-        if product.event_type:
-            res={'value' : {
-                            'event_type':product.event_type.name
-                           }
-                }
-            return res
+        
+
+    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
+    uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+    lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+        res = {}
+        if product:
+            product_res = self.pool.get('product.product').browse(cr, uid, product)
+            if product_res.event_type:
+                res={'value' : {
+                                'event_type':product_res.event_type.name,
+                                'event_ok':product_res.event_ok
+                                }
+                    }
+            return  res
+
+        return super(sale_order_line,self).product_id_change(cr,uid,ids,res,context)
 
     def button_confirm(self,cr,uid,ids,context=None):
         registration = self.browse(cr,uid,ids,context=None)
@@ -60,6 +70,5 @@ class sale_order_line(osv.osv):
             })
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context)
 
-sale_order_line()
 
 
