@@ -292,6 +292,7 @@
                     <button name="case_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                     <button name="case_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                    <button name="do_draft" string="Set To Draft" states="cancel,done" type="object" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
@@ -333,6 +334,7 @@
                                 <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                 <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                                 <button name="case_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                <button string="Set To Draft" name="do_draft" states="cancel" type="object" icon="gtk-convert"/>
                             </group>
                         </page>
                         <page string="Emails" groups="base.group_extended">

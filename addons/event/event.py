@@ -221,6 +221,8 @@ class event_registration(osv.osv):
         'user_id': lambda self, cr, uid, ctx: uid,
     }
 
+    def do_draft(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
     def do_open(self, cr, uid, ids, context=None):
         """ Open Registration
         """
@@ -229,7 +231,7 @@ class event_registration(osv.osv):
         self.message_append(cr, uid, ids, _('Open'))
         return res
 
-    def do_close(self, cr, uid, ids, context=None):
+    def case_close(self, cr, uid, ids, context=None):
         """ Close Registration
         """
         if context is None:
