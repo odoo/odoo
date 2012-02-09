@@ -694,20 +694,21 @@ class Menu(openerpweb.Controller):
         # If a menu action is defined use its domain to get the root menu items
         user_menu_id = s.model('res.users').read([s._uid], ['menu_id'], context)[0]['menu_id']
         if user_menu_id:
-            user_menu_domain = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'], context)[0]['domain']
-            user_menu_domain = ast.literal_eval(user_menu_domain)
-            root_menu_ids = Menus.search(user_menu_domain, 0, False, False, context)
-            menu_items = Menus.read(root_menu_ids, ['name', 'sequence', 'parent_id'], context)
-            menu_root = {'id': -2, 'name': 'root', 'parent_id': [-1, ''], 'children' : menu_items}
-            menu_roots = [menu_root] + menu_items
+            menu_domain = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'], context)[0]['domain']
+            menu_domain = ast.literal_eval(menu_domain)
         else:
-            menu_roots = [{'id': False, 'name': 'root', 'parent_id': [-1, '']}]
-
+            menu_domain = [('parent_id', '=', False)]
+        root_menu_ids = Menus.search(menu_domain, 0, False, False, context)
+        menu_roots = Menus.read(root_menu_ids, ['name', 'sequence', 'parent_id'], context)
+        menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, ''], 'children' : menu_roots}
 
         # menus are loaded fully unlike a regular tree view, cause there are a
         # limited number of items (752 when all 6.1 addons are installed)
         menu_ids = Menus.search([], 0, False, False, context)
         menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'], context)
+        # adds roots at the end of the sequence, so that they will overwrite
+        # equivalent menu items from full menu read when put into id:item
+        # mapping, resulting in children being correctly set on the roots.
         menu_items.extend(menu_roots)
 
         # make a tree using parent_id
