@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-01-13 19:23+0000\n"
+"PO-Revision-Date: 2012-02-08 08:45+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:31+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -142,6 +142,7 @@ msgstr "ungültige BBA Kommunikations Stuktur"
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
 msgstr ""
+"Die gewählten Journal und Perioden müssen zum selben Unternehmen gehören"
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
@@ -149,6 +150,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -255,6 +258,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -370,7 +376,7 @@ msgstr "Speichere Verrechnung als Vorlage"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "You can not create journal items on an account of type view."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -434,7 +440,7 @@ msgstr "Konto4 ID"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "Company must be the same for its related account and period."
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -524,7 +530,7 @@ msgstr ""
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "You can not create journal items on closed account."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -736,13 +742,3 @@ msgstr "Wertefehler"
 
 #~ msgid "You can not create move line on view account."
 #~ msgstr "Sie können keine Buchungen auf Konten des Typs Ansicht erstellen."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry must receive a value in its "
-#~ "secondary currency"
-#~ msgstr "Das ausgewählte Konto muss auch in der 2.Währung bebucht werden."
-
-#~ msgid "The date of your Journal Entry is not in the defined period!"
-#~ msgstr ""
-#~ "Das Datum Ihrer Journalbuchung befindet sich nicht in der definierten "
-#~ "Periode!"

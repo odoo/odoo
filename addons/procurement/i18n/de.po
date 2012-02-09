@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-01-15 09:14+0000\n"
+"PO-Revision-Date: 2012-02-08 10:20+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:59+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:00+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -216,6 +216,16 @@ msgid ""
 "\n"
 "        Exceptions:\n"
 msgstr ""
+"Das ist der Beschaffungsplanungs Report.\n"
+"\n"
+"        Startzeit: %s \n"
+"        Endzeit: %s \n"
+"        Anzahl der verabeiteten Beschaffungsvorschlge: %d \n"
+"        Beschaffungsvorschläge mit Ausnahmen: %d \n"
+"        Übersprungene Beschaffungsvorschläge (außerhalb des "
+"Planungszeitraumes) %d \n"
+"\n"
+"        Ausnahmen:\n"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -234,6 +244,8 @@ msgid ""
 "procurement to bring the virtual stock to the Quantity specified as Max "
 "Quantity."
 msgstr ""
+"Wenn die verfügbare Menge unter den Mindestbestand sinkt, generiert OpenERP "
+"einen Beschaffungs der den Bestand auf den Maximalbestand auffüllt."
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -310,7 +322,7 @@ msgstr "Günstigster Preis (noch nicht aktiviert!)"
 #: code:addons/procurement/schedulers.py:111
 #, python-format
 msgid "PROC %d: from stock - %3.2f %-5s - %s"
-msgstr ""
+msgstr "PROC %d: vom lager - %3.2f %-5s - %s"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -387,7 +399,7 @@ msgstr "Referenzen"
 #: view:product.product:0
 #: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rule"
-msgstr ""
+msgstr "Mindestbestandsregel"
 
 #. module: procurement
 #: view:res.company:0
@@ -401,6 +413,8 @@ msgid ""
 "Please check the quantity in procurement order(s), it should not be 0 or "
 "less!"
 msgstr ""
+"Bitte überprüfen Sie die Mnegen im Beschaffungsauftrag, diese sollten "
+"positive Werte sein."
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -471,6 +485,9 @@ msgid ""
 "OpenERP generates a procurement to bring the virtual stock to the Max "
 "Quantity."
 msgstr ""
+"Wenn die verfügbare Menge unter den Mindestbestand in diesem Feld sinkt, "
+"generiert OpenERP einen Beschaffungs der den Bestand auf den Maximalbestand "
+"auffüllt."
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -914,7 +931,7 @@ msgstr "Beschaffungsdisposition"
 #: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state!"
-msgstr ""
+msgstr "Beschaffungsaufträge mit Status %s können icht gelöscht werden."
 
 #. module: procurement
 #: sql_constraint:res.company:0
@@ -1022,7 +1039,7 @@ msgstr "Die Beschaffung begann zu spät"
 #. module: procurement
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fehler: Falscher EAN code"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:152
@@ -1034,7 +1051,7 @@ msgstr "DISPOSITION"
 #: code:addons/procurement/schedulers.py:88
 #, python-format
 msgid "PROC %d: on order - %3.2f %-5s - %s"
-msgstr ""
+msgstr "PROC %d: für Aufrag - %3.2f %-5s - %s"
 
 #, python-format
 #~ msgid ""

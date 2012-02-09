@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-07 10:15+0000\n"
-"Last-Translator: digitalsatori <digisatori@gmail.com>\n"
+"PO-Revision-Date: 2012-02-09 02:16+0000\n"
+"Last-Translator: sum1201 <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:24+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:26+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -775,7 +775,7 @@ msgstr "类型"
 msgid ""
 "Taxes are missing!\n"
 "Click on compute button."
-msgstr ""
+msgstr "没有选择税!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
@@ -5709,7 +5709,7 @@ msgstr ""
 #: code:addons/account/wizard/account_change_currency.py:70
 #, python-format
 msgid "Current currency is not configured properly !"
-msgstr ""
+msgstr "当前的货币配置不正确！"
 
 #. module: account
 #: field:account.tax,account_collected_id:0
@@ -5745,7 +5745,7 @@ msgstr "会计期间:%s"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_review_financial_journals_installer
 msgid "Review your Financial Journals"
-msgstr ""
+msgstr "审核财务凭证"
 
 #. module: account
 #: help:account.tax,name:0
@@ -5779,7 +5779,7 @@ msgstr "客户红字发票"
 #. module: account
 #: field:account.account,foreign_balance:0
 msgid "Foreign Balance"
-msgstr ""
+msgstr "国外资产"
 
 #. module: account
 #: field:account.journal.period,name:0
@@ -5838,14 +5838,14 @@ msgid ""
 "Configuration Error! \n"
 "You can not define children to an account with internal type different of "
 "\"View\"! "
-msgstr ""
+msgstr "配置错误！ "
 
 #. module: account
 #: help:res.partner.bank,journal_id:0
 msgid ""
 "This journal will be created automatically for this bank account when you "
 "save the record"
-msgstr ""
+msgstr "当保存数据时，系统会自动为此银行账户创建像相应的凭证."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -5918,7 +5918,7 @@ msgstr "这是一个定期分录模型"
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax_rate:0
 msgid "Sales Tax(%)"
-msgstr ""
+msgstr "销售税(%)"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -5965,7 +5965,7 @@ msgstr "公司"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Open and Paid Invoices"
-msgstr ""
+msgstr "打开并支付发票"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -5978,7 +5978,7 @@ msgstr ""
 msgid ""
 "You can not remove/desactivate an account which is set on a customer or "
 "supplier."
-msgstr ""
+msgstr "您不能删除或停用供应商或客户的帐户。"
 
 #. module: account
 #: help:account.fiscalyear.close.state,fy_id:0
@@ -6114,7 +6114,7 @@ msgstr "强制"
 #: code:addons/account/account.py:3368
 #, python-format
 msgid "Cannot generate an unused journal code."
-msgstr ""
+msgstr "不能生成一个未使用的凭证代码。"
 
 #. module: account
 #: view:project.account.analytic.line:0
@@ -6214,7 +6214,7 @@ msgstr "非强制创建"
 msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
-msgstr ""
+msgstr "你不能修改已经存在凭证的公司帐户。"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
@@ -6276,7 +6276,7 @@ msgstr "只读"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Valuation: Balance"
-msgstr ""
+msgstr "  估值:平衡"
 
 #. module: account
 #: field:account.invoice.line,uos_id:0
@@ -6293,7 +6293,7 @@ msgstr "付款方式明细中百分比在0和1之间，如：2%为0.02 "
 #. module: account
 #: field:account.installer,has_default_company:0
 msgid "Has Default Company"
-msgstr ""
+msgstr "已经存在默认公司"
 
 #. module: account
 #: model:ir.model,name:account.model_account_sequence_fiscalyear
@@ -6315,7 +6315,7 @@ msgstr "辅助核算账薄"
 #: code:addons/account/account.py:622
 #, python-format
 msgid "You can not desactivate an account that contains some journal items."
-msgstr ""
+msgstr "您不能停用已经存在凭证的账户。"
 
 #. module: account
 #: view:account.entries.report:0
@@ -6371,7 +6371,7 @@ msgstr "辅助核算统计"
 #: code:addons/account/account.py:624
 #, python-format
 msgid "You can not remove an account containing journal items."
-msgstr ""
+msgstr "您不能删除已经存在凭证的账户。"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:145
@@ -6388,7 +6388,7 @@ msgstr "在选定的账簿手动创建定期分录。"
 #. module: account
 #: help:res.partner.bank,currency_id:0
 msgid "Currency of the related account journal."
-msgstr ""
+msgstr "货币的关联账户凭证。"
 
 #. module: account
 #: code:addons/account/account.py:1563
@@ -6414,7 +6414,7 @@ msgstr ""
 #: code:addons/account/account.py:183
 #, python-format
 msgid "Balance Sheet (Asset account)"
-msgstr ""
+msgstr "资产负债表(资产帐户)"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_reconcile_tree
@@ -6475,7 +6475,7 @@ msgstr "Python代码"
 #. module: account
 #: view:account.entries.report:0
 msgid "Journal Entries with period in current period"
-msgstr ""
+msgstr "当前期间凭证列表"
 
 #. module: account
 #: help:account.journal,update_posted:0
@@ -6499,7 +6499,7 @@ msgstr "创建分录"
 #: code:addons/account/account.py:182
 #, python-format
 msgid "Profit & Loss (Expense account)"
-msgstr ""
+msgstr "损益(费用账户)"
 
 #. module: account
 #: code:addons/account/account.py:622
@@ -6535,7 +6535,7 @@ msgstr "错误！"
 #. module: account
 #: field:account.financial.report,style_overwrite:0
 msgid "Financial Report Style"
-msgstr ""
+msgstr "财务报表样式"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -6559,7 +6559,7 @@ msgstr "已打印"
 #: code:addons/account/account_move_line.py:591
 #, python-format
 msgid "Error :"
-msgstr ""
+msgstr "错误："
 
 #. module: account
 #: view:account.analytic.line:0
@@ -12447,46 +12447,3 @@ msgstr "基于当前币别的应收或应付款的余额"
 #~ msgstr ""
 #~ "科目一览表是根据贵公司所在国家的会计制度建立的。辅助核算项一览表是按贵公司管理需要或者需要查看成本/收益。一般用于管理合同、项目、产品或部门。很多Open"
 #~ "ERP业务（发票、计工单、费用报销）都会生成相关辅助核算项的记录"
-
-#, python-format
-#~ msgid "TAX-S-%s"
-#~ msgstr "TAX-S-%s"
-
-#, python-format
-#~ msgid "No period found or period given is ambigous."
-#~ msgstr "未设置财务期间或财务期间设置有冲突"
-
-#, python-format
-#~ msgid "Deposit"
-#~ msgstr "存款"
-
-#, python-format
-#~ msgid ""
-#~ "You can not validate a journal entry unless all journal items belongs to the "
-#~ "same chart of accounts !"
-#~ msgstr "所有凭证行对应科目均属同一科目表时方可审核该凭证"
-
-#, python-format
-#~ msgid "Tax Paid at %s"
-#~ msgstr "税额支付于 %s"
-
-#, python-format
-#~ msgid "You can not create move line on view account %s %s"
-#~ msgstr "不能在视图类型的科目 %s %s 上创建凭证行"
-
-#, python-format
-#~ msgid "BASE-S-%s"
-#~ msgstr "BASE-S-%s"
-
-#, python-format
-#~ msgid "The closing balance should be the same than the computed balance !"
-#~ msgstr "期末余额应与计算的余额相等"
-
-#, python-format
-#~ msgid ""
-#~ "Can not create the invoice !\n"
-#~ "The related payment term is probably misconfigured as it gives a computed "
-#~ "amount greater than the total invoiced amount."
-#~ msgstr ""
-#~ "无法创建发票\n"
-#~ "相关付款方式配置有误，计算所得金额大于发票的总金额"

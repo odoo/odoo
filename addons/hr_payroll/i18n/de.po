@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-01-14 17:12+0000\n"
+"PO-Revision-Date: 2012-02-08 09:21+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:54+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:55+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_select:0
@@ -289,7 +289,7 @@ msgstr "Wöchentlich"
 #. module: hr_payroll
 #: field:hr.payslip.line,rate:0
 msgid "Rate (%)"
-msgstr ""
+msgstr "Anteil (%)"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -405,6 +405,11 @@ msgid ""
 "* If the payslip is confirmed then state is set to 'Done'.            \n"
 "* When user cancel payslip the state is 'Rejected'."
 msgstr ""
+"Der Status des Lohnkontos ist:\n"
+"* \"Entwurf\" nach Erstellung\n"
+"* \"Wartend\" wenn das Lohnkonto überprüft wird.\n"
+"* \"Erledigt\" wenn das Lohnkonto bestätigt ist.\n"
+"* \"Abgelehnt\" wenn das Lohnkonto vom Benutzer storniert ist"
 
 #. module: hr_payroll
 #: field:hr.payslip.worked_days,number_of_days:0
@@ -580,6 +585,9 @@ msgid ""
 "basic salary for per product can defined in expression like result = "
 "inputs.SALEURO.amount * contract.wage*0.01."
 msgstr ""
+"Dieses Feld wird für Berechnungen verwendet.\r\n"
+"Eine Regel für 1% Verkaufskommision auf den Grundgehalt lautet zB: result = "
+"inputs.SALEURO.amount * contract.wage*0.01"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:0 field:hr.payslip.line,amount_select:0
@@ -738,7 +746,7 @@ msgstr "Arbeitsvertrag"
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
 msgid "Credit"
-msgstr ""
+msgstr "Haben"
 
 #. module: hr_payroll
 #: field:hr.contract,schedule_pay:0

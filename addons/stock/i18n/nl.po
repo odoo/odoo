@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2011-10-26 15:25+0000\n"
-"Last-Translator: Thomas <Unknown>\n"
+"PO-Revision-Date: 2012-02-08 10:49+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 04:57+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-09 05:58+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
 msgid "Track Outgoing Lots"
-msgstr "Traceer uitgaande lotnummers"
+msgstr "Traceer uitgaande partijen"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
@@ -77,7 +77,7 @@ msgstr "Revisie nummer"
 #. module: stock
 #: view:stock.move:0
 msgid "Orders processed Today or planned for Today"
-msgstr ""
+msgstr "Orders verwerkt vandaag of geplant voor vandaag"
 
 #. module: stock
 #: view:stock.partial.move.line:0 view:stock.partial.picking:0
@@ -89,7 +89,7 @@ msgstr "Product verschuivingen"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
-msgstr ""
+msgstr "Maateenheid categorieën"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_move_report
@@ -123,7 +123,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_change_product_qty.py:87
 #, python-format
 msgid "Quantity cannot be negative."
-msgstr ""
+msgstr "Hoeveelheid mag niet negatief zijn."
 
 #. module: stock
 #: view:stock.picking:0
@@ -166,13 +166,13 @@ msgstr "Dag"
 #: view:stock.move:0 field:stock.move.split,product_uom:0 view:stock.picking:0
 #: view:stock.production.lot:0
 msgid "UoM"
-msgstr "Meeteenheid"
+msgstr "Eenh."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 msgid "Physical Inventories"
-msgstr ""
+msgstr "Fysieke voorraden"
 
 #. module: stock
 #: field:product.category,property_stock_journal:0 view:report.stock.move:0
@@ -183,13 +183,14 @@ msgstr "Dagboek voorraad"
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
 msgid "Current month"
-msgstr ""
+msgstr "Huidige maand"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:222
 #, python-format
 msgid "Unable to assign all lots to this move!"
 msgstr ""
+"Het is niet mogelijk om alle partijen aan deze verplaatsing toe te wijzen."
 
 #. module: stock
 #: code:addons/stock/stock.py:2516
@@ -277,7 +278,7 @@ msgstr "Referentie"
 #: code:addons/stock/stock.py:670 code:addons/stock/stock.py:1516
 #, python-format
 msgid "Products to Process"
-msgstr ""
+msgstr "Te verwerken producten"
 
 #. module: stock
 #: help:stock.fill.inventory,set_stock_zero:0
@@ -289,7 +290,7 @@ msgstr ""
 #. module: stock
 #: view:stock.partial.move:0 view:stock.partial.picking:0
 msgid "_Validate"
-msgstr ""
+msgstr "_Valideren"
 
 #. module: stock
 #: code:addons/stock/stock.py:1149
@@ -344,17 +345,17 @@ msgstr ""
 #: field:stock.production.lot.revision,lot_id:0
 #: field:stock.report.prodlots,prodlot_id:0
 msgid "Production lot"
-msgstr "Batchnummer"
+msgstr "Productie partij"
 
 #. module: stock
 #: help:stock.incoterms,code:0
 msgid "Code for Incoterms"
-msgstr ""
+msgstr "Code voor Incoterms"
 
 #. module: stock
 #: field:stock.tracking,move_ids:0
 msgid "Moves for this pack"
-msgstr ""
+msgstr "Verplaats dit pak"
 
 #. module: stock
 #: view:stock.picking:0
@@ -398,7 +399,7 @@ msgstr "Werkelijke voorraad"
 #. module: stock
 #: field:report.stock.move,day_diff2:0
 msgid "Lag (Days)"
-msgstr ""
+msgstr "Vertraging (dagen)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_action_traceability
@@ -454,7 +455,7 @@ msgstr "Splitsen in"
 #. module: stock
 #: view:stock.location:0
 msgid "Internal Locations"
-msgstr ""
+msgstr "Interne locaties"
 
 #. module: stock
 #: field:stock.move,price_currency_id:0
@@ -491,7 +492,7 @@ msgstr ""
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Product Lots Filter"
-msgstr "Productie lot filter"
+msgstr "Productie partij filter"
 
 #. module: stock
 #: report:lot.stock.overview:0 report:lot.stock.overview_all:0
@@ -534,7 +535,7 @@ msgstr "Afleverlocatie"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move_line
 msgid "stock.partial.move.line"
-msgstr ""
+msgstr "stock.partial.move.line"
 
 #. module: stock
 #: code:addons/stock/stock.py:760
@@ -602,7 +603,7 @@ msgstr "Extra referenties"
 #. module: stock
 #: view:stock.production.lot.revision:0
 msgid "Production Lot Revisions"
-msgstr "Batchnummer herzieningen"
+msgstr "Productie partij herzieningen"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_journal_form
@@ -684,6 +685,7 @@ msgstr ""
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr ""
+"U probeert een partij toe te wijzen die niet van hetzelfde product is."
 
 #. module: stock
 #: view:res.partner:0
@@ -718,7 +720,7 @@ msgstr "Ontvanger"
 #. module: stock
 #: model:stock.location,name:stock.location_refrigerator
 msgid "Refrigerator"
-msgstr ""
+msgstr "Koelkast"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
@@ -751,13 +753,13 @@ msgstr ""
 #. module: stock
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Referentie moet uniek zijn per bedrijf!"
 
 #. module: stock
 #: code:addons/stock/product.py:417
 #, python-format
 msgid "Future Receptions"
-msgstr ""
+msgstr "Toekomstige ontvangsten"
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -796,7 +798,8 @@ msgstr "Locatieadres"
 #. module: stock
 #: help:stock.move,prodlot_id:0
 msgid "Production lot is used to put a serial number on the production"
-msgstr "Batchnummers worden gebruikt om productie-eenheden te identificeren."
+msgstr ""
+"Productie partij worden gebruikt om productie-eenheden te identificeren."
 
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
@@ -811,7 +814,7 @@ msgstr "Besteldatum"
 #. module: stock
 #: selection:product.product,valuation:0
 msgid "Periodical (manual)"
-msgstr ""
+msgstr "Periodiek (handmatig)"
 
 #. module: stock
 #: model:stock.location,name:stock.location_procurement
@@ -849,12 +852,12 @@ msgstr "Hoeveelheid aanpassen"
 #. module: stock
 #: field:report.stock.inventory,month:0
 msgid "unknown"
-msgstr ""
+msgstr "onbekend"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
 msgid "Merge Inventory"
-msgstr ""
+msgstr "Voorraad samenvoegen"
 
 #. module: stock
 #: code:addons/stock/product.py:433
@@ -935,6 +938,9 @@ msgid ""
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
+"Laat leeg indien u produceert op de locatie waar het gereed product nodig "
+"is. Stel een locatie in als u produceert op een vaste locatie. Dat kan de "
+"locatie van een relatie zijn indien u de fabricage outsource't."
 
 #. module: stock
 #: view:res.partner:0
@@ -1163,7 +1169,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move.split:0
 msgid "Lot number"
-msgstr "Lot nummer"
+msgstr "Partij nummer"
 
 #. module: stock
 #: field:stock.inventory.line,product_uom:0
@@ -1330,7 +1336,7 @@ msgstr "Factuurcontrole"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot_revision
 msgid "Production lot revisions"
-msgstr "Batchnummer herzieningen"
+msgstr "Productie partij herzieningen"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1644,7 +1650,7 @@ msgstr ""
 #. module: stock
 #: field:stock.report.tracklots,tracking_id:0
 msgid "Tracking lot"
-msgstr ""
+msgstr "Traceer partij"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1671,12 +1677,12 @@ msgstr "Geleverd aantal"
 #: model:ir.actions.act_window,name:stock.track_line
 #: view:stock.inventory.line.split:0 view:stock.move.split:0
 msgid "Split in lots"
-msgstr ""
+msgstr "Splits in partijen"
 
 #. module: stock
 #: view:stock.move.split:0
 msgid "Production Lot Numbers"
-msgstr ""
+msgstr "Productie partij nummers"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -1730,7 +1736,7 @@ msgstr "Code"
 #. module: stock
 #: view:stock.inventory.line.split:0
 msgid "Lots Number"
-msgstr ""
+msgstr "Partijnumer"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.open_board_warehouse
@@ -1771,7 +1777,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
 msgid "Split in production lots"
-msgstr "Splits in productie-lots"
+msgstr "Splits in productie partijen"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
@@ -2569,12 +2575,12 @@ msgstr ""
 #: view:report.stock.inventory:0 field:report.stock.inventory,prodlot_id:0
 #: view:stock.move:0 report:stock.picking.list:0
 msgid "Lot"
-msgstr "Batch"
+msgstr "Partij"
 
 #. module: stock
 #: view:stock.move.split:0
 msgid "Production Lot Number"
-msgstr ""
+msgstr "Productie partijnummer"
 
 #. module: stock
 #: code:addons/stock/stock.py:2697
@@ -3000,7 +3006,7 @@ msgstr "Virtuale voorraad"
 #: view:product.product:0 view:stock.inventory.line.split:0
 #: view:stock.move.split:0
 msgid "Lots"
-msgstr "Batches"
+msgstr "Partijen"
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
@@ -3060,7 +3066,7 @@ msgstr ""
 #. module: stock
 #: field:stock.production.lot,move_ids:0
 msgid "Moves for this production lot"
-msgstr ""
+msgstr "Mutaties voor deze productie partij"
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
@@ -3070,7 +3076,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0
 msgid "Lot Inventory"
-msgstr "Batchvoorraad"
+msgstr "Partijvoorraad"
 
 #. module: stock
 #: view:stock.move:0
@@ -3364,7 +3370,7 @@ msgstr "Instellingen"
 #: field:stock.inventory.line.split,use_exist:0
 #: field:stock.move.split,use_exist:0
 msgid "Existing Lots"
-msgstr ""
+msgstr "Bestaande partij"
 
 #. module: stock
 #: view:stock.location:0
@@ -3467,7 +3473,7 @@ msgstr ""
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Available Product Lots"
-msgstr ""
+msgstr "Beschikbare productie partijen"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_move_form2
@@ -3695,7 +3701,7 @@ msgstr ""
 #: field:stock.partial.picking.line,prodlot_id:0 view:stock.production.lot:0
 #: field:stock.production.lot,name:0
 msgid "Production Lot"
-msgstr "Productie batch"
+msgstr "Productie partij"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_traceability view:stock.move:0
@@ -3764,7 +3770,7 @@ msgstr ""
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "U moet een productie partij toewijzen voor dit product"
 
 #. module: stock
 #: view:stock.move:0
@@ -3804,7 +3810,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split
 msgid "Split in Production lots"
-msgstr ""
+msgstr "Splits in productie partijen"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:213
@@ -3861,7 +3867,7 @@ msgstr "Vastgezette locatiesoort"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
 msgid "Stock report by production lots"
-msgstr "Voorraadrapport met batchnummers"
+msgstr "Voorraadrapport met partijnummers"
 
 #. module: stock
 #: view:stock.location:0 selection:stock.location,chained_location_type:0
