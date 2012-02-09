@@ -821,10 +821,6 @@ session.web.Sidebar = session.web.OldWidget.extend({
             }, {
                 label: _t("Export"),
                 callback: view.on_sidebar_export
-            }, {
-                label: _t("View Log"),
-                callback: view.on_sidebar_view_log,
-                classname: 'oe_hide oe_sidebar_view_log'
             }
         ]);
     },
@@ -863,18 +859,32 @@ session.web.Sidebar = session.web.OldWidget.extend({
         }
         return $section;
     },
-
+    /**
+     * For each item added to the section:
+     *
+     * ``label``
+     *     will be used as the item's name in the sidebar
+     *
+     * ``action``
+     *     descriptor for the action which will be executed, ``action`` and
+     *     ``callback`` should be exclusive
+     *
+     * ``callback``
+     *     function to call when the item is clicked in the sidebar, called
+     *     with the item descriptor as its first argument (so information
+     *     can be stored as additional keys on the object passed to
+     *     ``add_items``)
+     *
+     * ``classname`` (optional)
+     *     ``@class`` set on the sidebar serialization of the item
+     *
+     * ``title`` (optional)
+     *     will be set as the item's ``@title`` (tooltip)
+     *
+     * @param {String} section_code
+     * @param {Array<{label, action | callback[, classname][, title]}>} items
+     */
     add_items: function(section_code, items) {
-        // An item is a dictonary : {
-        //    label: label to be displayed for the link,
-        //    action: action to be launch when the link is clicked,
-        //    callback: a function to be executed when the link is clicked,
-        //    classname: optional dom class name for the line,
-        //    title: optional title for the link
-        // }
-        // Note: The item should have one action or/and a callback
-        //
-
         var self = this,
             $section = this.add_section(_.str.titleize(section_code.replace('_', ' ')), section_code),
             section_id = $section.attr('id');
@@ -1221,8 +1231,6 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             view_type : "list",
             view_mode : "list"
         });
-    },
-    on_sidebar_view_log: function() {
     },
     sidebar_context: function () {
         return $.when();
