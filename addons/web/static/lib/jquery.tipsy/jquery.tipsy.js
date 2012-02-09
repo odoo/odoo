@@ -18,7 +18,7 @@
     
     Tipsy.prototype = {
         show: function() {
-            $('div.tipsy').stop().remove();
+            $.fn.tipsy.clear();
             if (!this.$element.parent().length) {
                 return;
             }
@@ -179,6 +179,10 @@
         return this;
         
     };
+
+    $.fn.tipsy.clear = function() {
+        $('div.tipsy').stop().remove();
+    }
     
     $.fn.tipsy.defaults = {
         className: null,

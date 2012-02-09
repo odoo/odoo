@@ -836,7 +836,7 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
     },
     stop: function() {
         this._super.apply(this, arguments);
-        $('div.tipsy').stop().remove();
+        $.fn.tipsy.clear();
     },
     process_modifiers: function() {
         var compute_domain = openerp.web.form.compute_domain;
