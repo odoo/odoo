@@ -46,9 +46,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 {text: _t("Create"), click: function() { self.on_create_view(); }},
                 {text: _t("Edit"), click: function() { self.xml_element_id = 0; self.get_arch(); }},
                 {text: _t("Remove"), click: function() { self.do_delete_view(); }},
-                {text: _t("Close"), click: function() { self.view_edit_dialog.close(); }}
+                {text: _t("Close"), click: function() { self.view_edit_dialog.close(); window.location.reload(); }}
             ]
         }).open();
+        this.view_edit_dialog.on_close.add_last(function(){window.location.reload();});
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new openerp.web.ActionManager(this);
         this.action_manager.appendTo(this.view_edit_dialog);
@@ -601,7 +602,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         return clone;
     },
     do_save_xml: function(arch1, obj, child_list, move_direct, update_values, arch){
-        var self = this, children_list =  $(arch1).children(), list_obj_xml = _.zip(children_list, obj.child_id);
+        var self = this, children_list =  $(arch1).children(),list_obj_xml;
+        try{list_obj_xml = _.zip(children_list, obj.child_id);}catch(err){return;}
         if (this.one_object.clicked_tr_id) {
             if (obj.id == this.one_object.clicked_tr_id) {
                 var parent = false, index = _.indexOf(child_list, obj);
