@@ -470,8 +470,8 @@ class wizard_tech_guide_rst(osv.osv_memory):
 
     _defaults ={
         'rst_file' : _generate,
-        'name': 'modules_technical_guide_rst.tgz'
-        }
+        'name': 'modules_technical_guide_rst.tgz',
+    }
 
 wizard_tech_guide_rst()
 

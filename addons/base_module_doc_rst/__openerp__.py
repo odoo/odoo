@@ -35,7 +35,12 @@ This module generates the Technical Guides of selected modules in Restructured T
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],
-    'update_xml': ['wizard/generate_relation_graph_view.xml', 'wizard/tech_guide_rst_view.xml', 'base_module_doc_rst_view.xml', 'module_report.xml'],
+    'update_xml': [
+        'base_module_doc_rst_view.xml',
+        'wizard/generate_relation_graph_view.xml',
+        'wizard/tech_guide_rst_view.xml',
+        'module_report.xml',
+    ],
     'demo_xml': [],
     'installable': True,
     'certificate': '001288481437217734509',

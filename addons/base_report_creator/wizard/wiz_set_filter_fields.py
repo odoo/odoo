@@ -54,23 +54,23 @@ class set_filter_fields(osv.osv_memory):
         field_type = self.browse(cr, uid, ids, context=context)[0].field_id.ttype
         operator = (field_type=='many2one') and 'in' or '='
         return {
-             'name': _('Set Filter Values'),
-             'context': {
-                 'field_id':data['field_id'][0],
-                 'default_field_id': data['field_id'],
-                 'default_operator': operator,
-                 },
-             'view_type': 'form',
-             'view_mode': 'form',
-             'res_model': 'set.filter.value',
-             'views': [(resource_id, 'form')],
-             'type': 'ir.actions.act_window',
-             'target': 'new',
-             }
+            'name': _('Set Filter Values'),
+            'context': {
+                'field_id':data['field_id'][0],
+                'default_field_id': data['field_id'],
+                'default_operator': operator,
+            },
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'set.filter.value',
+            'views': [(resource_id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
 
     _columns = {
         'field_id': fields.many2one('ir.model.fields', "Filter Field", required=True),
-   }
+    }
 
 set_filter_fields()
 
@@ -141,8 +141,8 @@ class set_filter_value(osv.osv_memory):
     }
 
     _defaults = {
-         'condition': 'and',
-     }
+        'condition': 'and',
+    }
     
     def set_field_operator(self, field_name, field_type, search_operator, search_value):
         field_search = [field_name,search_operator,search_value]
@@ -218,11 +218,11 @@ class set_filter_value(osv.osv_memory):
                 fields_list = self.set_field_operator(table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data)
             if fields_list:
                 create_dict = {
-                               'name':model_name + "/" +field_data['field_description'] +" "+ mapping_fields[form_data['operator']] + " " + tools.ustr(fields_list[2]) + " ",
-                               'expression':' '.join(map(tools.ustr,fields_list)),
-                               'report_id': context.get('active_id',False),
-                               'condition' : form_data['condition']
-                               }
+                    'name':model_name + "/" +field_data['field_description'] +" "+ mapping_fields[form_data['operator']] + " " + tools.ustr(fields_list[2]) + " ",
+                    'expression':' '.join(map(tools.ustr,fields_list)),
+                    'report_id': context.get('active_id',False),
+                    'condition' : form_data['condition']
+                }
                 self.pool.get('base_report_creator.report.filter').create(cr, uid, create_dict, context)
         return {'type': 'ir.actions.act_window_close'}
 

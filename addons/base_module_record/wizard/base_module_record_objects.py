@@ -86,9 +86,7 @@ class base_module_record(osv.osv_memory):
                 resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
                 return {
                     'name': _('Message'),
-                    'context':  {
-                        'default_yaml_file': tools.ustr(res['yaml_file']),
-                        },
+                    'context': {'default_yaml_file': tools.ustr(res['yaml_file'])},
                     'view_type': 'form',
                     'view_mode': 'form',
                     'res_model': 'base.module.record.objects',
@@ -109,9 +107,9 @@ class base_module_record(osv.osv_memory):
                     'type': 'ir.actions.act_window',
                     'target': 'new',
                 }
+
         model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'module_recording_message_view')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        
         return {
             'name': _('Message'),
             'context': context,
@@ -122,6 +120,7 @@ class base_module_record(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
         }      
+
 base_module_record()
 
 class base_module_record_objects(osv.osv_memory):
@@ -137,10 +136,10 @@ class base_module_record_objects(osv.osv_memory):
         
         return {
             'name': _('Message'),
-            'context':  {
-                        'default_module_filename': tools.ustr(res['module_filename']),
-                        'default_module_file': tools.ustr(res['module_file']),
-                        },
+            'context': {
+                'default_module_filename': tools.ustr(res['module_filename']),
+                'default_module_file': tools.ustr(res['module_file']),
+            },
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'base.module.record.objects',
@@ -166,7 +165,7 @@ class base_module_record_objects(osv.osv_memory):
         'author': 'OpenERP SA',
         'category': 'Vertical Modules/Parametrization',
         'website': 'http://www.openerp.com',
-        'data_kind': 'update'
+        'data_kind': 'update',
     }    
    
 base_module_record_objects()
