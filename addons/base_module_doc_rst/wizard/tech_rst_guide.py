@@ -386,11 +386,11 @@ class wizard_tech_guide_rst(osv.osv_memory):
 
     def _get_views(self, cr, uid, module_id, context=None):
         module_module_obj = self.pool.get('ir.module.module')
+        model_data_obj = self.pool.get('ir.model.data')
+        view_obj = self.pool.get('ir.ui.view')
+        report_obj = self.pool.get('ir.actions.report.xml')
+        menu_obj = self.pool.get('ir.ui.menu')
         res = {}
-        model_data_obj = pool.get('ir.model.data')
-        view_obj = pool.get('ir.ui.view')
-        report_obj = pool.get('ir.actions.report.xml')
-        menu_obj = pool.get('ir.ui.menu')
         mlist = module_module_obj.browse(cr, uid, [module_id], context=context)
         mnames = {}
         for m in mlist:
