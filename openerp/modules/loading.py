@@ -56,6 +56,7 @@ from openerp.tools.translate import _
 from openerp.modules.module import \
     get_modules, get_modules_with_version, \
     load_information_from_description_file, \
+    call_post_load_hook, \
     get_module_resource, zip_directory, \
     get_module_path, initialize_sys_path, \
     register_module_classes, init_module_models
@@ -163,6 +164,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         _logger.info('module %s: loading objects', package.name)
         migrations.migrate_module(package, 'pre')
         register_module_classes(package.name)
+
         models = pool.load(cr, package)
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):

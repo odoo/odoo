@@ -406,11 +406,10 @@ def register_module_classes(m):
     global loaded
     if m in loaded:
         return
-    _logger.info('module %s: registering objects', m)
-    mod_path = get_module_path(m)
 
     initialize_sys_path()
     try:
+        mod_path = get_module_path(m)
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
             __import__('openerp.addons.' + m)
@@ -423,6 +422,20 @@ def register_module_classes(m):
     else:
         loaded.append(m)
 
+    call_post_load_hook(m)
+
+# TODO replace the __import__() by register_module_classes() above
+# and combine call_post_load_hook with it for 6.2.
+def call_post_load_hook(module_name):
+    """
+    Call the module's post-load hook. This can done before any model or
+    data has been initialized. This is ok as the post-load hook is for
+    server-wide (instead of registry-specific) functionalities.
+    The module must have been loaded with as openerp.addons.<module_name>.
+    """
+    info = load_information_from_description_file(module_name)
+    if info['post_load']:
+        getattr(sys.modules['openerp.addons.' + module_name], info['post_load'])()
 
 def get_modules():
     """Returns the list of module names
