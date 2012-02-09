@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-01-22 21:13+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"PO-Revision-Date: 2012-02-08 16:51+0000\n"
+"Last-Translator: Ferdinand-camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:07+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:09+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -37,6 +37,12 @@ msgid ""
 "new payment methods directly from menu \"PoS Backend > Configuration > "
 "Payment Methods\"."
 msgstr ""
+"Die verfügbaren Zahlungsmethoden (Bank & Cash) müssen in den entsprechenden "
+"Journalen gekennzeichnet werden.\r\n"
+"(Finanzen -> Konfiguration -> Finanzen -> Buchungsjournale)\r\n"
+"Entweder in einem bestehenden Journal das Feld POS-Zahlungsmethode anhaken "
+"oder unter POS Verwaltung -> Konfiguration -> Zahlungswege einen neuen "
+"anlegen."
 
 #. module: point_of_sale
 #: view:pos.order:0 view:report.pos.order:0
@@ -184,7 +190,7 @@ msgstr "Durchschnittspreis"
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Disc. (%)"
-msgstr "Rabatt (%)"
+msgstr "Rab. (%)"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_open_config
@@ -251,7 +257,7 @@ msgstr "Auswertung Verkäufe"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beverage
 msgid "Beverages"
-msgstr ""
+msgstr "Getränke"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_50cl_product_template
@@ -432,7 +438,7 @@ msgstr "Periode"
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
 #, python-format
 msgid "No Cash Register Defined !"
-msgstr ""
+msgstr "Keine Kassa definiert."
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -702,7 +708,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_product_putmoneyforchange1_product_template
 msgid "Cash Out"
-msgstr ""
+msgstr "Geldausgang"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
@@ -1066,7 +1072,7 @@ msgstr "Benutzer"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.food
 msgid "Food"
-msgstr ""
+msgstr "Speisen"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1259,7 +1265,7 @@ msgstr "Basis"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.categ_others
 msgid "Others"
-msgstr ""
+msgstr "Sonstige"
 
 #. module: point_of_sale
 #: view:product.product:0
@@ -1431,7 +1437,7 @@ msgstr "Offene Barkassen"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.water
 msgid "Water"
-msgstr ""
+msgstr "Wasser"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
@@ -1615,7 +1621,7 @@ msgstr ""
 msgid ""
 "OpenERP will close all cash registers he can close automatically without "
 "validation. He will also open all cash registers for which you have to "
-"control the ending balance before closing manually."
+"control the ending belance before closing manually."
 msgstr ""
 "OpenERP wird alle Registerkassen schließen, die ohne Validierung geschlossen "
 "werden können und alle Registerkassen öffnen, die Sie vor manueller "
@@ -1634,7 +1640,7 @@ msgstr "Alle externen Angebote"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_product_putmoneyforchange0_product_template
 msgid "Cash In"
-msgstr ""
+msgstr "Geld Eingang"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1874,7 +1880,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.details,user_ids:0
 msgid "Salesmen"
-msgstr ""
+msgstr "Verkäufer"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_cash_register
@@ -2169,6 +2175,7 @@ msgstr "Lieferantenrechnung"
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
 msgstr ""
+"Die gewählten Journal und Perioden müssen zum selben Unternehmen gehören"
 
 #. module: point_of_sale
 #: view:pos.order:0 selection:pos.order,state:0
@@ -2427,6 +2434,11 @@ msgid ""
 "contains detailed information about your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
+"Alle Produkte, die Sie ein- oder verkaufen, müssen definiert werden. "
+"Produkte können Rohstoffe, Lagerprodukte, Verbrauchsmaterial oder "
+"Dienstleistungen sein. Das Eingabeformular für die Erstellung von Produkten "
+"beinhaltet detaillierte Informationen z.B. über die Beschaffung, Preise, "
+"Kategoriezuordnung, Lieferanten, Lieferzeiten etc."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_2l_product_template
@@ -2680,13 +2692,13 @@ msgstr ""
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:41
 msgid "Subtotal:"
-msgstr ""
+msgstr "Zwischensumme:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:45
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:268
 msgid "Tax:"
-msgstr ""
+msgstr "Steuern:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:64
@@ -2701,13 +2713,13 @@ msgstr ""
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:105
 msgid "Paid:"
-msgstr ""
+msgstr "Bezahlt:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:113
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:288
 msgid "Change:"
-msgstr ""
+msgstr "Ändern:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:124
@@ -2717,12 +2729,12 @@ msgstr ""
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:127
 msgid "Validate"
-msgstr ""
+msgstr "Bestätigen"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:140
 msgid "pending orders"
-msgstr ""
+msgstr "Offene Aufträge"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:145
@@ -2730,16 +2742,19 @@ msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
 msgstr ""
+"Es gibt noch offene Vorgänge, die nicht in der Datenbank gespeichert werden "
+"konnten.\r\n"
+"Wollen Sie treotzdem beenden."
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:236
 msgid "Print"
-msgstr ""
+msgstr "Drucken"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:238
 msgid "Next Order"
-msgstr ""
+msgstr "Nächster Auftrag"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:248
@@ -3400,9 +3415,3 @@ msgstr ""
 
 #~ msgid "Today's Sales By Current User"
 #~ msgstr "Heutige Verkäufe des derzeitigen Benutzers"
-
-#~ msgid "Product Image, must be 50x50"
-#~ msgstr "Produkt Bild, muss 50x50 sein"
-
-#~ msgid "Use an image size of 50x50."
-#~ msgstr "Verwende ein Bild 50x50"

@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2011-04-12 18:24+0000\n"
-"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
+"PO-Revision-Date: 2012-02-09 02:53+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:31+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Time (real)"
-msgstr ""
+msgstr "每小时收入（实际）"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -36,39 +36,39 @@ msgstr "这项目的最近的工作完成日期"
 msgid ""
 "The contracts to be renewed because the deadline is passed or the working "
 "hours are higher than the allocated hours"
-msgstr ""
+msgstr "合同需要续签，因为最后期限已过，或者实际工时超过了计划工时。"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending contracts to renew with your customer"
-msgstr ""
+msgstr "需要与客户续签的合同"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
 msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
-msgstr ""
+msgstr "如果您按成本科目开票，这里是可以开票的工时。"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Analytic Accounts with a past deadline in one month."
-msgstr ""
+msgstr "在一个月内到期的成本科目"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Group By..."
-msgstr ""
+msgstr "分组..."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "End Date"
-msgstr ""
+msgstr "截止日期"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Create Invoice"
-msgstr ""
+msgstr "创建发票"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -85,17 +85,17 @@ msgstr "计算公式：理论收入 - 总费用"
 msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
-msgstr ""
+msgstr "你在这个成本科目上花费的时间总数（数据来自计工单）。仅计算类型为“普通”的凭证簿。"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts in progress"
-msgstr ""
+msgstr "正在执行的合同"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
 msgid "Overdue Quantity"
-msgstr ""
+msgstr "超期数量"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -107,6 +107,8 @@ msgid ""
 "pending accounts and reopen or close the according to the negotiation with "
 "the customer."
 msgstr ""
+"这里列出需要续签的合同，原因可能是最后期限已过或者实际工数超出了合同规定的工数。OpenERP自动把这些成本科目设置为“待处理”状态，目的是在输入计工单的"
+"时候给出一个警告。销售员应该查看所有待处理的成本科目并与客户协商后重新打开或关闭它。"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -116,7 +118,7 @@ msgstr "理论收入"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Time"
-msgstr ""
+msgstr "未开票的工时"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -128,7 +130,7 @@ msgstr "如果发票来自费用, 这是最近工作日期或已开票的费用"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "To Renew"
-msgstr ""
+msgstr "要续签的"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -138,24 +140,24 @@ msgstr "最近日期的工作成本"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Time"
-msgstr ""
+msgstr "已开票的工时"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid ""
 "A contract in OpenERP is an analytic account having a partner set on it."
-msgstr ""
+msgstr "OpenERP中的合同是指一个被指定了业务伙伴的成本科目。"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Time"
-msgstr ""
+msgstr "剩余时间"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
 msgid "Contracts to Renew"
-msgstr ""
+msgstr "要续签的合同"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -165,7 +167,7 @@ msgstr "理论的差额"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid " +1 Month"
-msgstr ""
+msgstr " 下个月"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -178,7 +180,7 @@ msgstr "如果所有成本按正常的销售价格开票那这项目的成本基
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Pending"
-msgstr ""
+msgstr "待处理"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
@@ -193,7 +195,7 @@ msgstr "计算公式为:发票金额 - 总成本"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Parent"
-msgstr ""
+msgstr "父级"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -224,7 +226,7 @@ msgstr "最近的已发票日期"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contract"
-msgstr ""
+msgstr "合同"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
@@ -259,14 +261,14 @@ msgstr "剩余的收入"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Time"
-msgstr ""
+msgstr "计算公式：最大时数 - 总时数"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
 msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
-msgstr ""
+msgstr "可以开发票的工时 加上 已经开发票的工时"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -278,7 +280,7 @@ msgstr "如果是辅助核算项目的发票, 剩余金额你能给客户开基�
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
-msgstr ""
+msgstr "计算公式：已开票金额 / 总时数"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
@@ -303,12 +305,12 @@ msgstr "辅助核算项"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
 msgid "Contracts"
-msgstr ""
+msgstr "合同"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Manager"
-msgstr ""
+msgstr "经理"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -319,22 +321,22 @@ msgstr "所有未开发票"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "If invoice from the costs, this is the date of the latest invoiced."
-msgstr ""
+msgstr "如按实际成本开票，这是最末开票日期"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Associated Partner"
-msgstr ""
+msgstr "相关业务伙伴"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Open"
-msgstr ""
+msgstr "使用中"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts that are not assigned to an account manager."
-msgstr ""
+msgstr "没有制定客户经理的合同"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0

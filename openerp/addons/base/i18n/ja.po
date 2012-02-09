@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-02-04 21:55+0000\n"
+"PO-Revision-Date: 2012-02-09 03:33+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 04:47+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-09 05:49+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -359,7 +359,7 @@ msgstr ""
 "  - client_print_multi\n"
 "  - client_action_relate\n"
 "  - tree_but_open\n"
-"デフォルト、任意の条件"
+"既定値、任意の条件として"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -677,7 +677,7 @@ msgstr "未翻訳"
 #: help:ir.actions.act_window,context:0
 msgid ""
 "Context dictionary as Python expression, empty by default (Default: {})"
-msgstr "Pythonのコンテキスト辞書においてデフォルトの空は（Default: {}）"
+msgstr "Pythonのコンテキスト辞書において既定値の空は（既定値: {}）"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_wizard
@@ -1845,7 +1845,7 @@ msgstr ""
 "\n"
 "VAT番号の検査レベルは異なった2つのレベルがあります：\n"
 "\n"
-" ・ デフォルトでは国のための知られている検査ルール、通常は簡単なチェックディジットを\n"
+" ・ 既定値では国のための知られている検査ルール、通常は簡単なチェックディジットを\n"
 "　　使って簡便なオフラインチェックが実行されます。これは簡単でいつでも利用できますが、\n"
 "　　割り当て済みの番号や正しくない値を許してしまいます。\n"
 " ・ 'VAT VIES Check' オプションが使用可能（ユーザの会社のコンフィギュレーションにある）な\n"
@@ -2480,7 +2480,7 @@ msgstr "ポーランド"
 msgid ""
 "Comma-separated list of allowed view modes, such as 'form', 'tree', "
 "'calendar', etc. (Default: tree,form)"
-msgstr "'form'、'tree'、'calendar'など（デフォルト：tree、form）のようなビューモードの許されたカンマ区切りのリスト"
+msgstr "'form'、'tree'、'calendar'など（既定値：tree、form）のようなビューモードの許されたカンマ区切りのリスト"
 
 #. module: base
 #: code:addons/orm.py:3615
@@ -2689,7 +2689,7 @@ msgstr "ショートカット名称"
 #. module: base
 #: help:ir.actions.act_window,limit:0
 msgid "Default limit for the list view"
-msgstr "リストビューのデフォルト上限"
+msgstr "リストビューの既定上限値"
 
 #. module: base
 #: model:res.country,name:base.pg
@@ -3108,17 +3108,15 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"This module allows users to perform segmentation within partners.\n"
+"このモジュールはユーザにパートナの中での分割を許可します。\n"
 "=================================================================\n"
 "\n"
-"It uses the profiles criteria from the earlier segmentation module and "
-"improve it. Thanks to the new concept of questionnaire. You can now regroup "
-"questions into a questionnaire and directly use it on a partner.\n"
+"これは初期の分割モジュールからプロファイル基準を使います。そして、新しい質問表のコンセプトによって改良して下さい。あなたは質問表の質問を再度グループ化し、"
+"直接パートナの上で使うことができます。\n"
 "\n"
-"It also has been merged with the earlier CRM & SRM segmentation tool because "
-"they were overlapping.\n"
+"また、このモジュールは機能が重複していた初期のCRMとSRM分割ツールが統合されたものです。\n"
 "\n"
-"    ・ メモ： それはリネームされたのでこのモジュールはモジュール分割と互換性はありません。\n"
+"    * メモ： このモジュールはモジュール分割がリネームされたものであるため、モジュール分割と両立できません。\n"
 "    "
 
 #. module: base
@@ -3131,7 +3129,7 @@ msgstr "定義されていないレポートタイプです： %s"
 #: code:addons/base/ir/ir_model.py:282
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
-msgstr ""
+msgstr "項目選択のために選択オプションを指定して下さい。"
 
 #. module: base
 #: model:res.widget,title:base.facebook_widget
@@ -3141,42 +3139,42 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.am
 msgid "Armenia"
-msgstr ""
+msgstr "アルメニア"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_property_form
 #: model:ir.ui.menu,name:base.menu_ir_property_form_all
 msgid "Configuration Parameters"
-msgstr ""
+msgstr "構成のパラメータ"
 
 #. module: base
 #: constraint:ir.cron:0
 msgid "Invalid arguments"
-msgstr ""
+msgstr "無効な引数"
 
 #. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
-msgstr ""
+msgstr "スウェーデン"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 #: selection:wizard.ir.model.menu.create.line,view_type:0
 msgid "Gantt"
-msgstr ""
+msgstr "ガント"
 
 #. module: base
 #: view:ir.property:0
 msgid "Property"
-msgstr ""
+msgstr "プロパティ"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_bank_type
 #: field:res.partner.bank,state:0
 #: view:res.partner.bank.type:0
 msgid "Bank Account Type"
-msgstr ""
+msgstr "銀行口座タイプ"
 
 #. module: base
 #: field:base.language.export,config_logo:0
@@ -3191,22 +3189,22 @@ msgstr ""
 #: field:res.config,config_logo:0
 #: field:res.config.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "イメージ"
 
 #. module: base
 #: view:ir.actions.server:0
 msgid "Iteration Action Configuration"
-msgstr ""
+msgstr "繰り返しの設定"
 
 #. module: base
 #: selection:publisher_warranty.contract,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "キャンセル済み"
 
 #. module: base
 #: model:res.country,name:base.at
 msgid "Austria"
-msgstr ""
+msgstr "オーストリア"
 
 #. module: base
 #: view:ir.module.module:0
@@ -3244,7 +3242,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wiki_quality_manual
 msgid "Wiki: Quality Manual"
-msgstr ""
+msgstr "Wiki： 品質マニュアル"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -3252,27 +3250,27 @@ msgstr ""
 #: selection:ir.ui.view,type:0
 #: selection:wizard.ir.model.menu.create.line,view_type:0
 msgid "Calendar"
-msgstr ""
+msgstr "カレンダー"
 
 #. module: base
 #: field:res.partner.address,partner_id:0
 msgid "Partner Name"
-msgstr ""
+msgstr "パートナ名"
 
 #. module: base
 #: field:workflow.activity,signal_send:0
 msgid "Signal (subflow.*)"
-msgstr ""
+msgstr "シグナル（サブフロー.*）"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_17
 msgid "HR sector"
-msgstr ""
+msgstr "HR部門"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_dashboard_admin
 msgid "Administration Dashboard"
-msgstr ""
+msgstr "アドミニストレーションダッシュボード"
 
 #. module: base
 #: code:addons/orm.py:4408
@@ -3282,6 +3280,7 @@ msgid ""
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
 msgstr ""
+"無効なオーダーが指定されました。正しいオーダーの仕様は正しい項目名によるカンマ区切りのリストです（オプションで asc / desc が続きます）。"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -3291,12 +3290,12 @@ msgstr ""
 #. module: base
 #: selection:publisher_warranty.contract.wizard,state:0
 msgid "Draft"
-msgstr ""
+msgstr "草案"
 
 #. module: base
 #: selection:res.users,view:0
 msgid "Extended"
-msgstr ""
+msgstr "拡張"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_title_contact
@@ -3304,14 +3303,14 @@ msgid ""
 "Manage the contact titles you want to have available in your system and the "
 "way you want to print them in letters and other documents. Some example: "
 "Mr., Mrs. "
-msgstr ""
+msgstr "手紙や他のドキュメントの印刷において利用する際の適切な役職を管理して下さい。 "
 
 #. module: base
 #: view:ir.model.access:0
 #: view:res.groups:0
 #: field:res.groups,model_access:0
 msgid "Access Controls"
-msgstr ""
+msgstr "アクセスコントロール"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:237
@@ -3319,43 +3318,43 @@ msgstr ""
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
 "provide an expression in the [('key','Label'), ...] format."
-msgstr ""
+msgstr "この選択オプションは正しいPython表現ではありません。[('key','Label'), ...] の書式で記述して下さい。"
 
 #. module: base
 #: model:res.groups,name:base.group_survey_user
 msgid "Survey / User"
-msgstr ""
+msgstr "調査 / ユーザ"
 
 #. module: base
 #: view:ir.module.module:0
 #: field:ir.module.module,dependencies_id:0
 msgid "Dependencies"
-msgstr ""
+msgstr "依存"
 
 #. module: base
 #: field:multi_company.default,company_id:0
 msgid "Main Company"
-msgstr ""
+msgstr "主要な会社"
 
 #. module: base
 #: field:ir.ui.menu,web_icon_hover:0
 msgid "Web Icon File (hover)"
-msgstr ""
+msgstr "Webアイコンファイル（hover）"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_diagram
 msgid "Openerp web Diagram view"
-msgstr ""
+msgstr "OpeｎERP Webダイアグラムビュー"
 
 #. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "HR Officer"
-msgstr ""
+msgstr "HR役員"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract
 msgid "Employee Contracts"
-msgstr ""
+msgstr "従業員契約"
 
 #. module: base
 #: model:ir.module.module,description:base.module_wiki_faq
@@ -3368,18 +3367,24 @@ msgid ""
 "for Wiki FAQ.\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールはWiki FAQのテンプレートです。\n"
+"=========================================\n"
+"\n"
+"Wiki FAQのためのWikiグループとWikiページにデモデータを提供します。\n"
+"    "
 
 #. module: base
 #: view:ir.actions.server:0
 msgid ""
 "If you use a formula type, use a python expression using the variable "
 "'object'."
-msgstr ""
+msgstr "式表現を使う場合は、可変的な'object'によるPython表現を使って下さい。"
 
 #. module: base
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "エラー！再帰的な関係となる会社を作ることはできません。"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users
@@ -3390,51 +3395,51 @@ msgstr ""
 #: field:res.groups,users:0
 #: view:res.users:0
 msgid "Users"
-msgstr ""
+msgstr "ユーザ"
 
 #. module: base
 #: field:res.partner.address,birthdate:0
 msgid "Birthdate"
-msgstr ""
+msgstr "生年月日"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
 #: model:ir.ui.menu,name:base.menu_partner_title_contact
 msgid "Contact Titles"
-msgstr ""
+msgstr "役職"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_manufacturer
 msgid "Products Manufacturers"
-msgstr ""
+msgstr "製品製造者"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:217
 #, python-format
 msgid "SMTP-over-SSL mode unavailable"
-msgstr ""
+msgstr "SMTP-over-SSLモードは利用可能ではありません。"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey
 msgid "Survey"
-msgstr ""
+msgstr "調査"
 
 #. module: base
 #: view:base.language.import:0
 msgid ""
 "Please double-check that the file encoding is set to UTF-8 (sometimes called "
 "Unicode) when the translator exports it."
-msgstr ""
+msgstr "翻訳者がエクスポートする際に、ファイルのエンコードがUTF-8（Unicode）となっていることを再確認して下さい。"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (DO) / Español (DO)"
-msgstr ""
+msgstr "スペイン語（ドミニカ共和国）"
 
 #. module: base
 #: model:res.country,name:base.na
 msgid "Namibia"
-msgstr ""
+msgstr "ナミビア"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_activity
@@ -3446,52 +3451,52 @@ msgstr ""
 msgid ""
 "Reference of the target resource, whose model/table depends on the 'Resource "
 "Name' field."
-msgstr ""
+msgstr "目的リソースのリファレンス。そのモデルとテーブルはリソース名の項目で依存する。"
 
 #. module: base
 #: field:ir.model.fields,select_level:0
 msgid "Searchable"
-msgstr ""
+msgstr "検索可能"
 
 #. module: base
 #: model:res.country,name:base.uy
 msgid "Uruguay"
-msgstr ""
+msgstr "ウルグアイ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail_crm
 msgid "eMail Gateway for Leads"
-msgstr ""
+msgstr "リード用Eメールゲートウェイ"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Finnish / Suomi"
-msgstr ""
+msgstr "フィンランド語"
 
 #. module: base
 #: field:ir.rule,perm_write:0
 msgid "Apply For Write"
-msgstr ""
+msgstr "書き込みの申し込み"
 
 #. module: base
 #: field:ir.sequence,prefix:0
 msgid "Prefix"
-msgstr ""
+msgstr "プレフィックス"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "German / Deutsch"
-msgstr ""
+msgstr "ドイツ語"
 
 #. module: base
 #: view:ir.actions.server:0
 msgid "Fields Mapping"
-msgstr ""
+msgstr "項目マッピング"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_dashboard
 msgid "web Dashboard"
-msgstr ""
+msgstr "Webダッシュボード"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -3535,16 +3540,54 @@ msgid ""
 "    * Graph of Sales by Product's Category in last 90 days\n"
 "    "
 msgstr ""
+"\n"
+"この基本モジュールは見積りと販売オーダーを管理します。\n"
+"======================================================\n"
+"\n"
+"確認のワークフロー：\n"
+"-------------------------------\n"
+"    ・ 見積り -> 販売オーダー -> 請求書\n"
+"\n"
+"請求方法：\n"
+"------------------\n"
+"    ・ オーダー時に請求（発送前または発送後）\n"
+"    ・ 配達時に請求\n"
+"    ・ タイムシートによる請求\n"
+"    ・ 前請求\n"
+"\n"
+"パートナの選択：\n"
+"---------------------\n"
+"    ・ 発送\n"
+"    ・ 請求\n"
+"    ・ インコタームズ\n"
+"\n"
+"商品の在庫と価格\n"
+"--------------------------\n"
+"\n"
+"配達方法：\n"
+"-----------------\n"
+"    ・ 全てを１回で\n"
+"    ・ 複数の小包\n"
+"    ・ 配送コスト\n"
+"\n"
+"セールス管理のダッシュボードに含むもの：\n"
+"------------------------------------------\n"
+"    ・ 見積り\n"
+"    ・ 月別販売\n"
+"    ・ 直近90日間の販売員別販売グラフ\n"
+"    ・ 直近90日間の顧客別販売グラフ\n"
+"    ・ 直近90日間の商品カテゴリ別販売グラフ\n"
+"    "
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Portugese / Português"
-msgstr ""
+msgstr "ポルトガル語"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_sir
 msgid "Sir"
-msgstr ""
+msgstr "拝啓"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -3558,26 +3601,33 @@ msgid ""
 "Canadian accounting charts and localizations.\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールは英語とフランス語－OpenERPのカナダ会計表－を管理するモジュールです。\n"
+"============================================================================="
+"==============\n"
+"\n"
+"カナダ会計表とローカリゼーション\n"
+"    "
 
 #. module: base
 #: view:base.module.import:0
 msgid "Select module package to import (.zip file):"
-msgstr ""
+msgstr "インポートする（.zipファイル）モジュールパッケージを選択して下さい。"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "French / Français"
-msgstr ""
+msgstr "フランス語"
 
 #. module: base
 #: model:res.country,name:base.mt
 msgid "Malta"
-msgstr ""
+msgstr "マルタ"
 
 #. module: base
 #: field:ir.actions.server,fields_lines:0
 msgid "Field Mappings."
-msgstr ""
+msgstr "項目マッピング"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -3590,11 +3640,18 @@ msgid ""
 "    * the Tax Code Chart for Luxembourg\n"
 "    * the main taxes used in Luxembourg"
 msgstr ""
+"\n"
+"この基本モジュールはルクセンブルグの会計表を管理するためのモジュールです。\n"
+"======================================================================\n"
+"\n"
+"    ・ KLUWER会計表\n"
+"    ・ ルクセンブルグの税金コード表\n"
+"    ・ ルクセンブルグでの主要税金"
 
 #. module: base
 #: field:ir.module.module,demo:0
 msgid "Demo data"
-msgstr ""
+msgstr "デモデータ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -3614,11 +3671,18 @@ msgid ""
 "module 'share'.\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールは、OpenERPデータベースを外部ユーザがアクセスする際のカスタマイズしたポータルを定義します。\n"
+"\n"
+"このポータルはカスタマイズされたユーザメニューと、ポータルと結び付けされたユーザのグループのためのアクセス\n"
+"権限を定義します。また、ユーザグループをポータルユーザと結び付けます（グループをポータルに加えると自動的に\n"
+"ポータルユーザとなる）。これはモジュールの共有と組み合わせると非常に役に立ちます。\n"
+"    "
 
 #. module: base
 #: selection:res.request,priority:0
 msgid "High"
-msgstr ""
+msgstr "高"
 
 #. module: base
 #: field:ir.attachment,description:0
@@ -3630,18 +3694,18 @@ msgstr ""
 #: field:res.partner.event,description:0
 #: view:res.request:0
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_instance_form
 #: model:ir.ui.menu,name:base.menu_workflow_instance
 msgid "Instances"
-msgstr ""
+msgstr "インスタンス"
 
 #. module: base
 #: help:ir.mail_server,smtp_host:0
 msgid "Hostname or IP of SMTP server"
-msgstr ""
+msgstr "ホスト名またはSMTPサーバのIPアドレス"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -3651,12 +3715,12 @@ msgstr ""
 #. module: base
 #: field:ir.actions.report.xml,auto:0
 msgid "Custom python parser"
-msgstr ""
+msgstr "カスタムPythonパーサ"
 
 #. module: base
 #: view:base.language.import:0
 msgid "_Import"
-msgstr ""
+msgstr "インポート"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -3666,50 +3730,50 @@ msgstr ""
 #. module: base
 #: field:res.lang,grouping:0
 msgid "Separator Format"
-msgstr ""
+msgstr "区切り書式"
 
 #. module: base
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
-msgstr ""
+msgstr "銀行情報のRIBまたはIBANが正しくありません。"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_webkit
 msgid "Webkit Report Engine"
-msgstr ""
+msgstr "Webkitレポートエンジン"
 
 #. module: base
 #: selection:publisher_warranty.contract,state:0
 msgid "Unvalidated"
-msgstr ""
+msgstr "確認未済"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_9
 msgid "Database Structure"
-msgstr ""
+msgstr "データベース構造"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_mass_mail
 #: model:ir.model,name:base.model_partner_massmail_wizard
 #: view:partner.massmail.wizard:0
 msgid "Mass Mailing"
-msgstr ""
+msgstr "メール一括送信"
 
 #. module: base
 #: model:res.country,name:base.yt
 msgid "Mayotte"
-msgstr ""
+msgstr "マヨット"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_todo
 msgid "Tasks on CRM"
-msgstr ""
+msgstr "CRM上のタスク"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules_accounting
 #: view:res.company:0
 msgid "Accounting"
-msgstr ""
+msgstr "会計"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_payment
@@ -3724,11 +3788,20 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
+"\n"
+"請求書支払管理モジュール\n"
+"=================================\n"
+"\n"
+"このモジュールは以下を提供します：\n"
+"----------------------\n"
+"・ より効果的な請求書支払管理\n"
+"・ 多様な自動支払を容易化する基本メカニズム\n"
+"    "
 
 #. module: base
 #: view:ir.rule:0
 msgid "Interaction between rules"
-msgstr ""
+msgstr "ルール間の影響"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_invoice_layout
@@ -3750,21 +3823,35 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールは請求書のレイアウトを改良する幾つかの機能を提供します。\n"
+"=========================================================================\n"
+"\n"
+"次のような機能があります：\n"
+"--------------------------------\n"
+"    ・ 請求書の全行のオーダー\n"
+"    ・ タイトル、コメント欄、小計の追加\n"
+"    ・ 罫線の描画、改ページ\n"
+"\n"
+"さらには、選択された全ての請求書の下端に特別なメッセージを印刷することができます。この機能は、年末の挨拶、期日に関する特別な条件などを印刷できるため非常に"
+"役立ちます。\n"
+"\n"
+"    "
 
 #. module: base
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "エラーです。再帰的な関係となる会員を作ることはできません。"
 
 #. module: base
 #: view:res.payterm:0
 msgid "Payment Term"
-msgstr ""
+msgstr "支払期間"
 
 #. module: base
 #: selection:res.lang,direction:0
 msgid "Right-to-Left"
-msgstr ""
+msgstr "右から左"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_event
@@ -3778,7 +3865,7 @@ msgstr ""
 #: model:ir.model,name:base.model_ir_filters
 #: model:ir.ui.menu,name:base.menu_ir_filters
 msgid "Filters"
-msgstr ""
+msgstr "フィルタ"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
@@ -3787,13 +3874,15 @@ msgid ""
 "or data in your OpenERP instance. To install some modules, click on the "
 "button \"Install\" from the form view and then click on \"Start Upgrade\"."
 msgstr ""
+"OpenERPの新しい機能、メニュー、レポート、データを稼動させるための新モジュールをインストールできます。モジュールをインストールする場合はフォームビュ"
+"ーのインストールボタンをクリックし、アップグレード開始をクリックして下さい。"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
 #: view:ir.cron:0
 #: model:ir.ui.menu,name:base.menu_ir_cron_act
 msgid "Scheduled Actions"
-msgstr ""
+msgstr "スケジュールされたアクション"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_chat
@@ -3802,40 +3891,43 @@ msgid ""
 "        OpenERP Web chat module.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP Webチャットモジュール\n"
+"        "
 
 #. module: base
 #: field:res.partner.address,title:0
 #: field:res.partner.title,name:0
 #: field:res.widget,title:0
 msgid "Title"
-msgstr ""
+msgstr "役職"
 
 #. module: base
 #: help:ir.property,res_id:0
 msgid "If not set, acts as a default value for new resources"
-msgstr ""
+msgstr "セットされない場合、既定値を仮定します。"
 
 #. module: base
 #: code:addons/orm.py:3988
 #, python-format
 msgid "Recursivity Detected."
-msgstr ""
+msgstr "再帰状態を検出しました。"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_webkit_sample
 msgid "Webkit Report Samples"
-msgstr ""
+msgstr "Webkit レポートサンプル"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point Of Sale"
-msgstr ""
+msgstr "POS"
 
 #. module: base
 #: code:addons/base/module/module.py:302
 #, python-format
 msgid "Recursion error in modules dependencies !"
-msgstr ""
+msgstr "モジュールの依存関係による再帰エラー。"
 
 #. module: base
 #: view:base.language.install:0
@@ -3844,11 +3936,13 @@ msgid ""
 "loading a new language it becomes available as default interface language "
 "for users and partners."
 msgstr ""
+"このウィザードはあなたのOpenERPシステムに新しい言語を追加するのを助けます。新しい言語をローディングした後にユーザとパートナの既定値のインタフェース"
+"言語として利用可能になります。"
 
 #. module: base
 #: view:ir.model:0
 msgid "Create a Menu"
-msgstr ""
+msgstr "メニューの作成"
 
 #. module: base
 #: help:res.partner,vat:0
@@ -3963,7 +4057,7 @@ msgstr ""
 #. module: base
 #: constraint:res.partner.category:0
 msgid "Error ! You can not create recursive categories."
-msgstr ""
+msgstr "エラーです。再帰的な関係となる分類を作ることはできません。"
 
 #. module: base
 #: view:res.lang:0
@@ -14158,7 +14252,7 @@ msgstr ""
 #: code:addons/base/ir/ir_ui_menu.py:284
 #, python-format
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "エラーです。再帰的な関係となるメニューを作ることはできません。"
 
 #. module: base
 #: view:ir.rule:0
@@ -15500,50 +15594,3 @@ msgstr ""
 
 #~ msgid "Schedule Upgrade"
 #~ msgstr "スケジュール更新"
-
-#~ msgid ""
-#~ "Configure your company's bank account and select those that must appear on "
-#~ "the report footer. You can reorder bank accounts from the list view. If you "
-#~ "use the accounting application of OpenERP, journals and accounts will be "
-#~ "created automatically based on these data."
-#~ msgstr ""
-#~ "あなたの会社の銀行口座を設定し、レポートのフッターに置くべき銀行口座を選択して下さい。あなたはリストビューから銀行口座の再注文ができます。もし、OpenE"
-#~ "RPの会計アプリケーションをお使いなら、ジャーナルとアカウントは自動的にそれらのデータの中に作成されます。"
-
-#~ msgid ""
-#~ "\n"
-#~ "Module provides functionality to import bank statements from coda files.\n"
-#~ "========================================================================\n"
-#~ "\n"
-#~ "Contains a wizard to import coda statements and maintains logs for the "
-#~ "same.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "モジュールは終結部ファイルから銀行口座明細書をインポートするための機能を提供します。==================================="
-#~ "=====================================\n"
-#~ "\n"
-#~ "終結部口座明細書をインポートするウィザードを含み、同じようにログを維持します。\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Synchronization between Project Task and Caldav Vtodo.\n"
-#~ "======================================================\n"
-#~ "\n"
-#~ "With the Caldav functionality you can get access to scheduling information\n"
-#~ "on a remote server.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Synchronization between Project Task and Caldav Vtodo.\n"
-#~ "======================================================\n"
-#~ "\n"
-#~ "With the Caldav functionality you can get access to scheduling information\n"
-#~ "on a remote server.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "The user this filter is available to. Keep empty to make it available to all "
-#~ "users."
-#~ msgstr "このフィルタが利用可能であるユーザ。全てのユーザに利用可能にさせるためには空の状態を保って下さい。"

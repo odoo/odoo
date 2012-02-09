@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-01-13 20:21+0000\n"
+"PO-Revision-Date: 2012-02-08 11:38+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:28+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:30+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -57,6 +57,12 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location typed as "
 "'internal'."
 msgstr ""
+"geplante Menge des Produktes. In Zusammenhang von\n"
+"* EINEM Lagerort: Mengen diese Lagers und aller untergeordneten Läger \n"
+"* EINEM Lager: Mengen diese Lagerorts und aller untergeordneten Läger \n"
+"* EINEM Shop: Mengen diese Lager dieses Geschäftes und aller untergeordneten "
+"Läger\n"
+"In allen anderen Fällen: Die Menge auf internen Lägern"
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -177,7 +183,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
 msgid "Dozen"
-msgstr ""
+msgstr "Dutzend"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -436,6 +442,12 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location typed as "
 "'internal'."
 msgstr ""
+"Aktuelle Menge des Produktes. In Zusammenhang von\n"
+"* EINEM Lagerort: Mengen diese Lagers und aller untergeordneten Läger \n"
+"* EINEM Lager: Mengen diese Lagerorts und aller untergeordneten Läger \n"
+"* EINEM Shop: Mengen diese Lager dieses Geschäftes und aller untergeordneten "
+"Läger\n"
+"In allen anderen Fällen: Die Menge auf internen Lägern"
 
 #. module: product
 #: view:product.pricelist:0
@@ -660,6 +672,9 @@ msgid ""
 "you need to change the unit of measure, you may desactivate this product "
 "from the 'Procurement & Locations' tab and create a new one."
 msgstr ""
+"Die neue Mengeneinheit '%s' muss zur gleichen Kategorie '%s' wie die alte "
+"'%s' gehören. Eine andere Mengeneinheit kann nur für eine neues Produkt "
+"definiert werden."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -725,7 +740,7 @@ msgstr "Preisbezeichnung"
 #. module: product
 #: model:product.template,name:product.product_product_arm_product_template
 msgid "Cabinet"
-msgstr ""
+msgstr "Schrank"
 
 #. module: product
 #: help:product.product,incoming_qty:0
@@ -740,11 +755,17 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location typed as "
 "'internal'."
 msgstr ""
+"geplante Produktzugänge. In Zusammenhang von\n"
+"* EINEM Lagerort: Mengen diese Lagers und aller untergeordneten Läger \n"
+"* EINEM Lager: Mengen diese Lagerorts und aller untergeordneten Läger \n"
+"* EINEM Shop: Mengen diese Lager dieses Geschäftes und aller untergeordneten "
+"Läger\n"
+"In allen anderen Fällen: Die Menge auf internen Lägern"
 
 #. module: product
 #: model:product.template,name:product.product_product_woodentable0_product_template
 msgid "Wooden Table"
-msgstr ""
+msgstr "Holztisch"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -988,7 +1009,7 @@ msgstr "Gesamtes Verpackungsgewicht"
 #. module: product
 #: field:product.template,seller_info_id:0
 msgid "unknown"
-msgstr ""
+msgstr "Unbekannt"
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1159,6 +1180,12 @@ msgid ""
 "Otherwise, this includes goods leaving from any Stock Location typed as "
 "'internal'."
 msgstr ""
+"geplante Produktabgänge. In Zusammenhang von\n"
+"* EINEM Lagerort: Mengen diese Lagers und aller untergeordneten Läger \n"
+"* EINEM Lager: Mengen diese Lagerorts und aller untergeordneten Läger \n"
+"* EINEM Shop: Mengen diese Lager dieses Geschäftes und aller untergeordneten "
+"Läger\n"
+"In allen anderen Fällen: Die Menge auf internen Lägern"
 
 #. module: product
 #: model:product.category,name:product.product_category_services0
@@ -1615,7 +1642,7 @@ msgstr "Das Gewicht der Verpackungseinheit ohne Inhalt"
 #. module: product
 #: model:product.template,name:product.product_product_woodmm10_product_template
 msgid "Wood 10mm"
-msgstr ""
+msgstr "Holz 10 mm"
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -1823,7 +1850,7 @@ msgstr "Rundungsverfahren"
 #. module: product
 #: model:product.category,name:product.product_category_assembly
 msgid "Assembly Service"
-msgstr ""
+msgstr "Fertigung Service"
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
@@ -1968,7 +1995,7 @@ msgstr "Basiert auf"
 #. module: product
 #: model:product.uom,name:product.product_uom_ton
 msgid "t"
-msgstr ""
+msgstr "t"
 
 #. module: product
 #: model:product.category,name:product.product_category_rawmaterial0
@@ -2046,7 +2073,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
 msgid "UoM Categories"
-msgstr ""
+msgstr "ME Kategorien"
 
 #. module: product
 #: field:product.template,seller_delay:0
@@ -2283,7 +2310,7 @@ msgstr "Sequenz"
 #. module: product
 #: model:product.template,name:product.product_assembly_product_template
 msgid "Assembly Service Cost"
-msgstr ""
+msgstr "Fertigungskosten"
 
 #. module: product
 #: view:product.price_list:0
@@ -2422,7 +2449,7 @@ msgstr "Preislisten Versionen"
 #. module: product
 #: model:product.template,name:product.product_product_span100_product_template
 msgid "Shelf Panel"
-msgstr ""
+msgstr "Regal"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
@@ -2907,10 +2934,3 @@ msgstr "Rabatt"
 #~ "Die Produktart beinflusst den Beschaffungsprozess. Verbrauchsmaterialien "
 #~ "sind Lagerprodukte mit unendlicher Lagermenge, bzw. zu verwenden, wenn kein "
 #~ "Lagerverwaltungssystem installiert ist."
-
-#, python-format
-#~ msgid ""
-#~ "New UoM '%s' must belongs to same UoM category '%s' as of old UoM '%s'."
-#~ msgstr ""
-#~ "Neue Mengeneinheit '%s' muss zur selben Kategorie  '%s' gehören wie die alte "
-#~ "ME '%s'."

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-01-15 09:15+0000\n"
+"PO-Revision-Date: 2012-02-08 11:47+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:03+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:05+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -1016,7 +1016,7 @@ msgstr "Produkt Kategorien"
 #. module: purchase
 #: selection:purchase.config.wizard,default_method:0
 msgid "Pre-Generate Draft Invoices based on Purchase Orders"
-msgstr ""
+msgstr "Erzeuge vorab Rechnungsentwürfe aufgrund der Einkaufsaufträge"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
@@ -1054,6 +1054,8 @@ msgstr "Nettobetrag"
 #, python-format
 msgid "Selected UOM does not belong to the same category as the product UOM"
 msgstr ""
+"Die ausgewählte Mengeneinheit geehört nicht zur selben "
+"Mengeneinheitskategorie wie die Produkt-Mengeneinheit"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:907
@@ -1151,7 +1153,7 @@ msgstr "Rechnungserstellung"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "UoM Categories"
-msgstr ""
+msgstr "ME Kategorien"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1543,6 +1545,8 @@ msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
 "purchase less."
 msgstr ""
+"Der ausgewählte Lieferant hat eine Minimalbestellmenge %s %s definiert, Sie "
+"können daher nicht weniger bestellen.."
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -1659,7 +1663,7 @@ msgstr "Nettobetrag"
 #. module: purchase
 #: view:stock.picking:0
 msgid "Picking to Invoice"
-msgstr ""
+msgstr "Lieferschein zu Rechnung"
 
 #. module: purchase
 #: view:purchase.config.wizard:0
@@ -2501,11 +2505,3 @@ msgstr "Pinnwand Einkauf"
 #~ msgstr ""
 #~ "Sie müssen eine Preisliste im Einkaufsformular auswählen, bevor Sie ein "
 #~ "Produkt auswählen."
-
-#, python-format
-#~ msgid ""
-#~ "The selected supplier has a minimal quantity set to %s, you should not "
-#~ "purchase less."
-#~ msgstr ""
-#~ "Der Lieferant hat eine Minimalmenge von %s definiert, Sie sollten nicht "
-#~ "weniger bestellen."

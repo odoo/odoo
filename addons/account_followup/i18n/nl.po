@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2011-11-11 15:21+0000\n"
-"Last-Translator: Janverlaan <Unknown>\n"
+"PO-Revision-Date: 2012-02-08 10:34+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:14+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -113,7 +113,7 @@ msgstr "Ok"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
-msgstr ""
+msgstr "Bedrag"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
@@ -314,6 +314,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Alle e-mails zijn succesvol verzonden naar relaties:\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -343,7 +346,7 @@ msgstr "Aanmaning statistieken per relatie"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
+msgstr "Bericht"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -360,6 +363,11 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\n"
+"\n"
+"E-mail is succesvol verzonden naar de volgende relaties!\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -414,6 +422,8 @@ msgstr "Boekingen"
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
 msgstr ""
+"Het is niet mogelijk om journaal boekingen te doen op een rekening van het "
+"type 'view'"
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -423,7 +433,7 @@ msgstr "Stuur bevestigings e-mail"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
+msgstr "Totaal:"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -503,7 +513,7 @@ msgstr "Overzicht aanmaningen"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Steps"
-msgstr ""
+msgstr "Opvolgende stappen"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -540,7 +550,7 @@ msgstr ""
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "Bedrijf moet gelijk zijn voor de gerelateerde rekening en periode."
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -564,6 +574,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"E-mail is niet verzonden naar de volgende relaties, E-mail is niet "
+"beschikbaar!\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -579,7 +593,7 @@ msgstr "%(date)s: Huidige datum"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Inclusief journaalposten gemarkeerd als een geschil"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -631,7 +645,7 @@ msgstr "Verstuurde aanmaningen"
 #. module: account_followup
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "De naam van het bedrijf moet uniek zijn!"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -694,6 +708,7 @@ msgstr ""
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
 msgstr ""
+"Het is niet mogelijk een journaal boeking te doen op een afgesloten rekening."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -718,7 +733,7 @@ msgstr "Referentie klant:"
 #. module: account_followup
 #: field:account.followup.print.all,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Test afdruk"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
