@@ -271,6 +271,7 @@ class RegistryManager(object):
                     _logger.info("Invalidating all model caches after database signaling.")
                     registry.base_cache_signaling_sequence = r
                     registry.clear_caches()
+                    registry.reset_any_cache_cleared()
             finally:
                 cr.close()
 
@@ -283,12 +284,14 @@ class RegistryManager(object):
             if registry.any_cache_cleared():
                 _logger.info("At least one model cache has been cleare, signaling through the database.")
                 cr = registry.db.cursor()
+                r = 1
                 try:
                     pass
-                    # cr.execute("select nextval('base_cache_signaling')")
-                    # cls.base_cache_signaling_sequence to = result
+                    cr.execute("select nextval('base_cache_signaling')")
+                    r = cr.fetchone()[0]
                 finally:
                     cr.close()
+                registry.base_cache_signaling_sequence = r
                 registry.reset_any_cache_cleared()
 
     @classmethod
