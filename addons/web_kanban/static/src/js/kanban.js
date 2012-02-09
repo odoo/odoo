@@ -353,8 +353,7 @@ openerp.web_kanban.KanbanGroup = openerp.web.OldWidget.extend({
         }
     },
     do_toggle_fold: function(compute_width) {
-        this.$element.toggleClass('oe_kanban_group_folded');
-        this.$records.find('.oe_kanban_record').toggle();
+        this.$element.add(this.$records).toggleClass('oe_kanban_group_folded');
         this.state.folded = this.$element.is('.oe_kanban_group_folded');
     },
     do_save_sequences: function() {
