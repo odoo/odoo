@@ -40,57 +40,69 @@ def one_in(setA, setB):
 class ir_ui_menu(osv.osv):
     _name = 'ir.ui.menu'
 
+    def __init__(self, *args, **kwargs):
+        self.cache_lock = threading.RLock()
+        self.clear_cache()
+        r = super(ir_ui_menu, self).__init__(*args, **kwargs)
+        self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
+        return r
+
+    def clear_cache(self):
+        with self.cache_lock:
+            # radical but this doesn't frequently happen
+            self._cache = {}
+
     def _filter_visible_menus(self, cr, uid, ids, context=None):
         """Filters the give menu ids to only keep the menu items that should be
            visible in the menu hierarchy of the current user.
            Uses a cache for speeding up the computation.
         """
-        _cache = {}
-        modelaccess = self.pool.get('ir.model.access')
-        user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
-        result = []
-        for menu in self.browse(cr, uid, ids, context=context):
-            # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
-            key = (cr.dbname, menu.id, tuple(user_groups))
-            if key in _cache:
-                if _cache[key]:
-                    result.append(menu.id)
-                #elif not menu.groups_id and not menu.action:
-                #    result.append(menu.id)
-                continue
-
-            _cache[key] = False
-            if menu.groups_id:
-                restrict_to_groups = [g.id for g in menu.groups_id]
-                if not user_groups.intersection(restrict_to_groups):
-                    continue
-                #result.append(menu.id)
-                #_cache[key] = True
-                #continue
-
-            if menu.action:
-                # we check if the user has access to the action of the menu
-                data = menu.action
-                if data:
-                    model_field = { 'ir.actions.act_window':    'res_model',
-                                    'ir.actions.report.xml':    'model',
-                                    'ir.actions.wizard':        'model',
-                                    'ir.actions.server':        'model_id',
-                                  }
-
-                    field = model_field.get(menu.action._name)
-                    if field and data[field]:
-                        if not modelaccess.check(cr, uid, data[field], 'read', False):
-                            continue
-            else:
-                # if there is no action, it's a 'folder' menu
-                if not menu.child_id:
-                    # not displayed if there is no children
+        with self.cache_lock:
+            modelaccess = self.pool.get('ir.model.access')
+            user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
+            result = []
+            for menu in self.browse(cr, uid, ids, context=context):
+                # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
+                key = (cr.dbname, menu.id, tuple(user_groups))
+                if key in self._cache:
+                    if self._cache[key]:
+                        result.append(menu.id)
+                    #elif not menu.groups_id and not menu.action:
+                    #    result.append(menu.id)
                     continue
 
-            result.append(menu.id)
-            _cache[key] = True
-        return result
+                self._cache[key] = False
+                if menu.groups_id:
+                    restrict_to_groups = [g.id for g in menu.groups_id]
+                    if not user_groups.intersection(restrict_to_groups):
+                        continue
+                    #result.append(menu.id)
+                    #self._cache[key] = True
+                    #continue
+
+                if menu.action:
+                    # we check if the user has access to the action of the menu
+                    data = menu.action
+                    if data:
+                        model_field = { 'ir.actions.act_window':    'res_model',
+                                        'ir.actions.report.xml':    'model',
+                                        'ir.actions.wizard':        'model',
+                                        'ir.actions.server':        'model_id',
+                                      }
+
+                        field = model_field.get(menu.action._name)
+                        if field and data[field]:
+                            if not modelaccess.check(cr, uid, data[field], 'read', False):
+                                continue
+                else:
+                    # if there is no action, it's a 'folder' menu
+                    if not menu.child_id:
+                        # not displayed if there is no children
+                        continue
+
+                result.append(menu.id)
+                self._cache[key] = True
+            return result
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
@@ -133,6 +145,18 @@ class ir_ui_menu(osv.osv):
         else:
             parent_path = ''
         return parent_path + menu.name
+
+    def create(self, *args, **kwargs):
+        self.clear_cache()
+        return super(ir_ui_menu, self).create(*args, **kwargs)
+
+    def write(self, *args, **kwargs):
+        self.clear_cache()
+        return super(ir_ui_menu, self).write(*args, **kwargs)
+
+    def unlink(self, *args, **kwargs):
+        self.clear_cache()
+        return super(ir_ui_menu, self).unlink(*args, **kwargs)
 
     def copy(self, cr, uid, id, default=None, context=None):
         ir_values_obj = self.pool.get('ir.values')
