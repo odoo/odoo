@@ -21,8 +21,7 @@
 import time, os
 import pydot
 
-import report
-import tools
+import report,pooler,tools
 
 class report_graph(report.interface.report_int):
     def __init__(self, name, table):
@@ -30,7 +29,8 @@ class report_graph(report.interface.report_int):
         self.table = table
 
     def get_proximity_graph(self, cr, uid, module_id, context=None):
-        module_obj = self.pool.get('ir.module.module')
+        pool_obj = pooler.get_pool(cr.dbname)
+        module_obj = pool_obj.get('ir.module.module')
         nodes = [('base','unknown')]
         edges = []
         def get_depend_module(module_id):
