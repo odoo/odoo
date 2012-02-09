@@ -680,13 +680,17 @@ class Menu(openerpweb.Controller):
     def load(self, req):
         return {'data': self.do_load(req)}
 
-    def do_load(self, req):
-        """ Loads all menu items (all applications and their sub-menus).
+    @openerpweb.jsonrequest
+    def get_user_roots(self, req):
+        return self.do_get_user_roots(req)
+
+    def do_get_user_roots(self, req):
+        """ Return all root menu ids visible for the session user.
 
         :param req: A request object, with an OpenERP session attribute
         :type req: < session -> OpenERPSession >
-        :return: the menu root
-        :rtype: dict('children': menu_nodes)
+        :return: the root menu ids
+        :rtype: list(int)
         """
         s = req.session
         context = s.eval_context(req.context)
@@ -698,8 +702,20 @@ class Menu(openerpweb.Controller):
             menu_domain = ast.literal_eval(menu_domain)
         else:
             menu_domain = [('parent_id', '=', False)]
-        root_menu_ids = Menus.search(menu_domain, 0, False, False, context)
-        menu_roots = Menus.read(root_menu_ids, ['name', 'sequence', 'parent_id'], context)
+        return Menus.search(menu_domain, 0, False, False, context)
+
+    def do_load(self, req):
+        """ Loads all menu items (all applications and their sub-menus).
+
+        :param req: A request object, with an OpenERP session attribute
+        :type req: < session -> OpenERPSession >
+        :return: the menu root
+        :rtype: dict('children': menu_nodes)
+        """
+        context = req.session.eval_context(req.context)
+        Menus = req.session.model('ir.ui.menu')
+
+        menu_roots = Menus.read(self.do_get_user_roots(req), ['name', 'sequence', 'parent_id'], context)
         menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, ''], 'children' : menu_roots}
 
         # menus are loaded fully unlike a regular tree view, cause there are a
