@@ -93,7 +93,7 @@ class account_followup_stat_by_partner(osv.osv):
         cr.execute("""
             create or replace view account_followup_stat_by_partner as (
                 SELECT
-                    l.partner_id AS id,
+                    l.partner_id * 10000 + l.company_id as id,
                     l.partner_id AS partner_id,
                     min(l.date) AS date_move,
                     max(l.date) AS date_move_last,
@@ -217,23 +217,20 @@ class account_followup_print_all(osv.osv_memory):
         if context is None:
             context = {}
         data = self.browse(cr, uid, ids, context=context)[0]
-        partner_ids = [partner_id.id for partner_id in data.partner_ids]
+        stat_by_partner_line_ids = [partner_id.id for partner_id in data.partner_ids]
+        partners = [stat_by_partner_line / 10000 for stat_by_partner_line in stat_by_partner_line_ids]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all_msg')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         if data.email_conf:
             msg_sent = ''
             msg_unsent = ''
             data_user = user_obj.browse(cr, uid, uid, context=context)
-            move_lines = line_obj.browse(cr, uid, partner_ids, context=context)
-            partners = []
-            dict_lines = {}
-            for line in move_lines:
-                partners.append(line.partner_id)
-                dict_lines[line.partner_id.id] =line
-            for partner in partners:
+            for partner in self.pool.get('res.partner').browse(cr, uid, partners, context=context):
                 ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable']),('company_id','=',context.get('company_id', False))])
                 data_lines = move_obj.browse(cr, uid, ids_lines, context=context)
-                followup_data = dict_lines[partner.id]
+                total_amt = 0.0
+                for line in data_lines:
+                    total_amt += line.debit - line.credit
                 dest = False
                 if partner.address:
                     for adr in partner.address:
@@ -250,8 +247,6 @@ class account_followup_print_all(osv.osv_memory):
                     cxt = context.copy()
                     cxt['lang'] = partner.lang
                     body = user_obj.browse(cr, uid, uid, context=cxt).company_id.follow_up_msg
-
-                total_amt = followup_data.debit - followup_data.credit
                 move_line = ''
                 subtotal_due = 0.0
                 subtotal_paid = 0.0
