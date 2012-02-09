@@ -464,11 +464,7 @@ def on_starting(server):
     openerp.modules.loading.open_openerp_namespace()
     for m in openerp.conf.server_wide_modules:
         try:
-            __import__(m)
-            # Call any post_load hook.
-            info = openerp.modules.module.load_information_from_description_file(m)
-            if info['post_load']:
-                getattr(sys.modules[m], info['post_load'])()
+            openerp.modules.module.load_openerp_module(m)
         except Exception:
             msg = ''
             if m == 'web':
