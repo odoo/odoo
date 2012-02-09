@@ -908,7 +908,7 @@
             <span class="oe_tooltip_technical_title">Modifiers:</span>
             <t t-esc="widget.node.attrs.modifiers"/>
         </li>
-        <li t-if="widget.field.change_default" data-item="change_default">
+        <li t-if="widget.field and widget.field.change_default" data-item="change_default">
             <span class="oe_tooltip_technical_title">Change default:</span>
             Yes
         </li>
