@@ -117,7 +117,7 @@ class db(netsvc.ExportService):
         return fn(*params)
 
     def _create_empty_database(self, name):
-        db = sql_db.db_connect('template1')
+        db = sql_db.db_connect('postgres')
         cr = db.cursor()
         chosen_template = tools.config['db_template']
         try:
@@ -176,7 +176,7 @@ class db(netsvc.ExportService):
         openerp.modules.registry.RegistryManager.delete(db_name)
         sql_db.close_db(db_name)
 
-        db = sql_db.db_connect('template1')
+        db = sql_db.db_connect('postgres')
         cr = db.cursor()
         cr.autocommit(True) # avoid transaction block
         try:
@@ -278,7 +278,7 @@ class db(netsvc.ExportService):
         openerp.modules.registry.RegistryManager.delete(old_name)
         sql_db.close_db(old_name)
 
-        db = sql_db.db_connect('template1')
+        db = sql_db.db_connect('postgres')
         cr = db.cursor()
         cr.autocommit(True) # avoid transaction block
         try:
@@ -306,7 +306,7 @@ class db(netsvc.ExportService):
             raise openerp.exceptions.AccessDenied()
         chosen_template = tools.config['db_template']
         templates_list = tuple(set(['template0', 'template1', 'postgres', chosen_template]))
-        db = sql_db.db_connect('template1')
+        db = sql_db.db_connect('postgres')
         cr = db.cursor()
         try:
             try:
@@ -544,7 +544,7 @@ GNU Public Licence.
         return http_server.list_http_services()
 
     def exp_check_connectivity(self):
-        return bool(sql_db.db_connect('template1'))
+        return bool(sql_db.db_connect('postgres'))
 
     def exp_get_os_time(self):
         return os.times()
