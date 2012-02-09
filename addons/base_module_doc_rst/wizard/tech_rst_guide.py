@@ -305,8 +305,7 @@ class RstDoc(object):
 class wizard_tech_guide_rst(osv.osv_memory):
     _name = "tech.guide.rst"
     _columns = {
-        'rst_file': fields.binary('File',required = True, readonly = True),
-        'name': fields.char("Filename", size=64, required=True, readonly = True),
+        'rst_file': fields.binary('File', required=True, readonly=True),
     }
 
     def _generate(self, cr, uid, context):
@@ -468,9 +467,8 @@ class wizard_tech_guide_rst(osv.osv_memory):
             logger.notifyChannel("base_module_doc_rst", netsvc.LOG_ERROR, msg)
             return ""
 
-    _defaults ={
-        'rst_file' : _generate,
-        'name': 'modules_technical_guide_rst.tgz',
+    _defaults = {
+        'rst_file': _generate,
     }
 
 wizard_tech_guide_rst()
