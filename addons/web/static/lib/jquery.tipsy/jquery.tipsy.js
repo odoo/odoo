@@ -18,6 +18,10 @@
     
     Tipsy.prototype = {
         show: function() {
+            $('div.tipsy').stop().remove();
+            if (!this.$element.parent().length) {
+                return;
+            }
             var title = this.getTitle();
             if (title && this.enabled) {
                 var $tip = this.tip();

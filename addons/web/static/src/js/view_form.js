@@ -867,7 +867,7 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
                         debug: openerp.connection.debug,
                         widget: widget
                 })},
-                gravity: $.fn.tipsy.autoBounds(50, 'n'),
+                gravity: $.fn.tipsy.autoBounds(50, 'nw'),
                 html: true,
                 opacity: 0.85,
                 trigger: 'hover'
