@@ -126,6 +126,11 @@ class Registry(object):
         """
         for model in self.models.itervalues():
             model.clear_caches()
+        # Special case for ir_ui_menu which does not use openerp.tools.ormcache.
+        ir_ui_menu = self.models.get('ir.ui.menu')
+        if ir_ui_menu:
+            ir_ui_menu.clear_cache()
+
 
     # Useful only in a multi-process context.
     def reset_any_cache_cleared(self):

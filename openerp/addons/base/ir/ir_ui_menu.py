@@ -50,6 +50,10 @@ class ir_ui_menu(osv.osv):
     def clear_cache(self):
         with self.cache_lock:
             # radical but this doesn't frequently happen
+            if self._cache:
+                # Normally this is done by openerp.tools.ormcache
+                # but since we do not use it, set it by ourself.
+                self.pool._any_cache_cleared = True
             self._cache = {}
 
     def _filter_visible_menus(self, cr, uid, ids, context=None):
