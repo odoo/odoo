@@ -216,7 +216,7 @@ class mail_message(osv.osv):
             notification_obj.create(cr, uid, {'user_id': vals['need_action_user_id'], 'message_id': msg_id}, context=context)
         return msg_id
     
-    def get_pushed_messages(self, cr, uid, context=None):
+    def get_pushed_messages(self, cr, uid, ids, filter_search=False, context=None):
         """Wall: get messages to display"""
         notification_obj = self.pool.get('mail.notification')
         notification_ids = notification_obj.search(cr, uid, [('user_id', '=', uid)], context=context)

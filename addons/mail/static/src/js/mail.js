@@ -95,8 +95,9 @@ openerp.mail = function(session) {
         // QWeb template to use when rendering the object
         template: 'WallView',
 
-        init: function() {
-            this._super.apply(this, arguments);
+        init: function (parent, params) {
+            this._super(parent);
+            this.filter_search = params['filter_search'];
             /* DataSets */
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
         },
@@ -104,8 +105,9 @@ openerp.mail = function(session) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
+            console.log(this);
             self.$element.find('button.oe_mail_action_comment').bind('click', function () { self.do_comment(); });
-            this.ds_msg.call('get_pushed_messages', []).then(
+            this.ds_msg.call('get_pushed_messages', [[], self.filter_search]).then(
                 this.proxy('display_records'));
         },
         
@@ -114,6 +116,7 @@ openerp.mail = function(session) {
         },
 
         fetch_messages: function () {
+            console.log('debug--fetch_messages');
             return this.ds_msg.call('get_pushed_messages', []).then(
                 this.proxy('display_records'));
         },

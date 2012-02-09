@@ -230,6 +230,13 @@
         <record id="action_mail_all_feeds" model="ir.actions.client">
           <field name="name">(w)All Feeds</field>
           <field name="tag">mail.all_feeds</field>
+          <field name="params" eval="{'filter_search': False, 'thread_nbr': 10}"/>
+        </record>
+
+        <record id="action_mail_my_feeds" model="ir.actions.client">
+          <field name="name">My Feeds</field>
+          <field name="tag">mail.all_feeds</field>
+          <field name="params" eval="{'filter_search': True, 'thread_nbr': 10}"/>
         </record>
 
     </data>

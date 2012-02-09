@@ -51,26 +51,35 @@
         </record>
 
         <!-- toplevel menu -->
-        <menuitem id="mail_feeds_main" name="Feeds" action="action_view_groups"/>
+        <record id="mail_feeds_main" model="ir.ui.menu">
+          <field name="name">Feeds</field>
+<!--           <field name="sequence" eval="20"/> -->
+          <field name="action" ref="action_mail_all_feeds"/>
+        </record>
+<!--         <menuitem id="mail_feeds_main" name="Feeds" action="action_mail_all_feeds"/> -->
 
         <!-- left-side menu: Feeds !-->
         <menuitem id="mail_feeds" name="Feeds"  parent="mail_feeds_main"/>
-        <menuitem id="mail_myfeeds" name="My feeds" parent="mail_feeds" action="action_view_mytweets"/>
-        <menuitem id="mail_allfeeds" name="All feeds" parent="mail_feeds" action="action_view_tweets"/>
-<!--        <menuitem id="mail_wallfeeds" name="(w)All feeds" parent="mail_feeds" action="action_mail_all_feeds"/>-->
+        <record id="mail_myfeeds" model="ir.ui.menu">
+          <field name="name">My Feeds</field>
+          <field name="sequence" eval="10"/>
+          <field name="action" ref="action_mail_my_feeds"/>
+          <field name="parent_id" ref="mail_feeds"/>
+        </record>
         <record id="mail_wallfeeds" model="ir.ui.menu">
           <field name="name">(w)All Feeds</field>
           <field name="sequence" eval="20"/>
           <field name="action" ref="action_mail_all_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
         </record>
-
         <!-- left-side menu: Groups !-->
         <menuitem id="mail_groups" name="Groups"  parent="mail_feeds_main"/>
         <menuitem id="mail_allgroups" name="All groups"  parent="mail_groups" action="action_view_groups"/>
         <!-- left-side menu: Tmp !-->
         <menuitem id="mail_debug" name="Debug/Tmp"  parent="mail_feeds_main"/>
         <menuitem id="mail_debug_msgs" name="Messages" parent="mail_debug" action="action_view_all_message"/>
+        <menuitem id="mail_debug_myfeeds" name="My feeds" parent="mail_debug" action="action_view_mytweets"/>
+        <menuitem id="mail_debug_allfeeds" name="All feeds" parent="mail_debug" action="action_view_tweets"/>
         <menuitem id="mail_debug_groups" name="Groups" parent="mail_debug" action="action_view_groups"/>
         <menuitem id="mail_debug_subs" name="Subscriptions" parent="mail_debug" action="action_view_subscriptions"/>
         <menuitem id="mail_debug_notifs" name="Pushed notif" parent="mail_debug" action="action_view_notifications"/>
