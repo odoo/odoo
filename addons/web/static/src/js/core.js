@@ -254,6 +254,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      * @param {Object} mapping a mapping of keys to object-paths
      */
     init: function (mapping) {
+        this.parent = null;
         this.map = mapping || {};
     },
     /**
@@ -269,6 +270,9 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
     get_object: function (key, silent_error) {
         var path_string = this.map[key];
         if (path_string === undefined) {
+            if (this.parent) {
+                return this.parent.get_object(key, silent_error);
+            }
             if (silent_error) { return void 'nooo'; }
             throw new openerp.web.KeyNotFound(key);
         }
@@ -287,6 +291,21 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
         return object_match;
     },
     /**
+     * Checks if the registry contains an object mapping for this key.
+     *
+     * @param {String} key key to look for
+     */
+    contains: function (key) {
+        if (key === undefined) { return false; }
+        if (key in this.map) {
+            return true
+        }
+        if (this.parent) {
+            return this.parent.contains(key);
+        }
+        return false;
+    },
+    /**
      * Tries a number of keys, and returns the first object matching one of
      * the keys.
      *
@@ -299,7 +318,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
     get_any: function (keys) {
         for (var i=0; i<keys.length; ++i) {
             var key = keys[i];
-            if (key === undefined || !(key in this.map)) {
+            if (!this.contains(key)) {
                 continue;
             }
 
@@ -324,11 +343,22 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      * Creates and returns a copy of the current mapping, with the provided
      * mapping argument added in (replacing existing keys if needed)
      *
+     * Parent and child remain linked, a new key in the parent (which is not
+     * overwritten by the child) will appear in the child.
+     *
      * @param {Object} [mapping={}] a mapping of keys to object-paths
      */
+    extend: function (mapping) {
+        var child = new openerp.web.Registry(mapping);
+        child.parent = this;
+        return child;
+    },
+    /**
+     * @deprecated use Registry#extend
+     */
     clone: function (mapping) {
-        return new openerp.web.Registry(
-            _.extend({}, this.map, mapping || {}));
+        console.warn('Registry#clone is deprecated, use Registry#extend');
+        return this.extend(mapping);
     }
 });
 
@@ -393,7 +423,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.qweb_mutex = new $.Mutex();
     },
     bind: function(origin) {
-        var window_origin = location.protocol+"//"+location.host;
+        var window_origin = location.protocol+"//"+location.host, self=this;
         this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
         this.prefix = this.origin;
         this.server = this.origin; // keep chs happy
@@ -405,8 +435,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.user_context= {};
         this.db = false;
         this.openerp_entreprise = false;
-        this.module_list = [];
-        this.module_loaded = {"web": true};
+        this.module_list = openerp._modules.slice();
+        this.module_loaded = {};
+        _(this.module_list).each(function (mod) {
+            self.module_loaded[mod] = true;
+        });
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
@@ -694,10 +727,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     load_modules: function(no_session_valid_signal) {
         var self = this;
         return this.rpc('/web/session/modules', {}).pipe(function(result) {
-            var lang = self.user_context.lang;
-            var params = { mods: ["web"].concat(result), lang: lang};
+            var lang = self.user_context.lang,
+                all_modules = _.uniq(self.module_list.concat(result));
+            var params = { mods: all_modules, lang: lang};
             var to_load = _.difference(result, self.module_list).join(',');
-            self.module_list = result;
+            self.module_list = all_modules;
             return $.when(
                 self.rpc('/web/webclient/csslist', {mods: to_load}, self.do_load_css),
                 self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
@@ -1174,9 +1208,7 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
     add_module_translation: function(mod) {
         var self = this;
         _.each(mod.messages, function(message) {
-            if (self.db[message.id] === undefined) {
-                self.db[message.id] = message.string;
-            }
+            self.db[message.id] = message.string;
         });
     },
     build_translation_function: function() {
@@ -1223,18 +1255,34 @@ openerp.web.qweb.default_dict = {
     '_' : _,
     '_t' : openerp.web._t
 };
-openerp.web.qweb.format_text_node = function (s) {
-    // Note that 'this' is the Qweb Node of the text
-    var translation = this.node.parentNode.attributes['t-translation'];
-    if (translation && translation.value === 'off') {
-        return s;
+openerp.web.qweb.preprocess_node = function() {
+    // Note that 'this' is the Qweb Node
+    switch (this.node.nodeType) {
+        case 3:
+        case 4:
+            // Text and CDATAs
+            var translation = this.node.parentNode.attributes['t-translation'];
+            if (translation && translation.value === 'off') {
+                return;
+            }
+            var ts = _.str.trim(this.node.data);
+            if (ts.length === 0) {
+                return;
+            }
+            var tr = openerp.web._t(ts);
+            if (tr !== ts) {
+                this.node.data = tr;
+            }
+            break;
+        case 1:
+            // Element
+            var attr, attrs = ['label', 'title', 'alt'];
+            while (attr = attrs.pop()) {
+                if (this.attributes[attr]) {
+                    this.attributes[attr] = openerp.web._t(this.attributes[attr]);
+                }
+            }
     }
-    var ts = _.str.trim(s);
-    if (ts.length === 0) {
-        return s;
-    }
-    var tr = openerp.web._t(ts);
-    return tr === ts ? s : tr;
 };
 
 /** Jquery extentions */

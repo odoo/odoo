@@ -451,6 +451,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      */
     reload_content: function () {
         var self = this;
+        self.$element.find('.all-record-selector').prop('checked', false);
         this.records.reset();
         var reloaded = $.Deferred();
         this.$element.find('.oe-listview-content').append(

@@ -244,7 +244,7 @@ class WebClient(openerpweb.Controller):
             transs[addon_name] = transl
             addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
             for l in langs:
-                f_name = os.path.join(addons_path, addon_name, "po", l + ".po")
+                f_name = os.path.join(addons_path, addon_name, "i18n", l + ".po")
                 if not os.path.exists(f_name):
                     continue
                 try:
@@ -253,7 +253,7 @@ class WebClient(openerpweb.Controller):
                 except Exception:
                     continue
                 for x in po:
-                    if x.id and x.string:
+                    if x.id and x.string and "openerp-web" in x.auto_comments:
                         transl["messages"].append({'id': x.id, 'string': x.string})
         return {"modules": transs,
                 "lang_parameters": lang_obj}
@@ -688,14 +688,27 @@ class Menu(openerpweb.Controller):
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        Menus = req.session.model('ir.ui.menu')
-        # menus are loaded fully unlike a regular tree view, cause there are
-        # less than 512 items
-        context = req.session.eval_context(req.context)
+        s = req.session
+        context = s.eval_context(req.context)
+        Menus = s.model('ir.ui.menu')
+        # If a menu action is defined use its domain to get the root menu items
+        user_menu_id = s.model('res.users').read([s._uid], ['menu_id'], context)[0]['menu_id']
+        if user_menu_id:
+            user_menu_domain = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'], context)[0]['domain']
+            user_menu_domain = ast.literal_eval(user_menu_domain)
+            root_menu_ids = Menus.search(user_menu_domain, 0, False, False, context)
+            menu_items = Menus.read(root_menu_ids, ['name', 'sequence', 'parent_id'], context)
+            menu_root = {'id': -2, 'name': 'root', 'parent_id': [-1, ''], 'children' : menu_items}
+            menu_roots = [menu_root] + menu_items
+        else:
+            menu_roots = [{'id': False, 'name': 'root', 'parent_id': [-1, '']}]
+
+
+        # menus are loaded fully unlike a regular tree view, cause there are a
+        # limited number of items (752 when all 6.1 addons are installed)
         menu_ids = Menus.search([], 0, False, False, context)
         menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'], context)
-        menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, '']}
-        menu_items.append(menu_root)
+        menu_items.extend(menu_roots)
 
         # make a tree using parent_id
         menu_items_map = dict((menu_item["id"], menu_item) for menu_item in menu_items)
@@ -1268,6 +1281,37 @@ class Binary(openerpweb.Controller):
             return req.make_response(filecontent,
                 [('Content-Type', 'application/octet-stream'),
                  ('Content-Disposition', 'attachment; filename="%s"' % filename)])
+
+    @openerpweb.httprequest
+    def saveas_ajax(self, req, data, token):
+        jdata = simplejson.loads(data)
+        model = jdata['model']
+        field = jdata['field']
+        id = jdata.get('id', None)
+        filename_field = jdata.get('filename_field', None)
+        context = jdata.get('context', dict())
+
+        context = req.session.eval_context(context)
+        Model = req.session.model(model)
+        fields = [field]
+        if filename_field:
+            fields.append(filename_field)
+        if id:
+            res = Model.read([int(id)], fields, context)[0]
+        else:
+            res = Model.default_get(fields, context)
+        filecontent = base64.b64decode(res.get(field, ''))
+        if not filecontent:
+            raise ValueError("No content found for field '%s' on '%s:%s'" %
+                (field, model, id))
+        else:
+            filename = '%s_%s' % (model.replace('.', '_'), id)
+            if filename_field:
+                filename = res.get(filename_field, '') or filename
+            return req.make_response(filecontent,
+                headers=[('Content-Type', 'application/octet-stream'),
+                        ('Content-Disposition', 'attachment; filename="%s"' % filename)],
+                cookies={'fileToken': int(token)})
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):

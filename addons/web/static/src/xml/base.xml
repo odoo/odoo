@@ -3,7 +3,7 @@
 -->
 <templates id="template" xml:space="preserve">
 <t t-name="Notification">
-    <div class="oe_notification">
+    <div class="oe_notification" t-translation="off">
         <div id="oe_notification_default">
             <a class="ui-notify-cross ui-notify-close" href="#">x</a>
             <h1>#{title}</h1>
@@ -385,12 +385,12 @@
 </t>
 <t t-name="Menu.secondary">
     <div t-attf-class="oe_toggle_secondary_menu">
-        <span class="oe_menu_fold" title="Fold menu">&amp;laquo;</span>
-        <span class="oe_menu_unfold" title="Unfold menu">&amp;raquo;</span>
+        <span class="oe_menu_fold" title="Fold menu"><t t-raw="'&amp;laquo;'"/></span>
+        <span class="oe_menu_unfold" title="Unfold menu"><t t-raw="'&amp;raquo;'"/></span>
     </div>
     <div t-foreach="widget.data.data.children" t-as="menu" style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu.id">
         <t t-foreach="menu.children" t-as="menu">
-            <t t-set="classname">oe_secondary_menu_item</t>
+            <t t-set="classname" t-translation="off">oe_secondary_menu_item</t>
             <t t-set="level" t-value="0"/>
             <t t-call="Menu.secondary.children"/>
         </t>
@@ -405,7 +405,7 @@
     </a>
     <div t-attf-class="oe_secondary_submenu" t-if="menu.children.length" t-att-style="menu_first and level == 1 ? undefined : 'display: none'">
         <t t-foreach="menu.children" t-as="menu">
-            <t t-set="classname">oe_secondary_submenu_item</t>
+            <t t-set="classname" t-translation="off">oe_secondary_submenu_item</t>
             <t t-call="Menu.secondary.children"/>
         </t>
     </div>
@@ -422,7 +422,7 @@
                 <div class="oe_vm_switch">
                     <t t-if="views.length != 1" t-foreach="views" t-as="view">
 
-                        <button type="button" t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="view.view_type">
+                        <button type="button" t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
                             <span><t t-esc="view.label || view.view_type"/></span>
                         </button>
                     </t>
@@ -929,7 +929,7 @@
     </ul>
 </t>
 <t t-name="WidgetParagraph">
-    <p t-attf-class="oe_form_paragraph oe_align_#{widget.align}"><t t-esc="widget.string"/></p>
+    <p t-attf-class="oe_form_paragraph oe_align_#{widget.align} #{widget.multilines ? 'oe_multilines' : ''}"><t t-esc="widget.string"/></p>
 </t>
 <t t-name="FieldChar">
     <input t-att-type="widget.password ? 'password' : 'text'" size="1"
@@ -1604,7 +1604,7 @@
             <tr class="oe_export_row">
                 <t t-foreach="(field.id).split('/')" t-as="level" >
                     <t t-if="(field.id).split('/')[0] != level">
-                        <td width="18">&amp;nbsp;</td>
+                        <td width="18" t-translation="off">&amp;nbsp;</td>
                     </t>
                 </t>
                 <td valign="top" align="left" style="cursor: pointer;" width="18">
