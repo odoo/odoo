@@ -18,31 +18,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from os.path import join
+
+from osv import osv, fields
+import netsvc
+
 import base64
 import tempfile
 import tarfile
 import httplib
-
-import netsvc
-import wizard
-import pooler
 import os
-import tools
-
-choose_file_form = '''<?xml version="1.0"?>
-<form string="Create Technical Guide in rst format">
-    <separator string="Technical Guide in rst format" colspan="4"/>
-    <label string="Please choose a file where the Technical Guide will be written." colspan="4"/>
-    <field name="rst_file" />
-    <field name="name" invisible="1"/>
-</form>
-'''
-
-choose_file_fields = {
-    'rst_file': {'string': 'file', 'type': 'binary', 'required': True, 'readonly': True},
-    'name': {'string': 'filename', 'type': 'char', 'required': True, 'readonly': True},
-}
 
 class RstDoc(object):
     def __init__(self, module, objects):
@@ -250,8 +234,7 @@ class RstDoc(object):
             field_dict = field_def[1]
             field_required = field_dict.get('required', '') and ', required'
             field_readonly = field_dict.get('readonly', '') and ', readonly'
-
-            field_help_s = field_dict.get('help', '').strip()
+            field_help_s = field_dict.get('help', '')
             if field_help_s:
                 field_help_s = "*%s*" % (field_help_s)
                 field_help = '\n'.join(['    %s' % line.strip() for line in field_help_s.split('\n')])
@@ -319,13 +302,15 @@ class RstDoc(object):
         return s
 
 
-class wizard_tech_guide_rst(wizard.interface):
+class wizard_tech_guide_rst(osv.osv_memory):
+    _name = "tech.guide.rst"
+    _columns = {
+        'rst_file': fields.binary('File', required=True, readonly=True),
+    }
 
-
-    def _generate(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        module_model = pool.get('ir.module.module')
-        module_ids = data['ids']
+    def _generate(self, cr, uid, context):
+        module_model = self.pool.get('ir.module.module')
+        module_ids = context['active_ids']
 
         module_index = []
 
@@ -396,19 +381,15 @@ class wizard_tech_guide_rst(wizard.interface):
                 msg = "Temporary file %s could not be deleted. (%s)" % (tgz_tmp_filename, e)
                 logger.notifyChannel("warning", netsvc.LOG_WARNING, msg)
 
-        return {
-            'rst_file': base64.encodestring(out),
-            'name': 'modules_technical_guide_rst.tgz'
-        }
+        return base64.encodestring(out)
 
     def _get_views(self, cr, uid, module_id, context=None):
-        pool = pooler.get_pool(cr.dbname)
-        module_module_obj = pool.get('ir.module.module')
+        module_module_obj = self.pool.get('ir.module.module')
+        model_data_obj = self.pool.get('ir.model.data')
+        view_obj = self.pool.get('ir.ui.view')
+        report_obj = self.pool.get('ir.actions.report.xml')
+        menu_obj = self.pool.get('ir.ui.menu')
         res = {}
-        model_data_obj = pool.get('ir.model.data')
-        view_obj = pool.get('ir.ui.view')
-        report_obj = pool.get('ir.actions.report.xml')
-        menu_obj = pool.get('ir.ui.menu')
         mlist = module_module_obj.browse(cr, uid, [module_id], context=context)
         mnames = {}
         for m in mlist:
@@ -468,17 +449,15 @@ class wizard_tech_guide_rst(wizard.interface):
         return res
 
     def _object_find(self, cr, uid, module):
-        pool = pooler.get_pool(cr.dbname)
-        ids2 = pool.get('ir.model.data').search(cr, uid, [('module', '=', module.name), ('model', '=', 'ir.model')])
+        ir_model_data = self.pool.get('ir.model.data')
+        ids2 = ir_model_data.search(cr, uid, [('module', '=', module.name), ('model', '=', 'ir.model')])
         ids = []
-        for mod in pool.get('ir.model.data').browse(cr, uid, ids2):
+        for mod in ir_model_data.browse(cr, uid, ids2):
             ids.append(mod.res_id)
-        modobj = pool.get('ir.model')
-        return modobj.browse(cr, uid, ids)
+        return self.pool.get('ir.model').browse(cr, uid, ids)
 
     def _fields_find(self, cr, uid, obj):
-        pool = pooler.get_pool(cr.dbname)
-        modobj = pool.get(obj)
+        modobj = self.pool.get(obj)
         if modobj:
             res = modobj.fields_get(cr, uid).items()
             return res
@@ -488,21 +467,11 @@ class wizard_tech_guide_rst(wizard.interface):
             logger.notifyChannel("base_module_doc_rst", netsvc.LOG_ERROR, msg)
             return ""
 
-    states = {
-        'init': {
-            'actions': [_generate],
-            'result': {
-                'type': 'form',
-                'arch': choose_file_form,
-                'fields': choose_file_fields,
-                'state': [
-                    ('end', 'Close', 'gtk-close'),
-                ]
-            }
-        },
+    _defaults = {
+        'rst_file': _generate,
     }
 
-wizard_tech_guide_rst('tech.guide.rst')
+wizard_tech_guide_rst()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
