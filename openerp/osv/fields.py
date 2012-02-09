@@ -141,7 +141,7 @@ class boolean(_column):
     def __init__(self, string='unknown', required=False, **args):
         super(boolean, self).__init__(string=string, required=required, **args)
         if required:
-            _logger.warning(
+            _logger.debug(
                 "required=True is deprecated: making a boolean field"
                 " `required` has no effect, as NULL values are "
                 "automatically turned into False.")
@@ -156,7 +156,7 @@ class integer(_column):
     def __init__(self, string='unknown', required=False, **args):
         super(integer, self).__init__(string=string, required=required, **args)
         if required:
-            _logger.warning(
+            _logger.debug(
                 "required=True is deprecated: making an integer field"
                 " `required` has no effect, as NULL values are "
                 "automatically turned into 0.")
@@ -182,7 +182,7 @@ class integer_big(_column):
     def __init__(self, string='unknown', required=False, **args):
         super(integer_big, self).__init__(string=string, required=required, **args)
         if required:
-            _logger.warning(
+            _logger.debug(
                 "required=True is deprecated: making an integer_big field"
                 " `required` has no effect, as NULL values are "
                 "automatically turned into 0.")
@@ -246,7 +246,7 @@ class float(_column):
         # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
         if required:
-            _logger.warning(
+            _logger.debug(
                 "required=True is deprecated: making a float field"
                 " `required` has no effect, as NULL values are "
                 "automatically turned into 0.0.")
