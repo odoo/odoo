@@ -1433,8 +1433,6 @@ class Export(View):
             if import_compat:
                 if exclude and field_name in exclude:
                     continue
-                if 'function' in field:
-                    continue
                 if field.get('readonly'):
                     # If none of the field's states unsets readonly, skip the field
                     if all(dict(attrs).get('readonly', True)
