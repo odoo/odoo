@@ -506,8 +506,7 @@ class ir_model_access(osv.osv):
             model_name = model
 
         # TransientModel records have no access rights, only an implicit access rule
-        model_obj = self.pool.get(model_name)
-        if model_obj and model_obj.is_transient():
+        if self.pool.get(model_name).is_transient():
             return True
 
         # We check if a specific rule exists
