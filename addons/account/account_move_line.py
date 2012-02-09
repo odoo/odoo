@@ -826,13 +826,9 @@ class account_move_line(osv.osv):
                    (tuple(ids), ))
         r = cr.fetchall()
         #TODO: move this check to a constraint in the account_move_reconcile object
-        if (len(r) != 1) and not context.get('fy_closing', False):
-            raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
         if not unrec_lines:
             raise osv.except_osv(_('Error'), _('Entry is already reconciled'))
         account = account_obj.browse(cr, uid, account_id, context=context)
-        if not context.get('fy_closing', False) and not account.reconcile:
-            raise osv.except_osv(_('Error'), _('This account does not allow reconciliation! You should update the account definition to change this.'))
         if r[0][1] != None:
             raise osv.except_osv(_('Error'), _('Some entries are already reconciled !'))
 
