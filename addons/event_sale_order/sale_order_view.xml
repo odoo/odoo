@@ -7,8 +7,8 @@
              <field name="type">form</field>
              <field name="inherit_id" ref="product.product_normal_form_view" />
              <field name="arch" type="xml">
-                <field name='purchase_ok' position='after'>
-                    <field name="event_ok"/>
+                <field name='supply_method' position='after'>
+                    <field name="event_ok" attrs="{'invisible': [('type', '!=', 'service')]}"/>
                     <field name="event_type" attrs="{'invisible': [('event_ok', '=', False)]}"/>
                 </field>
              </field>

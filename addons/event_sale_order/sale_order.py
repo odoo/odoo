@@ -25,7 +25,7 @@ class product(osv.osv):
     _inherit='product.product'
     _columns={
     'event_ok':fields.boolean('Event'),
-    'event_type':fields.many2one('event.type','Type of event'),
+    'event_type':fields.many2one('event.type','Type of Event'),
     }
 product()
 
@@ -36,7 +36,6 @@ class sale_order_line(osv.osv):
     'event_type':fields.char('event_type',128),
     'event_ok':fields.boolean('event_ok'),
     }
-        
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
     uom=False, qty_uos=0, uos=False, name='', partner_id=False,
@@ -56,18 +55,22 @@ class sale_order_line(osv.osv):
 
     def button_confirm(self,cr,uid,ids,context=None):
         registration = self.browse(cr,uid,ids,context=None)
-        for registration in registration:
-            self.pool.get('event.registration').create(cr,uid,{
-            'name':registration.order_id.partner_invoice_id.name,
-            'partner_id':registration.order_id.partner_id.id,
-            'email':registration.order_id.partner_id.email,
-            'phone':registration.order_id.partner_id.phone,
-            'street':registration.order_id.partner_invoice_id.street,
-            'city':registration.order_id.partner_invoice_id.city,
-            'origin':registration.order_id.name,
-            'nb_register':1,
-            'event_id':registration.event.id,
-            })
+        for registration in registration:    
+            if registration.event.id:
+                self.pool.get('event.registration').create(cr,uid,{
+                'name':registration.order_id.partner_invoice_id.name,
+                'partner_id':registration.order_id.partner_id.id,
+                'contact_id':registration.order_id.partner_invoice_id.id,
+                'email':registration.order_id.partner_id.email,
+                'phone':registration.order_id.partner_id.phone,
+                'street':registration.order_id.partner_invoice_id.street,
+                'city':registration.order_id.partner_invoice_id.city,
+                'origin':registration.order_id.name,
+                'nb_register':1,
+                'event_id':registration.event.id,
+                })
+                message = ("The sales order '%s' create a registration.") % (registration.order_id.name,)
+                self.log(cr, uid, registration.event.id, message)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context)
 
 
