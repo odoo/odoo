@@ -56,10 +56,9 @@ from openerp.tools.translate import _
 from openerp.modules.module import \
     get_modules, get_modules_with_version, \
     load_information_from_description_file, \
-    call_post_load_hook, \
     get_module_resource, zip_directory, \
     get_module_path, initialize_sys_path, \
-    register_module_classes, init_module_models
+    load_openerp_module, init_module_models
 
 _logger = logging.getLogger(__name__)
 
@@ -163,7 +162,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         _logger.info('module %s: loading objects', package.name)
         migrations.migrate_module(package, 'pre')
-        register_module_classes(package.name)
+        load_openerp_module(package.name)
 
         models = pool.load(cr, package)
         loaded_modules.append(package.name)

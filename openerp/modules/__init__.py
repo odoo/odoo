@@ -36,7 +36,7 @@ from openerp.modules.module import \
     load_information_from_description_file, \
     get_module_resource, zip_directory, \
     get_module_path, initialize_sys_path, \
-    register_module_classes, init_module_models
+    load_openerp_module, init_module_models
 
 from openerp.modules.loading import load_modules
 

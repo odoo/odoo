@@ -464,10 +464,7 @@ def on_starting(server):
     openerp.modules.loading.open_openerp_namespace()
     for m in openerp.conf.server_wide_modules:
         try:
-            if m not in openerp.modules.module.loaded:
-                __import__('openerp.addons.' + m)
-                openerp.modules.module.call_post_load_hook(m)
-                openerp.modules.module.loaded.append(m)
+            openerp.modules.module.load_openerp_module(m)
         except Exception:
             msg = ''
             if m == 'web':
