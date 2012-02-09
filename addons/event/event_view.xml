@@ -176,7 +176,7 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="user_id" date_start="date_begin" string="Event Organization">
+                <calendar color="user_id" date_start="date_begin" date_stop="date_end" string="Event Organization">
                     <field name="name"/>
                     <field name="type" widget="selection"/>
                 </calendar>
@@ -211,6 +211,7 @@
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
+                        <field name="type" widget="selection"/>
                         <field name="user_id" widget="selection">
                         <filter icon="terp-personal"
                               string="My Events"
@@ -247,7 +248,7 @@
            <field name="type">ir.actions.act_window</field>
            <field name="res_model">event.event</field>
            <field name="view_type">form</field>
-           <field name="view_mode">tree,form,calendar,graph</field>
+           <field name="view_mode">calendar,tree,form,graph</field>
            <field name="context">{"search_default_draft": "1", "search_default_section_id": section_id}</field>
            <field name="search_view_id" ref="view_event_search"/>
            <field name="help">Event is the low level object used by meeting and others documents that should be synchronized with mobile devices or calendar applications through caldav. Most of the users should work in the Calendar menu, and not in the list of events.</field>

@@ -32,6 +32,7 @@
     'update_xml': [
         'sale_order_view.xml',
     ],
+    'test':['test/confirm.yml'],
     'installable': True,
     'active': False,
 }

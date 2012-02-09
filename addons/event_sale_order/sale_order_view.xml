@@ -20,10 +20,10 @@
              <field name="type">form</field>
              <field name="inherit_id" ref="sale.view_order_form" />
              <field name="arch" type="xml">
-                <xpath expr="//field[@name='product_id']" position="after">
+                <xpath expr="//field[@name='discount']" position="after">
+                    <field name="event" colspan="3" domain="[('type', '=', event_type )]" attrs="{'invisible': [('event_ok', '=', False)]}"/>
                     <field name="event_type" invisible="1"/>
                     <field name="event_ok" invisible="1"/>
-                    <field name="event" domain="[('type', '=', event_type )]" attrs="{'invisible': [('event_ok', '=', False)]}"/>
                 </xpath>
              </field>
         </record>
