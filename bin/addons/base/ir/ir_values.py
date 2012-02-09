@@ -179,7 +179,7 @@ class ir_values(osv.osv):
                     where.append('res_id=%s')
                     params.append(res_id)
 
-            order = 'user_id, company_id'
+            order = 'id, company_id'
             where.append('''(user_id=%s or (user_id IS NULL))
                 and (company_id is null or
                 company_id = (SELECT company_id FROM res_users WHERE id = %s)) order by '''+ order)
