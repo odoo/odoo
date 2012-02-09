@@ -623,7 +623,7 @@ openerp.point_of_sale = function(db) {
      Views
      ---
      */
-    var NumpadWidget = db.web.Widget.extend({
+    var NumpadWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.state = new NumpadState();
@@ -660,7 +660,7 @@ openerp.point_of_sale = function(db) {
     /*
      Gives access to the payment methods (aka. 'cash registers')
      */
-    var PaypadWidget = db.web.Widget.extend({
+    var PaypadWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -691,7 +691,7 @@ openerp.point_of_sale = function(db) {
             }, this));
         }
     });
-    var PaymentButtonWidget = db.web.Widget.extend({
+    var PaymentButtonWidget = db.web.OldWidget.extend({
         template_fct: qweb_template('pos-payment-button-template'),
         render_element: function() {
             this.$element.html(this.template_fct({
@@ -709,7 +709,7 @@ openerp.point_of_sale = function(db) {
      It should be possible to go back to any step as long as step 3 hasn't been completed.
      Modifying an order after validation shouldn't be allowed.
      */
-    var StepSwitcher = db.web.Widget.extend({
+    var StepSwitcher = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -735,7 +735,7 @@ openerp.point_of_sale = function(db) {
     /*
      Shopping carts.
      */
-    var OrderlineWidget = db.web.Widget.extend({
+    var OrderlineWidget = db.web.OldWidget.extend({
         tag_name: 'tr',
         template_fct: qweb_template('pos-orderline-template'),
         init: function(parent, options) {
@@ -775,7 +775,7 @@ openerp.point_of_sale = function(db) {
         },
         on_selected: function() {},
     });
-    var OrderWidget = db.web.Widget.extend({
+    var OrderWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -858,7 +858,7 @@ openerp.point_of_sale = function(db) {
     /*
      "Products" step.
      */
-    var CategoryWidget = db.web.Widget.extend({
+    var CategoryWidget = db.web.OldWidget.extend({
         start: function() {
             this.$element.find(".oe-pos-categories-list a").click(_.bind(this.changeCategory, this));
         },
@@ -893,7 +893,7 @@ openerp.point_of_sale = function(db) {
         },
         on_change_category: function(id) {},
     });
-    var ProductWidget = db.web.Widget.extend({
+    var ProductWidget = db.web.OldWidget.extend({
         tag_name:'li',
         template_fct: qweb_template('pos-product-template'),
         init: function(parent, options) {
@@ -915,7 +915,7 @@ openerp.point_of_sale = function(db) {
             return this;
         },
     });
-    var ProductListWidget = db.web.Widget.extend({
+    var ProductListWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
@@ -937,7 +937,7 @@ openerp.point_of_sale = function(db) {
     /*
      "Payment" step.
      */
-    var PaymentlineWidget = db.web.Widget.extend({
+    var PaymentlineWidget = db.web.OldWidget.extend({
         tag_name: 'tr',
         template_fct: qweb_template('pos-paymentline-template'),
         init: function(parent, options) {
@@ -971,7 +971,7 @@ openerp.point_of_sale = function(db) {
             $('.delete-payment-line', this.$element).click(this.on_delete);
         },
     });
-    var PaymentWidget = db.web.Widget.extend({
+    var PaymentWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
@@ -1066,7 +1066,7 @@ openerp.point_of_sale = function(db) {
         	this.currentPaymentLines.last().set({amount: val});
         },
     });
-    var ReceiptWidget = db.web.Widget.extend({
+    var ReceiptWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.model = options.model;
@@ -1086,7 +1086,6 @@ openerp.point_of_sale = function(db) {
         },
         print: function() {
             window.print();
-            this.finishOrder();
         },
         finishOrder: function() {
             this.shop.get('selectedOrder').destroy();
@@ -1109,7 +1108,7 @@ openerp.point_of_sale = function(db) {
             $('.pos-receipt-container', this.$element).html(qweb_template('pos-ticket')({widget:this}));
         },
     });
-    var OrderButtonWidget = db.web.Widget.extend({
+    var OrderButtonWidget = db.web.OldWidget.extend({
         tag_name: 'li',
         template_fct: qweb_template('pos-order-selector-button-template'),
         init: function(parent, options) {
@@ -1148,7 +1147,7 @@ openerp.point_of_sale = function(db) {
             this.$element.addClass('order-selector-button');
         }
     });
-    var ShopWidget = db.web.Widget.extend({
+    var ShopWidget = db.web.OldWidget.extend({
         init: function(parent, options) {
             this._super(parent);
             this.shop = options.shop;
@@ -1283,7 +1282,7 @@ openerp.point_of_sale = function(db) {
         return App;
     })();
     
-    db.point_of_sale.SynchNotification = db.web.Widget.extend({
+    db.point_of_sale.SynchNotification = db.web.OldWidget.extend({
         template: "pos-synch-notification",
         init: function() {
             this._super.apply(this, arguments);
@@ -1301,7 +1300,7 @@ openerp.point_of_sale = function(db) {
     });
 
     db.web.client_actions.add('pos.ui', 'db.point_of_sale.PointOfSale');
-    db.point_of_sale.PointOfSale = db.web.Widget.extend({
+    db.point_of_sale.PointOfSale = db.web.OldWidget.extend({
         init: function() {
             this._super.apply(this, arguments);
 

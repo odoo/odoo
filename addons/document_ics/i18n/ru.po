@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-08-03 03:50+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:09+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:47+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,claims:0
@@ -22,6 +22,8 @@ msgid ""
 "Manages the supplier and customers claims,including your corrective or "
 "preventive actions."
 msgstr ""
+"Управляет заявками поставщиков и покупателей, включая ваши корректирующие и "
+"превентивные действия."
 
 #. module: document_ics
 #: field:document.directory.content,object_id:0
@@ -97,6 +99,11 @@ msgid "dtend"
 msgstr "dtend"
 
 #. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "summary"
+msgstr "сводка"
+
+#. module: document_ics
 #: model:ir.model,name:document_ics.model_crm_meeting
 msgid "Meeting"
 msgstr "Встреча"
@@ -165,6 +172,8 @@ msgid ""
 "Helps you to encode the result of a phone call or to plan a list of phone "
 "calls to process."
 msgstr ""
+"Помогает зафиксировать результат телефонного разговора или планировать "
+"телефонные разговоры."
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,document_ics:0
@@ -172,11 +181,13 @@ msgid ""
 " Will allow you to synchronise your Open ERP calendars with your phone, "
 "outlook, Sunbird, ical, ..."
 msgstr ""
+" Позволяет синхронизировать календари Open ERP с телефоном,  outlook, "
+"Sunbird, ical, ..."
 
 #. module: document_ics
 #: field:document.directory.ics.fields,field_id:0
 msgid "OpenERP Field"
-msgstr ""
+msgstr "Поле OpenERP"
 
 #. module: document_ics
 #: view:document.directory:0
@@ -186,7 +197,7 @@ msgstr "Календарь формата ICS"
 #. module: document_ics
 #: field:document.directory.ics.fields,name:0
 msgid "ICS Value"
-msgstr ""
+msgstr "Значение ICS"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
@@ -201,7 +212,7 @@ msgstr "местоположение"
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "attendee"
-msgstr ""
+msgstr "Участник"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -211,12 +222,12 @@ msgstr "Название"
 #. module: document_ics
 #: help:document.directory.ics.fields,fn:0
 msgid "Alternate method                 of calculating the value"
-msgstr ""
+msgstr "Альтернативный метод вычисления"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,meeting:0
 msgid "Manages the calendar of meetings of the users."
-msgstr ""
+msgstr "Управляет календарем совещаний пользователей."
 
 #. module: document_ics
 #: field:document.directory.content,ics_domain:0
@@ -227,16 +238,18 @@ msgstr "Домен"
 #: help:document.ics.crm.wizard,bugs:0
 msgid "Used by companies to track bugs and support requests on software"
 msgstr ""
+"Используется компаниями для отслеживания ошибок в программном обеспечении и "
+"заявок на техобслуживание"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "last-modified"
-msgstr ""
+msgstr "последнее-обновление"
 
 #. module: document_ics
 #: view:document.directory:0
 msgid "ICS Mapping"
-msgstr ""
+msgstr "ICS связывание"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,document_ics:0
@@ -251,7 +264,7 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtstart"
-msgstr ""
+msgstr "dtstart"
 
 #. module: document_ics
 #: field:document.directory.ics.fields,expr:0
@@ -276,22 +289,22 @@ msgstr ""
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
 msgid "Create Pre-Configured Calendars"
-msgstr ""
+msgstr "Создать предварительно настроенные календари"
 
 #. module: document_ics
 #: field:document.directory.content,fname_field:0
 msgid "Filename field"
-msgstr ""
+msgstr "Поле названия файла"
 
 #. module: document_ics
 #: field:document.directory.content,obj_iterate:0
 msgid "Iterate object"
-msgstr ""
+msgstr "Объект итерации"
 
 #. module: document_ics
 #: field:crm.meeting,code:0
 msgid "Calendar Code"
-msgstr ""
+msgstr "Код календаря"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
@@ -314,11 +327,12 @@ msgid ""
 "If set, a separate                         instance will be created for each "
 "record of Object"
 msgstr ""
+"Если установлен, будет создан отдельный экземпляр для каждой записи объекта"
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "summary"
-msgstr "сводка"
+#: view:document.ics.crm.wizard:0
+msgid "res_config_contents"
+msgstr ""
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
@@ -331,9 +345,9 @@ msgid "document.ics.crm.wizard"
 msgstr "document.ics.crm.wizard"
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "res_config_contents"
-msgstr ""
+#: model:crm.case.section,name:document_ics.section_meeting
+msgid "Shared Calendar Meetings"
+msgstr "Общедоступные календарные собрания"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,phonecall:0

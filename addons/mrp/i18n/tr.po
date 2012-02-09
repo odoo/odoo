@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
-"PO-Revision-Date: 2011-12-06 10:17+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2012-02-08 00:49+0000\n"
+"PO-Revision-Date: 2012-01-24 22:15+0000\n"
+"Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:52+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:03+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -47,6 +47,11 @@ msgid "Work Centers Utilisation"
 msgstr "İş Merkezi Kullanımı"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_sugar_product_template
+msgid "Sugar"
+msgstr ""
+
+#. module: mrp
 #: report:mrp.production.order:0
 msgid "No. Of Cycles"
 msgstr "Çevrim Sayısı"
@@ -55,6 +60,11 @@ msgstr "Çevrim Sayısı"
 #: field:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of Cycles"
 msgstr "Çevrim Sayısı"
+
+#. module: mrp
+#: model:product.uom.categ,name:mrp.product_uom_categ_fluid
+msgid "Fluid"
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_minimumstockprocure0
@@ -138,7 +148,7 @@ msgstr "Bitmiş Ürünler"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are currently in production."
-msgstr ""
+msgstr "Şu an Üretilen Üretim Emirleri"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
@@ -172,6 +182,11 @@ msgstr "Durum"
 #: field:mrp.workcenter,costs_hour:0
 msgid "Cost per hour"
 msgstr "Saat Maliyeti"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_orange_product_template
+msgid "Orange"
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemts0
@@ -220,6 +235,8 @@ msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
 msgstr ""
+"Satın aldığınız ve sattığınız her ürün için bir ürün formu oluştur. Eğer "
+"ürün satınalınıyorsa bir tedarikçi belirleyin."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.next_id_77
@@ -255,7 +272,7 @@ msgstr "Kapasite Bilgisi"
 #. module: mrp
 #: field:mrp.production,move_created_ids2:0
 msgid "Produced Products"
-msgstr ""
+msgstr "Üretilmiş Ürünler"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -282,9 +299,10 @@ msgid "Partner Ref"
 msgstr "Cari Ref."
 
 #. module: mrp
-#: selection:mrp.workcenter.load,measure_unit:0
-msgid "Amount in hours"
-msgstr "Saat olarak miktar"
+#: field:mrp.production,origin:0
+#: report:mrp.production.order:0
+msgid "Source Document"
+msgstr "Kaynak belge"
 
 #. module: mrp
 #: field:mrp.production,product_lines:0
@@ -307,6 +325,11 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr "Aynı üründen olmayan bir lota atamaya çalışıyorsunuz."
 
 #. module: mrp
+#: model:product.template,name:mrp.product_cloth_product_template
+msgid "Cloth"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
 msgstr "Ürün Üretimi"
@@ -314,7 +337,7 @@ msgstr "Ürün Üretimi"
 #. module: mrp
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
-msgstr ""
+msgstr "Hata ! Kendini İçeren  BoM oluşturamazsınız."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
@@ -335,7 +358,7 @@ msgstr "Varsayılan Birim"
 #: sql_constraint:mrp.production:0
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Referans her şirket için tekil olmalı!"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
@@ -447,7 +470,7 @@ msgstr "Ürün tipi hizmettir"
 #. module: mrp
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Şirket adı tekil olmalı !"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -514,7 +537,7 @@ msgstr "Hata: Geçersiz ean kodu"
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
 msgid "Products to Produce"
-msgstr ""
+msgstr "Üretilecek Ürünler"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -530,7 +553,7 @@ msgstr "Miktarı Değiştir"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_configure_workcenter
 msgid "Configure your work centers"
-msgstr ""
+msgstr "İş merkezlerinizi ayarlayın"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -567,12 +590,12 @@ msgstr "Birim Başına Tedarikçi Fiyatı"
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr ""
+msgstr "Rota iş merkezlerinin listesini gösterirken sıra numarası verir"
 
 #. module: mrp
 #: constraint:stock.move:0
 msgid "You can not move products from or to a location of the type view."
-msgstr ""
+msgstr "view tipinde bir lokasyona ürün giriş çıkışı yapamazsınız."
 
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
@@ -657,6 +680,11 @@ msgid "Ready"
 msgstr "Hazır"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_buttons_product_template
+msgid "Shirt Buttons"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.production,routing_id:0
 msgid ""
 "The list of operations (list of work centers) to produce the finished "
@@ -677,7 +705,7 @@ msgstr "Bir çevrimin tamamlanması için saat olarak süre."
 #. module: mrp
 #: constraint:mrp.bom:0
 msgid "BoM line product should not be same as BoM product."
-msgstr ""
+msgstr "BoM satırındaki ürün BoM ürünü ile aynı olamaz."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -721,7 +749,6 @@ msgid "Per month"
 msgstr "Ay başına"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:603
 #: code:addons/mrp/wizard/change_production_qty.py:78
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #, python-format
@@ -747,9 +774,10 @@ msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:734
+#: code:addons/mrp/mrp.py:762
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Uyarı!"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -796,7 +824,7 @@ msgstr "Acil"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are waiting for raw materials."
-msgstr ""
+msgstr "Hammadde bekleyen Üretim Emirleri"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -807,6 +835,10 @@ msgid ""
 "resource leave are not taken into account in the time computation of the "
 "work center."
 msgstr ""
+"İş merkezleri üretim birimlerini oluşturup yönetmenizi sağlar. İş merkezleri "
+"kapasite planlamasında kullanılan işçiler ve veya makielerden oluşur. Lütfen "
+"çalışma saatlerinin ve çalışan izinlerinin bu hesaplarda dikkate "
+"alınmadığını unutmayın."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -892,7 +924,7 @@ msgstr "Minimum Stok"
 #: code:addons/mrp/mrp.py:503
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'"
-msgstr ""
+msgstr "'%s' durumundaki üretim emirini silinemez."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menus_dash_mrp
@@ -904,7 +936,7 @@ msgstr "Kontrol paneli"
 #: code:addons/mrp/report/price.py:211
 #, python-format
 msgid "Total Cost of %s %s"
-msgstr ""
+msgstr "Toplam maliyet %s %s"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stockproduct0
@@ -996,42 +1028,6 @@ msgid "BOM Name"
 msgstr "BOM Adı"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:762
-#, python-format
-msgid ""
-"You are going to produce total %s quantities of \"%s\".\n"
-"But you can produce upto total %s quantities.' % (production_qty, prod_name, "
-"rest_qty)))\n"
-"                if rest_qty > 0 :\n"
-"                    stock_mov_obj.action_consume(cr, uid, "
-"[produce_product.id], (subproduct_factor * production_qty), "
-"context=context)\n"
-"\n"
-"        for raw_product in production.move_lines2:\n"
-"            new_parent_ids = []\n"
-"            parent_move_ids = [x.id for x in raw_product.move_history_ids]\n"
-"            for final_product in production.move_created_ids2:\n"
-"                if final_product.id not in parent_move_ids:\n"
-"                    new_parent_ids.append(final_product.id)\n"
-"            for new_parent_id in new_parent_ids:\n"
-"                stock_mov_obj.write(cr, uid, [raw_product.id], "
-"{'move_history_ids': [(4,new_parent_id)]})\n"
-"\n"
-"        wf_service = netsvc.LocalService(\"workflow\")\n"
-"        wf_service.trg_validate(uid, 'mrp.production', production_id, "
-"'button_produce_done', cr)\n"
-"        return True\n"
-"\n"
-"    def _costs_generate(self, cr, uid, production):\n"
-"        \"\"\" Calculates total costs at the end of the production.\n"
-"        @param production: Id of production order.\n"
-"        @return: Calculated amount.\n"
-"        \"\"\"\n"
-"        amount = 0.0\n"
-"        analytic_line_obj = self.pool.get('account.analytic.line"
-msgstr ""
-
-#. module: mrp
 #: view:mrp.production:0
 msgid "Start Production"
 msgstr "Üretimi Başlat"
@@ -1045,7 +1041,7 @@ msgstr "Üretim Paneli"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Manager"
-msgstr ""
+msgstr "Yönetici"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1106,12 +1102,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.todo.category,name:mrp.category_mrp_config
 msgid "MRP Management"
-msgstr ""
+msgstr "MRP Yönetimi"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Work Center per hour."
-msgstr ""
+msgstr "İş Merkezinin saatlik maliyetini belirleyin"
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
@@ -1126,11 +1122,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 msgid "Manufacturing Orders in Progress"
 msgstr "Ürün Emirleri Sürüyor"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_production_action4
-msgid "Manufacturing Orders Waiting Products"
-msgstr "Üretim Emri Bekleyen Ürünler"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1168,6 +1159,7 @@ msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
 "routing."
 msgstr ""
+"Bu iş merkezinin belirlenen rotadaki operasyonu yapması için gereken saat"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -1201,7 +1193,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_form_config_action
 msgid "Create or Import Products"
-msgstr ""
+msgstr "Ürünleri Oluştur ya da İçeri Aktar"
 
 #. module: mrp
 #: field:report.workcenter.load,hour:0
@@ -1221,7 +1213,7 @@ msgstr "Notlar"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are ready to start production."
-msgstr ""
+msgstr "Üretime başlamaya hazır Üretim Emirleri"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -1253,6 +1245,9 @@ msgid ""
 "Routing is indicated then,the third tab of a production order (Work Centers) "
 "will be automatically pre-completed."
 msgstr ""
+"Rotalar kullanılan bütün iş merkezlerini ne kadar süre/kaç döngü "
+"kullanıldığını gösterir. Eğer rotalar işaretlenirse üretim emrinin (iş "
+"merkezleri) üçüncü sekmesi otomatik olarak doldurulacaktır"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_producttostockrules0
@@ -1268,7 +1263,7 @@ msgstr ""
 #: code:addons/mrp/report/price.py:187
 #, python-format
 msgid "Components Cost of %s %s"
-msgstr ""
+msgstr "%s %s Bileşen Maliyeti"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -1279,6 +1274,11 @@ msgstr "Güne Gün"
 #: view:mrp.bom:0
 msgid "Revisions"
 msgstr "Revizyonlar"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_shirt_product_template
+msgid "Shirt"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1316,12 +1316,17 @@ msgstr "Planlı Ürün Üretimi"
 #: code:addons/mrp/report/price.py:204
 #, python-format
 msgid "Work Cost of %s %s"
-msgstr ""
+msgstr "İşçilik Maliyeti %s %s"
 
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
 msgstr "Her üretim işlemi için güvenli günler."
+
+#. module: mrp
+#: model:product.template,name:mrp.product_water_product_template
+msgid "Water"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1338,7 +1343,7 @@ msgstr "Stoğa Üretim"
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "Sipariş adedi negatif ya da sıfır olamaz!"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1426,6 +1431,12 @@ msgid "Pending"
 msgstr "&Kalan Mesajları Gönder"
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:603
+#, python-format
+msgid "Couldn't find a bill of material for this product."
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom,active:0
 #: field:mrp.routing,active:0
 msgid "Active"
@@ -1494,10 +1505,9 @@ msgid "Done"
 msgstr "Bitti"
 
 #. module: mrp
-#: field:mrp.production,origin:0
-#: report:mrp.production.order:0
-msgid "Source Document"
-msgstr "Kaynak belge"
+#: model:ir.actions.act_window,name:mrp.mrp_production_action4
+msgid "Manufacturing Orders Waiting Products"
+msgstr "Üretim Emri Bekleyen Ürünler"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1507,7 +1517,7 @@ msgstr "Acil Değil"
 #. module: mrp
 #: field:mrp.production,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Sorumlu"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
@@ -1592,6 +1602,8 @@ msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
 msgstr ""
+"İş Merkezinin Açıklaması. Bu alanda her döngünün bu iş merkezine göre ne "
+"olduğunu açıklayın."
 
 #. module: mrp
 #: view:mrp.production.lot.line:0
@@ -1721,6 +1733,14 @@ msgid ""
 msgstr "Birim (Ölçüm Birimi), envanter kontrolüne ait ölçüm birimidir"
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:734
+#, python-format
+msgid ""
+"You are going to consume total %s quantities of \"%s\".\n"
+"But you can only consume up to total %s quantities."
+msgstr ""
+
+#. module: mrp
 #: model:process.transition,note:mrp.process_transition_bom0
 msgid ""
 "The Bill of Material is the product's decomposition. The components (that "
@@ -1738,6 +1758,11 @@ msgstr ""
 #: view:mrp.workcenter:0
 msgid "Company"
 msgstr "Şirket"
+
+#. module: mrp
+#: selection:mrp.workcenter.load,measure_unit:0
+msgid "Amount in hours"
+msgstr "Saat olarak miktar"
 
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
@@ -1849,7 +1874,7 @@ msgstr "Ürün Yuvarlama"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "New"
-msgstr ""
+msgstr "Yeni"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -1908,52 +1933,7 @@ msgstr "Ayarlar"
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Starting Date"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:734
-#, python-format
-msgid ""
-"You are going to consume total %s quantities of \"%s\".\n"
-"But you can consume upto total %s quantities.' % (qty, prod_name, "
-"qty_avail)))\n"
-"                    if qty <= 0.0:\n"
-"                        # we already have more qtys consumed than we need \n"
-"                        continue\n"
-"\n"
-"                    raw_product[0].action_consume(qty, "
-"raw_product[0].location_id.id, context=context)\n"
-"\n"
-"        if production_mode == 'consume_produce':\n"
-"            # To produce remaining qty of final product\n"
-"            #vals = {'state':'confirmed'}\n"
-"            #final_product_todo = [x.id for x in "
-"production.move_created_ids]\n"
-"            #stock_mov_obj.write(cr, uid, final_product_todo, vals)\n"
-"            #stock_mov_obj.action_confirm(cr, uid, final_product_todo, "
-"context)\n"
-"            produced_products = {}\n"
-"            for produced_product in production.move_created_ids2:\n"
-"                if produced_product.scrapped:\n"
-"                    continue\n"
-"                if not produced_products.get(produced_product.product_id.id, "
-"False):\n"
-"                    produced_products[produced_product.product_id.id] = 0\n"
-"                produced_products[produced_product.product_id.id] += "
-"produced_product.product_qty\n"
-"\n"
-"            for produce_product in production.move_created_ids:\n"
-"                produced_qty = "
-"produced_products.get(produce_product.product_id.id, 0)\n"
-"                subproduct_factor = self._get_subproduct_factor(cr, uid, "
-"production.id, produce_product.id, context=context)\n"
-"                rest_qty = (subproduct_factor * production.product_qty) - "
-"produced_qty\n"
-"\n"
-"                if rest_qty < production_qty:\n"
-"                    prod_name = produce_product.product_id.name_get()[0][1]\n"
-"                    raise osv.except_osv(_('Warning!"
-msgstr ""
+msgstr "Başlangıç Tarihi"
 
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
@@ -2006,6 +1986,11 @@ msgid "Time in hours for the setup."
 msgstr "Ayar için saat cinsinden süre."
 
 #. module: mrp
+#: model:product.template,name:mrp.product_orangejuice_product_template
+msgid "Orange Juice"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom.revision,bom_id:0
 #: field:procurement.order,bom_id:0
 msgid "BoM"
@@ -2053,7 +2038,7 @@ msgstr "Normal"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production started late"
-msgstr ""
+msgstr "Üretim Geç Başladı"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_routing0
@@ -2070,7 +2055,7 @@ msgstr "Maliyet Yapısı"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_user
 msgid "User"
-msgstr ""
+msgstr "Kullanıcı"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -2099,6 +2084,19 @@ msgstr ""
 "kullanıldığını aramak için bu menüyü kullanın."
 
 #. module: mrp
+#: model:product.uom,name:mrp.product_uom_litre
+msgid "Litre"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:762
+#, python-format
+msgid ""
+"You are going to produce total %s quantities of \"%s\".\n"
+"But you can only produce up to total %s quantities."
+msgstr ""
+
+#. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct0
 msgid "Product type is Stockable or Consumable."
 msgstr "Ürün tipi Stoklanabilir veya Sarf Edilebilir'dir."
@@ -2114,7 +2112,7 @@ msgstr "Hata"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr ""
+msgstr "Üretim Başladı"
 
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
@@ -2273,7 +2271,7 @@ msgstr ""
 #: code:addons/mrp/mrp.py:954
 #, python-format
 msgid "PROD: %s"
-msgstr ""
+msgstr "ÜRET: %s"
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0

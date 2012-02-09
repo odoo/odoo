@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-11-11 15:22+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-09 03:49+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:07+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:16+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -42,7 +42,7 @@ msgstr "催款"
 #: help:account.followup.print.all,test_print:0
 msgid ""
 "Check if you want to print followups without changing followups level."
-msgstr ""
+msgstr "如果你不想改催款级别而直接打印催款函，请勾选这一项。"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -67,6 +67,20 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"尊敬的 %(partner_name)s，\n"
+"\n"
+"我们十分遗憾地通知您，您的欠款真的已经到期了。\n"
+"\n"
+"请马上付款，否则我们会冻结与您的业务，意味着我们将无法继续向您的公司提供商品或服务。\n"
+"\n"
+"请在8日内付清这笔货款。\n"
+"\n"
+"如果哪一张发票存在问题不能付款，请立即与我们的财务部门联系。我们会立即解决。\n"
+"\n"
+"已到期的欠款明细如下。\n"
+"\n"
+"顺祝商祺，\n"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -101,7 +115,7 @@ msgstr "图表"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow up Entries with period in current year"
-msgstr ""
+msgstr "本年每个期间的催款行"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -109,14 +123,9 @@ msgid "Ok"
 msgstr "确定"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "您不能在关闭的科目上建立分录。"
-
-#. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
-msgstr ""
+msgstr "金额"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
@@ -143,6 +152,13 @@ msgstr "余额> 0"
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "借方合计"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr "凭证日期不在所选期间内！可以修改凭证日期或在凭证簿上去掉这个检查项。"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -273,6 +289,14 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"尊敬的 %(partner_name)s，\n"
+"\n"
+"如果我们搞错了请纠正我们，似乎您的以下欠款还没有支付。请在8日内支付到我们的账户。\n"
+"\n"
+"如果您在收到此信前已经付款了，请忽略这封信。并与我们的会计部门联系。\n"
+"\n"
+"顺祝商祺，\n"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -307,13 +331,24 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"所有邮件已成功发送到业务伙伴：\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
 msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
-msgstr ""
+msgstr "描述有无，请使用正确的标识或百分数。"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr "凭证上的科目要求输入一个外币。你可以在科目设置中去掉这个外币或在凭证簿设置上选择一个支持多币种的输入界面。"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -328,14 +363,7 @@ msgstr "业务伙伴的催款统计"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
+msgstr "信息"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -352,6 +380,11 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\n"
+"\n"
+"电子邮件成功发送到以下业务伙伴：\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -402,8 +435,8 @@ msgstr "账簿明细"
 
 #. module: account_followup
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "相关帐户和会计期限必须相同。"
+msgid "You can not create journal items on an account of type view."
+msgstr "凭证上不能使用视图类型的科目"
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -413,12 +446,7 @@ msgstr "确认发送电子邮件"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
+msgstr "合计:"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -498,7 +526,7 @@ msgstr "催款报表"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Steps"
-msgstr ""
+msgstr "催款步骤"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -530,7 +558,12 @@ msgstr "最高催款等级"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
-msgstr ""
+msgstr "查看催款函"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr "科目和期间必须属于同一个公司"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -539,7 +572,7 @@ msgid ""
 "specify the message and the day of delay. Use the legend to know the using "
 "code to adapt the email content to the good context (good name, good date) "
 "and you can manage the multi language of messages."
-msgstr ""
+msgstr "定义催款步骤及其对应的信息和账期。每个步骤都可以定义不同的信息和账期。使用以下变量在邮件内填充数据，还可以维护多语言的信息"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -554,6 +587,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"邮件没有发送到以下客户，电子邮件地址不存在！\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -569,7 +605,7 @@ msgstr "当前日期:%(date)s"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "包含有争议的凭证行"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -585,7 +621,7 @@ msgstr "说明"
 #. module: account_followup
 #: constraint:account_followup.followup:0
 msgid "Only One Followup by Company."
-msgstr ""
+msgstr "每个公司一张催款函"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -619,7 +655,7 @@ msgstr "已发送催款"
 #. module: account_followup
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "公司名称必须唯一！"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -677,6 +713,23 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"尊敬的 %(partner_name)s，\n"
+"\n"
+"即使已经多次提醒，您始终没有支付欠款。\n"
+"\n"
+"请在8日内付款，否则我们将采取法律手段追回欠款，恕不另行通知。\n"
+"\n"
+"我相信我们大可不必如此。以下是欠款明细。\n"
+"\n"
+"有任何疑问，请与我们的会计部门联系。\n"
+"\n"
+"顺祝商祺，\n"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr "凭证上不能使用已关闭的科目"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -701,7 +754,7 @@ msgstr "客户:"
 #. module: account_followup
 #: field:account.followup.print.all,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "仅打印"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -717,11 +770,6 @@ msgstr "最近催款日期"
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
 msgstr "催款标准"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "不能针对内部类型是视图的科目记账"
 
 #~ msgid "Amount In Currency"
 #~ msgstr "金额"
@@ -873,6 +921,9 @@ msgstr "不能针对内部类型是视图的科目记账"
 #~ msgstr ""
 #~ "电子邮件不发送到下列业务伙伴,电子邮箱无效!\n"
 #~ "\n"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "您不能在关闭的科目上建立分录。"
 
 #, python-format
 #~ msgid ""
@@ -1049,6 +1100,9 @@ msgstr "不能针对内部类型是视图的科目记账"
 #~ msgid "Due"
 #~ msgstr "到期日期"
 
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "相关帐户和会计期限必须相同。"
+
 #~ msgid "Followup Lines"
 #~ msgstr "催款明细"
 
@@ -1062,3 +1116,6 @@ msgstr "不能针对内部类型是视图的科目记账"
 #~ msgstr ""
 #~ "电子邮件发送到下面业务伙伴，电子邮件无效!\n"
 #~ "\n"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "不能针对内部类型是视图的科目记账"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-08-02 14:36+0000\n"
 "Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:56+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:08+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: event
 #: view:event.event:0
@@ -75,6 +75,11 @@ msgid "_Close"
 msgstr "结束"
 
 #. module: event
+#: model:event.event,name:event.event_0
+msgid "Concert of Bon Jovi"
+msgstr "Bon Jovi音乐会"
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Invoiced Registrations only"
 msgstr ""
@@ -95,13 +100,10 @@ msgid "Quantity"
 msgstr "数量"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:50
-#: code:addons/event/wizard/event_make_invoice.py:54
-#: code:addons/event/wizard/event_make_invoice.py:58
-#: code:addons/event/wizard/event_make_invoice.py:62
+#: code:addons/event/wizard/event_make_invoice.py:63
 #, python-format
-msgid "Warning !"
-msgstr "警告！"
+msgid "Registration doesn't have any partner to invoice."
+msgstr "登记记录没有给任何业务伙伴开发票"
 
 #. module: event
 #: field:event.event,company_id:0
@@ -195,6 +197,11 @@ msgid "Mail Auto Confirm"
 msgstr "邮件自动确认"
 
 #. module: event
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "歌剧门票"
+
+#. module: event
 #: code:addons/event/event.py:125
 #: view:event.event:0
 #, python-format
@@ -220,10 +227,9 @@ msgid "Event Dashboard"
 msgstr "事件控制台"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:63
-#, python-format
-msgid "Registration doesn't have any partner to invoice."
-msgstr "登记记录没有给任何业务伙伴开发票"
+#: model:event.event,name:event.event_1
+msgid "Opera of Verdi"
+msgstr "Verdi歌剧"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -276,9 +282,9 @@ msgid "Draft"
 msgstr "草稿"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Events States"
-msgstr ""
+#: field:event.type,name:0
+msgid "Event type"
+msgstr "事件类型"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -342,6 +348,15 @@ msgstr "事件创建发票"
 #: help:event.registration,nb_register:0
 msgid "Number of Registrations or Tickets"
 msgstr "登记记录的编号或票"
+
+#. module: event
+#: code:addons/event/wizard/event_make_invoice.py:50
+#: code:addons/event/wizard/event_make_invoice.py:54
+#: code:addons/event/wizard/event_make_invoice.py:58
+#: code:addons/event/wizard/event_make_invoice.py:62
+#, python-format
+msgid "Warning !"
+msgstr "警告！"
 
 #. module: event
 #: view:event.registration:0
@@ -551,9 +566,9 @@ msgid "Mailing"
 msgstr "邮递"
 
 #. module: event
-#: field:event.type,name:0
-msgid "Event type"
-msgstr "事件类型"
+#: view:report.event.registration:0
+msgid "Events States"
+msgstr ""
 
 #. module: event
 #: view:board.board:0
@@ -735,6 +750,11 @@ msgstr "将创建这事件登记记录的产品发票。因此对这些默认发
 #: selection:report.event.registration,month:0
 msgid "June"
 msgstr "6月"
+
+#. module: event
+#: model:product.template,name:event.event_product_0_product_template
+msgid "Ticket for Concert"
+msgstr "演唱会票"
 
 #. module: event
 #: field:event.registration,write_date:0
@@ -980,6 +1000,11 @@ msgid "Speaker"
 msgstr "关注者"
 
 #. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on ERP Buisness"
+msgstr "商业会议"
+
+#. module: event
 #: view:event.registration:0
 msgid "Reply"
 msgstr "回复"
@@ -1040,6 +1065,11 @@ msgstr "事件登记记录"
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
 msgstr "当有人赞同这事件时将发送这邮件"
+
+#. module: event
+#: model:product.template,name:event.event_product_2_product_template
+msgid "Ticket for Conference"
+msgstr "会议门票"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type_association
@@ -1245,9 +1275,6 @@ msgstr "事件是低层对象用于会议和其它文档通过caldar同步移动
 #~ msgid "Error!"
 #~ msgstr "错误！"
 
-#~ msgid "Ticket for Opera"
-#~ msgstr "歌剧门票"
-
 #~ msgid "Events by Categories"
 #~ msgstr "事件分类"
 
@@ -1259,9 +1286,6 @@ msgstr "事件是低层对象用于会议和其它文档通过caldar同步移动
 
 #~ msgid "Canceled"
 #~ msgstr "已取消"
-
-#~ msgid "Ticket for Concert"
-#~ msgstr "演唱会票"
 
 #~ msgid "Error Messages"
 #~ msgstr "错误消息"
@@ -1278,9 +1302,6 @@ msgstr "事件是低层对象用于会议和其它文档通过caldar同步移动
 #~ msgid "Send Reminder"
 #~ msgstr "发送提醒"
 
-#~ msgid "Ticket for Conference"
-#~ msgstr "会议门票"
-
 #~ msgid "Draft Events"
 #~ msgstr "事件草稿"
 
@@ -1296,17 +1317,11 @@ msgstr "事件是低层对象用于会议和其它文档通过caldar同步移动
 #~ msgid "Ending date"
 #~ msgstr "结束日期"
 
-#~ msgid "Concert of Bon Jovi"
-#~ msgstr "Bon Jovi音乐会"
-
 #~ msgid "Draft Registrations"
 #~ msgstr "记录草稿"
 
 #~ msgid "Invoice Rejected"
 #~ msgstr "发票被拒绝"
-
-#~ msgid "Opera of Verdi"
-#~ msgstr "Verdi歌剧"
 
 #~ msgid "Draft Registration"
 #~ msgstr "记录草稿"
@@ -1430,9 +1445,6 @@ msgstr "事件是低层对象用于会议和其它文档通过caldar同步移动
 
 #~ msgid "General"
 #~ msgstr "通用"
-
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "商业会议"
 
 #~ msgid ""
 #~ "This email will be sent when the event gets confimed or when someone "

@@ -39,7 +39,7 @@ a line on a supplier purchase order into several accounts and analytic plans.
     'update_xml': ['purchase_analytic_plans_view.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0062176518909',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

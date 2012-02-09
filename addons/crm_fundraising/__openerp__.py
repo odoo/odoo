@@ -53,7 +53,7 @@ fund status.
     ],
     'test': ['test/process/fund-rising.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00871545204231528989',
     'images': ['images/fundraising_analysis.jpeg','images/fundraising_categories.jpeg','images/funds.jpeg'],
 }

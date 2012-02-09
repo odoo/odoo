@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -92,6 +93,9 @@ class stock_location(osv.osv):
             res[m.id] = ' / '.join(reversed(names))
         return res
 
+    def _get_sublocations(self, cr, uid, ids, context=None):
+        """ return all sublocations of the given stock locations (included) """
+        return self.search(cr, uid, [('id', 'child_of', ids)], context=context)
 
     def _product_value(self, cr, uid, ids, field_names, arg, context=None):
         """Computes stock value (real and virtual) for a product, as well as stock qty (real and virtual).
@@ -154,7 +158,8 @@ class stock_location(osv.osv):
                        \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
                       """, select = True),
          # temporarily removed, as it's unused: 'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
-        'complete_name': fields.function(_complete_name, type='char', size=256, string="Location Name", store=True),
+        'complete_name': fields.function(_complete_name, type='char', size=256, string="Location Name",
+                            store={'stock.location': (_get_sublocations, ['name', 'location_id'], 10)}),
 
         'stock_real': fields.function(_product_value, type='float', string='Real Stock', multi="stock"),
         'stock_virtual': fields.function(_product_value, type='float', string='Virtual Stock', multi="stock"),
@@ -860,21 +865,13 @@ class stock_picking(osv.osv):
     def get_currency_id(self, cr, uid, picking):
         return False
 
-    def _get_payment_term(self, cr, uid, picking):
-        """ Gets payment term from partner.
-        @return: Payment term
+    def _get_partner_to_invoice(self, cr, uid, picking, context=None):
+        """ Gets the partner that will be invoiced
+            Note that this function is inherited in the sale module
+            @param picking: object of the picking for which we are selecting the partner to invoice
+            @return: object of the partner to invoice
         """
-        partner = picking.address_id.partner_id
-        return partner.property_payment_term and partner.property_payment_term.id or False
-
-    def _get_address_invoice(self, cr, uid, picking):
-        """ Gets invoice address of a partner
-        @return {'contact': address, 'invoice': address} for invoice
-        """
-        partner_obj = self.pool.get('res.partner')
-        partner = picking.address_id.partner_id
-        return partner_obj.address_get(cr, uid, [partner.id],
-                ['contact', 'invoice'])
+        return picking.address_id and picking.address_id.partner_id
 
     def _get_comment_invoice(self, cr, uid, picking):
         """
@@ -954,6 +951,113 @@ class stock_picking(osv.osv):
                 inv_type = 'out_invoice'
         return inv_type
 
+    def _prepare_invoice_group(self, cr, uid, picking, partner, invoice, context=None):
+        """ Builds the dict for grouped invoices
+            @param picking: picking object
+            @param partner: object of the partner to invoice (not used here, but may be usefull if this function is inherited)
+            @param invoice: object of the invoice that we are updating
+            @return: dict that will be used to update the invoice
+        """
+        comment = self._get_comment_invoice(cr, uid, picking)
+        return {
+            'name': (invoice.name or '') + ', ' + (picking.name or ''),
+            'origin': (invoice.origin or '') + ', ' + (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
+            'comment': (comment and (invoice.comment and invoice.comment + "\n" + comment or comment)) or (invoice.comment and invoice.comment or ''),
+            'date_invoice': context.get('date_inv', False),
+            'user_id': uid,
+        }
+
+    def _prepare_invoice(self, cr, uid, picking, partner, inv_type, journal_id, context=None):
+        """ Builds the dict containing the values for the invoice
+            @param picking: picking object
+            @param partner: object of the partner to invoice
+            @param inv_type: type of the invoice ('out_invoice', 'in_invoice', ...)
+            @param journal_id: ID of the accounting journal
+            @return: dict that will be used to create the invoice object
+        """
+        if inv_type in ('out_invoice', 'out_refund'):
+            account_id = partner.property_account_receivable.id
+        else:
+            account_id = partner.property_account_payable.id
+        address_contact_id, address_invoice_id = \
+                self.pool.get('res.partner').address_get(cr, uid, [partner.id],
+                        ['contact', 'invoice']).values()
+        comment = self._get_comment_invoice(cr, uid, picking)
+        invoice_vals = {
+            'name': picking.name,
+            'origin': (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
+            'type': inv_type,
+            'account_id': account_id,
+            'partner_id': partner.id,
+            'address_invoice_id': address_invoice_id,
+            'address_contact_id': address_contact_id,
+            'comment': comment,
+            'payment_term': partner.property_payment_term and partner.property_payment_term.id or False,
+            'fiscal_position': partner.property_account_position.id,
+            'date_invoice': context.get('date_inv', False),
+            'company_id': picking.company_id.id,
+            'user_id': uid,
+        }
+        cur_id = self.get_currency_id(cr, uid, picking)
+        if cur_id:
+            invoice_vals['currency_id'] = cur_id
+        if journal_id:
+            invoice_vals['journal_id'] = journal_id
+        return invoice_vals
+
+    def _prepare_invoice_line(self, cr, uid, group, picking, move_line, invoice_id,
+        invoice_vals, context=None):
+        """ Builds the dict containing the values for the invoice line
+            @param group: True or False
+            @param picking: picking object
+            @param: move_line: move_line object
+            @param: invoice_id: ID of the related invoice
+            @param: invoice_vals: dict used to created the invoice
+            @return: dict that will be used to create the invoice line
+        """
+        if group:
+            name = (picking.name or '') + '-' + move_line.name
+        else:
+            name = move_line.name
+        origin = move_line.picking_id.name or ''
+        if move_line.picking_id.origin:
+            origin += ':' + move_line.picking_id.origin
+
+        if invoice_vals['type'] in ('out_invoice', 'out_refund'):
+            account_id = move_line.product_id.product_tmpl_id.\
+                    property_account_income.id
+            if not account_id:
+                account_id = move_line.product_id.categ_id.\
+                        property_account_income_categ.id
+        else:
+            account_id = move_line.product_id.product_tmpl_id.\
+                    property_account_expense.id
+            if not account_id:
+                account_id = move_line.product_id.categ_id.\
+                        property_account_expense_categ.id
+        if invoice_vals['fiscal_position']:
+            fp_obj = self.pool.get('account.fiscal.position')
+            fiscal_position = fp_obj.browse(cr, uid, invoice_vals['fiscal_position'], context=context)
+            account_id = fp_obj.map_account(cr, uid, fiscal_position, account_id)
+        # set UoS if it's a sale and the picking doesn't have one
+        uos_id = move_line.product_uos and move_line.product_uos.id or False
+        if not uos_id and invoice_vals['type'] in ('out_invoice', 'out_refund'):
+            uos_id = move_line.product_uom.id
+
+        return {
+            'name': name,
+            'origin': origin,
+            'invoice_id': invoice_id,
+            'uos_id': uos_id,
+            'product_id': move_line.product_id.id,
+            'account_id': account_id,
+            'price_unit': self._get_price_unit_invoice(cr, uid, move_line, invoice_vals['type']),
+            'discount': self._get_discount_invoice(cr, uid, move_line),
+            'quantity': move_line.product_uos_qty or move_line.product_qty,
+            'invoice_line_tax_id': [(6, 0, self._get_taxes_invoice(cr, uid, move_line, invoice_vals['type']))],
+            'account_analytic_id': self._get_account_analytic_invoice(cr, uid, picking, move_line),
+        }
+
     def action_invoice_create(self, cr, uid, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
         """ Creates invoice based on the invoice state selected for picking.
@@ -967,14 +1071,13 @@ class stock_picking(osv.osv):
 
         invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
-        address_obj = self.pool.get('res.partner.address')
         invoices_group = {}
         res = {}
         inv_type = type
         for picking in self.browse(cr, uid, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
-            partner =  picking.address_id and picking.address_id.partner_id
+            partner = self._get_partner_to_invoice(cr, uid, picking, context=context)
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
@@ -982,101 +1085,24 @@ class stock_picking(osv.osv):
             if not inv_type:
                 inv_type = self._get_invoice_type(picking)
 
-            if inv_type in ('out_invoice', 'out_refund'):
-                account_id = partner.property_account_receivable.id
-            else:
-                account_id = partner.property_account_payable.id
-            address_contact_id, address_invoice_id = \
-                    self._get_address_invoice(cr, uid, picking).values()
-            address = address_obj.browse(cr, uid, address_contact_id, context=context)
-
-            comment = self._get_comment_invoice(cr, uid, picking)
             if group and partner.id in invoices_group:
                 invoice_id = invoices_group[partner.id]
                 invoice = invoice_obj.browse(cr, uid, invoice_id)
-                invoice_vals = {
-                    'name': (invoice.name or '') + ', ' + (picking.name or ''),
-                    'origin': (invoice.origin or '') + ', ' + (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
-                    'comment': (comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
-                    'date_invoice':context.get('date_inv',False),
-                    'user_id':uid
-                }
-                invoice_obj.write(cr, uid, [invoice_id], invoice_vals, context=context)
+                invoice_vals_group = self._prepare_invoice_group(cr, uid, picking, partner, invoice, context=context)
+                invoice_obj.write(cr, uid, [invoice_id], invoice_vals_group, context=context)
             else:
-                invoice_vals = {
-                    'name': picking.name,
-                    'origin': (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
-                    'type': inv_type,
-                    'account_id': account_id,
-                    'partner_id': address.partner_id.id,
-                    'address_invoice_id': address_invoice_id,
-                    'address_contact_id': address_contact_id,
-                    'comment': comment,
-                    'payment_term': self._get_payment_term(cr, uid, picking),
-                    'fiscal_position': partner.property_account_position.id,
-                    'date_invoice': context.get('date_inv',False),
-                    'company_id': picking.company_id.id,
-                    'user_id':uid
-                }
-                cur_id = self.get_currency_id(cr, uid, picking)
-                if cur_id:
-                    invoice_vals['currency_id'] = cur_id
-                if journal_id:
-                    invoice_vals['journal_id'] = journal_id
-                invoice_id = invoice_obj.create(cr, uid, invoice_vals,
-                        context=context)
+                invoice_vals = self._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
+                invoice_id = invoice_obj.create(cr, uid, invoice_vals, context=context)
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
             for move_line in picking.move_lines:
                 if move_line.state == 'cancel':
                     continue
-                origin = move_line.picking_id.name or ''
-                if move_line.picking_id.origin:
-                    origin += ':' + move_line.picking_id.origin
-                if group:
-                    name = (picking.name or '') + '-' + move_line.name
-                else:
-                    name = move_line.name
-
-                if inv_type in ('out_invoice', 'out_refund'):
-                    account_id = move_line.product_id.product_tmpl_id.\
-                            property_account_income.id
-                    if not account_id:
-                        account_id = move_line.product_id.categ_id.\
-                                property_account_income_categ.id
-                else:
-                    account_id = move_line.product_id.product_tmpl_id.\
-                            property_account_expense.id
-                    if not account_id:
-                        account_id = move_line.product_id.categ_id.\
-                                property_account_expense_categ.id
-
-                price_unit = self._get_price_unit_invoice(cr, uid,
-                        move_line, inv_type)
-                discount = self._get_discount_invoice(cr, uid, move_line)
-                tax_ids = self._get_taxes_invoice(cr, uid, move_line, inv_type)
-                account_analytic_id = self._get_account_analytic_invoice(cr, uid, picking, move_line)
-
-                #set UoS if it's a sale and the picking doesn't have one
-                uos_id = move_line.product_uos and move_line.product_uos.id or False
-                if not uos_id and inv_type in ('out_invoice', 'out_refund'):
-                    uos_id = move_line.product_uom.id
-
-                account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
-                invoice_line_id = invoice_line_obj.create(cr, uid, {
-                    'name': name,
-                    'origin': origin,
-                    'invoice_id': invoice_id,
-                    'uos_id': uos_id,
-                    'product_id': move_line.product_id.id,
-                    'account_id': account_id,
-                    'price_unit': price_unit,
-                    'discount': discount,
-                    'quantity': move_line.product_uos_qty or move_line.product_qty,
-                    'invoice_line_tax_id': [(6, 0, tax_ids)],
-                    'account_analytic_id': account_analytic_id,
-                }, context=context)
-                self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
+                vals = self._prepare_invoice_line(cr, uid, group, picking, move_line,
+                                invoice_id, invoice_vals, context=context)
+                if vals:
+                    invoice_line_id = invoice_line_obj.create(cr, uid, vals, context=context)
+                    self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
 
             invoice_obj.button_compute(cr, uid, [invoice_id], context=context,
                     set_total=(inv_type in ('in_invoice', 'in_refund')))

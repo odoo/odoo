@@ -42,7 +42,7 @@ This new object will regroup and will allow you to easily keep track and order a
                     "purchase_requisition_report.xml",
                     "security/ir.model.access.csv","purchase_requisition_sequence.xml"
     ],
-    "active": False,
+    "auto_install": False,
     "test":[
             'test/purchase_requisition_demo.yml',
             'test/purchase_requisition.yml',

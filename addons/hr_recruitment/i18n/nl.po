@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
-"PO-Revision-Date: 2011-01-14 12:19+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"PO-Revision-Date: 2012-01-28 13:54+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:19+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:59+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -27,8 +27,7 @@ msgstr ""
 "verwijderen."
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:0
-#: field:hr.recruitment.stage,requirements:0
+#: view:hr.recruitment.stage:0 field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
 msgstr "Vereisten"
 
@@ -37,7 +36,7 @@ msgstr "Vereisten"
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
 msgid "Sources of Applicants"
-msgstr ""
+msgstr "Bron van aanvragers"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,delay_open:0
@@ -57,18 +56,16 @@ msgstr "Groepeer op..."
 #. module: hr_recruitment
 #: field:hr.applicant,user_email:0
 msgid "User Email"
-msgstr ""
+msgstr "Gebruikers e-mail"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Filter and view on next actions and date"
-msgstr ""
+msgstr "Filter an weergave op volgende acties en datums"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,department_id:0
+#: view:hr.applicant:0 field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,department_id:0
 msgid "Department"
 msgstr "Afdeling"
 
@@ -90,11 +87,10 @@ msgstr "Vacatures"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Pending Jobs"
-msgstr ""
+msgstr "Lopende vacatures"
 
 #. module: hr_recruitment
-#: field:hr.applicant,company_id:0
-#: view:hr.recruitment.report:0
+#: field:hr.applicant,company_id:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,company_id:0
 msgid "Company"
 msgstr "Bedijf"
@@ -102,6 +98,12 @@ msgstr "Bedijf"
 #. module: hr_recruitment
 #: view:hired.employee:0
 msgid "No"
+msgstr "Nr."
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:436
+#, python-format
+msgid "You must define Applied Job for this applicant."
 msgstr ""
 
 #. module: hr_recruitment
@@ -130,22 +132,20 @@ msgid "Partner Contact Name"
 msgstr "Relatie contactnaam"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: view:hr.recruitment.partner.create:0
+#: view:hr.applicant:0 view:hr.recruitment.partner.create:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
 msgid "Create Partner"
 msgstr "Relatie aanmaken"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,day:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,day:0
 msgid "Day"
 msgstr "Dag"
 
 #. module: hr_recruitment
 #: field:hr.applicant,reference:0
 msgid "Refered By"
-msgstr ""
+msgstr "Gerefereerd door"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -160,7 +160,7 @@ msgstr "Interne notitie toevoegen"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Refuse"
-msgstr ""
+msgstr "Afwijzen"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -188,14 +188,12 @@ msgid "Next Actions"
 msgstr "Volgende acties"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0
-#: view:hr.recruitment.report:0
+#: field:hr.applicant,salary_expected:0 view:hr.recruitment.report:0
 msgid "Expected Salary"
 msgstr "Verwacht salaris"
 
 #. module: hr_recruitment
-#: field:hr.applicant,job_id:0
-#: field:hr.recruitment.report,job_id:0
+#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
 msgstr "Toegepaste vacature"
 
@@ -207,11 +205,10 @@ msgstr "Gediplomeerd"
 #. module: hr_recruitment
 #: field:hr.applicant,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Kleur index"
 
 #. module: hr_recruitment
-#: view:board.board:0
-#: view:hr.applicant:0
+#: view:board.board:0 view:hr.applicant:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_applicants_status
 msgid "Applicants Status"
 msgstr "Status kandidaat"
@@ -224,7 +221,7 @@ msgstr "Mijn werving"
 #. module: hr_recruitment
 #: field:hr.job,survey_id:0
 msgid "Interview Form"
-msgstr ""
+msgstr "Interview Formulier"
 
 #. module: hr_recruitment
 #: help:hr.job,survey_id:0
@@ -242,7 +239,7 @@ msgstr "Werving"
 #: code:addons/hr_recruitment/hr_recruitment.py:436
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Waarschuwing!"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop:0
@@ -252,7 +249,7 @@ msgstr "Voorgesteld salaris"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Change Color"
-msgstr ""
+msgstr "Wijzig kleur"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -260,8 +257,7 @@ msgid "Avg Proposed Salary"
 msgstr "Gem. voorgesteld salaris"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.recruitment.report,available:0
+#: view:hr.applicant:0 field:hr.recruitment.report,available:0
 msgid "Availability"
 msgstr "Beschikbaarheid"
 
@@ -280,7 +276,7 @@ msgstr "Vorige"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
 msgid "Source of Applicants"
-msgstr ""
+msgstr "Bron van aanvragers"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:115
@@ -299,20 +295,20 @@ msgid "Recruitments Statistics"
 msgstr "Werving statistieken"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:477
+#: code:addons/hr_recruitment/hr_recruitment.py:476
 #, python-format
 msgid "Changed Stage to: %s"
-msgstr ""
+msgstr "Stadium veranderd in: %s"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Hire"
-msgstr ""
+msgstr "Aannemen"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Hired employees"
-msgstr ""
+msgstr "Aangenomen werknemers"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -325,10 +321,9 @@ msgid "Job Description"
 msgstr "Functieomschrijving"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,source_id:0
+#: view:hr.applicant:0 field:hr.applicant,source_id:0
 msgid "Source"
-msgstr ""
+msgstr "Bron"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -342,10 +337,8 @@ msgid "A partner is already defined on this job request."
 msgstr "Er is al een relatie gedefinieerd bij deze sollicitatie."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
-#: selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
 msgid "New"
 msgstr "Nieuw"
 
@@ -392,8 +385,7 @@ msgstr ""
 "eerste interview, tweede interview, afgewezen, aangenomen."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,create_date:0
+#: view:hr.applicant:0 field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
 msgid "Creation Date"
 msgstr "Datum gemaakt"
@@ -402,7 +394,7 @@ msgstr "Datum gemaakt"
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_hired_employee
 #: model:ir.model,name:hr_recruitment.model_hired_employee
 msgid "Create Employee"
-msgstr ""
+msgstr "Werknemer aanmaken"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.job2phonecall,deadline:0
@@ -410,8 +402,7 @@ msgid "Planned Date"
 msgstr "Datum gepland"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,priority:0
+#: view:hr.applicant:0 field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
 msgstr "Waardering"
@@ -424,22 +415,18 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Print Interview"
-msgstr ""
+msgstr "Gesprek afdrukken"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,stage_id:0
+#: view:hr.applicant:0 field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,stage_id:0
 #: view:hr.recruitment.stage:0
 msgid "Stage"
 msgstr "Stadium"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
-#: selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
 msgid "Pending"
 msgstr "Wachtend"
 
@@ -451,7 +438,7 @@ msgstr "Wervingsstadia"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
 msgid "Doctoral Degree"
-msgstr ""
+msgstr "Dr. titel"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -529,8 +516,7 @@ msgid "Qualification"
 msgstr "Qualificatie"
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_id:0
-#: view:hr.recruitment.report:0
+#: field:hr.applicant,partner_id:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr "Relatie"
@@ -555,12 +541,12 @@ msgstr "Stadia"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Draft recruitment"
-msgstr ""
+msgstr "Concept werving"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Delete"
-msgstr ""
+msgstr "Verwijderen"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -570,7 +556,7 @@ msgstr "Loopt"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
 msgid "Review Recruitment Stages"
-msgstr ""
+msgstr "Bekijk werving fases"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -595,23 +581,22 @@ msgstr "December"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Recruitment performed in current year"
-msgstr ""
+msgstr "Wervingen uitgevoerd in huidige jaar"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Recruitment during last month"
-msgstr ""
+msgstr "Wervingen gedurende laatste maand"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,month:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,month:0
 msgid "Month"
 msgstr "Maand"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Unassigned Recruitments"
-msgstr ""
+msgstr "Niet toegewezen wervingen"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -631,18 +616,17 @@ msgstr "Datum gewijzigd"
 #. module: hr_recruitment
 #: view:hired.employee:0
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0
-#: view:hr.recruitment.report:0
+#: field:hr.applicant,salary_proposed:0 view:hr.recruitment.report:0
 msgid "Proposed Salary"
 msgstr "Voorgesteld salaris"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Schedule Meeting"
-msgstr ""
+msgstr "Afspraak plannen"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -681,8 +665,7 @@ msgid "Group By ..."
 msgstr "Groepeer op..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: selection:hr.applicant,state:0
+#: view:hr.applicant:0 selection:hr.applicant,state:0
 msgid "In Progress"
 msgstr "Loopt"
 
@@ -718,8 +701,7 @@ msgid "Degrees"
 msgstr "Graden"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0
-#: field:hr.recruitment.report,date_closed:0
+#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
 msgid "Closed"
 msgstr "Gesloten"
 
@@ -752,7 +734,7 @@ msgstr "Afspraak"
 #: code:addons/hr_recruitment/hr_recruitment.py:347
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Geen onderwerp"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -770,10 +752,8 @@ msgid "August"
 msgstr "Augustus"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:0
-#: view:hr.recruitment.report:0
+#: view:hr.applicant:0 field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
@@ -833,7 +813,7 @@ msgstr "Antwoord"
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,department_id:0
 msgid "Specific to a Department"
-msgstr ""
+msgstr "Specifiek voor een afdeling"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
@@ -869,8 +849,7 @@ msgid "Not Good"
 msgstr "Niet goed"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date:0
-#: field:hr.recruitment.report,date:0
+#: field:hr.applicant,date:0 field:hr.recruitment.report,date:0
 msgid "Date"
 msgstr "Datum"
 
@@ -888,7 +867,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hired.employee:0
 msgid "Would you like to create an employee ?"
-msgstr ""
+msgstr "Wilt u een werknemer aanmaken?"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -917,7 +896,7 @@ msgstr "Historie"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Recruitment performed in current month"
-msgstr ""
+msgstr "Werving uitgevoerd in huidige maand"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_form_installer
@@ -933,20 +912,12 @@ msgid "Partner Contact"
 msgstr "Relatie contact"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:436
-#, python-format
-msgid "You must define Applied Job for Applicant !"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
 msgid "Contract Proposed"
 msgstr "Contract voorgesteld"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,state:0
-#: view:hr.recruitment.report:0
+#: view:hr.applicant:0 field:hr.applicant,state:0 view:hr.recruitment.report:0
 #: field:hr.recruitment.report,state:0
 msgid "State"
 msgstr "Status"
@@ -954,7 +925,7 @@ msgstr "Status"
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_website_company
 msgid "Company Website"
-msgstr ""
+msgstr "Website bedrijf"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
@@ -962,14 +933,12 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,year:0
+#: view:hr.recruitment.report:0 field:hr.recruitment.report,year:0
 msgid "Year"
 msgstr "Jaar"
 
 #. module: hr_recruitment
-#: view:hired.employee:0
-#: view:hr.recruitment.job2phonecall:0
+#: view:hired.employee:0 view:hr.recruitment.job2phonecall:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
 msgstr "Annuleren"
@@ -1001,8 +970,7 @@ msgid "Gives the sequence order when displaying a list of degrees."
 msgstr "Bepaalt de volgorde bij het afbeelden van de lijst van graden"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,user_id:0
+#: view:hr.applicant:0 field:hr.applicant,user_id:0
 #: view:hr.recruitment.report:0
 msgid "Responsible"
 msgstr "Verantwoordelijke"
@@ -1017,12 +985,12 @@ msgstr "Werving analyse"
 #. module: hr_recruitment
 #: view:hired.employee:0
 msgid "Create New Employee"
-msgstr ""
+msgstr "Nieuwe werknemer aanmaken"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_linkedin
 msgid "LinkedIn"
-msgstr ""
+msgstr "LinkedIn"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1047,7 +1015,7 @@ msgstr "Gesprek"
 #. module: hr_recruitment
 #: field:hr.recruitment.source,name:0
 msgid "Source Name"
-msgstr ""
+msgstr "Naam van bron"
 
 #. module: hr_recruitment
 #: field:hr.applicant,description:0
@@ -1070,8 +1038,7 @@ msgid "Word of Mouth"
 msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0
-#: selection:hr.recruitment.report,state:0
+#: selection:hr.applicant,state:0 selection:hr.recruitment.report,state:0
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
 msgid "Refused"
 msgstr "Afgewezen"
@@ -1083,8 +1050,7 @@ msgid "Applicant '%s' is being hired."
 msgstr "Kandidaat '%s' is aangenomen."
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0
+#: selection:hr.applicant,state:0 view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
 msgid "Hired"
 msgstr "Aangenomen"
@@ -1103,7 +1069,7 @@ msgstr "Graden bij werving"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Open Jobs"
-msgstr ""
+msgstr "Open vacatures"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1111,8 +1077,7 @@ msgid "February"
 msgstr "Februari"
 
 #. module: hr_recruitment
-#: field:hr.applicant,name:0
-#: field:hr.recruitment.degree,name:0
+#: field:hr.applicant,name:0 field:hr.recruitment.degree,name:0
 #: field:hr.recruitment.stage,name:0
 msgid "Name"
 msgstr "Naam"
@@ -1120,7 +1085,7 @@ msgstr "Naam"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Edit"
-msgstr ""
+msgstr "Bewerken"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -1140,22 +1105,22 @@ msgstr "April"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Pending recruitment"
-msgstr ""
+msgstr "Lopende wervingen"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_monster
 msgid "Monster"
-msgstr ""
+msgstr "Monster"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "Vacatures"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "In progress recruitment"
-msgstr ""
+msgstr "Wervingen in behandeling"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.job:0

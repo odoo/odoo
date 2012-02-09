@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-23 09:54+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2012-01-13 21:13+0000\n"
 "Last-Translator: kifcaliph <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-14 05:12+0000\n"
-"X-Generator: Launchpad (build 14664)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:42+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -22,25 +22,24 @@ msgid "Openerp user"
 msgstr "مستخدم OpenERP"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,requirements:0
+#: view:hr.job:0 field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "المتطلبات"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You can not create recursive departments."
-msgstr ""
+msgstr "خطأ! لايمكنك انشاء إدارات متداخلة."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr ""
+msgstr "وصل الموظف بالمعلومات"
 
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr ""
+msgstr "رقم التوقيع"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -50,8 +49,7 @@ msgid "Human Resources"
 msgstr "الموارد البشرية"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
 msgstr "تجميع بـ ..."
 
@@ -71,11 +69,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
-#: view:res.users:0
+#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
+#: field:hr.job,department_id:0 view:res.users:0
 msgid "Department"
 msgstr "القسم"
 
@@ -92,12 +87,10 @@ msgstr "الأعمال"
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr ""
+msgstr "في التوظيف"
 
 #. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "الشركة"
@@ -105,7 +98,7 @@ msgstr "الشركة"
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr ""
+msgstr "متوقع في التوظيف"
 
 #. module: hr
 #: model:ir.actions.todo.category,name:hr.category_hr_management_config
@@ -118,20 +111,21 @@ msgid ""
 "Partner that is related to the current employee. Accounting transaction will "
 "be written on this partner belongs to employee."
 msgstr ""
+"الشريك هو المتعلق بالموظف الحالي. وستكتب هذه المعاملات الحسابية على هذا "
+"الشيك المنتمي للموظف."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr ""
+msgstr "صل المستخدم للموظف"
 
 #. module: hr
 #: field:hr.department,parent_id:0
 msgid "Parent Department"
-msgstr ""
+msgstr "قسم الوالدين"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,notes:0
+#: view:hr.employee:0 field:hr.employee,notes:0
 msgid "Notes"
 msgstr ""
 
@@ -156,6 +150,8 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"اعتادت هيكل ادارة شركتك لادارة كل الوثائق المرتبطة للموظف بالادارات: النفقات "
+"والتحقق من صحة الجدول الزمني, يترك الادارة, التوظيف, الخ."
 
 #. module: hr
 #: field:hr.employee,color:0
@@ -168,17 +164,17 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
+"يسمح حقل المستخدم المتعلق بشكل الموظف بوصل مستخدم OpenERP (و حقوقها) للموظف."
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Recruitement"
-msgstr ""
+msgstr "في التوظيف"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "رقم الهوية"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -198,7 +194,7 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "Social IDs"
-msgstr ""
+msgstr "معرفات اجتماعية"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
@@ -211,8 +207,7 @@ msgid "Child Categories"
 msgstr "تصنيفات فرعية"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,description:0
+#: view:hr.job:0 field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "وصف العمل"
@@ -225,11 +220,10 @@ msgstr "مكان المكتب"
 #. module: hr
 #: view:hr.employee:0
 msgid "My Departments Employee"
-msgstr ""
+msgstr "موظف ادارتي"
 
 #. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "الموظف"
@@ -261,9 +255,7 @@ msgid "Human Resources Dashboard"
 msgstr "لوحة معلومات الموارد البشرية"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
 msgstr "العمل"
 
@@ -278,15 +270,14 @@ msgid "Configuration"
 msgstr "إعدادات"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,category_ids:0
+#: view:hr.employee:0 field:hr.employee,category_ids:0
 msgid "Categories"
 msgstr "التصنيفات"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr ""
+msgstr "الموظفون المتوقعون"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -301,7 +292,7 @@ msgstr "التصنيف الرئيسي"
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error ! You cannot create recursive Categories."
-msgstr ""
+msgstr "خطأ ! لايمكنك انشاء فئات عودية."
 
 #. module: hr
 #: view:hr.department:0
@@ -319,7 +310,7 @@ msgstr "جهات اتصال الموظف"
 #. module: hr
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "لجنتي"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -346,7 +337,7 @@ msgstr "جهات اتصال الموظف"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "hr.department"
-msgstr ""
+msgstr "قسم الموارد البشرية"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_create_hr_employee_installer
@@ -376,7 +367,7 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr ""
+msgstr "حساب راتب مصرف الموظف"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -386,7 +377,7 @@ msgstr "ملاحظة"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
-msgstr ""
+msgstr "هيكل الموظفين"
 
 #. module: hr
 #: constraint:res.users:0
@@ -401,13 +392,18 @@ msgstr "معلومات التواصل"
 #. module: hr
 #: field:hr.employee,address_id:0
 msgid "Working Address"
-msgstr ""
+msgstr "عنوان العمل"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
 msgid "HR Manager Dashboard"
 msgstr ""
+
+#. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr "اقسام الطفل"
 
 #. module: hr
 #: view:hr.employee:0
@@ -418,12 +414,12 @@ msgstr "الحالة"
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
 msgid "Categories structure"
-msgstr ""
+msgstr "هيكل الفئات"
 
 #. module: hr
 #: field:hr.employee,partner_id:0
 msgid "unknown"
-msgstr ""
+msgstr "غير معرّف"
 
 #. module: hr
 #: help:hr.job,no_of_employee:0
@@ -433,7 +429,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
-msgstr ""
+msgstr "رقم SSN"
 
 #. module: hr
 #: view:hr.employee:0
@@ -443,7 +439,7 @@ msgstr ""
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "خطأ ! لايمكنك انشاء تسلسل هرمي عودي  للعاملين"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
@@ -461,7 +457,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account Number"
-msgstr ""
+msgstr "رقم الحساب المصرفي"
 
 #. module: hr
 #: view:hr.department:0
@@ -473,7 +469,7 @@ msgstr ""
 msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
-msgstr ""
+msgstr "في مضمون الموظفين, هناك اختلاف في المعلومات مثل معلومات المتصل."
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard
@@ -491,8 +487,7 @@ msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,state:0
+#: view:hr.job:0 field:hr.job,state:0
 msgid "State"
 msgstr ""
 
@@ -509,7 +504,7 @@ msgstr ""
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr ""
+msgstr "شكل الموظفين و الهيئة"
 
 #. module: hr
 #: field:hr.employee,photo:0
@@ -534,7 +529,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "رقم جواز السفر"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
@@ -544,7 +539,7 @@ msgstr ""
 #. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
-msgstr ""
+msgstr "فئات الموظفين"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
@@ -567,15 +562,14 @@ msgid "Job Name"
 msgstr ""
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Position"
-msgstr ""
+msgstr "في الوضع"
 
 #. module: hr
 #: view:hr.department:0
 msgid "department"
-msgstr ""
+msgstr "قسم"
 
 #. module: hr
 #: field:hr.employee,country_id:0
@@ -590,7 +584,7 @@ msgstr ""
 #. module: hr
 #: view:board.board:0
 msgid "HR Manager Board"
-msgstr ""
+msgstr "لوحةادارة الموارد البشرية"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
@@ -609,10 +603,8 @@ msgid "Gender"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0 view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -625,7 +617,7 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr ""
+msgstr "رقم التأمين الاجتماعي"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -640,11 +632,11 @@ msgstr ""
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr ""
+msgstr "انشاء مستخدم a OpenERP"
 
 #. module: hr
-#: field:hr.department,child_ids:0
-msgid "Child Departments"
+#: field:hr.employee,login:0
+msgid "Login"
 msgstr ""
 
 #. module: hr
@@ -656,7 +648,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "مواضع الوظيفة"
 
 #. module: hr
 #: field:hr.employee,otherid:0
@@ -664,10 +656,9 @@ msgid "Other Id"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
+#: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "مدرب"
 
 #. module: hr
 #: sql_constraint:hr.job:0
@@ -680,8 +671,7 @@ msgid "My Departments Jobs"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
+#: field:hr.department,manager_id:0 view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr ""
@@ -694,7 +684,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
-msgstr ""
+msgstr "المرؤوسين"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
@@ -735,3 +725,86 @@ msgstr ""
 
 #~ msgid "Configure"
 #~ msgstr "تهيئة"
+
+#~ msgid "Simplifies the management of employee's attendances."
+#~ msgstr "ويبسط ادارة حضور الموظف"
+
+#~ msgid "Tracks employee leaves, allocation requests and planning."
+#~ msgstr "موظف المسارات يترك, طلبات التخصيص والتخطيط."
+
+#~ msgid "Generic Payroll system."
+#~ msgstr "نظام الرواتب العامة."
+
+#~ msgid "Employee's Contracts"
+#~ msgstr "عقود الموظف"
+
+#~ msgid ""
+#~ "Error ! You cannot select a department for which the employee is the manager."
+#~ msgstr "خطأ! لا يمكنك تحديد الادارة التي يديرها الموظف."
+
+#~ msgid ""
+#~ "Lets you create and manage the periodic evaluation and performance review of "
+#~ "employees."
+#~ msgstr "ويتيح لك انشاء وادارة التقييم الدوري واستعراض اداء الموظفين."
+
+#~ msgid "No of Employee"
+#~ msgstr "رقم الموظف"
+
+#~ msgid ""
+#~ "You can enhance the base HR Application by installing few HR-related "
+#~ "functionalities."
+#~ msgstr ""
+#~ "يمكنك تعزيز تطبيق قاعدة الموارد البشرية بتثبيت قليل من الموارد البشرية "
+#~ "المتعلقة بالوظائف."
+
+#~ msgid "Status Description"
+#~ msgstr "وصف الحالات"
+
+#~ msgid "Required number of Employees in total for that job."
+#~ msgstr "مطلوب عدد من الموظفين في الكلي لتلك الوظيفة."
+
+#~ msgid "Helps you manage and streamline your recruitment process."
+#~ msgstr "تساعدك في ادارة و تبسيط عملية التوظيف الخاصة بك."
+
+#~ msgid "Payroll Accounting"
+#~ msgstr "محاسبة المرتبات"
+
+#~ msgid "Attendances"
+#~ msgstr "الحضور"
+
+#~ msgid "Payroll"
+#~ msgstr "الراتب"
+
+#~ msgid "Extends employee profiles to help manage their contracts."
+#~ msgstr "وتمتد واجهة الموظف للمساعدة في إدارة عقودهم."
+
+#~ msgid ""
+#~ "Tracks and manages employee expenses, and can automatically re-invoice "
+#~ "clients if the expenses are project-related."
+#~ msgstr ""
+#~ "ويتابع ويدير نفقات الموظفين, ويستطيع اعادة فاتورة العملاء تلقائيًا ادا طانت "
+#~ "النفقات مرتبطه بالمشروع."
+
+#~ msgid "Human Resources Application Configuration"
+#~ msgstr "تكوين تطبيق الموارد البشرية"
+
+#~ msgid "hr.installer"
+#~ msgstr "مثبت الموارد البشرية"
+
+#~ msgid "Configure Your Human Resources Application"
+#~ msgstr "كوّن تطبيق الموارد البشرية الخاص بك"
+
+#~ msgid "Generic Payroll system Integrated with Accountings."
+#~ msgstr "اندماج نظام الراتب العام مع المحاسبيات."
+
+#~ msgid "Employee Marital Status"
+#~ msgstr "الحالة الاجتماعية للموظف"
+
+#~ msgid "Periodic Evaluations"
+#~ msgstr "التقييمات الدورية"
+
+#~ msgid "Recruitment Process"
+#~ msgstr "عمليات التوظيف"
+
+#~ msgid "Holidays / Leaves Management"
+#~ msgstr "الاجازات/ مغادرات الادارة"

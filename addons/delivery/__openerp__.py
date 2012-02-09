@@ -48,7 +48,7 @@ When creating invoices from picking, OpenERP is able to add and compute the ship
         'test/delivery_cost.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0033981912253',
     'images': ['images/1_delivery_method.jpeg','images/2_delivery_pricelist.jpeg'],
 }

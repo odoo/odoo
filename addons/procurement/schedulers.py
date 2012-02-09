@@ -176,14 +176,17 @@ class procurement_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
 
         warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
-        products_id = product_obj.search(cr, uid, [('purchase_ok', '=', True)], order='id', context=context)
+        products_ids = product_obj.search(cr, uid, [('purchase_ok', '=', True)], order='id', context=context)
 
         for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
             context['warehouse'] = warehouse
-            for product in product_obj.browse(cr, uid, products_id, context=context):
-                if product.virtual_available >= 0.0:
+            # Here we check products availability.
+            # We use the method 'read' for performance reasons, because using the method 'browse' may crash the server.
+            for product_read in product_obj.read(cr, uid, products_ids, ['virtual_available'], context=context):
+                if product_read['virtual_available'] >= 0.0:
                     continue
 
+                product = product_obj.browse(cr, uid, [product_read['id']], context=context)[0]
                 if product.supply_method == 'buy':
                     location_id = warehouse.lot_input_id.id
                 elif product.supply_method == 'produce':
@@ -191,8 +194,8 @@ class procurement_order(osv.osv):
                 else:
                     continue
                 proc_id = proc_obj.create(cr, uid,
-                                          self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
-                                          context=context)
+                            self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
+                            context=context)
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
         return True

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-08-03 03:54+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:56+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:07+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: event
 #: view:event.event:0
@@ -75,6 +75,11 @@ msgid "_Close"
 msgstr ""
 
 #. module: event
+#: model:event.event,name:event.event_0
+msgid "Concert of Bon Jovi"
+msgstr "Koncert Bon Jovi-ja"
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Invoiced Registrations only"
 msgstr ""
@@ -95,12 +100,9 @@ msgid "Quantity"
 msgstr ""
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:50
-#: code:addons/event/wizard/event_make_invoice.py:54
-#: code:addons/event/wizard/event_make_invoice.py:58
-#: code:addons/event/wizard/event_make_invoice.py:62
+#: code:addons/event/wizard/event_make_invoice.py:63
 #, python-format
-msgid "Warning !"
+msgid "Registration doesn't have any partner to invoice."
 msgstr ""
 
 #. module: event
@@ -195,6 +197,11 @@ msgid "Mail Auto Confirm"
 msgstr "Pošlji samodejno potrditev"
 
 #. module: event
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "Vstopnice za opero"
+
+#. module: event
 #: code:addons/event/event.py:125
 #: view:event.event:0
 #, python-format
@@ -220,10 +227,9 @@ msgid "Event Dashboard"
 msgstr ""
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:63
-#, python-format
-msgid "Registration doesn't have any partner to invoice."
-msgstr ""
+#: model:event.event,name:event.event_1
+msgid "Opera of Verdi"
+msgstr "Verdijeva opera"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -276,9 +282,9 @@ msgid "Draft"
 msgstr "Osnutek"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Events States"
-msgstr ""
+#: field:event.type,name:0
+msgid "Event type"
+msgstr "Tip dogodka"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -341,6 +347,15 @@ msgstr ""
 #. module: event
 #: help:event.registration,nb_register:0
 msgid "Number of Registrations or Tickets"
+msgstr ""
+
+#. module: event
+#: code:addons/event/wizard/event_make_invoice.py:50
+#: code:addons/event/wizard/event_make_invoice.py:54
+#: code:addons/event/wizard/event_make_invoice.py:58
+#: code:addons/event/wizard/event_make_invoice.py:62
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: event
@@ -550,9 +565,9 @@ msgid "Mailing"
 msgstr ""
 
 #. module: event
-#: field:event.type,name:0
-msgid "Event type"
-msgstr "Tip dogodka"
+#: view:report.event.registration:0
+msgid "Events States"
+msgstr ""
 
 #. module: event
 #: view:board.board:0
@@ -734,6 +749,11 @@ msgstr ""
 #: selection:report.event.registration,month:0
 msgid "June"
 msgstr ""
+
+#. module: event
+#: model:product.template,name:event.event_product_0_product_template
+msgid "Ticket for Concert"
+msgstr "Vstopnica za koncert"
 
 #. module: event
 #: field:event.registration,write_date:0
@@ -979,6 +999,11 @@ msgid "Speaker"
 msgstr ""
 
 #. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on ERP Buisness"
+msgstr "Konferenca o ERP-jih"
+
+#. module: event
 #: view:event.registration:0
 msgid "Reply"
 msgstr ""
@@ -1039,6 +1064,11 @@ msgstr ""
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
 msgstr ""
+
+#. module: event
+#: model:product.template,name:event.event_product_2_product_template
+msgid "Ticket for Conference"
+msgstr "Vstopnica za konferenco"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type_association
@@ -1255,9 +1285,6 @@ msgstr ""
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "Napaka: neveljavna EAN črtna koda"
 
-#~ msgid "Concert of Bon Jovi"
-#~ msgstr "Koncert Bon Jovi-ja"
-
 #~ msgid "Ending date"
 #~ msgstr "Datum zaključka"
 
@@ -1270,9 +1297,6 @@ msgstr ""
 
 #~ msgid "Create Invoices"
 #~ msgstr "Izdelaj račune"
-
-#~ msgid "Opera of Verdi"
-#~ msgstr "Verdijeva opera"
 
 #~ msgid "Badge"
 #~ msgstr "Priponka"
@@ -1357,17 +1381,11 @@ msgstr ""
 #~ msgid "Case"
 #~ msgstr "Primer"
 
-#~ msgid "Ticket for Conference"
-#~ msgstr "Vstopnica za konferenco"
-
 #~ msgid "Badge Partner"
 #~ msgstr "Partnerjeva priponka"
 
 #~ msgid "Confirmed Events"
 #~ msgstr "Potrdi dogodke"
-
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "Konferenca o ERP-jih"
 
 #~ msgid "Invoice Rejected"
 #~ msgstr "Zavrnjeni račun"
@@ -1387,14 +1405,8 @@ msgstr ""
 #~ msgid "Draft Registration"
 #~ msgstr "Osnutek registracije"
 
-#~ msgid "Ticket for Opera"
-#~ msgstr "Vstopnice za opero"
-
 #~ msgid "Draft Registrations"
 #~ msgstr "Osnutki registracij"
-
-#~ msgid "Ticket for Concert"
-#~ msgstr "Vstopnica za koncert"
 
 #~ msgid "Error ! You cannot create recursive sections."
 #~ msgstr "Napaka! Ne morete oblikovati rekurzivnih oddelkov."
