@@ -787,21 +787,24 @@ class DataSet(openerpweb.Controller):
         context, domain = eval_context_and_domain(
             req.session, req.context, domain)
 
-        ids = Model.search(domain, 0, False, sort or False, context)
-        # need to fill the dataset with all ids for the (domain, context) pair,
-        # so search un-paginated and paginate manually before reading
-        paginated_ids = ids[offset:(offset + limit if limit else None)]
+        ids = Model.search(domain, offset or 0, limit or False, sort or False, context)
+        if limit and len(ids) == limit:
+            length = Model.search_count(domain, context)
+        else:
+            length = len(ids) + (offset or 0)
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
             return {
                 'ids': ids,
-                'records': [{'id': id} for id in paginated_ids]
+                'length': length,
+                'records': [{'id': id} for id in ids]
             }
 
-        records = Model.read(paginated_ids, fields or False, context)
+        records = Model.read(ids, fields or False, context)
         records.sort(key=lambda obj: ids.index(obj['id']))
         return {
             'ids': ids,
+            'length': length,
             'records': records
         }
 
