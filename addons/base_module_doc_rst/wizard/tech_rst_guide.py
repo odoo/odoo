@@ -18,18 +18,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from os.path import join
+
+from osv import osv, fields
+import netsvc
+
 import base64
 import tempfile
 import tarfile
 import httplib
-
-import netsvc
-import wizard
-import pooler
 import os
-import tools
-from osv import osv,fields
 
 class RstDoc(object):
     def __init__(self, module, objects):
@@ -308,13 +305,12 @@ class RstDoc(object):
 class wizard_tech_guide_rst(osv.osv_memory):
     _name = "tech.guide.rst"
     _columns = {
-            'rst_file': fields.binary('File',required = True, readonly = True),
-            'name': fields.char("Filename", size=64, required=True, readonly = True),
- }
+        'rst_file': fields.binary('File',required = True, readonly = True),
+        'name': fields.char("Filename", size=64, required=True, readonly = True),
+    }
 
     def _generate(self, cr, uid, context):
-        pool = pooler.get_pool(cr.dbname)
-        module_model = pool.get('ir.module.module')
+        module_model = self.pool.get('ir.module.module')
         module_ids = context['active_ids']
 
         module_index = []
@@ -389,8 +385,7 @@ class wizard_tech_guide_rst(osv.osv_memory):
         return base64.encodestring(out)
 
     def _get_views(self, cr, uid, module_id, context=None):
-        pool = pooler.get_pool(cr.dbname)
-        module_module_obj = pool.get('ir.module.module')
+        module_module_obj = self.pool.get('ir.module.module')
         res = {}
         model_data_obj = pool.get('ir.model.data')
         view_obj = pool.get('ir.ui.view')
@@ -455,17 +450,15 @@ class wizard_tech_guide_rst(osv.osv_memory):
         return res
 
     def _object_find(self, cr, uid, module):
-        pool = pooler.get_pool(cr.dbname)
-        ids2 = pool.get('ir.model.data').search(cr, uid, [('module', '=', module.name), ('model', '=', 'ir.model')])
+        ir_model_data = self.pool.get('ir.model.data')
+        ids2 = ir_model_data.search(cr, uid, [('module', '=', module.name), ('model', '=', 'ir.model')])
         ids = []
-        for mod in pool.get('ir.model.data').browse(cr, uid, ids2):
+        for mod in ir_model_data.browse(cr, uid, ids2):
             ids.append(mod.res_id)
-        modobj = pool.get('ir.model')
-        return modobj.browse(cr, uid, ids)
+        return self.pool.get('ir.model').browse(cr, uid, ids)
 
     def _fields_find(self, cr, uid, obj):
-        pool = pooler.get_pool(cr.dbname)
-        modobj = pool.get(obj)
+        modobj = self.pool.get(obj)
         if modobj:
             res = modobj.fields_get(cr, uid).items()
             return res

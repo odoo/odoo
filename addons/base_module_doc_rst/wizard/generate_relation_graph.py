@@ -18,17 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import wizard
+
 from osv import osv
-from osv import fields
-import pooler
-from tools.translate import _
 
 class create_graph(osv.osv_memory):
     _name = "create.relation.graph"
 
     def get_graph(self, cr, uid, datas, context=None):
-        mod_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
+        mod_obj = self.pool.get('ir.module.module')
         modules = mod_obj.browse(cr, uid, context['active_ids'], context=context)
         for module in modules:
             module_data = mod_obj.get_relation_graph(cr, uid, module.name, context=context)

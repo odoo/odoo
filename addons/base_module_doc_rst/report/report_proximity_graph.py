@@ -21,7 +21,8 @@
 import time, os
 import pydot
 
-import report,pooler,tools
+import report
+import tools
 
 class report_graph(report.interface.report_int):
     def __init__(self, name, table):
@@ -29,11 +30,10 @@ class report_graph(report.interface.report_int):
         self.table = table
 
     def get_proximity_graph(self, cr, uid, module_id, context=None):
-        pool_obj = pooler.get_pool(cr.dbname)
-        module_obj = pool_obj.get('ir.module.module')
+        module_obj = self.pool.get('ir.module.module')
         nodes = [('base','unknown')]
         edges = []
-        def get_dpend_module(module_id):
+        def get_depend_module(module_id):
             module_record = module_obj.browse(cr, uid, module_id, context=context)
             if module_record.name not in nodes:
                 # Add new field ir.module.module object in server side. field name = module_type/
@@ -46,8 +46,8 @@ class report_graph(report.interface.report_int):
                         continue
                     id = module_obj.browse(cr, uid, module_obj.search(cr, uid, [('name', '=' ,depen.name)]), context=context)
                     if id:
-                        get_dpend_module(id[0].id)
-        get_dpend_module(module_id)
+                        get_depend_module(id[0].id)
+        get_depend_module(module_id)
         graph = pydot.Dot(graph_type='digraph',fontsize='10', label="\\nProximity Graph. \\n\\nGray Color-Official Modules, Red  Color-Extra Addons Modules, Blue Color-Community Modules, Purple Color-Unknow Modules"
                                      , center='1')
         for node in nodes:

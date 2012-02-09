@@ -19,43 +19,33 @@
 #
 ##############################################################################
 
-import time
-
-import base_module_save
 from osv import osv, fields
 import tools
 from tools.translate import _
+import base_module_save
+
+import time
 
 class base_module_record(osv.osv_memory):
     _name = 'base.module.record'
     _description = "Base Module Record"
         
-    def default_get(self, cr, uid, fields, context=None):
-         mod = self.pool.get('ir.model')
-         res = super(base_module_record, self).default_get(cr, uid, fields, context=context)
-         
-         list=('ir.ui.view', 'ir.ui.menu', 'ir.model', 'ir.model.fields', 'ir.model.access', \
-            'res.partner', 'res.partner.address', 'res.partner.category', 'workflow', \
-            'workflow.activity', 'workflow.transition', 'ir.actions.server', 'ir.server.object.lines')
-         if 'objects' in fields:
-             res.update({'objects': mod.search(cr, uid, [('model', 'in', list)])})
-         cr.execute('select max(create_date) from ir_model_data')
-         c=(cr.fetchone())[0].split('.')[0]
-         c = time.strptime(c, "%Y-%m-%d %H:%M:%S")
-         sec=c.tm_sec!=59 and c.tm_sec + 1
-         c=(c[0],c[1],c[2],c[3],c[4],sec,c[6],c[7],c[8])
-         if 'check_date' in fields:
-             res.update({'check_date': time.strftime("%Y-%m-%d %H:%M:%S", c)})
-         return res
-
     _columns = {
         'check_date': fields.datetime('Record from Date', required=True),
         'objects': fields.many2many('ir.model', 'base_module_record_object_rel', 'objects', 'model_id', 'Objects'),
         'filter_cond': fields.selection([('created', 'Created'), ('modified', 'Modified'), ('created_modified', 'Created & Modified')], 'Records only', required=True),
         'info_yaml': fields.boolean('YAML'),
     }
+
+    def _get_default_objects(self, cr, uid, context=None):
+        names = ('ir.ui.view', 'ir.ui.menu', 'ir.model', 'ir.model.fields', 'ir.model.access',
+            'res.partner', 'res.partner.address', 'res.partner.category', 'workflow',
+            'workflow.activity', 'workflow.transition', 'ir.actions.server', 'ir.server.object.lines')
+        return self.pool.get('ir.model').search(cr, uid, [('model', 'in', names)])
+
     _defaults = {
         'check_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'objects': _get_default_objects,
         'filter_cond': 'created',
     }
     

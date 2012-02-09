@@ -20,11 +20,11 @@
 #
 ##############################################################################
 
-import time
-
 from osv import osv, fields
 import tools
 from tools.translate import _
+
+import time
 
 class base_module_data(osv.osv_memory):
     _name = 'base.module.data'
