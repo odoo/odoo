@@ -295,11 +295,14 @@ class TinyPoFile(object):
                 if line.startswith('#~ '):
                     break
                 if line.startswith('#:'):
-                    if ' ' in line[2:].strip():
-                        for lpart in line[2:].strip().split(' '):
-                            tmp_tnrs.append(lpart.strip().split(':',2))
-                    else:
-                        tmp_tnrs.append( line[2:].strip().split(':',2) )
+                    for lpart in line[2:].strip().split(' '):
+                        trans_info = lpart.strip().split(':',2)
+                        if trans_info and len(trans_info) == 2:
+                            # looks like the translation type is missing, which is not
+                            # unexpected because it is not a GetText standard. Default: 'code'
+                            trans_info[:0] = ['code']
+                        if trans_info and len(trans_info) == 3:
+                            tmp_tnrs.append(trans_info)
                 elif line.startswith('#,') and (line[2:].strip() == 'fuzzy'):
                     fuzzy = True
                 line = self.lines.pop(0).strip()
