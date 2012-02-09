@@ -524,8 +524,9 @@
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
                     <group>
-                        <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
-                        <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+                        <filter string="Draft" name="state_draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                        <filter string="Open" name="state_open" domain="[('state','=','open')]" icon="terp-document-new"/>
+                        <filter string="Confirmed" name="state_confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="name"/>
