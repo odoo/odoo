@@ -57,6 +57,16 @@ class res_partner_grade(osv.osv):
     }
 res_partner_grade()
 
+class res_partner_activation(osv.osv):
+    _name = 'res.partner.activation'
+    _order = 'sequence'
+
+    _columns = {
+        'sequence' : fields.integer('Sequence'),
+        'name' : fields.char('Name', size=32, required=True),
+    }
+
+res_partner_activation()
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
@@ -68,7 +78,11 @@ class res_partner(osv.osv):
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
         'opportunity_assigned_ids': fields.one2many('crm.lead', 'partner_assigned_id',\
             'Assigned Opportunities'),
-        'grade_id': fields.many2one('res.partner.grade', 'Partner Grade')
+        'grade_id': fields.many2one('res.partner.grade', 'Partner Grade'),
+        'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
+        'date_partnership' : fields.date('Partnership Date'),
+        'date_review' : fields.date('Latest Partner Review'),
+        'date_review_next' : fields.date('Next Partner Review'),
     }
     _defaults = {
         'partner_weight': lambda *args: 0
