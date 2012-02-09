@@ -1279,7 +1279,10 @@
     <option class="oe-filters-title" value="">Filters</option>
     <optgroup label="-- Filters --">
         <t t-foreach="filters" t-as="filter">
-            <option t-attf-value="get:#{filter_index}"><t t-esc="filter.name"/></option>
+            <option t-attf-value="get:#{filter_index}"
+                    t-att-disabled="filter.disabled and 'disabled'">
+                <t t-esc="filter.name"/>
+            </option>
         </t>
     </optgroup>
     <optgroup label="-- Actions --">

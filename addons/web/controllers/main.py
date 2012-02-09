@@ -5,6 +5,7 @@ import base64
 import csv
 import glob
 import itertools
+import logging
 import operator
 import datetime
 import os
@@ -1177,11 +1178,21 @@ class SearchView(View):
 
     @openerpweb.jsonrequest
     def get_filters(self, req, model):
+        logger = logging.getLogger(__name__ + '.SearchView.get_filters')
         Model = req.session.model("ir.filters")
         filters = Model.get_filters(model)
         for filter in filters:
-            filter["context"] = req.session.eval_context(parse_context(filter["context"], req.session))
-            filter["domain"] = req.session.eval_domain(parse_domain(filter["domain"], req.session))
+            try:
+                filter["context"] = req.session.eval_context(
+                    parse_context(filter["context"], req.session))
+                filter["domain"] = req.session.eval_domain(
+                    parse_domain(filter["domain"], req.session))
+            except Exception:
+                logger.exception("Failed to parse custom filter %s in %s",
+                                 filter['name'], model)
+                filter['disabled'] = True
+                del filter['context']
+                del filter['domain']
         return filters
 
     @openerpweb.jsonrequest
