@@ -50,6 +50,15 @@ class Registry(object):
         self._init_parent = {}
         self.db_name = db_name
         self.db = openerp.sql_db.db_connect(db_name)
+
+        # Inter-process signaling (used only when openerp.multi_process is True):
+        # The `base_registry_signaling` sequence indicates the whole registry
+        # must be reloaded.
+        # The `base_cache_signaling sequence` indicates all caches must be
+        # invalidated (i.e. cleared).
+        self.base_registry_signaling_sequence = 1
+        self.base_cache_signaling_sequence = 1
+
         # Flag indicating if at least one model cache has been cleared.
         # Useful only in a multi-process context.
         self._any_cache_cleared = False
@@ -137,15 +146,6 @@ class RegistryManager(object):
     # Accessed through the methods below.
     registries = {}
     registries_lock = threading.RLock()
-
-    # Inter-process signaling (used only when openerp.multi_process is True):
-    # The `base_registry_signaling` sequence indicates the whole registry
-    # must be reloaded.
-    # The `base_cache_signaling sequence` indicates all caches must be
-    # invalidated (i.e. cleared).
-    # TODO per registry
-    base_registry_signaling_sequence = 1
-    base_cache_signaling_sequence = 1
 
     @classmethod
     def get(cls, db_name, force_demo=False, status=None, update_module=False,
@@ -237,19 +237,20 @@ class RegistryManager(object):
 
     @classmethod
     def check_registry_signaling(cls, db_name):
-        if openerp.multi_process:
+        if openerp.multi_process and db_name in cls.registries:
             # Check if the model registry must be reloaded (e.g. after the
             # database has been updated by another process).
-            cr = openerp.sql_db.db_connect(db_name).cursor()
+            registry = cls.get(db_name, pooljobs=False)
+            cr = registry.db.cursor()
             registry_reloaded = False
             try:
                 cr.execute('SELECT last_value FROM base_registry_signaling')
                 r = cr.fetchone()[0]
-                if cls.base_registry_signaling_sequence != r:
+                if registry.base_registry_signaling_sequence != r:
                     _logger.info("Reloading the model registry after database signaling.")
-                    cls.base_registry_signaling_sequence = r
                     # Don't run the cron in the Gunicorn worker.
-                    cls.new(db_name, pooljobs=False)
+                    registry = cls.new(db_name, pooljobs=False)
+                    registry.base_registry_signaling_sequence = r
                     registry_reloaded = True
             finally:
                 cr.close()
@@ -261,23 +262,22 @@ class RegistryManager(object):
             try:
                 cr.execute('SELECT last_value FROM base_cache_signaling')
                 r = cr.fetchone()[0]
-                if cls.base_cache_signaling_sequence != r and not registry_reloaded:
+                if registry.base_cache_signaling_sequence != r and not registry_reloaded:
                     _logger.info("Invalidating all model caches after database signaling.")
-                    cls.base_cache_signaling_sequence = r
-                    registry = cls.get(db_name, pooljobs=False)
+                    registry.base_cache_signaling_sequence = r
                     registry.clear_caches()
             finally:
                 cr.close()
 
     @classmethod
     def signal_caches_change(cls, db_name):
-        if openerp.multi_process:
+        if openerp.multi_process and db_name in cls.registries:
             # Check the registries if any cache has been cleared and signal it
             # through the database to other processes.
             registry = cls.get(db_name, pooljobs=False)
             if registry.any_cache_cleared():
                 _logger.info("At least one model cache has been cleare, signaling through the database.")
-                cr = openerp.sql_db.db_connect(db_name).cursor()
+                cr = registry.db.cursor()
                 try:
                     pass
                     # cr.execute("select nextval('base_cache_signaling')")
@@ -288,11 +288,15 @@ class RegistryManager(object):
 
     @classmethod
     def signal_registry_change(cls, db_name):
-        cr = openerp.sql_db.db_connect(db_name).cursor()
-        try:
-            cr.execute("select nextval('base_registry_signaling')")
-        finally:
-            cr.close()
-        #cls.base_registry_signaling_sequence to = result
+        if openerp.multi_process and db_name in cls.registries:
+            registry = cls.get(db_name, pooljobs=False)
+            cr = registry.db.cursor()
+            r = 1
+            try:
+                cr.execute("select nextval('base_registry_signaling')")
+                r = cr.fetchone()[0]
+            finally:
+                cr.close()
+            registry.base_registry_signaling_sequence = r
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
