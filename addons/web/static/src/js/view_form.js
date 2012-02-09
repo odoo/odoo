@@ -655,10 +655,25 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                         || field.field.type === 'many2many') {
                     return false;
                 }
+                var displayed;
+                switch(field.field.type) {
+                case 'selection':
+                    displayed = _(field.values).find(function (option) {
+                            return option[0] === value;
+                        })[1];
+                    break;
+                case 'many2one':
+                    displayed = field.value[1] || value;
+                    break;
+                default:
+                    displayed = value;
+                }
+
                 return {
                     name: name,
                     string: field.string,
                     value: value,
+                    displayed: displayed,
                     // convert undefined to false
                     change_default: !!field.field.change_default
                 }

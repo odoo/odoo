@@ -806,7 +806,7 @@
                     <option value=""/>
                     <option t-foreach="args.fields" t-as="field"
                             t-att-value="field.name">
-                        <t t-esc="field.string"/> = <t t-esc="field.value"/>
+                        <t t-esc="field.string"/> = <t t-esc="field.displayed"/>
                     </option>
                 </select>
             </td>
@@ -823,7 +823,7 @@
                     <option value=""/>
                     <option t-foreach="args.conditions" t-as="cond"
                             t-att-value="cond.name + '=' + cond.value">
-                        <t t-esc="cond.string"/>=<t t-esc="cond.value"/>
+                        <t t-esc="cond.string"/>=<t t-esc="cond.displayed"/>
                     </option>
                 </select>
             </td>
