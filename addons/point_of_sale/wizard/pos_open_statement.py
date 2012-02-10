@@ -79,9 +79,9 @@ class pos_open_statement(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'name': _('List of Cash Registers'),
             'view_type': 'form',
-            'view_mode': 'tree, form',
+            'view_mode': 'tree,form',
             'res_model': 'account.bank.statement',
-            'domain': "[('id', 'in', " + str(st_ids) + ")]",
+            'domain': str([('id', 'in', str(st_ids))]),
             'views': [(tree_id, 'tree'), (form_id, 'form')],
             'search_view_id': search_id,
         }
