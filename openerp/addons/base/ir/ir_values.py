@@ -378,6 +378,8 @@ class ir_values(osv.osv):
         cr.execute(query, ('action', action_slot, model, res_id or None))
         results = {}
         for action in cr.dictfetchall():
+            if not action['value']:
+                continue    # skip if undefined
             action_model,id = action['value'].split(',')
             fields = [
                     field
