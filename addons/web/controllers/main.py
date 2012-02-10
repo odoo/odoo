@@ -8,6 +8,7 @@ import itertools
 import logging
 import operator
 import datetime
+import hashlib
 import os
 import re
 import simplejson
@@ -20,6 +21,7 @@ from cStringIO import StringIO
 
 import babel.messages.pofile
 import werkzeug.utils
+import werkzeug.wrappers
 try:
     import xlwt
 except ImportError:
@@ -35,21 +37,22 @@ openerpweb = common.http
 
 def concat_xml(file_list):
     """Concatenate xml files
-    return (concat,timestamp)
-    concat: concatenation of file content
-    timestamp: max(os.path.getmtime of file_list)
+
+    :param list(str) file_list: list of files to check
+    :returns: (concatenation_result, checksum)
+    :rtype: (str, str)
     """
+    checksum = hashlib.new('sha1')
     if not file_list:
-        return '', None
+        return '', checksum.hexdigest()
 
     root = None
-    files_timestamp = 0
     for fname in file_list:
-        ftime = os.path.getmtime(fname)
-        if ftime > files_timestamp:
-            files_timestamp = ftime
-
-        xml = ElementTree.parse(fname).getroot()
+        with open(fname, 'rb') as fp:
+            contents = fp.read()
+            checksum.update(contents)
+            fp.seek(0)
+            xml = ElementTree.parse(fp).getroot()
 
         if root is None:
             root = ElementTree.Element(xml.tag)
@@ -58,17 +61,21 @@ def concat_xml(file_list):
 
         for child in xml.getchildren():
             root.append(child)
-    return ElementTree.tostring(root, 'utf-8'), files_timestamp
+    return ElementTree.tostring(root, 'utf-8'), checksum.hexdigest()
 
 
 def concat_files(file_list, reader=None, intersperse=""):
-    """ Concatenate file content
-    return (concat,timestamp)
-    concat: concatenation of file content, read by `reader`
-    timestamp: max(os.path.getmtime of file_list)
+    """ Concatenates contents of all provided files
+
+    :param list(str) file_list: list of files to check
+    :param function reader: reading procedure for each file
+    :param str intersperse: string to intersperse between file contents
+    :returns: (concatenation_result, checksum)
+    :rtype: (str, str)
     """
+    checksum = hashlib.new('sha1')
     if not file_list:
-        return '', None
+        return '', checksum.hexdigest()
 
     if reader is None:
         def reader(f):
@@ -76,15 +83,13 @@ def concat_files(file_list, reader=None, intersperse=""):
                 return fp.read()
 
     files_content = []
-    files_timestamp = 0
     for fname in file_list:
-        ftime = os.path.getmtime(fname)
-        if ftime > files_timestamp:
-            files_timestamp = ftime
+        contents = reader(fname)
+        checksum.update(contents)
+        files_content.append(contents)
 
-        files_content.append(reader(fname))
     files_concat = intersperse.join(files_content)
-    return files_concat,files_timestamp
+    return files_concat, checksum.hexdigest()
 
 html_template = """<!DOCTYPE html>
 <html style="height: 100%%">
@@ -150,10 +155,24 @@ class WebClient(openerpweb.Controller):
     def qweblist(self, req, mods=None):
         return self.manifest_list(req, mods, 'qweb')
 
+    def get_last_modified(self, files):
+        """ Returns the modification time of the most recently modified
+        file provided
+
+        :param list(str) files: names of files to check
+        :return: most recent modification time amongst the fileset
+        :rtype: datetime.datetime
+        """
+        return max(datetime.datetime.fromtimestamp(os.path.getmtime(f))
+                   for f in files)
+
     @openerpweb.httprequest
     def css(self, req, mods=None):
-
         files = list(self.manifest_glob(req, mods, 'css'))
+        last_modified = self.get_last_modified(f[0] for f in files)
+        if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
+            return werkzeug.wrappers.Response(status=304)
+
         file_map = dict(files)
 
         rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
@@ -182,23 +201,54 @@ class WebClient(openerpweb.Controller):
             )
             return data
 
-        content,timestamp = concat_files((f[0] for f in files), reader)
-        # TODO use timestamp to set Last mofified date and E-tag
-        return req.make_response(content, [('Content-Type', 'text/css')])
+        content, checksum = concat_files((f[0] for f in files), reader)
+        if req.httprequest.if_none_match and checksum in req.httprequest.if_none_match:
+            return werkzeug.wrappers.Response(status=304)
+
+        response = req.make_response(content, [('Content-Type', 'text/css')])
+        response.cache_control.must_revalidate = True
+        response.cache_control.max_age = 0
+        response.last_modified = last_modified
+        response.set_etag(checksum)
+        return response
 
     @openerpweb.httprequest
     def js(self, req, mods=None):
         files = [f[0] for f in self.manifest_glob(req, mods, 'js')]
-        content, timestamp = concat_files(files, intersperse=';')
-        # TODO use timestamp to set Last mofified date and E-tag
-        return req.make_response(content, [('Content-Type', 'application/javascript')])
+        last_modified = self.get_last_modified(files)
+        print 'last modified', last_modified
+        print 'if modified since', req.httprequest.if_modified_since
+        if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
+            return werkzeug.wrappers.Response(status=304)
+
+        content, checksum = concat_files(files, intersperse=';')
+        if req.httprequest.if_none_match and checksum in req.httprequest.if_none_match:
+            return werkzeug.wrappers.Response(status=304)
+
+        resp = req.make_response(content, [('Content-Type', 'application/javascript')])
+        resp.cache_control.must_revalidate = True
+        resp.cache_control.max_age = 0
+        resp.last_modified = last_modified
+        resp.set_etag(checksum)
+        return resp
 
     @openerpweb.httprequest
     def qweb(self, req, mods=None):
         files = [f[0] for f in self.manifest_glob(req, mods, 'qweb')]
-        content,timestamp = concat_xml(files)
-        # TODO use timestamp to set Last mofified date and E-tag
-        return req.make_response(content, [('Content-Type', 'text/xml')])
+        last_modified = self.get_last_modified(files)
+        if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
+            return werkzeug.wrappers.Response(status=304)
+
+        content,checksum = concat_xml(files)
+        if req.httprequest.if_none_match and checksum in req.httprequest.if_none_match:
+            return werkzeug.wrappers.Response(status=304)
+
+        response = req.make_response(content, [('Content-Type', 'text/xml')])
+        response.cache_control.must_revalidate = True
+        response.cache_control.max_age = 0
+        response.last_modified = last_modified
+        response.set_etag(checksum)
+        return response
 
 
     @openerpweb.httprequest
