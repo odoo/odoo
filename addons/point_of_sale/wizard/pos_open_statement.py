@@ -81,7 +81,7 @@ class pos_open_statement(osv.osv_memory):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.bank.statement',
-            'domain': str([('id', 'in', str(st_ids))]),
+            'domain': str([('id', 'in', st_ids)]),
             'views': [(tree_id, 'tree'), (form_id, 'form')],
             'search_view_id': search_id,
         }
