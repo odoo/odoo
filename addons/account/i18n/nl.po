@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-01 08:48+0000\n"
+"PO-Revision-Date: 2012-02-09 14:13+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:18+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-10 04:47+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: account
 #: code:addons/account/account.py:1307
@@ -87,7 +87,7 @@ msgstr "Definitie kinderen"
 #: code:addons/account/account_bank_statement.py:302
 #, python-format
 msgid "Journal item \"%s\" is not valid."
-msgstr ""
+msgstr "Journaalpost \"%s\" is niet geldig."
 
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
@@ -177,7 +177,7 @@ msgstr "Waarschuwing!"
 #: code:addons/account/account.py:3112
 #, python-format
 msgid "Miscellaneous Journal"
-msgstr "Diverse postenboek"
+msgstr "Diverse dagboek"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -391,6 +391,8 @@ msgstr ""
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
 msgstr ""
+"Het is niet mogelijk om journaal boekingen te doen op een rekening van het "
+"type 'view'"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -666,6 +668,7 @@ msgstr "Hoofdvolgorde moet afwijken van de huidige !"
 #, python-format
 msgid "No period found or more than one period found for the given date."
 msgstr ""
+"Geen periode gevonden of meer dan één periode gevonden op de gegeven datum."
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -726,6 +729,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"De datum van uw dagboek boeking is niet in de gedefinieerde periode! U moet "
+"de datum aanpassen of deze beperking van het dagboek verwijderen."
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -818,6 +823,8 @@ msgid ""
 "Taxes are missing!\n"
 "Click on compute button."
 msgstr ""
+"Belastingen ontbreken!\n"
+"Klik op berekenen."
 
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
@@ -962,6 +969,8 @@ msgid ""
 "This account does not allow reconciliation! You should update the account "
 "definition to change this."
 msgstr ""
+"Dit account staat afletteren niet toe! U dient de rekeningdefinitie te "
+"veranderen om dit mogelijk te maken."
 
 #. module: account
 #: view:account.invoice:0
@@ -1134,6 +1143,8 @@ msgstr ""
 msgid ""
 "You have to provide an account for the write off/exchange difference entry !"
 msgstr ""
+"Het is verplicht om een rekening voor de afschrijving/koersverschillen aan "
+"te geven!"
 
 #. module: account
 #: view:account.tax:0
@@ -1172,7 +1183,7 @@ msgstr "Genereer boekingen voor:"
 #. module: account
 #: view:account.move.line:0
 msgid "Unbalanced Journal Items"
-msgstr ""
+msgstr "Dagboekboekingen in onbelans"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
@@ -1242,7 +1253,7 @@ msgstr "Facturen annuleren"
 #. module: account
 #: help:account.journal,code:0
 msgid "The code will be displayed on reports."
-msgstr ""
+msgstr "De code zal zichtbaar zijn op rapporten"
 
 #. module: account
 #: view:account.tax.template:0
@@ -1315,7 +1326,7 @@ msgstr "Andere"
 #. module: account
 #: view:account.subscription:0
 msgid "Draft Subscription"
-msgstr ""
+msgstr "Concept abonnement"
 
 #. module: account
 #: view:account.account:0
@@ -1762,7 +1773,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.account:0
 msgid "Pending Accounts"
-msgstr ""
+msgstr "Lopende rekeningen"
 
 #. module: account
 #: view:account.tax.template:0
@@ -1913,7 +1924,7 @@ msgstr "Fout ! U kunt geen recursieve bedrijven maken."
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_journal_sale_purchase
 msgid "Sale/Purchase Journal"
-msgstr ""
+msgstr "Verkoop/inkoop dagboek"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -2015,6 +2026,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"De geselecteerde rekening van uw journalboeking vraagt om een tweede valuta. "
+"U moet de tweede valuta op de rekening verwijderen of selecteer een multi-"
+"valuta overzicht van de boeking."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_financial_report_tree
@@ -2044,7 +2058,7 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Italic Text (smaller)"
-msgstr ""
+msgstr "Cursieve tekst (kleiner)"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2062,7 +2076,7 @@ msgstr "Concept"
 #. module: account
 #: report:account.journal.period.print.sale.purchase:0
 msgid "VAT Declaration"
-msgstr ""
+msgstr "BTW declaratie"
 
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
@@ -2256,7 +2270,7 @@ msgstr "Er is geen inkoop- of verkoop-dagboek ingesteld!"
 #. module: account
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
-msgstr ""
+msgstr "De RIB en/of IBAN is niet gelding"
 
 #. module: account
 #: view:product.category:0
@@ -2344,7 +2358,7 @@ msgstr "Laat leeg voor alle open boekjaren"
 #. module: account
 #: field:account.invoice.report,account_line_id:0
 msgid "Account Line"
-msgstr ""
+msgstr "Rekening regel"
 
 #. module: account
 #: code:addons/account/account.py:1468
@@ -2353,6 +2367,8 @@ msgid ""
 "There is no default default credit account defined \n"
 "on journal \"%s\""
 msgstr ""
+"Er is geen default krediet rekening beschikbaar \n"
+"voor journaal \"%s\""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_review_financial_journals_installer
@@ -2385,6 +2401,8 @@ msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
 msgstr ""
+"Om een bankafschrift te verwijderen, dient u eerst het gerelateerde journaal "
+"item te annuleren."
 
 #. module: account
 #: field:account.invoice,payment_term:0
@@ -2556,7 +2574,7 @@ msgstr "Voorheffing"
 #. module: account
 #: view:account.entries.report:0
 msgid "entries"
-msgstr ""
+msgstr "boekingen"
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -2751,7 +2769,7 @@ msgstr "Bovenliggende belastingkaart"
 #: code:addons/account/wizard/account_change_currency.py:59
 #, python-format
 msgid "New currency is not configured properly !"
-msgstr ""
+msgstr "De nieuwe valuta is niet correct geconfigureerd !"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -2855,7 +2873,7 @@ msgstr "Belastingcodes"
 #. module: account
 #: view:account.account:0
 msgid "Unrealized Gains and losses"
-msgstr ""
+msgstr "Niet gerealiseerde winst of verlies"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
@@ -2945,6 +2963,8 @@ msgid ""
 "You can not delete an invoice which is open or paid. We suggest you to "
 "refund it instead."
 msgstr ""
+"Een factuur die open of betaald is kan u niet verwijderen. In plaats daarvan "
+"stellen we voor dat u ze terugbetaald."
 
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
@@ -2955,7 +2975,7 @@ msgstr "Standaard belasting op verkopen"
 #: code:addons/account/account_invoice.py:1013
 #, python-format
 msgid "Invoice  '%s' is validated."
-msgstr ""
+msgstr "Factuur '%s' is gevalideerd."
 
 #. module: account
 #: help:account.model.line,date_maturity:0
@@ -3072,7 +3092,7 @@ msgstr "Lijst belasting-sjablonen"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_print_sale_purchase_journal
 msgid "Sale/Purchase Journals"
-msgstr ""
+msgstr "Verkoop/Inkoop dagboek"
 
 #. module: account
 #: help:account.account,currency_mode:0
@@ -3374,7 +3394,7 @@ msgstr "BTW:"
 #. module: account
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "Ongeldige BBA gestructureerde communicatie!"
 
 #. module: account
 #: help:account.analytic.line,amount_currency:0
@@ -3496,7 +3516,7 @@ msgstr "Periode lengte (dagen)"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
 msgid "Print Sale/Purchase Journal"
-msgstr ""
+msgstr "Afdrukken verkoop/inkoop dagboek"
 
 #. module: account
 #: field:account.invoice.report,state:0
@@ -4079,6 +4099,8 @@ msgstr "Afkorting"
 #: constraint:account.fiscalyear:0
 msgid "Error! The start date of the fiscal year must be before his end date."
 msgstr ""
+"Foutmelding! De startdatum van het fiscale jaar moet vroeger zijn dan z'n "
+"einddatum"
 
 #. module: account
 #: view:account.account:0
@@ -4393,7 +4415,7 @@ msgstr "Niet geïmplementeerd"
 #. module: account
 #: field:account.chart.template,visible:0
 msgid "Can be Visible?"
-msgstr ""
+msgstr "Kan zichtbaar zijn?"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
@@ -4408,7 +4430,7 @@ msgstr "Creditfacturen"
 #. module: account
 #: sql_constraint:account.period:0
 msgid "The name of the period must be unique per company!"
-msgstr ""
+msgstr "Per bedrijf moet de naam van de periode uniek zijn."
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -4930,7 +4952,7 @@ msgstr "Te sluiten"
 #. module: account
 #: field:account.treasury.report,date:0
 msgid "Beginning of Period Date"
-msgstr ""
+msgstr "Begindatum van de periode"
 
 #. module: account
 #: code:addons/account/account.py:1351
@@ -5134,7 +5156,7 @@ msgstr "Balans"
 #: view:account.general.journal:0
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
-msgstr ""
+msgstr "Algemene dagboeken"
 
 #. module: account
 #: field:account.journal,allow_date:0
