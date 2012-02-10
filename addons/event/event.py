@@ -118,6 +118,7 @@ class event_event(osv.osv):
             if 'register_prospect' in fields:
                 res[event.id]['register_prospect'] = number and number[0] or 0.0
         return res
+    
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
@@ -202,6 +203,7 @@ class event_registration(osv.osv):
         'partner_id_address': fields.many2one('res.partner.address', 'Partner', states={'done': [('readonly', True)]}),
         "contact_id": fields.many2one('res.partner.address', 'Partner Contact', readonly=False, states={'done': [('readonly', True)]}), #TODO: filter only the contacts that have a function into the selected partner_id
         'date_closed': fields.datetime('Closure Date', readonly=True),
+        'date_open': fields.datetime('Open Date', readonly=True),
         'email_from': fields.related('event_id','reply_to',string='Reply-to Email', type='char', size=128, readonly=True,),
         'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('email_from', '=', False),('model','=',_name)]),
         'date_deadline': fields.related('event_id','date_end', type='datetime', string="Event End Date", readonly=True),
@@ -226,7 +228,7 @@ class event_registration(osv.osv):
     def do_open(self, cr, uid, ids, context=None):
         """ Open Registration
         """
-        res = self.write(cr, uid, ids, {'state': 'open'}, context=context)
+        res = self.write(cr, uid, ids, {'state': 'open','date_open':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         self.mail_user(cr, uid, ids)
         self.message_append(cr, uid, ids, _('Open'))
         return res

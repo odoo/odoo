@@ -4,11 +4,10 @@
     create a product
 -
     !record {model: product.product, id: event_product}:
-         name: formation
+         name: test_formation
          type: service
          event_ok: True
          event_type_id: 1
-         default_code: EVT
 -
     create a sale order
 -
@@ -19,12 +18,17 @@
 -
     create sale order line from the sale order with the product
 -
+    !record {model: event.event,id: event}:
+         name: test_event
+         type: 1
+-
     !record {model: sale.order.line, id: line}:
          product_id: event_product
          price_unit: 190.50
          product_uom_qty: 8
          order_id: order
          name: sale order line
+         event: event
 -
     confirm the sale order
 -
@@ -46,7 +50,3 @@
         else:
             if registration_ids[0].state == 'draft':
                 print 'erreur mauvais state'
--
-    check registration has been created
-    check the right type the good person state = draft
--

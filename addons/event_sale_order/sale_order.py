@@ -72,6 +72,7 @@ class sale_order_line(osv.osv):
                 'name':registration.order_id.partner_invoice_id.name,
                 'partner_id':registration.order_id.partner_id.id,
                 'contact_id':registration.order_id.partner_invoice_id.id,
+                'nb_register':registration.product_uom_qty,
                 'email':registration.order_id.partner_id.email,
                 'phone':registration.order_id.partner_id.phone,
                 'street':registration.order_id.partner_invoice_id.street,
@@ -81,8 +82,8 @@ class sale_order_line(osv.osv):
                 'event_id':registration.event.id,
                 }
                 self.pool.get('event.registration').create(cr,uid,dic,context=context)
-                message = ("The sales order '%s' create a registration.") % (registration.order_id.name,)
-                self.log(cr, uid, registration.event.id, message)
+                message = ("A registration is create from the %s sale order.") % (registration.order_id.name,)
+                self.pool.get('event.registration').log(cr, uid, registration.event.id, message)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context)
 
 
