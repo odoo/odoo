@@ -183,7 +183,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         var self = this;
         var group_list,
         view_chart = (self.chart == 'line')?'line':(self.chart == 'area')?'area':'';
-        if (!this.group_field) {
+        if (!this.group_field || !results.length) {
             if (self.chart == 'bar'){
                 view_chart = (this.orientation === 'horizontal') ? 'barH' : 'bar';
             }
