@@ -34,10 +34,10 @@
 
 import base64
 import datetime as DT
+import logging
 import re
 import string
 import sys
-import warnings
 import xmlrpclib
 from psycopg2 import Binary
 
@@ -47,6 +47,8 @@ import openerp.tools as tools
 from openerp.tools.translate import _
 from openerp.tools import float_round, float_repr
 import simplejson
+
+_logger = logging.getLogger(__name__)
 
 def _symbol_set(symb):
     if symb == None or symb == False:
@@ -139,8 +141,10 @@ class boolean(_column):
     def __init__(self, string='unknown', required=False, **args):
         super(boolean, self).__init__(string=string, required=required, **args)
         if required:
-            warnings.warn("Making a boolean field `required` has no effect, as NULL values are "
-                          "automatically turned into False", PendingDeprecationWarning, stacklevel=2)
+            _logger.debug(
+                "required=True is deprecated: making a boolean field"
+                " `required` has no effect, as NULL values are "
+                "automatically turned into False.")
 
 class integer(_column):
     _type = 'integer'
@@ -152,8 +156,10 @@ class integer(_column):
     def __init__(self, string='unknown', required=False, **args):
         super(integer, self).__init__(string=string, required=required, **args)
         if required:
-            warnings.warn("Making an integer field `required` has no effect, as NULL values are "
-                          "automatically turned into 0", PendingDeprecationWarning, stacklevel=2)
+            _logger.debug(
+                "required=True is deprecated: making an integer field"
+                " `required` has no effect, as NULL values are "
+                "automatically turned into 0.")
 
 class integer_big(_column):
     """Experimental 64 bit integer column type, currently unused.
@@ -176,8 +182,10 @@ class integer_big(_column):
     def __init__(self, string='unknown', required=False, **args):
         super(integer_big, self).__init__(string=string, required=required, **args)
         if required:
-            warnings.warn("Making an integer_big field `required` has no effect, as NULL values are "
-                          "automatically turned into 0", PendingDeprecationWarning, stacklevel=2)
+            _logger.debug(
+                "required=True is deprecated: making an integer_big field"
+                " `required` has no effect, as NULL values are "
+                "automatically turned into 0.")
 
 class reference(_column):
     _type = 'reference'
@@ -238,8 +246,10 @@ class float(_column):
         # synopsis: digits_compute(cr) ->  (precision, scale)
         self.digits_compute = digits_compute
         if required:
-            warnings.warn("Making a float field `required` has no effect, as NULL values are "
-                          "automatically turned into 0.0", PendingDeprecationWarning, stacklevel=2)
+            _logger.debug(
+                "required=True is deprecated: making a float field"
+                " `required` has no effect, as NULL values are "
+                "automatically turned into 0.0.")
 
     def digits_change(self, cr):
         if self.digits_compute:
@@ -355,7 +365,7 @@ class one2one(_column):
     _deprecated = True
 
     def __init__(self, obj, string='unknown', **args):
-        warnings.warn("The one2one field doesn't work anymore", DeprecationWarning)
+        _logger.warning("The one2one field is deprecated and doesn't work anymore.")
         _column.__init__(self, string=string, **args)
         self._obj = obj
 
@@ -620,8 +630,9 @@ class many2many(_column):
         for id in ids:
             res[id] = []
         if offset:
-            warnings.warn("Specifying offset at a many2many.get() may produce unpredictable results.",
-                      DeprecationWarning, stacklevel=2)
+            _logger.warning(
+                "Specifying offset at a many2many.get() is deprecated and may"
+                " produce unpredictable results.")
         obj = model.pool.get(self._obj)
         rel, id1, id2 = self._sql_names(model)
 

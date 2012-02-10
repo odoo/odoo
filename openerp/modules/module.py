@@ -56,7 +56,7 @@ ad_paths = []
 # Modules already loaded
 loaded = []
 
-logger = netsvc.Logger()
+_logger = logging.getLogger(__name__)
 
 class AddonsImportHook(object):
     """
@@ -100,8 +100,7 @@ class AddonsImportHook(object):
             try:
                 # Check if the bare module name clashes with another module.
                 f, path, descr = imp.find_module(module_parts[0])
-                logger = logging.getLogger('init')
-                logger.warning("""
+                _logger.warning("""
 Ambiguous import: the OpenERP module `%s` is shadowed by another
 module (available at %s).
 To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
@@ -137,9 +136,12 @@ To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
 
         # Note: we don't support circular import.
         f, path, descr = imp.find_module(module_part, ad_paths)
-        mod = imp.load_module(module_name, f, path, descr)
+        mod = imp.load_module('openerp.addons.' + module_part, f, path, descr)
         if not is_shadowing:
             sys.modules[module_part] = mod
+            for k in sys.modules.keys():
+                if k.startswith('openerp.addons.' + module_part):
+                    sys.modules[k[len('openerp.addons.'):]] = sys.modules[k]
         sys.modules['openerp.addons.' + module_part] = mod
         return mod
 
@@ -176,7 +178,7 @@ def get_module_path(module, downloaded=False, display_warning=True):
     if downloaded:
         return opj(_ad, module)
     if display_warning:
-        logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
+        _logger.warning('module %s: module not found', module)
     return False
 
 
@@ -342,8 +344,11 @@ def load_information_from_description_file(module):
                 'depends data demo test init_xml update_xml demo_xml'.split(),
                 iter(list, None)))
 
-            with tools.file_open(terp_file) as terp_f:
-                info.update(eval(terp_f.read()))
+            f = tools.file_open(terp_file)
+            try:
+                info.update(eval(f.read()))
+            finally:
+                f.close()
 
             if 'active' in info:
                 # 'active' has been renamed 'auto_install'
@@ -353,7 +358,7 @@ def load_information_from_description_file(module):
 
     #TODO: refactor the logger in this file to follow the logging guidelines
     #      for 6.0
-    logging.getLogger('modules').debug('module %s: no descriptor file'
+    _logger.debug('module %s: no descriptor file'
         ' found: __openerp__.py or __terp__.py (deprecated)', module)
     return {}
 
@@ -367,8 +372,7 @@ def init_module_models(cr, module_name, obj_list):
     TODO better explanation of _auto_init and init.
 
     """
-    logger.notifyChannel('init', netsvc.LOG_INFO,
-        'module %s: creating or updating database tables' % module_name)
+    _logger.info('module %s: creating or updating database tables', module_name)
     todo = []
     for obj in obj_list:
         result = obj._auto_init(cr, {'module': module_name})
@@ -385,40 +389,43 @@ def init_module_models(cr, module_name, obj_list):
         t[1](cr, *t[2])
     cr.commit()
 
-def register_module_classes(m):
-    """ Register module named m, if not already registered.
+def load_openerp_module(module_name):
+    """ Load an OpenERP module, if not already loaded.
 
     This loads the module and register all of its models, thanks to either
     the MetaModel metaclass, or the explicit instantiation of the model.
-
+    This is also used to load server-wide module (i.e. it is also used
+    when there is no model to register).
     """
-
-    def log(e):
-        mt = isinstance(e, zipimport.ZipImportError) and 'zip ' or ''
-        msg = "Couldn't load %smodule %s" % (mt, m)
-        logger.notifyChannel('init', netsvc.LOG_CRITICAL, msg)
-        logger.notifyChannel('init', netsvc.LOG_CRITICAL, e)
-
     global loaded
-    if m in loaded:
+    if module_name in loaded:
         return
-    logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: registering objects' % m)
-    mod_path = get_module_path(m)
 
     initialize_sys_path()
     try:
+        mod_path = get_module_path(module_name)
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
-            __import__('openerp.addons.' + m)
+            __import__('openerp.addons.' + module_name)
         else:
             zimp = zipimport.zipimporter(zip_mod_path)
-            zimp.load_module(m)
+            zimp.load_module(module_name)
+
+        # Call the module's post-load hook. This can done before any model or
+        # data has been initialized. This is ok as the post-load hook is for
+        # server-wide (instead of registry-specific) functionalities.
+        info = load_information_from_description_file(module_name)
+        if info['post_load']:
+            getattr(sys.modules['openerp.addons.' + module_name], info['post_load'])()
+
     except Exception, e:
-        log(e)
+        mt = isinstance(e, zipimport.ZipImportError) and 'zip ' or ''
+        msg = "Couldn't load %smodule %s" % (mt, module_name)
+        _logger.critical(msg)
+        _logger.critical(e)
         raise
     else:
-        loaded.append(m)
-
+        loaded.append(module_name)
 
 def get_modules():
     """Returns the list of module names

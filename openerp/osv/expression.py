@@ -159,7 +159,7 @@ FALSE_LEAF = (0, '=', 1)
 TRUE_DOMAIN = [TRUE_LEAF]
 FALSE_DOMAIN = [FALSE_LEAF]
 
-_logger = logging.getLogger('expression')
+_logger = logging.getLogger(__name__)
 
 def normalize(domain):
     """Returns a normalized version of ``domain_expr``, where all implicit '&' operators

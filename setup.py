@@ -40,6 +40,11 @@ def data():
     r = d.items()
     if os.name == 'nt':
         r.append(("Microsoft.VC90.CRT", glob.glob('C:\Microsoft.VC90.CRT\*.*')))
+
+    import babel
+    r.append(("localedata",
+              glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata" , '*'))))
+
     return r
 
 def gen_manifest():

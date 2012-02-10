@@ -62,7 +62,7 @@ class ir_filters(osv.osv):
 
     _columns = {
         'name': fields.char('Filter Name', size=64, translate=True, required=True),
-        'user_id':fields.many2one('res.users', 'User', help="The user this filter is available to. Keep empty to make it available to all users."),
+        'user_id':fields.many2one('res.users', 'User', help="The user this filter is available to. When left empty the filter is usable by the system only."),
         'domain': fields.text('Domain Value', required=True),
         'context': fields.text('Context Value', required=True),
         'model_id': fields.selection(_list_all_models, 'Object', size=64, required=True),

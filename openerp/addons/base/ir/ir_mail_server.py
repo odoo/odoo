@@ -40,7 +40,7 @@ import openerp.tools as tools
 # it is moved to loglevels until we refactor tools.
 from openerp.loglevels import ustr
 
-_logger = logging.getLogger('ir.mail_server')
+_logger = logging.getLogger(__name__)
 
 class MailDeliveryException(osv.except_osv):
     """Specific exception subclass for mail delivery errors"""

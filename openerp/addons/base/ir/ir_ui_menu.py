@@ -204,10 +204,10 @@ class ir_ui_menu(osv.osv):
             ('model', '=', self._name), ('key', '=', 'action'),
             ('key2', '=', 'tree_but_open'), ('res_id', '=', menu_id)],
             context=context)
-        if values_ids:
-            ir_values_obj.write(cursor, user, values_ids, {'value': value},
-                    context=ctx)
-        else:
+        if value and values_ids:
+            ir_values_obj.write(cursor, user, values_ids, {'value': value}, context=ctx)
+        elif value:
+            # no values_ids, create binding
             ir_values_obj.create(cursor, user, {
                 'name': 'Menuitem',
                 'model': self._name,
@@ -216,6 +216,9 @@ class ir_ui_menu(osv.osv):
                 'key2': 'tree_but_open',
                 'res_id': menu_id,
                 }, context=ctx)
+        elif values_ids:
+            # value is False, remove existing binding
+            ir_values_obj.unlink(cursor, user, values_ids, context=ctx)
 
     def _get_icon_pict(self, cr, uid, ids, name, args, context):
         res = {}

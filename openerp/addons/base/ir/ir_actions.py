@@ -36,6 +36,8 @@ from tools.safe_eval import safe_eval as eval
 from tools.translate import _
 from socket import gethostname
 
+_logger = logging.getLogger(__name__)
+
 class actions(osv.osv):
     _name = 'ir.actions.actions'
     _table = 'ir_actions'
@@ -550,7 +552,6 @@ class actions_server(osv.osv):
     }
 
     def get_email(self, cr, uid, action, context):
-        logger = logging.getLogger('Workflow')
         obj_pool = self.pool.get(action.model_id.model)
         id = context.get('active_id')
         obj = obj_pool.browse(cr, uid, id)
@@ -566,12 +567,11 @@ class actions_server(osv.osv):
             try:
                 obj = getattr(obj, field)
             except Exception:
-                logger.exception('Failed to parse: %s', field)
+                _logger.exception('Failed to parse: %s', field)
 
         return obj
 
     def get_mobile(self, cr, uid, action, context):
-        logger = logging.getLogger('Workflow')
         obj_pool = self.pool.get(action.model_id.model)
         id = context.get('active_id')
         obj = obj_pool.browse(cr, uid, id)
@@ -587,7 +587,7 @@ class actions_server(osv.osv):
             try:
                 obj = getattr(obj, field)
             except Exception:
-                logger.exception('Failed to parse: %s', field)
+                _logger.exception('Failed to parse: %s', field)
 
         return obj
 
@@ -624,7 +624,6 @@ class actions_server(osv.osv):
 
     # FIXME: refactor all the eval() calls in run()!
     def run(self, cr, uid, ids, context=None):
-        logger = logging.getLogger(self._name)
         if context is None:
             context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid)
@@ -668,11 +667,11 @@ class actions_server(osv.osv):
                     pass
 
                 if not address:
-                    logger.info('No partner email address specified, not sending any email.')
+                    _logger.info('No partner email address specified, not sending any email.')
                     continue
 
                 if not email_from:
-                    logger.debug('--email-from command line option is not specified, using a fallback value instead.')
+                    _logger.debug('--email-from command line option is not specified, using a fallback value instead.')
                     if user.user_email:
                         email_from = user.user_email
                     else:
@@ -685,9 +684,9 @@ class actions_server(osv.osv):
                 msg = ir_mail_server.build_email(email_from, [address], subject, body)
                 res_email = ir_mail_server.send_email(cr, uid, msg)
                 if res_email:
-                    logger.info('Email successfully sent to: %s', address)
+                    _logger.info('Email successfully sent to: %s', address)
                 else:
-                    logger.warning('Failed to send email to: %s', address)
+                    _logger.warning('Failed to send email to: %s', address)
 
             if action.state == 'trigger':
                 wf_service = netsvc.LocalService("workflow")
@@ -701,7 +700,7 @@ class actions_server(osv.osv):
                 #TODO: set the user and password from the system
                 # for the sms gateway user / password
                 # USE smsclient module from extra-addons
-                logger.warning('SMS Facility has not been implemented yet. Use smsclient module!')
+                _logger.warning('SMS Facility has not been implemented yet. Use smsclient module!')
 
             if action.state == 'other':
                 res = []

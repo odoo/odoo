@@ -32,6 +32,8 @@ from tools import config
 from tools.translate import _
 import pooler
 
+_logger = logging.getLogger(__name__)
+
 def _get_fields_type(self, cr, uid, context=None):
     return sorted([(k,k) for k,v in fields.__dict__.iteritems()
                       if type(v) == types.TypeType
@@ -144,6 +146,10 @@ class ir_model(osv.osv):
     def write(self, cr, user, ids, vals, context=None):
         if context:
             context.pop('__last_update', None)
+        # Filter out operations 4 link from field id, because openerp-web
+        # always write (4,id,False) even for non dirty items
+        if 'field_id' in vals:
+            vals['field_id'] = [op for op in vals['field_id'] if op[0] != 4]
         return super(ir_model,self).write(cr, user, ids, vals, context)
 
     def create(self, cr, user, vals, context=None):
@@ -232,7 +238,7 @@ class ir_model_fields(osv.osv):
         try:
             selection_list = eval(selection)
         except Exception:
-            logging.getLogger('ir.model').warning('Invalid selection list definition for fields.selection', exc_info=True)
+            _logger.warning('Invalid selection list definition for fields.selection', exc_info=True)
             raise except_orm(_('Error'),
                     _("The Selection Options expression is not a valid Pythonic expression." \
                       "Please provide an expression in the [('key','Label'), ...] format."))
@@ -308,10 +314,10 @@ class ir_model_fields(osv.osv):
         if 'serialization_field_id' in vals or 'name' in vals:
             for field in self.browse(cr, user, ids, context=context):
                 if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
-                    raise except_orm(_('Error!'),  _('Changing the storing system for the field "%s" is not allowed.'%field.name))
+                    raise except_orm(_('Error!'),  _('Changing the storing system for field "%s" is not allowed.')%field.name)
                 if field.serialization_field_id and (field.name != vals['name']):
-                    raise except_orm(_('Error!'),  _('Renaming the sparse field "%s" is not allowed'%field.name))           
-                
+                    raise except_orm(_('Error!'),  _('Renaming sparse field "%s" is not allowed')%field.name)
+
         column_rename = None # if set, *one* column can be renamed here
         obj = None
         models_patch = {}    # structs of (obj, [(field, prop, change_to),..])
@@ -588,7 +594,6 @@ class ir_model_data(osv.osv):
              update them seamlessly.
     """
     _name = 'ir.model.data'
-    __logger = logging.getLogger('addons.base.'+_name)
     _order = 'module,model,name'
     _columns = {
         'name': fields.char('External Identifier', required=True, size=128, select=1,
@@ -821,13 +826,13 @@ class ir_model_data(osv.osv):
         if not config.get('import_partial'):
             for (model, res_id) in to_unlink:
                 if self.pool.get(model):
-                    self.__logger.info('Deleting %s@%s', res_id, model)
+                    _logger.info('Deleting %s@%s', res_id, model)
                     try:
                         self.pool.get(model).unlink(cr, uid, [res_id])
                         cr.commit()
                     except Exception:
                         cr.rollback()
-                        self.__logger.warn(
+                        _logger.warning(
                             'Could not delete obsolete record with id: %d of model %s\n'
                             'There should be some relation that points to this resource\n'
                             'You should manually fix this and restart with --update=module',

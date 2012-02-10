@@ -36,6 +36,8 @@ import common
 from openerp.osv.fields import float as float_class, function as function_class
 from openerp.tools.translate import _
 
+_logger = logging.getLogger(__name__)
+
 DT_FORMAT = '%Y-%m-%d'
 DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
 HM_FORMAT = '%H:%M:%S'
@@ -472,17 +474,23 @@ class report_sxw(report_rml, preprocess.report):
                 if aname:
                     try:
                         name = aname+'.'+result[1]
+                        # Remove the default_type entry from the context: this
+                        # is for instance used on the account.account_invoices
+                        # and is thus not intended for the ir.attachment type
+                        # field.
+                        ctx = dict(context)
+                        ctx.pop('default_type', None)
                         pool.get('ir.attachment').create(cr, uid, {
                             'name': aname,
                             'datas': base64.encodestring(result[0]),
                             'datas_fname': name,
                             'res_model': self.table,
                             'res_id': obj.id,
-                            }, context=context
+                            }, context=ctx
                         )
                     except Exception:
                         #TODO: should probably raise a proper osv_except instead, shouldn't we? see LP bug #325632
-                        logging.getLogger('report').error('Could not create saved report attachment', exc_info=True)
+                        _logger.error('Could not create saved report attachment', exc_info=True)
                 results.append(result)
             if results:
                 if results[0][1]=='pdf':
