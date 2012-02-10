@@ -108,7 +108,7 @@
             <para style="terp_default_9">[[ l['intra_code'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ l['amount']/100 ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ l['amount'] or O.OO ]] [[ company.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -129,7 +129,7 @@
           <para style="terp_tblheader_General_Right">Total:</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right">[[ data['form']['amountsum']/100 ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_tblheader_General_Right">[[ data['form']['amountsum'] or 0.00 ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
