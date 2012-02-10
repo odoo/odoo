@@ -601,7 +601,7 @@ class account_voucher(osv.osv):
             'state':'cancel',
             'move_id':False,
         }
-        for inv_id in invoice_ids:
+        for inv_id in set(invoice_ids):
             wf_service.trg_validate(uid, 'account.invoice', inv_id, 'open_test', cr)
         self.write(cr, uid, ids, res)
         return True
