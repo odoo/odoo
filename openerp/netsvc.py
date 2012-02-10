@@ -216,6 +216,8 @@ def init_logger():
         pseudo_config = ['openerp:CRITICAL']
     elif tools.config['log_level'] == 'debug_sql':
         pseudo_config = ['openerp.sql_db:DEBUG']
+    else:
+        pseudo_config = []
 
     logconfig = tools.config['log_handler']
 
