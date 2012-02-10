@@ -3,17 +3,28 @@
     
     <div t-name="ThreadView" class="oe_mail_main">
         <div class="separator horizontal">OpenSocial</div>
-        <div class="oe_mail_actions">
-            <button type="button" class="oe_mail_action_follow">Follow</button>
-            <button type="button" class="oe_mail_action_unfollow">Unfollow</button>
+        <div class="oe_mail_main_left">
+            <div class="oe_mail_actions">
+                <button type="button" class="oe_mail_button_follow">Follow</button>
+                <button type="button" class="oe_mail_button_unfollow">Unfollow</button>
+            </div>
+            <div class="oe_mail_post_comment">
+                <textarea class="oe_mail_action_textarea" onfocus="this.value='';">Enter your comment here...</textarea><br />
+                <button type="button" class="oe_mail_button_comment">Post comment</button>
+            </div>
+            <div class="oe_mail_msg">
+                <div class="oe_mail_comment">
+                </div>
+            </div>
         </div>
-        <div class="oe_mail_post_comment">
-            <textarea rows="3" cols="15">Type your comment</textarea><br />
-            <button type="button" class="oe_mail_action_comment">Post comment</button>
-        </div>
-        <div class="oe_mail_comments">
+        <div class="oe_mail_main_right">
+            <button type="button" class="oe_mail_button_getfollowers">See followers</button>
+            <button type="button" class="oe_mail_button_hidefollowers">Hide followers</button>
+            <br />
+             <div class="oe_mail_followers_vignette" title="Raoul Grobedon"><img src="people.png"/></div>
         </div>
     </div>
+
     
     <t t-name="ThreadMsgView">
         <div class="oe_mail_msg_image">Image</div>
@@ -23,15 +34,15 @@
                     <span class="oe_mail_msg_author">OpenERP System Notification</span>
                 </t>
                 <t t-if="record.type == 'comment'">
-                    <span class="oe_mail_msg_author"><t t-raw="record.user_id[1]"/></span>
+                    <span class="oe_mail_msg_author"><a href="#"><t t-raw="record.user_id[1]"/></a></span>
                 </t>
                 <t t-if="record.type == 'email'">
                     <span class="oe_mail_msg_author"><t t-raw="record.user_id[1]"/></span>
                 </t>
-                <t t-if="record.need_action_user_id != false">- <span class="oe_mail_msg_need_action">Need action</span></t>
+                <t t-if="record.need_action_user_id != false">- <span class="oe_mail_msg_need_action">Need action by <a href="#"><t t-raw="record.need_action_user_id[1]"/></a></span></t>
                 <br />
                 <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span><br />
-                <span class="oe_mail_msg_date"><t t-raw="record.date"/></span>
+                <span class="oe_mail_msg_date"><a href="#"><t t-raw="record.date"/></a></span>
            </p>
         </div>
     </t>

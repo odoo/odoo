@@ -1,43 +1,74 @@
 /** ThreadView widget **/
 
 .oe_mail_main {
+    overflow: auto;
+    padding: 5px 5px 5px 5px;
 }
 
+/* 2 columns view */
+.oe_mail_main_left {
+    float: left;
+    width: 65%;
+}
+
+.oe_mail_main_right {
+    float: right;
+    width: 34%;
+}
+
+/* Left-side CSS */
 .oe_mail_actions {
-    padding-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .oe_mail_post_comment {
-    width: 65%;
-    padding-bottom: 10px;
+    margin-bottom: 10px;
 }
 
-.oe_mail_comments {
-    width: 65%;
+.oe_mail_button_follow, .oe_mail_button_unfollow, .oe_mail_button_getfollowers, .oe_mail_button_hidefollowers {
+    width: 100px;
+}
+
+.oe_mail_button_comment {
+    width: 150px;
+}
+
+.oe_mail_action_textarea {
+    width: 60%;
+    height: 50px;
+    padding: 5px;
+}
+
+.oe_mail_action_comment {
 }
 
 .oe_mail_msg {
-    width: 65%;
-/*     border: 1px solid #998877; */
-    padding: 10px 0px 10px 0px;
 }
 
-.oe_mail_msg:after {
+/*.oe_mail_msg:after {
   content: "";
   display: block;
   clear: both; 
+}*/
+
+.oe_mail_comment {
+    white-space: normal;
+    margin-bottom: 5px;
 }
 
 .oe_mail_msg_image {
     float: left;
-    width: 9%;
+    width: 14%;
+}
+
+.oe_mail_msg_image img {
+    width: 80%;
+    margin-left: 10%;
 }
 
 .oe_mail_msg_content {
-    width: 89%;
-    margin-left: 10%;
-/*     border: 1px solid #557722; */
-    overflow: hidden;
+    width: 85%;
+    margin-left: 15%;
 }
 
 .oe_mail_msg_p {
@@ -48,14 +79,24 @@
 .oe_mail_msg_body {
 }
 
-.oe_mail_msg_author {
+.oe_mail_msg_author, .oe_mail_msg_author a {
     color: #4E43E7;
 }
 
-.oe_mail_msg_need_action {
+.oe_mail_msg_need_action, .oe_mail_msg_need_action a {
     color: #C03000;
 }
 
-.oe_mail_msg_date {
+.oe_mail_msg_date, .oe_mail_msg_date a {
     color: #4E43E7;
+}
+
+/* Right-side CSS */
+.oe_mail_followers_vignette {
+    float: left;
+    width: 20%%;
+}
+
+.oe_mail_followers_vignette img {
+    width: 80%;
 }
