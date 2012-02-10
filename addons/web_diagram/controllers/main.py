@@ -1,5 +1,11 @@
-import web.common.http as openerpweb
-from web.controllers.main import View
+try:
+    # embedded
+    import openerp.addons.web.common.http as openerpweb
+    from openerp.addons.web.controllers.main import View
+except ImportError:
+    # standalone
+    import web.common.http as openerpweb
+    from web.controllers.main import View
 
 class DiagramView(View):
     _cp_path = "/web_diagram/diagram"

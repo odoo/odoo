@@ -25,9 +25,9 @@ import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
 
-import nonliterals
-import session
-import openerplib
+from . import nonliterals
+from . import session
+from . import openerplib
 
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
            'WebRequest', 'JsonRequest', 'HttpRequest']

@@ -1,6 +1,7 @@
-import common
-import controllers
 import logging
+
+from . import common
+from . import controllers
 
 _logger = logging.getLogger(__name__)
 

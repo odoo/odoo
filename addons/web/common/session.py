@@ -6,7 +6,7 @@ import logging
 import time
 import openerplib
 
-import nonliterals
+from . import nonliterals
 
 _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
