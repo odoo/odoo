@@ -115,7 +115,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     },
     do_save_view: function(values) {
         def = $.Deferred();
-        console.log("valuesss",values);
         var field_dataset = new openerp.web.DataSetSearch(this, this.model, null, null);
         var model_dataset = new openerp.web.DataSetSearch(this, 'ir.model', null, null);
         var view_string = "", field_name = false, self = this;
@@ -167,10 +166,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     do_delete_view: function() {
         if (confirm(_t("Do you really want to remove this view?"))) {
             var controller = this.action_manager.inner_viewmanager.views[this.action_manager.inner_viewmanager.active_view].controller;
-            this.dataset.unlink([this.main_view_id]).then(function() {
-                controller.reload_content();
-                this.main_view_id = self.parent.fields_view.view_id;
-            });
+            this.dataset.unlink([this.main_view_id]).then(function() {controller.reload_content();});
         }
     },
     create_View_Node: function(node){
@@ -236,7 +232,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 self.main_view_type = arch[0].type == 'tree'? 'list': arch[0].type;
                 view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch});
                 self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}).then(function(result) {
-                    console.log("resulttt",result);
                     _.each(result, function(res) {
                         view_arch_list.push({"view_id": res.id, "arch": res.arch});
                         self.inherit_view(arch_object, res);
@@ -281,7 +276,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     return list instanceof Array? _.include(list, "position"): false;
                 });
                 expr_to_list = [_.flatten(temp)];
-                console.log("exprt",expr_to_list,xpath_arch_object);
             }
             self.inherit_apply(expr_to_list, arch_object ,xpath_arch_object);
         });
@@ -371,6 +365,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     if (selected_row.length) {
                         if(selected_row.find('a').text().search("field") != -1){
                             if (confirm(_t("Do you really wants to create an inherited view here?"))) {
+                                self.action_manager.inner_viewmanager.views[self.action_manager.inner_viewmanager.active_view].controller.reload_content();
                                 self.inherited_view(selected_row);
                             }
                         }else{
@@ -442,6 +437,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var vals = {'model': self.model, 'name': view_name, 'priority': 16, 'type': "form", 'arch': arch,'inherit_id':view_id};
         this.dataset.create(vals, function(suc) {
             var arch_to_obj = self.parse_xml(arch,suc.result);
+            self.one_object['arch'].push({'view_id':suc.result,"arch":arch});
             self.increase_level(arch_to_obj[0],obj.level+1);
             obj.child_id.push(arch_to_obj[0]);
             self.one_object['parent_child_id'] = self.parent_child_list(self.one_object['main_object'],[]);
@@ -460,7 +456,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }));
         }
         self.edit_xml_dialog.$element.
-            find("tr[id='viewedit-"+row_id+"']").after(clone);
+            find("tr[id='viewedit-"+row_id+"']").after(clone.removeClass('ui-selected'));
         _.each(obj.child_id,function(obj){
             self.render_inherited_view(clone,obj);
         });
