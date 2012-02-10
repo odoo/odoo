@@ -421,7 +421,6 @@ def serve():
     # TODO Change the xmlrpc_* options to http_*
     interface = config['xmlrpc_interface'] or '0.0.0.0'
     port = config['xmlrpc_port']
-    proxy_msg = ' in proxy mode' if config['proxy_mode'] else ''
     try:
         import werkzeug.serving
         if config['proxy_mode']:
@@ -448,7 +447,7 @@ def start_server():
 
     The WSGI server can be shutdown with stop_server() below.
     """
-    threading.Thread(target=openerp.wsgi.serve).start()
+    threading.Thread(target=serve).start()
 
 def stop_server():
     """ Initiate the shutdown of the WSGI server.

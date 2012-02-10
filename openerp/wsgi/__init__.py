@@ -27,4 +27,7 @@ This module offers a WSGI interface to/from OpenERP.
 
 from . import core
 
+# TODO: This is for the web addons, can be removed later.
+register_wsgi_handler = core.register_wsgi_handler
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
