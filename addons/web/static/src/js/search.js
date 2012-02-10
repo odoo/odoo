@@ -154,7 +154,6 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
         // for extended search view
         var ext = new openerp.web.search.ExtendedSearch(this, this.model);
         lines.push([ext]);
-        this.inputs.push(ext);
         this.extended_search = ext;
 
         var render = QWeb.render("SearchView", {
@@ -425,13 +424,9 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
         this.$element.find('table:last').hide();
 
         $('.searchview_extended_groups_list').empty();
-        _.each(this.inputs, function (input) {
-            if(input.datewidget && input.datewidget.value) {
-                input.datewidget.set_value(false);
-            }
-        });
-        return $.async_when().pipe(
-            reload_view !== false ? this.on_clear : null);
+        return $.async_when.apply(
+            null, _(this.inputs).invoke('clear')).pipe(
+                reload_view !== false ? this.on_clear : null);
     },
     /**
      * Triggered when the search view gets cleared
@@ -618,7 +613,11 @@ openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.
             }
         }
         this.attrs = attrs;
-    }
+    },
+    /**
+     * Specific clearing operations, if any
+     */
+    clear: function () {}
 });
 openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends openerp.web.search.FilterGroup# */{
     template: 'SearchView.filters',
@@ -900,6 +899,22 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
             defaults[this.attrs.name] = false;
         }
         return this._super(defaults);
+    },
+    clear: function () {
+        var self = this, d = $.Deferred(), selection = this.attrs.selection;
+        for(var index=0; index<selection.length; ++index) {
+            var item = selection[index];
+            if (!item[1]) {
+                setTimeout(function () {
+                    // won't override mutable, because we immediately bail out
+                    //noinspection JSReferencingMutableVariableFromClosure
+                    self.$element.val(index);
+                    d.resolve();
+                }, 0);
+                return d.promise();
+            }
+        }
+        return d.resolve().promise();
     }
 });
 openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @lends openerp.web.search.BooleanField# */{
@@ -956,6 +971,9 @@ openerp.web.search.DateField = openerp.web.search.Field.extend(/** @lends opener
     },
     get_value: function () {
         return this.datewidget.get_value() || null;
+    },
+    clear: function () {
+        this.datewidget.set_value(false);
     }
 });
 /**
@@ -1051,7 +1069,7 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
     }
 });
 
-openerp.web.search.ExtendedSearch = openerp.web.search.Widget.extend({
+openerp.web.search.ExtendedSearch = openerp.web.search.Input.extend({
     template: 'SearchView.extended_search',
     init: function (parent, model) {
         this._super(parent);
