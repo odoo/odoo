@@ -88,8 +88,10 @@ class account_followup_stat_by_partner(osv.osv):
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_followup_stat_by_partner')
         # Here we don't have other choice but to create a virtual ID based on the concatenation
-        # of the partner_id and the company_id. An assumption that the number of companies will
-        # not reach 10 000 records is made, what should be enough for a time.
+        # of the partner_id and the company_id, because if a partner is shared between 2 companies,
+        # we want to see 2 lines for him in this table. It means that both company should be able 
+        # to send him followups separately . An assumption that the number of companies will not 
+        # reach 10 000 records is made, what should be enough for a time.
         cr.execute("""
             create or replace view account_followup_stat_by_partner as (
                 SELECT
