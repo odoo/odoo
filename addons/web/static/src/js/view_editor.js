@@ -364,12 +364,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             title: _.str.sprintf(_t("View Editor %d - %s"), self.main_view_id, self.model),
             height: '90%',
             buttons: [
-                {text: _t("Inherit View"), click: function(){
+                {text: _t("Inherited View"), click: function(){
                     var selected_row = self.edit_xml_dialog.$element.find('.ui-selected');
                     if (selected_row.length) {
                         if(selected_row.find('a').text().search("field") != -1){
                             if (confirm(_t("Do you really wants to create an inherited view here?"))) {
-                                self.action_manager.inner_viewmanager.views[self.action_manager.inner_viewmanager.active_view].controller.reload_content();
                                 self.inherited_view(selected_row);
                             }
                         }else{
@@ -397,6 +396,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     action_manager.do_action(action);
                 }},
                 {text: _t("Close"), click: function(){
+                    self.action_manager.inner_viewmanager.views[self.action_manager.inner_viewmanager.active_view].controller.reload_content();
                     self.edit_xml_dialog.close();
                 }}
             ]
