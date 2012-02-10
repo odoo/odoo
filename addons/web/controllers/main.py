@@ -166,6 +166,30 @@ class WebClient(openerpweb.Controller):
         return max(datetime.datetime.fromtimestamp(os.path.getmtime(f))
                    for f in files)
 
+    def make_conditional(self, req, response, last_modified=None, etag=None):
+        """ Makes the provided response conditional based upon the request,
+        and mandates revalidation from clients
+
+        Uses Werkzeug's own :meth:`ETagResponseMixin.make_conditional`, after
+        setting ``last_modified`` and ``etag`` correctly on the response object
+
+        :param req: OpenERP request
+        :type req: web.common.http.WebRequest
+        :param response: Werkzeug response
+        :type response: werkzeug.wrappers.Response
+        :param datetime.datetime last_modified: last modification date of the response content
+        :param str etag: some sort of checksum of the content (deep etag)
+        :return: the response object provided
+        :rtype: werkzeug.wrappers.Response
+        """
+        response.cache_control.must_revalidate = True
+        response.cache_control.max_age = 0
+        if last_modified:
+            response.last_modified = last_modified
+        if etag:
+            response.set_etag(etag)
+        return response.make_conditional(req.httprequest)
+
     @openerpweb.httprequest
     def css(self, req, mods=None):
         files = list(self.manifest_glob(req, mods, 'css'))
@@ -202,15 +226,10 @@ class WebClient(openerpweb.Controller):
             return data
 
         content, checksum = concat_files((f[0] for f in files), reader)
-        if req.httprequest.if_none_match and checksum in req.httprequest.if_none_match:
-            return werkzeug.wrappers.Response(status=304)
 
-        response = req.make_response(content, [('Content-Type', 'text/css')])
-        response.cache_control.must_revalidate = True
-        response.cache_control.max_age = 0
-        response.last_modified = last_modified
-        response.set_etag(checksum)
-        return response
+        return self.make_conditional(
+            req, req.make_response(content, [('Content-Type', 'text/css')]),
+            last_modified, checksum)
 
     @openerpweb.httprequest
     def js(self, req, mods=None):
@@ -222,15 +241,10 @@ class WebClient(openerpweb.Controller):
             return werkzeug.wrappers.Response(status=304)
 
         content, checksum = concat_files(files, intersperse=';')
-        if req.httprequest.if_none_match and checksum in req.httprequest.if_none_match:
-            return werkzeug.wrappers.Response(status=304)
 
-        resp = req.make_response(content, [('Content-Type', 'application/javascript')])
-        resp.cache_control.must_revalidate = True
-        resp.cache_control.max_age = 0
-        resp.last_modified = last_modified
-        resp.set_etag(checksum)
-        return resp
+        return self.make_conditional(
+            req, req.make_response(content, [('Content-Type', 'application/javascript')]),
+            last_modified, checksum)
 
     @openerpweb.httprequest
     def qweb(self, req, mods=None):
@@ -240,16 +254,10 @@ class WebClient(openerpweb.Controller):
             return werkzeug.wrappers.Response(status=304)
 
         content,checksum = concat_xml(files)
-        if req.httprequest.if_none_match and checksum in req.httprequest.if_none_match:
-            return werkzeug.wrappers.Response(status=304)
 
-        response = req.make_response(content, [('Content-Type', 'text/xml')])
-        response.cache_control.must_revalidate = True
-        response.cache_control.max_age = 0
-        response.last_modified = last_modified
-        response.set_etag(checksum)
-        return response
-
+        return self.make_conditional(
+            req, req.make_response(content, [('Content-Type', 'text/xml')]),
+            last_modified, checksum)
 
     @openerpweb.httprequest
     def home(self, req, s_action=None, **kw):
