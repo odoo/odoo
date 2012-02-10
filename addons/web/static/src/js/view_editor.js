@@ -164,9 +164,13 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         }
     },
     do_delete_view: function() {
+        var self = this;
         if (confirm(_t("Do you really want to remove this view?"))) {
             var controller = this.action_manager.inner_viewmanager.views[this.action_manager.inner_viewmanager.active_view].controller;
-            this.dataset.unlink([this.main_view_id]).then(function() {controller.reload_content();});
+            this.dataset.unlink([this.main_view_id]).then(function() {
+                controller.reload_content();
+                self.main_view_id = self.parent.fields_view.view_id;
+            });
         }
     },
     create_View_Node: function(node){
@@ -413,40 +417,34 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
     },
     inherited_view: function(selected_row){
-        var self = this;
-        var row_id = parseInt((selected_row.attr('id')).split('-')[1]);
+        var self = this,row_id = parseInt((selected_row.attr('id')).split('-')[1]);
         var obj = self.get_object_by_id(row_id,self.one_object['main_object'], [])[0];
         var view_name = this.model + '.inherit_' + Math.round(Math.random() * 1000),
-        view_find = selected_row,view_id,view_xml_id,min_level = parseInt(selected_row.attr('level'));
+        view_find = selected_row,view_id,min_level = parseInt(selected_row.attr('level'));
         while (1) {
             view_find = view_find.prev();
             if (view_find.length == 0 ||
                     (self.edit_xml_dialog.$element.find(view_find).find('a').text()).search("view_id") != -1
                     && parseInt(view_find.attr('level')) < min_level ) {
-                        
                 view_id = parseInt(($(view_find).find('a').text()).replace(/[^0-9]+/g, ''));
-                view_xml_id = parseInt((view_find.attr('id')).split('-')[1]);
                 break;
             }
             if (view_find.attr('level') < min_level) {min_level = parseInt(view_find.attr('level'));}
         }
-        val = _.detect(obj.att_list,function(val){
-                return val[0] == "name";
-            });
+        val = _.detect(obj.att_list,function(val){return val[0] == "name";});
         var arch = _.str.sprintf("<?xml version='1.0'?>\n\t <field name='%s' position='after'> </field>", val[1]);
         var vals = {'model': self.model, 'name': view_name, 'priority': 16, 'type': "form", 'arch': arch,'inherit_id':view_id};
         this.dataset.create(vals, function(suc) {
             var arch_to_obj = self.parse_xml(arch,suc.result);
-            self.one_object['arch'].push({'view_id':suc.result,"arch":arch});
-            self.increase_level(arch_to_obj[0],obj.level+1);
-            obj.child_id.push(arch_to_obj[0]);
             self.one_object['parent_child_id'] = self.parent_child_list(self.one_object['main_object'],[]);
-            self.render_inherited_view(selected_row,arch_to_obj[0]);        
+            self.one_object['arch'].push({'view_id':suc.result,"arch":arch});
+            obj.child_id.push(arch_to_obj[0]);
+            self.increase_level(arch_to_obj[0],obj.level+1);
+            self.render_inherited_view(selected_row,arch_to_obj[0]);
         });
     },
     render_inherited_view: function(selected_row,obj){
-        var self = this;
-        var row_id = parseInt((selected_row.attr('id')).split('-')[1]);
+        var self = this,row_id = parseInt((selected_row.attr('id')).split('-')[1]);
         var clone = this.create_clone(selected_row.clone(),obj);
         if (selected_row.find("img[id^='parentimg-']").length == 0) {
             ($(selected_row.find('a').parent()).siblings('td'))
@@ -457,9 +455,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         }
         self.edit_xml_dialog.$element.
             find("tr[id='viewedit-"+row_id+"']").after(clone.removeClass('ui-selected'));
-        _.each(obj.child_id,function(obj){
-            self.render_inherited_view(clone,obj);
-        });
+        _.each(obj.child_id,function(obj){self.render_inherited_view(clone,obj);});
     },
     on_select_img: function(element_img) {
         var self = this;
