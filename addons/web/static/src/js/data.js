@@ -522,6 +522,9 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
 
         this._sort.unshift((reverse ? '-' : '') + field);
         return undefined;
+    },
+    size: function () {
+        return this.ids.length;
     }
 });
 openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
@@ -568,6 +571,7 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
         this._super(parent, model, context);
         this.domain = domain || [];
         this.offset = 0;
+        this._length;
         // subset records[offset:offset+limit]
         // is it necessary ?
         this.ids = [];
@@ -599,6 +603,7 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
         }).pipe(function (result) {
             self.ids = result.ids;
             self.offset = offset;
+            self._length = result.length;
             return result.records;
         });
     },
@@ -619,6 +624,12 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
             if (callback)
                 callback(result);
         }, error_callback);
+    },
+    size: function () {
+        if (this._length !== undefined) {
+            return this._length;
+        }
+        return this._super();
     }
 });
 openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({

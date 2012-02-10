@@ -5,6 +5,7 @@ import base64
 import csv
 import glob
 import itertools
+import logging
 import operator
 import datetime
 import os
@@ -680,6 +681,30 @@ class Menu(openerpweb.Controller):
     def load(self, req):
         return {'data': self.do_load(req)}
 
+    @openerpweb.jsonrequest
+    def get_user_roots(self, req):
+        return self.do_get_user_roots(req)
+
+    def do_get_user_roots(self, req):
+        """ Return all root menu ids visible for the session user.
+
+        :param req: A request object, with an OpenERP session attribute
+        :type req: < session -> OpenERPSession >
+        :return: the root menu ids
+        :rtype: list(int)
+        """
+        s = req.session
+        context = s.eval_context(req.context)
+        Menus = s.model('ir.ui.menu')
+        # If a menu action is defined use its domain to get the root menu items
+        user_menu_id = s.model('res.users').read([s._uid], ['menu_id'], context)[0]['menu_id']
+        if user_menu_id:
+            menu_domain = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'], context)[0]['domain']
+            menu_domain = ast.literal_eval(menu_domain)
+        else:
+            menu_domain = [('parent_id', '=', False)]
+        return Menus.search(menu_domain, 0, False, False, context)
+
     def do_load(self, req):
         """ Loads all menu items (all applications and their sub-menus).
 
@@ -688,26 +713,19 @@ class Menu(openerpweb.Controller):
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        s = req.session
-        context = s.eval_context(req.context)
-        Menus = s.model('ir.ui.menu')
-        # If a menu action is defined use its domain to get the root menu items
-        user_menu_id = s.model('res.users').read([s._uid], ['menu_id'], context)[0]['menu_id']
-        if user_menu_id:
-            user_menu_domain = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'], context)[0]['domain']
-            user_menu_domain = ast.literal_eval(user_menu_domain)
-            root_menu_ids = Menus.search(user_menu_domain, 0, False, False, context)
-            menu_items = Menus.read(root_menu_ids, ['name', 'sequence', 'parent_id'], context)
-            menu_root = {'id': -2, 'name': 'root', 'parent_id': [-1, ''], 'children' : menu_items}
-            menu_roots = [menu_root] + menu_items
-        else:
-            menu_roots = [{'id': False, 'name': 'root', 'parent_id': [-1, '']}]
+        context = req.session.eval_context(req.context)
+        Menus = req.session.model('ir.ui.menu')
 
+        menu_roots = Menus.read(self.do_get_user_roots(req), ['name', 'sequence', 'parent_id'], context)
+        menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, ''], 'children' : menu_roots}
 
         # menus are loaded fully unlike a regular tree view, cause there are a
         # limited number of items (752 when all 6.1 addons are installed)
         menu_ids = Menus.search([], 0, False, False, context)
         menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'], context)
+        # adds roots at the end of the sequence, so that they will overwrite
+        # equivalent menu items from full menu read when put into id:item
+        # mapping, resulting in children being correctly set on the roots.
         menu_items.extend(menu_roots)
 
         # make a tree using parent_id
@@ -769,21 +787,24 @@ class DataSet(openerpweb.Controller):
         context, domain = eval_context_and_domain(
             req.session, req.context, domain)
 
-        ids = Model.search(domain, 0, False, sort or False, context)
-        # need to fill the dataset with all ids for the (domain, context) pair,
-        # so search un-paginated and paginate manually before reading
-        paginated_ids = ids[offset:(offset + limit if limit else None)]
+        ids = Model.search(domain, offset or 0, limit or False, sort or False, context)
+        if limit and len(ids) == limit:
+            length = Model.search_count(domain, context)
+        else:
+            length = len(ids) + (offset or 0)
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
             return {
                 'ids': ids,
-                'records': [{'id': id} for id in paginated_ids]
+                'length': length,
+                'records': [{'id': id} for id in ids]
             }
 
-        records = Model.read(paginated_ids, fields or False, context)
+        records = Model.read(ids, fields or False, context)
         records.sort(key=lambda obj: ids.index(obj['id']))
         return {
             'ids': ids,
+            'length': length,
             'records': records
         }
 
@@ -1160,11 +1181,21 @@ class SearchView(View):
 
     @openerpweb.jsonrequest
     def get_filters(self, req, model):
+        logger = logging.getLogger(__name__ + '.SearchView.get_filters')
         Model = req.session.model("ir.filters")
         filters = Model.get_filters(model)
         for filter in filters:
-            filter["context"] = req.session.eval_context(parse_context(filter["context"], req.session))
-            filter["domain"] = req.session.eval_domain(parse_domain(filter["domain"], req.session))
+            try:
+                filter["context"] = req.session.eval_context(
+                    parse_context(filter["context"], req.session))
+                filter["domain"] = req.session.eval_domain(
+                    parse_domain(filter["domain"], req.session))
+            except Exception:
+                logger.exception("Failed to parse custom filter %s in %s",
+                                 filter['name'], model)
+                filter['disabled'] = True
+                del filter['context']
+                del filter['domain']
         return filters
 
     @openerpweb.jsonrequest
@@ -1431,8 +1462,6 @@ class Export(View):
         for field_name, field in fields_sequence:
             if import_compat:
                 if exclude and field_name in exclude:
-                    continue
-                if 'function' in field:
                     continue
                 if field.get('readonly'):
                     # If none of the field's states unsets readonly, skip the field

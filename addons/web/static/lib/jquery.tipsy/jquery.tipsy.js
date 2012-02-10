@@ -18,6 +18,10 @@
     
     Tipsy.prototype = {
         show: function() {
+            $.fn.tipsy.clear();
+            if (!this.$element.parent().length) {
+                return;
+            }
             var title = this.getTitle();
             if (title && this.enabled) {
                 var $tip = this.tip();
@@ -175,6 +179,10 @@
         return this;
         
     };
+
+    $.fn.tipsy.clear = function() {
+        $('div.tipsy').stop().remove();
+    }
     
     $.fn.tipsy.defaults = {
         className: null,
