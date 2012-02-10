@@ -1,11 +1,15 @@
 # Gunicorn sample configuration file.
 # See http://gunicorn.org/configure.html for more details.
 #
-# To run OpenERP via Gunicorn, change the appropriate
+# To run the OpenERP server via Gunicorn, change the appropriate
 # settings below, in order to provide the parameters that
 # would normally be passed in the command-line,
 # (at least `bind` and `conf['addons_path']`), then execute:
-#  $ gunicorn openerp:wsgi.application -c gunicorn.conf.py
+#   $ gunicorn openerp:wsgi.core.application -c gunicorn.conf.py
+# or if you want to run it behind a reverse proxy, add the line
+#   import openerp.wsgi.proxied
+# in this file and execute:
+#   $ gunicorn openerp:wsgi.proxied.application -c gunicorn.conf.py
 
 import openerp
 
@@ -20,10 +24,10 @@ pidfile = '.gunicorn.pid'
 workers = 4
 
 # Some application-wide initialization is needed.
-on_starting = openerp.wsgi.on_starting
-when_ready = openerp.wsgi.when_ready
-pre_request = openerp.wsgi.pre_request
-post_request = openerp.wsgi.post_request
+on_starting = openerp.wsgi.core.on_starting
+when_ready = openerp.wsgi.core.when_ready
+pre_request = openerp.wsgi.core.pre_request
+post_request = openerp.wsgi.core.post_request
 
 # openerp request-response cycle can be quite long for
 # big reports for example

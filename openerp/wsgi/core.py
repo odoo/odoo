@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2011-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-""" WSGI stuffs (proof of concept for now)
+"""
 
-This module offers a WSGI interface to OpenERP.
+WSGI stack, common code.
 
 """
 
@@ -41,7 +41,7 @@ import traceback
 import openerp
 import openerp.modules
 import openerp.tools.config as config
-import service.websrv_lib as websrv_lib
+from ..service import websrv_lib
 
 _logger = logging.getLogger(__name__)
 
@@ -423,11 +423,20 @@ def serve():
     port = config['xmlrpc_port']
     try:
         import werkzeug.serving
+        if config['proxy_mode']:
+            from werkzeug.contrib.fixers import ProxyFix
+            app = ProxyFix(application)
+            suffix = ' (in proxy mode)'
+        else:
+            app = application
+            suffix = ''
         httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
-        _logger.info('HTTP service (werkzeug) running on %s:%s', interface, port)
+        _logger.info('HTTP service (werkzeug) running on %s:%s%s', interface, port, suffix)
     except ImportError:
         import wsgiref.simple_server
         _logger.warning('Werkzeug module unavailable, falling back to wsgiref.')
+        if config['proxy_mode']:
+            _logger.warning('Werkzeug module unavailable, not using proxy mode.')
         httpd = wsgiref.simple_server.make_server(interface, port, application)
         _logger.info('HTTP service (wsgiref) running on %s:%s', interface, port)
 
@@ -438,7 +447,7 @@ def start_server():
 
     The WSGI server can be shutdown with stop_server() below.
     """
-    threading.Thread(target=openerp.wsgi.serve).start()
+    threading.Thread(target=serve).start()
 
 def stop_server():
     """ Initiate the shutdown of the WSGI server.
