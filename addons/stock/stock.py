@@ -504,9 +504,13 @@ class stock_tracking(osv.osv):
         return self.name_get(cr, user, ids, context)
 
     def name_get(self, cr, uid, ids, context=None):
+        """Append the serial to the name"""
         if not len(ids):
             return []
-        res = [(r['id'], r['name']+' ['+(r['serial'] or '')+']') for r in self.read(cr, uid, ids, ['name', 'serial'], context)]
+        res = [ (r['id'], r['serial'] and '%s [%s]' % (r['name'], r['serial'])
+                                      or r['name'] )
+                for r in self.read(cr, uid, ids, ['name', 'serial'],
+                                   context=context) ]
         return res
 
     def unlink(self, cr, uid, ids, context=None):
