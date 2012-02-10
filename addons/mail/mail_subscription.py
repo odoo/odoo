@@ -39,7 +39,8 @@ class mail_subscription(osv.osv):
                         select=1, required=True),
         'res_id': fields.integer('Related Document ID', select=1),
         #'res_domain': fields.char('res_domain', size=256),
-        'user_id': fields.integer('Related User ID', select=1, required=True),
+        'user_id': fields.many2one('res.users', string='Related User ID',
+                        ondelete='cascade', required=True, select=1),
     }
     _defaults = {
     }
