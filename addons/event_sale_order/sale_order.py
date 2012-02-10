@@ -25,46 +25,50 @@ class product(osv.osv):
     _inherit='product.product'
     _columns={
     'event_ok':fields.boolean('Event'),
-    'event_type':fields.many2one('event.type','Type of Event'),
+    'event_type_id':fields.many2one('event.type','Type of Event'),
     }
 product()
 
 class sale_order_line(osv.osv):
     _inherit='sale.order.line'
     _columns={
-    'event':fields.many2one('event.event','Event'),
-    'event_type':fields.char('event_type',128),
-    'event_ok':fields.boolean('event_ok'),
+        'event':fields.many2one('event.event','Event'),
+        'event_type_id':fields.related('event_type',type='many2one', relation="event.type", string="Event Type"),
+        'event_ok':fields.related('event_ok',string='event_ok' ,type='boolean'),
     }
 
-    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
-    uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-    lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+    def product_id_change(self, cr, uid, ids,
+                          pricelist, 
+                          product, qty=0,
+                          uom=False,
+                          qty_uos=0,
+                          uos=False,
+                          name='',
+                          partner_id=False,
+                          lang=False,
+                          update_tax=True,
+                          date_order=False,
+                          packaging=False,
+                          fiscal_position=False,
+                          flag=False, context=None):
         """
         check product if event type 
         """
-        res = {}
+        res = super(sale_order_line,self).product_id_change(cr,uid,ids,pricelist, product, qty,uom, qty_uos, uos, name, partner_id,lang, update_tax, date_order, packaging, fiscal_position, flag,context)
         if product:
-            product_res = self.pool.get('product.product').browse(cr, uid, product)
-            if product_res.event_type:
-                res={'value' : {
-                                'event_type':product_res.event_type.name,
-                                'event_ok':product_res.event_ok
-                                }
-                    }
-            return  res
-
-        return super(sale_order_line,self).product_id_change(cr,uid,ids,res,context)
+            product_res = self.pool.get('product.product').browse(cr, uid, product,context=context)
+            if product_res.event_type_id:
+                res['value'].update({'event_type_id':product_res.event_type_id.id,'event_ok':product_res.event_ok})
+        return res
 
     def button_confirm(self,cr,uid,ids,context=None):
         '''
         create registration with sale order
 
         '''
-        registration = self.browse(cr,uid,ids,context=None)
-        for registration in registration:    
+        for registration in self.browse(cr,uid,ids,context=context):
             if registration.event.id:
-                self.pool.get('event.registration').create(cr,uid,{
+                dic = {
                 'name':registration.order_id.partner_invoice_id.name,
                 'partner_id':registration.order_id.partner_id.id,
                 'contact_id':registration.order_id.partner_invoice_id.id,
@@ -75,7 +79,8 @@ class sale_order_line(osv.osv):
                 'origin':registration.order_id.name,
                 'nb_register':1,
                 'event_id':registration.event.id,
-                })
+                }
+                self.pool.get('event.registration').create(cr,uid,dic,context=context)
                 message = ("The sales order '%s' create a registration.") % (registration.order_id.name,)
                 self.log(cr, uid, registration.event.id, message)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context)
