@@ -543,6 +543,13 @@ class mail_thread(osv.osv):
             subs = subscription_obj.browse(cr, uid, sub_ids, context=context)
         return subs
     
+    def message_get_subscribers_web(self, cr, uid, ids, context=None):
+        subscription_obj = self.pool.get('mail.subscription')
+        for id in ids:
+            sub_ids = subscription_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', '=', id)], context=context)
+            subs = subscription_obj.read(cr, uid, sub_ids, context=context)
+        return subs
+    
     def message_is_subscriber(self, cr, uid, ids, context=None):
         for subscription in self.message_get_subscribers(cr, uid, ids, context=context):
             if subscription.user_id == uid: return True

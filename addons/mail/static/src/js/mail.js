@@ -32,6 +32,7 @@ openerp.mail = function(session) {
             self.$element.find('button.oe_mail_button_unfollow').bind('click', function () { self.do_unfollow(); });
             self.$element.find('button.oe_mail_button_unfollow').hide();
             self.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
+            self.$element.find('button.oe_mail_button_followers').bind('click', function () { self.do_toggle_followers(); });
             /* find wich (un)follow buttons to show */
             var call_res = this.ds.call('message_is_subscriber', [[this.session.uid]]).then(function (records) {
                 if (records == true) { self.follow_state = 1; self.$element.find('button.oe_mail_button_unfollow').show(); }
@@ -47,15 +48,18 @@ openerp.mail = function(session) {
         set_value: function() {
             this._super.apply(this, arguments);
             if (! this.view.datarecord.id) { return; }
-            return this.fetch_messages();
+            return this.fetch_data();
         },
         
-        fetch_messages: function () {
-            return this.ds.call('message_load', [[this.view.datarecord.id]]).then(
-                this.proxy('display_records'));
+        fetch_data: function () {
+            var load_res = this.ds.call('message_load', [[this.view.datarecord.id]]).then(
+                this.proxy('display_comments'));
+            var follow_res = this.ds.call('message_get_subscribers_web', [[this.view.datarecord.id]]).then(
+                this.proxy('display_followers'));
+            return follow_res;
         },
         
-        display_records: function (records) {
+        display_comments: function (records) {
             this.$element.find('div.oe_mail_msg').empty();
             var self = this;
             _(records).each(function (record) {
@@ -66,6 +70,16 @@ openerp.mail = function(session) {
                 $('<div class="oe_mail_comment">').html(render_res).appendTo(self.$element.find('div.oe_mail_msg'));
             });
 //             this.timeout = setTimeout(this.proxy('fetch_messages'), 5000);
+        },
+        
+        display_followers: function (records) {
+            this.$element.find('div.oe_mail_followers').empty();
+            var self = this;
+            _(records).each(function (record) {
+                console.log(record);
+//                 <div class="oe_mail_followers_vignette" title="Raoul Grobedon"><img src="people.png"/></div>
+                $('<div class="oe_mail_followers_vignette">').text(record.user_id[1]).appendTo(self.$element.find('div.oe_mail_followers'));
+            });
         },
         
         do_follow: function () {
@@ -84,6 +98,10 @@ openerp.mail = function(session) {
             var body_text = this.$element.find('textarea').val();
             return this.ds.call('message_append_note', [[this.view.datarecord.id], 'Reply comment', body_text, type='comment']).then(
                 this.proxy('fetch_messages'));
+        },
+        
+        do_toggle_followers: function () {
+            this.$element.find('div.oe_mail_followers').toggle();
         },
     });
     
