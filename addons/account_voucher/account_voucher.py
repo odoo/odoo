@@ -750,6 +750,9 @@ class account_voucher(osv.osv):
                     'debit': 0.0,
                     'date': inv.date
                 }
+                if not amount:
+                    raise osv.except_osv(_('Warning'),
+                        _("Error while processing 'account.voucher %s' (id:%s) for partner '%s', amount: %s !") % (inv.name, inv.id, inv.partner_id.name, inv.amount))
                 if amount < 0:
                     amount = -amount
                     if line.type == 'dr':
