@@ -101,9 +101,10 @@ class AddonsImportHook(object):
                 # Check if the bare module name clashes with another module.
                 f, path, descr = imp.find_module(module_parts[0])
                 _logger.warning("""
-Ambiguous import: the OpenERP module `%s` is shadowing another
-module (available at %s).""" % (module_name, path))
-                return self # We act as a loader too.
+Ambiguous import: the OpenERP module `%s` is shadowed by another
+module (available at %s).
+To import it, use `import openerp.addons.<module>.`.""" % (module_name, path))
+                return
             except ImportError, e:
                 # Using `import <module_name>` instead of
                 # `import openerp.addons.<module_name>` is ugly but not harmful
@@ -136,7 +137,7 @@ module (available at %s).""" % (module_name, path))
         # Note: we don't support circular import.
         f, path, descr = imp.find_module(module_part, ad_paths)
         mod = imp.load_module('openerp.addons.' + module_part, f, path, descr)
-        if is_shadowing or not is_shadowing: # == if True, but keep the defined variable.
+        if not is_shadowing:
             sys.modules[module_part] = mod
             for k in sys.modules.keys():
                 if k.startswith('openerp.addons.' + module_part):
