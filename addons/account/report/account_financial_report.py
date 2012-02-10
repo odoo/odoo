@@ -86,7 +86,12 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                         'type': 'account',
                         'level': report.display_detail == 'detail_with_hierarchy' and min(account.level + 1,6) or 6, #account.level + 1
                         'account_type': account.type,
+                        
                     }
+                    if data['form']['debit_credit'] == True:
+                        vals['debit'] = account.debit
+                        vals['credit'] = account.credit
+                    lines.append(vals)
                     if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance']):
                         flag = True
                     if data['form']['enable_filter']:
