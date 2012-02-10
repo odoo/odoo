@@ -230,14 +230,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     get_arch: function() {
         var self = this;
         var view_arch_list = [];
-        this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type']).then(function(arch) {
+        this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type','priority']).then(function(arch) {
             if (arch.length) {
                 var arch_object = self.parse_xml(arch[0].arch, self.main_view_id);
                 self.main_view_type = arch[0].type == 'tree'? 'list': arch[0].type;
-                view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch});
+                view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch,"priority":arch[0].priority});
                 self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}).then(function(result) {
                     _.each(result, function(res) {
-                        view_arch_list.push({"view_id": res.id, "arch": res.arch});
+                        view_arch_list.push({"view_id": res.id, "arch": res.arch,"priority":res.priority});
                         self.inherit_view(arch_object, res);
                     });
                     return self.edit_view({"main_object": arch_object,
@@ -431,14 +431,15 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
             if (view_find.attr('level') < min_level) {min_level = parseInt(view_find.attr('level'));}
         }
-        val = _.detect(obj.att_list,function(val){return val[0] == "name";});
+        var val = _.detect(obj.att_list,function(val){return val[0] == "name";});
+        var priority =_.detect(self.one_object['arch'],function(val){return val.view_id == view_id;});
         var arch = _.str.sprintf("<?xml version='1.0'?>\n\t <field name='%s' position='after'> </field>", val[1]);
-        var vals = {'model': self.model, 'name': view_name, 'priority': 16, 'type': "form", 'arch': arch,'inherit_id':view_id};
+        var vals = {'model': self.model, 'name': view_name, 'priority': priority.priority + 1, 'type': "form", 'arch': arch,'inherit_id':self.main_view_id};
         this.dataset.create(vals, function(suc) {
             var arch_to_obj = self.parse_xml(arch,suc.result);
-            self.one_object['parent_child_id'] = self.parent_child_list(self.one_object['main_object'],[]);
-            self.one_object['arch'].push({'view_id':suc.result,"arch":arch});
             obj.child_id.push(arch_to_obj[0]);
+            self.one_object['parent_child_id'] = self.parent_child_list(self.one_object['main_object'],[]);
+            self.one_object['arch'].push({'view_id':suc.result,"arch":arch,'priority': priority.priority + 1});
             self.increase_level(arch_to_obj[0],obj.level+1);
             self.render_inherited_view(selected_row,arch_to_obj[0]);
         });
