@@ -325,7 +325,7 @@ class hr_holidays(osv.osv):
     
     def holidays_confirm_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
-            self.message_append_note(cr, uid, [obj.id], _('System notification'), _("The %s request '%s' has been confirmed and is waiting for validation.") % ('leave' if obj.type == 'remove' else 'allocation', obj.name,), type='notification', need_action_user_id=obj.employee_id.parent_id.user_id.id)
+            self.message_append_note(cr, uid, [obj.id], _('System notification'), _("The %s request '%s' has been confirmed and is waiting for validation.") % ('leave' if obj.type == 'remove' else 'allocation', obj.name,), type='notification', need_action_user_id = obj.employee_id.parent_id.user_id.id if obj.employee_id.parent_id else False)
     
     def holidays_refuse(self, cr, uid, ids, approval, context=None):
         obj_emp = self.pool.get('hr.employee')
