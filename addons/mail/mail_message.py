@@ -198,7 +198,7 @@ class mail_message(osv.osv):
     
     def create(self, cr, uid, vals, context=None):
         # OpenSocial: notifications do not come from any user but from system
-        if vals['type'] == 'notification': vals['user_id'] = False
+        if vals.get('type') == 'notification': vals['user_id'] = False
         need_action_pushed = False
         msg_id = super(mail_message, self).create(cr, uid, vals, context)
         # push the message to suscribed users
