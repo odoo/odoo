@@ -1,12 +1,14 @@
 # Gunicorn sample configuration file.
 # See http://gunicorn.org/configure.html for more details.
 #
-# To run OpenERP via Gunicorn, change the appropriate
+# To run the OpenERP server via Gunicorn, change the appropriate
 # settings below, in order to provide the parameters that
 # would normally be passed in the command-line,
 # (at least `bind` and `conf['addons_path']`), then execute:
 #   $ gunicorn openerp:wsgi.core.application -c gunicorn.conf.py
-# or
+# or if you want to run it behind a reverse proxy, add the line
+#   import openerp.wsgi.proxied
+# in this file and execute:
 #   $ gunicorn openerp:wsgi.proxied.application -c gunicorn.conf.py
 
 import openerp
