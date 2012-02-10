@@ -732,17 +732,21 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             var params = { mods: all_modules, lang: lang};
             var to_load = _.difference(result, self.module_list).join(',');
             self.module_list = all_modules;
-            return $.when(
-                self.rpc('/web/webclient/csslist', {mods: to_load}, self.do_load_css),
-                self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
-                self.rpc('/web/webclient/translations', params).pipe(function(trans) {
-                    openerp.web._t.database.set_bundle(trans);
-                    var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
-                    return self.rpc('/web/webclient/jslist', {mods: to_load}).pipe(function(files) {
-                        return self.do_load_js(file_list.concat(files)); 
-                    });
-                })
-            ).then(function() {
+
+            var loaded = $.Deferred().resolve().promise();
+            if (to_load.length) {
+                loaded = $.when(
+                    self.rpc('/web/webclient/csslist', {mods: to_load}, self.do_load_css),
+                    self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
+                    self.rpc('/web/webclient/translations', params).pipe(function(trans) {
+                        openerp.web._t.database.set_bundle(trans);
+                        var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
+                        return self.rpc('/web/webclient/jslist', {mods: to_load}).pipe(function(files) {
+                            return self.do_load_js(file_list.concat(files));
+                        });
+                    }))
+            }
+            return loaded.then(function() {
                 self.on_modules_loaded();
                 if (!no_session_valid_signal) {
                     self.on_session_valid();
