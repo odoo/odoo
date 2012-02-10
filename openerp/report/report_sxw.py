@@ -474,13 +474,19 @@ class report_sxw(report_rml, preprocess.report):
                 if aname:
                     try:
                         name = aname+'.'+result[1]
+                        # Remove the default_type entry from the context: this
+                        # is for instance used on the account.account_invoices
+                        # and is thus not intended for the ir.attachment type
+                        # field.
+                        ctx = dict(context)
+                        ctx.pop('default_type', None)
                         pool.get('ir.attachment').create(cr, uid, {
                             'name': aname,
                             'datas': base64.encodestring(result[0]),
                             'datas_fname': name,
                             'res_model': self.table,
                             'res_id': obj.id,
-                            }, context=context
+                            }, context=ctx
                         )
                     except Exception:
                         #TODO: should probably raise a proper osv_except instead, shouldn't we? see LP bug #325632
