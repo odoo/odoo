@@ -1158,7 +1158,7 @@ var _CHILDREN = {
     'group': ['field', 'label', 'button', 'separator', 'newline','group'],
     'board': ['column'],
     'action': [],
-    'field': ['form', 'tree', 'graph'],
+    'field': ['form', 'tree', 'graph','field'],
     'label': [],
     'button' : [],
     'newline': [],
