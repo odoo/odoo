@@ -357,11 +357,13 @@ def session_context(request, storage_path, session_cookie='sessionid'):
         # session id, and are generally noise
         removed_sessions = set()
         for key, value in request.session.items():
-            if (isinstance(value, session.OpenERPSession) 
-                and not value._uid
-                and not value.jsonp_requests
-                and value._creation_time + (60*5) < time.time()  # FIXME do not use a fixed value
-            ):
+            if not isinstance(value, session.OpenERPSession):
+                continue
+            if getattr(value, '_suicide', False) or (
+                        not value._uid
+                    and not value.jsonp_requests
+                    # FIXME do not use a fixed value
+                    and value._creation_time + (60*5) < time.time()):
                 _logger.debug('remove session %s', key)
                 removed_sessions.add(key)
                 del request.session[key]

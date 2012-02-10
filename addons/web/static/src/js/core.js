@@ -674,6 +674,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
     session_logout: function() {
         this.set_cookie('session_id', '');
+        return this.rpc("/web/session/destroy", {});
     },
     on_session_valid: function() {
     },

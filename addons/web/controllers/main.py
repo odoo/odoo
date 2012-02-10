@@ -613,6 +613,10 @@ class Session(openerpweb.Controller):
         req.session.assert_valid()
         return None
 
+    @openerpweb.jsonrequest
+    def destroy(self, req):
+        req.session._suicide = True
+
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
     # should we give the evaluated context as an evaluation context to the domain?

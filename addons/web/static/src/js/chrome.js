@@ -1147,12 +1147,14 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
         n.warn.apply(n, arguments);
     },
     on_logout: function() {
-        this.session.session_logout();
-        $(window).unbind('hashchange', this.on_hashchange);
-        this.do_push_state({});
-        //would be cool to be able to do this, but I think it will make addons do strange things
-        //this.show_login();
-        window.location.reload();
+        var self = this;
+        this.session.session_logout().then(function () {
+            $(window).unbind('hashchange', self.on_hashchange);
+            self.do_push_state({});
+            //would be cool to be able to do this, but I think it will make addons do strange things
+            //this.show_login();
+            window.location.reload();
+        });
     },
     bind_hashchange: function() {
         $(window).bind('hashchange', this.on_hashchange);
