@@ -197,6 +197,7 @@
         <record id="ch" model="res.country">
             <field name="name">Switzerland</field>
             <field name="code">ch</field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
         </record>
         <record id="ci" model="res.country">
             <field name="name">Ivory Coast (Cote D'Ivoire)</field>
@@ -767,6 +768,7 @@
         <record id="ro" model="res.country">
             <field name="name">Romania</field>
             <field name="code">ro</field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(state_code)s\n%(country_name)s'" />            
         </record>
         <record id="ru" model="res.country">
             <field name="name">Russian Federation</field>
