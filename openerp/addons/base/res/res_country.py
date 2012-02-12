@@ -86,9 +86,10 @@ class CountryState(osv.osv):
     _columns = {
         'country_id': fields.many2one('res.country', 'Country',
             required=True),
-        'name': fields.char('State Name', size=64, required=True),
+        'name': fields.char('State Name', size=64, required=True, 
+                            help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton'),
         'code': fields.char('State Code', size=3,
-            help='The state code in three chars.\n', required=True),
+            help='The state code in max. three chars.', required=True),
     }
     def name_search(self, cr, user, name='', args=None, operator='ilike',
             context=None, limit=100):

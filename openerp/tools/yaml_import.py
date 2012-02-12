@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import threading
 import types
 import time # used to eval time.strftime expressions
