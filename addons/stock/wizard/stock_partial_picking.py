@@ -30,8 +30,8 @@ class stock_partial_picking(osv.osv_memory):
     _description = "Partial Picking"
     _columns = {
         'date': fields.datetime('Date', required=True),
-        'product_moves_out' : fields.one2many('stock.move.memory.out', 'wizard_id', 'Moves'),
-        'product_moves_in' : fields.one2many('stock.move.memory.in', 'wizard_id', 'Moves'),
+        'product_moves_out' : fields.one2many('stock.move.memory.out', 'wizard_pick_id', 'Moves'),
+        'product_moves_in' : fields.one2many('stock.move.memory.in', 'wizard_pick_id', 'Moves'),
      }
 
     def get_picking_type(self, cr, uid, picking, context=None):
