@@ -382,6 +382,14 @@ label.error {
     height: 100%;
 }
 
+/* IE Hack - for IE < 9
+ * Avoids footer to be placed statically at 100% cutting the middle of the views
+ * */
+.openerp .oe-application-container {
+    height: auto\9;
+    min-height: 100%\9;
+}
+
 /* Menu */
 .openerp .menu {
     height: 34px;
