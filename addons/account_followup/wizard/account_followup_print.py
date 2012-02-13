@@ -200,11 +200,11 @@ class account_followup_print_all(osv.osv_memory):
             stat_line_id = partner_id * 10000 + company_id
             if date_maturity:
                 if date_maturity <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
-                    if partner_id not in partner_list:
+                    if stat_line_id not in partner_list:
                         partner_list.append(stat_line_id)
-                    to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
+                    to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
             elif date and date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
-                if partner_id not in partner_list:
+                if stat_line_id not in partner_list:
                     partner_list.append(stat_line_id)
                 to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
         return {'partner_ids': partner_list, 'to_update': to_update}
