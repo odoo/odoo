@@ -36,6 +36,11 @@ class event_type(osv.osv):
     _description = __doc__
     _columns = {
         'name': fields.char('Event type', size=64, required=True),
+        'default_reply_to': fields.char('Default Reply-To', size=64, required=True),
+        'default_email_event': fields.many2one('email.template','Registration Confirmation Email'),
+        'default_email_registration':fields.many2one('email.template','Registration Confirmation Email'),
+        'default_registration_min':fields.integer('Default Minimum Registration'),
+        'default_registration_max':fields.integer('Default Maximum Registration'),
     }
 
 event_type()
@@ -136,12 +141,11 @@ class event_event(osv.osv):
     
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
+        'name': fields.char('Participant Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
-        'section_id': fields.many2one('crm.case.section', 'Sale Team', readonly=False, states={'done': [('readonly', True)]}),
         'type': fields.many2one('event.type', 'Type', help="Type of Event like Seminar, Exhibition, Conference, Training.", readonly=False, states={'done': [('readonly', True)]}),
         'register_max': fields.integer('Maximum Registrations', help="Provide Maximum Number of Registrations", readonly=True, states={'draft': [('readonly', False)]}),
-        'register_min': fields.integer('Minimum Registrations', help="Provide Minimum Number of Registrations", readonly=True, states={'draft': [('readonly', False)]}),
+        'register_min': fields.integer('Minimum Registrations', help="The minimum number of participants required to confirm this event.", readonly=True, states={'draft': [('readonly', False)]}),
         'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_current',
             help="Total of Open and Done Registrations"),
         'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_prospect',
@@ -156,10 +160,10 @@ class event_event(osv.osv):
             ('cancel', 'Cancelled')],
             'State', readonly=True, required=True,
             help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
-        'email_registration_id' : fields.many2one('email.template','Email registration'),
-        'email_confirmation_id' : fields.many2one('email.template','Email confirmation'),
+        'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email'),
+        'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
         'full_name' : fields.function(_name_get_fnc, type="char", string='Name'),
-        'reply_to': fields.char('Reply-To', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address put in the 'Reply-To' of all emails sent by OpenERP"),
+        'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer which is put in the 'Reply-To' of all emails sent automatically at event or registrations confirmation. You can also put your email address of your mail gateway if you use one."),
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
         'speaker_ids': fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers', readonly=False, states={'done': [('readonly', True)]}),
         'address_id': fields.many2one('res.partner.address','Location Address', readonly=False, states={'done': [('readonly', True)]}),
@@ -213,7 +217,7 @@ class event_registration(osv.osv):
     _columns = {
         'id': fields.integer('ID'),
         'origin': fields.char('Origin', size=124,  readonly=True, states={'draft': [('readonly', False)]}),
-        'nb_register': fields.integer('Quantity', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Number of Registrations or Tickets"),
+        'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Number of participants for this registration."),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
         'partner_id_address': fields.many2one('res.partner.address', 'Partner', states={'done': [('readonly', True)]}),
@@ -225,7 +229,6 @@ class event_registration(osv.osv):
         'date_deadline': fields.related('event_id','date_end', type='datetime', string="Event End Date", readonly=True),
         'date': fields.related('event_id', 'date_begin', type='datetime', string="Event Start Date", readonly=True),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
-        'section_id': fields.related('event_id', 'section_id', type='many2one', relation='crm.case.section', string='Sale Team', store=True, readonly=True),
         'company_id': fields.related('event_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Unconfirmed'),
                                     ('open', 'Confirmed'),
@@ -332,7 +335,6 @@ class event_registration(osv.osv):
         return {'value': 
                     {'date': data_event.date_begin,
                      'date_deadline': data_event.date_end,
-                     'section_id': data_event.section_id and data_event.section_id.id or False,
                      'company_id': data_event.company_id and data_event.company_id.id or False,
                     }
                }

@@ -18,6 +18,11 @@
             <field name="arch" type="xml">
                 <form string="Event Type">
                     <field name="name" select="1"/>
+                    <field name="default_reply_to"/>
+                    <field name="default_email_event"/>
+                    <field name="default_email_registration"/>
+                    <field name="default_registration_min"/>
+                    <field name="default_registration_max"/>
                 </form>
             </field>
         </record>
@@ -79,10 +84,6 @@
                                 <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)" />
                                 <field name="name"/>
                                 <group colspan="4" col="4">
-                                <field name="street"/>
-                                <field name="city"/>
-                                </group>
-                                <group colspan="4" col="4">
                                 <field name="email"/>
                                 <field name="phone"/>
                                 </group>
@@ -126,15 +127,8 @@
                         <group col="2" colspan="2">
                             <separator string="Emails" colspan="2"/>
                             <field name="reply_to"/>
-                            <field name="email_registration_id" domain="[('model_id','=','Event Registration')]"/>
-                            <field name="email_confirmation_id"/>
-                        </group>
-                        <group col="2" colspan="2" groups="base.group_extended">
-                            <separator string="Misc" colspan="2"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator string="Sales Team" colspan="2"/>
-                            <field name="section_id" on_change="do_team_change(self, cr, uid, ids, team_id)"/>
+                            <field name="email_registration_id" domain="[('model_id','=',ref('event.event_registration'))]" groups="base.group_extended"/>
+                            <field name="email_confirmation_id" domain="[('model_id','=',ref('event.event_event'))]" groups="base.group_extended"/>
                         </group>
                     </page>
                     </notebook>
@@ -149,14 +143,13 @@
             <field name="model">event.event</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Events" colors="red:register_min>register_current;black:register_min&lt;=register_current">
+                <tree string="Events" colors="red:(register_min and register_min&gt;register_current) or (register_max and register_max&lt;register_current);grey:state=='cancel'">
                     <field name="name" string="Name"/>
                     <field name="type"/>
                     <field name="date_begin"/>
                     <field name="date_end"/>
                     <field name="register_current"/>
                     <field name="register_min"/>
-                    <field name="section_id" invisible="context.get('invisible_section', True)"/>
                     <field name="main_speaker_id" groups="base.extended"/>
                     <field name="user_id"/>
                     <field name="state"/>
@@ -241,7 +234,6 @@
            <field name="res_model">event.event</field>
            <field name="view_type">form</field>
            <field name="view_mode">calendar,tree,form,graph</field>
-           <field name="context">{"search_default_section_id": section_id}</field>
            <field name="search_view_id" ref="view_event_search"/>
            <field name="help">Event is the low level object used by meeting and others documents that should be synchronized with mobile devices or calendar applications through caldav. Most of the users should work in the Calendar menu, and not in the list of events.</field>
        </record>
@@ -277,15 +269,14 @@
                 <tree string="Registration" >
                     <field name="name"/>
                     <field name="email"/>
-                    <field name="phone"/>
                     <field name="event_id"/>
-                    <field name="nb_register" invisible="1"/>
+                    <field name="nb_register" groups="base.group_extended"/>
                     <field name="user_id"/>
+                    <field name="origin" groups="base.group_extended"/>
                     <field name="state"/>
-                    <button name="case_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
-                    <button name="case_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                    <button name="do_draft" string="Set To Draft" states="cancel,done" type="object" icon="gtk-convert"/>
+                    <button name="case_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                    <button name="case_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                 </tree>
             </field>
         </record>
@@ -298,10 +289,9 @@
                 <form string="Registration">
                     <group col="6" colspan="4">
                         <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
-                        <field name="nb_register"/>
-                        <field name="origin"/>
-                        <field name="name" colspan="4"/>
                         <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+                        <field name="origin"/>
+                        <field name="nb_register"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Additional Information">
@@ -309,10 +299,9 @@
                                 <separator string="Contact Information" colspan="2"/>
                                 <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)" groups="base.group_extended"/>
                                 <field name="contact_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_contact_id(contact_id, context)" groups="base.group_extended"/>
+                                <field name="name"/>
                                 <field name="email"/>
                                 <field name="phone"/>
-                                <field name="street"/>
-                                <field name="city"/>
                             </group>
                             <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Dates" colspan="2"/>
@@ -396,14 +385,15 @@
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
                         <separator orientation="vertical"/>
                         <field name="event_id" widget="selection"/>
-                        <field name="partner_id" groups="base.group_extended"/>
-                        <field name="user_id" widget="selection">
+                        <field name="name" string="Participant"
+                            filter_domain="['|','|','|', ('name','ilike',self), ('contact_id','ilike',self), ('partner_id','ilike',self), ('email','ilike',self)]"/>
+                        <field name="user_id" groups="base.group_extended">
                         <filter icon="terp-personal"
                               string="My Registrations"
                                 help="My Registrations"
                               domain="[('user_id','=',uid)]"/>
                         </field>
-                        <field name="origin"/>
+                        <field name="origin" groups="base.group_extended"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
