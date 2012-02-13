@@ -86,8 +86,7 @@ class account_installer(osv.osv_memory):
         company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
         cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
         configured_cmp = [r[0] for r in cr.fetchall()]
-        unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
-        return unconfigured_cmp
+        return list(set(company_ids)-set(configured_cmp))
     
     def check_unconfigured_cmp(self, cr, uid, context=None):
         """ check if there are still unconfigured companies """
