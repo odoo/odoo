@@ -46,6 +46,21 @@ class event_event(osv.osv):
     _description = __doc__
     _order = 'date_begin'
 
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+              return []
+        reads = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in reads:
+            name = record.name+'('+record.date_begin+')'
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids,prop,unknow, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
+
     def copy(self, cr, uid, id, default=None, context=None):
         """ Reset the state and the registrations while copying an event
         """
@@ -143,6 +158,7 @@ class event_event(osv.osv):
             help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
         'email_registration_id' : fields.many2one('email.template','Email registration'),
         'email_confirmation_id' : fields.many2one('email.template','Email confirmation'),
+        'full_name' : fields.function(_name_get_fnc, type="char", string='Name'),
         'reply_to': fields.char('Reply-To', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address put in the 'Reply-To' of all emails sent by OpenERP"),
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
         'speaker_ids': fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers', readonly=False, states={'done': [('readonly', True)]}),
