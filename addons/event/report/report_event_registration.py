@@ -66,7 +66,6 @@ class report_event_registration(osv.osv):
                 e.user_id AS user_id,
                 r.user_id AS user_id_registration,
                 r.name AS name_registration,
-                e.section_id AS section_id,
                 e.company_id AS company_id,
                 e.main_speaker_id AS speaker_id,
                 to_char(e.date_begin, 'YYYY') AS year,
