@@ -42,16 +42,14 @@ class l10n_be_vat_declaration(osv.osv_memory):
     _columns = {
         'name': fields.char('File Name', size=32),
         'period_id': fields.many2one('account.period','Period', required=True),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], help="Keep empty to use the user's company", required=True),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], required=True),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
         'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a resitution is to made or not?'),
         'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to made or not?'),
-        'client_nihil': fields.boolean('Last Declaration of Enterprise',help='Tick this case only if it concerns only the last statement on the civil or cessation of activity'),
-        'vat_declarations_nbr': fields.integer('VAT Declaration Number', help="Number of periodic VAT returns in the shipment"),
+        'client_nihil': fields.boolean('Last Declaration, no clients in client listing', help='Tick this case only if it concerns only the last statement on the civil or cessation of activity: ' \
+            'no clients to be included in the client listing.'),
         'comments': fields.text('Comments'),
-        'identification_type': fields.selection([('tin','TIN'), ('nvat','NVAT'), ('other','Other')], 'Identification Type', required=True),
-        'other': fields.char('Other Qlf', size=16, help="Description of a Identification Type"),
     }
 
     def _get_tax_code(self, cr, uid, context=None):
@@ -65,8 +63,6 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'msg': 'Save the File with '".xml"' extension.',
         'file_save': _get_xml_data,
         'name': 'vat_declaration.xml',
-        'identification_type': 'nvat',
-        'vat_declarations_nbr': 1,
         'tax_code_id': _get_tax_code,
     }
 
@@ -94,7 +90,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         tax_code_ids = obj_tax_code.search(cr, uid, [('parent_id','child_of',data_tax.tax_code_id.id), ('company_id','=',obj_company.id)], context=context)
         ctx = context.copy()
         data  = self.read(cr, uid, ids)[0]
-        ctx['period_id'] = data['period_id'][0] #added context here
+        ctx['period_id'] = data['period_id'][0]
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
         name = email = phone = address = post_code = city = country_code = ''
@@ -103,8 +99,6 @@ class l10n_be_vat_declaration(osv.osv_memory):
         account_period = obj_acc_period.browse(cr, uid, data['period_id'][0], context=context)
         issued_by = vat_no[:2] 
         comments = data['comments'] or ''
-        type = data['identification_type'] or ''
-        other = data['other'] or ''
             
         send_ref = str(obj_company.partner_id.id) + str(account_period.date_start[5:7]) + str(account_period.date_stop[:4])
         
@@ -117,10 +111,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         if not phone:
             raise osv.except_osv(_('Data Insufficient!'),_('No phone associated with the company.'))
         file_data = {
-                        'vat_declarations_nbr': str(data['vat_declarations_nbr']),
-                        'type': type.upper(),
                         'issued_by': issued_by,
-                        'other': other,
                         'vat_no': vat_no,
                         'only_vat': vat_no[2:],
                         'cmpny_name': obj_company.name,
@@ -143,7 +134,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         data_of_file = """<?xml version="1.0"?>
 <ns2:VATConsignment xmlns="http://www.minfin.fgov.be/InputCommon" xmlns:ns2="http://www.minfin.fgov.be/VATConsignment" VATDeclarationsNbr="1">
     <ns2:Representative>
-        <RepresentativeID identificationType="%(type)s" issuedBy="%(issued_by)s" otherQlf="%(other)s">%(only_vat)s</RepresentativeID>
+        <RepresentativeID identificationType="NVAT" issuedBy="%(issued_by)s">%(only_vat)s</RepresentativeID>
         <Name>%(cmpny_name)s</Name>
         <Street>%(address)s</Street>
         <PostCode>%(post_code)s</PostCode>
@@ -165,7 +156,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         </ns2:Declarant>
         <ns2:Period>
     """ % (file_data)
-         
+
         if starting_month != ending_month:
             #starting month and ending month of selected period are not the same
             #it means that the accounting isn't based on periods of 1 month but on quarters
@@ -174,7 +165,6 @@ class l10n_be_vat_declaration(osv.osv_memory):
             data_of_file += '\t\t<ns2:Month>%(month)s</ns2:Month>\n\t\t' % (file_data)
         data_of_file += '\t<ns2:Year>%(year)s</ns2:Year>' % (file_data)
         data_of_file += '\n\t\t</ns2:Period>\n'
-        
         data_of_file += '\t\t<ns2:Data>\t'
         cases_list = []
         for item in tax_info:

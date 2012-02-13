@@ -18,10 +18,6 @@
                             <field name="ask_restitution"/>
                             <field name="ask_payment"/>
                             <field name="client_nihil" string="Is Last Declaration"/><label/>
-                            <field name="vat_declarations_nbr" invisible="1"/>
-                            <!-- should be unused ?
-                            <field name="identification_type"/>
-                            <field name="other" attrs="{'invisible':[('identification_type','!=','other')], 'required':[('identification_type','=','other')]}"/> -->
                         </group>
                         <group colspan="4" groups="base.group_extended">
                             <separator string="Comments" colspan="4"/>
@@ -57,7 +53,7 @@
         </record>
 
         <record id="action_vat_declaration" model="ir.actions.act_window">
-            <field name="name">Vat Declaraion</field>
+            <field name="name">Vat Declaration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">l1on_be.vat.declaration</field>
             <field name="view_type">form</field>
@@ -68,9 +64,9 @@
 
         <menuitem
             name="Periodical VAT Declaration"
-            parent="menu_finance_belgian_statement"
+            parent="l10n_be.menu_finance_belgian_statement"
             action="action_vat_declaration"
-            id="l10_be_vat_declaration"
+            id="l10n_be.l10_be_vat_declaration"
             groups="account.group_account_manager"/>
 
     </data>
