@@ -484,7 +484,6 @@
         <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</option>
         <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id">Edit Action</option>
         <option value="edit_workflow">Edit Workflow</option>
-        <option value="customize_object">Customize Object</option>
     </t>
 </t>
 <t t-name="ViewManagerDebugViewLog">
@@ -1545,9 +1544,9 @@
     </table>
 </t>
 <t t-name="view_editor.row">
-    <tr  class="oe_view_editor_row" t-att-id="'viewedit-' + rec.id"  t-att-level="rec.level" t-foreach="data" t-as="rec">
-        <td class="oe_view_editor_colum"  width="85%">
-            <table class="oe_view_editor_tree_grid">
+    <tr  t-att-id="'viewedit-' + rec.id"  t-att-level="rec.level" t-foreach="data" t-as="rec">
+        <td width="90%">
+            <table class="oe_view_editor_field">
                 <tr>
                     <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
                         <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
@@ -1561,30 +1560,24 @@
                 </tr>
             </table>
         </td>
-        <td align="left" class="oe_view_editor_colum"  width="15%">
-            <table width="100%">
-                <tr>
-                    <td width="20%">
-                        <img t-if="rec.att_list.length"
-                            id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
-                    </td>
-                    <td width="20%">
-                        <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
-                    </td>
-                    <td width="20%">
-                        <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
-                            id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
-                    </td>
-                    <td width="20%">
-                        <img t-if="rec.att_list.length"
-                            id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
-                    </td>
-                    <td width="20%">
-                        <img t-if="rec.att_list.length"
-                            id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
-                    </td>
-                </tr>
-            </table>
+        <td width="2%">
+            <img t-if="rec.att_list.length"
+                id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
+        </td>
+        <td width="2%">
+            <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
+        </td>
+        <td width="2%">
+            <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
+                id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
+        </td>
+        <td width="2%">
+            <img t-if="rec.att_list.length"
+                id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
+        </td>
+        <td width="2%">
+            <img t-if="rec.att_list.length"
+                id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
         </td>
         <t t-if="rec.child_id.length">
             <t t-set="data" t-value="rec.child_id"/>

@@ -602,16 +602,6 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                         width: '95%'}, $root).open();
                 });
                 break;
-            case 'customize_object':
-                this.rpc('/web/dataset/search_read', {
-                    model: 'ir.model',
-                    fields: ['id'],
-                    domain: [['model', '=', this.dataset.model]]
-                }, function (result) {
-                    self.do_edit_resource('ir.model', result.ids[0], {
-                        name : _t("Customize Object") });
-                });
-                break;
             case 'manage_views':
                 if (current_view.fields_view && current_view.fields_view.arch) {
                     var view_editor = new session.web.ViewEditor(current_view, current_view.$element, this.dataset, current_view.fields_view.arch);
