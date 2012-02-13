@@ -209,7 +209,7 @@ class purchase_order(osv.osv):
         'company_id': fields.many2one('res.company','Company',required=True,select=1),
     }
     _defaults = {
-        'date_order': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_order': fields.date.context_today,
         'state': 'draft',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
         'shipped': 0,
@@ -274,7 +274,7 @@ class purchase_order(osv.osv):
         return {'value':{'partner_address_id': supplier_address['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
 
     def wkf_approve_order(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
+        self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(cr,uid,context=context)})
         return True
 
     #TODO: implement messages system
@@ -758,7 +758,7 @@ class purchase_order_line(osv.osv):
 
         # - determine product_qty and date_planned based on seller info
         if not date_order:
-            date_order = time.strftime('%Y-%m-%d')
+            date_order = fields.date.context_today(cr,uid,context=context)
 
         qty = qty or 1.0
         seller_delay = 0

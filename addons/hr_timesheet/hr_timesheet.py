@@ -149,7 +149,7 @@ class hr_analytic_timesheet(osv.osv):
         'product_id': _getEmployeeProduct,
         'general_account_id': _getGeneralAccount,
         'journal_id': _getAnalyticJournal,
-        'date': lambda self, cr, uid, ctx: ctx.get('date', time.strftime('%Y-%m-%d')),
+        'date': lambda self, cr, uid, ctx: ctx.get('date', fields.date.context_today(cr,uid,context=ctx)),
         'user_id': lambda obj, cr, uid, ctx: ctx.get('user_id', uid),
     }
     def on_change_account_id(self, cr, uid, ids, account_id):

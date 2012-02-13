@@ -136,8 +136,8 @@ class report_account_analytic_planning(osv.osv):
         'total_free': fields.function(_get_total_free, string='Total Free'),
     }
     _defaults = {
-        'date_from': lambda *a: time.strftime('%Y-%m-01'),
-        'date_to': lambda *a: (datetime.now()+relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'),
+        'date_from': lambda self,cr,uid,ctx: fields.date.context_today(cr,uid,today=(datetime.now()+relativedelta(day=1)),context=ctx),
+        'date_to': lambda self,cr,uid,ctx: fields.date.context_today(cr,uid,today=(datetime.now()+relativedelta(months=1, day=1, days=-1)),context=ctx),
         'user_id': lambda self, cr, uid, c: uid,
         'state': 'draft',
         'business_days': 20,

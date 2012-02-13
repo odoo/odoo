@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import osv, fields
-import time
 
 class lunch_category(osv.osv):
     """ Lunch category """
@@ -146,7 +145,7 @@ class lunch_order(osv.osv):
 
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid,
-        'date': lambda self, cr, uid, context: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
         'state': lambda self, cr, uid, context: 'draft',
     }
 

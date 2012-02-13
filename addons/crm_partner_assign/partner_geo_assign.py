@@ -102,7 +102,7 @@ class res_partner(osv.osv):
                 self.write(cr, uid, [partner.id], {
                     'partner_latitude': result[0],
                     'partner_longitude': result[1],
-                    'date_localization': time.strftime('%Y-%m-%d')
+                    'date_localization': fields.date.context_today(cr,uid,context=context)
                 }, context=context)
         return True
 res_partner()
@@ -128,7 +128,7 @@ class crm_lead(osv.osv):
             partners = self.pool.get('res.partner').browse(cr, uid, [partner_assigned_id], context=context)
             user_id = partners[0] and partners[0].user_id.id or False
             return {'value':
-                        {'date_assign': time.strftime('%Y-%m-%d'),
+                        {'date_assign': fields.date.context_today(cr,uid,context=context),
                          'user_id' : user_id}
                    }
 
@@ -151,9 +151,9 @@ class crm_lead(osv.osv):
             if partner.user_id:
                 for lead_id in ids:
                     self.allocate_salesman(cr, uid, [lead_id], [partner.user_id.id], context=context)
-            self.write(cr, uid, [lead.id], {'date_assign': time.strftime('%Y-%m-%d'), 'partner_assigned_id': partner_id}, context=context)
+            self.write(cr, uid, [lead.id], {'date_assign': fields.date.context_today(cr,uid,context=context), 'partner_assigned_id': partner_id}, context=context)
         return res
-        
+
 
     def assign_geo_localize(self, cr, uid, ids, latitude=False, longitude=False, context=None):
         for lead in self.browse(cr, uid, ids, context=context):
