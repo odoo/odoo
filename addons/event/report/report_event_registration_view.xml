@@ -25,7 +25,6 @@
                     <field name="user_id_registration" invisible="1"/>
                     <field name="register_max" invisible="context.get('max_reg_event_visible', True)"/>
                     <field name="company_id" invisible="1"/>
-                    <field name="section_id" invisible="1"/>
                     <field name="total" invisible="context.get('total_invisible', True)" sum="Total"/>
                 </tree>
             </field>
@@ -100,7 +99,6 @@
                         <filter string="Responsible" name="user_id" icon="terp-personal" context="{'group_by': 'user_id'}"/>
                         <filter string="Speaker" name="speaker" icon="terp-personal+" context="{'group_by': 'speaker_id'}"/>
                         <filter string="Participant" icon="terp-personal" context="{'group_by':'name_registration'}" help="Registration contact"/>
-                        <filter string="Sale Team"  icon="terp-personal" context="{'group_by': 'section_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Event" name="event" icon="terp-crm" context="{'group_by':'event_id', 'max_reg_event_visible':0}"/>
                         

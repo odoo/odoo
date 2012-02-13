@@ -48,7 +48,6 @@ class report_event_registration(osv.osv):
         'speaker_id': fields.many2one('res.partner', 'Speaker', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'total': fields.float('Total'),
-        'section_id': fields.related('event_id', 'section_id', type='many2one', relation='crm.case.section', string='Sale Team', store=True, readonly=True),
     }
     _order = 'event_date desc'
     def init(self, cr):
@@ -93,9 +92,8 @@ class report_event_registration(osv.osv):
                 registration_state,
                 r.nb_register,
                 event_type, e.id, e.date_begin, e.main_speaker_id,
-                e.register_max,event_id, e.user_id,e.company_id,e.section_id,
+                e.register_max,event_id, e.user_id,e.company_id,
                 e.user_id,
-                e.section_id,
                 event_state,
                 e.company_id,
                 e.main_speaker_id,
