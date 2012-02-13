@@ -20,17 +20,27 @@ openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.
             expires: 2500
         });
     },
-    notify: function(title, text) {
+    notify: function(title, text, sticky) {
+        sticky = !!sticky;
+        var opts = {};
+        if (sticky) {
+            opts.expires = false;
+        }
         this.$element.notify('create', {
             title: title,
             text: text
-        });
+        }, opts);
     },
-    warn: function(title, text) {
+    warn: function(title, text, sticky) {
+        sticky = !!sticky;
+        var opts = {};
+        if (sticky) {
+            opts.expires = false;
+        }
         this.$element.notify('create', 'oe_notification_alert', {
             title: title,
             text: text
-        });
+        }, opts);
     }
 
 });

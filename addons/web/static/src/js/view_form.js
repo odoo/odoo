@@ -173,7 +173,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_record_loaded: function(record) {
         var self = this, set_values = [];
         if (!record) {
-            throw new Error("Form: No record received");
+            this.do_warn("Form", "The record could not be found in the database.", true);
+            return $.Deferred().reject();
         }
         this.datarecord = record;
 
