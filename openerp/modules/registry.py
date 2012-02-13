@@ -286,7 +286,6 @@ class RegistryManager(object):
                 cr = registry.db.cursor()
                 r = 1
                 try:
-                    pass
                     cr.execute("select nextval('base_cache_signaling')")
                     r = cr.fetchone()[0]
                 finally:

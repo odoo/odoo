@@ -204,9 +204,12 @@ def start_master_thread():
         _logger.warning("Connection pool size (%s) is set lower than max number of cron threads (%s), "
                         "this may cause trouble if you reach that number of parallel cron tasks.",
                         db_maxconn, _thread_slots)
-    t = threading.Thread(target=runner, name="openerp.cron.master_thread")
-    t.setDaemon(True)
-    t.start()
-    _logger.debug("Master cron daemon started!")
+    if _thread_slots:
+        t = threading.Thread(target=runner, name="openerp.cron.master_thread")
+        t.setDaemon(True)
+        t.start()
+        _logger.debug("Master cron daemon started!")
+    else:
+        _logger.info("No master cron daemon (0 workers needed).")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
