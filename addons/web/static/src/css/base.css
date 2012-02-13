@@ -1439,10 +1439,13 @@ label.error {
 .openerp .oe_forms select{
     padding-top: 2px;
 }
+.openerp .oe_forms input[readonly],
+.openerp .oe_forms select[readonly],
+.openerp .oe_forms textarea[readonly],
 .openerp .oe_forms input[disabled],
 .openerp .oe_forms select[disabled],
 .openerp .oe_forms textarea[disabled]{
-    background: #E0E0E0;
+    background: #E0E0E0 !important;
 }
 .openerp .oe_forms textarea {
     resize:vertical;

@@ -1457,7 +1457,7 @@ openerp.web.form.FieldChar = openerp.web.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.find('input').prop('disabled', this.readonly);
+        this.$element.find('input').prop('readonly', this.readonly);
     },
     set_value_from_ui: function() {
         this.value = openerp.web.parse_value(this.$element.find('input').val(), this);
@@ -1480,7 +1480,7 @@ openerp.web.form.FieldChar = openerp.web.form.Field.extend({
 openerp.web.form.FieldID = openerp.web.form.FieldChar.extend({
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.find('input').prop('disabled', true);
+        this.$element.find('input').prop('readonly', true);
     }
 });
 
@@ -1588,7 +1588,7 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
     },
     set_readonly: function(readonly) {
         this.readonly = readonly;
-        this.$input.prop('disabled', this.readonly);
+        this.$input.prop('readonly', this.readonly);
         this.$element.find('img.oe_datepicker_trigger').toggleClass('oe_input_icon_disabled', readonly);
     },
     is_valid: function(required) {
@@ -1677,7 +1677,7 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.find('textarea').prop('disabled', this.readonly);
+        this.$element.find('textarea').prop('readonly', this.readonly);
     },
     set_value_from_ui: function() {
         this.value = openerp.web.parse_value(this.$element.find('textarea').val(), this);
@@ -2194,7 +2194,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$input.prop('disabled', this.readonly);
+        this.$input.prop('readonly', this.readonly);
     }
 });
 
@@ -3219,7 +3219,7 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
     update_dom: function() {
         this._super.apply(this, arguments);
         this.$element.find('.oe-binary-file-set, .oe-binary-file-clear').toggle(!this.readonly);
-        this.$element.find('input[type=text]').prop('disabled', this.readonly);
+        this.$element.find('input[type=text]').prop('readonly', this.readonly);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
