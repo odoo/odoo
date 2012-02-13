@@ -94,7 +94,6 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                     if data['form']['debit_credit']:
                         vals['debit'] = account.debit
                         vals['credit'] = account.credit
-                    lines.append(vals)
                     if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance']):
                         flag = True
                     if data['form']['enable_filter']:
