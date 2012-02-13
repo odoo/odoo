@@ -550,7 +550,7 @@ class account_move_line(osv.osv):
         'blocked': False,
         'centralisation': 'normal',
         'date': _get_date,
-        'date_created': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_created': fields.date.context_today,
         'state': 'draft',
         'currency_id': _get_currency,
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),

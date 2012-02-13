@@ -151,7 +151,7 @@ class pos_return(osv.osv_memory):
                                                 'name': 'Refund %s'%order_id.name,
                                                 'statement_id': order_id.statement_ids[0].statement_id.id,
                                                 'pos_statement_id': new_order,
-                                                'date': time.strftime('%Y-%m-%d'),
+                                                'date': fields.date.context_today(cr, uid, context=context),
                                                 'account_id': order_id.partner_id and order_id.partner_id.property_account_payable \
                                                              and order_id.partner_id.property_account_payable.id or account_def.id,
                                                 'amount': -amount,

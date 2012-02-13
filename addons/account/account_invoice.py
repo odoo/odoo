@@ -814,7 +814,7 @@ class account_invoice(osv.osv):
             ctx = context.copy()
             ctx.update({'lang': inv.partner_id.lang})
             if not inv.date_invoice:
-                self.write(cr, uid, [inv.id], {'date_invoice':time.strftime('%Y-%m-%d')}, context=ctx)
+                self.write(cr, uid, [inv.id], {'date_invoice': fields.date.context_today(cr,uid,context=context)}, context=ctx)
             company_currency = inv.company_id.currency_id.id
             # create the analytical lines
             # one move line per invoice line

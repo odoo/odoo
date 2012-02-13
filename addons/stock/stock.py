@@ -1482,7 +1482,7 @@ class stock_production_lot_revision(osv.osv):
 
     _defaults = {
         'author_id': lambda x, y, z, c: z,
-        'date': time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
     }
 
 stock_production_lot_revision()
