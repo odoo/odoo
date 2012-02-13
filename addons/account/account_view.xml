@@ -2491,9 +2491,13 @@
             <field name="model_id" ref="base.model_ir_actions_todo"/>
             <field eval="5" name="sequence"/>
             <field name="code">
+# check for unconfigured companies
 account_installer_obj = self.pool.get('account.installer')
 account_installer_obj.check_unconfigured_cmp(cr, uid, context=context)
 action_ids = []
+# fetch the act_window actions related to chart of account configuration
+# we use ir.actions.todo to enable the possibility for other modules to insert their own
+# wizards during the configuration process
 ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_wizard_multi_chart')
 if ref:
     action_ids += [ref[1]]
