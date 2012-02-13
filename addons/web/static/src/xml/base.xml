@@ -579,20 +579,21 @@
         t-att-data-id="record.id" t-att-data-level="level + 1">
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
+    <t t-set="rank" t-value="'oe-treeview-first'"/>
     <t t-set="style" t-value="'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px;'"/>
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
         t-att-data-id="record.id"
         t-att-style="color_for(record) + style "
-        t-att-class="(fields[field.attrs.name].type === 'float') or (fields[field.attrs.name].type === 'integer')
-                    ? (class +' ' +'oe-number') : class">
+        t-attf-class="#{class} #{rank} #{(fields[field.attrs.name].type === 'float') or (fields[field.attrs.name].type === 'integer') ? 'oe-number' : ''}">
 
         <span t-if="!field.attrs.modifiers.invisible" >
             <t t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
         </span>
 
         <t t-set="class" t-value="'treeview-td'"/>
+        <t t-set="rank" t-value="''"/>
         <t t-set="style" t-value="''"/>
     </td>
 </tr>
