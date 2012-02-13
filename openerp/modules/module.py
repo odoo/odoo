@@ -389,40 +389,43 @@ def init_module_models(cr, module_name, obj_list):
         t[1](cr, *t[2])
     cr.commit()
 
-def register_module_classes(m):
-    """ Register module named m, if not already registered.
+def load_openerp_module(module_name):
+    """ Load an OpenERP module, if not already loaded.
 
     This loads the module and register all of its models, thanks to either
     the MetaModel metaclass, or the explicit instantiation of the model.
-
+    This is also used to load server-wide module (i.e. it is also used
+    when there is no model to register).
     """
-
-    def log(e):
-        mt = isinstance(e, zipimport.ZipImportError) and 'zip ' or ''
-        msg = "Couldn't load %smodule %s" % (mt, m)
-        _logger.critical(msg)
-        _logger.critical(e)
-
     global loaded
-    if m in loaded:
+    if module_name in loaded:
         return
-    _logger.info('module %s: registering objects', m)
-    mod_path = get_module_path(m)
 
     initialize_sys_path()
     try:
+        mod_path = get_module_path(module_name)
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
-            __import__('openerp.addons.' + m)
+            __import__('openerp.addons.' + module_name)
         else:
             zimp = zipimport.zipimporter(zip_mod_path)
-            zimp.load_module(m)
+            zimp.load_module(module_name)
+
+        # Call the module's post-load hook. This can done before any model or
+        # data has been initialized. This is ok as the post-load hook is for
+        # server-wide (instead of registry-specific) functionalities.
+        info = load_information_from_description_file(module_name)
+        if info['post_load']:
+            getattr(sys.modules['openerp.addons.' + module_name], info['post_load'])()
+
     except Exception, e:
-        log(e)
+        mt = isinstance(e, zipimport.ZipImportError) and 'zip ' or ''
+        msg = "Couldn't load %smodule %s" % (mt, module_name)
+        _logger.critical(msg)
+        _logger.critical(e)
         raise
     else:
-        loaded.append(m)
-
+        loaded.append(module_name)
 
 def get_modules():
     """Returns the list of module names

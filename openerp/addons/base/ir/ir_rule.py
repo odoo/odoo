@@ -69,6 +69,10 @@ class ir_rule(osv.osv):
     def _check_model_obj(self, cr, uid, ids, context=None):
         return not any(self.pool.get(rule.model_id.model).is_transient() for rule in self.browse(cr, uid, ids, context))
 
+    def _check_model_name(self, cr, uid, ids, context=None):
+        # Don't allow rules on rules records (this model).
+        return not any(rule.model_id.model == self._name for rule in self.browse(cr, uid, ids, context))
+
     _columns = {
         'name': fields.char('Name', size=128, select=1),
         'model_id': fields.many2one('ir.model', 'Object',select=1, required=True),
@@ -95,7 +99,8 @@ class ir_rule(osv.osv):
         ('no_access_rights', 'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)', 'Rule must have at least one checked access right !'),
     ]
     _constraints = [
-        (_check_model_obj, 'Rules are not supported for osv_memory objects !', ['model_id'])
+        (_check_model_obj, 'Rules can not be applied on Transient models.', ['model_id']),
+        (_check_model_name, 'Rules can not be applied on the Record Rules model.', ['model_id']),
     ]
 
     @tools.ormcache()

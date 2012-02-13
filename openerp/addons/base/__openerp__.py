@@ -42,6 +42,7 @@
         'base_update.xml',
         'ir/wizard/wizard_menu_view.xml',
         'ir/ir.xml',
+        'ir/ir_config_parameter_view.xml',
         'ir/workflow/workflow_view.xml',
         'ir/report/ir_report.xml',
         'module/module_view.xml',

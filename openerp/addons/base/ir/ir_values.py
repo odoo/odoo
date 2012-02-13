@@ -290,10 +290,12 @@ class ir_values(osv.osv):
                           )
                       %s
                    ORDER BY v.user_id, u.company_id"""
-        query = query % ('AND v.key2 = %s' if condition else '')
         params = ('default', model, uid, uid)
         if condition:
+            query = query % 'AND v.key2 = %s'
             params += (condition[:200],)
+        else:
+            query = query % 'AND v.key2 is NULL'
         cr.execute(query, params)
 
         # keep only the highest priority default for each field
@@ -376,6 +378,8 @@ class ir_values(osv.osv):
         cr.execute(query, ('action', action_slot, model, res_id or None))
         results = {}
         for action in cr.dictfetchall():
+            if not action['value']:
+                continue    # skip if undefined
             action_model,id = action['value'].split(',')
             fields = [
                     field

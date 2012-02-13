@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-02-09 03:33+0000\n"
+"PO-Revision-Date: 2012-02-11 21:39+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 05:49+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-12 04:41+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -359,7 +359,7 @@ msgstr ""
 "  - client_print_multi\n"
 "  - client_action_relate\n"
 "  - tree_but_open\n"
-"既定値、任意の条件として"
+"デフォルト、任意条件として"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -586,7 +586,7 @@ msgstr "ここをチェックした場合、ユーザが同じ名前で２回目
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_layout
 msgid "Sales Orders Print Layout"
-msgstr "セールスオーダーのプリントレイアウト"
+msgstr "受注のプリントレイアウト"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -677,7 +677,7 @@ msgstr "未翻訳"
 #: help:ir.actions.act_window,context:0
 msgid ""
 "Context dictionary as Python expression, empty by default (Default: {})"
-msgstr "Pythonのコンテキスト辞書において既定値の空は（既定値: {}）"
+msgstr "Pythonのコンテキスト辞書においてデフォルトの空は（デフォルト: {}）"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_wizard
@@ -1775,7 +1775,7 @@ msgstr ""
 "\n"
 "    昼食を管理するための基本モジュール\n"
 "\n"
-"    ランチオーダー、現金移動、現金ボックス、商品の追跡を続けます。\n"
+"    ランチの注文、現金移動、現金ボックス、商品の追跡を続けます。\n"
 "    商品のために異なったカテゴリを適用します。\n"
 "    "
 
@@ -1845,7 +1845,7 @@ msgstr ""
 "\n"
 "VAT番号の検査レベルは異なった2つのレベルがあります：\n"
 "\n"
-" ・ 既定値では国のための知られている検査ルール、通常は簡単なチェックディジットを\n"
+" ・ デフォルトでは国のための知られている検査ルール、通常は簡単なチェックディジットを\n"
 "　　使って簡便なオフラインチェックが実行されます。これは簡単でいつでも利用できますが、\n"
 "　　割り当て済みの番号や正しくない値を許してしまいます。\n"
 " ・ 'VAT VIES Check' オプションが使用可能（ユーザの会社のコンフィギュレーションにある）な\n"
@@ -1981,7 +1981,7 @@ msgstr "左括弧"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_mrp
 msgid "Create Tasks on SO"
-msgstr "タスク作成（セールスオーダー）"
+msgstr "タスク作成（受注）"
 
 #. module: base
 #: field:ir.attachment,res_model:0
@@ -2059,7 +2059,7 @@ msgstr ""
 "============================================================================="
 "=\n"
 "\n"
-"エクアドル用の会計チャートとローカリゼーション\n"
+"エクアドル用の会計チャートとローカル化\n"
 "    "
 
 #. module: base
@@ -2271,8 +2271,7 @@ msgstr ""
 "\n"
 "バッチ操作は一度に全ての販売の確認、有効化、請求書の梱包といった異なるジャーナルを処理できます。\n"
 "\n"
-"バッチ送付の方法はパートナによって実施されることや販売オーダーを行うこともできます。例：\n"
-"\n"
+"バッチ請求方法はパートナごとや受注ごとに構成することもできます。例：\n"
 "\n"
 "    ・ 日々の送付\n"
 "    ・ 月次の送付など\n"
@@ -2319,7 +2318,7 @@ msgstr ""
 "===============================================\n"
 "\n"
 "以下の全てのワークフローが実装されています：\n"
-"    ・ 経費草案\n"
+"    ・ ドラフト経費\n"
 "    ・ 従業員によるシートの確認\n"
 "    ・ 管理者による認可\n"
 "    ・ 会計人による認可と請求書の作成\n"
@@ -2480,7 +2479,7 @@ msgstr "ポーランド"
 msgid ""
 "Comma-separated list of allowed view modes, such as 'form', 'tree', "
 "'calendar', etc. (Default: tree,form)"
-msgstr "'form'、'tree'、'calendar'など（既定値：tree、form）のようなビューモードの許されたカンマ区切りのリスト"
+msgstr "'form'、'tree'、'calendar'など（デフォルト：tree、form）のようなビューモードの許されたカンマ区切りのリスト"
 
 #. module: base
 #: code:addons/orm.py:3615
@@ -2650,10 +2649,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"分析的な流通と販売オーダーの管理のための基本モジュール\n"
+"分析的な流通と受注管理のための基本モジュール\n"
 "=================================================================\n"
 "\n"
-"このモジュールを使うことで、販売オーダーに対して分析アカウントを結びつけることができます。\n"
+"このモジュールを使うことで、受注に対して分析アカウントを結びつけることができます。\n"
 "    "
 
 #. module: base
@@ -2689,7 +2688,7 @@ msgstr "ショートカット名称"
 #. module: base
 #: help:ir.actions.act_window,limit:0
 msgid "Default limit for the list view"
-msgstr "リストビューの既定上限値"
+msgstr "リストビューのデフォルト上限"
 
 #. module: base
 #: model:res.country,name:base.pg
@@ -3280,7 +3279,7 @@ msgid ""
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
 msgstr ""
-"無効なオーダーが指定されました。正しいオーダーの仕様は正しい項目名によるカンマ区切りのリストです（オプションで asc / desc が続きます）。"
+"無効な注文が指定されました。正しい注文の仕様は正しい項目名によるカンマ区切りのリストです（オプションで asc / desc が続きます）。"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -3290,7 +3289,7 @@ msgstr ""
 #. module: base
 #: selection:publisher_warranty.contract.wizard,state:0
 msgid "Draft"
-msgstr "草案"
+msgstr "ドラフト"
 
 #. module: base
 #: selection:res.users,view:0
@@ -3541,16 +3540,16 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"この基本モジュールは見積りと販売オーダーを管理します。\n"
+"この基本モジュールは見積りと受注を管理します。\n"
 "======================================================\n"
 "\n"
 "確認のワークフロー：\n"
 "-------------------------------\n"
-"    ・ 見積り -> 販売オーダー -> 請求書\n"
+"    ・ 見積り -> 受注 -> 請求書\n"
 "\n"
 "請求方法：\n"
 "------------------\n"
-"    ・ オーダー時に請求（発送前または発送後）\n"
+"    ・ 注文時に請求（発送前または発送後）\n"
 "    ・ 配達時に請求\n"
 "    ・ タイムシートによる請求\n"
 "    ・ 前請求\n"
@@ -3606,7 +3605,7 @@ msgstr ""
 "============================================================================="
 "==============\n"
 "\n"
-"カナダ会計表とローカリゼーション\n"
+"カナダ会計表とローカル化\n"
 "    "
 
 #. module: base
@@ -3829,7 +3828,7 @@ msgstr ""
 "\n"
 "次のような機能があります：\n"
 "--------------------------------\n"
-"    ・ 請求書の全行のオーダー\n"
+"    ・ 請求書の全行の注文\n"
 "    ・ タイトル、コメント欄、小計の追加\n"
 "    ・ 罫線の描画、改ページ\n"
 "\n"
@@ -3905,7 +3904,7 @@ msgstr "役職"
 #. module: base
 #: help:ir.property,res_id:0
 msgid "If not set, acts as a default value for new resources"
-msgstr "セットされない場合、既定値を仮定します。"
+msgstr "セットされない場合、デフォルト値を仮定します。"
 
 #. module: base
 #: code:addons/orm.py:3988
@@ -3936,8 +3935,8 @@ msgid ""
 "loading a new language it becomes available as default interface language "
 "for users and partners."
 msgstr ""
-"このウィザードはあなたのOpenERPシステムに新しい言語を追加するのを助けます。新しい言語をローディングした後にユーザとパートナの既定値のインタフェース"
-"言語として利用可能になります。"
+"このウィザードはあなたのOpenERPシステムに新しい言語を追加するのを助けます。新しい言語をローディングした後にユーザとパートナのデフォルトのインタフェ"
+"ース言語として利用可能になります。"
 
 #. module: base
 #: view:ir.model:0
@@ -3949,12 +3948,12 @@ msgstr "メニューの作成"
 msgid ""
 "Value Added Tax number. Check the box if the partner is subjected to the "
 "VAT. Used by the VAT legal statement."
-msgstr ""
+msgstr "付加価値税（VAT）番号。パートナがVATに従属させられる場合はボックスをチェックして下さい。VATの法的な計算書に使用されます。"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
 msgid "Standard"
-msgstr ""
+msgstr "標準"
 
 #. module: base
 #: model:ir.model,name:base.model_maintenance_contract
@@ -3964,17 +3963,17 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ru
 msgid "Russian Federation"
-msgstr ""
+msgstr "ロシア連邦"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Urdu / اردو"
-msgstr ""
+msgstr "ウルドゥー語"
 
 #. module: base
 #: field:res.company,name:0
 msgid "Company Name"
-msgstr ""
+msgstr "会社名"
 
 #. module: base
 #: code:addons/orm.py:2683
@@ -3982,38 +3981,38 @@ msgstr ""
 msgid ""
 "Invalid value for reference field \"%s.%s\" (last part must be a non-zero "
 "integer): \"%s\""
-msgstr ""
+msgstr "参照項目として無効な値です \"%s.%s\" （最後の部分は整数の０以外にすべきです）：\"%s\""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources
 msgid "Human Resources"
-msgstr ""
+msgstr "ヒューマンリソース"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
 #: model:ir.ui.menu,name:base.menu_country_partner
 msgid "Countries"
-msgstr ""
+msgstr "国"
 
 #. module: base
 #: selection:ir.translation,type:0
 msgid "RML  (deprecated - use Report)"
-msgstr ""
+msgstr "RML（非難された - レポート使用のこと）"
 
 #. module: base
 #: sql_constraint:ir.translation:0
 msgid "Language code of translation item must be among known languages"
-msgstr ""
+msgstr "翻訳項目の言語コードは周知の言語でなければいけません。"
 
 #. module: base
 #: view:ir.rule:0
 msgid "Record rules"
-msgstr ""
+msgstr "レコード規則"
 
 #. module: base
 #: view:ir.property:0
 msgid "Field Information"
-msgstr ""
+msgstr "項目情報"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -4027,17 +4026,22 @@ msgid ""
 "templates to target objects.\n"
 "    "
 msgstr ""
+"\n"
+"    * 多言語サポート：会計表、税金、税金コード、ジャーナル、会計テンプレート、会計分析表、ジャーナル分析\n"
+"    * セットアップウィザード変更\n"
+"        - テンプレートから目的のオブジェクトへCOA、税金、税金コード、会計ポジションの翻訳をコピー\n"
+"    "
 
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Search Actions"
-msgstr ""
+msgstr "検索アクション"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_partner_wizard_ean_check
 #: view:partner.wizard.ean.check:0
 msgid "Ean check"
-msgstr ""
+msgstr "EANチェック"
 
 #. module: base
 #: field:res.partner,vat:0
@@ -4047,12 +4051,12 @@ msgstr ""
 #. module: base
 #: field:res.users,new_password:0
 msgid "Set password"
-msgstr ""
+msgstr "パスワードの設定"
 
 #. module: base
 #: view:res.lang:0
 msgid "12. %w              ==> 5 ( Friday is the 6th day)"
-msgstr ""
+msgstr "12. %w ==> 5（金曜日は第6番目の日）"
 
 #. module: base
 #: constraint:res.partner.category:0
@@ -4062,7 +4066,7 @@ msgstr "エラーです。再帰的な関係となる分類を作ることはで
 #. module: base
 #: view:res.lang:0
 msgid "%x - Appropriate date representation."
-msgstr ""
+msgstr "%x - 日付表示の割り当て"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_mobile
@@ -4071,21 +4075,24 @@ msgid ""
 "        OpenERP Web mobile.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP Webモバイル\n"
+"        "
 
 #. module: base
 #: view:res.lang:0
 msgid "%d - Day of the month [01,31]."
-msgstr ""
+msgstr "%d - 月の日 [01,31]."
 
 #. module: base
 #: model:res.country,name:base.tj
 msgid "Tajikistan"
-msgstr ""
+msgstr "タジキスタン"
 
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
-msgstr ""
+msgstr "GPL-2 またはそれ以降のバージョン"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_sir
@@ -4099,6 +4106,8 @@ msgid ""
 "Can not create the module file:\n"
 " %s"
 msgstr ""
+"そのモジュールファイルの作成ができません：\n"
+" %s"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_wizard
@@ -4112,23 +4121,23 @@ msgstr ""
 msgid ""
 "Operation prohibited by access rules, or performed on an already deleted "
 "document (Operation: read, Document type: %s)."
-msgstr ""
+msgstr "その操作はアクセス規制あるいは既にドキュメントが削除されたため実行できません（操作：read、ドキュメントタイプ： %s）。"
 
 #. module: base
 #: model:res.country,name:base.nr
 msgid "Nauru"
-msgstr ""
+msgstr "ナウル"
 
 #. module: base
 #: report:ir.module.reference.graph:0
 msgid "Introspection report on objects"
-msgstr ""
+msgstr "オブジェクトのイントロスペクションレポート"
 
 #. module: base
 #: code:addons/base/module/module.py:240
 #, python-format
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "証明書IDは固有である必要があります。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hn
@@ -4137,6 +4146,8 @@ msgid ""
 "la moneda Lempira. -- Adds accounting chart for Honduras.  It also includes "
 "taxes and the Lempira currency"
 msgstr ""
+"Agrega una nomenclatura contable para Honduras. También incluye impuestos y "
+"la moneda Lempira. -- ホンジュラスのための会計表を加えます。これには税金とLempira通貨が含まれます。"
 
 #. module: base
 #: selection:ir.actions.act_window,view_type:0
@@ -4145,7 +4156,7 @@ msgstr ""
 #: selection:ir.ui.view,type:0
 #: selection:wizard.ir.model.menu.create.line,view_type:0
 msgid "Form"
-msgstr ""
+msgstr "フォーム"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it
@@ -4157,21 +4168,27 @@ msgid ""
 "Italian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Piano dei conti italiano di un'impresa generica.\n"
+"================================================\n"
+"\n"
+"イタリアの会計表とローカル化\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.me
 msgid "Montenegro"
-msgstr ""
+msgstr "モンテネグロ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document_ics
 msgid "iCal Support"
-msgstr ""
+msgstr "iCalサポート"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail
 msgid "Email Gateway"
-msgstr ""
+msgstr "Eメールゲートウェイ"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:439
@@ -4180,22 +4197,24 @@ msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
 "%s: %s"
 msgstr ""
+"SMTPサーバによるメール送信は失敗しました '%s'。\n"
+"%s: %s"
 
 #. module: base
 #: view:ir.cron:0
 msgid "Technical Data"
-msgstr ""
+msgstr "技術データ"
 
 #. module: base
 #: view:res.partner:0
 #: field:res.partner,category_id:0
 msgid "Categories"
-msgstr ""
+msgstr "カテゴリ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_mobile
 msgid "OpenERP Web mobile"
-msgstr ""
+msgstr "OpenERP Webモバイル"
 
 #. module: base
 #: view:base.language.import:0
@@ -4204,6 +4223,7 @@ msgid ""
 "import a language pack from here. Other OpenERP languages than the official "
 "ones can be found on launchpad."
 msgstr ""
+"正式に利用可能な言語と別の言語を必要とする場合は、ここから言語パックをインポートして下さい。正式なもの以外の言語はLaunchpad上にあります。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -4219,27 +4239,35 @@ msgid ""
 "user rights to Demo user.\n"
 "    "
 msgstr ""
+"\n"
+"会計のアクセス権限\n"
+"=========================\n"
+"\n"
+"このモジュールはアドミンユーザにジャーナル項目や会計表といった全ての会計機能へのアクセスを与えます。\n"
+"\n"
+"アドミニストレータには管理者とユーザアクセス権を、デモユーザにはユーザアクセス権のみを割り当てます。\n"
+"    "
 
 #. module: base
 #: selection:ir.module.module,state:0
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
-msgstr ""
+msgstr "アップグレード対象"
 
 #. module: base
 #: model:res.country,name:base.ly
 msgid "Libya"
-msgstr ""
+msgstr "リビア"
 
 #. module: base
 #: model:res.country,name:base.cf
 msgid "Central African Republic"
-msgstr ""
+msgstr "中央アフリカ共和国"
 
 #. module: base
 #: model:res.country,name:base.li
 msgid "Liechtenstein"
-msgstr ""
+msgstr "リヒテンシュタイン"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_rpc
@@ -4249,7 +4277,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue_sheet
 msgid "Timesheet on Issues"
-msgstr ""
+msgstr "問題事項のタイムシート"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_ltd
@@ -4270,6 +4298,15 @@ msgid ""
 "    * Cheque Register\n"
 "    "
 msgstr ""
+"\n"
+"会計証明モジュールは銀行、現金、販売、購入、経費、契約などの証明の全ての基本要求を含みます。\n"
+"============================================================================="
+"=======================================================\n"
+"\n"
+"    ・ 証書入力\n"
+"    ・ 領収書\n"
+"    ・ 小切手登録\n"
+"    "
 
 #. module: base
 #: field:res.partner,ean13:0
@@ -4280,22 +4317,22 @@ msgstr ""
 #: code:addons/orm.py:2134
 #, python-format
 msgid "Invalid Architecture!"
-msgstr ""
+msgstr "無効なアーキテクチャです。"
 
 #. module: base
 #: model:res.country,name:base.pt
 msgid "Portugal"
-msgstr ""
+msgstr "ポルトガル"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_share
 msgid "Share any Document"
-msgstr ""
+msgstr "ドキュメント共有"
 
 #. module: base
 #: field:ir.module.module,certificate:0
 msgid "Quality Certificate"
-msgstr ""
+msgstr "品質証明書"
 
 #. module: base
 #: view:res.lang:0
@@ -4336,21 +4373,44 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
+"\n"
+"これは分析会計において主に多角化企業のためにOpenERPの多通貨による取り扱いを改善します。\n"
+"\n"
+"このモジュールは全ての c2c_multicost が利用可能な v5.0 "
+"の安定したバージョンに基づいています。会社間（それぞれで通貨が異なっていたとしても）での分析アカウントを共有することができます。\n"
+"\n"
+"ここで実現されたこと：\n"
+"\n"
+"  ・ 分析ライン（分析ラインと関連付けされた一般アカウントを持つ会社）の所有者に適合させる\n"
+"  ・ 分析ライン（金融の会計に類似している）に多通貨を追加する\n"
+"  ・ コストに分類される全てをオーナー会社の正しい通貨に基づいて分析アカウントの中に修正する\n"
+"  ・ デフォルトでは、単独会社においては何ら変更なし\n"
+"\n"
+"結果として、同じ通貨ではない会社間において同じ分析アカウントを共有することができます。このセットアップは有効にします。どうぞお使い下さい。\n"
+"\n"
+"・ 会社A ： ユーロ\n"
+"・ 会社B ： スイスフラン\n"
+"\n"
+"・ 分析アカウントA ： 米ドル、会社Aにより所有\n"
+"・ 分析アカウントB ： スイスフラン、会社Aにより所有\n"
+"・ 分析アカウントC ： ユーロ、会社Bにより所有\n"
+"\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it
 msgid "Italy - Accounting"
-msgstr ""
+msgstr "イタリア - 会計"
 
 #. module: base
 #: field:ir.actions.act_window,help:0
 msgid "Action description"
-msgstr ""
+msgstr "アクション説明"
 
 #. module: base
 #: help:res.partner,customer:0
 msgid "Check this box if the partner is a customer."
-msgstr ""
+msgstr "パートナが顧客である場合はこのボックスをチェックして下さい。"
 
 #. module: base
 #: help:ir.module.module,auto_install:0
@@ -4359,6 +4419,8 @@ msgid ""
 "its dependencies are satisfied. If the module has no dependency, it is "
 "always installed."
 msgstr ""
+"自動インストール可能モジュールは、全ての依存関係が満足している場合にシステムによって自動的にインストールされます。そのモジュールが依存関係を持たない場合は"
+"、いつもインストールされます。"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_lang_act_window
@@ -4366,7 +4428,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_res_lang_act_window
 #: view:res.lang:0
 msgid "Languages"
-msgstr ""
+msgstr "言語"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_claim
@@ -4381,6 +4443,13 @@ msgid ""
 "automatically new claims based on incoming emails.\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールは顧客 / サプライヤのクレームや不満の追跡をします。\n"
+"============================================================================="
+"===\n"
+"\n"
+"これはEメールゲートウェイと完全に統合されており、受信Eメールを元に自動的に新しいクレームを生成することができます。\n"
+"    "
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -4391,12 +4460,12 @@ msgstr "Xor"
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization_account_charts
 msgid "Account Charts"
-msgstr ""
+msgstr "会計表"
 
 #. module: base
 #: view:res.request:0
 msgid "Request Date"
-msgstr ""
+msgstr "リクエスト日"
 
 #. module: base
 #: code:addons/base/module/wizard/base_export_language.py:52
@@ -4406,6 +4475,8 @@ msgid ""
 "spreadsheet software. The file encoding is UTF-8. You have to translate the "
 "latest column before reimporting it."
 msgstr ""
+"このドキュメントを .CSVファイルとして保存し、好みの表計算ソフトウェアで開いて下さい。ファイルのエンコーディングはUTF-"
+"8です。再インポートする前に最新のカラムに翻訳しておく必要があります。"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -4413,12 +4484,12 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_partner_form
 #: view:res.partner:0
 msgid "Customers"
-msgstr ""
+msgstr "顧客"
 
 #. module: base
 #: model:res.country,name:base.au
 msgid "Australia"
-msgstr ""
+msgstr "オーストラリア"
 
 #. module: base
 #: help:res.partner,lang:0
@@ -4426,16 +4497,18 @@ msgid ""
 "If the selected language is loaded in the system, all documents related to "
 "this partner will be printed in this language. If not, it will be english."
 msgstr ""
+"選択した言語がシステムにロードされるなら、このパートナと関連する全てのドキュメントはその言語によって印刷されます。しかし、そうでない場合は英語により印刷さ"
+"れます。"
 
 #. module: base
 #: report:ir.module.reference.graph:0
 msgid "Menu :"
-msgstr ""
+msgstr "メニュー："
 
 #. module: base
 #: selection:ir.model.fields,state:0
 msgid "Base Field"
-msgstr ""
+msgstr "基本項目"
 
 #. module: base
 #: model:ir.module.module,description:base.module_anonymization
@@ -4457,6 +4530,16 @@ msgid ""
 "anonymization process to recover your previous data.\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールはデータベースを匿名化することを可能にします。\n"
+"===============================================\n"
+"\n"
+"このモジュールは与えられたデータベースのデータの機密を保持することができます。\n"
+"このプロセスはあなたが移行プロセスを使って、自身または顧客の機密データを保護したい場合に役立ちます。\n"
+"原則は機密データを隠すための匿名化ツールを実行します。それらは'XXX'文字列によって置き換えられます。\n"
+"そして、匿名化されたデータベースを移行チームに送ります。移行されたデータベースを受け取った後は、\n"
+"リストアを行い、匿名化プロセスの逆を行い以前のデータを復活させます。\n"
+"    "
 
 #. module: base
 #: help:publisher_warranty.contract,name:0
@@ -4464,7 +4547,7 @@ msgstr ""
 msgid ""
 "Your OpenERP Publisher's Warranty Contract unique key, also called serial "
 "number."
-msgstr ""
+msgstr "あなたのOpenERP発行人の保証書の固有キーはシリアル番号とも呼ばれます。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -4479,27 +4562,35 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールは新しいデータベースのインストールにおいてシステムの構成を助けます。\n"
+"============================================================================="
+"===\n"
+"\n"
+"インストールすべきアプリケーションの特徴のリストを見せます。\n"
+"\n"
+"    "
 
 #. module: base
 #: field:ir.actions.report.xml,report_sxw_content:0
 #: field:ir.actions.report.xml,report_sxw_content_data:0
 msgid "SXW content"
-msgstr ""
+msgstr "SXWコンテンツ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl
 msgid "Poland - Accounting"
-msgstr ""
+msgstr "ポーランド - 会計"
 
 #. module: base
 #: view:ir.cron:0
 msgid "Action to Trigger"
-msgstr ""
+msgstr "トリガーとなるアクション"
 
 #. module: base
 #: selection:ir.translation,type:0
 msgid "Constraint"
-msgstr ""
+msgstr "制約"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase
@@ -4519,50 +4610,63 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"購入モジュールはサプライヤからの商品購入のために注文書を作成します。\n"
+"============================================================================="
+"============\n"
+"\n"
+"個々の注文書に応じたサプライヤの請求書が作成されます。\n"
+"\n"
+"購入管理のダッシュボードは以下を含みます：\n"
+"    ・ 最新の注文書\n"
+"    ・ ドラフトの注文書\n"
+"    ・ 月別の発注量と金額のグラフ\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.model.fields:0
 #: field:ir.model.fields,required:0
 #: field:res.partner.bank.type.field,required:0
 msgid "Required"
-msgstr ""
+msgstr "必須"
 
 #. module: base
 #: view:res.users:0
 msgid "Default Filters"
-msgstr ""
+msgstr "ドラフトフィルタ"
 
 #. module: base
 #: field:res.request.history,name:0
 msgid "Summary"
-msgstr ""
+msgstr "要約"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden_dependency
 msgid "Dependency"
-msgstr ""
+msgstr "依存関係"
 
 #. module: base
 #: field:multi_company.default,expression:0
 msgid "Expression"
-msgstr ""
+msgstr "式"
 
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Validate"
-msgstr ""
+msgstr "確認"
 
 #. module: base
 #: view:res.company:0
 msgid "Header/Footer"
-msgstr ""
+msgstr "ヘッダ/フッタ"
 
 #. module: base
 #: help:ir.mail_server,sequence:0
 msgid ""
 "When no specific mail server is requested for a mail, the highest priority "
 "one is used. Default priority is 10 (smaller number = higher priority)"
-msgstr ""
+msgstr "メールサーバを特に指定しないメールは最も高い優先度が使われます。デフォルトの優先度は10（より小さい番号がより高い優先度）。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_partner_assign
@@ -4581,121 +4685,133 @@ msgid ""
 "You can also use the geolocalization without using the GPS coordinates.\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールは、顧客を地理的ローカル化に基づくパートナに再配置するために、OpenERP SAによって使わます。\n"
+"============================================================================="
+"=========================\n"
+"\n"
+"このモジュールを使うことで、あなたのオポチュニティを地理的ローカル化できます。\n"
+"\n"
+"オポチュニティをパートナに割り当てる場合に地理的ローカル化を使って下さい。\n"
+"パートナの住所によるGPS座標を決定して下さい。\n"
+"最も適切なパートナの割り当てが可能です。\n"
+"また、GPS座標なしでも地理的ローカル化はできます。\n"
+"    "
 
 #. module: base
 #: help:ir.actions.act_window,help:0
 msgid ""
 "Optional help text for the users with a description of the target view, such "
 "as its usage and purpose."
-msgstr ""
+msgstr "ユーザのために、用途や目的といった目的となるビューの説明を伴った任意のヘルプテキスト"
 
 #. module: base
 #: model:res.country,name:base.va
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "教皇庁（バチカン市国）"
 
 #. module: base
 #: field:base.module.import,module_file:0
 msgid "Module .ZIP file"
-msgstr ""
+msgstr "モジュール .ZIPファイル"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
 msgid "Telecom sector"
-msgstr ""
+msgstr "遠距離通信部門"
 
 #. module: base
 #: field:workflow.transition,trigger_model:0
 msgid "Trigger Object"
-msgstr ""
+msgstr "トリガーオブジェクト"
 
 #. module: base
 #: sql_constraint:ir.sequence.type:0
 msgid "`code` must be unique."
-msgstr ""
+msgstr "`code`は固有であるべきです。"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense
 msgid "Expenses Management"
-msgstr ""
+msgstr "経費管理"
 
 #. module: base
 #: view:workflow.activity:0
 #: field:workflow.activity,in_transitions:0
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "入力変化"
 
 #. module: base
 #: field:ir.values,value_unpickle:0
 msgid "Default value or action reference"
-msgstr ""
+msgstr "デフォルト値またはアクションリファレンス"
 
 #. module: base
 #: model:res.country,name:base.sr
 msgid "Suriname"
-msgstr ""
+msgstr "スリナム"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet
 msgid "Bill Time on Tasks"
-msgstr ""
+msgstr "タスクの時間割表"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
 #: model:ir.module.module,shortdesc:base.module_marketing
 #: model:ir.ui.menu,name:base.marketing_menu
 msgid "Marketing"
-msgstr ""
+msgstr "マーケティング"
 
 #. module: base
 #: view:res.partner.bank:0
 msgid "Bank account"
-msgstr ""
+msgstr "銀行口座"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr
 msgid "Greece - Accounting"
-msgstr ""
+msgstr "ギリシャ - 会計"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (HN) / Español (HN)"
-msgstr ""
+msgstr "スペイン語（ホンジュラス）"
 
 #. module: base
 #: view:ir.sequence.type:0
 msgid "Sequence Type"
-msgstr ""
+msgstr "順序タイプ"
 
 #. module: base
 #: view:ir.ui.view.custom:0
 msgid "Customized Architecture"
-msgstr ""
+msgstr "カスタマイズされたアーキテクチャ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_gantt
 msgid "web Gantt"
-msgstr ""
+msgstr "Webガント"
 
 #. module: base
 #: field:ir.module.module,license:0
 msgid "License"
-msgstr ""
+msgstr "ライセンス"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_graph
 msgid "web Graph"
-msgstr ""
+msgstr "Webグラフ"
 
 #. module: base
 #: field:ir.attachment,url:0
 msgid "Url"
-msgstr ""
+msgstr "URL"
 
 #. module: base
 #: selection:ir.translation,type:0
 msgid "SQL Constraint"
-msgstr ""
+msgstr "SQL制約"
 
 #. module: base
 #: help:ir.ui.menu,groups_id:0
@@ -4704,12 +4820,14 @@ msgid ""
 "groups. If this field is empty, OpenERP will compute visibility based on the "
 "related object's read access."
 msgstr ""
+"グループを持つ場合、このメニューはそのグループを基にした表示となります。この項目が空の場合は、OpenERPは関連するオブジェクトの読み込み権限を基にした"
+"表示を行います。"
 
 #. module: base
 #: view:base.module.upgrade:0
 msgid ""
 "We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."
-msgstr ""
+msgstr "新しいメニューを見るためにはメニュータブをリロードして下さい。（Ctrl+T の後 Ctrl+R）。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_subscription
@@ -4727,6 +4845,16 @@ msgid ""
 "above. Specify the interval information and partner to be invoice.\n"
 "    "
 msgstr ""
+"\n"
+"定期的ドキュメントの作成\n"
+"===========================\n"
+"\n"
+"このモジュールは新しいドキュメントを作成し、それを定期的にすることを可能にします。\n"
+"\n"
+"例えば、定期的に自動で請求書を生成するためには以下の手順です:\n"
+"    ・ 請求書オブジェクトに基づきドキュメントタイプを定義して下さい。\n"
+"    ・ 情報元ドキュメントを定義してそれに定期性を定義します。請求書のための間隔情報とパートナを指定します。\n"
+"    "
 
 #. module: base
 #: field:ir.actions.server,srcmodel_id:0
@@ -4734,45 +4862,45 @@ msgstr ""
 #: field:ir.model.fields,model_id:0
 #: view:ir.values:0
 msgid "Model"
-msgstr ""
+msgstr "モデル"
 
 #. module: base
 #: view:base.language.install:0
 msgid ""
 "The selected language has been successfully installed. You must change the "
 "preferences of the user and open a new menu to view the changes."
-msgstr ""
+msgstr "選択した言語のインストールに成功しました。ユーザのプリファレンスを変更して、新しいメニューを開くと、変更結果が確認できます。"
 
 #. module: base
 #: sql_constraint:ir.config_parameter:0
 msgid "Key must be unique."
-msgstr ""
+msgstr "キーは固有であるべきです。"
 
 #. module: base
 #: view:ir.actions.act_window:0
 msgid "Open a Window"
-msgstr ""
+msgstr "ウィンドウを開く"
 
 #. module: base
 #: model:res.country,name:base.gq
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "赤道ギニア"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_warning
 msgid "Warning Messages and Alerts"
-msgstr ""
+msgstr "警告メッセージと注意"
 
 #. module: base
 #: view:base.module.import:0
 #: model:ir.actions.act_window,name:base.action_view_base_module_import
 msgid "Module Import"
-msgstr ""
+msgstr "モジュールインポート"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch
 msgid "Switzerland - Accounting"
-msgstr ""
+msgstr "スイス - 会計"
 
 #. module: base
 #: field:res.bank,zip:0
@@ -4780,28 +4908,28 @@ msgstr ""
 #: field:res.partner.address,zip:0
 #: field:res.partner.bank,zip:0
 msgid "Zip"
-msgstr ""
+msgstr "郵便番号"
 
 #. module: base
 #: view:ir.module.module:0
 #: field:ir.module.module,author:0
 msgid "Author"
-msgstr ""
+msgstr "著者"
 
 #. module: base
 #: model:res.country,name:base.mk
 msgid "FYROM"
-msgstr ""
+msgstr "マケドニア旧ユーゴスラビア共和国"
 
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Set as Todo"
-msgstr ""
+msgstr "ToDoとしてセット"
 
 #. module: base
 #: view:res.lang:0
 msgid "%c - Appropriate date and time representation."
-msgstr ""
+msgstr "%c - 日付と時間の表現を割り当てて下さい。"
 
 #. module: base
 #: code:addons/base/res/res_config.py:386
@@ -4811,31 +4939,34 @@ msgid ""
 "\n"
 "Click 'Continue' and enjoy your OpenERP experience..."
 msgstr ""
+"データベースは今、完全に構成されます。\n"
+"\n"
+"’続ける’をクリックして、OpenERPを体験して下さい。"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_marketing
 msgid "Helps you manage your marketing campaigns step by step."
-msgstr ""
+msgstr "マーケティングキャンペーンの管理を順番にお手伝いします。"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Hebrew / עִבְרִי"
-msgstr ""
+msgstr "ヘブライ語"
 
 #. module: base
 #: model:res.country,name:base.bo
 msgid "Bolivia"
-msgstr ""
+msgstr "ボリビア"
 
 #. module: base
 #: model:res.country,name:base.gh
 msgid "Ghana"
-msgstr ""
+msgstr "ガーナ"
 
 #. module: base
 #: field:res.lang,direction:0
 msgid "Direction"
-msgstr ""
+msgstr "指示"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -4848,39 +4979,39 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_action_ui_view
 #: view:ir.ui.view:0
 msgid "Views"
-msgstr ""
+msgstr "ビュー"
 
 #. module: base
 #: view:res.groups:0
 #: field:res.groups,rule_groups:0
 msgid "Rules"
-msgstr ""
+msgstr "ルール"
 
 #. module: base
 #: field:ir.mail_server,smtp_host:0
 msgid "SMTP Server"
-msgstr ""
+msgstr "SMTP サーバ"
 
 #. module: base
 #: code:addons/base/module/module.py:256
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
-msgstr ""
+msgstr "インストールされるかインストール予定のモジュールを削除しようとしています。"
 
 #. module: base
 #: view:base.module.upgrade:0
 msgid "The selected modules have been updated / installed !"
-msgstr ""
+msgstr "選択されたモジュールは更新あるいはインストールされました。"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (PR) / Español (PR)"
-msgstr ""
+msgstr "スペイン語（プエルトリコ）"
 
 #. module: base
 #: model:res.country,name:base.gt
 msgid "Guatemala"
-msgstr ""
+msgstr "グアテマラ"
 
 #. module: base
 #: help:ir.actions.server,message:0
@@ -4889,6 +5020,9 @@ msgid ""
 "the same values as those available in the condition field, e.g. `Dear [[ "
 "object.partner_id.name ]]`"
 msgstr ""
+"Email contents, may contain expressions enclosed in double brackets based on "
+"the same values as those available in the condition field, e.g. `Dear [[ "
+"object.partner_id.name ]]`"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_form
@@ -4896,7 +5030,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_workflow
 #: model:ir.ui.menu,name:base.menu_workflow_root
 msgid "Workflows"
-msgstr ""
+msgstr "ワークフロー"
 
 #. module: base
 #: model:ir.module.module,description:base.module_profile_tools
@@ -4909,83 +5043,90 @@ msgid ""
 "modules like share, lunch, pad, idea, survey and subscription.\n"
 "    "
 msgstr ""
+"\n"
+"昼食、調査、アイディア、共有など隠された追加機能のインストーラ\n"
+"===============================================================\n"
+"\n"
+"共有、昼食、パッド、アイディア、調査、定期発行といったモジュールをインストールしたところから、\n"
+"追加の隠された設定を利用可能にします。\n"
+"    "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_specific_industry_applications
 msgid "Specific Industry Applications"
-msgstr ""
+msgstr "特定産業のアプリケーション"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_retailers0
 msgid "Retailers"
-msgstr ""
+msgstr "小売業者"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_uservoice
 msgid "Receive User Feedback"
-msgstr ""
+msgstr "ユーザフィードバックの受信"
 
 #. module: base
 #: model:res.country,name:base.ls
 msgid "Lesotho"
-msgstr ""
+msgstr "レソト"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
 msgid "VAT Number Validation"
-msgstr ""
+msgstr "VAT番号確認"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_partner_assign
 msgid "Partners Geo-Localization"
-msgstr ""
+msgstr "パートナの地理的ローカル化"
 
 #. module: base
 #: model:res.country,name:base.ke
 msgid "Kenya"
-msgstr ""
+msgstr "ケニア"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_translation
 #: model:ir.ui.menu,name:base.menu_action_translation
 msgid "Translated Terms"
-msgstr ""
+msgstr "翻訳された用語"
 
 #. module: base
 #: view:res.partner.event:0
 msgid "Event"
-msgstr ""
+msgstr "イベント"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom_reports
 msgid "Custom Reports"
-msgstr ""
+msgstr "カスタムレポート"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Abkhazian / аҧсуа"
-msgstr ""
+msgstr "アブハジア語"
 
 #. module: base
 #: view:base.module.configuration:0
 msgid "System Configuration Done"
-msgstr ""
+msgstr "システムコンフィギュレーション完了"
 
 #. module: base
 #: code:addons/orm.py:1459
 #, python-format
 msgid "Error occurred while validating the field(s) %s: %s"
-msgstr ""
+msgstr "項目の確認中にエラーが発生しました %s： %s"
 
 #. module: base
 #: view:ir.property:0
 msgid "Generic"
-msgstr ""
+msgstr "一般的"
 
 #. module: base
 #: view:ir.actions.server:0
 msgid "SMS Configuration"
-msgstr ""
+msgstr "SMSコンフィギュレーション"
 
 #. module: base
 #: model:ir.module.module,description:base.module_document_webdav
@@ -5015,11 +5156,33 @@ msgid ""
 "Also implements IETF RFC 5785 for services discovery on a http server,\n"
 "which needs explicit configuration in openerp-server.conf, too.\n"
 msgstr ""
+"\n"
+"このモジュールはドキュメントのためのWebDAVサーバを稼動させます。\n"
+"===============================================================\n"
+"\n"
+"その後、OpenObjectに装着されたものを遠隔地からどの互換ブラウザからでも見ることができます。\n"
+"\n"
+"インストールの後、WebDAVサーバはサーバコンフィグの[webdav]セクションによってコントロールが可能です。\n"
+"サーバーコンフィギュレーションパラメータ：\n"
+"\n"
+"     [webdav]\n"
+"    ; enable = True ; Serve webdav over the http(s) servers\n"
+"    ; vdir = webdav ; the directory that webdav will be served at\n"
+"    ; this default val means that webdav will be\n"
+"    ; on \"http://localhost:8069/webdav/\n"
+"    ; verbose = True ; Turn on the verbose messages of webdav\n"
+"    ; debug = True ; Turn on the debugging messages of webdav\n"
+"    ; since the messages are routed to the python logging, with\n"
+"    ; levels \"debug\" and \"debug_rpc\" respectively, you can leave\n"
+"    ; these options on\n"
+"\n"
+"httpサーバのサービスディスカバリのためにIETF RFC 5785が実装されます。\n"
+"これは openerp-server.conf に明確なコンフィギュレーションを必要とします。\n"
 
 #. module: base
 #: model:res.country,name:base.sm
 msgid "San Marino"
-msgstr ""
+msgstr "サンマリノ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey
@@ -5037,49 +5200,58 @@ msgid ""
 "of the survey\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールは調査のために使われます。\n"
+"==================================\n"
+"\n"
+"それは異なるユーザによる答えや質問のレビューを元にしています。\n"
+"調査は複数ページに亘るでしょう。各ページは複数の質問からなり、各質問には複数の答えがあります。\n"
+"異なるユーザには異なる質問の答えが与えられます。これに従った調査が行われます。\n"
+"パートナにも調査の招待のためにユーザ名とパスワードとともにメールが送信されます。\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.bm
 msgid "Bermuda"
-msgstr ""
+msgstr "バミューダ"
 
 #. module: base
 #: model:res.country,name:base.pe
 msgid "Peru"
-msgstr ""
+msgstr "ペルー"
 
 #. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Set NULL"
-msgstr ""
+msgstr "Nullをセット"
 
 #. module: base
 #: model:res.country,name:base.bj
 msgid "Benin"
-msgstr ""
+msgstr "ベナン"
 
 #. module: base
 #: code:addons/base/publisher_warranty/publisher_warranty.py:295
 #: sql_constraint:publisher_warranty.contract:0
 #, python-format
 msgid "That contract is already registered in the system."
-msgstr ""
+msgstr "この契約は既にシステムに登録されています。"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_type_form
 #: model:ir.ui.menu,name:base.menu_action_res_partner_bank_typeform
 msgid "Bank Account Types"
-msgstr ""
+msgstr "銀行口座タイプ"
 
 #. module: base
 #: help:ir.sequence,suffix:0
 msgid "Suffix value of the record for the sequence"
-msgstr ""
+msgstr "順序のためのレコードのサフィックス値"
 
 #. module: base
 #: help:ir.mail_server,smtp_user:0
 msgid "Optional username for SMTP authentication"
-msgstr ""
+msgstr "SMTP認証のためのオプションのユーザ名"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_actions
@@ -5089,17 +5261,17 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,select_level:0
 msgid "Not Searchable"
-msgstr ""
+msgstr "検索可能ではありません"
 
 #. module: base
 #: field:ir.config_parameter,key:0
 msgid "Key"
-msgstr ""
+msgstr "キー"
 
 #. module: base
 #: field:res.company,rml_header:0
 msgid "RML Header"
-msgstr ""
+msgstr "RMLヘッダー"
 
 #. module: base
 #: code:addons/base/res/res_users.py:271
@@ -5110,6 +5282,8 @@ msgid ""
 "sure to save and close all forms before switching to a different company. "
 "(You can click on Cancel in the User Preferences now)"
 msgstr ""
+"現在表示されているドキュメントは、会社を切り替えた後では、適切でないかもしれないことを忘れないで下さい。変更を保存していなかったのなら、会社を切り替える前"
+"に全てのフォームを保存し、フォームを閉じたことを確認して下さい（ユーザプリファレンスでキャンセルをクリックすることもできます）。"
 
 #. module: base
 #: field:partner.sms.send,app_id:0
@@ -5122,28 +5296,28 @@ msgstr ""
 msgid ""
 "You can not create this document (%s) ! Be sure your user belongs to one of "
 "these groups: %s."
-msgstr ""
+msgstr "あなたはこのドキュメントの作成ができません（%s）。あなたのユーザがこのグループに属していることを確認して下さい： %s"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_chat
 msgid "Web Chat"
-msgstr ""
+msgstr "Webチャット"
 
 #. module: base
 #: field:res.company,rml_footer2:0
 msgid "Bank Accounts Footer"
-msgstr ""
+msgstr "銀行口座フッター"
 
 #. module: base
 #: model:res.country,name:base.mu
 msgid "Mauritius"
-msgstr ""
+msgstr "モーリシャス"
 
 #. module: base
 #: view:ir.model.access:0
 #: view:ir.rule:0
 msgid "Full Access"
-msgstr ""
+msgstr "フルアクセス"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -5152,40 +5326,40 @@ msgstr ""
 #: view:ir.model.fields:0
 #: model:ir.ui.menu,name:base.menu_security
 msgid "Security"
-msgstr ""
+msgstr "セキュリティ"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:311
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
-msgstr ""
+msgstr "システムに保存されている項目\"%s\"は変更が許されていません。"
 
 #. module: base
 #: help:res.partner.bank,company_id:0
 msgid "Only if this bank account belong to your company"
-msgstr ""
+msgstr "この銀行口座があなたの会社に属している場合に限り"
 
 #. module: base
 #: model:res.country,name:base.za
 msgid "South Africa"
-msgstr ""
+msgstr "南アフリカ"
 
 #. module: base
 #: view:ir.module.module:0
 #: selection:ir.module.module,state:0
 #: selection:ir.module.module.dependency,state:0
 msgid "Installed"
-msgstr ""
+msgstr "インストール済み"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Ukrainian / українська"
-msgstr ""
+msgstr "ウクライナ語"
 
 #. module: base
 #: model:res.country,name:base.sn
 msgid "Senegal"
-msgstr ""
+msgstr "セネガル"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_requisition
@@ -5199,26 +5373,32 @@ msgid ""
 "This new object will regroup and will allow you to easily keep track and "
 "order all your purchase orders.\n"
 msgstr ""
+"\n"
+"このモジュールは購入要求を管理します。\n"
+"===========================================================\n"
+"\n"
+"注文書が作られるときに、あなたは関連する購入要求を救済する機会を持ちます。\n"
+"新しいオブジェクトは再グループ化され容易に追跡を続けることができるので、全ての購入要求を注文することができます。\n"
 
 #. module: base
 #: model:res.country,name:base.hu
 msgid "Hungary"
-msgstr ""
+msgstr "ハンガリー"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment
 msgid "Recruitment Process"
-msgstr ""
+msgstr "求人プロセス"
 
 #. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
-msgstr ""
+msgstr "ブラジル"
 
 #. module: base
 #: view:res.lang:0
 msgid "%M - Minute [00,59]."
-msgstr ""
+msgstr "%M - 分[00,59]."
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -5228,12 +5408,12 @@ msgstr ""
 #. module: base
 #: field:ir.sequence,number_next:0
 msgid "Next Number"
-msgstr ""
+msgstr "次の番号"
 
 #. module: base
 #: help:workflow.transition,condition:0
 msgid "Expression to be satisfied if we want the transition done."
-msgstr ""
+msgstr "変化させることを望む場合、満足させるための表現"
 
 #. module: base
 #: model:ir.model,name:base.model_publisher_warranty_contract_wizard
@@ -5243,18 +5423,18 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (PA) / Español (PA)"
-msgstr ""
+msgstr "スペイン語（パナマ）"
 
 #. module: base
 #: view:res.currency:0
 #: field:res.currency,rate_ids:0
 msgid "Rates"
-msgstr ""
+msgstr "レート"
 
 #. module: base
 #: model:res.country,name:base.sy
 msgid "Syria"
-msgstr ""
+msgstr "シリア"
 
 #. module: base
 #: view:res.lang:0
@@ -5264,17 +5444,17 @@ msgstr ""
 #. module: base
 #: view:base.module.upgrade:0
 msgid "System update completed"
-msgstr ""
+msgstr "システム更新の終了"
 
 #. module: base
 #: sql_constraint:ir.model:0
 msgid "Each model must be unique!"
-msgstr ""
+msgstr "各モジュールは固有でなければなりません。"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_localization
 msgid "Localization"
-msgstr ""
+msgstr "ローカル化"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_mrp
@@ -5290,11 +5470,19 @@ msgid ""
 "It adds sales name and sales Reference on production order.\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールはユーザにMRPと販売モジュールを一度にインストールする便宜を提供します。\n"
+"============================================================================="
+"=======\n"
+"\n"
+"受注から生成された生産注文を追跡したい時に基本的に利用されます。\n"
+"これは生産注文の販売名や販売リファレンスを追加します。\n"
+"    "
 
 #. module: base
 #: selection:res.request,state:0
 msgid "draft"
-msgstr ""
+msgstr "ドラフト"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -5304,17 +5492,17 @@ msgstr ""
 #: field:res.partner.event,date:0
 #: field:res.request,date_sent:0
 msgid "Date"
-msgstr ""
+msgstr "日付"
 
 #. module: base
 #: field:ir.actions.report.xml,report_sxw:0
 msgid "SXW path"
-msgstr ""
+msgstr "SXWパス"
 
 #. module: base
 #: view:ir.attachment:0
 msgid "Data"
-msgstr ""
+msgstr "データ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_invoice
@@ -5329,45 +5517,50 @@ msgid ""
 "revenue\n"
 "reports, etc."
 msgstr ""
+"経費、タイムシート入力などから請求書を作成します。\n"
+"コスト（人的資源、経費など）に基づく請求書を作成するためのモジュールです。========================================"
+"====================================\n"
+"\n"
+"分析アカウントの中に価格表を定義し、いくらかの仮定上の収支レポート他を作ることができます。"
 
 #. module: base
 #: field:ir.ui.menu,parent_id:0
 #: field:wizard.ir.model.menu.create,menu_id:0
 msgid "Parent Menu"
-msgstr ""
+msgstr "親メニュー"
 
 #. module: base
 #: field:res.partner.bank,owner_name:0
 msgid "Account Owner Name"
-msgstr ""
+msgstr "口座所有者名"
 
 #. module: base
 #: field:ir.rule,perm_unlink:0
 msgid "Apply For Delete"
-msgstr ""
+msgstr "削除申請"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:359
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
-msgstr ""
+msgstr "既にそのカラムは存在しています。列のリネームはできません %s。"
 
 #. module: base
 #: view:ir.attachment:0
 msgid "Attached To"
-msgstr ""
+msgstr "添付先"
 
 #. module: base
 #: field:res.lang,decimal_point:0
 msgid "Decimal Separator"
-msgstr ""
+msgstr "10進数のセパレータ"
 
 #. module: base
 #: code:addons/base/module/module.py:346
 #: view:ir.module.module:0
 #, python-format
 msgid "Install"
-msgstr ""
+msgstr "インストール"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_groups
@@ -5379,18 +5572,21 @@ msgid ""
 "to see. Whether they can have a read, write, create and delete access right "
 "can be managed from here."
 msgstr ""
+"グループはシステムの特定のアプリケーションとタスクにアクセスと権利を与えるためユーザに割り当てられる機能エリアのセットです。ユーザが見ることのできるメニュ"
+"ーのビューをカスタマイズするために、カスタムグループを作成したり、デフォルトで存在するグループを編集できます。\r\n"
+"彼らが読み込み、書き込み、作成、削除のアクセス権限を持つかどうかをここから管理することができます。"
 
 #. module: base
 #: field:ir.filters,name:0
 msgid "Filter Name"
-msgstr ""
+msgstr "フィルタ名"
 
 #. module: base
 #: view:res.partner:0
 #: view:res.request:0
 #: field:res.request,history:0
 msgid "History"
-msgstr ""
+msgstr "履歴"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -5402,11 +5598,16 @@ msgid ""
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
 msgstr ""
+"これは英国の中小企業向けにOpenERPの会計を実行するために必要とされるローカル化モジュールです：\n"
+"    ・ CT600 会計表に対応\n"
+"    ・ VAT100 税制に対応\n"
+"    ・ InfoLogic 英国の地域一覧表\n"
+"    ・ その他の適用"
 
 #. module: base
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
-msgstr ""
+msgstr "作成者"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_asset
@@ -5417,21 +5618,25 @@ msgid ""
 "    those assets. And it allows to create Move's of the depreciation lines.\n"
 "    "
 msgstr ""
+"金融と会計資産管理\n"
+"    このモジュールは会社または個人の所有する資産の管理をします。\n"
+"    資産の上で発生する減価償却を追跡し続け、減価償却表を作成することができます。\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.bv
 msgid "Bouvet Island"
-msgstr ""
+msgstr "ブーベ島"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config_plugins
 msgid "Plugins"
-msgstr ""
+msgstr "プラグイン"
 
 #. module: base
 #: field:res.company,child_ids:0
 msgid "Child Companies"
-msgstr ""
+msgstr "子会社"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users
@@ -5441,7 +5646,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ni
 msgid "Nicaragua"
-msgstr ""
+msgstr "ニカラグア"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -5479,23 +5684,47 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"これはベルギーのOpenERP会計表管理の基本モジュールです。\n"
+"============================================================================="
+"=\n"
+"\n"
+"このモジュールをインストール後、会計のコンフィギュレーションウィザードが自動起動します。\n"
+"    ・ 会計表作成を補助する会計テンプレートがあります。\n"
+"    ・ "
+"特定のウィザードでは会社の名前、従うべき表のテンプレート、生成するための桁数、あなたのアカウントと銀行口座、ジャーナル作成のための通貨が尋ねられます。\n"
+"\n"
+"すると、未記入の表テンプレートのコピーが作成されます。\n"
+"\n"
+"このモジュールによリ提供されるウィザード：\n"
+"    ・ パートナのVATイントラ： VAT（付加価値税）関連するパートナを協力させて、XML形式の請求書作成します。\n"
+"            アクセスのためのパス： Accounting/Reporting//Legal Statements/Belgium "
+"Statements/Partner VAT Listing\n"
+"    ・ 定期的なVAT申告： 現在ログインしているユーザの主会社のVAT申告のためのXMLファイルを準備します。\n"
+"            アクセスのためのパス： Accounting/Reporting/Legal Statements/Belgium "
+"Statements/Periodical VAT Declaration\n"
+"    ・ VATの年次リスト－主体となる顧客： 現在ログインしているユーザの主会社の年次のVAT申告のためのXMLファイルを準備します。\n"
+"            アクセスのためのパス： Accounting/Reporting/Legal Statements/Belgium "
+"Statements/Annual Listing Of VAT-Subjected Customers\n"
+"\n"
+"    "
 
 #. module: base
 #: field:ir.property,fields_id:0
 #: selection:ir.translation,type:0
 #: field:multi_company.default,field_id:0
 msgid "Field"
-msgstr ""
+msgstr "項目"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_long_term
 msgid "Long Term Projects"
-msgstr ""
+msgstr "長期間プロジェクト"
 
 #. module: base
 #: model:res.country,name:base.ve
 msgid "Venezuela"
-msgstr ""
+msgstr "ベネズエラ"
 
 #. module: base
 #: view:res.lang:0
@@ -5505,44 +5734,44 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.zm
 msgid "Zambia"
-msgstr ""
+msgstr "ザンビア"
 
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Launch Configuration Wizard"
-msgstr ""
+msgstr "昼食コンフィギュレーションウィザード"
 
 #. module: base
 #: help:res.partner,user_id:0
 msgid ""
 "The internal user that is in charge of communicating with this partner if "
 "any."
-msgstr ""
+msgstr "その内部ユーザはどんな場合でもこのパートナとの通信に責任を持ちます。"
 
 #. module: base
 #: field:res.partner,parent_id:0
 msgid "Parent Partner"
-msgstr ""
+msgstr "親パートナ"
 
 #. module: base
 #: view:ir.module.module:0
 msgid "Cancel Upgrade"
-msgstr ""
+msgstr "更新のキャンセル"
 
 #. module: base
 #: model:res.country,name:base.ci
 msgid "Ivory Coast (Cote D'Ivoire)"
-msgstr ""
+msgstr "コートジボワール"
 
 #. module: base
 #: model:res.country,name:base.kz
 msgid "Kazakhstan"
-msgstr ""
+msgstr "カザフスタン"
 
 #. module: base
 #: view:res.lang:0
 msgid "%w - Weekday number [0(Sunday),6]."
-msgstr ""
+msgstr "%w - 曜日番号 [0(日曜),6]."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_form
@@ -5555,6 +5784,19 @@ msgid ""
 "plugin, don't forget to register emails to each contact so that the gateway "
 "will automatically attach incoming emails to the right partner."
 msgstr ""
+"顧客は会社または組織といったビジネス対象の存在です。会社で働く人々のため顧客は複数のコンタクト者や住所を管理できます。顧客と関係する全てのトランザクション"
+"をたどるために履歴タブが利用できます：受注、Eメール、オポチュニティ、クレームなど。もし、OutlookやThunderbirdプラグインのEメールゲート"
+"ウェイを使う場合、ゲートウェイが自動的に入ってくるEメールを正しいパートナに結びつけるように各コンタクトにEメールを登録することを忘れないで下さい。\r"
+"\n"
+"\r\n"
+"\r\n"
+"A customer is an entity you do business with, like a company or an "
+"organization. A customer can have several contacts or addresses which are "
+"the people working for this company. You can use the history tab, to follow "
+"all transactions related to a customer: sales order, emails, opportunities, "
+"claims, etc. If you use the email gateway, the Outlook or the Thunderbird "
+"plugin, don't forget to register emails to each contact so that the gateway "
+"will automatically attach incoming emails to the right partner."
 
 #. module: base
 #: field:ir.actions.report.xml,name:0
@@ -5585,7 +5827,7 @@ msgstr ""
 #: field:workflow,name:0
 #: field:workflow.activity,name:0
 msgid "Name"
-msgstr ""
+msgstr "名前"
 
 #. module: base
 #: help:ir.actions.act_window,multi:0
@@ -5597,17 +5839,17 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ms
 msgid "Montserrat"
-msgstr ""
+msgstr "モントセラト"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_decimal_precision
 msgid "Decimal Precision Configuration"
-msgstr ""
+msgstr "小数精度設定"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
 msgid "Application Terms"
-msgstr ""
+msgstr "アプリケーション用語"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock
@@ -5637,6 +5879,30 @@ msgid ""
 "        * Graph : Products to send in delay (date < = today)\n"
 "    "
 msgstr ""
+"\n"
+"OpenERP在庫管理モジュールは Inventory Management module can manage multi-warehouses, "
+"multi and structured stock locations.\n"
+"============================================================================="
+"=========================\n"
+"\n"
+"Thanks to the double entry management, the inventory controlling is powerful "
+"and flexible:\n"
+"    * Moves history and planning,\n"
+"    * Different inventory methods (FIFO, LIFO, ...)\n"
+"    * Stock valuation (standard or average price, ...)\n"
+"    * Robustness faced with Inventory differences\n"
+"    * Automatic reordering rules (stock level, JIT, ...)\n"
+"    * Bar code supported\n"
+"    * Rapid detection of mistakes through double entry system\n"
+"    * Traceability (upstream/downstream, production lots, serial number, "
+"...)\n"
+"    * Dashboard for warehouse that includes:\n"
+"        * Procurement in exception\n"
+"        * List of Incoming Products\n"
+"        * List of Outgoing Products\n"
+"        * Graph : Products to receive in delay (date < = today)\n"
+"        * Graph : Products to send in delay (date < = today)\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module
@@ -5646,7 +5912,7 @@ msgstr ""
 #: field:ir.module.module.dependency,module_id:0
 #: report:ir.module.reference.graph:0
 msgid "Module"
-msgstr ""
+msgstr "モジュール"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -10855,7 +11121,7 @@ msgstr "使用例"
 #: field:ir.default,value:0
 #: view:ir.values:0
 msgid "Default Value"
-msgstr "既定値"
+msgstr "デフォルト値"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -15555,7 +15821,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.lk
 msgid "Sri Lanka"
-msgstr ""
+msgstr "スリランカ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_module_record
@@ -15587,7 +15853,7 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Russian / русский язык"
-msgstr ""
+msgstr "ロシア"
 
 #~ msgid "Metadata"
 #~ msgstr "メタデータ"

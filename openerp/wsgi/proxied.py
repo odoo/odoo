@@ -2,8 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,25 +19,16 @@
 #
 ##############################################################################
 
-""" Modules (also called addons) management.
+"""
+
+WSGI entry point with Proxy mode (from Werkzeug).
 
 """
 
-import openerp.modules.db
-import openerp.modules.graph
-import openerp.modules.loading
-import openerp.modules.migration
-import openerp.modules.module
+from werkzeug.contrib.fixers import ProxyFix
 
-# TODO temporarily expose those things
-from openerp.modules.module import \
-    get_modules, get_modules_with_version, \
-    load_information_from_description_file, \
-    get_module_resource, zip_directory, \
-    get_module_path, initialize_sys_path, \
-    load_openerp_module, init_module_models
+from . import core
 
-from openerp.modules.loading import load_modules
-
+application = ProxyFix(core.application)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

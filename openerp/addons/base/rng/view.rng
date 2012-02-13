@@ -222,7 +222,6 @@
             <rng:ref name="overload"/>
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="colors"/></rng:optional>
-            <rng:optional><rng:attribute name="color"/></rng:optional>
             <rng:optional>
               <rng:attribute name="editable">
                 <rng:choice>
@@ -231,11 +230,14 @@
                 </rng:choice>
               </rng:attribute>
             </rng:optional>
-            <rng:optional><rng:attribute name="toolbar"/></rng:optional>
-            <rng:optional><rng:attribute name="link"/></rng:optional>
-            <rng:optional><rng:attribute name="type"/></rng:optional>
-            <rng:optional><rng:attribute name="limit"/></rng:optional>
-            <rng:optional><rng:attribute name="min_rows"/></rng:optional>
+            <rng:optional>
+              <rng:attribute name="toolbar">
+                <rng:choice>
+                  <rng:value>1</rng:value>
+                  <rng:value>True</rng:value>
+                </rng:choice>
+              </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="on_write"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
@@ -256,9 +258,6 @@
         <rng:element name="search">
             <rng:ref name="overload"/>
             <rng:optional><rng:attribute name="string"/></rng:optional>
-            <rng:optional><rng:attribute name="col"/></rng:optional>
-            <rng:optional><rng:attribute name="type"/></rng:optional>
-            <rng:optional><rng:attribute name="link"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field"/>
