@@ -35,14 +35,12 @@
 import base64
 import datetime as DT
 import logging
+import pytz
 import re
-import string
-import sys
 import xmlrpclib
 from psycopg2 import Binary
 
 import openerp
-import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.translate import _
 from openerp.tools import float_round, float_repr
@@ -262,6 +260,7 @@ class float(_column):
 
 class date(_column):
     _type = 'date'
+
     @staticmethod
     def today(*args):
         """ Returns the current date in a format fit for being a
@@ -272,6 +271,28 @@ class date(_column):
         """
         return DT.date.today().strftime(
             tools.DEFAULT_SERVER_DATE_FORMAT)
+
+    @staticmethod
+    def context_today(cr, uid, today=None, context=None):
+        """Returns the current date as seen in the client's timezone
+           in a format fit for date fields.
+           This method may be passed as value to initialize _defaults.
+
+           :param datetime today: optional date value to use instead of
+                                  the current date"""
+        today = DT.datetime.now()
+        context_today = None
+        if context and context.get('tz'):
+            try:
+                utc = pytz.timezone('UTC')
+                context_tz = pytz.timezone(context['tz'])
+                utc_today = utc.localize(today, is_dst=False)
+                context_today = utc_today.astimezone(context_tz)
+            except Exception:
+                _logger.debug("failed to compute context/client-specific today date, "
+                              "using the UTC value for `today`",
+                              exc_info=True)
+        return (context_today or today).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
 
 class datetime(_column):
     _type = 'datetime'
