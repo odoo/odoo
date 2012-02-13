@@ -7,7 +7,15 @@
         <field name="email_from" >${object.user_id.user_email or object.company_id.email or 'noreply@localhost'}</field>
         <field name="email_to" >${object.email_from}</field>
         <field name="subject">Ticket for ${object.event_id.name}</field>
-        <field name="body_text">thank you for your registration</field>
+        <field name="body_text">
+        hello ${object.contact_id.name},
+
+        The event ${object.event_id.name} that you register is confirmed 
+
+        we thank you for your participation
+
+        best regards
+        </field>
         </record>
 
     </data>
@@ -19,7 +27,14 @@
         <field name="email_from" >${object.user_id.user_email or object.company_id.email or 'noreply@localhost'}</field>
         <field name="email_to" >${object.email_from}</field>
         <field name="subject">Ticket for ${object.event_id.name}</field>
-        <field name="body_text">thank you for your registration</field>
+        <field name="body_text">
+        hello ${object.contact_id.name},
+        You have just been registered for the event ${object.event_id.name}  to be held from ${object.event_id.date_begin} to ${object.event_id.date_end}
+
+        we thank you for your participation
+
+        best regards
+        </field>
         </record>
 
     </data>

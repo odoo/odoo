@@ -101,7 +101,7 @@ class event_event(osv.osv):
         register_pool = self.pool.get('event.registration')
         for event in self.browse(cr, uid, ids, context=context):
             total_confirmed = event.register_current
-            if total_confirmed < event.register_min or total_confirmed > event.register_max:
+            if total_confirmed < event.register_min or total_confirmed > event.register_max and event.register_max!=0:
                 raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. You should maybe reconsider those limits before going further") % (even.name))
             if event.email_confirmation_id:
                 #send reminder that will confirm the event for all the people that were already confirmed

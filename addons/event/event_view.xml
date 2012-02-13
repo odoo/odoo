@@ -150,6 +150,7 @@
                     <field name="date_end"/>
                     <field name="register_current"/>
                     <field name="register_min"/>
+                    <field name="register_max" invisible="1"/>
                     <field name="main_speaker_id" groups="base.extended"/>
                     <field name="user_id"/>
                     <field name="state"/>
@@ -277,6 +278,7 @@
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                     <button name="case_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                     <button name="case_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
+                    <button string="Set To Draft" name="do_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
@@ -317,7 +319,7 @@
                                 <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                 <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                                 <button name="case_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                <button string="Set To Draft" name="do_draft" states="cancel" type="object" icon="gtk-convert"/>
+                                <button string="Set To Draft" name="do_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                             </group>
                         </page>
                         <page string="Emails" groups="base.group_extended">

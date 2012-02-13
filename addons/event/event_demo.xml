@@ -1,134 +1,131 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
     <record id="base.user_demo" model="res.users">
              <field name="groups_id" eval="[(4, ref('marketing.group_marketing_user')),(4, ref('base.group_sale_salesman'))]"/>
      </record>
-     
-     
 
-     
+
 <!-- Demo Data for Product -->
-	<record id="event_product_0" model="product.product">
-		<field name="list_price">68.00</field>
-		<field name="standard_price">15.00</field>
-		<field name="uom_id" ref="product.product_uom_unit"/>
-		<field name="uom_po_id" ref="product.product_uom_unit"/>
-		<field name="name">Ticket for Concert</field>
-		<field name="categ_id" model="product.category" search="[]"/>
-	</record>
+    <record id="event_product_0" model="product.product">
+        <field name="list_price">68.00</field>
+        <field name="standard_price">15.00</field>
+        <field name="uom_id" ref="product.product_uom_unit"/>
+        <field name="uom_po_id" ref="product.product_uom_unit"/>
+        <field name="name">Ticket for Concert</field>
+        <field name="categ_id" model="product.category" search="[]"/>
+    </record>
 
-	<record id="event_product_1" model="product.product">
-		<field name="list_price">24.00</field>
-		<field name="standard_price">15.00</field>
-		<field name="uom_id" ref="product.product_uom_unit"/>
-		<field name="uom_po_id" ref="product.product_uom_unit"/>
-		<field name="name">Ticket for Opera</field>
-		<field name="categ_id" model="product.category" search="[]"/>
-	</record>
+    <record id="event_product_1" model="product.product">
+        <field name="list_price">24.00</field>
+        <field name="standard_price">15.00</field>
+        <field name="uom_id" ref="product.product_uom_unit"/>
+        <field name="uom_po_id" ref="product.product_uom_unit"/>
+        <field name="name">Ticket for Opera</field>
+        <field name="categ_id" model="product.category" search="[]"/>
+    </record>
 
-	<record id="event_product_2" model="product.product">
-		<field name="list_price">15.50</field>
-		<field name="standard_price">5.00</field>
-		<field name="uom_id" ref="product.product_uom_unit"/>
-		<field name="uom_po_id" ref="product.product_uom_unit"/>
-		<field name="name">Ticket for Conference</field>
-		<field name="categ_id" model="product.category" search="[]"/>
-	</record>
+    <record id="event_product_2" model="product.product">
+        <field name="list_price">15.50</field>
+        <field name="standard_price">5.00</field>
+        <field name="uom_id" ref="product.product_uom_unit"/>
+        <field name="uom_po_id" ref="product.product_uom_unit"/>
+        <field name="name">Ticket for Conference</field>
+        <field name="categ_id" model="product.category" search="[]"/>
+    </record>
 
 
 <!-- Demo Data for Event Type -->
-	<record id="event_type_0" model="event.type">
-		<field name="name">Seminar</field>
-	</record>
+    <record id="event_type_0" model="event.type">
+        <field name="name">Seminar</field>
+    </record>
 
-	<record id="event_type_1" model="event.type">
-		<field name="name">Exhibition</field>
-	</record>
+    <record id="event_type_1" model="event.type">
+        <field name="name">Exhibition</field>
+    </record>
 
-	<record id="event_type_2" model="event.type">
-		<field name="name">Conference</field>
-	</record>
+    <record id="event_type_2" model="event.type">
+        <field name="name">Conference</field>
+    </record>
 
-	<record id="event_type_3" model="event.type">
-		<field name="name">Saloon</field>
-	</record>
+    <record id="event_type_3" model="event.type">
+        <field name="name">Saloon</field>
+    </record>
 
-	<record id="event_type_4" model="event.type">
-		<field name="name">Training</field>
-	</record>
+    <record id="event_type_4" model="event.type">
+        <field name="name">Training</field>
+    </record>
 
 <!-- Demo data for Event -->
-	<record id="event_0" model="event.event">
-		<field name="name">Concert of Bon Jovi</field>
+    <record id="event_0" model="event.event">
+        <field name="name">Concert of Bon Jovi</field>
         <field eval="time.strftime('%Y-%m-01 19:05:15')" name="date_begin"/>
         <field eval="time.strftime('%Y-%m-01 23:05:15')" name="date_end"/>
-		<field name="product_id" ref="event_product_0"/>
-		<field name="unit_price">68.00</field>
-		<field name="mail_auto_registr">True</field>
-		<field name="mail_auto_confirm">True</field>
-		<field name="user_id" ref="base.user_root"/>
-		<field name="register_max">500</field>
-		<field name="type" ref="event_type_1"/>
-	</record>
+        <field name="product_id" ref="event_product_0"/>
+        <field name="unit_price">68.00</field>
+        <field name="mail_auto_registr">True</field>
+        <field name="mail_auto_confirm">True</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="register_max">500</field>
+        <field name="type" ref="event_type_1"/>
+    </record>
 
-	<record id="event_1" model="event.event">
-		<field name="name">Opera of Verdi</field>
+    <record id="event_1" model="event.event">
+        <field name="name">Opera of Verdi</field>
         <field eval="time.strftime('%Y-%m-05 18:00:00')" name="date_begin"/>
         <field eval="time.strftime('%Y-%m-05 21:00:00')" name="date_end"/>
-		<field name="product_id" ref="event_product_1"/>
-		<field name="unit_price">24.00</field>
-		<field name="type" ref="event_type_1"/>
-		<field name="user_id" ref="base.user_root"/>
-		<field name="register_min">50</field>
-		<field name="register_max">350</field>
-	</record>
-	<record id="event_2" model="event.event">
-		<field name="name">Conference on ERP Buisness</field>
+        <field name="product_id" ref="event_product_1"/>
+        <field name="unit_price">24.00</field>
+        <field name="type" ref="event_type_1"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="register_min">50</field>
+        <field name="register_max">350</field>
+    </record>
+    <record id="event_2" model="event.event">
+        <field name="name">Conference on ERP Buisness</field>
         <field eval="time.strftime('%Y-%m-05 14:00:00')" name="date_begin"/>
         <field eval="time.strftime('%Y-%m-05 16:30:00')" name="date_end"/>
-		<field name="product_id" ref="event_product_2"/>
-		<field name="unit_price">15.50</field>
-		<field name="type" ref="event_type_2"/>
-		<field name="register_max">200</field>
-		<field name="user_id" ref="base.user_root"/>
-		<field name="mail_auto_registr">True</field>
-		<field name="mail_auto_confirm">True</field>
-		<field name="mail_registr">Thanks for registration. We will keep you informed of the modalities.</field>
-		<field name="mail_confirm">Thanks for registration. The conference will begin at 2 PM and will be given by Mr. Pinckaers.</field>
-	</record>
+        <field name="product_id" ref="event_product_2"/>
+        <field name="unit_price">15.50</field>
+        <field name="type" ref="event_type_2"/>
+        <field name="register_max">200</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="mail_auto_registr">True</field>
+        <field name="mail_auto_confirm">True</field>
+        <field name="mail_registr">Thanks for registration. We will keep you informed of the modalities.</field>
+        <field name="mail_confirm">Thanks for registration. The conference will begin at 2 PM and will be given by Mr. Pinckaers.</field>
+    </record>
     <function model="event.event" name="button_confirm" eval="[ref('event_2')]"/>
     <function model="event.event" name="button_confirm" eval="[ref('event_2')]"/>
 
 <!-- Demo data for Event Registration-->
-	<record id="reg_1_1" model="event.registration">
-		<field name="event_id" ref="event_1"/>
-		<field name="partner_id_address" ref="base.res_partner_asus"/>
-		<field name="partner_invoice_id" ref="base.res_partner_asus"/>
-		<field name="nb_register">5</field>
-		<field name="event_product">Ticket for Opera</field>
-		<field name="unit_price">24.00</field>
-	</record>
+    <record id="reg_1_1" model="event.registration">
+        <field name="event_id" ref="event_1"/>
+        <field name="partner_id_address" ref="base.res_partner_asus"/>
+        <field name="partner_invoice_id" ref="base.res_partner_asus"/>
+        <field name="nb_register">5</field>
+        <field name="event_product">Ticket for Opera</field>
+        <field name="unit_price">24.00</field>
+    </record>
 
-	<record id="reg_1_2" model="event.registration">
-		<field name="event_id" ref="event_1"/>
-		<field name="partner_id_address" ref="base.res_partner_agrolait"/>
-		<field name="partner_invoice_id" ref="base.res_partner_agrolait"/>
-		<field name="nb_register">10</field>
-		<field name="event_product">Ticket for Opera</field>
-		<field name="unit_price">24.00</field>
-	</record>
+    <record id="reg_1_2" model="event.registration">
+        <field name="event_id" ref="event_1"/>
+        <field name="partner_id_address" ref="base.res_partner_agrolait"/>
+        <field name="partner_invoice_id" ref="base.res_partner_agrolait"/>
+        <field name="nb_register">10</field>
+        <field name="event_product">Ticket for Opera</field>
+        <field name="unit_price">24.00</field>
+    </record>
 
-	 
 
-	<record id="reg_0_1" model="event.registration">
-		<field name="event_id" ref="event_0"/>
-		<field name="partner_id_address" ref="base.res_partner_c2c"/>
-		<field name="partner_invoice_id" ref="base.res_partner_c2c"/>
-		<field name="nb_register">6</field>
-		<field name="event_product">Ticket for Concert</field>
-		<field name="unit_price">15.50</field>
-	</record>
+    <record id="reg_0_1" model="event.registration">
+        <field name="event_id" ref="event_0"/>
+        <field name="partner_id_address" ref="base.res_partner_c2c"/>
+        <field name="partner_invoice_id" ref="base.res_partner_c2c"/>
+        <field name="nb_register">6</field>
+        <field name="event_product">Ticket for Concert</field>
+        <field name="unit_price">15.50</field>
+    </record>
 
 
 
@@ -140,8 +137,6 @@
         <field name="event_product">Ticket for Conference</field>
         <field name="unit_price">20</field>
     </record>
-    
 
-    
-	</data>
+    </data>
 </openerp>
