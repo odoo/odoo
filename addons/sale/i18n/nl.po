@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-09 18:14+0000\n"
+"PO-Revision-Date: 2012-02-12 11:34+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-10 04:48+0000\n"
-"X-Generator: Launchpad (build 14771)\n"
+"X-Launchpad-Export-Date: 2012-02-13 04:50+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -123,6 +123,9 @@ msgid ""
 "cancel a sale order, you must first cancel related picking or delivery "
 "orders."
 msgstr ""
+"Om een ​​bevestigde verkooporder te verwijderen, moet u deze eerst "
+"annuleren! Om een verkooporder te annuleren, moet u eerst gereleateerde "
+"pickopdrachten of leveringsopdrachten annuleren."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -326,6 +329,17 @@ msgid ""
 "  - The 'Invoice based on deliveries' choice is used to create an invoice "
 "during the picking process."
 msgstr ""
+"Het factureerbeleid wordt gebruikt om facturatie en leveringsopdrachten te "
+"synchroniseren.\n"
+"  - De 'Vooruitbetaling' keuze genereert eerst de factuur en genereert de "
+"pakbon na betaling van de factuur.\n"
+"  - De 'Leveren & Handmatig factureren' keuze maakt de pakbon direct en "
+"wacht met het genereren van een concept factuur totdat de gebruiker de "
+"'Factureren' knop drukt.\n"
+"  - De 'Factuur op order na levering' keuze genereert de concept factuur "
+"gebaseerd op de verkooporder nadat alle pakbonnen gereed zijn. \n"
+"  - De 'Factuur van pakbon' keuze wordt gebruikt om een factuur te maken "
+"gedurende het verzamel proces."
 
 #. module: sale
 #: code:addons/sale/sale.py:1171
@@ -587,7 +601,7 @@ msgstr "Maart"
 msgid "You can not move products from or to a location of the type view."
 msgstr ""
 "Het is niet mogelijk om producten te verplaatsen naar een locatie van het "
-"type 'view'."
+"type 'aanzicht'."
 
 #. module: sale
 #: field:sale.config.picking_policy,sale_orders:0
@@ -885,6 +899,12 @@ msgid ""
 "The 'Waiting Schedule' state is set when the invoice is confirmed but "
 "waiting for the scheduler to run on the order date."
 msgstr ""
+"Geeft de status van de offerte of verkooporder.\n"
+"De uitzondering staat wordt automatisch ingesteld wanneer een "
+"annuleringsopdracht plaatsvindt bij de factuurvalidatie (Factuur "
+"uitzondering) of in het pickinglijst proces (verzending uitzondering).\n"
+"De 'Wacht op planner' staat wordt ingesteld wanneer de factuur is bevestigd, "
+"maar wacht deze op de planner, als deze start op de orderdatum."
 
 #. module: sale
 #: code:addons/sale/sale.py:1272
@@ -1361,6 +1381,9 @@ msgid ""
 "create a task, purchase order or manufacturing order linked to this sale "
 "order line."
 msgstr ""
+"Bij 'maak op bestelling' wordt wanneer de verkooporder is bevestigd een "
+"verwerving gestart, om een taak, inkooporder of productie order te koppelen "
+"aan deze verkooporderregel."
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0

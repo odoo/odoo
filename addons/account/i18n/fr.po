@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-09 20:04+0000\n"
+"PO-Revision-Date: 2012-02-10 18:45+0000\n"
 "Last-Translator: t.o <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-10 04:48+0000\n"
+"X-Launchpad-Export-Date: 2012-02-11 05:08+0000\n"
 "X-Generator: Launchpad (build 14771)\n"
 
 #. module: account
@@ -4208,7 +4208,7 @@ msgstr "Type de compte"
 #. module: account
 #: view:res.partner:0
 msgid "Bank Account Owner"
-msgstr ""
+msgstr "Titulaire du compte bancaire"
 
 #. module: account
 #: report:account.account.balance:0
@@ -4640,7 +4640,7 @@ msgstr "Solde de clôture basé sur la caisse"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "Example"
-msgstr ""
+msgstr "Exemple"
 
 #. module: account
 #: code:addons/account/account_invoice.py:828
@@ -4717,7 +4717,7 @@ msgstr ""
 #. module: account
 #: selection:account.bank.statement,state:0
 msgid "New"
-msgstr ""
+msgstr "Nouveau"
 
 #. module: account
 #: field:account.invoice.refund,date:0
@@ -4763,12 +4763,12 @@ msgstr "Modèle d'imputation des charges"
 #: code:addons/account/account.py:3120
 #, python-format
 msgid "MISC"
-msgstr ""
+msgstr "OD"
 
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Facture (Ref ${object.number or 'n/a' })"
 
 #. module: account
 #: help:res.partner,last_reconciliation_date:0
@@ -4798,7 +4798,7 @@ msgstr "Factures"
 #. module: account
 #: view:account.invoice:0
 msgid "My invoices"
-msgstr ""
+msgstr "Mes factures"
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -4879,12 +4879,14 @@ msgid ""
 "You can not define children to an account with internal type different of "
 "\"View\"! "
 msgstr ""
+"Erreur de configuration!\n"
+"Vous ne pouvez pas définir un sous-compte avec un type 'Vue' "
 
 #. module: account
 #: code:addons/account/account.py:923
 #, python-format
 msgid "Opening Period"
-msgstr ""
+msgstr "Période ouverte"
 
 #. module: account
 #: view:account.move:0
@@ -4988,7 +4990,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Le numéro de facture doit être unique par société !"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -5003,7 +5005,7 @@ msgstr "Générer les écritures d'ouvertures d'exercice comptable"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Accountant"
-msgstr ""
+msgstr "Comptable"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_treasury_report_all
@@ -5011,6 +5013,9 @@ msgid ""
 "From this view, have an analysis of your treasury. It sums the balance of "
 "every accounting entries made on liquidity accounts per period."
 msgstr ""
+"De cette vue, vous pouvez avoir une analyse de votre trésorerie. Il "
+"renseigne sur le solde des écritures portées sur les comptes de liquidités "
+"par période."
 
 #. module: account
 #: field:account.journal,group_invoice_lines:0
@@ -5180,6 +5185,10 @@ msgid ""
 "encode the sale and purchase rates or choose from list of taxes. This last "
 "choice assumes that the set of tax defined on this template is complete"
 msgstr ""
+"Cette case à cocher  vous aide à choisir si vous voulez proposer à "
+"l'utilisateur d'encoder les taux de vente et  d'achat ou de choisir parmi la "
+"liste des taxes. Ce dernier choix suppose que les taxes définies sur ce "
+"modèle sont paramétrées"
 
 #. module: account
 #: view:account.financial.report:0
@@ -5504,7 +5513,7 @@ msgstr "Rapport des factures créées depuis 15 jours"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Number of Days: 14"
-msgstr ""
+msgstr "  Nombre de jours: 14"
 
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
@@ -5805,7 +5814,7 @@ msgstr "Comptes fils"
 #: code:addons/account/account_move_line.py:1214
 #, python-format
 msgid "Move name (id): %s (%s)"
-msgstr ""
+msgstr "Nom du mouvement (id): %s (%s)"
 
 #. module: account
 #: view:account.move.line.reconcile:0
@@ -5987,7 +5996,7 @@ msgstr "Filtrer par"
 #: code:addons/account/account.py:2256
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model !"
-msgstr ""
+msgstr "Vous avez une expression incorrecte \"%(...)s\" dans votre modèle !"
 
 #. module: account
 #: field:account.bank.statement.line,date:0
@@ -6235,7 +6244,7 @@ msgstr "Ceci est un modèle pour des écritures comptable récurrentes"
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax_rate:0
 msgid "Sales Tax(%)"
-msgstr ""
+msgstr "Taxes sul les ventes(%)"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -6268,6 +6277,10 @@ msgid ""
 "choice assumes that the set of tax defined for the chosen template is "
 "complete"
 msgstr ""
+"Cette case à cocher détermine si vous voulez proposer à l'utilisateur "
+"d'encoder  les taxes sur les ventes et achats ou utiliser les champs "
+"habituels m2o. Ce dernier choix suppose que les taxe définies pour le modèle "
+"choisi sont paramétrées"
 
 #. module: account
 #: report:account.vat.declaration:0
