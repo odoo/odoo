@@ -23,7 +23,7 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import logging
-import Image
+from PIL import Image
 
 import netsvc
 from osv import fields, osv
