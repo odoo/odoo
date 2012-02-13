@@ -502,11 +502,11 @@ class task(osv.osv):
         # read uom as admin to avoid access rights issues, e.g. for portal/share users,
         # this should be safe (no context passed to avoid side-effects)
         obj_tm = users_obj.browse(cr, 1, uid, context=context).company_id.project_time_mode_id
-        tm = obj_tm and obj_tm.name or 'Hours'
+        tm = obj_tm and obj_tm.name or _('Hours')
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
 
-        if tm in ['Hours','Hour']:
+        if tm in [_('Hours'),_('Hour')]:
             return res
 
         eview = etree.fromstring(res['arch'])
@@ -523,8 +523,8 @@ class task(osv.osv):
         res['arch'] = etree.tostring(eview)
 
         for f in res['fields']:
-            if 'Hours' in res['fields'][f]['string']:
-                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
+            if _('Hours') in res['fields'][f]['string']:
+                res['fields'][f]['string'] = res['fields'][f]['string'].replace(_('Hours'), tm)
         return res
 
     def action_close(self, cr, uid, ids, context=None):
