@@ -241,8 +241,8 @@ QWeb2.Engine = (function() {
             return true;
         },
         load_xml : function(s) {
-            s = s.replace(/^\s*|\s*$/g, '');
-            if (this.tools.trim(s)[0] === '<') {
+            s = this.tools.trim(s);
+            if (s.charAt(0) === '<') {
                 return this.load_xml_string(s);
             } else {
                 var req = this.get_xhr();
@@ -256,6 +256,9 @@ QWeb2.Engine = (function() {
                     req.send(null);
                     var xDoc = req.responseXML;
                     if (xDoc) {
+                        if (!xDoc.documentElement) {
+                            throw new Error("QWeb2: This xml document has no root document : " + xDoc.responseText);
+                        }
                         if (xDoc.documentElement.nodeName == "parsererror") {
                             return this.tools.exception(xDoc.documentElement.childNodes[0].nodeValue);
                         }
