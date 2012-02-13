@@ -2189,7 +2189,6 @@ dhtmlx.Canvas = {
         });
         a.appendChild(this.l);
         if (!this.l.getContext) if (dhtmlx.r) {
-            dhtmlx.require("thirdparty/excanvas/excanvas.js");
             G_vmlCanvasManager.init_(document);
             G_vmlCanvasManager.initElement(this.l)
         }
