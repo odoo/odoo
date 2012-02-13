@@ -284,10 +284,10 @@ class event_registration(osv.osv):
     def case_pending(self, cr, uid, ids, context=None):
         pass
 
-    #def button_reg_close(self, cr, uid, ids, context=None):
-    #    """This Function Close Event Registration.
-    #    """
-    #    return self.case_close(cr, uid, ids)
+    def button_reg_close(self, cr, uid, ids, context=None):
+        """This Function Close Event Registration.
+        """
+        return self.case_close(cr, uid, ids)
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
         return self.case_cancel(cr, uid, ids)
