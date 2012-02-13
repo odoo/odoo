@@ -228,13 +228,8 @@ class account_move_line(osv.osv):
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context=context)
         # Starts: Manual entry from account.move form
-        if context.get('lines',[]):
-            total_new = 0.00
-            for i in context['lines']:
-                if i[2]:
-                    total_new += (i[2]['debit'] or 0.00)- (i[2]['credit'] or 0.00)
-                    for item in i[2]:
-                            data[item] = i[2][item]
+        if context.get('lines'):
+            total_new = context.get('balance', 0.00)
             if context['journal']:
                 journal_data = journal_obj.browse(cr, uid, context['journal'], context=context)
                 if journal_data.type == 'purchase':
