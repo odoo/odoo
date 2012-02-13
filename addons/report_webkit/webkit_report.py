@@ -83,7 +83,9 @@ class WebKitParser(report_sxw):
                 defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
                 if hasattr(sys, 'frozen'):
                     defpath.append(os.getcwd())
-                webkit_path = tools.which('wkhtmltopdf', path=os.path.join(defpath))
+                    if tools.config['root_path']:
+                        defpath.append(os.path.dirname(tools.config['root_path']))
+                webkit_path = tools.which('wkhtmltopdf', path=os.pathsep.join(defpath))
             except IOError:
                 webkit_path = None
 
