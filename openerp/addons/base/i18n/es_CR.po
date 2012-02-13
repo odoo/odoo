@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-02-10 03:30+0000\n"
+"PO-Revision-Date: 2012-02-10 17:23+0000\n"
 "Last-Translator: Freddy Gonzalez <freddy.gonzalez@clearcorp.co.cr>\n"
 "Language-Team: Spanish (Costa Rica) <es_CR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-10 04:46+0000\n"
+"X-Launchpad-Export-Date: 2012-02-11 05:06+0000\n"
 "X-Generator: Launchpad (build 14771)\n"
 "Language: \n"
 
@@ -10122,7 +10122,7 @@ msgstr "Instalar actualizar módulo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_email_template
 msgid "E-Mail Templates"
-msgstr ""
+msgstr "Plantillas de correo electrónico"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_configuration_wizard
@@ -10468,12 +10468,12 @@ msgstr "Complejidad"
 #. module: base
 #: selection:ir.actions.act_window,target:0
 msgid "Inline"
-msgstr ""
+msgstr "En línea"
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field_bic
 msgid "bank_bic"
-msgstr ""
+msgstr "bank_bic"
 
 #. module: base
 #: code:addons/orm.py:3988
@@ -10496,6 +10496,17 @@ msgid ""
 "* Date\n"
 "    "
 msgstr ""
+"Establecer valores por defecto para las cuentas analíticas\n"
+"Permite seleccionar de forma automática las cuentas analíticas basadas en "
+"criterios:\n"
+"================================================== ===================\n"
+"\n"
+"* producto\n"
+"* Socio\n"
+"* Nombre de usuario\n"
+"* Empresa\n"
+"* Fecha\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.ae
@@ -10526,11 +10537,17 @@ msgid ""
 "Greek accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Este es el módulo de base para gestionar el Plan Contable para Grecia.\n"
+"================================================== ================\n"
+"\n"
+"Gráfico de la contabilidad griega y la localización.\n"
+"    "
 
 #. module: base
 #: view:ir.values:0
 msgid "Action Reference"
-msgstr ""
+msgstr "Acción de referencia"
 
 #. module: base
 #: model:res.country,name:base.re
@@ -10556,16 +10573,22 @@ msgid ""
 "Keep track of Wiki groups, pages, and history.\n"
 "    "
 msgstr ""
+"\n"
+"El módulo de base para la gestión de documentos (Wiki).\n"
+"==========================================\n"
+"\n"
+"Lleve un registro de grupos de Wiki, páginas, y la historia.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
 msgid "Repairs Management"
-msgstr ""
+msgstr "Reparación de Gestión"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
 msgid "Assets Management"
-msgstr ""
+msgstr "Gestión de activos"
 
 #. module: base
 #: view:ir.model.access:0
@@ -10827,6 +10850,280 @@ msgid ""
 "product, warehouse and company because results\n"
 "   can be unpredictable. The same applies to Forecasts lines.\n"
 msgstr ""
+"\n"
+"MPS permite crear un plan de adquisiciones de instrucciones, aparte de la "
+"programación MRP normal, que funciona de forma automática basada en reglas "
+"de existencias mínimas\n"
+"============================================================================="
+"============================================================\n"
+"\n"
+"Rápida Glosario\n"
+"--------------\n"
+"- Período de archivo - los límites de tiempo (entre fecha de inicio y final) "
+"para sus previsiones de ventas y las imágenes de archivo y la planificación\n"
+"- Pronóstico de ventas - la cantidad de productos que planea vender durante "
+"el período de archivo relacionado.\n"
+"- Planificación de archivo - la cantidad de productos que planea comprar o "
+"producir para el período de archivo relacionado.\n"
+"\n"
+"Para evitar la confusión con los términos utilizados por el `` `` "
+"sale_forecast módulo, (\"Pronóstico de Ventas\" y \"Planificación\" los "
+"importes) que utilizamos los términos \"de archivo y de las previsiones de "
+"ventas\" y \"Planificación de archivo\" para enfatizar que utilizamos los "
+"valores de cantidad.\n"
+"\n"
+"¿Por dónde empezar\n"
+"--------------\n"
+"El uso de este módulo se realiza en tres pasos:\n"
+"\n"
+" * Crear períodos de archivo través de la Galería> Configuración del "
+"archivo> Períodos menú (paso obligatorio)\n"
+" * Creación de previsiones de venta llenarlos con cantidades previstas, a "
+"través de las ventas del menú> Pronóstico de ventas. (Paso opcional, pero "
+"útil para la planificación de otra forma)\n"
+" * Crear el plan de MPS real, consultar el saldo y activar las adquisiciones "
+"según sea necesario. El suministro real es el paso final para el período de "
+"archivo.\n"
+"\n"
+"Archivo de configuración Período\n"
+"--------------------------\n"
+"Usted tiene dos opciones de menú para períodos de \"almacén de archivo de "
+"configuración> Períodos>\". Hay:\n"
+"\n"
+" * \"Crear archivo\" - Períodos de forma automática puede crear periodos "
+"diarios, semanales o mensuales.\n"
+" * \"Los períodos de archivo\" - permite crear cualquier tipo de períodos, "
+"cambiar las fechas y cambiar el estado del período.\n"
+"\n"
+"Creación de períodos es el primer paso. Usted puede crear periodos "
+"personalizados utilizando el botón \"Nuevo\" en \"períodos de archivo\", "
+"pero se recomienda el uso de los asistentes automáticos \"Crear períodos de "
+"archivo\".\n"
+"\n"
+"Observaciones:\n"
+"\n"
+" - Estos períodos (períodos de archivo) son completamente distintos de los "
+"períodos financieros o de otro tipo en el sistema.\n"
+" - Los períodos no son asignados a las empresas (cuando se utiliza "
+"multiempresa). Módulo de suponer que se utilizan los mismos períodos a "
+"través de las empresas. Si desea utilizar períodos diferentes para las "
+"diferentes empresas a definir como desee (pueden superponerse). Más adelante "
+"en este texto será indicaciones de cómo usar esos períodos.\n"
+" - Cuando los períodos son creados automáticamente su inicio y las fechas de "
+"finalización están con hora de inicio y el final 00:00:00 23:59:00 horas. "
+"Cuando se crea períodos diarios que tendrán fecha de inicio 31/01/2010 y "
+"fecha de finalización 00:00:00 31/01/2010 23:59:00. Funciona sólo en la "
+"creación automática de los períodos. Cuando se crea períodos manualmente lo "
+"que tienes que tener cuidado acerca de hora, ya que puede tener valores "
+"incorrectos de ventas de forma o de valores.\n"
+" - Si se utiliza durante períodos escalonados para el mismo producto, los "
+"resultados de almacén y de la empresa pueden ser impredecibles.\n"
+" - Si la fecha actual no pertenece a ningún período o si tiene agujeros "
+"entre los resultados de los períodos puede ser impredecible.\n"
+"\n"
+"Las previsiones de ventas de configuración\n"
+"-----------------------------\n"
+"Usted tiene pocos menús de previsión de ventas en \"Ventas> Previsiones de "
+"ventas\":\n"
+"\n"
+" - \"Creación de previsiones de ventas\" - puede crear automáticamente "
+"líneas de pronóstico de acuerdo a sus necesidades\n"
+" - \"Las previsiones de ventas\" - para la gestión de las previsiones de "
+"ventas\n"
+"\n"
+"Menú \"Crear previsiones de ventas\" crea Pronósticos para los productos de "
+"la categoría seleccionada, durante el período seleccionado y para el almacén "
+"seleccionado.\n"
+"También es posible copiar el pronóstico anterior.\n"
+"\n"
+"Observaciones:\n"
+"\n"
+" - Esta herramienta no duplica las líneas si usted ya tiene una entrada para "
+"el mismo producto, Período, Almacén, creado o validado por el mismo usuario. "
+"Si desea crear otro pronóstico, si las líneas pertinentes existe lo que "
+"tienes que hacerlo manualmente como se describe a continuación.\n"
+" - Cuando las líneas creadas son validadas por otra persona puede utilizar "
+"esta herramienta para crear otra línea en el mismo periodo del producto, y "
+"el almacén.\n"
+" - Cuando se elige \"Pronóstico de la última copia\", creada línea de tener "
+"la cantidad y otros ajustes de su (validado por usted o creado por usted si "
+"no se ha validado aún) pronóstico que es para el último período antes del "
+"período de la previsión de crear.\n"
+"\n"
+"El \"Pronóstico de ventas\" se forman principalmente tiene que introducir "
+"una cantidad prevista en la \"Cantidad del producto\".\n"
+"Además el cálculo puede trabajar para las previsiones de los proyectos. Sin "
+"embargo, la validación puede guardar sus datos contra cualquier cambio "
+"accidental.\n"
+"Puede hacer clic en botón \"Validar\", pero no es obligatorio.\n"
+"\n"
+"En vez de cantidad prevista se podrá indicar la cantidad de las previsiones "
+"de ventas a través de la \"cantidad de producto\" de campo.\n"
+"El sistema contará con la cantidad de la cantidad de acuerdo a precio de "
+"venta del producto.\n"
+"\n"
+"Todos los valores en el formulario se expresan en la unidad de medida "
+"seleccionada en el formulario.\n"
+"Puede seleccionar una unidad de medida de la categoría por defecto o de "
+"segunda categoría.\n"
+"Cuando se cambia la unidad de medida la cantidad de producto previsiones se "
+"volverá a calcular de acuerdo a la nueva Unidad de medida.\n"
+"\n"
+"Para calcular su pronóstico venta puede utilizar la \"Historia de venta\" "
+"del producto.\n"
+"Usted tiene que introducir los parámetros de la parte superior e izquierda "
+"de esta tabla y el sistema contará con las cantidades de venta de acuerdo a "
+"estos parámetros.\n"
+"Así que usted puede obtener resultados para un determinado equipo de ventas "
+"o período.\n"
+"\n"
+"\n"
+"MPS o planificación de las adquisiciones\n"
+"---------------------------\n"
+"Una planificación MPS consiste en líneas de planificación de archivo, que se "
+"utilizan para analizar y posiblemente conducir a la adquisición de\n"
+"productos para cada Período de archivo correspondiente y de almacenes.\n"
+"El menú se encuentra en \"Almacén> Programadores programa de adquisiciones> "
+"Maestro\":\n"
+"\n"
+" - \"Crear líneas de archivo de Planificación\" - un asistente para ayudar a "
+"crear automáticamente muchas líneas de planificación\n"
+" - \"Programa Maestro de Adquisiciones\" - la gestión de sus líneas de "
+"planificación\n"
+"\n"
+"De manera similar a la forma en previsión de ventas sirve para definir la "
+"planificación de las ventas, el MPS le permite planificar sus adquisiciones "
+"(compra / fabricación).\n"
+"Rápidamente se puede rellenar el MPS con la opción \"Crear líneas de archivo "
+"de Planificación\" asistente y, a continuación, proceder a su revisión a "
+"través del \"Programa Maestro de Adquisiciones\" del menú.\n"
+"\n"
+"El \"Crear líneas de archivo de Planificación\" asistente le permite crear "
+"rápidamente todas las líneas de MPS para cierta categoría de producto, y un "
+"período dado y Almacén.\n"
+"Al habilitar la opción \"Todos los productos con pronóstico\" la opción del "
+"asistente, el sistema crea las líneas de todos los productos que tienen "
+"previsión de ventas para seleccionar\n"
+"Período y Almacén (la categoría seleccionada se tendrá en cuenta en este "
+"caso).\n"
+"\n"
+"En el menú \"Programa de Adquisiciones Master\" lo normal es que cambiar el "
+"\"planeado\" y \"programa En\" cantidades y observar la resultante "
+"\"Simulación de archivo\" valor\n"
+"para decidir si es necesario adquirir más productos para el periodo "
+"indicado.\n"
+"\"Planeado\", se basa inicialmente en la \"Previsión Almacén\", que es la "
+"suma de todas las acciones de salida se mueve ya se prevé para el período y "
+"Almacén.\n"
+"Por supuesto, usted puede alterar este valor de proporcionar a sus propias "
+"cantidades. No es necesario tener cualquier pronóstico.\n"
+"\"En programa En\" la cantidad se utiliza para calcular el campo de "
+"\"izquierda entrante\", que es la cantidad a ser adquiridos para llegar a la "
+"\"Simulación de archivo\" al final del período.\n"
+"Usted puede comparar \"Simulación de archivo\" la cantidad de existencias "
+"mínimas de las normas visibles en el formulario.\n"
+"Y usted puede planear cantidad diferente que en las Reglas mínimas de las "
+"imágenes de archivo. Los cálculos se realizan para el almacenamiento "
+"conjunto de manera predeterminada,\n"
+"si desea ver los valores para la ubicación de archivo de almacén calcula "
+"puede comprobar \"Ubicación de archivo solamente\".\n"
+"\n"
+"Cuando esté satisfecho con el \"planeado\", \"programa En\" y al final del "
+"período de \"Simulación de archivo\",\n"
+"puede hacer clic en \"Izquierda entrante Procurar\" para crear una "
+"contratación pública con la \"izquierda entrante\" cantidad.\n"
+"Usted puede decidir si la contratación se destinará a la Bolsa de Valores de "
+"entrada o la ubicación del almacén.\n"
+"\n"
+"Si no quiere producir o comprar el producto, sino simplemente la "
+"transferencia de la cantidad calculada a partir de otro almacén\n"
+"puede hacer clic en \"Suministro de un segundo almacén\" (en lugar de "
+"\"izquierda entrante Adquirir\") y el sistema\n"
+"crear la lista de picking correspondiente (movimientos de acciones).\n"
+"Usted puede elegir para llevar la mercancía desde el archivo o la ubicación "
+"de salida del almacén de origen.\n"
+"Ubicación de destino (archivo o entrada) en el almacén de destino será "
+"considerado como en el caso de adquisiciones.\n"
+"\n"
+"Para ver actualizar las cantidades de \"Confirmado En\", \"Confirmado Out\", "
+"\"Confirmado En Antes\", \"planificado antes\"\n"
+"y \"Simulación de archivo\" puede pulsar \"Calcular Planificación\".\n"
+"\n"
+"Todos los valores en el formulario se expresan en la unidad de medida "
+"seleccionada en el formulario.\n"
+"Usted puede seleccionar uno de la unidad de medida de la categoría por "
+"defecto o de segunda categoría.\n"
+"Cuando se cambia la unidad de medida de las cantidades editables se volverá "
+"a calcular de acuerdo a la nueva Unidad de medida. Los demás serán "
+"actualizadas después de pulsar \"Calcular Planificación\".\n"
+"\n"
+"Cálculo de cantidades de simulación de archivo\n"
+"------------------------------------------\n"
+"El valor de Simulación de archivo es la cantidad de stock estimado al cierre "
+"del período.\n"
+"El cálculo siempre se inicia con la acción real en la mano al comienzo del "
+"período en curso, a continuación,\n"
+"suma o resta las cantidades calculadas.\n"
+"Cuando usted está en el mismo período (período actual es el mismo que "
+"calcula) Simulación de archivo se calcula como sigue:\n"
+"\n"
+"Simulación de archivo =\n"
+"[Tab] de archivo de inicio del período actual\n"
+"[Tab] - planeado\n"
+"[Tab] + programa En\n"
+"\n"
+"Cuando se calcula el período siguiente a la actual:\n"
+"\n"
+"Simulación de archivo =\n"
+"[Tab] de archivo de inicio del período actual\n"
+"[Tab] - Planned fuera del periodo actual\n"
+"[Tab] + Confirmado En del período actual (incl. Ya In)\n"
+"[Tab] - Planned fuera del periodo calculado\n"
+"[Tab] + programa En del período calculado.\n"
+"\n"
+"Como se ve el período calculado se toma de la misma manera como en el caso "
+"anterior, pero el cálculo en la corriente\n"
+"El periodo es un poco diferente. En primer lugar debe tener en cuenta que el "
+"sistema tarda sólo los movimientos confirmados para el\n"
+"período en curso. Esto significa que usted debe completar la planificación y "
+"la adquisición del período actual antes de\n"
+"va a la siguiente.\n"
+"\n"
+"Cuando se planifica para períodos futuros:\n"
+"\n"
+"Simulación de archivo =\n"
+"[Tab] de archivo de inicio del período actual\n"
+"[Tab] - Suma de planeado de los períodos antes de calcular\n"
+"[Tab] + Suma de Confirmado En los períodos anteriores calculados (incl. Ya "
+"In)\n"
+"[Tab] - Planned fuera del periodo calculado\n"
+"[Tab] + programa En del período calculado.\n"
+"\n"
+"Aquí \"Los períodos antes calculado\" designa a todos los períodos que "
+"comienzan con la corriente hasta que el período anterior a la que se "
+"calcula.\n"
+"\n"
+"Observaciones:\n"
+"\n"
+" - Recuerde que el continuar con la planificación de cada período, en orden "
+"cronológico, de lo contrario los números no reflejan la\n"
+"   realidad\n"
+" - Si tienes planeado para períodos futuros y encontrar que fuera real, "
+"confirmada es más grande que planeado, en algunos períodos anteriores,\n"
+"   puede repetir de Planificación y realizar otra adquisición. Usted debe "
+"hacerlo en la línea de la planificación misma.\n"
+"   Si se crea otra línea de la planificación de las sugerencias que pueden "
+"estar equivocados.\n"
+" - Cuando se desea trabajar con diferentes períodos de algunos productos, se "
+"definen dos tipos de períodos (por ejemplo, semanal y mensual) y el uso\n"
+"   por productos diferentes. Ejemplo: Si usted usa siempre períodos "
+"semanales para el producto A, y los períodos mensuales para el producto B\n"
+"   todos los cálculos funcionará correctamente. También puede utilizar "
+"diferentes tipos de períodos para el mismo producto desde el almacén de "
+"diferentes\n"
+"   o empresas. Pero no se puede utilizar períodos que se superpongan para el "
+"mismo producto, almacén y de la empresa, porque los resultados\n"
+"   puede ser impredecible. Lo mismo se aplica a las líneas de pronósticos.\n"
 
 #. module: base
 #: model:res.country,name:base.mp
@@ -10836,7 +11133,7 @@ msgstr "Islas Marianas del Norte"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_claim_from_delivery
 msgid "Claim on Deliveries"
-msgstr ""
+msgstr "Declaraciones sobre las entregas"
 
 #. module: base
 #: model:res.country,name:base.sb
@@ -10887,6 +11184,17 @@ msgid ""
 "    * Generates Relationship Graph\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo genera las guías técnicas de los módulos seleccionados en "
+"formato de texto reestructurado (RST).\n"
+"================================================== "
+"===============================================\n"
+"\n"
+"     * Se utiliza la Esfinge (http://sphinx.pocoo.org) la aplicación de RST\n"
+"     * Se crea un archivo comprimido (. Sufijo de archivo tgz) que contiene "
+"un archivo de índice y un archivo por módulo\n"
+"     * Genera Gráfico Relación\n"
+"    "
 
 #. module: base
 #: field:res.log,create_date:0
@@ -10902,7 +11210,7 @@ msgstr "Traducciones"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_gtd
 msgid "Todo Lists"
-msgstr ""
+msgstr "Listas de tareas pendientes"
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -10917,6 +11225,9 @@ msgid ""
 "instead.If SSL is needed, an upgrade to Python 2.6 on the server-side should "
 "do the trick."
 msgstr ""
+"Su servidor OpenERP no es compatible con SMTP-over-SSL. Se puede usar "
+"STARTTLS instead.If SSL es necesario, una actualización a Python 2.6 en el "
+"lado del servidor debe hacer el truco."
 
 #. module: base
 #: model:res.country,name:base.ua
@@ -10933,7 +11244,7 @@ msgstr "Sitio web"
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
 msgid "None"
-msgstr ""
+msgstr "Ningúno"
 
 #. module: base
 #: view:ir.module.category:0
@@ -10953,7 +11264,7 @@ msgstr "Guía de referencia"
 #. module: base
 #: view:ir.values:0
 msgid "Default Value Scope"
-msgstr ""
+msgstr "Ámbito de aplicación valor por defecto"
 
 #. module: base
 #: view:ir.ui.view:0
@@ -10973,6 +11284,10 @@ msgid ""
 "review and adapt it with your Accountant, before using it in a live "
 "Environment."
 msgstr ""
+"Este módulo proporciona la tabla de la norma contable de Austria, que se "
+"basa en la plantilla a partir de BMF.gv.at. Por favor, tenga en cuenta que "
+"usted debe revisar y adaptar con su contador, antes de usarlo en un entorno "
+"real."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -11017,6 +11332,32 @@ msgid ""
 "* Maximal difference between timesheet and attendances\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo le ayuda a codificar y validar fácilmente hoja de tiempo y de "
+"las visitas en el mismo punto de vista.\n"
+"============================================================================="
+"======================\n"
+"\n"
+"La parte superior de la vista es de las presencias y de pista (ingresar / "
+"salir) los acontecimientos.\n"
+"La parte inferior es para la parte de horas.\n"
+"\n"
+"Otras pestañas contiene las opiniones de las estadísticas que le ayudarán a "
+"analizar su\n"
+"tiempo o el tiempo de su equipo:\n"
+"* El tiempo dedicado por el día (con asistencias)\n"
+"* El tiempo dedicado por el proyecto\n"
+"\n"
+"Este módulo también implementa un proceso de validación de hoja de tiempo "
+"completo:\n"
+"* Proyecto de la hoja\n"
+"* Confirmación al final del período por el empleado\n"
+"* Validación por el director del proyecto\n"
+"\n"
+"La validación se puede configurar en la empresa:\n"
+"* Período de tamaño (día, semana, mes, año)\n"
+"* Diferencia máxima entre la tabla de tiempos y asistencias\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -11032,6 +11373,8 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    "
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -11061,7 +11404,7 @@ msgstr "Fecha de creación"
 #. module: base
 #: help:ir.actions.server,trigger_name:0
 msgid "The workflow signal to trigger"
-msgstr ""
+msgstr "La señal de flujo de trabajo para activar"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp
@@ -11106,11 +11449,54 @@ msgid ""
 "    * Graph of stock value variation\n"
 "    "
 msgstr ""
+"\n"
+"Este es el módulo de base para gestionar el proceso de fabricación en "
+"OpenERP.\n"
+"=======================================================================\n"
+"\n"
+"Características:\n"
+"---------\n"
+"     * Asegúrese de archivo / Realizar la orden (por línea)\n"
+"     * Multi-nivel de las listas de materiales, sin límite\n"
+"     * Multi-nivel de enrutamiento, sin límite de\n"
+"     * Enrutamiento y centro de trabajo integrado con la contabilidad "
+"analítica\n"
+"     * Programador de computación periódicamente / Just In Time Module\n"
+"     * Multi-POS, multi-almacén\n"
+"     * Las políticas de reordenación de diferentes\n"
+"     * Método del costo por producto: precio estándar, precio medio\n"
+"     * Fácil análisis de los problemas o necesidades\n"
+"     * Muy flexible\n"
+"     * Permite navegar por la lista de materiales en la estructura completa "
+"que incluye los niños y las listas de materiales fantasma\n"
+"\n"
+"Es compatible con una completa integración y planificación de bienes "
+"inventariable,\n"
+"consumible de servicios. Los servicios están completamente integrados con el "
+"resto\n"
+"del software. Por ejemplo, puede configurar un servicio de subcontratación\n"
+"en una lista de materiales para la compra de forma automática en el orden "
+"del conjunto de la producción.\n"
+"\n"
+"Los informes proporcionados por este módulo:\n"
+"--------------------------------\n"
+"     * Proyecto de Ley de la estructura de los materiales y componentes\n"
+"     * Carga pronóstico en Centros de Trabajo\n"
+"     * Imprimir una orden de producción\n"
+"     * Las previsiones de archivo\n"
+"\n"
+"Dashboard proporciona este módulo:\n"
+"----------------------------------\n"
+"     * Lista de órdenes de producción próximos\n"
+"     * Lista de las compras en una excepción\n"
+"     * El gráfico de la carga de trabajo del centro\n"
+"     * Gráfico de variación de las existencias de valor\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_base_account
 msgid "The module adds google user in res user"
-msgstr ""
+msgstr "El módulo agrega el usuario de Google en el usuario BES"
 
 #. module: base
 #: selection:base.language.install,state:0
@@ -11127,7 +11513,7 @@ msgstr "Configuración general"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uy
 msgid "Uruguay - Chart of Accounts"
-msgstr ""
+msgstr "Uruguay - Plan General de Contabilidad"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_administration_shortcut
@@ -11147,25 +11533,25 @@ msgstr "Argelia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_plugin
 msgid "CRM Plugins"
-msgstr ""
+msgstr "Plugins de CRM"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
 #: model:ir.model,name:base.model_ir_model
 #: model:ir.ui.menu,name:base.ir_model_model_menu
 msgid "Models"
-msgstr ""
+msgstr "Modelos"
 
 #. module: base
 #: code:addons/base/ir/ir_cron.py:292
 #, python-format
 msgid "Record cannot be modified right now"
-msgstr ""
+msgstr "El registro no se puede modificar en este momento"
 
 #. module: base
 #: selection:ir.actions.todo,type:0
 msgid "Launch Manually"
-msgstr ""
+msgstr "Inicie manualmente"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -11175,12 +11561,12 @@ msgstr "Bélgica"
 #. module: base
 #: view:res.company:0
 msgid "Preview Header"
-msgstr ""
+msgstr "Vista previa de cabecera"
 
 #. module: base
 #: field:res.company,paper_format:0
 msgid "Paper Format"
-msgstr ""
+msgstr "Formato de Papel"
 
 #. module: base
 #: field:base.language.export,lang:0
@@ -11210,7 +11596,7 @@ msgstr "Compañías"
 #. module: base
 #: help:res.currency,symbol:0
 msgid "Currency sign, to be used when printing amounts."
-msgstr ""
+msgstr "Signo de divisas, que se utilizará al imprimir cantidades."
 
 #. module: base
 #: view:res.lang:0
@@ -11224,6 +11610,8 @@ msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
 "instead"
 msgstr ""
+"Su servidor no parece compatible con SSL, usted puede querer intentar "
+"STARTTLS lugar"
 
 #. module: base
 #: model:ir.model,name:base.model_res_widget
@@ -11244,16 +11632,21 @@ msgid ""
 "=====================================================\n"
 "\n"
 msgstr ""
+"\n"
+"La interfaz común para Plugin.\n"
+"=====================================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_jit
 msgid "Just In Time Scheduling"
-msgstr ""
+msgstr "Planificación 'Just in Time'"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_extensions
 msgid "Bank Statement extensions to support e-banking"
 msgstr ""
+"Las extensiones del Banco declaración de apoyo a la banca electrónica"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -11280,7 +11673,7 @@ msgstr "osv_memory.autovacuum"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us
 msgid "United States - Chart of accounts"
-msgstr ""
+msgstr "Estados Unidos - Plan de cuentas"
 
 #. module: base
 #: view:base.language.install:0
@@ -11332,11 +11725,25 @@ msgid ""
 "fund status.\n"
 "    "
 msgstr ""
+"\n"
+"Recaudación de fondos.\n"
+"============\n"
+"\n"
+"Cuando usted desea apoyar a su organización o una campaña, se puede "
+"rastrear\n"
+"todas sus actividades de recaudación de fondos. Se abre el menú una lista de "
+"búsqueda\n"
+"donde se pueden encontrar descripciones de los fondos, correo electrónico, "
+"la historia y la probabilidad de\n"
+"éxito. Varios botones de acción le permite modificar fácilmente su "
+"diferente\n"
+"financiar el estado.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_margin
 msgid "Margins in Sales Orders"
-msgstr ""
+msgstr "Márgenes en pedidos de venta"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_9
@@ -11347,7 +11754,7 @@ msgstr "Proveedor de componentes"
 #: model:ir.module.category,name:base.module_category_purchase_management
 #: model:ir.module.module,shortdesc:base.module_purchase
 msgid "Purchase Management"
-msgstr ""
+msgstr "Gestión de compras"
 
 #. module: base
 #: field:ir.module.module,published_version:0
@@ -11405,11 +11812,17 @@ msgid ""
 "This module is the base module for other multi-company modules.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo es para la gestión de un entorno multiempresa.\n"
+"=======================================================\n"
+"\n"
+"Este módulo es el módulo de base para otras compañías de varios módulos.\n"
+"    "
 
 #. module: base
 #: sql_constraint:res.currency:0
 msgid "The currency code must be unique per company!"
-msgstr ""
+msgstr "¡El código de moneda debe ser único por compañía!"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_property
@@ -11452,6 +11865,48 @@ msgid ""
 "mail. \n"
 "    "
 msgstr ""
+"\n"
+"Recuperar el correo electrónico entrante en servidores POP / IMAP\n"
+"=============================================\n"
+"\n"
+"Introduzca los parámetros de su correo POP / IMAP (s), y la entrada de "
+"cualquier\n"
+"mensajes de correo electrónico de estas cuentas se descargará "
+"automáticamente en su OpenERP\n"
+"sistema. Todos los servidores POP3/IMAP-compatible son compatibles, "
+"incluidos los\n"
+"que requieren una conexión cifrada con SSL / TLS conexión.\n"
+"\n"
+"Esto se puede utilizar para crear fácilmente flujos de trabajo basados ​​en "
+"correo electrónico para muchos\n"
+"correo electrónico habilitados para OpenERP documentos, tales como:\n"
+"\n"
+"  * CRM Leads / Oportunidades\n"
+"  * Las reclamaciones de CRM\n"
+"  * Temas de Proyectos\n"
+"  * Las tareas del proyecto\n"
+"  * Contratación de personal de Recursos Humanos (solicitantes)\n"
+"  * Etc\n"
+"\n"
+"Sólo tiene que instalar la aplicación correspondiente, y se puede asignar "
+"cualquiera de\n"
+"estos tipos de documentos (los conductores, los temas del proyecto, etc) a "
+"su entrada\n"
+"cuentas de correo electrónico. Los nuevos correos electrónicos de forma "
+"automática se generan nuevos documentos\n"
+"del tipo elegido, por lo que es un complemento para crear un buzón de correo-"
+"a-OpenERP\n"
+"integración. Mejor aún: estos documentos directamente actuar como mini-\n"
+"conversaciones sincronizadas por correo electrónico. Puede responder desde "
+"dentro\n"
+"OpenERP, y las respuestas de forma automática cuando se recogerán\n"
+"vuelven, y unido a la conversación * mismo documento *.\n"
+"\n"
+"Para necesidades más específicas, también puede asignar las acciones "
+"definidas por el cliente\n"
+"(técnicamente: Acciones del servidor), que se activará para cada entrada\n"
+"electrónico. \n"
+"    "
 
 #. module: base
 #: help:ir.actions.server,email:0
@@ -11460,6 +11915,10 @@ msgid ""
 "same values as for the condition field.\n"
 "Example: object.invoice_address_id.email, or 'me@example.com'"
 msgstr ""
+"Expresión que devuelve la dirección de correo electrónico para enviar el "
+"mensaje. Puede estar basada en los mismos valores para el campo de "
+"condición.\n"
+"Ejemplo: object.invoice_address_id.email, o 'me@example.com'"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_hello
@@ -11468,6 +11927,9 @@ msgid ""
 "        OpenERP Web example module.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP Web módulo de ejemplo.\n"
+"        "
 
 #. module: base
 #: model:res.country,name:base.gy
@@ -11477,7 +11939,7 @@ msgstr "Guayana"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_expiry
 msgid "Products Expiry Date"
-msgstr ""
+msgstr "Fecha de Expiración de productos"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -11511,6 +11973,35 @@ msgid ""
 "module named account_voucher.\n"
 "    "
 msgstr ""
+"\n"
+"Contabilidad y Gestión Financiera.\n"
+"====================================\n"
+"\n"
+"Módulo financiero y contable que se refiere a:\n"
+"--------------------------------------------\n"
+"contabilidades generales\n"
+"Costo / contabilidad analítica\n"
+"La contabilidad de terceros\n"
+"impuestos gestión\n"
+"presupuestos\n"
+"Clientes y proveedores facturas\n"
+"estados de cuenta bancarios\n"
+"Proceso de reconciliación por el socio\n"
+"\n"
+"Crea un cuadro de mando para los contadores, que incluye:\n"
+"--------------------------------------------------\n"
+"* Lista de la factura del cliente para aprobar\n"
+"* Análisis de la empresa\n"
+"* Gráfico de créditos Ancianos\n"
+"* Gráfico de Hacienda\n"
+"\n"
+"Los procesos como el mantenimiento de la contabilidad general se realiza a "
+"través de los diarios financieros definidos (línea de entrada o de "
+"movimiento\n"
+"agrupación se mantiene a través de diario) para un ejercicio determinado y "
+"para la preparación de los vales hay una\n"
+"módulo denominado account_voucher.\n"
+"    "
 
 #. module: base
 #: help:ir.actions.act_window,view_type:0
@@ -11581,6 +12072,12 @@ msgid ""
 "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated port "
 "(default: 465)"
 msgstr ""
+"Elija el sistema de cifrado de conexión:\n"
+"- Ninguno: las sesiones SMTP se realizan en texto sin cifrar.\n"
+"- TLS (STARTTLS): el cifrado TLS se solicita al inicio de la sesión de SMTP "
+"(recomendado)\n"
+"- SSL / TLS: sesiones SMTP están cifradas con SSL / TLS a través de un "
+"puerto dedicado (por defecto: 465)"
 
 #. module: base
 #: view:ir.model:0
@@ -11599,21 +12096,29 @@ msgid ""
 "modules like base_report_designer and base_report_creator.\n"
 "    "
 msgstr ""
+"\n"
+"Installer para la presentación de informes Ocultos.\n"
+"==============================\n"
+"\n"
+"Hace que la configuración de Reporting Ocultos disponibles desde donde se "
+"puede instalar\n"
+"módulos como base_report_designer y base_report_creator.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_synchro
 msgid "Multi-DB Synchronization"
-msgstr ""
+msgstr "Multi-BD de sincronización"
 
 #. module: base
 #: selection:ir.module.module,complexity:0
 msgid "Expert"
-msgstr ""
+msgstr "Experto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Leaves Management"
-msgstr ""
+msgstr "Gestión de ausencias"
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -11644,6 +12149,9 @@ msgid ""
 "Todo list for CRM leads and opportunities.\n"
 "    "
 msgstr ""
+"\n"
+"Todo lista de clientes potenciales y oportunidades de CRM.\n"
+"    "
 
 #. module: base
 #: field:ir.actions.act_window.view,view_id:0
@@ -11656,7 +12164,7 @@ msgstr "Vista"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wiki_sale_faq
 msgid "Wiki: Sale FAQ"
-msgstr ""
+msgstr "Wiki: Venta FAQ"
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -11684,7 +12192,7 @@ msgstr "Base"
 #: field:ir.model.data,model:0
 #: field:ir.values,model:0
 msgid "Model Name"
-msgstr ""
+msgstr "Nombre de modelo"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -11702,6 +12210,13 @@ msgid ""
 "outlook, Sunbird, ical, ...\n"
 "    "
 msgstr ""
+"\n"
+"Permite Sincronizar calendarios con otras aplicaciones.\n"
+"=========================================================\n"
+"\n"
+"Le permitirá sincronizar sus calendarios OpenERP con su teléfono, Outlook, "
+"Sunbird, iCal ...\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.lr
@@ -11718,6 +12233,13 @@ msgid ""
 "Indian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Permite sincronizar los calendarios con otras aplicaciones.\n"
+"=========================================================\n"
+"\n"
+"Le permitirá sincronizar los calendarios de OpenERP con su teléfono, "
+"Outlook, Sunbird, iCal ...\n"
+"    "
 
 #. module: base
 #: view:ir.attachment:0
@@ -11765,6 +12287,7 @@ msgstr "Mónaco"
 #: view:base.module.import:0
 msgid "Please be patient, this operation may take a few minutes..."
 msgstr ""
+"Por favor, sea paciente, esta operación puede tardar unos minutos ..."
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -11774,7 +12297,7 @@ msgstr "Minutos"
 #. module: base
 #: view:res.currency:0
 msgid "Display"
-msgstr ""
+msgstr "Desplegar"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -11791,17 +12314,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_map
 msgid "Google Maps on Customers"
-msgstr ""
+msgstr "Google Maps en los clientes"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.preview_report
 msgid "Preview Report"
-msgstr ""
+msgstr "Vista previa del informe"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_analytic_plans
 msgid "Purchase Analytic Plans"
-msgstr ""
+msgstr "Planes analíticos de compra"
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic_journal_billing_rate
@@ -11822,6 +12345,21 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo le permite definir cuál es la tasa de facturación por defecto "
+"para una revista específica en una cuenta determinada.\n"
+"============================================================================="
+"=================================\n"
+"\n"
+"Casi siempre se usa cuando un usuario codifica la parte de horas: los "
+"valores se recuperan y los campos son de auto-llenado. Sin embargo, la "
+"posibilidad de cambiar estos valores todavía está disponible.\n"
+"\n"
+"Obviamente, si no hay datos se ha registrado para la cuenta corriente, el "
+"valor por defecto se da, como de costumbre por los datos de la cuenta, para "
+"que este módulo es perfectamente compatible con mayores configuraciones.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_fundrising
@@ -11884,7 +12422,7 @@ msgstr "Semanas"
 #: code:addons/base/res/res_company.py:157
 #, python-format
 msgid "VAT: "
-msgstr ""
+msgstr "IVA: "
 
 #. module: base
 #: model:res.country,name:base.af
@@ -11901,17 +12439,17 @@ msgstr "¡Error!"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_campaign_crm_demo
 msgid "Marketing Campaign - Demo"
-msgstr ""
+msgstr "Campaña de marketing - Demo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail_hr_recruitment
 msgid "eMail Gateway for Applicants"
-msgstr ""
+msgstr "gateway de correo electrónico para los solicitantes"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_coda
 msgid "Belgium - Import bank CODA statements"
-msgstr ""
+msgstr "Bélgica - Import Bank declaraciones CODA"
 
 #. module: base
 #: field:ir.cron,interval_type:0
@@ -11933,7 +12471,7 @@ msgstr "Este método ya no existe"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_import_google
 msgid "Google Import"
-msgstr ""
+msgstr "Google Importación"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
@@ -11953,12 +12491,12 @@ msgstr "Fecha creación"
 #. module: base
 #: view:ir.module.module:0
 msgid "Keywords"
-msgstr ""
+msgstr "Palabras clave"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn
 msgid "中国会计科目表 - Accounting"
-msgstr ""
+msgstr "Plan General de Contabilidad - Contabilidad"
 
 #. module: base
 #: view:ir.model.access:0
@@ -11979,12 +12517,12 @@ msgstr ""
 #. module: base
 #: help:ir.model.data,res_id:0
 msgid "ID of the target record in the database"
-msgstr ""
+msgstr "ID del registro objetivo de la la base de datos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_analysis
 msgid "Contracts Management"
-msgstr ""
+msgstr "Gestión de Contratos"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -12009,7 +12547,7 @@ msgstr "Para ejecutar"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_visible_discount
 msgid "Prices Visible Discounts"
-msgstr ""
+msgstr "Los precios de los Descuentos visibles"
 
 #. module: base
 #: field:ir.attachment,datas:0
@@ -12040,6 +12578,21 @@ msgid ""
 "account numbers\n"
 "    "
 msgstr ""
+"\n"
+"Módulo que se extiende el objeto account_bank_statement_line estándar para "
+"la mejora de banca electrónica de apoyo.\n"
+"\n"
+"añade\n"
+"- Valuta fecha\n"
+"- Los pagos por lotes\n"
+"- La trazabilidad de los cambios en las líneas de extractos de cuenta\n"
+"- Línea de la declaración del Banco considera que\n"
+"- Estados de cuenta bancarios saldos informe\n"
+"- Mejoras de rendimiento para la importación digital de estado de cuenta "
+"bancaria (a través de bandera de contexto \"ebanking_import ')\n"
+"- Name_search de res.partner.bank mejorado para permitir la búsqueda en el "
+"banco y los números de cuenta de IBAN\n"
+"    "
 
 #. module: base
 #: code:addons/orm.py:1895
@@ -12078,6 +12631,38 @@ msgid ""
 "            "
 "fields_to_search.update(view_root.xpath(\"//field[@select=1]/@name"
 msgstr ""
+"Campos insuficiente para generar una vista de calendario para% s, la falta o "
+"un date_stop date_delay un \"% (self._name)))\n"
+"\n"
+"         la devolución de la vista\n"
+"\n"
+"     def _get_default_search_view (sí, cr, uid, el contexto = None):\n"
+"         \"\n"
+"         : Param cr: base de datos, el cursor\n"
+"         : Param int usuario: el usuario de la Identificación\n"
+"         : Param contexto, el dict: conexión de contexto\n"
+"         : Devuelve: un lxml, documentos de la vista\n"
+"         : RTYPE: etree._Element\n"
+"         \"\n"
+"         form_view = self.fields_view_get (CR, uid, False, \"forma\", "
+"context =)\n"
+"         tree_view = self.fields_view_get (CR, uid, False, \"árbol\", "
+"context =)\n"
+"\n"
+"         # TODO parece que _all_columns podría utilizarse en lugar de "
+"fields_get (sin necesidad de información traducida campos)\n"
+"         = campos self.fields_get (CR, uid, context =)\n"
+"         fields_to_search = set (\n"
+"             de campo para el campo, en el descriptor fields.iteritems ()\n"
+"             si descriptor.get ('select'))\n"
+"\n"
+"         para la vista en (form_view, tree_view):\n"
+"             view_root = etree.fromstring (ver ['arco'])\n"
+"             # Sólo se preocupan por seleccionar = 1 en un XPath a "
+"continuación, debido a que la selección =2 está \"cubierta\"\n"
+"             # En la búsqueda avanzada de clientes personalizada\n"
+"             fields_to_search.update (view_root.xpath "
+"(\"//campo[@select=1]/@name"
 
 #. module: base
 #: constraint:res.users:0
@@ -12099,12 +12684,12 @@ msgstr "Nombre del servicio"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_import_base
 msgid "Framework for complex import"
-msgstr ""
+msgstr "Marco para la importación compleja"
 
 #. module: base
 #: view:ir.actions.todo.category:0
 msgid "Wizard Category"
-msgstr ""
+msgstr "Asistente de Categoría"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_cancel
@@ -12117,6 +12702,14 @@ msgid ""
 "journal. If set to true it allows user to cancel entries & invoices.\n"
 "    "
 msgstr ""
+"\n"
+"Permite cancelar los asientos contables.\n"
+"=====================================\n"
+"\n"
+"Este módulo añade 'Permitir cancelar las entradas de campo en la vista de "
+"formulario de la revista cuenta. Si se establece en true permite al usuario "
+"cancelar las entradas y las facturas.\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_rule
@@ -12138,7 +12731,7 @@ msgstr "Día del año: %(doy)s"
 #: model:ir.module.category,name:base.module_category_portal
 #: model:ir.module.module,shortdesc:base.module_portal
 msgid "Portal"
-msgstr ""
+msgstr "Portal"
 
 #. module: base
 #: model:ir.module.module,description:base.module_claim_from_delivery
@@ -12149,6 +12742,11 @@ msgid ""
 "\n"
 "Adds a Claim link to the delivery order.\n"
 msgstr ""
+"\n"
+"Crear una reclamación de un albarán de entrega.\n"
+"=====================================\n"
+"\n"
+"Añade un enlace de reclamación a la orden de entrega.\n"
 
 #. module: base
 #: view:ir.model:0
@@ -12173,6 +12771,9 @@ msgid ""
 "Please define BIC/Swift code on bank for bank type IBAN Account to make "
 "valid payments"
 msgstr ""
+"\n"
+"Por favor defina el código BIC/Swift en el banco de cuentas IBAN para "
+"realizar pagos válidos"
 
 #. module: base
 #: view:res.lang:0
@@ -12183,6 +12784,7 @@ msgstr "%A - Nombre completo del día de la semana."
 #: help:ir.values,user_id:0
 msgid "If set, action binding only applies for this user."
 msgstr ""
+"Si se establece, la unión de acción sólo se aplica para este usuario."
 
 #. module: base
 #: model:res.country,name:base.gw
@@ -12222,11 +12824,18 @@ msgid ""
 "Provide Templates for Chart of Accounts, Taxes for Uruguay\n"
 "\n"
 msgstr ""
+"\n"
+"Plan General de Contabilidad\n"
+"=========================\n"
+"\n"
+"Proporcionar plantillas de Plan General de Contabilidad, Impuestos para "
+"Uruguay\n"
+"\n"
 
 #. module: base
 #: help:res.company,bank_ids:0
 msgid "Bank accounts related to this company"
-msgstr ""
+msgstr "Las cuentas bancarias en relación con esta empresa"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
@@ -12250,6 +12859,8 @@ msgstr "Realizado"
 msgid ""
 "Specify if missed occurrences should be executed when the server restarts."
 msgstr ""
+"Especifique si las ocurrencias perdidas debe ejecutarse cuando se reinicia "
+"el servidor."
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -12317,6 +12928,12 @@ msgid ""
 "\n"
 "Using this you can directly open Google Map from the URL widget."
 msgstr ""
+"\n"
+"El módulo se añade Google Mapa de campo en la dirección de pareja.\n"
+"====================================================\n"
+"\n"
+"El uso de este puede abrir directamente mapa de Google desde el widget de la "
+"URL."
 
 #. module: base
 #: field:workflow.activity,action:0
@@ -12338,6 +12955,18 @@ msgid ""
 "    http://files.me.com/nbessi/06n92k.mov\n"
 "                    "
 msgstr ""
+"\n"
+"Las muestras para el Webkit motor de informes (report_webkit módulo).\n"
+"========================================================\n"
+"\n"
+"Un informe de la factura de la muestra se incluye en este módulo, así como "
+"un asistente para\n"
+"agregar entradas Webkit informar sobre cualquier documento en el sistema.\n"
+"\n"
+"Usted tiene que crear los botones de impresión llamando al asistente. Para "
+"obtener más información, consulte:\n"
+"     http://files.me.com/nbessi/06n92k.mov\n"
+"                    "
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -12419,11 +13048,21 @@ msgid ""
 "    * Product Attributes\n"
 "    "
 msgstr ""
+"\n"
+"Un módulo que añade fabricantes y atributos en la forma del producto.\n"
+"====================================================================\n"
+"\n"
+"Ahora puede definir lo siguiente para un producto:\n"
+"     * Fabricante\n"
+"     * Nombre del fabricante del producto\n"
+"     * Fabricante de código del producto\n"
+"     * Las Características del producto\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_todo_category
 msgid "Configuration Wizard Category"
-msgstr ""
+msgstr "Asistente para configuración de Categoría"
 
 #. module: base
 #: view:base.module.update:0
@@ -12460,11 +13099,20 @@ msgid ""
 "accounts with a single statement.\n"
 "    "
 msgstr ""
+"\n"
+"En este módulo se instala la base de las cuentas bancarias IBAN "
+"(International Bank Account Number) y los cheques para su validez.\n"
+"============================================================================="
+"========================================\n"
+"\n"
+"La capacidad de extraer las cuentas correctamente representados locales de "
+"IBAN cuentas con una sola sentencia.\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_mail_server
 msgid "ir.mail_server"
-msgstr ""
+msgstr "ir.mail_server"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -12479,6 +13127,11 @@ msgid ""
 "the bounds of global ones. The first group rules restrict further than "
 "global rules, but any additional group rule will add more permissions"
 msgstr ""
+"Las reglas globales (no específico de grupo) son las restricciones, y no "
+"pueden ser anuladas. Grupo de reglas locales, conceder permisos adicionales, "
+"pero se ven limitados dentro de los límites de los mundiales. Las reglas del "
+"grupo primeras restringir aún más que las reglas globales, pero cualquier "
+"grupo de reglas adicionales a añadir más permisos"
 
 #. module: base
 #: field:res.currency.rate,rate:0
@@ -12509,7 +13162,7 @@ msgstr "Provincia"
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_5
 msgid "Sequences & Identifiers"
-msgstr ""
+msgstr "Las secuencias y los identificadores"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -12521,6 +13174,12 @@ msgid ""
 "Thai accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Plan General de Contabilidad para Tailandia.\n"
+"===============================\n"
+"\n"
+"Gráfico de la contabilidad de Tailandia y la localización.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.kn
@@ -12530,7 +13189,7 @@ msgstr "Antillas San Kitts y Nevis"
 #. module: base
 #: model:ir.module.category,name:base.module_category_point_of_sale
 msgid "Point of Sales"
-msgstr ""
+msgstr "Punto de Ventas"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_payroll_account
@@ -12544,6 +13203,14 @@ msgid ""
 "    * Company Contribution Management\n"
 "    "
 msgstr ""
+"\n"
+"Sistema de nómina genérica Integrado con Contabilidades.\n"
+"===================================================\n"
+"\n"
+"     * Gastos de codificación\n"
+"     * El pago de codificación\n"
+"     * Empresa Gestión de Contribuciones\n"
+"    "
 
 #. module: base
 #: code:addons/base/res/res_currency.py:190
@@ -12575,6 +13242,20 @@ msgid ""
 "    * Allow to refund former sales.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo proporciona un proceso de venta rápido y fácil.\n"
+"===================================================\n"
+"\n"
+"Características principales:\n"
+"---------------\n"
+"     * Codificación rápida de la venta.\n"
+"     * Permitir a elegir un modo de pago (la forma más rápida) o para "
+"dividir el pago entre el modo de pago de varios.\n"
+"     * El cálculo de la cantidad de dinero para regresar.\n"
+"     * Cree y confirme recoger la lista de forma automática.\n"
+"     * Permite al usuario crear la factura de forma automática.\n"
+"     * Permitir a la devolución de ventas anteriores.\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
@@ -12591,6 +13272,8 @@ msgid ""
 "Checked if this is an OpenERP Publisher's Warranty contract (versus older "
 "contract types"
 msgstr ""
+"Activada si se trata de un contrato de Autor OpenERP de Garantía (frente a "
+"mayores tipos de contrato"
 
 #. module: base
 #: field:ir.model.fields,model:0
@@ -12630,6 +13313,9 @@ msgid ""
 "Helps you manage your human resources by encoding your employees structure, "
 "generating work sheets, tracking attendance and more."
 msgstr ""
+"Le ayuda a gestionar sus recursos humanos mediante la codificación de la "
+"estructura de los empleados, la generación de hojas de trabajo, seguimiento "
+"de la asistencia, ..."
 
 #. module: base
 #: help:ir.model.fields,model_id:0
@@ -12652,6 +13338,14 @@ msgid ""
 "for Wiki Sale FAQ.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo proporciona un Wiki Ventas plantilla de preguntas frecuentes.\n"
+"===============================================\n"
+"\n"
+"Proporciona datos de demostración, creando así un grupo de Wiki y una página "
+"de Wiki\n"
+"Venta Wiki FAQ.\n"
+"    "
 
 #. module: base
 #: view:ir.sequence.type:0
@@ -12674,6 +13368,20 @@ msgid ""
 "trigger an automatic reminder email.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo permite poner en práctica las reglas de acción para cualquier "
+"objeto.\n"
+"============================================================\n"
+"\n"
+"Utilice acciones automatizadas para activar automáticamente acciones de "
+"varias pantallas.\n"
+"\n"
+"Ejemplo: una ventaja creada por un usuario específico puede ser "
+"automáticamente a una determinada\n"
+"equipo de ventas, o una oportunidad que todavía ha estado pendiente después "
+"de 14 días podría\n"
+"desencadenar un recordatorio por correo electrónico automático.\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request-act
@@ -12696,7 +13404,7 @@ msgstr "O"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
 msgid "Brazilian - Accounting"
-msgstr ""
+msgstr "Brasil - Contabilidad"
 
 #. module: base
 #: model:res.country,name:base.pk
@@ -12715,6 +13423,14 @@ msgid ""
 "The wizard to launch the report has several options to help you get the data "
 "you need.\n"
 msgstr ""
+"\n"
+"Agrega un menú de informes en los productos que calcula las ventas, compras, "
+"márgenes y otros indicadores de interés sobre la base de las facturas.\n"
+"============================================================================="
+"================================================\n"
+"\n"
+"El asistente para presentar el informe tiene varias opciones para ayudarle a "
+"obtener los datos que necesita.\n"
 
 #. module: base
 #: model:res.country,name:base.al
@@ -12727,6 +13443,9 @@ msgid ""
 "Level of difficulty of module. Easy: intuitive and easy to use for everyone. "
 "Normal: easy to use for business experts. Expert: requires technical skills."
 msgstr ""
+"Nivel de dificultad de módulo. Fácil: intuitivo y fácil de usar para todos. "
+"Normal: fácil de usar para los expertos en negocios. Experto: requiere "
+"conocimientos técnicos."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:191
@@ -12781,6 +13500,13 @@ msgid ""
 "Price and Cost Price.\n"
 "    "
 msgstr ""
+"\n"
+"En este módulo se añade el «margen» en la orden de venta.\n"
+"=============================================\n"
+"\n"
+"Esto le da a la rentabilidad mediante el cálculo de la diferencia entre el "
+"precio unitario y el precio de coste.\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_bank_form
@@ -12827,7 +13553,7 @@ msgstr "Acción inicial"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_project
 msgid "Retro-Planning on Events"
-msgstr ""
+msgstr "Retro-Planificación de Eventos"
 
 #. module: base
 #: code:addons/custom.py:555
@@ -12847,7 +13573,7 @@ msgstr "¿Desea limpiar Ids? "
 #. module: base
 #: view:res.partner.bank:0
 msgid "Information About the Bank"
-msgstr ""
+msgstr "Información del banco"
 
 #. module: base
 #: help:ir.actions.server,condition:0
@@ -12865,12 +13591,25 @@ msgid ""
 " - uid: current user id\n"
 " - context: current context"
 msgstr ""
+"Condición que se prueba antes de que la acción se ejecuta, y prevenir la "
+"ejecución si no se verifica.\n"
+"Ejemplo: object.list_price> 5000\n"
+"Se trata de una expresión de Python que se puede utilizar los siguientes "
+"valores:\n"
+"  - Sí: el modelo ORM del registro en el que se desencadena la acción\n"
+"  - Objeto o obj: browse_record del registro en el que se desencadena la "
+"acción\n"
+"  - Piscina: ORM modelo (es decir, self.pool)\n"
+"  - Tiempo: Python módulo de tiempo\n"
+"  - CR: Mueve el cursor de base de datos\n"
+"  - Uid: Identificación del usuario actual\n"
+"  - El contexto: el contexto actual"
 
 #. module: base
 #: view:ir.rule:0
 msgid ""
 "2. Group-specific rules are combined together with a logical OR operator"
-msgstr ""
+msgstr "2. Específicos de grupo-reglas se combinan con un operador lógico OR"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_woodsuppliers0
@@ -12900,7 +13639,7 @@ msgstr "Todo parado"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_user_function
 msgid "Jobs on Contracts"
-msgstr ""
+msgstr "Ofertas de empleo en los contratos"
 
 #. module: base
 #: model:ir.module.module,description:base.module_import_sugarcrm
@@ -12910,6 +13649,10 @@ msgid ""
 "            \"Contacts\", \"Employees\", Meetings, Phonecalls, Emails, and "
 "Project, Project Tasks Data into OpenERP Module."
 msgstr ""
+"This Module Import SugarCRM \"Leads\", \"Opportunities\", \"Users\", "
+"\"Accounts\", \n"
+"            \"Contacts\", \"Employees\", Meetings, Phonecalls, Emails, and "
+"Project, Project Tasks Data into OpenERP Module."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_add_wizard
@@ -12927,6 +13670,11 @@ msgid ""
 "\n"
 "Este módulo es para manejar un catálogo de cuentas ejemplo para Venezuela.\n"
 msgstr ""
+"\n"
+"This is the module to manage the accounting chart for Venezuela in OpenERP.\n"
+"===========================================================================\n"
+"\n"
+"Este módulo es para manejar un catálogo de cuentas ejemplo para Venezuela.\n"
 
 #. module: base
 #: view:ir.model.data:0
@@ -12954,6 +13702,8 @@ msgid ""
 "Lets you install addons geared towards sharing knowledge with and between "
 "your employees."
 msgstr ""
+"Le permite instalar addons orientados a compartir el conocimiento con y "
+"entre sus empleados."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -12963,7 +13713,7 @@ msgstr "Árabe / الْعَرَبيّة"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_hello
 msgid "Hello"
-msgstr ""
+msgstr "Hola"
 
 #. module: base
 #: view:ir.actions.configuration.wizard:0
@@ -12978,7 +13728,7 @@ msgstr "Comentario"
 #. module: base
 #: model:res.groups,name:base.group_hr_manager
 msgid "HR Manager"
-msgstr ""
+msgstr "Gerente de Recursos Humanos"
 
 #. module: base
 #: view:ir.filters:0
@@ -12992,7 +13742,7 @@ msgstr "Dominio"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_campaign
 msgid "Marketing Campaigns"
-msgstr ""
+msgstr "Campañas de marketing"
 
 #. module: base
 #: code:addons/base/publisher_warranty/publisher_warranty.py:144
@@ -13003,7 +13753,7 @@ msgstr "Error de validación de contrato"
 #. module: base
 #: field:ir.values,key2:0
 msgid "Qualifier"
-msgstr ""
+msgstr "Calificador"
 
 #. module: base
 #: field:res.country.state,name:0
@@ -13013,7 +13763,7 @@ msgstr "Nombre provincia"
 #. module: base
 #: view:res.lang:0
 msgid "Update Languague Terms"
-msgstr ""
+msgstr "Actualización de Términos del Lenguaje"
 
 #. module: base
 #: field:workflow.activity,join_mode:0
@@ -13028,7 +13778,7 @@ msgstr "Zona horaria"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wiki_faq
 msgid "Wiki: Internal FAQ"
-msgstr ""
+msgstr "Wiki: Ayuda Interna"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report_xml
@@ -13049,6 +13799,15 @@ msgid ""
 "handle an issue.\n"
 "                "
 msgstr ""
+"\n"
+"En este módulo se añade el apoyo de parte de horas para las Cuestiones y "
+"Gestión de Errores en el proyecto.\n"
+"================================================== "
+"===============================\n"
+"\n"
+"Worklogs se puede mantener para indicar el número de horas dedicadas por los "
+"usuarios para manejar un problema.\n"
+"                "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -13129,7 +13888,7 @@ msgstr "Normal"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_double_validation
 msgid "Double Validation on Purchases"
-msgstr ""
+msgstr "Validación de Dobles en compras"
 
 #. module: base
 #: field:res.bank,street2:0
@@ -13196,6 +13955,9 @@ msgid ""
 "importing a new module you can install it by clicking on the button "
 "\"Install\" from the form view."
 msgstr ""
+"Este asistente le ayuda a importar un nuevo módulo para el sistema de "
+"OpenERP. Después de importar un nuevo módulo se puede instalar haciendo clic "
+"en el botón \"Instalar\" de la vista de formulario."
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -13229,6 +13991,15 @@ msgid ""
 "picking and invoice. The message is triggered by the form's onchange event.\n"
 "    "
 msgstr ""
+"\n"
+"Módulo para activar las advertencias de los objetos OpenERP.\n"
+"==============================================\n"
+"\n"
+"Los mensajes de advertencia se pueden mostrar los objetos como para la "
+"venta, orden de compra,\n"
+"la recolección y la factura. El mensaje es desencadenada por evento onchange "
+"del formulario.\n"
+"    "
 
 #. module: base
 #: code:addons/osv.py:150
@@ -13261,7 +14032,7 @@ msgstr "Somalia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_operations
 msgid "Manufacturing Operations"
-msgstr ""
+msgstr "Operaciones de producción"
 
 #. module: base
 #: selection:publisher_warranty.contract,state:0
@@ -13289,11 +14060,20 @@ msgid ""
 "it to all the users.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo proporciona la funcionalidad para enviar mensajes dentro de un "
+"proyecto.\n"
+"=========================================================================\n"
+"\n"
+"Un usuario puede enviar mensajes a otros usuarios de forma individual. "
+"Incluso puede transmitir\n"
+"a todos los usuarios.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr
 msgid "Employee Directory"
-msgstr ""
+msgstr "Directorio de empleados"
 
 #. module: base
 #: view:ir.cron:0
@@ -13327,6 +14107,12 @@ msgid ""
 "This module gives the details of the goods traded between the countries of "
 "European Union "
 msgstr ""
+"\n"
+"Un módulo que se suma los informes Intrastat.\n"
+"=====================================\n"
+"\n"
+"Este módulo ofrece a los detalles de las mercancías objeto de comercio entre "
+"los países de la Unión Europea "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_invoice_directly
@@ -13339,6 +14125,13 @@ msgid ""
 "the invoicing wizard if the delivery is to be invoiced.\n"
 "    "
 msgstr ""
+"\n"
+"Asistente para la entrega de la factura.\n"
+"============================\n"
+"\n"
+"Al enviar o entregar bienes, este módulo se inicia automáticamente\n"
+"el asistente de facturación, si la entrega es a facturar.\n"
+"    "
 
 #. module: base
 #: code:addons/orm.py:1388
@@ -13360,12 +14153,12 @@ msgstr "Corrija código EAN13"
 #. module: base
 #: selection:res.company,paper_format:0
 msgid "A4"
-msgstr ""
+msgstr "A4"
 
 #. module: base
 #: field:publisher_warranty.contract,check_support:0
 msgid "Support Level 1"
-msgstr ""
+msgstr "Apoyo Nivel 1"
 
 #. module: base
 #: field:res.partner,customer:0
@@ -13401,6 +14194,25 @@ msgid ""
 "lines: Unit price=225, Discount=0,00, Net price=225\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo le permite calcular los descuentos en las líneas de pedido de "
+"venta y la base de las líneas de la factura en la lista de precios de la "
+"pareja.\n"
+"============================================================================="
+"==================================\n"
+"\n"
+"Con este fin, una nueva casilla de verificación denominada \"Descuento "
+"visible\" se agrega a la forma de lista de precios.\n"
+"\n"
+"Ejemplo:\n"
+"     Para el PC1 del producto y el socio \"Asustek\": si listprice = 450, y "
+"el precio calculado utilizando la lista de precios de Asustek es de 225\n"
+"     Si la casilla está marcada, vamos a tener en la línea de orden de "
+"venta: Precio por unidad = 450, de descuento = 50,00, el precio neto = 225\n"
+"     Si la casilla está marcada, vamos a tener el orden de venta y las "
+"líneas de factura: Precio por unidad = 225, de descuento = 0,00, el precio "
+"neto = 225\n"
+"    "
 
 #. module: base
 #: field:ir.module.module,shortdesc:0
@@ -13470,7 +14282,7 @@ msgstr "Túnez"
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Wizards to be Launched"
-msgstr ""
+msgstr "Wizards para ser lanzado"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
@@ -13486,7 +14298,7 @@ msgstr "Comores"
 #. module: base
 #: view:res.request:0
 msgid "Draft and Active"
-msgstr ""
+msgstr "Proyecto y Activo"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
@@ -13498,7 +14310,7 @@ msgstr "Acciones de servidor"
 #. module: base
 #: field:res.partner.bank.type,format_layout:0
 msgid "Format Layout"
-msgstr ""
+msgstr "Formato de Presentación"
 
 #. module: base
 #: field:ir.model.fields,selection:0
@@ -13513,7 +14325,7 @@ msgstr "Padre derecho"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_openid
 msgid "OpenID Authentification"
-msgstr ""
+msgstr "OpenID Authentification"
 
 #. module: base
 #: model:ir.module.module,description:base.module_plugin_thunderbird
@@ -13529,6 +14341,21 @@ msgid ""
 "HR Applicant and Project Issue from selected mails.\n"
 "      "
 msgstr ""
+"\n"
+"Este módulo es necesario para la Thuderbird Plug-in para que funcione "
+"correctamente.\n"
+"================================================== ==================\n"
+"\n"
+"El plug-in le permite archivar el correo electrónico y sus anexos a la "
+"seleccionada\n"
+"OpenERP objetos. Puede seleccionar un socio, una tarea, un proyecto, un "
+"análisis\n"
+"objeto de cuenta, o cualquier otro y adjuntar las cuentas de correo como un "
+"archivo. eml en\n"
+"la fijación de un registro seleccionado. Puede crear documentos para el "
+"plomo CRM,\n"
+"HR solicitante y del proyecto de emisión de los correos seleccionados.\n"
+"      "
 
 #. module: base
 #: view:res.lang:0
@@ -13543,12 +14370,12 @@ msgstr "Copiar objeto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail
 msgid "Emails Management"
-msgstr ""
+msgstr "Los correos electrónicos de gestión"
 
 #. module: base
 #: field:ir.actions.server,trigger_name:0
 msgid "Trigger Signal"
-msgstr ""
+msgstr "Disparador de señal"
 
 #. module: base
 #: code:addons/base/res/res_users.py:119
@@ -13574,6 +14401,19 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+"El objetivo es contar con un módulo completo para gestionar todas las "
+"reparaciones de productos. Los siguientes temas deben ser objeto de este "
+"módulo:\n"
+"============================================================================="
+"==============================================\n"
+"\n"
+"     * Agregar / quitar productos en la reparación\n"
+"     * Impacto de las poblaciones\n"
+"     * Facturación (productos y / o servicios)\n"
+"     * Garantía concepto\n"
+"     * Reparación cita el informe\n"
+"     * Notas para el técnico y para el cliente final\n"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
@@ -13599,11 +14439,19 @@ msgid ""
 "document and Wiki based Hidden.\n"
 "    "
 msgstr ""
+"\n"
+"Instalador basado en el conocimiento oculto.\n"
+"====================================\n"
+"\n"
+"Hace que la configuración de la aplicación del conocimiento disponible en "
+"donde se puede instalar\n"
+"documento y Wiki basada Oculto.\n"
+"    "
 
 #. module: base
 #: field:res.groups,trans_implied_ids:0
 msgid "Transitively inherits"
-msgstr ""
+msgstr "Transitivamente hereda"
 
 #. module: base
 #: field:ir.default,ref_table:0
@@ -13614,7 +14462,7 @@ msgstr "Ref. tabla"
 #: code:addons/base/ir/ir_mail_server.py:443
 #, python-format
 msgid "Mail delivery failed"
-msgstr ""
+msgstr "La entrega de correo falló"
 
 #. module: base
 #: field:ir.actions.act_window,res_model:0
@@ -13654,7 +14502,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_plans
 msgid "Multiple Analytic Plans"
-msgstr ""
+msgstr "Planes analíticos múltiples"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet
@@ -13670,6 +14518,17 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"La sincronización de las entradas de trabajo del proyecto de trabajo con "
+"hojas de tiempos.\n"
+"====================================================================\n"
+"\n"
+"Este módulo le permite transferir las entradas en las tareas definidas para "
+"la Gestión de Proyectos para\n"
+"las entradas de línea de parte de horas para la fecha y usuario en "
+"particular con el efecto de crear, editar y eliminar cualquiera de formas.\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.sequence:0
@@ -13684,7 +14543,7 @@ msgstr "Planificación"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_tools
 msgid "Base Tools"
-msgstr ""
+msgstr "Herramientas de base"
 
 #. module: base
 #: help:res.country,address_format:0
@@ -13703,6 +14562,20 @@ msgid ""
 "            \n"
 "%(country_code)s: the code of the country"
 msgstr ""
+"Se puede decir aquí el formato habitual el uso de las direcciones que "
+"pertenecen a este país.\n"
+"\n"
+"Usted puede utilizar el patern cadena de python-estilo con todo el campo de "
+"la dirección (por ejemplo, el uso de '% (de calle) s' para mostrar 'la "
+"calle' el campo), además de\n"
+"            \n"
+"% (nom_provincia)s: el nombre del estado\n"
+"            \n"
+"% (cod_provincia)s: el código del estado\n"
+"            \n"
+"% (country_name)s: el nombre del país\n"
+"            \n"
+"% (country_code)s: el código del país"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pad
@@ -13716,11 +14589,19 @@ msgid ""
 "(by default, http://ietherpad.com/).\n"
 "    "
 msgstr ""
+"\n"
+"Añade soporte mejorado para archivos adjuntos Pad (éter) en el cliente web.\n"
+"===================================================================\n"
+"\n"
+"Permite personalizar la empresa, que la instalación del filtro debe ser "
+"utilizado para enlazar a nuevas pastillas\n"
+"(por defecto, http://ietherpad.com/).\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk
 msgid "UK - Accounting"
-msgstr ""
+msgstr "Reino Unido - Contabilidad"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_scrum
@@ -13751,6 +14632,32 @@ msgid ""
 "    * http://controlchaos.com\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo implementa todos los conceptos definidos por la metodología de "
+"gestión scrum proyecto para las empresas de TI.\n"
+"============================================================================="
+"============================\n"
+"\n"
+"     * Proyecto con sprints, propietario de un producto, Scrum Master\n"
+"     * Los sprints con los exámenes, reuniones diarias, retroalimentaciones\n"
+"     * Producto retraso\n"
+"     * Sprint retraso\n"
+"\n"
+"Se añade algunos conceptos para el módulo de gestión de proyectos:\n"
+"     * A medio plazo, a largo plazo hoja de ruta\n"
+"     * Los clientes o solicitudes funcionales VS los técnicos\n"
+"\n"
+"También crea una nueva presentación de informes:\n"
+"     * Grabar abajo carta\n"
+"\n"
+"Los proyectos scrum y las tareas heredan de los proyectos reales y\n"
+"tareas, para que pueda seguir trabajando en las tareas normales que también "
+"se\n"
+"incluyen las tareas de los proyectos de scrum.\n"
+"\n"
+"Más información sobre la metodología:\n"
+"     * http://controlchaos.com\n"
+"    "
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:371
@@ -13793,7 +14700,7 @@ msgstr "Configuración"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in
 msgid "India - Accounting"
-msgstr ""
+msgstr "India - Contabilidad"
 
 #. module: base
 #: field:ir.actions.server,expression:0
@@ -13808,12 +14715,12 @@ msgstr "Fecha inicial"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gt
 msgid "Guatemala - Accounting"
-msgstr ""
+msgstr "Guatemala - Contabilidad"
 
 #. module: base
 #: help:ir.cron,args:0
 msgid "Arguments to be passed to the method, e.g. (uid,)."
-msgstr ""
+msgstr "Los argumentos que se pasan al método, por ejemplo (uid,)."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_5
@@ -13886,6 +14793,21 @@ msgid ""
 "in the form of pdf file. Implements a dashboard for My Current Evaluations\n"
 "         "
 msgstr ""
+"\n"
+"Capacidad para crear de evaluación empleados.\n"
+"=======================================\n"
+"\n"
+"Una evaluación puede ser creado por un empleado para los subordinados,\n"
+"jóvenes, así como su evaluación manager.The se realiza bajo un plan de\n"
+"en el que diversas encuestas pueden ser creados y que se puede definir lo "
+"que se\n"
+"nivel de la jerarquía empleado llena de revisión y lo que final y la "
+"evaluación\n"
+"se realiza mediante la evaluación manager.Every llenado por los empleados "
+"pueden ser vistos\n"
+"en forma de archivo PDF. Implementa un tablero de instrumentos para mis "
+"evaluaciones actuales\n"
+"         "
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -13947,7 +14869,7 @@ msgstr "Criterios de búsqueda inválidos"
 #. module: base
 #: view:ir.mail_server:0
 msgid "Connection Information"
-msgstr ""
+msgstr "Información de la conexión"
 
 #. module: base
 #: view:ir.attachment:0
@@ -13979,6 +14901,8 @@ msgid ""
 "External Key/Identifier that can be used for data integration with third-"
 "party systems"
 msgstr ""
+"External Key / identificador que se puede utilizar para la integración de "
+"datos con sistemas de terceros"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_operations
@@ -14013,6 +14937,39 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"En este módulo se añade el estado, date_start, date_stop en líneas de "
+"producción de operaciones de orden (en el \"Centros de trabajo\" ficha).\n"
+"============================================================================="
+"================================\n"
+"\n"
+"Estado: proyecto, confirman, hacer, cancelar\n"
+"Al terminar / confirmación, cancelación de órdenes de producción que se "
+"establecen todas las líneas de estado al estado de acuerdo\n"
+"\n"
+"Crear menús:\n"
+"     Manufactura> Manufactura> Ordenes de Trabajo\n"
+"\n"
+"¿Qué es un punto de vista sobre \"centros de trabajo\" en las líneas para la "
+"producción.\n"
+"\n"
+"Añadir botones en la vista de formulario de la orden de producción en la "
+"pestaña centro de trabajo:\n"
+"     * Comenzar (establecer el estado para confirmar), conjunto date_start\n"
+"     * Hacer (establecer el estado de hecho), establece date_stop\n"
+"     * Establece en el proyecto (establecer el estado de proyecto)\n"
+"     * Cancela el estado conjunto de cancelar\n"
+"\n"
+"Cuando la orden de producción se convierte en \"lista para producir\", las "
+"operaciones deben\n"
+"convertirse en 'confirmada'. Cuando la orden de producción se hace, todas "
+"las operaciones\n"
+"debe ser hecho.\n"
+"\n"
+"El retraso es la demora de campo (dejar de fecha - fecha de inicio).\n"
+"Para que podamos comparar el retraso teórico y el retraso real.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auction
@@ -14036,6 +14993,24 @@ msgid ""
 "    * Objects By Day (graph)\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo gestiona los registros de los artistas, artículos de subastas, "
+"compradores y vendedores.\n"
+"============================================================================="
+"====\n"
+"\n"
+"Es completamente gestiona una subasta como la gestión de las ofertas,\n"
+"hacer el seguimiento de los artículos que se venden junto con el pago\n"
+"y objetos pendientes, incluyendo la entrega de los artículos.\n"
+"\n"
+"El tablero de instrumentos para la subasta incluye:\n"
+"     * Los últimos objetos (lista)\n"
+"     * Últimas Depósitos (lista)\n"
+"     * Objetos de Estadística (lista)\n"
+"     * Las adjudicaciones totales (gráfico)\n"
+"     * Min / adj / Max (gráfico)\n"
+"     * Objetos cada día (gráfico)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_crypt
@@ -14072,6 +15047,43 @@ msgid ""
 "\n"
 "                    "
 msgstr ""
+"\n"
+"Sustituye contraseñas en texto plano en la base de datos con un control "
+"seguro\n"
+"===============================================================\n"
+"Para su base de usuarios existente, la eliminación del texto plano\n"
+"contraseñas se produce inmediatamente después de instalación base_crypt.\n"
+"\n"
+"Todas las contraseñas se sustituye por un seguro, criptográfica salado,\n"
+"cualquier hash, la prevención de la lectura de la contraseña original en\n"
+"la base de datos.\n"
+"\n"
+"Después de instalar este módulo no será posible recuperar una\n"
+"He olvidado la contraseña para los usuarios, la única solución es que una\n"
+"de administración para establecer una nueva contraseña.\n"
+"\n"
+"Advertencia de seguridad\n"
+"+ + + + + + + + + + + + + + + +\n"
+"La instalación de este módulo no significa que usted puede pasar por alto "
+"otras medidas de seguridad,\n"
+"que la contraseña está siendo transmitida en la red sin encriptar, a menos "
+"que\n"
+"utiliza un protocolo seguro, como XML-RPCS o HTTPS.\n"
+"Asimismo, no proteger el resto del contenido de la base de datos, que puede\n"
+"contengan datos importantes. Medidas de seguridad adecuadas, es necesario "
+"implementar\n"
+"el administrador del sistema en todas las áreas, tales como: protección de "
+"la base de datos\n"
+"copias de seguridad, archivos de sistema, el acceso shell remoto, el acceso "
+"del servidor físico, etc\n"
+"\n"
+"Interacción con la autenticación LDAP\n"
+"+ + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +\n"
+"Este módulo no es actualmente compatible con el `` `` user_ldap módulo y\n"
+"inhabilitará la autenticación LDAP completamente si se instala al mismo "
+"tiempo.\n"
+"\n"
+"                    "
 
 #. module: base
 #: field:ir.actions.act_window,view_id:0
@@ -14082,11 +15094,12 @@ msgstr "Ref. vista"
 #: model:ir.module.category,description:base.module_category_sales_management
 msgid "Helps you handle your quotations, sale orders and invoicing."
 msgstr ""
+"Le ayuda a gestionar sus presupuestos, pedidos de venta y facturación."
 
 #. module: base
 #: field:res.groups,implied_ids:0
 msgid "Inherits"
-msgstr ""
+msgstr "Hereda"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -14096,7 +15109,7 @@ msgstr "Selección"
 #. module: base
 #: field:ir.module.module,icon:0
 msgid "Icon URL"
-msgstr ""
+msgstr "URL del icono"
 
 #. module: base
 #: field:ir.actions.act_window,type:0
@@ -14131,6 +15144,17 @@ msgid ""
 "Chad, Togo.\n"
 "    "
 msgstr ""
+"Este módulo implementa la tabla de la contabilidad para el área de la "
+"OHADA.\n"
+"     Permite a cualquier empresa o asociación para gestionar su contabilidad "
+"financiera.\n"
+"     Los países que utilizan la OHADA son los siguientes:\n"
+"     Benin, Burkina Faso, Camerún, República Centroafricana, Comoras, "
+"Congo,\n"
+"     Costa de Marfil, Gabón, Guinea, Guinea-Bissau,\n"
+"     Guinea Ecuatorial, Malí, Níger, República Democrática del Congo "
+"Réplica, Senegal, Chad, Togo.\n"
+"    "
 
 #. module: base
 #: view:base.language.import:0
@@ -14172,7 +15196,7 @@ msgstr "Costa Rica"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_module_doc_rst
 msgid "Generate Docs of Modules"
-msgstr ""
+msgstr "Generar documentos de los módulos"
 
 #. module: base
 #: model:res.company,overdue_msg:base.main_company
@@ -14184,11 +15208,17 @@ msgid ""
 "queries regarding your account, please contact us.\n"
 "Thank you in advance.\n"
 msgstr ""
+"Nuestros registros indican que los siguientes pagos siguen siendo debidos. "
+"Si la cantidad\n"
+"ya ha sido pagada, por favor ignore este aviso. Sin embargo, si usted tiene "
+"cualquiera\n"
+"consultas sobre su cuenta, póngase en contacto con nosotros.\n"
+"Gracias de antemano.\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_users_ldap
 msgid "Authentication via LDAP"
-msgstr ""
+msgstr "Autenticación a través de LDAP"
 
 #. module: base
 #: view:workflow.activity:0
@@ -14211,12 +15241,12 @@ msgstr "Monedas"
 #: model:ir.model,name:base.model_ir_actions_client
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.client"
-msgstr ""
+msgstr "ir.actions.client"
 
 #. module: base
 #: help:ir.values,value:0
 msgid "Default value (pickled) or reference to an action"
-msgstr ""
+msgstr "El valor por defecto (en escabeche) o la referencia a una acción"
 
 #. module: base
 #: sql_constraint:res.groups:0
@@ -14234,6 +15264,14 @@ msgid ""
 "you can modify in OpenOffice. Once you have modified it you can\n"
 "upload the report using the same wizard.\n"
 msgstr ""
+"\n"
+"Este módulo se utiliza junto con el Plugin de OpenOffice OpenERP.\n"
+"=========================================================\n"
+"\n"
+"En este módulo se añade un asistente para Importar / Exportar. Informe que "
+"sxw\n"
+"se puede modificar en OpenOffice. Una vez que haya modificado se puede\n"
+"cargar el informe con el mismo asistente.\n"
 
 #. module: base
 #: view:ir.sequence:0
@@ -14271,11 +15309,24 @@ msgid ""
 "If you need to manage your meetings, you should install the CRM module.\n"
 "    "
 msgstr ""
+"\n"
+"Se trata de un sistema de calendario con todas las funciones.\n"
+"========================================\n"
+"\n"
+"Es compatible con:\n"
+"     - Calendario de eventos\n"
+"     - Alertas (crear peticiones)\n"
+"     - Los eventos recurrentes\n"
+"     - Las invitaciones a las personas\n"
+"\n"
+"Si usted necesita para administrar sus reuniones, usted debe instalar el "
+"módulo de CRM.\n"
+"    "
 
 #. module: base
 #: view:ir.rule:0
 msgid "Rule definition (domain filter)"
-msgstr ""
+msgstr "Definicion de regla (dominio del filtro)"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_instance
@@ -14323,12 +15374,12 @@ msgstr "Tableros"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_procurement
 msgid "Procurements"
-msgstr ""
+msgstr "Abastecimientos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
 msgid "Payroll Accounting"
-msgstr ""
+msgstr "Cálculo de nóminas"
 
 #. module: base
 #: help:ir.attachment,type:0
@@ -14338,12 +15389,12 @@ msgstr "Archivo binario o URL externa"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_order_dates
 msgid "Dates on Sales Order"
-msgstr ""
+msgstr "Fechas en las órdenes de venta"
 
 #. module: base
 #: view:ir.attachment:0
 msgid "Creation Month"
-msgstr ""
+msgstr "Mes de creación"
 
 #. module: base
 #: model:res.country,name:base.nl
@@ -14365,6 +15416,17 @@ msgid ""
 "technical OpenERP documentation at http://doc.openerp.com\n"
 "    "
 msgstr ""
+"\n"
+"Proporciona una plataforma EDI común que otras aplicaciones pueden utilizar\n"
+"==============================================================\n"
+"\n"
+"OpenERP especifica un formato EDI genérico para el intercambio de negocios\n"
+"documentos entre los diferentes sistemas, y proporciona genéricos\n"
+"mecanismos para importar y exportar ellos.\n"
+"\n"
+"Más detalles sobre formato EDI OpenERP pueden ser encontradas en el\n"
+"documentación técnica de OpenERP en http://doc.openerp.com\n"
+"    "
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_4
@@ -14374,12 +15436,12 @@ msgstr "Objetos de bajo nivel"
 #. module: base
 #: help:ir.values,model:0
 msgid "Model to which this entry applies"
-msgstr ""
+msgstr "Modelo al que se aplica esta entrada"
 
 #. module: base
 #: field:res.country,address_format:0
 msgid "Address Format"
-msgstr ""
+msgstr "Formato de la dirección"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_values
@@ -14389,7 +15451,7 @@ msgstr "ir.valores"
 #. module: base
 #: model:res.groups,name:base.group_no_one
 msgid "Technical Features"
-msgstr ""
+msgstr "Características técnicas"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14403,18 +15465,20 @@ msgid ""
 "Here is what we got instead:\n"
 " %s"
 msgstr ""
+"Esto es lo que tenemos en su lugar:\n"
+"  %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_data
 #: view:ir.model.data:0
 #: model:ir.ui.menu,name:base.ir_model_data_menu
 msgid "External Identifiers"
-msgstr ""
+msgstr "Identificadores externos"
 
 #. module: base
 #: model:res.groups,name:base.group_sale_salesman
 msgid "User - Own Leads Only"
-msgstr ""
+msgstr "Usuario - Propietario sólo dirige"
 
 #. module: base
 #: model:res.country,name:base.cd
@@ -14459,7 +15523,7 @@ msgstr "Número de ejecuciones"
 #: code:addons/base/res/res_bank.py:189
 #, python-format
 msgid "BANK"
-msgstr ""
+msgstr "Banco"
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -14494,11 +15558,22 @@ msgid ""
 "hesap bilgileriniz,ilgili para birimi gibi bilgiler isteyecek.\n"
 "    "
 msgstr ""
+"\n"
+"Contabilidad de OpenERP plantilla del plan es un único módulo para Turquía.\n"
+"============================================================================="
+"=\n"
+"\n"
+"Después de instalar este módulo, ejecute el asistente de configuración de "
+"Contabilidad\n"
+"     * La plantilla de asistente de plan de cuentas, plan para la creación "
+"de la empresa, información de cuentas bancarias, solicitar información, "
+"tales como la moneda en cuestión.\n"
+"    "
 
 #. module: base
 #: view:res.config:0
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #. module: base
 #: field:res.request,trigger_date:0
@@ -14522,11 +15597,14 @@ msgid ""
 "        OpenERP Web kanban view.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP Web kanban vista.\n"
+"        "
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_project_management_time_tracking
 msgid "Time Tracking"
-msgstr ""
+msgstr "Seguimiento de tiempo"
 
 #. module: base
 #: view:res.partner.category:0
@@ -14545,6 +15623,8 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
+"Le ayuda a gestionar su inventario y las operaciones principales de stock: "
+"las órdenes de entrega, recepciones, ..."
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_update
@@ -14649,6 +15729,104 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Agrega soporte para la autenticación en el servidor LDAP.\n"
+"===============================================\n"
+"Este módulo permite a los usuarios su sesión con nombre de usuario LDAP y\n"
+"contraseña, y automáticamente se los crea para los usuarios de OpenERP\n"
+"sobre la marcha.\n"
+"\n"
+"** Nota **: Este módulo de Python sólo funcionan en los servidores que "
+"tienen\n"
+"`` `` Modulo LDAP instalado.\n"
+"\n"
+"Configuración\n"
+"+ + + + + + + + + + + + +\n"
+"Después de instalar este módulo, es necesario configurar el servidor LDAP\n"
+"Los parámetros en la pestaña Configuración de la Compañía, los detalles.\n"
+"Las diferentes empresas Podemos tener diferentes servidores LDAP, siempre y\n"
+"ya que tienen nombres de usuario único (nombres de usuario tienen que ser "
+"únicos en el\n"
+"OpenERP, incluso a través de varias compañías).\n"
+"\n"
+"Anónimo vinculante LDAP también es compatible (para servidores LDAP\n"
+"que lo permiten), manteniendo el usuario LDAP y contraseña simpling\n"
+"vacío en la configuración de LDAP. Este ** no ** permiten\n"
+"la autenticación anónima para los usuarios, es sólo para el maestro\n"
+"Cuenta LDAP que se utiliza para verificar si existe un usuario antes de\n"
+"intentar la autenticación.\n"
+"\n"
+"Asegurar la conexión con los STARTTLS LDAP está disponible para\n"
+"los servidores que lo apoyan, al habilitar la opción de TLS en el servidor "
+"LDAP\n"
+"configuración.\n"
+"\n"
+"Otras opciones para configurar los valores de LDAP, consulte el\n"
+"ldap.conf página de manual: página de manual: `ldap.conf (5)`.\n"
+"\n"
+"Consideraciones de seguridad\n"
+"+ + + + + + + + + + + + + + + + + + + + + + +\n"
+"Contraseñas de los usuarios no se almacenan en el servidor LDAP OpenERP base "
+"de datos,\n"
+"el servidor LDAP se consulta cada vez que un usuario debe ser\n"
+"autenticado. No duplicación de la contraseña se produce, y\n"
+"las contraseñas se logró en un solo lugar.\n"
+"\n"
+"OpenERP no consigue en los cambios de contraseña de LDAP, por lo que\n"
+"llevada a cabo por otros medios debe ser cualquier cambio de contraseña\n"
+"directamente en el directorio LDAP (para los usuarios de LDAP).\n"
+"\n"
+"También es posible que los usuarios en el local de OpenERP\n"
+"LDAP usuarios autenticados, junto con la base de datos (Administrador de\n"
+"cuenta es un ejemplo obvio).\n"
+"\n"
+"Así es como funciona:\n"
+"\n"
+"  * El primer sistema intenta autenticar a los usuarios contra\n"
+"    la base de datos local OpenERP;\n"
+"  * Si la autenticación falla (por ejemplo porque el\n"
+"    usuario local no tiene contraseña), el sistema intenta\n"
+"    LDAP para la autenticación;\n"
+"\n"
+"Como los usuarios tienen contraseñas en blanco por defecto en el LDAP local\n"
+"OpenERP base de datos (que significa que no hay acceso), el primer paso\n"
+"siempre falla y el servidor LDAP se realiza una consulta para hacer el\n"
+"autenticación.\n"
+"\n"
+"Habilitación de STARTTLS asegura que la consulta de autenticación a la\n"
+"Servidor LDAP está encriptada.\n"
+"\n"
+"Usuario de la plantilla\n"
+"+ + + + + + + + + + + + +\n"
+"En la configuración LDAP en la forma de empresa, es posible\n"
+"seleccione Plantillas del usuario * a *. Si se establece, este usuario será "
+"usado como\n"
+"Cada vez que alguien autentica plantilla para crear los usuarios locales\n"
+"la autenticación a través de LDAP, por primera vez.\n"
+"Esto permite programar los grupos predeterminados y los menús de la\n"
+"por primera vez los usuarios.\n"
+"\n"
+"** ** Advertencia: si se establece una contraseña para la plantilla de "
+"usuario,\n"
+"Esta contraseña se le asignará como la contraseña local para cada nueva\n"
+"De usuarios de LDAP, que se fije una contraseña maestra * para * Estos\n"
+"los usuarios (hasta que se cambie manualmente). Usted no quiere que este "
+"servidor.\n"
+"Una forma fácil es configurar un usuario para iniciar sesión una vez con la "
+"plantilla\n"
+"Un usuario de LDAP válida, vamos a OpenERP crear un usuario local con el "
+"espacio en blanco\n"
+"mismo inicio de sesión (y una contraseña en blanco), a continuación, cambiar "
+"el nombre de este nuevo usuario\n"
+"a un nombre de usuario que no existe en el LDAP, y la configuración de su\n"
+"grupos de la forma que desee.\n"
+"\n"
+"Interacción con base_crypt\n"
+"+ + + + + + + + + + + + + + + + + + + + + + + + + + +\n"
+"El módulo de base_crypt no es compatible con este módulo, y\n"
+"si se instala al mismo tiempo, se desactivará la autenticación LDAP.\n"
+"\n"
+"    "
 
 #. module: base
 #: field:res.request.history,body:0
@@ -14659,7 +15837,7 @@ msgstr "Contenido"
 #: code:addons/base/ir/ir_mail_server.py:199
 #, python-format
 msgid "Connection test succeeded!"
-msgstr ""
+msgstr "Prueba de conexión se realizó correctamente!"
 
 #. module: base
 #: view:partner.massmail.wizard:0
@@ -14703,11 +15881,13 @@ msgid ""
 "Please define at least one SMTP server, or provide the SMTP parameters "
 "explicitly."
 msgstr ""
+"Por favor, defina al menos un servidor SMTP, o explícitamente los parámetros "
+"SMTP."
 
 #. module: base
 #: view:ir.attachment:0
 msgid "Filter on my documents"
-msgstr ""
+msgstr "Filtro en mis documentos"
 
 #. module: base
 #: help:ir.actions.server,code:0
@@ -14715,6 +15895,9 @@ msgid ""
 "Python code to be executed if condition is met.\n"
 "It is a Python block that can use the same values as for the condition field"
 msgstr ""
+"Código Python a ejecutar si la condición se cumple.\n"
+"Se trata de un bloque de Python que puede utilizar los mismos valores para "
+"el campo de condición"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
@@ -14746,7 +15929,7 @@ msgstr "Gabón"
 #. module: base
 #: model:res.groups,name:base.group_multi_company
 msgid "Multi Companies"
-msgstr ""
+msgstr "Multi Compañias"
 
 #. module: base
 #: view:ir.model:0
@@ -14765,7 +15948,7 @@ msgstr "Groenlandia"
 #. module: base
 #: model:res.groups,name:base.group_sale_salesman_all_leads
 msgid "User - All Leads"
-msgstr ""
+msgstr "Usuario - Todos los usuarios"
 
 #. module: base
 #: field:res.partner.bank,acc_number:0
@@ -14778,11 +15961,13 @@ msgid ""
 "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )"
 msgstr ""
+"Ejemplo: GLOBAL_RULE_1 Y GLOBAL_RULE_2 Y ((GROUP_A_RULE_1 GROUP_A_RULE_2 O) "
+"O (O GROUP_B_RULE_1 GROUP_B_RULE_2))"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_th
 msgid "Thailand - Accounting"
-msgstr ""
+msgstr "Tailandia - Contabilidad"
 
 #. module: base
 #: view:res.lang:0
@@ -14814,6 +15999,26 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo permite el cálculo justo a tiempo de los pedidos del sector.\n"
+"================================================== ================\n"
+"\n"
+"Si instala este módulo, usted no tendrá que ejecutar la adquisición regular\n"
+"programador más (pero usted todavía tiene que ejecutar la regla para punto "
+"mínimo\n"
+"programador, o por ejemplo, se deja correr todos los días.)\n"
+"Todas las órdenes de compra será procesada inmediatamente, lo que podría en "
+"algunos\n"
+"casos conllevan un pequeño impacto en el rendimiento.\n"
+"\n"
+"También puede aumentar el tamaño de la población porque los productos se "
+"reservan tan pronto\n"
+"como sea posible y el intervalo de tiempo programador no se tiene en cuenta "
+"a la venta.\n"
+"En ese caso, no puede utilizar nada más sobre las prioridades de la cosecha "
+"diferente.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.cy
@@ -14830,7 +16035,7 @@ msgstr "Asunto"
 #. module: base
 #: selection:res.currency,position:0
 msgid "Before Amount"
-msgstr ""
+msgstr "Antes de Cantidad"
 
 #. module: base
 #: field:res.request,act_from:0
@@ -14851,12 +16056,12 @@ msgstr "Consumidores"
 #. module: base
 #: view:res.company:0
 msgid "Set Bank Accounts"
-msgstr ""
+msgstr "Ajuste de cuentas bancarias"
 
 #. module: base
 #: field:ir.actions.client,tag:0
 msgid "Client action tag"
-msgstr ""
+msgstr "Cliente etiqueta de acción"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:189
@@ -14868,7 +16073,7 @@ msgstr ""
 #. module: base
 #: field:ir.values,model_id:0
 msgid "Model (change only)"
-msgstr ""
+msgstr "Modelo (cambio)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_marketing_campaign_crm_demo
@@ -14881,12 +16086,19 @@ msgid ""
 "marketing_campaign.\n"
 "    "
 msgstr ""
+"\n"
+"Datos de demostración para el módulo de marketing_campaign.\n"
+"============================================\n"
+"\n"
+"Crea datos de demostración, como clientes potenciales, las campañas y los "
+"segmentos de la marketing_campaign módulo.\n"
+"    "
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 msgid "Kanban"
-msgstr ""
+msgstr "Kanban"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:251
@@ -14901,12 +16113,12 @@ msgstr ""
 #. module: base
 #: view:ir.filters:0
 msgid "Current User"
-msgstr ""
+msgstr "Usuario Actual"
 
 #. module: base
 #: field:res.company,company_registry:0
 msgid "Company Registry"
-msgstr ""
+msgstr "Registro  de Compañía"
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -14918,7 +16130,7 @@ msgstr "Varios"
 #: view:ir.mail_server:0
 #: model:ir.ui.menu,name:base.menu_mail_servers
 msgid "Outgoing Mail Servers"
-msgstr ""
+msgstr "Servidores de correo saliente"
 
 #. module: base
 #: model:res.country,name:base.cn
@@ -14931,6 +16143,8 @@ msgid ""
 "The object that should receive the workflow signal (must have an associated "
 "workflow)"
 msgstr ""
+"El objeto que debe recibir la señal de flujo de trabajo (debe tener un flujo "
+"de trabajo asociado)"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_account_voucher
@@ -14938,6 +16152,8 @@ msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
 msgstr ""
+"Le permite crear sus facturas y controlar los pagos. Es una versión más "
+"fácil del módulo de contabilidad para gestores que no sean contables."
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -14947,7 +16163,7 @@ msgstr "Sáhara occidental"
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
 msgid "Invoicing & Payments"
-msgstr ""
+msgstr "Cobros y pagos"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_company_form
@@ -15020,6 +16236,51 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
+"\n"
+"Localización de Suiza:\n"
+"  - DTA generación de una gran cantidad de tipos de pago\n"
+"  - BVR gestión (generación de números, informes, etc.)\n"
+"  - Importación movimiento cuenta desde el archivo de banco (como v11, "
+"etc.)\n"
+"  - Simplificar la forma de manejar el estado de cuenta para la "
+"reconciliación\n"
+"\n"
+"También puede agregar postal y la finalización del banco con:\n"
+"  - l10n_ch_zip\n"
+"  - l10n_ch_bank\n"
+" \n"
+"  Autor: Camptocamp SA\n"
+"  Donantes: Hasa Sàrl, Open Net Sàrl y Soluciones de Informática Prisme SA\n"
+"\n"
+"-------------------------------------------------- ----------------------\n"
+"\n"
+"Módulo incluant la localización de la Suisse TinyERP Revu et Corrige la par "
+"Camptocamp. Cette nouvelle version\n"
+"comprend la gestion et l'émissionde BVR, le paiement électronique a través "
+"de DTA (pour les banques, le système postal est en développement)\n"
+"et l'import du relevé de compte depuis la Banque de automatisée manière.\n"
+"De plus, nous avons intégré la définition toutes les Banques Suisses "
+"(adresse, Swift y de compensación).\n"
+"\n"
+"Par ailleurs, conjointement un CE de módulos, nous proposons la finalización "
+"NPA:\n"
+"\n"
+"Vous pouvez ajouter la realización des Banques et des NPA avec con:\n"
+"  - l10n_ch_zip\n"
+"  - l10n_ch_bank\n"
+" \n"
+"  Auteur: Camptocamp SA\n"
+"  Donateurs: Hasa Sàrl, Open Net Sàrl y Soluciones de Informática Prisme SA\n"
+"\n"
+"-------------------------------------------------- ------------------------\n"
+"TAREAS:\n"
+"- Poner en práctica la importación parcial de la reconciliación BVR\n"
+"- Vuelva a colocar asistente osv_memory cuando sea posible\n"
+"- Añadir AYUDA mising\n"
+"- Finalizar comentario de código\n"
+"- Mejorar los datos de demostración\n"
+"\n"
+"\n"
 
 #. module: base
 #: help:multi_company.default,expression:0
@@ -15150,11 +16411,29 @@ msgid ""
 "using it, otherwise it may crash.\n"
 "    "
 msgstr ""
+"\n"
+"El objetivo de este módulo es para comprobar la calidad de otros módulos.\n"
+"================================================================\n"
+"\n"
+"Se define un asistente en la lista de módulos de OpenERP, que le permite\n"
+"evaluarlos en diferentes criterios tales como: el respeto de OpenERP "
+"codificación\n"
+"las normas, la eficacia de velocidad ...\n"
+"\n"
+"Este módulo también proporciona un marco genérico para definir su propia "
+"prueba de calidad.\n"
+"Para más informaciones, los codificadores pueden echar un vistazo a "
+"base_module_quality \\ README.txt\n"
+"\n"
+"ADVERTENCIA: Este módulo no puede funcionar como un archivo ZIP, debe "
+"descomprimir antes de\n"
+"de usarlo, de lo contrario puede fallar.\n"
+"    "
 
 #. module: base
 #: field:res.partner.bank,bank_name:0
 msgid "Bank Name"
-msgstr ""
+msgstr "Nombre del Banco"
 
 #. module: base
 #: model:res.country,name:base.ki
@@ -15187,6 +16466,17 @@ msgid ""
 "supplier in the routing of the assembly operation.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo permite un proceso de selección de intermedia para proporcionar "
+"materias primas a las órdenes de producción.\n"
+"============================================================================="
+"====================\n"
+"\n"
+"Un ejemplo de uso de este módulo es gestionar la producción hecha por su\n"
+"proveedores (subcontratación). Para lograr esto, ponga el producto montado\n"
+"que es subcontratado a \"no auto-picking\" y poner la ubicación de la\n"
+"proveedor en el trazado de la operación de montaje.\n"
+"    "
 
 #. module: base
 #: view:ir.actions.server:0
@@ -15200,6 +16490,10 @@ msgid ""
 "are available. To add a new language, you can use the 'Load an Official "
 "Translation' wizard available from the 'Administration' menu."
 msgstr ""
+"El idioma por defecto utilizado en la interfaz gráfica de usuario, cuando se "
+"dispone de traducciones. Para añadir un nuevo idioma, puede utilizar la "
+"\"carga una traducción oficial 'asistente disponible en la\" Administración "
+"\"del menú."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -15218,6 +16512,19 @@ msgid ""
 "Note: You should install the l10n_ES_account_balance_report module\n"
 "for yearly account reporting (balance, profit & losses).\n"
 msgstr ""
+"\n"
+"Gráficos en español de Cuentas (PGCE 2008).\n"
+"=======================================\n"
+"\n"
+"* Define la siguiente tabla de plantillas de cuenta:\n"
+"     * General español Plan General de Contabilidad 2008.\n"
+"     * General español Plan General de Contabilidad 2008 para las empresas "
+"pequeñas y medianas empresas.\n"
+"* Define las plantillas para la venta y el IVA de compra.\n"
+"* Define las plantillas en el código fiscal.\n"
+"\n"
+"Nota: Usted debe instalar el módulo l10n_ES_account_balance_report\n"
+"de informes de la cuenta anual (balance, pérdidas y ganancias).\n"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence_type
@@ -15233,7 +16540,7 @@ msgstr "Archivo CSV"
 #: code:addons/base/res/res_company.py:154
 #, python-format
 msgid "Phone: "
-msgstr ""
+msgstr "Teléfono: "
 
 #. module: base
 #: field:res.company,account_no:0
@@ -15268,11 +16575,21 @@ msgid ""
 "plans.\n"
 "    "
 msgstr ""
+"\n"
+"El módulo base para administrar la distribución analítica y órdenes de "
+"compra.\n"
+"====================================================================\n"
+"\n"
+"Permite al usuario mantener los planes de varios análisis. Estos le permiten "
+"dividir\n"
+"una línea en una orden de compra de proveedores en varias cuentas y planes "
+"de análisis.\n"
+"    "
 
 #. module: base
 #: field:res.company,vat:0
 msgid "Tax ID"
-msgstr ""
+msgstr "ID de impuesto"
 
 #. module: base
 #: field:ir.model.fields,field_description:0
@@ -15384,6 +16701,28 @@ msgid ""
 "state are scheduled with taking the phase's start date\n"
 "    "
 msgstr ""
+"\n"
+"Proyecto a largo plazo módulo de gestión que realiza el seguimiento de "
+"planificación, programación, asignación de recursos.\n"
+"================================================== "
+"=========================================\n"
+"\n"
+"Características\n"
+"--------\n"
+"     * Gestión de proyectos grandes.\n"
+"     * Definir las distintas fases del proyecto.\n"
+"     * Calcular la fase de planificación: calcular la fecha de inicio y "
+"fecha de finalización de las fases que están en proyecto, abierto y estado "
+"pendiente del proyecto.\n"
+"       Si no hay ningún proyecto determinado entonces todo el proyecto, "
+"abierto y en espera de las fases del Estado que se adopten.\n"
+"     * Programación de tareas Compute: Esto funciona igual que el botón "
+"Scheduler en project.phase. Se necesita el proyecto como argumento y calcula "
+"todos los proyectos abiertos, y las tareas pendientes.\n"
+"     * Tareas Horario: Todas las tareas que están en proyecto, a la espera y "
+"el estado abierto se han programado con la toma de la fecha de inicio de la "
+"fase de\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_activity_form
@@ -15396,7 +16735,7 @@ msgstr "Actividades"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
-msgstr ""
+msgstr "Productos y Listas de precios"
 
 #. module: base
 #: field:ir.actions.act_window,auto_refresh:0
@@ -15418,12 +16757,12 @@ msgstr "Diagrama"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es
 msgid "Spanish - Accounting (PGCE 2008)"
-msgstr ""
+msgstr "Español - Contabilidad (PGCE 2008)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_no_autopicking
 msgid "Picking Before Manufacturing"
-msgstr ""
+msgstr "Español - Contabilidad (PGCE 2008)"
 
 #. module: base
 #: model:res.country,name:base.wf
@@ -15443,12 +16782,12 @@ msgstr "Grecia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_calendar
 msgid "web calendar"
-msgstr ""
+msgstr "calendario web"
 
 #. module: base
 #: field:ir.model.data,name:0
 msgid "External Identifier"
-msgstr ""
+msgstr "Identificador externo"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.grant_menu_access
@@ -15479,7 +16818,7 @@ msgstr "Acciones"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
 msgid "Delivery Costs"
-msgstr ""
+msgstr "Costes de envío"
 
 #. module: base
 #: code:addons/base/ir/ir_cron.py:293
@@ -15488,6 +16827,8 @@ msgid ""
 "This cron task is currently being executed and may not be modified, please "
 "try again in a few minutes"
 msgstr ""
+"Esta tarea cron se está ejecutando actualmente y no puede ser modificado, "
+"por favor vuelve a intentarlo en unos minutos"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -15504,6 +16845,17 @@ msgid ""
 "\n"
 "Used, for example, in food industries."
 msgstr ""
+"\n"
+"Seguimiento de diferentes fechas en los productos y lotes de producción.\n"
+"======================================================\n"
+"\n"
+"Siguientes fechas se puede seguir:\n"
+"     - Final de la vida\n"
+"     - El mejor antes de la fecha\n"
+"     - Eliminación de la fecha\n"
+"     - Fecha de alerta\n"
+"\n"
+"Se utiliza, por ejemplo, en las industrias alimentarias."
 
 #. module: base
 #: field:ir.exports.line,export_id:0
@@ -15513,7 +16865,7 @@ msgstr "Exportar"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl
 msgid "Netherlands - Accounting"
-msgstr ""
+msgstr "Holanda - Contabilidad"
 
 #. module: base
 #: field:res.bank,bic:0
@@ -15533,6 +16885,9 @@ msgid ""
 "        OpenERP Web process view.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP Web visión de proceso.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_chart
@@ -15543,6 +16898,11 @@ msgid ""
 "\n"
 "Deactivates minimal chart of accounts.\n"
 msgstr ""
+"\n"
+"Quitar tabla de la cuenta mínima.\n"
+"=============================\n"
+"\n"
+"Desactiva el gráfico de un mínimo de cuentas.\n"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:653
@@ -15580,7 +16940,7 @@ msgstr "Error"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_crypt
 msgid "DB Password Encryption"
-msgstr ""
+msgstr "BD Cifrado de la clave"
 
 #. module: base
 #: help:workflow.transition,act_to:0
@@ -15590,7 +16950,7 @@ msgstr "Actividad destino"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_writing
 msgid "Check writing"
-msgstr ""
+msgstr "Verifique la escritura"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_layout
@@ -15606,6 +16966,17 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo proporciona funciones para mejorar el diseño de la orden de "
+"venta.\n"
+"=======================================================================\n"
+"\n"
+"Te da la posibilidad de\n"
+"     * Orden todas las líneas de un pedido de venta\n"
+"     * Los títulos add, líneas de comentario, sub líneas totales\n"
+"     * Dibujar líneas horizontales y poner saltos de página\n"
+"\n"
+"    "
 
 #. module: base
 #: view:base.module.update:0
@@ -15622,7 +16993,7 @@ msgstr "Guía técnica"
 #. module: base
 #: view:res.company:0
 msgid "Address Information"
-msgstr ""
+msgstr "Dirección de Información"
 
 #. module: base
 #: model:res.country,name:base.tz
@@ -15647,7 +17018,7 @@ msgstr "Isla Natividad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_livechat
 msgid "Live Chat Support"
-msgstr ""
+msgstr "Chat de asistencia"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -15666,11 +17037,14 @@ msgid ""
 "        OpenERP Web dashboard view.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP Web dashboard view.\n"
+"        "
 
 #. module: base
 #: view:res.partner:0
 msgid "Supplier Partners"
-msgstr ""
+msgstr "OpenERP web panel de vista."
 
 #. module: base
 #: view:res.config.installer:0
@@ -15700,6 +17074,21 @@ msgid ""
 "    * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...\n"
 "    "
 msgstr ""
+"\n"
+"Reglas belgas de nómina\n"
+"=====================\n"
+"\n"
+"     * Detalles de empleados\n"
+"     * Los contratos de los empleados\n"
+"     * Pasaporte basado en contrato\n"
+"     * Los subsidios y deducciones\n"
+"     * Permitir configurar Salario Básico / Crece / Net\n"
+"     * Empleado Nómina\n"
+"     * Registro de nómina mensual\n"
+"     * Integrado con la gestión de vacaciones\n"
+"     * Salario Mayor, ONSS, Retención de impuestos, asignación por hijos, "
+"...\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_partner_wizard_ean_check
@@ -15709,7 +17098,7 @@ msgstr "Verificación EAN"
 #. module: base
 #: view:res.partner:0
 msgid "Customer Partners"
-msgstr ""
+msgstr "Socios del cliente"
 
 #. module: base
 #: sql_constraint:res.users:0
@@ -15745,6 +17134,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo muestra los procesos básicos que intervienen en los módulos "
+"seleccionados y en la secuencia que se produzcan.\n"
+"============================================================================="
+"=========================\n"
+"\n"
+"Nota: Esto se aplica a los módulos que contienen modulename_process_xml\n"
+"e.g producto / proceso / product_process_xml\n"
+"\n"
+"    "
 
 #. module: base
 #: field:res.users,menu_tips:0
@@ -15775,7 +17174,7 @@ msgstr "Cabecera / Pie de página interna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm
 msgid "CRM"
-msgstr ""
+msgstr "CRM"
 
 #. module: base
 #: code:addons/base/module/wizard/base_export_language.py:59
@@ -15800,7 +17199,7 @@ msgstr "_Exportar"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_followup
 msgid "Followup Management"
-msgstr ""
+msgstr "Seguimiento de Gestión"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -15811,6 +17210,12 @@ msgid ""
 "\n"
 "Credits: Sistheo Zeekom CrysaLEAD\n"
 msgstr ""
+"\n"
+"Este es el módulo para gestionar el gráfico que representa a Francia en "
+"OpenERP.\n"
+"================================================== ======================\n"
+"\n"
+"Créditos: Sistheo Zeekom CrysaLEAD\n"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -15845,12 +17250,14 @@ msgstr ""
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
 msgid "TLS (STARTTLS)"
-msgstr ""
+msgstr "TLS (STARTTLS)"
 
 #. module: base
 #: help:ir.actions.act_window,usage:0
 msgid "Used to filter menu and home actions from the user form."
 msgstr ""
+"Se utiliza para filtrar las acciones del menú y el hogar del formulario de "
+"usuario."
 
 #. module: base
 #: model:res.country,name:base.sa
@@ -15861,11 +17268,13 @@ msgstr "Arabia Saudí"
 #: help:res.company,rml_header1:0
 msgid "Appears by default on the top right corner of your printed documents."
 msgstr ""
+"Aparece de forma predeterminada en la esquina superior derecha de sus "
+"documentos impresos."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail_crm_claim
 msgid "eMail Gateway for CRM Claim"
-msgstr ""
+msgstr "E-Mail Gateway para la reivindicación de CRM"
 
 #. module: base
 #: help:res.partner,supplier:0
@@ -15931,6 +17340,9 @@ msgid ""
 "later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
+"Dos implementación de los objetos de secuencia se ofrecen: 'brecha no-"
+"estándar y. Este último es más lento que el anterior, pero prohíbe toda "
+"diferencia de la secuencia (mientras que son posibles en la primera)."
 
 #. module: base
 #: model:res.country,name:base.gn
@@ -15965,12 +17377,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_auth_openid
 msgid "Allow users to login through OpenID."
-msgstr ""
+msgstr "Permitir a los usuarios acceder a través de OpenID."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment
 msgid "Suppliers Payment Management"
-msgstr ""
+msgstr "Gestión de los pagos a proveedores"
 
 #. module: base
 #: model:res.country,name:base.sv
@@ -16008,11 +17420,22 @@ msgid ""
 "After installing the module, it adds a menu to define a custom report in\n"
 "the Administration / Customization / Reporting menu.\n"
 msgstr ""
+"\n"
+"Este módulo le permite crear cualquier informe estadístico sobre varios "
+"objetos.\n"
+"================================================== =======================\n"
+"\n"
+"Se trata de un generador de consultas SQL y explorador\n"
+"para los usuarios finales.\n"
+"\n"
+"Después de instalar el módulo, se agrega un menú para definir un informe "
+"personalizado en\n"
+"la Administración / menú de personalización / Informes.\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_designer
 msgid "Report Designer"
-msgstr ""
+msgstr "Diseñador de informes"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_address_book
@@ -16034,6 +17457,15 @@ msgid ""
 "cumulatif...). L'intégration comptable a été validé avec l'aide du Cabinet "
 "d'expertise comptable Seddik au cours du troisième trimestre 2010"
 msgstr ""
+"\n"
+"Este es el módulo de base para gestionar el Plan Contable para Maroc.\n"
+"=================================================================\n"
+"\n"
+"Ce módulo de carga de Le modèle du Plan de Cuentas estándar Marroquí et "
+"Permet de générer Les Etats aux normes comptables marocaines (Bilan, CPC "
+"(comptes de produits et cargos), el equilibrio générale à 6 Colonnes, Grand "
+"livre cumulatif ...). L'intégration comptable un été validé avec l'aide du "
+"Cabinet d'experiencia comptable Seddik cours du troisième au Trimestre 2010"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_calendar
@@ -16042,6 +17474,9 @@ msgid ""
 "        OpenERP Web calendar view.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP Web vista calendario.\n"
+"        "
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
@@ -16069,6 +17504,8 @@ msgstr "Y"
 msgid ""
 "Database identifier of the record to which this applies. 0 = for all records"
 msgstr ""
+"Base de datos de identificación del registro al que se aplica. 0 = para "
+"todos los registros"
 
 #. module: base
 #: field:ir.model.fields,relation:0
@@ -16078,7 +17515,7 @@ msgstr "Objeto relación"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
 msgid "eInvoicing & Payments"
-msgstr ""
+msgstr "facturación electrónica y pagos"
 
 #. module: base
 #: view:ir.rule:0
@@ -16126,7 +17563,7 @@ msgstr "Objeto del recurso"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_helpdesk
 msgid "Helpdesk"
-msgstr ""
+msgstr "Helpdesk"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.grant_menu_access
@@ -16151,7 +17588,7 @@ msgstr "Campo hijo"
 #. module: base
 #: view:ir.rule:0
 msgid "Detailed algorithm:"
-msgstr ""
+msgstr "Algoritmo detallada:"
 
 #. module: base
 #: field:ir.actions.act_window,usage:0
@@ -16172,7 +17609,7 @@ msgstr "workflow.workitem"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_profile_tools
 msgid "Miscellaneous Tools"
-msgstr ""
+msgstr "Herramientas varias"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_tools
@@ -16180,6 +17617,8 @@ msgid ""
 "Lets you install various interesting but non-essential tools like Survey, "
 "Lunch and Ideas box."
 msgstr ""
+"Permite instalar varias herramientas interesantes pero no esenciales como "
+"Informes, Comidas y caja de Ideas."
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -16210,6 +17649,28 @@ msgid ""
 "Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"Este es el módulo de base para la gestión de productos y listas de precios "
+"en OpenERP.\n"
+"========================================================================\n"
+"\n"
+"Productos de apoyo a las variantes, diferentes métodos de fijación de "
+"precios, los proveedores\n"
+"información, hacer de stock / compra, unidad distinta de las medidas,\n"
+"envasado y propiedades.\n"
+"\n"
+"Listas de precios apoyar:\n"
+"     * Múltiples niveles de descuento (por producto, categoría, cantidades)\n"
+"     * Calcular el precio sobre la base de diferentes criterios:\n"
+"         * Otro listado de precios,\n"
+"         * Precio de coste,\n"
+"         * Precio de lista,\n"
+"         * Proveedor de precios, ...\n"
+"\n"
+"Listas de precios preferencias por productos y / o socios.\n"
+"\n"
+"Imprimir etiquetas de los productos con código de barras.\n"
+"    "
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -16230,17 +17691,17 @@ msgstr "No puede suprimir el campo '%s' !"
 #. module: base
 #: view:res.users:0
 msgid "Allowed Companies"
-msgstr ""
+msgstr "Empresas Permitidas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de
 msgid "Deutschland - Accounting"
-msgstr ""
+msgstr "Alemania - Contabilidad"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auction
 msgid "Auction Houses"
-msgstr ""
+msgstr "Casas de subastas"
 
 #. module: base
 #: field:ir.ui.menu,web_icon:0
@@ -16256,7 +17717,7 @@ msgstr "Aplicar actualizaciones programadas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_journal
 msgid "Invoicing Journals"
-msgstr ""
+msgstr "Revistas de facturación"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -16303,6 +17764,14 @@ msgid ""
 "Add \"Support\" button in header from where you can access OpenERP Support.\n"
 "    "
 msgstr ""
+"\n"
+"Habilitar el chat en vivo para aquellos que tienen un contrato de "
+"mantenimiento.\n"
+"===================================================================\n"
+"\n"
+"Añadir \"apoyo\" en la cabecera desde donde se puede acceder a OpenERP "
+"apoyo.\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_configuration
@@ -16317,6 +17786,10 @@ msgid ""
 "        This module provides the core of the OpenERP web client.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP Web módulo principal.\n"
+"             Este módulo proporciona el núcleo del Cliente Web OpenERP.\n"
+"        "
 
 #. module: base
 #: sql_constraint:res.country:0
@@ -16354,7 +17827,7 @@ msgstr "Aruba"
 #: code:addons/base/module/wizard/base_module_import.py:60
 #, python-format
 msgid "File is not a zip file!"
-msgstr ""
+msgstr "El archivo no es zip"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -16374,6 +17847,18 @@ msgid ""
 "and decide on their status as they evolve.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo proporciona Problemas/bugs en ​​Gestión de Proyectos.\n"
+"================================================== =====\n"
+"\n"
+"OpenERP le permite gestionar los problemas que podría enfrentar en un "
+"proyecto\n"
+"al igual que los errores en un sistema, quejas de los clientes o las averías "
+"del material. A\n"
+"listview Permite al administrador comprobar rápidamente los problemas, "
+"asignarles\n"
+"y decidir sobre su estado a medida que evolucionan.\n"
+"    "
 
 #. module: base
 #: field:res.groups,full_name:0
@@ -16388,7 +17873,7 @@ msgstr "Bahréin"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
 msgid "web"
-msgstr ""
+msgstr "web"
 
 #. module: base
 #: field:res.bank,fax:0
@@ -16436,6 +17921,42 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Este es el módulo para gestionar la tabla de la contabilidad para los Países "
+"Bajos en OpenERP.\n"
+"============================================================================="
+"\n"
+"\n"
+"Lea en el archivo __ cambios openerp__.py de información de la versión.\n"
+"Dit is een base del módulo om een Uitgebreid grootboek voor Nederlandse-en "
+"cierto esquema Bedrijven º installeren sellada en la quinta OpenERP\n"
+"\n"
+"De detección de cierto sonido genereren zijn Waar nodig gekoppeld om te "
+"juiste de relatoría, pensando bv aan intracommunautaire verwervingen\n"
+"waarbij u 19% Moet opvoeren Por cierto, aftrekken ook maar tegelijkertijd "
+"19%, al igual que voorheffing weer.\n"
+"\n"
+"Bueno Installatie van deze módulos configuratie asistente voor de la palabra "
+"\"informe\" aangeroepen.\n"
+"     Al comprar een Lijst conoció * U grootboektemplates zich ook het "
+"Nederlandse aangeboden waarin grootboekschema bevind.\n"
+"\n"
+"     * Al inicio de voeren configuratie asistente, wordt om de naam van "
+"gevraagd u uw bedrijf en te, te marchitas installeren grootboekschema, "
+"bestaan ​​UIT een cijfers hoeveel grootboekrekening le gusta van het uw "
+"AccountNumber bancarias en moneda ujeres de te creeren revistas.\n"
+"\n"
+"Que Op! -> De la plantilla van het Nederlandse rekeningschema se opgebouwd "
+"UIT 4 cijfers. Dit es het Moet mínima invullen aantal marchitas u, u puede "
+"verhogen het aantal. De \"cero\" cijfers adicionales octava dan het º Cuenta "
+"aangevult han cumplido\n"
+"\n"
+"     * ¿Has estado en dit kan es dezelfe aangeroepen configuratie asistente "
+"seca a través de la gestión financiera / Configuración / Contabilidad "
+"Financiera / Cuentas Financieras / Generar Plan General de Contabilidad de "
+"una plantilla de gráfico.\n"
+"\n"
+"    "
 
 #. module: base
 #: view:res.partner.address:0
@@ -16462,7 +17983,7 @@ msgstr "Compañía"
 #. module: base
 #: model:ir.module.category,name:base.module_category_report_designer
 msgid "Advanced Reporting"
-msgstr ""
+msgstr "Informes avanzados"
 
 #. module: base
 #: selection:ir.actions.act_window,target:0
@@ -16493,7 +18014,7 @@ msgstr "Servicio de Post-venta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr
 msgid "France - Accounting"
-msgstr ""
+msgstr "Francia - Contabilidad"
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -16503,7 +18024,7 @@ msgstr "Lanzar"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_caldav
 msgid "Share Calendar using CalDAV"
-msgstr ""
+msgstr "Compartir calendario usando CalDAV"
 
 #. module: base
 #: field:ir.actions.act_window,limit:0
@@ -16522,7 +18043,7 @@ msgstr ""
 #: code:addons/orm.py:791
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr ""
+msgstr "La serialización de campo `%s 'no existe por el campo%s escasa`'!"
 
 #. module: base
 #: model:res.country,name:base.jm
@@ -16533,7 +18054,7 @@ msgstr "Jamaica"
 #: field:res.partner,color:0
 #: field:res.partner.address,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Índice de colores"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_category_form
@@ -16563,12 +18084,12 @@ msgstr "Aviso"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_edi
 msgid "Electronic Data Interchange (EDI)"
-msgstr ""
+msgstr "Electronic Data Interchange (EDI)"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_tools
 msgid "Extra Tools"
-msgstr ""
+msgstr "Herramientas extras"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -16632,6 +18153,52 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Correo electrónico de plantillas (versión simplificada del correo "
+"electrónico de alimentación original de Open Labs)\n"
+"============================================================================="
+"\n"
+"\n"
+"Permite plantillas de diseño completas de correo electrónico relacionados "
+"con cualquier documento de OpenERP (Venta\n"
+"Los pedidos, facturas y otros), incluyendo remitente, destinatario, asunto, "
+"cuerpo (HTML y\n"
+"Texto). También es posible adjuntar archivos de forma automática a sus "
+"plantillas, o imprimir y\n"
+"adjuntar un informe.\n"
+"\n"
+"Para uso avanzado, las plantillas pueden incluir atributos dinámicos del "
+"documento\n"
+"están relacionados con. Por ejemplo, usted puede usar el nombre del país de "
+"su pareja\n"
+"al hablar con ellos, proporcionando así un seguro en caso de defecto del "
+"atributo es\n"
+"no se define. Cada plantilla contiene un asistente integrado para ayudar a "
+"la\n"
+"inclusión de estos valores dinámicos.\n"
+"\n"
+"Si activa la opción, un asistente de la composición aparecerá en la barra "
+"lateral\n"
+"OpenERP de los documentos a los que se aplica la plantilla (por ejemplo, "
+"facturas).\n"
+"Esto sirve como una forma rápida de enviar un nuevo correo electrónico "
+"basado en la plantilla, después de\n"
+"y la revisión de los contenidos, conector, si es necesario.\n"
+"Este asistente de la composición se convertirá entonces en un sistema de "
+"envío masivo de correo cuando se le llama\n"
+"de varios documentos al mismo tiempo.\n"
+"\n"
+"Estas plantillas de correo electrónico, por tanto, en el corazón del sistema "
+"de campaña de marketing\n"
+"(Vea la aplicación `` `` marketing_campaign), si usted necesita para "
+"automatizar más grande\n"
+"campañas en cualquier documento de OpenERP.\n"
+"\n"
+"Nota técnica: sólo el sistema de plantillas de la potencia original por "
+"correo electrónico\n"
+"Open Labs\n"
+"\n"
+"    "
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -16641,7 +18208,7 @@ msgstr "﻿Checo / Čeština"
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules
 msgid "Generic Modules"
-msgstr ""
+msgstr "Módulos Genéricos"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -16680,11 +18247,29 @@ msgid ""
 "to set up a management by affair.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo implementa un sistema de partes de horas\n"
+"==========================================\n"
+"\n"
+"Cada empleado puede codificar y realizar un seguimiento de su tiempo "
+"dedicado a los diferentes proyectos.\n"
+"Un proyecto es un relato analítico y el tiempo dedicado a un costo del "
+"proyecto de generación de las tasas de\n"
+"La cuenta analítica.\n"
+"\n"
+"Un montón de informes a tiempo y seguimiento de los empleados se "
+"proporcionan.\n"
+"\n"
+"Está completamente integrado con el módulo de contabilidad de costos. Le "
+"permite\n"
+"para establecer una gestión por asunto.\n"
+"    "
 
 #. module: base
 #: help:ir.mail_server,smtp_port:0
 msgid "SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."
 msgstr ""
+"Puerto SMTP. Por lo general, 465 para SSL, y 25 o 587 para otros casos."
 
 #. module: base
 #: view:ir.sequence:0
@@ -16752,6 +18337,41 @@ msgid ""
 "    * Opportunities by Stage (graph)\n"
 "    * Planned Revenue by Stage and User (graph)\n"
 msgstr ""
+"\n"
+"El OpenERP cliente genérico de gestión de relaciones.\n"
+"=====================================================\n"
+"\n"
+"Este sistema permite a un grupo de personas que de forma inteligente y "
+"gestionar de forma eficaz\n"
+"clientes potenciales, oportunidades, reuniones, llamadas telefónicas, etc\n"
+"Gestiona las tareas clave como la búsqueda de la comunicación, la "
+"identificación, priorización,\n"
+"asignación, resolución y notificación.\n"
+"\n"
+"Asegura que todos los casos se OpenERP seguido con éxito por los usuarios, "
+"clientes y\n"
+"proveedores. Se puede enviar automáticamente recordatorios, eleve la "
+"solicitud, el gatillo\n"
+"métodos específicos y un montón de otras acciones en base a sus normas "
+"propias de la empresa.\n"
+"\n"
+"Lo mejor de este sistema es que los usuarios no necesitan hacer nada\n"
+"especial. Sólo puede enviar un correo electrónico a la solicitud de "
+"seguimiento. OpenERP se llevará a\n"
+"el cuidado de darles las gracias por su mensaje, automáticamente el "
+"enrutamiento a la\n"
+"El personal apropiado, y asegúrese de que toda la correspondencia futura "
+"llega a la derecha\n"
+"Revisión.\n"
+"\n"
+"El módulo de CRM tiene una puerta de entrada de correo electrónico para la "
+"interfaz de sincronización\n"
+"entre los mails y OpenERP.\n"
+"\n"
+"Crea un tablero de instrumentos para CRM que incluye:\n"
+"     * Oportunidades por categorías (gráfico)\n"
+"     * Oportunidades de la etapa (gráfico)\n"
+"     * Planificación de Ingresos por el escenario y los usuarios (gráfico)\n"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_accounting_and_finance
@@ -16759,11 +18379,13 @@ msgid ""
 "Helps you handle your accounting needs, if you are not an accountant, we "
 "suggest you to install only the Invoicing."
 msgstr ""
+"Le ayuda a manejar sus necesidades de contabilidad, si usted no es un "
+"contador, le sugerimos que para instalar sólo la facturación."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_plugin_thunderbird
 msgid "Thunderbird Plug-In"
-msgstr ""
+msgstr "Conector Thunderbird"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country
@@ -16781,7 +18403,7 @@ msgstr "País"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_messages
 msgid "In-Project Messaging System"
-msgstr ""
+msgstr "Sistema de mensajes en proyectos"
 
 #. module: base
 #: model:res.country,name:base.pn
@@ -16795,11 +18417,14 @@ msgid ""
 "        OpenERP Web test suite.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP Web banco de pruebas.\n"
+"        "
 
 #. module: base
 #: view:ir.values:0
 msgid "Action Bindings/Defaults"
-msgstr ""
+msgstr "Enlaces de acción de los ajustes/predeterminados"
 
 #. module: base
 #: view:ir.rule:0
@@ -16814,7 +18439,7 @@ msgstr ""
 #: view:res.partner:0
 #: view:res.partner.address:0
 msgid "Change Color"
-msgstr ""
+msgstr "Cambiar color"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_15
@@ -16853,7 +18478,7 @@ msgstr ""
 #. module: base
 #: field:ir.module.module,auto_install:0
 msgid "Automatic Installation"
-msgstr ""
+msgstr "Instalación automática"
 
 #. module: base
 #: model:res.country,name:base.jp
@@ -16905,6 +18530,34 @@ msgid ""
 "Leads.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo proporciona pistas de automatización a través de campañas de "
+"marketing (campañas de hecho, puede ser definido en cualquier recurso, no "
+"sólo conduce CRM).\n"
+"============================================================================="
+"============================================================\n"
+"\n"
+"Las campañas son dinámicos y canales múltiples. El proceso es como sigue:\n"
+"     * Las campañas de marketing como el diseño de flujos de trabajo, "
+"incluidas las plantillas de correo electrónico para enviar, informes que "
+"imprimir y enviar por correo electrónico, las acciones personalizadas, etc\n"
+"     * Definir el segmento de entrada que quiere para seleccionar los "
+"elementos que deben entrar en la campaña (por ejemplo, los cables "
+"procedentes de determinados países, etc)\n"
+"     * Ejecutar en modo de simulación que la campaña para probar en tiempo "
+"real o acelerado, y afinar\n"
+"     * También se puede iniciar la campaña real en el modo manual, en el que "
+"cada acción requiere la validación manual\n"
+"     * Por último el lanzamiento de su campaña de vivir, y ver las "
+"estadísticas en la campaña hace todo automáticamente reiniciar el sistema.\n"
+"\n"
+"Mientras que la campaña se puede, por supuesto, continuar para afinar los "
+"parámetros, los segmentos de entrada, flujo de trabajo, etc\n"
+"\n"
+"Nota: Si usted necesita los datos demográficos, se puede instalar el módulo "
+"de marketing_campaign_crm_demo, pero esto también se instalará la aplicación "
+"de CRM, ya que depende en los conductores de CRM.\n"
+"    "
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -16922,7 +18575,7 @@ msgstr "ir.acciones.server"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca
 msgid "Canada - Accounting"
-msgstr ""
+msgstr "Canada - Contabilidad"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_ir_actions_todo_form
@@ -16956,12 +18609,12 @@ msgstr "Ubicación"
 #. module: base
 #: field:ir.sequence,implementation:0
 msgid "Implementation"
-msgstr ""
+msgstr "Implementación"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ve
 msgid "Venezuela - Accounting"
-msgstr ""
+msgstr "Venezuela - Contabilidad"
 
 #. module: base
 #: model:res.country,name:base.cl
@@ -16983,7 +18636,7 @@ msgstr "Condición"
 #. module: base
 #: help:res.currency,rate:0
 msgid "The rate of the currency to the currency of rate 1."
-msgstr ""
+msgstr "La tasa de la moneda a la tasa de la moneda 1"
 
 #. module: base
 #: field:ir.ui.view,name:0
@@ -16993,12 +18646,12 @@ msgstr "Nombre de la vista"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document_ftp
 msgid "Shared Repositories (FTP)"
-msgstr ""
+msgstr "Repositorios compartidos (FTP)"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Grupos de acceso"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -17072,7 +18725,7 @@ msgstr "Cuentas bancarias"
 #: field:ir.model,modules:0
 #: field:ir.model.fields,modules:0
 msgid "In modules"
-msgstr ""
+msgstr "En los módulos"
 
 #. module: base
 #: model:res.country,name:base.sl
@@ -17093,7 +18746,7 @@ msgstr "Islas Turcas y Caicos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail_project_issue
 msgid "eMail Gateway for Project Issues"
-msgstr ""
+msgstr "puerta de entrada de correo electrónico para cuestiones del proyecto"
 
 #. module: base
 #: field:res.partner.bank,partner_id:0
@@ -17117,6 +18770,8 @@ msgid ""
 "Helps you manage your manufacturing processes and generate reports on those "
 "processes."
 msgstr ""
+"Le ayuda a gestionar sus procesos de fabricación y generar informes sobre "
+"estos procesos."
 
 #. module: base
 #: help:ir.sequence,number_increment:0
@@ -17149,6 +18804,8 @@ msgid ""
 "Manage relations with prospects and customers using leads, opportunities, "
 "requests or issues."
 msgstr ""
+"Gestionar las relaciones con los clientes actuales y potenciales utilizando "
+"clientes potenciales, oportunidades, peticiones o asuntos."
 
 #. module: base
 #: selection:res.partner.address,type:0
@@ -17164,7 +18821,7 @@ msgstr "S.A."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
 msgid "Purchase Requisitions"
-msgstr ""
+msgstr "Solicitudes de compra"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -17185,7 +18842,7 @@ msgstr "Empresas: "
 #. module: base
 #: field:res.partner.bank,name:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Cuenta Bancaria"
 
 #. module: base
 #: model:res.country,name:base.kp
@@ -17206,12 +18863,12 @@ msgstr "Contexto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
 msgid "Sales and MRP Management"
-msgstr ""
+msgstr "Gestión de ventas y MRP"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_sms_send
 msgid "Send an SMS"
-msgstr ""
+msgstr "Enviar un SMS"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
@@ -17221,7 +18878,7 @@ msgstr "Prospección"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_invoice_directly
 msgid "Invoice Picking Directly"
-msgstr ""
+msgstr "Facturar albarán directamente"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -17239,6 +18896,13 @@ msgid ""
 "are accessible if installed.\n"
 "    "
 msgstr ""
+"\n"
+"Base común para los módulos de herramientas.\n"
+"==============================\n"
+"\n"
+"Crea enlace del menú de herramientas desde donde herramientas como la "
+"encuesta, el almuerzo, idea, etc son accesibles si se ha instalado.\n"
+"    "
 
 #. module: base
 #: field:ir.exports,name:0
@@ -17266,6 +18930,8 @@ msgid ""
 "This field is computed automatically based on bank accounts defined, having "
 "the display on footer checkbox set."
 msgstr ""
+"Este campo se calcula automáticamente en función de las cuentas bancarias "
+"definidas, con la presentación en conjunto casilla pie de página."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subproduct
@@ -17285,6 +18951,20 @@ msgid ""
 "    A + B + C -> D + E\n"
 "    "
 msgstr ""
+"\n"
+"This module allows you to produce several products from one production "
+"order.\n"
+"============================================================================="
+"\n"
+"\n"
+"You can configure sub-products in the bill of material.\n"
+"\n"
+"Without this module:\n"
+"    A + B + C -> D\n"
+"\n"
+"With this module:\n"
+"    A + B + C -> D + E\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.lk
@@ -17317,6 +18997,19 @@ msgid ""
 "module.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo le permite producir varios productos de la orden de producción.\n"
+"================================================== "
+"===========================\n"
+"\n"
+"Puede configurar los sub-productos en la lista de materiales.\n"
+"\n"
+"Sin este módulo:\n"
+"     A + B + C -> D\n"
+"\n"
+"Con este módulo:\n"
+"     A + B + C -> D + E\n"
+"    "
 
 #. module: base
 #: selection:base.language.install,lang:0
