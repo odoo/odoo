@@ -831,6 +831,7 @@ openerp.point_of_sale = function(db) {
         	this.currentSelected = this.shop.get('selectedOrder').selected;
         	if (reset && this.numpadState)
         		this.numpadState.reset();
+            this.updateSummary();
         },
         render_element: function() {
             this.$element.empty();
