@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Project-Id-Version: OpenERP Server 6.1rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-08 00:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -81,11 +81,6 @@ msgstr ""
 #. module: idea
 #: view:report.vote:0
 msgid "Open Date"
-msgstr ""
-
-#. module: idea
-#: view:report.vote:0
-msgid "Idea Vote created in curren year"
 msgstr ""
 
 #. module: idea
@@ -618,12 +613,6 @@ msgid "Refused"
 msgstr ""
 
 #. module: idea
-#: code:addons/idea/idea.py:274
-#, python-format
-msgid "Draft/Accepted/Cancelled ideas Could not be voted"
-msgstr ""
-
-#. module: idea
 #: view:idea.vote:0
 msgid "Vote date"
 msgstr ""
@@ -664,6 +653,11 @@ msgid "Vote Status"
 msgstr ""
 
 #. module: idea
+#: view:report.vote:0
+msgid "Idea Vote created in current year"
+msgstr ""
+
+#. module: idea
 #: field:idea.idea,vote_avg:0
 msgid "Average Score"
 msgstr ""
@@ -699,6 +693,12 @@ msgstr ""
 #: view:report.vote:0
 #: field:report.vote,year:0
 msgid "Year"
+msgstr ""
+
+#. module: idea
+#: code:addons/idea/idea.py:274
+#, python-format
+msgid "You can not vote on a Draft/Accepted/Cancelled ideas."
 msgstr ""
 
 #. module: idea

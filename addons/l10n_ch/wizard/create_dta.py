@@ -28,6 +28,8 @@ import pooler
 from tools.translate import _
 import unicode2ascii
 
+import re
+
 TRANS=[
     (u'é','e'),
     (u'è','e'),
@@ -346,6 +348,14 @@ def c_ljust(s, size):
     s = s.decode('utf-8').encode('latin1','replace').ljust(size)
     return s
 
+def _is_9_pos_bvr_adherent(adherent_num):
+    """
+    from a bvr adherent number,
+    return true if 
+    """
+    pattern = r'[0-9]{2}-[0-9]{1,6}-[0-9]'
+    return re.search(pattern, adherent_num)
+
 def _create_dta(obj, cr, uid, data, context=None):
     v = {}
     v['uid'] = str(uid)
@@ -435,10 +445,24 @@ def _create_dta(obj, cr, uid, data, context=None):
                 or  False
         v['partner_bvr'] = pline.bank_id.post_number or ''
         if v['partner_bvr']:
-            v['partner_bvr'] = v['partner_bvr'].replace('-','')
-            if len(v['partner_bvr']) < 9:
-                v['partner_bvr'] = v['partner_bvr'][:2] + '0' * \
-                        (9 - len(v['partner_bvr'])) + v['partner_bvr'][2:]
+            is_9_pos_adherent = None
+            # if adherent bvr number is a 9 pos number
+            # add 0 to fill 2nd part plus remove '-'
+            # exemple: 12-567-C becomes 12000567C
+            if _is_9_pos_bvr_adherent(v['partner_bvr']):
+                parts = v['partner_bvr'].split('-')
+                parts[1] = parts[1].rjust(6, '0')
+                v['partner_bvr'] = ''.join(parts)
+                is_9_pos_adherent = True
+            # add 4*0 to bvr adherent number with 5 pos
+            # exemple: 12345 becomes 000012345
+            elif len(v['partner_bvr']) == 5:
+                v['partner_bvr'] = v['partner_bvr'].rjust(9, '0')
+                is_9_pos_adherent = False
+            else:
+                raise osv.except_osv(_('Error'),
+                                     _('Wrong postal number format.\n'
+                                       'It must be 12-123456-9 or 12345 format'))
 
         if pline.bank_id.bank:
             v['partner_bank_city'] = pline.bank_id.bank.city or False
@@ -518,15 +542,39 @@ def _create_dta(obj, cr, uid, data, context=None):
 
         elif elec_pay == 'bvrbank' or elec_pay == 'bvrpost':
             from tools import mod10r
-            if v['reference']:
-                v['reference'] = v['reference'].replace(' ',
-                        '').rjust(27).replace(' ', '0')
-                if not v['reference'] \
-                    or (mod10r(v['reference'][:-1]) != v['reference'] and \
-                    not len(v['reference']) == 15):
-                    raise osv.except_osv(_('Error'), _('You must provide ' \
-                        'a valid BVR reference number \n' \
-                        'for the line: %s') % pline.name)
+            if not v['reference']:
+                raise osv.except_osv(_('Error'), 
+                                     _('You must provide ' \
+                                       'a BVR reference number \n' \
+                                       'for the line: %s') % pline.name)
+            v['reference'] = v['reference'].replace(' ', '')
+            if is_9_pos_adherent:
+                if len(v['reference']) > 27: 
+                    raise osv.except_osv(_('Error'),
+                                         _('BVR reference number is not valid \n' 
+                                           'for the line: %s. \n'
+                                           'Reference is too long.') % pline.name)
+                # do a mod10 check
+                if mod10r(v['reference'][:-1]) != v['reference']:
+                    raise osv.except_osv(_('Error'),
+                                         _('BVR reference number is not valid \n'
+                                           'for the line: %s. \n'
+                                           'Mod10 check failed') % pline.name)
+                # fill reference with 0
+                v['reference'] = v['reference'].rjust(27, '0')
+            else:
+                # reference of BVR adherent with 5 positions number
+                # have 15 positions references
+                if len(v['reference']) > 15:
+                    raise osv.except_osv(_('Error'),
+                                         _('BVR reference number is not valid \n'
+                                           'for the line: %s. \n'
+                                           'Reference is too long '
+                                           'for this type of beneficiary.') % pline.name)
+                # complete 15 first digit with 0 on left and complete 27 digits with trailing spaces
+                # exemple: 123456 becomes 00000000012345____________
+                v['reference'] = v['reference'].rjust(15, '0').ljust(27, ' ')
+
             if not v['partner_bvr']:
                 raise osv.except_osv(_('Error'), _('You must provide a BVR number\n'
                     'for the bank account: %s' \

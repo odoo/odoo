@@ -29,7 +29,7 @@
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Email Content"/>
                                 <field name="subject" required="1"/>
-                                <notebook>
+                                <notebook  colspan="2">
                                     <page string="Body (Text)">
                                         <field name="body_text" colspan="4" width="250" height="250" nolabel="1"/>
                                     </page>
@@ -40,7 +40,7 @@
                                 </notebook>
                             </group>
                             <group col="4" colspan="2">
-                                <notebook>
+                                <notebook colspan="4">
                                     <page string="Dynamic Values Builder">
                                         <field name="model_object_field"
                                             domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"
@@ -86,7 +86,7 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Attachments" colspan="2"/>
-                                <notebook>
+                                <notebook colspan="2">
                                     <page string="Attach Report">
                                         <field name="report_template" colspan="4"
                                             domain="[('model','=',model)]"/>

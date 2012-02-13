@@ -6,20 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2012-01-24 20:57+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-09 21:54+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-25 05:25+0000\n"
-"X-Generator: Launchpad (build 14719)\n"
+"X-Launchpad-Export-Date: 2012-02-10 04:47+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
 msgstr "Sipariş Ref."
+
+#. module: delivery
+#: model:product.template,name:delivery.delivery_product_product_template
+msgid "Delivery by Poste"
+msgstr "Teslimat Postasına göre"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -36,12 +41,6 @@ msgstr "Net Ağırlık"
 #: view:stock.picking:0
 msgid "Delivery Order"
 msgstr "Teslim Emri"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No price available !"
-msgstr "Fiyat bulunamadı !"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -148,15 +147,15 @@ msgid "Delivery Method"
 msgstr "Teslimat Yöntemi"
 
 #. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No price available!"
+msgstr "Fiyat uygun değil!"
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr "Stok Hareketi"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No line matched this order in the choosed delivery grids !"
-msgstr "Seçilen teslimat gridlerinde bu siparişle eşleşen hiçbir satır yok!"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
@@ -222,6 +221,12 @@ msgid "Delivery Grid"
 msgstr "Teslimat Gridi"
 
 #. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No line matched this product or order in the choosed delivery grid."
+msgstr ""
+
+#. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
 msgstr "Fatura Edilen"
@@ -284,7 +289,7 @@ msgid "To Zip"
 msgstr "Bitiş P. Kodu"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:143
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "Default price"
 msgstr "Öntanımlı Fiyat"
@@ -347,7 +352,7 @@ msgid "You can not move products from or to a location of the type view."
 msgstr "view tipinde bir lokasyona ürün giriş çıkışı yapamazsınız."
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid available !"
 msgstr "Hiçbir grid mevcut değil!"
@@ -358,8 +363,8 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "Order not in draft state !"
 msgstr "Sipariş taslak modunda değil !"
@@ -403,7 +408,7 @@ msgstr "Maliyeti"
 #. module: delivery
 #: field:delivery.define.delivery.steps.wizard,picking_policy:0
 msgid "Picking Policy"
-msgstr ""
+msgstr "Teslimat Kuralları"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -436,7 +441,7 @@ msgstr "Adet"
 #: view:delivery.define.delivery.steps.wizard:0
 #: model:ir.actions.act_window,name:delivery.action_define_delivery_steps
 msgid "Setup Your Picking Policy"
-msgstr ""
+msgstr "Teslimat kurallarınızı Ayarlayın"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form1
@@ -449,6 +454,8 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
+"Eğer sipariş belli tutarın üzerinde ise, müşteri ücretsiz teslimattan "
+"faydalanabilir"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
@@ -463,10 +470,10 @@ msgid "Cancel"
 msgstr "İptal"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:131
+#: code:addons/delivery/delivery.py:130
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "Eğer %.2f fazla ise ücretsiz"
 
 #. module: delivery
 #: sql_constraint:sale.order:0
@@ -541,7 +548,7 @@ msgid "Price"
 msgstr "Fiyat"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "Bu nakliyeciyle eşleşen hiçbir grid mevcut değil!"
@@ -603,8 +610,8 @@ msgid "ID"
 msgstr "No"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -649,9 +656,6 @@ msgstr "Fiyat Tipi"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
 
-#~ msgid "Delivery by Poste"
-#~ msgstr "Teslimat Postasına göre"
-
 #~ msgid "Generate Draft Invoices On Receptions"
 #~ msgstr "Kabuldeki Tedarikçi Faturalarını Oluştur"
 
@@ -679,6 +683,10 @@ msgstr "Fiyat Tipi"
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "Sipariş referans no'su tek olmalı !"
 
+#, python-format
+#~ msgid "No price available !"
+#~ msgstr "Fiyat bulunamadı !"
+
 #~ msgid ""
 #~ "Create and manage the delivery methods you need for your sales activities. "
 #~ "Each delivery method can be assigned to a price list which computes the "
@@ -687,6 +695,10 @@ msgstr "Fiyat Tipi"
 #~ "Satış aktiviteleri için gerekli teslim yöntemlerini oluştur ve yönet. Her "
 #~ "teslim yöntemi bir fiyat listesine yönlendirilir ve bu da satılan ya da "
 #~ "teslim edilen ürünün teslimat fiyatının hesaplanmasını sağlar."
+
+#, python-format
+#~ msgid "No line matched this order in the choosed delivery grids !"
+#~ msgstr "Seçilen teslimat gridlerinde bu siparişle eşleşen hiçbir satır yok!"
 
 #~ msgid ""
 #~ "Allows you to add delivery methods in sale orders and picking.\n"

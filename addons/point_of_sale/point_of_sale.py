@@ -23,6 +23,7 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import logging
+from PIL import Image
 
 import netsvc
 from osv import fields, osv
@@ -739,13 +740,34 @@ class pos_category(osv.osv):
     }
 pos_category()
 
+import io, StringIO
+
 class product_product(osv.osv):
     _inherit = 'product.product'
+    def _get_small_image(self, cr, uid, ids, prop, unknow_none, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            if not obj.product_image:
+                result[obj.id] = False
+                continue
+
+            image_stream = io.BytesIO(obj.product_image.decode('base64'))
+            img = Image.open(image_stream)
+            img.thumbnail((120, 100), Image.ANTIALIAS)
+            img_stream = StringIO.StringIO()
+            img.save(img_stream, "JPEG")
+            result[obj.id] = img_stream.getvalue().encode('base64')
+        return result
+
     _columns = {
         'income_pdt': fields.boolean('PoS Cash Input', help="This is a product you can use to put cash into a statement for the point of sale backend."),
         'expense_pdt': fields.boolean('PoS Cash Output', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
         'pos_categ_id': fields.many2one('pos.category','PoS Category',
-            help="If you want to sell this product through the point of sale, select the category it belongs to.")
+            help="If you want to sell this product through the point of sale, select the category it belongs to."),
+        'product_image_small': fields.function(_get_small_image, string='Small Image', type="binary",
+            store = {
+                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['product_image'], 10),
+            })
     }
 product_product()
 

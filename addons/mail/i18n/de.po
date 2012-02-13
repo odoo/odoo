@@ -7,360 +7,510 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-04-03 09:21+0000\n"
+"POT-Creation-Date: 2012-02-09 00:36+0000\n"
+"PO-Revision-Date: 2012-02-09 15:36+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:56+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2012-02-10 04:49+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
-#. module: mail_gateway
-#: field:mailgate.message,res_id:0
-msgid "Resource ID"
-msgstr "Ressource ID"
+#. module: mail
+#: field:mail.compose.message,subtype:0 field:mail.message,subtype:0
+#: field:mail.message.common,subtype:0
+msgid "Message type"
+msgstr "Mitteilung Typ"
 
-#. module: mail_gateway
-#: code:addons/mail_gateway/mail_gateway.py:68
-#: code:addons/mail_gateway/mail_gateway.py:71
-#: code:addons/mail_gateway/mail_gateway.py:89
-#, python-format
-msgid "Method is not implemented"
-msgstr "Methode ist nicht implementiert"
+#. module: mail
+#: help:mail.compose.message,auto_delete:0
+msgid "Permanently delete emails after sending"
+msgstr "Immer EMails nach Versendung löschen"
 
-#. module: mail_gateway
-#: view:mailgate.message:0
-#: field:mailgate.message,email_from:0
-msgid "From"
-msgstr "Von"
+#. module: mail
+#: view:mail.message:0
+msgid "Open Related Document"
+msgstr "Öffne zugehöriges Dokument"
 
-#. module: mail_gateway
-#: view:mailgate.message:0
+#. module: mail
+#: view:mail.message:0
 msgid "Open Attachments"
 msgstr "Öffne Anhang"
 
-#. module: mail_gateway
-#: view:mailgate.message:0
+#. module: mail
+#: view:mail.message:0
 msgid "Message Details"
 msgstr "Details Nachricht"
 
-#. module: mail_gateway
-#: field:mailgate.message,message_id:0
-msgid "Message Id"
-msgstr "Nachricht ID"
+#. module: mail
+#: view:mail.thread:0
+msgid "Communication History"
+msgstr "Kommunikation Geschichte"
 
-#. module: mail_gateway
-#: field:mailgate.message,ref_id:0
-msgid "Reference Id"
-msgstr "Referenz ID"
-
-#. module: mail_gateway
-#: view:mailgate.thread:0
-msgid "Mailgateway History"
-msgstr "Historie Mailgateway"
-
-#. module: mail_gateway
-#: code:addons/mail_gateway/mail_gateway.py:249
-#, python-format
-msgid "Note"
-msgstr "Anmerkung"
-
-#. module: mail_gateway
-#: view:mailgate.message:0
+#. module: mail
+#: view:mail.message:0
 msgid "Group By..."
 msgstr "Gruppierung..."
 
-#. module: mail_gateway
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Fehler! Sie können keine rekursiven Elemente anlegen"
+#. module: mail
+#: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
+#: view:mail.compose.message:0
+msgid "Compose Email"
+msgstr "Email schreiben"
 
-#. module: mail_gateway
-#: help:mailgate.message,message_id:0
-msgid "Message Id on Email."
-msgstr "Nachricht ID der Email"
+#. module: mail
+#: help:mail.compose.message,body_text:0 help:mail.message,body_text:0
+#: help:mail.message.common,body_text:0
+msgid "Plain-text version of the message"
+msgstr "Text Version der Mitteilung"
 
-#. module: mail_gateway
-#: help:mailgate.message,email_to:0
-msgid "Email Recipients"
-msgstr "Email Empfänger"
+#. module: mail
+#: view:mail.compose.message:0
+msgid "Body"
+msgstr "Textkörper"
 
-#. module: mail_gateway
-#: view:mailgate.message:0
-msgid "Details"
-msgstr "Details"
+#. module: mail
+#: help:mail.compose.message,email_to:0 help:mail.message,email_to:0
+#: help:mail.message.common,email_to:0
+msgid "Message recipients"
+msgstr "Mitteilung Empfänger"
 
-#. module: mail_gateway
-#: view:mailgate.thread:0
-msgid "Mailgate History"
-msgstr "Historie Mailgateway"
+#. module: mail
+#: field:mail.compose.message,body_text:0 field:mail.message,body_text:0
+#: field:mail.message.common,body_text:0
+msgid "Text contents"
+msgstr "Text Inhalt"
 
-#. module: mail_gateway
-#: model:ir.model,name:mail_gateway.model_email_server_tools
-msgid "Email Server Tools"
-msgstr "Email Server Werkzeuge"
+#. module: mail
+#: view:mail.message:0 selection:mail.message,state:0
+msgid "Received"
+msgstr "Empfangen"
 
-#. module: mail_gateway
-#: view:mailgate.message:0
-msgid "Email Followers"
-msgstr "EMail Verfolger"
-
-#. module: mail_gateway
-#: model:ir.model,name:mail_gateway.model_res_partner
-#: view:mailgate.message:0
-#: field:mailgate.message,partner_id:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: mail_gateway
-#: code:addons/mail_gateway/mail_gateway.py:250
-#, python-format
-msgid " wrote on %s:\n"
-msgstr " geschrieben am %s:\n"
-
-#. module: mail_gateway
-#: view:mailgate.message:0
-#: field:mailgate.message,description:0
-#: field:mailgate.message,message:0
-msgid "Description"
-msgstr "Beschreibung"
-
-#. module: mail_gateway
-#: field:mailgate.message,email_to:0
-msgid "To"
-msgstr "An"
-
-#. module: mail_gateway
-#: help:mailgate.message,references:0
-msgid "References emails."
-msgstr "EMail Referenzen"
-
-#. module: mail_gateway
-#: help:mailgate.message,email_cc:0
-msgid "Carbon Copy Email Recipients"
-msgstr "Carbon Copy Email Empf."
-
-#. module: mail_gateway
-#: model:ir.module.module,shortdesc:mail_gateway.module_meta_information
-msgid "Email Gateway System"
-msgstr "Email Gateway System"
-
-#. module: mail_gateway
-#: field:mailgate.message,date:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: mail_gateway
-#: field:mailgate.message,model:0
-msgid "Object Name"
-msgstr "Object Name"
-
-#. module: mail_gateway
-#: view:mailgate.message:0
-msgid "Partner Name"
-msgstr "Partner Name"
-
-#. module: mail_gateway
-#: model:ir.actions.act_window,name:mail_gateway.action_view_mailgate_thread
-msgid "Mailgateway Threads"
-msgstr "Mailgateway Beiträge"
-
-#. module: mail_gateway
-#: code:addons/mail_gateway/mail_gateway.py:247
-#, python-format
-msgid "Opportunity"
-msgstr "Verkaufschance"
-
-#. module: mail_gateway
-#: model:ir.actions.act_window,name:mail_gateway.act_res_partner_emails
-#: model:ir.actions.act_window,name:mail_gateway.action_view_mailgate_message
-#: view:mailgate.message:0
-#: field:res.partner,emails:0
-msgid "Emails"
-msgstr "EMails"
-
-#. module: mail_gateway
-#: code:addons/mail_gateway/mail_gateway.py:252
-#, python-format
-msgid "Stage"
-msgstr "Stufe"
-
-#. module: mail_gateway
-#: code:addons/mail_gateway/mail_gateway.py:250
-#, python-format
-msgid " added note on "
-msgstr " hinzugefügter Hinweis "
-
-#. module: mail_gateway
-#: help:mailgate.message,email_from:0
-msgid "Email From"
-msgstr "EMail von"
-
-#. module: mail_gateway
-#: view:mailgate.message:0
+#. module: mail
+#: view:mail.message:0
 msgid "Thread"
 msgstr "Beitrag"
 
-#. module: mail_gateway
-#: model:ir.model,name:mail_gateway.model_mailgate_message
-msgid "Mailgateway Message"
-msgstr "Mailgateway Nachricht"
+#. module: mail
+#: field:mail.message,mail_server_id:0
+msgid "Outgoing mail server"
+msgstr "Ausgehender Mailserver"
 
-#. module: mail_gateway
-#: model:ir.actions.act_window,name:mail_gateway.action_view_mail_message
-#: field:mailgate.thread,message_ids:0
-msgid "Messages"
-msgstr "Nachrichten"
+#. module: mail
+#: selection:mail.message,state:0
+msgid "Cancelled"
+msgstr "Storniert"
 
-#. module: mail_gateway
-#: field:mailgate.message,user_id:0
-msgid "User Responsible"
-msgstr "Verantwortlicher Benutzer"
+#. module: mail
+#: field:mail.compose.message,reply_to:0 field:mail.message,reply_to:0
+#: field:mail.message.common,reply_to:0
+msgid "Reply-To"
+msgstr "Antwort an"
 
-#. module: mail_gateway
-#: code:addons/mail_gateway/mail_gateway.py:248
+#. module: mail
+#: help:mail.compose.message,body_html:0 help:mail.message,body_html:0
+#: help:mail.message.common,body_html:0
+msgid "Rich-text/HTML version of the message"
+msgstr "Rich-text/HTML Version der Nachricht"
+
+#. module: mail
+#: field:mail.compose.message,auto_delete:0 field:mail.message,auto_delete:0
+msgid "Auto Delete"
+msgstr "Autom. Löschen"
+
+#. module: mail
+#: help:mail.compose.message,email_bcc:0 help:mail.message,email_bcc:0
+#: help:mail.message.common,email_bcc:0
+msgid "Blind carbon copy message recipients"
+msgstr "Verdeckte Mail Empfänger"
+
+#. module: mail
+#: model:ir.model,name:mail.model_res_partner view:mail.message:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: mail
+#: field:mail.compose.message,subject:0 field:mail.message,subject:0
+#: field:mail.message.common,subject:0
+msgid "Subject"
+msgstr "Betreff"
+
+#. module: mail
+#: code:addons/mail/wizard/mail_compose_message.py:152
 #, python-format
-msgid "Converted to Opportunity"
-msgstr "Konvertiert zu Verkaufschance"
+msgid "On %(date)s, "
+msgstr "Am %(date)s, "
 
-#. module: mail_gateway
-#: field:mailgate.message,email_bcc:0
-msgid "Bcc"
-msgstr "Bcc"
+#. module: mail
+#: field:mail.compose.message,email_from:0 field:mail.message,email_from:0
+#: field:mail.message.common,email_from:0
+msgid "From"
+msgstr "Von"
 
-#. module: mail_gateway
-#: field:mailgate.message,history:0
-msgid "Is History?"
-msgstr "Historie EMail"
+#. module: mail
+#: view:mail.message:0
+msgid "Email message"
+msgstr "EMail Nachricht"
 
-#. module: mail_gateway
-#: help:mailgate.message,email_bcc:0
-msgid "Blind Carbon Copy Email Recipients"
-msgstr "Blind Carbon Copy Email Empf."
+#. module: mail
+#: view:mail.compose.message:0
+msgid "Send"
+msgstr "Senden"
 
-#. module: mail_gateway
-#: view:mailgate.message:0
-msgid "mailgate message"
-msgstr "Mailgateway Nachricht"
+#. module: mail
+#: view:mail.message:0
+msgid "Failed"
+msgstr "Fehlgeschlagen"
 
-#. module: mail_gateway
-#: code:addons/mail_gateway/mail_gateway.py:148
-#: view:mailgate.thread:0
-#: view:res.partner:0
+#. module: mail
+#: view:mail.message:0 field:mail.message,state:0
+msgid "State"
+msgstr "Status"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Reply"
+msgstr "Antworten"
+
+#. module: mail
+#: view:mail.message:0 selection:mail.message,state:0
+msgid "Sent"
+msgstr "Gesendet"
+
+#. module: mail
+#: help:mail.compose.message,subtype:0 help:mail.message,subtype:0
+#: help:mail.message.common,subtype:0
+msgid ""
+"Type of message, usually 'html' or 'plain', used to select plaintext or rich "
+"text contents accordingly"
+msgstr "Auswahl des Typs der Nachricht, 'HTML' oder 'Text'."
+
+#. module: mail
+#: view:mail.message:0
+msgid "Recipients"
+msgstr "Empfänger"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_compose_message
+msgid "E-mail composition wizard"
+msgstr "Email-Zusammensetzung Assistent"
+
+#. module: mail
+#: field:mail.compose.message,res_id:0 field:mail.message,res_id:0
+#: field:mail.message.common,res_id:0
+msgid "Related Document ID"
+msgstr "zugehörige Dokumenten-ID"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Advanced"
+msgstr "Erweitert"
+
+#. module: mail
+#: code:addons/mail/wizard/mail_compose_message.py:157
+#, python-format
+msgid "Re:"
+msgstr "Re:"
+
+#. module: mail
+#: field:mail.compose.message,model:0 field:mail.message,model:0
+#: field:mail.message.common,model:0
+msgid "Related Document model"
+msgstr "zugehöriges Dokumenten-Modell"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Month"
+msgstr "Monat"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Email Search"
+msgstr "Suche EMail"
+
+#. module: mail
+#: help:mail.message,original:0
+msgid "Original version of the message, as it was sent on the network"
+msgstr "Originalversion der Nachricht, wie sie über das Netz versendet wurde"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Partner Name"
+msgstr "Partner Name"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Retry"
+msgstr "Wiederholen"
+
+#. module: mail
+#: view:mail.message:0 selection:mail.message,state:0
+msgid "Outgoing"
+msgstr "Postausgang"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Send Now"
+msgstr "Sofort senden"
+
+#. module: mail
+#: field:mail.message,partner_id:0
+msgid "Related partner"
+msgstr "Zugehörige Partner"
+
+#. module: mail
+#: view:mail.message:0
+msgid "User"
+msgstr "Benutzer"
+
+#. module: mail
+#: field:mail.compose.message,date:0 field:mail.message,date:0
+#: field:mail.message.common,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Extended Filters..."
+msgstr "Erweiterte Filter..."
+
+#. module: mail
+#: code:addons/mail/wizard/mail_compose_message.py:153
+#, python-format
+msgid "%(sender_name)s wrote:"
+msgstr "%(sender_name)s schrieb:"
+
+#. module: mail
+#: field:mail.compose.message,body_html:0 field:mail.message,body_html:0
+#: field:mail.message.common,body_html:0
+msgid "Rich-text contents"
+msgstr "Rich-Text Inhalt"
+
+#. module: mail
+#: field:mail.message,original:0
+msgid "Original"
+msgstr "Original"
+
+#. module: mail
+#: code:addons/mail/mail_thread.py:247 view:res.partner:0
 #, python-format
 msgid "History"
 msgstr "Historie"
 
-#. module: mail_gateway
-#: field:mailgate.message,references:0
-msgid "References"
-msgstr "Referenzen"
+#. module: mail
+#: field:mail.compose.message,message_id:0 field:mail.message,message_id:0
+#: field:mail.message.common,message_id:0
+msgid "Message-Id"
+msgstr "Nachricht-ID"
 
-#. module: mail_gateway
-#: model:ir.model,name:mail_gateway.model_mailgate_thread
-#: view:mailgate.thread:0
-msgid "Mailgateway Thread"
-msgstr "Mailgateway Beitrag"
-
-#. module: mail_gateway
-#: model:ir.actions.act_window,name:mail_gateway.act_res_partner_open_email
-#: view:mailgate.message:0
-#: field:mailgate.message,attachment_ids:0
-#: view:mailgate.thread:0
+#. module: mail
+#: view:mail.compose.message:0 field:mail.compose.message,attachment_ids:0
+#: view:mail.message:0 field:mail.message,attachment_ids:0
 msgid "Attachments"
 msgstr "Anhänge"
 
-#. module: mail_gateway
-#: view:mailgate.message:0
-msgid "Open Document"
-msgstr "Öffne Dokument"
-
-#. module: mail_gateway
-#: view:mailgate.thread:0
-msgid "Email Details"
-msgstr "Email Details"
-
-#. module: mail_gateway
-#: field:mailgate.message,email_cc:0
+#. module: mail
+#: field:mail.compose.message,email_cc:0 field:mail.message,email_cc:0
+#: field:mail.message.common,email_cc:0
 msgid "Cc"
 msgstr "CC"
 
-#. module: mail_gateway
-#: code:addons/mail_gateway/mail_gateway.py:254
+#. module: mail
+#: code:addons/mail/mail_message.py:159
 #, python-format
-msgid " on %s:\n"
-msgstr " am %s:\n"
+msgid " on "
+msgstr " EMail von "
 
-#. module: mail_gateway
-#: view:mailgate.message:0
-msgid "Month"
-msgstr "Monat"
-
-#. module: mail_gateway
-#: view:mailgate.message:0
-msgid "Email Search"
-msgstr "Suche EMail"
-
-#. module: mail_gateway
-#: code:addons/mail_gateway/mail_gateway.py:561
-#, python-format
-msgid "receive"
-msgstr "empfangen"
-
-#. module: mail_gateway
-#: model:ir.module.module,description:mail_gateway.module_meta_information
-msgid ""
-"The generic email gateway system allows to send and receive emails\n"
-"    * History for Emails\n"
-"    * Easy Integration with any Module"
+#. module: mail
+#: help:mail.message,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
 msgstr ""
-"Das allgemeine EMail Gateway ermöglicht Senden und Empfangen von EMails\n"
-"   * EMail Historie   * Einfache Integration anderer Module"
+"Dauerhaftes Löschen dieser E-Mail nach dem Absenden, um Platz zu sparen"
 
-#. module: mail_gateway
-#: code:addons/mail_gateway/mail_gateway.py:255
-#, python-format
-msgid "Changed Status to: "
-msgstr "Ändere Status zu: "
+#. module: mail
+#: field:mail.compose.message,references:0 field:mail.message,references:0
+#: field:mail.message.common,references:0
+msgid "References"
+msgstr "Referenzen"
 
-#. module: mail_gateway
-#: field:mailgate.message,display_text:0
+#. module: mail
+#: field:mail.message,display_text:0
 msgid "Display Text"
 msgstr "Textbereich"
 
-#. module: mail_gateway
-#: view:mailgate.message:0
-msgid "Owner"
-msgstr "Besitzer"
+#. module: mail
+#: view:mail.compose.message:0 view:mail.message:0
+msgid "Cancel"
+msgstr "Abbrechen"
 
-#. module: mail_gateway
-#: code:addons/mail_gateway/mail_gateway.py:253
+#. module: mail
+#: view:mail.message:0
+msgid "Open"
+msgstr "Öffnen"
+
+#. module: mail
+#: code:addons/mail/mail_thread.py:434
 #, python-format
-msgid "Changed Stage to: "
-msgstr "Ändere Bearbeitungsstufe auf: "
+msgid "[OpenERP-Forward-Failed] %s"
+msgstr "[OpenERP-Weiterleitung-schlug fehl] %s"
 
-#. module: mail_gateway
-#: view:mailgate.message:0
-msgid "Message"
-msgstr "Nachricht"
+#. module: mail
+#: field:mail.message,user_id:0
+msgid "Related user"
+msgstr "zugehöriger Benutzer"
 
-#. module: mail_gateway
-#: view:mailgate.message:0
-#: field:mailgate.message,name:0
-msgid "Subject"
-msgstr "Betreff"
+#. module: mail
+#: help:mail.compose.message,headers:0 help:mail.message,headers:0
+#: help:mail.message.common,headers:0
+msgid ""
+"Full message headers, e.g. SMTP session headers (usually available on "
+"inbound messages only)"
+msgstr ""
+"Kompletter Nachrichtenvorspann, zB SMTP Session Header (normalerweise nur "
+"für einlangende EMails)"
 
-#. module: mail_gateway
-#: help:mailgate.message,ref_id:0
-msgid "Message Id in Email Server."
-msgstr "Nachricht ID Email Server."
+#. module: mail
+#: view:mail.message:0
+msgid "Creation Month"
+msgstr "Monat Erstellung"
 
+#. module: mail
+#: field:mail.compose.message,email_to:0 field:mail.message,email_to:0
+#: field:mail.message.common,email_to:0
+msgid "To"
+msgstr "An"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Details"
+msgstr "Details"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.action_view_mailgate_thread
+#: view:mail.thread:0
+msgid "Email Threads"
+msgstr "EMail Threads"
+
+#. module: mail
+#: help:mail.compose.message,email_from:0 help:mail.message,email_from:0
+#: help:mail.message.common,email_from:0
+msgid ""
+"Message sender, taken from user preferences. If empty, this is not a mail "
+"but a message."
+msgstr ""
+"Absender der Nachricht lt. Benutzereinstellung. Wenn leer, dann ist es eine "
+"Nachricht aber kein Mail"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Body (Plain)"
+msgstr "Textkörper (einfach)"
+
+#. module: mail
+#: code:addons/mail/wizard/mail_compose_message.py:153
 #, python-format
-#~ msgid " wrote on "
-#~ msgstr " schreibe zu "
+msgid "You"
+msgstr "Sie"
 
+#. module: mail
+#: help:mail.compose.message,message_id:0 help:mail.message,message_id:0
+#: help:mail.message.common,message_id:0
+msgid "Message unique identifier"
+msgstr "Eindeutige Identifikation der Nachricht"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Body (Rich)"
+msgstr "Textkörper (RTF)"
+
+#. module: mail
+#: code:addons/mail/mail_message.py:155
 #, python-format
-#~ msgid " on "
-#~ msgstr " EMail von "
+msgid ""
+"%s wrote on %s: \n"
+" Subject: %s \n"
+"\t"
+msgstr ""
+"%s schrieb am %s: \n"
+" Betreff: %s \n"
+"\t"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.act_res_partner_emails
+#: view:mail.message:0 field:res.partner,emails:0
+msgid "Emails"
+msgstr "EMails"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.action_view_mail_message
+#: model:ir.ui.menu,name:mail.menu_email_message
+#: field:mail.thread,message_ids:0
+msgid "Messages"
+msgstr "Nachrichten"
+
+#. module: mail
+#: field:mail.compose.message,headers:0 field:mail.message,headers:0
+#: field:mail.message.common,headers:0
+msgid "Message headers"
+msgstr "Nachrichten-Vorspann"
+
+#. module: mail
+#: field:mail.compose.message,email_bcc:0 field:mail.message,email_bcc:0
+#: field:mail.message.common,email_bcc:0
+msgid "Bcc"
+msgstr "Bcc"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_message_common
+msgid "mail.message.common"
+msgstr "mail.message.common"
+
+#. module: mail
+#: help:mail.compose.message,references:0 help:mail.message,references:0
+#: help:mail.message.common,references:0
+msgid "Message references, such as identifiers of previous messages"
+msgstr "Nachricht Referenzen, wie z. B. Kennungen von vorherigen Nachrichten"
+
+#. module: mail
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "Fehler! Sie können keine rekursive assoziierte Mitglieder anlegen."
+
+#. module: mail
+#: help:mail.compose.message,email_cc:0 help:mail.message,email_cc:0
+#: help:mail.message.common,email_cc:0
+msgid "Carbon copy message recipients"
+msgstr "CC Nachrichten Empfänger"
+
+#. module: mail
+#: selection:mail.message,state:0
+msgid "Delivery Failed"
+msgstr "Auslieferung gescheitert"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_message
+msgid "Email Message"
+msgstr "EMail Nachricht"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_thread view:mail.thread:0
+msgid "Email Thread"
+msgstr "EMail Thread"
+
+#. module: mail
+#: field:mail.compose.message,filter_id:0
+msgid "Filters"
+msgstr "Filter"
+
+#. module: mail
+#: code:addons/mail/mail_thread.py:220
+#, python-format
+msgid "Mail attachment"
+msgstr "Nachrichtenbeilage"
+
+#. module: mail
+#: help:mail.compose.message,reply_to:0 help:mail.message,reply_to:0
+#: help:mail.message.common,reply_to:0
+msgid "Preferred response address for the message"
+msgstr "Bevorzugte Antwortadresse für diese Nachricht"

@@ -256,7 +256,7 @@
             <field name="arch" type="xml">
                 <form string="Invoice">
                     <group colspan="4" col="8">
-                    <field name="journal_id" groups="base.group_user" on_change="onchange_journal_id(journal_id)" widget="selection"/>
+                    <field name="journal_id" groups="base.group_user" on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
                     <field name="number"/>
                     <field name="type" invisible="1"/>
                     <field name="currency_id" width="50"/>
@@ -291,7 +291,9 @@
                                 </field>
                             </group>
                             <group col="4" colspan="2">
-                                <button colspan="2" name="button_reset_taxes" states="draft,proforma2" string="Compute Taxes" type="object" groups="base.group_user" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
+                                <group colspan="2" col="1">
+                                    <button name="button_reset_taxes" states="draft,proforma2" string="Compute Taxes" type="object" groups="base.group_user" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
+                                </group>
                                 <field name="amount_untaxed"/>
                                 <label string="" colspan="2"/>
                                 <field name="amount_tax"/>

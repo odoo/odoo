@@ -524,8 +524,9 @@
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
                     <group>
-                        <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
-                        <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+                        <filter string="Draft" name="state_draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                        <filter string="Open" name="state_open" domain="[('state','=','open')]" icon="terp-check"/>
+                        <filter string="Confirmed" name="state_confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="name"/>
@@ -1364,7 +1365,10 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Items">
-                            <field colspan="4" name="line_id" nolabel="1" height="250" widget="one2many_list" context="{'lines':line_id ,'journal':journal_id }">
+                            <field name="balance" invisible="1"/>
+                            <field colspan="4" name="line_id" nolabel="1" height="250" widget="one2many_list" 
+                            on_change="onchange_line_id(line_id)"
+                            context="{'balance': balance , 'journal': journal_id }">
                                 <form string="Journal Item">
                                     <group col="6" colspan="4">
                                         <field name="name"/>

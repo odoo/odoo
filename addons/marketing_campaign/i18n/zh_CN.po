@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-07-01 03:28+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:23+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:04+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -37,14 +37,6 @@ msgstr "这步没有邮件或者报表。"
 #: constraint:marketing.campaign.transition:0
 msgid "The To/From Activity of transition must be of the same Campaign "
 msgstr "前后活动必须属于同一个营销活动 "
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:148
-#, python-format
-msgid ""
-"The campaign cannot be started: it doesn't have any starting activity (or "
-"any activity with a signal and no previous activity)"
-msgstr "营销活动无法开始：它没有开始的活动（或者标识为开始但没有前一个活动的活动）"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
@@ -117,23 +109,10 @@ msgid "Sync mode: only records created after last sync"
 msgstr ""
 
 #. module: marketing_campaign
-#: help:marketing.campaign.activity,condition:0
+#: model:email.template,body_text:marketing_campaign.email_template_2
 msgid ""
-"Python expression to decide whether the activity can be executed, otherwise "
-"it will be deleted or cancelled.The expression may use the following "
-"[browsable] variables:\n"
-"   - activity: the campaign activity\n"
-"   - workitem: the campaign workitem\n"
-"   - resource: the resource object this campaign item represents\n"
-"   - transitions: list of campaign transitions outgoing from this activity\n"
-"...- re: Python regular expression module"
+"Hello, We are happy to announce that you now become our Silver Partner."
 msgstr ""
-"由Python表达式决定活动是否被执行的，或者被删除，或者被取消。表达式可以用以下[browsable]变量：\n"
-"   -activity：营销活动项\n"
-"   -workitem：营销活动工作项\n"
-"   -resource：营销活动代表的资源对象\n"
-"   -transitions：从此活动转出的营销活动列表\n"
-"...-re：Python正则表达式模块"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -195,15 +174,15 @@ msgid "Last Synchronization"
 msgstr "最近同步"
 
 #. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:214
+#, python-format
+msgid "You can not duplicate a campaign, it's not supported yet."
+msgstr ""
+
+#. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Year(s)"
 msgstr "年"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:214
-#, python-format
-msgid "Sorry, campaign duplication is not supported at the moment."
-msgstr "对不起，暂时不支持营销活动复制。"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_last_date:0
@@ -260,9 +239,9 @@ msgid "Campaign"
 msgstr "营销活动"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,start:0
-msgid "Start"
-msgstr "开始"
+#: model:email.template,subject:marketing_campaign.email_template_3
+msgid "Congratulation! You become our Gold Partner."
+msgstr ""
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -317,6 +296,11 @@ msgstr "业务伙伴"
 #: view:marketing.campaign.activity:0
 msgid "Transitions"
 msgstr "转换"
+
+#. module: marketing_campaign
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr ""
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
@@ -410,9 +394,10 @@ msgid "Interval Unit"
 msgstr "间隔单位"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,country_id:0
-msgid "Country"
-msgstr "国家/地区"
+#: code:addons/marketing_campaign/marketing_campaign.py:792
+#, python-format
+msgid "Email Preview"
+msgstr "邮件预览"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_id:0
@@ -454,6 +439,13 @@ msgid "Campaign Segment"
 msgstr "营销活动段"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
+#: view:marketing.campaign.segment:0
+#: view:marketing.campaign.workitem:0
+msgid "Cancel"
+msgstr "取消"
+
+#. module: marketing_campaign
 #: help:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid ""
 "By activating this option, workitems that aren't executed because the "
@@ -474,6 +466,11 @@ msgstr "工作项"
 #: field:marketing.campaign,fixed_cost:0
 msgid "Fixed Cost"
 msgstr "固定成本"
+
+#. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_2
+msgid "Congratulation! You become now our Silver Partner."
+msgstr ""
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -681,6 +678,14 @@ msgid "The report to generate when this activity is activated"
 msgstr "活动被激活时生成的报表"
 
 #. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:148
+#, python-format
+msgid ""
+"The campaign cannot be started: it doesn't have any starting activity. "
+"Modify campaign's activities to mark one as the starting point."
+msgstr ""
+
+#. module: marketing_campaign
 #: field:marketing.campaign,unique_field_id:0
 msgid "Unique Field"
 msgstr ""
@@ -749,6 +754,11 @@ msgid "Automatic transition"
 msgstr "自动迁移"
 
 #. module: marketing_campaign
+#: field:marketing.campaign.activity,start:0
+msgid "Start"
+msgstr "开始"
+
+#. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 #: view:res.partner:0
 msgid "History"
@@ -800,11 +810,9 @@ msgid "Operation not supported"
 msgstr "操作不支持"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
-#: view:marketing.campaign.workitem:0
-msgid "Cancel"
-msgstr "取消"
+#: model:email.template,body_text:marketing_campaign.email_template_3
+msgid "Hello, We are happy to announce that you become our Gold Partner."
+msgstr ""
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -817,21 +825,40 @@ msgid "Model of filter must be same as resource model of Campaign "
 msgstr "模型的过滤器必须和营销活动的资源模型一致 "
 
 #. module: marketing_campaign
+#: help:marketing.campaign.activity,condition:0
+msgid ""
+"Python expression to decide whether the activity can be executed, otherwise "
+"it will be deleted or cancelled.The expression may use the following "
+"[browsable] variables:\n"
+"   - activity: the campaign activity\n"
+"   - workitem: the campaign workitem\n"
+"   - resource: the resource object this campaign item represents\n"
+"   - transitions: list of campaign transitions outgoing from this activity\n"
+"...- re: Python regular expression module"
+msgstr ""
+"由Python表达式决定活动是否被执行的，或者被删除，或者被取消。表达式可以用以下[browsable]变量：\n"
+"   -activity：营销活动项\n"
+"   -workitem：营销活动工作项\n"
+"   -resource：营销活动代表的资源对象\n"
+"   -transitions：从此活动转出的营销活动列表\n"
+"...-re：Python正则表达式模块"
+
+#. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Synchronize Manually"
 msgstr "手工同步"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:158
-#, python-format
-msgid "The campaign cannot be marked as done before all segments are done"
-msgstr "只有所有的活动片段完成之后才能把营销活动设置为已完成"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,res_id:0
 msgid "Resource ID"
 msgstr "资源ID"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:136
+#, python-format
+msgid "The campaign cannot be started: there are no activities in it."
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
@@ -909,6 +936,11 @@ msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "在%(interval_nbr)d %(interval_type)s之后"
 
 #. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_1
+msgid "Welcome in OpenERP Partner Channel!"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
 msgid "Marketing Campaign"
 msgstr "市场营销活动"
@@ -948,21 +980,14 @@ msgid "Sync mode: only records updated after last sync"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:792
-#, python-format
-msgid "Email Preview"
-msgstr "邮件预览"
+#: field:campaign.analysis,country_id:0
+msgid "Country"
+msgstr "国家/地区"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,signal:0
 msgid "Signal"
 msgstr "信号"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:136
-#, python-format
-msgid "The campaign cannot be started: there are no activities in it"
-msgstr "营销活动无法启动：没有任何活动项"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
@@ -973,6 +998,12 @@ msgstr "如果没有设置日期，此工作项必须由手工启动"
 #: selection:campaign.analysis,month:0
 msgid "April"
 msgstr "4"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:158
+#, python-format
+msgid "The campaign cannot be marked as done before all segments are closed."
+msgstr ""
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -1050,10 +1081,21 @@ msgid "Cost"
 msgstr "成本"
 
 #. module: marketing_campaign
+#: model:email.template,body_text:marketing_campaign.email_template_1
+msgid "Hello, We are very happy to send Welcome message."
+msgstr ""
+
+#. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,year:0
 msgid "Year"
 msgstr "年"
+
+#, python-format
+#~ msgid ""
+#~ "The campaign cannot be started: it doesn't have any starting activity (or "
+#~ "any activity with a signal and no previous activity)"
+#~ msgstr "营销活动无法开始：它没有开始的活动（或者标识为开始但没有前一个活动的活动）"
 
 #, python-format
 #~ msgid ""
@@ -1068,6 +1110,10 @@ msgstr "年"
 #~ "The generated workitems will be linked to the partner related to the record. "
 #~ "If the record is the partner itself leave this field empty."
 #~ msgstr "生成的工作项将会关联此记录相关的业务伙伴。如果此记录本身是业务伙伴，请留空。"
+
+#, python-format
+#~ msgid "Sorry, campaign duplication is not supported at the moment."
+#~ msgstr "对不起，暂时不支持营销活动复制。"
 
 #~ msgid "This Month"
 #~ msgstr "本月"
@@ -1089,6 +1135,14 @@ msgstr "年"
 
 #~ msgid "Email Templates for Models"
 #~ msgstr "模型的邮件模板"
+
+#, python-format
+#~ msgid "The campaign cannot be marked as done before all segments are done"
+#~ msgstr "只有所有的活动片段完成之后才能把营销活动设置为已完成"
+
+#, python-format
+#~ msgid "The campaign cannot be started: there are no activities in it"
+#~ msgstr "营销活动无法启动：没有任何活动项"
 
 #~ msgid ""
 #~ "Determines an additional criterion to add to the filter when selecting new "

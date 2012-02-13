@@ -711,6 +711,38 @@
             <field name="type">accounts</field>
         </record>
         -->
+
+        <!-- Adding new menuitems in Reporting\Legal Reports\Belgian Statements -->
+        <menuitem
+            id="menu_finance_belgian_statement"
+            name="Belgium Statements"
+            parent="account.menu_finance_legal_statement" groups="account.group_account_manager"/>
+
+        <record id="action_account_report_be_bs" model="ir.actions.act_window">
+             <field name="name">Bilan</field>
+             <field name="res_model">accounting.report</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="account.accounting_report_view"/>
+             <field name="target">new</field>
+             <field name="context" eval="{'default_account_report_id':ref('account_financial_report_belgium_bs')}"/>
+        </record>
+        <menuitem icon="STOCK_PRINT" name="Balance Sheet" action="action_account_report_be_bs" id="menu_account_report_be_bs" parent="menu_finance_belgian_statement" sequence="1"/>
+
+        <record id="action_account_report_be_pl" model="ir.actions.act_window">
+             <field name="name">Comptes de Charges</field>
+             <field name="res_model">accounting.report</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="account.accounting_report_view"/>
+             <field name="target">new</field>
+             <field name="context"></field>
+             <field name="context" eval="{'default_account_report_id':ref('account_financial_report_belgiumpl0')}"/>
+        </record>
+        <menuitem icon="STOCK_PRINT" name="Profit And Loss" action="action_account_report_be_pl" id="menu_account_report_be_pl" parent="menu_finance_belgian_statement" sequence="2"/>
+        
     </data>
 </openerp>
 

@@ -4,8 +4,14 @@ import textwrap
 import simplejson
 import werkzeug.wrappers
 
-import web.common.http as openerpweb
-import web.controllers.main
+try:
+    # embedded
+    import openerp.addons.web.common.http as openerpweb
+    import openerp.addons.web.controllers.main as webmain
+except ImportError:
+    # standalone
+    import web.common.http as openerpweb
+    import web.controllers.main as webmain
 
 class EDI(openerpweb.Controller):
     # http://hostname:8069/edi/view?db=XXXX&token=XXXXXXXXXXX
@@ -24,14 +30,14 @@ class EDI(openerpweb.Controller):
     def view(self, req, db, token):
         d = self.template(req)
         d["init"] = 's.edi.edi_view("%s","%s");'%(db,token)
-        r = web.controllers.main.html_template % d
+        r = webmain.html_template % d
         return r
 
     @openerpweb.httprequest
     def import_url(self, req, url):
         d = self.template(req)
         d["init"] = 's.edi.edi_import("%s");'%(url)
-        r = web.controllers.main.html_template % d
+        r = webmain.html_template % d
         return r
 
     @openerpweb.httprequest
@@ -78,7 +84,7 @@ class EDI(openerpweb.Controller):
     def import_edi_url(self, req, url):
         result = req.session.proxy('edi').import_edi_url(req.session._db, req.session._uid, req.session._password, url)
         if len(result) == 1:
-            return {"action": web.controllers.main.clean_action(req, result[0][2])}
+            return {"action": webmain.clean_action(req, result[0][2])}
         return True
 
 #

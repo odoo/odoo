@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-12 06:17+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:48+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:29+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
@@ -82,11 +82,6 @@ msgstr "Идея должна быть \"Открыта\" перед голос�
 #. module: idea
 #: view:report.vote:0
 msgid "Open Date"
-msgstr ""
-
-#. module: idea
-#: view:report.vote:0
-msgid "Idea Vote created in curren year"
 msgstr ""
 
 #. module: idea
@@ -624,12 +619,6 @@ msgid "Refused"
 msgstr "Отказано"
 
 #. module: idea
-#: code:addons/idea/idea.py:274
-#, python-format
-msgid "Draft/Accepted/Cancelled ideas Could not be voted"
-msgstr "Нельзя голосовать за черновики/принятые/отмененные идеи"
-
-#. module: idea
 #: view:idea.vote:0
 msgid "Vote date"
 msgstr "Дата голосования"
@@ -670,6 +659,11 @@ msgid "Vote Status"
 msgstr "Статус голосования"
 
 #. module: idea
+#: view:report.vote:0
+msgid "Idea Vote created in current year"
+msgstr ""
+
+#. module: idea
 #: field:idea.idea,vote_avg:0
 msgid "Average Score"
 msgstr "Средний уровень"
@@ -706,6 +700,12 @@ msgstr "Проголосовать"
 #: field:report.vote,year:0
 msgid "Year"
 msgstr "Год"
+
+#. module: idea
+#: code:addons/idea/idea.py:274
+#, python-format
+msgid "You can not vote on a Draft/Accepted/Cancelled ideas."
+msgstr ""
 
 #. module: idea
 #: view:idea.select:0
@@ -802,6 +802,10 @@ msgstr "Выберите идею для голосования"
 
 #~ msgid "    Today    "
 #~ msgstr "    Сегодня    "
+
+#, python-format
+#~ msgid "Draft/Accepted/Cancelled ideas Could not be voted"
+#~ msgstr "Нельзя голосовать за черновики/принятые/отмененные идеи"
 
 #~ msgid ""
 #~ "\n"

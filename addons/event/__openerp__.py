@@ -55,7 +55,12 @@ Note that:
     'demo_xml': ['event_demo.xml'],
     'test': [],
     'installable': True,
+<<<<<<< TREE
     'active': False,
+=======
+    'auto_install': False,
+    'certificate': '0083059161581',
+>>>>>>> MERGE-SOURCE
     'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

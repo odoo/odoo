@@ -58,10 +58,12 @@ class account_invoice(osv.osv):
         return res and res[0] or False
 
     def _get_currency(self, cr, uid, context=None):
-        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid], context=context)[0]
-        if user.company_id:
-            return user.company_id.currency_id.id
-        return pooler.get_pool(cr.dbname).get('res.currency').search(cr, uid, [('rate','=', 1.0)])[0]
+        res = False
+        journal_id = self._get_journal(cr, uid, context=context)
+        if journal_id:
+            journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+            res = journal.currency and journal.currency.id or journal.company_id.currency_id.id
+        return res
 
     def _get_journal_analytic(self, cr, uid, type_inv, context=None):
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
@@ -287,7 +289,7 @@ class account_invoice(osv.osv):
         'user_id': lambda s, cr, u, c: u,
     }
     _sql_constraints = [
-        ('number_uniq', 'unique(number, company_id)', 'Invoice Number must be unique per Company!'),
+        ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
@@ -464,10 +466,10 @@ class account_invoice(osv.osv):
             result['value'].update(to_update['value'])
         return result
 
-    def onchange_journal_id(self, cr, uid, ids, journal_id=False):
+    def onchange_journal_id(self, cr, uid, ids, journal_id=False, context=None):
         result = {}
         if journal_id:
-            journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
+            journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
             currency_id = journal.currency and journal.currency.id or journal.company_id.currency_id.id
             result = {'value': {
                     'currency_id': currency_id,
@@ -572,18 +574,6 @@ class account_invoice(osv.osv):
         else:
             journal_ids = obj_journal.search(cr, uid, [])
 
-        if currency_id and company_id:
-            currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
-            if currency.company_id and currency.company_id.id != company_id:
-                val['currency_id'] = False
-            else:
-                val['currency_id'] = currency.id
-        if company_id:
-            company = self.pool.get('res.company').browse(cr, uid, company_id)
-            if company.currency_id.company_id and company.currency_id.company_id.id != company_id:
-                val['currency_id'] = False
-            else:
-                val['currency_id'] = company.currency_id.id
         return {'value': val, 'domain': dom}
 
     # go from canceled state to draft state

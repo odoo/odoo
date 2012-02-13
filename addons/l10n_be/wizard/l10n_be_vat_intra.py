@@ -52,19 +52,31 @@ class partner_vat_intra(osv.osv_memory):
     '''
     ),
         'period_ids': fields.many2many('account.period', 'account_period_rel', 'acc_id', 'period_id', 'Period (s)', help = 'Select here the period(s) you want to include in your intracom declaration'),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)]),
+        'tax_code_id': fields.many2one('account.tax.code', 'Company', domain=[('parent_id', '=', False)], help="Keep empty to use the user's company", required=True),
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
         'mand_id' : fields.char('MandataireId', size=14, required=True,  help="This identifies the representative of the sending company. This is a string of 14 characters"),
         'msg': fields.text('File created', size=14, readonly=True),
         'no_vat': fields.text('Partner With No VAT', size=14, readonly=True, help="The Partner whose VAT number is not defined they doesn't include in XML File."),
         'file_save' : fields.binary('Save File', readonly=True),
         'country_ids': fields.many2many('res.country', 'vat_country_rel', 'vat_id', 'country_id', 'European Countries'),
+        'comments': fields.text('Comments'),
+        'identification_type': fields.selection([('tin','TIN'), ('nvat','NVAT'), ('other','Other')], 'Identification Type', required=True),
+        'other': fields.char('Other Qlf', size=16, help="Description of Identification Type"),
         }
+
+    def _get_tax_code(self, cr, uid, context=None):
+        obj_tax_code = self.pool.get('account.tax.code')
+        obj_user = self.pool.get('res.users')
+        company_id = obj_user.browse(cr, uid, uid, context=context).company_id.id
+        tax_code_ids = obj_tax_code.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', False)], context=context)
+        return tax_code_ids and tax_code_ids[0] or False
 
     _defaults = {
         'country_ids': _get_europe_country,
         'file_save': _get_xml_data,
-        'name': 'vat_Intra.xml',
+        'name': 'vat_intra.xml',
+        'identification_type': 'nvat',
+        'tax_code_id': _get_tax_code,
     }
 
     def _get_datas(self, cr, uid, ids, context=None):
@@ -82,21 +94,25 @@ class partner_vat_intra(osv.osv_memory):
         obj_partner_add = self.pool.get('res.partner.address')
 
         xmldict = {}
-        street = zip_city = country = p_list = data_clientinfo = ''
+        post_code = street = city = country = data_clientinfo = ''
         seq = amount_sum = 0
 
         wiz_data = self.browse(cr, uid, ids[0], context=context)
+        type = wiz_data.identification_type or ''
+        other = wiz_data.other or ''
+        comments = wiz_data.comments
 
         if wiz_data.tax_code_id:
-            data_cmpny = wiz_data.tax_code_id.company_id
+            data_company = wiz_data.tax_code_id.company_id
         else:
-            data_cmpny = obj_user.browse(cr, uid, uid, context=context).company_id
-
+            data_company = obj_user.browse(cr, uid, uid, context=context).company_id
+        
         # Get Company vat
-        company_vat = data_cmpny.partner_id.vat
+        company_vat = data_company.partner_id.vat
         if not company_vat:
             raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
         company_vat = company_vat.replace(' ','').upper()
+        issued_by = company_vat[:2]
 
         if len(wiz_data.period_code) != 6:
             raise osv.except_osv(_('Wrong Period Code'), _('The period code you entered is not valid.'))
@@ -108,17 +124,17 @@ class partner_vat_intra(osv.osv_memory):
         if not p_id_list:
             raise osv.except_osv(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
 
-        seq_controlref = obj_sequence.get(cr, uid, 'controlref')
         seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
-        cref = company_vat[2:] + seq_controlref[-4:]
-        dnum = cref + seq_declarantnum[-5:]
+        dnum = company_vat[2:] + seq_declarantnum[-4:]
 
-        addr = obj_partner.address_get(cr, uid, [data_cmpny.partner_id.id], ['invoice'])
+        addr = obj_partner.address_get(cr, uid, [data_company.partner_id.id], ['invoice'])
+        email = data_company.partner_id.email or ''
+        phone = data_company.partner_id.phone or ''
+
         if addr.get('invoice',False):
             ads = obj_partner_add.browse(cr, uid, [addr['invoice']])[0]
-            zip_city = (ads.city or '') + ' ' + (ads.zip or '')
-            if zip_city== ' ':
-                zip_city = ''
+            city = (ads.city or '')
+            post_code = (ads.zip or '')
             if ads.street:
                 street = ads.street
             if ads.street2:
@@ -127,40 +143,56 @@ class partner_vat_intra(osv.osv_memory):
             if ads.country_id:
                 country = ads.country_id.code
 
+        if not country:
+            country = company_vat[:2]
+        if not email:
+            raise osv.except_osv(_('Data Insufficient!'),_('No email address associated with the company.'))
+        if not phone:
+            raise osv.except_osv(_('Data Insufficient!'),_('No phone associated with the company.'))
         xmldict.update({
-                        'company_name': data_cmpny.name,
+                        'company_name': data_company.name,
                         'company_vat': company_vat, 
                         'vatnum':  company_vat[2:],
-                        'controlref': seq_controlref,
-                        'cref': cref, 
                         'mand_id': wiz_data.mand_id, 
                         'sender_date': str(time.strftime('%Y-%m-%d')),
                         'street': street,
-                        'zip_city': zip_city,
+                        'city': city,
+                        'post_code': post_code,
                         'country': country,
+                        'email': email,
+                        'phone': phone.replace('/','').replace('.','').replace('(','').replace(')','').replace(' ',''),
                         'period': wiz_data.period_code,
-                        'clientlist': []
+                        'clientlist': [], 
+                        'comments': comments,
+                        'type': type.upper(),
+                        'other': other,
+                        'issued_by': issued_by,
                         })
         
-        codes = ('44', '46L', '46T')
-        cr.execute('''SELECT p.name As partner_name, l.partner_id AS partner_id, p.vat AS vat, t.code AS intra_code, SUM(l.tax_amount) AS amount
+        codes = ('44', '46L', '46T', '48s44', '48s46L', '48s46T')
+        cr.execute('''SELECT p.name As partner_name, l.partner_id AS partner_id, p.vat AS vat, 
+                      (CASE WHEN t.code = '48s44' THEN '44'
+                            WHEN t.code = '48s46L' THEN '46L'
+                            WHEN t.code = '48s46T' THEN '46T'
+                       ELSE t.code END) AS intra_code,
+                      SUM(CASE WHEN t.code in ('48s44','48s46L','48s46T') THEN -l.tax_amount ELSE l.tax_amount END) AS amount
                       FROM account_move_line l
                       LEFT JOIN account_tax_code t ON (l.tax_code_id = t.id)
                       LEFT JOIN res_partner p ON (l.partner_id = p.id)
                       WHERE t.code IN %s
                        AND l.period_id IN %s
-                      GROUP BY p.name, l.partner_id, p.vat, t.code''', (codes, tuple([p.id for p in wiz_data.period_ids])))            
+                       AND t.company_id = %s
+                      GROUP BY p.name, l.partner_id, p.vat, intra_code''', (codes, tuple([p.id for p in wiz_data.period_ids]), data_company.id))
 
         p_count = 0
+
         for row in cr.dictfetchall():
             if not row['vat']:
-                p_list += str(row['partner_name']) + ', '
+                row['vat'] = ''
                 p_count += 1
-                continue
 
             seq += 1
-            amt = row['amount'] or 0
-            amt = int(round(amt * 100))
+            amt = row['amount'] or 0.0
             amount_sum += amt
 
             intra_code = row['intra_code'] == '44' and 'S' or (row['intra_code'] == '46L' and 'L' or (row['intra_code'] == '46T' and 'T' or ''))
@@ -186,30 +218,47 @@ class partner_vat_intra(osv.osv_memory):
         """
         mod_obj = self.pool.get('ir.model.data')
         xml_data = self._get_datas(cursor, user, ids, context=context)
+        month_quarter = xml_data['period'][:2]
+        year = xml_data['period'][2:]
         data_file = ''
+        #for country in xml_data['clientlist']:
+        #    if country['country'] == 'BE':
+        #        country['country'] = ''
+        #    else:
+        #        country['country'] = country['country']
 
         # Can't we do this by etree?
-        data_head = """<?xml version="1.0"?>
-<VatIntra xmlns="http://www.minfin.fgov.be/VatIntra" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" RecipientId="VAT-ADMIN" SenderId="%(company_vat)s" ControlRef="%(controlref)s" MandataireId="%(mand_id)s" SenderDate="%(sender_date)s" VersionTech="1.3">
-	<AgentRepr DecNumber="1">
-		<CompanyInfo>
-			<VATNum>%(company_vat)s</VATNum>
-			<Name>%(company_name)s</Name>
-			<Street>%(street)s</Street>
-			<CityAndZipCode>%(zip_city)s</CityAndZipCode>
-			<Country>%(country)s</Country>
-		</CompanyInfo>
-	</AgentRepr>""" % (xml_data)
+        data_head = """<?xml version="1.0" encoding="ISO-8859-1"?>
+<ns2:IntraConsignment xmlns="http://www.minfin.fgov.be/InputCommon" xmlns:ns2="http://www.minfin.fgov.be/IntraConsignment" IntraListingsNbr="1">
+    <ns2:Representative>
+        <RepresentativeID identificationType="%(type)s" issuedBy="%(issued_by)s" otherQlf="%(other)s">%(company_vat)s</RepresentativeID>
+        <Name>%(company_name)s</Name>
+        <Street>%(street)s</Street>
+        <PostCode>%(post_code)s</PostCode>
+        <City>%(city)s</City>
+        <CountryCode>%(country)s</CountryCode>
+        <EmailAddress>%(email)s</EmailAddress>
+        <Phone>%(phone)s</Phone>
+    </ns2:Representative>
+<ns2:RepresentativeReference>%(mand_id)s</ns2:RepresentativeReference>""" % (xml_data)
 
-        data_comp_period = '\n\t\t<CompanyInfo>\n\t\t\t<VATNum>%(vatnum)s</VATNum>\n\t\t\t<Name>%(company_name)s</Name>\n\t\t\t<Street>%(street)s</Street>\n\t\t\t<CityAndZipCode>%(zip_city)s</CityAndZipCode>\n\t\t\t<Country>%(country)s</Country>\n\t\t</CompanyInfo>\n\t\t<Period>%(period)s</Period>' % (xml_data)
+        data_comp_period = '\n\t\t<ns2:Declarant>\n\t\t\t<VATNumber>%(vatnum)s</VATNumber>\n\t\t\t<Name>%(company_name)s</Name>\n\t\t\t<Street>%(street)s</Street>\n\t\t\t<PostCode>%(post_code)s</PostCode>\n\t\t\t<City>%(city)s</City>\n\t\t\t<CountryCode>%(country)s</CountryCode>\n\t\t\t<EmailAddress>%(email)s</EmailAddress>\n\t\t\t<Phone>%(phone)s</Phone>\n\t\t</ns2:Declarant>' % (xml_data)
+        if month_quarter.startswith('3'):
+            data_comp_period += '\n\t\t<ns2:Period>\n\t\t\t<ns2:Quarter>'+month_quarter+'</ns2:Quarter> \n\t\t\t<ns2:Year>'+year+'</ns2:Year>\n\t\t</ns2:Period>'
+        elif month_quarter.startswith('0') and month_quarter.endswith('0'):
+            data_comp_period+= '\n\t\t<ns2:Period>%(period)s</ns2:Period>' % (xml_data)
+        else:
+            data_comp_period += '\n\t\t<ns2:Period>\n\t\t\t<ns2:Month>'+month_quarter+'</ns2:Month> \n\t\t\t<ns2:Year>'+year+'</ns2:Year>\n\t\t</ns2:Period>'
 
         data_clientinfo = ''
         for client in xml_data['clientlist']:
-            data_clientinfo +='\n\t\t<ClientList SequenceNum="%(seq)s">\n\t\t\t<CompanyInfo>\n\t\t\t\t<VATNum>%(vatnum)s</VATNum>\n\t\t\t\t<Country>%(country)s</Country>\n\t\t\t</CompanyInfo>\n\t\t\t<Amount>%(amount)s</Amount>\n\t\t\t<Code>%(code)s</Code>\n\t\t</ClientList>' % (client)
+            if not client['vatnum']:
+                raise osv.except_osv(_('Data Insufficient!'),_('No vat number defined for %s') % client['partner_name'])
+            data_clientinfo +='\n\t\t<ns2:IntraClient SequenceNumber="%(seq)s">\n\t\t\t<ns2:CompanyVATNumber issuedBy="%(country)s">%(vatnum)s</ns2:CompanyVATNumber>\n\t\t\t<ns2:Code>%(code)s</ns2:Code>\n\t\t\t<ns2:Amount>%(amount)s</ns2:Amount>\n\t\t\t</ns2:IntraClient>' % (client)
 
-        data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="%(dnum)s" ClientNbr="%(clientnbr)s" AmountSum="%(amountsum)s" >' % (xml_data)
+        data_decl = '\n\t<ns2:IntraListing SequenceNumber="1" ClientsNbr="%(clientnbr)s" DeclarantReference="%(dnum)s" AmountSum="%(amountsum)s">' % (xml_data)
 
-        data_file += data_head + data_decl + data_comp_period + data_clientinfo + '\n\t</DeclarantList>\n</VatIntra>'
+        data_file += data_head + data_decl + data_comp_period + data_clientinfo + '\n\t\t<ns2:Comment>%(comments)s</ns2:Comment>\n\t</ns2:IntraListing>\n</ns2:IntraConsignment>' % (xml_data)
         context['file_save'] = data_file
 
         model_data_ids = mod_obj.search(cursor, user,[('model','=','ir.ui.view'),('name','=','view_vat_intra_save')], context=context)
@@ -251,7 +300,7 @@ class vat_intra_print(report_sxw.rml_parse):
             'time': time,
         })
         
-report_sxw.report_sxw('report.partner.vat.intra.print', 'partner.vat.intra', 'addons/l10n_be/wizard/l10n_be_vat_intra_print.rml', parser=vat_intra_print)
+report_sxw.report_sxw('report.partner.vat.intra.print', 'partner.vat.intra', 'addons/l10n_be/wizard/l10n_be_vat_intra_print.rml', parser=vat_intra_print, header="internal")
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

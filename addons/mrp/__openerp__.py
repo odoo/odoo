@@ -99,7 +99,7 @@ Dashboard provided by this module:
     ],
     'installable': True,
     'application': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0032052481373',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -41,13 +41,13 @@ the Administration / Customization / Reporting menu.
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
+        'wizard/wiz_set_filter_fields_view.xml',
         'wizard/report_menu_create_view.xml',
-        'base_report_creator_wizard.xml',
         'base_report_creator_view.xml'
     ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0031285794149',
     'images': ['images/base_report_creator1.jpeg','images/base_report_creator2.jpeg','images/base_report_creator3.jpeg',],
 }

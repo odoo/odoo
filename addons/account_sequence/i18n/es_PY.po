@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-03-04 16:50+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish (Paraguay) <es_PY@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:32+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:09+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -27,6 +27,11 @@ msgstr "Configuración de Aplicación de Secuencia de Cuenta"
 #: constraint:account.move:0
 msgid ""
 "You can not create more than one move per period on centralized journal"
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
 msgstr ""
 
 #. module: account_sequence
@@ -77,11 +82,6 @@ msgid "Company"
 msgstr "Compañía"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "No puede crear una línea de movimiento en una cuenta cerrada."
-
-#. module: account_sequence
 #: help:account.journal,internal_sequence_id:0
 msgid ""
 "This sequence will be used to maintain the internal number for the journal "
@@ -108,8 +108,8 @@ msgstr "Número interno"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: account_sequence
 #: help:account.sequence.installer,padding:0
@@ -127,7 +127,7 @@ msgstr "Nombre"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
+msgid "You can not create journal items on closed account."
 msgstr ""
 
 #. module: account_sequence
@@ -180,8 +180,16 @@ msgstr "¡El nombre del diario debe ser único por compañía!"
 #. module: account_sequence
 #: constraint:account.move.line:0
 msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
 msgstr ""
 
 #. module: account_sequence
@@ -210,11 +218,6 @@ msgid "You can enhance the Account Sequence Application by installing ."
 msgstr ""
 "Puede realzar la Aplicación de Secuencia de la Cuenta mediante instalación ."
 
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "No puede crear un movimiento en una cuenta de tipo vista."
-
 #~ msgid "Entries Sequence Numbering"
 #~ msgstr "Numeración de la secuencia de asientos"
 
@@ -236,7 +239,16 @@ msgstr "No puede crear un movimiento en una cuenta de tipo vista."
 #~ msgid "Configuration Progress"
 #~ msgstr "Progreso de la configuración"
 
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
+
 #~ msgid ""
 #~ "You cannot create more than one move per period on centralized journal"
 #~ msgstr ""
 #~ "No puede crear más de un movimiento por periodo en un diario centralizado"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "No puede crear una línea de movimiento en una cuenta cerrada."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "No puede crear un movimiento en una cuenta de tipo vista."
