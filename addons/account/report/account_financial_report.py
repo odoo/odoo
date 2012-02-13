@@ -61,6 +61,9 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 'level': bool(report.style_overwrite) and report.style_overwrite or report.level,
                 'account_type': report.type =='sum' and 'view' or False, #used to underline the financial report balances
             }
+            if data['form']['debit_credit']:
+                vals['debit'] = report.debit
+                vals['credit'] = report.credit
             if data['form']['enable_filter']:
                 vals['balance_cmp'] = self.pool.get('account.financial.report').browse(self.cr, self.uid, report.id, context=data['form']['comparison_context']).balance
             lines.append(vals)
@@ -87,6 +90,11 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                         'level': report.display_detail == 'detail_with_hierarchy' and min(account.level + 1,6) or 6, #account.level + 1
                         'account_type': account.type,
                     }
+
+                    if data['form']['debit_credit']:
+                        vals['debit'] = account.debit
+                        vals['credit'] = account.credit
+                    lines.append(vals)
                     if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance']):
                         flag = True
                     if data['form']['enable_filter']:
