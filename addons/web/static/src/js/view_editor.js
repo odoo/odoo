@@ -417,22 +417,27 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         });
     },
     inherited_view: function(selected_row){
-        var self = this,row_id = parseInt((selected_row.attr('id')).split('-')[1]);
+        var self = this;
+        var row_id = parseInt((selected_row.attr('id')).split('-')[1]);
         var obj = self.get_object_by_id(row_id,self.one_object['main_object'], [])[0];
-        var view_name = this.model + '.inherit_' + Math.round(Math.random() * 1000),
-        view_find = selected_row,view_id,min_level = parseInt(selected_row.attr('level'));
+        var view_name = this.model + '.inherit_' + Math.round(Math.random() * 1000);
+        var view_find = selected_row;
+        var view_id;
+        var min_level = parseInt(selected_row.attr('level'));
         while (1) {
             view_find = view_find.prev();
             if (view_find.length == 0 ||
-                    (self.edit_xml_dialog.$element.find(view_find).find('a').text()).search("view_id") != -1
-                    && parseInt(view_find.attr('level')) < min_level ) {
-                view_id = parseInt(($(view_find).find('a').text()).replace(/[^0-9]+/g, ''));
+                    self.edit_xml_dialog.$element.find(view_find).find('a').text().search("view_id") != -1 &&
+                    parseInt(view_find.attr('level')) < min_level ) {
+                view_id = parseInt($(view_find).find('a').text().replace(/[^0-9]+/g, ''));
                 break;
             }
-            if (view_find.attr('level') < min_level) {min_level = parseInt(view_find.attr('level'));}
+            if (view_find.attr('level') < min_level) {
+            	min_level = parseInt(view_find.attr('level'));
+            }
         }
-        var val = _.detect(obj.att_list,function(val){return val[0] == "name";});
-        var priority =_.detect(self.one_object['arch'],function(val){return val.view_id == view_id;});
+        var val = _.detect(obj.att_list, function(val) {return val[0] == "name";});
+        var priority = _.detect(self.one_object['arch'], function(val) {return val.view_id == view_id;});
         var arch = _.str.sprintf("<?xml version='1.0'?>\n\t <field name='%s' position='after'> </field>", val[1]);
         var vals = {'model': self.model, 'name': view_name, 'priority': priority.priority + 1, 'type': "form", 'arch': arch,'inherit_id':self.main_view_id};
         this.dataset.create(vals, function(suc) {
