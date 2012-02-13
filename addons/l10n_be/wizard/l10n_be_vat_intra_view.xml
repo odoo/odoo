@@ -14,15 +14,13 @@
                             <page string="General Information">
                                 <newline/>
                                 <field name="period_code"/>
-                                <field name="mand_id"/>
+                                <newline/>
                                 <field name="tax_code_id" string="Company" widget="selection" groups="base.group_multi_company"/>
                                 <newline/>
+                                <field name="mand_id"/>
+                                <newline/>
                                 <separator string="Periods" colspan="4"/>
-                                <field name="period_ids" nolabel="1" colspan="4"/>
-                                <!-- should be unused ?
-                                <separator string="Advanced Options" colspan="4"/>
-                                <field name="identification_type"/>
-                                <field name="other" attrs="{'invisible':[('identification_type','!=','other')], 'required':[('identification_type','=','other')]}"/> -->
+                                <field name="period_ids" nolabel="1" colspan="4" height="200"/>
                                 <group colspan="4" groups="base.group_extended">
                                     <separator string="Comments" colspan="4"/>
                                     <field colspan="4" name="comments" nolabel="1"/>
@@ -72,9 +70,9 @@
 
         <menuitem
             name="Partner VAT Intra"
-            parent="menu_finance_belgian_statement"
+            parent="l10n_be.menu_finance_belgian_statement"
             action="action_vat_intra"
-            id="l10_be_vat_intra"/>
+            id="l10n_be.l10_be_vat_intra"/>
 
     </data>
 </openerp>
