@@ -8,3 +8,52 @@
          type: service
          event_ok: True
          event_type_id: 1
+-
+    create a sale order
+-
+    !record {model: sale.order, id: order}:
+         partner_id: base.res_partner_agrolait
+         note: Invoice after delivery
+         payment_term: account.account_payment_term
+-
+    create sale order line from the sale order with the product
+-
+    !record {model: event.event,id: event}:
+         name: test_event
+         type: 1
+         date_end: '2012-01-01 19:05:15'
+         date_begin: '2012-01-01 18:05:15'
+-
+    create a sale order
+-
+    !record {model: sale.order, id: order}:
+         partner_id: base.res_partner_agrolait
+         note: Invoice after delivery
+         payment_term: account.account_payment_term
+-
+    !record {model: sale.order.line, id: line}:
+         product_id: event_product
+         price_unit: 190.50
+         product_uom_qty: 8
+         order_id: order
+         name: sale order line
+         event: event
+-
+    confirm the sale order
+-
+    !workflow {model: sale.order, ref: order, action: order_confirm}
+-
+    check if sale order is confirmed
+-
+    !assert {model: sale.order, id: order}:
+         - state == 'confirmed'
+-
+    check if a registration is created
+-
+    !python {model: event.registration}: |
+        order_id = ref('order')
+        order =  self.pool.get('sale.order').browse(cr, uid,order_id)
+        registration_ids = self.search(cr,uid,[('origin','=',order.name)])
+        if registration_ids == []:
+           raise osv.except_osv(_('Error!'),_("The registration is not created"))
+
