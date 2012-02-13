@@ -276,7 +276,12 @@ openerp.web_kanban.KanbanGroup = openerp.web.OldWidget.extend({
         if (this.group) {
             this.value = group.value;
             this.title = group.value;
-            if (this.value instanceof Array) {
+            var field = this.view.fields_view.fields[this.view.group_by];
+            if (field) {
+                try {
+                    this.title = openerp.web.format_value(this.value, field, false);
+                } catch(e) {}
+            } else if (this.value instanceof Array) {
                 this.title = this.value[1];
                 this.value = this.value[0];
             }
