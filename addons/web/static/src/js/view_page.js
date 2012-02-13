@@ -92,17 +92,22 @@ openerp.web.page = function (openerp) {
     openerp.web.page.FieldURIReadonly = openerp.web.page.FieldCharReadonly.extend({
         template: 'FieldURI.readonly',
         scheme: null,
+        format_value: function (value) {
+            return value;
+        },
         set_value: function (value) {
-            var displayed = this._super.apply(this, arguments);
             this.$element.find('a')
-                    .attr('href', this.scheme + ':' + displayed)
-                    .text(displayed);
+                    .attr('href', this.scheme + ':' + value)
+                    .text(this.format_value(value));
         }
     });
     openerp.web.page.FieldEmailReadonly = openerp.web.page.FieldURIReadonly.extend({
         scheme: 'mailto'
     });
     openerp.web.page.FieldUrlReadonly = openerp.web.page.FieldURIReadonly.extend({
+        format_value: function (value) {
+            return value.slice(2);
+        },
         set_value: function (value) {
             var s = /(\w+):(.+)/.exec(value);
             if (!s || !(s[1] === 'http' || s[1] === 'https')) { return; }
