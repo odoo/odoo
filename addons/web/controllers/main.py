@@ -163,8 +163,11 @@ class WebClient(openerpweb.Controller):
         :return: most recent modification time amongst the fileset
         :rtype: datetime.datetime
         """
-        return max(datetime.datetime.fromtimestamp(os.path.getmtime(f))
-                   for f in files)
+        files = list(files)
+        if files:
+            return max(datetime.datetime.fromtimestamp(os.path.getmtime(f))
+                       for f in files)
+        return datetime.datetime(1970, 1, 1)
 
     def make_conditional(self, req, response, last_modified=None, etag=None):
         """ Makes the provided response conditional based upon the request,
@@ -235,8 +238,6 @@ class WebClient(openerpweb.Controller):
     def js(self, req, mods=None):
         files = [f[0] for f in self.manifest_glob(req, mods, 'js')]
         last_modified = self.get_last_modified(files)
-        print 'last modified', last_modified
-        print 'if modified since', req.httprequest.if_modified_since
         if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
             return werkzeug.wrappers.Response(status=304)
 
