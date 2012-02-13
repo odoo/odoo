@@ -36,7 +36,7 @@ class event_type(osv.osv):
     _description = __doc__
     _columns = {
         'name': fields.char('Event type', size=64, required=True),
-        'default_reply_to': fields.char('Default Reply-To', size=64, required=True),
+        'default_reply_to': fields.char('Default Reply-To', size=64 ),
         'default_email_event': fields.many2one('email.template','Registration Confirmation Email'),
         'default_email_registration':fields.many2one('email.template','Registration Confirmation Email'),
         'default_registration_min':fields.integer('Default Minimum Registration'),
