@@ -21,6 +21,8 @@
     !record {model: event.event,id: event}:
          name: test_event
          type: 1
+         date_end: '2012-01-01 19:05:15'
+         date_begin: '2012-01-01 18:05:15'
 -
     !record {model: sale.order.line, id: line}:
          product_id: event_product
@@ -46,7 +48,5 @@
         order =  self.pool.get('sale.order').browse(cr, uid,order_id)
         registration_ids = self.search(cr,uid,[('origin','=',order.name)])
         if registration_ids == []:
-           print 'erreur' 
-        else:
-            if registration_ids[0].state == 'draft':
-                print 'erreur mauvais state'
+           raise osv.except_osv(_('Error!'),_("The registration is not created"))
+
