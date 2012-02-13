@@ -55,9 +55,18 @@ class pos_order(osv.osv):
         #_logger.info("orders: %r", orders)
         list = []
         for order in orders:
-            list.append(self.create(cr, uid, order, context))
+            # set account_id using property_account_receivable if defined
+            property_obj = self.pool.get('ir.property')
+            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
+            account_id = (account_def and account_def.id) or False
+            for statement_val in order['statement_ids']:
+                statement_val[2]['account_id'] = account_id or statement_val[2]['account_id']
+            # create pos order
+            order_id = self.create(cr, uid, order, context)
+            list.append(order_id)
+            # mark as paid
             wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'pos.order', list[-1], 'paid', cr)
+            wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
         return list
 
     def unlink(self, cr, uid, ids, context=None):
