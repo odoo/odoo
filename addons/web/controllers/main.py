@@ -94,6 +94,7 @@ def concat_files(file_list, reader=None, intersperse=""):
 html_template = """<!DOCTYPE html>
 <html style="height: 100%%">
     <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title>OpenERP</title>
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
