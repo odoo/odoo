@@ -26,7 +26,7 @@ from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
 from crm import wizard
-
+import time
 
 wizard.mail_compose_message.SUPPORTED_MODELS.append('event.registration')
 
@@ -42,6 +42,10 @@ class event_type(osv.osv):
         'default_registration_min':fields.integer('Default Minimum Registration'),
         'default_registration_max':fields.integer('Default Maximum Registration'),
     }
+    _defaults = {
+        'default_registration_min' : 0,
+        'default_registration_max':1000,
+        }
 
 event_type()
 
@@ -57,7 +61,9 @@ class event_event(osv.osv):
         reads = self.browse(cr, uid, ids, context=context)
         res = []
         for record in reads:
-            name = record.name+'('+record.date_begin+')'
+            date= time.strptime(record.date_begin,'%Y-%m-%d %H:%M:%S')
+            date =time.strftime('%Y-%m-%d',date)
+            name = record.name+' ('+date+')'
             res.append((record['id'], name))
         return res
 
@@ -141,7 +147,7 @@ class event_event(osv.osv):
     
 
     _columns = {
-        'name': fields.char('Participant Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
+        'name': fields.char('Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
         'type': fields.many2one('event.type', 'Type', help="Type of Event like Seminar, Exhibition, Conference, Training.", readonly=False, states={'done': [('readonly', True)]}),
         'register_max': fields.integer('Maximum Registrations', help="Provide Maximum Number of Registrations", readonly=True, states={'draft': [('readonly', False)]}),
@@ -179,7 +185,6 @@ class event_event(osv.osv):
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
-        'register_max': 1000,
     }
 
     def _check_closing_date(self, cr, uid, ids, context=None):
@@ -191,21 +196,19 @@ class event_event(osv.osv):
     _constraints = [
         (_check_closing_date, 'Error ! Closing Date cannot be set before Beginning Date.', ['date_end']),
     ]
-    #TODO: display sale_team in event form view and use this onchange
-    def do_team_change(self, cr, uid, ids, team_id, context=None):
-        """
-        On Change Callback: when team change, this is call.
-        on this function, take value of reply_to from selected team.
-        """
-        if not team_id:
-            return {}
-        team_pool = self.pool.get('crm.case.section')
-        res = {}
-        team = team_pool.browse(cr, uid, team_id, context=context)
-        if team.reply_to:
-            res = {'value': {'reply_to': team.reply_to}}
-        return res
 
+    def onchange_evnet_type(self, cr, uid, ids, type_event, context=None):
+        if type_event:
+            type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context)
+            dic ={
+              'reply_to':type_info.default_reply_to,
+              'email_registration_id':type_info.default_email_registration.id,
+              'email_confirmation_id':type_info.default_email_event.id,
+              'register_min':type_info.default_registration_min,
+              'register_max':type_info.default_registration_max,
+            }
+            res = {'value':dic}
+            return res
 event_event()
 
 class event_registration(osv.osv):
@@ -320,7 +323,13 @@ class event_registration(osv.osv):
         if not contact:
             return data
         addr_obj = self.pool.get('res.partner.address')
-        data['email_from'] = addr_obj.browse(cr, uid, contact, context).email
+        contact_id =  addr_obj.browse(cr, uid, contact, context)
+        data = {
+            'email':contact_id.email,
+            'contact_id':contact_id.id,
+            'name':contact_id.name,
+            'phone':contact_id.phone,
+            }
         return {'value': data}
 
     def onchange_event(self, cr, uid, ids, event_id, context=None):
@@ -341,7 +350,6 @@ class event_registration(osv.osv):
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         res_obj = self.pool.get('res.partner')
-
         data = {}
         if not part:
             return {'value': data}

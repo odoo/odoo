@@ -61,7 +61,7 @@
                         <field name="name"/>
                         <field name="date_begin"/>
                         <field name="date_end"/>
-                        <field name="type" widget="selection"/>
+                        <field name="type" on_change="onchange_evnet_type(type,context)" widget="selection"/>
                         <field name="user_id"/>
                         <field name="address_id" />
                     </group>
@@ -269,7 +269,7 @@
                 <tree string="Registration" >
                     <field name="name"/>
                     <field name="email"/>
-                    <field name="event_id"/>
+                    <field name="event_id" />
                     <field name="nb_register" groups="base.group_extended"/>
                     <field name="user_id"/>
                     <field name="origin" groups="base.group_extended"/>
