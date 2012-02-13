@@ -606,6 +606,10 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
         }
         var $e = this.$element;
         var db = $e.find("form [name=db]").val();
+        if (!db) {
+            this.do_warn("Login", "No database selected !");
+            return false;
+        }
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
 
