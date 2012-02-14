@@ -1712,7 +1712,7 @@ class stock_move(osv.osv):
                 WHERE indexname = \'stock_move_location_id_location_dest_id_product_id_state\'')
         if not cursor.fetchone():
             cursor.execute('CREATE INDEX stock_move_location_id_location_dest_id_product_id_state \
-                    ON stock_move (location_id, location_dest_id, product_id, state)')
+                    ON stock_move (product_id, state, location_id, location_dest_id)')
         return res
 
     def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False,
