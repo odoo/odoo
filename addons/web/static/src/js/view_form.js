@@ -1558,7 +1558,7 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
             showButtonPanel: true
         });
         this.$element.find('img.oe_datepicker_trigger').click(function() {
-            if (!self.readonly) {
+            if (!self.readonly && !self.$input_picker[self.jqueryui_object]("widget").is(":visible")) {
                 self.picker('setDate', self.value ? openerp.web.auto_str_to_date(self.value) : new Date());
                 self.$input_picker.show();
                 self.picker('show');
