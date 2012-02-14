@@ -28,7 +28,7 @@
     'description': """
 """,
     'author': 'OpenERP SA',
-    'depends': ['event','sale'],
+    'depends': ['event','sale','sale_crm'],
     'update_xml': [
         'sale_order_view.xml',
     ],
