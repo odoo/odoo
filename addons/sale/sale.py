@@ -147,11 +147,15 @@ class sale_order(osv.osv):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
             res[sale.id] = True
+            invoices = []
             for invoice in sale.invoice_ids:
+                if invoice.state!='cancel':
+                    invoices.append(invoice)
+            for invoice in invoices: 
                 if invoice.state != 'paid':
                     res[sale.id] = False
                     break
-            if not sale.invoice_ids:
+            if not invoices:
                 res[sale.id] = False
         return res
 
