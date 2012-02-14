@@ -631,9 +631,9 @@ class sale_order(osv.osv):
             if not o.order_line:
                 raise osv.except_osv(_('Error !'),_('You cannot confirm a sale order which has no line.'))
             if (o.order_policy == 'manual'):
-                self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(cr, uid, context=context)})
+                self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             else:
-                self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(cr, uid, context=context)})
+                self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
             message = _("The quotation '%s' has been converted to a sales order.") % (o.name,)
             self.log(cr, uid, o.id, message)

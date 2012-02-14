@@ -274,7 +274,7 @@ class purchase_order(osv.osv):
         return {'value':{'partner_address_id': supplier_address['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
 
     def wkf_approve_order(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(cr,uid,context=context)})
+        self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
 
     #TODO: implement messages system

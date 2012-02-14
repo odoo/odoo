@@ -933,7 +933,7 @@ class account_fiscalyear(osv.osv):
                 if de.strftime('%Y-%m-%d') > fy.date_stop:
                     de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
 
-                context_today = fields.date.context_today(cr,uid,context=context)
+                context_today = fields.date.context_today(self,cr,uid,context=context)
                 period_obj.create(cr, uid, {
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
@@ -951,7 +951,7 @@ class account_fiscalyear(osv.osv):
     def finds(self, cr, uid, dt=None, exception=True, context=None):
         if context is None: context = {}
         if not dt:
-            dt = fields.date.context_today(cr,uid,context=context)
+            dt = fields.date.context_today(self,cr,uid,context=context)
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
         if context.get('company_id', False):
             args.append(('company_id', '=', context['company_id']))
@@ -1040,7 +1040,7 @@ class account_period(osv.osv):
     def find(self, cr, uid, dt=None, context=None):
         if context is None: context = {}
         if not dt:
-            dt = fields.date.context_today(cr,uid,context=context)
+            dt = fields.date.context_today(self,cr,uid,context=context)
 #CHECKME: shouldn't we check the state of the period?
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
         if context.get('company_id', False):
@@ -2270,7 +2270,7 @@ class account_model(osv.osv):
                 'ref': entry['name'],
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
-                'date': context.get('date', fields.date.context_today(cr,uid,context=context))
+                'date': context.get('date', fields.date.context_today(self,cr,uid,context=context))
             })
             move_ids.append(move_id)
             for line in model.lines_id:
@@ -2307,7 +2307,7 @@ class account_model(osv.osv):
                     'account_id': line.account_id.id,
                     'move_id': move_id,
                     'partner_id': line.partner_id.id,
-                    'date': context.get('date', fields.date.context_today(cr,uid,context=context)),
+                    'date': context.get('date', fields.date.context_today(self,cr,uid,context=context)),
                     'date_maturity': date_maturity
                 })
                 account_move_line_obj.create(cr, uid, val, context=ctx)
