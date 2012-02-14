@@ -43,7 +43,6 @@
     "update_xml" : [
         "security/account_asset_security.xml",
         "security/ir.model.access.csv",
-        "account_asset_wizard.xml",
         "wizard/account_asset_change_duration_view.xml",
         "wizard/wizard_asset_compute_view.xml",
         "account_asset_view.xml",

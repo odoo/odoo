@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2012-01-08 15:28+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-13 13:18+0000\n"
+"Last-Translator: walid sayed <mashyuser@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-09 04:50+0000\n"
-"X-Generator: Launchpad (build 14640)\n"
+"X-Launchpad-Export-Date: 2012-02-14 05:45+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -53,6 +53,7 @@ msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
 msgstr ""
+"لإستخدام الحقل كإسم على دلائل المصدر. اذا كان فارغ , سيتم استخدام‘‘الاسم‘‘."
 
 #. module: document
 #: view:document.directory:0
@@ -159,6 +160,8 @@ msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
 msgstr ""
+"اذا كانت صحيحة, سيتم تثبيت كل المرفقات التي تتوافق مع هذا المصدر. اذا كانت "
+"خاطئة, واحدة منهم فقط ستكون مثبتة كجزء."
 
 #. module: document
 #: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
@@ -193,11 +196,6 @@ msgstr "البحث عن كل الموارد المتاحة"
 #: selection:document.directory,type:0
 msgid "Folders per resource"
 msgstr "مجلد لكل مورد"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Indexed Content - experimental"
-msgstr ""
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -239,7 +237,7 @@ msgstr "دليل الوثيقة"
 #: code:addons/document/document_directory.py:276
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "التحقق من صلاحية الخطأ"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
@@ -268,7 +266,7 @@ msgstr "مخزن"
 #. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
-msgstr ""
+msgstr "نموذج المصدر"
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -313,7 +311,7 @@ msgstr "الملفات حسب الشريك"
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr ""
+msgstr "حقول السياق"
 
 #. module: document
 #: field:ir.attachment,store_fname:0
@@ -506,11 +504,14 @@ msgid ""
 "name.\n"
 "If set, the directory will have to be a resource one."
 msgstr ""
+"أختر هذا الحقل اذا كنت تريد اسم الملف ليشمل اسم التسجيل.\n"
+"اذا وُضعت سيصبح المجلد مصدر له."
 
 #. module: document
+#: view:document.configuration:0
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Configure Directories"
-msgstr ""
+msgstr "ضبط اعدادات المجلدات"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -525,7 +526,7 @@ msgstr "مرفق"
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
 msgid "Model Id"
-msgstr ""
+msgstr "هوية النموذج"
 
 #. module: document
 #: field:document.storage,online:0
@@ -538,6 +539,7 @@ msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
 msgstr ""
+"أختر هذا اذا كنت تريد استخدام نفس الهيكل كموضوع تم اختياره في النظام."
 
 #. module: document
 #: help:document.directory,ressource_id:0
@@ -545,6 +547,8 @@ msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
 msgstr ""
+"بجانب الموديل الرئيسي, يرفق هذا التعريف ذلك الملف لتسجيل محدد للنموذج "
+"الرئيسي."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -688,7 +692,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
-msgstr ""
+msgstr "الملفات الشهرية"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -704,7 +708,7 @@ msgstr "البادئة"
 #. module: document
 #: field:report.document.wall,last:0
 msgid "Last Posted Time"
-msgstr ""
+msgstr "وقت أخر موضوع"
 
 #. module: document
 #: field:report.document.user,datas_fname:0
@@ -724,24 +728,24 @@ msgstr "معرف المصدر"
 #. module: document
 #: selection:document.storage,type:0
 msgid "External file storage"
-msgstr ""
+msgstr "مخزن الملف الخارجي"
 
 #. module: document
 #: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_wall
 #: view:report.document.wall:0
 msgid "Wall of Shame"
-msgstr ""
+msgstr "جدار شام"
 
 #. module: document
 #: help:document.storage,path:0
 msgid "For file storage, the root path of the storage"
-msgstr ""
+msgstr "لتخزين الملفات، المسار الجذري للتخزين"
 
 #. module: document
 #: model:ir.model,name:document.model_report_files_partner
 msgid "Files details by Partners"
-msgstr ""
+msgstr "تفاصيل ملفات الشركاء"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -751,12 +755,12 @@ msgstr "حقل"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr ""
+msgstr "محتوى الدليل الفعال"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
 msgid "Parent Model"
-msgstr ""
+msgstr "موديل الشريك"
 
 #. module: document
 #: view:report.document.user:0
@@ -785,7 +789,7 @@ msgstr "التقارير"
 #. module: document
 #: field:document.directory,ressource_tree:0
 msgid "Tree Structure"
-msgstr ""
+msgstr "هيكل شجري"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -813,7 +817,7 @@ msgstr "مخزن الوثائق يتيح لك الوصول الي كل المر�
 #. module: document
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
-msgstr ""
+msgstr "بالنسبة لكل أدخال هنا, ستظهر الملفات الواقعية في هذا الملف."
 
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
@@ -833,11 +837,11 @@ msgstr "ثابت"
 #. module: document
 #: view:report.files.partner:0
 msgid "Files By Partner"
-msgstr ""
+msgstr "ملفات الشريك"
 
 #. module: document
-#: view:document.configuration:0
-msgid "Configure Direcories"
+#: view:ir.attachment:0
+msgid "Indexed Content - experimental"
 msgstr ""
 
 #. module: document
@@ -1069,3 +1073,10 @@ msgstr "نوع الوثيقة"
 
 #~ msgid "Configuration Progress"
 #~ msgstr "سير الإعدادات"
+
+#~ msgid "Choose the following Resouces to auto directory configuration."
+#~ msgstr "اختار المصادر التالية لتأكيد الدليل ذاتيًا."
+
+#~ msgid ""
+#~ "Auto directory configuration for Sale Orders and Quotation with report."
+#~ msgstr "تكوين الدليل الذاتي لاوامر البيع والاقتباس بالتقرير"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-05-06 10:46+0000\n"
 "Last-Translator: simone.sandri <lexluxsox@hotmail.it>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:56+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:08+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -109,9 +109,19 @@ msgid "Non Member"
 msgstr "Non Membro"
 
 #. module: membership
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "Iscrizione base"
+
+#. module: membership
 #: view:res.partner:0
 msgid "All Members"
 msgstr "Tutti i membri"
+
+#. module: membership
+#: field:res.partner,membership_stop:0
+msgid "Stop membership date"
+msgstr "Data Fine Iscrizione"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -152,6 +162,11 @@ msgstr "Partner associato"
 #: view:res.partner:0
 msgid "Supplier Partners"
 msgstr ""
+
+#. module: membership
+#: field:report.membership,num_invoiced:0
+msgid "# Invoiced"
+msgstr "# Fatturati"
 
 #. module: membership
 #: constraint:account.invoice:0
@@ -315,9 +330,9 @@ msgid "July"
 msgstr "Luglio"
 
 #. module: membership
-#: field:report.membership,num_invoiced:0
-msgid "# Invoiced"
-msgstr "# Fatturati"
+#: model:product.template,name:membership.membership_0_product_template
+msgid "Golden Membership"
+msgstr "Iscrizione golden"
 
 #. module: membership
 #: help:res.partner,associate_member:0
@@ -766,9 +781,9 @@ msgid "May"
 msgstr "Maggio"
 
 #. module: membership
-#: field:res.partner,membership_stop:0
-msgid "Stop membership date"
-msgstr "Data Fine Iscrizione"
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr "Iscrizione silver"
 
 #. module: membership
 #: view:product.product:0
@@ -974,12 +989,3 @@ msgstr ""
 
 #~ msgid "Last 30 Days"
 #~ msgstr "Ultimi 30 giorni"
-
-#~ msgid "Silver Membership"
-#~ msgstr "Iscrizione silver"
-
-#~ msgid "Golden Membership"
-#~ msgstr "Iscrizione golden"
-
-#~ msgid "Basic Membership"
-#~ msgstr "Iscrizione base"

@@ -6,20 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-03-07 17:48+0000\n"
 "Last-Translator: Alexsandro Haag <alexsandro.haag@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:53+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:04+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
 msgstr "Ref. da Ordem"
+
+#. module: delivery
+#: model:product.template,name:delivery.delivery_product_product_template
+msgid "Delivery by Poste"
+msgstr "Entrega por correio"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -36,12 +41,6 @@ msgstr "Peso líquido"
 #: view:stock.picking:0
 msgid "Delivery Order"
 msgstr "Ordem de Entrega"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No price available !"
-msgstr "Nenhum preço disponível!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -148,16 +147,15 @@ msgid "Delivery Method"
 msgstr "Método de Entrega"
 
 #. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No price available!"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr "Mov. de Estoque"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
-"Nenhuma linha corresponde a esta ordem na grade de entrega escolhida !"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
@@ -223,6 +221,12 @@ msgid "Delivery Grid"
 msgstr "Grade de entrega"
 
 #. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No line matched this product or order in the choosed delivery grid."
+msgstr ""
+
+#. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
 msgstr "Faturado para"
@@ -285,7 +289,7 @@ msgid "To Zip"
 msgstr "Para o CEP"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:143
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "Default price"
 msgstr ""
@@ -348,7 +352,7 @@ msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid available !"
 msgstr "Sem grade disponível!"
@@ -359,8 +363,8 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "Order not in draft state !"
 msgstr "Ordem não está como rascunho!"
@@ -466,7 +470,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:131
+#: code:addons/delivery/delivery.py:130
 #, python-format
 msgid "Free if more than %.2f"
 msgstr ""
@@ -544,7 +548,7 @@ msgid "Price"
 msgstr "Preço"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "Sem grade correspondentes para esta transportadora!"
@@ -606,8 +610,8 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -682,11 +686,12 @@ msgstr "Tipo de Preço"
 #~ msgid "Packing to be invoiced"
 #~ msgstr "Embalagem a ser Faturada"
 
+#, python-format
+#~ msgid "No price available !"
+#~ msgstr "Nenhum preço disponível!"
+
 #~ msgid "Delivery method"
 #~ msgstr "Método de Entrega"
-
-#~ msgid "Delivery by Poste"
-#~ msgstr "Entrega por correio"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome de modelo inválido na definição da ação"
@@ -756,3 +761,8 @@ msgstr "Tipo de Preço"
 #~ "capaz de adicionar e somar a linha de frete.\n"
 #~ "\n"
 #~ "     "
+
+#, python-format
+#~ msgid "No line matched this order in the choosed delivery grids !"
+#~ msgstr ""
+#~ "Nenhuma linha corresponde a esta ordem na grade de entrega escolhida !"

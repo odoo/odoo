@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2012-01-24 20:05+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-25 05:25+0000\n"
-"X-Generator: Launchpad (build 14719)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:16+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -110,11 +110,6 @@ msgid "Ok"
 msgstr "Tamam"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Kapanmış bir hesap için hareket yaratamazsınız."
-
-#. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
 msgstr "Tutar"
@@ -144,6 +139,13 @@ msgstr "Bakiye > 0"
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Toplam Borç"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -323,6 +325,14 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
 msgstr "Postaları Gönder"
@@ -336,13 +346,6 @@ msgstr "Paydaşa göre İzleme İstatistikleri"
 #: view:account_followup.followup.line:0
 msgid "Message"
 msgstr "Mesaj"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -414,8 +417,8 @@ msgstr "Yevmiye Kalemleri"
 
 #. module: account_followup
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -426,11 +429,6 @@ msgstr "Email Onayı gönder"
 #: report:account_followup.followup.print:0
 msgid "Total:"
 msgstr "Toplam:"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr "Yevmiye Girişinizin tarihi tanımlanan dönemle uyuşmuyor!"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -542,6 +540,11 @@ msgstr "En Üst İzleme Seviyesi"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
+msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
 msgstr ""
 
 #. module: account_followup
@@ -696,6 +699,11 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
 msgstr "%(satır)lar: Büyük Defter İşleme Kalemleri"
@@ -734,11 +742,6 @@ msgstr "Son İzleme Tarihi"
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
 msgstr "İzleme Kriteri"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Hesap Görünümünde hareket oluşturamazsınız."
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
@@ -878,6 +881,9 @@ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
 #~ "\n"
 #~ "E-posta aşağıdaki Paydaşlara başarıyla gönderildi. !\n"
 #~ "\n"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Kapanmış bir hesap için hareket yaratamazsınız."
 
 #~ msgid ""
 #~ "\n"
@@ -1039,6 +1045,9 @@ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
 #~ msgid "Followup Lines"
 #~ msgstr "İzleme Satırları"
 
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
+
 #~ msgid "Maturity"
 #~ msgstr "Vade"
 
@@ -1049,3 +1058,6 @@ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
 #~ msgstr ""
 #~ "Aşağıdaki Paydaşa E-Posta gönderilemedi. E-Posta bulunamadı !\n"
 #~ "\n"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Hesap Görünümünde hareket oluşturamazsınız."

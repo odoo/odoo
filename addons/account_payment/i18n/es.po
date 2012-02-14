@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2012-02-02 14:37+0000\n"
-"Last-Translator: Carlos @ smile.fr <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-08 19:30+0000\n"
+"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-03 05:38+0000\n"
-"X-Generator: Launchpad (build 14738)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:33+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -89,7 +89,7 @@ msgstr "Fecha preferida"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "Contabilidad / Pagos"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -97,6 +97,7 @@ msgid "Free"
 msgstr "Libre"
 
 #. module: account_payment
+#: view:payment.order.create:0
 #: field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "Asientos"
@@ -111,11 +112,6 @@ msgstr "Cuenta utilizada"
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Fecha de vencimiento"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "No puede crear una línea de movimiento en una cuenta cerrada."
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -173,13 +169,22 @@ msgstr "¡El nombre de la línea de pago debe ser única!"
 #. module: account_payment
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "¡Estructura de comunicación BBA no válida!"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "Órdenes de pago"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
+"¡La fecha de su asiento no está en el periodo definido! Usted debería "
+"cambiar la fecha o borar esta restricción del diario."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -352,6 +357,17 @@ msgid "Amount to be paid"
 msgstr "Importe a pagar"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+"La cuenta seleccionada en su asiento fuerza a tener una moneda secundaria. "
+"Debería eliminar la moneda secundaria de la cuenta o asignar al diario una "
+"vista multi-moneda"
+
+#. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
 msgstr "Moneda"
@@ -455,8 +471,8 @@ msgstr "Apuntes contables"
 
 #. module: account_payment
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
+msgid "You can not create journal items on an account of type view."
+msgstr "No puede crear asientos en una cuenta de tipo vista"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -576,13 +592,18 @@ msgstr "Cancelar"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "Cuenta bancaria destino"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
 msgstr "Información"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr "La compañía debe ser la misma para su cuenta y periodo relacionados"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -637,11 +658,6 @@ msgstr "Cuenta bancaria"
 #: view:payment.order:0
 msgid "Confirm Payments"
 msgstr "Confirmar pagos"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
@@ -702,6 +718,11 @@ msgid "Order"
 msgstr "Orden"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr "No puede crear asientos en cuentas cerradas"
+
+#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Total"
@@ -711,13 +732,6 @@ msgstr "Total"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
 msgstr "Realizar pago"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
 
 #. module: account_payment
 #: field:payment.order,mode:0
@@ -733,11 +747,6 @@ msgstr "Generar pago"
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Cuenta bancaria para el modo de pago"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
 
 #~ msgid "Execution date:"
 #~ msgstr "Fecha de ejecución:"
@@ -815,6 +824,15 @@ msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
 
 #~ msgid "Populate Statement with Payment lines"
 #~ msgstr "Llenar un extracto con líneas de pago"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "No puede crear una línea de movimiento en una cuenta cerrada."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
 
 #~ msgid ""
 #~ "\n"

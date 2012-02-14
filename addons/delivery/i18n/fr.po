@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-18 13:05+0000\n"
 "Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:52+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:04+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valide pour l'architecture de la vue !"
@@ -26,6 +26,11 @@ msgstr ""
 #: report:sale.shipping:0
 msgid "Order Ref."
 msgstr "Réf. commande"
+
+#. module: delivery
+#: model:product.template,name:delivery.delivery_product_product_template
+msgid "Delivery by Poste"
+msgstr "Livraison par la poste"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -42,12 +47,6 @@ msgstr "Poids net"
 #: view:stock.picking:0
 msgid "Delivery Order"
 msgstr "Bon de livraison"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No price available !"
-msgstr "Aucun prix disponible !"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -156,16 +155,15 @@ msgid "Delivery Method"
 msgstr "Méthode de livraison"
 
 #. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No price available!"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr "Mouvement de stock"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
-"Aucune ligne ne correspond à cette commande dans le tarif de livraison choisi"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
@@ -231,6 +229,12 @@ msgid "Delivery Grid"
 msgstr "Tarifs de livraison"
 
 #. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No line matched this product or order in the choosed delivery grid."
+msgstr ""
+
+#. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
 msgstr "Facturé à"
@@ -293,7 +297,7 @@ msgid "To Zip"
 msgstr "Code postal destination"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:143
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "Default price"
 msgstr ""
@@ -356,7 +360,7 @@ msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid available !"
 msgstr "Pas de grille tarifaire disponible !"
@@ -367,8 +371,8 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "Order not in draft state !"
 msgstr "La commande n'est pas à l'état de brouillon"
@@ -407,7 +411,7 @@ msgstr "Condition"
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
-msgstr "Prix standard"
+msgstr "Prix de revient"
 
 #. module: delivery
 #: field:delivery.define.delivery.steps.wizard,picking_policy:0
@@ -474,7 +478,7 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:131
+#: code:addons/delivery/delivery.py:130
 #, python-format
 msgid "Free if more than %.2f"
 msgstr ""
@@ -552,7 +556,7 @@ msgid "Price"
 msgstr "Prix"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "Aucun tarif correspondant pour ce transporteur !"
@@ -614,8 +618,8 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -658,6 +662,10 @@ msgstr ""
 msgid "Price Type"
 msgstr "Type de prix"
 
+#, python-format
+#~ msgid "No price available !"
+#~ msgstr "Aucun prix disponible !"
+
 #~ msgid "Add Delivery Costs"
 #~ msgstr "Ajouter les frais de port"
 
@@ -691,6 +699,11 @@ msgstr "Type de prix"
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr ""
 #~ "Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
+
+#, python-format
+#~ msgid "No line matched this order in the choosed delivery grids !"
+#~ msgstr ""
+#~ "Aucune ligne ne correspond à cette commande dans le tarif de livraison choisi"
 
 #~ msgid ""
 #~ "Complete this field if you plan to invoice the shipping based on packing."
@@ -735,9 +748,6 @@ msgstr "Type de prix"
 
 #~ msgid "Generate Draft Invoices On Receptions"
 #~ msgstr "Créer les factures brouillon sur les réceptions"
-
-#~ msgid "Delivery by Poste"
-#~ msgstr "Livraison par la poste"
 
 #~ msgid ""
 #~ "Allows you to add delivery methods in sale orders and picking.\n"

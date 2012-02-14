@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-17 09:06+0000\n"
 "Last-Translator: Pekka Pylvänäinen <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:55+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:07+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: event
 #: view:event.event:0
@@ -76,6 +76,11 @@ msgid "_Close"
 msgstr "_Sulje"
 
 #. module: event
+#: model:event.event,name:event.event_0
+msgid "Concert of Bon Jovi"
+msgstr "Bon Jovin konsertti"
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Invoiced Registrations only"
 msgstr ""
@@ -96,13 +101,10 @@ msgid "Quantity"
 msgstr "Määrä"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:50
-#: code:addons/event/wizard/event_make_invoice.py:54
-#: code:addons/event/wizard/event_make_invoice.py:58
-#: code:addons/event/wizard/event_make_invoice.py:62
+#: code:addons/event/wizard/event_make_invoice.py:63
 #, python-format
-msgid "Warning !"
-msgstr "Varoitus !"
+msgid "Registration doesn't have any partner to invoice."
+msgstr "Rekisteröinnillä ei ole laskutuskumppania"
 
 #. module: event
 #: field:event.event,company_id:0
@@ -198,6 +200,11 @@ msgid "Mail Auto Confirm"
 msgstr "Postita automaattinen vahvistus"
 
 #. module: event
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "Pääsylippu Oopperaan"
+
+#. module: event
 #: code:addons/event/event.py:125
 #: view:event.event:0
 #, python-format
@@ -223,10 +230,9 @@ msgid "Event Dashboard"
 msgstr "Tapahtumien työpöytä"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:63
-#, python-format
-msgid "Registration doesn't have any partner to invoice."
-msgstr "Rekisteröinnillä ei ole laskutuskumppania"
+#: model:event.event,name:event.event_1
+msgid "Opera of Verdi"
+msgstr "Verdin ooppera"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -279,9 +285,9 @@ msgid "Draft"
 msgstr "Luonnos"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Events States"
-msgstr ""
+#: field:event.type,name:0
+msgid "Event type"
+msgstr "Tapahtumatyyppi"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -345,6 +351,15 @@ msgstr "Tee tapahtumasta lasku"
 #: help:event.registration,nb_register:0
 msgid "Number of Registrations or Tickets"
 msgstr "Osallistujien tai lippujen määrä"
+
+#. module: event
+#: code:addons/event/wizard/event_make_invoice.py:50
+#: code:addons/event/wizard/event_make_invoice.py:54
+#: code:addons/event/wizard/event_make_invoice.py:58
+#: code:addons/event/wizard/event_make_invoice.py:62
+#, python-format
+msgid "Warning !"
+msgstr "Varoitus !"
 
 #. module: event
 #: view:event.registration:0
@@ -553,9 +568,9 @@ msgid "Mailing"
 msgstr "Postitus"
 
 #. module: event
-#: field:event.type,name:0
-msgid "Event type"
-msgstr "Tapahtumatyyppi"
+#: view:report.event.registration:0
+msgid "Events States"
+msgstr ""
 
 #. module: event
 #: view:board.board:0
@@ -740,6 +755,11 @@ msgstr ""
 #: selection:report.event.registration,month:0
 msgid "June"
 msgstr "Kesäkuu"
+
+#. module: event
+#: model:product.template,name:event.event_product_0_product_template
+msgid "Ticket for Concert"
+msgstr "Pääsylippu konserttiin"
 
 #. module: event
 #: field:event.registration,write_date:0
@@ -987,6 +1007,11 @@ msgid "Speaker"
 msgstr "Puhuja"
 
 #. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on ERP Buisness"
+msgstr "ERP -liiketoiminnan konferenssi"
+
+#. module: event
 #: view:event.registration:0
 msgid "Reply"
 msgstr "Vastaa"
@@ -1047,6 +1072,11 @@ msgstr "Tapahtumiin ilmoittautuminen"
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
 msgstr "Tämä sähköposti lähetetään kun joku ilmoittautuu tapahtumaan."
+
+#. module: event
+#: model:product.template,name:event.event_product_2_product_template
+msgid "Ticket for Conference"
+msgstr "Pääsylippu konferenssiin"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type_association
@@ -1245,9 +1275,6 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
 
-#~ msgid "Concert of Bon Jovi"
-#~ msgstr "Bon Jovin konsertti"
-
 #~ msgid "Draft Registrations"
 #~ msgstr "Luonnostele rekisteröinnit"
 
@@ -1296,12 +1323,6 @@ msgstr ""
 
 #~ msgid "Invoice Rejected"
 #~ msgstr "Hylätty lasku"
-
-#~ msgid "Ticket for Opera"
-#~ msgstr "Pääsylippu Oopperaan"
-
-#~ msgid "Opera of Verdi"
-#~ msgstr "Verdin ooppera"
 
 #~ msgid "Badge"
 #~ msgstr "Kulkukortti"
@@ -1366,9 +1387,6 @@ msgstr ""
 #~ msgid "Events On Registrations"
 #~ msgstr "Rekisteröinnin tapahtumat"
 
-#~ msgid "Ticket for Concert"
-#~ msgstr "Pääsylippu konserttiin"
-
 #~ msgid "Communication history"
 #~ msgstr "Kommunikointihistoria"
 
@@ -1409,9 +1427,6 @@ msgstr ""
 #~ "Merkitse tämä laatikko jos haluat käyttää automaattista postitusta uuteen "
 #~ "rekisteröintiin"
 
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "ERP -liiketoiminnan konferenssi"
-
 #~ msgid "Events on registrations"
 #~ msgstr "Rekisteröintien tapahtumat"
 
@@ -1423,9 +1438,6 @@ msgstr ""
 
 #~ msgid "Case"
 #~ msgstr "Tapaus"
-
-#~ msgid "Ticket for Conference"
-#~ msgstr "Pääsylippu konferenssiin"
 
 #~ msgid "Badge Partner"
 #~ msgstr "Kulkulupa kumppani"

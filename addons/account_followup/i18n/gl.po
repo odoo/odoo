@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-11-11 15:21+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:06+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -112,11 +112,6 @@ msgid "Ok"
 msgstr "Aceptar"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Non pode crear unha liña de movemento nunha conta pechada."
-
-#. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
 msgstr ""
@@ -146,6 +141,13 @@ msgstr "Balance > 0"
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Total debe"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -324,6 +326,14 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
 msgstr "Enviar emails"
@@ -336,13 +346,6 @@ msgstr "Estadísticas seguimento por empresa"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
 msgstr ""
 
 #. module: account_followup
@@ -412,8 +415,8 @@ msgstr "Elementos do Diario"
 
 #. module: account_followup
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "A compañía debe ser a mesma para a conta e período relacionados."
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -423,11 +426,6 @@ msgstr "Enviar correo electrónico de confirmación"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
 msgstr ""
 
 #. module: account_followup
@@ -540,6 +538,11 @@ msgstr "Nivel superior seguimento máx."
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
+msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
 msgstr ""
 
 #. module: account_followup
@@ -691,6 +694,11 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
 msgstr "%(line)s: Liñas incluídas no libro maior"
@@ -729,11 +737,6 @@ msgstr "Data último seguimento"
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
 msgstr "Criterios seguimento"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Non pode crear unha liña de movemento nunha conta de tipo vista."
 
 #~ msgid ""
 #~ "\n"
@@ -787,6 +790,9 @@ msgstr "Non pode crear unha liña de movemento nunha conta de tipo vista."
 #~ "\n"
 #~ "Correo enviado ás seguintes empresas correctamente.\n"
 #~ "\n"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Non pode crear unha liña de movemento nunha conta pechada."
 
 #~ msgid ""
 #~ "\n"
@@ -895,6 +901,9 @@ msgstr "Non pode crear unha liña de movemento nunha conta de tipo vista."
 #~ msgid "Balance:"
 #~ msgstr "Balance:"
 
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "A compañía debe ser a mesma para a conta e período relacionados."
+
 #~ msgid "Followup Lines"
 #~ msgstr "Liñas de seguimento"
 
@@ -912,3 +921,6 @@ msgstr "Non pode crear unha liña de movemento nunha conta de tipo vista."
 #~ "Correo non enviado ás empresas seguintes, o seu email non estaba "
 #~ "dispoñible.\n"
 #~ "\n"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Non pode crear unha liña de movemento nunha conta de tipo vista."

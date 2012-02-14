@@ -146,9 +146,11 @@ class delivery_carrier(osv.osv):
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
-        res_id = super(delivery_carrier, self).write(cr, uid, ids, vals, context=context)
+        if isinstance(ids, (int,long)):
+            ids = [ids]
+        res = super(delivery_carrier, self).write(cr, uid, ids, vals, context=context)
         self.create_grid_lines(cr, uid, ids, vals, context=context)
-        return res_id
+        return res
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(delivery_carrier, self).create(cr, uid, vals, context=context)

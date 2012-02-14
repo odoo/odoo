@@ -289,7 +289,7 @@ class account_invoice(osv.osv):
         'user_id': lambda s, cr, u, c: u,
     }
     _sql_constraints = [
-        ('number_uniq', 'unique(number, company_id)', 'Invoice Number must be unique per Company!'),
+        ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
@@ -349,7 +349,7 @@ class account_invoice(osv.osv):
             context = {}
         res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'invoice_form')
         view_id = res and res[1] or False
-        context.update({'view_id': view_id})
+        context['view_id'] = view_id
         return context
 
     def create(self, cr, uid, vals, context=None):
@@ -814,7 +814,7 @@ class account_invoice(osv.osv):
             ctx = context.copy()
             ctx.update({'lang': inv.partner_id.lang})
             if not inv.date_invoice:
-                self.write(cr, uid, [inv.id], {'date_invoice':time.strftime('%Y-%m-%d')}, context=ctx)
+                self.write(cr, uid, [inv.id], {'date_invoice': fields.date.context_today(self,cr,uid,context=context)}, context=ctx)
             company_currency = inv.company_id.currency_id.id
             # create the analytical lines
             # one move line per invoice line

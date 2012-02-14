@@ -6,20 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-01-20 16:03+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-10 15:41+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:53+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-11 05:07+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
 msgstr "关联单号"
+
+#. module: delivery
+#: model:product.template,name:delivery.delivery_product_product_template
+msgid "Delivery by Poste"
+msgstr "由post送货"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -36,12 +41,6 @@ msgstr "净重"
 #: view:stock.picking:0
 msgid "Delivery Order"
 msgstr "送货单"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No price available !"
-msgstr "无价格表可用！"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -125,7 +124,7 @@ msgstr "送货价格表允许您通过重量或其它条件计算成本和售价
 #. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "金额"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -144,15 +143,15 @@ msgid "Delivery Method"
 msgstr "送货方式"
 
 #. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No price available!"
+msgstr "无可用价格！"
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr "库存调拨"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No line matched this order in the choosed delivery grids !"
-msgstr "在所选的送货网络中没有明细匹配这个订单"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
@@ -210,12 +209,18 @@ msgstr "批次"
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "物流公司"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
 msgstr "送货网络"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No line matched this product or order in the choosed delivery grid."
+msgstr "在选择的运输网格包含的明细中没有匹配的产品或订单。"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -278,15 +283,15 @@ msgid "To Zip"
 msgstr "目的地邮编"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:143
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "Default price"
-msgstr ""
+msgstr "默认价格"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_define_delivery_steps_wizard
 msgid "delivery.define.delivery.steps.wizard"
-msgstr ""
+msgstr "delivery.define.delivery.steps.wizard"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
@@ -341,7 +346,7 @@ msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid available !"
 msgstr "没有可用的送货网络"
@@ -352,8 +357,8 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "Order not in draft state !"
 msgstr "单据不在草稿状态！"
@@ -455,7 +460,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:131
+#: code:addons/delivery/delivery.py:130
 #, python-format
 msgid "Free if more than %.2f"
 msgstr ""
@@ -531,7 +536,7 @@ msgid "Price"
 msgstr "价格"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "没有送货网络适用于此承运方"
@@ -593,8 +598,8 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "只能对草稿状态的订单增加送货明细"
@@ -695,11 +700,16 @@ msgstr "价格类型"
 #~ msgid "This delivery method will be used when invoicing from packing."
 #~ msgstr "这交货方式将用在包装的发票上"
 
+#, python-format
+#~ msgid "No price available !"
+#~ msgstr "无价格表可用！"
+
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "单号必须唯一！"
 
-#~ msgid "Delivery by Poste"
-#~ msgstr "由post送货"
+#, python-format
+#~ msgid "No line matched this order in the choosed delivery grids !"
+#~ msgstr "在所选的送货网络中没有明细匹配这个订单"
 
 #~ msgid ""
 #~ "Create and manage the delivery methods you need for your sales activities. "

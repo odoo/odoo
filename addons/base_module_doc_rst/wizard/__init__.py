@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import wizard_tech_guide_rst
+import tech_rst_guide
 import generate_relation_graph
 
 

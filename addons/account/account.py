@@ -661,7 +661,7 @@ class account_account(osv.osv):
                 # Allow the write if the value is the same
                 for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'])]:
                     if vals['company_id']!=i:
-                        raise osv.except_osv(_('Warning !'), _('You cannot modify the company as its related to existing journal items.'))
+                        raise osv.except_osv(_('Warning !'), _('You cannot change the owner company of an account that already contains journal items.'))
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context=context)
         if 'type' in vals.keys():
@@ -933,11 +933,12 @@ class account_fiscalyear(osv.osv):
                 if de.strftime('%Y-%m-%d') > fy.date_stop:
                     de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
 
+                context_today = fields.date.context_today(self,cr,uid,context=context)
                 period_obj.create(cr, uid, {
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
-                    'date_start': ds.strftime('%Y-%m-%d'),
-                    'date_stop': de.strftime('%Y-%m-%d'),
+                    'date_start': context_today,
+                    'date_stop': context_today,
                     'fiscalyear_id': fy.id,
                 })
                 ds = ds + relativedelta(months=interval)
@@ -950,7 +951,7 @@ class account_fiscalyear(osv.osv):
     def finds(self, cr, uid, dt=None, exception=True, context=None):
         if context is None: context = {}
         if not dt:
-            dt = time.strftime('%Y-%m-%d')
+            dt = fields.date.context_today(self,cr,uid,context=context)
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
         if context.get('company_id', False):
             args.append(('company_id', '=', context['company_id']))
@@ -1039,7 +1040,7 @@ class account_period(osv.osv):
     def find(self, cr, uid, dt=None, context=None):
         if context is None: context = {}
         if not dt:
-            dt = time.strftime('%Y-%m-%d')
+            dt = fields.date.context_today(self,cr,uid,context=context)
 #CHECKME: shouldn't we check the state of the period?
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
         if context.get('company_id', False):
@@ -1078,6 +1079,8 @@ class account_period(osv.osv):
         return super(account_period, self).write(cr, uid, ids, vals, context=context)
 
     def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
+        if period_from_id == period_to_id:
+            return period_from_id
         period_from = self.browse(cr, uid, period_from_id)
         period_date_start = period_from.date_start
         company1_id = period_from.company_id.id
@@ -1271,12 +1274,14 @@ class account_move(osv.osv):
         'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}, select=True),
         'narration':fields.text('Internal Note'),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
+        'balance': fields.float('balance', digits_compute=dp.get_precision('Account'), help="This is a field only used for internal purpose and shouldn't be displayed"),
     }
+
     _defaults = {
         'name': '/',
         'state': 'draft',
         'period_id': _get_period,
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
@@ -1341,7 +1346,8 @@ class account_move(osv.osv):
                 if not top_common:
                     top_common = top_account
                 elif top_account.id != top_common.id:
-                    raise osv.except_osv(_('Error !'), _('You cannot validate a journal entry because account "%s" does not belong to chart of accounts "%s"!' % (account.name, top_common.name)))
+                    raise osv.except_osv(_('Error !'),
+                                         _('You cannot validate this journal entry because account "%s" does not belong to chart of accounts "%s"!') % (account.name, top_common.name))
         return self.post(cursor, user, ids, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -1353,6 +1359,13 @@ class account_move(osv.osv):
                        'SET state=%s '\
                        'WHERE id IN %s', ('draft', tuple(ids),))
         return True
+
+    def onchange_line_id(self, cr, uid, ids, line_ids, context=None):
+        balance = 0.0
+        for line in line_ids:
+            if line[2]:
+                balance += (line[2]['debit'] or 0.00)- (line[2]['credit'] or 0.00)
+        return {'value': {'balance': balance}}
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
@@ -2257,7 +2270,7 @@ class account_model(osv.osv):
                 'ref': entry['name'],
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
-                'date': context.get('date',time.strftime('%Y-%m-%d'))
+                'date': context.get('date', fields.date.context_today(self,cr,uid,context=context))
             })
             move_ids.append(move_id)
             for line in model.lines_id:
@@ -2294,7 +2307,7 @@ class account_model(osv.osv):
                     'account_id': line.account_id.id,
                     'move_id': move_id,
                     'partner_id': line.partner_id.id,
-                    'date': context.get('date',time.strftime('%Y-%m-%d')),
+                    'date': context.get('date', fields.date.context_today(self,cr,uid,context=context)),
                     'date_maturity': date_maturity
                 })
                 account_move_line_obj.create(cr, uid, val, context=ctx)
@@ -2347,7 +2360,7 @@ class account_subscription(osv.osv):
         'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
     }
     _defaults = {
-        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_start': fields.date.context_today,
         'period_type': 'month',
         'period_total': 12,
         'period_nbr': 1,

@@ -143,7 +143,7 @@
     <blockTableStyle id="Table1">
       <blockTopPadding start="0,0" stop="-1,0" length="10"/>
       <blockAlignment value="LEFT"/>
-      <lineStyle kind="LINEBELOW" colorName="#666666" start="1,1" stop="1,1"/>
+      <lineStyle kind="LINEBELOW" colorName="#666666" start="1,1" stop="-1,1"/>
     </blockTableStyle>
     <blockTableStyle id="Table2">
       <blockValign value="TOP"/>
@@ -205,8 +205,40 @@
     <para style="Standard">
         <font color="white"> </font>
     </para>
+    <!-- table with debit/credit displayed -->
+    <blockTable colWidths="210.0,90.0,90.0,100.0" style="Table_Account_Line_Title">
+      [[ data['form']['debit_credit'] == 1 or removeParentNode('blockTable') ]]
+      <tr>
+        <td>
+          <para style="terp_default_Bold_9">Name</para>
+        </td>
+         <td>
+          <para style="terp_tblheader_Details_Right">Debit</para>
+        </td>
+          <td>
+          <para style="terp_tblheader_Details_Right">Credit</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Balance</para>
+        </td>
+      </tr>
+      <tr style="Table3">
+          [[ repeatIn(get_lines(data), 'a') ]]
+          [[ (a.get('level') &lt;&gt; 0) or removeParentNode('tr') ]]
+          [[ setTag('tr','tr',{'style': 'Table'+str(min(3,'level' in a and a.get('level') or 1))}) ]]
+          <td><para style="terp_level_3_name">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_name'}) ]][[ a.get('name') ]]</para></td>
+          <td><para style="terp_level_3_balance">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_balance'}) ]][[ formatLang(a.get('debit',0.0), currency_obj = company.currency_id) ]]</para></td>
+          <td><para style="terp_level_3_balance">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_balance'}) ]][[ formatLang(a.get('credit',0.0), currency_obj = company.currency_id) ]]</para></td> 
+          <td>[[ (a.get('account_type') =='view' and a.get('level') &lt;&gt; 1) or removeParentNode('td') ]]
+              <para style="terp_level_3_balance"><u>[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_balance'}) ]][[ formatLang(a.get('balance'), currency_obj = company.currency_id) ]]</u></para></td>
+          <td>[[ (a.get('account_type') &lt;&gt;'view' or a.get('level') == 1) or removeParentNode('td') ]]
+              <para style="terp_level_3_balance">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_balance'}) ]][[ formatLang(a.get('balance'), currency_obj = company.currency_id) ]]</para></td>
+      </tr>
+    </blockTable>
+
+    <!-- table with no comparison, no debit/credit displayed -->
     <blockTable colWidths="390.0,100.0" style="Table_Account_Line_Title">
-      [[ data['form']['enable_filter'] == 0 or removeParentNode('blockTable') ]]
+      [[ (not data['form']['enable_filter'] and not data['form']['debit_credit']) or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_default_Bold_9">Name</para>
@@ -220,17 +252,19 @@
           [[ (a.get('level') &lt;&gt; 0) or removeParentNode('tr') ]]
           [[ setTag('tr','tr',{'style': 'Table'+str(min(3,'level' in a and a.get('level') or 1))}) ]]
           <td><para style="terp_level_3_name">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_name'}) ]][[ a.get('name') ]]</para></td>
-          <td>[[ a.get('account_type') =='view' or removeParentNode('td') ]]
+          <td>[[ (a.get('account_type') =='view' and a.get('level') &lt;&gt; 1) or removeParentNode('td') ]]
               <para style="terp_level_3_balance"><u>[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_balance'}) ]][[ formatLang(a.get('balance'), currency_obj = company.currency_id) ]]</u></para></td>
-          <td>[[ a.get('account_type') &lt;&gt;'view' or removeParentNode('td') ]]
+          <td>[[ (a.get('account_type') &lt;&gt;'view' or a.get('level') == 1) or removeParentNode('td') ]]
               <para style="terp_level_3_balance">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_balance'}) ]][[ formatLang(a.get('balance'), currency_obj = company.currency_id) ]]</para></td>
       </tr>
     </blockTable>
     <para style="Standard">
       <font color="white"> </font>
     </para>
+
+    <!-- table with comparison -->
     <blockTable colWidths="263.0,100.0,100" style="Table_Account_Line_Title">
-      [[ data['form']['enable_filter'] == 1 or removeParentNode('blockTable') ]]
+      [[ (data['form']['enable_filter'] == 1 and not data['form']['debit_credit']) or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_default_Bold_9">Name</para>
@@ -247,13 +281,13 @@
           [[ (a.get('level') &lt;&gt; 0) or removeParentNode('tr') ]]
           [[ setTag('tr','tr',{'style': 'Table'+str(min(3,'level' in a and a.get('level') or 1))}) ]]
           <td><para style="terp_level_3_name">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_name'}) ]][[ a.get('name') ]]</para></td>
-          <td>[[ a.get('account_type') =='view' or removeParentNode('td') ]]
+          <td>[[ (a.get('account_type') =='view' and a.get('level') &lt;&gt; 1) or removeParentNode('td') ]]
               <para style="terp_level_3_balance"><u>[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_balance'}) ]][[ formatLang(a.get('balance'), currency_obj = company.currency_id) ]]</u></para></td>
-          <td>[[ a.get('account_type') &lt;&gt;'view' or removeParentNode('td') ]]
+          <td>[[ (a.get('account_type') &lt;&gt;'view' or a.get('level') == 1) or removeParentNode('td') ]]
               <para style="terp_level_3_balance">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_balance'}) ]][[ formatLang(a.get('balance'), currency_obj = company.currency_id) ]]</para></td>
-          <td>[[ a.get('account_type') =='view' or removeParentNode('td') ]]
+          <td>[[ (a.get('account_type') =='view' and a.get('level') &lt;&gt; 1) or removeParentNode('td') ]]
               <para style="terp_level_3_balance"><u>[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_balance'}) ]][[ formatLang(a.get('balance_cmp'), currency_obj = company.currency_id) ]]</u></para></td>
-          <td>[[ a.get('account_type') &lt;&gt;'view' or removeParentNode('td') ]]
+          <td>[[ (a.get('account_type') &lt;&gt;'view' or a.get('level') == 1) or removeParentNode('td') ]]
               <para style="terp_level_3_balance">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a.get('level')))+'_balance'}) ]][[ formatLang(a.get('balance_cmp'), currency_obj = company.currency_id) ]]</para></td>
       </tr>
     </blockTable>

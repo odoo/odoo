@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2012-01-23 15:23+0000\n"
 "Last-Translator: mrx5682 <Unknown>\n"
 "Language-Team: English (United Kingdom) <en_GB@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-24 05:29+0000\n"
-"X-Generator: Launchpad (build 14713)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:02+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -27,6 +27,12 @@ msgstr ""
 "\n"
 "Please define BIC/Swift code on bank for bank type IBAN Account to make "
 "valid payments"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:139
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it"
+msgstr ""
 
 #. module: base_iban
 #: model:res.partner.bank.type,format_layout:base_iban.bank_iban
@@ -59,7 +65,7 @@ msgid "country_id"
 msgstr "country_id"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:130
+#: code:addons/base_iban/base_iban.py:136
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like "
@@ -74,7 +80,7 @@ msgid "IBAN"
 msgstr "IBAN"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:131
+#: code:addons/base_iban/base_iban.py:140
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr "The IBAN is invalid, it should begin with the country code"
@@ -83,6 +89,11 @@ msgstr "The IBAN is invalid, it should begin with the country code"
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
 msgstr "IBAN Account"
+
+#. module: base_iban
+#: constraint:res.partner.bank:0
+msgid "The RIB and/or IBAN is not valid"
+msgstr ""
 
 #, python-format
 #~ msgid "The IBAN is invalid, It should begin with the country code"

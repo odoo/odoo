@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-23 09:54+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2011-01-28 11:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-24 05:54+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:42+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -23,8 +23,7 @@ msgid "Openerp user"
 msgstr "Usuario OpenERP"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,requirements:0
+#: view:hr.job:0 field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "Requirimentos"
 
@@ -51,8 +50,7 @@ msgid "Human Resources"
 msgstr "Recursos humanos"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
 msgstr "Agrupar por..."
 
@@ -77,11 +75,8 @@ msgstr ""
 "a este posto."
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
-#: view:res.users:0
+#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
+#: field:hr.job,department_id:0 view:res.users:0
 msgid "Department"
 msgstr "Departamento"
 
@@ -101,9 +96,7 @@ msgid "In Recruitment"
 msgstr "En selección"
 
 #. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Compañía"
@@ -138,8 +131,7 @@ msgid "Parent Department"
 msgstr "Departamento pai"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,notes:0
+#: view:hr.employee:0 field:hr.employee,notes:0
 msgid "Notes"
 msgstr "Notas"
 
@@ -183,8 +175,7 @@ msgstr ""
 "usuario de OpenERP (e os seus permisos) ó empregado."
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Recruitement"
 msgstr "En selección"
 
@@ -224,8 +215,7 @@ msgid "Child Categories"
 msgstr "Categorías fillas"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,description:0
+#: view:hr.job:0 field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "Descrición do posto de traballo"
@@ -241,8 +231,7 @@ msgid "My Departments Employee"
 msgstr "Os meus departamentos do empregado"
 
 #. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Empregado"
@@ -274,9 +263,7 @@ msgid "Human Resources Dashboard"
 msgstr "Taboleiro de recursos humanos"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
 msgstr "Traballo"
 
@@ -291,8 +278,7 @@ msgid "Configuration"
 msgstr "Configuración"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,category_ids:0
+#: view:hr.employee:0 field:hr.employee,category_ids:0
 msgid "Categories"
 msgstr "Categorías"
 
@@ -435,6 +421,11 @@ msgid "HR Manager Dashboard"
 msgstr "Taboleiro Director RRHH"
 
 #. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr "Departamentos fillos"
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Status"
 msgstr "Estado"
@@ -518,8 +509,7 @@ msgid "You can not have two users with the same login !"
 msgstr "Non pode ter dous usuarios co mesmo login!"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,state:0
+#: view:hr.job:0 field:hr.job,state:0
 msgid "State"
 msgstr "Estado"
 
@@ -594,8 +584,7 @@ msgid "Job Name"
 msgstr "Nome do traballo"
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Position"
 msgstr "Ocupado"
 
@@ -636,10 +625,8 @@ msgid "Gender"
 msgstr "Sexo"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0 view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -670,9 +657,9 @@ msgid "Creation of a OpenERP user"
 msgstr "Creación dun usuario OpenERP"
 
 #. module: hr
-#: field:hr.department,child_ids:0
-msgid "Child Departments"
-msgstr "Departamentos fillos"
+#: field:hr.employee,login:0
+msgid "Login"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -691,8 +678,7 @@ msgid "Other Id"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
+#: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
 msgstr "Monitor"
 
@@ -707,8 +693,7 @@ msgid "My Departments Jobs"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
+#: field:hr.department,manager_id:0 view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Xestor"

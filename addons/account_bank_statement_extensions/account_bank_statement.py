@@ -50,9 +50,10 @@ class account_bank_statement(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         super(account_bank_statement, self).button_cancel(cr, uid, ids, context=context)
         for st in self.browse(cr, uid, ids, context=context):
-            cr.execute("UPDATE account_bank_statement_line  \
-                SET state='draft' WHERE id in %s ",
-                (tuple([x.id for x in st.line_ids]),))
+            if st.line_ids:
+                cr.execute("UPDATE account_bank_statement_line  \
+                    SET state='draft' WHERE id in %s ",
+                    (tuple([x.id for x in st.line_ids]),))
         return True
 
 account_bank_statement()

@@ -88,12 +88,14 @@ class account_followup_stat_by_partner(osv.osv):
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_followup_stat_by_partner')
         # Here we don't have other choice but to create a virtual ID based on the concatenation
-        # of the partner_id and the company_id. An assumption that the number of companies will
-        # not reach 10 000 records is made, what should be enough for a time.
+        # of the partner_id and the company_id, because if a partner is shared between 2 companies,
+        # we want to see 2 lines for him in this table. It means that both company should be able 
+        # to send him followups separately . An assumption that the number of companies will not 
+        # reach 10 000 records is made, what should be enough for a time.
         cr.execute("""
             create or replace view account_followup_stat_by_partner as (
                 SELECT
-                    l.partner_id AS id,
+                    l.partner_id * 10000 + l.company_id as id,
                     l.partner_id AS partner_id,
                     min(l.date) AS date_move,
                     max(l.date) AS date_move_last,
@@ -198,11 +200,11 @@ class account_followup_print_all(osv.osv_memory):
             stat_line_id = partner_id * 10000 + company_id
             if date_maturity:
                 if date_maturity <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
-                    if partner_id not in partner_list:
+                    if stat_line_id not in partner_list:
                         partner_list.append(stat_line_id)
-                    to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
+                    to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
             elif date and date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
-                if partner_id not in partner_list:
+                if stat_line_id not in partner_list:
                     partner_list.append(stat_line_id)
                 to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
         return {'partner_ids': partner_list, 'to_update': to_update}
@@ -217,23 +219,20 @@ class account_followup_print_all(osv.osv_memory):
         if context is None:
             context = {}
         data = self.browse(cr, uid, ids, context=context)[0]
-        partner_ids = [partner_id.id for partner_id in data.partner_ids]
+        stat_by_partner_line_ids = [partner_id.id for partner_id in data.partner_ids]
+        partners = [stat_by_partner_line / 10000 for stat_by_partner_line in stat_by_partner_line_ids]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all_msg')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         if data.email_conf:
             msg_sent = ''
             msg_unsent = ''
             data_user = user_obj.browse(cr, uid, uid, context=context)
-            move_lines = line_obj.browse(cr, uid, partner_ids, context=context)
-            partners = []
-            dict_lines = {}
-            for line in move_lines:
-                partners.append(line.partner_id)
-                dict_lines[line.partner_id.id] =line
-            for partner in partners:
+            for partner in self.pool.get('res.partner').browse(cr, uid, partners, context=context):
                 ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable']),('company_id','=',context.get('company_id', False))])
                 data_lines = move_obj.browse(cr, uid, ids_lines, context=context)
-                followup_data = dict_lines[partner.id]
+                total_amt = 0.0
+                for line in data_lines:
+                    total_amt += line.debit - line.credit
                 dest = False
                 if partner.address:
                     for adr in partner.address:
@@ -250,8 +249,6 @@ class account_followup_print_all(osv.osv_memory):
                     cxt = context.copy()
                     cxt['lang'] = partner.lang
                     body = user_obj.browse(cr, uid, uid, context=cxt).company_id.follow_up_msg
-
-                total_amt = followup_data.debit - followup_data.credit
                 move_line = ''
                 subtotal_due = 0.0
                 subtotal_paid = 0.0

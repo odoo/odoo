@@ -24,6 +24,7 @@ import time
 from osv import osv, fields
 from tools.translate import _
 import pos_box_entries
+import netsvc
 
 
 class pos_make_payment(osv.osv_memory):
@@ -49,7 +50,8 @@ class pos_make_payment(osv.osv_memory):
             order_obj.add_payment(cr, uid, active_id, data, context=context)
 
         if order_obj.test_paid(cr, uid, [active_id]):
-            order_obj.action_paid(cr, uid, [active_id], context=context)
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'pos.order', active_id, 'paid', cr)
             return self.print_report(cr, uid, ids, context=context)
 
         return self.launch_payment(cr, uid, ids, context=context)

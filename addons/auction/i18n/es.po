@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-02-03 18:07+0000\n"
 "Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:58+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:38+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
@@ -272,6 +272,7 @@ msgid "Items"
 msgstr "Artículos"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax5
 #: field:auction.dates,seller_costs:0
 msgid "Seller Costs"
 msgstr "Costes del vendedor"
@@ -482,6 +483,11 @@ msgid "Object Category"
 msgstr ""
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id4
+msgid "VAT 12%"
+msgstr "IVA 12%"
+
+#. module: auction
 #: view:auction.dates:0
 msgid "Buyer Invoices"
 msgstr "Facturas comprador"
@@ -645,6 +651,11 @@ msgid "March"
 msgstr "Marzo"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax4
+msgid "Seller Costs1"
+msgstr "Costes de vendedor1"
+
+#. module: auction
 #: field:auction.deposit,create_uid:0
 #: field:auction.lots,create_uid:0
 msgid "Created by"
@@ -788,6 +799,11 @@ msgid "Auction Name"
 msgstr "Nombre subasta"
 
 #. module: auction
+#: model:account.tax,name:auction.tax_seller
+msgid "Seller Costs (12%)"
+msgstr "Costes vendedor (12%)"
+
+#. module: auction
 #: field:aie.category,parent_id:0
 msgid "Parent aie Category"
 msgstr "Categoría padre de aie"
@@ -843,6 +859,11 @@ msgid "Account tax for author commission"
 msgstr "Cuenta impuesto para la comisión del autor"
 
 #. module: auction
+#: model:product.template,name:auction.monproduit_product_template
+msgid "Oeuvres a 21%"
+msgstr "Obras al 21%"
+
+#. module: auction
 #: field:report.object.encoded,adj:0
 msgid "Adj."
 msgstr "Adj."
@@ -894,9 +915,9 @@ msgid "To pay ("
 msgstr "A pagar ("
 
 #. module: auction
-#: model:ir.model,name:auction.model_auction_lots
-msgid "Auction Object"
-msgstr "Objeto subastado"
+#: model:account.tax,name:auction.tax_buyer
+msgid "Buyer Costs (20%)"
+msgstr "Costes comprador (20%)"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction
@@ -1144,6 +1165,11 @@ msgstr "Categoría objeto"
 #: view:auction.taken:0
 msgid "Mark Lots"
 msgstr "Marcar lotes"
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_lots
+msgid "Auction Object"
+msgstr "Objeto subastado"
 
 #. module: auction
 #: field:auction.lots,obj_num:0
@@ -1414,6 +1440,11 @@ msgid "Beginning of the auction"
 msgstr "Inicio de la subasta"
 
 #. module: auction
+#: help:auction.pay.buy,statement_id3:0
+msgid "Third Bank Statement For Buyer"
+msgstr "Tercer extracto bancario para el comprador"
+
+#. module: auction
 #: view:report.auction:0
 #: field:report.auction,month:0
 #: field:report.auction.object.date,month:0
@@ -1455,6 +1486,11 @@ msgstr "Historial de lote"
 #: view:auction.lots.make.invoice.buyer:0
 msgid "Create invoices"
 msgstr "Crear facturas"
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id5
+msgid "VAT 5%"
+msgstr "IVA 5%"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_buyer_map
@@ -1514,6 +1550,11 @@ msgid "Exposition Dates"
 msgstr "Fechas exposición"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax1
+msgid "TVA"
+msgstr "IVA"
+
+#. module: auction
 #: field:auction.lots,important:0
 msgid "To be Emphatized"
 msgstr "Para enfatizar"
@@ -1522,6 +1563,11 @@ msgstr "Para enfatizar"
 #: report:buyer.list:0
 msgid "Total:"
 msgstr "Total:"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax2
+msgid "TVA1"
+msgstr "IVA1"
 
 #. module: auction
 #: view:report.auction.object.date:0
@@ -1750,6 +1796,11 @@ msgid "Seller price"
 msgstr "Precio vendedor"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax20
+msgid "Frais de vente0"
+msgstr ""
+
+#. module: auction
 #: model:ir.actions.report.xml,name:auction.buy_id_list
 msgid "Buyer List"
 msgstr "Lista comprador"
@@ -1773,9 +1824,19 @@ msgid "Seller Price"
 msgstr "Precio vendedor"
 
 #. module: auction
-#: help:auction.pay.buy,statement_id3:0
-msgid "Third Bank Statement For Buyer"
-msgstr "Tercer extracto bancario para el comprador"
+#: model:account.tax,name:auction.auction_tax6
+msgid "Frais de vente"
+msgstr "Gastos de venta"
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id1
+msgid "VAT 1%"
+msgstr "IVA 1%"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax
+msgid "Droit d'auteur"
+msgstr "Derechos de autor"
 
 #. module: auction
 #: field:auction.dates,expo1:0
@@ -1818,6 +1879,11 @@ msgstr "Últimos depósitos"
 #: report:auction.total.rml:0
 msgid "# of items:"
 msgstr "Nº de artículos:"
+
+#. module: auction
+#: model:account.tax,name:auction.tax_buyer_author
+msgid "Author rights (4%)"
+msgstr "Derechos de autor (4%)"
 
 #. module: auction
 #: field:report.object.encoded,estimation:0
@@ -1959,6 +2025,11 @@ msgid "Lots able"
 msgstr "Lotes disponibles"
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id3
+msgid "VAT 10%"
+msgstr "IVA 10%"
+
+#. module: auction
 #: field:auction.artists,name:0
 msgid "Artist/Author Name"
 msgstr "Artista / Nombre autor"
@@ -1969,6 +2040,7 @@ msgid "December"
 msgstr "Diciembre"
 
 #. module: auction
+#: view:auction.deposit:0
 #: field:auction.lots,image:0
 msgid "Image"
 msgstr "Imagen"
@@ -1983,6 +2055,11 @@ msgstr "Precio comprador"
 #: model:ir.model,name:auction.model_auction_lot_category
 msgid "Auction Lots Category"
 msgstr "Categoría lotes subasta"
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id2
+msgid "VAT 20%"
+msgstr "IVA 20%"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_payer_sel
@@ -2097,6 +2174,7 @@ msgid "Not sold"
 msgstr "No vendido"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax3
 #: field:auction.dates,buyer_costs:0
 msgid "Buyer Costs"
 msgstr "Costes comprador"
@@ -2297,12 +2375,6 @@ msgstr "Año"
 msgid "Auction history"
 msgstr "Historial subasta"
 
-#~ msgid "Oeuvres a 21%"
-#~ msgstr "Obras al 21%"
-
-#~ msgid "Frais de vente"
-#~ msgstr "Gastos de venta"
-
 #~ msgid "Total margin"
 #~ msgstr "Margen total"
 
@@ -2497,9 +2569,6 @@ msgstr "Historial subasta"
 
 #~ msgid "Close + Create all invoices"
 #~ msgstr "Cerrar + Crear todas las facturas"
-
-#~ msgid "Seller Costs1"
-#~ msgstr "Costes de vendedor1"
 
 #~ msgid "Antique/Verreries"
 #~ msgstr "Antigüedades / Vidrierías"
@@ -2711,9 +2780,6 @@ msgstr "Historial subasta"
 #~ msgid "Antique/Sculpture, bronze, eso."
 #~ msgstr "Antigüedades / Escultura, bronze, etc."
 
-#~ msgid "TVA1"
-#~ msgstr "IVA1"
-
 #~ msgid "Numerotate"
 #~ msgstr "Enumeración"
 
@@ -2801,9 +2867,6 @@ msgstr "Historial subasta"
 #~ msgid "First Number"
 #~ msgstr "Primer número"
 
-#~ msgid "Droit d'auteur"
-#~ msgstr "Derechos de autor"
-
 #~ msgid "Auction Reporting on  view2"
 #~ msgstr "Informe subastas según vista2"
 
@@ -2873,9 +2936,6 @@ msgstr "Historial subasta"
 #~ msgid "Amount to paid"
 #~ msgstr "Importe a pagar"
 
-#~ msgid "TVA"
-#~ msgstr "IVA"
-
 #~ msgid "No of buyers"
 #~ msgstr "Nº de compradores"
 
@@ -2929,30 +2989,6 @@ msgstr "Historial subasta"
 
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "¡Error! No puede crear miembros asociados recursivamente."
-
-#~ msgid "VAT 5%"
-#~ msgstr "IVA 5%"
-
-#~ msgid "VAT 10%"
-#~ msgstr "IVA 10%"
-
-#~ msgid "VAT 12%"
-#~ msgstr "IVA 12%"
-
-#~ msgid "VAT 1%"
-#~ msgstr "IVA 1%"
-
-#~ msgid "VAT 20%"
-#~ msgstr "IVA 20%"
-
-#~ msgid "Seller Costs (12%)"
-#~ msgstr "Costes vendedor (12%)"
-
-#~ msgid "Buyer Costs (20%)"
-#~ msgstr "Costes comprador (20%)"
-
-#~ msgid "Author rights (4%)"
-#~ msgstr "Derechos de autor (4%)"
 
 #~ msgid ""
 #~ "\n"

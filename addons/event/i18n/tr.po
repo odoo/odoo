@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-08-07 01:28+0000\n"
 "Last-Translator: oguzhan <tazmanyacanawari@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:56+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:08+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: event
 #: view:event.event:0
@@ -75,6 +75,11 @@ msgid "_Close"
 msgstr "_Kapat"
 
 #. module: event
+#: model:event.event,name:event.event_0
+msgid "Concert of Bon Jovi"
+msgstr "Bon Jovi Konseri"
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Invoiced Registrations only"
 msgstr ""
@@ -95,13 +100,10 @@ msgid "Quantity"
 msgstr "Miktar"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:50
-#: code:addons/event/wizard/event_make_invoice.py:54
-#: code:addons/event/wizard/event_make_invoice.py:58
-#: code:addons/event/wizard/event_make_invoice.py:62
+#: code:addons/event/wizard/event_make_invoice.py:63
 #, python-format
-msgid "Warning !"
-msgstr "Uyarı !"
+msgid "Registration doesn't have any partner to invoice."
+msgstr "Kayıtta faturalandırılacak paydaş yok."
 
 #. module: event
 #: field:event.event,company_id:0
@@ -195,6 +197,11 @@ msgid "Mail Auto Confirm"
 msgstr "Posta Otomatik Onayı"
 
 #. module: event
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "Opera İçin Bilet"
+
+#. module: event
 #: code:addons/event/event.py:125
 #: view:event.event:0
 #, python-format
@@ -220,10 +227,9 @@ msgid "Event Dashboard"
 msgstr "Etkinlik Panosu"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:63
-#, python-format
-msgid "Registration doesn't have any partner to invoice."
-msgstr "Kayıtta faturalandırılacak paydaş yok."
+#: model:event.event,name:event.event_1
+msgid "Opera of Verdi"
+msgstr "Verdi Operası"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -276,9 +282,9 @@ msgid "Draft"
 msgstr "Taslak"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Events States"
-msgstr ""
+#: field:event.type,name:0
+msgid "Event type"
+msgstr "Etkinlik Türü"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -342,6 +348,15 @@ msgstr "Etkinlik Faturası Hazırla"
 #: help:event.registration,nb_register:0
 msgid "Number of Registrations or Tickets"
 msgstr "Kayıt ya da Bilet Sayısı"
+
+#. module: event
+#: code:addons/event/wizard/event_make_invoice.py:50
+#: code:addons/event/wizard/event_make_invoice.py:54
+#: code:addons/event/wizard/event_make_invoice.py:58
+#: code:addons/event/wizard/event_make_invoice.py:62
+#, python-format
+msgid "Warning !"
+msgstr "Uyarı !"
 
 #. module: event
 #: view:event.registration:0
@@ -550,9 +565,9 @@ msgid "Mailing"
 msgstr "Postalama"
 
 #. module: event
-#: field:event.type,name:0
-msgid "Event type"
-msgstr "Etkinlik Türü"
+#: view:report.event.registration:0
+msgid "Events States"
+msgstr ""
 
 #. module: event
 #: view:board.board:0
@@ -734,6 +749,11 @@ msgstr ""
 #: selection:report.event.registration,month:0
 msgid "June"
 msgstr ""
+
+#. module: event
+#: model:product.template,name:event.event_product_0_product_template
+msgid "Ticket for Concert"
+msgstr "Konser için Bilet"
 
 #. module: event
 #: field:event.registration,write_date:0
@@ -979,6 +999,11 @@ msgid "Speaker"
 msgstr ""
 
 #. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on ERP Buisness"
+msgstr "ERP Business'da Konferans"
+
+#. module: event
 #: view:event.registration:0
 msgid "Reply"
 msgstr "Yanıtla"
@@ -1039,6 +1064,11 @@ msgstr ""
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
 msgstr "Birisi Etkinliğe abone olduğunda bu e-posta gönderilecek."
+
+#. module: event
+#: model:product.template,name:event.event_product_2_product_template
+msgid "Ticket for Conference"
+msgstr "Konferans için Bilet"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type_association
@@ -1237,9 +1267,6 @@ msgstr ""
 #~ msgid "Configuration"
 #~ msgstr "Ayarlar"
 
-#~ msgid "Concert of Bon Jovi"
-#~ msgstr "Bon Jovi Konseri"
-
 #~ msgid "Ending date"
 #~ msgstr "Bitiş Tarihi"
 
@@ -1319,9 +1346,6 @@ msgstr ""
 #~ msgid "Error!"
 #~ msgstr "Hata!"
 
-#~ msgid "Opera of Verdi"
-#~ msgstr "Verdi Operası"
-
 #~ msgid "Draft Registration"
 #~ msgstr "Olay Kaydı"
 
@@ -1348,9 +1372,6 @@ msgstr ""
 
 #~ msgid "Registration Invoiced"
 #~ msgstr "Kayıt Faturalandı."
-
-#~ msgid "Ticket for Concert"
-#~ msgstr "Konser için Bilet"
 
 #~ msgid ""
 #~ "Error: The default UOM and the purchase UOM must be in the same category."
@@ -1402,9 +1423,6 @@ msgstr ""
 
 #~ msgid "Badge Title"
 #~ msgstr "Rozet Başlığı"
-
-#~ msgid "Ticket for Conference"
-#~ msgstr "Konferans için Bilet"
 
 #~ msgid "Label Invoice"
 #~ msgstr "Etiket Faturası"
@@ -1470,12 +1488,6 @@ msgstr ""
 #~ "Bu e-posta etkinlik onaylandığında ya da birisi onaylı bir etkinliğe abone "
 #~ "olduğunda gönderilecektir. Bu aynı zamanda etkinliği birisine hatırlatmak "
 #~ "için gönderilen e-postadır."
-
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "ERP Business'da Konferans"
-
-#~ msgid "Ticket for Opera"
-#~ msgstr "Opera İçin Bilet"
 
 #~ msgid "Provide Maximun Number of Registrations"
 #~ msgstr "Enfazla Kayıt Sayısını Belirtin"

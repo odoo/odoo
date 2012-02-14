@@ -228,13 +228,8 @@ class account_move_line(osv.osv):
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context=context)
         # Starts: Manual entry from account.move form
-        if context.get('lines',[]):
-            total_new = 0.00
-            for i in context['lines']:
-                if i[2]:
-                    total_new += (i[2]['debit'] or 0.00)- (i[2]['credit'] or 0.00)
-                    for item in i[2]:
-                            data[item] = i[2][item]
+        if context.get('lines'):
+            total_new = context.get('balance', 0.00)
             if context['journal']:
                 journal_data = journal_obj.browse(cr, uid, context['journal'], context=context)
                 if journal_data.type == 'purchase':
@@ -555,7 +550,7 @@ class account_move_line(osv.osv):
         'blocked': False,
         'centralisation': 'normal',
         'date': _get_date,
-        'date_created': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_created': fields.date.context_today,
         'state': 'draft',
         'currency_id': _get_currency,
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
@@ -826,13 +821,9 @@ class account_move_line(osv.osv):
                    (tuple(ids), ))
         r = cr.fetchall()
         #TODO: move this check to a constraint in the account_move_reconcile object
-        if (len(r) != 1) and not context.get('fy_closing', False):
-            raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
         if not unrec_lines:
             raise osv.except_osv(_('Error'), _('Entry is already reconciled'))
         account = account_obj.browse(cr, uid, account_id, context=context)
-        if not context.get('fy_closing', False) and not account.reconcile:
-            raise osv.except_osv(_('Error'), _('This account does not allow reconciliation! You should update the account definition to change this.'))
         if r[0][1] != None:
             raise osv.except_osv(_('Error'), _('Some entries are already reconciled !'))
 
