@@ -125,8 +125,6 @@ class view(osv.osv):
         return result
 
     def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node, label, scale, context=None):
-        if not label:
-            label = []
         nodes=[]
         nodes_name=[]
         transitions=[]
