@@ -1276,14 +1276,6 @@
             groups="group_account_user"
         />
 
-        <record id="action_move_line_select" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_account_move_line_filter"/>
-        </record>
-
         <record id="action_view_move_line" model="ir.actions.act_window">
             <field name="name">Lines to reconcile</field>
             <field name="res_model">account.move.line</field>
@@ -1302,7 +1294,6 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
-            <field name="domain">[]</field>
             <field name="context">{'search_default_account_id': [active_id]}</field>
         </record>
 
