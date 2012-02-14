@@ -565,10 +565,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         } else {
             this.datarecord.id = r.result;
             if (!prepend_on_create) {
-                this.dataset.ids.push(this.datarecord.id);
+                this.dataset.alter_ids(this.dataset.ids.concat([this.datarecord.id]));
                 this.dataset.index = this.dataset.ids.length - 1;
             } else {
-                this.dataset.ids.unshift(this.datarecord.id);
+            	this.dataset.alter_ids([this.datarecord.id].concat(this.dataset.ids));
                 this.dataset.index = 0;
             }
             this.do_update_pager();
