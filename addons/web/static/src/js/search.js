@@ -186,7 +186,10 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
         }).then(function(result) {
             self.managed_filters = result;
             var filters = self.$element.find(".oe_search-view-filters-management");
-            filters.html(QWeb.render("SearchView.managed-filters", {filters: result, _t: _t}));
+            filters.html(QWeb.render("SearchView.managed-filters", {
+                filters: result,
+                disabled_filter_message: _t('Filter disabled due to invalid syntax')
+            }));
             filters.change(self.on_filters_management);
         });
     },

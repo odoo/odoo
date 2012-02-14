@@ -320,7 +320,10 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
             .value();
         this.$element.html(QWeb.render('ConfigOverview.content', {
             completion: 100 * progress.done / progress.total,
-            groups: grouped_todos
+            groups: grouped_todos,
+            task_title: _t("Execute task \"%s\""),
+            checkbox_title: _t("Mark this task as done"),
+            _: _
         }));
         var $progress = this.$element.find('div.oe-config-progress-bar');
         $progress.progressbar({value: $progress.data('completion')});

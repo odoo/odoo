@@ -1281,7 +1281,7 @@
         <t t-foreach="filters" t-as="filter">
             <option t-attf-value="get:#{filter_index}"
                     t-att-disabled="filter.disabled and 'disabled'"
-                    t-att-title="filter.disabled and _t('Filter disabled due to invalid syntax')">
+                    t-att-title="filter.disabled and disabled_filter_message">
                 <t t-esc="filter.name"/>
             </option>
         </t>
