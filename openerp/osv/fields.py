@@ -273,11 +273,14 @@ class date(_column):
             tools.DEFAULT_SERVER_DATE_FORMAT)
 
     @staticmethod
-    def context_today(cr, uid, timestamp=None, context=None):
+    def context_today(model, cr, uid, context=None, timestamp=None):
         """Returns the current date as seen in the client's timezone
            in a format fit for date fields.
            This method may be passed as value to initialize _defaults.
 
+           :param Model model: model (osv) for which the date value is being
+                               computed - technical field, currently ignored,
+                               automatically passed when used in _defaults.
            :param datetime timestamp: optional datetime value to use instead of
                                       the current date and time (must be a
                                       datetime, regular dates can't be converted
