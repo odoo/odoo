@@ -755,16 +755,21 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var $logs_list = $logs.find('ul').empty();
         $logs.toggleClass('oe-has-more', log_records.length > cutoff);
         _(log_records.reverse()).each(function (record) {
+            var context = {};
+            if (record.context) {
+                try { context = py.eval(record.context).toJSON(); }
+                catch (e) { /* TODO: what do I do now? */ }
+            }
             $(_.str.sprintf('<li><a href="#">%s</a></li>', record.name))
                 .appendTo($logs_list)
-                .delegate('a', 'click', function (e) {
+                .delegate('a', 'click', function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
                         res_model: record.res_model,
                         res_id: record.res_id,
                         // TODO: need to have an evaluated context here somehow
-                        //context: record.context,
-                        views: [[false, 'form']]
+                        context: context,
+                        views: [[context.view_id || false, 'form']]
                     });
                     return false;
                 });
