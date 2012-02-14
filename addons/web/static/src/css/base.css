@@ -1467,14 +1467,20 @@ label.error {
     min-width: 100%;
     width: 100%;
 }
-.openerp .oe_forms .button {
-    height: 22px;
-}
 @-moz-document url-prefix() {
     /* Strange firefox behaviour on width: 100% + white-space: nowrap */
     .openerp .oe_forms .oe_form_button .oe_button {
         width: auto;
     }
+}
+/* IE Hack - for IE < 9
+ * Avoids buttons overflow
+ * */
+.openerp .oe_forms .oe_form_button .oe_button {
+    min-width: auto\9;
+}
+.openerp .oe_forms .button {
+    height: 22px;
 }
 .openerp .oe_forms .oe_button span {
     position: relative;
