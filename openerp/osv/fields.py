@@ -273,14 +273,16 @@ class date(_column):
             tools.DEFAULT_SERVER_DATE_FORMAT)
 
     @staticmethod
-    def context_today(cr, uid, today=None, context=None):
+    def context_today(cr, uid, timestamp=None, context=None):
         """Returns the current date as seen in the client's timezone
            in a format fit for date fields.
            This method may be passed as value to initialize _defaults.
 
-           :param datetime today: optional date value to use instead of
-                                  the current date"""
-        today = DT.datetime.now()
+           :param datetime timestamp: optional datetime value to use instead of
+                                      the current date and time (must be a
+                                      datetime, regular dates can't be converted
+                                      between timezones.)"""
+        today = timestamp or DT.datetime.now()
         context_today = None
         if context and context.get('tz'):
             try:
