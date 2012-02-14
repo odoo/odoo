@@ -358,7 +358,7 @@ form: module.record_id""" % (xml_id,)
             # Special check for report having attribute menu=False on update
             value = 'ir.actions.report.xml,'+str(id)
             self._remove_ir_values(cr, res['name'], value, res['model'])
-        return False
+        return id
 
     def _tag_function(self, cr, rec, data_node=None):
         if self.isnoupdate(data_node) and self.mode != 'init':
