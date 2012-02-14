@@ -98,11 +98,16 @@ class delivery_carrier(osv.osv):
         return False
 
     def create_grid_lines(self, cr, uid, ids, vals, context=None):
-        if context == None:
+        if context is None:
             context = {}
         grid_line_pool = self.pool.get('delivery.grid.line')
         grid_pool = self.pool.get('delivery.grid')
         for record in self.browse(cr, uid, ids, context=context):
+            # if using advanced pricing per destination: do not change
+            if record.use_detailed_pricelist:
+                continue
+			
+            # not using advanced pricing per destination: override grid
             grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
 
             if grid_id and not (record.normal_price or record.free_if_more_than):
