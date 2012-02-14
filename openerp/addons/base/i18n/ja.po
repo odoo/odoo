@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-02-11 21:39+0000\n"
+"PO-Revision-Date: 2012-02-14 00:29+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-12 04:41+0000\n"
-"X-Generator: Launchpad (build 14771)\n"
+"X-Launchpad-Export-Date: 2012-02-14 05:42+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -1775,7 +1775,7 @@ msgstr ""
 "\n"
 "    昼食を管理するための基本モジュール\n"
 "\n"
-"    ランチの注文、現金移動、現金ボックス、商品の追跡を続けます。\n"
+"    昼食の注文、現金移動、現金ボックス、商品の追跡を続けます。\n"
 "    商品のために異なったカテゴリを適用します。\n"
 "    "
 
@@ -5786,17 +5786,7 @@ msgid ""
 msgstr ""
 "顧客は会社または組織といったビジネス対象の存在です。会社で働く人々のため顧客は複数のコンタクト者や住所を管理できます。顧客と関係する全てのトランザクション"
 "をたどるために履歴タブが利用できます：受注、Eメール、オポチュニティ、クレームなど。もし、OutlookやThunderbirdプラグインのEメールゲート"
-"ウェイを使う場合、ゲートウェイが自動的に入ってくるEメールを正しいパートナに結びつけるように各コンタクトにEメールを登録することを忘れないで下さい。\r"
-"\n"
-"\r\n"
-"\r\n"
-"A customer is an entity you do business with, like a company or an "
-"organization. A customer can have several contacts or addresses which are "
-"the people working for this company. You can use the history tab, to follow "
-"all transactions related to a customer: sales order, emails, opportunities, "
-"claims, etc. If you use the email gateway, the Outlook or the Thunderbird "
-"plugin, don't forget to register emails to each contact so that the gateway "
-"will automatically attach incoming emails to the right partner."
+"ウェイを使う場合、ゲートウェイが自動的に入ってくるEメールを正しいパートナに結びつけるように各コンタクトにEメールを登録することを忘れないで下さい。"
 
 #. module: base
 #: field:ir.actions.report.xml,name:0
@@ -5834,7 +5824,7 @@ msgstr "名前"
 msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view"
-msgstr ""
+msgstr "Trueをセットした場合、アクションはフォームビューの右のツールバー上に表示されません。"
 
 #. module: base
 #: model:res.country,name:base.ms
@@ -5880,28 +5870,25 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"OpenERP在庫管理モジュールは Inventory Management module can manage multi-warehouses, "
-"multi and structured stock locations.\n"
+"OpenERP在庫管理モジュールは複数の倉庫、複数で階層的な在庫場所の管理ができます。\n"
 "============================================================================="
 "=========================\n"
 "\n"
-"Thanks to the double entry management, the inventory controlling is powerful "
-"and flexible:\n"
-"    * Moves history and planning,\n"
-"    * Different inventory methods (FIFO, LIFO, ...)\n"
-"    * Stock valuation (standard or average price, ...)\n"
-"    * Robustness faced with Inventory differences\n"
-"    * Automatic reordering rules (stock level, JIT, ...)\n"
-"    * Bar code supported\n"
-"    * Rapid detection of mistakes through double entry system\n"
-"    * Traceability (upstream/downstream, production lots, serial number, "
-"...)\n"
-"    * Dashboard for warehouse that includes:\n"
-"        * Procurement in exception\n"
-"        * List of Incoming Products\n"
-"        * List of Outgoing Products\n"
-"        * Graph : Products to receive in delay (date < = today)\n"
-"        * Graph : Products to send in delay (date < = today)\n"
+"二重入力管理により在庫コントロールは強力かつ柔軟です：\n"
+"    ・ 移動履歴と計画\n"
+"    ・ 異なる在庫手法（FIFO、LIFO、 …）\n"
+"    ・ 在庫評価（標準、平均価格、…）\n"
+"    ・ 在庫相違に直面した安定性\n"
+"    ・ 自動発注ルール（在庫レベル、JIT、…）\n"
+"    ・ バーコードサポート\n"
+"    ・ 二重入力システムにより迅速な誤り検出\n"
+"    ・ トレーサビリティ（上流 / 下流、生産ロット、シリアル番号、…）\n"
+"    ・ 以下を含む倉庫のダッシュボード：\n"
+"        ・ 例外的な調達\n"
+"        ・ 入庫製品のリスト\n"
+"        ・ 出庫製品のリスト\n"
+"        ・ グラフ： 製品の受領遅延（日付＜＝本日）\n"
+"        ・ グラフ： 製品の送付遅延（日付＜＝本日）\n"
 "    "
 
 #. module: base
@@ -5917,31 +5904,31 @@ msgstr "モジュール"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "English (UK)"
-msgstr ""
+msgstr "英語（イギリス）"
 
 #. module: base
 #: model:res.country,name:base.aq
 msgid "Antarctica"
-msgstr ""
+msgstr "南極大陸"
 
 #. module: base
 #: help:workflow.transition,act_from:0
 msgid ""
 "Source activity. When this activity is over, the condition is tested to "
 "determine if we can start the ACT_TO activity."
-msgstr ""
+msgstr "ソースアクティビティ。そのアクティビティを終えた時に、ACT_TO活動を始めるかどうか条件がテストされます。"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_3
 msgid "Starter Partner"
-msgstr ""
+msgstr "開始パートナ"
 
 #. module: base
 #: help:ir.model.fields,relation_field:0
 msgid ""
 "For one2many fields, the field on the target model that implement the "
 "opposite many2one relationship"
-msgstr ""
+msgstr "１対多項目のため、目的モデル上のその項目は正反対の多対１関係を実装します。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_budget
@@ -5973,6 +5960,24 @@ msgid ""
 "Budgets per Budgets.\n"
 "\n"
 msgstr ""
+"\n"
+"このモジュールは会計士が分析的で相互に関連する予算の管理をします。\n"
+"==========================================================================\n"
+"\n"
+"ひとたびマスタ予算と各種予算が定義されたら（Accounting/Budgets/の中に）、\n"
+"各プロジェクト管理者は各分析アカウントに計画量をセットすることができます。\n"
+"\n"
+"会計士は計画の合計が彼が計画した予算やマスタ予算よりも大き過ぎず、小さ過ぎない\n"
+"ことを確認するため、各予算とマスター予算の計画量の合計を見通すための機能を持ちます。\n"
+"各レコードのリストはグラフィカルビューに切り替えることもできます。\n"
+"\n"
+"以下の3つのレポートが利用可能です：\n"
+"    1. 予算リスト： マスタ予算ごとの分析アカウントをそれらの予算のために展開することができます。\n"
+"\n"
+"    2. 予算リストの合計： 分析アカウントを選択された予算のために展開することができます。\n"
+"\n"
+"    3. 会計の分析表： 各予算ごとのマスター予算を選択した分析アカウントのために展開することができます。\n"
+"\n"
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -5992,7 +5997,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_lunch
 msgid "Lunch Orders"
-msgstr ""
+msgstr "昼食オーダー"
 
 #. module: base
 #: selection:base.language.install,lang:0

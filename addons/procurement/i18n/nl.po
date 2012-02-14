@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-02-01 13:00+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"PO-Revision-Date: 2012-02-13 14:13+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:00+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-14 05:45+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -83,7 +83,7 @@ msgstr "Alleen minimum voorraadregels berekenen"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Temporary Procurement Exceptions"
-msgstr ""
+msgstr "Tijdelijke verwervingsfouten"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -162,7 +162,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Permanent Procurement Exceptions"
-msgstr ""
+msgstr "Blijvende verwervingsfouten"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -214,6 +214,16 @@ msgid ""
 "\n"
 "        Exceptions:\n"
 msgstr ""
+"Hier is het verwerving taakplanner rapport.\n"
+"\n"
+"        Start Tijd: %s \n"
+"        Eind Tijd: %s \n"
+"        Totaal verwervingen verwerkt: %d \n"
+"        Verwervingen met een fout: %d \n"
+"        Overgeslagen verwervingen (geplande datum buiten bereik "
+"taakplanner): %d \n"
+"\n"
+"        Fouten:\n"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -232,6 +242,9 @@ msgid ""
 "procurement to bring the virtual stock to the Quantity specified as Max "
 "Quantity."
 msgstr ""
+"Wanneer de virtuele voorraad onder de minimale hoeveelheid gaat, zal OpenERP "
+"een verwerving genereren om de virtuele voorraad naar de maximaal "
+"gespecificeerde voorraad te brengen."
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -267,7 +280,7 @@ msgstr "Fout ! U kunt geen recursieve bedrijven maken."
 #: code:addons/procurement/procurement.py:386
 #, python-format
 msgid "Procurement '%s' is in exception: "
-msgstr ""
+msgstr "Verwerving '%s' is in fout: "
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -308,7 +321,7 @@ msgstr "Beste prijs (nog niet actief)"
 #: code:addons/procurement/schedulers.py:111
 #, python-format
 msgid "PROC %d: from stock - %3.2f %-5s - %s"
-msgstr ""
+msgstr "VERW %d: van voorraaad - %3.2f %-5s - %s"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -384,7 +397,7 @@ msgstr "Referenties"
 #: view:product.product:0
 #: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rule"
-msgstr ""
+msgstr "Minimum voorraadregel"
 
 #. module: procurement
 #: view:res.company:0
@@ -398,6 +411,8 @@ msgid ""
 "Please check the quantity in procurement order(s), it should not be 0 or "
 "less!"
 msgstr ""
+"Controleer de hoeveelheid in de verwerving order(s). Het mag niet nul of "
+"minder zijn!"
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -468,6 +483,9 @@ msgid ""
 "OpenERP generates a procurement to bring the virtual stock to the Max "
 "Quantity."
 msgstr ""
+"Wanneer de virtuele voorraad onder de minimale hoeveelheid gaat, "
+"gespecificeerd voor dit veld, zal OpenERP een verwerving genereren om de "
+"virtuele voorraad naar de maximaal gespecificeerde voorraad te brengen."
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -506,6 +524,8 @@ msgstr "plus"
 #: constraint:stock.move:0
 msgid "You can not move products from or to a location of the type view."
 msgstr ""
+"Het is niet mogelijk om producten te verplaatsen naar een locatie van het "
+"type 'aanzicht'."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -628,6 +648,8 @@ msgstr "Minimum voorraadregel"
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid "The procurement quantity will be rounded up to this multiple."
 msgstr ""
+"De verwerving hoeveelheid zal worden afgerond naar deze "
+"vermenigvuldigingsfactor."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -667,7 +689,7 @@ msgstr "Tot maximum"
 #. module: procurement
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Referentie moet uniek zijn per bedrijf!"
 
 #. module: procurement
 #: field:procurement.order,date_close:0
@@ -904,11 +926,13 @@ msgstr "MRP & logistiek planner"
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state!"
 msgstr ""
+"Het is niet mogelijk om verwerving order(s) te verwijderen welke zich in de "
+"%s status bevinden!"
 
 #. module: procurement
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "De naam van het bedrijf moet uniek zijn!"
 
 #. module: procurement
 #: field:mrp.property,name:0
@@ -1004,12 +1028,12 @@ msgstr "Details verwerving"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement started late"
-msgstr ""
+msgstr "Verwerving is te laat gestart"
 
 #. module: procurement
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fout: Ongeldige EAN-code"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:152
@@ -1021,7 +1045,7 @@ msgstr "PLANNER"
 #: code:addons/procurement/schedulers.py:88
 #, python-format
 msgid "PROC %d: on order - %3.2f %-5s - %s"
-msgstr ""
+msgstr "VERW %d: van order - %3.2f %-5s - %s"
 
 #~ msgid "The procurement quantity will by rounded up to this multiple."
 #~ msgstr ""
