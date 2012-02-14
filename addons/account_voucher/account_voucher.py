@@ -612,6 +612,7 @@ class account_voucher(osv.osv):
         res = {
             'state':'cancel',
             'move_id':False,
+            'number': ''
         }
         if invoice_ids:
             wf_service.trg_validate(uid, 'account.invoice', invoice_ids[0], 'open_test', cr)
@@ -665,9 +666,7 @@ class account_voucher(osv.osv):
             context_multi_currency = context.copy()
             context_multi_currency.update({'date': inv.date})
 
-            if inv.number:
-                name = inv.number
-            elif inv.journal_id.sequence_id:
+            if inv.journal_id.sequence_id:
                 name = seq_obj.get_id(cr, uid, inv.journal_id.sequence_id.id)
             if not name:
                 raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal and make sure it is activated !'))
