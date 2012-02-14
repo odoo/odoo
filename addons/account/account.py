@@ -954,10 +954,10 @@ class account_fiscalyear(osv.osv):
             dt = fields.date.context_today(self,cr,uid,context=context)
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
         if context.get('company_id', False):
-            args.append(('company_id', '=', context['company_id']))
+            company_id = context['company_id']
         else:
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-            args.append(('company_id', '=', company_id))
+        args.append(('company_id', '=', company_id))
         ids = self.search(cr, uid, args, context=context)
         if not ids:
             if exception:
