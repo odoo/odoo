@@ -2394,13 +2394,13 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                         obj['id'] = _.uniqueId(self.dataset.virtual_id_prefix);
                         obj.defaults = {};
                         self.dataset.to_create.push(obj);
-                        self.dataset.cache.push(_.clone(obj));
+                        self.dataset.cache.push(_.extend(_.clone(obj), {values: _.clone(command[2])}));
                         ids.push(obj.id);
                         return;
                     case commands.UPDATE:
                         obj['id'] = command[1];
                         self.dataset.to_write.push(obj);
-                        self.dataset.cache.push(_.clone(obj));
+                        self.dataset.cache.push(_.extend(_.clone(obj), {values: _.clone(command[2])}));
                         ids.push(obj.id);
                         return;
                     case commands.DELETE:

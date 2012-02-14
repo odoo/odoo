@@ -764,7 +764,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                         self.cache.push({id: id, values: record});
                     } else {
                         // I assume cache value is prioritary
-                        _.defaults(cached.values, record);
+                    	cached.values = _.defaults(_.clone(cached.values), record);
                     }
                 });
                 return_records();
