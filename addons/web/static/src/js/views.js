@@ -1056,6 +1056,7 @@ session.web.TranslateDialog = session.web.Dialog.extend({
             if (code === self.view_language) {
                 _.each(data, function(value, field) {
                     self.view.fields[field].set_value(value);
+                    self.view.fields[field].dirty = true;
                 });
             } else {
                 trads_mutex.exec(function() {
