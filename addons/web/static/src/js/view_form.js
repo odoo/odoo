@@ -1361,6 +1361,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         this._super.apply(this, arguments);
         if (this.field.translate) {
             this.view.translatable_fields.push(this);
+            this.$element.addClass('oe_form_field_translatable');
             this.$element.find('.oe_field_translate').click(this.on_translate);
         }
         if (this.nolabel && openerp.connection.debug) {
