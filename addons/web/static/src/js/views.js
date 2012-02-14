@@ -1043,7 +1043,8 @@ session.web.TranslateDialog = session.web.Dialog.extend({
     },
     on_button_Save: function() {
         var trads = {},
-            self = this;
+            self = this,
+            trads_mutex = new $.Mutex();
         self.$fields_form.find('.oe_trad_field.touched').each(function() {
             var field = $(this).attr('name').split('-');
             if (!trads[field[0]]) {
@@ -1057,7 +1058,9 @@ session.web.TranslateDialog = session.web.Dialog.extend({
                     self.view.fields[field].set_value(value);
                 });
             } else {
-                self.view.dataset.write(self.view.datarecord.id, data, { 'lang': code });
+                trads_mutex.exec(function() {
+                    return self.view.dataset.write(self.view.datarecord.id, data, { context : { 'lang': code } });
+                });
             }
         });
         this.close();
