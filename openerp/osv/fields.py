@@ -1315,10 +1315,10 @@ class sparse(function):
                     value = value or []
                     if value:
                         # filter out deleted records as superuser
-                        relation_obj = obj.pool.get(self.relation)
+                        relation_obj = obj.pool.get(obj._columns[field_name].relation)
                         value = relation_obj.exists(cr, openerp.SUPERUSER_ID, value)
                 if type(value) in (int,long) and field_type == 'many2one':
-                    relation_obj = obj.pool.get(self.relation)
+                    relation_obj = obj.pool.get(obj._columns[field_name].relation)
                     # check for deleted record as superuser
                     if not relation_obj.exists(cr, openerp.SUPERUSER_ID, [value]):
                         value = False
