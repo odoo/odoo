@@ -349,7 +349,7 @@ class account_invoice(osv.osv):
             context = {}
         res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'invoice_form')
         view_id = res and res[1] or False
-        context.update({'view_id': view_id})
+        context['view_id'] = view_id
         return context
 
     def create(self, cr, uid, vals, context=None):
