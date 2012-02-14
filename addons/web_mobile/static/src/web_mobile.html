@@ -50,7 +50,10 @@
     <script type="text/javascript">
         var QWeb;
         $(function() {
-            if(document.URL!="http://"+window.location.host+"/web_mobile/static/src/web_mobile.html"){
+            if(
+                document.URL!="http://"+window.location.host+"/web_mobile/static/src/web_mobile.html" &&
+                document.URL!="https://"+window.location.host+"/web_mobile/static/src/web_mobile.html"                
+            ){
                 window.location.replace('/mobile');
             }
             var oe = openerp.init();
