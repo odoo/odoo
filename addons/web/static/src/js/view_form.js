@@ -210,6 +210,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (record.id) {
                 self.do_push_state({id:record.id});
             }
+            self.$element.removeClass('oe_form_dirty');
         });
     },
     on_form_changed: function() {
@@ -221,6 +222,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
             w.update_dom();
         }
+    },
+    do_notify_change: function() {
+        this.$element.addClass('oe_form_dirty');
     },
     on_pager_action: function(action) {
         if (this.can_be_discarded()) {
@@ -1413,7 +1417,8 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         if (this.is_valid()) {
             this.set_value_from_ui();
             this.view.do_onchange(this);
-            this.view.on_form_changed();
+            this.view.on_form_changed(true);
+            this.view.do_notify_change();
         } else {
             this.update_dom(true);
         }
@@ -2608,6 +2613,13 @@ openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
         this.$form_header.find('button.oe_form_button_create').click(function() {
             self.do_save().then(self.on_button_new);
         });
+    },
+    do_notify_change: function() {
+        if (this.dataset.parent_view) {
+            this.dataset.parent_view.do_notify_change();
+        } else {
+            this._super.apply(this, arguments);
+        }
     }
 });
 

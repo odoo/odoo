@@ -1184,7 +1184,20 @@ label.error {
 
 
 /* Form */
-
+.openerp .oe_form_button_save_dirty {
+    display: none;
+}
+.openerp .oe_form_dirty > .oe_form_header > .oe_form_buttons > .oe_form_button_save {
+    background: white;
+    font-weight: bold;
+}
+.openerp .oe_form_dirty > .oe_form_header > .oe_form_buttons > .oe_form_button_save > .oe_form_button_save_dirty {
+    display: inline;
+    font-weight: bold;
+    font-size: 80%;
+    position: relative;
+    bottom: 0.4em;
+}
 .openerp .oe_form_frame_cell input[type="checkbox"] {
     margin-top: 3px;
     vertical-align: middle;
