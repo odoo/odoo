@@ -29,6 +29,7 @@ from osv import fields, osv
 from tools.translate import _
 import netsvc
 import tools
+from tools import float_compare
 import decimal_precision as dp
 import logging
 
@@ -378,7 +379,7 @@ class stock_location(osv.osv):
         :param lock: if True, the stock.move lines of product with id ``product_id`` in all locations (and children locations) with ``ids`` will
                      be write-locked using postgres's "FOR UPDATE NOWAIT" option until the transaction is committed or rolled back. This is
                      to prevent reserving twice the same products.
-        :param context: optional context dictionary: it a 'uom' key is present it will be used instead of the default product uom to
+        :param context: optional context dictionary: if a 'uom' key is present it will be used instead of the default product uom to
                         compute the ``product_qty`` and in the return value.
         :return: List of tuples in the form (qty, location_id) with the (partial) quantities that can be taken in each location to
                  reach the requested product_qty (``qty`` is expressed in the default uom of the product), of False if enough
@@ -388,6 +389,10 @@ class stock_location(osv.osv):
         amount = 0.0
         if context is None:
             context = {}
+        uom_obj = self.pool.get('product.uom')
+        uom_rounding = self.pool.get('product.product').browse(cr, uid, product_id, context=context).uom_id.rounding
+        if context.get('uom'):
+            uom_rounding = uom_obj.browse(cr, uid, context.get('uom'), context=context).rounding
         for id in self.search(cr, uid, [('location_id', 'child_of', ids)]):
             if lock:
                 try:
@@ -442,14 +447,15 @@ class stock_location(osv.osv):
             total = 0.0
             results2 = 0.0
             for r in results:
-                amount = self.pool.get('product.uom')._compute_qty(cr, uid, r['product_uom'], r['product_qty'], context.get('uom', False))
+                amount = uom_obj._compute_qty(cr, uid, r['product_uom'], r['product_qty'], context.get('uom', False))
                 results2 += amount
                 total += amount
             if total <= 0.0:
                 continue
 
             amount = results2
-            if amount > 0:
+            compare_qty = float_compare(amount, 0, precision_rounding=uom_rounding)
+            if compare_qty == 1:
                 if amount > min(total, product_qty):
                     amount = min(product_qty, total)
                 result.append((amount, id))
