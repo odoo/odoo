@@ -71,7 +71,7 @@ class WebKitParser(report_sxw):
         report_sxw.__init__(self, name, table, rml, parser,
             header, store)
 
-    def get_lib(self, cursor, uid, company) :
+    def get_lib(self, cursor, uid):
         """Return the lib wkhtml path"""
         proxy = self.pool.get('ir.config_parameter')
         webkit_path = proxy.get_param(cursor, uid, 'webkit_path')
@@ -294,7 +294,7 @@ class WebKitParser(report_sxw):
                 logger.error(msg)
                 raise except_osv(_('Webkit render'), msg)
             return (deb, 'html')
-        bin = self.get_lib(cursor, uid, company.id)
+        bin = self.get_lib(cursor, uid)
         pdf = self.generate_pdf(bin, report_xml, head, foot, htmls)
         return (pdf, 'pdf')
 
