@@ -113,7 +113,6 @@
     product = self.browse(cr, uid, ref('product_icecream'), context=context)
     assert product.qty_available == 140, "Stock does not correspond."
     assert product.virtual_available == 10, "Vitual stock does not correspond."
-
 -
   I split incomming shipment into lots. each lot contain 10 kgm Ice-cream.
 -
@@ -188,20 +187,18 @@
 -
   !python {model: stock.location}: |
     ctx = {'product_id': ref('product_icecream')}
-    refrigerator_location = self.browse(cr, uid, ref('location_refrigerator'), context=ctx)
-    assert refrigerator_location.stock_real == 131.96, 'stock does not correspond in refrigerator location.'
+    refrigerator_location = self.pool.get('stock.location').browse(cr, uid, ref('location_refrigerator'), context=ctx)
+    assert refrigerator_location.stock_real == 135.96, 'stock does not correspond in refrigerator location.'
     scrapped_location = self.browse(cr, uid, ref('stock_location_scrapped'), context=ctx)
     assert scrapped_location.stock_real == 0.010*4, 'scraped stock does not correspond in scrap location.'
-    production_location = self.browse(cr, uid, ref('location_production'), context=ctx)
-    assert production_location.stock_real == 1*4, 'consume stock does not correspond in production location.' #TOFIX: consume stock is not updated in default production location of product.
     
 -
   I check availabile stock after consumed and scraped.
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_icecream'), context=context)
-    assert product.qty_available == 131.96, "Stock does not correspond."
-    assert round(product.virtual_available, 2) == 1.96, "Vitual stock does not correspond."
+    assert product.qty_available == 135.96, "Stock does not correspond."
+    assert round(product.virtual_available, 2) == 5.96, "Vitual stock does not correspond."
 -
   I trace all incoming lots.
 -
@@ -276,5 +273,5 @@
 -
   !python {model: product.product}: |
     product = self.browse(cr, uid, ref('product_icecream'), context=context)
-    assert round(product.qty_available, 2) == 1.96, "Stock does not correspond."
-    assert round(product.virtual_available, 2) == 1.96, "Vitual stock does not correspond."
+    assert round(product.qty_available, 2) == 5.96, "Stock does not correspond."
+    assert round(product.virtual_available, 2) == 5.96, "Vitual stock does not correspond."
