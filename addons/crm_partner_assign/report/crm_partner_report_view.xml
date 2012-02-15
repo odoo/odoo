@@ -31,6 +31,8 @@
                         <filter string="Partner" name="" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical" />
+                        <filter string="Date Invoice" name="group_period_id" icon="terp-stock_symbol-selection"
+                            domain="[]" context="{'group_by':'period_id'}" />
                         <filter string="Date Partnership" name="group_date_partnership" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'date_partnership'}" />
                         <filter string="Date Review" name="group_date_review" icon="terp-stock_symbol-selection"
@@ -54,6 +56,7 @@
                 <field name="activation" invisible="1"/>
                 <field name="date_review" invisible="1"/>
                 <field name="date_partnership" invisible="1"/>
+                <field name="period_id" invisible="1"/>
                 <field name="section_id" invisible="1" groups="base.group_extended"/>
                 <field name="user_id" invisible="1"/>
                 <field name="opp"/>

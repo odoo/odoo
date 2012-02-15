@@ -38,10 +38,9 @@ class crm_partner_report_assign(osv.osv):
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'opp': fields.integer('# of Opportunity', readonly=True),
         'turnover': fields.float('Turnover', readonly=True),
+        'period_id': fields.many2one('account.period', 'Invoice Period', readonly=True),
     }
-
     def init(self, cr):
-
         """
             CRM Lead Report
             @param cr: the current row, from the database cursor
@@ -50,7 +49,7 @@ class crm_partner_report_assign(osv.osv):
         cr.execute("""
             CREATE OR REPLACE VIEW crm_partner_report_assign AS (
                 SELECT
-                    p.id,
+                    coalesce(i.id,-p.id) as id,
                     p.id as partner_id,
                     (SELECT country_id FROM res_partner_address a WHERE a.partner_id=p.id AND country_id is not null limit 1) as country_id,
                     p.grade_id,
@@ -60,17 +59,12 @@ class crm_partner_report_assign(osv.osv):
                     p.user_id,
                     p.section_id,
                     (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS opp,
-                    (SELECT
-                        sum(price_total)
-                     FROM
-                        account_invoice_report
-                     WHERE
-                        partner_id=p.id and
-                        type in ('out_invoice','out_refund') and
-                        state in ('open','paid')) AS turnover
+                    i.price_total as turnover,
+                    i.period_id
                 FROM
                     res_partner p
-
+                    left join account_invoice_report i
+                        on (i.partner_id=p.id and i.type in ('out_invoice','out_refund') and i.state in ('open','paid'))
             )""")
 
 crm_partner_report_assign()
