@@ -84,9 +84,9 @@ this if you want the rule to send an email to the partner."),
         result_history = True
         if regex:
             res = False
-            ptrn = re.compile(str(regex))
+            ptrn = re.compile(tools.ustr(regex))
             for history in obj.message_ids:
-                _result = ptrn.search(str(history.name))
+                _result = ptrn.search(tools.ustr(history.name))
                 if _result:
                     res = True
                     break

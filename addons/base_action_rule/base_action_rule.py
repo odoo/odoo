@@ -356,8 +356,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
         reg_name = action.regex_name
         result_name = True
         if reg_name:
-            ptrn = re.compile(str(reg_name))
-            _result = ptrn.search(str(obj.name))
+            ptrn = re.compile(tools.ustr(reg_name))
+            _result = ptrn.search(tools.ustr(obj.name))
             if not _result:
                 result_name = False
         regex_n = not reg_name or result_name
