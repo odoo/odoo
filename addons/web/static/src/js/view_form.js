@@ -145,6 +145,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     do_show: function () {
         var self = this;
         this.$element.show().css('visibility', 'hidden');
+        this.$element.removeClass('oe_form_dirty');
         return this.has_been_loaded.pipe(function() {
             var result;
             if (self.dataset.index === null) {
@@ -447,7 +448,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
     },
     on_button_cancel: function() {
-        return this.do_prev_view({'default': 'page'});
+        if (this.can_be_discarded()) {
+            return this.do_prev_view({'default': 'page'});
+        }
     },
     on_button_new: function() {
         var self = this;
