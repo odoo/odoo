@@ -600,7 +600,7 @@ class share_wizard(osv.osv_memory):
                     combined_domain = expression.AND([new_clause, org_domain])
                     rule.write({'domain_force': combined_domain, 'name': rule.name + _('(Modified)')})
                     self._logger.debug("Combining sharing rule %s on model %s with domain: %s", rule.id, model_id, domain)
-        if not restrict:
+        if not rule_ids or not restrict:
             # Adding the new rule in the group is ok for normal cases, because rules
             # in the same group and for the same model will be combined with OR
             # (as of v6.1), so the desired effect is achieved.
