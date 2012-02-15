@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-06 16:54+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2012-02-14 10:21+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 05:57+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-15 05:27+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -119,7 +119,7 @@ msgstr "总剩余时间，任务执行者可定期重估"
 #. module: project
 #: view:project.project:0
 msgid "Re-open project"
-msgstr ""
+msgstr "重启项目"
 
 #. module: project
 #: help:project.project,priority:0
@@ -295,7 +295,7 @@ msgstr "请指定项目经理或项目经理的电子邮件地址。"
 #. module: project
 #: view:project.task:0
 msgid "For cancelling the task"
-msgstr ""
+msgstr "为取消这个任务"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
@@ -595,7 +595,7 @@ msgstr "计算:花费的时间 + 剩余的时间"
 #: model:ir.actions.act_window,name:project.action_view_task_history_cumulative
 #: model:ir.ui.menu,name:project.menu_action_view_task_history_cumulative
 msgid "Cumulative Flow"
-msgstr ""
+msgstr "渐进过程"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -617,7 +617,7 @@ msgstr "重估"
 #: code:addons/project/project.py:597
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (副本)"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -822,7 +822,7 @@ msgstr "委派"
 msgid ""
 "If you check this field, the project manager will receive an email each time "
 "a task is completed by his team."
-msgstr ""
+msgstr "如果你勾选这里，项目经理在团队成员完成一个任务时会收到一封邮件。"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
@@ -984,7 +984,7 @@ msgstr "已计划的小时数"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_review_task_stage
 msgid "Review Task Stages"
-msgstr ""
+msgstr "查看任务阶段"
 
 #. module: project
 #: view:project.project:0
@@ -1006,7 +1006,7 @@ msgstr "开始日期"
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready To Pull"
-msgstr ""
+msgstr "可以推送"
 
 #. module: project
 #: view:project.task:0 field:project.task,parent_ids:0
@@ -1031,7 +1031,7 @@ msgstr "如果该任务的进度为 99.99%且该任务已经完成，那么您�
 #. module: project
 #: view:project.project:0
 msgid "Contact Address"
-msgstr ""
+msgstr "联系地址"
 
 #. module: project
 #: help:project.task,kanban_state:0
@@ -1041,6 +1041,10 @@ msgid ""
 " * Blocked indicates something is preventing the progress of this task\n"
 " * Ready To Pull indicates the task is ready to be pulled to the next stage"
 msgstr ""
+"任务的看板状态表示不同的情形，影响如下：\n"
+"”正常“是默认情形\n"
+"”锁定“意味着有问题阻挡了这个任务的进行\n"
+"”可以推送“意味着任务可以被拖到下一个阶段"
 
 #. module: project
 #: view:project.project:0
@@ -1055,7 +1059,7 @@ msgstr "发票"
 #. module: project
 #: view:project.task:0
 msgid "For changing to delegate state"
-msgstr ""
+msgstr "要设置为委派状态"
 
 #. module: project
 #: field:project.task,priority:0 field:report.project.task.user,priority:0
@@ -1082,7 +1086,7 @@ msgstr "project.task.reevaluate"
 #: code:addons/project/wizard/project_task_delegate.py:81
 #, python-format
 msgid "CHECK: %s"
-msgstr ""
+msgstr "参考：%s"
 
 #. module: project
 #: view:project.project:0
@@ -1151,7 +1155,7 @@ msgstr "项目经理"
 #. module: project
 #: view:project.task:0 view:res.partner:0
 msgid "For changing to done state"
-msgstr ""
+msgstr "要设置为完成状态"
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
@@ -1256,7 +1260,7 @@ msgstr "项目 '%s' 已关闭"
 #. module: project
 #: view:project.task.history.cumulative:0
 msgid "Tasks's Cumulative Flow"
-msgstr ""
+msgstr "任务的渐进过程"
 
 #. module: project
 #: view:project.task:0
@@ -1402,7 +1406,7 @@ msgstr "增加筛选条件"
 #: code:addons/project/project.py:1148
 #, python-format
 msgid "Please delete the project linked with this account first."
-msgstr ""
+msgstr "请删除与此科目关联的项目"
 
 #. module: project
 #: field:project.task,total_hours:0 field:project.vs.hours,total_hours:0
@@ -1633,7 +1637,7 @@ msgstr "任务总数"
 msgid ""
 "If you check this field, this stage will be proposed by default on each new "
 "project. It will not assign this stage to existing projects."
-msgstr ""
+msgstr "如果勾了这里，这个阶段将作为每个新建项目的默认阶段。对已有项目无影响。"
 
 #. module: project
 #: view:board.board:0
@@ -1694,7 +1698,7 @@ msgstr "此项目极其子项目的所有任务的实际工时数"
 #. module: project
 #: field:project.task.type,project_default:0
 msgid "Common to All Projects"
-msgstr ""
+msgstr "对所有项目通用"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
@@ -1794,7 +1798,7 @@ msgstr "花费时间"
 msgid ""
 "The stages can be common to all project or specific to one project. Each "
 "task will follow the different stages in order to be closed."
-msgstr ""
+msgstr "这个阶段对所有项目通用，或只适用于特定项目。每个任务关闭前都要遵循不同的阶段。"
 
 #. module: project
 #: help:project.project,sequence:0
@@ -1821,7 +1825,7 @@ msgstr "燃尽图"
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr ""
+msgstr "已安排任务"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -1831,12 +1835,12 @@ msgstr "拖期任务"
 #. module: project
 #: view:report.project.task.user:0
 msgid "Current Year"
-msgstr ""
+msgstr "本年"
 
 #. module: project
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "错误，您不能创建循环引用的会员用户"
 
 #. module: project
 #: field:project.project,priority:0 field:project.project,sequence:0
@@ -1914,7 +1918,7 @@ msgstr "任务 ‘%s' 取消了"
 #. module: project
 #: view:project.task:0 view:res.partner:0
 msgid "For changing to open state"
-msgstr ""
+msgstr "要改为打开状态"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner view:project.project:0
@@ -1948,7 +1952,7 @@ msgstr "邮件页脚"
 #. module: project
 #: view:project.task:0 view:project.task.history.cumulative:0
 msgid "In Progress Tasks"
-msgstr ""
+msgstr "进行中的任务"
 
 #~ msgid "Close Task"
 #~ msgstr "关闭任务"

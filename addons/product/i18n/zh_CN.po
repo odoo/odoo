@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-08 03:39+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2012-02-15 03:16+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:31+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-15 05:27+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -53,6 +53,11 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location typed as "
 "'internal'."
 msgstr ""
+"预测数量（计算公式：在库数量 - 将要出库 + 将要入库 ）。\n"
+"针对库位来说，包含该库位及其子库位的存货数量。\n"
+"针对仓库来说，包含该仓库所有子库位，及其下级库位的存货数量。\n"
+"对于门店，包含该门店对应的仓库的所有子库位，及其下级库位的存货数量。\n"
+"其他情况下，包含存储在类型为“内部”的库位中的存货数量。"
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -161,7 +166,7 @@ msgstr "业务伙伴"
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr ""
+msgstr "产品单位 %s 与默认单位 %s 无法转换，二者属于不同的分类。"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -247,7 +252,7 @@ msgstr "产品类型"
 msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
-msgstr ""
+msgstr "新建产品，用于销售或采购。请为用于采购的产品指定供应商。"
 
 #. module: product
 #: view:product.uom:0
@@ -410,6 +415,11 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location typed as "
 "'internal'."
 msgstr ""
+"在库数量。\n"
+"针对库位来说，包含该库位及其子库位的存货数量。\n"
+"针对仓库来说，包含该仓库所有子库位，及其下级库位的存货数量。\n"
+"对于门店，包含该门店对应的仓库的所有子库位，及其下级库位的存货数量。\n"
+"其他情况下，包含存储在类型为“内部”的库位中的存货数量。"
 
 #. module: product
 #: view:product.pricelist:0
@@ -622,6 +632,8 @@ msgid ""
 "you need to change the unit of measure, you may desactivate this product "
 "from the 'Procurement & Locations' tab and create a new one."
 msgstr ""
+"新的计量单位 %s 应属于计量单位类别 %s，与旧的计量单位 %s "
+"一致。如果你要修改产品的计量单位，你可以在“补货/库位”标签页停用这个产品，再新建一个。"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -684,7 +696,7 @@ msgstr "价格名称"
 #. module: product
 #: model:product.template,name:product.product_product_arm_product_template
 msgid "Cabinet"
-msgstr ""
+msgstr "箱"
 
 #. module: product
 #: help:product.product,incoming_qty:0
@@ -699,11 +711,16 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location typed as "
 "'internal'."
 msgstr ""
+"待收货数量。\n"
+"针对库位来说，包含该库位及其子库位的待收货数量。\n"
+"针对仓库来说，包含该仓库所有子库位，及其下级库位的待收货数量。\n"
+"对于门店，包含该门店对应的仓库的所有子库位，及其下级库位的待收货数量。\n"
+"其他情况下，包含存储在类型为“内部”的库位中的待收货数量。"
 
 #. module: product
 #: model:product.template,name:product.product_product_woodentable0_product_template
 msgid "Wooden Table"
-msgstr ""
+msgstr "木桌子"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -1090,6 +1107,11 @@ msgid ""
 "Otherwise, this includes goods leaving from any Stock Location typed as "
 "'internal'."
 msgstr ""
+"待发货数量。\n"
+"针对库位来说，包含该库位及其子库位的待发货数量。\n"
+"针对仓库来说，包含该仓库所有子库位，及其下级库位的待发货数量。\n"
+"对于门店，包含该门店对应的仓库的所有子库位，及其下级库位的待发货数量。\n"
+"其他情况下，包含存储在类型为“内部”的库位中的待发货数量。"
 
 #. module: product
 #: model:product.category,name:product.product_category_services0
@@ -1437,7 +1459,7 @@ msgstr "通常处理器配置"
 msgid ""
 "Will change the way procurements are processed. Consumable are product where "
 "you don't manage stock."
-msgstr ""
+msgstr "将改变补货处理的方式。消耗品是指不做库存管理的产品。"
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1515,7 +1537,7 @@ msgstr "空包装的重量"
 #. module: product
 #: model:product.template,name:product.product_product_woodmm10_product_template
 msgid "Wood 10mm"
-msgstr ""
+msgstr "10毫米厚的木板"
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -1676,7 +1698,7 @@ msgstr "按订单生产"
 msgid ""
 "Produce will generate production order or tasks, according to the product "
 "type. Buy will trigger purchase orders when requested."
-msgstr ""
+msgstr "产品将根据产品类型生成制造订单或任务。购买意味着会在需要时创建采购订单。"
 
 #. module: product
 #: field:product.product,variants:0
@@ -2190,7 +2212,7 @@ msgstr "延迟"
 #. module: product
 #: view:product.product:0
 msgid "Both stockable and consumable products"
-msgstr ""
+msgstr "可库存产品和消耗品"
 
 #. module: product
 #: model:process.node,note:product.process_node_product0
@@ -2295,7 +2317,7 @@ msgstr "价格表版本"
 #. module: product
 #: model:product.template,name:product.product_product_span100_product_template
 msgid "Shelf Panel"
-msgstr ""
+msgstr "货架通道"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
@@ -2339,7 +2361,7 @@ msgstr ""
 #. module: product
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "错误，您不能创建循环引用的会员用户"
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0
