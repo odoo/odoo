@@ -886,6 +886,11 @@ class BaseModel(object):
                         for c in new.keys():
                             if new[c].manual:
                                 del new[c]
+                        # Duplicate float fields because they have a .digits
+                        # cache (which must be per-registry, not server-wide).
+                        for c in new.keys():
+                            if new[c]._type == 'float':
+                                new[c] = copy.copy(new[c])
                     if hasattr(new, 'update'):
                         new.update(cls.__dict__.get(s, {}))
                     elif s=='_constraints':
