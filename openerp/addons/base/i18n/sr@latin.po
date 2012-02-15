@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-02-13 21:22+0000\n"
+"PO-Revision-Date: 2012-02-14 23:37+0000\n"
 "Last-Translator: zmmaj <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-14 05:43+0000\n"
+"X-Launchpad-Export-Date: 2012-02-15 05:26+0000\n"
 "X-Generator: Launchpad (build 14781)\n"
 
 #. module: base
@@ -527,6 +527,10 @@ msgid ""
 "and reference view. The result is returned as an ordered list of pairs "
 "(view_id,view_mode)."
 msgstr ""
+"Ova funkcija proračunava željenu listu pregleda koji bi trebali biti "
+"omogućeni kada se prokazuje reziltat neke akcije, uklkučuje mod pregleda, "
+"preglede i referentne preglede. Rezultat funkcije se vraća kao sređena lista "
+"parova ( id_pregleda,mod_pregleda)"
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -616,7 +620,7 @@ msgstr "Španija (VE)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_invoice
 msgid "Invoice on Timesheets"
-msgstr ""
+msgstr "Fakture po evidenciji rada"
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -652,6 +656,27 @@ msgid ""
 "    Accounting/Reporting/Generic Reporting/Partners/Follow-ups Sent\n"
 "\n"
 msgstr ""
+"\n"
+"Modul za automatizaciju slanja pisama za neplaćene fakture, sa reslanjem u "
+"više nivoa.\n"
+"==========================================================================\n"
+"\n"
+"Možete definisati vaše nivoe ponovnog slanja (podsećanja) kroz meni:\n"
+"    Računovodstvo/Konfiguracija/Ostalo/Praćenja\n"
+"\n"
+"Jednoim definisani, možete automatski štampati podsetnike svakog dana "
+"prostiom klikom na meni:\n"
+"    Računovodstvo/Periodični procesi/Naplata/Šalji Praćenja\n"
+"\n"
+"Generisaće se PDF fajl sa svim pismima u odnosu na različite nivoe koje ste "
+"definisali. Možete definisati\n"
+"drugačije polise za različita preduzeća, Takoće možete slati i Email "
+"klijentima.\n"
+"\n"
+"Ukoliko želite da čekirate nivi praćenja za datog partnera/sadržaj naloga, "
+"to možete uraditi iz menija:\n"
+"    Računovodstvo/Izveštaji/Generički Izveštaji/Partneri/Slanje Praćenja\n"
+"\n"
 
 #. module: base
 #: field:res.country,name:0
@@ -1452,6 +1477,12 @@ msgid ""
 "    * Commitment Date\n"
 "    * Effective Date\n"
 msgstr ""
+"\n"
+"Dodaje neophodne informacije datuma u narudžbe prodaje.\n"
+"====================================================\n"
+"    *Datum Zahteva\n"
+"    *Datum potvrde prijema narudžbe\n"
+"    *Efektivni datum\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sequence
@@ -1493,6 +1524,26 @@ msgid ""
 "database,\n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 msgstr ""
+"\n"
+"Ovo je kompletan sistem za upravljanje dokumentima.\n"
+"=====================================================\n"
+"\n"
+"    *Autentifikacija korisnika\n"
+"    * Indeksacija Dokumenata:- .pptx i .docx dokumenti nisu podržani za "
+"Windows platforme\n"
+"    *Kontrolna tabla za dokumente koja uključuje:\n"
+"        *Nove Datoteke (lista)\n"
+"        *Datoteke po tipu resursa(grafikon)\n"
+"        *Datoteke po partneru(grafikon)\n"
+"        *Veličina datoteka po mesecima(grafikon)\n"
+"\n"
+"PAŽNJA:\n"
+"    -Ukoliko instalirate ovaj modul u već postojećem preduzeću koje već ima "
+"PDF fajlove sačuvane u databazi,\n"
+"      izgubićete ih sve (pdf fajlove).\n"
+"    -Nakon instaliranja ovog modula PDF datoteke se više ne čuvaju u bazi "
+"podataka,\n"
+"      nego na serveru na adresi sličnoj /server/bin/filestore.\n"
 
 #. module: base
 #: view:res.lang:0
@@ -1522,6 +1573,9 @@ msgid ""
 "system. After the contract has been registered, you will be able to send "
 "issues directly to OpenERP."
 msgstr ""
+"Ovaj čarobnjak vam omogućava da registrujete izdavačev ugovor o održavanju u "
+"OpenERP sistem. Nakon što je ugovor registrovan, bićete u mogućnosti da "
+"pošaljete problem direktno OpenERP-u."
 
 #. module: base
 #: view:wizard.ir.model.menu.create:0
@@ -1558,6 +1612,15 @@ msgid ""
 "Web.\n"
 "    "
 msgstr ""
+"\n"
+"Ovo je testni modul koji prikazuje HTML tagove podržane u normalnom XML "
+"pregledu forme.\n"
+"============================================================================="
+"\n"
+"\n"
+"Kreira primer pregleda forme koristeći HTML tagove. Vidljivo je samo u "
+"OpenERP Web-u.\n"
+"    "
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_purchase_management
@@ -1653,6 +1716,19 @@ msgid ""
 "    - You can define new types of events in\n"
 "        Association / Configuration / Types of Events\n"
 msgstr ""
+"\n"
+"Organizovanje i Upravljanje Događajima.\n"
+"=======================================\n"
+"\n"
+"Ovaj modul vam omogućava\n"
+"    * da upravljate događajima i njihovom registracijom\n"
+"    *da koristite Emailove da bi automatski potvrdili i poslali potvrde za "
+"bilo koju registraciju nekom događaju\n"
+"    *....\n"
+"\n"
+"Upamtite da:\n"
+"    - Možete definisati nove tipove događaja u\n"
+"       Asociacija/konfiguracija/Tipovi Događaja\n"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_tools
@@ -1755,6 +1831,26 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul dodaje generičku alatku za deljenje vašoj trenutnoj OpenERP bazi "
+"podataka.\n"
+"\n"
+"===========================================================================\n"
+"\n"
+"Specifično je to da dodaje \"dodaj\" dugme koje je kasnije dostupno Web "
+"klijentima da\n"
+"podele bilo koje podatke OpenERP-a sa kolegama, mušterijama, prijateljima, "
+"itd.\n"
+"\n"
+"Sistem radi tako što u letu kreira nove korisnike i grupe, i kombinovanjem "
+"odgovarajućih pristupnih prava i IR.pravilima\n"
+"da bi osigurao da deljeni korisnici imaju pristup samo podacima koji su i "
+"podeljeni njima.\n"
+"\n"
+"Ovo je izuzetno korisna alatka za kolaborativni rad, deljenje iskustava,\n"
+"sinhronizaciju sa drugim preduzećima, itd.\n"
+"\n"
+"    "
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -1834,6 +1930,38 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"PDV validacija Partnerovih PDV brojeva\n"
+"================================================\n"
+"\n"
+"Nakon instalacije ovog modula, upisana vrednost u PDV polju partnera će\n"
+"biti verifikovana za sve podržane zemlje. Zemlje se dobijaju iz dva kodna "
+"slova zemlje\n"
+"koja su ujedno i prefix PDV broja, npr. \"BE0477472701\"\n"
+"će biti validirano korišćenjem Belgijskih pravila.\n"
+"\n"
+"postoji dva različita nivoa validacije PDV brojeva:\n"
+"\n"
+" *Podrazumevano, je prosta provera se radi korišćenjem poznatom validacijom\n"
+"   pravila zemlje, obično prostom proverom brojeva. ovo je brzo i \n"
+"   uvek dostupno, ali omogućava da se provuku brojevi koji nisu pravi,\n"
+"   ili nisu više validni.\n"
+" * Kada je \"VIES Provera PDV-a\" omogućena (u konfiguraciji korisničkog "
+"preduzeća), PDV broj će odmah\n"
+"   biti prosleđen EU VIES databazi, koja će zaista verifikovati da li je "
+"broj validan, i da li je predviđen \n"
+"   za EU preduzeće. ovo je malo sporiji proces nego off line provera, "
+"zahteva internet konekciju\n"
+"   i možda neće biti dostupno svo vreme. Ako servis nije trenutno dostupan "
+"ili ne podržava traženu zemlju\n"
+"   ( Npr Zemlje koje nisu u EU) , prosta provera će se obaviti odmah.\n"
+"\n"
+"Podržane zemlje su one koje su trenutno u EU, ali ima i par onih koje nisu u "
+"EU a podržane su kao\n"
+"što su Čile, Kolumbija, Meksiko, Norveška ili Rusija. Za nepodržane zemlje "
+"se proverava samo kod zemlje.\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.sequence:0
@@ -1871,6 +1999,18 @@ msgid ""
 "The managers can obtain an easy view of best ideas from all the users.\n"
 "Once installed, check the menu 'Ideas' in the 'Tools' main menu."
 msgstr ""
+"\n"
+"Ovaj modul omogućava korisniku da jednostavno i efikasno učestvuje u "
+"inovacijama.\n"
+"=====================================================================\n"
+"\n"
+"Ovo svima omogućava da izraze svoje želje o različitim temama.\n"
+"Tada, drugi korisnici moku komentirati ove ideje i glasati za neke.\n"
+"Svaka ideja ima svoj rezultat baziran na različitom nroju glasova.\n"
+"Menadžeri tada mogu veoma lako da uoče nakbolje ideje date od strane "
+"korisnika.\n"
+"Jednom instaliran, čekirajte meni \"Ideje\" u \"ALATI\" meniju koji se "
+"nalazi u glavnom meniju."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_rule
@@ -1970,6 +2110,11 @@ msgid ""
 "        ============================================================\n"
 "    "
 msgstr ""
+"\n"
+"        添加中文省份数据\n"
+"        科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"        ============================================================\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
@@ -2022,6 +2167,13 @@ msgid ""
 "Accounting chart and localization for Ecuador.\n"
 "    "
 msgstr ""
+"\n"
+"Ovo je bazni  modul za upravljanje Kontnim planom za Ekvador u OpenERP-u.\n"
+"============================================================================="
+"====\n"
+"\n"
+"Računovodstvena karta i lokalizacija za Ekvador.\n"
+"    "
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:38
@@ -2090,6 +2242,45 @@ msgid ""
 "today don't come with any additional paid permission for online use of "
 "'private modules'."
 msgstr ""
+"\n"
+"Bazni modul za Brazilsku lokalizaciju\n"
+"=======================================\n"
+"\n"
+"Ovaj modul sadrži:\n"
+"\n"
+" -Generički Brazilski Kontni plan\n"
+" -Brazilske takse kao što su:\n"
+"\n"
+"        -IPI\n"
+"        -ICMS\n"
+"        -PIS\n"
+"        -COFINS\n"
+"        -ISS\n"
+"        -IR\n"
+"        IRPJ\n"
+"        CSLL\n"
+"\n"
+" -Kodna situacija taxi (CST) potrebna je za elekronske fiskalne "
+"fakture(NFe)\n"
+"\n"
+"Polje tax_discount (popust) je takodje dodato u  account.tax.template i u "
+"account.tax objektima kako bi se omogućilo ispravno računanje nekih "
+"Brazilskih PDV-a kao npr ICMS. Čarobnjak za kreaciju ovog kontnog plana je "
+"proširen kako vi ove nove podatke ispravno i predstavio.\n"
+"\n"
+"Treba napomenuti da je ovaj modul pretrpeo više implementacija kako bi se "
+"OPenERP koristio ispravno u Brazilu. Ove implementacije (kao npr elektronsko "
+"fiskalno fakturisanje koji je već operativan) donosi sa sobom 15 novih "
+"modula za brazilsku Launchpad lokalizaciju.\n"
+"project https://launchpad.net/openerp.pt-br-localiz i njihovi odnosi sa "
+"extra dodacima. Ovi moduli su komplementarni sa OpenERP modularnošću, to je "
+"razlog njihovoj brojnosti. IMa ih dosta, ali su mali. Postoji još jedan "
+"razlog zašto se ovi moduli obrađuju posebno je i taj što vođe Brazilske "
+"lokalizacije trebaju da obezbede prava koriščenja za pojedine delove ( kao "
+"što su. fiskalni knjige,  fiskalni SPED, računovodstveni SPED, i PAF ECF "
+"koji do Septembra 2011 i dalje nedostaju). Ovi moduli su i dalje striktno "
+"licencirani pod AGPL V3 licencom, koji do danas ne dolaze sa bilo kojom "
+"plaćenom dozvolom za online korišćene za  'privatne module '."
 
 #. module: base
 #: view:res.request:0
@@ -2223,6 +2414,32 @@ msgid ""
 "Some statistics by journals are provided.\n"
 "    "
 msgstr ""
+"\n"
+"Dnevnik prodaje omogućava vam da katekorišete vašu prodaju i isporuke između "
+"različitih dnevnika\n"
+"============================================================================="
+"===\n"
+"\n"
+"Ovaj modul je veoma koristan u većim kompanijama koje\n"
+"zasnivaju svoj rad na odeljenjima.\n"
+"\n"
+"MOžete koristiti dnevnike za različite namene, neki primeri:\n"
+"    -da izolujete različita odelenja\n"
+"    -dnevnici isporuka kamionima, ili UPS ( poštom)\n"
+"\n"
+"Stavke dnevnika funkcionišu i evoluiraju pod sledećim statusima:\n"
+"    -U pripremi, Otvoren, otkazan, završen.\n"
+"\n"
+"Automatizovane operacije mogu se procesuirati nad različitim dnevnicima da\n"
+"potvrde sve prodaje odjednom, ili da potvrde pakovanje po fakturama...\n"
+"\n"
+"Takođe podržavaju metod automatskog fakturisanja koje se može konfigurisati "
+"po partnerima i narudžbama, primeri:\n"
+"    *Dnevno fakturisanje,\n"
+"    *mesečno fakturisanje\n"
+"\n"
+"Neke statistike po dnevnicima su dostupne.\n"
+"    "
 
 #. module: base
 #: field:res.company,logo:0
@@ -2258,6 +2475,21 @@ msgid ""
 "re-invoice your customer's expenses if your work by project.\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul ima za zadatak da upravlja troškovima zaposlenih.\n"
+"=======================================================\n"
+"\n"
+"U radnom toku je implementirano:\n"
+"    *Planirani troškovi\n"
+"    *Potvrda stanja od strane zaposlenog\n"
+"    *Potvrda stanja od strane rukovodioca\n"
+"    *Potvrda od strane računovođe i kreiranje fakture\n"
+"    *Isplata fakture zaposlenom\n"
+"\n"
+"Ovaj modul takođe koristi analitičko računovodstvo i kompatibilan je sa\n"
+"fakturom na modulu karneta tako da će te biti u mogućnosti da automatski\n"
+"re fakturišete ove troškove ukoliko radite po zacrtanom planu ili projektu.\n"
+"    "
 
 #. module: base
 #: field:ir.values,action_id:0
@@ -2382,6 +2614,19 @@ msgid ""
 "system to store and search in your CV base.\n"
 "    "
 msgstr ""
+"\n"
+"Upravlja pozicijom posla i procesom zapošljavanja.\n"
+"=====================================================\n"
+"\n"
+"Integrisan je sa pretraživačkim modulom koji ti omogućava da definišeš "
+"intervjue za različite poslove.\n"
+"\n"
+"Ovaj modul je integrisan sa Email izlazom, i automatski prati Emailove "
+"poslate na\n"
+"jobs@YOURCOMPANY.com. Takođe je integrisan sa sistemom upravljanja "
+"dokumenetima koji\n"
+"se mogu čuvati i pretraživati u vašoj CIV bazi.\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_widget_wizard
@@ -2459,6 +2704,18 @@ msgid ""
 "and categorize your interventions with a channel and a priority level.\n"
 "    "
 msgstr ""
+"\n"
+"Upravljanje HelpDesk-om.\n"
+"=======================\n"
+"\n"
+"Kao što su zapisi, i procesuiranje žalbi, HelpDesk i podrška su odlična "
+"altka\n"
+"da pratite vaše intervencije. Ovaj meni je više adaptiran oralnoj "
+"komunikaciji, koja\n"
+"nemora obavezno biti vezana za žalbe. Izaberite mušteriju(klijenta), dodajte "
+"neki zapis\n"
+"i kategorizujte vaše intervencije sa kanalom i nivoom prioriteta.\n"
+"    "
 
 #. module: base
 #: sql_constraint:ir.ui.view_sc:0
@@ -2479,6 +2736,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Modul za upravljanje resursima\n"
+"==================================\n"
+"\n"
+"Resurs predstavlja nešto što se može planski koristiti.\n"
+"Ovaj modul upravlja kalendarom resurasa koji je asociran sa svakom resursom "
+"pojedinačno.\n"
+"Takodje upravlja stanjem svakog od njih,\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.rule:0
@@ -2519,6 +2786,12 @@ msgid ""
 "\n"
 "Configure servers and trigger synchronization with its database objects.\n"
 msgstr ""
+"\n"
+"Sinhronizacija sa svim objektima.\n"
+"================================\n"
+"\n"
+"Konfiguriše server i okidače sinhronizacije sa svojim objektima baza "
+"podataka.\n"
 
 #. module: base
 #: model:res.country,name:base.mg
@@ -2571,6 +2844,13 @@ msgid ""
 "orders.\n"
 "    "
 msgstr ""
+"\n"
+"Osnovni modul za upravljanje Analitičkom distribucijom i Narudžbenicama.\n"
+"==================================================================\n"
+"\n"
+"korišćenjem ovog modula moći će te da povežete analitičke naloge sa "
+"Narudžbenicama.\n"
+"    "
 
 #. module: base
 #: field:ir.actions.url,target:0
@@ -2688,6 +2968,29 @@ msgid ""
 "performing those tasks.\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul imlementira sve koncepte definisane metodologijom (Getting Things "
+"Done) Dobijanje svršenih stvari.\n"
+"============================================================================="
+"=================\n"
+"\n"
+"Ovaj modul implementira prostu ličnu listu stvari za završiti baziranoj na "
+"poslovima. Dodaje u projekat jednu uprošćenu listu koju možete uređivati, sa "
+"minimumom neophodnih polja.\n"
+"\n"
+"Ova Za uraditi lista (todo list) je bazirana na gore spomenutoj metodologiji "
+"(GTD). Ova širom sveta korišćena \n"
+"metodologija se koristi za personalno uređenje i poboljšanje vremena.\n"
+"\n"
+"Getting Things Done(skraćeno GTD) je jedan akdiono upravljački metod kreirao "
+"ga je David Allen, i opisan je u istoimenoj knjizi.\n"
+"\n"
+"GTD se bazira na principu da persona treba da ukloni poslove iz svoje glave "
+"tako što će ih negde zapisati. \n"
+"Na ovaj način, um je nrasterećen od poslova i svega onoga što treba da bi se "
+"oni obavili, i sada se može\n"
+"koncetrisati na obavljanje pojedinačno tih poslova, jedan po jedan.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -2714,7 +3017,7 @@ msgstr "Mapiranje polja"
 #: code:addons/base/publisher_warranty/publisher_warranty.py:163
 #, python-format
 msgid "Error during communication with the publisher warranty server."
-msgstr ""
+msgstr "Greška tokom komunikacije sa serverom  održavanja."
 
 #. module: base
 #: model:res.groups,name:base.group_sale_manager
@@ -2871,6 +3174,9 @@ msgid ""
 "partner records. You can create or delete countries to make sure the ones "
 "you are working on will be maintained."
 msgstr ""
+"Prikazuje i uređuje listu svih zemalja koje mogu biti pridodate u yapise "
+"tvog partnera. Možete kreirati ili obrisati zemlje da bi bili sigurni da "
+"radite samo na onim koje će biti dodate."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_7
@@ -2911,7 +3217,7 @@ msgstr "Retro-planiranje projekata"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_planning
 msgid "Master Procurement Schedule"
-msgstr ""
+msgstr "Raspored/planiranje nabake"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_category
@@ -2960,6 +3266,17 @@ msgid ""
 "że wszystkie towary są w obrocie hurtowym.\n"
 "    "
 msgstr ""
+"\n"
+"Ovo je modul za upravljanje kontnim planom Poljske u OpenERP-u.\n"
+"============================================================================="
+"=====\n"
+"\n"
+"To jest moduł do tworzenia wzorcowego planu kont i podstawowych ustawień do "
+"podatków\n"
+"VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów "
+"zakładając,\n"
+"że wszystkie towary są w obrocie hurtowym.\n"
+"    "
 
 #. module: base
 #: field:ir.actions.client,params_store:0
@@ -2995,6 +3312,20 @@ msgid ""
 "since it's the same which has been renamed.\n"
 "    "
 msgstr ""
+"\n"
+"Oaj modul omogućava korisnicima da urade segmentaciju sa pertnerima.\n"
+"================================================================\n"
+"\n"
+"Koristi kriterijume profila it ranijeg segmentacionog modula i poboljšava "
+"ih. Zahvaljujući novom konceptu upinika, sada možete da regrupišete pitanja "
+"u upitniku i direktno ih primenite na partneru.\n"
+"\n"
+"Takođe se implementira sa ranijim CRM&SRM segmentacijonim alatom zato što se "
+"preklapaju.\n"
+"\n"
+"    *Pozor: Ovaj modul nije kompatibilan sa segmentacionim modulom, obzirom "
+"da je ovo isti, preimenovani modul.\n"
+"    "
 
 #. module: base
 #: code:addons/report_sxw.py:434
@@ -3006,7 +3337,7 @@ msgstr "Nepoznati tip izveštaja: %s"
 #: code:addons/base/ir/ir_model.py:282
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
-msgstr ""
+msgstr "Za selktovana polja , moraju biti zadate selekcione opcije!"
 
 #. module: base
 #: model:res.widget,title:base.facebook_widget
@@ -3115,6 +3446,28 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    \n"
+"Belgijska lokalizacija za ulazno izlazbe fakture.\n"
+"    - Rename 'reference' field labels to 'Communication'\n"
+"    - Add support for Belgian Structured Communication\n"
+"\n"
+"A Structured Communication can be generated automatically on outgoing "
+"invoices according to the following algorithms:\n"
+"    1) Random : +++RRR/RRRR/RRRDD+++\n"
+"        R..R = Random Digits, DD = Check Digits\n"
+"    2) Date : +++DOY/YEAR/SSSDD+++\n"
+"        DOY = Day of the Year, SSS = Sequence Number, DD = Check Digits)\n"
+"    3) Customer Reference +++RRR/RRRR/SSSDDD+++\n"
+"        R..R = Customer Reference without non-numeric characters, SSS = "
+"Sequence Number, DD = Check Digits)  \n"
+"        \n"
+"The preferred type of Structured Communication and associated Algorithm can "
+"be specified on the Partner records. \n"
+"A 'random' Structured Communication will generated if no algorithm is "
+"specified on the Partner record. \n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wiki_quality_manual
@@ -3157,6 +3510,8 @@ msgid ""
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
 msgstr ""
+"Naveden pogrešan \"poredak\". Ispravan \"poredak\" čini lista naziva polja "
+"razdvojenih zarezom (opcionalno s asc/desc za smijer)"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -3180,6 +3535,10 @@ msgid ""
 "way you want to print them in letters and other documents. Some example: "
 "Mr., Mrs. "
 msgstr ""
+"Upravljanje naslovima kontakata onih koježeliš da ti budu dostupni u "
+"sistemu, kao i način na koji želiš da ih odštampaš u pismima i drugim "
+"dokumentima.\r\n"
+"Neki primeri : Gosp, Dr, Mgr, itd. "
 
 #. module: base
 #: view:ir.model.access:0
@@ -3195,11 +3554,13 @@ msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
+"Selekcija ocione ekspresije nije validna Pyton ekspresija. Molim upišite "
+"ekspresiju u formatu  [('key','Label'), ...]"
 
 #. module: base
 #: model:res.groups,name:base.group_survey_user
 msgid "Survey / User"
-msgstr ""
+msgstr "Anketa / Korisnik"
 
 #. module: base
 #: view:ir.module.module:0
@@ -3215,17 +3576,17 @@ msgstr "Glavno preduzeće"
 #. module: base
 #: field:ir.ui.menu,web_icon_hover:0
 msgid "Web Icon File (hover)"
-msgstr ""
+msgstr "Web Ikona Fajla (hover)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_diagram
 msgid "Openerp web Diagram view"
-msgstr ""
+msgstr "Pregled Openerp ewb Dijagrama"
 
 #. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "HR Officer"
-msgstr ""
+msgstr "Službenik u Ljudski Resursi odeljenju"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract
@@ -3243,6 +3604,13 @@ msgid ""
 "for Wiki FAQ.\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul daje Wiki često postavljena pitanja (FAQ) izgled.\n"
+"=====================================================\n"
+"\n"
+"Daje demo podatke, koji se mogu kreirati kao Wiki grupa ili strana za \n"
+"Wiki FAQ.\n"
+"    "
 
 #. module: base
 #: view:ir.actions.server:0
@@ -3326,6 +3694,7 @@ msgid ""
 "Reference of the target resource, whose model/table depends on the 'Resource "
 "Name' field."
 msgstr ""
+"Referenca ciljnog resursa, čiji model/tabela ovisi o polju 'Ime Resursa'"
 
 #. module: base
 #: field:ir.model.fields,select_level:0
@@ -3340,7 +3709,7 @@ msgstr "Urugvaj"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail_crm
 msgid "eMail Gateway for Leads"
-msgstr ""
+msgstr "eMail Gateway for tragove ( Leads)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -3414,6 +3783,45 @@ msgid ""
 "    * Graph of Sales by Product's Category in last 90 days\n"
 "    "
 msgstr ""
+"\n"
+"bazni modul za upravljanje Kotacijama i Narudžbenicama.\n"
+"======================================================\n"
+"\n"
+"Radni tok sa validacionim koracima\n"
+"--------------------------------------------\n"
+"    *Kotacija -> Narudžbenica -> Faktura\n"
+"\n"
+"Metode Fakturisanja:\n"
+"----------------------------------------------\n"
+"    *Fakture na zahtev (pre ili posle isporuke)\n"
+"    *Fakture po isporuci\n"
+"    *Fakture po radnom vremenu\n"
+"    *Napredne fakture.\n"
+"\n"
+"Partnerovi prioriteti\n"
+"-------------------------------------\n"
+"    *Špredicija\n"
+"    *fakturisanje\n"
+"    *inkoterm\n"
+"\n"
+"Lageri proizvoda i cene\n"
+"-----------------------------------\n"
+"\n"
+"Metode Isporuke:\n"
+"-------------------\n"
+"    *Sve odjednom\n"
+"    *Multi-podeljeno\n"
+"    *Troškovi dostave\n"
+"\n"
+"Kontrolni panel za upravljanje prodajom koji sadrži:\n"
+"-------------------------------------------------------\n"
+"\n"
+"    *Kotaciju\n"
+"    *Prodaju po mesecima\n"
+"    *Grafikon prodaje po prodavcima u zadnjih 90 dana\n"
+"    *Grafikon prodaje po klijentima u zadnjih 90 dana\n"
+"    *Grafikon prodaje po kategorijama proizvoda u zadnjih 90 dana.\n"
+"    "
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -3437,6 +3845,14 @@ msgid ""
 "Canadian accounting charts and localizations.\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul služi za upravljanje Engleskim i Francuskim- Kanadskim kontnim "
+"planom u OpenERP-u.\n"
+"============================================================================="
+"===========\n"
+"\n"
+"Kanadski kontni plan i lokalizacija.\n"
+"    "
 
 #. module: base
 #: view:base.module.import:0
@@ -3469,6 +3885,13 @@ msgid ""
 "    * the Tax Code Chart for Luxembourg\n"
 "    * the main taxes used in Luxembourg"
 msgstr ""
+"\n"
+"Ovo je bazni modul za upravljanje kontnim planom za Luksemburg.\n"
+"===================================================================\n"
+"\n"
+"    *KLUWER kontni plan\n"
+"    *Kodovi kontnih taxi za Luksemburg\n"
+"    *Osnovne takse koje se koriste u Luksemburgu"
 
 #. module: base
 #: field:ir.module.module,demo:0
@@ -3493,6 +3916,18 @@ msgid ""
 "module 'share'.\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul definiše 'portale' ta kustomizaciju prava pristupa vašoj OpenERP "
+"bazi podataka za eksterne korisnike.\n"
+"\n"
+"Portal definiše kustomiziran korisnikov meni i prava pristupa za grupe "
+"korisnika \n"
+"(onih koje su asocirane sa portalom). Takođe asocira korisničke grupe sa\n"
+"korisnicima portala(dodavanjem grupe u portal atomatski je dodaje u portal "
+"korisnika itd) \n"
+"Ova mogućnost je vrlo zgodna kada se koristi u kombinaciji sa modulom "
+"'Deljenja' (Share).\n"
+"    "
 
 #. module: base
 #: selection:res.request,priority:0
@@ -3550,12 +3985,12 @@ msgstr "Format separatora"
 #. module: base
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
-msgstr ""
+msgstr "RIB i / ili IBAN nije validan"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_webkit
 msgid "Webkit Report Engine"
-msgstr ""
+msgstr "WEBKIT engine Izveštaja"
 
 #. module: base
 #: selection:publisher_warranty.contract,state:0
@@ -3582,7 +4017,7 @@ msgstr "Majote"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_todo
 msgid "Tasks on CRM"
-msgstr ""
+msgstr "Zadaci u CRm-u"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules_accounting
@@ -3603,6 +4038,15 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
+"\n"
+"Modul za upravljanje fakturnim plaćanjima\n"
+"============================================\n"
+"\n"
+"Ovaj modul donosi:\n"
+"--------------------\n"
+"*Efikasniji način upravljanja fakturnim plaćanjima\n"
+"*Osnovni mehanizam za implementaciju različitih automatskih plaćanja.\n"
+"    "
 
 #. module: base
 #: view:ir.rule:0
@@ -3629,11 +4073,27 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul donosi neke mogućnosti za poboljšanje izgleda faktura.\n"
+"=========================================================\n"
+"\n"
+"Daje vam mogućnost da:\n"
+"------------------------------------\n"
+"    *poređa sve linije fakture\n"
+"    *Doda naslove, linije komentara, sub total linije\n"
+"    *Crta horizontalne linije i postavlja prelom strane\n"
+"\n"
+"Čak šta više, postoji mogućnost koja ti omogućava da odštampate sve "
+"selektovane fakture sa datom specijalnom porukom na svakoj fakturi.\n"
+"Ova mogućnost zna biti veoma korisna kada štampate vaše fakture na kraju "
+"godine.\n"
+"\n"
+"    "
 
 #. module: base
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Greška ! Ne možete kreirati rekursivne asocirane članove."
 
 #. module: base
 #: view:res.payterm:0
@@ -3666,6 +4126,10 @@ msgid ""
 "or data in your OpenERP instance. To install some modules, click on the "
 "button \"Install\" from the form view and then click on \"Start Upgrade\"."
 msgstr ""
+"MOžete instalirati nove module da bi aktivirali nove mogućnosti, menije, "
+"izveštaje, ili podatke u vašem OpenERP-u.\r\n"
+"Da bi instalirali neki modul, kliknite na dugme \"instaliraj\" i zatim na "
+"\"Počni Nadogradnju\""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -3681,6 +4145,9 @@ msgid ""
 "        OpenERP Web chat module.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP Čat modul.\n"
+"        "
 
 #. module: base
 #: field:res.partner.address,title:0
@@ -3704,7 +4171,7 @@ msgstr "Detektovana rekurzivnost."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_webkit_sample
 msgid "Webkit Report Samples"
-msgstr ""
+msgstr "Primeri Webkit Izveštaja"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
@@ -3774,6 +4241,8 @@ msgid ""
 "Invalid value for reference field \"%s.%s\" (last part must be a non-zero "
 "integer): \"%s\""
 msgstr ""
+"Neispravna vrednost referentnog polja \"%s.%s\" (poslednji deo mora biti ceo "
+"broj i ne nula): \"%s\""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources
@@ -3794,7 +4263,7 @@ msgstr "RML ( zastarelo - koristi izveštaj)"
 #. module: base
 #: sql_constraint:ir.translation:0
 msgid "Language code of translation item must be among known languages"
-msgstr ""
+msgstr "Jezički kod prevedene stavke mora pripadati nekom od poznatih jezika"
 
 #. module: base
 #: view:ir.rule:0
@@ -3818,6 +4287,14 @@ msgid ""
 "templates to target objects.\n"
 "    "
 msgstr ""
+"\n"
+"    Više jezička podrška za Kontne planove, Kodove Taksi, Dnevnike, "
+"Templajtevi Računovodstva, \n"
+"         Analitički kontni plan, i analitičke Dnevnike.\n"
+"    *Promene instalacionog čarobnjaka\n"
+"        - Kopiora prevode za COA, TAX, Tax Code, i fiskalnu poziciju iz "
+"templejta u ciljni objekat.\n"
+"    "
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -3862,6 +4339,9 @@ msgid ""
 "        OpenERP Web mobile.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP mobilni Web\n"
+"        "
 
 #. module: base
 #: view:res.lang:0
@@ -3906,6 +4386,8 @@ msgid ""
 "Operation prohibited by access rules, or performed on an already deleted "
 "document (Operation: read, Document type: %s)."
 msgstr ""
+"Ova operacija vam nije dozvoljena ili zbog pristupnih pravila, ili zato što "
+"je pokušavate nad izbrisanim dokumentom( Operacija:čitaj, Tip dokumenta: %s)."
 
 #. module: base
 #: model:res.country,name:base.nr
@@ -3930,6 +4412,9 @@ msgid ""
 "la moneda Lempira. -- Adds accounting chart for Honduras.  It also includes "
 "taxes and the Lempira currency"
 msgstr ""
+"Agrega una nomenclatura contable para Honduras. También incluye impuestos y "
+"la moneda Lempira. -- Dodaje kontni plan za Honduras. Takođe dodaje taxe kao "
+"i Lempira valutu."
 
 #. module: base
 #: selection:ir.actions.act_window,view_type:0
@@ -3950,6 +4435,12 @@ msgid ""
 "Italian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Piano dei conti italiano di un'impresa generica.\n"
+"================================================\n"
+"\n"
+"Italijanski kontni plan i lokalizacija.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.me
@@ -3999,6 +4490,9 @@ msgid ""
 "import a language pack from here. Other OpenERP languages than the official "
 "ones can be found on launchpad."
 msgstr ""
+"Ukoliko vam treba neki drugi jezik umesto oficijalno dostupnih, možete "
+"uvesti jezički paked odavde.\r\n"
+"Ostali jezički paketi mogu se naći na launchpad-u."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -4014,6 +4508,17 @@ msgid ""
 "user rights to Demo user.\n"
 "    "
 msgstr ""
+"\n"
+"Računovodstvena Prava Pristupa\n"
+"===============================\n"
+"\n"
+"Ova opcija daje admin korisniku pravo pristupa svim mogućnostima "
+"računovodstva\n"
+"kao što su stavke dnevnika i kontni plan.\n"
+"\n"
+"Dodeljuje upravljanje i korisnička prava pristupa Administratoru, i samo "
+"korisnička prava Demo korisniku.\n"
+"    "
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -4024,12 +4529,12 @@ msgstr "Za nadogradnju"
 #. module: base
 #: model:res.country,name:base.ly
 msgid "Libya"
-msgstr ""
+msgstr "Libija"
 
 #. module: base
 #: model:res.country,name:base.cf
 msgid "Central African Republic"
-msgstr ""
+msgstr "Centralnoafrička Republika"
 
 #. module: base
 #: model:res.country,name:base.li
@@ -4154,6 +4659,9 @@ msgid ""
 "its dependencies are satisfied. If the module has no dependency, it is "
 "always installed."
 msgstr ""
+"Auto-instalirajući modul se automatski instalira od strane sistema onog "
+"momenta kada su sve ovisnosti zadovoljene. Ukoliko modul ne zavisi od "
+"ostalih instalira se odmah."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_lang_act_window
@@ -4265,6 +4773,8 @@ msgid ""
 "Your OpenERP Publisher's Warranty Contract unique key, also called serial "
 "number."
 msgstr ""
+"Vaš OpenERP ugovor o održavanju jedinstveni ključ, poznat i kao serijski "
+"broj."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -4279,6 +4789,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul vam pomašže da konfigurišete sistem pri instalaciji nove baze "
+"podataka.\n"
+"=======================================================================\n"
+"\n"
+"Prikazuje listu mogućnosti aplikacija iz kojih se instalira.\n"
+"\n"
+"    "
 
 #. module: base
 #: field:ir.actions.report.xml,report_sxw_content:0
@@ -4289,7 +4807,7 @@ msgstr "SXW sadržaj"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl
 msgid "Poland - Accounting"
-msgstr ""
+msgstr "Poljska - Računovodstvo"
 
 #. module: base
 #: view:ir.cron:0
@@ -4319,6 +4837,20 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Modul Nabavke služi za generisanje narudžbenice pri kupovini dobara od "
+"dobavljača.\n"
+"============================================================================="
+"=========\n"
+"\n"
+"Dobavljačeva faktura je kreirana za datu Narudžbenicu.\n"
+"\n"
+"Kontrolna tabla za Zpravljanje Nabavkama koja sadrži:\n"
+"    *Trenutne Narudžbenice\n"
+"    *Narudžbenice koje su u pripremi\n"
+"    *Grafikon kvabtiteta i količine po mesecu.\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.model.fields:0
@@ -4363,6 +4895,9 @@ msgid ""
 "When no specific mail server is requested for a mail, the highest priority "
 "one is used. Default priority is 10 (smaller number = higher priority)"
 msgstr ""
+"Kada je ne specifični Email server zatražen za Email, veći prioritet je onaj "
+"koji će se koristiti. Podrazumevani prioritet je 10 (manji broj=veći "
+"prioritet)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_partner_assign
@@ -4440,7 +4975,7 @@ msgstr "Surinam"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet
 msgid "Bill Time on Tasks"
-msgstr ""
+msgstr "Vreme provedeno na poslovima"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
@@ -4534,6 +5069,18 @@ msgid ""
 "above. Specify the interval information and partner to be invoice.\n"
 "    "
 msgstr ""
+"\n"
+"Kreira rekurzivne dokumente.\n"
+"==============================\n"
+"\n"
+"Ovaj modul vam omogućava da kreirate nov dokument i dodate istom "
+"subskripciju.\n"
+"\n"
+"npr. Da bi imali fakturu generiranu periodično automatski:\n"
+"    *Definiše tip dokumenta baziranim na fakturi objekta\n"
+"    *Definiše subskripciju čiji je izvor dokumenat definisan kao "
+"gore.Specificira intervalnu informaciju i partnera za fakturisanje.\n"
+"    "
 
 #. module: base
 #: field:ir.actions.server,srcmodel_id:0
@@ -4620,6 +5167,9 @@ msgid ""
 "\n"
 "Click 'Continue' and enjoy your OpenERP experience..."
 msgstr ""
+"Vaša baza podataka je sada potpuno konfigurisana.\n"
+"\n"
+"Klikni na Nastavi, i uživajte u radu sa OpenERP-om..."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_marketing
@@ -4700,6 +5250,9 @@ msgid ""
 "the same values as those available in the condition field, e.g. `Dear [[ "
 "object.partner_id.name ]]`"
 msgstr ""
+"Sadržaj Emaila, može sadržavati izraze stavljene u duple zagrade, bazirane "
+"na istim vrednostima kao i one koje su dostupne u poljima uslova, npr. "
+"`Dragi[[ object.partner_id.name ]]`"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_form
@@ -4729,12 +5282,12 @@ msgstr "Specifična Industrijska Aplikacija"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_retailers0
 msgid "Retailers"
-msgstr ""
+msgstr "Prodavci"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_uservoice
 msgid "Receive User Feedback"
-msgstr ""
+msgstr "Prijem povratnih informacija od korisnika"
 
 #. module: base
 #: model:res.country,name:base.ls
@@ -4826,6 +5379,30 @@ msgid ""
 "Also implements IETF RFC 5785 for services discovery on a http server,\n"
 "which needs explicit configuration in openerp-server.conf, too.\n"
 msgstr ""
+"\n"
+"Sa ovim modulom, aktiviran je WebDAV server za dokumenta\n"
+"=========================================================================\n"
+"\n"
+"Možete koristiti bilo koji browser da sa udaljenog mesta vidite dodatke "
+"OpenObjekt-a.\n"
+"\n"
+"Nakon instalacije, WebDAV server se može kontrolisati iz [webdav]  sekcije "
+"iz server konfiguracije.\n"
+"Konfiguracioni parametri Servera:\n"
+"\n"
+"    [webdav] \n"
+"    ;enable = True ; poslužuje webdav preko http servera\n"
+"    ;vdir=webdav; direktorijum koji će webdav obrađivati\n"
+"    ;this default val znači da će webdav biti na\n"
+"    ;\"http://localhost:8069/webdav/\n"
+"    ;verbose = True ; Uključuje verbose poruke webdav-a\n"
+"    ; debug = True ; Uključuje debug poruke webdav-a\n"
+"    ;kako su poruke rutirane preko Pzthon logina, sa\n"
+"    ;nivoima \"debug\" i \"debug_rpc\" respektivno, možete ostaviti\n"
+"    ;ove opcije uključenim.\n"
+"\n"
+"Takođe implementira IETF RFC 5785 za otkrivanje servisa na http serveru,\n"
+"kojima eksplicitno treba konfiguracija iz openerp-server.conf.\n"
 
 #. module: base
 #: model:res.country,name:base.sm
@@ -4848,6 +5425,19 @@ msgid ""
 "of the survey\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul se koristi za ankete.\n"
+"=================================\n"
+"\n"
+"Ovisi o odgovorima ili pregledima nekih pitanja od strane različitih "
+"korisnika.\n"
+"Anketa možeimati više strana. Svaka strana može sadržavati više pitanja i "
+"svako pitanje može imati više odgovora.\n"
+"Razlićiti korisnici mogu davati različite odgovore na pitanja ovisno o svrhi "
+"ankete.\n"
+"Partnerima šalje Emailove sa korisničkim imenom i lozinkom sa pozivom na "
+"anketu.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.bm
@@ -4921,6 +5511,10 @@ msgid ""
 "sure to save and close all forms before switching to a different company. "
 "(You can click on Cancel in the User Preferences now)"
 msgstr ""
+"Imajte na umu da trenutno prikazani dokumenti ne moraju biti relevantani "
+"nakon prebacivanja na drugo preduzeće. Ako imate nesačuvane promjene, molimo "
+"sačuvajte ih i zatvorite sve obrasce pre prelaska na drugo preduzeće. "
+"(Možete kliknuti na 'Odustani' u Korisničkim postavkama)"
 
 #. module: base
 #: field:partner.sms.send,app_id:0
@@ -4934,6 +5528,8 @@ msgid ""
 "You can not create this document (%s) ! Be sure your user belongs to one of "
 "these groups: %s."
 msgstr ""
+"Vi ne možete kreirati ovaj dokument (%s) ! Budite sigurni da pripadate "
+"jednoh od ovih grupa: %s."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_chat
@@ -5163,6 +5759,7 @@ msgstr "Prihvati za brisanje"
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr ""
+"Ne mogu preimenovati kolonu u %s, zato što takva kolona već  postoji!"
 
 #. module: base
 #: view:ir.attachment:0
@@ -5191,6 +5788,12 @@ msgid ""
 "to see. Whether they can have a read, write, create and delete access right "
 "can be managed from here."
 msgstr ""
+"Grupa je skup funkcionalnih područja koja će biti dodeljena korisniku kako "
+"bi imli prava pristupa na posebne programe i zadatke u sistemu. Možete "
+"stvoriti prilagođene grupe ili izmeniti one postojeće kako bi prilagodili "
+"preglede i polja na obrascima koje će korisnici moći vidjeti. Ovde možete "
+"upravljati pravima čitanja, uređivanja, kreiranja i brisanja zapisa po "
+"grupama."
 
 #. module: base
 #: field:ir.filters,name:0
@@ -5494,6 +6097,8 @@ msgid ""
 "For one2many fields, the field on the target model that implement the "
 "opposite many2one relationship"
 msgstr ""
+"Za one2many polja, polje u odredišnom modelu koje implementira suprotnu "
+"many2one vezu"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_budget
@@ -5702,7 +6307,7 @@ msgstr "Testiraj"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_kanban
 msgid "Base Kanban"
-msgstr ""
+msgstr "Kanban baza"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -5773,6 +6378,21 @@ msgid ""
 "http://translations.launchpad.net/openerp-costa-rica\n"
 "    "
 msgstr ""
+"\n"
+"Kontni plan za Kostariku.\n"
+"===============================\n"
+"\n"
+"Sadrži:\n"
+"* account.type\n"
+"* account.account.template\n"
+"* account.tax.template\n"
+"* account.tax.code.template\n"
+"* account.chart.template\n"
+"\n"
+"Everything is in English with Spanish translation. Further translations are "
+"welcome, please go to\n"
+"http://translations.launchpad.net/openerp-costa-rica\n"
+"    "
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -5851,6 +6471,8 @@ msgid ""
 "How many times the method is called,\n"
 "a negative number indicates no limit."
 msgstr ""
+"Koliko puta je neki metod pozivan,\n"
+"negativni broj znači neograničeno."
 
 #. module: base
 #: field:res.partner.bank.type.field,bank_type_id:0
@@ -5891,11 +6513,12 @@ msgstr "Gujarati / ગુજરાતી"
 msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: %s"
 msgstr ""
+"Nije moguće obraditi modul \"%s\" jer postoji eksterna zavisnost o: %s"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
 msgid "Belgium - Payroll"
-msgstr ""
+msgstr "Belgija - Platni spisak"
 
 #. module: base
 #: view:publisher_warranty.contract.wizard:0
@@ -5951,6 +6574,19 @@ msgid ""
 "    * Integrated with Holiday Management\n"
 "    "
 msgstr ""
+"\n"
+"Generički Platni sistem\n"
+"==================================\n"
+"\n"
+"    *detalji Zaposlenog\n"
+"    *Ugovori zaposlenog\n"
+"    *Ugovor zasnovan na Pasošu\n"
+"    *Dodaci / Olakšice\n"
+"    *Omogućava konfigurisanje osnovne/radne /Neto plate\n"
+"    *Obračunski list plate zaposlenog\n"
+"    *Registracija mesečnih isplata\n"
+"    *Integrisano sa Menadžmentom praznika\n"
+"    "
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -6023,6 +6659,13 @@ msgid ""
 "The user can also publish notes.\n"
 "    "
 msgstr ""
+"\n"
+"Omogućava korisniku da kreira kontrolnu tablu.\n"
+"\n"
+"Ovaj modul takođe kreira Administratorsku kontrolnu tablu.\n"
+"\n"
+"Korisnici mogu da objavljuju beleške.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_scrum
@@ -6145,6 +6788,23 @@ msgid ""
 "an other object.\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul vam omogućava da upravljate kontaktima.\n"
+"===============================================\n"
+"\n"
+"Omogućava vam da definišete:\n"
+"    *Kontakte koji nisu povezani sa partnerom\n"
+"    *Radne Kontakte na više adresa ( moguće ta različite partnere),\n"
+"    *kontakte sa moguće različitim funkcijama za svaku adresu posla\n"
+"\n"
+"Takodje dodaje novu stavku menija lociranoj u\n"
+"    Nabavke / Adresar / Kontakti\n"
+"    Prodaja/ Adresar / Kontakti\n"
+"\n"
+"Obratite pažnju na to da ovaj modul konvertuje postojeće adrese u \"ADRESA + "
+"kontakt\". To znači da će neka polja adresa nedostajati ( kao npr kontakt "
+"ime), obzirom da su trebala biti definisana u drugim modulima.\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
@@ -6203,7 +6863,7 @@ msgstr "vsep"
 #. module: base
 #: model:res.widget,title:base.openerp_favorites_twitter_widget
 msgid "OpenERP Tweets"
-msgstr ""
+msgstr "OpenERP Tweets"
 
 #. module: base
 #: code:addons/base/module/module.py:392
@@ -6234,7 +6894,7 @@ msgstr "SSL/TLS"
 #. module: base
 #: field:publisher_warranty.contract,check_opw:0
 msgid "OPW"
-msgstr ""
+msgstr "Garancije"
 
 #. module: base
 #: field:res.log,secondary:0
@@ -6280,6 +6940,8 @@ msgid ""
 "An arbitrary string, interpreted by the client according to its own needs "
 "and wishes. There is no central tag repository across clients."
 msgstr ""
+"Opcioni string, dat od strane klijenta i baziran na njegovim potrebama i "
+"željama. Ovde ne postoji centralni tag koji bi povezivao međusobni klijente."
 
 #. module: base
 #: sql_constraint:ir.rule:0
@@ -6304,6 +6966,13 @@ msgid ""
 "using the\n"
 "FTP client.\n"
 msgstr ""
+"\n"
+"Ovo je Interfejs FTP podrške sa sistemom upravljanja dokumentima.\n"
+"==========================================================\n"
+"\n"
+"Sa ovim modulom nećete više biti u mogućnosti da pristupate dokumentima samo "
+"kroz OpenERP\n"
+"već će te dobiti mogućnost pristupa dokumentima korišćenjem FTP klijenta.\n"
 
 #. module: base
 #: field:ir.model.fields,size:0
@@ -6333,7 +7002,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_audittrail
 msgid "Audit Trail"
-msgstr ""
+msgstr "Revizija Praćenja"
 
 #. module: base
 #: model:res.country,name:base.sd
@@ -6346,7 +7015,7 @@ msgstr "Sudan"
 #: field:res.currency.rate,currency_rate_type_id:0
 #: view:res.currency.rate.type:0
 msgid "Currency Rate Type"
-msgstr ""
+msgstr "Tip Valutne stope"
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -6392,7 +7061,7 @@ msgstr "OHADA - Računovodstvo"
 #. module: base
 #: help:res.bank,bic:0
 msgid "Sometimes called BIC or Swift."
-msgstr ""
+msgstr "Ponekad nazvanim BIC ili SWIFT"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
@@ -6404,6 +7073,12 @@ msgid ""
 "Mexican accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul upravlja kontnim planom za Meksiko u OpenERP-u.\n"
+"=============================================================\n"
+"\n"
+"Meksički kontni plan i lokalizacija.\n"
+"    "
 
 #. module: base
 #: field:res.lang,time_format:0
@@ -6414,7 +7089,7 @@ msgstr "Format vremena"
 #: code:addons/orm.py:2134
 #, python-format
 msgid "There is no view of type '%s' defined for the structure!"
-msgstr ""
+msgstr "Pregled tipa '%s' ne postoji!"
 
 #. module: base
 #: view:ir.module.module:0
@@ -6556,7 +7231,7 @@ msgstr "Profilisanje Mušterija"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue
 msgid "Issues Tracker"
-msgstr ""
+msgstr "Pratilac Problema"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -6587,6 +7262,8 @@ msgid ""
 "Please check that all your lines have %d columns.Stopped around line %d "
 "having %d columns."
 msgstr ""
+"Proverite da li sve vaše linije imaju %d kolona. Zaustavljeno negde oko "
+"linije %d koja ima %d kolona."
 
 #. module: base
 #: field:base.language.export,advice:0
@@ -6617,6 +7294,8 @@ msgid ""
 "You cannot perform this operation. New Record Creation is not allowed for "
 "this object as this object is for reporting purpose."
 msgstr ""
+"Nije moguće izvršiti radnju. Stvaranje novog zapisa nije dozvoljeno za "
+"objekte namenjene izveštavanju."
 
 #. module: base
 #: help:ir.model.fields,translate:0
@@ -6624,11 +7303,13 @@ msgid ""
 "Whether values for this field can be translated (enables the translation "
 "mechanism for that field)"
 msgstr ""
+"Kada god sadržaj ovog polja može biti preveden ( omogućava prevodilački "
+"mehanizam za to polje)"
 
 #. module: base
 #: selection:res.currency,position:0
 msgid "After Amount"
-msgstr ""
+msgstr "Nakon Količine"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6647,7 +7328,7 @@ msgstr ""
 #. module: base
 #: help:ir.model.fields,relation:0
 msgid "For relationship fields, the technical name of the target model"
-msgstr ""
+msgstr "Zavezanaa polja, tehničko ime ciljnog modela"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6660,6 +7341,8 @@ msgid ""
 "If you enable this option, existing translations (including custom ones) "
 "will be overwritten and replaced by those in this file"
 msgstr ""
+"Ukoliko omogućite ovu opciju, postojeći prevod ( uključujući prilagođeni) "
+"biće prepisan i zamenjen onim iz ove datoteke"
 
 #. module: base
 #: field:ir.ui.view,inherit_id:0
@@ -6674,7 +7357,7 @@ msgstr "Uslov Izvora"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
 msgid "Timesheets Validation"
-msgstr ""
+msgstr "Validacija Karneta"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_main_pm
@@ -6684,7 +7367,7 @@ msgstr "Projekat"
 #. module: base
 #: field:ir.ui.menu,web_icon_hover_data:0
 msgid "Web Icon Image (hover)"
-msgstr ""
+msgstr "Slika web ikone (hover)"
 
 #. module: base
 #: view:base.module.import:0
@@ -6721,6 +7404,7 @@ msgstr "Revizija( Audit)"
 #: help:ir.values,company_id:0
 msgid "If set, action binding only applies for this company"
 msgstr ""
+"Ako je postavljena, akcija povezivanja će biti važeća za samo ovo preduzeće"
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -6734,6 +7418,9 @@ msgid ""
 "password, otherwise leave empty. After a change of password, the user has to "
 "login again."
 msgstr ""
+"Specificirajte unos samo ako kreirate korisnika ili mu menjate lozinku, "
+"inače ostavite prazno. Nakon promene lozinke, korisnik\r\n"
+"se mora Prijaviti u sistem ponovo."
 
 #. module: base
 #: view:publisher_warranty.contract:0
@@ -6818,7 +7505,7 @@ msgstr "Prilikom brisanja"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_multilang
 msgid "Multi Language Chart of Accounts"
-msgstr ""
+msgstr "Višejezički kontni plan"
 
 #. module: base
 #: selection:res.lang,direction:0
@@ -6845,6 +7532,16 @@ msgid ""
 "that have no counterpart in the general financial accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Modul za definisanje analitičkog računovodstva objekta.\n"
+"==================================================\n"
+"\n"
+"U openERP-u analitičko računovodstvo je povezano sa osnovnim nalozima ali je "
+"\n"
+"tretirano totalno nezavisno. Takop da možete da unesete različite analitičke "
+"operacije\n"
+"koje imaju brojački deo u osnovnom finansijskom računovodstvu.\n"
+"    "
 
 #. module: base
 #: field:res.users,signature:0
@@ -6935,6 +7632,8 @@ msgid ""
 "Action bound to this entry - helper field for binding an action, will "
 "automatically set the correct reference"
 msgstr ""
+"Akcija usmerena na ovaj unos - pomoćno polje za vezu akcije, će automatski "
+"postaviti ispravne reference."
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_project_long_term
@@ -7001,6 +7700,9 @@ msgid ""
 "        United States - Chart of accounts\n"
 "    "
 msgstr ""
+"\n"
+"        Amerika - Kontni plan\n"
+"    "
 
 #. module: base
 #: view:res.widget.wizard:0
@@ -7041,6 +7743,16 @@ msgid ""
 "    * HR Jobs\n"
 "    "
 msgstr ""
+"\n"
+"MOdul za uređenje Ljudskih Resurasa.\n"
+"===================================\n"
+"\n"
+"Možete uređivati\n"
+"    *Zaposlene i hijerarhije: Možete definisati vaše zaposlene kao korisnike "
+"i prikazati hijerarhije\n"
+"    *HR Odeljenja\n"
+"    *HR poslovi\n"
+"    "
 
 #. module: base
 #: view:res.widget.wizard:0
@@ -7055,7 +7767,7 @@ msgstr "Honduras - Računovodstvo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_intrastat
 msgid "Intrastat Reporting"
-msgstr ""
+msgstr "Intrastat Izveštavanja"
 
 #. module: base
 #: code:addons/base/res/res_users.py:222
@@ -7064,6 +7776,8 @@ msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
 "change your own password."
 msgstr ""
+"Koristite čarobnjaka za promenu lozinke.(korisničke postavke ili Korisnički "
+"meni)"
 
 #. module: base
 #: code:addons/orm.py:1883
@@ -7146,6 +7860,16 @@ msgid ""
 "You can assign several contracts per employee.\n"
 "    "
 msgstr ""
+"\n"
+"Dodaje informacije u obrazac zaposlenog da bi upravljali ugovorima.\n"
+"============================================================\n"
+"\n"
+"    *Bračni Status\n"
+"    *Broj Osiguranja\n"
+"    *Mesto i datum rođenja,...\n"
+"\n"
+"Možete dodeliti više ugovora zaposlenom.\n"
+"    "
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -7194,7 +7918,7 @@ msgstr "Spanish (MX) / Español (MX)"
 #: code:addons/base/publisher_warranty/publisher_warranty.py:145
 #, python-format
 msgid "Please verify your publisher warranty serial number and validity."
-msgstr ""
+msgstr "Molim proverite garancioni serijski broj i njegovu validnost"
 
 #. module: base
 #: view:res.log:0
@@ -7224,7 +7948,7 @@ msgstr "Ovaj prozor"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Publisher Warranty Contracts"
-msgstr ""
+msgstr "Garancioni Ugovori"
 
 #. module: base
 #: help:res.log,name:0
@@ -7255,7 +7979,7 @@ msgstr "Upravljanje Asocijacijama"
 #. module: base
 #: help:ir.model,modules:0
 msgid "List of modules in which the object is defined or inherited"
-msgstr ""
+msgstr "Lista modula u kojima je objekat definisan ili je ovisan"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll
@@ -7269,6 +7993,8 @@ msgid ""
 "federal states you are working on from here. Each state is attached to one "
 "country."
 msgstr ""
+"Ako radite za Američko tržište, možete upravljati sa različitim federalnim "
+"državama sa kojima radite odavde. Svaka država je pridodana jednoj zemlji."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -8157,6 +8883,7 @@ msgid ""
 "The priority of the job, as an integer: 0 means higher priority, 10 means "
 "lower priority."
 msgstr ""
+"Prioritet posla kao ceo broj: 0 je najveći a 10 je najmanji prioritet."
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_transition
@@ -8176,7 +8903,7 @@ msgstr "Pod Meniji"
 #. module: base
 #: model:res.groups,name:base.group_extended
 msgid "Extended View"
-msgstr ""
+msgstr "Prošireni Pregled"
 
 #. module: base
 #: model:res.country,name:base.pf
@@ -8244,7 +8971,7 @@ msgstr "XSL putanja"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_layout
 msgid "Invoice Layouts"
-msgstr ""
+msgstr "Izgledi Faktura"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_location
@@ -8328,6 +9055,8 @@ msgstr "Ažuriraj listu modula"
 msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: %s"
 msgstr ""
+"Nije moguće nadograditi modul \"% s\", jer eksterna zavisnost nije "
+"zadovoljena:% s"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
@@ -8350,7 +9079,7 @@ msgstr ""
 #: code:addons/orm.py:2693
 #, python-format
 msgid "The value \"%s\" for the field \"%s.%s\" is not in the selection"
-msgstr ""
+msgstr "sadržaj  \"%s\" za polje \"%s.%s\" nije u selekciji"
 
 #. module: base
 #: view:ir.actions.configuration.wizard:0
@@ -8395,6 +9124,14 @@ msgid ""
 "German accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem "
+"SKR03.\n"
+"============================================================================="
+"=\n"
+"\n"
+"Nemački kontni plan i lokalizacija\n"
+"    "
 
 #. module: base
 #: field:ir.actions.report.xml,attachment_use:0
@@ -8734,6 +9471,7 @@ msgstr "Ujedinjeni Arapski Emirati"
 msgid ""
 "Unable to delete this document because it is used as a default property"
 msgstr ""
+"Nije moguće obrisati dokument jer se koristi kao podrazumevana vrednost"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_case_job_req_main
@@ -8750,6 +9488,12 @@ msgid ""
 "Greek accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Ovo je bazni modul koji upravlja kontnim planom za Grčku.\n"
+"====================================================\n"
+"\n"
+"Grčki kontni plan i lokalizacija\n"
+"    "
 
 #. module: base
 #: view:ir.values:0
@@ -9504,7 +10248,7 @@ msgstr "osv_memory.autovacuum"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us
 msgid "United States - Chart of accounts"
-msgstr ""
+msgstr "USA - kontni plan"
 
 #. module: base
 #: view:base.language.install:0
@@ -9633,7 +10377,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.currency:0
 msgid "The currency code must be unique per company!"
-msgstr ""
+msgstr "Valutni kod mora biti jedinstven po preduzeću"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_property
@@ -10586,6 +11330,8 @@ msgid ""
 "Manage the partner titles you want to have available in your system. The "
 "partner titles is the legal status of the company: Private Limited, SA, etc."
 msgstr ""
+"Upravlja sa parnerovim imenom ukoliko ga želiš dostupnim u sistemu. Ime "
+"partnera je pravni status preduteća: d.o.o, dd i sl"
 
 #. module: base
 #: view:base.language.export:0
@@ -10599,6 +11345,8 @@ msgid ""
 "You can not read this document (%s) ! Be sure your user belongs to one of "
 "these groups: %s."
 msgstr ""
+"Nemate prava čitanja za dokument (%s)! Prava čitanja su dodjeljena ovim "
+"grupama: %s"
 
 #. module: base
 #: view:res.bank:0
@@ -10613,6 +11361,8 @@ msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
 "But the latter module is not available in your system."
 msgstr ""
+"Pokušali ste instalirati modul '%s' koji ovisi o modulu '%s' \n"
+"koji nije dostupan na vašem sistemu."
 
 #. module: base
 #: field:ir.module.module,latest_version:0
@@ -10782,6 +11532,9 @@ msgid ""
 "for the currency: %s \n"
 "at the date: %s"
 msgstr ""
+"Neije pronađena stopa \n"
+"za valutu: %s \n"
+"na dan: %s"
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -10808,6 +11561,8 @@ msgid ""
 "Customized views are used when users reorganize the content of their "
 "dashboard views (via web client)"
 msgstr ""
+"Prilagođeni pogledi se koriste kada korisnik reorganizira sadržaj kontrolnih "
+"ploča (web klijent)"
 
 #. module: base
 #: help:publisher_warranty.contract,check_opw:0
@@ -11314,6 +12069,8 @@ msgstr "Partneri OpenERP-a"
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: %s"
 msgstr ""
+"Nije moguće instalirati modul \"% s\", jer eksterna zavisnost nije "
+"zadovoljena:% s"
 
 #. module: base
 #: view:ir.module.module:0
@@ -11343,6 +12100,10 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
+"Upravljanje korisnicima koji će se spajati na sistem. Korisnici mogu biti "
+"deaktivirani kako bi im se trajno ili provremeno ograničio pristup sistemu. "
+"Korisnicima možete dodeliti grupe koje im daju prava pristupa aplikacijama "
+"koje su im potrebne."
 
 #. module: base
 #: selection:ir.module.module,complexity:0
@@ -11475,7 +12236,7 @@ msgstr "tok posla"
 #: code:addons/base/ir/ir_model.py:255
 #, python-format
 msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "Veličina polja nikada ne može biti manja od 1!"
 
 #. module: base
 #: model:res.country,name:base.so
@@ -11568,7 +12329,7 @@ msgstr ""
 #: code:addons/orm.py:1388
 #, python-format
 msgid "key '%s' not found in selection field '%s'"
-msgstr ""
+msgstr "ključ '%s' nije pronađen u polju '%s'"
 
 #. module: base
 #: selection:ir.values,key:0
@@ -11602,7 +12363,7 @@ msgstr "Mušterija"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (NI) / Español (NI)"
-msgstr ""
+msgstr "Spanish (NI) / Español (NI)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_visible_discount
@@ -11779,7 +12540,7 @@ msgstr "Signal Okidača"
 #, python-format
 msgid ""
 "Group(s) cannot be deleted, because some user(s) still belong to them: %s !"
-msgstr ""
+msgstr "Grupe nije moguće obrisati jer su dodeljene korisnicima: %s !"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_repair
@@ -11860,7 +12621,7 @@ msgstr "Isporuka Emaila Neuspešna"
 #: field:res.request.link,object:0
 #: field:workflow.triggers,model:0
 msgid "Object"
-msgstr ""
+msgstr "Objekat"
 
 #. module: base
 #: code:addons/osv.py:147
@@ -11870,11 +12631,14 @@ msgid ""
 "\n"
 "[object with reference: %s - %s]"
 msgstr ""
+"\n"
+"\n"
+"[objekt sa referencom: %s - %s]"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_plans
 msgid "Multiple Analytic Plans"
-msgstr ""
+msgstr "Višestruki analitički planovi"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet
@@ -11894,17 +12658,17 @@ msgstr ""
 #. module: base
 #: view:ir.sequence:0
 msgid "Minute: %(min)s"
-msgstr ""
+msgstr "Minute: %(min)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_10
 msgid "Scheduler"
-msgstr ""
+msgstr "Planer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_tools
 msgid "Base Tools"
-msgstr ""
+msgstr "Osnovni Alati"
 
 #. module: base
 #: help:res.country,address_format:0
@@ -11940,7 +12704,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk
 msgid "UK - Accounting"
-msgstr ""
+msgstr "UK - računovodstvo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_scrum
@@ -11983,18 +12747,18 @@ msgstr ""
 #. module: base
 #: field:ir.ui.view_sc,user_id:0
 msgid "User Ref."
-msgstr ""
+msgstr "Referentni Korisnik"
 
 #. module: base
 #: code:addons/base/res/res_users.py:118
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Upozorenje !"
 
 #. module: base
 #: model:res.widget,title:base.google_maps_widget
 msgid "Google Maps"
-msgstr ""
+msgstr "Google Mape"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
@@ -12006,27 +12770,27 @@ msgstr ""
 #: view:res.company:0
 #: model:res.groups,name:base.group_system
 msgid "Configuration"
-msgstr ""
+msgstr "Podešavanje"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in
 msgid "India - Accounting"
-msgstr ""
+msgstr "Indija - Računovodstvo"
 
 #. module: base
 #: field:ir.actions.server,expression:0
 msgid "Loop Expression"
-msgstr ""
+msgstr "Izraz petlje"
 
 #. module: base
 #: field:publisher_warranty.contract,date_start:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Pocetni Datum"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gt
 msgid "Guatemala - Accounting"
-msgstr ""
+msgstr "Gvatemala - Računovodstvo"
 
 #. module: base
 #: help:ir.cron,args:0
@@ -12036,7 +12800,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_5
 msgid "Gold Partner"
-msgstr ""
+msgstr "Zlatni partner"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner
@@ -12046,34 +12810,34 @@ msgstr ""
 #: selection:res.partner.title,domain:0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: base
 #: field:ir.model.fields,complete_name:0
 #: field:ir.ui.menu,complete_name:0
 msgid "Complete Name"
-msgstr ""
+msgstr "Puno Ime"
 
 #. module: base
 #: model:res.country,name:base.tr
 msgid "Turkey"
-msgstr ""
+msgstr "Turska"
 
 #. module: base
 #: model:res.country,name:base.fk
 msgid "Falkland Islands"
-msgstr ""
+msgstr "Foklandska Ostrva"
 
 #. module: base
 #: model:res.country,name:base.lb
 msgid "Lebanon"
-msgstr ""
+msgstr "Liban"
 
 #. module: base
 #: view:ir.actions.report.xml:0
 #: field:ir.actions.report.xml,report_type:0
 msgid "Report Type"
-msgstr ""
+msgstr "Tip Izveštaja"
 
 #. module: base
 #: field:ir.actions.todo,state:0
@@ -12086,7 +12850,7 @@ msgstr ""
 #: field:workflow.instance,state:0
 #: field:workflow.workitem,state:0
 msgid "State"
-msgstr ""
+msgstr "region"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_evaluation
@@ -12108,69 +12872,69 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Galician / Galego"
-msgstr ""
+msgstr "Galician / Galego"
 
 #. module: base
 #: model:res.country,name:base.no
 msgid "Norway"
-msgstr ""
+msgstr "Norveška"
 
 #. module: base
 #: view:res.lang:0
 msgid "4.  %b, %B         ==> Dec, December"
-msgstr ""
+msgstr "4. %b, %B ==> Dec, Decembar"
 
 #. module: base
 #: view:base.language.install:0
 #: model:ir.ui.menu,name:base.menu_view_base_language_install
 msgid "Load an Official Translation"
-msgstr ""
+msgstr "Učitaj službeni prevod"
 
 #. module: base
 #: view:res.currency:0
 msgid "Miscelleanous"
-msgstr ""
+msgstr "Ostalo"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_10
 msgid "Open Source Service Company"
-msgstr ""
+msgstr "Open Source Service Company"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Sinhalese / සිංහල"
-msgstr ""
+msgstr "Sinhalese / සිංහල"
 
 #. module: base
 #: selection:res.request,state:0
 msgid "waiting"
-msgstr ""
+msgstr "čekanje"
 
 #. module: base
 #: field:ir.actions.report.xml,report_file:0
 msgid "Report file"
-msgstr ""
+msgstr "Datoteka izveštaja"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_triggers
 msgid "workflow.triggers"
-msgstr ""
+msgstr "workflow.triggers"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:74
 #, python-format
 msgid "Invalid search criterions"
-msgstr ""
+msgstr "Neispravan izraz pretraživanja"
 
 #. module: base
 #: view:ir.mail_server:0
 msgid "Connection Information"
-msgstr ""
+msgstr "Informacije o vezi"
 
 #. module: base
 #: view:ir.attachment:0
 msgid "Created"
-msgstr ""
+msgstr "Kreirano"
 
 #. module: base
 #: help:ir.actions.wizard,multi:0
@@ -12178,16 +12942,18 @@ msgid ""
 "If set to true, the wizard will not be displayed on the right toolbar of a "
 "form view."
 msgstr ""
+"Ako je postavljeno na istinito, čarobnjak neće biti prikazan na desnoj "
+"alatnoj traci prozora."
 
 #. module: base
 #: view:base.language.import:0
 msgid "- type,name,res_id,src,value"
-msgstr ""
+msgstr "- tip,ime,res_id,izvor,vrednost"
 
 #. module: base
 #: model:res.country,name:base.hm
 msgid "Heard and McDonald Islands"
-msgstr ""
+msgstr "Ostrvo Heard i McDonald ostrva"
 
 #. module: base
 #: help:ir.model.data,name:0
@@ -12292,12 +13058,12 @@ msgstr ""
 #. module: base
 #: field:ir.actions.act_window,view_id:0
 msgid "View Ref."
-msgstr ""
+msgstr "Referentni pregled"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_management
 msgid "Helps you handle your quotations, sale orders and invoicing."
-msgstr ""
+msgstr "Pomaze ti da savladas svoje upite, prodajne zahteve i fakturisanje."
 
 #. module: base
 #: field:res.groups,implied_ids:0
@@ -12307,12 +13073,12 @@ msgstr ""
 #. module: base
 #: selection:ir.translation,type:0
 msgid "Selection"
-msgstr ""
+msgstr "Selekcija"
 
 #. module: base
 #: field:ir.module.module,icon:0
 msgid "Icon URL"
-msgstr ""
+msgstr "URL ikona"
 
 #. module: base
 #: field:ir.actions.act_window,type:0
@@ -12326,12 +13092,12 @@ msgstr ""
 #: field:ir.actions.url,type:0
 #: field:ir.actions.wizard,type:0
 msgid "Action Type"
-msgstr ""
+msgstr "Tip Akcije"
 
 #. module: base
 #: model:res.country,name:base.vn
 msgid "Vietnam"
-msgstr ""
+msgstr "Vijetnam"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada
@@ -12353,42 +13119,42 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
 #: model:ir.ui.menu,name:base.menu_view_base_import_language
 msgid "Import Translation"
-msgstr ""
+msgstr "Uvezi prevod"
 
 #. module: base
 #: field:res.partner.bank.type,field_ids:0
 msgid "Type fields"
-msgstr ""
+msgstr "Vrste Polja"
 
 #. module: base
 #: view:ir.actions.todo:0
 #: field:ir.actions.todo,category_id:0
 #: field:ir.module.module,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "Категорија"
 
 #. module: base
 #: view:ir.attachment:0
 #: selection:ir.attachment,type:0
 #: selection:ir.property,type:0
 msgid "Binary"
-msgstr ""
+msgstr "Binarno"
 
 #. module: base
 #: field:ir.actions.server,sms:0
 #: selection:ir.actions.server,state:0
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: base
 #: model:res.country,name:base.cr
 msgid "Costa Rica"
-msgstr ""
+msgstr "Kostarika"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_module_doc_rst
 msgid "Generate Docs of Modules"
-msgstr ""
+msgstr "Generiši dokumente modula"
 
 #. module: base
 #: model:res.company,overdue_msg:base.main_company
@@ -12409,19 +13175,19 @@ msgstr ""
 #. module: base
 #: view:workflow.activity:0
 msgid "Conditions"
-msgstr ""
+msgstr "Uslovi"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_other_form
 msgid "Other Partners"
-msgstr ""
+msgstr "Drugi partneri"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_currency_form
 #: model:ir.ui.menu,name:base.menu_action_currency_form
 #: view:res.currency:0
 msgid "Currencies"
-msgstr ""
+msgstr "Valute"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_client
@@ -12437,7 +13203,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
-msgstr ""
+msgstr "Naziv grupe mora biti jedinstven!"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_report_designer
@@ -12454,22 +13220,22 @@ msgstr ""
 #. module: base
 #: view:ir.sequence:0
 msgid "Hour 00->12: %(h12)s"
-msgstr ""
+msgstr "Sat 00->12: %(h12)s"
 
 #. module: base
 #: help:res.partner.address,active:0
 msgid "Uncheck the active field to hide the contact."
-msgstr ""
+msgstr "Razčekitajte polje aktivan da biste sakrili kontakt."
 
 #. module: base
 #: model:ir.model,name:base.model_res_widget_wizard
 msgid "Add a widget for User"
-msgstr ""
+msgstr "Dodaj widget za korisnika"
 
 #. module: base
 #: model:res.country,name:base.dk
 msgid "Denmark"
-msgstr ""
+msgstr "Danska"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_calendar
@@ -12496,60 +13262,60 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_workflow_instance
 msgid "workflow.instance"
-msgstr ""
+msgstr "workflow.instance"
 
 #. module: base
 #: code:addons/orm.py:471
 #, python-format
 msgid "Unknown attribute %s in %s "
-msgstr ""
+msgstr "Nepoznat atribut %s u %s "
 
 #. module: base
 #: view:res.lang:0
 msgid "10. %S              ==> 20"
-msgstr ""
+msgstr "10. %S ==> 20"
 
 #. module: base
 #: code:addons/fields.py:122
 #, python-format
 msgid "undefined get method !"
-msgstr ""
+msgstr "nedefinirana get metoda !"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Norwegian Bokmål / Norsk bokmål"
-msgstr ""
+msgstr "Norwegian Bokmål / Norsk bokmål"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
 msgid "Madam"
-msgstr ""
+msgstr "Gospođa"
 
 #. module: base
 #: model:res.country,name:base.ee
 msgid "Estonia"
-msgstr ""
+msgstr "Estonija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
 #: model:ir.ui.menu,name:base.menu_dashboard
 msgid "Dashboards"
-msgstr ""
+msgstr "Kontrolne Table"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_procurement
 msgid "Procurements"
-msgstr ""
+msgstr "Nabavke"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
 msgid "Payroll Accounting"
-msgstr ""
+msgstr "Platno Računovodstvo"
 
 #. module: base
 #: help:ir.attachment,type:0
 msgid "Binary File or external URL"
-msgstr ""
+msgstr "Binarna datoteka ili externi URL"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_order_dates
@@ -12559,12 +13325,12 @@ msgstr ""
 #. module: base
 #: view:ir.attachment:0
 msgid "Creation Month"
-msgstr ""
+msgstr "Kreacija Meseca"
 
 #. module: base
 #: model:res.country,name:base.nl
 msgid "Netherlands"
-msgstr ""
+msgstr "Holandija"
 
 #. module: base
 #: model:ir.module.module,description:base.module_edi
@@ -12585,7 +13351,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_4
 msgid "Low Level Objects"
-msgstr ""
+msgstr "Sistemski objekti"
 
 #. module: base
 #: help:ir.values,model:0
@@ -12595,22 +13361,22 @@ msgstr ""
 #. module: base
 #: field:res.country,address_format:0
 msgid "Address Format"
-msgstr ""
+msgstr "Format Adrese"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_values
 msgid "ir.values"
-msgstr ""
+msgstr "ir.values"
 
 #. module: base
 #: model:res.groups,name:base.group_no_one
 msgid "Technical Features"
-msgstr ""
+msgstr "Tehničke mogućnosti"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Occitan (FR, post 1500) / Occitan"
-msgstr ""
+msgstr "Occitan (FR, post 1500) / Occitan"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:192
@@ -12625,7 +13391,7 @@ msgstr ""
 #: view:ir.model.data:0
 #: model:ir.ui.menu,name:base.ir_model_data_menu
 msgid "External Identifiers"
-msgstr ""
+msgstr "Ekterni identifikatori"
 
 #. module: base
 #: model:res.groups,name:base.group_sale_salesman
@@ -12635,19 +13401,19 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cd
 msgid "Congo, The Democratic Republic of the"
-msgstr ""
+msgstr "Kongo, Demokratska Republika"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Malayalam / മലയാളം"
-msgstr ""
+msgstr "Malayalam / മലയാളം"
 
 #. module: base
 #: view:res.request:0
 #: field:res.request,body:0
 #: field:res.request.history,req_id:0
 msgid "Request"
-msgstr ""
+msgstr "Zahtev"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.act_ir_actions_todo_form
@@ -12660,24 +13426,24 @@ msgstr ""
 #. module: base
 #: view:res.company:0
 msgid "Portrait"
-msgstr ""
+msgstr "Portret"
 
 #. module: base
 #: field:ir.cron,numbercall:0
 msgid "Number of Calls"
-msgstr ""
+msgstr "Broj pokretanja"
 
 #. module: base
 #: code:addons/base/res/res_bank.py:189
 #, python-format
 msgid "BANK"
-msgstr ""
+msgstr "BANKA"
 
 #. module: base
 #: view:base.module.upgrade:0
 #: field:base.module.upgrade,module_info:0
 msgid "Modules to update"
-msgstr ""
+msgstr "Moduli za nadogradnju"
 
 #. module: base
 #: help:ir.actions.server,sequence:0
@@ -12685,11 +13451,13 @@ msgid ""
 "Important when you deal with multiple actions, the execution order will be "
 "decided based on this, low number is higher priority."
 msgstr ""
+"Važno kada koristite više akcija, redoslijed izvršenja će biti zasnovan na "
+"ovome, manji broj je veći prioritet."
 
 #. module: base
 #: field:ir.actions.report.xml,header:0
 msgid "Add RML header"
-msgstr ""
+msgstr "Dodaj RML zaglavlje"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -12708,17 +13476,17 @@ msgstr ""
 #. module: base
 #: view:res.config:0
 msgid "Apply"
-msgstr ""
+msgstr "Primeni"
 
 #. module: base
 #: field:res.request,trigger_date:0
 msgid "Trigger Date"
-msgstr ""
+msgstr "Datum Okidanja"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Croatian / hrvatski jezik"
-msgstr ""
+msgstr "Hrvatski / hrvatski jezik"
 
 #. module: base
 #: sql_constraint:res.country:0
@@ -12736,18 +13504,18 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_project_management_time_tracking
 msgid "Time Tracking"
-msgstr ""
+msgstr "Praćenje Vremena"
 
 #. module: base
 #: view:res.partner.category:0
 msgid "Partner Category"
-msgstr ""
+msgstr "Kategorija Partnera"
 
 #. module: base
 #: view:ir.actions.server:0
 #: selection:ir.actions.server,state:0
 msgid "Trigger"
-msgstr ""
+msgstr "Okidač"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_warehouse_management
@@ -12755,17 +13523,19 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
+"POmaze ti da upravljas svojim inventarom i glavnim magacinskim zadacima: "
+"Isporuka zahteva, prijemi, itd..."
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_update
 msgid "Update Module"
-msgstr ""
+msgstr "Ažuriraj modul"
 
 #. module: base
 #: view:ir.model.fields:0
 #: field:ir.model.fields,translate:0
 msgid "Translate"
-msgstr ""
+msgstr "Prevedi"
 
 #. module: base
 #: model:ir.module.module,description:base.module_users_ldap
@@ -12863,23 +13633,23 @@ msgstr ""
 #. module: base
 #: field:res.request.history,body:0
 msgid "Body"
-msgstr ""
+msgstr "Telo"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:199
 #, python-format
 msgid "Connection test succeeded!"
-msgstr ""
+msgstr "Konekcija uspešno testirana"
 
 #. module: base
 #: view:partner.massmail.wizard:0
 msgid "Send Email"
-msgstr ""
+msgstr "Pošalji e-mail"
 
 #. module: base
 #: field:res.users,menu_id:0
 msgid "Menu Action"
-msgstr ""
+msgstr "Akcija Menija"
 
 #. module: base
 #: help:ir.model.fields,selection:0
@@ -12892,7 +13662,7 @@ msgstr ""
 #. module: base
 #: selection:base.language.export,state:0
 msgid "choose"
-msgstr ""
+msgstr "odaberite"
 
 #. module: base
 #: help:ir.model,osv_memory:0
@@ -12926,32 +13696,32 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: view:res.partner:0
 msgid "Suppliers"
-msgstr ""
+msgstr "Dobavljaci"
 
 #. module: base
 #: view:publisher_warranty.contract.wizard:0
 msgid "Register"
-msgstr ""
+msgstr "Registruj"
 
 #. module: base
 #: field:res.request,ref_doc2:0
 msgid "Document Ref 2"
-msgstr ""
+msgstr "Vezani dokument 2"
 
 #. module: base
 #: field:res.request,ref_doc1:0
 msgid "Document Ref 1"
-msgstr ""
+msgstr "Ref dokument 1"
 
 #. module: base
 #: model:res.country,name:base.ga
 msgid "Gabon"
-msgstr ""
+msgstr "Gabon"
 
 #. module: base
 #: model:res.groups,name:base.group_multi_company
 msgid "Multi Companies"
-msgstr ""
+msgstr "Multi Kompanije"
 
 #. module: base
 #: view:ir.model:0
@@ -12960,12 +13730,12 @@ msgstr ""
 #: model:res.groups,name:base.group_erp_manager
 #: view:res.users:0
 msgid "Access Rights"
-msgstr ""
+msgstr "Prava pristupa"
 
 #. module: base
 #: model:res.country,name:base.gl
 msgid "Greenland"
-msgstr ""
+msgstr "Grenland"
 
 #. module: base
 #: model:res.groups,name:base.group_sale_salesman_all_leads
@@ -12975,7 +13745,7 @@ msgstr ""
 #. module: base
 #: field:res.partner.bank,acc_number:0
 msgid "Account Number"
-msgstr ""
+msgstr "Broj računa"
 
 #. module: base
 #: view:ir.rule:0
@@ -12992,12 +13762,12 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "1.  %c              ==> Fri Dec  5 18:25:20 2008"
-msgstr ""
+msgstr "1. %c ==> Pet Pro 5 18:25:20 2008"
 
 #. module: base
 #: model:res.country,name:base.nc
 msgid "New Caledonia (French)"
-msgstr ""
+msgstr "New Caledonia (French)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_jit
@@ -13023,14 +13793,14 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cy
 msgid "Cyprus"
-msgstr ""
+msgstr "Kipar"
 
 #. module: base
 #: field:ir.actions.server,subject:0
 #: field:partner.massmail.wizard,subject:0
 #: field:res.request,name:0
 msgid "Subject"
-msgstr ""
+msgstr "Subjekat"
 
 #. module: base
 #: selection:res.currency,position:0
@@ -13041,17 +13811,17 @@ msgstr ""
 #: field:res.request,act_from:0
 #: field:res.request.history,act_from:0
 msgid "From"
-msgstr ""
+msgstr "Od"
 
 #. module: base
 #: view:res.users:0
 msgid "Preferences"
-msgstr ""
+msgstr "Podešavanja"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_consumers0
 msgid "Consumers"
-msgstr ""
+msgstr "Potrošači"
 
 #. module: base
 #: view:res.company:0
@@ -13067,7 +13837,7 @@ msgstr ""
 #: code:addons/base/res/res_lang.py:189
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language !"
-msgstr ""
+msgstr "Ne možete obrisati jezik. Postoje korisnici koji ga koriste!"
 
 #. module: base
 #: field:ir.values,model_id:0
@@ -13090,7 +13860,7 @@ msgstr ""
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 msgid "Kanban"
-msgstr ""
+msgstr "Kanban"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:251
@@ -13099,33 +13869,34 @@ msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
 "format!"
 msgstr ""
+"Ekspresija selektovane opcije mora biti u [('key','Label'), ...] formatu!"
 
 #. module: base
 #: view:ir.filters:0
 msgid "Current User"
-msgstr ""
+msgstr "Trenutni korisnik"
 
 #. module: base
 #: field:res.company,company_registry:0
 msgid "Company Registry"
-msgstr ""
+msgstr "Registar preduzeća"
 
 #. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Ostalo"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ir_mail_server_list
 #: view:ir.mail_server:0
 #: model:ir.ui.menu,name:base.menu_mail_servers
 msgid "Outgoing Mail Servers"
-msgstr ""
+msgstr "Izlazni Email Serveri"
 
 #. module: base
 #: model:res.country,name:base.cn
 msgid "China"
-msgstr ""
+msgstr "Kina"
 
 #. module: base
 #: help:ir.actions.server,wkf_model_id:0
@@ -13133,6 +13904,8 @@ msgid ""
 "The object that should receive the workflow signal (must have an associated "
 "workflow)"
 msgstr ""
+"Objekt koji bi trebalo da primi signal radnog toka( mora imati asiciran "
+"radni tok)"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_account_voucher
@@ -13140,16 +13913,18 @@ msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
 msgstr ""
+"Omogućava ti da kreiraš svoje fakture i da pratiš plaćanja. Ovo je lakša "
+"verzija računovodstvenog modula za menadžere koji nisu računovođe."
 
 #. module: base
 #: model:res.country,name:base.eh
 msgid "Western Sahara"
-msgstr ""
+msgstr "Zapadna Sahara"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
 msgid "Invoicing & Payments"
-msgstr ""
+msgstr "Fakturisanje & Plaćanja"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_company_form
@@ -13157,11 +13932,13 @@ msgid ""
 "Create and manage the companies that will be managed by OpenERP from here. "
 "Shops or subsidiaries can be created and maintained from here."
 msgstr ""
+"Kreira i upravlja sa kompanijama kojima će upravljati OpenERP odavde. "
+"Prodavnice i njima slične mogu biti kreirane i održavane odavde."
 
 #. module: base
 #: model:res.country,name:base.id
 msgid "Indonesia"
-msgstr ""
+msgstr "Indonezija"
 
 #. module: base
 #: view:base.update.translations:0
@@ -13170,6 +13947,9 @@ msgid ""
 "you can then add translations manually or perform a complete export (as a "
 "template for a new language example)."
 msgstr ""
+"Čarobnjak će sam otkriti nove pojmove i termine ta prevođenje u aplikaciji, "
+"tada možete ručno dodati prevod ili možete uraditi kompletan izvoz (kao "
+"template za nov jezik npr)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -13224,26 +14004,28 @@ msgid ""
 "Expression, must be True to match\n"
 "use context.get or user (browse)"
 msgstr ""
+"Expresija, mora biti Istinita da bi se podudarala\n"
+"koristi context.get ili korisnika (browse)"
 
 #. module: base
 #: model:res.country,name:base.bg
 msgid "Bulgaria"
-msgstr ""
+msgstr "Bugarska"
 
 #. module: base
 #: view:publisher_warranty.contract.wizard:0
 msgid "Publisher warranty contract successfully registered!"
-msgstr ""
+msgstr "Ugovor o održavanju sa izdavačem uspešno je registrovan!"
 
 #. module: base
 #: model:res.country,name:base.ao
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #. module: base
 #: model:res.country,name:base.tf
 msgid "French Southern Territories"
-msgstr ""
+msgstr "Francuske Južne Teritorije"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency
@@ -13253,77 +14035,77 @@ msgstr ""
 #: field:res.currency,name:0
 #: field:res.currency.rate,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: base
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
-msgstr ""
+msgstr "5. %y, %Y ==> 11, 2011"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_ltd
 msgid "ltd"
-msgstr ""
+msgstr "d.o.o."
 
 #. module: base
 #: field:res.log,res_id:0
 msgid "Object ID"
-msgstr ""
+msgstr "ID objekta"
 
 #. module: base
 #: view:res.company:0
 msgid "Landscape"
-msgstr ""
+msgstr "Pejzažno"
 
 #. module: base
 #: model:ir.actions.todo.category,name:base.category_administration_config
 #: model:ir.module.category,name:base.module_category_administration
 msgid "Administration"
-msgstr ""
+msgstr "Administracija"
 
 #. module: base
 #: view:base.module.update:0
 msgid "Click on Update below to start the process..."
-msgstr ""
+msgstr "KLinki na Ažuriraj ispod da bi se proces pokrenuo..."
 
 #. module: base
 #: model:res.country,name:base.ir
 msgid "Iran"
-msgstr ""
+msgstr "Iran"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_widget_user_act_window
 #: model:ir.ui.menu,name:base.menu_res_widget_user_act_window
 msgid "Widgets per User"
-msgstr ""
+msgstr "Widgeti po korisniku"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_form
 #: model:ir.ui.menu,name:base.menu_publisher_warranty_contract
 msgid "Contracts"
-msgstr ""
+msgstr "Ugovori"
 
 #. module: base
 #: field:base.language.export,state:0
 #: field:ir.ui.menu,icon_pict:0
 #: field:publisher_warranty.contract.wizard,state:0
 msgid "unknown"
-msgstr ""
+msgstr "nepoznato"
 
 #. module: base
 #: field:res.currency,symbol:0
 msgid "Symbol"
-msgstr ""
+msgstr "Simbol"
 
 #. module: base
 #: help:res.users,login:0
 msgid "Used to log into the system"
-msgstr ""
+msgstr "Korišćeno za prijavu u sistem"
 
 #. module: base
 #: view:base.update.translations:0
 msgid "Synchronize Translation"
-msgstr ""
+msgstr "Sinhronizuj prevode"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_module_quality
@@ -13349,23 +14131,23 @@ msgstr ""
 #. module: base
 #: field:res.partner.bank,bank_name:0
 msgid "Bank Name"
-msgstr ""
+msgstr "Ime Banke"
 
 #. module: base
 #: model:res.country,name:base.ki
 msgid "Kiribati"
-msgstr ""
+msgstr "Kiribati"
 
 #. module: base
 #: model:res.country,name:base.iq
 msgid "Iraq"
-msgstr ""
+msgstr "Irak"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_association
 #: model:ir.ui.menu,name:base.menu_association
 msgid "Association"
-msgstr ""
+msgstr "Asociacija"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_no_autopicking
@@ -13386,7 +14168,7 @@ msgstr ""
 #. module: base
 #: view:ir.actions.server:0
 msgid "Action to Launch"
-msgstr ""
+msgstr "Pokreće akciju"
 
 #. module: base
 #: help:res.users,context_lang:0
@@ -13395,6 +14177,9 @@ msgid ""
 "are available. To add a new language, you can use the 'Load an Official "
 "Translation' wizard available from the 'Administration' menu."
 msgstr ""
+"Podrazumevani jezik korišćen u korisničkom interfejsu, kada je prevod "
+"dostupan. Da dodate novi jezik, možete koristiti čarobnjaka 'Učitaj "
+"Oficijelni Prevod' dostupnog iz menija 'Administracija'."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -13417,39 +14202,39 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence_type
 msgid "ir.sequence.type"
-msgstr ""
+msgstr "ir.sequence.type"
 
 #. module: base
 #: selection:base.language.export,format:0
 msgid "CSV File"
-msgstr ""
+msgstr "CSV datoteka"
 
 #. module: base
 #: code:addons/base/res/res_company.py:154
 #, python-format
 msgid "Phone: "
-msgstr ""
+msgstr "Telefon: "
 
 #. module: base
 #: field:res.company,account_no:0
 msgid "Account No."
-msgstr ""
+msgstr "Broj računa"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:187
 #, python-format
 msgid "Base Language 'en_US' can not be deleted !"
-msgstr ""
+msgstr "Jezik 'en_US' se koristi kao osnovni jezik. Ne može se obrisati !"
 
 #. module: base
 #: selection:ir.model,state:0
 msgid "Base Object"
-msgstr ""
+msgstr "Osnovni objekt"
 
 #. module: base
 #: report:ir.module.reference.graph:0
 msgid "Dependencies :"
-msgstr ""
+msgstr "Zavisnosti:"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_analytic_plans
@@ -13467,12 +14252,12 @@ msgstr ""
 #. module: base
 #: field:res.company,vat:0
 msgid "Tax ID"
-msgstr ""
+msgstr "ID takse"
 
 #. module: base
 #: field:ir.model.fields,field_description:0
 msgid "Field Label"
-msgstr ""
+msgstr "Labela polja"
 
 #. module: base
 #: help:ir.actions.report.xml,report_rml:0
@@ -13480,21 +14265,23 @@ msgid ""
 "The path to the main report file (depending on Report Type) or NULL if the "
 "content is in another data field"
 msgstr ""
+"Putanja do glavnog izveštaja( ovisna o tipu izveštaja) ili NULL ako je "
+"sadržaj u nekom drugom polju podataka."
 
 #. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
-msgstr ""
+msgstr "Džibuti"
 
 #. module: base
 #: field:ir.translation,value:0
 msgid "Translation Value"
-msgstr ""
+msgstr "Vrednost Prevedenog"
 
 #. module: base
 #: model:res.country,name:base.ag
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "Antigva i Barbuda"
 
 #. module: base
 #: code:addons/orm.py:3669
@@ -13503,34 +14290,36 @@ msgid ""
 "Operation prohibited by access rules, or performed on an already deleted "
 "document (Operation: %s, Document type: %s)."
 msgstr ""
+"Nedovoljna prava za operaciju ili je dokument u međuvremenu obrisan. "
+"(Operacija: %s, Tip dokumenta: %s)."
 
 #. module: base
 #: model:res.country,name:base.zr
 msgid "Zaire"
-msgstr ""
+msgstr "Zair"
 
 #. module: base
 #: field:ir.translation,res_id:0
 #: field:workflow.instance,res_id:0
 #: field:workflow.triggers,res_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "ID resursa"
 
 #. module: base
 #: view:ir.cron:0
 #: field:ir.model,info:0
 msgid "Information"
-msgstr ""
+msgstr "Informacija"
 
 #. module: base
 #: view:res.widget.user:0
 msgid "User Widgets"
-msgstr ""
+msgstr "Korisnički Widgeti"
 
 #. module: base
 #: view:base.module.update:0
 msgid "Update Module List"
-msgstr ""
+msgstr "Ažuriraj listu modula"
 
 #. module: base
 #: code:addons/base/res/res_users.py:755
@@ -13539,17 +14328,17 @@ msgstr ""
 #: view:res.users:0
 #, python-format
 msgid "Other"
-msgstr ""
+msgstr "Ostalo"
 
 #. module: base
 #: view:res.request:0
 msgid "Reply"
-msgstr ""
+msgstr "Odgovori"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Turkish / Türkçe"
-msgstr ""
+msgstr "Turski / Türkçe"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_long_term
@@ -13582,80 +14371,82 @@ msgstr ""
 #: view:workflow:0
 #: field:workflow,activities:0
 msgid "Activities"
-msgstr ""
+msgstr "Aktivnosti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
-msgstr ""
+msgstr "Proizvodi & Cenovnici"
 
 #. module: base
 #: field:ir.actions.act_window,auto_refresh:0
 msgid "Auto-Refresh"
-msgstr ""
+msgstr "Automatsko osvežavanje"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:74
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
 msgstr ""
+"osv_memory polje se može samo porediti sa = i != operatorom ( jednako i "
+"različito)"
 
 #. module: base
 #: selection:ir.ui.view,type:0
 msgid "Diagram"
-msgstr ""
+msgstr "Dijagram"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es
 msgid "Spanish - Accounting (PGCE 2008)"
-msgstr ""
+msgstr "Španija - Računovodstvo (PGCE 2008)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_no_autopicking
 msgid "Picking Before Manufacturing"
-msgstr ""
+msgstr "Izbor pre Proizvodnje"
 
 #. module: base
 #: model:res.country,name:base.wf
 msgid "Wallis and Futuna Islands"
-msgstr ""
+msgstr "Wallis a Futuna ostrva"
 
 #. module: base
 #: help:multi_company.default,name:0
 msgid "Name it to easily find a record"
-msgstr ""
+msgstr "Imenujte ga da bi ste lakše našli zapis"
 
 #. module: base
 #: model:res.country,name:base.gr
 msgid "Greece"
-msgstr ""
+msgstr "Grčka"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_calendar
 msgid "web calendar"
-msgstr ""
+msgstr "web-kalendar"
 
 #. module: base
 #: field:ir.model.data,name:0
 msgid "External Identifier"
-msgstr ""
+msgstr "Eksterni Identifikatir"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.grant_menu_access
 #: model:ir.ui.menu,name:base.menu_grant_menu_access
 msgid "Menu Items"
-msgstr ""
+msgstr "Stavke Menija"
 
 #. module: base
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "Pravila nisu podržana za osv_memory objekte !"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event
 #: model:ir.ui.menu,name:base.menu_event_main
 msgid "Events Organisation"
-msgstr ""
+msgstr "Organizacija Dogadjaja"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -13664,12 +14455,12 @@ msgstr ""
 #: model:ir.ui.menu,name:base.next_id_6
 #: view:workflow.activity:0
 msgid "Actions"
-msgstr ""
+msgstr "Akcije"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
 msgid "Delivery Costs"
-msgstr ""
+msgstr "Troškovi Dostave"
 
 #. module: base
 #: code:addons/base/ir/ir_cron.py:293
@@ -13678,6 +14469,8 @@ msgid ""
 "This cron task is currently being executed and may not be modified, please "
 "try again in a few minutes"
 msgstr ""
+"Ovaj zakazani posao je trenutno u toku, i ne može se modificirati, molim "
+"pokušajte za par minuta ponovo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -13698,23 +14491,23 @@ msgstr ""
 #. module: base
 #: field:ir.exports.line,export_id:0
 msgid "Export"
-msgstr ""
+msgstr "Izvoz"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl
 msgid "Netherlands - Accounting"
-msgstr ""
+msgstr "Holandija - Računovodstvo"
 
 #. module: base
 #: field:res.bank,bic:0
 #: field:res.partner.bank,bank_bic:0
 msgid "Bank Identifier Code"
-msgstr ""
+msgstr "Identifikacioni Kod Banke"
 
 #. module: base
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
-msgstr ""
+msgstr "Turkmenistan"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_process
@@ -13723,6 +14516,9 @@ msgid ""
 "        OpenERP Web process view.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP Web pregled procesa.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_chart
@@ -13765,22 +14561,22 @@ msgstr ""
 #: code:addons/orm.py:3704
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Greška"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_crypt
 msgid "DB Password Encryption"
-msgstr ""
+msgstr "Enkripcija lozinke databaze"
 
 #. module: base
 #: help:workflow.transition,act_to:0
 msgid "The destination activity."
-msgstr ""
+msgstr "Ciljna aktivnost"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_writing
 msgid "Check writing"
-msgstr ""
+msgstr "Provera pisanja"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_layout
@@ -13802,52 +14598,52 @@ msgstr ""
 #: view:base.module.upgrade:0
 #: view:base.update.translations:0
 msgid "Update"
-msgstr ""
+msgstr "Ažuriraj"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
-msgstr ""
+msgstr "Tehničko uputstvo"
 
 #. module: base
 #: view:res.company:0
 msgid "Address Information"
-msgstr ""
+msgstr "Informacija Adrese"
 
 #. module: base
 #: model:res.country,name:base.tz
 msgid "Tanzania"
-msgstr ""
+msgstr "Tanzanija"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Danish / Dansk"
-msgstr ""
+msgstr "Danski / Dansk"
 
 #. module: base
 #: selection:ir.model.fields,select_level:0
 msgid "Advanced Search (deprecated)"
-msgstr ""
+msgstr "Napredna pretraga"
 
 #. module: base
 #: model:res.country,name:base.cx
 msgid "Christmas Island"
-msgstr ""
+msgstr "Božićno ostrvo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_livechat
 msgid "Live Chat Support"
-msgstr ""
+msgstr "Podrška za Live Čat"
 
 #. module: base
 #: view:ir.actions.server:0
 msgid "Other Actions Configuration"
-msgstr ""
+msgstr "Konfiguracije Ostalih Akcija"
 
 #. module: base
 #: selection:ir.module.module.dependency,state:0
 msgid "Uninstallable"
-msgstr ""
+msgstr "Ne može se instalirati"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_dashboard
@@ -13860,17 +14656,17 @@ msgstr ""
 #. module: base
 #: view:res.partner:0
 msgid "Supplier Partners"
-msgstr ""
+msgstr "Dobavljačevi partneri"
 
 #. module: base
 #: view:res.config.installer:0
 msgid "Install Modules"
-msgstr ""
+msgstr "Instaliraj module"
 
 #. module: base
 #: view:ir.ui.view:0
 msgid "Extra Info"
-msgstr ""
+msgstr "Dodatne Informacije"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -13894,32 +14690,32 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_partner_wizard_ean_check
 msgid "Ean Check"
-msgstr ""
+msgstr "Provjera Ean"
 
 #. module: base
 #: view:res.partner:0
 msgid "Customer Partners"
-msgstr ""
+msgstr "Partneri Mušterija"
 
 #. module: base
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Ne možete imati dva korisnika sa istom prijavom!"
 
 #. module: base
 #: model:ir.model,name:base.model_res_request_history
 msgid "res.request.history"
-msgstr ""
+msgstr "res.request.history"
 
 #. module: base
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
-msgstr ""
+msgstr "Podrazumevana Multi Kompanija"
 
 #. module: base
 #: view:res.request:0
 msgid "Send"
-msgstr ""
+msgstr "Posalji"
 
 #. module: base
 #: model:ir.module.module,description:base.module_process
@@ -13939,32 +14735,32 @@ msgstr ""
 #. module: base
 #: field:res.users,menu_tips:0
 msgid "Menu Tips"
-msgstr ""
+msgstr "Saveti Menija"
 
 #. module: base
 #: field:ir.translation,src:0
 msgid "Source"
-msgstr ""
+msgstr "Izvor"
 
 #. module: base
 #: help:res.partner.address,partner_id:0
 msgid "Keep empty for a private address, not related to partner."
-msgstr ""
+msgstr "Zadržite prazno za privatne adrese, ne vezane za partnera."
 
 #. module: base
 #: model:res.country,name:base.vu
 msgid "Vanuatu"
-msgstr ""
+msgstr "Vanuatu"
 
 #. module: base
 #: view:res.company:0
 msgid "Internal Header/Footer"
-msgstr ""
+msgstr "Interno Zaglavlje/Podnožje"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm
 msgid "CRM"
-msgstr ""
+msgstr "CRM"
 
 #. module: base
 #: code:addons/base/module/wizard/base_export_language.py:59
@@ -13973,21 +14769,23 @@ msgid ""
 "Save this document to a .tgz file. This archive containt UTF-8 %s files and "
 "may be uploaded to launchpad."
 msgstr ""
+"Sačuvaj ovaj dokument kao .tgz datoteku. Ova arhiva sadrži UTF-8 %s datoteke "
+"i može biti poslata na launchpad."
 
 #. module: base
 #: view:base.module.upgrade:0
 msgid "Start configuration"
-msgstr ""
+msgstr "Pokreni konfiguraciju"
 
 #. module: base
 #: view:base.language.export:0
 msgid "_Export"
-msgstr ""
+msgstr "_Izvoz"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_followup
 msgid "Followup Management"
-msgstr ""
+msgstr "Upravljanje Praćenjem"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -13998,26 +14796,31 @@ msgid ""
 "\n"
 "Credits: Sistheo Zeekom CrysaLEAD\n"
 msgstr ""
+"\n"
+"Ovo je modul za upravljanje kontnim planom Francuske u OpenERP-u.\n"
+"==============================================================\n"
+"\n"
+"Credit: Sistheo Zeekom CrysaLEAD\n"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Catalan / Català"
-msgstr ""
+msgstr "Catalanski / Català"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Greek / Ελληνικά"
-msgstr ""
+msgstr "Grčka / Ελληνικά"
 
 #. module: base
 #: model:res.country,name:base.do
 msgid "Dominican Republic"
-msgstr ""
+msgstr "Dominikanska Republika"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Serbian (Cyrillic) / српски"
-msgstr ""
+msgstr "Serbian (Cyrillic) / српски"
 
 #. module: base
 #: code:addons/orm.py:2527
@@ -14026,31 +14829,37 @@ msgid ""
 "Invalid group_by specification: \"%s\".\n"
 "A group_by specification must be a list of valid fields."
 msgstr ""
+"Neispravna group_by specifikacija:  \"%s\".\n"
+"group_by mora biti lista validnih polja."
 
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
 msgid "TLS (STARTTLS)"
-msgstr ""
+msgstr "TLS (STARTTLS)"
 
 #. module: base
 #: help:ir.actions.act_window,usage:0
 msgid "Used to filter menu and home actions from the user form."
 msgstr ""
+"Korišćeno za filterisanje početnih akcija i akcija menija iz korisničkog "
+"obrasca."
 
 #. module: base
 #: model:res.country,name:base.sa
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "Saudijska Arabija"
 
 #. module: base
 #: help:res.company,rml_header1:0
 msgid "Appears by default on the top right corner of your printed documents."
 msgstr ""
+"Pojavljuje se kao podrazumevano u gornjem desnom uglu vašeg odštampanog "
+"dokumenta."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail_crm_claim
 msgid "eMail Gateway for CRM Claim"
-msgstr ""
+msgstr "eMail Gateway za CRM Pritužbe"
 
 #. module: base
 #: help:res.partner,supplier:0
@@ -14058,44 +14867,46 @@ msgid ""
 "Check this box if the partner is a supplier. If it's not checked, purchase "
 "people will not see it when encoding a purchase order."
 msgstr ""
+"Čekirajte ovde ako je partner dobavljač. Ako nije čekirana, ljudi iz nabavke "
+"ga neće videti prilikom unosa naloga za nabavku."
 
 #. module: base
 #: field:ir.actions.server,trigger_obj_id:0
 #: field:ir.model.fields,relation_field:0
 msgid "Relation Field"
-msgstr ""
+msgstr "Relaciono polja"
 
 #. module: base
 #: view:res.partner.event:0
 msgid "Event Logs"
-msgstr ""
+msgstr "Logovi Događaja"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_configuration.py:38
 #, python-format
 msgid "System Configuration done"
-msgstr ""
+msgstr "Završena je konfiguracija sistema"
 
 #. module: base
 #: view:ir.actions.server:0
 msgid "Create / Write / Copy"
-msgstr ""
+msgstr "Kreacija / Upis / Kopiranje"
 
 #. module: base
 #: field:workflow.triggers,instance_id:0
 msgid "Destination Instance"
-msgstr ""
+msgstr "Ciljna instanca"
 
 #. module: base
 #: field:ir.actions.act_window,multi:0
 #: field:ir.actions.wizard,multi:0
 msgid "Action on Multiple Doc."
-msgstr ""
+msgstr "Akcija na više dokumenata"
 
 #. module: base
 #: view:base.language.export:0
 msgid "https://translations.launchpad.net/openobject"
-msgstr ""
+msgstr "https://translations.launchpad.net/openobject"
 
 #. module: base
 #: view:base.language.export:0
@@ -14105,7 +14916,7 @@ msgstr ""
 #. module: base
 #: field:ir.actions.report.xml,report_xml:0
 msgid "XML path"
-msgstr ""
+msgstr "XML putanja"
 
 #. module: base
 #: help:ir.sequence,implementation:0
@@ -14114,27 +14925,30 @@ msgid ""
 "later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
+"Dve sekvence objekata koje su implementirane nude: Standardno i No gap'.. "
+"Ovo drugo je sporije ali zato preskače svaku prazninu ( gap) u sekvenci "
+"(koje su opet moguće u prvoj ponudi)"
 
 #. module: base
 #: model:res.country,name:base.gn
 msgid "Guinea"
-msgstr ""
+msgstr "Gvineja"
 
 #. module: base
 #: model:res.country,name:base.lu
 msgid "Luxembourg"
-msgstr ""
+msgstr "Luksemburg"
 
 #. module: base
 #: selection:res.request,priority:0
 msgid "Low"
-msgstr ""
+msgstr "Nizak"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_menu.py:284
 #, python-format
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Greška ! Ne možete kreirati rekurzivni meni."
 
 #. module: base
 #: view:ir.rule:0
@@ -14142,21 +14956,23 @@ msgid ""
 "3. If user belongs to several groups, the results from step 2 are combined "
 "with logical OR operator"
 msgstr ""
+"3. Ako korisnik ima više grupa, rezultati iz 2. koraka se kombinuju logičkim "
+"ili (OR) operatorom"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_openid
 msgid "Allow users to login through OpenID."
-msgstr ""
+msgstr "Omogućuje korisnicima da se prijave kroz OpenID."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment
 msgid "Suppliers Payment Management"
-msgstr ""
+msgstr "Upravljanje Plaćanjima Dobavljačima"
 
 #. module: base
 #: model:res.country,name:base.sv
 msgid "El Salvador"
-msgstr ""
+msgstr "El Salvador"
 
 #. module: base
 #: field:res.bank,phone:0
@@ -14164,17 +14980,17 @@ msgstr ""
 #: field:res.partner,phone:0
 #: field:res.partner.address,phone:0
 msgid "Phone"
-msgstr ""
+msgstr "Telefon:"
 
 #. module: base
 #: field:res.groups,menu_access:0
 msgid "Access Menu"
-msgstr ""
+msgstr "Meni Pristupa"
 
 #. module: base
 #: model:res.country,name:base.th
 msgid "Thailand"
-msgstr ""
+msgstr "Tajland"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_report_creator
@@ -14193,14 +15009,14 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_designer
 msgid "Report Designer"
-msgstr ""
+msgstr "Dizajner Izvještaja"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_address_book
 #: model:ir.ui.menu,name:base.menu_config_address_book
 #: model:ir.ui.menu,name:base.menu_procurement_management_supplier
 msgid "Address Book"
-msgstr ""
+msgstr "Adresar"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -14227,87 +15043,87 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
 msgid "Leads & Opportunities"
-msgstr ""
+msgstr "Tragovi & Prilike"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Romanian / română"
-msgstr ""
+msgstr "Romanian / română"
 
 #. module: base
 #: view:res.log:0
 msgid "System Logs"
-msgstr ""
+msgstr "Sistemski Izveštaji"
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
 #: selection:workflow.activity,split_mode:0
 msgid "And"
-msgstr ""
+msgstr "I"
 
 #. module: base
 #: help:ir.values,res_id:0
 msgid ""
 "Database identifier of the record to which this applies. 0 = for all records"
-msgstr ""
+msgstr "Identifikator databaze nad kojoj se ovo primenjuje. 0= za sve zapise"
 
 #. module: base
 #: field:ir.model.fields,relation:0
 msgid "Object Relation"
-msgstr ""
+msgstr "Relacija objekta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_voucher
 msgid "eInvoicing & Payments"
-msgstr ""
+msgstr "eFakturisanje & Plaćanja"
 
 #. module: base
 #: view:ir.rule:0
 #: view:res.partner:0
 msgid "General"
-msgstr ""
+msgstr "Opšte"
 
 #. module: base
 #: model:res.country,name:base.uz
 msgid "Uzbekistan"
-msgstr ""
+msgstr "Uzbekistan"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: base
 #: field:ir.rule,perm_create:0
 msgid "Apply For Create"
-msgstr ""
+msgstr "Primeni za upis"
 
 #. module: base
 #: model:res.country,name:base.vi
 msgid "Virgin Islands (USA)"
-msgstr ""
+msgstr "Virgin Islands (USA)"
 
 #. module: base
 #: model:res.country,name:base.tw
 msgid "Taiwan"
-msgstr ""
+msgstr "Tajvan"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency_rate
 msgid "Currency Rate"
-msgstr ""
+msgstr "Valutna stopa"
 
 #. module: base
 #: field:workflow,osv:0
 #: field:workflow.instance,res_type:0
 msgid "Resource Object"
-msgstr ""
+msgstr "Objekt resursa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_helpdesk
 msgid "Helpdesk"
-msgstr ""
+msgstr "HelpDesk"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.grant_menu_access
@@ -14322,12 +15138,12 @@ msgstr ""
 #. module: base
 #: field:ir.ui.view,field_parent:0
 msgid "Child Field"
-msgstr ""
+msgstr "Podređeno polje"
 
 #. module: base
 #: view:ir.rule:0
 msgid "Detailed algorithm:"
-msgstr ""
+msgstr "Detaljni Algoritam:"
 
 #. module: base
 #: field:ir.actions.act_window,usage:0
@@ -14338,17 +15154,17 @@ msgstr ""
 #: field:ir.actions.server,usage:0
 #: field:ir.actions.wizard,usage:0
 msgid "Action Usage"
-msgstr ""
+msgstr "Korištenje akcije"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_workitem
 msgid "workflow.workitem"
-msgstr ""
+msgstr "workflow.workitem"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_profile_tools
 msgid "Miscellaneous Tools"
-msgstr ""
+msgstr "Razni alati"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_tools
@@ -14360,7 +15176,7 @@ msgstr ""
 #. module: base
 #: selection:ir.module.module,state:0
 msgid "Not Installable"
-msgstr ""
+msgstr "Ne može se instalirati"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product
@@ -14390,49 +15206,49 @@ msgstr ""
 #. module: base
 #: report:ir.module.reference.graph:0
 msgid "View :"
-msgstr ""
+msgstr "Pregled"
 
 #. module: base
 #: field:ir.model.fields,view_load:0
 msgid "View Auto-Load"
-msgstr ""
+msgstr "Pregled Auto-Učitavanja"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:264
 #, python-format
 msgid "You cannot remove the field '%s' !"
-msgstr ""
+msgstr "Ne možete ukloniti polje  '%s' !"
 
 #. module: base
 #: view:res.users:0
 msgid "Allowed Companies"
-msgstr ""
+msgstr "Dozvoljene kompanije i preduzeća"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de
 msgid "Deutschland - Accounting"
-msgstr ""
+msgstr "Nemačka - Računovdstvo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auction
 msgid "Auction Houses"
-msgstr ""
+msgstr "Aukcione Kuće"
 
 #. module: base
 #: field:ir.ui.menu,web_icon:0
 msgid "Web Icon File"
-msgstr ""
+msgstr "Datoteka Web Ikona"
 
 #. module: base
 #: view:base.module.upgrade:0
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
 msgid "Apply Scheduled Upgrades"
-msgstr ""
+msgstr "Primeni planirano ažuriranje"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_journal
 msgid "Invoicing Journals"
-msgstr ""
+msgstr "Dnevnik Fakturisanja"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14442,13 +15258,13 @@ msgstr ""
 #. module: base
 #: view:ir.actions.act_window:0
 msgid "View Ordering"
-msgstr ""
+msgstr "Pregled Narudžbi"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_upgrade.py:95
 #, python-format
 msgid "Unmet dependency !"
-msgstr ""
+msgstr "Neispunjene zavisnosti !"
 
 #. module: base
 #: view:base.language.import:0
@@ -14456,6 +15272,8 @@ msgid ""
 "Supported file formats: *.csv (Comma-separated values) or *.po (GetText "
 "Portable Objects)"
 msgstr ""
+"Podržani formati datoteka: .csv (vrednosti razdvojene zarezom) ili *.po "
+"(GetText Portable Objekti)"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:534
@@ -14464,6 +15282,8 @@ msgid ""
 "You can not delete this document (%s) ! Be sure your user belongs to one of "
 "these groups: %s."
 msgstr ""
+"Ne možete brisati dokument (%s) !  Nudite sigurni da vaš korisnik pripada "
+"jednoj od sledećih grupa: %s."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_livechat
@@ -14475,11 +15295,18 @@ msgid ""
 "Add \"Support\" button in header from where you can access OpenERP Support.\n"
 "    "
 msgstr ""
+"\n"
+"Omogući Live Čat Podršku za one koji imaju ugovor o održavanju.\n"
+"=============================================================\n"
+"\n"
+"Dodaj \"Podrška\" dugme u zaglavlje oadkle možeš pristupiti OpenErp "
+"Podršci.\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_configuration
 msgid "base.module.configuration"
-msgstr ""
+msgstr "base.module.configuration"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web
@@ -14489,49 +15316,53 @@ msgid ""
 "        This module provides the core of the OpenERP web client.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP osnovni modul.\n"
+"        Ovaj modul sadrži osnovu za OpenERP web cliente.\n"
+"        "
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
-msgstr ""
+msgstr "Naziv države mora biti jedinstven!"
 
 #. module: base
 #: field:base.language.export,name:0
 #: field:ir.attachment,datas_fname:0
 msgid "Filename"
-msgstr ""
+msgstr "Ime datoteke"
 
 #. module: base
 #: field:ir.model,access_ids:0
 #: view:ir.model.access:0
 msgid "Access"
-msgstr ""
+msgstr "Pristup"
 
 #. module: base
 #: model:res.country,name:base.sk
 msgid "Slovak Republic"
-msgstr ""
+msgstr "Slovačka Republika"
 
 #. module: base
 #: model:ir.ui.menu,name:base.publisher_warranty
 msgid "Publisher Warranty"
-msgstr ""
+msgstr "Garancija Proizvođača"
 
 #. module: base
 #: model:res.country,name:base.aw
 msgid "Aruba"
-msgstr ""
+msgstr "Aruba"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_import.py:60
 #, python-format
 msgid "File is not a zip file!"
-msgstr ""
+msgstr "Datoteka nije zip datoteka!"
 
 #. module: base
 #: model:res.country,name:base.ar
 msgid "Argentina"
-msgstr ""
+msgstr "Argentina"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_issue
@@ -14546,28 +15377,37 @@ msgid ""
 "and decide on their status as they evolve.\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul omogućava upravljanje sa Problemima / Bug-ovima u Projektu.\n"
+"===================================================================\n"
+"OpenERP vam omogućava da upravljate sa problemima sa kojima se možete "
+"suočiti u projektu\n"
+"slično bug sistemu, klijentovim žalbama, ili padom /prekidom rada.\n"
+"Pregledna lista omogućava menadžerima da brzo provere probleme, vide ih\n"
+"i odluče o njihovom statusu tokom njihove evaluacije.\n"
+"    "
 
 #. module: base
 #: field:res.groups,full_name:0
 msgid "Group Name"
-msgstr ""
+msgstr "Ime Grupe"
 
 #. module: base
 #: model:res.country,name:base.bh
 msgid "Bahrain"
-msgstr ""
+msgstr "Bahrein"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
 msgid "web"
-msgstr ""
+msgstr "web"
 
 #. module: base
 #: field:res.bank,fax:0
 #: field:res.company,fax:0
 #: field:res.partner.address,fax:0
 msgid "Fax"
-msgstr ""
+msgstr "Faks"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl
@@ -14608,11 +15448,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Ovaj modul upravlja sa Holandskim Platnim kontom u OpenERP-u.\n"
+"=======================================================================\n"
+"\n"
+"    "
 
 #. module: base
 #: view:res.partner.address:0
 msgid "Search Contact"
-msgstr ""
+msgstr "Pretrazi Kontakt"
 
 #. module: base
 #: view:ir.attachment:0
@@ -14629,81 +15474,83 @@ msgstr ""
 #: view:res.users:0
 #: field:res.users,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Preduzeće"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_report_designer
 msgid "Advanced Reporting"
-msgstr ""
+msgstr "Napredno Izveštavanje"
 
 #. module: base
 #: selection:ir.actions.act_window,target:0
 #: selection:ir.actions.url,target:0
 msgid "New Window"
-msgstr ""
+msgstr "Novi Prozor"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_data
 msgid "ir.model.data"
-msgstr ""
+msgstr "ir.model.data"
 
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Publisher Warranty Contract"
-msgstr ""
+msgstr "Izdavačev Ugovor o Održavanju"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Bulgarian / български език"
-msgstr ""
+msgstr "Bugarski / български език"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_aftersale
 msgid "After-Sale Services"
-msgstr ""
+msgstr "PostProdajni Servisi i Usluge"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr
 msgid "France - Accounting"
-msgstr ""
+msgstr "Francuska - Računovodstvo"
 
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Launch"
-msgstr ""
+msgstr "Pokreni"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_caldav
 msgid "Share Calendar using CalDAV"
-msgstr ""
+msgstr "Deli kalendar koriscenjem CalDAV-a"
 
 #. module: base
 #: field:ir.actions.act_window,limit:0
 msgid "Limit"
-msgstr ""
+msgstr "Ograničenje"
 
 #. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
 msgstr ""
+"Grupa kojoj korisnik mora pripadati kako bi mogao odobriti ovu tranziciju."
 
 #. module: base
 #: code:addons/orm.py:791
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
 msgstr ""
+"Serijalizacija polja `%s` nije pronađena da bi se smanjilo polje `%s`!"
 
 #. module: base
 #: model:res.country,name:base.jm
 msgid "Jamaica"
-msgstr ""
+msgstr "Jamajka"
 
 #. module: base
 #: field:res.partner,color:0
 #: field:res.partner.address,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Indeks boja"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_category_form
@@ -14724,33 +15571,33 @@ msgstr ""
 #: code:addons/base/res/res_partner.py:273
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Upozorenje"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_edi
 msgid "Electronic Data Interchange (EDI)"
-msgstr ""
+msgstr "Elektronsko Smenjivanje Podataka(EDI)"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_tools
 msgid "Extra Tools"
-msgstr ""
+msgstr "Dodatni Alati"
 
 #. module: base
 #: model:res.country,name:base.vg
 msgid "Virgin Islands (British)"
-msgstr ""
+msgstr "Devičanska ostrva"
 
 #. module: base
 #: view:ir.property:0
 #: model:ir.ui.menu,name:base.next_id_15
 msgid "Parameters"
-msgstr ""
+msgstr "Parametri"
 
 #. module: base
 #: model:res.country,name:base.pm
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "Sveti Pjer i Mikelon"
 
 #. module: base
 #: model:ir.module.module,description:base.module_email_template
@@ -14802,12 +15649,12 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Czech / Čeština"
-msgstr ""
+msgstr "Češki / Čeština"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules
 msgid "Generic Modules"
-msgstr ""
+msgstr "Generički Moduli"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -14821,7 +15668,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.rw
 msgid "Rwanda"
-msgstr ""
+msgstr "Ruanda"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -14846,37 +15693,37 @@ msgstr ""
 #. module: base
 #: help:ir.mail_server,smtp_port:0
 msgid "SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."
-msgstr ""
+msgstr "SMTP Port. Obično 465 za SSL, i 25 or 587 u drugim slučajevima."
 
 #. module: base
 #: view:ir.sequence:0
 msgid "Day of the week (0:Monday): %(weekday)s"
-msgstr ""
+msgstr "Dan u nedelji (0:Ponedjeljak): %(weekday)s"
 
 #. module: base
 #: model:res.country,name:base.ck
 msgid "Cook Islands"
-msgstr ""
+msgstr "Kukova ostrva"
 
 #. module: base
 #: field:ir.model.data,noupdate:0
 msgid "Non Updatable"
-msgstr ""
+msgstr "Nije Dogradivo"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Klingon"
-msgstr ""
+msgstr "Klingon"
 
 #. module: base
 #: model:res.country,name:base.sg
 msgid "Singapore"
-msgstr ""
+msgstr "Singapur"
 
 #. module: base
 #: selection:ir.actions.act_window,target:0
 msgid "Current Window"
-msgstr ""
+msgstr "Trenutni Prozor"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm
@@ -14921,11 +15768,13 @@ msgid ""
 "Helps you handle your accounting needs, if you are not an accountant, we "
 "suggest you to install only the Invoicing."
 msgstr ""
+"Pomaže vam u računovodstvenom radu. Ukoliko niste računovođa predlažemo bam "
+"da instalirate samo Fakturisanje."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_plugin_thunderbird
 msgid "Thunderbird Plug-In"
-msgstr ""
+msgstr "Thunderbird Plug-In"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country
@@ -14938,17 +15787,17 @@ msgstr ""
 #: field:res.partner.address,country_id:0
 #: field:res.partner.bank,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "Država"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_messages
 msgid "In-Project Messaging System"
-msgstr ""
+msgstr "Projektni sistem dopisivanja"
 
 #. module: base
 #: model:res.country,name:base.pn
 msgid "Pitcairn Island"
-msgstr ""
+msgstr "Pitcairn ostrva"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_tests
@@ -14957,11 +15806,14 @@ msgid ""
 "        OpenERP Web test suite.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP Web test sučelje.\n"
+"        "
 
 #. module: base
 #: view:ir.values:0
 msgid "Action Bindings/Defaults"
-msgstr ""
+msgstr "Akcije Povezivanje / Podrazumevano"
 
 #. module: base
 #: view:ir.rule:0
@@ -14969,17 +15821,19 @@ msgid ""
 "1. Global rules are combined together with a logical AND operator, and with "
 "the result of the following steps"
 msgstr ""
+"1. Globalna pravila se kombinuju logičkim i (AND) operatorom , i sa "
+"rezultatom sledećih koraka"
 
 #. module: base
 #: view:res.partner:0
 #: view:res.partner.address:0
 msgid "Change Color"
-msgstr ""
+msgstr "Promeni Boju"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_15
 msgid "IT sector"
-msgstr ""
+msgstr "IT sektor"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -15066,18 +15920,18 @@ msgstr ""
 #: selection:ir.ui.view,type:0
 #: selection:wizard.ir.model.menu.create.line,view_type:0
 msgid "Graph"
-msgstr ""
+msgstr "Grafikon"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.server"
-msgstr ""
+msgstr "ir.actions.server"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca
 msgid "Canada - Accounting"
-msgstr ""
+msgstr "Kanada - Računovodstvo"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_ir_actions_todo_form
@@ -15086,84 +15940,84 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_ir_actions_todo_form
 #: model:ir.ui.menu,name:base.next_id_11
 msgid "Configuration Wizards"
-msgstr ""
+msgstr "Konfiguracioni Čarobnjaci"
 
 #. module: base
 #: field:res.lang,code:0
 msgid "Locale Code"
-msgstr ""
+msgstr "Kod Lokalizacije"
 
 #. module: base
 #: field:workflow.activity,split_mode:0
 msgid "Split Mode"
-msgstr ""
+msgstr "Mod Deljenja"
 
 #. module: base
 #: view:base.module.upgrade:0
 msgid "Note that this operation might take a few minutes."
-msgstr ""
+msgstr "Ova operacija može potrajati nekoliko minuta."
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_localisation
 msgid "Localisation"
-msgstr ""
+msgstr "Lokalizacija"
 
 #. module: base
 #: field:ir.sequence,implementation:0
 msgid "Implementation"
-msgstr ""
+msgstr "Implementacija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ve
 msgid "Venezuela - Accounting"
-msgstr ""
+msgstr "Venecuela - Računovodstvo"
 
 #. module: base
 #: model:res.country,name:base.cl
 msgid "Chile"
-msgstr ""
+msgstr "Čile"
 
 #. module: base
 #: view:ir.cron:0
 msgid "Execution"
-msgstr ""
+msgstr "Izvršavanje"
 
 #. module: base
 #: field:ir.actions.server,condition:0
 #: view:ir.values:0
 #: field:workflow.transition,condition:0
 msgid "Condition"
-msgstr ""
+msgstr "Uslov"
 
 #. module: base
 #: help:res.currency,rate:0
 msgid "The rate of the currency to the currency of rate 1."
-msgstr ""
+msgstr "Stopa valute za valutu stope 1."
 
 #. module: base
 #: field:ir.ui.view,name:0
 msgid "View Name"
-msgstr ""
+msgstr "Naziv Pregleda"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document_ftp
 msgid "Shared Repositories (FTP)"
-msgstr ""
+msgstr "Deljena Skladista (FTP)"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Pristup Grupama"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
-msgstr ""
+msgstr "Italijanski / Italiano"
 
 #. module: base
 #: field:ir.actions.report.xml,attachment:0
 msgid "Save As Attachment Prefix"
-msgstr ""
+msgstr "Sačuvaj kao prefiks dodatka(Attachment Prefix)"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -15171,16 +16025,18 @@ msgid ""
 "Only one client action will be executed, last client action will be "
 "considered in case of multiple client actions."
 msgstr ""
+"Samo jedna klijentska akcija će se izvršiti. U slučaju više klijentskih "
+"akcija izvršiće će se posljednja."
 
 #. module: base
 #: model:res.country,name:base.hr
 msgid "Croatia"
-msgstr ""
+msgstr "Hrvatska"
 
 #. module: base
 #: field:ir.actions.server,mobile:0
 msgid "Mobile No"
-msgstr ""
+msgstr "Br Mobilnog"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_by_category
@@ -15189,27 +16045,27 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_partner_category_form
 #: view:res.partner.category:0
 msgid "Partner Categories"
-msgstr ""
+msgstr "Kategorije partnera"
 
 #. module: base
 #: view:base.module.upgrade:0
 msgid "System Update"
-msgstr ""
+msgstr "Ažuriranje Sistema"
 
 #. module: base
 #: selection:ir.translation,type:0
 msgid "Wizard Field"
-msgstr ""
+msgstr "Polje Čarobnjaka"
 
 #. module: base
 #: help:ir.sequence,prefix:0
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "Prefix vrednosti zapisa sekvence"
 
 #. module: base
 #: model:res.country,name:base.sc
 msgid "Seychelles"
-msgstr ""
+msgstr "Sejšeli"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
@@ -15219,7 +16075,7 @@ msgstr ""
 #: field:res.company,bank_ids:0
 #: view:res.partner.bank:0
 msgid "Bank Accounts"
-msgstr ""
+msgstr "Bankovni Računi"
 
 #. module: base
 #: field:ir.model,modules:0
@@ -15230,39 +16086,39 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sl
 msgid "Sierra Leone"
-msgstr ""
+msgstr "Siera Leone"
 
 #. module: base
 #: view:res.company:0
 #: view:res.partner:0
 msgid "General Information"
-msgstr ""
+msgstr "Opšte informacije"
 
 #. module: base
 #: model:res.country,name:base.tc
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "Turks i Kaikos Ostrva"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail_project_issue
 msgid "eMail Gateway for Project Issues"
-msgstr ""
+msgstr "eMail Gateway za Probleme Projekta"
 
 #. module: base
 #: field:res.partner.bank,partner_id:0
 msgid "Account Owner"
-msgstr ""
+msgstr "Vlasnik računa"
 
 #. module: base
 #: code:addons/base/res/res_users.py:270
 #, python-format
 msgid "Company Switch Warning"
-msgstr ""
+msgstr "Upozorenje Prelaz na drugo preduzeće"
 
 #. module: base
 #: model:res.country,name:base.ge
 msgid "Georgia"
-msgstr ""
+msgstr "Džordžija"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_manufacturing
@@ -15270,28 +16126,30 @@ msgid ""
 "Helps you manage your manufacturing processes and generate reports on those "
 "processes."
 msgstr ""
+"Pomaže vam pri upravljanju proizvodnim procesima i generiše izveštaje vezane "
+"za iste."
 
 #. module: base
 #: help:ir.sequence,number_increment:0
 msgid "The next number of the sequence will be incremented by this number"
-msgstr ""
+msgstr "Sledeći broj ovog niza biće povećan ovim brojem"
 
 #. module: base
 #: code:addons/orm.py:341
 #, python-format
 msgid "Wrong ID for the browse record, got %r, expected an integer."
-msgstr ""
+msgstr "Pogrešna šifra za pregled zapisa, dobiven %r, očekivan cijeli broj."
 
 #. module: base
 #: field:res.partner.address,function:0
 #: selection:workflow.activity,kind:0
 msgid "Function"
-msgstr ""
+msgstr "Funkcija"
 
 #. module: base
 #: view:res.widget:0
 msgid "Search Widget"
-msgstr ""
+msgstr "Pretraga Widgeta"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_customer_relationship_management
@@ -15299,84 +16157,86 @@ msgid ""
 "Manage relations with prospects and customers using leads, opportunities, "
 "requests or issues."
 msgstr ""
+"Upravlja relacijama sa prospektima i mušterijama koristeći tragove, ponude, "
+"zahteve ili probleme."
 
 #. module: base
 #: selection:res.partner.address,type:0
 msgid "Delivery"
-msgstr ""
+msgstr "Isporuka"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
-msgstr ""
+msgstr "Corp."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
 msgid "Purchase Requisitions"
-msgstr ""
+msgstr "Zahtevi Nabavke"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
 msgid "Months"
-msgstr ""
+msgstr "Meseci"
 
 #. module: base
 #: view:workflow.instance:0
 msgid "Workflow Instances"
-msgstr ""
+msgstr "Instance Radnog Toka"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:284
 #, python-format
 msgid "Partners: "
-msgstr ""
+msgstr "Partneri: "
 
 #. module: base
 #: field:res.partner.bank,name:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Bankovni račun"
 
 #. module: base
 #: model:res.country,name:base.kp
 msgid "North Korea"
-msgstr ""
+msgstr "Severna Koreja"
 
 #. module: base
 #: selection:ir.actions.server,state:0
 msgid "Create Object"
-msgstr ""
+msgstr "Kreiraj objekt"
 
 #. module: base
 #: view:ir.filters:0
 #: field:res.log,context:0
 msgid "Context"
-msgstr ""
+msgstr "Kontekst"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
 msgid "Sales and MRP Management"
-msgstr ""
+msgstr "Prodaja i MRP uređivanje"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_sms_send
 msgid "Send an SMS"
-msgstr ""
+msgstr "Pošalji SMS"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
 msgid "Prospect"
-msgstr ""
+msgstr "Prospekt"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_invoice_directly
 msgid "Invoice Picking Directly"
-msgstr ""
+msgstr "Direktan izbor fakture"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Polish / Język polski"
-msgstr ""
+msgstr "Poljski / Język polski"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_tools
@@ -15393,7 +16253,7 @@ msgstr ""
 #. module: base
 #: field:ir.exports,name:0
 msgid "Export Name"
-msgstr ""
+msgstr "Naziv izvoza"
 
 #. module: base
 #: help:res.partner.address,type:0
@@ -15401,6 +16261,8 @@ msgid ""
 "Used to select automatically the right address according to the context in "
 "sales and purchases documents."
 msgstr ""
+"Koristi se za automatski izbor prave adrese u skladu sa kontekstom u "
+"dokumentima prodaje i nabavke."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_widget_act_window
