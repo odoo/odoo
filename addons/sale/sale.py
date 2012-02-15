@@ -393,19 +393,32 @@ class sale_order(osv.osv):
     def button_dummy(self, cr, uid, ids, context=None):
         return True
 
+    # FIXME: deprecated method, overriders should be using _prepare_invoice() instead.
+    #        can be removed after 6.1.
+    def _inv_get(self, cr, uid, order, context=None):
+        return {}
+
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
-        """ Builds the dict containing the values for the invoice
-            @param order: order object
-            @param line: list of invoice line IDs that must be attached to the invoice
-            @return: dict that will be used to create the invoice object
+        """Prepare the dict of values to create the new invoice for a
+           sale order. This method may be overridden to implement custom
+           invoice generation (making sure to call super() to establish
+           a clean extension chain).
+
+           :param browse_record order: sale.order record to invoice
+           :param list(int) line: list of invoice line IDs that must be
+                                  attached to the invoice
+           :return: dict of value to create() the invoice
         """
+        if context is None:
+            context = {}
         journal_ids = self.pool.get('account.journal').search(cr, uid,
             [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)],
             limit=1)
         if not journal_ids:
             raise osv.except_osv(_('Error !'),
                 _('There is no sales journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
-        return {
+
+        invoice_vals = {
             'name': order.client_order_ref or '',
             'origin': order.name,
             'type': 'out_invoice',
@@ -424,6 +437,11 @@ class sale_order(osv.osv):
             'company_id': order.company_id.id,
             'user_id': order.user_id and order.user_id.id or False
         }
+
+        # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
+        invoice_vals.update(self._inv_get(cr, uid, order, context=context))
+
+        return invoice_vals
 
     def _make_invoice(self, cr, uid, order, lines, context=None):
         inv_obj = self.pool.get('account.invoice')
@@ -980,10 +998,15 @@ class sale_order_line(osv.osv):
     }
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
-        """ Builds the invoice line dict from a sale order line
-            @param line: sale order line object
-            @param account_id: the id of the account to force eventually (the method is used for picking return including service)
-            @return: dict that will be used to create the invoice line
+        """Prepare the dict of values to create the new invoice line for a
+           sale order line. This method may be overridden to implement custom
+           invoice generation (making sure to call super() to establish
+           a clean extension chain).
+
+           :param browse_record line: sale.order.line record to invoice
+           :param int account_id: optional ID of a G/L account to force
+               (this is used for returning products including service)
+           :return: dict of values to create() the invoice line
         """
 
         def _get_line_qty(line):
