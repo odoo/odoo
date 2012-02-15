@@ -204,4 +204,29 @@ $(document).ready(function () {
         equal(openerp.web.format_value(6000, {type: 'float'}),
               '6.000,00');
     });
+    module('custom-date-formats', {
+        setup: function () {
+            openerp = window.openerp.init();
+            window.openerp.web.core(openerp);
+            window.openerp.web.dates(openerp);
+            window.openerp.web.formats(openerp);
+        }
+    });
+    test('format stripper', function () {
+        strictEqual(openerp.web.strip_raw_chars('%a, %Y %b %d'), '%a, %Y %b %d');
+        strictEqual(openerp.web.strip_raw_chars('%a, %Y.eko %bren %da'), '%a, %Y. %b %d');
+    });
+    test('ES date format', function () {
+        openerp.web._t.database.parameters.date_format = '%a, %Y %b %d';
+        var date = openerp.web.str_to_date("2009-05-04");
+        strictEqual(openerp.web.format_value(date, {type:"date"}), 'Mon, 2009 May 04');
+        strictEqual(openerp.web.parse_value('Mon, 2009 May 04', {type: 'date'}), '2009-05-04');
+    });
+    test('extended ES date format', function () {
+            openerp.web._t.database.parameters.date_format = '%a, %Y.eko %bren %da';
+            var date = openerp.web.str_to_date("2009-05-04");
+            strictEqual(openerp.web.format_value(date, {type:"date"}), 'Mon, 2009. May 04');
+            strictEqual(openerp.web.parse_value('Mon, 2009. May 04', {type: 'date'}), '2009-05-04');
+        });
+
 });

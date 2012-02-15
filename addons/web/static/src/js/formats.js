@@ -61,6 +61,28 @@ openerp.web.insert_thousand_seps = function (num) {
     return (negative ? '-' : '') + openerp.web.intersperse(
         num, _t.database.parameters.grouping, _t.database.parameters.thousands_sep);
 };
+
+/**
+ * removes literal (non-format) text from a date or time pattern, as datejs can
+ * not deal with literal text in format strings (whatever the format), whereas
+ * strftime allows for literal characters
+ *
+ * @param {String} value original format
+ */
+openerp.web.strip_raw_chars = function (value) {
+    var isletter = /[a-zA-Z]/, output = [];
+    for(var index=0; index < value.length; ++index) {
+        var character = value[index];
+        if(isletter.test(character) && (index === 0 || value[index-1] !== '%')) {
+            continue;
+        }
+        output.push(character);
+    }
+    return output.join('');
+};
+var normalize_format = function (format) {
+    return Date.normalizeFormat(openerp.web.strip_raw_chars(format));
+};
 /**
  * Formats a single atomic value based on a field descriptor
  *
@@ -116,16 +138,16 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
 
-            return value.format(l10n.date_format
-                        + ' ' + l10n.time_format);
+            return value.toString(normalize_format(l10n.date_format)
+                        + ' ' + normalize_format(l10n.time_format));
         case 'date':
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
-            return value.format(l10n.date_format);
+            return value.toString(normalize_format(l10n.date_format));
         case 'time':
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
-            return value.format(l10n.time_format);
+            return value.toString(normalize_format(l10n.time_format));
         case 'selection':
             // Each choice is [value, label]
             if(_.isArray(value)) {
@@ -142,8 +164,8 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
 };
 
 openerp.web.parse_value = function (value, descriptor, value_if_empty) {
-    var date_pattern = Date.normalizeFormat(_t.database.parameters.date_format),
-        time_pattern = Date.normalizeFormat(_t.database.parameters.time_format);
+    var date_pattern = normalize_format(_t.database.parameters.date_format),
+        time_pattern = normalize_format(_t.database.parameters.time_format);
     switch (value) {
         case false:
         case "":
