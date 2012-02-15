@@ -253,7 +253,7 @@
       <para style="Standard"><font color="white">[[lines(o.period_id.id, o.journal_id.id) or removeParentNode('story') ]]</font></para>
       <tr>
         <td><para style="terp_default_8">[[ repeatIn(lines(o.period_id.id, o.journal_id.id), 'line') ]]</para><para style="terp_default_8">[[ formatLang(line.date,date=True) ]]</para></td>
-        <td><para style="terp_default_8">[[ strip_name(line.ref,20) ]]</para></td>
+        <td><para style="terp_default_8">[[ strip_name(line.ref,12) ]]</para></td>
         <td><para style="terp_default_8">[[ line.move_id.name &lt;&gt; '/' and line.move_id.name or ('*'+str(line.move_id.id)) ]]</para></td> 
         <td><para style="terp_default_8">[[ line.account_id.code ]]</para></td>
         <td><para style="terp_default_8">[[ line.partner_id and strip_name(line.partner_id.name,17) ]]</para></td>
