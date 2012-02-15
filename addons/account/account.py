@@ -933,12 +933,11 @@ class account_fiscalyear(osv.osv):
                 if de.strftime('%Y-%m-%d') > fy.date_stop:
                     de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
 
-                context_today = fields.date.context_today(self,cr,uid,context=context)
                 period_obj.create(cr, uid, {
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
-                    'date_start': context_today,
-                    'date_stop': context_today,
+                    'date_start': ds.strftime('%Y-%m-%d'),
+                    'date_stop': de.strftime('%Y-%m-%d'),
                     'fiscalyear_id': fy.id,
                 })
                 ds = ds + relativedelta(months=interval)
