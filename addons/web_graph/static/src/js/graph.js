@@ -216,9 +216,11 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     .pluck(this.group_field)
                     .uniq()
                     .map(function (value, index) {
+                        if(value)
+                            value = value.toLowerCase().replace(/[\s\/]+/g,'_')
                         return {
                             group: self.ordinate + '_' +
-                                    value.toLowerCase().replace(/[\s\/]+/g,'_'),
+                                    value,
                             text: value,
                             color: COLOR_PALETTE[index % COLOR_PALETTE.length]
                         };
@@ -231,9 +233,11 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     // second argument is coerced to a str, no good for boolean
                     r[self.abscissa] = records[0][self.abscissa];
                     _(records).each(function (record) {
+                        if(record[self.group_field])
+                            record[self.group_field] = record[self.group_field].toLowerCase().replace(/[\s\/]+/g,'_')
                         var key = _.str.sprintf('%s_%s',
                             self.ordinate,
-                            record[self.group_field].toLowerCase().replace(/[\s\/]+/g,'_'));
+                            record[self.group_field]);
                         r[key] = record[self.ordinate];
                     });
                     return r;
@@ -349,7 +353,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             self.renderer = null;
             var chart =  new dhtmlXChart({
                 view:"pie3D",
-                container:self.element_id+"-piechart",
+                container:self.widget_parent.element_id+"-piechart",
                 value:"#"+self.ordinate+"#",
                 pieInnerText:function(obj) {
                     var sum = chart.sum("#"+self.ordinate+"#");
