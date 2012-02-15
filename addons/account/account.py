@@ -936,8 +936,8 @@ class account_fiscalyear(osv.osv):
                 period_obj.create(cr, uid, {
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
-                    'date_start': fields.date.context_today(self, cr, uid, context=context, timestamp=ds),
-                    'date_stop': fields.date.context_today(self, cr, uid, context=context, timestamp=de),
+                    'date_start': fields.date.context_today(self, cr, uid, timestamp=ds, context=context),
+                    'date_stop': fields.date.context_today(self, cr, uid timestamp=de, context=context),
                     'fiscalyear_id': fy.id,
                 })
                 ds = ds + relativedelta(months=interval)
