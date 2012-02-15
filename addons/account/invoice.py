@@ -752,7 +752,10 @@ class account_invoice(osv.osv):
                     raise osv.except_osv(_('Warning !'), _('There is no active invoice sequence defined for the journal !'))
 
                 if invtype in ('in_invoice', 'in_refund'):
-                    ref = reference
+                    if not reference:
+                        ref = self._convert_ref(cr, uid, number)
+                    else:
+                        ref = reference
                 else:
                     ref = self._convert_ref(cr, uid, number)
                 cr.execute('UPDATE account_invoice SET number=%s ' \
