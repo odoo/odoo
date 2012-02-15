@@ -73,33 +73,32 @@ class WebKitParser(report_sxw):
 
     def get_lib(self, cursor, uid, company) :
         """Return the lib wkhtml path"""
-        #TODO Detect lib in system first
-        path = self.pool.get('res.company').read(cursor, uid, company, ['lib_path',])
-        path = path['lib_path']
-        if not path:
-            raise except_osv(
-                             _('Wkhtmltopdf library path is not set in company'),
-                             _('Please install executable on your system'+
-                             ' (sudo apt-get install wkhtmltopdf) or download it from here:'+
-                             ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+
-                             ' path to the executable on the Company form.'+
-                             'Minimal version is 0.9.9')
-                            )
-        if os.path.isabs(path) :
-            if (os.path.exists(path) and os.access(path, os.X_OK)\
-                and os.path.basename(path).startswith('wkhtmltopdf')):
-                return path
-            else:
-                raise except_osv(
-                                _('Wrong Wkhtmltopdf path set in company'+
-                                'Given path is not executable or path is wrong'),
-                                'for path %s'%(path)
-                                )
-        else :
-            raise except_osv(
-                            _('path to Wkhtmltopdf is not absolute'),
-                            'for path %s'%(path)
-                            )
+        proxy = self.pool.get('ir.config_parameter')
+        webkit_path = proxy.get_param(cursor, uid, 'webkit_path')
+
+        if not webkit_path:
+            try:
+                defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
+                if hasattr(sys, 'frozen'):
+                    defpath.append(os.getcwd())
+                    if tools.config['root_path']:
+                        defpath.append(os.path.dirname(tools.config['root_path']))
+                webkit_path = tools.which('wkhtmltopdf', path=os.pathsep.join(defpath))
+            except IOError:
+                webkit_path = None
+
+        if webkit_path:
+            return webkit_path
+
+        raise except_osv(
+                         _('Wkhtmltopdf library path is not set'),
+                         _('Please install executable on your system' \
+                         ' (sudo apt-get install wkhtmltopdf) or download it from here:' \
+                         ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the' \
+                         ' path in the ir.config_parameter with the webkit_path key.' \
+                         'Minimal version is 0.9.9')
+                        )
+
     def generate_pdf(self, comm_path, report_xml, header, footer, html_list, webkit_header=False):
         """Call webkit in order to generate pdf"""
         if not webkit_header:
