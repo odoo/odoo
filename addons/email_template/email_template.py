@@ -180,20 +180,21 @@ class email_template(osv.osv):
             src_obj = template.model_id.model
             model_data_id = data_obj._get_id(cr, uid, 'mail', 'email_compose_message_wizard_form')
             res_id = data_obj.browse(cr, uid, model_data_id, context=context).res_id
+            button_name = _('Send Mail (%s)') % template.name
             vals['ref_ir_act_window'] = action_obj.create(cr, uid, {
-                 'name': template.name,
+                 'name': button_name,
                  'type': 'ir.actions.act_window',
                  'res_model': 'mail.compose.message',
                  'src_model': src_obj,
                  'view_type': 'form',
-                 'context': "{'mail.compose.message.mode':'mass_mail'}",
+                 'context': "{'mail.compose.message.mode':'mass_mail', 'mail.compose.template_id' : %d}" % (template.id),
                  'view_mode':'form,tree',
                  'view_id': res_id,
                  'target': 'new',
                  'auto_refresh':1
             }, context)
             vals['ref_ir_value'] = self.pool.get('ir.values').create(cr, uid, {
-                 'name': _('Send Mail (%s)') % template.name,
+                 'name': button_name,
                  'model': src_obj,
                  'key2': 'client_action_multi',
                  'value': "ir.actions.act_window," + str(vals['ref_ir_act_window']),
@@ -214,7 +215,7 @@ class email_template(osv.osv):
                     ir_values_obj = self.pool.get('ir.values')
                     ir_values_obj.unlink(cr, uid, template.ref_ir_value.id, context)
             except:
-                raise osv.except_osv(_("Warning"), _("Deletion of Record failed"))
+                raise osv.except_osv(_("Warning"), _("Deletion of the action record failed."))
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -375,8 +376,8 @@ class email_template(osv.osv):
         """
         mail_message = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
-        template = self.browse(cr, uid, template_id, context)
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
+        assert 'email_from' in values, 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
         attachments = values.pop('attachments') or {}
         msg_id = mail_message.create(cr, uid, values, context=context)
         # link attachments

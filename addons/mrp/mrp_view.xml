@@ -520,7 +520,7 @@
             <field name="name">Bill of Materials Structure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
-            <field name="domain">[('id','=',active_id)]</field>
+            <field name="domain">[('id','in',active_ids)]</field>
             <field name="view_type">tree</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="mrp_bom_tree_view"/>
@@ -604,11 +604,7 @@
             <field name="model">mrp.production</field>
             <field name="type">gantt</field>
             <field name="arch" type="xml">
-                <gantt color="product_id" date_stop="date_finished" date_start="date_start" string="Productions">
-                    <level object="mrp.routing" link="routing_id" domain="[]">
-                        <field name="name"/>
-                        <field name="origin"/>
-                    </level>
+                <gantt date_stop="date_finished" date_start="date_start" string="Productions" default_group_by="routing_id">
                 </gantt>
             </field>
         </record>
@@ -985,7 +981,7 @@
         <act_window
             id="action_product_bom_structure"
             name="Product BoM Structure"
-            domain="[('product_id', '=', active_id),('bom_id','=',False)]"
+            domain="[('product_id', 'in', active_ids),('bom_id','=',False)]"
             context="{'default_product_id': active_id}"
             view_type="tree"
             view_mode="tree"

@@ -6,36 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2009-02-04 12:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:33+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:44+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: stock_no_autopicking
 #: model:ir.model,name:stock_no_autopicking.model_product_product
 msgid "Product"
-msgstr ""
-
-#. module: stock_no_autopicking
-#: model:ir.module.module,description:stock_no_autopicking.module_meta_information
-msgid ""
-"\n"
-"    This module allows an intermediate picking process to provide raw "
-"materials\n"
-"    to production orders.\n"
-"\n"
-"    One example of usage of this module is to manage production made by "
-"your\n"
-"    suppliers (sub-contracting). To achieve this, set the assembled product\n"
-"    which is sub-contracted to \"No Auto-Picking\" and put the location of "
-"the\n"
-"    supplier in the routing of the assembly operation.\n"
-"    "
 msgstr ""
 
 #. module: stock_no_autopicking
@@ -59,11 +42,11 @@ msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: stock_no_autopicking
-#: model:ir.module.module,shortdesc:stock_no_autopicking.module_meta_information
-msgid "Stock No Auto-Picking"
+#: sql_constraint:mrp.production:0
+msgid "Reference must be unique per Company!"
 msgstr ""
 
 #. module: stock_no_autopicking
 #: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero !"
+msgid "Order quantity cannot be negative or zero!"
 msgstr ""

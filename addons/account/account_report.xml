@@ -10,6 +10,7 @@
         <report auto="False" id="account_central_journal" model="account.journal.period" name="account.central.journal" rml="account/report/account_central_journal.rml" string="Central Journal" header="False"/>
         <report auto="False" id="account_general_journal" model="account.journal.period" name="account.general.journal" rml="account/report/account_general_journal.rml" string="General Journal" header="False"/>
         <report auto="False" id="account_journal" model="account.journal.period" name="account.journal.period.print" rml="account/report/account_journal.rml" string="Journal" header="False"/>
+        <report auto="False" id="account_journal_sale_purchase" model="account.journal.period" name="account.journal.period.print.sale.purchase" rml="account/report/account_journal_sale_purchase.rml" string="Sale/Purchase Journal" header="False"/>
         <report auto="False" id="account_overdue" model="res.partner" name="account.overdue" rml="account/report/account_print_overdue.rml" string="Overdue Payments"/>
         <report
             auto="False"
@@ -18,7 +19,7 @@
             name="account.invoice"
             rml="account/report/account_print_invoice.rml"
             string="Invoices"
-            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/',''))"
+            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
             usage="default"
             multi="True"/>
         <report id="account_transfers" model="account.transfer" name="account.transfer" string="Transfers" xml="account/report/transfer.xml" xsl="account/report/transfer.xsl"/>

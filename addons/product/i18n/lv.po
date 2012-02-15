@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2010-12-26 07:53+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:18+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:30+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -44,6 +44,20 @@ msgid ""
 msgstr ""
 "Norādīt kā veidne, ja nosacījums paredzēts produktu veidnēm. Neaizpildīt, ja "
 "visiem produktiem."
+
+#. module: product
+#: help:product.product,virtual_available:0
+msgid ""
+"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location typed as "
+"'internal'."
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -81,11 +95,6 @@ msgid "Incoming"
 msgstr "Ienākošais"
 
 #. module: product
-#: field:product.template,mes_type:0
-msgid "Measure Type"
-msgstr "Mērvienības Tips"
-
-#. module: product
 #: help:res.partner,property_product_pricelist:0
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
@@ -93,15 +102,6 @@ msgid ""
 msgstr ""
 "Tiks izmantota attiecīgā cenuzīme cenuzīmes pēc noklusējuma vietā, tirgojot "
 "šim partnerim."
-
-#. module: product
-#: constraint:product.supplierinfo:0
-msgid ""
-"Error: The default UOM and the Supplier Product UOM must be in the same "
-"category."
-msgstr ""
-"Kļūda: mērvienībai pēc noklusējuma un piegādātāja produkta mērvienībai ir "
-"jāatrodas vienā kategorijā."
 
 #. module: product
 #: field:product.template,seller_qty:0
@@ -114,9 +114,7 @@ msgid "Fixed"
 msgstr "Fiksēts"
 
 #. module: product
-#: code:addons/product/pricelist.py:186
-#: code:addons/product/pricelist.py:342
-#: code:addons/product/pricelist.py:360
+#: code:addons/product/pricelist.py:178
 #, python-format
 msgid "Warning !"
 msgstr "Uzmanību!"
@@ -148,11 +146,6 @@ msgid "Reference"
 msgstr "Atsauksme"
 
 #. module: product
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Kļūda! Jūs nevarat veidot rekursīvas kategorijas."
-
-#. module: product
 #: help:pricelist.partnerinfo,min_quantity:0
 msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
@@ -172,13 +165,17 @@ msgid "Partner"
 msgstr "Partneris"
 
 #. module: product
-#: help:product.template,supply_method:0
+#: code:addons/product/product.py:143
+#, python-format
 msgid ""
-"Produce will generate production order or tasks, according to the product "
-"type. Purchase will trigger purchase orders when requested."
+"Conversion from Product UoM %s to Default UoM %s is not possible as they "
+"both belong to different Category!."
 msgstr ""
-"Komanda Izpildīt ģenerēs pasūtījumu vai darba uzdevumu atkarībā no produkta "
-"tipa. Iepirkums ģenerēs iepirkuma pasūtījumu."
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen"
+msgstr ""
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -189,12 +186,6 @@ msgstr "Vidējā cena"
 #: help:product.pricelist.item,name:0
 msgid "Explicit rule name for this pricelist line."
 msgstr "Tiešs nosacījuma nosaukums attiecīgajai cenuzīmes rindai."
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr "Mērvienību kategorijas"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu1_product_template
@@ -263,12 +254,19 @@ msgid "Product Type"
 msgstr "Produkta tips"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_form_config_action
+msgid ""
+"Create a product form for everything you buy or sell. Specify a supplier if "
+"the product can be purchased."
+msgstr ""
+
+#. module: product
 #: view:product.uom:0
 msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  attiecīgi: 1 * (esošā vienība) = attiecība * (atsauces vienība)"
 
 #. module: product
-#: code:addons/product/product.py:380
+#: code:addons/product/product.py:418
 #, python-format
 msgid "Products: "
 msgstr "Preces: "
@@ -277,15 +275,6 @@ msgstr "Preces: "
 #: field:product.category,parent_id:0
 msgid "Parent Category"
 msgstr "Virskategorija"
-
-#. module: product
-#: help:product.product,outgoing_qty:0
-msgid ""
-"Quantities of products that are planned to leave in selected locations or "
-"all internal if none have been selected."
-msgstr ""
-"Produktu daudzums, ko plānots atstāt izvēlētajās vietās. Atstājot tukšu visi "
-"produkti tiek uzskatīti par \"iekšējiem\"."
 
 #. module: product
 #: help:product.template,procure_method:0
@@ -429,6 +418,20 @@ msgstr ""
 "kategorija, piegādātāja informācija u.c."
 
 #. module: product
+#: help:product.product,qty_available:0
+msgid ""
+"Current quantity of products.\n"
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location typed as "
+"'internal'."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
 msgstr "Produktu cenu meklēšana"
@@ -504,13 +507,6 @@ msgid "Codes"
 msgstr "Kodi"
 
 #. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid ""
-"Choose here the Unit of Measure in which the prices and quantities are "
-"expressed below."
-msgstr "Izvēlēties šeit mērvienību, kurā tiks attēlotas cenas un daudzums."
-
-#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr "Daudzums-4"
@@ -527,6 +523,7 @@ msgstr "Darba Laiks"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
+#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
 msgid ""
 "A price list contains rules to be evaluated in order to compute the purchase "
 "or sales price for all the partners assigned to a price list. Price lists "
@@ -542,28 +539,15 @@ msgstr ""
 "piegādātāja cenai."
 
 #. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the product "
-"without removing it."
-msgstr ""
-"Atzīmējot lauku kā \"False\", iespējams izņemt produktu no saraksta, tajā "
-"pašā laikā to nedzēšot no sistēmas."
-
-#. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
 msgstr "Metal Cleats"
 
 #. module: product
-#: code:addons/product/pricelist.py:343
+#: code:addons/product/product.py:175
 #, python-format
-msgid ""
-"No active version for the selected pricelist !\n"
-"Please create or activate one."
+msgid "Cannot change the category of existing UoM '%s'."
 msgstr ""
-"Izvēlētajam cenrādim nav aktīva neviena versija!\n"
-"Lūdzu veidojiet jaunu, vai aktivizējiet kādu no esošajām."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -579,6 +563,11 @@ msgstr "Box 20x20x40"
 #: view:product.pricelist.item:0
 msgid "Price Computation"
 msgstr "Cenas aprēķins"
+
+#. module: product
+#: model:res.groups,name:product.group_uos
+msgid "Product UoS View"
+msgstr ""
 
 #. module: product
 #: field:product.template,purchase_ok:0
@@ -614,11 +603,6 @@ msgid "The width of the package"
 msgstr "Iepakojuma platums"
 
 #. module: product
-#: field:product.product,virtual_available:0
-msgid "Virtual Stock"
-msgstr "Virtuāla noliktava"
-
-#. module: product
 #: selection:product.category,type:0
 msgid "View"
 msgstr "Skatījums"
@@ -629,9 +613,20 @@ msgid "Product Templates"
 msgstr "Produktu sagataves"
 
 #. module: product
+#: field:product.category,parent_left:0
+msgid "Left Parent"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_restaurantexpenses0_product_template
 msgid "Restaurant Expenses"
 msgstr "Restaurant Expenses"
+
+#. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr ""
+"Kopējais produktu daudzums, ko var novietot uz paletes vai ielikt kastē."
 
 #. module: product
 #: constraint:product.packaging:0
@@ -650,6 +645,15 @@ msgid "Price Type"
 msgstr "Cenas tips"
 
 #. module: product
+#: code:addons/product/product.py:363
+#, python-format
+msgid ""
+"New UoM '%s' must belong to same UoM category '%s' as of old UoM '%s'. If "
+"you need to change the unit of measure, you may desactivate this product "
+"from the 'Procurement & Locations' tab and create a new one."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "Max. Margin"
 msgstr "Maks. peļņa"
@@ -658,6 +662,11 @@ msgstr "Maks. peļņa"
 #: view:product.pricelist.item:0
 msgid "Base Price"
 msgstr "Bāzes cena"
+
+#. module: product
+#: model:product.template,name:product.product_consultant_product_template
+msgid "Service on Timesheet"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_fan2_product_template
@@ -690,9 +699,9 @@ msgid "Supplier"
 msgstr "Piegādātājs"
 
 #. module: product
-#: model:product.template,name:product.product_product_sidepanel0_product_template
-msgid "Side Panel"
-msgstr "Side Panel"
+#: field:product.product,qty_available:0
+msgid "Quantity On Hand"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
@@ -703,6 +712,30 @@ msgstr "Kit Keyboard + Mouse"
 #: field:product.price.type,name:0
 msgid "Price Name"
 msgstr "Cenas nosaukums"
+
+#. module: product
+#: model:product.template,name:product.product_product_arm_product_template
+msgid "Cabinet"
+msgstr ""
+
+#. module: product
+#: help:product.product,incoming_qty:0
+msgid ""
+"Quantity of products that are planned to arrive.\n"
+"In a context with a single Stock Location, this includes goods arriving to "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods arriving to the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location typed as "
+"'internal'."
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_woodentable0_product_template
+msgid "Wooden Table"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -765,9 +798,9 @@ msgid "Customer Lead Time"
 msgstr "Pasūtījuma Apstrādes laiks"
 
 #. module: product
-#: model:process.transition,name:product.process_transition_supplierofproduct0
-msgid "Supplier of the product"
-msgstr "Produkta piegādātājs"
+#: model:product.template,name:product.product_product_25_product_template
+msgid "Mouse"
+msgstr "Pele"
 
 #. module: product
 #: help:product.template,uos_id:0
@@ -809,6 +842,7 @@ msgstr "Tips"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action2
 #: model:ir.ui.menu,name:product.menu_product_pricelist_main
 msgid "Pricelists"
@@ -865,6 +899,12 @@ msgid "In Development"
 msgstr "Izstrādē"
 
 #. module: product
+#: code:addons/product/product.py:363
+#, python-format
+msgid "UoM categories Mismatch!"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_shelfofcm1_product_template
 msgid "Shelf of 200cm"
 msgstr "Shelf of 200cm"
@@ -909,6 +949,8 @@ msgid "DDR 256MB PC400"
 msgstr "DDR 256MB PC400"
 
 #. module: product
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model:ir.ui.menu,name:product.menu_product_category_action_form
 #: view:product.category:0
 msgid "Product Categories"
 msgstr "Produktu kategorijas"
@@ -930,6 +972,11 @@ msgstr ""
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
 msgstr "Kopējasi iepakojuma svars"
+
+#. module: product
+#: field:product.template,seller_info_id:0
+msgid "unknown"
+msgstr ""
 
 #. module: product
 #: help:product.packaging,code:0
@@ -962,11 +1009,6 @@ msgstr "Regular case fan 80mm"
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Information about a product supplier"
 msgstr "Informācijas par produkta piegādātāju"
-
-#. module: product
-#: view:product.product:0
-msgid "Extended Filters..."
-msgstr "Paplašinātie filtri..."
 
 #. module: product
 #: view:product.product:0
@@ -1072,14 +1114,28 @@ msgid "Bigger than the reference UoM"
 msgstr "Lielāks par atsauces mērvienību"
 
 #. module: product
-#: model:ir.module.module,shortdesc:product.module_meta_information
-msgid "Products & Pricelists"
-msgstr "Produkti & Cenu lapas"
+#: field:product.category,parent_right:0
+msgid "Right Parent"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
 msgid "To Sell"
 msgstr "Pārdot"
+
+#. module: product
+#: help:product.product,outgoing_qty:0
+msgid ""
+"Quantity of products that are planned to leave.\n"
+"In a context with a single Stock Location, this includes goods leaving from "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving from the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods leaving from the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods leaving from any Stock Location typed as "
+"'internal'."
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_services0
@@ -1116,17 +1172,13 @@ msgid "Name"
 msgstr "Nosaukums"
 
 #. module: product
-#: view:product.product:0
-msgid "Stockable"
-msgstr "Noliktavas"
-
-#. module: product
 #: model:product.template,name:product.product_product_woodlintelm0_product_template
 msgid "Wood Lintel 4m"
 msgstr "Wood Lintel 4m"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
 msgid ""
 "You must define a Product for everything you buy or sell. Products can be "
 "raw materials, stockable products, consumables or services. The Product form "
@@ -1221,30 +1273,6 @@ msgid "Unit of Sale"
 msgstr "Pārdošanas Mērvienība"
 
 #. module: product
-#: model:ir.module.module,description:product.module_meta_information
-msgid ""
-"\n"
-"    This is the base module for managing products and pricelists in "
-"OpenERP.\n"
-"\n"
-"    Products support variants, different pricing methods, suppliers\n"
-"    information, make to stock/order, different unit of measures,\n"
-"    packaging and properties.\n"
-"\n"
-"    Pricelists support:\n"
-"    * Multiple-level of discount (by product, category, quantities)\n"
-"    * Compute price based on different criteria:\n"
-"        * Other pricelist,\n"
-"        * Cost price,\n"
-"        * List price,\n"
-"        * Supplier price, ...\n"
-"    Pricelists preferences by product and/or partners.\n"
-"\n"
-"    Print product labels with barcode.\n"
-"    "
-msgstr ""
-
-#. module: product
 #: help:product.template,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
@@ -1264,6 +1292,11 @@ msgid "Services"
 msgstr "Pakalpojumi"
 
 #. module: product
+#: model:ir.actions.act_window,name:product.product_form_config_action
+msgid "Create or Import Products"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,base_pricelist_id:0
 msgid "If Other Pricelist"
 msgstr "Ja izvēlēta cita Cenuzīme"
@@ -1271,8 +1304,10 @@ msgstr "Ja izvēlēta cita Cenuzīme"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_puchased
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_products
+#: model:ir.ui.menu,name:product.prod_config_main
 #: view:product.product:0
 msgid "Products"
 msgstr "Preces"
@@ -1294,7 +1329,7 @@ msgid "Pallet Dimension"
 msgstr "Paletes izmēri"
 
 #. module: product
-#: code:addons/product/product.py:618
+#: code:addons/product/product.py:668
 #, python-format
 msgid " (copy)"
 msgstr " (kopija)"
@@ -1321,7 +1356,7 @@ msgid "Second UoM"
 msgstr "Otra mērvienība"
 
 #. module: product
-#: code:addons/product/product.py:142
+#: code:addons/product/product.py:143
 #, python-format
 msgid "Error !"
 msgstr "Kļūda!"
@@ -1364,6 +1399,11 @@ msgid "Price List Version"
 msgstr "Cenu lapas versija"
 
 #. module: product
+#: field:product.product,virtual_available:0
+msgid "Quantity Available"
+msgstr ""
+
+#. module: product
 #: help:product.pricelist.item,sequence:0
 msgid ""
 "Gives the order in which the pricelist items will be checked. The evaluation "
@@ -1387,10 +1427,21 @@ msgid "The gross weight in Kg."
 msgstr "Bruto svars kg"
 
 #. module: product
+#: model:product.template,name:product.product_product_sidepanel0_product_template
+msgid "Side Panel"
+msgstr "Side Panel"
+
+#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
 msgstr "Sagāde"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Weights"
+msgstr "Svari"
 
 #. module: product
 #: field:product.uom,category_id:0
@@ -1433,14 +1484,11 @@ msgid "Regular processor config"
 msgstr "Regular processor config"
 
 #. module: product
-#: code:addons/product/product.py:142
-#, python-format
+#: help:product.template,type:0
 msgid ""
-"Conversion from Product UoM m to Default UoM PCE is not possible as they "
-"both belong to different Category!."
+"Will change the way procurements are processed. Consumable are product where "
+"you don't manage stock."
 msgstr ""
-"Produkta mērvienības konversācija uz noklusēto mērvienību nav iespējama, jo "
-"tās atrodas dažādās kategorijās."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1461,15 +1509,6 @@ msgstr ""
 "savs apstrādes laiks un vēlāk summēts."
 
 #. module: product
-#: help:product.product,qty_available:0
-msgid ""
-"Current quantities of products in selected locations or all internal if none "
-"have been selected."
-msgstr ""
-"Produktu daudzums attiecīgajās produktu atrašanās vietās, vai visu produktu "
-"kopējais daudzums, ja vieta nav norādīta."
-
-#. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
 msgid "Basic PC"
 msgstr "Basic PC"
@@ -1482,11 +1521,6 @@ msgid ""
 msgstr ""
 "Lauku ir atzīmējot kā \"False\", iespējams noslēpt cenuzīmi to nedzēšot no "
 "sistēmas."
-
-#. module: product
-#: field:product.product,qty_available:0
-msgid "Real Stock"
-msgstr "Reāli noliktavā"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
@@ -1536,6 +1570,11 @@ msgid "The weight of the empty UL"
 msgstr ""
 
 #. module: product
+#: model:product.template,name:product.product_product_woodmm10_product_template
+msgid "Wood 10mm"
+msgstr ""
+
+#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference UoM"
 msgstr "Mazāks kā atsauces mērvienība"
@@ -1565,6 +1604,11 @@ msgid "The EAN code of the package unit."
 msgstr "Iepakojuma vienības EAN kods."
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid "This comes from the product form."
+msgstr ""
+
+#. module: product
 #: field:product.packaging,weight_ul:0
 msgid "Empty Package Weight"
 msgstr "Tukša iepakojuma svars"
@@ -1575,10 +1619,9 @@ msgid "Product Field"
 msgstr "Produkta lauks"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_pricelist_type_action
-#: model:ir.ui.menu,name:product.menu_product_pricelist_type_action2
-msgid "Pricelists Types"
-msgstr "Cenu lapu tipi"
+#: field:product.template,mes_type:0
+msgid "Measure Type"
+msgstr "Mērvienības Tips"
 
 #. module: product
 #: help:product.uom,factor:0
@@ -1589,6 +1632,12 @@ msgstr ""
 "Norāda par cik attiecīgā mērvienība ir mazāka kā atsauces mērvienība šajā "
 "kategorijā:\n"
 "1 ( atsauces mērv. ) = attiecība * ( šī mērvienība)"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_price_type_action
+#: model:ir.ui.menu,name:product.menu_product_price_type
+msgid "Price Types"
+msgstr ""
 
 #. module: product
 #: help:product.template,uom_id:0
@@ -1663,7 +1712,6 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
-#: model:ir.ui.menu,name:product.prod_config_main
 #: model:process.node,name:product.process_node_product0
 #: model:process.process,name:product.process_process_productprocess0
 #: field:product.packaging,product_id:0
@@ -1685,10 +1733,11 @@ msgid "Make to Order"
 msgstr "Uz pasūtījumu"
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
+#: help:product.template,supply_method:0
+msgid ""
+"Produce will generate production order or tasks, according to the product "
+"type. Buy will trigger purchase orders when requested."
 msgstr ""
-"Kopējais produktu daudzums, ko var novietot uz paletes vai ielikt kastē."
 
 #. module: product
 #: field:product.product,variants:0
@@ -1700,12 +1749,6 @@ msgstr "Varianti"
 #: model:ir.ui.menu,name:product.menu_products_category
 msgid "Products by Category"
 msgstr "Preces pa Kategorijām"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_category_action_form
-#: model:ir.ui.menu,name:product.menu_product_category_action_form
-msgid "Product Categories"
-msgstr "Preču kategorijas"
 
 #. module: product
 #: field:product.template,uos_coeff:0
@@ -1728,14 +1771,14 @@ msgid "ATX Mid-size Tower"
 msgstr "ATX Mid-size Tower"
 
 #. module: product
-#: field:product.packaging,ean:0
-msgid "EAN"
-msgstr "EAN"
-
-#. module: product
 #: view:product.pricelist.item:0
 msgid "Rounding Method"
 msgstr "Noapaļošanas metode"
+
+#. module: product
+#: model:product.category,name:product.product_category_assembly
+msgid "Assembly Service"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
@@ -1766,15 +1809,11 @@ msgstr "Produktu cenu lapas"
 #: field:product.pricelist,company_id:0
 #: field:product.pricelist.item,company_id:0
 #: field:product.pricelist.version,company_id:0
+#: view:product.product:0
 #: field:product.supplierinfo,company_id:0
 #: field:product.template,company_id:0
 msgid "Company"
 msgstr "Uzņēmums"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_price_type_action
-msgid "Prices Types"
-msgstr "Cenu tipi"
 
 #. module: product
 #: help:product.template,list_price:0
@@ -1786,7 +1825,7 @@ msgstr ""
 "cenu."
 
 #. module: product
-#: code:addons/product/pricelist.py:518
+#: code:addons/product/pricelist.py:376
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Produkta formas Partnera sadaļa"
@@ -1838,7 +1877,6 @@ msgstr "Vecākais atbalsta Tehniķis"
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
 #: field:product.pricelist,type:0
-#: view:product.pricelist.type:0
 msgid "Pricelist Type"
 msgstr "Cenuzīmes Tips"
 
@@ -1846,6 +1884,11 @@ msgstr "Cenuzīmes Tips"
 #: model:product.category,name:product.product_category_otherproducts0
 msgid "Other Products"
 msgstr "Citi Produkti"
+
+#. module: product
+#: field:product.product,color:0
+msgid "Color Index"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -1868,9 +1911,20 @@ msgid "Supplier Pricelist"
 msgstr "Piegādātāja Cenuzīme"
 
 #. module: product
+#: code:addons/product/product.py:175
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,base:0
 msgid "Based on"
 msgstr "Veidots uz"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_ton
+msgid "t"
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_rawmaterial0
@@ -1878,15 +1932,9 @@ msgid "Raw Materials"
 msgstr "Izejvielas"
 
 #. module: product
-#: help:product.product,virtual_available:0
-msgid ""
-"Future stock for this product according to the selected locations or all "
-"internal if none have been selected. Computed as: Real Stock - Outgoing + "
-"Incoming."
-msgstr ""
-"Paredzamais produktu daudzums noliktavā izvēlētajām preču atrašanās vietām, "
-"vai visu \"iekšējo\" produktu daudzums, ja preču atrašanās vietas nav "
-"norādītas. Tiek aprēķināts kā: Preces uz vietas - Izejošās + Ienākošās."
+#: help:product.template,product_manager:0
+msgid "This is use as task responsible"
+msgstr "Tiek noteikts atbildīgais."
 
 #. module: product
 #: field:product.pricelist,name:0
@@ -1951,6 +1999,12 @@ msgstr ""
 "no sistēmas."
 
 #. module: product
+#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
+msgid "UoM Categories"
+msgstr ""
+
+#. module: product
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr "Piegādātāja piegādes laiks"
@@ -1979,6 +2033,11 @@ msgid ""
 "unchanged."
 msgstr ""
 "Cena tiek izvēlēta tikai kodā, atkarībā no konteksta. Vērtību nemainīt."
+
+#. module: product
+#: view:product.product:0
+msgid "Context..."
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd1_product_template
@@ -2016,9 +2075,14 @@ msgid "Processor on demand"
 msgstr "Processor on demand"
 
 #. module: product
-#: model:product.template,name:product.product_product_25_product_template
-msgid "Mouse"
-msgstr "Pele"
+#: model:process.transition,name:product.process_transition_supplierofproduct0
+msgid "Supplier of the product"
+msgstr "Produkta piegādātājs"
+
+#. module: product
+#: field:product.product,product_image:0
+msgid "Image"
+msgstr ""
 
 #. module: product
 #: field:product.uom,uom_type:0
@@ -2026,9 +2090,13 @@ msgid "UoM Type"
 msgstr "Mērv. tips"
 
 #. module: product
-#: help:product.template,product_manager:0
-msgid "This is use as task responsible"
-msgstr "Tiek noteikts atbildīgais."
+#: help:product.product,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
+msgstr ""
+"Atzīmējot lauku kā \"False\", iespējams izņemt produktu no saraksta, tajā "
+"pašā laikā to nedzēšot no sistēmas."
 
 #. module: product
 #: help:product.uom,rounding:0
@@ -2061,17 +2129,6 @@ msgid "Complete PC With Peripherals"
 msgstr "Complete PC With Peripherals"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Weigths"
-msgstr "Svari"
-
-#. module: product
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Kļūda! Nevar izveidot rekursīvus asociētos dalībniekus."
-
-#. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
 msgid "Hotel Expenses"
 msgstr "Hotel Expenses"
@@ -2100,6 +2157,14 @@ msgstr "Iepakojuma saraksta rindu attēlošanas kārtība."
 #: field:product.pricelist.item,price_round:0
 msgid "Price Rounding"
 msgstr "Cenas noapaļošana"
+
+#. module: product
+#: code:addons/product/pricelist.py:178
+#, python-format
+msgid ""
+"At least one pricelist has no active version !\n"
+"Please create or activate one."
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
@@ -2157,11 +2222,16 @@ msgid "Phone Help"
 msgstr "Phone Help"
 
 #. module: product
-#: help:product.pricelist.item,price_round:0
-msgid ""
-"Sets the price so that it is a multiple of this value.\n"
-"Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+#: field:product.supplierinfo,sequence:0
+msgid "Sequence"
+msgstr "Secība"
+
+#. module: product
+#: model:product.template,name:product.product_assembly_product_template
+msgid "Assembly Service Cost"
 msgstr ""
 
 #. module: product
@@ -2185,28 +2255,20 @@ msgid "Sales Properties"
 msgstr "Pārdošanas īpašības"
 
 #. module: product
-#: model:product.uom,name:product.product_uom_ton
-msgid "tonne"
-msgstr "tonna"
-
-#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Delays"
 msgstr "Kavēšanās"
 
 #. module: product
+#: view:product.product:0
+msgid "Both stockable and consumable products"
+msgstr ""
+
+#. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Creation of the product"
 msgstr "Produktu izveide"
-
-#. module: product
-#: help:product.template,type:0
-msgid ""
-"Will change the way procurements are processed. Consumables are stockable "
-"products with infinite stock, or for use when you have no inventory "
-"management in the system."
-msgstr ""
 
 #. module: product
 #: field:pricelist.partnerinfo,name:0
@@ -2219,14 +2281,9 @@ msgid "Description"
 msgstr "Apraksts"
 
 #. module: product
-#: code:addons/product/pricelist.py:361
-#, python-format
-msgid ""
-"Could not resolve product category, you have defined cyclic categories of "
-"products!"
-msgstr ""
-"Nav iespējams noteikt produkta kategoriju, jo definētas cikliskas produkta "
-"kategorijas!"
+#: field:product.packaging,ean:0
+msgid "EAN"
+msgstr "EAN"
 
 #. module: product
 #: view:product.template:0
@@ -2237,15 +2294,6 @@ msgstr "Produkta apraksta"
 #: view:product.pricelist.item:0
 msgid " ) + "
 msgstr " ) + "
-
-#. module: product
-#: help:product.product,incoming_qty:0
-msgid ""
-"Quantities of products that are planned to arrive in selected locations or "
-"all internal if none have been selected."
-msgstr ""
-"Plānotais ienākošo produktu daudzums izvēlētajās preču atrašanās vietās, vai "
-"visās, ja tās nav norādītas."
 
 #. module: product
 #: field:product.template,volume:0
@@ -2259,6 +2307,7 @@ msgstr "Reģistrs"
 
 #. module: product
 #: view:product.product:0
+#: model:res.groups,name:product.group_product_variant
 msgid "Product Variant"
 msgstr "Produkta Veids"
 
@@ -2268,7 +2317,7 @@ msgid "Shelves"
 msgstr "Plaukti"
 
 #. module: product
-#: code:addons/product/pricelist.py:517
+#: code:addons/product/pricelist.py:375
 #, python-format
 msgid "Other Pricelist"
 msgstr "Cita Cenuzīme"
@@ -2293,6 +2342,11 @@ msgid "Palletization"
 msgstr "Novietošana paletēs"
 
 #. module: product
+#: help:product.template,volume:0
+msgid "The volume in m3."
+msgstr "Tilpums m3"
+
+#. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
 msgstr "Dzīves cikla beigas"
@@ -2315,17 +2369,27 @@ msgid "Pricelist Versions"
 msgstr "Cenu lapas versijas"
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-#: field:product.supplierinfo,sequence:0
-msgid "Sequence"
-msgstr "Secība"
+#: model:product.template,name:product.product_product_span100_product_template
+msgid "Shelf Panel"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,price_round:0
+msgid ""
+"Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+msgstr ""
 
 #. module: product
 #: field:product.template,list_price:0
 msgid "Sale Price"
 msgstr "Pārdošanas Cena"
+
+#. module: product
+#: constraint:product.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr ""
 
 #. module: product
 #: field:product.category,type:0
@@ -2347,11 +2411,123 @@ msgstr ""
 " pārd. mērv. = mērv. * koef."
 
 #. module: product
-#: help:product.template,volume:0
-msgid "The volume in m3."
-msgstr "Tilpums m3"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Cenas atlaide"
+
+#~ msgid "Products Categories"
+#~ msgstr "Preču kategorijas"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Kļūda! Jūs nevarat veidot rekursīvas kategorijas."
+
+#~ msgid "Units of Measure Categories"
+#~ msgstr "Mērvienību kategorijas"
+
+#~ msgid "Virtual Stock"
+#~ msgstr "Virtuāla noliktava"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Paplašinātie filtri..."
+
+#~ msgid "Products & Pricelists"
+#~ msgstr "Produkti & Cenu lapas"
+
+#~ msgid "Stockable"
+#~ msgstr "Noliktavas"
+
+#~ msgid "Real Stock"
+#~ msgstr "Reāli noliktavā"
+
+#~ msgid "Pricelists Types"
+#~ msgstr "Cenu lapu tipi"
+
+#~ msgid "Prices Types"
+#~ msgstr "Cenu tipi"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Kļūda! Nevar izveidot rekursīvus asociētos dalībniekus."
+
+#~ msgid "Weigths"
+#~ msgstr "Svari"
+
+#~ msgid "tonne"
+#~ msgstr "tonna"
+
+#~ msgid ""
+#~ "Choose here the Unit of Measure in which the prices and quantities are "
+#~ "expressed below."
+#~ msgstr "Izvēlēties šeit mērvienību, kurā tiks attēlotas cenas un daudzums."
+
+#, python-format
+#~ msgid ""
+#~ "No active version for the selected pricelist !\n"
+#~ "Please create or activate one."
+#~ msgstr ""
+#~ "Izvēlētajam cenrādim nav aktīva neviena versija!\n"
+#~ "Lūdzu veidojiet jaunu, vai aktivizējiet kādu no esošajām."
+
+#~ msgid ""
+#~ "Error: The default UOM and the Supplier Product UOM must be in the same "
+#~ "category."
+#~ msgstr ""
+#~ "Kļūda: mērvienībai pēc noklusējuma un piegādātāja produkta mērvienībai ir "
+#~ "jāatrodas vienā kategorijā."
+
+#~ msgid ""
+#~ "Quantities of products that are planned to leave in selected locations or "
+#~ "all internal if none have been selected."
+#~ msgstr ""
+#~ "Produktu daudzums, ko plānots atstāt izvēlētajās vietās. Atstājot tukšu visi "
+#~ "produkti tiek uzskatīti par \"iekšējiem\"."
+
+#, python-format
+#~ msgid ""
+#~ "Conversion from Product UoM m to Default UoM PCE is not possible as they "
+#~ "both belong to different Category!."
+#~ msgstr ""
+#~ "Produkta mērvienības konversācija uz noklusēto mērvienību nav iespējama, jo "
+#~ "tās atrodas dažādās kategorijās."
+
+#~ msgid ""
+#~ "Current quantities of products in selected locations or all internal if none "
+#~ "have been selected."
+#~ msgstr ""
+#~ "Produktu daudzums attiecīgajās produktu atrašanās vietās, vai visu produktu "
+#~ "kopējais daudzums, ja vieta nav norādīta."
+
+#~ msgid ""
+#~ "Future stock for this product according to the selected locations or all "
+#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
+#~ "Incoming."
+#~ msgstr ""
+#~ "Paredzamais produktu daudzums noliktavā izvēlētajām preču atrašanās vietām, "
+#~ "vai visu \"iekšējo\" produktu daudzums, ja preču atrašanās vietas nav "
+#~ "norādītas. Tiek aprēķināts kā: Preces uz vietas - Izejošās + Ienākošās."
+
+#~ msgid ""
+#~ "Quantities of products that are planned to arrive in selected locations or "
+#~ "all internal if none have been selected."
+#~ msgstr ""
+#~ "Plānotais ienākošo produktu daudzums izvēlētajās preču atrašanās vietās, vai "
+#~ "visās, ja tās nav norādītas."
+
+#~ msgid ""
+#~ "Produce will generate production order or tasks, according to the product "
+#~ "type. Purchase will trigger purchase orders when requested."
+#~ msgstr ""
+#~ "Komanda Izpildīt ģenerēs pasūtījumu vai darba uzdevumu atkarībā no produkta "
+#~ "tipa. Iepirkums ģenerēs iepirkuma pasūtījumu."
+
+#, python-format
+#~ msgid ""
+#~ "Could not resolve product category, you have defined cyclic categories of "
+#~ "products!"
+#~ msgstr ""
+#~ "Nav iespējams noteikt produkta kategoriju, jo definētas cikliskas produkta "
+#~ "kategorijas!"

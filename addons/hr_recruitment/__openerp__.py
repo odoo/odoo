@@ -23,6 +23,7 @@
     'name': 'Recruitment Process',
     'version': '1.0',
     'category': 'Human Resources',
+    "sequence": 24,
     'complexity': "easy",
     'description': """
 Manages job positions and the recruitment process.
@@ -60,7 +61,7 @@ system to store and search in your CV base.
             'test/recruitment_process.yml',
             ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '001073437025460275621',
     'application': True,
 }

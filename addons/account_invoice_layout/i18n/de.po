@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-04-02 21:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-01-13 19:20+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:22+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:34+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -40,12 +40,6 @@ msgid "Title"
 msgstr "Titel"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.action_account_invoice_special_msg
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_layout_message
-msgid "Invoices with Layout and Message"
-msgstr "Rechnungen mit Layout und Nachricht"
-
-#. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Disc. (%)"
@@ -57,9 +51,9 @@ msgid "Note"
 msgstr "Bemerkung"
 
 #. module: account_invoice_layout
-#: model:ir.model,name:account_invoice_layout.model_notify_message
-msgid "Notify By Messages"
-msgstr "Zeige alle Meldungen an"
+#: view:account.invoice.special.msg:0
+msgid "Print"
+msgstr "Druck"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
@@ -74,39 +68,9 @@ msgid "Unit Price"
 msgstr "Preis pro Einheit"
 
 #. module: account_invoice_layout
-#: model:ir.module.module,description:account_invoice_layout.module_meta_information
-msgid ""
-"\n"
-"    This module provides some features to improve the layout of the "
-"invoices.\n"
-"\n"
-"    It gives you the possibility to\n"
-"        * order all the lines of an invoice\n"
-"        * add titles, comment lines, sub total lines\n"
-"        * draw horizontal lines and put page breaks\n"
-"\n"
-"    Moreover, there is one option which allows you to print all the selected "
-"invoices with a given special message at the bottom of it. This feature can "
-"be very useful for printing your invoices with end-of-year wishes, special "
-"punctual conditions...\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"    Dieses Modul bietet die Möglichkeit das Layout von Rechnungen zu "
-"ändern.\n"
-"\n"
-"    Sie können ...\n"
-"        * die Reihenfolge der Rechnungspositionen bestimmen\n"
-"        * Zeilen für Überschriften, Kommentare, Zwischensummern erstellen\n"
-"        * horizontale Trennlinien zeichnen oder Seitenumbrüche bestimmen\n"
-"\n"
-"    Ausserdem, existiert eine Option für den Ausdruck ausgewählter "
-"Rechnungen mit einer speziellen Nachricht\n"
-"    am Ende des Belegs. Diese Funktion kann sinnvoll sein, wenn Sie auf "
-"besondere Aktionen hinweisen möchten.\n"
-"\n"
-"    "
+#: model:ir.model,name:account_invoice_layout.model_notify_message
+msgid "Notify By Messages"
+msgstr "Zeige alle Meldungen an"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -142,9 +106,9 @@ msgid "Notification Message"
 msgstr "Sende Nachricht"
 
 #. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
-msgstr "Produkt"
+#: report:account.invoice.layout:0
+msgid "Customer Code"
+msgstr "Kundennummer"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -241,9 +205,9 @@ msgid "Messages"
 msgstr "Alle Meldungen"
 
 #. module: account_invoice_layout
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
-msgid "Invoices with Layout"
-msgstr "Rechnungen mit Layout"
+#: selection:account.invoice.line,state:0
+msgid "Product"
+msgstr "Produkt"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -295,9 +259,9 @@ msgid "Origin"
 msgstr "Referenz"
 
 #. module: account_invoice_layout
-#: field:account.invoice.line,state:0
-msgid "Type"
-msgstr "Typ"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Die Rechnungsnummer muss je Firma eindeutig sein"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -305,15 +269,9 @@ msgid "Separator Line"
 msgstr "Trennlinie"
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Your Reference"
 msgstr "Ihre Referenz"
-
-#. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "Invoices Layout Improvement"
-msgstr "Erweitertes Layout der Rechnung"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -322,9 +280,14 @@ msgid "Supplier Invoice"
 msgstr "Lieferantenrechnung"
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Print"
-msgstr "Druck"
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
+msgid "Invoices"
+msgstr "Rechnungen"
+
+#. module: account_invoice_layout
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr "ungültige BBA Kommunikations Stuktur"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -341,6 +304,17 @@ msgstr "Rechnungszeile"
 #: report:account.invoice.layout:0
 msgid "Net Total:"
 msgstr "Netto:"
+
+#. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.action_account_invoice_special_msg
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_layout_message
+msgid "Invoices and Message"
+msgstr "Rechnungen und Mitteilungen"
+
+#. module: account_invoice_layout
+#: field:account.invoice.line,state:0
+msgid "Type"
+msgstr "Typ"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
@@ -427,3 +401,45 @@ msgstr "Zeige alle Meldungen an"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modellname in der Aktionsdefinition."
+
+#~ msgid "Invoices Layout Improvement"
+#~ msgstr "Erweitertes Layout der Rechnung"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module provides some features to improve the layout of the "
+#~ "invoices.\n"
+#~ "\n"
+#~ "    It gives you the possibility to\n"
+#~ "        * order all the lines of an invoice\n"
+#~ "        * add titles, comment lines, sub total lines\n"
+#~ "        * draw horizontal lines and put page breaks\n"
+#~ "\n"
+#~ "    Moreover, there is one option which allows you to print all the selected "
+#~ "invoices with a given special message at the bottom of it. This feature can "
+#~ "be very useful for printing your invoices with end-of-year wishes, special "
+#~ "punctual conditions...\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Dieses Modul bietet die Möglichkeit das Layout von Rechnungen zu "
+#~ "ändern.\n"
+#~ "\n"
+#~ "    Sie können ...\n"
+#~ "        * die Reihenfolge der Rechnungspositionen bestimmen\n"
+#~ "        * Zeilen für Überschriften, Kommentare, Zwischensummern erstellen\n"
+#~ "        * horizontale Trennlinien zeichnen oder Seitenumbrüche bestimmen\n"
+#~ "\n"
+#~ "    Ausserdem, existiert eine Option für den Ausdruck ausgewählter "
+#~ "Rechnungen mit einer speziellen Nachricht\n"
+#~ "    am Ende des Belegs. Diese Funktion kann sinnvoll sein, wenn Sie auf "
+#~ "besondere Aktionen hinweisen möchten.\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid "Invoices with Layout and Message"
+#~ msgstr "Rechnungen mit Layout und Nachricht"
+
+#~ msgid "Invoices with Layout"
+#~ msgstr "Rechnungen mit Layout"

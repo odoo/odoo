@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-06-23 20:16+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-01-23 23:23+0000\n"
+"Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:39+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:50+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -112,10 +112,16 @@ msgid "Group by partner invoice address"
 msgstr "Paydaş Fatura Adreslerine göre Gruplandır"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:430
+#: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "Ücretlerde tanımlanmış ürün yok!"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+#: field:mrp.repair,company_id:0
+msgid "Company"
+msgstr "Şirket"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -151,6 +157,7 @@ msgid "Invoice address :"
 msgstr "Fatura Adresi:"
 
 #. module: mrp_repair
+#: view:mrp.repair:0
 #: field:mrp.repair,guarantee_limit:0
 msgid "Guarantee limit"
 msgstr "Garanti sınırı"
@@ -161,29 +168,7 @@ msgid "Notes"
 msgstr "Notlar"
 
 #. module: mrp_repair
-#: model:ir.module.module,description:mrp_repair.module_meta_information
-msgid ""
-"\n"
-"           The aim is to have a complete module to manage all products "
-"repairs. The following topics should be covered by this module:\n"
-"           * Add/remove products in the reparation\n"
-"           * Impact for stocks\n"
-"           * Invoicing (products and/or services)\n"
-"           * Warranty concept\n"
-"           * Repair quotation report\n"
-"           * Notes for the technician and for the final customer\n"
-msgstr ""
-"\n"
-"           Amaç, bütün ürün onarımlarını yapmak için tam bir modül elde "
-"etmektir. Aşağıdaki konular bu modülün kapsamındadır:\n"
-"           * Onarımdaki ürünleri ekle/kaldır\n"
-"           * Stokları etkile\n"
-"           * Faturalama (ürünler ve/veya hizmetler)\n"
-"           * Garanti kavramı\n"
-"           * Onarım teklifi raporu\n"
-"           * Teknisyen ve son müşteri için notlar\n"
-
-#. module: mrp_repair
+#: view:mrp.repair:0
 #: field:mrp.repair,amount_tax:0
 #: field:mrp.repair.fee,tax_id:0
 #: field:mrp.repair.line,tax_id:0
@@ -196,7 +181,7 @@ msgid "Net Total :"
 msgstr "Net Toplam :"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:430
+#: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "Warning !"
 msgstr "Uyarı !"
@@ -217,7 +202,7 @@ msgid "Move"
 msgstr "Hareket"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:365
+#: code:addons/mrp_repair/mrp_repair.py:370
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr "Onarım formundan bir Paydaş Adresi seçmelisiniz !"
@@ -232,6 +217,12 @@ msgstr "Onarım Siparişleri"
 #: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
 msgid "Quotation / Order"
 msgstr "Teklif / Sipariş"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:337
+#, python-format
+msgid "Warning"
+msgstr "Uyarı"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -250,7 +241,7 @@ msgid "Draft"
 msgstr "Taslak"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:379
+#: code:addons/mrp_repair/mrp_repair.py:384
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "\"%s\" Paydaşı için tanımlanmış bir hesap yok."
@@ -305,9 +296,10 @@ msgid "Shipping address :"
 msgstr "Sevk Adresi :"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:379
-#: code:addons/mrp_repair/mrp_repair.py:408
-#: code:addons/mrp_repair/mrp_repair.py:437
+#: code:addons/mrp_repair/mrp_repair.py:334
+#: code:addons/mrp_repair/mrp_repair.py:384
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "Error !"
 msgstr "Hata !"
@@ -401,11 +393,6 @@ msgid "Repaired"
 msgstr "Onarıldı"
 
 #. module: mrp_repair
-#: model:ir.module.module,shortdesc:mrp_repair.module_meta_information
-msgid "Products Repairs Module - Manage All products Repairs"
-msgstr "Ürün Onarımları Modülü - Bütün ürün Onarımlarını Yönet"
-
-#. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
 #: field:mrp.repair.line,invoice_line_id:0
 msgid "Invoice Line"
@@ -415,6 +402,12 @@ msgstr "Fatura Kalemi"
 #: selection:mrp.repair.line,state:0
 msgid "Canceled"
 msgstr "İptal Edildi"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:337
+#, python-format
+msgid "Production lot is required for opration line with product '%s'"
+msgstr "'%s' Ürünü işlem kalemi için Üretim partisi gereklidir"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -525,6 +518,12 @@ msgid "Repair Fees Line"
 msgstr "Onarım Ücretleri Kalemi"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:334
+#, python-format
+msgid "You cannot confirm a repair order which has no line."
+msgstr ""
+
+#. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Quotation"
 msgstr "Teklif"
@@ -550,8 +549,8 @@ msgid "End Repair"
 msgstr "Onarım Bitir"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:408
-#: code:addons/mrp_repair/mrp_repair.py:437
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "\"%s\" Ürünü için tanımlı hesap yok."
@@ -809,7 +808,7 @@ msgid "Ready to Repair"
 msgstr "Onarıma Hazır"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:365
+#: code:addons/mrp_repair/mrp_repair.py:370
 #, python-format
 msgid "No partner !"
 msgstr "Paydaş Yok !"
@@ -873,3 +872,27 @@ msgstr "Paydaş Yok !"
 
 #~ msgid "Quality"
 #~ msgstr "Kalite"
+
+#~ msgid "Products Repairs Module - Manage All products Repairs"
+#~ msgstr "Ürün Onarımları Modülü - Bütün ürün Onarımlarını Yönet"
+
+#~ msgid ""
+#~ "\n"
+#~ "           The aim is to have a complete module to manage all products "
+#~ "repairs. The following topics should be covered by this module:\n"
+#~ "           * Add/remove products in the reparation\n"
+#~ "           * Impact for stocks\n"
+#~ "           * Invoicing (products and/or services)\n"
+#~ "           * Warranty concept\n"
+#~ "           * Repair quotation report\n"
+#~ "           * Notes for the technician and for the final customer\n"
+#~ msgstr ""
+#~ "\n"
+#~ "           Amaç, bütün ürün onarımlarını yapmak için tam bir modül elde "
+#~ "etmektir. Aşağıdaki konular bu modülün kapsamındadır:\n"
+#~ "           * Onarımdaki ürünleri ekle/kaldır\n"
+#~ "           * Stokları etkile\n"
+#~ "           * Faturalama (ürünler ve/veya hizmetler)\n"
+#~ "           * Garanti kavramı\n"
+#~ "           * Onarım teklifi raporu\n"
+#~ "           * Teknisyen ve son müşteri için notlar\n"

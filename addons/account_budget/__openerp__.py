@@ -67,7 +67,7 @@ Three reports are available:
             'test/account_budget_report.yml',
             ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0043819694157',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -449,7 +449,7 @@ class stock_planning(osv.osv):
         'history': fields.text('Procurement History', readonly=True, help = "History of procurement or internal supply of this planning line."),
         'state' : fields.selection([('draft','Draft'),('done','Done')],'State',readonly=True),
         'period_id': fields.many2one('stock.period' , 'Period', required=True, \
-                help = 'Period for this planning. Requisition will be created for beginning of the period.'),
+                help = 'Period for this planning. Requisition will be created for beginning of the period.', select=True),
         'warehouse_id': fields.many2one('stock.warehouse','Warehouse', required=True),
         'product_id': fields.many2one('product.product' , 'Product', required=True, help = 'Product which this planning is created for.'),
         'product_uom_categ' : fields.many2one('product.uom.categ', 'Product UoM Category'), # Invisible field for product_uom domain

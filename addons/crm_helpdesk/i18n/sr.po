@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-11-02 07:23+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:51+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:04+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,delay_close:0
@@ -42,6 +42,11 @@ msgstr "Данас"
 #: selection:crm.helpdesk.report,month:0
 msgid "March"
 msgstr "Март"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "Helpdesk requests occurred in current year"
+msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,company_id:0
@@ -73,6 +78,11 @@ msgid "Add Internal Note"
 msgstr "Dodaj Internu Napomenu"
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "Date of helpdesk requests"
+msgstr ""
+
+#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "Notes"
 msgstr "Белешке"
@@ -83,15 +93,15 @@ msgid "Messages"
 msgstr "Поруке"
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "My company"
+msgstr ""
+
+#. module: crm_helpdesk
 #: selection:crm.helpdesk,state:0
 #: selection:crm.helpdesk.report,state:0
 msgid "Cancelled"
 msgstr "Отказано"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,partner_address_id:0
-msgid "Partner Contact"
-msgstr "Kontakt Partnera"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
@@ -104,11 +114,6 @@ msgstr "Analiza HelpDeska"
 #: field:crm.helpdesk.report,date_closed:0
 msgid "Close Date"
 msgstr "Datum Zatvaranja"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "   Month   "
-msgstr "   Mesec   "
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,ref:0
@@ -149,12 +154,9 @@ msgid "Section"
 msgstr "Секција"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,priority:0
 #: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,priority:0
-msgid "Priority"
-msgstr "Приоритет"
+msgid "Helpdesk requests occurred in last month"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -162,14 +164,16 @@ msgid "Send New Email"
 msgstr "Posalji Novi Email"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Won"
-msgstr "Dobinitnik"
+#: view:crm.helpdesk:0
+msgid "Helpdesk requests during last 7 days"
+msgstr ""
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Prekoracio Krajnji rok"
+#: view:crm.helpdesk:0
+#: selection:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:0
+msgid "New"
+msgstr ""
 
 #. module: crm_helpdesk
 #: model:ir.model,name:crm_helpdesk.model_crm_helpdesk_report
@@ -182,9 +186,9 @@ msgid "Email"
 msgstr "Email"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,canal_id:0
+#: field:crm.helpdesk,channel_id:0
 #: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,canal_id:0
+#: field:crm.helpdesk.report,channel_id:0
 msgid "Channel"
 msgstr "Канал"
 
@@ -198,6 +202,12 @@ msgstr "Најнижи"
 #: view:crm.helpdesk.report:0
 msgid "# Mails"
 msgstr "# Emailova"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+#: view:crm.helpdesk.report:0
+msgid "My Sales Team(s)"
+msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,create_date:0
@@ -241,6 +251,11 @@ msgstr "Категорије"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
+msgid "New Helpdesk Request"
+msgstr ""
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
 msgid "History Information"
 msgstr "Informacije Istorije"
 
@@ -251,7 +266,13 @@ msgstr "Датуми"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
-msgid "    Month-1    "
+msgid "Month of helpdesk requests"
+msgstr ""
+
+#. module: crm_helpdesk
+#: code:addons/crm_helpdesk/crm_helpdesk.py:101
+#, python-format
+msgid "No Subject"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -260,15 +281,14 @@ msgid "#Helpdesk"
 msgstr "#HelpDesk"
 
 #. module: crm_helpdesk
-#: help:crm.helpdesk,email_cc:0
-msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
+#: view:crm.helpdesk:0
+msgid "All pending Helpdesk Request"
 msgstr ""
-"Ove ce Email adrese biti dodate u CC polje za sve dolazece i odlazece "
-"emailove za ovaj zapis pre samog slanja Emaila. Razdvojite vise adresa "
-"zarezom."
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "Year of helpdesk requests"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -302,9 +322,9 @@ msgid "Update Date"
 msgstr "Obnovi Datum"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Query"
-msgstr "Upit"
+#: view:crm.helpdesk.report:0
+msgid "Helpdesk requests occurred in current month"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -323,9 +343,9 @@ msgid "Category"
 msgstr "Категорија"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "  Year  "
-msgstr "  Godina  "
+#: view:crm.helpdesk:0
+msgid "Responsible User"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -339,9 +359,20 @@ msgid "Planned Costs"
 msgstr "Planirani Troskovi"
 
 #. module: crm_helpdesk
-#: model:ir.module.module,description:crm_helpdesk.module_meta_information
-msgid "Helpdesk Management"
-msgstr "Upravljanje Helpdeskom"
+#: help:crm.helpdesk,channel_id:0
+msgid "Communication channel."
+msgstr ""
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,email_cc:0
+msgid ""
+"These email addresses will be added to the CC field of all inbound and "
+"outbound emails for this record before being sent. Separate multiple email "
+"addresses with a comma"
+msgstr ""
+"Ove ce Email adrese biti dodate u CC polje za sve dolazece i odlazece "
+"emailove za ovaj zapis pre samog slanja Emaila. Razdvojite vise adresa "
+"zarezom."
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -349,7 +380,6 @@ msgid "Search Helpdesk"
 msgstr "Pretrazi HelpDesk"
 
 #. module: crm_helpdesk
-#: selection:crm.helpdesk,state:0
 #: selection:crm.helpdesk.report,state:0
 msgid "Draft"
 msgstr "Priprema"
@@ -363,9 +393,15 @@ msgstr "Низак"
 #. module: crm_helpdesk
 #: field:crm.helpdesk,date_closed:0
 #: selection:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:0
 #: selection:crm.helpdesk.report,state:0
 msgid "Closed"
 msgstr "Затворено"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Reply"
+msgstr "Odgovor"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -414,9 +450,9 @@ msgid "Active"
 msgstr "Активан"
 
 #. module: crm_helpdesk
-#: model:ir.module.module,shortdesc:crm_helpdesk.module_meta_information
-msgid "CRM Helpdesk"
-msgstr "CRM HelpDesk"
+#: selection:crm.helpdesk.report,month:0
+msgid "November"
+msgstr "Новембар"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -455,19 +491,22 @@ msgid "Date"
 msgstr "датум"
 
 #. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "November"
-msgstr "Новембар"
-
-#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "History"
 msgstr "Историја"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "Attachments"
-msgstr "Dodaci"
+#: field:crm.helpdesk,priority:0
+#: view:crm.helpdesk.report:0
+#: field:crm.helpdesk.report,priority:0
+msgid "Priority"
+msgstr "Приоритет"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,partner_address_id:0
+msgid "Partner Contact"
+msgstr "Kontakt Partnera"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -523,7 +562,7 @@ msgstr "Затвори"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-#: selection:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:0
 #: selection:crm.helpdesk.report,state:0
 msgid "Open"
 msgstr "Отвори"
@@ -532,6 +571,11 @@ msgstr "Отвори"
 #: view:crm.helpdesk:0
 msgid "Helpdesk Support Tree"
 msgstr "HelpDesk pregled Podrske"
+
+#. module: crm_helpdesk
+#: selection:crm.helpdesk,state:0
+msgid "In Progress"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -552,19 +596,9 @@ msgid "Responsible"
 msgstr "Одговоран"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Current"
-msgstr "Trenutni"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Details"
-msgstr "Детаљи"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Reply"
-msgstr "Odgovor"
+#: field:crm.helpdesk.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "Prekoracio Krajnji rok"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,description:0
@@ -593,13 +627,6 @@ msgid ""
 "specific criteria such as the processing time, number of requests answered, "
 "emails sent and costs."
 msgstr ""
-
-#. module: crm_helpdesk
-#: help:crm.helpdesk,canal_id:0
-msgid ""
-"The channels represent the different communication  modes available with the "
-"customer."
-msgstr "Kanal predstavja razlicite komunikacione modove dostupne sa Kupcem"
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,state:0
@@ -633,8 +660,8 @@ msgstr "Име"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
-msgid "Lost"
-msgstr "Изгубљен"
+msgid "Month-1"
+msgstr ""
 
 #. module: crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_help_support_main
@@ -652,6 +679,11 @@ msgid "My Case(s)"
 msgstr "Moj/i Slucaj(evi)"
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Query"
+msgstr "Upit"
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,id:0
 msgid "ID"
 msgstr "ИД"
@@ -661,6 +693,21 @@ msgstr "ИД"
 msgid ""
 "Create and manage helpdesk categories to better manage and classify your "
 "support requests."
+msgstr ""
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Todays's Helpdesk Requests"
+msgstr ""
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Request Date"
+msgstr ""
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Open Helpdesk Request"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -702,3 +749,35 @@ msgstr "Година"
 #: field:crm.helpdesk,duration:0
 msgid "Duration"
 msgstr "Kasnjenje"
+
+#~ msgid "   Month   "
+#~ msgstr "   Mesec   "
+
+#~ msgid "Won"
+#~ msgstr "Dobinitnik"
+
+#~ msgid "  Year  "
+#~ msgstr "  Godina  "
+
+#~ msgid "Helpdesk Management"
+#~ msgstr "Upravljanje Helpdeskom"
+
+#~ msgid "CRM Helpdesk"
+#~ msgstr "CRM HelpDesk"
+
+#~ msgid "Attachments"
+#~ msgstr "Dodaci"
+
+#~ msgid "Current"
+#~ msgstr "Trenutni"
+
+#~ msgid ""
+#~ "The channels represent the different communication  modes available with the "
+#~ "customer."
+#~ msgstr "Kanal predstavja razlicite komunikacione modove dostupne sa Kupcem"
+
+#~ msgid "Details"
+#~ msgstr "Детаљи"
+
+#~ msgid "Lost"
+#~ msgstr "Изгубљен"

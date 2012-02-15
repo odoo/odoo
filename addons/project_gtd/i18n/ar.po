@@ -6,29 +6,34 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2009-02-03 06:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:27+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:39+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: project_gtd
-#: help:project.task,timebox_id:0
-msgid "Time-laps during which task has to be treated"
+#: view:project.task:0
+msgid "In Progress"
 msgstr ""
 
 #. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_gtd_timebox
-msgid "project.gtd.timebox"
+#: view:project.task:0
+msgid "Show only tasks having a deadline"
 msgstr ""
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Reactivate"
+msgstr ""
+
+#. module: project_gtd
+#: help:project.task,timebox_id:0
+msgid "Time-laps during which task has to be treated"
 msgstr ""
 
 #. module: project_gtd
@@ -39,7 +44,7 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_travel
 msgid "Travel"
-msgstr ""
+msgstr "السفريات"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
@@ -47,71 +52,14 @@ msgid "Timebox Empty Process Completed Successfully."
 msgstr ""
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr ""
-
-#. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:112
-#, python-format
-msgid "GTD"
-msgstr ""
-
-#. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_lt
-msgid "Long Term"
-msgstr ""
-
-#. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_timebox_empty
-msgid "Project Timebox Empty"
-msgstr ""
-
-#. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_daily
-msgid "Today"
-msgstr ""
-
-#. module: project_gtd
-#: view:project.gtd.timebox:0
-#: field:project.gtd.timebox,name:0
 #: view:project.task:0
-#: field:project.task,timebox_id:0
-msgid "Timebox"
+msgid "Pending Tasks"
 msgstr ""
 
 #. module: project_gtd
-#: model:ir.module.module,shortdesc:project_gtd.module_meta_information
-msgid "Getting Things Done - Time Management Module"
-msgstr ""
-
-#. module: project_gtd
-#: field:project.timebox.fill.plan,timebox_to_id:0
-msgid "Set to Timebox"
-msgstr ""
-
-#. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "Error !"
-msgstr ""
-
-#. module: project_gtd
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr ""
-
-#. module: project_gtd
-#: view:project.timebox.fill.plan:0
-msgid "_Cancel"
-msgstr ""
-
-#. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
-#: view:project.timebox.empty:0
-msgid "Empty Timebox"
-msgstr ""
+#: view:project.task:0
+msgid "Next"
+msgstr "التالي"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -122,19 +70,84 @@ msgid ""
 msgstr ""
 
 #. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
-msgid "This Week"
+#: model:project.gtd.timebox,name:project_gtd.timebox_daily
+msgid "Today"
+msgstr "اليوم"
+
+#. module: project_gtd
+#: model:project.gtd.timebox,name:project_gtd.timebox_lt
+msgid "Long Term"
+msgstr "المدى الطويل"
+
+#. module: project_gtd
+#: model:ir.model,name:project_gtd.model_project_timebox_empty
+msgid "Project Timebox Empty"
 msgstr ""
 
 #. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_monthly
-msgid "This Month"
+#: view:project.task:0
+msgid "Pending"
+msgstr ""
+
+#. module: project_gtd
+#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
+#: view:project.task:0 field:project.task,timebox_id:0
+msgid "Timebox"
+msgstr "الوقت الزمني"
+
+#. module: project_gtd
+#: field:project.timebox.fill.plan,timebox_to_id:0
+msgid "Set to Timebox"
+msgstr ""
+
+#. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "Error !"
+msgstr "خطأ !"
+
+#. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.open_gtd_task
+#: model:ir.ui.menu,name:project_gtd.menu_open_gtd_timebox_tree
+#: view:project.task:0
+msgid "My Tasks"
+msgstr ""
+
+#. module: project_gtd
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr ""
+
+#. module: project_gtd
+#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
+msgid "This Week"
+msgstr "هذا الأسبوع"
+
+#. module: project_gtd
+#: view:project.timebox.fill.plan:0
+msgid "_Cancel"
+msgstr "ال_غاء"
+
+#. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
+#: view:project.timebox.empty:0
+msgid "Empty Timebox"
+msgstr ""
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Tasks having no timebox assigned yet"
+msgstr ""
+
+#. module: project_gtd
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
 msgstr ""
 
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
 msgid "Icon"
-msgstr ""
+msgstr "أيقونة"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_fill_plan
@@ -144,7 +157,7 @@ msgstr ""
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "مهمة"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
@@ -154,7 +167,7 @@ msgstr ""
 #. module: project_gtd
 #: field:project.timebox.empty,name:0
 msgid "Name"
-msgstr ""
+msgstr "الاسم"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
@@ -165,26 +178,11 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_car
 msgid "Car"
-msgstr ""
+msgstr "السيارة"
 
 #. module: project_gtd
-#: model:ir.module.module,description:project_gtd.module_meta_information
-msgid ""
-"\n"
-"This module implements all concepts defined by the Getting Things Done\n"
-"methodology. This world-wide used methodology is used for personal\n"
-"time management improvement.\n"
-"\n"
-"Getting Things Done (commonly abbreviated as GTD) is an action management\n"
-"method created by David Allen, and described in a book of the same name.\n"
-"\n"
-"GTD rests on the principle that a person needs to move tasks out of the mind "
-"by\n"
-"recording them externally. That way, the mind is freed from the job of\n"
-"remembering everything that needs to be done, and can concentrate on "
-"actually\n"
-"performing those tasks.\n"
-"    "
+#: view:project.task:0
+msgid "Show Context"
 msgstr ""
 
 #. module: project_gtd
@@ -194,6 +192,11 @@ msgid "Plannify Timebox"
 msgstr ""
 
 #. module: project_gtd
+#: model:ir.model,name:project_gtd.model_project_gtd_timebox
+msgid "project.gtd.timebox"
+msgstr "project.gtd.timebox"
+
+#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
@@ -201,43 +204,51 @@ msgid "Timeboxes"
 msgstr ""
 
 #. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0
-#: field:project.gtd.context,name:0
-#: field:project.task,context_id:0
-msgid "Context"
+#: view:project.task:0
+msgid "In Progress and draft tasks"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
+#: model:ir.model,name:project_gtd.model_project_gtd_context
+#: view:project.gtd.context:0 field:project.gtd.context,name:0
+#: field:project.task,context_id:0
+msgid "Context"
+msgstr "السياق"
+
+#. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
 msgstr ""
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
 msgid "_Ok"
-msgstr ""
-
-#. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:110
-#, python-format
-msgid "Getting Things Done"
-msgstr ""
+msgstr "م_وافق"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
 msgid "Office"
-msgstr ""
+msgstr "مكتب"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0
-#: field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
 msgid "Sequence"
+msgstr "مسلسل"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Show the context field"
 msgstr ""
 
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
 msgid "Gives the sequence order when displaying a list of contexts."
+msgstr ""
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Show Deadlines"
 msgstr ""
 
 #. module: project_gtd
@@ -251,10 +262,9 @@ msgid "Tasks selection"
 msgstr ""
 
 #. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:111
-#, python-format
+#: view:project.task:0
 msgid "Inbox"
-msgstr ""
+msgstr "صندوق الوارد"
 
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_id:0
@@ -269,7 +279,7 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
 msgid "Home"
-msgstr ""
+msgstr "المنزل"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
@@ -281,5 +291,13 @@ msgstr ""
 
 #. module: project_gtd
 #: view:project.task:0
-msgid "Previous"
+msgid "For reopening the tasks"
 msgstr ""
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Previous"
+msgstr "السابق"
+
+#~ msgid "This Month"
+#~ msgstr "هذا الشهر"

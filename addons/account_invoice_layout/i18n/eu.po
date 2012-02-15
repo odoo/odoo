@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2010-08-02 21:42+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:22+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:34+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -41,12 +41,6 @@ msgid "Title"
 msgstr "Izenburua"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.action_account_invoice_special_msg
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_layout_message
-msgid "Invoices with Layout and Message"
-msgstr "Molde eta mezu-dun Fakturak"
-
-#. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Disc. (%)"
@@ -58,9 +52,9 @@ msgid "Note"
 msgstr "Oharra"
 
 #. module: account_invoice_layout
-#: model:ir.model,name:account_invoice_layout.model_notify_message
-msgid "Notify By Messages"
-msgstr "Mezuz Adierazi"
+#: view:account.invoice.special.msg:0
+msgid "Print"
+msgstr "Inprimatu"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
@@ -75,24 +69,9 @@ msgid "Unit Price"
 msgstr "Unitate Prezioa"
 
 #. module: account_invoice_layout
-#: model:ir.module.module,description:account_invoice_layout.module_meta_information
-msgid ""
-"\n"
-"    This module provides some features to improve the layout of the "
-"invoices.\n"
-"\n"
-"    It gives you the possibility to\n"
-"        * order all the lines of an invoice\n"
-"        * add titles, comment lines, sub total lines\n"
-"        * draw horizontal lines and put page breaks\n"
-"\n"
-"    Moreover, there is one option which allows you to print all the selected "
-"invoices with a given special message at the bottom of it. This feature can "
-"be very useful for printing your invoices with end-of-year wishes, special "
-"punctual conditions...\n"
-"\n"
-"    "
-msgstr ""
+#: model:ir.model,name:account_invoice_layout.model_notify_message
+msgid "Notify By Messages"
+msgstr "Mezuz Adierazi"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -128,8 +107,8 @@ msgid "Notification Message"
 msgstr "Adierazpen Mezua"
 
 #. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
+#: report:account.invoice.layout:0
+msgid "Customer Code"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -226,8 +205,8 @@ msgid "Messages"
 msgstr ""
 
 #. module: account_invoice_layout
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
-msgid "Invoices with Layout"
+#: selection:account.invoice.line,state:0
+msgid "Product"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -280,9 +259,9 @@ msgid "Origin"
 msgstr ""
 
 #. module: account_invoice_layout
-#: field:account.invoice.line,state:0
-msgid "Type"
-msgstr "Mota"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -290,14 +269,8 @@ msgid "Separator Line"
 msgstr ""
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Your Reference"
-msgstr ""
-
-#. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "Invoices Layout Improvement"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -307,9 +280,14 @@ msgid "Supplier Invoice"
 msgstr ""
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Print"
-msgstr "Inprimatu"
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
+msgid "Invoices"
+msgstr ""
+
+#. module: account_invoice_layout
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -326,6 +304,17 @@ msgstr ""
 #: report:account.invoice.layout:0
 msgid "Net Total:"
 msgstr ""
+
+#. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.action_account_invoice_special_msg
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_layout_message
+msgid "Invoices and Message"
+msgstr ""
+
+#. module: account_invoice_layout
+#: field:account.invoice.line,state:0
+msgid "Type"
+msgstr "Mota"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
@@ -372,6 +361,9 @@ msgstr ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Objetuaren izena x_ -z hasi behar da eta ezin ditu karaktere berezirik izan!"
+
+#~ msgid "Invoices with Layout and Message"
+#~ msgstr "Molde eta mezu-dun Fakturak"
 
 #~ msgid "Customer Ref:"
 #~ msgstr "Bezero Erref."

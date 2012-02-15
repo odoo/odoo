@@ -6,15 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2009-02-03 06:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:38+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:49+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
+
+#. module: warning
+#: sql_constraint:purchase.order:0
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -33,14 +39,9 @@ msgid "Message for Purchase Order Line"
 msgstr ""
 
 #. module: warning
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr ""
-
-#. module: warning
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "قائمة الالتقاط"
 
 #. module: warning
 #: field:product.product,sale_line_warn:0
@@ -55,19 +56,13 @@ msgstr ""
 #. module: warning
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
-msgstr ""
-
-#. module: warning
-#: sql_constraint:purchase.order:0
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "المنتج"
 
 #. module: warning
 #: view:product.product:0
 #: view:res.partner:0
 msgid "Warnings"
-msgstr ""
+msgstr "تحذيرات"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -77,7 +72,7 @@ msgstr ""
 #: selection:res.partner,purchase_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "Warning"
-msgstr ""
+msgstr "تحذير"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -87,6 +82,11 @@ msgstr ""
 #: selection:res.partner,purchase_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "Blocking Message"
+msgstr ""
+
+#. module: warning
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
 msgstr ""
 
 #. module: warning
@@ -108,12 +108,7 @@ msgstr ""
 #: model:ir.model,name:warning.model_account_invoice
 #: field:res.partner,invoice_warn:0
 msgid "Invoice"
-msgstr ""
-
-#. module: warning
-#: model:ir.module.module,shortdesc:warning.module_meta_information
-msgid "Module for Warnings form onchange Event"
-msgstr ""
+msgstr "فاتورة"
 
 #. module: warning
 #: view:product.product:0
@@ -123,17 +118,22 @@ msgstr ""
 #. module: warning
 #: field:res.partner,sale_warn:0
 msgid "Sale Order"
-msgstr ""
+msgstr "طلب بيع"
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
 msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
+msgstr "أمر الشراء"
+
+#. module: warning
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
 msgstr ""
 
 #. module: warning
@@ -173,13 +173,18 @@ msgid "Alert for %s !"
 msgstr ""
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
 msgstr ""
 
 #. module: warning
-#: model:ir.module.module,description:warning.module_meta_information
-msgid "Module for Warnings form onchange Event."
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
+
+#. module: warning
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
 msgstr ""
 
 #. module: warning
@@ -221,14 +226,20 @@ msgstr ""
 #. module: warning
 #: model:ir.model,name:warning.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "شريك"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "أمر المبيعات"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "سطر أمر المبيعات"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "خطأ! لا يمكنك إنشاء أعضاء ذوي ارتباطات متداخلة."
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "لا بدّ أن يكون مرجع الأمر فريداً"

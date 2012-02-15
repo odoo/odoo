@@ -67,7 +67,7 @@ which needs explicit configuration in openerp-server.conf, too.
         "demo_xml" : [],
         "test": [ #'test/webdav_test1.yml',
                 ],
-        "active": False,
+        "auto_install": False,
         "installable": True,
         "certificate" : "001236490750845657973",
         'images': ['images/dav_properties.jpeg','images/directories_structure_principals.jpeg'],

@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-03-27 17:58+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:55+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:08+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
+
+#. module: purchase_requisition
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -24,21 +29,26 @@ msgid "In Progress"
 msgstr "В развитие"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
 #, python-format
 msgid "No Product in Tender"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Confirm"
-msgstr "Потвърждение"
+#: view:purchase.order:0
+msgid "Requisition"
+msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 #: field:purchase.requisition,user_id:0
 msgid "Responsible"
 msgstr "Отговорник"
+
+#. module: purchase_requisition
+#: view:purchase.requisition.partner:0
+msgid "Create Quotation"
+msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -53,9 +63,8 @@ msgstr "Състояние"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
-#: selection:purchase.requisition,state:0
-msgid "Draft"
-msgstr "Чернова"
+msgid "Purchase Requisition in negociation"
+msgstr ""
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -63,8 +72,9 @@ msgid "Supplier"
 msgstr "Доставчик"
 
 #. module: purchase_requisition
-#: field:purchase.requisition,exclusive:0
-msgid "Requisition Type"
+#: view:purchase.requisition:0
+#: selection:purchase.requisition,state:0
+msgid "New"
 msgstr ""
 
 #. module: purchase_requisition
@@ -82,6 +92,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: model:ir.actions.report.xml,name:purchase_requisition.report_purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
+#: model:ir.module.category,name:purchase_requisition.module_category_purchase_requisition
 #: field:product.product,purchase_requisition:0
 #: field:purchase.order,requisition_id:0
 #: view:purchase.requisition:0
@@ -96,15 +107,20 @@ msgid "Purchase Requisition Line"
 msgstr ""
 
 #. module: purchase_requisition
+#: view:purchase.order:0
+msgid "Purchase Orders with requisition"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
 #: field:purchase.requisition.line,product_id:0
 msgid "Product"
 msgstr "Продукт"
 
 #. module: purchase_requisition
-#: sql_constraint:purchase.order:0
-msgid "Order Reference must be unique !"
-msgstr "Препратката на поръчката трябва да бъде уникална!"
+#: view:purchase.requisition:0
+msgid "Quotations"
+msgstr "Оферти"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -117,6 +133,12 @@ msgstr "Описание"
 msgid ""
 "Check this box so that requisitions generates purchase requisitions instead "
 "of directly requests for quotations."
+msgstr ""
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:136
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: purchase_requisition
@@ -141,6 +163,12 @@ msgid "Multiple Requisitions"
 msgstr ""
 
 #. module: purchase_requisition
+#: report:purchase.requisition:0
+#: field:purchase.requisition.line,product_uom_id:0
+msgid "Product UoM"
+msgstr "Мерни единици на продукт"
+
+#. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Approved by Supplier"
 msgstr ""
@@ -151,14 +179,13 @@ msgid "Reset to Draft"
 msgstr "Пращане в проект"
 
 #. module: purchase_requisition
-#: model:ir.module.module,description:purchase_requisition.module_meta_information
-msgid ""
-"\n"
-"    This module allows you to manage your Purchase Requisition.\n"
-"    When a purchase order is created, you now have the opportunity to save "
-"the related requisition.\n"
-"    This new object will regroup and will allow you to easily keep track and "
-"order all your purchase orders.\n"
+#: view:purchase.requisition:0
+msgid "Current Purchase Requisition"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:res.groups,name:purchase_requisition.group_purchase_requisition_user
+msgid "User"
 msgstr ""
 
 #. module: purchase_requisition
@@ -170,11 +197,6 @@ msgstr "Адрес"
 #: report:purchase.requisition:0
 msgid "Order Reference"
 msgstr "Отпратка към поръчка"
-
-#. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Start Date"
-msgstr "Начална дата"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -192,9 +214,22 @@ msgid "Quantity"
 msgstr "Количество"
 
 #. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Unassigned  Requisition"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Purchase Requisitions"
+msgstr ""
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/purchase_requisition.py:136
+#, python-format
+msgid ""
+"You have already one %s purchase order for this partner, you must cancel "
+"this purchase order to create a new quotation."
 msgstr ""
 
 #. module: purchase_requisition
@@ -255,16 +290,20 @@ msgid "Purchase Order"
 msgstr "Нареждане за покупка"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
 #, python-format
 msgid "Error!"
 msgstr "Грешка!"
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-#: field:purchase.requisition.line,product_uom_id:0
-msgid "Product UoM"
-msgstr "Мерни единици на продукт"
+#: field:purchase.requisition,exclusive:0
+msgid "Requisition Type"
+msgstr ""
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "New Purchase Requisition"
+msgstr ""
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -275,6 +314,11 @@ msgstr "Продукти"
 #: view:purchase.requisition:0
 msgid "Order Date"
 msgstr "Дата на поръчка"
+
+#. module: purchase_requisition
+#: report:purchase.requisition:0
+msgid "]"
+msgstr "]"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -292,9 +336,9 @@ msgid "Purchase Requisition Partner"
 msgstr ""
 
 #. module: purchase_requisition
-#: report:purchase.requisition:0
-msgid "]"
-msgstr "]"
+#: view:purchase.requisition:0
+msgid "Start"
+msgstr ""
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -339,11 +383,6 @@ msgid "Latest Requisition"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Quotations"
-msgstr "Оферти"
-
-#. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Qty"
 msgstr "К-во"
@@ -354,8 +393,8 @@ msgid "Purchase Requisition (exclusive)"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition.partner:0
-msgid "Create Quotation"
+#: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager
+msgid "Manager"
 msgstr ""
 
 #. module: purchase_requisition
@@ -390,9 +429,9 @@ msgid "Partner"
 msgstr "Контрагент"
 
 #. module: purchase_requisition
-#: model:ir.module.module,shortdesc:purchase_requisition.module_meta_information
-msgid "Purchase - Purchase Requisition"
-msgstr ""
+#: view:purchase.requisition:0
+msgid "Start Date"
+msgstr "Начална дата"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -400,19 +439,15 @@ msgid "Unassigned"
 msgstr "Незаето"
 
 #. module: purchase_requisition
-#: view:purchase.order:0
-msgid "Requisition"
-msgstr ""
-
-#. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
 msgstr "Поръчки за покупки"
 
-#. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:90
-#, python-format
-msgid ""
-"You have already one %s purchase order for this partner, you must cancel "
-"this purchase order to create a new quotation."
-msgstr ""
+#~ msgid "Draft"
+#~ msgstr "Чернова"
+
+#~ msgid "Confirm"
+#~ msgstr "Потвърждение"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Препратката на поръчката трябва да бъде уникална!"

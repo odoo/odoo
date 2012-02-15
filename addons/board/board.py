@@ -43,11 +43,7 @@ class board_board(osv.osv):
         right = []
         #start Loop
         for line in board.line_ids:
-            linestr = '<action string="%s" name="%d" colspan="4"' % (line.name, line.action_id.id)
-            if line.height:
-                linestr += (' height="%d"' % (line.height, ))
-            if line.width:
-                linestr += (' width="%d"' % (line.width, ))
+            linestr = '<action string="%s" name="%d"' % (line.name, line.action_id.id)
             linestr += '/>'
             if line.position == 'left':
                 left.append(linestr)
@@ -178,13 +174,13 @@ class board_line(osv.osv):
     _columns = {
         'name': fields.char('Title', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order\
-                         when displaying a list of board lines."),
+                         when displaying a list of board lines.", select=True),
         'height': fields.integer('Height'),
         'width': fields.integer('Width'),
         'board_id': fields.many2one('board.board', 'Dashboard', required=True, ondelete='cascade'),
         'action_id': fields.many2one('ir.actions.act_window', 'Action', required=True),
         'position': fields.selection([('left','Left'),
-                                      ('right','Right')], 'Position', required=True)
+                                      ('right','Right')], 'Position', required=True, select=True)
     }
     _defaults = {
         'position': lambda *args: 'left'

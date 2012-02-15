@@ -6,59 +6,48 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-11 09:18+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-10 03:41+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:05+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-11 05:07+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:87
+#: code:addons/base_vat/base_vat.py:141
 #, python-format
 msgid ""
-"The Vat does not seems to be correct. You should have entered something like "
-"this %s"
-msgstr "增值税似乎不正确。您的输入应类似于：%s"
+"This VAT number does not seem to be valid.\n"
+"Note: the expected format is %s"
+msgstr "增值税号似乎不正确，应该格式类似 %s"
 
 #. module: base_vat
-#: model:ir.module.module,description:base_vat.module_meta_information
-msgid ""
-"\n"
-"    Enable the VAT Number for the partner. Check the validity of that VAT "
-"Number.\n"
-"\n"
-"    This module follows the methods stated at http://sima-pc.com/nif.php "
-"for\n"
-"    checking the validity of VAT Number assigned to partners in European "
-"countries.\n"
-"    "
-msgstr ""
-"\n"
-"    为业务伙伴启用增值税号码。检查增值税号码的有效性\n"
-"\n"
-"    此模块按照http://sima-pc.com/nif.php 上所列的方法 \n"
-"    检查分配给欧洲国家的合作伙伴增值税号码的有效性。\n"
-"    "
-
-#. module: base_vat
-#: model:ir.module.module,shortdesc:base_vat.module_meta_information
-msgid "Base VAT - To check VAT number validity"
-msgstr "基础增值税 - 检查增值税数字的有效性"
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "公司名称必须唯一！"
 
 #. module: base_vat
 #: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "错误！您不能创建递归的商会会员。"
+msgid "Error ! You cannot create recursive associated members."
+msgstr "错误，您不能创建循环引用的会员用户"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:88
-#, python-format
-msgid "The VAT is invalid, It should begin with the country code"
-msgstr "增值税无效，应以国家代码开头"
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr "VIES增值税号检查"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: base_vat
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "错误！您不能创建递归公司."
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -71,6 +60,13 @@ msgstr "如果你的业务伙伴接收增值税勾选此项.它将用于增值�
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
 msgstr "业务伙伴"
+
+#. module: base_vat
+#: help:res.company,vat_check_vies:0
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr "如勾选了这里，业务伙伴的增值税号会经由欧洲VIES服务机构在线验证，而非仅仅是本地验证编号格式"
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
@@ -86,3 +82,37 @@ msgstr "增值税正式报表"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "无效的视图结构xml文件"
+
+#, python-format
+#~ msgid "The VAT is invalid, It should begin with the country code"
+#~ msgstr "增值税无效，应以国家代码开头"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Enable the VAT Number for the partner. Check the validity of that VAT "
+#~ "Number.\n"
+#~ "\n"
+#~ "    This module follows the methods stated at http://sima-pc.com/nif.php "
+#~ "for\n"
+#~ "    checking the validity of VAT Number assigned to partners in European "
+#~ "countries.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    为业务伙伴启用增值税号码。检查增值税号码的有效性\n"
+#~ "\n"
+#~ "    此模块按照http://sima-pc.com/nif.php 上所列的方法 \n"
+#~ "    检查分配给欧洲国家的合作伙伴增值税号码的有效性。\n"
+#~ "    "
+
+#, python-format
+#~ msgid ""
+#~ "The Vat does not seems to be correct. You should have entered something like "
+#~ "this %s"
+#~ msgstr "增值税似乎不正确。您的输入应类似于：%s"
+
+#~ msgid "Base VAT - To check VAT number validity"
+#~ msgstr "基础增值税 - 检查增值税数字的有效性"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "错误！您不能创建递归的商会会员。"

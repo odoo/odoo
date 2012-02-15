@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-01-12 15:34+0000\n"
 "Last-Translator: Pekka Pylvänäinen <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:18+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:29+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -44,6 +44,20 @@ msgid ""
 msgstr ""
 "Aseta malli jos tätä sääntöä sovelletaan vain mallin mukaisiin tuotteisiin. "
 "Jätä tyhjäksi jos sovelletaan kaikkiin tuotteisiin."
+
+#. module: product
+#: help:product.product,virtual_available:0
+msgid ""
+"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location typed as "
+"'internal'."
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -81,11 +95,6 @@ msgid "Incoming"
 msgstr "Saapuvat"
 
 #. module: product
-#: field:product.template,mes_type:0
-msgid "Measure Type"
-msgstr "Mittatyyppi"
-
-#. module: product
 #: help:res.partner,property_product_pricelist:0
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
@@ -93,15 +102,6 @@ msgid ""
 msgstr ""
 "Tätä hintalistaa käytetään oletusarvon sijasta myyntiin nykyiselle "
 "yhteistyökumppanille"
-
-#. module: product
-#: constraint:product.supplierinfo:0
-msgid ""
-"Error: The default UOM and the Supplier Product UOM must be in the same "
-"category."
-msgstr ""
-"Virhe: Oletusyksikön ja toimittajan tuoteyksikön tulee olla samaa "
-"yksikköluokkaa."
 
 #. module: product
 #: field:product.template,seller_qty:0
@@ -114,9 +114,7 @@ msgid "Fixed"
 msgstr "Kiinteä"
 
 #. module: product
-#: code:addons/product/pricelist.py:186
-#: code:addons/product/pricelist.py:342
-#: code:addons/product/pricelist.py:360
+#: code:addons/product/pricelist.py:178
 #, python-format
 msgid "Warning !"
 msgstr "Varoitus!"
@@ -148,11 +146,6 @@ msgid "Reference"
 msgstr "Viite"
 
 #. module: product
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Virhe! Et voi luoda rekursiivisia kategorioita."
-
-#. module: product
 #: help:pricelist.partnerinfo,min_quantity:0
 msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
@@ -172,13 +165,17 @@ msgid "Partner"
 msgstr "Kumppani"
 
 #. module: product
-#: help:product.template,supply_method:0
+#: code:addons/product/product.py:143
+#, python-format
 msgid ""
-"Produce will generate production order or tasks, according to the product "
-"type. Purchase will trigger purchase orders when requested."
+"Conversion from Product UoM %s to Default UoM %s is not possible as they "
+"both belong to different Category!."
 msgstr ""
-"Tuotanto synnyttää tuotantotilauksen tai työtehtäviä tuotteen tyypin "
-"mukaisesti. Ostaminen luo ostotilauksen pyydettäessä."
+
+#. module: product
+#: model:product.uom,name:product.product_uom_dozen
+msgid "Dozen"
+msgstr ""
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -189,12 +186,6 @@ msgstr "Keskihinta"
 #: help:product.pricelist.item,name:0
 msgid "Explicit rule name for this pricelist line."
 msgstr "Säännön nimi tälle hinnaston riville."
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr "Mittayksikköjen kategoriat"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu1_product_template
@@ -263,12 +254,19 @@ msgid "Product Type"
 msgstr "Tuotteen tyyppi"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_form_config_action
+msgid ""
+"Create a product form for everything you buy or sell. Specify a supplier if "
+"the product can be purchased."
+msgstr ""
+
+#. module: product
 #: view:product.uom:0
 msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  esim. 1 * (tämä mittayksikkö) = kerroin * (viitemittayksikkö)"
 
 #. module: product
-#: code:addons/product/product.py:380
+#: code:addons/product/product.py:418
 #, python-format
 msgid "Products: "
 msgstr "Tuotteet: "
@@ -277,15 +275,6 @@ msgstr "Tuotteet: "
 #: field:product.category,parent_id:0
 msgid "Parent Category"
 msgstr "Yläkategoria"
-
-#. module: product
-#: help:product.product,outgoing_qty:0
-msgid ""
-"Quantities of products that are planned to leave in selected locations or "
-"all internal if none have been selected."
-msgstr ""
-"Tuotteiden määrät jotka on suunniteltu lähtemään valituista paikoista, tai "
-"kaikki kokonaisuudessaan jos yhtään ei ole valittu."
 
 #. module: product
 #: help:product.template,procure_method:0
@@ -424,6 +413,20 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: help:product.product,qty_available:0
+msgid ""
+"Current quantity of products.\n"
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods stored in the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location typed as "
+"'internal'."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
 msgstr "Tuotteen hintojen haku"
@@ -498,13 +501,6 @@ msgid "Codes"
 msgstr "Koodit"
 
 #. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid ""
-"Choose here the Unit of Measure in which the prices and quantities are "
-"expressed below."
-msgstr "Valitse mittayksikkö jossa hinnat ja määrät näytetään alapuolella."
-
-#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr "Määrä 4"
@@ -521,6 +517,7 @@ msgstr "Työaika"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
+#: model:ir.actions.act_window,help:product.product_pricelist_action_for_purchase
 msgid ""
 "A price list contains rules to be evaluated in order to compute the purchase "
 "or sales price for all the partners assigned to a price list. Price lists "
@@ -530,28 +527,15 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to False, it will allow you to hide the product "
-"without removing it."
-msgstr ""
-"Jos aktiivinen kenttä asetetaan tilaan epätosi (false), se mahdollistaa "
-"tuotteen piilottamisen poistamatta sitä."
-
-#. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:343
+#: code:addons/product/product.py:175
 #, python-format
-msgid ""
-"No active version for the selected pricelist !\n"
-"Please create or activate one."
+msgid "Cannot change the category of existing UoM '%s'."
 msgstr ""
-"Ei aktiivista versiota valitusta hintalistasta !\n"
-"Ole hyvä ja luo tai aktivoi jokin."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -567,6 +551,11 @@ msgstr "Laatikko 20x20x40"
 #: view:product.pricelist.item:0
 msgid "Price Computation"
 msgstr "Hinnan laskenta"
+
+#. module: product
+#: model:res.groups,name:product.group_uos
+msgid "Product UoS View"
+msgstr ""
 
 #. module: product
 #: field:product.template,purchase_ok:0
@@ -602,11 +591,6 @@ msgid "The width of the package"
 msgstr "Pakkauksen leveys"
 
 #. module: product
-#: field:product.product,virtual_available:0
-msgid "Virtual Stock"
-msgstr "Näennäinen varasto"
-
-#. module: product
 #: selection:product.category,type:0
 msgid "View"
 msgstr "Näkymä"
@@ -617,9 +601,19 @@ msgid "Product Templates"
 msgstr "Tuote mallipohjat"
 
 #. module: product
+#: field:product.category,parent_left:0
+msgid "Left Parent"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_restaurantexpenses0_product_template
 msgid "Restaurant Expenses"
 msgstr "Ravintolakulut"
+
+#. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr "Tuotteiden kokonaismäärä jotka voit laittaa lavalle tai laatikkoon."
 
 #. module: product
 #: constraint:product.packaging:0
@@ -638,6 +632,15 @@ msgid "Price Type"
 msgstr "Hintatyyppi"
 
 #. module: product
+#: code:addons/product/product.py:363
+#, python-format
+msgid ""
+"New UoM '%s' must belong to same UoM category '%s' as of old UoM '%s'. If "
+"you need to change the unit of measure, you may desactivate this product "
+"from the 'Procurement & Locations' tab and create a new one."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "Max. Margin"
 msgstr "Maksimikate"
@@ -646,6 +649,11 @@ msgstr "Maksimikate"
 #: view:product.pricelist.item:0
 msgid "Base Price"
 msgstr "Perushinta"
+
+#. module: product
+#: model:product.template,name:product.product_consultant_product_template
+msgid "Service on Timesheet"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_fan2_product_template
@@ -679,9 +687,9 @@ msgid "Supplier"
 msgstr "Toimittaja"
 
 #. module: product
-#: model:product.template,name:product.product_product_sidepanel0_product_template
-msgid "Side Panel"
-msgstr "Sivupaneeli"
+#: field:product.product,qty_available:0
+msgid "Quantity On Hand"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
@@ -692,6 +700,30 @@ msgstr "Perusnäppäimistö ja hiiri"
 #: field:product.price.type,name:0
 msgid "Price Name"
 msgstr "Hinnan nimi"
+
+#. module: product
+#: model:product.template,name:product.product_product_arm_product_template
+msgid "Cabinet"
+msgstr ""
+
+#. module: product
+#: help:product.product,incoming_qty:0
+msgid ""
+"Quantity of products that are planned to arrive.\n"
+"In a context with a single Stock Location, this includes goods arriving to "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods arriving to the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location typed as "
+"'internal'."
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_woodentable0_product_template
+msgid "Wooden Table"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -753,9 +785,9 @@ msgid "Customer Lead Time"
 msgstr "Asiakkaan läpimenoaika"
 
 #. module: product
-#: model:process.transition,name:product.process_transition_supplierofproduct0
-msgid "Supplier of the product"
-msgstr "Tuotteen toimittaja"
+#: model:product.template,name:product.product_product_25_product_template
+msgid "Mouse"
+msgstr "Hiiri"
 
 #. module: product
 #: help:product.template,uos_id:0
@@ -793,6 +825,7 @@ msgstr "Tyyppi"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.actions.act_window,name:product.product_pricelist_action_for_purchase
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action2
 #: model:ir.ui.menu,name:product.menu_product_pricelist_main
 msgid "Pricelists"
@@ -849,6 +882,12 @@ msgid "In Development"
 msgstr "Kehityksessä"
 
 #. module: product
+#: code:addons/product/product.py:363
+#, python-format
+msgid "UoM categories Mismatch!"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_shelfofcm1_product_template
 msgid "Shelf of 200cm"
 msgstr "200 cm hylly"
@@ -893,6 +932,8 @@ msgid "DDR 256MB PC400"
 msgstr "DDR 256MB PC400"
 
 #. module: product
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model:ir.ui.menu,name:product.menu_product_category_action_form
 #: view:product.category:0
 msgid "Product Categories"
 msgstr "Tuotteiden kategoriat"
@@ -914,6 +955,11 @@ msgstr ""
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
 msgstr "Pakkauksen kokonaispaino"
+
+#. module: product
+#: field:product.template,seller_info_id:0
+msgid "unknown"
+msgstr ""
 
 #. module: product
 #: help:product.packaging,code:0
@@ -948,11 +994,6 @@ msgstr "Tavallinen 80mm kotelotuuletin"
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Information about a product supplier"
 msgstr "Tuotteen toimittajan tiedot"
-
-#. module: product
-#: view:product.product:0
-msgid "Extended Filters..."
-msgstr "Laajennetut Suotimet..."
 
 #. module: product
 #: view:product.product:0
@@ -1054,14 +1095,28 @@ msgid "Bigger than the reference UoM"
 msgstr "Suurempi kuin viitemittayksikkö"
 
 #. module: product
-#: model:ir.module.module,shortdesc:product.module_meta_information
-msgid "Products & Pricelists"
-msgstr "Tuotteet ja hinnastot"
+#: field:product.category,parent_right:0
+msgid "Right Parent"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
 msgid "To Sell"
 msgstr "Myytäväksi"
+
+#. module: product
+#: help:product.product,outgoing_qty:0
+msgid ""
+"Quantity of products that are planned to leave.\n"
+"In a context with a single Stock Location, this includes goods leaving from "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving from the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"In a context with a single Shop, this includes goods leaving from the Stock "
+"Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods leaving from any Stock Location typed as "
+"'internal'."
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_services0
@@ -1098,17 +1153,13 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: product
-#: view:product.product:0
-msgid "Stockable"
-msgstr "Varastoitava"
-
-#. module: product
 #: model:product.template,name:product.product_product_woodlintelm0_product_template
 msgid "Wood Lintel 4m"
 msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
 msgid ""
 "You must define a Product for everything you buy or sell. Products can be "
 "raw materials, stockable products, consumables or services. The Product form "
@@ -1203,30 +1254,6 @@ msgid "Unit of Sale"
 msgstr "Myyntiyksikkö"
 
 #. module: product
-#: model:ir.module.module,description:product.module_meta_information
-msgid ""
-"\n"
-"    This is the base module for managing products and pricelists in "
-"OpenERP.\n"
-"\n"
-"    Products support variants, different pricing methods, suppliers\n"
-"    information, make to stock/order, different unit of measures,\n"
-"    packaging and properties.\n"
-"\n"
-"    Pricelists support:\n"
-"    * Multiple-level of discount (by product, category, quantities)\n"
-"    * Compute price based on different criteria:\n"
-"        * Other pricelist,\n"
-"        * Cost price,\n"
-"        * List price,\n"
-"        * Supplier price, ...\n"
-"    Pricelists preferences by product and/or partners.\n"
-"\n"
-"    Print product labels with barcode.\n"
-"    "
-msgstr ""
-
-#. module: product
 #: help:product.template,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
@@ -1249,6 +1276,11 @@ msgid "Services"
 msgstr "Palvelut"
 
 #. module: product
+#: model:ir.actions.act_window,name:product.product_form_config_action
+msgid "Create or Import Products"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,base_pricelist_id:0
 msgid "If Other Pricelist"
 msgstr "Jos muu hinnasto"
@@ -1256,8 +1288,10 @@ msgstr "Jos muu hinnasto"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
 #: model:ir.actions.act_window,name:product.product_normal_action_puchased
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
 #: model:ir.actions.act_window,name:product.product_normal_action_tree
 #: model:ir.ui.menu,name:product.menu_products
+#: model:ir.ui.menu,name:product.prod_config_main
 #: view:product.product:0
 msgid "Products"
 msgstr "Tuotteet"
@@ -1279,7 +1313,7 @@ msgid "Pallet Dimension"
 msgstr "Lavan koko"
 
 #. module: product
-#: code:addons/product/product.py:618
+#: code:addons/product/product.py:668
 #, python-format
 msgid " (copy)"
 msgstr " (kopio)"
@@ -1306,7 +1340,7 @@ msgid "Second UoM"
 msgstr "Toinen mittayksikkö"
 
 #. module: product
-#: code:addons/product/product.py:142
+#: code:addons/product/product.py:143
 #, python-format
 msgid "Error !"
 msgstr "Virhe !"
@@ -1349,6 +1383,11 @@ msgid "Price List Version"
 msgstr "Hinnaston versio"
 
 #. module: product
+#: field:product.product,virtual_available:0
+msgid "Quantity Available"
+msgstr ""
+
+#. module: product
 #: help:product.pricelist.item,sequence:0
 msgid ""
 "Gives the order in which the pricelist items will be checked. The evaluation "
@@ -1375,10 +1414,21 @@ msgid "The gross weight in Kg."
 msgstr "Bruttopaino kilogrammoissa."
 
 #. module: product
+#: model:product.template,name:product.product_product_sidepanel0_product_template
+msgid "Side Panel"
+msgstr "Sivupaneeli"
+
+#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
 msgstr "Hankinta"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Weights"
+msgstr "Painot"
 
 #. module: product
 #: field:product.uom,category_id:0
@@ -1422,14 +1472,11 @@ msgid "Regular processor config"
 msgstr "Vakio prosessorikonfiguraatio"
 
 #. module: product
-#: code:addons/product/product.py:142
-#, python-format
+#: help:product.template,type:0
 msgid ""
-"Conversion from Product UoM m to Default UoM PCE is not possible as they "
-"both belong to different Category!."
+"Will change the way procurements are processed. Consumable are product where "
+"you don't manage stock."
 msgstr ""
-"Muunnos tuotteen mittayksikösä m oletusmittayksikköön kpl ei ole mahdollinen "
-"koska ne kuuluvat eri kategorioihin!."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1450,15 +1497,6 @@ msgstr ""
 "hankintatilauksilta."
 
 #. module: product
-#: help:product.product,qty_available:0
-msgid ""
-"Current quantities of products in selected locations or all internal if none "
-"have been selected."
-msgstr ""
-"Tämänhetkiset tuotteiden määrät valituissa paikoissa, tai kokonaisuudessaan "
-"jos yhtään ei ole valittu."
-
-#. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
 msgid "Basic PC"
 msgstr "Tavallinen PC"
@@ -1471,11 +1509,6 @@ msgid ""
 msgstr ""
 "Jos aktiivinen kenttä asetetaan arvoon epätosi (false), voit piilottaa "
 "hinnaston poistamatta sitä."
-
-#. module: product
-#: field:product.product,qty_available:0
-msgid "Real Stock"
-msgstr "Todellinen varasto"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
@@ -1526,6 +1559,11 @@ msgid "The weight of the empty UL"
 msgstr "Tyhjän pakkauksen paino"
 
 #. module: product
+#: model:product.template,name:product.product_product_woodmm10_product_template
+msgid "Wood 10mm"
+msgstr ""
+
+#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference UoM"
 msgstr "Pienempi kuin viitemittayksikkö"
@@ -1555,6 +1593,11 @@ msgid "The EAN code of the package unit."
 msgstr "Pakkauksen EAN-koodi."
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid "This comes from the product form."
+msgstr ""
+
+#. module: product
 #: field:product.packaging,weight_ul:0
 msgid "Empty Package Weight"
 msgstr "Tyhjän pakkauksen paino"
@@ -1565,10 +1608,9 @@ msgid "Product Field"
 msgstr "Tuotekenttä"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_pricelist_type_action
-#: model:ir.ui.menu,name:product.menu_product_pricelist_type_action2
-msgid "Pricelists Types"
-msgstr "Hinnastojen tyypit"
+#: field:product.template,mes_type:0
+msgid "Measure Type"
+msgstr "Mittatyyppi"
 
 #. module: product
 #: help:product.uom,factor:0
@@ -1579,6 +1621,12 @@ msgstr ""
 "Kuinka monta kertaa pienempi tämä mittayksikkö on kategorian "
 "viitemittayksikköön nähden.\n"
 "1 * (viitemittayksikkö) = kerroin * (tämä yksikkö"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_price_type_action
+#: model:ir.ui.menu,name:product.menu_product_price_type
+msgid "Price Types"
+msgstr "Hintatyypit"
 
 #. module: product
 #: help:product.template,uom_id:0
@@ -1650,7 +1698,6 @@ msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
-#: model:ir.ui.menu,name:product.prod_config_main
 #: model:process.node,name:product.process_node_product0
 #: model:process.process,name:product.process_process_productprocess0
 #: field:product.packaging,product_id:0
@@ -1672,9 +1719,11 @@ msgid "Make to Order"
 msgstr "Valmista tilaukseen"
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
-msgstr "Tuotteiden kokonaismäärä jotka voit laittaa lavalle tai laatikkoon."
+#: help:product.template,supply_method:0
+msgid ""
+"Produce will generate production order or tasks, according to the product "
+"type. Buy will trigger purchase orders when requested."
+msgstr ""
 
 #. module: product
 #: field:product.product,variants:0
@@ -1686,12 +1735,6 @@ msgstr "Variaatiot"
 #: model:ir.ui.menu,name:product.menu_products_category
 msgid "Products by Category"
 msgstr "Tuotteet kategorioittain"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_category_action_form
-#: model:ir.ui.menu,name:product.menu_product_category_action_form
-msgid "Product Categories"
-msgstr "Tuotteiden kategoriat"
 
 #. module: product
 #: field:product.template,uos_coeff:0
@@ -1714,14 +1757,14 @@ msgid "ATX Mid-size Tower"
 msgstr "ATX keskikokoinen torni"
 
 #. module: product
-#: field:product.packaging,ean:0
-msgid "EAN"
-msgstr "EAN"
-
-#. module: product
 #: view:product.pricelist.item:0
 msgid "Rounding Method"
 msgstr "Pyöristys"
+
+#. module: product
+#: model:product.category,name:product.product_category_assembly
+msgid "Assembly Service"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
@@ -1752,15 +1795,11 @@ msgstr "Tuotteiden hinnastot"
 #: field:product.pricelist,company_id:0
 #: field:product.pricelist.item,company_id:0
 #: field:product.pricelist.version,company_id:0
+#: view:product.product:0
 #: field:product.supplierinfo,company_id:0
 #: field:product.template,company_id:0
 msgid "Company"
 msgstr "Yritys"
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_price_type_action
-msgid "Prices Types"
-msgstr "Hintatyypit"
 
 #. module: product
 #: help:product.template,list_price:0
@@ -1770,7 +1809,7 @@ msgid ""
 msgstr "Perushinta josta asiakkaan hinta lasketaan."
 
 #. module: product
-#: code:addons/product/pricelist.py:518
+#: code:addons/product/pricelist.py:376
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Tuotelomakkeen kumppaniosio"
@@ -1822,7 +1861,6 @@ msgstr "Asiantuntijan tuki paikan päällä"
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
 #: field:product.pricelist,type:0
-#: view:product.pricelist.type:0
 msgid "Pricelist Type"
 msgstr "Hinnaston tyyppi"
 
@@ -1830,6 +1868,11 @@ msgstr "Hinnaston tyyppi"
 #: model:product.category,name:product.product_category_otherproducts0
 msgid "Other Products"
 msgstr "Muut Tuotteet"
+
+#. module: product
+#: field:product.product,color:0
+msgid "Color Index"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -1852,9 +1895,20 @@ msgid "Supplier Pricelist"
 msgstr "Toimittajan hinnasto"
 
 #. module: product
+#: code:addons/product/product.py:175
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.item,base:0
 msgid "Based on"
 msgstr "Perustuen"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_ton
+msgid "t"
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_rawmaterial0
@@ -1862,14 +1916,9 @@ msgid "Raw Materials"
 msgstr "Raaka-aineet"
 
 #. module: product
-#: help:product.product,virtual_available:0
-msgid ""
-"Future stock for this product according to the selected locations or all "
-"internal if none have been selected. Computed as: Real Stock - Outgoing + "
-"Incoming."
-msgstr ""
-"Tuleva varasto tälle tuotteelle valituissa paikoissa (tai kaikki sisäiset "
-"jos mitään ei valittu). Lasketaan: todellinen varasto - lähtevät + saapuvat."
+#: help:product.template,product_manager:0
+msgid "This is use as task responsible"
+msgstr "Tätä käytetään tehtävän vastuuhenkilönä"
 
 #. module: product
 #: field:product.pricelist,name:0
@@ -1934,6 +1983,12 @@ msgstr ""
 "sitä kokonaan."
 
 #. module: product
+#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
+msgid "UoM Categories"
+msgstr ""
+
+#. module: product
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr "Toimittajan läpimenoaika"
@@ -1965,6 +2020,11 @@ msgid ""
 msgstr ""
 "Käytetään koodissa valitsemaan tietyt hinnat perustuen kontekstiin. Alä tee "
 "muutoksia."
+
+#. module: product
+#: view:product.product:0
+msgid "Context..."
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd1_product_template
@@ -2002,9 +2062,14 @@ msgid "Processor on demand"
 msgstr "Prosessori vaadittaessa"
 
 #. module: product
-#: model:product.template,name:product.product_product_25_product_template
-msgid "Mouse"
-msgstr "Hiiri"
+#: model:process.transition,name:product.process_transition_supplierofproduct0
+msgid "Supplier of the product"
+msgstr "Tuotteen toimittaja"
+
+#. module: product
+#: field:product.product,product_image:0
+msgid "Image"
+msgstr ""
 
 #. module: product
 #: field:product.uom,uom_type:0
@@ -2012,9 +2077,13 @@ msgid "UoM Type"
 msgstr "Mittayksikön tyyppi"
 
 #. module: product
-#: help:product.template,product_manager:0
-msgid "This is use as task responsible"
-msgstr "Tätä käytetään tehtävän vastuuhenkilönä"
+#: help:product.product,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
+msgstr ""
+"Jos aktiivinen kenttä asetetaan tilaan epätosi (false), se mahdollistaa "
+"tuotteen piilottamisen poistamatta sitä."
 
 #. module: product
 #: help:product.uom,rounding:0
@@ -2047,17 +2116,6 @@ msgid "Complete PC With Peripherals"
 msgstr "Kokonainen PC lisälaitteineen"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Weigths"
-msgstr "Painot"
-
-#. module: product
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Virhe! Et voi luoda itseään toistavasti rinnastettuja jäseniä."
-
-#. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
 msgid "Hotel Expenses"
 msgstr "Hotellikulut"
@@ -2086,6 +2144,14 @@ msgstr "Antaa järjestyksen näytettäessä pakkausten listausta."
 #: field:product.pricelist.item,price_round:0
 msgid "Price Rounding"
 msgstr "Hinnan pyöristys"
+
+#. module: product
+#: code:addons/product/pricelist.py:178
+#, python-format
+msgid ""
+"At least one pricelist has no active version !\n"
+"Please create or activate one."
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
@@ -2143,16 +2209,17 @@ msgid "Phone Help"
 msgstr "Puhelintuki"
 
 #. module: product
-#: help:product.pricelist.item,price_round:0
-msgid ""
-"Sets the price so that it is a multiple of this value.\n"
-"Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+#: field:product.supplierinfo,sequence:0
+msgid "Sequence"
+msgstr "Sarja"
+
+#. module: product
+#: model:product.template,name:product.product_assembly_product_template
+msgid "Assembly Service Cost"
 msgstr ""
-"Asettaa hinnan siten että se on tämän arvon kerrannainen.\n"
-"Pyöristys tehdään alennuksen jälkeen ja ennen hinnanlisiä.\n"
-"Saadaksesi hintoja jotka päättyvät 9.99, aseta pyöristys 10 ja hinnanlisä -"
-"0.01"
 
 #. module: product
 #: view:product.price_list:0
@@ -2175,28 +2242,20 @@ msgid "Sales Properties"
 msgstr "Myynnin ominaisuudet"
 
 #. module: product
-#: model:product.uom,name:product.product_uom_ton
-msgid "tonne"
-msgstr "tonni"
-
-#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Delays"
 msgstr "Viiveet"
 
 #. module: product
+#: view:product.product:0
+msgid "Both stockable and consumable products"
+msgstr ""
+
+#. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Creation of the product"
 msgstr "Tuotteen luominen"
-
-#. module: product
-#: help:product.template,type:0
-msgid ""
-"Will change the way procurements are processed. Consumables are stockable "
-"products with infinite stock, or for use when you have no inventory "
-"management in the system."
-msgstr ""
 
 #. module: product
 #: field:pricelist.partnerinfo,name:0
@@ -2209,14 +2268,9 @@ msgid "Description"
 msgstr "Kuvaus"
 
 #. module: product
-#: code:addons/product/pricelist.py:361
-#, python-format
-msgid ""
-"Could not resolve product category, you have defined cyclic categories of "
-"products!"
-msgstr ""
-"Ei voitu ratkaista tuotekategoriaa, olet määritellyt syklisiä kategorioita "
-"tuotteille!"
+#: field:product.packaging,ean:0
+msgid "EAN"
+msgstr "EAN"
 
 #. module: product
 #: view:product.template:0
@@ -2227,15 +2281,6 @@ msgstr "Tuotteen kuvaus"
 #: view:product.pricelist.item:0
 msgid " ) + "
 msgstr " ) + "
-
-#. module: product
-#: help:product.product,incoming_qty:0
-msgid ""
-"Quantities of products that are planned to arrive in selected locations or "
-"all internal if none have been selected."
-msgstr ""
-"Saapuviksi suunnitellut tuotteiden määrät valittuihin paikkoihin, tai "
-"kokonaisuudessaan paikkoja ei ole valittu."
 
 #. module: product
 #: field:product.template,volume:0
@@ -2249,6 +2294,7 @@ msgstr "Laatikko"
 
 #. module: product
 #: view:product.product:0
+#: model:res.groups,name:product.group_product_variant
 msgid "Product Variant"
 msgstr "Tuotevariaatio"
 
@@ -2258,7 +2304,7 @@ msgid "Shelves"
 msgstr "Hyllyt"
 
 #. module: product
-#: code:addons/product/pricelist.py:517
+#: code:addons/product/pricelist.py:375
 #, python-format
 msgid "Other Pricelist"
 msgstr "Muu hinnasto"
@@ -2283,6 +2329,11 @@ msgid "Palletization"
 msgstr "Lavoitus"
 
 #. module: product
+#: help:product.template,volume:0
+msgid "The volume in m3."
+msgstr "Tilavuus kuutiometreinä."
+
+#. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
 msgstr "Elinkaaren lopussa"
@@ -2304,17 +2355,31 @@ msgid "Pricelist Versions"
 msgstr "Hinnaston versio"
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-#: field:product.supplierinfo,sequence:0
-msgid "Sequence"
-msgstr "Sarja"
+#: model:product.template,name:product.product_product_span100_product_template
+msgid "Shelf Panel"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,price_round:0
+msgid ""
+"Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+msgstr ""
+"Asettaa hinnan siten että se on tämän arvon kerrannainen.\n"
+"Pyöristys tehdään alennuksen jälkeen ja ennen hinnanlisiä.\n"
+"Saadaksesi hintoja jotka päättyvät 9.99, aseta pyöristys 10 ja hinnanlisä -"
+"0.01"
 
 #. module: product
 #: field:product.template,list_price:0
 msgid "Sale Price"
 msgstr "Myyntihinta"
+
+#. module: product
+#: constraint:product.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr ""
 
 #. module: product
 #: field:product.category,type:0
@@ -2337,14 +2402,17 @@ msgstr ""
 " UOS = UOM * tehokkuuskerroin"
 
 #. module: product
-#: help:product.template,volume:0
-msgid "The volume in m3."
-msgstr "Tilavuus kuutiometreinä."
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Hinnanalennus"
+
+#~ msgid "Prices Types"
+#~ msgstr "Hintatyypit"
 
 #~ msgid "Priority"
 #~ msgstr "Prioriteetti"
@@ -2357,6 +2425,9 @@ msgstr "Hinnanalennus"
 
 #~ msgid "Can be sold"
 #~ msgstr "Voidaan myydä"
+
+#~ msgid "Weigths"
+#~ msgstr "Painot"
 
 #~ msgid "Price list"
 #~ msgstr "Hinnasto"
@@ -2385,6 +2456,13 @@ msgstr "Hinnanalennus"
 #~ "jos paikkoja ei ole valittu. Lasketaan seuraavasti: todellinen varasto - "
 #~ "lähtevät + saapuvat."
 
+#~ msgid ""
+#~ "Quantities of products that are planned to arrive in selected locations or "
+#~ "all internal if none have been selected."
+#~ msgstr ""
+#~ "Saapuviksi suunnitellut tuotteiden määrät valittuihin paikkoihin, tai "
+#~ "kokonaisuudessaan paikkoja ei ole valittu."
+
 #~ msgid "Product Process"
 #~ msgstr "Tuoteprosessi"
 
@@ -2400,14 +2478,27 @@ msgstr "Hinnanalennus"
 #~ msgid "The number of layer on a palet or box"
 #~ msgstr "Kerrosten lukumäärä lavalla tai laatikossa"
 
+#~ msgid ""
+#~ "Produce will generate production order or tasks, according to the product "
+#~ "type. Purchase will trigger purchase orders when requested."
+#~ msgstr ""
+#~ "Tuotanto synnyttää tuotantotilauksen tai työtehtäviä tuotteen tyypin "
+#~ "mukaisesti. Ostaminen luo ostotilauksen pyydettäessä."
+
 #~ msgid "Prices Computations"
 #~ msgstr "Hintojen laskenta"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Virhe! Et voi luoda rekursiivisia kategorioita."
 
 #~ msgid "Number of Layer"
 #~ msgstr "Kerroksien määrä"
 
 #~ msgid "Delivery Delay"
 #~ msgstr "Toimitusviive"
+
+#~ msgid "Units of Measure Categories"
+#~ msgstr "Mittayksikköjen kategoriat"
 
 #~ msgid "Partner Product Name"
 #~ msgstr "Kumppanin tuotteen nimi"
@@ -2518,11 +2609,25 @@ msgstr "Hinnanalennus"
 #~ "Tätä käytetään ostotilausten aikataulujen automaattiseen laskentaan."
 
 #~ msgid ""
+#~ "Quantities of products that are planned to leave in selected locations or "
+#~ "all internal if none have been selected."
+#~ msgstr ""
+#~ "Tuotteiden määrät jotka on suunniteltu lähtemään valituista paikoista, tai "
+#~ "kaikki kokonaisuudessaan jos yhtään ei ole valittu."
+
+#~ msgid ""
 #~ "Code of the product for this partner, will be used when printing a request "
 #~ "for quotation. Keep empty to use the internal one."
 #~ msgstr ""
 #~ "Tuotteen koodi tälle kumppanille, käytetään tarjousta tulostettaessa. Jätä "
 #~ "tyhjäksi käyttääksesi oletusta."
+
+#~ msgid ""
+#~ "Current quantities of products in selected locations or all internal if none "
+#~ "have been selected."
+#~ msgstr ""
+#~ "Tämänhetkiset tuotteiden määrät valituissa paikoissa, tai kokonaisuudessaan "
+#~ "jos yhtään ei ole valittu."
 
 #~ msgid ""
 #~ "Name of the product for this partner, will be used when printing a request "
@@ -2533,6 +2638,18 @@ msgstr "Hinnanalennus"
 
 #~ msgid "Factor"
 #~ msgstr "Kerroin"
+
+#~ msgid "Real Stock"
+#~ msgstr "Todellinen varasto"
+
+#~ msgid "Pricelists Types"
+#~ msgstr "Hinnastojen tyypit"
+
+#~ msgid "Products Categories"
+#~ msgstr "Tuotteiden kategoriat"
+
+#~ msgid "Virtual Stock"
+#~ msgstr "Näennäinen varasto"
 
 #~ msgid "Configuration"
 #~ msgstr "Konfiguraatio"
@@ -2593,6 +2710,9 @@ msgstr "Hinnanalennus"
 #~ "Vakio kaavassa:\n"
 #~ "1 (perusyksikkö) = vakio (tämä yksikkö). Määrä = 1 / kerroin"
 
+#~ msgid "Products & Pricelists"
+#~ msgstr "Tuotteet ja hinnastot"
+
 #~ msgid ""
 #~ "The cost of the product for accounting stock valuation. It can serves as a "
 #~ "base price for supplier price."
@@ -2602,3 +2722,59 @@ msgstr "Hinnanalennus"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
+
+#~ msgid ""
+#~ "Error: The default UOM and the Supplier Product UOM must be in the same "
+#~ "category."
+#~ msgstr ""
+#~ "Virhe: Oletusyksikön ja toimittajan tuoteyksikön tulee olla samaa "
+#~ "yksikköluokkaa."
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Laajennetut Suotimet..."
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Virhe! Et voi luoda itseään toistavasti rinnastettuja jäseniä."
+
+#~ msgid "tonne"
+#~ msgstr "tonni"
+
+#~ msgid ""
+#~ "Choose here the Unit of Measure in which the prices and quantities are "
+#~ "expressed below."
+#~ msgstr "Valitse mittayksikkö jossa hinnat ja määrät näytetään alapuolella."
+
+#, python-format
+#~ msgid ""
+#~ "No active version for the selected pricelist !\n"
+#~ "Please create or activate one."
+#~ msgstr ""
+#~ "Ei aktiivista versiota valitusta hintalistasta !\n"
+#~ "Ole hyvä ja luo tai aktivoi jokin."
+
+#~ msgid "Stockable"
+#~ msgstr "Varastoitava"
+
+#, python-format
+#~ msgid ""
+#~ "Could not resolve product category, you have defined cyclic categories of "
+#~ "products!"
+#~ msgstr ""
+#~ "Ei voitu ratkaista tuotekategoriaa, olet määritellyt syklisiä kategorioita "
+#~ "tuotteille!"
+
+#, python-format
+#~ msgid ""
+#~ "Conversion from Product UoM m to Default UoM PCE is not possible as they "
+#~ "both belong to different Category!."
+#~ msgstr ""
+#~ "Muunnos tuotteen mittayksikösä m oletusmittayksikköön kpl ei ole mahdollinen "
+#~ "koska ne kuuluvat eri kategorioihin!."
+
+#~ msgid ""
+#~ "Future stock for this product according to the selected locations or all "
+#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
+#~ "Incoming."
+#~ msgstr ""
+#~ "Tuleva varasto tälle tuotteelle valituissa paikoissa (tai kaikki sisäiset "
+#~ "jos mitään ei valittu). Lasketaan: todellinen varasto - lähtevät + saapuvat."

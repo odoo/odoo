@@ -477,7 +477,7 @@
                                 <separator string="Company" colspan="4"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="user_id" groups="base.group_extended"/>
-                                <field name="currency"/>
+                                <field name="currency" groups="base.group_extended"/>
                             </group>
                             <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Validations" colspan="4"/>
@@ -524,8 +524,9 @@
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
                     <group>
-                        <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
-                        <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+                        <filter string="Draft" name="state_draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                        <filter string="Open" name="state_open" domain="[('state','=','open')]" icon="terp-check"/>
+                        <filter string="Confirmed" name="state_confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="name"/>
@@ -594,7 +595,7 @@
                 <form string="Bank Statement">
                     <group col="7" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="date" select="1" on_change="onchange_date(date)"/>
+                        <field name="date" select="1" on_change="onchange_date(date, company_id)"/>
                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" select="1" widget="selection"/>
                         <newline/>
                         <field name="period_id"/>
@@ -655,7 +656,8 @@
                 <form string="Bank Statement">
                     <group col="7" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="date" select="1" on_change="onchange_date(date)"/>
+                        <field name="date" select="1" on_change="onchange_date(date, company_id)"/>
+                        <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                         <newline/>
                         <field name="period_id"/>
@@ -1274,14 +1276,6 @@
             groups="group_account_user"
         />
 
-        <record id="action_move_line_select" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_account_move_line_filter"/>
-        </record>
-
         <record id="action_view_move_line" model="ir.actions.act_window">
             <field name="name">Lines to reconcile</field>
             <field name="res_model">account.move.line</field>
@@ -1300,7 +1294,6 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
-            <field name="domain">[]</field>
             <field name="context">{'search_default_account_id': [active_id]}</field>
         </record>
 
@@ -1363,7 +1356,10 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Items">
-                            <field colspan="4" name="line_id" nolabel="1" height="250" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
+                            <field name="balance" invisible="1"/>
+                            <field colspan="4" name="line_id" nolabel="1" height="250" widget="one2many_list" 
+                            on_change="onchange_line_id(line_id)"
+                            context="{'balance': balance , 'journal': journal_id }">
                                 <form string="Journal Item">
                                     <group col="6" colspan="4">
                                         <field name="name"/>
@@ -2451,7 +2447,8 @@
                     <field name ="seq_journal" groups="base.group_extended"/>
                     <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                     <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
-                    <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
+                    <newline/>
+                    <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}" on_change="onchange_tax_rate(sale_tax_rate)"/>
                     <field name ="purchase_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                     <field name ="complete_tax_set" invisible="1"/>
                     <newline/> <!-- extended view because the web UI is not good for one2many -->
@@ -2488,11 +2485,20 @@
             <field name="model_id" ref="base.model_ir_actions_todo"/>
             <field eval="5" name="sequence"/>
             <field name="code">
-act_window_ids = pool.get('ir.actions.act_window').search(cr, uid,[('name', 'in', ('Accounting Chart Configuration', 'Generate Chart of Accounts from a Chart Template'))], context=context)
+# check for unconfigured companies
+account_installer_obj = self.pool.get('account.installer')
+account_installer_obj.check_unconfigured_cmp(cr, uid, context=context)
+action_ids = []
+# fetch the act_window actions related to chart of account configuration
+# we use ir.actions.todo to enable the possibility for other modules to insert their own
+# wizards during the configuration process
+ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_wizard_multi_chart')
+if ref:
+    action_ids += [ref[1]]
 ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_account_configuration_installer')
 if ref:
-    act_window_ids += [ref[1]]
-todo_ids = pool.get('ir.actions.todo').search(cr, uid, [('action_id', 'in', act_window_ids)], context=context)
+    action_ids += [ref[1]]
+todo_ids = pool.get('ir.actions.todo').search(cr, uid, [('action_id', 'in', action_ids)], context=context)
 pool.get('ir.actions.todo').write(cr, uid, todo_ids, {'state':'open'}, context=context)
 action = pool.get('res.config').next(cr, uid, [], context)
 </field>
@@ -2619,7 +2625,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                 <form string="Statement">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1" widget="selection"/>
                         <field name="user_id" select="1" readonly="1"/>
                         <field name="period_id" select="1"/>
@@ -2692,7 +2698,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     <group col="6" colspan="4">
                         <group col="2" colspan="2">
                             <separator string="Dates" colspan="4"/>
-                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date)"/>
+                            <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
                             <field name="closing_date" select="1" readonly="1"/>
                         </group>
                         <group col="2" colspan="2">
@@ -2784,6 +2790,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                         <field name="sequence"/>
                         <field name="type"/>
                         <field name="sign"/>
+                        <field name="style_overwrite"/>
                     </group>
                     <notebook colspan="6">
                         <page string="Report">

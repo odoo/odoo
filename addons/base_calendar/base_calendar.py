@@ -1426,7 +1426,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             context = {}
         fields2 = fields and fields[:] or None
 
-        EXTRAFIELDS = ('class','user_id','date','duration')
+        EXTRAFIELDS = ('class','user_id','duration')
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
                 fields2.append(f)
@@ -1486,6 +1486,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         if not isinstance(ids, list):
             ids = [ids]
         res = False
+        attendee_obj=self.pool.get('calendar.attendee')
         for event_id in ids[:]:
             if len(str(event_id).split('-')) == 1:
                 continue
@@ -1498,6 +1499,9 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             exdate = (data['exdate'] and (data['exdate'] + ',')  or '') + date_new
             self.write(cr, uid, [real_event_id], {'exdate': exdate})
             ids.remove(event_id)
+        for event in self.browse(cr, uid, ids, context=context):
+            if event.attendee_ids:
+                attendee_obj.unlink(cr, uid, [x.id for x in event.attendee_ids], context=context)
 
         res = super(calendar_event, self).unlink(cr, uid, ids, context=context)
         self.pool.get('res.alarm').do_alarm_unlink(cr, uid, ids, self._name)

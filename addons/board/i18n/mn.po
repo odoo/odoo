@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-12-20 02:24+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:29+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:41+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: board
 #: view:res.log.report:0
@@ -28,22 +28,9 @@ msgid "Menu Create"
 msgstr "Цэс үүсгэх"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-#: model:ir.model,name:board.model_board_note_type
-msgid "Note Type"
-msgstr "Тэмдэглэлийн төрөл"
-
-#. module: board
-#: view:board.note:0
-#: field:board.note,user_id:0
-msgid "Author"
-msgstr "Зохиогч"
-
-#. module: board
-#: model:ir.module.module,shortdesc:board.module_meta_information
-msgid "Dashboard main module"
-msgstr "Хяналтын самбарын үндсэн модул"
+#: view:board.menu.create:0
+msgid "Menu Information"
+msgstr "Цэсний мэдээлэл"
 
 #. module: board
 #: view:res.users:0
@@ -51,30 +38,25 @@ msgid "Latest Connections"
 msgstr "Сүүлийн холболт"
 
 #. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
-#, python-format
-msgid "User Error!"
-msgstr "Хэрэглэгчийн алдаа!"
+#: view:res.log.report:0
+msgid "Log created in last month"
+msgstr ""
 
 #. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.open_board_administration_form
-#: model:ir.ui.menu,name:board.menu_board_admin
 msgid "Administration Dashboard"
 msgstr "Админы хянах самбар"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note,note:0
-#: model:ir.model,name:board.model_board_note
-msgid "Note"
-msgstr "Тэмдэглэл"
-
-#. module: board
-#: view:board.note:0
 #: view:res.log.report:0
 msgid "Group By..."
 msgstr "Бүлэглэх..."
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log created in current year"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -82,7 +64,11 @@ msgid "Board"
 msgstr "Самбар"
 
 #. module: board
-#: view:board.board:0
+#: field:board.menu.create,menu_name:0
+msgid "Menu Name"
+msgstr "Цэсний нэр"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
 #: view:res.log.report:0
 msgid "Weekly Global Activity"
@@ -105,20 +91,19 @@ msgid "Month"
 msgstr "Сар"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr "Хяналтын самбар нээх"
+#: view:res.log.report:0
+msgid "Log created in current month"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
 #: view:res.log.report:0
 msgid "Monthly Activity per Document"
 msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
+#: view:board.board:0
+msgid "Configuration Overview"
 msgstr ""
 
 #. module: board
@@ -138,7 +123,6 @@ msgid "August"
 msgstr "8-р сар"
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_user_connection_tree
 msgid "User Connections"
 msgstr ""
@@ -149,25 +133,19 @@ msgid "Creation Date"
 msgstr "Үүсгэсэн огноо"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_note_form
-#: model:ir.ui.menu,name:board.menu_view_board_note_form
-msgid "Publish a note"
-msgstr "Нийтлэх тэмлэглэл"
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr ""
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
-msgstr "Цэсний мэдээлэл"
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr "Объект"
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "June"
 msgstr "6-р сар"
-
-#. module: board
-#: field:board.note,type:0
-msgid "Note type"
-msgstr "Тэмдэглэлийн төрөл"
 
 #. module: board
 #: field:board.board,line_ids:0
@@ -180,20 +158,15 @@ msgid "Log Report"
 msgstr ""
 
 #. module: board
-#: view:board.note:0
-#: field:board.note,date:0
-msgid "Date"
-msgstr "Огноо"
+#: code:addons/board/wizard/board_menu_create.py:46
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Хянах самбарын дэлгэцийг оруулна уу!"
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "July"
 msgstr "7-р сар"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Extended Filters..."
-msgstr "Өргөтгөсөн Шүүлтүүр..."
 
 #. module: board
 #: view:res.log.report:0
@@ -237,9 +210,9 @@ msgid "January"
 msgstr "1-р сар"
 
 #. module: board
-#: view:board.note:0
-msgid "Notes"
-msgstr "Тэмдэглэл"
+#: view:board.board:0
+msgid "Users"
+msgstr ""
 
 #. module: board
 #: selection:res.log.report,month:0
@@ -263,15 +236,15 @@ msgstr "4-р сар"
 #: view:board.board:0
 #: field:board.board,name:0
 #: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.admin_menu_dasboard
 #: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
 msgstr "Хянах самбар"
 
 #. module: board
-#: model:ir.module.module,description:board.module_meta_information
-msgid "Base module for all dashboards."
-msgstr "Хяналтын самбарт зориулсан үндсэн модул"
+#: code:addons/board/wizard/board_menu_create.py:45
+#, python-format
+msgid "User Error!"
+msgstr "Хэрэглэгчийн алдаа!"
 
 #. module: board
 #: field:board.board.line,action_id:0
@@ -289,12 +262,11 @@ msgid "Model"
 msgstr "Модел"
 
 #. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "Цэсний нэр"
+#: model:ir.actions.act_window,name:board.board_homepage_action
+msgid "Home Page"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_latest_activities_tree
 msgid "Latest Activities"
 msgstr "Сүүлийн хөдөлгөөн"
@@ -361,11 +333,6 @@ msgid "May"
 msgstr "5-р сар"
 
 #. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr "Объект"
-
-#. module: board
 #: view:res.log.report:0
 #: field:res.log.report,name:0
 msgid "Year"
@@ -381,17 +348,20 @@ msgstr "Цуцлах"
 msgid "Dashboard View"
 msgstr "Хяналтын самбар харах"
 
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
-#, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr "Хянах самбарын дэлгэцийг оруулна уу!"
+#~ msgid "Author"
+#~ msgstr "Зохиогч"
 
-#. module: board
-#: view:board.note:0
-#: field:board.note,name:0
-msgid "Subject"
-msgstr "Сэдэв"
+#~ msgid "Note"
+#~ msgstr "Тэмдэглэл"
+
+#~ msgid "Date"
+#~ msgstr "Огноо"
+
+#~ msgid "Notes"
+#~ msgstr "Тэмдэглэл"
+
+#~ msgid "Subject"
+#~ msgstr "Сэдэв"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -402,14 +372,32 @@ msgstr "Сэдэв"
 #~ msgid "board.board"
 #~ msgstr "Самбар"
 
+#~ msgid "Dashboard main module"
+#~ msgstr "Хяналтын самбарын үндсэн модул"
+
+#~ msgid "Publish a note"
+#~ msgstr "Нийтлэх тэмлэглэл"
+
 #~ msgid "board.note"
 #~ msgstr "Самбарын тэмдэглэл"
 
 #~ msgid "Configuration"
 #~ msgstr "Тохируулга"
 
+#~ msgid "Note Type"
+#~ msgstr "Тэмдэглэлийн төрөл"
+
 #~ msgid "board.note.type"
 #~ msgstr "Самбар тэмдэглэлийн төрөл"
+
+#~ msgid "Base module for all dashboards."
+#~ msgstr "Хяналтын самбарт зориулсан үндсэн модул"
+
+#~ msgid "Open Dashboard"
+#~ msgstr "Хяналтын самбар нээх"
+
+#~ msgid "Note type"
+#~ msgstr "Тэмдэглэлийн төрөл"
 
 #~ msgid "board.board.line"
 #~ msgstr "Самбарын шугам"
@@ -422,3 +410,6 @@ msgstr "Сэдэв"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Дэлгэцийн архитектур алдаатай!"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Өргөтгөсөн Шүүлтүүр..."

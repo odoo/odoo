@@ -43,7 +43,7 @@
                 <form string="Accounting Voucher">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
-                        <field name="date" on_change="onchange_date(date, currency_id, amount)"/>
+                        <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
                         <field name="journal_id" widget="selection" select="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
                         <field name="name" colspan="2"/>
@@ -53,7 +53,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Voucher Entry">
-                            <field name="line_ids" on_change="onchange_price(line_ids, tax_id, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_ids" on_change="onchange_price(line_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Voucher Items" editable="bottom">
                                     <field name="account_id"/>
                                     <field name="name"/>

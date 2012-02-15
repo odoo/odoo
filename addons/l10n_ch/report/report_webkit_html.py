@@ -124,28 +124,24 @@ class l10n_ch_report_webkit_html(report_sxw.rml_parse):
         invoice_obj = pool.get('account.invoice')
         ids = invoice_ids
         for invoice in invoice_obj.browse(cursor, self.uid, ids):
+            invoice_name = "%s %s" %(invoice.name, invoice.number)
             if not invoice.partner_bank_id:
                 raise except_osv(_('UserError'),
-                        _('No bank specified on invoice:\n' + \
-                                invoice_obj.name_get(cursor, self.uid, [invoice.id],
-                                    context={})[0][1]))
+                        _('No bank specified on invoice:\n%s' %(invoice_name)))
             if not self._compile_check_bvr.match(
                     invoice.partner_bank_id.post_number or ''):
                 raise except_osv(_('UserError'),
-                        _('Your bank BVR number should be of the form 0X-XXX-X! ' +
-                          'Please check your company ' +
-                          'information for the invoice:\n' + 
-                           invoice_obj.name_get(cursor, self.uid, [invoice.id],
-                           context={})[0][1]))
+                        _(('Your bank BVR number should be of the form 0X-XXX-X! '
+                          'Please check your company '
+                          'information for the invoice:\n%s')
+                          %(invoice_name)))
             if invoice.partner_bank_id.bvr_adherent_num \
                     and not self._compile_check_bvr_add_num.match(
                             invoice.partner_bank_id.bvr_adherent_num):
                 raise except_osv(_('UserError'),
-                        _('Your bank BVR adherent number must contain exactly seven' +
-                          'digits!\nPlease check your company ' +
-                          'information for the invoice:\n' +
-                          invoice_obj.name_get(cursor, self.uid, [invoice.id],
-                          context={})[0][1]))
+                        _(('Your bank BVR adherent number must contain only '
+                          'digits!\nPlease check your company '
+                          'information for the invoice:\n%s') %(invoice_name)))
         return ''
 
 class BVRWebKitParser(webkit_report.WebKitParser):
@@ -313,7 +309,7 @@ class BVRWebKitParser(webkit_report.WebKitParser):
             except Exception, e:
                raise Exception(exceptions.text_error_template().render())
             return (deb, 'html')
-        bin = self.get_lib(cursor, uid, company.id)
+        bin = self.get_lib(cursor, uid)
         pdf = self.generate_pdf(bin, report_xml, head, foot, htmls)
         return (pdf, 'pdf')
     

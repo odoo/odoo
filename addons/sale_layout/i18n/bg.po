@@ -7,34 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-03-21 10:53+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:44+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:57+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
+
+#. module: sale_layout
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
 msgid "Sub Total"
 msgstr "Междинна сума"
-
-#. module: sale_layout
-#: model:ir.module.module,description:sale_layout.module_meta_information
-msgid ""
-"\n"
-"    This module provides features to improve the layout of the Sales Order.\n"
-"\n"
-"    It gives you the possibility to\n"
-"        * order all the lines of a sales order\n"
-"        * add titles, comment lines, sub total lines\n"
-"        * draw horizontal lines and put page breaks\n"
-"\n"
-"    "
-msgstr ""
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -52,9 +43,9 @@ msgid "Note"
 msgstr "Бележка"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Unit Price"
-msgstr "Единична цена"
+#: field:sale.order.line,layout_type:0
+msgid "Line Type"
+msgstr ""
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -72,14 +63,14 @@ msgid "Disc.(%)"
 msgstr "Отстъпка (%)"
 
 #. module: sale_layout
-#: field:sale.order.line,layout_type:0
-msgid "Layout Type"
-msgstr "Тип на подредбата"
+#: report:sale.order.layout:0
+msgid "Unit Price"
+msgstr "Единична цена"
 
 #. module: sale_layout
 #: view:sale.order:0
-msgid "Seq."
-msgstr "Посл."
+msgid "Invoice Lines"
+msgstr "Редове на фактурата"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -92,19 +83,9 @@ msgid "Product"
 msgstr "Продукт"
 
 #. module: sale_layout
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "Означението на поръчката трябва да бъде уникално!"
-
-#. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Description"
 msgstr "Описание"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Manual Description"
-msgstr "Ръчно описание"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -112,14 +93,9 @@ msgid "Our Salesman"
 msgstr "Нашия търговец"
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "Automatic Declaration"
-msgstr "Автоматична декларация"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Invoice Lines"
-msgstr "Редове на фактурата"
+#: report:sale.order.layout:0
+msgid "Tel. :"
+msgstr "Тел. :"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -152,14 +128,9 @@ msgid "Invoice address :"
 msgstr "Адрес за фактура:"
 
 #. module: sale_layout
-#: model:ir.module.module,shortdesc:sale_layout.module_meta_information
-msgid "Sale Order Layout"
-msgstr ""
-
-#. module: sale_layout
-#: selection:sale.order.line,layout_type:0
-msgid "Page Break"
-msgstr "Нова страница"
+#: report:sale.order.layout:0
+msgid "Fax :"
+msgstr "Факс:"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -177,6 +148,7 @@ msgid "Shipping address :"
 msgstr "Адрес за доставка :"
 
 #. module: sale_layout
+#: view:sale.order:0
 #: report:sale.order.layout:0
 msgid "Taxes"
 msgstr "Данъци"
@@ -185,11 +157,6 @@ msgstr "Данъци"
 #: report:sale.order.layout:0
 msgid "Net Total :"
 msgstr "Нето общо :"
-
-#. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Tel. :"
-msgstr "Тел. :"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -205,11 +172,6 @@ msgstr "Условия за плащане"
 #: view:sale.order:0
 msgid "History"
 msgstr "История"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Sale Order Lines"
-msgstr "Редове от поръчка за продажба"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -262,9 +224,9 @@ msgid "Taxes :"
 msgstr "Данъци :"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Fax :"
-msgstr "Факс:"
+#: selection:sale.order.line,layout_type:0
+msgid "Page Break"
+msgstr "Нова страница"
 
 #. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order
@@ -290,3 +252,21 @@ msgstr "Ред от нареждане за продажба"
 #: view:sale.order:0
 msgid "Stock Moves"
 msgstr "Движения на стоки"
+
+#~ msgid "Seq."
+#~ msgstr "Посл."
+
+#~ msgid "Manual Description"
+#~ msgstr "Ръчно описание"
+
+#~ msgid "Automatic Declaration"
+#~ msgstr "Автоматична декларация"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Означението на поръчката трябва да бъде уникално!"
+
+#~ msgid "Sale Order Lines"
+#~ msgstr "Редове от поръчка за продажба"
+
+#~ msgid "Layout Type"
+#~ msgstr "Тип на подредбата"

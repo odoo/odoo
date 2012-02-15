@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-01-19 13:58+0000\n"
-"Last-Translator: Jan Verlaan @ Veritos <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-12 11:32+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:20+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-13 04:50+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -52,11 +52,6 @@ msgid "Analytic Plan"
 msgstr "Kostenplaatsschema"
 
 #. module: account_analytic_plans
-#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
-msgid "Multiple-plans management in Analytic Accounting"
-msgstr "Meedere schema's beheren in kostenplaatsen"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
 #: view:account.crossovered.analytic:0
 #: field:account.crossovered.analytic,journal_ids:0
@@ -70,7 +65,7 @@ msgid "Analytic Plan Line"
 msgstr "Kostenplaats planregel"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:60
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
 msgid "User Error"
 msgstr "Gebruikersfout"
@@ -86,11 +81,6 @@ msgid "Ok"
 msgstr "Ok"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "U kunt geen boekingsregel creëren op een gesloten rekening"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
 msgstr "Schema"
@@ -101,9 +91,9 @@ msgid "Account2 Id"
 msgstr "Account2 Id"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Account Id"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Factuurnummer moet uniek zijn per bedrijf!"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -111,9 +101,13 @@ msgid "Amount"
 msgstr "Bedrag"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Code"
-msgstr "Code"
+#: constraint:account.journal:0
+msgid ""
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
+msgstr ""
+"Configuratiefout! De gekozen valuta moet hetzelfde zijn als dat van de "
+"standaard grootboekrekeningen."
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -136,9 +130,26 @@ msgid "Bank Statement Line"
 msgstr "Bankafschrift regel"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Kostenplaats"
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid "Define your Analytic Plans"
+msgstr "Definieer uw kostenplaatsen"
+
+#. module: account_analytic_plans
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr "Ongeldige BBA gestructureerde communicatie!"
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement:0
+msgid "The journal and period chosen have to belong to the same company."
+msgstr "De gekozen journaal en periode moeten behoren tot hetzelfde bedrijf."
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -149,14 +160,6 @@ msgstr "De code van het dagboek moet uniek zijn per bedrijf !"
 #: field:account.crossovered.analytic,ref:0
 msgid "Analytic Account Reference"
 msgstr "Kostenplaats referentie"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-"U kunt geen boeking maken op een debiteuren/crediteuren rekening zonder een "
-"relatie aan te geven."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
@@ -182,11 +185,12 @@ msgstr "Afdrukken"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+#: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "Percentage"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #, python-format
 msgid "A model having this name and code already exists !"
 msgstr "Er bestaat al een model met deze naam en code!"
@@ -244,6 +248,14 @@ msgid "Invoice Line"
 msgstr "Factuurregel"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Currency"
 msgstr "Valuta"
@@ -254,9 +266,9 @@ msgid "Start Date"
 msgstr "Begindatum"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Company"
-msgstr "Bedrijf"
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Account Id"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -279,8 +291,8 @@ msgid "To Date"
 msgstr "Tot datum"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "U moet een een kostenplaatsdagboek definiëren bij het '%s' dagboek!"
@@ -296,82 +308,14 @@ msgid "analytic.plan.create.model.action"
 msgstr "analytic.plan.create.model.action"
 
 #. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Kostenplaatsboeking"
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account :"
 msgstr "Kostenplaats:"
-
-#. module: account_analytic_plans
-#: model:ir.module.module,description:account_analytic_plans.module_meta_information
-msgid ""
-"This module allows to use several analytic plans, according to the general "
-"journal,\n"
-"so that multiple analytic lines are created when the invoice or the entries\n"
-"are confirmed.\n"
-"\n"
-"For example, you can define the following analytic structure:\n"
-"  Projects\n"
-"      Project 1\n"
-"          SubProj 1.1\n"
-"          SubProj 1.2\n"
-"      Project 2\n"
-"  Salesman\n"
-"      Eric\n"
-"      Fabien\n"
-"\n"
-"Here, we have two plans: Projects and Salesman. An invoice line must\n"
-"be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-"Fabien. The amount can also be split. The following example is for\n"
-"an invoice that touches the two subproject and assigned to one salesman:\n"
-"\n"
-"Plan1:\n"
-"    SubProject 1.1 : 50%\n"
-"    SubProject 1.2 : 50%\n"
-"Plan2:\n"
-"    Eric: 100%\n"
-"\n"
-"So when this line of invoice will be confirmed, it will generate 3 analytic "
-"lines,\n"
-"for one account entry.\n"
-"The analytic plan validates the minimum and maximum percentage at the time "
-"of creation\n"
-"of distribution models.\n"
-"        "
-msgstr ""
-"Deze module stelt u in staat om meerdere kostenrekeningen te gebruiken, in "
-"overeenstemming met het generieke dagboek,\n"
-"zodat meerdere kostenregels worden aangemaakt op het moment dat de factuur "
-"of boekingsregels worden bevestigd.\n"
-"\n"
-"Bijvoorbeeld, u maakt de volgende kostenrekening structuur:\n"
-"  Projecten\n"
-"      Project 1\n"
-"          SubProj 1.1\n"
-"          SubProj 1.2\n"
-"      Project 2\n"
-"  Verkopers\n"
-"      Jan\n"
-"      Piet\n"
-"\n"
-"We hebben hier twee bovenliggende kostenrekeningen: Projecten and Verkopers. "
-"Een factuurregel moet\n"
-"in staat zijn om in twee kostenrekeningen te schrijven: SubProj 1.1 and "
-"Piet.\n"
-"Het bedrag kan ook worden gesplitst. Het volgende voorbeeld is voor een\n"
-"factuur welke gekoppeld is aan twee subprojecten en welke gekoppeld aan één "
-"verkoper:\n"
-"\n"
-"Kostenrekening1:\n"
-"    SubProject 1.1 : 50%\n"
-"    SubProject 1.2 : 50%\n"
-"Kostenrekening2:\n"
-"    Piet: 100%\n"
-"\n"
-"Wanneer de factuur wordt bevestigd worden 3 kostenrekening regels "
-"aangemaakt,\n"
-"voor één financiële boekingsregel.\n"
-"De kostenrekening valideert een minimum en maximum percentage op het moment\n"
-"van aanmaken volgens het gecreëerde model\n"
-"        "
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -399,11 +343,6 @@ msgid "Account1 Id"
 msgstr "Account1 Id"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Bedrijf moet hetzelfde zijn voor de betreffende rekening en periode."
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
 msgstr "Minimaal toegestaan (%)"
@@ -414,7 +353,7 @@ msgid "Root account of this plan."
 msgstr "Hoofdrekening van dit schema."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
@@ -425,6 +364,13 @@ msgstr "Fout"
 #: view:analytic.plan.create.model:0
 msgid "Save This Distribution as a Model"
 msgstr "Deze verdeling als model opslaan"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr ""
+"Het is niet mogelijk om journaal boekingen te doen op een rekening van het "
+"type 'aanzicht'"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -443,11 +389,16 @@ msgid "Print Crossovered Analytic"
 msgstr "Print kostenrekening kruislings"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Geen kostenplaatsdagboek !"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Kostenplaats"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
@@ -458,6 +409,11 @@ msgstr "Bankafschrift"
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
 msgstr "Account3 Id"
+
+#. module: account_analytic_plans
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -476,12 +432,17 @@ msgid "Account4 Id"
 msgstr "Rekening4 Id"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr "Bedrijf moet gelijk zijn voor de gerelateerde rekening en periode."
+
+#. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Lines"
 msgstr "Kostenverdelingsregels"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "The Total Should be Between %s and %s"
 msgstr "Het totaal dient tussen %s en %s te liggen"
@@ -533,6 +494,11 @@ msgid "Journal"
 msgstr "Dagboek"
 
 #. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Code"
+msgstr "Code"
+
+#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
 msgid "analytic.plan.create.model"
 msgstr "analytic.plan.create.model"
@@ -548,6 +514,25 @@ msgid "Distribution Models"
 msgstr "Kostenverdelingsmodellen"
 
 #. module: account_analytic_plans
+#: model:ir.actions.act_window,help:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid ""
+"To setup a multiple analytic plans environment, you must define the root "
+"analytic accounts for each plan set. Then, you must attach a plan set to "
+"your account journals."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+"Het is niet mogelijk een journaal boeking te doen op een afgesloten rekening."
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
 msgstr "Volgnummer"
@@ -558,15 +543,10 @@ msgid "The name of the journal must be unique per company !"
 msgstr "De naam van het dagboek moet uniek zijn per bedrijf !"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "Value Error"
 msgstr "Waarde fout"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "U kunt geen boekingsregel creëren op een zichtrekening"
 
 #~ msgid "Currency:"
 #~ msgstr "Valuta:"
@@ -664,6 +644,9 @@ msgstr "U kunt geen boekingsregel creëren op een zichtrekening"
 #~ "kostenplaatsboekingen voor één normale boeking.\n"
 #~ "        "
 
+#~ msgid "Multiple-plans management in Analytic Accounting"
+#~ msgstr "Meedere schema's beheren in kostenplaatsen"
+
 #~ msgid "Analytic Distribution's models"
 #~ msgstr "Kostenverdelingsmodellen"
 
@@ -671,3 +654,83 @@ msgstr "U kunt geen boekingsregel creëren op een zichtrekening"
 #~ "This distribution model has been saved. You will be able to reuse it later."
 #~ msgstr ""
 #~ "Dit kostenverdelingsmodel is opgeslagen. U kunt het later opnieuw gebruiken."
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "U kunt geen boekingsregel creëren op een gesloten rekening"
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Bedrijf moet hetzelfde zijn voor de betreffende rekening en periode."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "U kunt geen boekingsregel creëren op een zichtrekening"
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Deze module stelt u in staat om meerdere kostenrekeningen te gebruiken, in "
+#~ "overeenstemming met het generieke dagboek,\n"
+#~ "zodat meerdere kostenregels worden aangemaakt op het moment dat de factuur "
+#~ "of boekingsregels worden bevestigd.\n"
+#~ "\n"
+#~ "Bijvoorbeeld, u maakt de volgende kostenrekening structuur:\n"
+#~ "  Projecten\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Verkopers\n"
+#~ "      Jan\n"
+#~ "      Piet\n"
+#~ "\n"
+#~ "We hebben hier twee bovenliggende kostenrekeningen: Projecten and Verkopers. "
+#~ "Een factuurregel moet\n"
+#~ "in staat zijn om in twee kostenrekeningen te schrijven: SubProj 1.1 and "
+#~ "Piet.\n"
+#~ "Het bedrag kan ook worden gesplitst. Het volgende voorbeeld is voor een\n"
+#~ "factuur welke gekoppeld is aan twee subprojecten en welke gekoppeld aan één "
+#~ "verkoper:\n"
+#~ "\n"
+#~ "Kostenrekening1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Kostenrekening2:\n"
+#~ "    Piet: 100%\n"
+#~ "\n"
+#~ "Wanneer de factuur wordt bevestigd worden 3 kostenrekening regels "
+#~ "aangemaakt,\n"
+#~ "voor één financiële boekingsregel.\n"
+#~ "De kostenrekening valideert een minimum en maximum percentage op het moment\n"
+#~ "van aanmaken volgens het gecreëerde model\n"
+#~ "        "

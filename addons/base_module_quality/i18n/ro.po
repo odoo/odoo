@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-19 20:48+0000\n"
 "Last-Translator: Mihai Satmarean <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:39+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:51+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:187
@@ -24,6 +24,12 @@ msgstr ""
 #, python-format
 msgid "Suggestion"
 msgstr "Sugestie"
+
+#. module: base_module_quality
+#: model:ir.actions.act_window,name:base_module_quality.action_view_quality_save_report
+#: view:save.report:0
+msgid "Standard Entries"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/base_module_quality.py:100
@@ -35,12 +41,7 @@ msgstr "Eroare program"
 #: code:addons/base_module_quality/method_test/method_test.py:31
 #, python-format
 msgid "Method Test"
-msgstr ""
-
-#. module: base_module_quality
-#: model:ir.module.module,shortdesc:base_module_quality.module_meta_information
-msgid "Base module quality - To check the quality of other modules"
-msgstr ""
+msgstr "Metoda de incercare"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:34
@@ -49,11 +50,13 @@ msgid ""
 "\n"
 "Test checks for fields, views, security rules, dependancy level\n"
 msgstr ""
+"\n"
+"Verificare test pentru campuri, vizualizari, reguli de siguranta, nivelul de "
+"dependenta\n"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:127
-#, python-format
-msgid "O(n) or worst"
+#: view:save.report:0
+msgid " "
 msgstr ""
 
 #. module: base_module_quality
@@ -65,18 +68,17 @@ msgstr "Omis"
 #: code:addons/base_module_quality/method_test/method_test.py:46
 #, python-format
 msgid "Module has no objects"
-msgstr ""
+msgstr "Modulul nu are obiecte"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:49
 #, python-format
 msgid "Speed Test"
-msgstr ""
+msgstr "Testare viteza"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/terp_test/terp_test.py:54
-#, python-format
-msgid "The module does not contain the __openerp__.py file"
+#: model:ir.model,name:base_module_quality.model_quality_check
+msgid "Module Quality Check"
 msgstr ""
 
 #. module: base_module_quality
@@ -98,7 +100,7 @@ msgstr "Denumirea obiectului"
 #: code:addons/base_module_quality/method_test/method_test.py:68
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:34
@@ -107,18 +109,20 @@ msgid ""
 "This test checks if the module satisfies the current coding standard used by "
 "OpenERP."
 msgstr ""
+"Acest test verifica daca modulul indeplineste standardul actual de codare "
+"folosit de catre OpenERP."
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/quality_save_report.py:46
+#: code:addons/base_module_quality/wizard/quality_save_report.py:39
 #, python-format
 msgid "No report to save!"
-msgstr ""
+msgstr "Nici un raport de salvat!"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:177
 #, python-format
 msgid "Result of dependancy in %"
-msgstr ""
+msgstr "Rezultat al dependentei in %"
 
 #. module: base_module_quality
 #: help:module.quality.detail,state:0
@@ -133,19 +137,19 @@ msgstr ""
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:99
 #, python-format
 msgid "Result (/10)"
-msgstr ""
+msgstr "Rezultat (/10)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:33
 #, python-format
 msgid "Terp Test"
-msgstr ""
+msgstr "Test Terp"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:33
 #, python-format
 msgid "Object Test"
-msgstr ""
+msgstr "Test obiect"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
@@ -153,8 +157,9 @@ msgid "Save Report"
 msgstr "Salvare raport"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/module_quality_check.py:46
-#: model:ir.actions.wizard,name:base_module_quality.create_quality_check_id
+#: code:addons/base_module_quality/wizard/module_quality_check.py:43
+#: model:ir.actions.act_window,name:base_module_quality.act_base_module_quality
+#: view:quality.check:0
 #, python-format
 msgid "Quality Check"
 msgstr "Test calitate"
@@ -163,31 +168,42 @@ msgstr "Test calitate"
 #: code:addons/base_module_quality/speed_test/speed_test.py:128
 #, python-format
 msgid "Not Efficient"
-msgstr ""
+msgstr "Nu este eficient"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/quality_save_report.py:46
+#: code:addons/base_module_quality/wizard/quality_save_report.py:39
 #, python-format
 msgid "Warning"
 msgstr "Avertisment"
 
 #. module: base_module_quality
+#: code:addons/base_module_quality/structure_test/structure_test.py:172
+#, python-format
+msgid "Feedback about structure of module"
+msgstr "Feedback despre structura modulului"
+
+#. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:35
 #, python-format
 msgid "Unit Test"
+msgstr "Test unitate"
+
+#. module: base_module_quality
+#: view:quality.check:0
+msgid "Check"
 msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:151
 #, python-format
 msgid "Reading Complexity"
-msgstr ""
+msgstr "Complexitatea citirii"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:267
 #, python-format
 msgid "Result of pep8_test in %"
-msgstr ""
+msgstr "Rezultat al pep8_test in %"
 
 #. module: base_module_quality
 #: field:module.quality.detail,state:0
@@ -198,7 +214,7 @@ msgstr "Stare"
 #: code:addons/base_module_quality/unit_test/unit_test.py:50
 #, python-format
 msgid "Module does not have 'unit_test/test.py' file"
-msgstr ""
+msgstr "Modulul nu are fisierul 'unitate_test/test.py'"
 
 #. module: base_module_quality
 #: field:module.quality.detail,ponderation:0
@@ -209,7 +225,7 @@ msgstr "Ponderare"
 #: code:addons/base_module_quality/object_test/object_test.py:177
 #, python-format
 msgid "Result of Security in %"
-msgstr ""
+msgstr "Rezultat al sigurantei in %"
 
 #. module: base_module_quality
 #: help:module.quality.detail,ponderation:0
@@ -224,19 +240,19 @@ msgstr ""
 #: code:addons/base_module_quality/speed_test/speed_test.py:120
 #, python-format
 msgid "No enough data"
-msgstr ""
+msgstr "Date insuficiente"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:132
 #, python-format
 msgid "Result (/1)"
-msgstr ""
+msgstr "Rezultat (/1)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:151
 #, python-format
 msgid "N (Number of Records)"
-msgstr ""
+msgstr "N (Numar de Inregistrari)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:133
@@ -250,7 +266,13 @@ msgid "module.quality.detail"
 msgstr "module.quality.detail"
 
 #. module: base_module_quality
-#: wizard_field:quality_detail_save,init,module_file:0
+#: code:addons/base_module_quality/speed_test/speed_test.py:127
+#, python-format
+msgid "O(n) or worst"
+msgstr "P(e) sau mai rau"
+
+#. module: base_module_quality
+#: field:save.report,module_file:0
 msgid "Save report"
 msgstr "Salvare raport"
 
@@ -261,24 +283,27 @@ msgid ""
 "This test checks where object has workflow or not on it if there is a state "
 "field and several buttons on it and also checks validity of workflow xml file"
 msgstr ""
+"Acest test verifica daca obiectul contine sau nu flux de lucru, daca exista "
+"un camp stare si mai multe butoane si, de asemenea, verifica valabilitatea "
+"fisierului fluxului de lucru xml"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:151
 #, python-format
 msgid "Result in %"
-msgstr ""
+msgstr "Rezultate in %"
 
 #. module: base_module_quality
-#: wizard_view:quality_detail_save,init:0
-msgid "Standard entries"
-msgstr "Înregistrări standard"
+#: view:quality.check:0
+msgid "This wizard will check module(s) quality"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:58
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:88
 #, python-format
 msgid "No python file found"
-msgstr ""
+msgstr "Nu a fost gasit nici un fisier python"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:144
@@ -292,6 +317,12 @@ msgstr "Rezultat"
 #: field:module.quality.detail,message:0
 msgid "Message"
 msgstr "Mesaj"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/terp_test/terp_test.py:54
+#, python-format
+msgid "The module does not contain the __openerp__.py file"
+msgstr "Modulul nu contine fisierul _openerp_.py"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
@@ -312,12 +343,16 @@ msgid ""
 "wished.\n"
 "</html>"
 msgstr ""
+"<html>O(1) inseamna ca numarul cererilor SQL de citire a obiectului nu "
+"depinde de numarul obiectelor pe care le citim. Aceasta caracteristica este "
+"cea mai dorita. \n"
+"<html>"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:120
 #, python-format
 msgid "__openerp__.py file"
-msgstr ""
+msgstr "fisierul _openerp_.py"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:70
@@ -340,12 +375,16 @@ msgid ""
 "needed in order to run it.\n"
 "\n"
 msgstr ""
+"\n"
+"Acest test verifica viteza modulului. Obsevati ca sunt nevoie de cel putin 5 "
+"date demo pentru a-l executa.\n"
+"\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:71
 #, python-format
 msgid "Unable to parse the result. Check the details."
-msgstr ""
+msgstr "Rezultatul nu a putut fi analizat. Verificati detaliile."
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:33
@@ -354,6 +393,8 @@ msgid ""
 "\n"
 "This test checks if the module satisfy tiny structure\n"
 msgstr ""
+"\n"
+"Acest test verifica daca modulul indeplineste structura tiny\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:151
@@ -366,25 +407,25 @@ msgstr "Denumirea modulului"
 #: code:addons/base_module_quality/unit_test/unit_test.py:56
 #, python-format
 msgid "Error! Module is not properly loaded/installed"
-msgstr ""
+msgstr "Eroare! Modulul nu este incarcat/instalat cum trebuie"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:116
+#: code:addons/base_module_quality/speed_test/speed_test.py:115
 #, python-format
-msgid "Error in Read method: %s"
-msgstr ""
+msgid "Error in Read method"
+msgstr "Eroare in Metoda de citire"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:138
 #, python-format
 msgid "Score is below than minimal score(%s%%)"
-msgstr ""
+msgstr "Scorul este sub scorul minim(%s%%)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:151
 #, python-format
 msgid "N/2"
-msgstr ""
+msgstr "n/2"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:57
@@ -398,24 +439,24 @@ msgstr "Excepţie"
 #: code:addons/base_module_quality/base_module_quality.py:100
 #, python-format
 msgid "Test Is Not Implemented"
+msgstr "Testul nu este implementat"
+
+#. module: base_module_quality
+#: model:ir.model,name:base_module_quality.model_save_report
+msgid "Save Report of Quality"
 msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:151
 #, python-format
 msgid "N"
-msgstr ""
+msgstr "N"
 
 #. module: base_module_quality
-#: model:ir.actions.wizard,name:base_module_quality.quality_detail_save
-msgid "Report Save"
-msgstr "Salvare raport"
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/structure_test/structure_test.py:172
+#: code:addons/base_module_quality/workflow_test/workflow_test.py:143
 #, python-format
-msgid "Feedback about structure of module"
-msgstr ""
+msgid "Feed back About Workflow of Module"
+msgstr "Feedback despre fluxul de lucru al modulului"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:73
@@ -424,6 +465,8 @@ msgid ""
 "Given module has no objects.Speed test can work only when new objects are "
 "created in the module along with demo data"
 msgstr ""
+"Modulul respectiv nu are obiecte. Testul vitezei poate functiona doar atunci "
+"cand sunt create obiecte noi in modul impreuna cu datele demo"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:32
@@ -433,18 +476,22 @@ msgid ""
 "of Python. See http://www.logilab.org/project/name/pylint for further info.\n"
 " "
 msgstr ""
+"Acest test foloseste Pylint si verifica daca modulul indeplineste codarea "
+"standard Python. Pentru mai multe informatii vezi "
+"http://www.logilab.org/project/name/pylint\n"
+" "
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/workflow_test/workflow_test.py:143
+#: code:addons/base_module_quality/speed_test/speed_test.py:116
 #, python-format
-msgid "Feed back About Workflow of Module"
+msgid "Error in Read method: %s"
 msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:129
 #, python-format
 msgid "No Workflow define"
-msgstr ""
+msgstr "Nu este definit nici un flux de lucru"
 
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
@@ -452,9 +499,14 @@ msgid "Done"
 msgstr "Gata"
 
 #. module: base_module_quality
-#: wizard_button:quality_detail_save,init,end:0
+#: view:quality.check:0
 msgid "Cancel"
 msgstr "Revocare"
+
+#. module: base_module_quality
+#: view:save.report:0
+msgid "Close"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:32
@@ -463,6 +515,9 @@ msgid ""
 "\n"
 "PEP-8 Test , copyright of py files check, method can not call from loops\n"
 msgstr ""
+"\n"
+"Testul PEP-8 , verificarea drepturilor de autor pentru fisierele py, metoda "
+"nu poate apela din bucle\n"
 
 #. module: base_module_quality
 #: field:module.quality.check,final_score:0
@@ -475,12 +530,13 @@ msgstr "Scor final (%)"
 msgid ""
 "Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)"
 msgstr ""
+"Eroare. Este pylint instalat corect? (http://pypi.python.org/pypi/pylint)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:125
 #, python-format
 msgid "Efficient"
-msgstr ""
+msgstr "Eficient"
 
 #. module: base_module_quality
 #: field:module.quality.check,name:0
@@ -491,7 +547,7 @@ msgstr "Modul cotat"
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:33
 #, python-format
 msgid "Workflow Test"
-msgstr ""
+msgstr "Test flux de lucru"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:36
@@ -502,6 +558,10 @@ msgid ""
 "'unit_test/test.py' is needed in module.\n"
 "\n"
 msgstr ""
+"\n"
+"Acest test verifica Cazurile de Testare a Unitatii (PyUnit) ale modulului. "
+"Observati ca 'unit_test/test.py' este necesar in modul.\n"
+"\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:32
@@ -511,6 +571,9 @@ msgid ""
 "This test checks if the module classes are raising exception when calling "
 "basic methods or not.\n"
 msgstr ""
+"\n"
+"Acest test verifica daca clasele modulului cresc, cu exceptia apelarii la "
+"metodele de baza sau nu.\n"
 
 #. module: base_module_quality
 #: field:module.quality.detail,detail:0
@@ -521,68 +584,43 @@ msgstr "Detalii"
 #: code:addons/base_module_quality/speed_test/speed_test.py:119
 #, python-format
 msgid "Warning! Not enough demo data"
-msgstr ""
+msgstr "Avertisment! Date demo insuficiente"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:31
 #, python-format
 msgid "Pylint Test"
-msgstr ""
+msgstr "Testul Pylint"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:31
 #, python-format
 msgid "PEP-8 Test"
-msgstr ""
+msgstr "Test PEP-8"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:187
 #, python-format
 msgid "Field name"
-msgstr ""
+msgstr "Nume câmp"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:151
 #, python-format
 msgid "1"
-msgstr ""
+msgstr "1"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:132
 #, python-format
 msgid "Warning! Object has no demo data"
-msgstr ""
+msgstr "Avertisment! Obiectul nu are date demo"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:140
 #, python-format
 msgid "Tag Name"
-msgstr ""
-
-#. module: base_module_quality
-#: wizard_field:quality_detail_save,init,name:0
-msgid "File name"
-msgstr "Nume fișier"
-
-#. module: base_module_quality
-#: model:ir.module.module,description:base_module_quality.module_meta_information
-msgid ""
-"\n"
-"The aim of this module is to check the quality of other modules.\n"
-"\n"
-"It defines a wizard on the list of modules in OpenERP, which allows you to\n"
-"evaluate them on different criteria such as: the respect of OpenERP coding\n"
-"standards, the speed efficiency...\n"
-"\n"
-"This module also provides generic framework to define your own quality "
-"test.\n"
-"For further info, coders may take a look into base_module_quality\\"
-"README.txt\n"
-"\n"
-"WARNING: This module can not work as a ZIP file, you must unzip it before\n"
-"using it, otherwise it may crash.\n"
-"    "
-msgstr ""
+msgstr "Nume eticheta"
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
@@ -599,7 +637,7 @@ msgstr "Nume"
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:136
 #, python-format
 msgid "Result of views in %"
-msgstr ""
+msgstr "Razultat al vizualizarilor in %"
 
 #. module: base_module_quality
 #: field:module.quality.detail,score:0
@@ -607,7 +645,7 @@ msgid "Score (%)"
 msgstr "Scor (%)"
 
 #. module: base_module_quality
-#: help:quality_detail_save,init,name:0
+#: help:save.report,name:0
 msgid "Save report as .html format"
 msgstr "Salvare raport în format .html"
 
@@ -615,19 +653,19 @@ msgstr "Salvare raport în format .html"
 #: code:addons/base_module_quality/base_module_quality.py:269
 #, python-format
 msgid "The module has to be installed before running this test."
-msgstr ""
+msgstr "Modulul trebuie instalat inainte de rularea acestui test."
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:123
 #, python-format
 msgid "O(1)"
-msgstr ""
+msgstr "O(1)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:177
 #, python-format
 msgid "Result of fields in %"
-msgstr ""
+msgstr "Rezultat al campurilor in %"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:70
@@ -640,21 +678,22 @@ msgstr "Rezumat"
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:99
 #: code:addons/base_module_quality/structure_test/structure_test.py:172
+#: field:save.report,name:0
 #, python-format
 msgid "File Name"
-msgstr ""
+msgstr "Nume fișier"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:274
 #, python-format
 msgid "Line number"
-msgstr ""
+msgstr "Numar linie"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:32
 #, python-format
 msgid "Structure Test"
-msgstr ""
+msgstr "Structurati testul"
 
 #. module: base_module_quality
 #: field:module.quality.detail,quality_check_id:0
@@ -665,7 +704,7 @@ msgstr "Calitate"
 #: code:addons/base_module_quality/terp_test/terp_test.py:140
 #, python-format
 msgid "Feed back About terp file of Module"
-msgstr ""
+msgstr "Feedback asupra fisierului terp al modulului"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -678,3 +717,50 @@ msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
+
+#~ msgid "File name"
+#~ msgstr "Nume fișier"
+
+#~ msgid "Standard entries"
+#~ msgstr "Înregistrări standard"
+
+#~ msgid "Report Save"
+#~ msgstr "Salvare raport"
+
+#~ msgid "Base module quality - To check the quality of other modules"
+#~ msgstr ""
+#~ "Calitatea modulului de baza - Pentru a verifica calitatea celorlalte module"
+
+#~ msgid ""
+#~ "\n"
+#~ "The aim of this module is to check the quality of other modules.\n"
+#~ "\n"
+#~ "It defines a wizard on the list of modules in OpenERP, which allows you to\n"
+#~ "evaluate them on different criteria such as: the respect of OpenERP coding\n"
+#~ "standards, the speed efficiency...\n"
+#~ "\n"
+#~ "This module also provides generic framework to define your own quality "
+#~ "test.\n"
+#~ "For further info, coders may take a look into base_module_quality\\"
+#~ "README.txt\n"
+#~ "\n"
+#~ "WARNING: This module can not work as a ZIP file, you must unzip it before\n"
+#~ "using it, otherwise it may crash.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Scopul acestui modul este de a verifica calitatea celorlalte module. \n"
+#~ "\n"
+#~ "Defineste un wizard in lista cu module in OpenERP, care va permite sa \n"
+#~ "le evaluati dupa criterii diferitem precum: respectul pentru strandardele \n"
+#~ "de codare OpenERP, eficienta vitezei, etc...\n"
+#~ "\n"
+#~ "Acest modul ofera de asemenea un cadru general pentru definirea propriului "
+#~ "test al calitatii. \n"
+#~ "Pentru mai multe informatii, codificatorii pot sa arunce o privire la "
+#~ "base_module_quality\\README.txt\n"
+#~ "\n"
+#~ "AVERTISMENT: Acest modul nu poate functiona ca fisier ZIP, inainte de a-l "
+#~ "folosi trebuie sa \n"
+#~ "il deschideti , altfel ar putea cadea.\n"
+#~ "    "

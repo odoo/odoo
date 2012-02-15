@@ -45,7 +45,7 @@ This is the base module to manage the accounting chart for Luxembourg.
     'test': ['test/l10n_lu_report.yml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0078164766621',
     'images': ['images/config_chart_l10n_lu.jpeg','images/l10n_lu_chart.jpeg'],
 }

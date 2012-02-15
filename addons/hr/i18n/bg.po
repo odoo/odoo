@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2011-03-02 05:43+0000\n"
 "Last-Translator: Dimitar Markov <dimitar.markov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:30+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:42+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -22,8 +22,7 @@ msgid "Openerp user"
 msgstr "Openerp потребител"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,requirements:0
+#: view:hr.job:0 field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "Изисквания"
 
@@ -43,8 +42,6 @@ msgid "SIN No"
 msgstr ""
 
 #. module: hr
-#: model:ir.module.module,shortdesc:hr.module_meta_information
-#: model:ir.ui.menu,name:hr.menu_hr_deshboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
 #: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_root
@@ -52,10 +49,14 @@ msgid "Human Resources"
 msgstr "Човешки ресурси"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
 msgstr "Групирай по"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.view_department_form_installer
+msgid "Create Your Departments"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -68,18 +69,10 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
-#: view:res.users:0
+#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
+#: field:hr.job,department_id:0 view:res.users:0
 msgid "Department"
 msgstr "Отдел"
-
-#. module: hr
-#: help:hr.installer,hr_attendance:0
-msgid "Simplifies the management of employee's attendances."
-msgstr ""
 
 #. module: hr
 #: view:hr.job:0
@@ -97,14 +90,7 @@ msgid "In Recruitment"
 msgstr "За наемане"
 
 #. module: hr
-#: view:hr.installer:0
-msgid "title"
-msgstr "заглавие"
-
-#. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Фирма"
@@ -115,19 +101,9 @@ msgid "Expected in Recruitment"
 msgstr "Очаквано наемане"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
-msgid "Holidays"
-msgstr "Празници"
-
-#. module: hr
-#: help:hr.installer,hr_holidays:0
-msgid "Tracks employee leaves, allocation requests and planning."
+#: model:ir.actions.todo.category,name:hr.category_hr_management_config
+msgid "HR Management"
 msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_employee_marital_status
-msgid "Employee Marital Status"
-msgstr "Семейно положение на служител"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -142,34 +118,27 @@ msgid "Link a user to an employee"
 msgstr "Свързване на потребител към служител"
 
 #. module: hr
-#: field:hr.installer,hr_contract:0
-msgid "Employee's Contracts"
-msgstr "Договори на служители"
-
-#. module: hr
-#: help:hr.installer,hr_payroll:0
-msgid "Generic Payroll system."
+#: field:hr.department,parent_id:0
+msgid "Parent Department"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-msgid "My Departments Employee"
-msgstr ""
+#: view:hr.employee:0 field:hr.employee,notes:0
+msgid "Notes"
+msgstr "Бележки"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
+#: selection:hr.employee,marital:0
 msgid "Married"
 msgstr "Женен/омъжена"
 
 #. module: hr
-#: constraint:hr.employee:0
+#: model:ir.actions.act_window,help:hr.action_create_hr_employee_installer
 msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
-msgstr "Грешка! Не можете да изберете отдел, в който служителят е мениджър."
-
-#. module: hr
-#: help:hr.employee,passport_id:0
-msgid "Employee Passport Information"
+"Create employees form and link them to an OpenERP user if you want them to "
+"access this instance. Categories can be set on employees to perform massive "
+"operations on all the employees of the same category, i.e. allocating "
+"holidays."
 msgstr ""
 
 #. module: hr
@@ -181,14 +150,9 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-msgid "Position"
-msgstr "Позиция"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.action2
-msgid "Employee Hierarchy"
-msgstr "Йерархия на служителите"
+#: field:hr.employee,color:0
+msgid "Color Index"
+msgstr ""
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_employeeuser0
@@ -198,8 +162,7 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Recruitement"
 msgstr "В процес на наемане"
 
@@ -209,44 +172,23 @@ msgid "Identification No"
 msgstr ""
 
 #. module: hr
-#: field:hr.job,no_of_employee:0
-msgid "No of Employee"
-msgstr ""
-
-#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
 msgstr "Жена"
 
 #. module: hr
-#: help:hr.installer,hr_timesheet_sheet:0
-msgid ""
-"Tracks and helps employees encode and validate timesheets and attendances."
+#: help:hr.job,expected_employees:0
+msgid "Required number of employees in total for that job."
 msgstr ""
 
 #. module: hr
-#: field:hr.installer,hr_evaluation:0
-msgid "Periodic Evaluations"
-msgstr "Периодично оценяване"
-
-#. module: hr
-#: field:hr.installer,hr_timesheet_sheet:0
-msgid "Timesheets"
-msgstr "Графици"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_employee_tree
-msgid "Employees Structure"
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
+msgid "Attendance"
 msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Social IDs"
-msgstr ""
-
-#. module: hr
-#: help:hr.job,no_of_employee:0
-msgid "Number of employee with that job."
 msgstr ""
 
 #. module: hr
@@ -260,8 +202,7 @@ msgid "Child Categories"
 msgstr "Подкатегории"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,description:0
+#: view:hr.job:0 field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "Описание на работата"
@@ -273,8 +214,11 @@ msgstr "Местоположение на офис"
 
 #. module: hr
 #: view:hr.employee:0
-#: view:hr.job:0
-#: model:ir.model,name:hr.model_hr_employee
+msgid "My Departments Employee"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Служител"
@@ -290,12 +234,6 @@ msgid "Work E-mail"
 msgstr "Служебен имейл"
 
 #. module: hr
-#: field:hr.department,complete_name:0
-#: field:hr.employee.category,complete_name:0
-msgid "Name"
-msgstr "Име"
-
-#. module: hr
 #: field:hr.employee,birthday:0
 msgid "Date of Birth"
 msgstr "Дата на раждане"
@@ -306,24 +244,17 @@ msgid "Reporting"
 msgstr "Справки"
 
 #. module: hr
-#: model:ir.model,name:hr.model_ir_actions_act_window
-msgid "ir.actions.act_window"
-msgstr "ir.actions.act_window"
-
-#. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
 msgid "Human Resources Dashboard"
 msgstr "Табло Човешки ресурси"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
 msgstr "Работно място"
 
 #. module: hr
-#: view:hr.department:0
 #: field:hr.department,member_ids:0
 msgid "Members"
 msgstr "Участници"
@@ -334,14 +265,7 @@ msgid "Configuration"
 msgstr "Настройка"
 
 #. module: hr
-#: view:hr.installer:0
-msgid ""
-"You can enhance the base HR Application by installing few HR-related "
-"functionalities."
-msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
+#: view:hr.employee:0 field:hr.employee,category_ids:0
 msgid "Categories"
 msgstr "Категории"
 
@@ -351,12 +275,7 @@ msgid "Expected Employees"
 msgstr "Очаквани служители"
 
 #. module: hr
-#: help:hr.employee,sinid:0
-msgid "Social Insurance Number"
-msgstr ""
-
-#. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
+#: selection:hr.employee,marital:0
 msgid "Divorced"
 msgstr "Разведен/а"
 
@@ -374,7 +293,6 @@ msgstr "Грешка! Не могат да бъдат създавани рек�
 #: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: view:res.users:0
 #: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "Отдели"
@@ -395,11 +313,6 @@ msgid "Male"
 msgstr "Мъж"
 
 #. module: hr
-#: field:hr.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Прогрес на настройките"
-
-#. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 msgid "Categories of Employee"
@@ -412,21 +325,9 @@ msgid "Employee Category"
 msgstr "Категория на служител"
 
 #. module: hr
-#: field:hr.installer,config_logo:0
-msgid "Image"
-msgstr "Изображение"
-
-#. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
 msgstr "Договор на служител"
-
-#. module: hr
-#: help:hr.installer,hr_evaluation:0
-msgid ""
-"Lets you create and manage the periodic evaluation and performance review of "
-"employees."
-msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -434,17 +335,11 @@ msgid "hr.department"
 msgstr "отдел чов. ресурси"
 
 #. module: hr
-#: help:hr.employee,parent_id:0
-msgid "It is linked with manager of Department"
+#: model:ir.actions.act_window,name:hr.action_create_hr_employee_installer
+msgid "Create your Employees"
 msgstr ""
 
 #. module: hr
-#: field:hr.installer,hr_recruitment:0
-msgid "Recruitment Process"
-msgstr "Процес на наемане"
-
-#. module: hr
-#: field:hr.employee,category_ids:0
 #: field:hr.employee.category,name:0
 msgid "Category"
 msgstr "Категория"
@@ -475,6 +370,11 @@ msgid "Note"
 msgstr "Бележка"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_employee_tree
+msgid "Employees Structure"
+msgstr ""
+
+#. module: hr
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr "Избраната фирма не е измежду разрешените фирми за този потребител"
@@ -491,18 +391,19 @@ msgstr "Служебен адрес"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
 msgid "HR Manager Dashboard"
 msgstr "Табло мениджър ЧР"
+
+#. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Status"
 msgstr "Статус"
-
-#. module: hr
-#: view:hr.installer:0
-msgid "Configure"
-msgstr "Настройване"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -516,8 +417,8 @@ msgid "unknown"
 msgstr "неизвестен"
 
 #. module: hr
-#: field:hr.installer,hr_holidays:0
-msgid "Holidays / Leaves Management"
+#: help:hr.job,no_of_employee:0
+msgid "Number of employees with that job."
 msgstr ""
 
 #. module: hr
@@ -537,21 +438,27 @@ msgstr ""
 "Грешка! Не могат да бъдат създавани рекурсивни йерархии от служители."
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.action2
+msgid "Subordonate Hierarchy"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid ""
+"Your departments structure is used to manage all documents related to "
+"employees by departments: expenses and timesheet validation, leaves "
+"management, recruitments, etc."
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,bank_account_id:0
+msgid "Bank Account Number"
+msgstr ""
+
+#. module: hr
 #: view:hr.department:0
 msgid "Companies"
 msgstr "Фирми"
-
-#. module: hr
-#: model:ir.module.module,description:hr.module_meta_information
-msgid ""
-"\n"
-"    Module for human resource management. You can manage:\n"
-"    * Employees and hierarchies : You can define your employee with User and "
-"display hierarchies\n"
-"    * HR Departments\n"
-"    * HR Jobs\n"
-"    "
-msgstr ""
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -561,8 +468,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: help:hr.job,expected_employees:0
-msgid "Required number of Employees in total for that job."
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard
+msgid "Dashboard"
 msgstr ""
 
 #. module: hr
@@ -571,34 +478,24 @@ msgid "Old"
 msgstr "Стари"
 
 #. module: hr
-#: field:hr.employee.marital.status,description:0
-msgid "Status Description"
-msgstr "Описание на състоянието"
-
-#. module: hr
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
 msgstr "Не може да има двама потребитела с един и същ \"логин\"!"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,state:0
+#: view:hr.job:0 field:hr.job,state:0
 msgid "State"
 msgstr "Състояние"
 
 #. module: hr
 #: field:hr.employee,marital:0
-#: view:hr.employee.marital.status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.actions.act_window,name:hr.action_hr_marital_status
-#: model:ir.ui.menu,name:hr.hr_menu_marital_status
 msgid "Marital Status"
 msgstr "Семейно положение"
 
 #. module: hr
-#: help:hr.installer,hr_recruitment:0
-msgid "Helps you manage and streamline your recruitment process."
-msgstr ""
+#: model:ir.model,name:hr.model_ir_actions_act_window
+msgid "ir.actions.act_window"
+msgstr "ir.actions.act_window"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
@@ -616,14 +513,14 @@ msgid "res.users"
 msgstr "res.users"
 
 #. module: hr
-#: field:hr.installer,hr_payroll_account:0
-msgid "Payroll Accounting"
-msgstr ""
-
-#. module: hr
 #: view:hr.employee:0
 msgid "Personal Information"
 msgstr "Лична Информация"
+
+#. module: hr
+#: field:hr.employee,city:0
+msgid "City"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -631,27 +528,8 @@ msgid "Passport No"
 msgstr "Паспорт No"
 
 #. module: hr
-#: view:res.users:0
-msgid "Current Activity"
-msgstr "Настояща активност"
-
-#. module: hr
-#: help:hr.installer,hr_expense:0
-msgid ""
-"Tracks and manages employee expenses, and can automatically re-invoice "
-"clients if the expenses are project-related."
-msgstr ""
-"Проследява и управлява разходи на служител и може автоматично повторно да "
-"префактура клиентите, ако разходите са свързани с проекта."
-
-#. module: hr
-#: view:hr.job:0
-msgid "Current"
-msgstr "Текущ"
-
-#. module: hr
-#: field:hr.department,parent_id:0
-msgid "Parent Department"
+#: field:hr.employee,mobile_phone:0
+msgid "Work Mobile"
 msgstr ""
 
 #. module: hr
@@ -665,29 +543,12 @@ msgid "Home Address"
 msgstr "Домашен адрес"
 
 #. module: hr
-#: field:hr.installer,hr_attendance:0
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
-msgid "Attendances"
-msgstr ""
-
-#. module: hr
-#: view:hr.employee.marital.status:0
 #: view:hr.job:0
 msgid "Description"
 msgstr "Описание"
 
 #. module: hr
-#: help:hr.installer,hr_contract:0
-msgid "Extends employee profiles to help manage their contracts."
-msgstr ""
-
-#. module: hr
-#: field:hr.installer,hr_payroll:0
-msgid "Payroll"
-msgstr "Ведомост"
-
-#. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
+#: selection:hr.employee,marital:0
 msgid "Single"
 msgstr "Ерген"
 
@@ -697,15 +558,9 @@ msgid "Job Name"
 msgstr "Име на задание"
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Position"
 msgstr ""
-
-#. module: hr
-#: field:hr.employee,mobile_phone:0
-msgid "Mobile"
-msgstr "Мобилен"
 
 #. module: hr
 #: view:hr.department:0
@@ -718,15 +573,8 @@ msgid "Nationality"
 msgstr "Националност"
 
 #. module: hr
-#: view:hr.department:0
-#: view:hr.employee:0
-#: field:hr.employee,notes:0
-msgid "Notes"
-msgstr "Бележки"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_installer
-msgid "hr.installer"
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
+msgid "Leaves"
 msgstr ""
 
 #. module: hr
@@ -740,10 +588,10 @@ msgid "Resource"
 msgstr "Източник"
 
 #. module: hr
-#: view:hr.installer:0
-#: model:ir.actions.act_window,name:hr.action_hr_installer
-msgid "Human Resources Application Configuration"
-msgstr ""
+#: field:hr.department,complete_name:0
+#: field:hr.employee.category,complete_name:0
+msgid "Name"
+msgstr "Име"
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -751,7 +599,8 @@ msgid "Gender"
 msgstr "Пол"
 
 #. module: hr
-#: view:hr.employee:0
+#: view:hr.employee:0 view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0 view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -762,9 +611,9 @@ msgid "Employees"
 msgstr "Служители"
 
 #. module: hr
-#: field:hr.employee,bank_account_id:0
-msgid "Bank Account"
-msgstr "Банкова сметка"
+#: help:hr.employee,sinid:0
+msgid "Social Insurance Number"
+msgstr ""
 
 #. module: hr
 #: field:hr.department,name:0
@@ -782,8 +631,13 @@ msgid "Creation of a OpenERP user"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,child_ids:0
-msgid "Child Departments"
+#: field:hr.employee,login:0
+msgid "Login"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Job Information"
 msgstr ""
 
 #. module: hr
@@ -793,41 +647,44 @@ msgid "Job Positions"
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
+#: field:hr.employee,otherid:0
+msgid "Other Id"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
 msgstr "Треньор"
 
 #. module: hr
-#: view:hr.installer:0
-msgid "Configure Your Human Resources Application"
-msgstr "Настройки на приложението Човешки ресурси"
+#: sql_constraint:hr.job:0
+msgid "The name of the job position must be unique per company!"
+msgstr ""
 
 #. module: hr
-#: field:hr.installer,hr_expense:0
-msgid "Expenses"
-msgstr "Разходи"
+#: view:hr.job:0
+msgid "My Departments Jobs"
+msgstr ""
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
+#: field:hr.department,manager_id:0 view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Мениджър"
 
 #. module: hr
-#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
+#: selection:hr.employee,marital:0
 msgid "Widower"
 msgstr "Вдовец"
 
 #. module: hr
-#: help:hr.installer,hr_payroll_account:0
-msgid "Generic Payroll system Integrated with Accountings."
+#: field:hr.employee,child_ids:0
+msgid "Subordinates"
 msgstr ""
 
 #. module: hr
-#: field:hr.employee,child_ids:0
-msgid "Subordinates"
+#: field:hr.job,no_of_employee:0
+msgid "Number of Employees"
 msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
@@ -838,6 +695,15 @@ msgstr ""
 #~ msgstr ""
 #~ "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални "
 #~ "символи!"
+
+#~ msgid "Holidays"
+#~ msgstr "Празници"
+
+#~ msgid "title"
+#~ msgstr "заглавие"
+
+#~ msgid "Employee Marital Status"
+#~ msgstr "Семейно положение на служител"
 
 #~ msgid "Work Email"
 #~ msgstr "Служебен имейл"
@@ -880,3 +746,62 @@ msgstr ""
 
 #~ msgid "Other"
 #~ msgstr "Друг"
+
+#~ msgid "Position"
+#~ msgstr "Позиция"
+
+#~ msgid "Timesheets"
+#~ msgstr "Графици"
+
+#~ msgid "Image"
+#~ msgstr "Изображение"
+
+#~ msgid "Configure"
+#~ msgstr "Настройване"
+
+#~ msgid "Recruitment Process"
+#~ msgstr "Процес на наемане"
+
+#~ msgid ""
+#~ "Tracks and manages employee expenses, and can automatically re-invoice "
+#~ "clients if the expenses are project-related."
+#~ msgstr ""
+#~ "Проследява и управлява разходи на служител и може автоматично повторно да "
+#~ "префактура клиентите, ако разходите са свързани с проекта."
+
+#~ msgid "Expenses"
+#~ msgstr "Разходи"
+
+#~ msgid "Payroll"
+#~ msgstr "Ведомост"
+
+#~ msgid "Employee's Contracts"
+#~ msgstr "Договори на служители"
+
+#~ msgid "Periodic Evaluations"
+#~ msgstr "Периодично оценяване"
+
+#~ msgid "Configure Your Human Resources Application"
+#~ msgstr "Настройки на приложението Човешки ресурси"
+
+#~ msgid ""
+#~ "Error ! You cannot select a department for which the employee is the manager."
+#~ msgstr "Грешка! Не можете да изберете отдел, в който служителят е мениджър."
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Прогрес на настройките"
+
+#~ msgid "Current"
+#~ msgstr "Текущ"
+
+#~ msgid "Current Activity"
+#~ msgstr "Настояща активност"
+
+#~ msgid "Mobile"
+#~ msgstr "Мобилен"
+
+#~ msgid "Employee Hierarchy"
+#~ msgstr "Йерархия на служителите"
+
+#~ msgid "Status Description"
+#~ msgstr "Описание на състоянието"

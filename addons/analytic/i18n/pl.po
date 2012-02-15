@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2010-08-03 00:15+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:44+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:57+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -33,15 +33,6 @@ msgid "Specifies the amount of quantity to count."
 msgstr "Określa ilość do obliczeń."
 
 #. module: analytic
-#: model:ir.module.module,description:analytic.module_meta_information
-msgid ""
-"Module for defining analytic accounting object.\n"
-"    "
-msgstr ""
-"Moduł do definiowania obiektów księgowości analitycznej.\n"
-"    "
-
-#. module: analytic
 #: field:account.analytic.account,state:0
 msgid "State"
 msgstr "Stan"
@@ -50,11 +41,6 @@ msgstr "Stan"
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
 msgstr "Główna(y) księgowa(y)"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Draft"
-msgstr "Projekt"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -86,14 +72,14 @@ msgid ""
 msgstr ""
 
 #. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr ""
+
+#. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
 msgstr "Typ Konta"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "Szablon"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -123,9 +109,16 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Maximum Quantity"
-msgstr "Ilość maksymalna"
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really usefull for "
+"consolidation purposes of several companies charts with different "
+"currencies, for example."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -143,9 +136,9 @@ msgid "Date"
 msgstr "Data"
 
 #. module: analytic
-#: field:account.analytic.account,currency_id:0
-msgid "Account currency"
-msgstr "Waluta konta"
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "Szablon"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -161,8 +154,13 @@ msgid ""
 msgstr ""
 
 #. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr ""
+
+#. module: analytic
 #: help:account.analytic.account,quantity_max:0
-msgid "Sets the higher limit of quantity of hours."
+msgid "Sets the higher limit of time to work on the contract."
 msgstr ""
 
 #. module: analytic
@@ -181,16 +179,20 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: analytic
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
+#: field:account.analytic.account,code:0
+msgid "Code/Reference"
 msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
 msgstr "Anulowano"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -215,9 +217,14 @@ msgid "Date End"
 msgstr "Data końcowa"
 
 #. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Account Code"
-msgstr "Kod konta"
+#: field:account.analytic.account,quantity_max:0
+msgid "Maximum Time"
+msgstr ""
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -227,9 +234,18 @@ msgstr "Pełna nazwa konta"
 #. module: analytic
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.module.module,shortdesc:analytic.module_meta_information
 msgid "Analytic Account"
 msgstr "Konto analityczne"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr ""
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -255,3 +271,22 @@ msgstr "Otwarte"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Zapisy analityczne"
+
+#~ msgid ""
+#~ "Module for defining analytic accounting object.\n"
+#~ "    "
+#~ msgstr ""
+#~ "Moduł do definiowania obiektów księgowości analitycznej.\n"
+#~ "    "
+
+#~ msgid "Draft"
+#~ msgstr "Projekt"
+
+#~ msgid "Maximum Quantity"
+#~ msgstr "Ilość maksymalna"
+
+#~ msgid "Account currency"
+#~ msgstr "Waluta konta"
+
+#~ msgid "Account Code"
+#~ msgstr "Kod konta"

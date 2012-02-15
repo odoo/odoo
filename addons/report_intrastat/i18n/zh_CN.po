@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2010-08-03 07:31+0000\n"
 "Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:16+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:27+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -22,9 +22,9 @@ msgid "Cancelled Invoice"
 msgstr "取消发票"
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "June"
-msgstr "六月"
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr "国家名必须唯一"
 
 #. module: report_intrastat
 #: sql_constraint:res.country:0
@@ -83,10 +83,9 @@ msgid "March"
 msgstr "三月"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat.code,description:0
-msgid "Description"
-msgstr "描述"
+#: selection:report.intrastat,month:0
+msgid "August"
+msgstr "八月"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -109,9 +108,9 @@ msgid "Invoice Date"
 msgstr "发票日期"
 
 #. module: report_intrastat
-#: model:ir.module.module,shortdesc:report_intrastat.module_meta_information
-msgid "Intrastat Reporting - Reporting"
-msgstr "内部统计报告-报告"
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr "六月"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -187,26 +186,9 @@ msgid "Invoice"
 msgstr "发票"
 
 #. module: report_intrastat
-#: model:ir.module.module,description:report_intrastat.module_meta_information
-msgid ""
-"\n"
-"    A module that adds intrastat reports.\n"
-"    This module gives the details of the goods traded between the countries "
-"of European Union "
-msgstr ""
-"\n"
-"    这个模块增加了欧盟内部报表。\n"
-"    此模块提供了欧盟国家之间的货物交易细节 "
-
-#. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_res_country
 msgid "Country"
 msgstr "国家"
-
-#. module: report_intrastat
-#: sql_constraint:res.country:0
-msgid "The name of the country must be unique !"
-msgstr "国家名必须唯一"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -261,9 +243,10 @@ msgid "November"
 msgstr "十一月"
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "August"
-msgstr "八月"
+#: report:account.invoice.intrastat:0
+#: field:report.intrastat.code,description:0
+msgid "Description"
+msgstr "描述"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -364,6 +347,9 @@ msgstr "欧盟内部代码"
 #~ msgid "Intrastat (this month)"
 #~ msgstr "内部统计（本月）"
 
+#~ msgid "Intrastat Reporting - Reporting"
+#~ msgstr "内部统计报告-报告"
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr "对象名必须要以x_开头并且不能含有特殊字符"
@@ -382,3 +368,13 @@ msgstr "欧盟内部代码"
 
 #~ msgid "Origin"
 #~ msgstr "源"
+
+#~ msgid ""
+#~ "\n"
+#~ "    A module that adds intrastat reports.\n"
+#~ "    This module gives the details of the goods traded between the countries "
+#~ "of European Union "
+#~ msgstr ""
+#~ "\n"
+#~ "    这个模块增加了欧盟内部报表。\n"
+#~ "    此模块提供了欧盟国家之间的货物交易细节 "

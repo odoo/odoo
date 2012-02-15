@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-28 03:53+0000\n"
 "Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:38+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:49+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,9 +22,10 @@ msgid "Parent Directory"
 msgstr "上層目錄"
 
 #. module: document
-#: model:ir.model,name:document.model_document_configuration
-msgid "Auto Directory Configuration"
-msgstr "自動目錄配置"
+#: code:addons/document/document_directory.py:276
+#, python-format
+msgid "Directory name contains special characters!"
+msgstr "目錄名稱有特殊字元！"
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -52,12 +53,6 @@ msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
 msgstr "用作資源目錄名稱之欄位。如留空，會用該「名稱」。"
-
-#. module: document
-#: code:addons/document/document_directory.py:276
-#, python-format
-msgid "Directory name contains special characters!"
-msgstr "目錄名稱有特殊字元！"
 
 #. module: document
 #: view:document.directory:0
@@ -96,6 +91,11 @@ msgstr "三月"
 #: view:document.configuration:0
 msgid "title"
 msgstr ""
+
+#. module: document
+#: field:document.directory.dctx,expr:0
+msgid "Expression"
+msgstr "表達式"
 
 #. module: document
 #: view:document.directory:0
@@ -145,6 +145,10 @@ msgstr "目錄名不能重覆！"
 
 #. module: document
 #: view:ir.attachment:0
+msgid "Filter on my documents"
+msgstr ""
+
+#. module: document
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "已索引內容"
@@ -157,17 +161,16 @@ msgid ""
 msgstr ""
 
 #. module: document
+#: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
+msgid "Knowledge Management"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.storage,dir_ids:0
-#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "目錄"
-
-#. module: document
-#: field:document.configuration,sale_order:0
-msgid "Sale Order"
-msgstr "銷售訂單"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_user
@@ -175,21 +178,11 @@ msgid "Files details by Users"
 msgstr "各用戶檔案詳情"
 
 #. module: document
-#: field:document.configuration,project:0
-msgid "Project"
-msgstr "專案"
-
-#. module: document
 #: code:addons/document/document_storage.py:573
 #: code:addons/document/document_storage.py:601
 #, python-format
 msgid "Error!"
 msgstr "錯誤！"
-
-#. module: document
-#: help:document.configuration,product:0
-msgid "Auto directory configuration for Products."
-msgstr ""
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -234,8 +227,8 @@ msgid "Document directory"
 msgstr "文件目錄"
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #: code:addons/document/document_directory.py:266
 #: code:addons/document/document_directory.py:271
 #: code:addons/document/document_directory.py:276
@@ -268,9 +261,9 @@ msgid "Storage"
 msgstr ""
 
 #. module: document
-#: view:document.configuration:0
-msgid "Configure Resource Directory"
-msgstr "配置資源目錄"
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
+msgstr "資源模型"
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -321,11 +314,6 @@ msgstr "脈絡欄位"
 #: field:ir.attachment,store_fname:0
 msgid "Stored Filename"
 msgstr ""
-
-#. module: document
-#: field:document.directory,ressource_type_id:0
-msgid "Resource model"
-msgstr "資源模型"
 
 #. module: document
 #: view:document.directory:0
@@ -382,6 +370,13 @@ msgid "Generated Files"
 msgstr ""
 
 #. module: document
+#: view:document.configuration:0
+msgid ""
+"When executing this wizard, it will configure your directories automatically "
+"according to modules installed."
+msgstr ""
+
+#. module: document
 #: field:document.directory.content,directory_id:0
 #: field:document.directory.dctx,dir_id:0
 #: model:ir.actions.act_window,name:document.action_document_file_directory_form
@@ -393,9 +388,9 @@ msgid "Directory"
 msgstr "目錄"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by Partner"
-msgstr "各伙伴檔案"
+#: view:document.directory:0
+msgid "Security"
+msgstr "安全"
 
 #. module: document
 #: field:document.directory,write_uid:0
@@ -409,11 +404,6 @@ msgstr "最後修改用戶"
 #: model:ir.actions.act_window,name:document.zoom_directory
 msgid "Related Documents"
 msgstr "相關文件"
-
-#. module: document
-#: field:document.configuration,progress:0
-msgid "Configuration Progress"
-msgstr "配置進度"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -471,27 +461,6 @@ msgid "Define words in the context, for all child directories and files"
 msgstr ""
 
 #. module: document
-#: model:ir.module.module,description:document.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
-"    * User Authentication\n"
-"    * Document Indexation :- .pptx and .docx files are not support in "
-"windows platform.\n"
-"    * Dashboard for Document that includes:\n"
-"        * New Files (list)\n"
-"        * Files by Resource Type (graph)\n"
-"        * Files by Partner (graph)\n"
-"        * Files by Month (graph)\n"
-"    ATTENTION:\n"
-"    - When you install this module in a running company that have already "
-"PDF files stored into the database,\n"
-"      you will lose them all.\n"
-"    - After installing this module PDF's are no longer stored into the "
-"database,\n"
-"      but in the servers rootpad like /server/bin/filestore.\n"
-msgstr ""
-
-#. module: document
 #: help:document.storage,online:0
 msgid ""
 "If not checked, media is currently offline and its contents not available"
@@ -534,9 +503,10 @@ msgid ""
 msgstr ""
 
 #. module: document
+#: view:document.configuration:0
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
-msgid "Auto Configure Directory"
-msgstr "自動配置目錄"
+msgid "Configure Directories"
+msgstr ""
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -564,11 +534,6 @@ msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
 msgstr ""
-
-#. module: document
-#: view:document.directory:0
-msgid "Security"
-msgstr "安全"
 
 #. module: document
 #: help:document.directory,ressource_id:0
@@ -654,24 +619,15 @@ msgid "Database"
 msgstr "資料庫"
 
 #. module: document
-#: help:document.configuration,project:0
-msgid "Auto directory configuration for Projects."
-msgstr "自動為專案配置目錄"
+#: selection:report.document.user,month:0
+#: selection:report.files.partner,month:0
+msgid "January"
+msgstr "一月"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Related to"
 msgstr "關係到"
-
-#. module: document
-#: model:ir.module.module,shortdesc:document.module_meta_information
-msgid "Integrated Document Management System"
-msgstr "複合文件管理系統"
-
-#. module: document
-#: view:document.configuration:0
-msgid "Choose the following Resouces to auto directory configuration."
-msgstr ""
 
 #. module: document
 #: view:ir.attachment:0
@@ -694,9 +650,9 @@ msgid "Read Only"
 msgstr "唯讀"
 
 #. module: document
-#: field:document.directory.dctx,expr:0
-msgid "Expression"
-msgstr "表達式"
+#: model:ir.actions.act_window,name:document.action_document_directory_form
+msgid "Document Directory"
+msgstr ""
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -707,6 +663,20 @@ msgstr "目錄名不能重覆！"
 #: field:document.directory,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Creator"
+msgstr ""
+
+#. module: document
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr ""
+
+#. module: document
+#: view:document.configuration:0
+msgid ""
+"OpenERP's Document Management System supports mapping virtual folders with "
+"documents. The virtual folder of a document can be used to manage the files "
+"attached to the document, or to print and download any report. This tool "
+"will create directories automatically according to modules installed."
 msgstr ""
 
 #. module: document
@@ -799,14 +769,14 @@ msgid "Month"
 msgstr "月"
 
 #. module: document
+#: view:report.document.user:0
+msgid "This Months Files"
+msgstr ""
+
+#. module: document
 #: model:ir.ui.menu,name:document.menu_reporting
 msgid "Reporting"
 msgstr "報告"
-
-#. module: document
-#: field:document.configuration,product:0
-msgid "Product"
-msgstr "產品"
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -852,12 +822,6 @@ msgid "New Files"
 msgstr "新檔案"
 
 #. module: document
-#: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
-msgid "January"
-msgstr "一月"
-
-#. module: document
 #: view:document.directory:0
 msgid "Static"
 msgstr "靜態"
@@ -868,10 +832,8 @@ msgid "Files By Partner"
 msgstr "各伙伴檔案"
 
 #. module: document
-#: help:document.directory.dctx,field:0
-msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
+#: view:ir.attachment:0
+msgid "Indexed Content - experimental"
 msgstr ""
 
 #. module: document
@@ -885,9 +847,8 @@ msgid "Notes"
 msgstr "注解"
 
 #. module: document
-#: help:document.configuration,sale_order:0
-msgid ""
-"Auto directory configuration for Sale Orders and Quotation with report."
+#: model:ir.model,name:document.model_document_configuration
+msgid "Directory Configuration"
 msgstr ""
 
 #. module: document
@@ -911,6 +872,13 @@ msgstr "二月"
 #: model:ir.ui.menu,name:document.menu_reports_document_manager1
 msgid "Statistics by User"
 msgstr "各用戶統計"
+
+#. module: document
+#: help:document.directory.dctx,field:0
+msgid ""
+"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+"what is typed here."
+msgstr ""
 
 #. module: document
 #: field:document.directory,name:0
@@ -947,6 +915,12 @@ msgid "# of Files"
 msgstr "檔案數"
 
 #. module: document
+#: code:addons/document/document.py:209
+#, python-format
+msgid "(copy)"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 msgid ""
 "Only members of these groups will have access to this directory and its "
@@ -966,8 +940,8 @@ msgid "Mime Type"
 msgstr "Mime 類型"
 
 #. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
+#: view:report.document.user:0
+msgid "All Months Files"
 msgstr ""
 
 #. module: document
@@ -976,8 +950,8 @@ msgid "Content Name"
 msgstr "內容名稱"
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #, python-format
 msgid "File name must be unique!"
 msgstr "檔案名不能重覆！"
@@ -999,8 +973,6 @@ msgid "Directories' Structure"
 msgstr "目錄結構"
 
 #. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_document_by_resourcetype_graph
 #: view:report.document.user:0
 msgid "Files by Resource Type"
 msgstr "各資源類型檔案"
@@ -1013,6 +985,7 @@ msgstr "年份"
 
 #. module: document
 #: view:document.storage:0
+#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
 #: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
@@ -1027,3 +1000,33 @@ msgstr "搜尋文件儲存"
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "文件類型"
+
+#~ msgid "Auto Directory Configuration"
+#~ msgstr "自動目錄配置"
+
+#~ msgid "Sale Order"
+#~ msgstr "銷售訂單"
+
+#~ msgid "Project"
+#~ msgstr "專案"
+
+#~ msgid "Configure Resource Directory"
+#~ msgstr "配置資源目錄"
+
+#~ msgid "Files by Partner"
+#~ msgstr "各伙伴檔案"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "配置進度"
+
+#~ msgid "Auto Configure Directory"
+#~ msgstr "自動配置目錄"
+
+#~ msgid "Auto directory configuration for Projects."
+#~ msgstr "自動為專案配置目錄"
+
+#~ msgid "Integrated Document Management System"
+#~ msgstr "複合文件管理系統"
+
+#~ msgid "Product"
+#~ msgstr "產品"

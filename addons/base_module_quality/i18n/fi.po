@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-14 12:32+0000\n"
 "Last-Translator: Pekka Pylvänäinen <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:39+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:50+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:187
@@ -24,6 +24,12 @@ msgstr ""
 #, python-format
 msgid "Suggestion"
 msgstr "Ehdotus"
+
+#. module: base_module_quality
+#: model:ir.actions.act_window,name:base_module_quality.action_view_quality_save_report
+#: view:save.report:0
+msgid "Standard Entries"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/base_module_quality.py:100
@@ -38,11 +44,6 @@ msgid "Method Test"
 msgstr "Metodi testi"
 
 #. module: base_module_quality
-#: model:ir.module.module,shortdesc:base_module_quality.module_meta_information
-msgid "Base module quality - To check the quality of other modules"
-msgstr "Päämoduulien laatu - Toisten moduulien laadun tarkistamiseen"
-
-#. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:34
 #, python-format
 msgid ""
@@ -53,10 +54,9 @@ msgstr ""
 "Testi tarkistaa kentät, näkymät, turvasäännöt, riippuvuustasot\n"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:127
-#, python-format
-msgid "O(n) or worst"
-msgstr "0(n) tai huonoin"
+#: view:save.report:0
+msgid " "
+msgstr ""
 
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
@@ -76,10 +76,9 @@ msgid "Speed Test"
 msgstr "Nopeustesti"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/terp_test/terp_test.py:54
-#, python-format
-msgid "The module does not contain the __openerp__.py file"
-msgstr "Moduuli ei sisällä __openerp__.py tiedostoa"
+#: model:ir.model,name:base_module_quality.model_quality_check
+msgid "Module Quality Check"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:82
@@ -113,7 +112,7 @@ msgstr ""
 "koodausstandardit."
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/quality_save_report.py:46
+#: code:addons/base_module_quality/wizard/quality_save_report.py:39
 #, python-format
 msgid "No report to save!"
 msgstr "Ei talletettavaa raporttia!"
@@ -157,8 +156,9 @@ msgid "Save Report"
 msgstr "Tallenna raportti"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/module_quality_check.py:46
-#: model:ir.actions.wizard,name:base_module_quality.create_quality_check_id
+#: code:addons/base_module_quality/wizard/module_quality_check.py:43
+#: model:ir.actions.act_window,name:base_module_quality.act_base_module_quality
+#: view:quality.check:0
 #, python-format
 msgid "Quality Check"
 msgstr "Laaduntarkistus"
@@ -170,16 +170,27 @@ msgid "Not Efficient"
 msgstr "Ei tehokas"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/wizard/quality_save_report.py:46
+#: code:addons/base_module_quality/wizard/quality_save_report.py:39
 #, python-format
 msgid "Warning"
 msgstr "Varoitus"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/structure_test/structure_test.py:172
+#, python-format
+msgid "Feedback about structure of module"
+msgstr "Palautetta moduulin rakenteesta"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:35
 #, python-format
 msgid "Unit Test"
 msgstr "Yksikkötesti"
+
+#. module: base_module_quality
+#: view:quality.check:0
+msgid "Check"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:151
@@ -254,7 +265,13 @@ msgid "module.quality.detail"
 msgstr "moduulinlaadunyksityiskohdat"
 
 #. module: base_module_quality
-#: wizard_field:quality_detail_save,init,module_file:0
+#: code:addons/base_module_quality/speed_test/speed_test.py:127
+#, python-format
+msgid "O(n) or worst"
+msgstr "0(n) tai huonoin"
+
+#. module: base_module_quality
+#: field:save.report,module_file:0
 msgid "Save report"
 msgstr "Tallenna raportti"
 
@@ -276,9 +293,9 @@ msgid "Result in %"
 msgstr "Tulos %"
 
 #. module: base_module_quality
-#: wizard_view:quality_detail_save,init:0
-msgid "Standard entries"
-msgstr "Normikohdat"
+#: view:quality.check:0
+msgid "This wizard will check module(s) quality"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:58
@@ -299,6 +316,12 @@ msgstr "Tulös"
 #: field:module.quality.detail,message:0
 msgid "Message"
 msgstr "Viesti"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/terp_test/terp_test.py:54
+#, python-format
+msgid "The module does not contain the __openerp__.py file"
+msgstr "Moduuli ei sisällä __openerp__.py tiedostoa"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
@@ -382,10 +405,10 @@ msgid "Error! Module is not properly loaded/installed"
 msgstr "Virhe! Moduulia ei ole kunnolla ladattu/asennettu"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:116
+#: code:addons/base_module_quality/speed_test/speed_test.py:115
 #, python-format
-msgid "Error in Read method: %s"
-msgstr ""
+msgid "Error in Read method"
+msgstr "Virhe lukumenetelmässä"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:138
@@ -414,21 +437,21 @@ msgid "Test Is Not Implemented"
 msgstr "Testiä ei ole toteutettu"
 
 #. module: base_module_quality
+#: model:ir.model,name:base_module_quality.model_save_report
+msgid "Save Report of Quality"
+msgstr ""
+
+#. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:151
 #, python-format
 msgid "N"
 msgstr ""
 
 #. module: base_module_quality
-#: model:ir.actions.wizard,name:base_module_quality.quality_detail_save
-msgid "Report Save"
-msgstr "Raportin Tallennus"
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/structure_test/structure_test.py:172
+#: code:addons/base_module_quality/workflow_test/workflow_test.py:143
 #, python-format
-msgid "Feedback about structure of module"
-msgstr "Palautetta moduulin rakenteesta"
+msgid "Feed back About Workflow of Module"
+msgstr "Palautetta moduulin työnkulusta"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:73
@@ -453,10 +476,10 @@ msgstr ""
 " "
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/workflow_test/workflow_test.py:143
+#: code:addons/base_module_quality/speed_test/speed_test.py:116
 #, python-format
-msgid "Feed back About Workflow of Module"
-msgstr "Palautetta moduulin työnkulusta"
+msgid "Error in Read method: %s"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:129
@@ -470,9 +493,14 @@ msgid "Done"
 msgstr "Valmis"
 
 #. module: base_module_quality
-#: wizard_button:quality_detail_save,init,end:0
+#: view:quality.check:0
 msgid "Cancel"
 msgstr "Peruuta"
+
+#. module: base_module_quality
+#: view:save.report:0
+msgid "Close"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:32
@@ -581,31 +609,6 @@ msgid "Tag Name"
 msgstr ""
 
 #. module: base_module_quality
-#: wizard_field:quality_detail_save,init,name:0
-msgid "File name"
-msgstr "Tiedostonnimi"
-
-#. module: base_module_quality
-#: model:ir.module.module,description:base_module_quality.module_meta_information
-msgid ""
-"\n"
-"The aim of this module is to check the quality of other modules.\n"
-"\n"
-"It defines a wizard on the list of modules in OpenERP, which allows you to\n"
-"evaluate them on different criteria such as: the respect of OpenERP coding\n"
-"standards, the speed efficiency...\n"
-"\n"
-"This module also provides generic framework to define your own quality "
-"test.\n"
-"For further info, coders may take a look into base_module_quality\\"
-"README.txt\n"
-"\n"
-"WARNING: This module can not work as a ZIP file, you must unzip it before\n"
-"using it, otherwise it may crash.\n"
-"    "
-msgstr ""
-
-#. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
 msgid "module.quality.check"
 msgstr "moduulinlaatutarkistus"
@@ -628,7 +631,7 @@ msgid "Score (%)"
 msgstr "Tulos (%)"
 
 #. module: base_module_quality
-#: help:quality_detail_save,init,name:0
+#: help:save.report,name:0
 msgid "Save report as .html format"
 msgstr "Tallenna raportti .html -muotoon"
 
@@ -661,6 +664,7 @@ msgstr "Yhteenveto"
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:99
 #: code:addons/base_module_quality/structure_test/structure_test.py:172
+#: field:save.report,name:0
 #, python-format
 msgid "File Name"
 msgstr "Tiedostonimi"
@@ -691,6 +695,9 @@ msgstr ""
 #~ msgid "Base module quality"
 #~ msgstr "Ydinmoduulin laatu"
 
+#~ msgid "Report Save"
+#~ msgstr "Raportin Tallennus"
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
@@ -698,6 +705,11 @@ msgstr ""
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Virheellinen XML näkymäarkkitehtuurille!"
 
-#, python-format
-#~ msgid "Error in Read method"
-#~ msgstr "Virhe lukumenetelmässä"
+#~ msgid "File name"
+#~ msgstr "Tiedostonnimi"
+
+#~ msgid "Standard entries"
+#~ msgstr "Normikohdat"
+
+#~ msgid "Base module quality - To check the quality of other modules"
+#~ msgstr "Päämoduulien laatu - Toisten moduulien laadun tarkistamiseen"

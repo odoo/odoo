@@ -35,7 +35,7 @@ class res_partner_contact(osv.osv):
         return result
 
     _columns = {
-        'name': fields.function(_name_get_full, string='Name', size=64, type="char", store=True),
+        'name': fields.function(_name_get_full, string='Name', size=64, type="char", store=True, select=True),
         'last_name': fields.char('Last Name', size=64, required=True),
         'first_name': fields.char('First Name', size=64),
         'mobile': fields.char('Mobile', size=64),
@@ -44,7 +44,7 @@ class res_partner_contact(osv.osv):
         'lang_id': fields.many2one('res.lang', 'Language'),
         'job_ids': fields.one2many('res.partner.address', 'contact_id', 'Functions and Addresses'),
         'country_id': fields.many2one('res.country','Nationality'),
-        'birthdate': fields.date('Birth Date'),
+        'birthdate': fields.char('Birthdate', size=64),
         'active': fields.boolean('Active', help="If the active field is set to False,\
                  it will allow you to hide the partner contact without removing it."),
         'partner_id': fields.related('job_ids', 'partner_id', type='many2one',\
@@ -65,7 +65,7 @@ class res_partner_contact(osv.osv):
         'active' : lambda *a: True,
     }
 
-    _order = "name,first_name"
+    _order = "name"
 
     def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=None):
         if not args:
@@ -99,9 +99,9 @@ class res_partner_contact(osv.osv):
             cr.execute("""
                 INSERT INTO
                     res_partner_contact
-                    (id,name,last_name,title,active)
+                    (id,name,last_name,title,active,email,mobile,birthdate)
                 SELECT
-                    id,COALESCE(name, '/'),COALESCE(name, '/'),title,true
+                    id,COALESCE(name, '/'),COALESCE(name, '/'),title,true,email,mobile,birthdate
                 FROM
                     res_partner_address""")
             cr.execute("alter table res_partner_address add contact_id int references res_partner_contact")
@@ -120,7 +120,6 @@ class res_partner_location(osv.osv):
         'city': fields.char('City', size=128),
         'state_id': fields.many2one("res.country.state", 'Fed. State', domain="[('country_id','=',country_id)]"),
         'country_id': fields.many2one('res.country', 'Country'),
-        'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'company_id': fields.many2one('res.company', 'Company',select=1),
         'job_ids': fields.one2many('res.partner.address', 'location_id', 'Contacts'),
         'partner_id': fields.related('job_ids', 'partner_id', type='many2one',\
@@ -169,7 +168,8 @@ class res_partner_address(osv.osv):
     _inherit = 'res.partner.address'
 
     def _default_location_id(self, cr, uid, context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         if not context.get('default_partner_id',False):
             return False
         ids = self.pool.get('res.partner.location').search(cr, uid, [('partner_id','=',context['default_partner_id'])], context=context)
@@ -242,7 +242,8 @@ class res_partner_address(osv.osv):
     }
 
     def default_get(self, cr, uid, fields=[], context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         if 'default_type' in context:
             del context['default_type']
         return super(res_partner_address, self).default_get(cr, uid, fields, context)

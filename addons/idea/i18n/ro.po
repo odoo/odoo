@@ -6,25 +6,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-08-03 06:33+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:18+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:29+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
 msgid "If True creator of the idea will be visible to others"
 msgstr ""
+"Dacă este setat ca Adevărat, creatorul ideii va fi vizibil celorlalti"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "By States"
+msgstr ""
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_select
 msgid "Idea select"
-msgstr ""
+msgstr "Selectare idee"
 
 #. module: idea
 #: view:idea.idea:0
@@ -37,18 +43,18 @@ msgstr "Voturi"
 #: view:idea.idea:0
 #: field:idea.idea,comment_ids:0
 msgid "Comments"
-msgstr "Comentariu"
+msgstr "Comentarii"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Submit Vote"
-msgstr ""
+msgstr "Depune vot"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_report_vote_all
 #: model:ir.ui.menu,name:idea.menu_report_vote_all
 msgid "Ideas Analysis"
-msgstr ""
+msgstr "Analiza Ideilor"
 
 #. module: idea
 #: view:idea.category:0
@@ -56,48 +62,39 @@ msgstr ""
 #: view:idea.vote:0
 #: view:report.vote:0
 msgid "Group By..."
-msgstr ""
-
-#. module: idea
-#: model:ir.module.module,description:idea.module_meta_information
-msgid ""
-"\n"
-"    This module allows your user to easily and efficiently participate in "
-"the innovation of the enterprise.\n"
-"    It allows everybody to express ideas about different subjects.\n"
-"    Then, other users can comment on these ideas and vote for particular "
-"ideas.\n"
-"    Each idea has a score based on the different votes.\n"
-"    The managers can obtain an easy view on best ideas from all the users.\n"
-"    Once installed, check the menu 'Ideas' in the 'Tools' main menu."
-msgstr ""
-
-#. module: idea
-#: model:ir.module.module,shortdesc:idea.module_meta_information
-msgid "Idea Manager"
-msgstr "Manager idei"
+msgstr "Grupează după..."
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "March"
+msgstr "Martie"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Accepted Ideas"
 msgstr ""
 
 #. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:92
+#: code:addons/idea/wizard/idea_post_vote.py:94
 #, python-format
 msgid "Idea must be in 'Open' state before vote for that idea."
+msgstr "Ideea trebuie să se afle in starea 'Deschis' inainte de a o vota."
+
+#. module: idea
+#: view:report.vote:0
+msgid "Open Date"
 msgstr ""
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,day:0
 msgid "Day"
-msgstr ""
+msgstr "Zi"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Refuse"
-msgstr ""
+msgstr "Refuză"
 
 #. module: idea
 #: field:idea.idea,count_votes:0
@@ -107,7 +104,7 @@ msgstr "Numărare voturi"
 #. module: idea
 #: model:ir.model,name:idea.model_report_vote
 msgid "Idea Vote Statistics"
-msgstr ""
+msgstr "Statistică Vot Idei"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -120,7 +117,7 @@ msgstr "Rea"
 #. module: idea
 #: selection:report.vote,idea_state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Anulat(ă)"
 
 #. module: idea
 #: view:idea.category:0
@@ -128,27 +125,22 @@ msgid "Category of ideas"
 msgstr "Categorie de idei"
 
 #. module: idea
-#: code:addons/idea/idea.py:253
-#: code:addons/idea/wizard/idea_post_vote.py:89
-#: code:addons/idea/wizard/idea_post_vote.py:92
+#: code:addons/idea/idea.py:274
+#: code:addons/idea/wizard/idea_post_vote.py:91
+#: code:addons/idea/wizard/idea_post_vote.py:94
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Avertisment !"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Your comment"
-msgstr "Comentariul tău"
-
-#. module: idea
-#: view:report.vote:0
-msgid "   Month   "
-msgstr ""
+msgstr "Comentariul dvs"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote
 msgid "Idea Vote"
-msgstr ""
+msgstr "Vot idee"
 
 #. module: idea
 #: field:idea.category,parent_id:0
@@ -166,24 +158,24 @@ msgstr "Foarte rea"
 #. module: idea
 #: view:idea.vote:0
 msgid "Ideas vote"
-msgstr ""
+msgstr "Vot idei"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# de Linii"
 
 #. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:89
+#: code:addons/idea/wizard/idea_post_vote.py:91
 #, python-format
 msgid "You can not give Vote for this idea more than %s times"
-msgstr ""
+msgstr "Nu puteti vota această idee mai mult de %s ori"
 
 #. module: idea
 #: view:idea.category:0
 msgid "Ideas Categories"
-msgstr ""
+msgstr "Categorii idei"
 
 #. module: idea
 #: help:idea.idea,description:0
@@ -193,7 +185,7 @@ msgstr "Conţinutul ideii"
 #. module: idea
 #: model:ir.model,name:idea.model_idea_category
 msgid "Idea Category"
-msgstr ""
+msgstr "Categorie idee"
 
 #. module: idea
 #: view:idea.idea:0
@@ -212,12 +204,12 @@ msgstr "Nevotat"
 #. module: idea
 #: sql_constraint:idea.category:0
 msgid "The name of the category must be unique"
-msgstr ""
+msgstr "Numele categoriei trebuie să fie unic"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_select
 msgid "select idea"
-msgstr ""
+msgstr "selectează ideea"
 
 #. module: idea
 #: view:idea.stat:0
@@ -232,7 +224,7 @@ msgstr "Categorii subordonate"
 #. module: idea
 #: view:idea.select:0
 msgid "Next"
-msgstr ""
+msgstr "Următorul"
 
 #. module: idea
 #: view:idea.idea:0
@@ -240,6 +232,12 @@ msgstr ""
 #: view:report.vote:0
 #: field:report.vote,idea_state:0
 msgid "State"
+msgstr "Stare"
+
+#. module: idea
+#: view:idea.idea:0
+#: selection:idea.idea,state:0
+msgid "New"
 msgstr ""
 
 #. module: idea
@@ -253,12 +251,12 @@ msgstr "Bună"
 #. module: idea
 #: help:idea.idea,open_date:0
 msgid "Date when an idea opened"
-msgstr ""
+msgstr "Data cand a fost deshisă o idee"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Idea Detail"
-msgstr ""
+msgstr "Detalii idee"
 
 #. module: idea
 #: help:idea.idea,state:0
@@ -267,17 +265,35 @@ msgid ""
 " It is             opened by the user, the state is 'Opened'.            \n"
 "If the idea is accepted, the state is 'Accepted'."
 msgstr ""
+"Atunci cand ideea este creată, starea este 'Ciornă'.\n"
+" Cand este deschisă de către utilizator, starea este 'Deschis'.            \n"
+"Dacă ideea este acceptată, starea este 'Acceptat'."
+
+#. module: idea
+#: view:idea.idea:0
+msgid "New Ideas"
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+msgid "Idea Vote created last month"
+msgstr ""
 
 #. module: idea
 #: field:idea.category,visibility:0
 #: field:idea.idea,visibility:0
 msgid "Open Idea?"
+msgstr "Deschideti ideea?"
+
+#. module: idea
+#: view:report.vote:0
+msgid "Idea Vote created in current month"
 msgstr ""
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "July"
-msgstr ""
+msgstr "Iulie"
 
 #. module: idea
 #: view:idea.idea:0
@@ -285,7 +301,7 @@ msgstr ""
 #: view:report.vote:0
 #: selection:report.vote,idea_state:0
 msgid "Accepted"
-msgstr ""
+msgstr "Acceptat(ă)"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category
@@ -294,14 +310,14 @@ msgid "Categories"
 msgstr "Categorii"
 
 #. module: idea
-#: view:report.vote:0
-msgid "    Month-1    "
-msgstr ""
+#: view:idea.category:0
+msgid "Parent Category"
+msgstr "Categoria părinte (superioară)"
 
 #. module: idea
 #: field:idea.idea,open_date:0
 msgid "Open date"
-msgstr ""
+msgstr "Data deschiderii"
 
 #. module: idea
 #: field:idea.idea,vote_ids:0
@@ -318,12 +334,12 @@ msgstr "Statistici vot"
 #. module: idea
 #: field:idea.idea,vote_limit:0
 msgid "Maximum Vote per User"
-msgstr ""
+msgstr "Voturi maxime per Utilizator"
 
 #. module: idea
-#: view:idea.category:0
-msgid "Parent Category"
-msgstr ""
+#: view:idea.vote.stat:0
+msgid "vote_stat of ideas"
+msgstr "statistică_vot idei"
 
 #. module: idea
 #: field:idea.comment,content:0
@@ -337,24 +353,25 @@ msgstr "Comentariu"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "September"
-msgstr ""
+msgstr "Septembrie"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "December"
-msgstr ""
+msgstr "Decembrie"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,month:0
 msgid "Month"
-msgstr ""
+msgstr "Luna"
 
 #. module: idea
+#: view:idea.idea:0
 #: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
 #: model:ir.actions.act_window,name:idea.action_idea_idea_open
 msgid "Open Ideas"
-msgstr "Idei deschise"
+msgstr "Deschide idei"
 
 #. module: idea
 #: view:idea.category:0
@@ -375,11 +392,6 @@ msgid "Very Good"
 msgstr "Foarte bine"
 
 #. module: idea
-#: view:report.vote:0
-msgid "  Year  "
-msgstr ""
-
-#. module: idea
 #: selection:idea.idea,state:0
 #: selection:report.vote,idea_state:0
 msgid "Opened"
@@ -388,6 +400,11 @@ msgstr "Deschis"
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_vote
 msgid "Idea's Votes"
+msgstr "Voturi idee"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "By Idea Category"
 msgstr ""
 
 #. module: idea
@@ -396,18 +413,12 @@ msgid "New Idea"
 msgstr "Idee nouă"
 
 #. module: idea
-#: view:idea.vote.stat:0
-msgid "vote_stat of ideas"
-msgstr "situaţia de vot a ideilor"
-
-#. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category_tree
 #: model:ir.ui.menu,name:idea.menu_idea_category_tree
 msgid "Ideas by Categories"
 msgstr "Idei după categorie"
 
 #. module: idea
-#: selection:idea.idea,state:0
 #: selection:report.vote,idea_state:0
 msgid "Draft"
 msgstr "Ciornă"
@@ -415,7 +426,7 @@ msgstr "Ciornă"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -428,13 +439,13 @@ msgstr "Normal"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "June"
-msgstr ""
+msgstr "Iunie"
 
 #. module: idea
 #: field:report.vote,creater_id:0
 #: field:report.vote,user_id:0
 msgid "User Name"
-msgstr ""
+msgstr "Nume utilizator"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote_stat
@@ -452,12 +463,12 @@ msgstr "Utilizator"
 #. module: idea
 #: field:idea.vote,date:0
 msgid "Date"
-msgstr ""
+msgstr "Dată"
 
 #. module: idea
-#: view:idea.post.vote:0
-msgid "Post"
-msgstr ""
+#: selection:report.vote,month:0
+msgid "November"
+msgstr "Noiembrie"
 
 #. module: idea
 #: field:idea.idea,my_vote:0
@@ -467,7 +478,7 @@ msgstr "Votul meu"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "October"
-msgstr ""
+msgstr "Octombrie"
 
 #. module: idea
 #: field:idea.comment,create_date:0
@@ -478,17 +489,17 @@ msgstr "Data creării"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "January"
-msgstr ""
+msgstr "Ianuarie"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_idea
 msgid "idea.idea"
-msgstr "idea.idea"
+msgstr "idee.idee"
 
 #. module: idea
 #: field:idea.category,summary:0
 msgid "Summary"
-msgstr "Cuprins"
+msgstr "Rezumat"
 
 #. module: idea
 #: field:idea.idea,name:0
@@ -496,24 +507,19 @@ msgid "Idea Summary"
 msgstr "Rezumatul ideii"
 
 #. module: idea
-#: selection:report.vote,month:0
-msgid "November"
-msgstr ""
+#: view:idea.post.vote:0
+msgid "Post"
+msgstr "Postează"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "History"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Vots Statistics"
-msgstr ""
+msgstr "Istoric"
 
 #. module: idea
 #: field:report.vote,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Data comenzii"
 
 #. module: idea
 #: view:idea.idea:0
@@ -526,33 +532,43 @@ msgstr "Inițiator"
 #: view:idea.post.vote:0
 #: model:ir.ui.menu,name:idea.menu_give_vote
 msgid "Give Vote"
-msgstr ""
+msgstr "Acordă votul"
 
 #. module: idea
 #: help:idea.idea,vote_limit:0
 msgid "Set to one if  you require only one Vote per user"
+msgstr "Setati pe unu dacă doriti un singur vot per Utilizator"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "By Creators"
 msgstr ""
 
 #. module: idea
 #: view:idea.post.vote:0
 msgid "Cancel"
-msgstr "Anulare"
+msgstr "Anulează"
 
 #. module: idea
 #: view:idea.select:0
 msgid "Close"
-msgstr "Închidere"
+msgstr "Închide"
 
 #. module: idea
 #: view:idea.idea:0
-#: view:report.vote:0
 msgid "Open"
 msgstr "Deschide"
 
 #. module: idea
+#: view:idea.idea:0
+#: view:report.vote:0
+msgid "In Progress"
+msgstr ""
+
+#. module: idea
 #: view:report.vote:0
 msgid "Idea Vote Analysis"
-msgstr ""
+msgstr "Analiză vor idee"
 
 #. module: idea
 #: view:idea.idea:0
@@ -566,12 +582,7 @@ msgstr "Idei"
 #. module: idea
 #: model:ir.model,name:idea.model_idea_post_vote
 msgid "Post vote"
-msgstr ""
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Current"
-msgstr ""
+msgstr "Afisează vot"
 
 #. module: idea
 #: field:idea.vote.stat,score:0
@@ -580,9 +591,14 @@ msgid "Score"
 msgstr "Punctaj"
 
 #. module: idea
+#: view:idea.idea:0
+msgid "Votes Statistics"
+msgstr ""
+
+#. module: idea
 #: view:idea.vote:0
 msgid "Comments:"
-msgstr ""
+msgstr "Comentarii:"
 
 #. module: idea
 #: view:idea.category:0
@@ -594,33 +610,27 @@ msgstr "Descriere"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #. module: idea
 #: selection:idea.idea,state:0
 #: view:report.vote:0
 msgid "Refused"
-msgstr ""
-
-#. module: idea
-#: code:addons/idea/idea.py:253
-#, python-format
-msgid "Draft/Accepted/Cancelled ideas Could not be voted"
-msgstr ""
+msgstr "Respins"
 
 #. module: idea
 #: view:idea.vote:0
 msgid "Vote date"
-msgstr ""
+msgstr "Data votului"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "February"
-msgstr ""
+msgstr "Februarie"
 
 #. module: idea
-#: view:report.vote:0
-msgid "    Today    "
+#: field:idea.category,complete_name:0
+msgid "Name"
 msgstr ""
 
 #. module: idea
@@ -629,9 +639,14 @@ msgid "Number of Votes"
 msgstr "Număr de voturi"
 
 #. module: idea
+#: view:report.vote:0
+msgid "Month-1"
+msgstr ""
+
+#. module: idea
 #: selection:report.vote,month:0
 msgid "April"
-msgstr ""
+msgstr "Aprilie"
 
 #. module: idea
 #: field:idea.idea,count_comments:0
@@ -641,12 +656,22 @@ msgstr "Numărare comentarii"
 #. module: idea
 #: field:idea.vote,score:0
 msgid "Vote Status"
+msgstr "Status vot"
+
+#. module: idea
+#: view:report.vote:0
+msgid "Idea Vote created in current year"
 msgstr ""
 
 #. module: idea
 #: field:idea.idea,vote_avg:0
 msgid "Average Score"
 msgstr "Punctaj mediu"
+
+#. module: idea
+#: constraint:idea.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr ""
 
 #. module: idea
 #: field:idea.comment,idea_id:0
@@ -663,29 +688,38 @@ msgstr "Idee"
 #. module: idea
 #: view:idea.idea:0
 msgid "Accept"
-msgstr ""
+msgstr "Acceptă"
 
 #. module: idea
 #: field:idea.post.vote,vote:0
 msgid "Post Vote"
-msgstr ""
+msgstr "Afisează votul"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,year:0
 msgid "Year"
+msgstr "An"
+
+#. module: idea
+#: code:addons/idea/idea.py:274
+#, python-format
+msgid "You can not vote on a Draft/Accepted/Cancelled ideas."
 msgstr ""
 
 #. module: idea
 #: view:idea.select:0
 msgid "Select Idea for Vote"
-msgstr ""
+msgstr "Selectează Ideea pentru Vot"
 
 #~ msgid "My Open Ideas"
 #~ msgstr "Ideile mele deschise"
 
 #~ msgid "My Ideas"
 #~ msgstr "Ideile mele"
+
+#~ msgid "Idea Manager"
+#~ msgstr "Manager idei"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -749,3 +783,47 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nume invalid de model în definirea acţiunii"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module allows your user to easily and efficiently participate in "
+#~ "the innovation of the enterprise.\n"
+#~ "    It allows everybody to express ideas about different subjects.\n"
+#~ "    Then, other users can comment on these ideas and vote for particular "
+#~ "ideas.\n"
+#~ "    Each idea has a score based on the different votes.\n"
+#~ "    The managers can obtain an easy view on best ideas from all the users.\n"
+#~ "    Once installed, check the menu 'Ideas' in the 'Tools' main menu."
+#~ msgstr ""
+#~ "\n"
+#~ "    Acest modul permite utilizatorului dumneavoastră de a participa usor si "
+#~ "eficient la inovarea companiei.\n"
+#~ "    Permite tuturor să isi exprime ideile in legătură cu diverse subiecte.\n"
+#~ "    Apoi, alti utilizatori pot comenta aceste idei si pot vota anumite "
+#~ "idei.\n"
+#~ "    Fiecare idee are un punctaj bazat pe diferite voturi.\n"
+#~ "    Managerii pot vedea cu usurintă cele mai bune idei ale tuturor "
+#~ "utilizatorilor.\n"
+#~ "    Odată instalat, bifati meniul 'Idei' din meniul principal 'Instrumente'."
+
+#~ msgid "   Month   "
+#~ msgstr "   Luna   "
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Luna-1    "
+
+#~ msgid "  Year  "
+#~ msgstr "  An  "
+
+#~ msgid "Vots Statistics"
+#~ msgstr "Statistică voturi"
+
+#~ msgid "Current"
+#~ msgstr "Curent"
+
+#, python-format
+#~ msgid "Draft/Accepted/Cancelled ideas Could not be voted"
+#~ msgstr "Ideile in stare de Ciornă/Acceptate/Anulate nu pot fi votate"
+
+#~ msgid "    Today    "
+#~ msgstr "    Astăzi    "

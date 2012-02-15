@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-04-19 10:53+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:21+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:33+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -42,16 +42,6 @@ msgstr ""
 #: view:payment.order:0
 msgid "Group By..."
 msgstr "Grupper etter..."
-
-#. module: account_payment
-#: model:ir.module.module,description:account_payment.module_meta_information
-msgid ""
-"\n"
-"This module provides :\n"
-"* a more efficient way to manage invoice payment.\n"
-"* a basic mechanism to easily plug various automated payment.\n"
-"    "
-msgstr ""
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -81,7 +71,9 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
+#: field:payment.line,company_id:0
 #: field:payment.mode,company_id:0
+#: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Firma"
 
@@ -91,11 +83,17 @@ msgid "Preferred date"
 msgstr ""
 
 #. module: account_payment
+#: model:res.groups,name:account_payment.group_account_payment
+msgid "Accounting / Payments"
+msgstr ""
+
+#. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
 msgstr ""
 
 #. module: account_payment
+#: view:payment.order.create:0
 #: field:payment.order.create,entries:0
 msgid "Entries"
 msgstr ""
@@ -110,11 +108,6 @@ msgstr ""
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Forfallsdato"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr ""
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -170,9 +163,21 @@ msgid "The payment line name must be unique!"
 msgstr ""
 
 #. module: account_payment
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
+msgstr ""
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
 msgstr ""
 
 #. module: account_payment
@@ -296,12 +301,6 @@ msgid "Search Payment Orders"
 msgstr ""
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-
-#. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
 msgstr ""
@@ -327,8 +326,10 @@ msgid "Communication Type"
 msgstr ""
 
 #. module: account_payment
-#: model:ir.module.module,shortdesc:account_payment.module_meta_information
-msgid "Payment Management"
+#: field:payment.line,partner_id:0
+#: field:payment.mode,partner_id:0
+#: report:payment.order:0
+msgid "Partner"
 msgstr ""
 
 #. module: account_payment
@@ -344,6 +345,14 @@ msgstr ""
 #. module: account_payment
 #: field:account.invoice,amount_to_pay:0
 msgid "Amount to be paid"
+msgstr ""
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
 msgstr ""
 
 #. module: account_payment
@@ -437,7 +446,6 @@ msgstr ""
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
-#: model:ir.actions.act_window,name:account_payment.act_account_invoice_2_payment_line
 msgid "Payment Lines"
 msgstr ""
 
@@ -448,7 +456,7 @@ msgstr ""
 
 #. module: account_payment
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
+msgid "You can not create journal items on an account of type view."
 msgstr ""
 
 #. module: account_payment
@@ -520,13 +528,13 @@ msgid "Invoice Ref"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,name:0
-msgid "Your Reference"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.order,mode:0
-msgid "Payment mode"
+#: field:payment.line,name:0
+msgid "Your Reference"
 msgstr ""
 
 #. module: account_payment
@@ -565,9 +573,19 @@ msgid "Cancel"
 msgstr ""
 
 #. module: account_payment
+#: field:payment.line,bank_id:0
+msgid "Destination Bank Account"
+msgstr ""
+
+#. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
+msgstr ""
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
 msgstr ""
 
 #. module: account_payment
@@ -597,11 +615,6 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,communication2:0
 msgid "Communication 2"
-msgstr ""
-
-#. module: account_payment
-#: field:payment.line,bank_id:0
-msgid "Destination Bank account"
 msgstr ""
 
 #. module: account_payment
@@ -682,6 +695,11 @@ msgid "Order"
 msgstr ""
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr ""
@@ -693,9 +711,8 @@ msgid "Make Payment"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: report:payment.order:0
-msgid "Partner"
+#: field:payment.order,mode:0
+msgid "Payment mode"
 msgstr ""
 
 #. module: account_payment
@@ -706,9 +723,4 @@ msgstr ""
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
 msgstr ""

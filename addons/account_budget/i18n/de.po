@@ -6,16 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-12 14:54+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-08 08:46+0000\n"
+"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:36+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:48+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -32,12 +31,6 @@ msgstr "Bestätigt"
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
 msgstr "Budget Positionen"
-
-#. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "The General Budget '%s' has no Accounts!"
-msgstr "Das Allgemeine Budget '%s' beinhaltet keine Konten"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -140,9 +133,10 @@ msgstr ""
 "so zeitnahe wie möglich Hinweise für erforderliche Anpassungen geben."
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr "Dieser Assistent druckt eine Zusammenfassung des Budgets"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "The Budget '%s' has no accounts!"
+msgstr "Das Budget '%s' hat keine Konten!"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -261,6 +255,11 @@ msgid "Budget"
 msgstr "Budget"
 
 #. module: account_budget
+#: view:crossovered.budget:0
+msgid "To Approve Budgets"
+msgstr "Budgets genehmigen"
+
+#. module: account_budget
 #: code:addons/account_budget/account_budget.py:119
 #, python-format
 msgid "Error!"
@@ -291,11 +290,9 @@ msgid "Budgets"
 msgstr "Budgets"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "Fehler! Die Währung muss der Währung der gewählten Firma entsprechen"
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Dieser Assistent druckt eine Zusammenfassung des Budgets"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -356,59 +353,11 @@ msgid "Print"
 msgstr "Druck"
 
 #. module: account_budget
-#: model:ir.module.module,description:account_budget.module_meta_information
-msgid ""
-"This module allows accountants to manage analytic and crossovered budgets.\n"
-"\n"
-"Once the Master Budgets and the Budgets are defined (in "
-"Accounting/Budgets/),\n"
-"the Project Managers can set the planned amount on each Analytic Account.\n"
-"\n"
-"The accountant has the possibility to see the total of amount planned for "
-"each\n"
-"Budget and Master Budget in order to ensure the total planned is not\n"
-"greater/lower than what he planned for this Budget/Master Budget. Each list "
-"of\n"
-"record can also be switched to a graphical view of it.\n"
-"\n"
-"Three reports are available:\n"
-"    1. The first is available from a list of Budgets. It gives the "
-"spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
-"\n"
-"    2. The second is a summary of the previous one, it only gives the "
-"spreading, for the selected Budgets, of the Analytic Accounts.\n"
-"\n"
-"    3. The last one is available from the Analytic Chart of Accounts. It "
-"gives the spreading, for the selected Analytic Accounts, of the Master "
-"Budgets per Budgets.\n"
-"\n"
-msgstr ""
-"Dieses Modul ermöglicht Buchhaltern die Budgetierung von analytischen "
-"Konten.\n"
-"\n"
-"Zuerst müssen die zu budgetierenden Einzelpositionen unter Finanzen/Budgets "
-"definiert werden,\n"
-"bevor dann die Projekt- und Abteilungsleiter die Planwert für die "
-"analytischen Konten definieren können.\n"
-"Der Finanzbuchhalter hat dann die Möglichkeit alle geplanten Positionen im "
-"Gesamtüberblick des \n"
-"Budgets nachzuvollziehen und sicherzustellen, dass die Summe aller einzelnen "
-"Planungspositionen \n"
-"bestimmte festgesetzte Grenzwerte nicht übersteigt. Jedes Budget mit seinen "
-"Einzelposten \n"
-"kann auch in einer grafischen Balkendiagramm Ansicht angesehen werden.\n"
-"\n"
-"Drei Auswertungen sind vorhanden:\n"
-"    1. Die erste Auswertung zeigt ein zusammengefasstes Budget aufgeteilt "
-"nach seinen einzelnen in einer Zeile zusammengefassten Analyt. Konten. \n"
-"\n"
-"    2. Die zweite Auswertung zeigt zusätzlich Zeile für Zeile alle einzelnen "
-"Planungspositionen für die Analyt. Konten.\n"
-"\n"
-"    3. Der dritte Bericht wird über das Analytische Konto selbst erstellt. "
-"Angezeigt werden alle einzelnen Planungspositionen zu einem einzelnen "
-"Analysekonto.\n"
-"\n"
+#: view:account.budget.post:0
+#: view:crossovered.budget:0
+#: field:crossovered.budget.lines,theoritical_amount:0
+msgid "Theoretical Amount"
+msgstr "Sollwert"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
@@ -457,11 +406,6 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: account_budget
-#: model:ir.module.module,shortdesc:account_budget.module_meta_information
-msgid "Budget Management"
-msgstr "Budget Management"
-
-#. module: account_budget
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
 msgstr "Fehler ! Sie können keine rekursiven Analytische Konten definieren."
@@ -471,6 +415,11 @@ msgstr "Fehler ! Sie können keine rekursiven Analytische Konten definieren."
 #: report:crossovered.budget.report:0
 msgid "Analysis from"
 msgstr "Analyse vom"
+
+#. module: account_budget
+#: view:crossovered.budget:0
+msgid "Draft Budgets"
+msgstr "Budget Entwürfe"
 
 #~ msgid "% performance"
 #~ msgstr "% Leistungsfähigkeit"
@@ -547,9 +496,6 @@ msgstr "Analyse vom"
 #~ msgid "Spreading"
 #~ msgstr "Spannweite"
 
-#~ msgid "Theoretical Amount"
-#~ msgstr "Sollwert"
-
 #~ msgid "Fiscal Year"
 #~ msgstr "Fiskaljahr"
 
@@ -570,6 +516,9 @@ msgstr "Analyse vom"
 #~ msgid "No Dotations or Master Budget Expenses Found on Budget %s!"
 #~ msgstr ""
 #~ "Keine Zuweisungen oder Master Budget  Ausgaben für Budget %s gefunden"
+
+#~ msgid "Budget Management"
+#~ msgstr "Budget Management"
 
 #~ msgid ""
 #~ "This module allows accountants to manage analytic and crossovered budgets.\n"
@@ -618,3 +567,65 @@ msgstr "Analyse vom"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#, python-format
+#~ msgid "The General Budget '%s' has no Accounts!"
+#~ msgstr "Das Allgemeine Budget '%s' beinhaltet keine Konten"
+
+#~ msgid ""
+#~ "This module allows accountants to manage analytic and crossovered budgets.\n"
+#~ "\n"
+#~ "Once the Master Budgets and the Budgets are defined (in "
+#~ "Accounting/Budgets/),\n"
+#~ "the Project Managers can set the planned amount on each Analytic Account.\n"
+#~ "\n"
+#~ "The accountant has the possibility to see the total of amount planned for "
+#~ "each\n"
+#~ "Budget and Master Budget in order to ensure the total planned is not\n"
+#~ "greater/lower than what he planned for this Budget/Master Budget. Each list "
+#~ "of\n"
+#~ "record can also be switched to a graphical view of it.\n"
+#~ "\n"
+#~ "Three reports are available:\n"
+#~ "    1. The first is available from a list of Budgets. It gives the "
+#~ "spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
+#~ "\n"
+#~ "    2. The second is a summary of the previous one, it only gives the "
+#~ "spreading, for the selected Budgets, of the Analytic Accounts.\n"
+#~ "\n"
+#~ "    3. The last one is available from the Analytic Chart of Accounts. It "
+#~ "gives the spreading, for the selected Analytic Accounts, of the Master "
+#~ "Budgets per Budgets.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Dieses Modul ermöglicht Buchhaltern die Budgetierung von analytischen "
+#~ "Konten.\n"
+#~ "\n"
+#~ "Zuerst müssen die zu budgetierenden Einzelpositionen unter Finanzen/Budgets "
+#~ "definiert werden,\n"
+#~ "bevor dann die Projekt- und Abteilungsleiter die Planwert für die "
+#~ "analytischen Konten definieren können.\n"
+#~ "Der Finanzbuchhalter hat dann die Möglichkeit alle geplanten Positionen im "
+#~ "Gesamtüberblick des \n"
+#~ "Budgets nachzuvollziehen und sicherzustellen, dass die Summe aller einzelnen "
+#~ "Planungspositionen \n"
+#~ "bestimmte festgesetzte Grenzwerte nicht übersteigt. Jedes Budget mit seinen "
+#~ "Einzelposten \n"
+#~ "kann auch in einer grafischen Balkendiagramm Ansicht angesehen werden.\n"
+#~ "\n"
+#~ "Drei Auswertungen sind vorhanden:\n"
+#~ "    1. Die erste Auswertung zeigt ein zusammengefasstes Budget aufgeteilt "
+#~ "nach seinen einzelnen in einer Zeile zusammengefassten Analyt. Konten. \n"
+#~ "\n"
+#~ "    2. Die zweite Auswertung zeigt zusätzlich Zeile für Zeile alle einzelnen "
+#~ "Planungspositionen für die Analyt. Konten.\n"
+#~ "\n"
+#~ "    3. Der dritte Bericht wird über das Analytische Konto selbst erstellt. "
+#~ "Angezeigt werden alle einzelnen Planungspositionen zu einem einzelnen "
+#~ "Analysekonto.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Fehler! Die Währung muss der Währung der gewählten Firma entsprechen"

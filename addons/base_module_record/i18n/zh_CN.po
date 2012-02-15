@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-08-03 02:29+0000\n"
-"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-10 03:15+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:05+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-11 05:07+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,info,category:0
@@ -27,14 +27,9 @@ msgid "Information"
 msgstr "信息"
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record_objects,save:0
-msgid ""
-"If you think your module could interest others people, we'd like you to "
-"publish it on OpenERP.com, in the 'Modules' section. You can do it through "
-"the website or using features of the 'base_module_publish' module."
-msgstr ""
-"如果您觉得你的模块会让其他人感兴趣。我们希望您把它发布到OpenERP.com的模块部分。你可以通过这个网页或者用base_module_publish这"
-"个模块来发布"
+#: model:ir.model,name:base_module_record.model_ir_module_record
+msgid "ir.module.record"
+msgstr "ir.module.record"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,info,end:0
@@ -65,11 +60,6 @@ msgid "Records only"
 msgstr "只记录"
 
 #. module: base_module_record
-#: model:ir.model,name:base_module_record.model_ir_module_record
-msgid "ir.module.record"
-msgstr "ir.module.record"
-
-#. module: base_module_record
 #: selection:base_module_record.module_record_objects,info,data_kind:0
 msgid "Demo Data"
 msgstr "演示数据"
@@ -91,6 +81,14 @@ msgstr "版本"
 #: wizard_view:base_module_record.module_record_objects,init:0
 msgid "Objects Recording"
 msgstr "记录对象"
+
+#. module: base_module_record
+#: wizard_view:base_module_record.module_record_objects,save:0
+msgid ""
+"If you think your module could interest other people, we'd like you to "
+"publish it on http://www.openerp.com, in the 'Modules' section. You can do "
+"it through the website or using features of the 'base_module_publish' module."
+msgstr "如果你的模块对其他人也有用，我们建议你在apps.openerp.com上发布它。可以在网站上找到发布方法。"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,init,check_date:0
@@ -192,11 +190,6 @@ msgid "Record"
 msgstr "记录"
 
 #. module: base_module_record
-#: model:ir.module.module,shortdesc:base_module_record.module_meta_information
-msgid "Module Record"
-msgstr "Module Record"
-
-#. module: base_module_record
 #: wizard_button:base_module_record.module_record_objects,info,save:0
 msgid "Continue"
 msgstr "下一步"
@@ -270,41 +263,6 @@ msgstr "关闭"
 msgid "Created & Modified"
 msgstr "创建&修改"
 
-#. module: base_module_record
-#: model:ir.module.module,description:base_module_record.module_meta_information
-msgid ""
-"\n"
-"This module allows you to create a new module without any development.\n"
-"It records all operations on objects during the recording session and\n"
-"produce a .ZIP module. So you can create your own module directly from\n"
-"the OpenERP client.\n"
-"\n"
-"This version works for creating and updating existing records. It "
-"recomputes\n"
-"dependencies and links for all types of widgets (many2one, many2many, ...).\n"
-"It also support workflows and demo/update data.\n"
-"\n"
-"This should help you to easily create reusable and publishable modules\n"
-"for custom configurations and demo/testing data.\n"
-"\n"
-"How to use it:\n"
-"Run Administration/Customization/Module Creation/Export Customizations As a "
-"Module wizard.\n"
-"Select datetime criteria of recording and objects to be recorded and Record "
-"module.\n"
-"    "
-msgstr ""
-"\n"
-"这个模块可以让你不通过代码开发就创建一个新模块。\n"
-"它会记录你在操作中对象的所有的操作和变量的产生\n"
-"并生成一个.ZIP模块文件。所以你可以直接用OpenERP\n"
-"客户端来创建模块。\n"
-"\n"
-"如何使用它：\n"
-"运行管理/自定义/创建模块/把自定义设置导出为模块向导。\n"
-"选择录制和被录制的对象和记录模块中的日期时间标准。\n"
-"    "
-
 #~ msgid "Status"
 #~ msgstr "状态"
 
@@ -365,3 +323,47 @@ msgstr ""
 
 #~ msgid "Save Recorded Module"
 #~ msgstr "保存记录模块"
+
+#~ msgid "Module Record"
+#~ msgstr "Module Record"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows you to create a new module without any development.\n"
+#~ "It records all operations on objects during the recording session and\n"
+#~ "produce a .ZIP module. So you can create your own module directly from\n"
+#~ "the OpenERP client.\n"
+#~ "\n"
+#~ "This version works for creating and updating existing records. It "
+#~ "recomputes\n"
+#~ "dependencies and links for all types of widgets (many2one, many2many, ...).\n"
+#~ "It also support workflows and demo/update data.\n"
+#~ "\n"
+#~ "This should help you to easily create reusable and publishable modules\n"
+#~ "for custom configurations and demo/testing data.\n"
+#~ "\n"
+#~ "How to use it:\n"
+#~ "Run Administration/Customization/Module Creation/Export Customizations As a "
+#~ "Module wizard.\n"
+#~ "Select datetime criteria of recording and objects to be recorded and Record "
+#~ "module.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "这个模块可以让你不通过代码开发就创建一个新模块。\n"
+#~ "它会记录你在操作中对象的所有的操作和变量的产生\n"
+#~ "并生成一个.ZIP模块文件。所以你可以直接用OpenERP\n"
+#~ "客户端来创建模块。\n"
+#~ "\n"
+#~ "如何使用它：\n"
+#~ "运行管理/自定义/创建模块/把自定义设置导出为模块向导。\n"
+#~ "选择录制和被录制的对象和记录模块中的日期时间标准。\n"
+#~ "    "
+
+#~ msgid ""
+#~ "If you think your module could interest others people, we'd like you to "
+#~ "publish it on OpenERP.com, in the 'Modules' section. You can do it through "
+#~ "the website or using features of the 'base_module_publish' module."
+#~ msgstr ""
+#~ "如果您觉得你的模块会让其他人感兴趣。我们希望您把它发布到OpenERP.com的模块部分。你可以通过这个网页或者用base_module_publish这"
+#~ "个模块来发布"

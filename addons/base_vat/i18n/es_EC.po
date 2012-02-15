@@ -6,64 +6,48 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-13 04:07+0000\n"
 "Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:05+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:87
+#: code:addons/base_vat/base_vat.py:141
 #, python-format
 msgid ""
-"The Vat does not seems to be correct. You should have entered something like "
-"this %s"
+"This VAT number does not seem to be valid.\n"
+"Note: the expected format is %s"
 msgstr ""
-"El CIF/NIF parece que no sea correcto. Debería haber introducido algo como "
-"esto %s"
 
 #. module: base_vat
-#: model:ir.module.module,description:base_vat.module_meta_information
-msgid ""
-"\n"
-"    Enable the VAT Number for the partner. Check the validity of that VAT "
-"Number.\n"
-"\n"
-"    This module follows the methods stated at http://sima-pc.com/nif.php "
-"for\n"
-"    checking the validity of VAT Number assigned to partners in European "
-"countries.\n"
-"    "
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
 msgstr ""
-"\n"
-"    Permite la validación del CIF/NIF de las empresas. Comprueba si el "
-"CIF/NIF es un número válido.\n"
-"\n"
-"    Este módulo usa los métodos especificados en http://sima-pc.com/nif.php "
-"para\n"
-"    la validación del CIF/NIF asignado a las empresas de los países "
-"europeos.\n"
-"    "
-
-#. module: base_vat
-#: model:ir.module.module,shortdesc:base_vat.module_meta_information
-msgid "Base VAT - To check VAT number validity"
-msgstr "Base CIF/NIF - Para comprobar la validez de los CIF/NIF"
 
 #. module: base_vat
 #: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Error ! No puedes crear miembros asociados recursivos"
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:88
-#, python-format
-msgid "The VAT is invalid, It should begin with the country code"
-msgstr "El CIF/NIF no es válido, debería empezar con el código del país"
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: base_vat
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -78,6 +62,13 @@ msgstr ""
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
 msgstr "Empresa"
+
+#. module: base_vat
+#: help:res.company,vat_check_vies:0
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr ""
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
@@ -95,3 +86,42 @@ msgstr "Sujeto a IVA"
 
 #~ msgid "VAT"
 #~ msgstr "IVA"
+
+#, python-format
+#~ msgid ""
+#~ "The Vat does not seems to be correct. You should have entered something like "
+#~ "this %s"
+#~ msgstr ""
+#~ "El CIF/NIF parece que no sea correcto. Debería haber introducido algo como "
+#~ "esto %s"
+
+#~ msgid "Base VAT - To check VAT number validity"
+#~ msgstr "Base CIF/NIF - Para comprobar la validez de los CIF/NIF"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Error ! No puedes crear miembros asociados recursivos"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Enable the VAT Number for the partner. Check the validity of that VAT "
+#~ "Number.\n"
+#~ "\n"
+#~ "    This module follows the methods stated at http://sima-pc.com/nif.php "
+#~ "for\n"
+#~ "    checking the validity of VAT Number assigned to partners in European "
+#~ "countries.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Permite la validación del CIF/NIF de las empresas. Comprueba si el "
+#~ "CIF/NIF es un número válido.\n"
+#~ "\n"
+#~ "    Este módulo usa los métodos especificados en http://sima-pc.com/nif.php "
+#~ "para\n"
+#~ "    la validación del CIF/NIF asignado a las empresas de los países "
+#~ "europeos.\n"
+#~ "    "
+
+#, python-format
+#~ msgid "The VAT is invalid, It should begin with the country code"
+#~ msgstr "El CIF/NIF no es válido, debería empezar con el código del país"

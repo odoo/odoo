@@ -184,6 +184,7 @@ class product_product(osv.osv):
         
         location_obj = self.pool.get('stock.location')
         warehouse_obj = self.pool.get('stock.warehouse')
+        shop_obj = self.pool.get('sale.shop')
         
         states = context.get('states',[])
         what = context.get('what',())
@@ -193,18 +194,15 @@ class product_product(osv.osv):
         if not ids:
             return res
 
-    # TODO: write in more ORM way, less queries, more pg84 magic
         if context.get('shop', False):
-            cr.execute('select warehouse_id from sale_shop where id=%s', (int(context['shop']),))
-            res2 = cr.fetchone()
-            if res2:
-                context['warehouse'] = res2[0]
+            warehouse_id = shop_obj.read(cr, uid, int(context['shop']), ['warehouse_id'])['warehouse_id'][0]
+            if warehouse_id:
+                context['warehouse'] = warehouse_id
 
         if context.get('warehouse', False):
-            cr.execute('select lot_stock_id from stock_warehouse where id=%s', (int(context['warehouse']),))
-            res2 = cr.fetchone()
-            if res2:
-                context['location'] = res2[0]
+            lot_id = warehouse_obj.read(cr, uid, int(context['warehouse']), ['lot_stock_id'])['lot_stock_id'][0]
+            if lot_id:
+                context['location'] = lot_id
 
         if context.get('location', False):
             if type(context['location']) == type(1):
@@ -350,7 +348,7 @@ class product_product(osv.osv):
         'virtual_available': fields.function(_product_available, multi='qty_available',
             type='float',  digits_compute=dp.get_precision('Product UoM'),
             string='Quantity Available',
-            help="Forcasted quantity (computed as Quantity On Hand "
+            help="Forecast quantity (computed as Quantity On Hand "
                  "- Outgoing + Incoming)\n"
                  "In a context with a single Stock Location, this includes "
                  "goods stored at this Location, or any of its children.\n"
@@ -403,7 +401,7 @@ class product_product(osv.osv):
     }
 
     _defaults = {
-        'valuation': lambda *a: 'manual_periodic',
+        'valuation': 'manual_periodic',
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

@@ -7,24 +7,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-07-04 14:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-07-11 09:51+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:57+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:09+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:55
+#: code:addons/portal/wizard/share_wizard.py:51
 #, python-format
 msgid "Please select at least one user to share with"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:59
+#: code:addons/portal/wizard/share_wizard.py:55
 #, python-format
 msgid "Please select at least one group to share with"
 msgstr ""
@@ -32,11 +32,6 @@ msgstr ""
 #. module: portal
 #: field:res.portal,group_id:0
 msgid "Group"
-msgstr ""
-
-#. module: portal
-#: help:res.portal,other_group_ids:0
-msgid "Those groups are assigned to the portal's users"
 msgstr ""
 
 #. module: portal
@@ -56,6 +51,13 @@ msgid "Portal User"
 msgstr ""
 
 #. module: portal
+#: model:res.groups,comment:portal.group_portal_manager
+msgid ""
+"Portal managers have access to the portal definitions, and can easily "
+"configure the users, access rights and menus of portal users."
+msgstr ""
+
+#. module: portal
 #: help:res.portal,override_menu:0
 msgid "Enable this option to override the Menu Action of portal users"
 msgstr ""
@@ -63,11 +65,6 @@ msgstr ""
 #. module: portal
 #: field:res.portal.wizard.user,user_email:0
 msgid "E-mail"
-msgstr ""
-
-#. module: portal
-#: view:res.portal:0
-msgid "Other Groups assigned to Users"
 msgstr ""
 
 #. module: portal
@@ -82,32 +79,13 @@ msgid "Widgets"
 msgstr ""
 
 #. module: portal
-#: model:ir.module.module,description:portal.module_meta_information
-msgid ""
-"\n"
-"This module defines 'portals' to customize the access to your OpenERP "
-"database\n"
-"for external users.\n"
-"\n"
-"A portal defines customized user menu and access rights for a group of "
-"users\n"
-"(the ones associated to that portal).  It also associates user groups to "
-"the\n"
-"portal users (adding a group in the portal automatically adds it to the "
-"portal\n"
-"users, etc).  That feature is very handy when used in combination with the\n"
-"module 'share'.\n"
-"    "
-msgstr ""
-
-#. module: portal
-#: view:share.wizard:0
-msgid "Who do you want to share with?"
-msgstr ""
-
-#. module: portal
 #: view:res.portal.wizard:0
 msgid "Send Invitations"
+msgstr ""
+
+#. module: portal
+#: view:res.portal:0
+msgid "Widgets assigned to Users"
 msgstr ""
 
 #. module: portal
@@ -116,8 +94,8 @@ msgid "The url where portal users can connect to the server"
 msgstr ""
 
 #. module: portal
-#: field:res.portal.widget,widget_id:0
-msgid "Widget"
+#: model:res.groups,comment:portal.group_portal_officer
+msgid "Portal officers can create new portal users with the portal wizard."
 msgstr ""
 
 #. module: portal
@@ -131,9 +109,9 @@ msgid "If set, replaces the standard menu for the portal's users"
 msgstr ""
 
 #. module: portal
-#: field:res.portal,parent_menu_id:0
-msgid "Parent Menu"
-msgstr "Ylätason valikko"
+#: field:res.portal.wizard.user,lang:0
+msgid "Language"
+msgstr ""
 
 #. module: portal
 #: view:res.portal:0
@@ -161,13 +139,18 @@ msgid "User Name"
 msgstr ""
 
 #. module: portal
+#: help:res.portal,group_id:0
+msgid "The group corresponding to this portal"
+msgstr ""
+
+#. module: portal
 #: model:ir.model,name:portal.model_res_portal_widget
 msgid "Portal Widgets"
 msgstr ""
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_portal
-#: model:ir.module.module,shortdesc:portal.module_meta_information
+#: model:ir.module.category,name:portal.module_category_portal
 #: view:res.portal:0
 #: field:res.portal.widget,portal_id:0
 #: field:res.portal.wizard,portal_id:0
@@ -181,7 +164,7 @@ msgid "Your OpenERP account at %(company)s"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/portal.py:110
+#: code:addons/portal/portal.py:107
 #: code:addons/portal/portal.py:184
 #, python-format
 msgid "%s Menu"
@@ -190,6 +173,11 @@ msgstr ""
 #. module: portal
 #: help:res.portal.wizard,portal_id:0
 msgid "The portal in which new users must be added"
+msgstr ""
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_portal_wizard
+msgid "Portal Wizard"
 msgstr ""
 
 #. module: portal
@@ -222,9 +210,9 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: field:res.portal.wizard.user,lang:0
-msgid "Language"
-msgstr ""
+#: field:res.portal,parent_menu_id:0
+msgid "Parent Menu"
+msgstr "Ylätason valikko"
 
 #. module: portal
 #: field:res.portal,url:0
@@ -232,8 +220,8 @@ msgid "URL"
 msgstr ""
 
 #. module: portal
-#: view:res.portal:0
-msgid "Widgets assigned to Users"
+#: field:res.portal.widget,widget_id:0
+msgid "Widget"
 msgstr ""
 
 #. module: portal
@@ -291,20 +279,10 @@ msgid "ir.ui.menu"
 msgstr ""
 
 #. module: portal
-#: help:res.portal,group_id:0
-msgid "The group extended by this portal"
-msgstr ""
-
-#. module: portal
 #: view:res.portal:0
 #: view:res.portal.wizard:0
 #: field:res.portal.wizard,user_ids:0
 msgid "Users"
-msgstr ""
-
-#. module: portal
-#: field:res.portal,other_group_ids:0
-msgid "Other User Groups"
 msgstr ""
 
 #. module: portal
@@ -367,8 +345,8 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: model:ir.model,name:portal.model_res_portal_wizard
-msgid "Portal Wizard"
+#: model:res.groups,name:portal.group_portal_manager
+msgid "Manager"
 msgstr ""
 
 #. module: portal
@@ -402,4 +380,9 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_share_wizard
 msgid "Share Wizard"
+msgstr ""
+
+#. module: portal
+#: model:res.groups,name:portal.group_portal_officer
+msgid "Officer"
 msgstr ""

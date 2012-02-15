@@ -50,7 +50,8 @@
                        </group>
                        <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
                             <form string="Functions and Addresses">
-                                <field name="location_id"/>
+                                <field name="partner_id" />
+                                <field name="location_id" domain="[('partner_id', '=', partner_id)]"/>
                                 <field name="function" />
                                 <separator string="Professional Info" colspan="4"/>
                                 <field name="phone"/>
@@ -91,7 +92,7 @@
         <field name="arch" type="xml">
             <search string="Partner Contact">
                 <field name="name" string="First/Lastname"
-                    filter_domain="['|', ('firstname','ilike', self), ('lastname','ilike',self)]"/>
+                    filter_domain="['|', ('first_name','ilike', self), ('last_name', 'ilike', self)]"/>
                 <field name="partner_id" string="Partner"/>
             </search>
         </field>
@@ -135,7 +136,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <separator string="Postal Address" position="after">
-                <field name="location_id" on_change="onchange_location_id(location_id)"/>
+                <field name="location_id" on_change="onchange_location_id(location_id)" domain="[('partner_id', '=', parent.id)]"/>
             </separator>
             <xpath expr="//field[@string='Contact Name']" position="replace">
                 <field name="contact_id"/>

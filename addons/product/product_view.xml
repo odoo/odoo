@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="9"/>
+        <menuitem groups="base.group_extended" id="prod_config_main" name="Products" parent="base.menu_base_config" sequence="9"/>
 
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
@@ -15,8 +15,8 @@
                    <filter string="To Sell" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
                    <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
                    <separator orientation="vertical"/>
-                   <field name="default_code"/>
-                   <field name="name"/>
+                   <field name="name"
+                        filter_domain="['|', ('name','ilike',self),('default_code','ilike',self)]"/>
                    <field name="categ_id" widget="selection" operator="child_of" groups="base.group_extended"/>
                    <newline/>
                    <group expand="0" string="Context..." groups="base.group_extended">
@@ -26,7 +26,7 @@
                    </group>
                    <newline/>
                    <group  expand='0' string='Group by...' groups="base.group_extended">
-                       <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
+                       <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" groups="base.group_extended"/>
                        <separator orientation="vertical"/>
                        <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
                        <separator orientation="vertical"/>
@@ -245,6 +245,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
@@ -283,19 +284,31 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="context">{"search_default_filter_to_purchase":1}</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="help">Products can be purchased and/or sold. They can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
 
+        <record id="product_category_search_view" model="ir.ui.view">
+            <field name="name">product.category.search</field>
+            <field name="model">product.category</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Product Categories">
+                    <field name="parent_id"/>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
         <record id="product_category_form_view" model="ir.ui.view">
             <field name="name">product.category.form</field>
             <field name="model">product.category</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Categories">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <field name="parent_id"/>
                     <field name="sequence" invisible="1"/>
                     <field name="type"/>
@@ -345,6 +358,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.category</field>
             <field name="view_type">form</field>
+            <field name="search_view_id" ref="product_category_search_view"/>
             <field name="view_id" ref="product_category_list_view"/>
         </record>
         <menuitem action="product_category_action_form"
@@ -358,7 +372,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="context">{'categ_id':active_id, 'search_default_categ_id':active_id}</field>
         </record>
         <record id="ir_product_category_open" model="ir.values">
@@ -440,7 +454,7 @@
             </field>
         </record>
         <record id="product_uom_categ_form_action" model="ir.actions.act_window">
-            <field name="name">Units of Measure Categories</field>
+            <field name="name">UoM Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.uom.categ</field>
             <field name="view_type">form</field>
@@ -530,7 +544,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Supplier Information">
-                    <field name="name"/>
+                    <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" options='{"quick_create": false}'/>
                     <field name="sequence"/>
                     <field name="product_name" groups="base.group_extended"/>
                     <field name="product_code" groups="base.group_extended"/>

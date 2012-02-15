@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2010-12-09 09:43+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 04:52+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:01+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -79,7 +79,7 @@ msgid "Today"
 msgstr "Hoje"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:44
+#: code:addons/subscription/subscription.py:136
 #, python-format
 msgid "Error !"
 msgstr "Erro!"
@@ -105,14 +105,6 @@ msgstr "Parar"
 #: view:subscription.subscription:0
 msgid "Set to Draft"
 msgstr "Definir para Rascunho"
-
-#. module: subscription
-#: model:ir.module.module,description:subscription.module_meta_information
-msgid ""
-"Module allows to create new documents and add subscription on that document."
-msgstr ""
-"O Modulo permite criar novos documentos e adicionar subscrições nesse "
-"documento."
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -156,25 +148,16 @@ msgstr ""
 "o documento de subscrição sem ter de o eliminar"
 
 #. module: subscription
-#: selection:subscription.subscription.history,document_id:0
-msgid "Sale Order"
-msgstr "Ordem de Venda"
-
-#. module: subscription
 #: field:subscription.document,name:0
 #: field:subscription.subscription,name:0
 msgid "Name"
 msgstr "Nome"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:44
+#: code:addons/subscription/subscription.py:136
 #, python-format
-msgid ""
-"You cannot modify the Object linked to the Document Type!\n"
-"Create another Document instead !"
+msgid "You cannot delete an active subscription !"
 msgstr ""
-"Não pode modificat o Objeto ligado ao Tipo de Documento!\n"
-"Crie, antes, um outro Documento!"
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
@@ -277,11 +260,6 @@ msgid "Process"
 msgstr "Processo"
 
 #. module: subscription
-#: model:ir.module.module,shortdesc:subscription.module_meta_information
-msgid "Subscription and recurring operations"
-msgstr "Subscrição e operações recurrentes"
-
-#. module: subscription
 #: help:subscription.subscription,doc_source:0
 msgid ""
 "User can choose the source document on which he wants to create documents"
@@ -294,7 +272,7 @@ msgid "Document Types"
 msgstr "Tipos de Documentos"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:115
+#: code:addons/subscription/subscription.py:109
 #, python-format
 msgid "Wrong Source Document !"
 msgstr "Origem do Documento Errada !"
@@ -312,12 +290,7 @@ msgid "Done"
 msgstr "Concluído"
 
 #. module: subscription
-#: selection:subscription.subscription.history,document_id:0
-msgid "Invoice"
-msgstr "Factura"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:115
+#: code:addons/subscription/subscription.py:109
 #, python-format
 msgid ""
 "Please provide another source document.\n"
@@ -340,6 +313,12 @@ msgstr "Documentos criado"
 #~ msgid "Configuration"
 #~ msgstr "Configuração"
 
+#~ msgid "Sale Order"
+#~ msgstr "Ordem de Venda"
+
+#~ msgid "Invoice"
+#~ msgstr "Factura"
+
 #~ msgid "Tools"
 #~ msgstr "Ferramentas"
 
@@ -358,11 +337,28 @@ msgstr "Documentos criado"
 #~ msgid "Subscription document fields"
 #~ msgstr "Campos de subscrição de documento"
 
+#~ msgid ""
+#~ "Module allows to create new documents and add subscription on that document."
+#~ msgstr ""
+#~ "O Modulo permite criar novos documentos e adicionar subscrições nesse "
+#~ "documento."
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML Inválido para a Arquitectura de Vista !"
+
+#~ msgid "Subscription and recurring operations"
+#~ msgstr "Subscrição e operações recurrentes"
 
 #~ msgid "Subscription document"
 #~ msgstr "Subscrição de documento"
 
 #~ msgid "All Subscriptions"
 #~ msgstr "Todas as Subscrições"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot modify the Object linked to the Document Type!\n"
+#~ "Create another Document instead !"
+#~ msgstr ""
+#~ "Não pode modificat o Objeto ligado ao Tipo de Documento!\n"
+#~ "Crie, antes, um outro Documento!"

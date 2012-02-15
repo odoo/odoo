@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-01-12 14:24+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:22+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:33+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
+
+#. module: sale_journal
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -23,20 +28,21 @@ msgid "Note"
 msgstr "Тэмдэглэл"
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and picking."
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
 msgstr ""
-"Борлуулалт болон бүтээгдэхүүн сонголтонд ашиглагдсан бүртгэлийн төрөл"
 
 #. module: sale_journal
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "Захиалгын Лавлагаа дахин давтагдах ёсгүй !"
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, for invoicing the current "
+"partner."
+msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Нэхэмжлэл"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -58,37 +64,16 @@ msgid "Notes"
 msgstr "Тэмдэглэлүүд"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Method"
-msgstr "Нэхэмжлэлийн Арга"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Нэхэмжлэлийн арга"
 
 #. module: sale_journal
-#: model:ir.module.module,description:sale_journal.module_meta_information
-msgid ""
-"\n"
-"    The sales journal modules allows you to categorise your\n"
-"    sales and deliveries (picking lists) between different journals.\n"
-"    This module is very helpful for bigger companies that\n"
-"    works by departments.\n"
-"\n"
-"    You can use journal for different purposes, some examples:\n"
-"    * isolate sales of different departments\n"
-"    * journals for deliveries by truck or by UPS\n"
-"\n"
-"    Journals have a responsible and evolves between different status:\n"
-"    * draft, open, cancel, done.\n"
-"\n"
-"    Batch operations can be processed on the different journals to\n"
-"    confirm all sales at once, to validate or invoice packing, ...\n"
-"\n"
-"    It also supports batch invoicing methods that can be configured by\n"
-"    partners and sales orders, examples:\n"
-"    * daily invoicing,\n"
-"    * monthly invoicing, ...\n"
-"\n"
-"    Some statistics by journals are provided.\n"
-"    "
-msgstr ""
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Нэхэмжлэлийн Төрөл"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -101,11 +86,6 @@ msgid "Grouped"
 msgstr "Бүлэглэгдсэн"
 
 #. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Алдаа! Рекурсив холбоотой гишүүдийг үүсгэх боломжгүй."
-
-#. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
 msgid ""
 "Invoice types are used for partners, sales orders and delivery orders. You "
@@ -114,14 +94,9 @@ msgid ""
 msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Нэхэмжлэлийн арга"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sales Order"
-msgstr "Борлуулалтын захиалга"
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -142,11 +117,9 @@ msgid "Partner"
 msgstr "Түнш"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Нэхэмжлэлийн Төрөл"
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
+msgstr "Борлуулалтын захиалга"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
@@ -154,6 +127,19 @@ msgid "Picking List"
 msgstr "Агуулахын баримт"
 
 #. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr ""
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "Нэхэмжлэл"
+
+#~ msgid "Invoicing Method"
+#~ msgstr "Нэхэмжлэлийн Арга"
+
+#~ msgid "The type of journal used for sales and picking."
+#~ msgstr ""
+#~ "Борлуулалт болон бүтээгдэхүүн сонголтонд ашиглагдсан бүртгэлийн төрөл"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Алдаа! Рекурсив холбоотой гишүүдийг үүсгэх боломжгүй."
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Захиалгын Лавлагаа дахин давтагдах ёсгүй !"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-19 14:30+0000\n"
 "Last-Translator: Rungsan Suyala <rungsan@gmail.com>\n"
 "Language-Team: Thai <th@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:29+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:41+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: board
 #: view:res.log.report:0
@@ -28,22 +28,9 @@ msgid "Menu Create"
 msgstr "สร้างเมนู"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-#: model:ir.model,name:board.model_board_note_type
-msgid "Note Type"
-msgstr ""
-
-#. module: board
-#: view:board.note:0
-#: field:board.note,user_id:0
-msgid "Author"
-msgstr "ผู้เขียน"
-
-#. module: board
-#: model:ir.module.module,shortdesc:board.module_meta_information
-msgid "Dashboard main module"
-msgstr "แผงควบคุมโมดูลหลัก"
+#: view:board.menu.create:0
+msgid "Menu Information"
+msgstr "เมนูข้อมูล"
 
 #. module: board
 #: view:res.users:0
@@ -51,30 +38,25 @@ msgid "Latest Connections"
 msgstr ""
 
 #. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
-#, python-format
-msgid "User Error!"
+#: view:res.log.report:0
+msgid "Log created in last month"
 msgstr ""
 
 #. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.open_board_administration_form
-#: model:ir.ui.menu,name:board.menu_board_admin
 msgid "Administration Dashboard"
 msgstr "แผงควบคุมการบริหารงาน"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note,note:0
-#: model:ir.model,name:board.model_board_note
-msgid "Note"
-msgstr "บันทึก"
-
-#. module: board
-#: view:board.note:0
 #: view:res.log.report:0
 msgid "Group By..."
 msgstr "จัดกลุ่มตาม..."
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log created in current year"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -82,7 +64,11 @@ msgid "Board"
 msgstr ""
 
 #. module: board
-#: view:board.board:0
+#: field:board.menu.create,menu_name:0
+msgid "Menu Name"
+msgstr "ชื่อเมนู"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
 #: view:res.log.report:0
 msgid "Weekly Global Activity"
@@ -105,20 +91,19 @@ msgid "Month"
 msgstr "เดือน"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
+#: view:res.log.report:0
+msgid "Log created in current month"
 msgstr ""
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
 #: view:res.log.report:0
 msgid "Monthly Activity per Document"
 msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
+#: view:board.board:0
+msgid "Configuration Overview"
 msgstr ""
 
 #. module: board
@@ -138,7 +123,6 @@ msgid "August"
 msgstr "สิงหาคม"
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_user_connection_tree
 msgid "User Connections"
 msgstr ""
@@ -149,25 +133,19 @@ msgid "Creation Date"
 msgstr "วันที่สร้าง"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_note_form
-#: model:ir.ui.menu,name:board.menu_view_board_note_form
-msgid "Publish a note"
-msgstr "เผยแพร่ข้อความ"
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr ""
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
-msgstr "เมนูข้อมูล"
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr ""
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "June"
 msgstr "มิถุนายน"
-
-#. module: board
-#: field:board.note,type:0
-msgid "Note type"
-msgstr ""
 
 #. module: board
 #: field:board.board,line_ids:0
@@ -180,20 +158,15 @@ msgid "Log Report"
 msgstr ""
 
 #. module: board
-#: view:board.note:0
-#: field:board.note,date:0
-msgid "Date"
-msgstr "วันที่"
+#: code:addons/board/wizard/board_menu_create.py:46
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr ""
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "July"
 msgstr "กรกฎาคม"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Extended Filters..."
-msgstr ""
 
 #. module: board
 #: view:res.log.report:0
@@ -237,9 +210,9 @@ msgid "January"
 msgstr "มกราคม"
 
 #. module: board
-#: view:board.note:0
-msgid "Notes"
-msgstr "บันทึก"
+#: view:board.board:0
+msgid "Users"
+msgstr ""
 
 #. module: board
 #: selection:res.log.report,month:0
@@ -262,14 +235,14 @@ msgstr "เมษายน"
 #: view:board.board:0
 #: field:board.board,name:0
 #: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.admin_menu_dasboard
 #: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
 msgstr "แผงควบคุม"
 
 #. module: board
-#: model:ir.module.module,description:board.module_meta_information
-msgid "Base module for all dashboards."
+#: code:addons/board/wizard/board_menu_create.py:45
+#, python-format
+msgid "User Error!"
 msgstr ""
 
 #. module: board
@@ -288,12 +261,11 @@ msgid "Model"
 msgstr "โมเดล"
 
 #. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "ชื่อเมนู"
+#: model:ir.actions.act_window,name:board.board_homepage_action
+msgid "Home Page"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_latest_activities_tree
 msgid "Latest Activities"
 msgstr "กิจกรรมล่าสุด"
@@ -360,11 +332,6 @@ msgid "May"
 msgstr "พฤษภาคม"
 
 #. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr ""
-
-#. module: board
 #: view:res.log.report:0
 #: field:res.log.report,name:0
 msgid "Year"
@@ -380,14 +347,23 @@ msgstr "ยกเลิก"
 msgid "Dashboard View"
 msgstr ""
 
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
-#, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr ""
+#~ msgid "Author"
+#~ msgstr "ผู้เขียน"
 
-#. module: board
-#: view:board.note:0
-#: field:board.note,name:0
-msgid "Subject"
-msgstr "เรื่อง"
+#~ msgid "Note"
+#~ msgstr "บันทึก"
+
+#~ msgid "Dashboard main module"
+#~ msgstr "แผงควบคุมโมดูลหลัก"
+
+#~ msgid "Publish a note"
+#~ msgstr "เผยแพร่ข้อความ"
+
+#~ msgid "Date"
+#~ msgstr "วันที่"
+
+#~ msgid "Notes"
+#~ msgstr "บันทึก"
+
+#~ msgid "Subject"
+#~ msgstr "เรื่อง"

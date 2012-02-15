@@ -71,15 +71,6 @@ class share_wizard(osv.osv_memory):
     def has_share(self, cr, uid, context=None):
         return self.has_group(cr, uid, module='share', group_xml_id='group_share_user', context=context)
 
-    def has_email(self, cr, uid, context=None):
-        return bool(self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email)
-
-    def view_init(self, cr, uid, fields_list, context=None):
-        if not self.has_email(cr, uid, context=context):
-            raise osv.except_osv(_('No e-mail address configured'),
-                                 _('You must configure your e-mail address in the user preferences before using the Share button.'))
-        return super(share_wizard, self).view_init(cr, uid, fields_list, context=context)
-
     def _user_type_selection(self, cr, uid, context=None):
         """Selection values may be easily overridden/extended via inheritance"""
         return [('embedded', 'Direct link or embed code'), ('emails','Emails'), ]
@@ -95,7 +86,7 @@ class share_wizard(osv.osv_memory):
         # NOTE: take _ids in parameter to allow usage through browse_record objects
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
         if base_url:
-            base_url += '/web/webclient/login?db=%(dbname)s&login=%(login)s'
+            base_url += '/web/webclient/login?db=%(dbname)s&login=%(login)s&key=%(password)s'
             extra = context and context.get('share_url_template_extra_arguments')
             if extra:
                 base_url += '&' + '&'.join('%s=%%(%s)s' % (x,x) for x in extra)
@@ -106,7 +97,7 @@ class share_wizard(osv.osv_memory):
 
     def _share_root_url(self, cr, uid, ids, _fieldname, _args, context=None):
         result = dict.fromkeys(ids, '')
-        data = dict(dbname=cr.dbname, login='')
+        data = dict(dbname=cr.dbname, login='', password='')
         for this in self.browse(cr, uid, ids, context=context):
             result[this.id] = this.share_url_template() % data
         return result
@@ -159,10 +150,9 @@ class share_wizard(osv.osv_memory):
         result = dict.fromkeys(ids, '')
         for this in self.browse(cr, uid, ids, context=context):
             if this.result_line_ids:
-                ctx = dict(context, share_url_template_extra_arguments=['key'],
-                                    share_url_template_hash_arguments=['action_id'])
+                ctx = dict(context, share_url_template_hash_arguments=['action_id'])
                 user = this.result_line_ids[0]
-                data = dict(dbname=cr.dbname, login=user.login, key=user.password, action_id=this.action_id.id)
+                data = dict(dbname=cr.dbname, login=user.login, password=user.password, action_id=this.action_id.id)
                 result[this.id] = this.share_url_template(context=ctx) % data
         return result
 
@@ -189,7 +179,7 @@ class share_wizard(osv.osv_memory):
         'embed_url': fields.function(_embed_url, string='Share URL', type='char', size=512, readonly=True),
     }
     _defaults = {
-        'view_type': 'tree',
+        'view_type': 'page',
         'user_type' : 'embedded',
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
@@ -198,33 +188,19 @@ class share_wizard(osv.osv_memory):
         'embed_option_search': True,
     }
 
-    def go_step_1_link(self, cr, uid, ids, context=None):
-        dummy, step1_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step1_form_link')
-        return {
-            'name': _('Link or embed your documents'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'share.wizard',
-            'view_id': False,
-            'res_id': ids[0],
-            'views': [(step1_form_view_id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new'
-        }
+    def has_email(self, cr, uid, context=None):
+        return bool(self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email)
 
     def go_step_1(self, cr, uid, ids, context=None):
-        dummy, step1_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step1_form')
-        return {
-            'name': _('Share your documents by email'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'share.wizard',
-            'view_id': False,
-            'res_id': ids[0],
-            'views': [(step1_form_view_id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new'
-        }
+        user_type = self.browse(cr,uid,ids,context)[0].user_type
+        if user_type == 'emails' and not self.has_email(cr, uid, context=context):
+            raise osv.except_osv(_('No e-mail address configured'),
+                                 _('You must configure your e-mail address in the user preferences before using the Share button.'))
+        model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
+        action = self.pool.get(model).read(cr, uid, res_id, context=context)
+        action['res_id'] = ids[0]
+        action.pop('context', '')
+        return action
 
     def _create_share_group(self, cr, uid, wizard_data, context=None):
         group_obj = self.pool.get('res.groups')
@@ -284,6 +260,7 @@ class share_wizard(osv.osv_memory):
                 'name': new_login,
                 'groups_id': [(6,0,[group_id])],
                 'share': True,
+                'menu_tips' : False,
                 'company_id': current_user.company_id.id
             }, context)
             new_line = { 'user_id': user_id,
@@ -775,8 +752,6 @@ class share_wizard(osv.osv_memory):
         self._logger.info('Sending share notifications by email...')
         mail_message = self.pool.get('mail.message')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
-        if not user.user_email:
-            raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
 
         # TODO: also send an HTML version of this mail
         msg_ids = []
@@ -784,6 +759,8 @@ class share_wizard(osv.osv_memory):
             email_to = result_line.user_id.user_email
             if not email_to:
                 continue
+            if not user.user_email:
+                raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
             subject = wizard_data.name
             body = _("Hello,")
             body += "\n\n"
@@ -835,7 +812,7 @@ class share_result_line(osv.osv_memory):
     def _share_url(self, cr, uid, ids, _fieldname, _args, context=None):
         result = dict.fromkeys(ids, '')
         for this in self.browse(cr, uid, ids, context=context):
-            data = dict(dbname=cr.dbname, login=this.login)
+            data = dict(dbname=cr.dbname, login=this.login, password='')
             result[this.id] = this.share_wizard_id.share_url_template() % data
         return result
 

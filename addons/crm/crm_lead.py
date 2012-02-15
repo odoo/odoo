@@ -174,7 +174,7 @@ class crm_lead(crm_case, osv.osv):
         'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
         'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
         'user_id': fields.many2one('res.users', 'Salesman'),
@@ -194,14 +194,14 @@ class crm_lead(crm_case, osv.osv):
 
 
         # Only used for type opportunity
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"), 
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
         'probability': fields.float('Probability (%)',group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue'),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing'),
-        'date_action': fields.date('Next Action Date'),
+        'date_action': fields.date('Next Action Date', select=True),
         'title_action': fields.char('Next Action', size=64),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
         'color': fields.integer('Color Index'),
@@ -352,7 +352,7 @@ class crm_lead(crm_case, osv.osv):
         """
         return self.set_priority(cr, uid, ids, '3')
 
-    
+
     def _merge_data(self, cr, uid, ids, oldest, fields, context=None):
         # prepare opportunity data into dictionary for merging
         opportunities = self.browse(cr, uid, ids, context=context)
@@ -367,7 +367,7 @@ class crm_lead(crm_case, osv.osv):
         def _get_first_not_null_id(attr):
             res = _get_first_not_null(attr)
             return res and res.id or False
-    
+
         def _concat_all(attr):
             return ', '.join(filter(lambda x: x, [getattr(opportunity, attr) or '' for opportunity in opportunities if hasattr(opportunity, attr)]))
 
@@ -378,7 +378,7 @@ class crm_lead(crm_case, osv.osv):
                 continue
             field = field_info.column
             if field._type in ('many2many', 'one2many'):
-                continue  
+                continue
             elif field._type == 'many2one':
                 data[field_name] = _get_first_not_null_id(field_name)  # !!
             elif field._type == 'text':
@@ -437,18 +437,18 @@ class crm_lead(crm_case, osv.osv):
             subject.append(opportunity.name)
             title = "%s : %s" % (merge_message, opportunity.name)
             details.append(self._mail_body_text(cr, uid, opportunity, fields, title=title, context=context))
-            
+
         subject = subject[0] + ", ".join(subject[1:])
         details = "\n\n".join(details)
         return self.message_append(cr, uid, [opportunity_id], subject, body_text=details, context=context)
-        
+
     def _merge_opportunity_history(self, cr, uid, opportunity_id, opportunities, context=None):
         message = self.pool.get('mail.message')
         for opportunity in opportunities:
             for history in opportunity.message_ids:
                 message.write(cr, uid, history.id, {
-                        'res_id': opportunity_id, 
-                        'subject' : _("From %s : %s") % (opportunity.name, history.subject) 
+                        'res_id': opportunity_id,
+                        'subject' : _("From %s : %s") % (opportunity.name, history.subject)
                 }, context=context)
 
         return True
@@ -474,8 +474,8 @@ class crm_lead(crm_case, osv.osv):
                         )
                         attachment.write(values)
                         count+=1
-                    
-        return True    
+
+        return True
 
     def merge_opportunity(self, cr, uid, ids, context=None):
         """
@@ -483,12 +483,12 @@ class crm_lead(crm_case, osv.osv):
             :param ids: list of opportunities ids to merge
         """
         if context is None: context = {}
-        
+
         #TOCHECK: where pass lead_ids in context?
         lead_ids = context and context.get('lead_ids', []) or []
 
         if len(ids) <= 1:
-            raise osv.except_osv(_('Warning !'),_('Please select more than one opportunities.'))
+            raise osv.except_osv(_('Warning !'),_('Please select more than one opportunity from the list view.'))
 
         ctx_opportunities = self.browse(cr, uid, lead_ids, context=context)
         opportunities = self.browse(cr, uid, ids, context=context)
@@ -501,11 +501,11 @@ class crm_lead(crm_case, osv.osv):
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]
 
-        fields = ['partner_id', 'title', 'name', 'categ_id', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id', 
+        fields = ['partner_id', 'title', 'name', 'categ_id', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id',
             'partner_address_id', 'type_id', 'user_id', 'section_id', 'state_id', 'description', 'email', 'fax', 'mobile',
             'partner_name', 'phone', 'probability', 'planned_revenue', 'street', 'street2', 'zip', 'create_date', 'date_action_last',
             'date_action_next', 'email_from', 'email_cc', 'partner_name']
-        
+
         data = self._merge_data(cr, uid, ids, oldest, fields, context=context)
 
         # merge data into first opportunity
@@ -513,8 +513,8 @@ class crm_lead(crm_case, osv.osv):
 
         #copy message and attachements into the first opportunity
         self._merge_opportunity_history(cr, uid, first_opportunity.id, tail_opportunities, context=context)
-        self._merge_opportunity_attachments(cr, uid, first_opportunity.id, tail_opportunities, context=context)        
-        
+        self._merge_opportunity_attachments(cr, uid, first_opportunity.id, tail_opportunities, context=context)
+
         #Notification about loss of information
         self._merge_notification(cr, uid, first_opportunity, opportunities, context=context)
         #delete tail opportunities
@@ -534,7 +534,7 @@ class crm_lead(crm_case, osv.osv):
         if section_id:
             stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1), ('section_ids','=', section_id)])
         else:
-            stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1)])            
+            stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1)])
         stage_id = stage_ids and stage_ids[0] or False
         return {
                 'planned_revenue': lead.planned_revenue,
@@ -545,8 +545,10 @@ class crm_lead(crm_case, osv.osv):
                 'type': 'opportunity',
                 'stage_id': stage_id or False,
                 'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'partner_address_id': contact_id
+                'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'partner_address_id': contact_id,
         }
+
     def _convert_opportunity_notification(self, cr, uid, lead, context=None):
         success_message = _("Lead '%s' has been converted to an opportunity.") % lead.name
         self.message_append(cr, uid, [lead.id], success_message, body_text=success_message, context=context)
@@ -565,10 +567,10 @@ class crm_lead(crm_case, osv.osv):
                 continue
             if user_ids or section_id:
                 self.allocate_salesman(cr, uid, [lead.id], user_ids, section_id, context=context)
-            
+
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
-            
+
             self._convert_opportunity_notification(cr, uid, lead, context=context)
             #TOCHECK: why need to change partner details in all messages of lead ?
             if lead.partner_id:
@@ -596,7 +598,7 @@ class crm_lead(crm_case, osv.osv):
             res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id.id or False})
             contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
             res = lead.write({'partner_id' : partner_id, 'partner_address_id': contact_id}, context=context)
-            
+
         return res
 
     def _lead_create_partner_address(self, cr, uid, lead, partner_id, context=None):
@@ -628,7 +630,7 @@ class crm_lead(crm_case, osv.osv):
             context = {}
         partner_ids = {}
         for lead in self.browse(cr, uid, ids, context=context):
-            if action == 'create': 
+            if action == 'create':
                 if not partner_id:
                     partner_id = self._lead_create_partner(cr, uid, lead, context=context)
                 self._lead_create_partner_address(cr, uid, lead, partner_id, context=context)
@@ -641,12 +643,12 @@ class crm_lead(crm_case, osv.osv):
         Send mail to salesman with updated Lead details.
         @ lead: browse record of 'crm.lead' object.
         """
-        #TOFIX: mail template should be used here instead of fix subject, body text. 
+        #TOFIX: mail template should be used here instead of fix subject, body text.
         message = self.pool.get('mail.message')
         email_to = lead.user_id and lead.user_id.user_email
         if not email_to:
             return False
-        
+
         email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.user_email or email_to
         partner = lead.partner_id and lead.partner_id.name or lead.partner_name
         subject = "lead %s converted into opportunity" % lead.name
@@ -697,7 +699,7 @@ class crm_lead(crm_case, osv.osv):
                     'partner_mobile' : lead.partner_address_id and lead.partner_address_id.mobile or False,
                     'priority': lead.priority,
             }
-            
+
             new_id = phonecall.create(cr, uid, vals, context=context)
             phonecall.case_open(cr, uid, [new_id])
             if action == 'log':
@@ -777,7 +779,10 @@ class crm_lead(crm_case, osv.osv):
         for case in self.browse(cr, uid, ids, context=context):
             values = dict(vals)
             if case.state in CRM_LEAD_PENDING_STATES:
-                values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
+                #re-open
+                values.update(state=crm.AVAILABLE_STATES[1][0])
+                if not case.date_open:
+                    values['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT) 
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
 
@@ -799,10 +804,10 @@ class crm_lead(crm_case, osv.osv):
             context.update({
                 'default_opportunity_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
-                'default_user_id': uid, 
+                'default_user_id': uid,
                 'default_section_id': opp.section_id and opp.section_id.id or False,
                 'default_email_from': opp.email_from,
-                'default_state': 'open',  
+                'default_state': 'open',
                 'default_name': opp.name
             })
             value = {
@@ -822,9 +827,10 @@ class crm_lead(crm_case, osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context):
-            if (not lead.section_id.allow_unlink) and (lead.state <> 'draft'):
-                raise osv.except_osv(_('Warning !'),
-                    _('You can not delete this lead. You should better cancel it.'))
+            if (not lead.section_id.allow_unlink) and (lead.state != 'draft'):
+                raise osv.except_osv(_('Error'),
+                    _("You cannot delete lead '%s'; it must be in state 'Draft' to be deleted. " \
+                      "You should better cancel it, instead of deleting it.") % lead.name)
         return super(crm_lead, self).unlink(cr, uid, ids, context)
 
 
@@ -835,17 +841,21 @@ class crm_lead(crm_case, osv.osv):
         if 'date_closed' in vals:
             return super(crm_lead,self).write(cr, uid, ids, vals, context=context)
 
-        if 'stage_id' in vals and vals['stage_id']:
-            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
-            text = _("Changed Stage to: %s") % stage_obj.name
+        if vals.get('stage_id'):
+            stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
+            # change probability of lead(s) if required by stage
+            if not vals.get('probability') and stage.on_change:
+                vals['probability'] = stage.probability
+            text = _("Changed Stage to: %s") % stage.name
             self.message_append(cr, uid, ids, text, body_text=text, context=context)
-            message=''
             for case in self.browse(cr, uid, ids, context=context):
-                if case.type == 'lead' or  context.get('stage_type',False)=='lead':
-                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
+                if case.type == 'lead' or context.get('stage_type') == 'lead':
+                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage.name)
+                    self.log(cr, uid, case.id, message)
                 elif case.type == 'opportunity':
-                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-                self.log(cr, uid, case.id, message)
+                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage.name)
+                    self.log(cr, uid, case.id, message)
+
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
 
 crm_lead()

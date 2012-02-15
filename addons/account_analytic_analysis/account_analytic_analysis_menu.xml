@@ -34,22 +34,22 @@
                         <separator orientation="vertical"/>
                         <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Contract"/>
                         <field name="partner_id">
-                            <filter string="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
+                            <filter help="A contract in OpenERP is an analytic account having a partner set on it." name="has_partner" domain="[('partner_id', '!=', False)]" icon="terp-partner" />
                         </field>
                         <field name="user_id">
-                            <filter string="No Account Manager" domain="[('user_id', '=', False)]" icon="terp-personal-" />
+                            <filter help="Contracts that are not assigned to an account manager." domain="[('user_id', '=', False)]" icon="terp-personal-" />
                         </field>
 
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Associated Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="State" icon="terp-personal" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Parent" icon="terp-folder-orange" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <!--
+                        <separator orientation="vertical"/>
                         <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by' : 'date_start'}" />
-                        -->
                         <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" />
                     </group>
                 </search>

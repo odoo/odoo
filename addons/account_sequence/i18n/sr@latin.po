@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-11-24 21:01+0000\n"
 "Last-Translator: Milan Milosevic <Unknown>\n"
 "Language-Team: Serbian Latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-25 05:22+0000\n"
-"X-Generator: Launchpad (build 14376)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:09+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -26,9 +26,13 @@ msgstr "Podešavanje aplikacije nizova naloga"
 #. module: account_sequence
 #: constraint:account.move:0
 msgid ""
-"You cannot create entries on different periods/journals in the same move"
+"You can not create more than one move per period on centralized journal"
 msgstr ""
-"Ne možete napraviti ulaze za različite periode/dnevnike u jednom potezu"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -52,22 +56,6 @@ msgid "Increment Number"
 msgstr "Inkrementalni broj"
 
 #. module: account_sequence
-#: model:ir.module.module,description:account_sequence.module_meta_information
-msgid ""
-"\n"
-"    This module maintains internal sequence number for accounting entries.\n"
-"    "
-msgstr ""
-"\n"
-"    Ovaj modul održava unutrašnji niz brojeva za odgovarajuće naloge.\n"
-"    "
-
-#. module: account_sequence
-#: model:ir.module.module,shortdesc:account_sequence.module_meta_information
-msgid "Entries Sequence Numbering"
-msgstr "Dodeljivanje brojeva nizovima ulaza"
-
-#. module: account_sequence
 #: help:account.sequence.installer,number_increment:0
 msgid "The next number of the sequence will be incremented by this number"
 msgstr "Sledeći broj ovog niza biće povećan ovim brojem"
@@ -78,9 +66,9 @@ msgid "Configure Your Account Sequence Application"
 msgstr "Podesi svoju aplikaciju za niz brojeva"
 
 #. module: account_sequence
-#: field:account.sequence.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Napredak podešavanja"
+#: view:account.sequence.installer:0
+msgid "Configure"
+msgstr "Podešavanje"
 
 #. module: account_sequence
 #: help:account.sequence.installer,suffix:0
@@ -119,8 +107,8 @@ msgstr "Unutrašnji broj"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Preduzeće mora biti isto za sve vezane račune i periode."
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: account_sequence
 #: help:account.sequence.installer,padding:0
@@ -138,16 +126,15 @@ msgstr "Naziv"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Ne možete da napravite poteznu liniju na zatvorenim računima."
+msgid "You can not create journal items on closed account."
+msgstr ""
 
 #. module: account_sequence
-#: constraint:account.move:0
+#: constraint:account.journal:0
 msgid ""
-"You cannot create more than one move per period on centralized journal"
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
 msgstr ""
-"Ne možete napraviti više od jednog pomeranja po periodu u centralizovanom "
-"dnevniku"
 
 #. module: account_sequence
 #: sql_constraint:account.move.line:0
@@ -158,16 +145,6 @@ msgstr "Pogrešna vrednost kredita ili debita u ulazu računa !"
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr "Unutrašnji niz"
-
-#. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_sequence_installer
-msgid "account.sequence.installer"
-msgstr "account.sequence.installer"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure"
-msgstr "Podešavanje"
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -200,6 +177,21 @@ msgid "The name of the journal must be unique per company !"
 msgstr "Naziv dnevnika mora biti jedinstven po preduzeću"
 
 #. module: account_sequence
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
+
+#. module: account_sequence
 #: field:account.sequence.installer,prefix:0
 msgid "Prefix"
 msgstr "Prefiks"
@@ -210,11 +202,9 @@ msgid "The code of the journal must be unique per company !"
 msgstr "Kod dnevnika mora biti jedinstven po preduzeću !"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-"Ne možete napraviti poteznu liniju na primaćem/platežnom računu bez partnera"
+#: model:ir.model,name:account_sequence.model_account_sequence_installer
+msgid "account.sequence.installer"
+msgstr "account.sequence.installer"
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_journal
@@ -227,7 +217,37 @@ msgid "You can enhance the Account Sequence Application by installing ."
 msgstr ""
 "Ne možete poboljšati Aplikaciju za nizanje naloga instaliranjem iste."
 
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Ne možete napraviti poteznu liniju na računu po viđenju"
+#~ msgid "Entries Sequence Numbering"
+#~ msgstr "Dodeljivanje brojeva nizovima ulaza"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module maintains internal sequence number for accounting entries.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Ovaj modul održava unutrašnji niz brojeva za odgovarajuće naloge.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "You cannot create entries on different periods/journals in the same move"
+#~ msgstr ""
+#~ "Ne možete napraviti ulaze za različite periode/dnevnike u jednom potezu"
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Preduzeće mora biti isto za sve vezane račune i periode."
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Napredak podešavanja"
+
+#~ msgid ""
+#~ "You cannot create more than one move per period on centralized journal"
+#~ msgstr ""
+#~ "Ne možete napraviti više od jednog pomeranja po periodu u centralizovanom "
+#~ "dnevniku"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Ne možete da napravite poteznu liniju na zatvorenim računima."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Ne možete napraviti poteznu liniju na računu po viđenju"

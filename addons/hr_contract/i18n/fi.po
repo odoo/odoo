@@ -7,25 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-08-03 05:41+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:27+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:38+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Hourly cost computation"
-msgstr "Tuntihintalaskelma"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Palkka"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Gross"
-msgstr "Brutto"
+#: view:hr.contract:0
+msgid "Information"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -38,11 +38,6 @@ msgid "Trial Start Date"
 msgstr "Koeajan alkupäivä"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Passport"
-msgstr "Passi"
-
-#. module: hr_contract
 #: view:hr.employee:0
 msgid "Medical Examination"
 msgstr "Lääkärintarkastus"
@@ -51,11 +46,6 @@ msgstr "Lääkärintarkastus"
 #: field:hr.employee,vehicle:0
 msgid "Company Vehicle"
 msgstr "Yrityksen ajoneuvo"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "Palkkatyypin nimi"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -68,19 +58,9 @@ msgid "Current"
 msgstr "Nykyinen"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "Tuntimaksun kerroin"
-
-#. module: hr_contract
 #: view:hr.contract:0
-msgid "Overpassed"
-msgstr "Ylitetty"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Wage Types"
-msgstr "Palkkatyypit"
+msgid "Group By..."
+msgstr "Ryhmittely.."
 
 #. module: hr_contract
 #: field:hr.contract,department_id:0
@@ -88,9 +68,9 @@ msgid "Department"
 msgstr "Osasto"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Basic"
-msgstr "Perus"
+#: view:hr.contract:0
+msgid "Overpassed"
+msgstr "Ylitetty"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -100,19 +80,14 @@ msgid "Employee"
 msgstr "Työntekijä"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Net"
-msgstr "Netto"
+#: view:hr.contract:0
+msgid "Search Contract"
+msgstr "Hae sopimusta"
 
 #. module: hr_contract
-#: model:ir.module.module,shortdesc:hr_contract.module_meta_information
-msgid "Human Resources Contracts"
-msgstr "Henkilöstön sopimukset"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,factor_days:0
-msgid "Hours in the period"
-msgstr "Tunnit ajanjaksolla"
+#: view:hr.contract:0
+msgid "Contracts in progress"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
@@ -135,13 +110,8 @@ msgstr "Henkilötiedot"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Job"
-msgstr "Tehtävä"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Search Contract"
-msgstr "Hae sopimusta"
+msgid "Contracts whose end date already passed"
+msgstr ""
 
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
@@ -149,21 +119,9 @@ msgid "Latest contract of the employee"
 msgstr "Työntekijän viimeisin sopimus"
 
 #. module: hr_contract
-#: field:hr.contract,advantages_net:0
-msgid "Deductions"
-msgstr "Vähennykset"
-
-#. module: hr_contract
-#: model:ir.module.module,description:hr_contract.module_meta_information
-msgid ""
-"\n"
-"    Add all information on the employee form to manage contracts:\n"
-"    * Marital status,\n"
-"    * Security number,\n"
-"    * Place of birth, birth date, ...\n"
-"    You can assign several contracts per employee.\n"
-"    "
-msgstr ""
+#: view:hr.contract:0
+msgid "Job"
+msgstr "Tehtävä"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -193,15 +151,6 @@ msgid "Contract Types"
 msgstr "Sopimustyypit"
 
 #. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
-msgstr "Palkkatyyppi"
-
-#. module: hr_contract
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr "Virhe! Et voi luoda itseään toistavaa työntekijähierarkiaa."
@@ -212,9 +161,9 @@ msgid "End Date"
 msgstr "Loppupvm"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Palkka"
+#: help:hr.contract,wage:0
+msgid "Basic Salary of the employee"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,name:0
@@ -233,10 +182,9 @@ msgid "Notes"
 msgstr "Huomautukset"
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
-msgstr "Virhe! Osastoa, jolla työntekijä on esimiehenä, ei voi valita."
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -256,11 +204,6 @@ msgid "Contract Type"
 msgstr "Sopimustyyppi"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type.period:0
-msgid "Search Wage Period"
-msgstr "Hae palkkajaksoa"
-
-#. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,working_hours:0
 msgid "Working Schedule"
@@ -272,11 +215,9 @@ msgid "Job Info"
 msgstr "Tehtävän tiedot"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,period_id:0
-#: view:hr.contract.wage.type.period:0
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
-msgid "Wage Period"
-msgstr "Palkkajakso"
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
@@ -300,56 +241,14 @@ msgstr ""
 "Virhe! Sopimuksen alkupäivän täytyy olla aikaisempi kuin loppupäivän."
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
-msgstr "Hae palkan tyyppiä"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,type:0
-msgid "Type"
-msgstr "Tyyppi"
-
-#. module: hr_contract
-#: field:hr.contract,trial_date_end:0
-msgid "Trial End Date"
-msgstr "Koeajan loppupäivä"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr "Ryhmittely.."
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,name:0
-msgid "Period Name"
-msgstr "Ajanjakson nimi"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Period"
-msgstr "Jakso"
+#: field:hr.contract,visa_no:0
+msgid "Visa No"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
 msgid "Place of Birth"
 msgstr "Syntymäpaikka"
-
-#. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr "Palkkajakso"
-
-#. module: hr_contract
-#: help:hr.contract.wage.type,factor_type:0
-#: help:hr.contract.wage.type.period,factor_days:0
-msgid ""
-"This field is used by the timesheet system to compute the price of an hour "
-"of work wased on the contract of the employee"
-msgstr ""
-"Tätä kenttää käytetään aikataulun kanssa laskemaan työtunnin hinta, joka "
-"perustuu työntekijän sopimukseen"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -362,19 +261,20 @@ msgid "Medical Examination Date"
 msgstr "Lääkärintarkastuksen päivämäärä"
 
 #. module: hr_contract
-#: field:hr.contract,advantages_gross:0
-msgid "Allowances"
-msgstr "Päiväraha"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Main Data"
-msgstr "Päätiedot"
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
+msgstr "Koeajan loppupäivä"
 
 #. module: hr_contract
 #: view:hr.contract.type:0
 msgid "Search Contract Type"
 msgstr "Hae sopimustyyppiä"
+
+#~ msgid "Wage Types"
+#~ msgstr "Palkkatyypit"
+
+#~ msgid "Factor for hour cost"
+#~ msgstr "Tuntimaksun kerroin"
 
 #~ msgid "Number of children"
 #~ msgstr "Lasten lukumäärä"
@@ -382,8 +282,29 @@ msgstr "Hae sopimustyyppiä"
 #~ msgid "Generalities"
 #~ msgstr "Yleiset"
 
+#~ msgid "Gross"
+#~ msgstr "Brutto"
+
+#~ msgid "Hourly cost computation"
+#~ msgstr "Tuntihintalaskelma"
+
+#~ msgid "Wage Type"
+#~ msgstr "Palkkatyyppi"
+
+#~ msgid "Human Resources Contracts"
+#~ msgstr "Henkilöstön sopimukset"
+
+#~ msgid "Hours in the period"
+#~ msgstr "Tunnit ajanjaksolla"
+
+#~ msgid "Period Name"
+#~ msgstr "Ajanjakson nimi"
+
 #~ msgid "Employee Marital Status"
 #~ msgstr "Työntekijän siviilisääty"
+
+#~ msgid "Wage Period"
+#~ msgstr "Palkkajakso"
 
 #~ msgid "Working hours per day"
 #~ msgstr "Työtunnit vuorokaudessa"
@@ -391,8 +312,21 @@ msgstr "Hae sopimustyyppiä"
 #~ msgid "Medical examination date"
 #~ msgstr "Terveystutkimuksen päivämäärä"
 
+#~ msgid "Wage Type Name"
+#~ msgstr "Palkkatyypin nimi"
+
 #~ msgid "Contract Wage Type"
 #~ msgstr "Sopimuksen palkkatyyppi"
+
+#~ msgid "Wage period"
+#~ msgstr "Palkkajakso"
+
+#~ msgid ""
+#~ "This field is used by the timesheet system to compute the price of an hour "
+#~ "of work wased on the contract of the employee"
+#~ msgstr ""
+#~ "Tätä kenttää käytetään aikataulun kanssa laskemaan työtunnin hinta, joka "
+#~ "perustuu työntekijän sopimukseen"
 
 #~ msgid "Contract Name"
 #~ msgstr "Sopimuksen nimi"
@@ -408,3 +342,37 @@ msgstr "Hae sopimustyyppiä"
 
 #~ msgid "Contract Duration"
 #~ msgstr "Sopimuksen kesto"
+
+#~ msgid "Basic"
+#~ msgstr "Perus"
+
+#~ msgid "Passport"
+#~ msgstr "Passi"
+
+#~ msgid "Net"
+#~ msgstr "Netto"
+
+#~ msgid "Deductions"
+#~ msgstr "Vähennykset"
+
+#~ msgid ""
+#~ "Error ! You cannot select a department for which the employee is the manager."
+#~ msgstr "Virhe! Osastoa, jolla työntekijä on esimiehenä, ei voi valita."
+
+#~ msgid "Type"
+#~ msgstr "Tyyppi"
+
+#~ msgid "Search Wage Type"
+#~ msgstr "Hae palkan tyyppiä"
+
+#~ msgid "Search Wage Period"
+#~ msgstr "Hae palkkajaksoa"
+
+#~ msgid "Allowances"
+#~ msgstr "Päiväraha"
+
+#~ msgid "Main Data"
+#~ msgstr "Päätiedot"
+
+#~ msgid "Period"
+#~ msgstr "Jakso"

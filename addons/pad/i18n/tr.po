@@ -7,32 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-05-28 19:33+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"PO-Revision-Date: 2012-02-10 21:03+0000\n"
+"Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:55+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-11 05:09+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: pad
-#: code:addons/pad/web/editors.py:32
-#, python-format
-msgid "Ok"
-msgstr "Tamam"
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "Şirket tekil olmalı !"
 
 #. module: pad
-#: code:addons/pad/web/editors.py:29
-#, python-format
-msgid "Name"
-msgstr "Ad"
-
-#. module: pad
-#: help:res.company,pad_index:0
-msgid "The root URL of the company's pad instance"
-msgstr "Şirketin pad örneğinin kök adresi (URL)"
+#: help:res.company,pad_url_template:0
+msgid "Template used to generate pad URL."
+msgstr "Bloknot URL si oluştururken kullanılan Şablon"
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -45,26 +38,9 @@ msgid "Error! You can not create recursive companies."
 msgstr "Hata! özyinelemeli şirketler oluşturamazsınız."
 
 #. module: pad
-#: code:addons/pad/web/editors.py:17
-#, python-format
-msgid "Write"
-msgstr "Yaz"
-
-#. module: pad
-#: model:ir.module.module,description:pad.module_meta_information
-msgid ""
-"\n"
-"Adds enhanced support for (Ether)Pad attachments in the web client, lets "
-"the\n"
-"company customize which Pad installation should be used to link to new pads\n"
-"(by default, pad.openerp.com)\n"
-"    "
-msgstr ""
-
-#. module: pad
-#: field:res.company,pad_index:0
-msgid "Pad root URL"
-msgstr "Pad kök adresi (URL)"
+#: model:ir.model,name:pad.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
 
 #. module: pad
 #: view:res.company:0
@@ -72,6 +48,32 @@ msgid "Pad"
 msgstr "Pad"
 
 #. module: pad
-#: model:ir.module.module,shortdesc:pad.module_meta_information
-msgid "Enhanced support for (Ether)Pad attachments"
-msgstr "(Ether)Pad ekleri için gelişmiş destek"
+#: field:res.company,pad_url_template:0
+msgid "Pad URL Template"
+msgstr "Bloknot URL Şablonu"
+
+#. openerp-web
+#: /home/odo/repositories/addons/trunk/pad/static/src/xml/pad.xml:9
+msgid "Add Pad"
+msgstr "Pad Ekle"
+
+#, python-format
+#~ msgid "Ok"
+#~ msgstr "Tamam"
+
+#, python-format
+#~ msgid "Write"
+#~ msgstr "Yaz"
+
+#, python-format
+#~ msgid "Name"
+#~ msgstr "Ad"
+
+#~ msgid "Enhanced support for (Ether)Pad attachments"
+#~ msgstr "(Ether)Pad ekleri için gelişmiş destek"
+
+#~ msgid "Pad root URL"
+#~ msgstr "Pad kök adresi (URL)"
+
+#~ msgid "The root URL of the company's pad instance"
+#~ msgstr "Şirketin pad örneğinin kök adresi (URL)"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2010-11-22 20:29+0000\n"
 "Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:35+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:46+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: wiki
 #: field:wiki.groups,template:0
@@ -33,8 +33,7 @@ msgid "Display Method"
 msgstr ""
 
 #. module: wiki
-#: view:wiki.wiki:0
-#: field:wiki.wiki,create_uid:0
+#: view:wiki.wiki:0 field:wiki.wiki,create_uid:0
 msgid "Author"
 msgstr "Författare"
 
@@ -60,8 +59,7 @@ msgid "Indicates that this pages have a table of contents or not"
 msgstr ""
 
 #. module: wiki
-#: model:ir.model,name:wiki.model_wiki_wiki_history
-#: view:wiki.wiki.history:0
+#: model:ir.model,name:wiki.model_wiki_wiki_history view:wiki.wiki.history:0
 msgid "Wiki History"
 msgstr "Wikihistorik"
 
@@ -71,8 +69,7 @@ msgid "Minor edit"
 msgstr "Mindre förändring"
 
 #. module: wiki
-#: view:wiki.wiki:0
-#: field:wiki.wiki,text_area:0
+#: view:wiki.wiki:0 field:wiki.wiki,text_area:0
 msgid "Content"
 msgstr "Innehåll"
 
@@ -87,8 +84,7 @@ msgid "Parent Page"
 msgstr ""
 
 #. module: wiki
-#: view:wiki.wiki:0
-#: field:wiki.wiki,write_uid:0
+#: view:wiki.wiki:0 field:wiki.wiki,write_uid:0
 msgid "Last Contributor"
 msgstr ""
 
@@ -98,14 +94,13 @@ msgid "Parent Menu"
 msgstr "Huvudmeny"
 
 #. module: wiki
-#: help:wiki.wiki,group_id:0
-msgid "Topic, also called Wiki Group"
+#: code:addons/wiki/wizard/wiki_make_index.py:52
+#, python-format
+msgid "There is no section in this Page"
 msgstr ""
 
 #. module: wiki
-#: field:wiki.groups,name:0
-#: view:wiki.wiki:0
-#: field:wiki.wiki,group_id:0
+#: field:wiki.groups,name:0 view:wiki.wiki:0 field:wiki.wiki,group_id:0
 msgid "Wiki Group"
 msgstr "Wikigrupp"
 
@@ -130,21 +125,21 @@ msgid "Page Content"
 msgstr ""
 
 #. module: wiki
-#: code:addons/wiki/wiki.py:236
+#: code:addons/wiki/wiki.py:237 code:addons/wiki/wizard/wiki_make_index.py:52
 #, python-format
 msgid "Warning !"
 msgstr "Varning !"
 
 #. module: wiki
-#: code:addons/wiki/wiki.py:236
+#: code:addons/wiki/wiki.py:237
 #, python-format
 msgid "There are no changes in revisions"
 msgstr ""
 
 #. module: wiki
-#: model:ir.module.module,shortdesc:wiki.module_meta_information
-msgid "Document Management - Wiki"
-msgstr "Dokumenthantering - Wiki"
+#: help:wiki.wiki,section:0
+msgid "Use page section code like 1.2.1"
+msgstr "Använd sidområdes kod t ex 1.2.1"
 
 #. module: wiki
 #: field:wiki.create.menu,menu_name:0
@@ -169,8 +164,7 @@ msgid ""
 msgstr ""
 
 #. module: wiki
-#: view:wiki.create.menu:0
-#: view:wiki.make.index:0
+#: view:wiki.create.menu:0 view:wiki.make.index:0
 msgid "Menu Information"
 msgstr "Menyinformation"
 
@@ -210,9 +204,9 @@ msgid "Warning"
 msgstr "Warning"
 
 #. module: wiki
-#: field:wiki.wiki,create_date:0
-msgid "Created on"
-msgstr "Skapad den"
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -242,11 +236,6 @@ msgid "Group Description"
 msgstr ""
 
 #. module: wiki
-#: help:wiki.wiki,section:0
-msgid "Use page section code like 1.2.1"
-msgstr "Använd sidområdes kod t ex 1.2.1"
-
-#. module: wiki
 #: view:wiki.wiki.page.open:0
 msgid "Want to open a wiki page? "
 msgstr ""
@@ -267,25 +256,14 @@ msgid "Meta Information"
 msgstr ""
 
 #. module: wiki
-#: model:ir.module.module,description:wiki.module_meta_information
-msgid ""
-"\n"
-"The base module to manage documents(wiki)\n"
-"\n"
-"keep track for the wiki groups, pages, and history\n"
-"    "
-msgstr ""
+#: field:wiki.wiki,create_date:0
+msgid "Created on"
+msgstr "Skapad den"
 
 #. module: wiki
-#: view:wiki.groups:0
-#: view:wizard.wiki.history.show_diff:0
+#: view:wiki.groups:0 view:wizard.wiki.history.show_diff:0
 msgid "Notes"
 msgstr "Anteckningar"
-
-#. module: wiki
-#: help:wiki.groups,home:0
-msgid "Required to select home page if display method is Home Page"
-msgstr ""
 
 #. module: wiki
 #: selection:wiki.groups,method:0
@@ -293,8 +271,7 @@ msgid "List"
 msgstr ""
 
 #. module: wiki
-#: field:wiki.wiki,summary:0
-#: field:wiki.wiki.history,summary:0
+#: field:wiki.wiki,summary:0 field:wiki.wiki.history,summary:0
 msgid "Summary"
 msgstr "Sammanfattning"
 
@@ -334,8 +311,7 @@ msgid "Wiki Id"
 msgstr "Wiki Id"
 
 #. module: wiki
-#: field:wiki.groups,home:0
-#: selection:wiki.groups,method:0
+#: field:wiki.groups,home:0 selection:wiki.groups,method:0
 msgid "Home Page"
 msgstr ""
 
@@ -350,8 +326,12 @@ msgid "Modification Information"
 msgstr ""
 
 #. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_wiki_configuration
-#: view:wiki.wiki:0
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
+msgstr ""
+
+#. module: wiki
+#: model:ir.ui.menu,name:wiki.menu_wiki_configuration view:wiki.wiki:0
 msgid "Wiki"
 msgstr "Wiki"
 
@@ -368,8 +348,7 @@ msgstr "Konfigurering"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_view_wiki_make_index
 #: model:ir.actions.act_window,name:wiki.action_view_wiki_make_index_values
-#: model:ir.model,name:wiki.model_wiki_make_index
-#: view:wiki.make.index:0
+#: model:ir.model,name:wiki.model_wiki_make_index view:wiki.make.index:0
 msgid "Create Index"
 msgstr "Skapa index"
 
@@ -386,9 +365,7 @@ msgstr ""
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_create_menu
-#: view:wiki.create.menu:0
-#: view:wiki.groups:0
-#: view:wiki.make.index:0
+#: view:wiki.create.menu:0 view:wiki.groups:0 view:wiki.make.index:0
 msgid "Create Menu"
 msgstr "Skapa meny"
 
@@ -401,8 +378,7 @@ msgstr "Är detta en större redigering?"
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups_browse
 #: model:ir.model,name:wiki.model_wiki_groups
-#: model:ir.ui.menu,name:wiki.menu_action_wiki_groups
-#: view:wiki.groups:0
+#: model:ir.ui.menu,name:wiki.menu_action_wiki_groups view:wiki.groups:0
 msgid "Wiki Groups"
 msgstr "Wikigrupper"
 
@@ -424,8 +400,7 @@ msgid "Table of Contents"
 msgstr "Innehållsförteckning"
 
 #. module: wiki
-#: view:wiki.groups:0
-#: view:wiki.wiki.page.open:0
+#: view:wiki.groups:0 view:wiki.wiki.page.open:0
 msgid "Open Wiki Page"
 msgstr ""
 
@@ -435,9 +410,7 @@ msgid "wiz open page"
 msgstr ""
 
 #. module: wiki
-#: view:wiki.create.menu:0
-#: view:wiki.make.index:0
-#: view:wiki.wiki.page.open:0
+#: view:wiki.create.menu:0 view:wiki.make.index:0 view:wiki.wiki.page.open:0
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -495,6 +468,9 @@ msgstr ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#~ msgid "Document Management - Wiki"
+#~ msgstr "Dokumenthantering - Wiki"
 
 #~ msgid "Wiki Differance"
 #~ msgstr "Wiki skillnad"

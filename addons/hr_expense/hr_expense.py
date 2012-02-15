@@ -89,7 +89,7 @@ class hr_expense_expense(osv.osv):
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
         'state': 'draft',
         'employee_id': _employee_get,
         'user_id': lambda cr, uid, id, c={}: id,
@@ -268,7 +268,7 @@ class hr_expense_line(osv.osv):
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
         'ref': fields.char('Reference', size=32),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of expense lines."),
+        'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of expense lines."),
         }
     _defaults = {
         'unit_quantity': 1,

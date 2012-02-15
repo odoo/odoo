@@ -6,58 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2009-02-04 00:36+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:32+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:43+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
 msgstr "Списък с въпроси"
-
-#. module: crm_profiling
-#: model:ir.module.module,description:crm_profiling.module_meta_information
-msgid ""
-"\n"
-"    This module allows users to perform segmentation within partners.\n"
-"    It uses the profiles criteria from the earlier segmentation module and "
-"improve it. Thanks to the new concept of questionnaire. You can now regroup "
-"questions into a questionnaire and directly use it on a partner.\n"
-"\n"
-"    It also has been merged with the earlier CRM & SRM segmentation tool "
-"because they were overlapping.\n"
-"\n"
-"    The menu items related are in \"CRM & SRM\\Configuration\\"
-"Segmentations\"\n"
-"\n"
-"\n"
-"    * Note: this module is not compatible with the module segmentation, "
-"since it's the same which has been renamed.\n"
-"    "
-msgstr ""
-"\n"
-"    Този модул позволява на потребителите да извършват сегментацията между "
-"партньорите.\n"
-"Той използва критерии профили от по-ранната сегментация модул и да го "
-"подобрява. Благодарение на новата концепция на въпросника. Сега можете да се "
-"прегрупират въпроси в въпросник и директно да го използвате на партньор.\n"
-"\n"
-"Той също така е слята с по-ранната CRM и сегментация SRM инструмент, защото "
-"те са се застъпват.\n"
-"\n"
-"Менюто на свързани с тях изделия, са в \"CRM и SRM \\ конфигурация \\ "
-"сегментация\"\n"
-"\n"
-"\n"
-"* Забележка: този модул не е съвместима с модул за сегментиране, тъй като "
-"това е същото, което е преименуван.\n"
-"    "
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
@@ -76,18 +38,20 @@ msgstr ""
 #: field:crm_profiling.answer,question_id:0
 #: field:crm_profiling.question,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_question
+#: field:open.questionnaire.line,question_id:0
 msgid "Question"
 msgstr "Въпрос"
 
 #. module: crm_profiling
-#: wizard_button:open_questionnaire,init,open:0
+#: model:ir.actions.act_window,name:crm_profiling.action_open_questionnaire
+#: view:open.questionnaire:0
 msgid "Open Questionnaire"
 msgstr "Отворете въпросника"
 
 #. module: crm_profiling
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Грешка ! Не може да създадете рекурсивно свързани членове"
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
+msgstr "Под профили"
 
 #. module: crm_profiling
 #: view:crm.segmentation:0
@@ -97,8 +61,14 @@ msgstr "Сегментация на партньори"
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_answer
+#: field:open.questionnaire.line,answer_id:0
 msgid "Answer"
 msgstr "Отговор"
+
+#. module: crm_profiling
+#: model:ir.model,name:crm_profiling.model_open_questionnaire_line
+msgid "open.questionnaire.line"
+msgstr ""
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_crm_segmentation
@@ -109,11 +79,6 @@ msgstr "Сегментация на партньор"
 #: view:res.partner:0
 msgid "Profiling"
 msgstr "Профилиране"
-
-#. module: crm_profiling
-#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
-msgid "Crm Profiling management - To Perform Segmentation within Partners"
-msgstr "CRM за управление на профили - извършва сегментиране на партньорите"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -134,7 +99,12 @@ msgid "Answers"
 msgstr "Отговори"
 
 #. module: crm_profiling
-#: wizard_field:open_questionnaire,init,questionnaire_name:0
+#: model:ir.model,name:crm_profiling.model_open_questionnaire
+msgid "open.questionnaire"
+msgstr ""
+
+#. module: crm_profiling
+#: field:open.questionnaire,questionnaire_id:0
 msgid "Questionnaire name"
 msgstr "Име на въпросник"
 
@@ -144,9 +114,20 @@ msgid "Use a questionnaire"
 msgstr "Използване на въпросниците"
 
 #. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "_Cancel"
+msgstr ""
+
+#. module: crm_profiling
+#: field:open.questionnaire,question_ans_ids:0
+msgid "Question / Answers"
+msgstr ""
+
+#. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
+#: view:open.questionnaire:0
 msgid "Questionnaires"
 msgstr "Въпросници"
 
@@ -172,6 +153,11 @@ msgid "Use The Profiling Rules"
 msgstr "Правила за използване на профили"
 
 #. module: crm_profiling
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
+
+#. module: crm_profiling
 #: view:crm_profiling.question:0
 #: field:crm_profiling.question,answers_ids:0
 msgid "Avalaible answers"
@@ -181,11 +167,6 @@ msgstr "Достъпни отговори"
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
 msgstr "Включени отговори"
-
-#. module: crm_profiling
-#: field:crm.segmentation,child_ids:0
-msgid "Child Profiles"
-msgstr "Под профили"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -201,8 +182,7 @@ msgid "Parent Profile"
 msgstr "Родителски профил"
 
 #. module: crm_profiling
-#: wizard_button:open_questionnaire,init,end:0
-#: wizard_button:open_questionnaire,open,end:0
+#: view:open.questionnaire:0
 msgid "Cancel"
 msgstr "Отмяна"
 
@@ -212,21 +192,18 @@ msgid "Partner"
 msgstr "Партньор"
 
 #. module: crm_profiling
-#: code:addons/crm_profiling/crm_profiling.py:178
+#: code:addons/crm_profiling/wizard/open_questionnaire.py:77
 #: field:crm_profiling.questionnaire,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
-#: wizard_view:open_questionnaire,init:0
+#: view:open.questionnaire:0
+#: view:open.questionnaire.line:0
+#: field:open.questionnaire.line,wizard_id:0
 #, python-format
 msgid "Questionnaire"
 msgstr "Въпросник"
 
 #. module: crm_profiling
-#: model:ir.actions.wizard,name:crm_profiling.wizard_open_questionnaire
-msgid "Using a questionnaire"
-msgstr "С помоща на въпросник"
-
-#. module: crm_profiling
-#: wizard_button:open_questionnaire,open,compute:0
+#: view:open.questionnaire:0
 msgid "Save Data"
 msgstr "Дата на запазване"
 
@@ -238,3 +215,48 @@ msgstr "Дата на запазване"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Невалиден XML за преглед на архитектурата"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module allows users to perform segmentation within partners.\n"
+#~ "    It uses the profiles criteria from the earlier segmentation module and "
+#~ "improve it. Thanks to the new concept of questionnaire. You can now regroup "
+#~ "questions into a questionnaire and directly use it on a partner.\n"
+#~ "\n"
+#~ "    It also has been merged with the earlier CRM & SRM segmentation tool "
+#~ "because they were overlapping.\n"
+#~ "\n"
+#~ "    The menu items related are in \"CRM & SRM\\Configuration\\"
+#~ "Segmentations\"\n"
+#~ "\n"
+#~ "\n"
+#~ "    * Note: this module is not compatible with the module segmentation, "
+#~ "since it's the same which has been renamed.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Този модул позволява на потребителите да извършват сегментацията между "
+#~ "партньорите.\n"
+#~ "Той използва критерии профили от по-ранната сегментация модул и да го "
+#~ "подобрява. Благодарение на новата концепция на въпросника. Сега можете да се "
+#~ "прегрупират въпроси в въпросник и директно да го използвате на партньор.\n"
+#~ "\n"
+#~ "Той също така е слята с по-ранната CRM и сегментация SRM инструмент, защото "
+#~ "те са се застъпват.\n"
+#~ "\n"
+#~ "Менюто на свързани с тях изделия, са в \"CRM и SRM \\ конфигурация \\ "
+#~ "сегментация\"\n"
+#~ "\n"
+#~ "\n"
+#~ "* Забележка: този модул не е съвместима с модул за сегментиране, тъй като "
+#~ "това е същото, което е преименуван.\n"
+#~ "    "
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Грешка ! Не може да създадете рекурсивно свързани членове"
+
+#~ msgid "Crm Profiling management - To Perform Segmentation within Partners"
+#~ msgstr "CRM за управление на профили - извършва сегментиране на партньорите"
+
+#~ msgid "Using a questionnaire"
+#~ msgstr "С помоща на въпросник"

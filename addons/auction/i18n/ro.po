@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-08-03 03:08+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:26+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:37+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
@@ -24,7 +24,7 @@ msgstr "Raportare"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_taken
 msgid "Auction taken"
-msgstr ""
+msgstr "Luat la licitatie"
 
 #. module: auction
 #: view:auction.lots:0
@@ -43,7 +43,7 @@ msgstr "Vânzător"
 #. module: auction
 #: field:auction.lots,name:0
 msgid "Title"
-msgstr ""
+msgstr "Titlu"
 
 #. module: auction
 #: field:auction.lots.sms.send,text:0
@@ -55,17 +55,18 @@ msgstr "Mesaj SMS"
 #: view:auction.lots.auction.move:0
 #: view:auction.lots.make.invoice.buyer:0
 msgid " "
-msgstr ""
+msgstr " "
 
 #. module: auction
 #: view:auction.lots.auction.move:0
 msgid "Warning, Erase The Object Adjudication Price and Its Buyer!"
 msgstr ""
+"Avertisment, Stergeti Pretul de adjudecare al obiectului ci Cumparatorul lui!"
 
 #. module: auction
 #: help:auction.pay.buy,statement_id1:0
 msgid "First Bank Statement For Buyer"
-msgstr ""
+msgstr "Primul extras de cont pentru Cumparator"
 
 #. module: auction
 #: field:auction.bid_line,lot_id:0
@@ -81,7 +82,7 @@ msgstr "Nr. de obiecte"
 #. module: auction
 #: view:auction.lots:0
 msgid "Authors"
-msgstr ""
+msgstr "Autori"
 
 #. module: auction
 #: view:auction.bid:0
@@ -108,6 +109,8 @@ msgstr "Nr. de obiecte"
 msgid ""
 "When state of Seller Invoice is 'Paid', this field is selected as True."
 msgstr ""
+"Atunci cand starea Facturii vanzatorului este 'Platit', acest camp este "
+"selectat ca Adevarat."
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -128,12 +131,12 @@ msgstr "Suma facturată"
 #. module: auction
 #: help:auction.lots,name:0
 msgid "Auction object name"
-msgstr ""
+msgstr "Nume obiect licitatie"
 
 #. module: auction
 #: model:ir.model,name:auction.model_aie_category
 msgid "aie.category"
-msgstr ""
+msgstr "categoria.aie"
 
 #. module: auction
 #: field:auction.deposit.cost,amount:0
@@ -152,7 +155,7 @@ msgstr "Limită depozit"
 #. module: auction
 #: view:auction.deposit:0
 msgid "Reference"
-msgstr ""
+msgstr "Referinţă"
 
 #. module: auction
 #: help:auction.dates,state:0
@@ -160,6 +163,8 @@ msgid ""
 "When auction starts the state is 'Draft'.\n"
 " At the end of auction, the state becomes 'Closed'."
 msgstr ""
+"Atunci cand incepe licitatia, starea este 'Ciorna'. \n"
+"     La sfarsitul licitatiei, starea devine 'Inchis'."
 
 #. module: auction
 #: field:auction.dates,account_analytic_id:0
@@ -169,6 +174,11 @@ msgstr "Cont analitic"
 #. module: auction
 #: help:auction.pay.buy,amount3:0
 msgid "Amount For Third Bank Statement"
+msgstr "Suma pentru Al treilea extras de cont"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "Buy object"
 msgstr ""
 
 #. module: auction
@@ -179,7 +189,7 @@ msgstr "Număr pe listă"
 #. module: auction
 #: report:buyer.list:0
 msgid "Date:"
-msgstr ""
+msgstr "Data:"
 
 #. module: auction
 #: field:auction.deposit.cost,name:0
@@ -199,12 +209,12 @@ msgstr "Stare"
 #. module: auction
 #: view:auction.dates:0
 msgid "First Auction Date"
-msgstr ""
+msgstr "Data primei licitatii"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "January"
-msgstr ""
+msgstr "Ianuarie"
 
 #. module: auction
 #: help:auction.lot.category,active:0
@@ -212,6 +222,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the auction "
 "lot category without removing it."
 msgstr ""
+"Daca campul activ este setat pe Fals, va va permite sa ascundeti categoria "
+"licitatiei lotului fara a o sterge."
 
 #. module: auction
 #: view:auction.lots:0
@@ -221,7 +233,7 @@ msgstr "Ref"
 #. module: auction
 #: field:report.auction,total_price:0
 msgid "Total Price"
-msgstr ""
+msgstr "Preţ Total"
 
 #. module: auction
 #: view:auction.lots:0
@@ -231,12 +243,12 @@ msgstr "Total adj."
 #. module: auction
 #: view:auction.lots.sms.send:0
 msgid "SMS - Gateway: clickatell','Bulk SMS send"
-msgstr ""
+msgstr "SMS - Gateway: clickatell', trimite 'Bulk SMS"
 
 #. module: auction
 #: help:auction.lots,costs:0
 msgid "Deposit cost"
-msgstr ""
+msgstr "Cost de depozit"
 
 #. module: auction
 #: selection:auction.lots,state:0
@@ -248,12 +260,12 @@ msgstr "Nevândute"
 #. module: auction
 #: view:auction.deposit:0
 msgid "Search Auction deposit"
-msgstr ""
+msgstr "Cautare depozit licitatie"
 
 #. module: auction
 #: help:auction.lots,lot_num:0
 msgid "List number in depositer inventory"
-msgstr ""
+msgstr "Numarul din lista in inventarul deponentului"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -277,9 +289,14 @@ msgid "Bids"
 msgstr "Licitări"
 
 #. module: auction
+#: field:report.auction,gross_revenue:0
+msgid "Gross Revenue"
+msgstr "Venit brut"
+
+#. module: auction
 #: view:auction.lots.buyer_map:0
 msgid "Buyer Map"
-msgstr ""
+msgstr "Harta cumparator"
 
 #. module: auction
 #: field:report.object.encoded,obj_ret:0
@@ -289,34 +306,34 @@ msgstr "Nr ob. ret."
 #. module: auction
 #: model:ir.model,name:auction.model_auction_bid
 msgid "Bid Auctions"
-msgstr ""
+msgstr "Oferte licitatii"
 
 #. module: auction
 #: help:auction.lots,image:0
 msgid "Object Image"
-msgstr ""
+msgstr "Imagine obiect"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_buyer_map.py:70
 #, python-format
 msgid "No buyer is set for this lot."
-msgstr ""
+msgstr "Nu este setat nici un cumparator pentru acest lot."
 
 #. module: auction
 #: code:addons/auction/auction.py:578
 #, python-format
 msgid "The Buyer \"%s\" has no Invoice Address."
-msgstr ""
+msgstr "Cumparatorul \"%s\" nu are o Adresa de facturare"
 
 #. module: auction
-#: view:auction.dates:0
-msgid "Commissions"
-msgstr "Comisioane"
+#: model:ir.actions.act_window,name:auction.action_auction_object_categories
+msgid "Auction object Categories"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit_cost
 msgid "Auction Deposit Cost"
-msgstr ""
+msgstr "Cont Depozit Licitatie"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -326,12 +343,12 @@ msgstr "Formular limită depozit"
 #. module: auction
 #: help:auction.lots,statement_id:0
 msgid "Bank statement line for given buyer"
-msgstr ""
+msgstr "Linie extras de cont pentru cumparatorul respectiv"
 
 #. module: auction
 #: field:auction.lot.category,aie_categ:0
 msgid "Category"
-msgstr ""
+msgstr "Categorie"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_view_auction_buyer_map
@@ -341,7 +358,7 @@ msgstr "Asociere username cu partener"
 #. module: auction
 #: view:auction.lots:0
 msgid "Search Auction Lots"
-msgstr ""
+msgstr "Cautare Loturi Licitatie"
 
 #. module: auction
 #: field:report.auction,net_revenue:0
@@ -362,7 +379,7 @@ msgstr "Trimite SMS"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: auction
 #: view:auction.lots:0
@@ -375,18 +392,23 @@ msgstr "Vândut"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "June"
-msgstr ""
+msgstr "Iunie"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_catalog_flagey_report.py:63
 #, python-format
 msgid "No Lots belong to this Auction Date"
+msgstr "Nici un Lot nu apartine acestei Date de licitatie"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "New Object"
 msgstr ""
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "October"
-msgstr ""
+msgstr "Octombrie"
 
 #. module: auction
 #: field:auction.bid_line,name:0
@@ -411,17 +433,17 @@ msgstr "Descriere obiect"
 #. module: auction
 #: field:auction.lots,artist2_id:0
 msgid "Artist/Author2"
-msgstr ""
+msgstr "Artist/Autor 2"
 
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Line1"
-msgstr ""
+msgstr "Linia1"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_make_invoice_buyer
 msgid "Make Invoice for Buyer"
-msgstr ""
+msgstr "Faceti factura pentru Cumparator"
 
 #. module: auction
 #: field:auction.lots,gross_revenue:0
@@ -437,7 +459,7 @@ msgstr "Plată obiecte cumpărător"
 #. module: auction
 #: help:auction.dates,auction2:0
 msgid "End date of auction"
-msgstr ""
+msgstr "Data de sfarsit a licitatiei"
 
 #. module: auction
 #: view:auction.lots.sms.send:0
@@ -456,14 +478,20 @@ msgid "Buyers"
 msgstr "Cumpărători"
 
 #. module: auction
+#: view:auction.lots:0
+#: view:report.auction:0
+msgid "Object Category"
+msgstr ""
+
+#. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id4
 msgid "VAT 12%"
-msgstr ""
+msgstr "TVA 12%"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Buyer Invoices"
-msgstr ""
+msgstr "Facturi Cumparator"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.res_w_buyer
@@ -478,22 +506,22 @@ msgstr "Preţ maxim"
 #. module: auction
 #: help:auction.dates,auction1:0
 msgid "Start date of auction"
-msgstr ""
+msgstr "Data de inceput a licitatiei"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_auction_move
 msgid "Auction Move"
-msgstr ""
+msgstr "Miscare Licitatie"
 
 #. module: auction
 #: help:auction.dates,buyer_costs:0
 msgid "Account tax for buyer"
-msgstr ""
+msgstr "Cont taxa pentru cumparator"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Next Auction"
-msgstr ""
+msgstr "Urmatoarea Licitatie"
 
 #. module: auction
 #: view:auction.taken:0
@@ -510,7 +538,7 @@ msgstr "Plată"
 #: code:addons/auction/auction.py:686
 #, python-format
 msgid "The object \"%s\" has no buyer assigned."
-msgstr ""
+msgstr "Obiectul \"%s\" nu are atribuit nici un cumparator."
 
 #. module: auction
 #: selection:auction.deposit,method:0
@@ -520,12 +548,12 @@ msgstr "Păstrare până la vânzare"
 #. module: auction
 #: view:auction.dates:0
 msgid "Last Auction Date"
-msgstr ""
+msgstr "Data Ultimei Licitatii"
 
 #. module: auction
-#: model:account.tax,name:auction.tax_seller
-msgid "Seller Costs (12%)"
-msgstr ""
+#: field:report.object.encoded,obj_num:0
+msgid "# of Encoded obj."
+msgstr "Număr de obiecte înscrise"
 
 #. module: auction
 #: field:auction.lots,paid_vnd:0
@@ -574,12 +602,12 @@ msgstr "%)"
 #. module: auction
 #: view:auction.lots:0
 msgid "Buyer Information"
-msgstr ""
+msgstr "Informatii cumparator"
 
 #. module: auction
 #: help:auction.lots,gross_revenue:0
 msgid "Buyer Price - Seller Price"
-msgstr ""
+msgstr "Pretul cumparatorului - Pretul vanzatorului"
 
 #. module: auction
 #: field:auction.lots.make.invoice,objects:0
@@ -600,7 +628,7 @@ msgstr "Preţ cumpărător"
 #. module: auction
 #: view:auction.lots:0
 msgid "Bids Details"
-msgstr ""
+msgstr "Detalii oferte licitatie"
 
 #. module: auction
 #: field:auction.lots,is_ok:0
@@ -621,7 +649,7 @@ msgstr "Catalog de licitaţie Flagey"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "March"
-msgstr ""
+msgstr "Martie"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax4
@@ -647,20 +675,15 @@ msgstr "Costuri indirecte"
 #. module: auction
 #: help:auction.dates,seller_costs:0
 msgid "Account tax for seller"
-msgstr ""
+msgstr "Cont taxa pentru vanzator"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:68
+#: code:addons/auction/wizard/auction_lots_invoice.py:67
 #: code:addons/auction/wizard/auction_lots_numerotate.py:103
 #: code:addons/auction/wizard/auction_lots_numerotate.py:129
 #, python-format
 msgid "UserError"
-msgstr ""
-
-#. module: auction
-#: model:ir.module.module,shortdesc:auction.module_meta_information
-msgid "Auction Management"
-msgstr "Management licitaţii"
+msgstr "EroareUtilizator"
 
 #. module: auction
 #: field:auction.dates,journal_seller_id:0
@@ -680,36 +703,30 @@ msgid "Draft"
 msgstr "Ciornă"
 
 #. module: auction
-#: help:auction.lots,state:0
-msgid ""
-" * The 'Draft' state is used when a object is encoding as a new object.      "
-"           \n"
-"* The 'Unsold' state is used when object does not sold for long time, user "
-"can also set it as draft state after unsold.                 \n"
-"* The 'Paid' state is used when user pay for the object                 \n"
-"* The 'Sold' state is used when user buy the object."
+#: view:auction.dates:0
+msgid "Invoiced Auction"
 msgstr ""
 
 #. module: auction
 #: view:auction.catalog.flagey:0
 msgid "Print"
-msgstr ""
+msgstr "Imprimare"
 
 #. module: auction
 #: view:auction.lots:0
 #: view:report.auction:0
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #. module: auction
 #: help:aie.category,child_ids:0
 msgid "children aie category"
-msgstr ""
+msgstr "categorie copii (subordonata) aie"
 
 #. module: auction
 #: help:auction.lots,ach_emp:0
 msgid "When state is Taken Away, this field is marked as True"
-msgstr ""
+msgstr "Atunci cand starea este Luat, acest camp este marcat ca Adevarat"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_taken
@@ -723,6 +740,7 @@ msgstr "Gestiune intrări"
 #: view:auction.lots:0
 #: field:auction.lots,auction_id:0
 #: report:auction.total.rml:0
+#: model:ir.module.category,name:auction.module_category_auction
 #: model:ir.ui.menu,name:auction.auction_menu_root
 #: view:report.auction:0
 msgid "Auction"
@@ -753,7 +771,7 @@ msgstr "Estimare minim:"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "September"
-msgstr ""
+msgstr "Septembrie"
 
 #. module: auction
 #: field:report.auction,net_margin:0
@@ -768,7 +786,7 @@ msgstr "Limitare net?"
 #. module: auction
 #: field:aie.category,child_ids:0
 msgid "unknown"
-msgstr ""
+msgstr "necunoscut(ă)"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -782,19 +800,19 @@ msgid "Auction Name"
 msgstr "Nume licitaţie"
 
 #. module: auction
-#: field:report.object.encoded,obj_num:0
-msgid "# of Encoded obj."
-msgstr "Număr de obiecte înscrise"
+#: model:account.tax,name:auction.tax_seller
+msgid "Seller Costs (12%)"
+msgstr "Cheltuieli vanzator (12%)"
 
 #. module: auction
 #: field:aie.category,parent_id:0
 msgid "Parent aie Category"
-msgstr ""
+msgstr "Categorie Parinte aie"
 
 #. module: auction
 #: view:report.auction:0
 msgid "Auction Summary"
-msgstr ""
+msgstr "Rezumat licitatie"
 
 #. module: auction
 #: view:auction.lots.make.invoice:0
@@ -806,29 +824,29 @@ msgstr "Lăsaţi gol pentru numerotare automată"
 #: code:addons/auction/auction.py:578
 #, python-format
 msgid "No Invoice Address"
-msgstr ""
+msgstr "Nu exista Adresa de facturare"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.v_huissier
 msgid "Bailiffs Listing"
-msgstr ""
+msgstr "Listare aprozi"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_numerotate.py:103
 #: code:addons/auction/wizard/auction_lots_numerotate.py:129
 #, python-format
 msgid "This record does not exist !"
-msgstr ""
+msgstr "Aceasta inregistrare nu exista !"
 
 #. module: auction
 #: field:auction.pay.buy,total:0
 msgid "Total Amount"
-msgstr ""
+msgstr "Suma totală"
 
 #. module: auction
 #: help:auction.pay.buy,amount:0
 msgid "Amount For First Bank Statement"
-msgstr ""
+msgstr "Suma pentru Primul extras de cont"
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_object_date
@@ -839,7 +857,7 @@ msgstr "Obiecte pe zi"
 #. module: auction
 #: help:auction.lots,author_right:0
 msgid "Account tax for author commission"
-msgstr ""
+msgstr "Taxa de cont pentru imputernicirea autorului"
 
 #. module: auction
 #: model:product.template,name:auction.monproduit_product_template
@@ -870,12 +888,12 @@ msgstr "Costuri suplimentare"
 #. module: auction
 #: view:auction.lots.buyer_map:0
 msgid "Map "
-msgstr ""
+msgstr "Harta "
 
 #. module: auction
 #: field:auction.lots,paid_ach:0
 msgid "Buyer Invoice Reconciled"
-msgstr ""
+msgstr "Factura Cumparatorului Reconciliata"
 
 #. module: auction
 #: field:auction.deposit,date_dep:0
@@ -895,17 +913,17 @@ msgstr "Costuri specifice"
 #. module: auction
 #: report:buyer.list:0
 msgid "To pay ("
-msgstr ""
+msgstr "De plata ("
 
 #. module: auction
 #: model:account.tax,name:auction.tax_buyer
 msgid "Buyer Costs (20%)"
-msgstr ""
+msgstr "Cheltuieli cumparator (20%)"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction
 msgid "Dashboard"
-msgstr ""
+msgstr "Tablou de bord"
 
 #. module: auction
 #: view:auction.dates:0
@@ -923,12 +941,12 @@ msgstr "Total adjudecări"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_make_invoice
 msgid "Make invoice"
-msgstr ""
+msgstr "Faceti factura"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "November"
-msgstr ""
+msgstr "Noiembrie"
 
 #. module: auction
 #: view:auction.dates:0
@@ -939,7 +957,7 @@ msgstr "Istoric"
 #. module: auction
 #: field:aie.category,code:0
 msgid "Code"
-msgstr ""
+msgstr "Cod"
 
 #. module: auction
 #: report:auction.code_bar_lot:0
@@ -949,7 +967,7 @@ msgstr "Nr."
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.v_report_barcode_lot
 msgid "Barcode batch"
-msgstr ""
+msgstr "Cod de bare lot"
 
 #. module: auction
 #: report:report.auction.buyer.result:0
@@ -958,13 +976,14 @@ msgstr "Num"
 
 #. module: auction
 #: view:auction.catalog.flagey:0
+#: view:auction.taken:0
 msgid "Cancel"
 msgstr "Revocare"
 
 #. module: auction
 #: view:auction.lots:0
 msgid "Buyer's Payment History"
-msgstr ""
+msgstr "Istoric Plati cumparator"
 
 #. module: auction
 #: view:auction.artists:0
@@ -985,7 +1004,7 @@ msgstr "Plată"
 #. module: auction
 #: view:auction.lots.make.invoice:0
 msgid "Create Invoices For Seller"
-msgstr ""
+msgstr "Creare Facturi pentru Vanzator"
 
 #. module: auction
 #: field:report.object.encoded,obj_margin:0
@@ -995,7 +1014,7 @@ msgstr "Marjă netă"
 #. module: auction
 #: help:auction.lots,lot_local:0
 msgid "Auction Location"
-msgstr ""
+msgstr "Locatia licitatiei"
 
 #. module: auction
 #: view:auction.dates:0
@@ -1007,6 +1026,8 @@ msgstr "Analitic"
 msgid ""
 "When state of Buyer Invoice is 'Paid', this field is selected as True."
 msgstr ""
+"Atunci cand starea Facturii cumparatorului este 'Platita', acest camp este "
+"selectat ca Adevarat."
 
 #. module: auction
 #: report:bids.lots:0
@@ -1033,17 +1054,17 @@ msgstr "Facturare cumpărători obiecte"
 #. module: auction
 #: view:report.auction:0
 msgid "My Auction"
-msgstr ""
+msgstr "Licitatia mea"
 
 #. module: auction
 #: help:auction.lots,gross_margin:0
 msgid "(Gross Revenue*100.0)/ Object Price"
-msgstr ""
+msgstr "Venitul brut*100.0)/ Pret obiect"
 
 #. module: auction
 #: field:auction.bid,contact_tel:0
 msgid "Contact Number"
-msgstr ""
+msgstr "Numar de contact"
 
 #. module: auction
 #: view:auction.lots:0
@@ -1075,24 +1096,25 @@ msgstr "Numărul facturii"
 #: code:addons/auction/wizard/auction_lots_numerotate.py:173
 #, python-format
 msgid "Active IDs not Found"
-msgstr ""
+msgstr "Nu au fost gasite ID-urile active"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_aie_send.py:167
+#: code:addons/auction/wizard/auction_aie_send.py:166
 #: code:addons/auction/wizard/auction_aie_send_result.py:117
 #, python-format
 msgid "Connection to WWW.Auction-in-Europe.com failed !"
-msgstr ""
+msgstr "A esuat conectarea la www.Auction-in-Europe.com"
 
 #. module: auction
-#: field:report.auction,gross_revenue:0
-msgid "Gross Revenue"
-msgstr "Venit brut"
+#: model:ir.actions.act_window,name:auction.act_auction_lot_open_bid
+#: model:ir.actions.act_window,name:auction.action_bid_open
+msgid "Open Bids"
+msgstr "Deschidere oferte de licitatie"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.open_board_auction
 msgid "Auction board"
-msgstr ""
+msgstr "Consiliul de licitatie"
 
 #. module: auction
 #: field:aie.category,name:0
@@ -1103,6 +1125,7 @@ msgstr "Nume"
 
 #. module: auction
 #: field:auction.deposit,name:0
+#: view:auction.lots:0
 #: field:auction.lots,bord_vnd_id:0
 msgid "Depositer Inventory"
 msgstr "Inventar depozitar"
@@ -1111,12 +1134,12 @@ msgstr "Inventar depozitar"
 #: code:addons/auction/auction.py:692
 #, python-format
 msgid "The Buyer has no Invoice Address."
-msgstr ""
+msgstr "Cumparatorul nu are nici o Adresa de facturare"
 
 #. module: auction
-#: view:report.object.encoded:0
-msgid "Total adj."
-msgstr "Total adj"
+#: model:ir.actions.act_window,name:auction.action_report_auction_adjudication_tree
+msgid "Auction Adjudication Report"
+msgstr ""
 
 #. module: auction
 #: field:auction.lots.sms.send,user:0
@@ -1147,7 +1170,7 @@ msgstr "Marcare loturi"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots
 msgid "Auction Object"
-msgstr ""
+msgstr "Obiectul licitatiei"
 
 #. module: auction
 #: field:auction.lots,obj_num:0
@@ -1176,6 +1199,15 @@ msgid "Debit:"
 msgstr "Debit:"
 
 #. module: auction
+#: code:addons/auction/wizard/auction_aie_send.py:166
+#: code:addons/auction/wizard/auction_aie_send_result.py:116
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:70
+#: code:addons/auction/wizard/auction_lots_numerotate.py:145
+#, python-format
+msgid "Error"
+msgstr "Eroare"
+
+#. module: auction
 #: field:auction.lots,author_right:0
 msgid "Author rights"
 msgstr "Drepturi de autor"
@@ -1187,12 +1219,17 @@ msgstr "Drepturi de autor"
 #: view:auction.lots:0
 #: view:report.auction:0
 msgid "Group By..."
+msgstr "Grupează după..."
+
+#. module: auction
+#: view:report.auction:0
+msgid "Auction during last month."
 msgstr ""
 
 #. module: auction
 #: help:auction.dates,journal_id:0
 msgid "Account journal for buyer"
-msgstr ""
+msgstr "Jurnal de cont pentru cumparator"
 
 #. module: auction
 #: field:auction.bid,bid_lines:0
@@ -1219,14 +1256,19 @@ msgid "Sellers"
 msgstr "Vânzători"
 
 #. module: auction
+#: view:auction.dates:0
+msgid "Draft Auction"
+msgstr ""
+
+#. module: auction
 #: help:auction.lots,lot_est2:0
 msgid "Maximum Estimate Price"
-msgstr ""
+msgstr "Pretul maxim estimat"
 
 #. module: auction
 #: view:auction.lots:0
 msgid "Notes"
-msgstr ""
+msgstr "Note"
 
 #. module: auction
 #: view:auction.lots.auction.move:0
@@ -1241,7 +1283,7 @@ msgstr "Număr de obiecte nevândute"
 #. module: auction
 #: view:auction.dates:0
 msgid "Create Invoices"
-msgstr ""
+msgstr "Crează facturi"
 
 #. module: auction
 #: field:auction.bid,auction_id:0
@@ -1258,7 +1300,7 @@ msgstr ", Id"
 #. module: auction
 #: report:buyer.list:0
 msgid "Adj.("
-msgstr ""
+msgstr "Adj.("
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.lot_list_inv
@@ -1268,7 +1310,7 @@ msgstr "Listă loturi - Landscape"
 #. module: auction
 #: view:auction.artists:0
 msgid "Author/Artist"
-msgstr ""
+msgstr "Autor/Artist"
 
 #. module: auction
 #: field:auction.lots,ach_login:0
@@ -1283,6 +1325,7 @@ msgstr "Prioritate"
 
 #. module: auction
 #: view:board.board:0
+#: model:ir.actions.act_window,name:auction.action_report_latest_objects_tree
 msgid "Latest objects"
 msgstr "Ultimele obiecte"
 
@@ -1294,12 +1337,14 @@ msgstr "Locație"
 #. module: auction
 #: view:report.auction:0
 msgid "Month -1"
-msgstr ""
+msgstr "Luna -1"
 
 #. module: auction
 #: help:auction.lots,is_ok:0
 msgid "When buyer pay for bank statement', this field is marked"
 msgstr ""
+"Acest camp este marcat atunci cand cumparatorul plateste pentru estrasul de "
+"cont'"
 
 #. module: auction
 #: field:auction.lots,ach_emp:0
@@ -1314,12 +1359,12 @@ msgstr "Venit total brut"
 #. module: auction
 #: help:auction.lots,lot_est1:0
 msgid "Minimum Estimate Price"
-msgstr ""
+msgstr "Pretul minim estimat"
 
 #. module: auction
 #: view:auction.deposit:0
 msgid "Deposit Date"
-msgstr ""
+msgstr "Data depozit"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_numerotate.py:145
@@ -1330,7 +1375,7 @@ msgstr "Acest lot nu există!"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "July"
-msgstr ""
+msgstr "Iulie"
 
 #. module: auction
 #: field:auction.bid_line,call:0
@@ -1351,7 +1396,7 @@ msgstr "Estimare de minim"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_sms_send
 msgid "Sms send "
-msgstr ""
+msgstr "Trimitere Sms "
 
 #. module: auction
 #: view:auction.lots.auction.move:0
@@ -1362,7 +1407,7 @@ msgstr "Schimbare dată licitaţie"
 #. module: auction
 #: field:auction.artists,birth_death_dates:0
 msgid "Lifespan"
-msgstr ""
+msgstr "Durata de viata"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -1373,19 +1418,19 @@ msgstr "Metodă de retragere"
 #. module: auction
 #: view:auction.dates:0
 msgid "Buyer Commissions"
-msgstr ""
+msgstr "Comisioane cumparator"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_auction
 #: model:ir.ui.menu,name:auction.menu_report_auction
 msgid "Auction Analysis"
-msgstr ""
+msgstr "Analiza licitatiei"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_pay_buy.py:80
 #, python-format
 msgid "Payment aborted !"
-msgstr ""
+msgstr "Plata anulata !"
 
 #. module: auction
 #: field:auction.lot.history,price:0
@@ -1400,7 +1445,7 @@ msgstr "Începere licitaţie"
 #. module: auction
 #: help:auction.pay.buy,statement_id3:0
 msgid "Third Bank Statement For Buyer"
-msgstr ""
+msgstr "Al treilea extras de cont pentru Cumparator"
 
 #. module: auction
 #: view:report.auction:0
@@ -1417,27 +1462,27 @@ msgstr "Maxim estimat:"
 #. module: auction
 #: view:auction.lots:0
 msgid "Statistical"
-msgstr ""
+msgstr "Statistic"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit
 msgid "Auction Deposit Border"
-msgstr ""
+msgstr "Limita depozit licitatie"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_object_encoded_tree
 msgid "Object statistics"
-msgstr ""
+msgstr "Statistici obiect"
 
 #. module: auction
 #: help:auction.lots,net_margin:0
 msgid "(Net Revenue * 100)/ Object Price"
-msgstr ""
+msgstr "(Venit net * 100)/Pret obiect"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lot_history
 msgid "Lot History"
-msgstr ""
+msgstr "Istoric Lot"
 
 #. module: auction
 #: view:auction.lots.make.invoice:0
@@ -1448,17 +1493,22 @@ msgstr "Generare facturi"
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id5
 msgid "VAT 5%"
-msgstr ""
+msgstr "TVA 5%"
 
 #. module: auction
-#: field:auction.dates,expo1:0
-msgid "First Exposition Day"
-msgstr "Prima zi de expunere"
+#: model:ir.model,name:auction.model_auction_lots_buyer_map
+msgid "Map Buyer"
+msgstr "Harta Cumparator"
 
 #. module: auction
 #: report:buyer.list:0
 msgid "Lot"
 msgstr "Lot"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_auction_object_date_tree
+msgid "Auction Object Date"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_artists
@@ -1468,12 +1518,12 @@ msgstr "auction.artists"
 #. module: auction
 #: field:report.auction,avg_price:0
 msgid "Avg Price."
-msgstr ""
+msgstr "Pretul mediu."
 
 #. module: auction
 #: help:auction.pay.buy,statement_id2:0
 msgid "Second Bank Statement For Buyer"
-msgstr ""
+msgstr "Al doilea Extras de cont pentru Cumparator"
 
 #. module: auction
 #: field:auction.dates,journal_id:0
@@ -1500,7 +1550,7 @@ msgstr "Activ"
 #. module: auction
 #: view:auction.dates:0
 msgid "Exposition Dates"
-msgstr ""
+msgstr "Date expunere"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax1
@@ -1542,14 +1592,14 @@ msgstr "Obiecte pe zile"
 #. module: auction
 #: help:auction.dates,expo2:0
 msgid "Last exposition date for auction"
-msgstr ""
+msgstr "Data ultimei expuneri pentru licitatie"
 
 #. module: auction
 #: code:addons/auction/auction.py:571
 #: code:addons/auction/auction.py:686
 #, python-format
 msgid "Missed buyer !"
-msgstr ""
+msgstr "Ratare cumparator!"
 
 #. module: auction
 #: report:auction.code_bar_lot:0
@@ -1562,17 +1612,24 @@ msgid "Auction manager "
 msgstr "Managet licitaţie "
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:68
+#: code:addons/auction/wizard/auction_lots_invoice.py:67
 #, python-format
 msgid ""
 "Two different buyers for the same invoice !\n"
 "Please correct this problem before invoicing"
 msgstr ""
+"Doi cumparatori diferiti pentru aceeasi factura! \n"
+"Va rugam sa corectati aceasta problema inainte de facturare"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Invoice"
-msgstr ""
+msgstr "Factură"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Commissions"
+msgstr "Comisioane"
 
 #. module: auction
 #: field:auction.lots,vnd_lim:0
@@ -1587,17 +1644,17 @@ msgstr "Transfer"
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Line3"
-msgstr ""
+msgstr "Linia3"
 
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Line2"
-msgstr ""
+msgstr "Linia2"
 
 #. module: auction
 #: help:auction.lots,obj_ret:0
 msgid "Object Ret"
-msgstr ""
+msgstr "Ret obiect"
 
 #. module: auction
 #: view:report.auction.adjudication:0
@@ -1627,12 +1684,12 @@ msgstr "Produs"
 #. module: auction
 #: report:buyer.list:0
 msgid ")"
-msgstr ""
+msgstr ")"
 
 #. module: auction
 #: view:auction.lots:0
 msgid "Seller Information"
-msgstr ""
+msgstr "Informatii vanzator"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -1646,7 +1703,7 @@ msgstr "Obiecte"
 #. module: auction
 #: view:auction.dates:0
 msgid "Seller Invoices"
-msgstr ""
+msgstr "Facturi vanzator"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -1661,7 +1718,7 @@ msgstr "Permite sold negativ"
 #. module: auction
 #: help:auction.pay.buy,amount2:0
 msgid "Amount For Second Bank Statement"
-msgstr ""
+msgstr "Suma pentru Al doilea extras de cont"
 
 #. module: auction
 #: field:auction.lot.history,auction_id:0
@@ -1673,7 +1730,7 @@ msgstr "Data licitaţiei"
 #. module: auction
 #: view:auction.lots.sms.send:0
 msgid "SMS Text"
-msgstr ""
+msgstr "Text SMS"
 
 #. module: auction
 #: field:auction.dates,auction1:0
@@ -1683,7 +1740,12 @@ msgstr "Prima zi de licitaţie"
 #. module: auction
 #: view:auction.lots.make.invoice.buyer:0
 msgid "Create Invoices For Buyer"
-msgstr ""
+msgstr "Creare facturi pentru Cumparator"
+
+#. module: auction
+#: model:res.groups,name:auction.group_auction_manager
+msgid "Manager"
+msgstr "Manager"
 
 #. module: auction
 #: view:auction.dates:0
@@ -1699,12 +1761,12 @@ msgstr "Artiști"
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Pay Objects"
-msgstr ""
+msgstr "Plateste Obiectele"
 
 #. module: auction
 #: help:auction.dates,expo1:0
 msgid "Beginning exposition date for auction"
-msgstr ""
+msgstr "Data de incepere a expunerii pentru licitatie"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.act_auction_lot_line_open
@@ -1714,12 +1776,12 @@ msgstr "Loturi deschise"
 #. module: auction
 #: model:ir.actions.act_window,name:auction.act_auction_lot_open_deposit
 msgid "Deposit slip"
-msgstr ""
+msgstr "Chitanta de depunere"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_enable
 msgid "Lots Enable"
-msgstr ""
+msgstr "Activare loturi"
 
 #. module: auction
 #: view:auction.lots:0
@@ -1727,9 +1789,19 @@ msgid "Lots"
 msgstr "Loturi"
 
 #. module: auction
+#: model:ir.actions.act_window,name:auction.action_auction_artist
+msgid "Auction Artists"
+msgstr ""
+
+#. module: auction
 #: field:auction.lots,seller_price:0
 msgid "Seller price"
 msgstr "Preţ vânzător"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax20
+msgid "Frais de vente0"
+msgstr ""
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.buy_id_list
@@ -1752,10 +1824,9 @@ msgstr "Declaraţie"
 #: help:auction.lots,seller_price:0
 #: help:auction.lots.make.invoice,amount:0
 msgid "Seller Price"
-msgstr ""
+msgstr "Pretul vanzatorului"
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax20
 #: model:account.tax,name:auction.auction_tax6
 msgid "Frais de vente"
 msgstr "Costuri de vindere"
@@ -1763,7 +1834,7 @@ msgstr "Costuri de vindere"
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id1
 msgid "VAT 1%"
-msgstr ""
+msgstr "TVA 1%"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax
@@ -1771,9 +1842,9 @@ msgid "Droit d'auteur"
 msgstr "Drept de autor"
 
 #. module: auction
-#: model:ir.model,name:auction.model_auction_lots_buyer_map
-msgid "Map Buyer"
-msgstr ""
+#: field:auction.dates,expo1:0
+msgid "First Exposition Day"
+msgstr "Prima zi de expunere"
 
 #. module: auction
 #: field:report.auction.object.date,name:0
@@ -1786,6 +1857,8 @@ msgid ""
 "Provide deposit information: seller, Withdrawned Method, Object, Deposit "
 "Costs"
 msgstr ""
+"Ofera informatii referitoare la depozit: vanzator, Metoda de retragere. "
+"Obiect, Cheltuieli de depozit"
 
 #. module: auction
 #: field:auction.lots,net_revenue:0
@@ -1795,10 +1868,15 @@ msgstr "Venit net"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_catalog_flagey_report.py:63
-#: code:addons/auction/wizard/auction_pay_buy.py:87
+#: code:addons/auction/wizard/auction_pay_buy.py:89
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Eroare!"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_latest_doposit_tree
+msgid "Latest Deposits"
+msgstr "Ultimele depuneri"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -1808,7 +1886,7 @@ msgstr "Nr de obiecte"
 #. module: auction
 #: model:account.tax,name:auction.tax_buyer_author
 msgid "Author rights (4%)"
-msgstr ""
+msgstr "Drepturi de autor (4%)"
 
 #. module: auction
 #: field:report.object.encoded,estimation:0
@@ -1816,28 +1894,9 @@ msgid "Estimation"
 msgstr "Estimare"
 
 #. module: auction
-#: model:ir.module.module,description:auction.module_meta_information
-msgid ""
-"\n"
-"     This module manages the records of the artists,\n"
-"     the articles to be put up for auction,the buyers and\n"
-"     sellers.\n"
-"\n"
-"     It completely manages an auction such as managing bids,\n"
-"     keeping track of the sold articles along with the paid\n"
-"     and unpaid objects including delivery of the articles.\n"
-"     Dashboards for auction that includes:\n"
-"       * My Latest Objects (list)\n"
-"       * My Latest Deposits (list)\n"
-"       * Objects Statistics (list)\n"
-"       * My Objects By Day (list)\n"
-"    "
-msgstr ""
-
-#. module: auction
 #: view:auction.taken:0
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.buyer_form_id
@@ -1853,7 +1912,7 @@ msgstr "Nume cumpărător"
 #: view:report.auction:0
 #: field:report.auction,day:0
 msgid "Day"
-msgstr ""
+msgstr "Zi"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_lots_make_invoice
@@ -1874,12 +1933,12 @@ msgstr "Închis"
 #. module: auction
 #: view:auction.dates:0
 msgid "Search Next Auction Dates"
-msgstr ""
+msgstr "Cautare Datele licitatiilor urmatoare"
 
 #. module: auction
 #: view:auction.catalog.flagey:0
 msgid "Print Auction Catalog Flagey Report..."
-msgstr ""
+msgstr "Imprima Catalogul licitatiei Raport Flagey..."
 
 #. module: auction
 #: field:auction.lots,ach_avance:0
@@ -1899,17 +1958,17 @@ msgstr "Min/Adj/Max"
 #. module: auction
 #: view:auction.catalog.flagey:0
 msgid "Catalog Flagey Report"
-msgstr ""
+msgstr "Catalog Raport Flagey"
 
 #. module: auction
 #: help:auction.lots,obj_price:0
 msgid "Object Price"
-msgstr ""
+msgstr "Pretul obiectului"
 
 #. module: auction
 #: view:auction.bid:0
 msgid "Bids Lines"
-msgstr ""
+msgstr "Linii oferte de licitatie"
 
 #. module: auction
 #: view:auction.lots:0
@@ -1919,7 +1978,7 @@ msgstr "Catalog"
 #. module: auction
 #: help:auction.lots,auction_id:0
 msgid "Auction for object"
-msgstr ""
+msgstr "Licitatie pentru obiect"
 
 #. module: auction
 #: field:auction.deposit.cost,account:0
@@ -1932,16 +1991,22 @@ msgid "Configuration"
 msgstr "Configurare"
 
 #. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_auction_object_date_tree_my
+msgid "My Auction Object Date"
+msgstr ""
+
+#. module: auction
 #: code:addons/auction/wizard/auction_pay_buy.py:80
 #, python-format
 msgid ""
 "You should pay all the total: \"%.2f\" are missing to accomplish the payment."
 msgstr ""
+"Trebuie sa achitati totalul: \"%.2f\" lipseste pentru a realiza plata."
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_pay_buy
 msgid "Pay buy"
-msgstr ""
+msgstr "Achita achizitia"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_outils_menu
@@ -1961,12 +2026,12 @@ msgstr "Ultima zi de expunere"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_able
 msgid "Lots able"
-msgstr ""
+msgstr "Loturi corespunzatoare"
 
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id3
 msgid "VAT 10%"
-msgstr ""
+msgstr "TVA 10%"
 
 #. module: auction
 #: field:auction.artists,name:0
@@ -1976,9 +2041,10 @@ msgstr "Nume Artist/Autor"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "December"
-msgstr ""
+msgstr "Decembrie"
 
 #. module: auction
+#: view:auction.deposit:0
 #: field:auction.lots,image:0
 msgid "Image"
 msgstr "Imagine"
@@ -1987,22 +2053,22 @@ msgstr "Imagine"
 #: help:auction.lots,buyer_price:0
 #: help:auction.lots.make.invoice.buyer,amount:0
 msgid "Buyer Price"
-msgstr ""
+msgstr "Pretul Cumparatorului"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lot_category
 msgid "Auction Lots Category"
-msgstr ""
+msgstr "Categorie Loturi Licitatie"
 
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id2
 msgid "VAT 20%"
-msgstr ""
+msgstr "TVA 20%"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_payer_sel
 msgid "Auction payment for seller"
-msgstr ""
+msgstr "Plata de licitatie pentru vanzator"
 
 #. module: auction
 #: view:auction.lots:0
@@ -2014,6 +2080,11 @@ msgstr "Ridicat"
 #: model:ir.actions.report.xml,name:auction.seller_form_id
 msgid "Seller List"
 msgstr "Listă vânzător"
+
+#. module: auction
+#: view:report.object.encoded:0
+msgid "Total adj."
+msgstr "Total adj"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -2033,7 +2104,7 @@ msgstr "........."
 #. module: auction
 #: view:report.auction:0
 msgid "Auction Summary tree view"
-msgstr ""
+msgstr "Vizualizare arbore a rezumatului licitatiei"
 
 #. module: auction
 #: report:report.auction.buyer.result:0
@@ -2049,7 +2120,7 @@ msgstr "Date licitaţii"
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction_open
 msgid "Auction DashBoard"
-msgstr ""
+msgstr "Tablou de bord Licitatie"
 
 #. module: auction
 #: view:report.auction:0
@@ -2057,29 +2128,43 @@ msgstr ""
 #: field:report.auction.adjudication,user_id:0
 #: field:report.auction.object.date,user_id:0
 #: field:report.object.encoded,user_id:0
+#: model:res.groups,name:auction.group_auction_user
 msgid "User"
 msgstr "Utilizator"
 
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Payment Lines"
-msgstr ""
+msgstr "Linii plată"
 
 #. module: auction
 #: code:addons/auction/auction.py:692
 #, python-format
 msgid "Missed Address !"
-msgstr ""
+msgstr "Adresa pierduta !"
 
 #. module: auction
 #: help:auction.lots,net_revenue:0
 msgid "Buyer Price - Seller Price - Indirect Cost"
-msgstr ""
+msgstr "Pretul Cumparatorului - Pretul Vanzatorului - Cheltuieli indirecte"
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.act_auction_lot_open_bid
-msgid "Open Bids"
+#: help:auction.lots,state:0
+msgid ""
+" * The 'Draft' state is used when a object is encoding as a new object.      "
+"           \n"
+"* The 'Unsold' state is used when object does not sold for long time, user "
+"can also set it as draft state after unsold.                 \n"
+"* The 'Paid' state is used when user pay for the object                 \n"
+"* The 'Sold' state is used when user buy the object."
 msgstr ""
+" * Starea 'Ciorna' este folosita atunci cand un obiect este codat drept un "
+"obiect nou. \n"
+"*Starea 'Nevandut' este folosita atunci cand obiectul nu a fost vandut timp "
+"indelungat, utilizatorul poate de asemenea sa il seteze pe starea 'ciorna' "
+"dupa 'nevandut'.\n"
+"Starea 'Platit' este folosita atunci cand utilizatorul a platit obiectul. \n"
+"Starea 'Vandut' este folosita atunci cand utilizatorul cumpara obiectul."
 
 #. module: auction
 #: field:auction.artists,pseudo:0
@@ -2103,13 +2188,9 @@ msgid "Auction Date:"
 msgstr "Data licitaţiei:"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_aie_send.py:167
-#: code:addons/auction/wizard/auction_aie_send_result.py:116
-#: code:addons/auction/wizard/auction_lots_buyer_map.py:70
-#: code:addons/auction/wizard/auction_lots_numerotate.py:145
-#, python-format
-msgid "Error"
-msgstr ""
+#: view:auction.deposit:0
+msgid "Objects Description"
+msgstr "Descriere obiecte"
 
 #. module: auction
 #: field:auction.dates,buyer_invoice_history:0
@@ -2136,7 +2217,7 @@ msgstr "Totaluri licitaţii cu liste"
 #. module: auction
 #: view:auction.deposit:0
 msgid "General Information"
-msgstr ""
+msgstr "Informații generale"
 
 #. module: auction
 #: view:auction.lots.auction.move:0
@@ -2156,7 +2237,7 @@ msgstr "Obiect înregistrat"
 #. module: auction
 #: view:auction.bid:0
 msgid "Search Auction Bid"
-msgstr ""
+msgstr "Cautare Oferta de licitatie"
 
 #. module: auction
 #: report:bids.phones.details:0
@@ -2166,7 +2247,7 @@ msgstr "Est"
 #. module: auction
 #: view:auction.dates:0
 msgid "Seller Commissions"
-msgstr ""
+msgstr "Comisioane vanzator"
 
 #. module: auction
 #: view:report.object.encoded:0
@@ -2176,7 +2257,7 @@ msgstr "Statistică obiecte"
 #. module: auction
 #: help:auction.dates,journal_seller_id:0
 msgid "Account journal for seller"
-msgstr ""
+msgstr "Jurnal de cont pentru vanzator"
 
 #. module: auction
 #: field:auction.dates,auction2:0
@@ -2184,15 +2265,10 @@ msgid "Last Auction Day"
 msgstr "Ultima zi de licitaţie"
 
 #. module: auction
-#: view:auction.deposit:0
-msgid "Objects Description"
-msgstr ""
-
-#. module: auction
-#: code:addons/auction/wizard/auction_pay_buy.py:87
+#: code:addons/auction/wizard/auction_pay_buy.py:89
 #, python-format
 msgid "No auction date for \"%s\": Please set one."
-msgstr ""
+msgstr "Niic o data de licitatie pentru \"%s\": Va rugam sa setati una."
 
 #. module: auction
 #: view:auction.deposit:0
@@ -2204,7 +2280,7 @@ msgstr "Descriere"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #. module: auction
 #: field:auction.lots,obj_price:0
@@ -2224,12 +2300,12 @@ msgstr "Parolă"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "February"
-msgstr ""
+msgstr "Februarie"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "April"
-msgstr ""
+msgstr "Aprilie"
 
 #. module: auction
 #: view:auction.pay.buy:0
@@ -2262,8 +2338,18 @@ msgid "Expenses"
 msgstr "Cheltuieli"
 
 #. module: auction
+#: view:report.auction:0
+msgid "Auction during current month."
+msgstr ""
+
+#. module: auction
 #: model:ir.model,name:auction.model_auction_payer
 msgid "Auction payer"
+msgstr "Platitor licitatie"
+
+#. module: auction
+#: view:report.auction:0
+msgid "Auction during current year."
 msgstr ""
 
 #. module: auction
@@ -2285,7 +2371,7 @@ msgstr "Biografii artişti"
 #: view:report.auction:0
 #: field:report.auction,year:0
 msgid "Year"
-msgstr ""
+msgstr "An"
 
 #. module: auction
 #: field:auction.lots,history_ids:0
@@ -2495,6 +2581,9 @@ msgstr "Istoric licitaţie"
 
 #~ msgid "Error ! You can not create recursive accounts."
 #~ msgstr "Eroare ! Nu puteţi crea conturi recursive."
+
+#~ msgid "Auction Management"
+#~ msgstr "Management licitaţii"
 
 #~ msgid "Antique/Toys"
 #~ msgstr "Antichităţi / Jucării"
@@ -2754,9 +2843,6 @@ msgstr "Istoric licitaţie"
 #~ msgid "Lot Category"
 #~ msgstr "Categorie lot"
 
-#~ msgid "Manager"
-#~ msgstr "Manager"
-
 #~ msgid "Total"
 #~ msgstr "Total"
 
@@ -2807,9 +2893,6 @@ msgstr "Istoric licitaţie"
 
 #~ msgid "Antique/Graphic Arts"
 #~ msgstr "Antichităţi/Arte grafice"
-
-#~ msgid "Latest Deposits"
-#~ msgstr "Ultimele depuneri"
 
 #~ msgid "Antique/Oriental Arts"
 #~ msgstr "Antichităţi/Arte orientale"
@@ -2909,3 +2992,34 @@ msgstr "Istoric licitaţie"
 
 #~ msgid "Antique/Posters"
 #~ msgstr "Antichităţi/Postere"
+
+#~ msgid ""
+#~ "\n"
+#~ "     This module manages the records of the artists,\n"
+#~ "     the articles to be put up for auction,the buyers and\n"
+#~ "     sellers.\n"
+#~ "\n"
+#~ "     It completely manages an auction such as managing bids,\n"
+#~ "     keeping track of the sold articles along with the paid\n"
+#~ "     and unpaid objects including delivery of the articles.\n"
+#~ "     Dashboards for auction that includes:\n"
+#~ "       * My Latest Objects (list)\n"
+#~ "       * My Latest Deposits (list)\n"
+#~ "       * Objects Statistics (list)\n"
+#~ "       * My Objects By Day (list)\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "     Acest modul gestioneaza inregistrarile artistilor, \n"
+#~ "articolele care vor fi scoase la licitatie, cumparatorii si \n"
+#~ "vanzatorii. \n"
+#~ "\n"
+#~ "Gestioneaza complet o licitatie, cum ar fi ofertele de licitatie, \n"
+#~ "tine evidenta articolelor vandute impreuna cu obiectele platite si \n"
+#~ "cele neplatite, incluzand livrarea articolelor. \n"
+#~ "Tablouri de bord pentru licitatia care include: \n"
+#~ "          * Ultimele mele obiecte (lista) \n"
+#~ "          * Utlimele mele depozite (lista) \n"
+#~ "          * Statistici obiecte (lista) \n"
+#~ "          * Obiectele mele pe zi (lista)\n"
+#~ "    "

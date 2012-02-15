@@ -38,7 +38,7 @@ This module adds 'Allow cancelling entries' field on form view of account journa
     'update_xml': ['account_cancel_view.xml' ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     "certificate" : "001101250473177981989",
 
 

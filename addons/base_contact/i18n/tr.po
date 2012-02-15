@@ -6,15 +6,83 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-05-28 13:39+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-01-23 21:56+0000\n"
+"Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:04+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:14+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
+
+#. module: base_contact
+#: field:res.partner.location,city:0
+msgid "City"
+msgstr "Şehir"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "First/Lastname"
+msgstr "Ad/Soyad"
+
+#. module: base_contact
+#: model:ir.actions.act_window,name:base_contact.action_partner_contact_form
+#: model:ir.ui.menu,name:base_contact.menu_partner_contact_form
+#: model:ir.ui.menu,name:base_contact.menu_purchases_partner_contact_form
+#: model:process.node,name:base_contact.process_node_contacts0
+#: field:res.partner.location,job_ids:0
+msgid "Contacts"
+msgstr "İlgililer"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "Professional Info"
+msgstr "Profesyonel Bilgiler"
+
+#. module: base_contact
+#: field:res.partner.contact,first_name:0
+msgid "First Name"
+msgstr "Ad"
+
+#. module: base_contact
+#: field:res.partner.address,location_id:0
+msgid "Location"
+msgstr "Yer"
+
+#. module: base_contact
+#: model:process.transition,name:base_contact.process_transition_partnertoaddress0
+msgid "Partner to address"
+msgstr "Adreslenecek Paydaş"
+
+#. module: base_contact
+#: help:res.partner.contact,active:0
+msgid ""
+"If the active field is set to False,                 it will allow you to "
+"hide the partner contact without removing it."
+msgstr ""
+"Eğer aktif alan hayır olarak ayarlanmışsa, paydaşın adresini silmeden "
+"gizleyebilirsiniz."
+
+#. module: base_contact
+#: field:res.partner.contact,website:0
+msgid "Website"
+msgstr "Web Sitesi"
+
+#. module: base_contact
+#: field:res.partner.location,zip:0
+msgid "Zip"
+msgstr "Posta Kodu"
+
+#. module: base_contact
+#: field:res.partner.location,state_id:0
+msgid "Fed. State"
+msgstr "Fed. Eyalet"
+
+#. module: base_contact
+#: field:res.partner.location,company_id:0
+msgid "Company"
+msgstr "Şirket"
 
 #. module: base_contact
 #: field:res.partner.contact,title:0
@@ -22,57 +90,65 @@ msgid "Title"
 msgstr "Unvan"
 
 #. module: base_contact
+#: field:res.partner.location,partner_id:0
+msgid "Main Partner"
+msgstr "Ana Cari"
+
+#. module: base_contact
+#: model:process.process,name:base_contact.process_process_basecontactprocess0
+msgid "Base Contact"
+msgstr "Temel İlgili"
+
+#. module: base_contact
+#: field:res.partner.contact,email:0
+msgid "E-Mail"
+msgstr "E-posta"
+
+#. module: base_contact
+#: field:res.partner.contact,active:0
+msgid "Active"
+msgstr "Etkin"
+
+#. module: base_contact
+#: field:res.partner.contact,country_id:0
+msgid "Nationality"
+msgstr "Uyruk"
+
+#. module: base_contact
+#: view:res.partner:0
 #: view:res.partner.address:0
-msgid "# of Contacts"
-msgstr "İlgili Sayısı"
+msgid "Postal Address"
+msgstr "Posta Adresi"
 
 #. module: base_contact
-#: field:res.partner.job,fax:0
-msgid "Fax"
-msgstr "Faks"
+#: field:res.partner.contact,function:0
+msgid "Main Function"
+msgstr "Ana Görev"
 
 #. module: base_contact
-#: view:base.contact.installer:0
-msgid "title"
-msgstr "unvan"
+#: model:process.transition,note:base_contact.process_transition_partnertoaddress0
+msgid "Define partners and their addresses."
+msgstr "Paydaşları ve adreslerini tanımla"
 
 #. module: base_contact
-#: help:res.partner.job,date_start:0
-msgid "Start date of job(Joining Date)"
-msgstr "İşin Başlangıç Tarihi (katılım Tarihi)"
+#: field:res.partner.contact,name:0
+msgid "Name"
+msgstr "Ad"
 
 #. module: base_contact
-#: view:base.contact.installer:0
-msgid "Select the Option for Addresses Migration"
-msgstr "Adreslerin taşınması için ilgili seçeneği seçiniz"
-
-#. module: base_contact
-#: help:res.partner.job,function:0
-msgid "Function of this contact with this partner"
-msgstr "Bu kişininbu paydaşdaki görevi"
-
-#. module: base_contact
-#: help:res.partner.job,state:0
-msgid "Status of Address"
-msgstr "Adres Durumu"
-
-#. module: base_contact
-#: help:res.partner.job,name:0
-msgid ""
-"You may                     enter Address first,Partner will be linked "
-"automatically if any."
-msgstr ""
-"Önce adresi girin, eğer varsaPaydaş otomatik olarak ilişkilendirilecek"
-
-#. module: base_contact
-#: help:res.partner.job,fax:0
-msgid "Job FAX no."
-msgstr "İş Faks No"
+#: field:res.partner.contact,lang_id:0
+msgid "Language"
+msgstr "Dil"
 
 #. module: base_contact
 #: field:res.partner.contact,mobile:0
 msgid "Mobile"
 msgstr "Gsm No"
+
+#. module: base_contact
+#: field:res.partner.location,country_id:0
+msgid "Country"
+msgstr "Ülke"
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -86,125 +162,9 @@ msgid "People you work with."
 msgstr "Birlikte Çalıştığınız Kişiler"
 
 #. module: base_contact
-#: model:process.transition,note:base_contact.process_transition_functiontoaddress0
-msgid "Define functions and address."
-msgstr "Görev ve Adres Tanımları"
-
-#. module: base_contact
-#: help:res.partner.job,date_stop:0
-msgid "Last date of job"
-msgstr "İşin son tarihi"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-#: field:base.contact.installer,migrate:0
-msgid "Migrate"
-msgstr "Taşı"
-
-#. module: base_contact
 #: view:res.partner.contact:0
-#: field:res.partner.job,name:0
-msgid "Partner"
-msgstr "Paydaş"
-
-#. module: base_contact
-#: model:process.node,note:base_contact.process_node_function0
-msgid "Jobs at a same partner address."
-msgstr "Aynı paydaş adresindeki görevler"
-
-#. module: base_contact
-#: model:process.node,name:base_contact.process_node_partners0
-msgid "Partners"
-msgstr "Paydaşlar"
-
-#. module: base_contact
-#: field:res.partner.job,state:0
-msgid "State"
-msgstr "Durum"
-
-#. module: base_contact
-#: help:res.partner.contact,active:0
-msgid ""
-"If the active field is set to False,                 it will allow you to "
-"hide the partner contact without removing it."
-msgstr ""
-"Eğer aktif alan hayır olarak ayarlanmışsa, paydaşın adresini silmeden "
-"gizleyebilirsiniz."
-
-#. module: base_contact
-#: model:ir.module.module,description:base_contact.module_meta_information
-msgid ""
-"\n"
-"        This module allows you to manage your contacts entirely.\n"
-"\n"
-"    It lets you define\n"
-"        *contacts unrelated to a partner,\n"
-"        *contacts working at several addresses (possibly for different "
-"partners),\n"
-"        *contacts with possibly different functions for each of its job's "
-"addresses\n"
-"\n"
-"    It also adds new menu items located in\n"
-"        Partners \\ Contacts\n"
-"        Partners \\ Functions\n"
-"\n"
-"    Pay attention that this module converts the existing addresses into "
-"\"addresses + contacts\". It means that some fields of the addresses will be "
-"missing (like the contact name), since these are supposed to be defined in "
-"an other object.\n"
-"    "
-msgstr ""
-"\n"
-"        ........Bu bölüm listenizdeki tüm kişileri yönetmenize imkan sağlar\n"
-"\n"
-"    Tanımlamanıza izin verir\n"
-"        *Paydaş ile ilgili olmayan kişiler,\n"
-"        *birkaç farklı adreste çalışan kişiler (farklı iş ortakları için)\n"
-"        *her iş adresinde farklı işlev gösteren kişiler\n"
-"    "
-
-#. module: base_contact
-#: model:ir.module.module,shortdesc:base_contact.module_meta_information
-#: model:process.process,name:base_contact.process_process_basecontactprocess0
-msgid "Base Contact"
-msgstr "Temel İlgili"
-
-#. module: base_contact
-#: field:res.partner.job,date_stop:0
-msgid "Date Stop"
-msgstr "Durma Tarihi"
-
-#. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.action_res_partner_job
-msgid "Contact's Jobs"
-msgstr "İlgilinin işleri"
-
-#. module: base_contact
-#: view:res.partner:0
-msgid "Categories"
-msgstr "Kategoriler"
-
-#. module: base_contact
-#: help:res.partner.job,sequence_partner:0
-msgid ""
-"Order of importance                 of this job title in the list of job "
-"title of the linked partner"
-msgstr "Bu görevin sırasının ilgili paydaşın görev listesindeki önemi"
-
-#. module: base_contact
-#: field:res.partner.job,extension:0
-msgid "Extension"
-msgstr "İçhat"
-
-#. module: base_contact
-#: help:res.partner.job,extension:0
-msgid "Internal/External extension phone number"
-msgstr "İçhat/Dışhat telefon no"
-
-#. module: base_contact
-#: help:res.partner.job,phone:0
-msgid "Job Phone no."
-msgstr "İş Telefon No"
+msgid "Extra Information"
+msgstr "Ek Bilgi"
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -214,181 +174,14 @@ msgstr "Görevler ve Adresleri"
 
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_contact
-#: field:res.partner.job,contact_id:0
+#: field:res.partner.address,contact_id:0
 msgid "Contact"
 msgstr "İlgili"
 
 #. module: base_contact
-#: help:res.partner.job,email:0
-msgid "Job E-Mail"
-msgstr "İş Eposta"
-
-#. module: base_contact
-#: field:res.partner.job,sequence_partner:0
-msgid "Partner Seq."
-msgstr "Paydaş Sıra No."
-
-#. module: base_contact
-#: model:process.transition,name:base_contact.process_transition_functiontoaddress0
-msgid "Function to address"
-msgstr "Adrese görev"
-
-#. module: base_contact
-#: field:base.contact.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Yapılandırma Aşaması"
-
-#. module: base_contact
-#: field:res.partner.contact,name:0
-msgid "Last Name"
-msgstr "Soyadı"
-
-#. module: base_contact
-#: view:res.partner:0
-#: view:res.partner.contact:0
-msgid "Communication"
-msgstr "İletişim"
-
-#. module: base_contact
-#: field:base.contact.installer,config_logo:0
-#: field:res.partner.contact,photo:0
-msgid "Image"
-msgstr "Resim"
-
-#. module: base_contact
-#: selection:res.partner.job,state:0
-msgid "Past"
-msgstr "Geçmiş"
-
-#. module: base_contact
-#: model:ir.model,name:base_contact.model_res_partner_address
-msgid "Partner Addresses"
-msgstr "Paydaş Adresleri"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "Address's Migration to Contacts"
-msgstr "Adreslerin Kişilere taşınması"
-
-#. module: base_contact
-#: field:res.partner.job,sequence_contact:0
-msgid "Contact Seq."
-msgstr "İlgili Sırası"
-
-#. module: base_contact
-#: view:res.partner.address:0
-msgid "Search Contact"
-msgstr "İlgili Ara"
-
-#. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.action_partner_contact_form
-#: model:ir.ui.menu,name:base_contact.menu_partner_contact_form
-#: model:ir.ui.menu,name:base_contact.menu_purchases_partner_contact_form
-#: model:process.node,name:base_contact.process_node_contacts0
-#: view:res.partner:0
-#: field:res.partner.address,job_ids:0
-msgid "Contacts"
-msgstr "İlgililer"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid ""
-"Due to changes in Address and Partner's relation, some of the details from "
-"address are needed to be migrated into contact information."
-msgstr ""
-"Adres vePaydaş ile ilgili değişiklikler nedeniyle adres ile ilgili bazı "
-"detaylar kişi bilgisine taşınmalı"
-
-#. module: base_contact
-#: model:process.node,note:base_contact.process_node_addresses0
-msgid "Working and private addresses."
-msgstr "İş ve Özel Adresler"
-
-#. module: base_contact
-#: help:res.partner.job,address_id:0
-msgid "Address which is linked to the Partner"
-msgstr "Paydaşı ile ilişkili olan adresler"
-
-#. module: base_contact
-#: field:res.partner.job,function:0
-msgid "Partner Function"
-msgstr "Paydaşın Görevi"
-
-#. module: base_contact
-#: help:res.partner.job,other:0
-msgid "Additional phone field"
-msgstr "Diğer Telefon no"
-
-#. module: base_contact
-#: field:res.partner.contact,website:0
-msgid "Website"
-msgstr "Web Sitesi"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "Otherwise these details will not be visible from address/contact."
-msgstr "Yoksa bu detaylar adres/kişiler bölümünde görülebilir olmayacak"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "Configure"
-msgstr "Yapılandır"
-
-#. module: base_contact
-#: field:res.partner.contact,email:0
-#: field:res.partner.job,email:0
-msgid "E-Mail"
-msgstr "E-posta"
-
-#. module: base_contact
-#: model:ir.model,name:base_contact.model_base_contact_installer
-msgid "base.contact.installer"
-msgstr "base.contact.installer"
-
-#. module: base_contact
-#: view:res.partner.job:0
-msgid "Contact Functions"
-msgstr "İlgili Görevi"
-
-#. module: base_contact
-#: field:res.partner.job,phone:0
-msgid "Phone"
-msgstr "Telefon"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "Do you want to migrate your Address data in Contact Data?"
-msgstr "Adres bilgilerini Kişi bilgilerine taşımak ister misiniz?"
-
-#. module: base_contact
-#: field:res.partner.contact,active:0
-msgid "Active"
-msgstr "Etkin"
-
-#. module: base_contact
-#: field:res.partner.contact,function:0
-msgid "Main Function"
-msgstr "Ana Görev"
-
-#. module: base_contact
-#: model:process.transition,note:base_contact.process_transition_partnertoaddress0
-msgid "Define partners and their addresses."
-msgstr "Paydaşları ve adreslerini tanımla"
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "Seq."
-msgstr "Sıra"
-
-#. module: base_contact
-#: field:res.partner.contact,lang_id:0
-msgid "Language"
-msgstr "Dil"
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "Extra Information"
-msgstr "Ek Bilgi"
+#: model:ir.model,name:base_contact.model_res_partner_location
+msgid "res.partner.location"
+msgstr "res.partner.location"
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_partners0
@@ -396,9 +189,40 @@ msgid "Companies you work with."
 msgstr "Birlikte çalıştığınız firmalar"
 
 #. module: base_contact
+#: field:res.partner.contact,partner_id:0
+msgid "Main Employer"
+msgstr "Ana İşveren"
+
+#. module: base_contact
 #: view:res.partner.contact:0
 msgid "Partner Contact"
 msgstr "Paydaş İlgilisi"
+
+#. module: base_contact
+#: model:process.node,name:base_contact.process_node_addresses0
+msgid "Addresses"
+msgstr "Adresler"
+
+#. module: base_contact
+#: model:process.node,note:base_contact.process_node_addresses0
+msgid "Working and private addresses."
+msgstr "İş ve Özel Adresler"
+
+#. module: base_contact
+#: field:res.partner.contact,last_name:0
+msgid "Last Name"
+msgstr "Soyadı"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+#: field:res.partner.contact,photo:0
+msgid "Photo"
+msgstr "Foto"
+
+#. module: base_contact
+#: view:res.partner.location:0
+msgid "Locations"
+msgstr "Lokasyonlar"
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -406,124 +230,42 @@ msgid "General"
 msgstr "Genel"
 
 #. module: base_contact
+#: field:res.partner.location,street:0
+msgid "Street"
+msgstr "Sokak"
+
+#. module: base_contact
 #: view:res.partner.contact:0
-msgid "Photo"
-msgstr "Foto"
+msgid "Partner"
+msgstr "Paydaş"
+
+#. module: base_contact
+#: model:process.node,name:base_contact.process_node_partners0
+msgid "Partners"
+msgstr "Paydaşlar"
+
+#. module: base_contact
+#: model:ir.model,name:base_contact.model_res_partner_address
+msgid "Partner Addresses"
+msgstr "Paydaş Adresleri"
+
+#. module: base_contact
+#: field:res.partner.location,street2:0
+msgid "Street2"
+msgstr "Sokak2"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "Personal Information"
+msgstr "Kişisel Bilgiler"
 
 #. module: base_contact
 #: field:res.partner.contact,birthdate:0
 msgid "Birth Date"
 msgstr "Doğum Tarihi"
 
-#. module: base_contact
-#: help:base.contact.installer,migrate:0
-msgid "If you select this, all addresses will be migrated."
-msgstr "Bunu seçerseniz, bütün adresler taşınacak"
-
-#. module: base_contact
-#: selection:res.partner.job,state:0
-msgid "Current"
-msgstr "Geçerli"
-
-#. module: base_contact
-#: field:res.partner.contact,first_name:0
-msgid "First Name"
-msgstr "Ad"
-
-#. module: base_contact
-#: model:ir.model,name:base_contact.model_res_partner_job
-msgid "Contact Partner Function"
-msgstr "Paydaş İlgilisi Görevi"
-
-#. module: base_contact
-#: field:res.partner.job,other:0
-msgid "Other"
-msgstr "Diğer"
-
-#. module: base_contact
-#: model:process.node,name:base_contact.process_node_function0
-msgid "Function"
-msgstr "Görev"
-
-#. module: base_contact
-#: field:res.partner.address,job_id:0
-#: field:res.partner.contact,job_id:0
-msgid "Main Job"
-msgstr "Ana İş"
-
-#. module: base_contact
-#: model:process.transition,note:base_contact.process_transition_contacttofunction0
-msgid "Defines contacts and functions."
-msgstr "İlgilileri ve görevleri tanımlar"
-
-#. module: base_contact
-#: model:process.transition,name:base_contact.process_transition_contacttofunction0
-msgid "Contact to function"
-msgstr "İlgili Görevi"
-
-#. module: base_contact
-#: view:res.partner:0
-#: field:res.partner.job,address_id:0
-msgid "Address"
-msgstr "Adres"
-
-#. module: base_contact
-#: field:res.partner.contact,country_id:0
-msgid "Nationality"
-msgstr "Uyruk"
-
-#. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.act_res_partner_jobs
-msgid "Open Jobs"
-msgstr "Açık İşler"
-
-#. module: base_contact
-#: field:base.contact.installer,name:0
-msgid "Name"
-msgstr "Ad"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "You can migrate Partner's current addresses to the contact."
-msgstr "Paydaşın güncel adreslerini ilgililere taşı"
-
-#. module: base_contact
-#: field:res.partner.contact,partner_id:0
-msgid "Main Employer"
-msgstr "Ana İşveren"
-
-#. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.action_base_contact_installer
-msgid "Address Migration"
-msgstr "Adres Taşıma"
-
-#. module: base_contact
-#: view:res.partner:0
-msgid "Postal Address"
-msgstr "Posta Adresi"
-
-#. module: base_contact
-#: model:process.node,name:base_contact.process_node_addresses0
-#: view:res.partner:0
-msgid "Addresses"
-msgstr "Adresler"
-
-#. module: base_contact
-#: model:process.transition,name:base_contact.process_transition_partnertoaddress0
-msgid "Partner to address"
-msgstr "Adreslenecek Paydaş"
-
-#. module: base_contact
-#: field:res.partner.job,date_start:0
-msgid "Date Start"
-msgstr "Başlangıç Tarihi"
-
-#. module: base_contact
-#: help:res.partner.job,sequence_contact:0
-msgid ""
-"Order of                     importance of this address in the list of "
-"addresses of the linked contact"
-msgstr "Bu adresin, ilgili kişinin adres listesindeki sıralamasının önemi"
+#~ msgid "Phone"
+#~ msgstr "Telefon"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
@@ -535,8 +277,214 @@ msgstr "Bu adresin, ilgili kişinin adres listesindeki sıralamasının önemi"
 #~ msgid "res.partner.contact"
 #~ msgstr "res.partner.contact"
 
+#~ msgid "Other"
+#~ msgstr "Diğer"
+
+#~ msgid "# of Contacts"
+#~ msgstr "İlgili Sayısı"
+
+#~ msgid "Date Stop"
+#~ msgstr "Durma Tarihi"
+
+#~ msgid "Address"
+#~ msgstr "Adres"
+
+#~ msgid "Categories"
+#~ msgstr "Kategoriler"
+
+#~ msgid "Seq."
+#~ msgstr "Sıra"
+
 #~ msgid "Partner Contacts"
 #~ msgstr "Cari İletişimleri"
 
+#~ msgid "State"
+#~ msgstr "Durum"
+
+#~ msgid "Past"
+#~ msgstr "Geçmiş"
+
 #~ msgid "General Information"
 #~ msgstr "Genel Bilgiler"
+
+#~ msgid "Fax"
+#~ msgstr "Faks"
+
+#~ msgid "Status of Address"
+#~ msgstr "Adres Durumu"
+
+#~ msgid "Job Phone no."
+#~ msgstr "İş Telefon No"
+
+#~ msgid "Migrate"
+#~ msgstr "Taşı"
+
+#~ msgid "Image"
+#~ msgstr "Resim"
+
+#~ msgid "Communication"
+#~ msgstr "İletişim"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Yapılandırma Aşaması"
+
+#~ msgid "Additional phone field"
+#~ msgstr "Diğer Telefon no"
+
+#~ msgid "Configure"
+#~ msgstr "Yapılandır"
+
+#~ msgid "If you select this, all addresses will be migrated."
+#~ msgstr "Bunu seçerseniz, bütün adresler taşınacak"
+
+#~ msgid "Job FAX no."
+#~ msgstr "İş Faks No"
+
+#~ msgid "Otherwise these details will not be visible from address/contact."
+#~ msgstr "Yoksa bu detaylar adres/kişiler bölümünde görülebilir olmayacak"
+
+#~ msgid "Address's Migration to Contacts"
+#~ msgstr "Adreslerin Kişilere taşınması"
+
+#~ msgid "Do you want to migrate your Address data in Contact Data?"
+#~ msgstr "Adres bilgilerini Kişi bilgilerine taşımak ister misiniz?"
+
+#~ msgid ""
+#~ "Order of                     importance of this address in the list of "
+#~ "addresses of the linked contact"
+#~ msgstr "Bu adresin, ilgili kişinin adres listesindeki sıralamasının önemi"
+
+#~ msgid "Select the Option for Addresses Migration"
+#~ msgstr "Adreslerin taşınması için ilgili seçeneği seçiniz"
+
+#~ msgid "Last date of job"
+#~ msgstr "İşin son tarihi"
+
+#~ msgid "base.contact.installer"
+#~ msgstr "base.contact.installer"
+
+#~ msgid ""
+#~ "You may                     enter Address first,Partner will be linked "
+#~ "automatically if any."
+#~ msgstr ""
+#~ "Önce adresi girin, eğer varsaPaydaş otomatik olarak ilişkilendirilecek"
+
+#~ msgid "Function of this contact with this partner"
+#~ msgstr "Bu kişininbu paydaşdaki görevi"
+
+#~ msgid "title"
+#~ msgstr "unvan"
+
+#~ msgid "Start date of job(Joining Date)"
+#~ msgstr "İşin Başlangıç Tarihi (katılım Tarihi)"
+
+#~ msgid "Define functions and address."
+#~ msgstr "Görev ve Adres Tanımları"
+
+#~ msgid "Jobs at a same partner address."
+#~ msgstr "Aynı paydaş adresindeki görevler"
+
+#~ msgid "Contact's Jobs"
+#~ msgstr "İlgilinin işleri"
+
+#~ msgid ""
+#~ "Order of importance                 of this job title in the list of job "
+#~ "title of the linked partner"
+#~ msgstr "Bu görevin sırasının ilgili paydaşın görev listesindeki önemi"
+
+#~ msgid ""
+#~ "\n"
+#~ "        This module allows you to manage your contacts entirely.\n"
+#~ "\n"
+#~ "    It lets you define\n"
+#~ "        *contacts unrelated to a partner,\n"
+#~ "        *contacts working at several addresses (possibly for different "
+#~ "partners),\n"
+#~ "        *contacts with possibly different functions for each of its job's "
+#~ "addresses\n"
+#~ "\n"
+#~ "    It also adds new menu items located in\n"
+#~ "        Partners \\ Contacts\n"
+#~ "        Partners \\ Functions\n"
+#~ "\n"
+#~ "    Pay attention that this module converts the existing addresses into "
+#~ "\"addresses + contacts\". It means that some fields of the addresses will be "
+#~ "missing (like the contact name), since these are supposed to be defined in "
+#~ "an other object.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        ........Bu bölüm listenizdeki tüm kişileri yönetmenize imkan sağlar\n"
+#~ "\n"
+#~ "    Tanımlamanıza izin verir\n"
+#~ "        *Paydaş ile ilgili olmayan kişiler,\n"
+#~ "        *birkaç farklı adreste çalışan kişiler (farklı iş ortakları için)\n"
+#~ "        *her iş adresinde farklı işlev gösteren kişiler\n"
+#~ "    "
+
+#~ msgid "Internal/External extension phone number"
+#~ msgstr "İçhat/Dışhat telefon no"
+
+#~ msgid "Extension"
+#~ msgstr "İçhat"
+
+#~ msgid "Job E-Mail"
+#~ msgstr "İş Eposta"
+
+#~ msgid "Function to address"
+#~ msgstr "Adrese görev"
+
+#~ msgid "Partner Seq."
+#~ msgstr "Paydaş Sıra No."
+
+#~ msgid "Address which is linked to the Partner"
+#~ msgstr "Paydaşı ile ilişkili olan adresler"
+
+#~ msgid ""
+#~ "Due to changes in Address and Partner's relation, some of the details from "
+#~ "address are needed to be migrated into contact information."
+#~ msgstr ""
+#~ "Adres vePaydaş ile ilgili değişiklikler nedeniyle adres ile ilgili bazı "
+#~ "detaylar kişi bilgisine taşınmalı"
+
+#~ msgid "Partner Function"
+#~ msgstr "Paydaşın Görevi"
+
+#~ msgid "Search Contact"
+#~ msgstr "İlgili Ara"
+
+#~ msgid "Contact Seq."
+#~ msgstr "İlgili Sırası"
+
+#~ msgid "Contact Functions"
+#~ msgstr "İlgili Görevi"
+
+#~ msgid "Main Job"
+#~ msgstr "Ana İş"
+
+#~ msgid "Defines contacts and functions."
+#~ msgstr "İlgilileri ve görevleri tanımlar"
+
+#~ msgid "Contact Partner Function"
+#~ msgstr "Paydaş İlgilisi Görevi"
+
+#~ msgid "Contact to function"
+#~ msgstr "İlgili Görevi"
+
+#~ msgid "Current"
+#~ msgstr "Geçerli"
+
+#~ msgid "Function"
+#~ msgstr "Görev"
+
+#~ msgid "Address Migration"
+#~ msgstr "Adres Taşıma"
+
+#~ msgid "Date Start"
+#~ msgstr "Başlangıç Tarihi"
+
+#~ msgid "Open Jobs"
+#~ msgstr "Açık İşler"
+
+#~ msgid "You can migrate Partner's current addresses to the contact."
+#~ msgstr "Paydaşın güncel adreslerini ilgililere taşı"

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16:04+0000\n"
-"PO-Revision-Date: 2011-01-11 11:16:04+0000\n"
+"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-02-08 00:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,21 +16,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_layout
-#: selection:sale.order.line,layout_type:0
-msgid "Sub Total"
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
 msgstr ""
 
 #. module: sale_layout
-#: model:ir.module.module,description:sale_layout.module_meta_information
-msgid "\n"
-"    This module provides features to improve the layout of the Sales Order.\n"
-"\n"
-"    It gives you the possibility to\n"
-"        * order all the lines of a sales order\n"
-"        * add titles, comment lines, sub total lines\n"
-"        * draw horizontal lines and put page breaks\n"
-"\n"
-"    "
+#: selection:sale.order.line,layout_type:0
+msgid "Sub Total"
 msgstr ""
 
 #. module: sale_layout
@@ -49,8 +41,8 @@ msgid "Note"
 msgstr ""
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Unit Price"
+#: field:sale.order.line,layout_type:0
+msgid "Line Type"
 msgstr ""
 
 #. module: sale_layout
@@ -69,13 +61,13 @@ msgid "Disc.(%)"
 msgstr ""
 
 #. module: sale_layout
-#: field:sale.order.line,layout_type:0
-msgid "Layout Type"
+#: report:sale.order.layout:0
+msgid "Unit Price"
 msgstr ""
 
 #. module: sale_layout
 #: view:sale.order:0
-msgid "Seq."
+msgid "Invoice Lines"
 msgstr ""
 
 #. module: sale_layout
@@ -89,18 +81,8 @@ msgid "Product"
 msgstr ""
 
 #. module: sale_layout
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr ""
-
-#. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Description"
-msgstr ""
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Manual Description"
 msgstr ""
 
 #. module: sale_layout
@@ -109,13 +91,8 @@ msgid "Our Salesman"
 msgstr ""
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "Automatic Declaration"
-msgstr ""
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Invoice Lines"
+#: report:sale.order.layout:0
+msgid "Tel. :"
 msgstr ""
 
 #. module: sale_layout
@@ -149,13 +126,8 @@ msgid "Invoice address :"
 msgstr ""
 
 #. module: sale_layout
-#: model:ir.module.module,shortdesc:sale_layout.module_meta_information
-msgid "Sale Order Layout"
-msgstr ""
-
-#. module: sale_layout
-#: selection:sale.order.line,layout_type:0
-msgid "Page Break"
+#: report:sale.order.layout:0
+msgid "Fax :"
 msgstr ""
 
 #. module: sale_layout
@@ -174,6 +146,7 @@ msgid "Shipping address :"
 msgstr ""
 
 #. module: sale_layout
+#: view:sale.order:0
 #: report:sale.order.layout:0
 msgid "Taxes"
 msgstr ""
@@ -181,11 +154,6 @@ msgstr ""
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Net Total :"
-msgstr ""
-
-#. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Tel. :"
 msgstr ""
 
 #. module: sale_layout
@@ -201,11 +169,6 @@ msgstr ""
 #. module: sale_layout
 #: view:sale.order:0
 msgid "History"
-msgstr ""
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Sale Order Lines"
 msgstr ""
 
 #. module: sale_layout
@@ -259,8 +222,8 @@ msgid "Taxes :"
 msgstr ""
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Fax :"
+#: selection:sale.order.line,layout_type:0
+msgid "Page Break"
 msgstr ""
 
 #. module: sale_layout

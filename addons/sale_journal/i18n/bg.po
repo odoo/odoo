@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2010-08-03 06:05+0000\n"
 "Last-Translator: Boris <boris.t.ivanov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:22+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:33+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
+
+#. module: sale_journal
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -22,19 +27,21 @@ msgid "Note"
 msgstr "Бележка"
 
 #. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr ""
+
+#. module: sale_journal
 #: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and picking."
-msgstr "Видът на дневника използван за продажби и събиране."
+msgid ""
+"This invoicing type will be used, by default, for invoicing the current "
+"partner."
+msgstr ""
 
 #. module: sale_journal
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "Препратката на поръчката трябва да бъде уникална!"
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Фактуриране"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -56,60 +63,16 @@ msgid "Notes"
 msgstr "Бележки"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Method"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
 msgstr "Метод на фактуриране"
 
 #. module: sale_journal
-#: model:ir.module.module,description:sale_journal.module_meta_information
-msgid ""
-"\n"
-"    The sales journal modules allows you to categorise your\n"
-"    sales and deliveries (picking lists) between different journals.\n"
-"    This module is very helpful for bigger companies that\n"
-"    works by departments.\n"
-"\n"
-"    You can use journal for different purposes, some examples:\n"
-"    * isolate sales of different departments\n"
-"    * journals for deliveries by truck or by UPS\n"
-"\n"
-"    Journals have a responsible and evolves between different status:\n"
-"    * draft, open, cancel, done.\n"
-"\n"
-"    Batch operations can be processed on the different journals to\n"
-"    confirm all sales at once, to validate or invoice packing, ...\n"
-"\n"
-"    It also supports batch invoicing methods that can be configured by\n"
-"    partners and sales orders, examples:\n"
-"    * daily invoicing,\n"
-"    * monthly invoicing, ...\n"
-"\n"
-"    Some statistics by journals are provided.\n"
-"    "
-msgstr ""
-"\n"
-"    Модула за дневник на продажбите дава възможност за категоризиране\n"
-"на продажби и доставки (събиране на списъци) между различни дневници.\n"
-"Този модул е много полезен за големи предприятия, които\n"
-"работят по отдели.\n"
-"\n"
-"Можете да използвате дневника за различни цели, няколко примера:\n"
-"* изолиране на продажбите на различните отдели\n"
-"* дневници за доставки с камион или чрез UPS\n"
-"Дневника е отворен и се развива в различните състояния:\n"
-"* проект, отворен, отказан,  направен.\n"
-"Група операции могат да бъдат преработени в различни дневници\n"
-"потвърдени всички продажби наведнъж, за валидиране или фактура за опаковане, "
-"...\n"
-"\n"
-"Също така подкрепя методи за партидно фактуриране, които могат да се "
-"конфигурират от\n"
-"партньори и поръчки за продажба, примери:\n"
-"* ежедневно фактуриране\n"
-"* месечно фактуриране, ...\n"
-"\n"
-"Някои статистики от дневниците са предвидени.\n"
-"    "
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Видове фактури"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -120,11 +83,6 @@ msgstr "Негрупирани"
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
 msgstr "Групиран"
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Грешка ! Не може да създадете рекурсивно свързани членове"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -139,14 +97,9 @@ msgstr ""
 "месечни и т.н."
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Метод на фактуриране"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sales Order"
-msgstr "Поръчка за продажба"
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -167,11 +120,9 @@ msgid "Partner"
 msgstr "Партньор"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Видове фактури"
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
+msgstr "Поръчка за продажба"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
@@ -179,9 +130,9 @@ msgid "Picking List"
 msgstr "Списък за товарене"
 
 #. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr "Управление на продажби и доставки по дневник"
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "Фактуриране"
 
 #~ msgid "Journal date"
 #~ msgstr "Дата от дневник"
@@ -246,6 +197,9 @@ msgstr "Управление на продажби и доставки по дн
 #~ msgid "Open journals"
 #~ msgstr "Отваряне на дневници"
 
+#~ msgid "Managing sales and deliveries by journal"
+#~ msgstr "Управление на продажби и доставки по дневник"
+
 #~ msgid "Order State"
 #~ msgstr "Състояние на поръчка"
 
@@ -308,6 +262,9 @@ msgstr "Управление на продажби и доставки по дн
 
 #~ msgid "Code"
 #~ msgstr "Код"
+
+#~ msgid "Invoicing Method"
+#~ msgstr "Метод на фактуриране"
 
 #~ msgid "Cancel"
 #~ msgstr "Отказ"
@@ -431,3 +388,61 @@ msgstr "Управление на продажби и доставки по дн
 
 #~ msgid "Stats on packing by invoice method"
 #~ msgstr "Статистика за пакетиране според начина на фактуруране"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Препратката на поръчката трябва да бъде уникална!"
+
+#~ msgid "The type of journal used for sales and picking."
+#~ msgstr "Видът на дневника използван за продажби и събиране."
+
+#~ msgid ""
+#~ "\n"
+#~ "    The sales journal modules allows you to categorise your\n"
+#~ "    sales and deliveries (picking lists) between different journals.\n"
+#~ "    This module is very helpful for bigger companies that\n"
+#~ "    works by departments.\n"
+#~ "\n"
+#~ "    You can use journal for different purposes, some examples:\n"
+#~ "    * isolate sales of different departments\n"
+#~ "    * journals for deliveries by truck or by UPS\n"
+#~ "\n"
+#~ "    Journals have a responsible and evolves between different status:\n"
+#~ "    * draft, open, cancel, done.\n"
+#~ "\n"
+#~ "    Batch operations can be processed on the different journals to\n"
+#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
+#~ "\n"
+#~ "    It also supports batch invoicing methods that can be configured by\n"
+#~ "    partners and sales orders, examples:\n"
+#~ "    * daily invoicing,\n"
+#~ "    * monthly invoicing, ...\n"
+#~ "\n"
+#~ "    Some statistics by journals are provided.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Модула за дневник на продажбите дава възможност за категоризиране\n"
+#~ "на продажби и доставки (събиране на списъци) между различни дневници.\n"
+#~ "Този модул е много полезен за големи предприятия, които\n"
+#~ "работят по отдели.\n"
+#~ "\n"
+#~ "Можете да използвате дневника за различни цели, няколко примера:\n"
+#~ "* изолиране на продажбите на различните отдели\n"
+#~ "* дневници за доставки с камион или чрез UPS\n"
+#~ "Дневника е отворен и се развива в различните състояния:\n"
+#~ "* проект, отворен, отказан,  направен.\n"
+#~ "Група операции могат да бъдат преработени в различни дневници\n"
+#~ "потвърдени всички продажби наведнъж, за валидиране или фактура за опаковане, "
+#~ "...\n"
+#~ "\n"
+#~ "Също така подкрепя методи за партидно фактуриране, които могат да се "
+#~ "конфигурират от\n"
+#~ "партньори и поръчки за продажба, примери:\n"
+#~ "* ежедневно фактуриране\n"
+#~ "* месечно фактуриране, ...\n"
+#~ "\n"
+#~ "Някои статистики от дневниците са предвидени.\n"
+#~ "    "
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Грешка ! Не може да създадете рекурсивно свързани членове"

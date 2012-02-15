@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-02-02 20:17+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
 "<openerp@novotrade.hu>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:47+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:00+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,planned_revenue:0
@@ -102,14 +102,20 @@ msgid "Messages"
 msgstr "Üzenetek"
 
 #. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "My company"
+msgstr ""
+
+#. module: crm_fundraising
 #: view:crm.fundraising:0
 msgid "Amount"
 msgstr "Összeg"
 
 #. module: crm_fundraising
-#: model:crm.case.categ,name:crm_fundraising.categ_fund4
-msgid "Arts And Culture"
-msgstr "Művészetek és Kultúra"
+#: selection:crm.fundraising,state:0
+#: selection:crm.fundraising.report,state:0
+msgid "Cancelled"
+msgstr "Törölt"
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
@@ -118,14 +124,14 @@ msgid "Est.Revenue"
 msgstr "Becsült bevétel"
 
 #. module: crm_fundraising
-#: field:crm.fundraising,partner_address_id:0
-msgid "Partner Contact"
-msgstr "Partner kapcsolat"
+#: view:crm.fundraising:0
+msgid "Open Funds"
+msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "   Month   "
-msgstr "   Hónap   "
+#: field:crm.fundraising,ref:0
+msgid "Reference"
+msgstr "Hivatkozás"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,type_id:0
@@ -162,15 +168,15 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Funds raised in current year"
+msgstr ""
+
+#. module: crm_fundraising
 #: model:ir.actions.act_window,name:crm_fundraising.action_report_crm_fundraising
 #: model:ir.ui.menu,name:crm_fundraising.menu_report_crm_fundraising_tree
 msgid "Fundraising Analysis"
 msgstr "Tőkebevonás elemzése"
-
-#. module: crm_fundraising
-#: model:ir.module.module,shortdesc:crm_fundraising.module_meta_information
-msgid "CRM Fundraising"
-msgstr "CRM tőkebevonás"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -200,14 +206,21 @@ msgstr "Szociális rehabilitáció és Vidékfejlesztés"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
+msgid "Pending Funds"
+msgstr ""
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
 #: view:crm.fundraising.report:0
 msgid "Payment Mode"
 msgstr "Fizetési mód"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Reply"
-msgstr "Válasz"
+#: selection:crm.fundraising,state:0
+#: view:crm.fundraising.report:0
+msgid "New"
+msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising,email_from:0
@@ -215,14 +228,15 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: crm_fundraising
-#: field:crm.fundraising,canal_id:0
-msgid "Channel"
-msgstr "Csatorna"
-
-#. module: crm_fundraising
 #: selection:crm.fundraising,priority:0
 msgid "Lowest"
 msgstr "Legalacsonyabb"
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+#: view:crm.fundraising.report:0
+msgid "My Sales Team(s)"
+msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising,create_date:0
@@ -265,17 +279,6 @@ msgid "Employee Email"
 msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "    Month-1    "
-msgstr "    Előző hónap    "
-
-#. module: crm_fundraising
-#: selection:crm.fundraising,state:0
-#: selection:crm.fundraising.report,state:0
-msgid "Cancelled"
-msgstr "Törölt"
-
-#. module: crm_fundraising
 #: model:crm.case.categ,name:crm_fundraising.categ_fund2
 msgid "Learning And Education"
 msgstr "Tanulás ás Oktatás"
@@ -301,13 +304,17 @@ msgid "Number of Days to close the case"
 msgstr "Napok száma az eset lezárásáig"
 
 #. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Funds raised in current month"
+msgstr ""
+
+#. module: crm_fundraising
 #: view:crm.fundraising:0
 msgid "References"
 msgstr "Hivatkozások"
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
-#: model:ir.module.module,description:crm_fundraising.module_meta_information
 msgid "Fundraising"
 msgstr "Tőkebevonás"
 
@@ -366,14 +373,14 @@ msgid "Salesman"
 msgstr "Értékesítő"
 
 #. module: crm_fundraising
-#: field:crm.fundraising,ref:0
-msgid "Reference"
-msgstr "Hivatkozás"
-
-#. module: crm_fundraising
 #: field:crm.fundraising,ref2:0
 msgid "Reference 2"
 msgstr "Hivatkozás 2"
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Funds raised in last month"
+msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -384,9 +391,9 @@ msgid "Category"
 msgstr "Kategória"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "  Year  "
-msgstr "  Év  "
+#: model:crm.case.categ,name:crm_fundraising.categ_fund4
+msgid "Arts And Culture"
+msgstr "Művészetek és Kultúra"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,planned_cost:0
@@ -404,8 +411,6 @@ msgid ""
 msgstr ""
 
 #. module: crm_fundraising
-#: selection:crm.fundraising,state:0
-#: view:crm.fundraising.report:0
 #: selection:crm.fundraising.report,state:0
 msgid "Draft"
 msgstr "Tervezet"
@@ -434,11 +439,6 @@ msgstr "Függőben lévő"
 #: view:crm.fundraising:0
 msgid "Communication & History"
 msgstr ""
-
-#. module: crm_fundraising
-#: model:ir.ui.menu,name:crm_fundraising.menu_crm_fundraising_stage_act
-msgid "Stages"
-msgstr "Szakaszok"
 
 #. module: crm_fundraising
 #: selection:crm.fundraising.report,month:0
@@ -477,9 +477,9 @@ msgid "User"
 msgstr "Felhasználó"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "#Fundraising"
-msgstr "Tőkebevonás száma"
+#: model:crm.case.resource.type,name:crm_fundraising.type_fund2
+msgid "Cheque"
+msgstr "Csekk"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,active:0
@@ -512,9 +512,9 @@ msgid "January"
 msgstr "Január"
 
 #. module: crm_fundraising
-#: model:crm.case.resource.type,name:crm_fundraising.type_fund2
-msgid "Cheque"
-msgstr "Csekk"
+#: view:crm.fundraising.report:0
+msgid "#Fundraising"
+msgstr "Tőkebevonás száma"
 
 #. module: crm_fundraising
 #: model:ir.actions.act_window,help:crm_fundraising.crm_fund_categ_action
@@ -527,6 +527,11 @@ msgstr ""
 #: help:crm.fundraising,email_from:0
 msgid "These people will receive email."
 msgstr "Ezek az emberek fogják megkapni az e-mailt."
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "Fund Category"
+msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising,date:0
@@ -544,14 +549,14 @@ msgid "History"
 msgstr "Előzmény"
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Attachments"
-msgstr "Mellékletek"
+#: field:crm.fundraising,partner_address_id:0
+msgid "Partner Contact"
+msgstr "Partner kapcsolat"
 
 #. module: crm_fundraising
-#: model:ir.model,name:crm_fundraising.model_crm_case_stage
-msgid "Stage of case"
-msgstr "Eset szakasza"
+#: view:crm.fundraising.report:0
+msgid "Month of fundraising"
+msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -565,6 +570,11 @@ msgstr ""
 #: field:crm.fundraising.report,state:0
 msgid "State"
 msgstr "Állapot"
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "Unassigned"
+msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -585,10 +595,14 @@ msgstr "Mégsem"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-#: selection:crm.fundraising,state:0
 #: view:crm.fundraising.report:0
 #: selection:crm.fundraising.report,state:0
 msgid "Open"
+msgstr ""
+
+#. module: crm_fundraising
+#: selection:crm.fundraising,state:0
+msgid "In Progress"
 msgstr ""
 
 #. module: crm_fundraising
@@ -606,11 +620,6 @@ msgid "Responsible"
 msgstr "Felelős"
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Current"
-msgstr "Jelenleg"
-
-#. module: crm_fundraising
 #: help:crm.fundraising,section_id:0
 msgid ""
 "Sales team to which Case belongs to. Define Responsible user and Email "
@@ -618,14 +627,25 @@ msgid ""
 msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Details"
-msgstr "Részletek"
-
-#. module: crm_fundraising
 #: model:ir.model,name:crm_fundraising.model_crm_fundraising_report
 msgid "CRM Fundraising Report"
 msgstr "CRM tőkebevonás jelentés"
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "Reply"
+msgstr "Válasz"
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Date of fundraising"
+msgstr ""
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+#: field:crm.fundraising.report,amount_revenue_prob:0
+msgid "Est. Rev*Prob."
+msgstr "Becsült bevétel*Valószínűség"
 
 #. module: crm_fundraising
 #: field:crm.fundraising.report,type_id:0
@@ -633,10 +653,9 @@ msgid "Fundraising Type"
 msgstr "Tőkebevonás típusa"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-#: field:crm.fundraising.report,amount_revenue_prob:0
-msgid "Est. Rev*Prob."
-msgstr "Becsült bevétel*Valószínűség"
+#: view:crm.fundraising:0
+msgid "New Funds"
+msgstr ""
 
 #. module: crm_fundraising
 #: model:ir.actions.act_window,help:crm_fundraising.crm_fundraising_stage_act
@@ -664,13 +683,6 @@ msgstr "Valószínűség (%)"
 #: field:crm.fundraising,partner_name:0
 msgid "Employee's Name"
 msgstr "Alkalmazott neve"
-
-#. module: crm_fundraising
-#: help:crm.fundraising,canal_id:0
-msgid ""
-"The channels represent the different communication  modes available with the "
-"customer."
-msgstr ""
 
 #. module: crm_fundraising
 #: help:crm.fundraising,state:0
@@ -703,6 +715,11 @@ msgstr "Készpénz"
 #. module: crm_fundraising
 #: view:crm.fundraising:0
 msgid "Funds by Categories"
+msgstr ""
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Month-1"
 msgstr ""
 
 #. module: crm_fundraising
@@ -762,3 +779,33 @@ msgstr "Év"
 #: field:crm.fundraising,duration:0
 msgid "Duration"
 msgstr "Időtartam"
+
+#~ msgid "Stages"
+#~ msgstr "Szakaszok"
+
+#~ msgid "   Month   "
+#~ msgstr "   Hónap   "
+
+#~ msgid "Channel"
+#~ msgstr "Csatorna"
+
+#~ msgid "  Year  "
+#~ msgstr "  Év  "
+
+#~ msgid "Stage of case"
+#~ msgstr "Eset szakasza"
+
+#~ msgid "Attachments"
+#~ msgstr "Mellékletek"
+
+#~ msgid "Details"
+#~ msgstr "Részletek"
+
+#~ msgid "Current"
+#~ msgstr "Jelenleg"
+
+#~ msgid "CRM Fundraising"
+#~ msgstr "CRM tőkebevonás"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Előző hónap    "

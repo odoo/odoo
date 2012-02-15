@@ -6,24 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-13 18:39+0000\n"
-"Last-Translator: Jan Verlaan @ Veritos <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-08 09:34+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:20+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_invoiced:0
-msgid ""
-"Number of hours that can be invoiced plus those that already have been "
-"invoiced."
-msgstr ""
-"Aantal uren dat kan worden gefactureerd plus het aantal uren dat al "
-"gefactureerd is."
+#: field:account.analytic.account,revenue_per_hour:0
+msgid "Revenue per Time (real)"
+msgstr "Opbrengst per tijdseenheid (werkelijk)"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -31,40 +27,52 @@ msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr "Berekend met de formule: max factuurprijs - gefactureerd bedrag"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,remaining_hours:0
-msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-msgstr "Berekend met de formule: maximum hoeveelheid - totaal aantal uren"
+#: help:account.analytic.account,last_worked_date:0
+msgid "Date of the latest work done on this account."
+msgstr "Datum van de laatste werkzaamheden geboekt op deze rekening"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
-#, python-format
-msgid "AccessError"
-msgstr "Toegangsfout"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_invoice_date:0
-msgid "Date of the last invoice created for this analytic account."
-msgstr "Datum van de laatst aangemaakte factuur voor deze kostenplaats"
-
-#. module: account_analytic_analysis
-#: model:ir.module.module,description:account_analytic_analysis.module_meta_information
+#: view:account.analytic.account:0
 msgid ""
-"\n"
-"This module is for modifying account analytic view to show\n"
-"important data to project manager of services companies.\n"
-"Adds menu to show relevant information to each manager..\n"
-"\n"
-"You can also view the report of account analytic summary\n"
-"user-wise as well as month wise.\n"
+"The contracts to be renewed because the deadline is passed or the working "
+"hours are higher than the allocated hours"
 msgstr ""
-"\n"
-"Deze module is voor het wijzigen van de view op kostenplaatsten om\n"
-"belangrijke data aan de projectmanager van serviceberdijven te tonen.\n"
-"Voegt een menu toe om relevante informatie aan elke manager te tonen.\n"
-"\n"
-"U kunt ook het rapport bekijken met een samenvatting van de\n"
-"kostenplaatsrekening, zowel op gebruikersnivo als maandnivo.\n"
+"Contracten welke vernieuwd moeten worden omdat de deadline is verstreken of "
+"de werkuren zijn hoger dan de toegewezen uren."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending contracts to renew with your customer"
+msgstr "Lopende contracten met klanten welke vernieuwd moeten worden"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
+"Hoeveelheid tijd (uren/dagen) (van journaal 'algemeen') dat kan worden "
+"gefactureerd als u factureert op basis van kostenplaatsen."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Analytic Accounts with a past deadline in one month."
+msgstr "Kostenplaatsen met een deadline in het verleden in een maand"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Group By..."
+msgstr "Groepeer op..."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "End Date"
+msgstr "Einddatum"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Create Invoice"
+msgstr "Maak factuur"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -77,14 +85,50 @@ msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr "Berekend met de formule: theoretische omzet - totale kosten"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin_rate:0
-msgid "Real Margin Rate (%)"
-msgstr "Werkelijke marge (%)"
+#: help:account.analytic.account,hours_quantity:0
+msgid ""
+"Number of time you spent on the analytic account (from timesheet). It "
+"computes quantities on all journal of type 'general'."
+msgstr ""
+"Totaal aantal uren gespendeerd aan een kostenplaats (van urenstaat). Het "
+"berekend aantallen van alle journaals van het type 'algemeen'."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts in progress"
+msgstr "Contracten in behandeling"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,is_overdue_quantity:0
+msgid "Overdue Quantity"
+msgstr "Hoeveelheid over tijd"
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
+msgid ""
+"You will find here the contracts to be renewed because the deadline is "
+"passed or the working hours are higher than the allocated hours. OpenERP "
+"automatically sets these analytic accounts to the pending state, in order to "
+"raise a warning during the timesheets recording. Salesmen should review all "
+"pending accounts and reopen or close the according to the negotiation with "
+"the customer."
+msgstr ""
+"U vindt hier de contracten welke moeten worden vernieuwd omdat de deadline "
+"is verstreken of de werktijden hoger zijn dan de toegewezen uren. OpenERP "
+"zet automatisch deze kostenplaatsen in de wachtstand, om een waarschuwing te "
+"geven  tijdens de urenstaat ingave. Verkopers dienen alle lopende rekeningen "
+"te bekijken en opnieuw te openen of sluiten op basis van de onderhandelingen "
+"met de klant."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
 msgstr "Theoretische ontvangsten"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_qtt_non_invoiced:0
+msgid "Uninvoiced Time"
+msgstr "Ongefactureerde uren"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -96,9 +140,9 @@ msgstr ""
 "gefactureerde werkzaamheden of kosten"
 
 #. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
-msgid "Billing"
-msgstr "Facturatie"
+#: view:account.analytic.account:0
+msgid "To Renew"
+msgstr "Te vernieuwen"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -106,28 +150,37 @@ msgid "Date of Last Cost/Work"
 msgstr "Datum van laatste kosten/werkzaamheden"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,total_cost:0
-msgid "Total Costs"
-msgstr "Totale kosten"
+#: field:account.analytic.account,hours_qtt_invoiced:0
+msgid "Invoiced Time"
+msgstr "Gefactureerde tijd"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_quantity:0
+#: view:account.analytic.account:0
 msgid ""
-"Number of hours you spent on the analytic account (from timesheet). It "
-"computes on all journal of type 'general'."
+"A contract in OpenERP is an analytic account having a partner set on it."
 msgstr ""
-"Aantal uren dat u heeft besteed aan de kostenplaats (van urenstaat). Het "
-"wordt berekend op alle dagboeken van de soort 'algemeen'"
+"Een contract in OpenERP is een kostenplaats met een gekoppelde relatie."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
-msgid "Remaining Hours"
-msgstr "Resterende uren"
+msgid "Remaining Time"
+msgstr "Resterende tijd"
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
+msgid "Contracts to Renew"
+msgstr "Te vernieuwen contracten"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
 msgstr "Theoretische marge"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid " +1 Month"
+msgstr " +1 maand"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -141,10 +194,9 @@ msgstr ""
 "verkoopprijs volgens de prijslijst."
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,user_ids:0
-#: field:account_analytic_analysis.summary.user,user:0
-msgid "User"
-msgstr "Gebruiker"
+#: view:account.analytic.account:0
+msgid "Pending"
+msgstr "In afwachting"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
@@ -157,19 +209,20 @@ msgid "Computed using the formula: Invoiced Amount - Total Costs."
 msgstr "Berekend met de formule: gefactureerd bedrag - totale kosten."
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_qtt_non_invoiced:0
-msgid "Uninvoiced Hours"
-msgstr "Ongefactureerde uren"
+#: view:account.analytic.account:0
+msgid "Parent"
+msgstr "Bovenliggend"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_date:0
-msgid "Date of the latest work done on this account."
-msgstr "Datum van de laatste werkzaamheden geboekt op deze rekening"
+#: field:account.analytic.account,user_ids:0
+#: field:account_analytic_analysis.summary.user,user:0
+msgid "User"
+msgstr "Gebruiker"
 
 #. module: account_analytic_analysis
-#: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
-msgid "report_account_analytic"
-msgstr "report_account_analytic"
+#: help:account.analytic.account,real_margin_rate:0
+msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
+msgstr "Berekend met de formule: (werkelijke marge / totale kosten) * 100."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -182,35 +235,24 @@ msgid "Invoiced Amount"
 msgstr "Gefactureerd bedrag"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
-#, python-format
-msgid "You try to bypass an access rule (Document type: %s)."
-msgstr "U probeert een toegangsregel te omzeilen (Document type: %s)."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
 msgstr "Datum van laatste gefactureerde kosten"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_qtt_invoiced:0
-msgid "Invoiced Hours"
-msgstr "Gefactureerde uren"
+#: view:account.analytic.account:0
+msgid "Contract"
+msgstr "Contract"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,real_margin_rate:0
+msgid "Real Margin Rate (%)"
+msgstr "Werkelijke marge (%)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Werkelijke marge"
-
-#. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
-"Fout! De munteenheid moet hetzelfde zijn als de munteenheid van het "
-"geselecteerde bedrijf"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -223,28 +265,28 @@ msgid "Hours summary by month"
 msgstr "Bestede uren per maand"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,real_margin_rate:0
-msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr "Berekend met de formule: (werkelijke marge / totale kosten) * 100."
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of hours (from journal of type 'general') that can be invoiced if you "
-"invoice based on analytic account."
-msgstr ""
-"Aantal uren (van journaal van soort 'algemeen') die kunnen worden "
-"gefactureerd wanneer u factureerd op basis van kostenplaatsen."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Analytic accounts"
-msgstr "Kostenplaatsen"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "Fout! U kunt geen recursieve kostenplaatsen maken."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
 msgid "Remaining Revenue"
 msgstr "Resterende omzet"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,remaining_hours:0
+msgid "Computed using the formula: Maximum Time - Total Time"
+msgstr "De berekening gebruikt de formule: Maximale tijd - Totale tijd"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,hours_qtt_invoiced:0
+msgid ""
+"Number of time (hours/days) that can be invoiced plus those that already "
+"have been invoiced."
+msgstr ""
+"Hoeveelheid tijd (uren/dagen) dat kan worden gefactureerd plus hetgeen dat "
+"al is gefactureerd."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -257,19 +299,14 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
-msgid "Computed using the formula: Invoiced Amount / Hours Tot."
-msgstr "Berekend met de formule: gefactureerd bedrag / totaal aantal uren"
+msgid "Computed using the formula: Invoiced Amount / Total Time"
+msgstr ""
+"De berekening gebruikt de formule: Gefactureerde hoeveelheid / Totale tijd"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,revenue_per_hour:0
-msgid "Revenue per Hours (real)"
-msgstr "Omzet per uur (werkelijk)"
-
-#. module: account_analytic_analysis
-#: field:account_analytic_analysis.summary.month,unit_amount:0
-#: field:account_analytic_analysis.summary.user,unit_amount:0
-msgid "Total Time"
-msgstr "Totale tijd"
+#: field:account.analytic.account,total_cost:0
+msgid "Total Costs"
+msgstr "Totale kosten"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -278,6 +315,7 @@ msgid "Month"
 msgstr "Maand"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
@@ -285,10 +323,15 @@ msgid "Analytic Account"
 msgstr "Kostenplaats"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_overpassed
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_managed_overpassed
-msgid "Overpassed Accounts"
-msgstr "Overgehevelde kostenplaatsen"
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
+msgid "Contracts"
+msgstr "Contracten"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Manager"
+msgstr "Manager"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -297,14 +340,33 @@ msgid "All Uninvoiced Entries"
 msgstr "Alle ongefactureerde boekingen"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_quantity:0
-msgid "Hours Tot"
-msgstr "Totaal uren"
+#: help:account.analytic.account,last_invoice_date:0
+msgid "If invoice from the costs, this is the date of the latest invoiced."
+msgstr ""
+"Indien kosten zijn  gefactureerd, dan is dit de datum van de laatste welke "
+"is gefactureerd"
 
 #. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "Fout! U kunt geen recursieve kostenplaatsen maken."
+#: view:account.analytic.account:0
+msgid "Associated Partner"
+msgstr "Gekoppelde relatie"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Open"
+msgstr "Open"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts that are not assigned to an account manager."
+msgstr "Contracten welke niet zijn toegewezen aan een account manager."
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_quantity:0
+#: field:account_analytic_analysis.summary.month,unit_amount:0
+#: field:account_analytic_analysis.summary.user,unit_amount:0
+msgid "Total Time"
+msgstr "Totale tijd"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -316,8 +378,18 @@ msgstr ""
 "facturen) en indirecte kosten zoals tijd besteed aan het invoeren van "
 "urenstaten."
 
+#~ msgid ""
+#~ "Number of hours that can be invoiced plus those that already have been "
+#~ "invoiced."
+#~ msgstr ""
+#~ "Aantal uren dat kan worden gefactureerd plus het aantal uren dat al "
+#~ "gefactureerd is."
+
 #~ msgid "Hours summary by user"
 #~ msgstr "Urenoverzicht per gebruiker"
+
+#~ msgid "Date of the last invoice created for this analytic account."
+#~ msgstr "Datum van de laatst aangemaakte factuur voor deze kostenplaats"
 
 #~ msgid "New Analytic Account"
 #~ msgstr "Nieuwe kostenplaats"
@@ -325,14 +397,34 @@ msgstr ""
 #~ msgid "Analytic Accounts"
 #~ msgstr "Kostenplaatsen"
 
+#~ msgid ""
+#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
+#~ "invoice based on analytic account."
+#~ msgstr ""
+#~ "Aantal uren (van journaal van soort 'algemeen') die kunnen worden "
+#~ "gefactureerd wanneer u factureerd op basis van kostenplaatsen."
+
+#~ msgid "Analytic accounts"
+#~ msgstr "Kostenplaatsen"
+
 #~ msgid "My Accounts"
 #~ msgstr "Mijn kostenplaatsen"
+
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "U probeert een toegangsregel te omzeilen (Document type: %s)."
+
+#~ msgid "report_account_analytic"
+#~ msgstr "report_account_analytic"
 
 #~ msgid "My Current Accounts"
 #~ msgstr "Mijn actuele kostenplaatsen"
 
 #~ msgid "Theorical Revenue"
 #~ msgstr "Theoretische omzet"
+
+#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
+#~ msgstr "Berekend met de formule: maximum hoeveelheid - totaal aantal uren"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ongeldige XML voor weergave!"
@@ -352,11 +444,21 @@ msgstr ""
 #~ msgid "Invoicing"
 #~ msgstr "Facturatie"
 
+#~ msgid ""
+#~ "Number of hours you spent on the analytic account (from timesheet). It "
+#~ "computes on all journal of type 'general'."
+#~ msgstr ""
+#~ "Aantal uren dat u heeft besteed aan de kostenplaats (van urenstaat). Het "
+#~ "wordt berekend op alle dagboeken van de soort 'algemeen'"
+
 #~ msgid "My Pending Accounts"
 #~ msgstr "Mijn wachtende kostenplaatsen"
 
 #~ msgid "My Uninvoiced Entries"
 #~ msgstr "Mijn ongefactureerde boekingen"
+
+#~ msgid "Remaining Hours"
+#~ msgstr "Resterende uren"
 
 #~ msgid ""
 #~ "Modify account analytic view to show\n"
@@ -370,10 +472,59 @@ msgstr ""
 #~ msgid "Financial Project Management"
 #~ msgstr "Financieel projectmanagement"
 
+#~ msgid "Uninvoiced Hours"
+#~ msgstr "Ongefactureerde uren"
+
+#~ msgid "Hours Tot"
+#~ msgstr "Totaal uren"
+
 #~ msgid "Pending Analytic Accounts"
 #~ msgstr "Wachtende kostenplaatsen"
+
+#~ msgid "Invoiced Hours"
+#~ msgstr "Gefactureerde uren"
+
+#~ msgid "Computed using the formula: Invoiced Amount / Hours Tot."
+#~ msgstr "Berekend met de formule: gefactureerd bedrag / totaal aantal uren"
+
+#~ msgid "Revenue per Hours (real)"
+#~ msgstr "Omzet per uur (werkelijk)"
+
+#~ msgid "Overpassed Accounts"
+#~ msgstr "Overgehevelde kostenplaatsen"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+
+#~ msgid "Billing"
+#~ msgstr "Facturatie"
+
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "Toegangsfout"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr ""
+#~ "Fout! De munteenheid moet hetzelfde zijn als de munteenheid van het "
+#~ "geselecteerde bedrijf"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module is for modifying account analytic view to show\n"
+#~ "important data to project manager of services companies.\n"
+#~ "Adds menu to show relevant information to each manager..\n"
+#~ "\n"
+#~ "You can also view the report of account analytic summary\n"
+#~ "user-wise as well as month wise.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Deze module is voor het wijzigen van de view op kostenplaatsten om\n"
+#~ "belangrijke data aan de projectmanager van serviceberdijven te tonen.\n"
+#~ "Voegt een menu toe om relevante informatie aan elke manager te tonen.\n"
+#~ "\n"
+#~ "U kunt ook het rapport bekijken met een samenvatting van de\n"
+#~ "kostenplaatsrekening, zowel op gebruikersnivo als maandnivo.\n"

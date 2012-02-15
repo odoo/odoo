@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-04-11 05:47+0000\n"
 "Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:49+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:02+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -37,11 +37,6 @@ msgstr "责任人"
 #: field:crm.claim,date_action_next:0
 msgid "Next Action Date"
 msgstr "下一动作日期"
-
-#. module: crm_claim
-#: field:crm.claim.report,probability:0
-msgid "Probability"
-msgstr "概率"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -84,10 +79,15 @@ msgid ""
 msgstr "你能建立索赔阶段的分类在系统输入每个索赔的状态度。阶段定义索赔解决方案的所有需求的步骤。"
 
 #. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
-msgid "Highest"
-msgstr "最高"
+#: code:addons/crm_claim/crm_claim.py:132
+#, python-format
+msgid "The claim '%s' has been opened."
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "Date Closed"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -134,24 +134,9 @@ msgid "Preventive"
 msgstr "预防措施"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Fixed"
-msgstr "固定的"
-
-#. module: crm_claim
-#: field:crm.claim,partner_address_id:0
-msgid "Partner Contact"
-msgstr "业务伙伴联系方式"
-
-#. module: crm_claim
 #: field:crm.claim.report,date_closed:0
 msgid "Close Date"
 msgstr "结束日期"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "   Month   "
-msgstr "   月   "
 
 #. module: crm_claim
 #: field:crm.claim,ref:0
@@ -159,9 +144,19 @@ msgid "Reference"
 msgstr "关联"
 
 #. module: crm_claim
-#: field:crm.claim,action_next:0
-msgid "Next Action"
-msgstr "下一动作"
+#: view:crm.claim.report:0
+msgid "Date of claim"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "All pending Claims"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "# Mails"
+msgstr "#邮件"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -180,8 +175,14 @@ msgstr "截止日期"
 #: field:crm.claim,partner_id:0
 #: view:crm.claim.report:0
 #: field:crm.claim.report,partner_id:0
+#: model:ir.model,name:crm_claim.model_res_partner
 msgid "Partner"
 msgstr "业务伙伴"
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "Month of claim"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim,type_action:0
@@ -217,9 +218,11 @@ msgid "Send New Email"
 msgstr "发送新的电子邮件"
 
 #. module: crm_claim
-#: field:crm.claim.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "超过截止日期"
+#: view:crm.claim:0
+#: selection:crm.claim,state:0
+#: view:crm.claim.report:0
+msgid "New"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -237,6 +240,21 @@ msgstr "电子邮件"
 #: selection:crm.claim.report,priority:0
 msgid "Lowest"
 msgstr "最低"
+
+#. module: crm_claim
+#: field:crm.claim,action_next:0
+msgid "Next Action"
+msgstr "下一动作"
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "My Sales Team(s)"
+msgstr ""
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim3
+msgid "Won't fix"
+msgstr "不修正"
 
 #. module: crm_claim
 #: field:crm.claim,create_date:0
@@ -289,19 +307,14 @@ msgid "Dates"
 msgstr "日期"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "    Month-1    "
-msgstr "    上月    "
-
-#. module: crm_claim
 #: view:crm.claim:0
 msgid "Contact"
 msgstr "联系方式"
 
 #. module: crm_claim
-#: model:ir.ui.menu,name:crm_claim.menu_crm_claim_stage_act
-msgid "Stages"
-msgstr "阶段"
+#: view:crm.claim.report:0
+msgid "Month-1"
+msgstr ""
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
@@ -347,6 +360,7 @@ msgstr "月"
 
 #. module: crm_claim
 #: field:crm.claim,type_action:0
+#: view:crm.claim.report:0
 #: field:crm.claim.report,type_action:0
 msgid "Action Type"
 msgstr "动作类型"
@@ -355,6 +369,11 @@ msgstr "动作类型"
 #: field:crm.claim,write_date:0
 msgid "Update Date"
 msgstr "更新日期"
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "Year of claim"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -374,9 +393,9 @@ msgid "Value Claims"
 msgstr "索赔金额"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "  Year  "
-msgstr "  年  "
+#: view:crm.claim:0
+msgid "Responsible User"
+msgstr ""
 
 #. module: crm_claim
 #: help:crm.claim,email_cc:0
@@ -387,8 +406,6 @@ msgid ""
 msgstr "这些邮件地址将添加到之前发送记录的发送和接收邮件的抄送字段，分隔多个邮件地址有逗号。"
 
 #. module: crm_claim
-#: selection:crm.claim,state:0
-#: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
 msgid "Draft"
 msgstr "草稿"
@@ -405,6 +422,11 @@ msgstr "低"
 #: selection:crm.claim.report,state:0
 msgid "Closed"
 msgstr "已结束"
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "Reply"
+msgstr "回复"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -436,14 +458,14 @@ msgid "Global CC"
 msgstr "完整抄送"
 
 #. module: crm_claim
-#: model:ir.module.module,shortdesc:crm_claim.module_meta_information
-msgid "Customer & Supplier Relationship Management"
-msgstr "客户&供应商关系管理"
-
-#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "June"
 msgstr "6月"
+
+#. module: crm_claim
+#: view:res.partner:0
+msgid "Partners Claim"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,partner_phone:0
@@ -456,14 +478,9 @@ msgid "User"
 msgstr "用户"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Awaiting Response"
-msgstr "等待回复"
-
-#. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
-msgid "Claim Categories"
-msgstr "索赔分类"
+#: field:crm.claim,active:0
+msgid "Active"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -491,20 +508,6 @@ msgid "October"
 msgstr "10月"
 
 #. module: crm_claim
-#: model:ir.module.module,description:crm_claim.module_meta_information
-msgid ""
-"\n"
-"This modules allows you to track your customers/suppliers claims and "
-"flames.\n"
-"It is fully integrated with the email gateway so that you can create\n"
-"automatically new claims based on incoming emails.\n"
-"    "
-msgstr ""
-"\n"
-"这模块能跟踪你客户和供应商索赔和不满，它是全面整合在电子邮件的网关中，所以你能基于收到的邮件自动创建新的索赔\n"
-"    "
-
-#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "January"
 msgstr "1月"
@@ -521,10 +524,18 @@ msgid "These people will receive email."
 msgstr "这些人将收到电子邮件。"
 
 #. module: crm_claim
+#: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
+msgid "Claim Categories"
+msgstr "索赔分类"
+
+#. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
+#: model:ir.actions.act_window,name:crm_claim.act_claim_partner
+#: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
+#: field:res.partner,claims_ids:0
 msgid "Claims"
 msgstr "索赔"
 
@@ -551,14 +562,15 @@ msgid "Claim"
 msgstr "索赔"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Attachments"
-msgstr "附件"
+#: selection:crm.claim,priority:0
+#: selection:crm.claim.report,priority:0
+msgid "Highest"
+msgstr "最高"
 
 #. module: crm_claim
-#: model:ir.model,name:crm_claim.model_crm_case_stage
-msgid "Stage of case"
-msgstr "业务阶段"
+#: field:crm.claim,partner_address_id:0
+msgid "Partner Contact"
+msgstr "业务伙伴联系方式"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -592,7 +604,6 @@ msgstr "结束"
 
 #. module: crm_claim
 #: view:crm.claim:0
-#: selection:crm.claim,state:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
 msgid "Open"
@@ -600,6 +611,12 @@ msgstr "开启"
 
 #. module: crm_claim
 #: view:crm.claim:0
+msgid "New Claims"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
+#: selection:crm.claim,state:0
 msgid "In Progress"
 msgstr "进行中"
 
@@ -610,19 +627,24 @@ msgid "Responsible"
 msgstr "负责人"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Current"
-msgstr "当前的"
+#: view:crm.claim.report:0
+msgid "Claims created in current year"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Details"
-msgstr "详细"
+msgid "Unassigned Claims"
+msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Reply"
-msgstr "回复"
+#: view:crm.claim.report:0
+msgid "Claims created in current month"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "超过截止日期"
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
@@ -661,12 +683,6 @@ msgid "Resolution Actions"
 msgstr "决定采取的行动"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.act_claim_partner
-#: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
-msgid "Report a Claim"
-msgstr "报告一个索赔"
-
-#. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
 msgid ""
 "Record and track your customers' claims. Claims may be linked to a sales "
@@ -681,6 +697,21 @@ msgstr ""
 #: field:crm.claim.report,email:0
 msgid "# Emails"
 msgstr "电子邮件"
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Actions Done"
+msgstr "动作完成"
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "Claims created in last month"
+msgstr ""
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Actions Defined"
+msgstr "动作定义"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -709,9 +740,15 @@ msgid "February"
 msgstr "2月"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim3
-msgid "Won't fix"
-msgstr "不修正"
+#: view:crm.claim.report:0
+#: field:crm.claim.report,name:0
+msgid "Year"
+msgstr "年"
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "My company"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -727,6 +764,11 @@ msgstr "我的业务"
 #: field:crm.claim,id:0
 msgid "ID"
 msgstr "ID"
+
+#. module: crm_claim
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -752,13 +794,51 @@ msgid "Create Date"
 msgstr "创建日期"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-#: field:crm.claim.report,name:0
-msgid "Year"
-msgstr "年"
+#: view:crm.claim:0
+msgid "In Progress Claims"
+msgstr ""
 
-#~ msgid "Actions Defined"
-#~ msgstr "动作定义"
+#~ msgid "Probability"
+#~ msgstr "概率"
 
-#~ msgid "Actions Done"
-#~ msgstr "动作完成"
+#~ msgid "   Month   "
+#~ msgstr "   月   "
+
+#~ msgid "    Month-1    "
+#~ msgstr "    上月    "
+
+#~ msgid "Stages"
+#~ msgstr "阶段"
+
+#~ msgid "  Year  "
+#~ msgstr "  年  "
+
+#~ msgid "Customer & Supplier Relationship Management"
+#~ msgstr "客户&供应商关系管理"
+
+#~ msgid ""
+#~ "\n"
+#~ "This modules allows you to track your customers/suppliers claims and "
+#~ "flames.\n"
+#~ "It is fully integrated with the email gateway so that you can create\n"
+#~ "automatically new claims based on incoming emails.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "这模块能跟踪你客户和供应商索赔和不满，它是全面整合在电子邮件的网关中，所以你能基于收到的邮件自动创建新的索赔\n"
+#~ "    "
+
+#~ msgid "Stage of case"
+#~ msgstr "业务阶段"
+
+#~ msgid "Attachments"
+#~ msgstr "附件"
+
+#~ msgid "Current"
+#~ msgstr "当前的"
+
+#~ msgid "Report a Claim"
+#~ msgstr "报告一个索赔"
+
+#~ msgid "Details"
+#~ msgstr "详细"

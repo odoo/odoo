@@ -34,7 +34,7 @@
   I assign the Job position to the applicant
 -
   !python {model: hr.applicant}: |
-    self.write(cr, uid, [ref('hr_case_programmer')], {'job_id':ref('hr.job_jr_appli')})
+    self.write(cr, uid, [ref('hr_case_programmer')], {'job_id':ref('hr.job_developer')})
 -
   I start communication with applicant, first schedule phonecall.
 -

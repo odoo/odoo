@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-12-10 07:22+0000\n"
-"Last-Translator: Tomislav Bosnjakovic <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-01-30 15:25+0000\n"
+"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-11 05:36+0000\n"
-"X-Generator: Launchpad (build 14450)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:57+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: sale_mrp
 #: help:mrp.production,sale_ref:0
@@ -33,40 +33,44 @@ msgid "Manufacturing Order"
 msgstr "Nalog za proizvodnju"
 
 #. module: sale_mrp
-#: model:ir.module.module,description:sale_mrp.module_meta_information
-msgid ""
-"\n"
-"    This module provides facility to the user to install mrp and sales "
-"modules\n"
-"    at a time. It is basically used when we want to keep track of "
-"production\n"
-"    orders generated from sales order.\n"
-"    It adds sales name and sales Reference on production order\n"
-"    "
-msgstr ""
-"\n"
-"    Ovaj  modulomogućava korisniku instalaciju MRP i prodajnog modula.\n"
-"     Koristi se kad želimo pratiti radne naloge u proizvodnji nastale iz \n"
-"     prodajnih naloga.     \n"
-"     Dodaje naziv prodaje i prodajnu referencu na nalog za proizvodnju.\n"
-"    "
-
-#. module: sale_mrp
 #: field:mrp.production,sale_name:0
 msgid "Sales Name"
 msgstr "Naziv prodaje"
 
 #. module: sale_mrp
-#: model:ir.module.module,shortdesc:sale_mrp.module_meta_information
-msgid "Sales and MRP Management"
-msgstr "Upravljanje prodajom i MRP"
+#: sql_constraint:mrp.production:0
+msgid "Reference must be unique per Company!"
+msgstr "Vezna oznaka je već korištena."
 
 #. module: sale_mrp
 #: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero !"
-msgstr "Količina na nalogu ne smije biti negativna ili nula!"
+msgid "Order quantity cannot be negative or zero!"
+msgstr "Količina na nalogu mora biti veća od nula."
 
 #. module: sale_mrp
 #: help:mrp.production,sale_name:0
 msgid "Indicate the name of sales order."
-msgstr "Navedi ime prodajnog naloga"
+msgstr "Naziv prodajnog naloga"
+
+#~ msgid "Sales and MRP Management"
+#~ msgstr "Upravljanje prodajom i MRP"
+
+#~ msgid "Order quantity cannot be negative or zero !"
+#~ msgstr "Količina na nalogu ne smije biti negativna ili nula!"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module provides facility to the user to install mrp and sales "
+#~ "modules\n"
+#~ "    at a time. It is basically used when we want to keep track of "
+#~ "production\n"
+#~ "    orders generated from sales order.\n"
+#~ "    It adds sales name and sales Reference on production order\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Ovaj  modulomogućava korisniku instalaciju MRP i prodajnog modula.\n"
+#~ "     Koristi se kad želimo pratiti radne naloge u proizvodnji nastale iz \n"
+#~ "     prodajnih naloga.     \n"
+#~ "     Dodaje naziv prodaje i prodajnu referencu na nalog za proizvodnju.\n"
+#~ "    "

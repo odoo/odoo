@@ -7,212 +7,208 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-07-04 14:16+0000\n"
-"PO-Revision-Date: 2011-07-11 09:51+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-01-17 18:08+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:57+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:09+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:51
+#, python-format
+msgid "Please select at least one user to share with"
+msgstr "Selecteer tenminste een gebruiker om mee te delen"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:55
 #, python-format
-msgid "Please select at least one user to share with"
-msgstr ""
-
-#. module: portal
-#: code:addons/portal/wizard/share_wizard.py:59
-#, python-format
 msgid "Please select at least one group to share with"
-msgstr ""
+msgstr "Selecteer tenminste een groep om mee te delen"
 
 #. module: portal
 #: field:res.portal,group_id:0
 msgid "Group"
-msgstr ""
-
-#. module: portal
-#: help:res.portal,other_group_ids:0
-msgid "Those groups are assigned to the portal's users"
-msgstr ""
+msgstr "Groep"
 
 #. module: portal
 #: view:share.wizard:0
 #: field:share.wizard,group_ids:0
 msgid "Existing groups"
-msgstr ""
+msgstr "Bestaande groepen"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "Portaal gebruikers instellingen"
 
 #. module: portal
 #: view:res.portal.wizard.user:0
 msgid "Portal User"
+msgstr "Portaal gebruiker"
+
+#. module: portal
+#: model:res.groups,comment:portal.group_portal_manager
+msgid ""
+"Portal managers have access to the portal definitions, and can easily "
+"configure the users, access rights and menus of portal users."
 msgstr ""
+"Portaal managers hebben rechten op de portaal definities en kunnen "
+"gemakkelijk gebruikers, toegangsrechten en menu's van portaalgebruikers "
+"configureren."
 
 #. module: portal
 #: help:res.portal,override_menu:0
 msgid "Enable this option to override the Menu Action of portal users"
-msgstr ""
+msgstr "Schakel deze optie in om de menu actie van portal-gebruikers negeren"
 
 #. module: portal
 #: field:res.portal.wizard.user,user_email:0
 msgid "E-mail"
-msgstr ""
-
-#. module: portal
-#: view:res.portal:0
-msgid "Other Groups assigned to Users"
-msgstr ""
+msgstr "E-Mail"
 
 #. module: portal
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "Het gekozen bedrijf is geen toegestaan bedrijf voor deze gebruiker"
 
 #. module: portal
 #: view:res.portal:0
 #: field:res.portal,widget_ids:0
 msgid "Widgets"
-msgstr ""
-
-#. module: portal
-#: model:ir.module.module,description:portal.module_meta_information
-msgid ""
-"\n"
-"This module defines 'portals' to customize the access to your OpenERP "
-"database\n"
-"for external users.\n"
-"\n"
-"A portal defines customized user menu and access rights for a group of "
-"users\n"
-"(the ones associated to that portal).  It also associates user groups to "
-"the\n"
-"portal users (adding a group in the portal automatically adds it to the "
-"portal\n"
-"users, etc).  That feature is very handy when used in combination with the\n"
-"module 'share'.\n"
-"    "
-msgstr ""
-
-#. module: portal
-#: view:share.wizard:0
-msgid "Who do you want to share with?"
-msgstr ""
+msgstr "Widgets"
 
 #. module: portal
 #: view:res.portal.wizard:0
 msgid "Send Invitations"
-msgstr ""
+msgstr "Verstuur Uitnodigingen"
+
+#. module: portal
+#: view:res.portal:0
+msgid "Widgets assigned to Users"
+msgstr "Widgets toegewezen aan gebruikers"
 
 #. module: portal
 #: help:res.portal,url:0
 msgid "The url where portal users can connect to the server"
-msgstr ""
+msgstr "De url waar portaal gebruikers naar de server kunnen verbinden"
 
 #. module: portal
-#: field:res.portal.widget,widget_id:0
-msgid "Widget"
+#: model:res.groups,comment:portal.group_portal_officer
+msgid "Portal officers can create new portal users with the portal wizard."
 msgstr ""
+"Portaal managers kunnen nieuwe portaal gebruikers aanmaken met de wizard."
 
 #. module: portal
 #: help:res.portal.wizard,message:0
 msgid "This text is included in the welcome email sent to the users"
 msgstr ""
+"Deze tekst is toegevoegd aan de welkomst e-mail welke naar de gebruiker is "
+"gestuurd."
 
 #. module: portal
 #: help:res.portal,menu_action_id:0
 msgid "If set, replaces the standard menu for the portal's users"
 msgstr ""
+"Indien aangevinkt, dan vervangt deze het standaard menu voor de portaal "
+"gebruikers"
 
 #. module: portal
-#: field:res.portal,parent_menu_id:0
-msgid "Parent Menu"
-msgstr ""
+#: field:res.portal.wizard.user,lang:0
+msgid "Language"
+msgstr "Taal"
 
 #. module: portal
 #: view:res.portal:0
 msgid "Portal Name"
-msgstr ""
+msgstr "Portaal naam"
 
 #. module: portal
 #: view:res.portal.wizard.user:0
 msgid "Portal Users"
-msgstr ""
+msgstr "Portaal gebruikers"
 
 #. module: portal
 #: field:res.portal,override_menu:0
 msgid "Override Menu Action of Users"
-msgstr ""
+msgstr "Portaal gebruikers"
 
 #. module: portal
 #: field:res.portal,menu_action_id:0
 msgid "Menu Action"
-msgstr ""
+msgstr "Menu-actie"
 
 #. module: portal
 #: field:res.portal.wizard.user,name:0
 msgid "User Name"
+msgstr "Gebruikersnaam"
+
+#. module: portal
+#: help:res.portal,group_id:0
+msgid "The group corresponding to this portal"
 msgstr ""
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_portal_widget
 msgid "Portal Widgets"
-msgstr ""
+msgstr "Portaal Widgets"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_portal
-#: model:ir.module.module,shortdesc:portal.module_meta_information
+#: model:ir.module.category,name:portal.module_category_portal
 #: view:res.portal:0
 #: field:res.portal.widget,portal_id:0
 #: field:res.portal.wizard,portal_id:0
 msgid "Portal"
-msgstr ""
+msgstr "Portaal"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:35
 #, python-format
 msgid "Your OpenERP account at %(company)s"
-msgstr ""
+msgstr "Uw Open ERP account bij %(company)s"
 
 #. module: portal
-#: code:addons/portal/portal.py:110
+#: code:addons/portal/portal.py:107
 #: code:addons/portal/portal.py:184
 #, python-format
 msgid "%s Menu"
-msgstr ""
+msgstr "%s Menu"
 
 #. module: portal
 #: help:res.portal.wizard,portal_id:0
 msgid "The portal in which new users must be added"
-msgstr ""
+msgstr "De portaal waar de nieuwe gebruikers moeten worden toegevoegd"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_portal_wizard
+msgid "Portal Wizard"
+msgstr "Poortaal Wizard"
 
 #. module: portal
 #: help:res.portal,widget_ids:0
 msgid "Widgets assigned to portal users"
-msgstr ""
+msgstr "Widgets gekoppeld aan portaal gebruikers"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:163
 #, python-format
 msgid "(missing url)"
-msgstr ""
+msgstr "(ontbrekende url"
 
 #. module: portal
 #: view:share.wizard:0
 #: field:share.wizard,user_ids:0
 msgid "Existing users"
-msgstr ""
+msgstr "Bestaande gebruikers"
 
 #. module: portal
 #: field:res.portal.wizard.user,wizard_id:0
 msgid "Wizard"
-msgstr ""
+msgstr "Wizard"
 
 #. module: portal
 #: help:res.portal.wizard.user,user_email:0
@@ -220,63 +216,67 @@ msgid ""
 "Will be used as user login.  Also necessary to send the account information "
 "to new users"
 msgstr ""
+"Wordt gebruikt als gebruikerslogin. Deze is ook benodigd voor het verzenden "
+"van informatie naar nieuwe gebruikers."
 
 #. module: portal
-#: field:res.portal.wizard.user,lang:0
-msgid "Language"
-msgstr ""
+#: field:res.portal,parent_menu_id:0
+msgid "Parent Menu"
+msgstr "Bovenliggend Menu"
 
 #. module: portal
 #: field:res.portal,url:0
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: portal
-#: view:res.portal:0
-msgid "Widgets assigned to Users"
-msgstr ""
+#: field:res.portal.widget,widget_id:0
+msgid "Widget"
+msgstr "Widget"
 
 #. module: portal
 #: help:res.portal.wizard.user,lang:0
 msgid "The language for the user's user interface"
-msgstr ""
+msgstr "De taal voor de gebruikers weergave"
 
 #. module: portal
 #: view:res.portal.wizard:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #. module: portal
 #: view:res.portal:0
 msgid "Website"
-msgstr ""
+msgstr "Website"
 
 #. module: portal
 #: view:res.portal:0
 msgid "Create Parent Menu"
-msgstr ""
+msgstr "Maak bovenliggend menu"
 
 #. module: portal
 #: view:res.portal.wizard:0
 msgid ""
 "The following text will be included in the welcome email sent to users."
 msgstr ""
+"De volgende tekst zal worden toegevoegd aan de welkomst e-mail welke naar de "
+"gebruiker wordt gestuurd."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:135
 #, python-format
 msgid "Email required"
-msgstr ""
+msgstr "Email verplicht"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: portal
 #: constraint:res.portal.wizard.user:0
 msgid "Invalid email address"
-msgstr ""
+msgstr "Ongeldig e-mailadres"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:136
@@ -284,28 +284,20 @@ msgstr ""
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
+"U moet een e-mail adres in uw voorkeuren hebben ingesteld om e-mails te "
+"kunnen versturen."
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_menu
 msgid "ir.ui.menu"
-msgstr ""
-
-#. module: portal
-#: help:res.portal,group_id:0
-msgid "The group extended by this portal"
-msgstr ""
+msgstr "ir.ui.menu"
 
 #. module: portal
 #: view:res.portal:0
 #: view:res.portal.wizard:0
 #: field:res.portal.wizard,user_ids:0
 msgid "Users"
-msgstr ""
-
-#. module: portal
-#: field:res.portal,other_group_ids:0
-msgid "Other User Groups"
-msgstr ""
+msgstr "Gebruikers"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.portal_list_action
@@ -313,38 +305,38 @@ msgstr ""
 #: model:ir.ui.menu,name:portal.portal_menu
 #: view:res.portal:0
 msgid "Portals"
-msgstr ""
+msgstr "Portalen"
 
 #. module: portal
 #: help:res.portal,parent_menu_id:0
 msgid "The menu action opens the submenus of this menu item"
-msgstr ""
+msgstr "De menu actie opent het submenu van dit menu item"
 
 #. module: portal
 #: field:res.portal.widget,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Volgnummer"
 
 #. module: portal
 #: field:res.users,partner_id:0
 msgid "Related Partner"
-msgstr ""
+msgstr "Gekoppelde partner"
 
 #. module: portal
 #: view:res.portal:0
 msgid "Portal Menu"
-msgstr ""
+msgstr "Portaal menu"
 
 #. module: portal
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "U kunt niet twee gebruikers hebben met dezelfde gebruikersnaam !"
 
 #. module: portal
 #: view:res.portal.wizard:0
 #: field:res.portal.wizard,message:0
 msgid "Invitation message"
-msgstr ""
+msgstr "Uitnodigingsbericht"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:36
@@ -365,28 +357,42 @@ msgid ""
 "OpenERP - Open Source Business Applications\n"
 "http://www.openerp.com\n"
 msgstr ""
+"Beste %(name)s,\n"
+"\n"
+"Voor u is een OpenERP account bij %(url) s gemaakt.\n"
+"\n"
+"Uw logingegevens zijn:\n"
+"Database: %(db)s\n"
+"Gebruiker: %(login)s\n"
+"Wachtwoord: %(password)s\n"
+"\n"
+"%(message)s\n"
+"\n"
+"--\n"
+"OpenERP - Open Source Business Applications\n"
+"http://www.openerp.com\n"
 
 #. module: portal
-#: model:ir.model,name:portal.model_res_portal_wizard
-msgid "Portal Wizard"
-msgstr ""
+#: model:res.groups,name:portal.group_portal_manager
+msgid "Manager"
+msgstr "Manager"
 
 #. module: portal
 #: help:res.portal.wizard.user,name:0
 msgid "The user's real name"
-msgstr ""
+msgstr "De gebruikers echte naam"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.address_wizard_action
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: view:res.portal.wizard:0
 msgid "Add Portal Access"
-msgstr ""
+msgstr "Portaal toegang toevoegen"
 
 #. module: portal
 #: field:res.portal.wizard.user,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Relatie"
 
 #. module: portal
 #: model:ir.actions.act_window,help:portal.portal_list_action
@@ -398,8 +404,20 @@ msgid ""
 "the portal's users.\n"
 "            "
 msgstr ""
+"\n"
+"Een portaal helpt het definiëren van specifieke aanzichten en regels voor "
+"een groep gebruikers (de\n"
+"portaal groep). Een portaal menu, widgets en specifieke groepen worden "
+"toegewezen aan\n"
+"de poratal gebruikers.\n"
+"            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_share_wizard
 msgid "Share Wizard"
-msgstr ""
+msgstr "Deel assistent"
+
+#. module: portal
+#: model:res.groups,name:portal.group_portal_officer
+msgid "Officer"
+msgstr "Manager"

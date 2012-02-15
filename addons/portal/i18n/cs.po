@@ -7,25 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-07-04 14:16+0000\n"
-"PO-Revision-Date: 2011-11-25 13:27+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-03 13:07+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: Czech <openerp-i18n-czech@lists.launchpad.net >\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-26 05:50+0000\n"
-"X-Generator: Launchpad (build 14381)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:09+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:55
+#: code:addons/portal/wizard/share_wizard.py:51
 #, python-format
 msgid "Please select at least one user to share with"
 msgstr "Prosíme vyberte nejméně jednoho uživatele, s kterým chcete sdílet"
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:59
+#: code:addons/portal/wizard/share_wizard.py:55
 #, python-format
 msgid "Please select at least one group to share with"
 msgstr "Prosíme vyberte nejméně jednu skupinu, s kterou chcete sdílet"
@@ -34,11 +34,6 @@ msgstr "Prosíme vyberte nejméně jednu skupinu, s kterou chcete sdílet"
 #: field:res.portal,group_id:0
 msgid "Group"
 msgstr "Skupina"
-
-#. module: portal
-#: help:res.portal,other_group_ids:0
-msgid "Those groups are assigned to the portal's users"
-msgstr "Tyto skupiny jsou přiřazeny k uživatelům portálu"
 
 #. module: portal
 #: view:share.wizard:0
@@ -57,6 +52,13 @@ msgid "Portal User"
 msgstr "Uživatel portálu"
 
 #. module: portal
+#: model:res.groups,comment:portal.group_portal_manager
+msgid ""
+"Portal managers have access to the portal definitions, and can easily "
+"configure the users, access rights and menus of portal users."
+msgstr ""
+
+#. module: portal
 #: help:res.portal,override_menu:0
 msgid "Enable this option to override the Menu Action of portal users"
 msgstr "Povolte tuto volbu k přepsání Akcí nabídky uživatelů portálu"
@@ -65,11 +67,6 @@ msgstr "Povolte tuto volbu k přepsání Akcí nabídky uživatelů portálu"
 #: field:res.portal.wizard.user,user_email:0
 msgid "E-mail"
 msgstr "E-mail"
-
-#. module: portal
-#: view:res.portal:0
-msgid "Other Groups assigned to Users"
-msgstr "Jiné skupiny přiřazené uživatelům"
 
 #. module: portal
 #: constraint:res.users:0
@@ -84,46 +81,14 @@ msgid "Widgets"
 msgstr "Udělátka"
 
 #. module: portal
-#: model:ir.module.module,description:portal.module_meta_information
-msgid ""
-"\n"
-"This module defines 'portals' to customize the access to your OpenERP "
-"database\n"
-"for external users.\n"
-"\n"
-"A portal defines customized user menu and access rights for a group of "
-"users\n"
-"(the ones associated to that portal).  It also associates user groups to "
-"the\n"
-"portal users (adding a group in the portal automatically adds it to the "
-"portal\n"
-"users, etc).  That feature is very handy when used in combination with the\n"
-"module 'share'.\n"
-"    "
-msgstr ""
-"\n"
-"Tento modul určuje 'portály' k přizpůsobení přístupu k vaší databázi "
-"OpenERP\n"
-"pro vnější uživatele.\n"
-"\n"
-"Portál určuje přizpůsobení nabídky uživatele a jeho přístupových práv pro "
-"skupinu uživatelů\n"
-"(těch přiřazených k portálu).  Také přidružuje uživatelské skupiny k\n"
-"uživatelům portálu (přidáním skupiny v portálu automaticky je přidáte k "
-"uživatelům\n"
-"portálu, atd.).  Tato funkce je velmi užitečný v kombinaci s\n"
-"modulem 'sdílení'.\n"
-"    "
-
-#. module: portal
-#: view:share.wizard:0
-msgid "Who do you want to share with?"
-msgstr "S kým chcete sdílet?"
-
-#. module: portal
 #: view:res.portal.wizard:0
 msgid "Send Invitations"
 msgstr "Poslat pozvání"
+
+#. module: portal
+#: view:res.portal:0
+msgid "Widgets assigned to Users"
+msgstr "Pomůcky přiřazené uživatelům"
 
 #. module: portal
 #: help:res.portal,url:0
@@ -131,9 +96,9 @@ msgid "The url where portal users can connect to the server"
 msgstr "URL, kde uživatelé portálu se mohou připojit k serveru"
 
 #. module: portal
-#: field:res.portal.widget,widget_id:0
-msgid "Widget"
-msgstr "Udělátko"
+#: model:res.groups,comment:portal.group_portal_officer
+msgid "Portal officers can create new portal users with the portal wizard."
+msgstr ""
 
 #. module: portal
 #: help:res.portal.wizard,message:0
@@ -147,9 +112,9 @@ msgstr ""
 "Pokud je nastaveno, nahrazuje standardní nabídku pro uživatele portálu"
 
 #. module: portal
-#: field:res.portal,parent_menu_id:0
-msgid "Parent Menu"
-msgstr "Nadřazené menu"
+#: field:res.portal.wizard.user,lang:0
+msgid "Language"
+msgstr "Jazyk"
 
 #. module: portal
 #: view:res.portal:0
@@ -177,13 +142,18 @@ msgid "User Name"
 msgstr "Uživatelské jméno"
 
 #. module: portal
+#: help:res.portal,group_id:0
+msgid "The group corresponding to this portal"
+msgstr ""
+
+#. module: portal
 #: model:ir.model,name:portal.model_res_portal_widget
 msgid "Portal Widgets"
 msgstr "Pomůcky portálu"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_portal
-#: model:ir.module.module,shortdesc:portal.module_meta_information
+#: model:ir.module.category,name:portal.module_category_portal
 #: view:res.portal:0
 #: field:res.portal.widget,portal_id:0
 #: field:res.portal.wizard,portal_id:0
@@ -197,7 +167,7 @@ msgid "Your OpenERP account at %(company)s"
 msgstr "Váš účet OpenERP v %(company)s"
 
 #. module: portal
-#: code:addons/portal/portal.py:110
+#: code:addons/portal/portal.py:107
 #: code:addons/portal/portal.py:184
 #, python-format
 msgid "%s Menu"
@@ -207,6 +177,11 @@ msgstr "%s Nabídka"
 #: help:res.portal.wizard,portal_id:0
 msgid "The portal in which new users must be added"
 msgstr "Portál, ve kterém musí být přidání noví uživatelé"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_portal_wizard
+msgid "Portal Wizard"
+msgstr "Průvodce portálu"
 
 #. module: portal
 #: help:res.portal,widget_ids:0
@@ -240,9 +215,9 @@ msgstr ""
 "informace účtu novým uživatelům"
 
 #. module: portal
-#: field:res.portal.wizard.user,lang:0
-msgid "Language"
-msgstr "Jazyk"
+#: field:res.portal,parent_menu_id:0
+msgid "Parent Menu"
+msgstr "Nadřazené menu"
 
 #. module: portal
 #: field:res.portal,url:0
@@ -250,9 +225,9 @@ msgid "URL"
 msgstr "URL"
 
 #. module: portal
-#: view:res.portal:0
-msgid "Widgets assigned to Users"
-msgstr "Pomůcky přiřazené uživatelům"
+#: field:res.portal.widget,widget_id:0
+msgid "Widget"
+msgstr "Udělátko"
 
 #. module: portal
 #: help:res.portal.wizard.user,lang:0
@@ -312,21 +287,11 @@ msgid "ir.ui.menu"
 msgstr "ir.ui.menu"
 
 #. module: portal
-#: help:res.portal,group_id:0
-msgid "The group extended by this portal"
-msgstr "Skupina rozšířená tímto portálem"
-
-#. module: portal
 #: view:res.portal:0
 #: view:res.portal.wizard:0
 #: field:res.portal.wizard,user_ids:0
 msgid "Users"
 msgstr "Uživatelé"
-
-#. module: portal
-#: field:res.portal,other_group_ids:0
-msgid "Other User Groups"
-msgstr "Jiné skupiny uživatelů"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.portal_list_action
@@ -402,9 +367,9 @@ msgstr ""
 "http://www.openerp.com\n"
 
 #. module: portal
-#: model:ir.model,name:portal.model_res_portal_wizard
-msgid "Portal Wizard"
-msgstr "Průvodce portálu"
+#: model:res.groups,name:portal.group_portal_manager
+msgid "Manager"
+msgstr ""
 
 #. module: portal
 #: help:res.portal.wizard.user,name:0
@@ -444,3 +409,8 @@ msgstr ""
 #: model:ir.model,name:portal.model_share_wizard
 msgid "Share Wizard"
 msgstr "Průvodce sdílením"
+
+#. module: portal
+#: model:res.groups,name:portal.group_portal_officer
+msgid "Officer"
+msgstr ""

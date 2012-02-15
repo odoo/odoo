@@ -6,152 +6,159 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2009-02-03 06:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:04+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:14+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: sale_crm
-#: field:crm.make.sale,partner_id:0
-msgid "Customer"
+#: field:sale.order,categ_id:0
+msgid "Category"
+msgstr ""
+
+#. module: sale_crm
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:112
+#, python-format
+msgid "Converted to Sales Quotation(%s)."
 msgstr ""
 
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "Convert to Quotation"
-msgstr ""
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:108
-#, python-format
-msgid "Opportunity  '%s' is converted to Quotation."
-msgstr ""
+msgstr "حول الى أسعار"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:89
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "بيانات غير كافية!"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:89
 #, python-format
 msgid "Customer has no addresses defined!"
-msgstr ""
+msgstr "لا يوجد عنوان محدد للعميل!"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_make_sale
 msgid "Make sales"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.module.module,description:sale_crm.module_meta_information
-msgid ""
-"\n"
-"This module adds a shortcut on one or several opportunity cases in the CRM.\n"
-"This shortcut allows you to generate a sales order based on the selected "
-"case.\n"
-"If different cases are open (a list), it generates one sale order by\n"
-"case.\n"
-"The case is then closed and linked to the generated sales order.\n"
-"\n"
-"We suggest you to install this module if you installed both the sale and "
-"the\n"
-"crm modules.\n"
-"    "
-msgstr ""
+msgstr "تولى المبيعات"
 
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "_Create"
-msgstr ""
+msgstr "إن_شاء"
 
 #. module: sale_crm
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
+#: view:sale.order:0
+msgid "My Sales Team(s)"
 msgstr ""
 
 #. module: sale_crm
 #: help:crm.make.sale,close:0
 msgid ""
 "Check this to close the opportunity after having created the sale order."
+msgstr "تحقق من هذا لغلق الفرصة بعد ان انشأ امر البيع."
+
+#. module: sale_crm
+#: view:board.board:0
+msgid "My Opportunities"
 msgstr ""
 
 #. module: sale_crm
 #: view:crm.lead:0
 msgid "Convert to Quote"
-msgstr ""
+msgstr "حول الى اسعار"
 
 #. module: sale_crm
-#: view:account.invoice.report:0
-#: view:board.board:0
-msgid "Monthly Turnover"
-msgstr ""
+#: field:crm.make.sale,shop_id:0
+msgid "Shop"
+msgstr "المتجر"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:110
-#, python-format
-msgid "Converted to Sales Quotation(id: %s)."
-msgstr ""
+#: field:crm.make.sale,partner_id:0
+msgid "Customer"
+msgstr "عميل"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:92
 #, python-format
 msgid "Opportunity: %s"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.module.module,shortdesc:sale_crm.module_meta_information
-msgid "Creates Sales order from Opportunity"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.action_quotation_for_sale_crm
-msgid "Quotations"
-msgstr ""
-
-#. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr ""
-
-#. module: sale_crm
-#: view:board.board:0
-msgid "Opportunities by Stage"
-msgstr ""
-
-#. module: sale_crm
-#: view:board.board:0
-msgid "My Quotations"
-msgstr ""
+msgstr "الفرصة: %s"
 
 #. module: sale_crm
 #: field:crm.make.sale,close:0
 msgid "Close Opportunity"
+msgstr "اغلق الفرصة"
+
+#. module: sale_crm
+#: view:board.board:0
+msgid "My Planned Revenues by Stage"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:110
+#, python-format
+msgid "Opportunity  '%s' is converted to Quotation."
 msgstr ""
 
 #. module: sale_crm
 #: view:sale.order:0
 #: field:sale.order,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "فريق المبيعات"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
 msgid "Make Quotation"
-msgstr ""
+msgstr "انشأ اسعار"
 
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "Cancel"
-msgstr ""
+msgstr "إلغاء"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "أمر المبيعات"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "لا بدّ أن يكون مرجع الأمر فريداً"
+
+#~ msgid "Opportunities by Stage"
+#~ msgstr "الفرص حسب المرحلة"
+
+#, python-format
+#~ msgid "is converted to Quotation."
+#~ msgstr "تم تحويلها إلى أسعار."
+
+#~ msgid "Monthly Turnover"
+#~ msgstr "رأس مال شهري"
+
+#, python-format
+#~ msgid "Converted to Sales Quotation(id: %s)."
+#~ msgstr "تحولت الى أسعار المبيعات(هوية: %s)."
+
+#, python-format
+#~ msgid "Opportunity "
+#~ msgstr "الفرصة "
+
+#~ msgid "Creates Sales order from Opportunity"
+#~ msgstr "وتنشأ امر بيع من الفرصة"
+
+#~ msgid "My Quotations"
+#~ msgstr "الاسعار الخاصة بي"
+
+#~ msgid "Quotations"
+#~ msgstr "التسعيرات"

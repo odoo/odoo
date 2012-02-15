@@ -47,9 +47,6 @@
                                 <group col="4" colspan="2">
                                     <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
                                     context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
-                                    <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
-                                    <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
-                                    <button name="cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>
                                 </group>
                             </group>
                         </page>
@@ -85,6 +82,8 @@
                     <field name="partner_id" invisible="1"/>
                     <field name="state"/>
                     <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
+                    <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
+                    <button name="cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>
                     <button name="open_document" string="Open Related Document" type="object" icon="gtk-jump-to"/>
                     <button name="open_attachment" string="Open Attachments" type="object" icon="gtk-jump-to"/>
                 </tree>
@@ -130,8 +129,7 @@
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('email_from', '!=', False)]</field>
-             <field name="context">{'search_default_received':1}</field>
+            <field name="domain">['|',('state','in',['outgoing','exception']),('email_from', '!=', False)]</field>
             <field name="search_view_id" ref="view_email_message_search"/>
         </record>
 

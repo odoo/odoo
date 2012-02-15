@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-06-13 09:14+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:55+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:08+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: users_ldap
 #: constraint:res.company:0
@@ -28,12 +28,16 @@ msgid "The chosen company is not in the allowed companies for this user"
 msgstr "Valittu yritys ei ole sallittu tälle käyttäjälle"
 
 #. module: users_ldap
-#: field:res.company,ldaps:0
-msgid "LDAP Parameters"
-msgstr "LDAP parametrit"
+#: help:res.company.ldap,ldap_tls:0
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication "
+"attempts will fail."
+msgstr ""
 
 #. module: users_ldap
 #: view:res.company:0
+#: view:res.company.ldap:0
 msgid "LDAP Configuration"
 msgstr "LDAP konfiguraatio"
 
@@ -68,8 +72,25 @@ msgid "LDAP Server port"
 msgstr "LDAP palvelimen portti"
 
 #. module: users_ldap
+#: help:res.company.ldap,ldap_binddn:0
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr ""
+
+#. module: users_ldap
 #: field:res.company.ldap,ldap_base:0
 msgid "LDAP base"
+msgstr ""
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "User Information"
+msgstr ""
+
+#. module: users_ldap
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
 msgstr ""
 
 #. module: users_ldap
@@ -78,9 +99,9 @@ msgid "Companies"
 msgstr "Yritykset"
 
 #. module: users_ldap
-#: field:res.company.ldap,ldap_password:0
-msgid "LDAP password"
-msgstr "LDAP salasana"
+#: view:res.company.ldap:0
+msgid "Process Parameter"
+msgstr ""
 
 #. module: users_ldap
 #: model:ir.model,name:users_ldap.model_res_company_ldap
@@ -88,8 +109,8 @@ msgid "res.company.ldap"
 msgstr ""
 
 #. module: users_ldap
-#: model:ir.module.module,description:users_ldap.module_meta_information
-msgid "Adds support for authentication by ldap server"
+#: field:res.company.ldap,ldap_tls:0
+msgid "Use TLS"
 msgstr ""
 
 #. module: users_ldap
@@ -98,14 +119,41 @@ msgid "Sequence"
 msgstr "Sekvenssi"
 
 #. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Login Information"
+msgstr ""
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Server Information"
+msgstr ""
+
+#. module: users_ldap
+#: model:ir.actions.act_window,name:users_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr ""
+
+#. module: users_ldap
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
 msgstr "Kahdella eri käyttäjällä ei voi olla samaa käyttäjätunnusta!"
 
 #. module: users_ldap
-#: model:ir.module.module,shortdesc:users_ldap.module_meta_information
-msgid "Authenticate users with ldap server"
-msgstr "Autentikoi käyttäjät LDAP palvelimen kanssa"
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr "LDAP parametrit"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_password:0
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr ""
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_password:0
+msgid "LDAP password"
+msgstr "LDAP salasana"
 
 #. module: users_ldap
 #: field:res.company.ldap,user:0
@@ -126,3 +174,6 @@ msgstr "LDAP suodin"
 #: field:res.company.ldap,create_user:0
 msgid "Create user"
 msgstr "Luo käyttäjä"
+
+#~ msgid "Authenticate users with ldap server"
+#~ msgstr "Autentikoi käyttäjät LDAP palvelimen kanssa"

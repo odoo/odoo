@@ -6,48 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-01-13 20:55+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-01-13 19:15+0000\n"
+"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:34+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:45+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: analytic_journal_billing_rate
-#: model:ir.module.module,description:analytic_journal_billing_rate.module_meta_information
-msgid ""
-"\n"
-"\n"
-"    This module allows you to define what is the default invoicing rate for "
-"a specific journal on a given account. This is mostly used when a user "
-"encodes his timesheet: the values are retrieved and the fields are auto-"
-"filled... but the possibility to change these values is still available.\n"
-"\n"
-"    Obviously if no data has been recorded for the current account, the "
-"default value is given as usual by the account data so that this module is "
-"perfectly compatible with older configurations.\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"\n"
-"    Diese Anwendung ermöglicht Ihnen die Definition einer Standard "
-"Abrechnungsquote für ein analytisches Konto bei Buchung   im Kontext eines "
-"bestimmten Journals. Angewendet wird die Abrechnungsquote meistens, wenn ein "
-"Benutzer seine Zeiterfassung auf  bestimmte Konten vornimmt. Dabei werden "
-"dann die Konten und Beträge automatisch vorausgefüllt, mit der Möglichkeit "
-"diese\n"
-"individuell anzupassen.\n"
-"\n"
-"     Wenn keine Konfiguration bei der Eingabe eines Kontos gefunden wird, "
-"würde weiterhin der Standardwert des Kontos verwendet, so dass dieses Modul "
-"gleichzeitig kompatibel mit älteren Konfigurationseinstellungen ist.\n"
-"\n"
-"    "
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Die Rechnungsnummer muss je Firma eindeutig sein"
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,journal_id:0
@@ -55,9 +27,9 @@ msgid "Analytic Journal"
 msgstr "Analytisches Journal"
 
 #. module: analytic_journal_billing_rate
-#: model:ir.model,name:analytic_journal_billing_rate.model_account_invoice
-msgid "Invoice"
-msgstr "Rechnung"
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr "ungültige BBA Kommunikations Stuktur"
 
 #. module: analytic_journal_billing_rate
 #: view:analytic_journal_rate_grid:0
@@ -81,20 +53,15 @@ msgid "Invoicing Rate per Journal"
 msgstr "Abrechnungsquote nach Journal"
 
 #. module: analytic_journal_billing_rate
-#: model:ir.module.module,shortdesc:analytic_journal_billing_rate.module_meta_information
-msgid ""
-"Analytic Journal Billing Rate, Define the default invoicing rate for a "
-"specific journal"
-msgstr ""
-"Abrechnungsquote für analytische Buchungen. Definieren Sie einen "
-"Standardwert je spezifiziertem Journal."
+#: model:ir.model,name:analytic_journal_billing_rate.model_account_invoice
+msgid "Invoice"
+msgstr "Rechnung"
 
 #. module: analytic_journal_billing_rate
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "Fehler! Die Währung muss der Währung der gewählten Firma entsprechen"
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
+msgstr ""
+"Bestätigte und abgerechnete Zeitaufzeichungen können nicht geändert werden"
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,rate_id:0
@@ -122,3 +89,45 @@ msgstr "Zeiterfassung Positionen"
 
 #~ msgid "Analytic Journal Billing Rate"
 #~ msgstr "Analytisches Journal Verrechnungssatz"
+
+#~ msgid ""
+#~ "Analytic Journal Billing Rate, Define the default invoicing rate for a "
+#~ "specific journal"
+#~ msgstr ""
+#~ "Abrechnungsquote für analytische Buchungen. Definieren Sie einen "
+#~ "Standardwert je spezifiziertem Journal."
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Fehler! Die Währung muss der Währung der gewählten Firma entsprechen"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "    This module allows you to define what is the default invoicing rate for "
+#~ "a specific journal on a given account. This is mostly used when a user "
+#~ "encodes his timesheet: the values are retrieved and the fields are auto-"
+#~ "filled... but the possibility to change these values is still available.\n"
+#~ "\n"
+#~ "    Obviously if no data has been recorded for the current account, the "
+#~ "default value is given as usual by the account data so that this module is "
+#~ "perfectly compatible with older configurations.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "    Diese Anwendung ermöglicht Ihnen die Definition einer Standard "
+#~ "Abrechnungsquote für ein analytisches Konto bei Buchung   im Kontext eines "
+#~ "bestimmten Journals. Angewendet wird die Abrechnungsquote meistens, wenn ein "
+#~ "Benutzer seine Zeiterfassung auf  bestimmte Konten vornimmt. Dabei werden "
+#~ "dann die Konten und Beträge automatisch vorausgefüllt, mit der Möglichkeit "
+#~ "diese\n"
+#~ "individuell anzupassen.\n"
+#~ "\n"
+#~ "     Wenn keine Konfiguration bei der Eingabe eines Kontos gefunden wird, "
+#~ "würde weiterhin der Standardwert des Kontos verwendet, so dass dieses Modul "
+#~ "gleichzeitig kompatibel mit älteren Konfigurationseinstellungen ist.\n"
+#~ "\n"
+#~ "    "

@@ -52,7 +52,7 @@ Moreover, there is one option which allows you to print all the selected invoice
     'demo_xml': ['account_invoice_layout_demo.xml'],
     'test':['test/account_invoice_layout_report.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0057235078173',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

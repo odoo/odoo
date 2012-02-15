@@ -240,7 +240,7 @@ class hr_evaluation(osv.osv):
         request_obj = self.pool.get('hr.evaluation.interview')
         self.write(cr, uid, ids, {'state':'progress'}, context=context)
         for id in self.browse(cr, uid, ids, context=context):
-            if len(id.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', id.id),('state', '=', 'done')], context=context)):
+            if len(id.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', id.id),('state', 'in', ['done','cancel'])], context=context)):
                 raise osv.except_osv(_('Warning !'),_("You cannot change state, because some appraisal in waiting answer or draft state"))
         return True
 
@@ -250,6 +250,9 @@ class hr_evaluation(osv.osv):
         return True
 
     def button_cancel(self, cr, uid, ids, context=None):
+        interview_obj=self.pool.get('hr.evaluation.interview')
+        evaluation = self.browse(cr, uid, ids[0], context)
+        interview_obj.survey_req_cancel(cr, uid, [r.id for r in evaluation.survey_request_ids])
         self.write(cr, uid, ids,{'state':'cancel'}, context=context)
         return True
 
@@ -272,9 +275,6 @@ class survey_request(osv.osv):
     _inherit = "survey.request"
     _columns = {
         'is_evaluation': fields.boolean('Is Appraisal?'),
-    }
-    _defaults = {
-        'state': 'waiting_answer',
     }
 
 survey_request()

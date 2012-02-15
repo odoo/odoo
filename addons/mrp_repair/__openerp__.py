@@ -48,10 +48,14 @@ The aim is to have a complete module to manage all products repairs. The followi
         'mrp_repair_workflow.xml',
         'mrp_repair_report.xml',
     ],
-    'demo_xml': [],
-    'test': ['test/test_mrp_repair.yml', 'test/mrp_repair_report.yml','test/mrp_repair_cancel.yml'],
+    'demo_xml': ['mrp_repair_demo.yml'],
+    'test': ['test/test_mrp_repair_noneinv.yml',
+             'test/test_mrp_repair_b4inv.yml',
+             'test/test_mrp_repair_afterinv.yml',
+             'test/test_mrp_repair_cancel.yml',
+             'test/mrp_repair_report.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0060814381277',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

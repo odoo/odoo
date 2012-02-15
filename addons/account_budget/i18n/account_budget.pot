@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14:30+0000\n"
-"PO-Revision-Date: 2011-01-11 11:14:30+0000\n"
+"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-08 00:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,12 +29,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
-msgstr ""
-
-#. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "The General Budget '%s' has no Accounts!"
 msgstr ""
 
 #. module: account_budget
@@ -124,8 +118,9 @@ msgid "A budget is a forecast of your company's income and expenses expected for
 msgstr ""
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "The Budget '%s' has no accounts!"
 msgstr ""
 
 #. module: account_budget
@@ -214,9 +209,6 @@ msgstr ""
 
 #. module: account_budget
 #: view:account.analytic.account:0
-#: view:account.budget.post:0
-#: view:crossovered.budget:0
-#: field:crossovered.budget.lines,theoritical_amount:0
 msgid "Theoritical Amount"
 msgstr ""
 
@@ -245,6 +237,11 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account_budget.account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget
 msgid "Budget"
+msgstr ""
+
+#. module: account_budget
+#: view:crossovered.budget:0
+msgid "To Approve Budgets"
 msgstr ""
 
 #. module: account_budget
@@ -278,8 +275,8 @@ msgid "Budgets"
 msgstr ""
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid "Error! The currency has to be the same as the currency of the selected company"
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
 msgstr ""
 
 #. module: account_budget
@@ -341,25 +338,10 @@ msgid "Print"
 msgstr ""
 
 #. module: account_budget
-#: model:ir.module.module,description:account_budget.module_meta_information
-msgid "This module allows accountants to manage analytic and crossovered budgets.\n"
-"\n"
-"Once the Master Budgets and the Budgets are defined (in Accounting/Budgets/),\n"
-"the Project Managers can set the planned amount on each Analytic Account.\n"
-"\n"
-"The accountant has the possibility to see the total of amount planned for each\n"
-"Budget and Master Budget in order to ensure the total planned is not\n"
-"greater/lower than what he planned for this Budget/Master Budget. Each list of\n"
-"record can also be switched to a graphical view of it.\n"
-"\n"
-"Three reports are available:\n"
-"    1. The first is available from a list of Budgets. It gives the spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
-"\n"
-"    2. The second is a summary of the previous one, it only gives the spreading, for the selected Budgets, of the Analytic Accounts.\n"
-"\n"
-"    3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts, of the Master Budgets per Budgets.\n"
-"\n"
-""
+#: view:account.budget.post:0
+#: view:crossovered.budget:0
+#: field:crossovered.budget.lines,theoritical_amount:0
+msgid "Theoretical Amount"
 msgstr ""
 
 #. module: account_budget
@@ -409,11 +391,6 @@ msgid "Cancel"
 msgstr ""
 
 #. module: account_budget
-#: model:ir.module.module,shortdesc:account_budget.module_meta_information
-msgid "Budget Management"
-msgstr ""
-
-#. module: account_budget
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
@@ -422,5 +399,10 @@ msgstr ""
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Analysis from"
+msgstr ""
+
+#. module: account_budget
+#: view:crossovered.budget:0
+msgid "Draft Budgets"
 msgstr ""
 

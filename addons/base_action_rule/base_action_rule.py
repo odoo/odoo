@@ -31,6 +31,12 @@ import tools
 
 
 def get_datetime(date_field):
+    '''Return a datetime from a date string or a datetime string'''
+    #complete date time if date_field contains only a date
+    date_split = date_field.split(' ')
+    if len(date_split) == 1:
+        date_field = date_split[0] + " 00:00:00"
+   
     return datetime.strptime(date_field[:19], '%Y-%m-%d %H:%M:%S')
 
 
@@ -171,6 +177,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
         `post_action`, in that order.
         """
         def wrapper(cr, uid, vals, context=context):
+            if context is None:
+                context = {}
             new_id = old_create(cr, uid, vals, context=context)
             if not context.get('action'):
                 self.post_action(cr, uid, [new_id], model, context=context)
@@ -183,6 +191,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
         `post_action`, in that order.
         """
         def wrapper(cr, uid, ids, vals, context=context):
+            if context is None:
+                context = {}
             if isinstance(ids, (str, int, long)):
                 ids = [ids]
             old_write(cr, uid, ids, vals, context=context)

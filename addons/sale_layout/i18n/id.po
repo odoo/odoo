@@ -7,43 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-05-20 05:55+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:44+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:57+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
+
+#. module: sale_layout
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
 msgid "Sub Total"
 msgstr "Sub Total"
-
-#. module: sale_layout
-#: model:ir.module.module,description:sale_layout.module_meta_information
-msgid ""
-"\n"
-"    This module provides features to improve the layout of the Sales Order.\n"
-"\n"
-"    It gives you the possibility to\n"
-"        * order all the lines of a sales order\n"
-"        * add titles, comment lines, sub total lines\n"
-"        * draw horizontal lines and put page breaks\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"    Modul ini menyediakan fitur untuk meningkatkan tata letak  Sales order.\n"
-"\n"
-"Ini memberi anda kemungkinan untuk\n"
-"* Agar semua daftar order sales\n"
-"* menambahkan judul, baris komentar, sub total baris\n"
-"* menggambar garis horisontal dan menempatkan break halaman\n"
-"\n"
-"    "
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -61,9 +43,9 @@ msgid "Note"
 msgstr "Catatan"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Unit Price"
-msgstr "Harga Satuan"
+#: field:sale.order.line,layout_type:0
+msgid "Line Type"
+msgstr ""
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -81,14 +63,14 @@ msgid "Disc.(%)"
 msgstr "Potongan (%)"
 
 #. module: sale_layout
-#: field:sale.order.line,layout_type:0
-msgid "Layout Type"
-msgstr "Tipe tataletak"
+#: report:sale.order.layout:0
+msgid "Unit Price"
+msgstr "Harga Satuan"
 
 #. module: sale_layout
 #: view:sale.order:0
-msgid "Seq."
-msgstr "Urutan."
+msgid "Invoice Lines"
+msgstr "Daftar invoce"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -101,19 +83,9 @@ msgid "Product"
 msgstr "Produk"
 
 #. module: sale_layout
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "Referensi order harus unik !"
-
-#. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Description"
 msgstr "Keterangan"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Manual Description"
-msgstr "Keterangan Manual"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -121,14 +93,9 @@ msgid "Our Salesman"
 msgstr "Salesman Kita"
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "Automatic Declaration"
-msgstr "Keterangan Otomatis"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Invoice Lines"
-msgstr "Daftar invoce"
+#: report:sale.order.layout:0
+msgid "Tel. :"
+msgstr "Tlp."
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -161,14 +128,9 @@ msgid "Invoice address :"
 msgstr "Alamat invoice"
 
 #. module: sale_layout
-#: model:ir.module.module,shortdesc:sale_layout.module_meta_information
-msgid "Sale Order Layout"
-msgstr "Tata letak sale order"
-
-#. module: sale_layout
-#: selection:sale.order.line,layout_type:0
-msgid "Page Break"
-msgstr "Batas Halaman"
+#: report:sale.order.layout:0
+msgid "Fax :"
+msgstr "Fax :"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -186,6 +148,7 @@ msgid "Shipping address :"
 msgstr "Alamat pengiriman :"
 
 #. module: sale_layout
+#: view:sale.order:0
 #: report:sale.order.layout:0
 msgid "Taxes"
 msgstr "Pajak"
@@ -194,11 +157,6 @@ msgstr "Pajak"
 #: report:sale.order.layout:0
 msgid "Net Total :"
 msgstr "Total bersih"
-
-#. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Tel. :"
-msgstr "Tlp."
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -214,11 +172,6 @@ msgstr "Termin Pembayaran"
 #: view:sale.order:0
 msgid "History"
 msgstr "Riwayat"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Sale Order Lines"
-msgstr "Daftar Sale Order"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -271,9 +224,9 @@ msgid "Taxes :"
 msgstr "Pajak"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Fax :"
-msgstr "Fax :"
+#: selection:sale.order.line,layout_type:0
+msgid "Page Break"
+msgstr "Batas Halaman"
 
 #. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order
@@ -299,3 +252,45 @@ msgstr "Daftar sales order"
 #: view:sale.order:0
 msgid "Stock Moves"
 msgstr "Perpindahan Stok"
+
+#~ msgid "Layout Type"
+#~ msgstr "Tipe tataletak"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module provides features to improve the layout of the Sales Order.\n"
+#~ "\n"
+#~ "    It gives you the possibility to\n"
+#~ "        * order all the lines of a sales order\n"
+#~ "        * add titles, comment lines, sub total lines\n"
+#~ "        * draw horizontal lines and put page breaks\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Modul ini menyediakan fitur untuk meningkatkan tata letak  Sales order.\n"
+#~ "\n"
+#~ "Ini memberi anda kemungkinan untuk\n"
+#~ "* Agar semua daftar order sales\n"
+#~ "* menambahkan judul, baris komentar, sub total baris\n"
+#~ "* menggambar garis horisontal dan menempatkan break halaman\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid "Seq."
+#~ msgstr "Urutan."
+
+#~ msgid "Automatic Declaration"
+#~ msgstr "Keterangan Otomatis"
+
+#~ msgid "Manual Description"
+#~ msgstr "Keterangan Manual"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Referensi order harus unik !"
+
+#~ msgid "Sale Order Layout"
+#~ msgstr "Tata letak sale order"
+
+#~ msgid "Sale Order Lines"
+#~ msgstr "Daftar Sale Order"

@@ -7,21 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-11-11 15:21+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-12 04:52+0000\n"
-"X-Generator: Launchpad (build 14277)\n"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:295
-#, python-format
-msgid "Followup Summary"
-msgstr "Muistutuksen yhteenveto"
+"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -29,51 +23,51 @@ msgid "Search Followup"
 msgstr "Hae muistutusta"
 
 #. module: account_followup
-#: model:ir.module.module,description:account_followup.module_meta_information
-msgid ""
-"\n"
-"    Modules to automate letters for unpaid invoices, with multi-level "
-"recalls.\n"
-"\n"
-"    You can define your multiple levels of recall through the menu:\n"
-"        Accounting/Configuration/Miscellaneous/Follow-Ups\n"
-"\n"
-"    Once it is defined, you can automatically print recalls every day\n"
-"    through simply clicking on the menu:\n"
-"        Accounting/Periodical Processing/Billing/Send followups\n"
-"\n"
-"    It will generate a PDF with all the letters according to the the\n"
-"    different levels of recall defined. You can define different policies\n"
-"    for different companies. You can also send mail to the customer.\n"
-"\n"
-"    Note that if you want to change the followup level for a given "
-"partner/account entry, you can do from in the menu:\n"
-"        Accounting/Reporting/Generic Reporting/Partner Accounts/Follow-ups "
-"Sent\n"
-"\n"
-msgstr ""
-
-#. module: account_followup
 #: view:account_followup.stat:0
 msgid "Group By..."
 msgstr "Ryhmittely.."
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:290
-#, python-format
-msgid ""
-"\n"
-"\n"
-"E-Mail sent to following Partners successfully. !\n"
-"\n"
-"%s"
-msgstr ""
+#: view:res.company:0
+#: field:res.company,follow_up_msg:0
+msgid "Follow-up Message"
+msgstr "Seurantaviesti"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 #: field:account_followup.followup,followup_line:0
 msgid "Follow-Up"
 msgstr "Seuranta"
+
+#. module: account_followup
+#: help:account.followup.print.all,test_print:0
+msgid ""
+"Check if you want to print followups without changing followups level."
+msgstr ""
+
+#. module: account_followup
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line2
+msgid ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"We are disappointed to see that despite sending a reminder, that your "
+"account is now seriously overdue.\n"
+"\n"
+"It is essential that immediate payment is made, otherwise we will have to "
+"consider placing a stop on your account which means that we will no longer "
+"be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the "
+"next 8 days.\n"
+"\n"
+"If there is a problem with paying invoice that we are not aware of, do not "
+"hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+"we can resolve the matter quickly.\n"
+"\n"
+"Details of due payments is printed below.\n"
+"\n"
+"Best Regards,\n"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -107,24 +101,19 @@ msgid "Legend"
 msgstr "Selite"
 
 #. module: account_followup
+#: view:account_followup.stat:0
+msgid "Follow up Entries with period in current year"
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Ok"
 msgstr "OK"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-msgid "Select Partners to Remind"
-msgstr "Valitse muistutettavat kumppanit"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Et voi luoda siirtoriviä suljetulle tilille."
-
-#. module: account_followup
-#: field:account.followup.print,date:0
-msgid "Follow-up Sending Date"
-msgstr "Seurannan lähetyspäivä"
+#: report:account_followup.followup.print:0
+msgid "Amount"
+msgstr ""
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
@@ -153,15 +142,16 @@ msgid "Total debit"
 msgstr "Kokonais debet"
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
 msgstr "%(heading)s: Siirtorivin otsiko"
-
-#. module: account_followup
-#: view:res.company:0
-#: field:res.company,follow_up_msg:0
-msgid "Follow-up Message"
-msgstr "Seurantaviesti"
 
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
@@ -191,7 +181,7 @@ msgid "Partners"
 msgstr "Kumppanit"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:138
+#: code:addons/account_followup/wizard/account_followup_print.py:142
 #, python-format
 msgid "Invoices Reminder"
 msgstr "Laskumuistutus"
@@ -260,46 +250,9 @@ msgid "Latest followup"
 msgstr "Viimeisin muistutus"
 
 #. module: account_followup
-#: model:account_followup.followup.line,description:account_followup.demo_followup_line2
-msgid ""
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"We are disappointed to see that despite sending a reminder, that your "
-"account is now seriously overdue.\n"
-"\n"
-"It is essential that immediate payment is made, otherwise we will have to "
-"consider placing a stop on your account which means that we will no longer "
-"be able to supply your company with (goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the "
-"next 8 days\n"
-"\n"
-"If there is a problem with paying invoice that we are not aware of, do not "
-"hesitate to contact our accounting department at (+32).10.68.94.39. so that "
-"we can resolve the matter quickly.\n"
-"\n"
-"Details of due payments is printed below.\n"
-"\n"
-"Best Regards,\n"
-msgstr ""
-"\n"
-"Hyvä yhteistyökumppanimme %(partner_name)s,\n"
-"\n"
-"Olemme pettyneitä että muistutuksesta huolimatta laskunne ovat pahasti "
-"myöhässä.\n"
-"\n"
-"On tärkeää että maksu suoritetaan välittömästi, muuten meiden on harkitttava "
-"toimitusten keskeyttämistä\n"
-"jollloin emme voi enään toimittaa tuotteita tai palveluita teille.\n"
-"Olkaa hyvä ja suorittakaa maksu seuraavien 8 päivän aikana.\n"
-"\n"
-"Jos laskun maksamisessa on ongelmia joista emme ole tietoisia, olkaa hyvä ja "
-"ottakaa yhteyttä talousosastollemme, jotta ongelma voidaan ratkaista "
-"nopeasti.\n"
-"\n"
-"Erääntyneiden maksujen yksityiskohdat näkyvät alla.\n"
-"\n"
-"Ystävällisin terveisin.\n"
+#: view:account.followup.print.all:0
+msgid "Select Partners to Remind"
+msgstr "Valitse muistutettavat kumppanit"
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
@@ -307,15 +260,26 @@ msgid "Send Email in Partner Language"
 msgstr "Lähetä sähköpostia kumppanin kielellä"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-
-#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Partner Selection"
 msgstr "Kumppanin valinta"
+
+#. module: account_followup
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line1
+msgid ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Exception made if there was a mistake of ours, it seems that the following "
+"amount stays unpaid. Please, take appropriate measures in order to carry out "
+"this payment in the next 8 days.\n"
+"\n"
+"Would your payment have been carried out after this mail was sent, please "
+"ignore this message. Do not hesitate to contact our accounting department at "
+"(+32).10.68.94.39.\n"
+"\n"
+"Best Regards,\n"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -343,67 +307,28 @@ msgid "Follow Ups"
 msgstr "Muistutukset"
 
 #. module: account_followup
-#: model:account_followup.followup.line,description:account_followup.demo_followup_line1
+#: code:addons/account_followup/wizard/account_followup_print.py:296
+#, python-format
 msgid ""
+"All E-mails have been successfully sent to Partners:.\n"
 "\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Exception made if there was a mistake of ours, it seems that the following "
-"amount staid unpaid. Please, take appropriate measures in order to carry out "
-"this payment in the next 8 days.\n"
-"\n"
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department at (+32).10.68.94.39.\n"
-"\n"
-"Best Regards,\n"
+"%s"
 msgstr ""
-"\n"
-"Hyvä yhteistyökumppanimme %(partner_name)s,\n"
-"\n"
-"Järjestelmämme tietojen mukaan yrityksellänne on seuraavat laskut myöhässä.\n"
-"Olkaa hyvä ja suorittakaa maksu seuraavien 8 päivän aikana.\n"
-"\n"
-"Mikäli laskunne on jo maksettu tämän ilmoituksen jälkeen, tämä ilmoitus on "
-"aiheeton.\n"
-"Tarvittaessa voitte ottaa yhteyttä talousosastollemme asioiden "
-"selvittämiseksi.\n"
-"\n"
-"Ystävällisin terveisin,\n"
 
 #. module: account_followup
-#: model:account_followup.followup.line,description:account_followup.demo_followup_line3
+#: constraint:account_followup.followup.line:0
 msgid ""
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Despite several reminders, your account is still not settled.\n"
-"\n"
-"Unless full payment is made in next 8 days , then legal action for the "
-"recovery of the debt, will be taken without further notice.\n"
-"\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
-"\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department at (+32).10.68.94.39.\n"
-"\n"
-"Best Regards,\n"
+"Your description is invalid, use the right legend or %% if you want to use "
+"the percent character."
 msgstr ""
-"\n"
-"Hyvä yhteistyökumppanimme %(partner_name)s,\n"
-"\n"
-"Useista muistutuksista huolimatta, laskunne ovat yhä maksamatta.\n"
-"\n"
-"Jos maksua ei suoriteta seuraavien 8 päivän aikana, käynnistämme "
-"perintätoimet ilman erillistä ilmoitusta.\n"
-"\n"
-"Toivomme että perintätoimia ei tarvita ja maksatte allaolevat laskunne "
-"välittömästi.\n"
-"\n"
-"Tarvittaessa voitte ottaa yhteyttä talousosastollemme lisätietoja varten.\n"
-"\n"
-"Ystävällisin terveisin,\n"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -411,24 +336,30 @@ msgid "Send Mails"
 msgstr "Lähetä viestit"
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Currency"
-msgstr "Valuutta"
-
-#. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Followup Statistics by Partner"
 msgstr "Muistutustilastot kumppaneittain"
 
 #. module: account_followup
-#: model:ir.module.module,shortdesc:account_followup.module_meta_information
-msgid "Accounting follow-ups management"
-msgstr "Maksumuistutusten hallinta"
+#: view:account_followup.followup.line:0
+msgid "Message"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
 msgstr "Estetty"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:299
+#, python-format
+msgid ""
+"\n"
+"\n"
+"E-Mail sent to following Partners successfully. !\n"
+"\n"
+"%s"
+msgstr ""
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -437,9 +368,9 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Due"
-msgstr "Erääntyy"
+#: field:account.followup.print,date:0
+msgid "Follow-up Sending Date"
+msgstr "Seurannan lähetyspäivä"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:56
@@ -463,24 +394,9 @@ msgid "Latest Follow-up"
 msgstr "Viimeisin muistutus"
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Sub-Total:"
-msgstr "Alasumma:"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Balance:"
-msgstr "Balanssi"
-
-#. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Followup Statistics"
 msgstr "Maksumuistutusten tilastot"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Paid"
-msgstr "Maksettu"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -494,8 +410,8 @@ msgstr "Päiväkirjan tapahtumat"
 
 #. module: account_followup
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Yrityksen tulee olla sama liittyvälle tilille ja jaksolle."
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -503,12 +419,8 @@ msgid "Send email confirmation"
 msgstr "Lähetä sähköpostivarmennus"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:287
-#, python-format
-msgid ""
-"All E-mails have been successfully sent to Partners:.\n"
-"\n"
-"%s"
+#: report:account_followup.followup.print:0
+msgid "Total:"
 msgstr ""
 
 #. module: account_followup
@@ -527,9 +439,10 @@ msgid "Companies"
 msgstr "Yritykset"
 
 #. module: account_followup
-#: view:account_followup.followup:0
-msgid "Followup Lines"
-msgstr "Muistutusrivit"
+#: view:account.followup.print.all:0
+#: field:account.followup.print.all,summary:0
+msgid "Summary"
+msgstr "Yhteenveto"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -586,20 +499,26 @@ msgid "Followup Report"
 msgstr "Muistutus raportti"
 
 #. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "Follow-Up Steps"
+msgstr ""
+
+#. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
 msgstr "Jakso"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:307
+#, python-format
+msgid "Followup Summary"
+msgstr "Muistutuksen yhteenveto"
 
 #. module: account_followup
 #: view:account.followup.print:0
 #: view:account.followup.print.all:0
 msgid "Cancel"
 msgstr "Peruuta"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "Follow-Up Lines"
-msgstr "Muistutusrivit"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -612,9 +531,37 @@ msgid "Max Follow Up Level"
 msgstr "Suurin muistutustaso"
 
 #. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
+msgid "Review Invoicing Follow-Ups"
+msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
+
+#. module: account_followup
+#: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
+msgid ""
+"Define follow up levels and their related messages and delay. For each step, "
+"specify the message and the day of delay. Use the legend to know the using "
+"code to adapt the email content to the good context (good name, good date) "
+"and you can manage the multi language of messages."
+msgstr ""
+
+#. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 msgid "Payable Items"
 msgstr "Maksettavat rivit"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:298
+#, python-format
+msgid ""
+"E-Mail not sent to following Partners, E-mail not available !\n"
+"\n"
+"%s"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -629,15 +576,24 @@ msgstr "%(date)s: Nykyinen päiväys"
 
 #. module: account_followup
 #: view:account_followup.stat:0
+msgid "Including journal entries marked as a litigation"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat:0
 msgid "Followup Level"
 msgstr "Muistutuksen taso"
 
 #. module: account_followup
-#: view:account_followup.followup:0
 #: field:account_followup.followup,description:0
 #: report:account_followup.followup.print:0
 msgid "Description"
 msgstr "Kuvaus"
+
+#. module: account_followup
+#: constraint:account_followup.followup:0
+msgid "Only One Followup by Company."
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -671,6 +627,11 @@ msgid "Follow-ups Sent"
 msgstr "Maksumuistutukset lähetetty"
 
 #. module: account_followup
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr ""
+
+#. module: account_followup
 #: field:account_followup.followup,name:0
 #: field:account_followup.followup.line,name:0
 msgid "Name"
@@ -685,20 +646,6 @@ msgstr "Ensimmäinen liike"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Li."
-msgstr ""
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Maturity"
-msgstr "Erääntyneet"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:289
-#, python-format
-msgid ""
-"E-Mail not sent to following Partners, Email not available !\n"
-"\n"
-"%s"
 msgstr ""
 
 #. module: account_followup
@@ -717,15 +664,34 @@ msgid "Document : Customer account statement"
 msgstr "Dokumentti : Asiakkaan tiliote"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-#: field:account.followup.print.all,summary:0
-msgid "Summary"
-msgstr "Yhteenveto"
-
-#. module: account_followup
 #: view:account.move.line:0
 msgid "Total credit"
 msgstr "Kokonaisluotto"
+
+#. module: account_followup
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line3
+msgid ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Despite several reminders, your account is still not settled.\n"
+"\n"
+"Unless full payment is made in next 8 days, then legal action for the "
+"recovery of the debt will be taken without further notice.\n"
+"\n"
+"I trust that this action will prove unnecessary and details of due payments "
+"is printed below.\n"
+"\n"
+"In case of any queries concerning this matter, do not hesitate to contact "
+"our accounting department at (+32).10.68.94.39.\n"
+"\n"
+"Best Regards,\n"
+msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -748,6 +714,11 @@ msgid "Customer Ref :"
 msgstr "Asiakkaan viite"
 
 #. module: account_followup
+#: field:account.followup.print.all,test_print:0
+msgid "Test Print"
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(partner_name)s: Partner name"
 msgstr "%(partner_name)s: Kumppanin nimi"
@@ -761,11 +732,6 @@ msgstr "Viimeisimmän muistutuksen nimi"
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
 msgstr "Muistutuksen kriteeri"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Et voi luoda siirtoriviä näkymätilille."
 
 #~ msgid "Select partners"
 #~ msgstr "Valitse kumppanit"
@@ -781,6 +747,9 @@ msgstr "Et voi luoda siirtoriviä näkymätilille."
 #~ "Sähköpostia ei lehetetty seuraaville kumppaneille, Sähköposti ei ole "
 #~ "saatavilla\n"
 #~ "\n"
+
+#~ msgid "Balance:"
+#~ msgstr "Balanssi"
 
 #~ msgid "Select partners to remind"
 #~ msgstr "Valitse muitutettavat kumppanit"
@@ -798,6 +767,18 @@ msgstr "Et voi luoda siirtoriviä näkymätilille."
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
 
+#~ msgid "Paid"
+#~ msgstr "Maksettu"
+
+#~ msgid "Due"
+#~ msgstr "Erääntyy"
+
+#~ msgid "Maturity"
+#~ msgstr "Erääntyneet"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Et voi luoda siirtoriviä suljetulle tilille."
+
 #, python-format
 #~ msgid "Follwoup Summary"
 #~ msgstr "Muistutuksen yhteenveto"
@@ -814,6 +795,117 @@ msgstr "Et voi luoda siirtoriviä näkymätilille."
 #~ "Sähköposti lähetetty onnistuneesti seuraaville kumppaneille !\n"
 #~ "\n"
 
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Despite several reminders, your account is still not settled.\n"
+#~ "\n"
+#~ "Unless full payment is made in next 8 days , then legal action for the "
+#~ "recovery of the debt, will be taken without further notice.\n"
+#~ "\n"
+#~ "I trust that this action will prove unnecessary and details of due payments "
+#~ "is printed below.\n"
+#~ "\n"
+#~ "In case of any queries concerning this matter, do not hesitate to contact "
+#~ "our accounting department at (+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Hyvä yhteistyökumppanimme %(partner_name)s,\n"
+#~ "\n"
+#~ "Useista muistutuksista huolimatta, laskunne ovat yhä maksamatta.\n"
+#~ "\n"
+#~ "Jos maksua ei suoriteta seuraavien 8 päivän aikana, käynnistämme "
+#~ "perintätoimet ilman erillistä ilmoitusta.\n"
+#~ "\n"
+#~ "Toivomme että perintätoimia ei tarvita ja maksatte allaolevat laskunne "
+#~ "välittömästi.\n"
+#~ "\n"
+#~ "Tarvittaessa voitte ottaa yhteyttä talousosastollemme lisätietoja varten.\n"
+#~ "\n"
+#~ "Ystävällisin terveisin,\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "We are disappointed to see that despite sending a reminder, that your "
+#~ "account is now seriously overdue.\n"
+#~ "\n"
+#~ "It is essential that immediate payment is made, otherwise we will have to "
+#~ "consider placing a stop on your account which means that we will no longer "
+#~ "be able to supply your company with (goods/services).\n"
+#~ "Please, take appropriate measures in order to carry out this payment in the "
+#~ "next 8 days\n"
+#~ "\n"
+#~ "If there is a problem with paying invoice that we are not aware of, do not "
+#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+#~ "we can resolve the matter quickly.\n"
+#~ "\n"
+#~ "Details of due payments is printed below.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Hyvä yhteistyökumppanimme %(partner_name)s,\n"
+#~ "\n"
+#~ "Olemme pettyneitä että muistutuksesta huolimatta laskunne ovat pahasti "
+#~ "myöhässä.\n"
+#~ "\n"
+#~ "On tärkeää että maksu suoritetaan välittömästi, muuten meiden on harkitttava "
+#~ "toimitusten keskeyttämistä\n"
+#~ "jollloin emme voi enään toimittaa tuotteita tai palveluita teille.\n"
+#~ "Olkaa hyvä ja suorittakaa maksu seuraavien 8 päivän aikana.\n"
+#~ "\n"
+#~ "Jos laskun maksamisessa on ongelmia joista emme ole tietoisia, olkaa hyvä ja "
+#~ "ottakaa yhteyttä talousosastollemme, jotta ongelma voidaan ratkaista "
+#~ "nopeasti.\n"
+#~ "\n"
+#~ "Erääntyneiden maksujen yksityiskohdat näkyvät alla.\n"
+#~ "\n"
+#~ "Ystävällisin terveisin.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Exception made if there was a mistake of ours, it seems that the following "
+#~ "amount staid unpaid. Please, take appropriate measures in order to carry out "
+#~ "this payment in the next 8 days.\n"
+#~ "\n"
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department at (+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Hyvä yhteistyökumppanimme %(partner_name)s,\n"
+#~ "\n"
+#~ "Järjestelmämme tietojen mukaan yrityksellänne on seuraavat laskut myöhässä.\n"
+#~ "Olkaa hyvä ja suorittakaa maksu seuraavien 8 päivän aikana.\n"
+#~ "\n"
+#~ "Mikäli laskunne on jo maksettu tämän ilmoituksen jälkeen, tämä ilmoitus on "
+#~ "aiheeton.\n"
+#~ "Tarvittaessa voitte ottaa yhteyttä talousosastollemme asioiden "
+#~ "selvittämiseksi.\n"
+#~ "\n"
+#~ "Ystävällisin terveisin,\n"
+
+#~ msgid "Sub-Total:"
+#~ msgstr "Alasumma:"
+
+#~ msgid "Accounting follow-ups management"
+#~ msgstr "Maksumuistutusten hallinta"
+
+#~ msgid "Currency"
+#~ msgstr "Valuutta"
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Yrityksen tulee olla sama liittyvälle tilille ja jaksolle."
+
 #, python-format
 #~ msgid ""
 #~ "All E-mails have been successfully sent to Partners:.\n"
@@ -821,6 +913,12 @@ msgstr "Et voi luoda siirtoriviä näkymätilille."
 #~ msgstr ""
 #~ "Kaikki sähköpostit on lähetetty onnistuneesti kumppaneille:.\n"
 #~ "\n"
+
+#~ msgid "Followup Lines"
+#~ msgstr "Muistutusrivit"
+
+#~ msgid "Follow-Up Lines"
+#~ msgstr "Muistutusrivit"
 
 #, python-format
 #~ msgid ""
@@ -830,3 +928,6 @@ msgstr "Et voi luoda siirtoriviä näkymätilille."
 #~ "Sähköpostia ei lähetetty seuraaville kumppaneille. Sähköpostisosoitetta ei "
 #~ "löydy !\n"
 #~ "\n"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Et voi luoda siirtoriviä näkymätilille."

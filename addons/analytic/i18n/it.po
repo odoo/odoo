@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-01-13 01:32+0000\n"
 "Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:44+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:56+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -33,15 +33,6 @@ msgid "Specifies the amount of quantity to count."
 msgstr "Specifica la quantità da sommare"
 
 #. module: analytic
-#: model:ir.module.module,description:analytic.module_meta_information
-msgid ""
-"Module for defining analytic accounting object.\n"
-"    "
-msgstr ""
-"Modulo per definire gli oggetti dei conti analitici\n"
-"    "
-
-#. module: analytic
 #: field:account.analytic.account,state:0
 msgid "State"
 msgstr "Stato"
@@ -50,11 +41,6 @@ msgstr "Stato"
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
 msgstr "Gestore Conti"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Draft"
-msgstr "Bozza"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -97,14 +83,14 @@ msgstr ""
 "Quando il progetto è completato lo stato è \"Done\"."
 
 #. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr ""
+
+#. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
 msgstr "Tipo di conto"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "Modello"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -134,9 +120,16 @@ msgid "Company"
 msgstr "Azienda"
 
 #. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Maximum Quantity"
-msgstr "Quantità massima"
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really usefull for "
+"consolidation purposes of several companies charts with different "
+"currencies, for example."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -154,9 +147,9 @@ msgid "Date"
 msgstr "Data"
 
 #. module: analytic
-#: field:account.analytic.account,currency_id:0
-msgid "Account currency"
-msgstr "Valuta del Conto"
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "Modello"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -174,9 +167,14 @@ msgstr ""
 "costo del Prodotto. Sempre espresso nella valuta principale aziendale."
 
 #. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr ""
+
+#. module: analytic
 #: help:account.analytic.account,quantity_max:0
-msgid "Sets the higher limit of quantity of hours."
-msgstr "Imposta il limite superiore della quantità di ore"
+msgid "Sets the higher limit of time to work on the contract."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -194,18 +192,20 @@ msgid "Contact"
 msgstr "Contatto"
 
 #. module: analytic
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
+#: field:account.analytic.account,code:0
+msgid "Code/Reference"
 msgstr ""
-"Errore! La valuta deve essere la stessa di quella impostata nell'azienda "
-"selezionata"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
 msgstr "Cancellato"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -232,9 +232,14 @@ msgid "Date End"
 msgstr "Data Fine"
 
 #. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Account Code"
-msgstr "Codice Conto"
+#: field:account.analytic.account,quantity_max:0
+msgid "Maximum Time"
+msgstr ""
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -244,9 +249,18 @@ msgstr "Nome Conto completa"
 #. module: analytic
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.module.module,shortdesc:analytic.module_meta_information
 msgid "Analytic Account"
 msgstr "Conto Analitico"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr ""
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -272,3 +286,32 @@ msgstr "Aperto"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Voci Conto Analitico"
+
+#~ msgid ""
+#~ "Module for defining analytic accounting object.\n"
+#~ "    "
+#~ msgstr ""
+#~ "Modulo per definire gli oggetti dei conti analitici\n"
+#~ "    "
+
+#~ msgid "Draft"
+#~ msgstr "Bozza"
+
+#~ msgid "Maximum Quantity"
+#~ msgstr "Quantità massima"
+
+#~ msgid "Sets the higher limit of quantity of hours."
+#~ msgstr "Imposta il limite superiore della quantità di ore"
+
+#~ msgid "Account currency"
+#~ msgstr "Valuta del Conto"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr ""
+#~ "Errore! La valuta deve essere la stessa di quella impostata nell'azienda "
+#~ "selezionata"
+
+#~ msgid "Account Code"
+#~ msgstr "Codice Conto"

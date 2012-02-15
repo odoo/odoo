@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-02-11 01:24+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:45+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:57+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -25,9 +25,9 @@ msgid ""
 msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Friday"
-msgstr "Петък"
+#: selection:resource.resource,resource_type:0
+msgid "Material"
+msgstr "Материал"
 
 #. module: resource
 #: field:resource.resource,resource_type:0
@@ -43,13 +43,14 @@ msgstr ""
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr ""
+msgstr "Разходни норми"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
+#: field:resource.resource,calendar_id:0
 msgid "Working Time"
 msgstr "Работно време"
 
@@ -72,7 +73,7 @@ msgstr "Неделя"
 #. module: resource
 #: view:resource.resource:0
 msgid "Search Resource"
-msgstr ""
+msgstr "Търси ресурс"
 
 #. module: resource
 #: view:resource.resource:0
@@ -86,24 +87,32 @@ msgid "Resources"
 msgstr "Ресурси"
 
 #. module: resource
+#: code:addons/resource/resource.py:392
+#, python-format
+msgid "Make sure the Working time has been configured with proper week days!"
+msgstr ""
+
+#. module: resource
 #: field:resource.calendar,manager:0
 msgid "Workgroup manager"
-msgstr ""
+msgstr "Бригадир"
 
 #. module: resource
 #: help:resource.calendar.attendance,hour_from:0
 msgid "Working time will start from"
-msgstr ""
+msgstr "Нална дата на периода за изработка"
 
 #. module: resource
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
+"Грешка! Началната дата трябва да е по малка от крайната дата при периода на "
+"изработка"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
-msgstr ""
+msgstr "Календар ползвани ресурси"
 
 #. module: resource
 #: field:resource.calendar,company_id:0
@@ -115,9 +124,9 @@ msgid "Company"
 msgstr "Фирма"
 
 #. module: resource
-#: selection:resource.resource,resource_type:0
-msgid "Material"
-msgstr "Материал"
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Friday"
+msgstr "Петък"
 
 #. module: resource
 #: field:resource.calendar.attendance,dayofweek:0
@@ -127,7 +136,7 @@ msgstr "Ден от седмицата"
 #. module: resource
 #: help:resource.calendar.attendance,hour_to:0
 msgid "Working time will end at"
-msgstr ""
+msgstr "Работното време приключва на"
 
 #. module: resource
 #: field:resource.calendar.attendance,date_from:0
@@ -137,7 +146,7 @@ msgstr "Начална дата"
 #. module: resource
 #: view:resource.calendar:0
 msgid "Search Working Time"
-msgstr ""
+msgstr "Търсене в работните времена"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -158,6 +167,11 @@ msgstr "Дата"
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Search Working Period Leaves"
+msgstr "Търсене в периодите за изработка"
+
+#. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency factor"
 msgstr ""
 
 #. module: resource
@@ -171,7 +185,6 @@ msgid "Closing Days"
 msgstr ""
 
 #. module: resource
-#: model:ir.module.module,shortdesc:resource.module_meta_information
 #: model:ir.ui.menu,name:resource.menu_resource_config
 #: view:resource.calendar.leaves:0
 #: field:resource.calendar.leaves,resource_id:0
@@ -189,19 +202,6 @@ msgid "Name"
 msgstr "Име"
 
 #. module: resource
-#: model:ir.module.module,description:resource.module_meta_information
-msgid ""
-"\n"
-"    Module for resource management\n"
-"     A resource represent something that can be scheduled\n"
-"     (a developer on a task or a workcenter on manufacturing orders).\n"
-"     This module manages a resource calendar associated to every resource.\n"
-"     It also manages the leaves of every resource.\n"
-"\n"
-"    "
-msgstr ""
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
 msgstr "Сряда"
@@ -209,14 +209,13 @@ msgstr "Сряда"
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
-#: field:resource.resource,calendar_id:0
 msgid "Working Period"
-msgstr ""
+msgstr "Време за изработка"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
 msgid "Resource Detail"
-msgstr ""
+msgstr "Детайли за ресурса"
 
 #. module: resource
 #: field:resource.resource,active:0
@@ -233,6 +232,18 @@ msgstr ""
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
 msgid "Resource's Calendar"
+msgstr "Календар на ресурса"
+
+#. module: resource
+#: field:resource.calendar.attendance,hour_from:0
+msgid "Work from"
+msgstr ""
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
+msgid ""
+"Define working hours and time table that could be scheduled to your project "
+"members"
 msgstr ""
 
 #. module: resource
@@ -243,11 +254,11 @@ msgstr ""
 #. module: resource
 #: help:resource.resource,calendar_id:0
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "Определяне на график за ползване на ресурса"
 
 #. module: resource
-#: field:resource.calendar.attendance,hour_from:0
-msgid "Work from"
+#: view:resource.calendar.leaves:0
+msgid "Starting Date of Leave"
 msgstr ""
 
 #. module: resource
@@ -291,11 +302,6 @@ msgid "Resource Leaves"
 msgstr ""
 
 #. module: resource
-#: view:resource.resource:0
-msgid "General Information"
-msgstr "Обща информация"
-
-#. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
 msgid ""
 "Resources allow you to create and manage resources that should be involved "
@@ -315,8 +321,9 @@ msgid "(vacation)"
 msgstr "(ваканция)"
 
 #. module: resource
-#: field:resource.resource,time_efficiency:0
-msgid "Efficiency factor"
+#: code:addons/resource/resource.py:392
+#, python-format
+msgid "Configuration Error!"
 msgstr ""
 
 #. module: resource
@@ -335,7 +342,7 @@ msgid "Start Date"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/resource.py:246
+#: code:addons/resource/resource.py:310
 #, python-format
 msgid " (copy)"
 msgstr ""
@@ -344,3 +351,6 @@ msgstr ""
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr ""
+
+#~ msgid "General Information"
+#~ msgstr "Обща информация"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-12 20:29+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-09 07:20+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-11-05 05:22+0000\n"
-"X-Generator: Launchpad (build 14231)\n"
+"X-Launchpad-Export-Date: 2012-02-10 04:48+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -40,12 +40,6 @@ msgid "Title"
 msgstr "Titel"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.action_account_invoice_special_msg
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_layout_message
-msgid "Invoices with Layout and Message"
-msgstr "Facturen met layout en bericht"
-
-#. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Disc. (%)"
@@ -57,9 +51,9 @@ msgid "Note"
 msgstr "Opmerking"
 
 #. module: account_invoice_layout
-#: model:ir.model,name:account_invoice_layout.model_notify_message
-msgid "Notify By Messages"
-msgstr "Opmerkzaam maken met bericht"
+#: view:account.invoice.special.msg:0
+msgid "Print"
+msgstr "Afdrukken"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
@@ -75,39 +69,9 @@ msgid "Unit Price"
 msgstr "Eenheidsprijs"
 
 #. module: account_invoice_layout
-#: model:ir.module.module,description:account_invoice_layout.module_meta_information
-msgid ""
-"\n"
-"    This module provides some features to improve the layout of the "
-"invoices.\n"
-"\n"
-"    It gives you the possibility to\n"
-"        * order all the lines of an invoice\n"
-"        * add titles, comment lines, sub total lines\n"
-"        * draw horizontal lines and put page breaks\n"
-"\n"
-"    Moreover, there is one option which allows you to print all the selected "
-"invoices with a given special message at the bottom of it. This feature can "
-"be very useful for printing your invoices with end-of-year wishes, special "
-"punctual conditions...\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"    Deze module biedt een aantal mogelijkheden om de factuurlayout te "
-"verbeteren.\n"
-"\n"
-"    Heet geeft u de mogelijkheid om\n"
-"        * factuurregels te sorteren\n"
-"        * titels, commentaarregels en subtotaalregels toe te voegen\n"
-"        * horizontale lijnen te trekken en pagina overgangen toe te voegen\n"
-"\n"
-"    Daarnaast is er een optie om alle geselecteerde facturen af te drukken "
-"met een speciaal bericht aan het einde ervan. Deze optie kan goed bruikbaar "
-"zijn bij het afdrukken van facturen met eindejaars wensen, speciale "
-"tijdelijke voorwaarden....\n"
-"\n"
-"    "
+#: model:ir.model,name:account_invoice_layout.model_notify_message
+msgid "Notify By Messages"
+msgstr "Opmerkzaam maken met bericht"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -143,9 +107,9 @@ msgid "Notification Message"
 msgstr "Bericht"
 
 #. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
-msgstr "Product"
+#: report:account.invoice.layout:0
+msgid "Customer Code"
+msgstr "Klant Code"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -241,9 +205,9 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: account_invoice_layout
-#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
-msgid "Invoices with Layout"
-msgstr "Facturen met layout:"
+#: selection:account.invoice.line,state:0
+msgid "Product"
+msgstr "Product"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -295,9 +259,9 @@ msgid "Origin"
 msgstr "Oorsprong"
 
 #. module: account_invoice_layout
-#: field:account.invoice.line,state:0
-msgid "Type"
-msgstr "Soort"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Factuurnummer moet uniek zijn per bedrijf!"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -305,15 +269,9 @@ msgid "Separator Line"
 msgstr "Scheidingslijn"
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Your Reference"
 msgstr "Uw referentie"
-
-#. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "Invoices Layout Improvement"
-msgstr "Factuurlayout verbetering"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -322,9 +280,14 @@ msgid "Supplier Invoice"
 msgstr "Inkoopfactuur"
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Print"
-msgstr "Afdrukken"
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
+msgid "Invoices"
+msgstr "Facturen"
+
+#. module: account_invoice_layout
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr "Ongeldige BBA gestructureerde communicatie!"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -341,6 +304,17 @@ msgstr "Factuurregel"
 #: report:account.invoice.layout:0
 msgid "Net Total:"
 msgstr "Netto totaal:"
+
+#. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.action_account_invoice_special_msg
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_layout_message
+msgid "Invoices and Message"
+msgstr "Facturen en berichten"
+
+#. module: account_invoice_layout
+#: field:account.invoice.line,state:0
+msgid "Type"
+msgstr "Soort"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
@@ -383,6 +357,9 @@ msgstr "Alle berichten"
 #~ msgid "Invoice Date:"
 #~ msgstr "Factuurdatum:"
 
+#~ msgid "Invoices with Layout and Message"
+#~ msgstr "Facturen met layout en bericht"
+
 #~ msgid "Customer Ref:"
 #~ msgstr "Klant ref:"
 
@@ -397,6 +374,9 @@ msgstr "Alle berichten"
 
 #~ msgid "Tel. :"
 #~ msgstr "Tel. :"
+
+#~ msgid "Invoices with Layout"
+#~ msgstr "Facturen met layout:"
 
 #~ msgid "Total (excl. taxes):"
 #~ msgstr "Totaal (excl. BTW):"
@@ -426,3 +406,39 @@ msgstr "Alle berichten"
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+
+#~ msgid "Invoices Layout Improvement"
+#~ msgstr "Factuurlayout verbetering"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module provides some features to improve the layout of the "
+#~ "invoices.\n"
+#~ "\n"
+#~ "    It gives you the possibility to\n"
+#~ "        * order all the lines of an invoice\n"
+#~ "        * add titles, comment lines, sub total lines\n"
+#~ "        * draw horizontal lines and put page breaks\n"
+#~ "\n"
+#~ "    Moreover, there is one option which allows you to print all the selected "
+#~ "invoices with a given special message at the bottom of it. This feature can "
+#~ "be very useful for printing your invoices with end-of-year wishes, special "
+#~ "punctual conditions...\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Deze module biedt een aantal mogelijkheden om de factuurlayout te "
+#~ "verbeteren.\n"
+#~ "\n"
+#~ "    Heet geeft u de mogelijkheid om\n"
+#~ "        * factuurregels te sorteren\n"
+#~ "        * titels, commentaarregels en subtotaalregels toe te voegen\n"
+#~ "        * horizontale lijnen te trekken en pagina overgangen toe te voegen\n"
+#~ "\n"
+#~ "    Daarnaast is er een optie om alle geselecteerde facturen af te drukken "
+#~ "met een speciaal bericht aan het einde ervan. Deze optie kan goed bruikbaar "
+#~ "zijn bij het afdrukken van facturen met eindejaars wensen, speciale "
+#~ "tijdelijke voorwaarden....\n"
+#~ "\n"
+#~ "    "
