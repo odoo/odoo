@@ -216,11 +216,12 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     .pluck(this.group_field)
                     .uniq()
                     .map(function (value, index) {
+                        var groupval = '';
                         if(value) {
-                            value = value.toLowerCase().replace(/[\s\/]+/g,'_');
+                            groupval = value.toLowerCase().replace(/[\s\/]+/g,'_');
                         }
                         return {
-                            group: _.str.sprintf('%s_%s', self.ordinate, value),
+                            group: _.str.sprintf('%s_%s', self.ordinate, groupval),
                             text: value,
                             color: COLOR_PALETTE[index % COLOR_PALETTE.length]
                         };
