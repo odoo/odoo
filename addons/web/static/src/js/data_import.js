@@ -109,9 +109,10 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         _(fields).each(function (field, field_name) {
             // Ignore spec for id field
             // Don't import function fields (function and related)
-            if (field_name === 'id' || 'function' in field) {
+            if (field_name === 'id' || field.readonly) {
                 return;
             }
+
             var f = {
                 id: field_name,
                 name: field_name,

@@ -313,14 +313,17 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
                     name: record.action_id[1],
                     done: record.state !== 'open',
                     to_do: record.state === 'open',
-                    category: record['category_id'][1] || "Uncategorized"
+                    category: record['category_id'][1] || _t("Uncategorized")
                 }
             })
             .groupBy(function (record) {return record.category})
             .value();
         this.$element.html(QWeb.render('ConfigOverview.content', {
             completion: 100 * progress.done / progress.total,
-            groups: grouped_todos
+            groups: grouped_todos,
+            task_title: _t("Execute task \"%s\""),
+            checkbox_title: _t("Mark this task as done"),
+            _: _
         }));
         var $progress = this.$element.find('div.oe-config-progress-bar');
         $progress.progressbar({value: $progress.data('completion')});
@@ -419,18 +422,14 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.OldWidget.extend({
     },
     on_installed_database: function() {
         var self = this;
-        var ds = new openerp.web.DataSetSearch(this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
-        var r = ds.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data', 'module']).then(function (applications) {
-            //// Create a matrix of 3*x applications
-            //var rows = [];
-            //while (applications.length) {
-            //    rows.push(applications.splice(0, 3));
-            //}
-            //var tiles = QWeb.render('ApplicationTiles.content', {rows: rows});
-            var tiles = QWeb.render('ApplicationTiles.content', {applications: applications});
-            $(tiles).appendTo(self.$element).find('.oe_install-module-link').click(function () {
-                openerp.webclient.menu.on_menu_click(null, $(this).data('menu'))
-            });
+        self.rpc('/web/menu/get_user_roots', {}).then(function (menu_ids) {
+            var menuds = new openerp.web.DataSet(this, 'ir.ui.menu',{})
+                .read_ids(menu_ids, ['name', 'web_icon_data', 'web_icon_hover_data', 'module']).then(function (applications) {
+                    var tiles = QWeb.render('ApplicationTiles.content', {applications: applications});
+                    $(tiles).appendTo(self.$element).find('.oe_install-module-link').click(function () {
+                        openerp.webclient.menu.on_menu_click(null, $(this).data('menu'))
+                    });
+                });
         });
     }
 });

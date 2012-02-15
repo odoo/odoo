@@ -57,7 +57,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
             this.widget_parent.do_push_state(state);
         }
     },
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
         var self = this,
             action_loaded;
         if (state.action_id) {
@@ -76,6 +76,15 @@ session.web.ActionManager = session.web.OldWidget.extend({
                 views: [[false, 'page'], [false, 'form']]
             };
             action_loaded = this.do_action(action);
+        } else if (state.sa) {
+            // load session action
+            var self = this;
+            this.null_action();
+            action_loaded = this.rpc('/web/session/get_session_action',  {key: state.sa}).pipe(function(action) {
+                if (action) {
+                    return self.do_action(action);
+                }
+            });
         } else if (state.client_action) {
             this.null_action();
             this.ir_actions_client(state.client_action);
@@ -83,7 +92,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
 
         $.when(action_loaded || null).then(function() {
             if (self.inner_viewmanager) {
-                self.inner_viewmanager.do_load_state(state);
+                self.inner_viewmanager.do_load_state(state, warm);
             }
         });
     },
@@ -593,16 +602,6 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                         width: '95%'}, $root).open();
                 });
                 break;
-            case 'customize_object':
-                this.rpc('/web/dataset/search_read', {
-                    model: 'ir.model',
-                    fields: ['id'],
-                    domain: [['model', '=', this.dataset.model]]
-                }, function (result) {
-                    self.do_edit_resource('ir.model', result.ids[0], {
-                        name : _t("Customize Object") });
-                });
-                break;
             case 'manage_views':
                 if (current_view.fields_view && current_view.fields_view.arch) {
                     var view_editor = new session.web.ViewEditor(current_view, current_view.$element, this.dataset, current_view.fields_view.arch);
@@ -686,7 +685,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             this.widget_parent.do_push_state(state);
         }
     },
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
         var self = this,
             defs = [];
         if (state.view_type && state.view_type !== this.active_view) {
@@ -698,7 +697,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         } 
 
         $.when(defs).then(function() {
-            self.views[self.active_view].controller.do_load_state(state);
+            self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },
     shortcut_check : function(view) {
@@ -756,16 +755,21 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         var $logs_list = $logs.find('ul').empty();
         $logs.toggleClass('oe-has-more', log_records.length > cutoff);
         _(log_records.reverse()).each(function (record) {
+            var context = {};
+            if (record.context) {
+                try { context = py.eval(record.context).toJSON(); }
+                catch (e) { /* TODO: what do I do now? */ }
+            }
             $(_.str.sprintf('<li><a href="#">%s</a></li>', record.name))
                 .appendTo($logs_list)
-                .delegate('a', 'click', function (e) {
+                .delegate('a', 'click', function () {
                     self.do_action({
                         type: 'ir.actions.act_window',
                         res_model: record.res_model,
                         res_id: record.res_id,
                         // TODO: need to have an evaluated context here somehow
-                        //context: record.context,
-                        views: [[false, 'form']]
+                        context: context,
+                        views: [[context.view_id || false, 'form']]
                     });
                     return false;
                 });
@@ -812,10 +816,6 @@ session.web.Sidebar = session.web.OldWidget.extend({
             }, {
                 label: _t("Export"),
                 callback: view.on_sidebar_export
-            }, {
-                label: _t("View Log"),
-                callback: view.on_sidebar_view_log,
-                classname: 'oe_hide oe_sidebar_view_log'
             }
         ]);
     },
@@ -854,18 +854,32 @@ session.web.Sidebar = session.web.OldWidget.extend({
         }
         return $section;
     },
-
+    /**
+     * For each item added to the section:
+     *
+     * ``label``
+     *     will be used as the item's name in the sidebar
+     *
+     * ``action``
+     *     descriptor for the action which will be executed, ``action`` and
+     *     ``callback`` should be exclusive
+     *
+     * ``callback``
+     *     function to call when the item is clicked in the sidebar, called
+     *     with the item descriptor as its first argument (so information
+     *     can be stored as additional keys on the object passed to
+     *     ``add_items``)
+     *
+     * ``classname`` (optional)
+     *     ``@class`` set on the sidebar serialization of the item
+     *
+     * ``title`` (optional)
+     *     will be set as the item's ``@title`` (tooltip)
+     *
+     * @param {String} section_code
+     * @param {Array<{label, action | callback[, classname][, title]}>} items
+     */
     add_items: function(section_code, items) {
-        // An item is a dictonary : {
-        //    label: label to be displayed for the link,
-        //    action: action to be launch when the link is clicked,
-        //    callback: a function to be executed when the link is clicked,
-        //    classname: optional dom class name for the line,
-        //    title: optional title for the link
-        // }
-        // Note: The item should have one action or/and a callback
-        //
-
         var self = this,
             $section = this.add_section(_.str.titleize(section_code.replace('_', ' ')), section_code),
             section_id = $section.attr('id');
@@ -1029,7 +1043,8 @@ session.web.TranslateDialog = session.web.Dialog.extend({
     },
     on_button_Save: function() {
         var trads = {},
-            self = this;
+            self = this,
+            trads_mutex = new $.Mutex();
         self.$fields_form.find('.oe_trad_field.touched').each(function() {
             var field = $(this).attr('name').split('-');
             if (!trads[field[0]]) {
@@ -1042,9 +1057,10 @@ session.web.TranslateDialog = session.web.Dialog.extend({
                 _.each(data, function(value, field) {
                     self.view.fields[field].set_value(value);
                 });
-            } else {
-                self.view.dataset.write(self.view.datarecord.id, data, { 'lang': code });
             }
+            trads_mutex.exec(function() {
+                return self.view.dataset.write(self.view.datarecord.id, data, { context : { 'lang': code } });
+            });
         });
         this.close();
     },
@@ -1172,7 +1188,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             this.widget_parent.do_push_state(state);
         }
     },
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
     },
     /**
      * Switches to a specific view type
@@ -1212,8 +1228,6 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             view_type : "list",
             view_mode : "list"
         });
-    },
-    on_sidebar_view_log: function() {
     },
     sidebar_context: function () {
         return $.when();

@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-import web.common.http as openerpweb
+try:
+    import openerp.addons.web.common.http as openerpweb
+except ImportError:
+    import web.common.http as openerpweb
 
 WIDGET_CONTENT_PATTERN = """<!DOCTYPE html>
 <html>

@@ -922,6 +922,3 @@ if (!document.createElement('canvas').getContext) {
 })();
 
 } // if
-
-if (dhtmlx && dhtmlx._modules)
-	dhtmlx._modules["thirdparty/excanvas/excanvas.js"] = true;

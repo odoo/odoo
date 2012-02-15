@@ -97,7 +97,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             this._limit = (this.options.limit
                         || this.defaults.limit
                         || (this.widget_parent.action || {}).limit
-                        || null);
+                        || 80);
         }
         return this._limit;
     },
@@ -246,7 +246,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                         self.page = 0; break;
                     case 'last':
                         self.page = Math.floor(
-                            self.dataset.ids.length / self.limit());
+                            self.dataset.size() / self.limit());
                         break;
                     case 'next':
                         self.page += 1; break;
@@ -293,7 +293,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.dataset.ids = dataset.ids;
 
         var limit = this.limit(),
-            total = dataset.ids.length,
+            total = dataset.size(),
             first = (this.page * limit),
             last;
         if (!limit || (total - first) < limit) {
@@ -451,6 +451,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      */
     reload_content: function () {
         var self = this;
+        self.$element.find('.all-record-selector').prop('checked', false);
         this.records.reset();
         var reloaded = $.Deferred();
         this.$element.find('.oe-listview-content').append(
@@ -475,7 +476,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         return this.reload_content();
     },
 
-    do_load_state: function(state) {
+    do_load_state: function(state, warm) {
         var reload = false;
         if (state.page && this.page !== state.page) {
             this.page = state.page;
@@ -1316,11 +1317,11 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             if (!self.datagroup.openable) {
                 view.configure_pager(dataset);
             } else {
-                if (dataset.ids.length == records.length) {
+                if (dataset.size() == records.length) {
                     // only one page
                     self.$row.find('td.oe-group-pagination').empty();
                 } else {
-                    var pages = Math.ceil(dataset.ids.length / limit);
+                    var pages = Math.ceil(dataset.size() / limit);
                     self.$row
                         .find('.oe-pager-state')
                             .text(_.str.sprintf(_t("%(page)d/%(page_count)d"), {

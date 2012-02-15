@@ -6,7 +6,7 @@ import logging
 import time
 import openerplib
 
-import nonliterals
+from . import nonliterals
 
 _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
@@ -36,6 +36,7 @@ class OpenERPSession(object):
         self._uid = False
         self._login = False
         self._password = False
+        self._suicide = False
         self.context = {}
         self.contexts_store = {}
         self.domains_store = {}

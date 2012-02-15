@@ -5,8 +5,10 @@ import base64
 import csv
 import glob
 import itertools
+import logging
 import operator
 import datetime
+import hashlib
 import os
 import re
 import simplejson
@@ -19,6 +21,7 @@ from cStringIO import StringIO
 
 import babel.messages.pofile
 import werkzeug.utils
+import werkzeug.wrappers
 try:
     import xlwt
 except ImportError:
@@ -34,21 +37,22 @@ openerpweb = common.http
 
 def concat_xml(file_list):
     """Concatenate xml files
-    return (concat,timestamp)
-    concat: concatenation of file content
-    timestamp: max(os.path.getmtime of file_list)
+
+    :param list(str) file_list: list of files to check
+    :returns: (concatenation_result, checksum)
+    :rtype: (str, str)
     """
+    checksum = hashlib.new('sha1')
     if not file_list:
-        return '', None
+        return '', checksum.hexdigest()
 
     root = None
-    files_timestamp = 0
     for fname in file_list:
-        ftime = os.path.getmtime(fname)
-        if ftime > files_timestamp:
-            files_timestamp = ftime
-
-        xml = ElementTree.parse(fname).getroot()
+        with open(fname, 'rb') as fp:
+            contents = fp.read()
+            checksum.update(contents)
+            fp.seek(0)
+            xml = ElementTree.parse(fp).getroot()
 
         if root is None:
             root = ElementTree.Element(xml.tag)
@@ -57,17 +61,21 @@ def concat_xml(file_list):
 
         for child in xml.getchildren():
             root.append(child)
-    return ElementTree.tostring(root, 'utf-8'), files_timestamp
+    return ElementTree.tostring(root, 'utf-8'), checksum.hexdigest()
 
 
 def concat_files(file_list, reader=None, intersperse=""):
-    """ Concatenate file content
-    return (concat,timestamp)
-    concat: concatenation of file content, read by `reader`
-    timestamp: max(os.path.getmtime of file_list)
+    """ Concatenates contents of all provided files
+
+    :param list(str) file_list: list of files to check
+    :param function reader: reading procedure for each file
+    :param str intersperse: string to intersperse between file contents
+    :returns: (concatenation_result, checksum)
+    :rtype: (str, str)
     """
+    checksum = hashlib.new('sha1')
     if not file_list:
-        return '', None
+        return '', checksum.hexdigest()
 
     if reader is None:
         def reader(f):
@@ -75,19 +83,18 @@ def concat_files(file_list, reader=None, intersperse=""):
                 return fp.read()
 
     files_content = []
-    files_timestamp = 0
     for fname in file_list:
-        ftime = os.path.getmtime(fname)
-        if ftime > files_timestamp:
-            files_timestamp = ftime
+        contents = reader(fname)
+        checksum.update(contents)
+        files_content.append(contents)
 
-        files_content.append(reader(fname))
     files_concat = intersperse.join(files_content)
-    return files_concat,files_timestamp
+    return files_concat, checksum.hexdigest()
 
 html_template = """<!DOCTYPE html>
 <html style="height: 100%%">
     <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title>OpenERP</title>
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
@@ -149,10 +156,51 @@ class WebClient(openerpweb.Controller):
     def qweblist(self, req, mods=None):
         return self.manifest_list(req, mods, 'qweb')
 
+    def get_last_modified(self, files):
+        """ Returns the modification time of the most recently modified
+        file provided
+
+        :param list(str) files: names of files to check
+        :return: most recent modification time amongst the fileset
+        :rtype: datetime.datetime
+        """
+        files = list(files)
+        if files:
+            return max(datetime.datetime.fromtimestamp(os.path.getmtime(f))
+                       for f in files)
+        return datetime.datetime(1970, 1, 1)
+
+    def make_conditional(self, req, response, last_modified=None, etag=None):
+        """ Makes the provided response conditional based upon the request,
+        and mandates revalidation from clients
+
+        Uses Werkzeug's own :meth:`ETagResponseMixin.make_conditional`, after
+        setting ``last_modified`` and ``etag`` correctly on the response object
+
+        :param req: OpenERP request
+        :type req: web.common.http.WebRequest
+        :param response: Werkzeug response
+        :type response: werkzeug.wrappers.Response
+        :param datetime.datetime last_modified: last modification date of the response content
+        :param str etag: some sort of checksum of the content (deep etag)
+        :return: the response object provided
+        :rtype: werkzeug.wrappers.Response
+        """
+        response.cache_control.must_revalidate = True
+        response.cache_control.max_age = 0
+        if last_modified:
+            response.last_modified = last_modified
+        if etag:
+            response.set_etag(etag)
+        return response.make_conditional(req.httprequest)
+
     @openerpweb.httprequest
     def css(self, req, mods=None):
-
         files = list(self.manifest_glob(req, mods, 'css'))
+        last_modified = self.get_last_modified(f[0] for f in files)
+        if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
+            return werkzeug.wrappers.Response(status=304)
+
         file_map = dict(files)
 
         rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
@@ -181,24 +229,37 @@ class WebClient(openerpweb.Controller):
             )
             return data
 
-        content,timestamp = concat_files((f[0] for f in files), reader)
-        # TODO use timestamp to set Last mofified date and E-tag
-        return req.make_response(content, [('Content-Type', 'text/css')])
+        content, checksum = concat_files((f[0] for f in files), reader)
+
+        return self.make_conditional(
+            req, req.make_response(content, [('Content-Type', 'text/css')]),
+            last_modified, checksum)
 
     @openerpweb.httprequest
     def js(self, req, mods=None):
         files = [f[0] for f in self.manifest_glob(req, mods, 'js')]
-        content, timestamp = concat_files(files, intersperse=';')
-        # TODO use timestamp to set Last mofified date and E-tag
-        return req.make_response(content, [('Content-Type', 'application/javascript')])
+        last_modified = self.get_last_modified(files)
+        if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
+            return werkzeug.wrappers.Response(status=304)
+
+        content, checksum = concat_files(files, intersperse=';')
+
+        return self.make_conditional(
+            req, req.make_response(content, [('Content-Type', 'application/javascript')]),
+            last_modified, checksum)
 
     @openerpweb.httprequest
     def qweb(self, req, mods=None):
         files = [f[0] for f in self.manifest_glob(req, mods, 'qweb')]
-        content,timestamp = concat_xml(files)
-        # TODO use timestamp to set Last mofified date and E-tag
-        return req.make_response(content, [('Content-Type', 'text/xml')])
+        last_modified = self.get_last_modified(files)
+        if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
+            return werkzeug.wrappers.Response(status=304)
 
+        content,checksum = concat_xml(files)
+
+        return self.make_conditional(
+            req, req.make_response(content, [('Content-Type', 'text/xml')]),
+            last_modified, checksum)
 
     @openerpweb.httprequest
     def home(self, req, s_action=None, **kw):
@@ -244,7 +305,7 @@ class WebClient(openerpweb.Controller):
             transs[addon_name] = transl
             addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
             for l in langs:
-                f_name = os.path.join(addons_path, addon_name, "po", l + ".po")
+                f_name = os.path.join(addons_path, addon_name, "i18n", l + ".po")
                 if not os.path.exists(f_name):
                     continue
                 try:
@@ -253,7 +314,7 @@ class WebClient(openerpweb.Controller):
                 except Exception:
                     continue
                 for x in po:
-                    if x.id and x.string:
+                    if x.id and x.string and "openerp-web" in x.auto_comments:
                         transl["messages"].append({'id': x.id, 'string': x.string})
         return {"modules": transs,
                 "lang_parameters": lang_obj}
@@ -554,6 +615,10 @@ class Session(openerpweb.Controller):
         req.session.assert_valid()
         return None
 
+    @openerpweb.jsonrequest
+    def destroy(self, req):
+        req.session._suicide = True
+
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
     # should we give the evaluated context as an evaluation context to the domain?
@@ -644,6 +709,9 @@ def fix_view_modes(action):
     new view mode ``list`` which is the result of the ``tree`` view_mode
     in conjunction with the ``form`` view_type.
 
+    This method also adds a ``page`` view mode in case there is a ``form`` in
+    the input action.
+
     TODO: this should go into the doc, some kind of "peculiarities" section
 
     :param dict action: an action descriptor
@@ -677,6 +745,30 @@ class Menu(openerpweb.Controller):
     def load(self, req):
         return {'data': self.do_load(req)}
 
+    @openerpweb.jsonrequest
+    def get_user_roots(self, req):
+        return self.do_get_user_roots(req)
+
+    def do_get_user_roots(self, req):
+        """ Return all root menu ids visible for the session user.
+
+        :param req: A request object, with an OpenERP session attribute
+        :type req: < session -> OpenERPSession >
+        :return: the root menu ids
+        :rtype: list(int)
+        """
+        s = req.session
+        context = s.eval_context(req.context)
+        Menus = s.model('ir.ui.menu')
+        # If a menu action is defined use its domain to get the root menu items
+        user_menu_id = s.model('res.users').read([s._uid], ['menu_id'], context)[0]['menu_id']
+        if user_menu_id:
+            menu_domain = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'], context)[0]['domain']
+            menu_domain = ast.literal_eval(menu_domain)
+        else:
+            menu_domain = [('parent_id', '=', False)]
+        return Menus.search(menu_domain, 0, False, False, context)
+
     def do_load(self, req):
         """ Loads all menu items (all applications and their sub-menus).
 
@@ -685,14 +777,20 @@ class Menu(openerpweb.Controller):
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        Menus = req.session.model('ir.ui.menu')
-        # menus are loaded fully unlike a regular tree view, cause there are
-        # less than 512 items
         context = req.session.eval_context(req.context)
+        Menus = req.session.model('ir.ui.menu')
+
+        menu_roots = Menus.read(self.do_get_user_roots(req), ['name', 'sequence', 'parent_id'], context)
+        menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, ''], 'children' : menu_roots}
+
+        # menus are loaded fully unlike a regular tree view, cause there are a
+        # limited number of items (752 when all 6.1 addons are installed)
         menu_ids = Menus.search([], 0, False, False, context)
         menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'], context)
-        menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, '']}
-        menu_items.append(menu_root)
+        # adds roots at the end of the sequence, so that they will overwrite
+        # equivalent menu items from full menu read when put into id:item
+        # mapping, resulting in children being correctly set on the roots.
+        menu_items.extend(menu_roots)
 
         # make a tree using parent_id
         menu_items_map = dict((menu_item["id"], menu_item) for menu_item in menu_items)
@@ -753,21 +851,24 @@ class DataSet(openerpweb.Controller):
         context, domain = eval_context_and_domain(
             req.session, req.context, domain)
 
-        ids = Model.search(domain, 0, False, sort or False, context)
-        # need to fill the dataset with all ids for the (domain, context) pair,
-        # so search un-paginated and paginate manually before reading
-        paginated_ids = ids[offset:(offset + limit if limit else None)]
+        ids = Model.search(domain, offset or 0, limit or False, sort or False, context)
+        if limit and len(ids) == limit:
+            length = Model.search_count(domain, context)
+        else:
+            length = len(ids) + (offset or 0)
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
             return {
                 'ids': ids,
-                'records': [{'id': id} for id in paginated_ids]
+                'length': length,
+                'records': [{'id': id} for id in ids]
             }
 
-        records = Model.read(paginated_ids, fields or False, context)
+        records = Model.read(ids, fields or False, context)
         records.sort(key=lambda obj: ids.index(obj['id']))
         return {
             'ids': ids,
+            'length': length,
             'records': records
         }
 
@@ -1144,11 +1245,21 @@ class SearchView(View):
 
     @openerpweb.jsonrequest
     def get_filters(self, req, model):
+        logger = logging.getLogger(__name__ + '.SearchView.get_filters')
         Model = req.session.model("ir.filters")
         filters = Model.get_filters(model)
         for filter in filters:
-            filter["context"] = req.session.eval_context(parse_context(filter["context"], req.session))
-            filter["domain"] = req.session.eval_domain(parse_domain(filter["domain"], req.session))
+            try:
+                filter["context"] = req.session.eval_context(
+                    parse_context(filter["context"], req.session))
+                filter["domain"] = req.session.eval_domain(
+                    parse_domain(filter["domain"], req.session))
+            except Exception:
+                logger.exception("Failed to parse custom filter %s in %s",
+                                 filter['name'], model)
+                filter['disabled'] = True
+                del filter['context']
+                del filter['domain']
         return filters
 
     @openerpweb.jsonrequest
@@ -1265,6 +1376,37 @@ class Binary(openerpweb.Controller):
             return req.make_response(filecontent,
                 [('Content-Type', 'application/octet-stream'),
                  ('Content-Disposition', 'attachment; filename="%s"' % filename)])
+
+    @openerpweb.httprequest
+    def saveas_ajax(self, req, data, token):
+        jdata = simplejson.loads(data)
+        model = jdata['model']
+        field = jdata['field']
+        id = jdata.get('id', None)
+        filename_field = jdata.get('filename_field', None)
+        context = jdata.get('context', dict())
+
+        context = req.session.eval_context(context)
+        Model = req.session.model(model)
+        fields = [field]
+        if filename_field:
+            fields.append(filename_field)
+        if id:
+            res = Model.read([int(id)], fields, context)[0]
+        else:
+            res = Model.default_get(fields, context)
+        filecontent = base64.b64decode(res.get(field, ''))
+        if not filecontent:
+            raise ValueError("No content found for field '%s' on '%s:%s'" %
+                (field, model, id))
+        else:
+            filename = '%s_%s' % (model.replace('.', '_'), id)
+            if filename_field:
+                filename = res.get(filename_field, '') or filename
+            return req.make_response(filecontent,
+                headers=[('Content-Type', 'application/octet-stream'),
+                        ('Content-Disposition', 'attachment; filename="%s"' % filename)],
+                cookies={'fileToken': int(token)})
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):
@@ -1384,8 +1526,6 @@ class Export(View):
         for field_name, field in fields_sequence:
             if import_compat:
                 if exclude and field_name in exclude:
-                    continue
-                if 'function' in field:
                     continue
                 if field.get('readonly'):
                     # If none of the field's states unsets readonly, skip the field

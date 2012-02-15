@@ -55,7 +55,7 @@ var QWeb2 = {
             if (o !== null && o !== undefined) {
                 if (o.constructor === Array) {
                     if (o[1] !== null && o[1] !== undefined) {
-                        return ' ' + o[0] + '="' + this.html_escape(o[1], true) + '"';
+                        return this.format_attribute(o[0], o[1]);
                     }
                 } else if (typeof o === 'object') {
                     var r = '';
@@ -68,6 +68,9 @@ var QWeb2 = {
                 }
             }
             return '';
+        },
+        format_attribute: function(name, value) {
+            return ' ' + name + '="' + this.html_escape(value, true) + '"';
         },
         extend: function(dst, src, exclude) {
             for (var p in src) {
@@ -104,26 +107,6 @@ var QWeb2 = {
                     }
                     throw new Error('Unknown node type ' + node.nodeType);
                 }
-            }
-        },
-        xpath_selectNodes : function(node, expr) {
-            if (node.selectNodes !== undefined) {
-                return node.selectNodes(expr);
-            } else {
-                var xpath = new XPathEvaluator();
-                try {
-                    var result = xpath.evaluate(expr, node, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-                } catch(error) {
-                    this.exception("Error with XPath expression '" + expr + "' : " + error);
-                }
-                var r = [];
-                if (result != null) {
-                    var element;
-                    while (element = result.iterateNext()) {
-                        r.push(element);
-                    }
-                }
-                return r
             }
         },
         call: function(context, template, old_dict, _import, callback) {
@@ -213,7 +196,7 @@ QWeb2.Engine = (function() {
         this.reserved_words = QWeb2.RESERVED_WORDS.slice(0);
         this.actions_precedence = QWeb2.ACTIONS_PRECEDENCE.slice(0);
         this.word_replacement = QWeb2.tools.extend({}, QWeb2.WORD_REPLACEMENT);
-        this.format_text_node = null;
+        this.preprocess_node = null;
         for (var i = 0; i < arguments.length; i++) {
             this.add_template(arguments[i]);
         }
@@ -258,8 +241,8 @@ QWeb2.Engine = (function() {
             return true;
         },
         load_xml : function(s) {
-            s = s.replace(/^\s*|\s*$/g, '');
-            if (this.tools.trim(s)[0] === '<') {
+            s = this.tools.trim(s);
+            if (s.charAt(0) === '<') {
                 return this.load_xml_string(s);
             } else {
                 var req = this.get_xhr();
@@ -273,12 +256,11 @@ QWeb2.Engine = (function() {
                     req.send(null);
                     var xDoc = req.responseXML;
                     if (xDoc) {
+                        if (!xDoc.documentElement) {
+                            throw new Error("QWeb2: This xml document has no root document : " + xDoc.responseText);
+                        }
                         if (xDoc.documentElement.nodeName == "parsererror") {
                             return this.tools.exception(xDoc.documentElement.childNodes[0].nodeValue);
-                        }
-                        if (xDoc.xml !== undefined) {
-                            // MSIE
-                            return this.convert_xml_to_html(xDoc.documentElement);
                         }
                         return xDoc;
                     } else {
@@ -307,25 +289,7 @@ QWeb2.Engine = (function() {
             xDoc.async = false;
             xDoc.preserveWhiteSpace = true;
             xDoc.loadXML(s);
-            return this.convert_xml_to_html(xDoc.documentElement);
-        },
-        convert_xml_to_html: function (node) {
-            switch (node.nodeType) {
-            case 3:
-            case 4:
-                return document.createTextNode(node.data);
-            case 8: return document.createComment(node.data);
-            }
-
-            var hnode = document.createElement(node.nodeName);
-            for(var i=0, alen=node.attributes.length; i < alen; ++i) {
-                var attr = node.attributes[i];
-                hnode.setAttribute(attr.name, attr.value);
-            }
-            for(var j=0, clen=node.childNodes.length; j < clen; ++j) {
-                hnode.appendChild(this.convert_xml_to_html(node.childNodes[j]));
-            }
-            return hnode;
+            return xDoc;
         },
         has_template : function(template) {
             return !!this.templates[template];
@@ -407,39 +371,31 @@ QWeb2.Engine = (function() {
             for (var i = 0, ilen = extend_node.childNodes.length; i < ilen; i++) {
                 var child = extend_node.childNodes[i];
                 if (child.nodeType === 1) {
-                    var xpath = child.getAttribute(this.prefix + '-xpath'),
-                        jquery = child.getAttribute(this.prefix + '-jquery'),
+                    var jquery = child.getAttribute(this.prefix + '-jquery'),
                         operation = child.getAttribute(this.prefix + '-operation'),
                         target,
                         error_msg = "Error while extending template '" + template;
                     if (jquery) {
                         target = this.jQuery(jquery, template_dest);
-                    } else if (xpath) {
-                        // NOTE: due to the XPath implementation, extending a template will only work once
-                        // when using XPath because XPathResult won't match objects with other constructor than 'Element'
-                        // As jQuery will create HTMLElements, xpath will ignore them then causing problems when a
-                        // template has already been extended. XPath selectors will probably be removed in QWeb.
-                        target = this.jQuery(this.tools.xpath_selectNodes(this.templates[template], xpath));
                     } else {
                         this.tools.exception(error_msg + "No expression given");
                     }
-                    error_msg += "' (expression='" + (jquery || xpath) + "') : ";
-                    var inner = this.tools.xml_node_to_string(child, true);
+                    error_msg += "' (expression='" + jquery + "') : ";
                     if (operation) {
                         var allowed_operations = "append,prepend,before,after,replace,inner".split(',');
                         if (this.tools.arrayIndexOf(allowed_operations, operation) == -1) {
                             this.tools.exception(error_msg + "Invalid operation : '" + operation + "'");
                         }
                         operation = {'replace' : 'replaceWith', 'inner' : 'html'}[operation] || operation;
-                        target[operation](this.jQuery(inner));
+                        target[operation](child.cloneNode(true).childNodes);
                     } else {
                         try {
-                            var f = new Function(['$'], inner);
+                            var f = new Function(['$', 'document'], this.tools.xml_node_to_string(child, true));
                         } catch(error) {
                             return this.tools.exception("Parse " + error_msg + error);
                         }
                         try {
-                            f.apply(target, [this.jQuery]);
+                            f.apply(target, [this.jQuery, template_dest.ownerDocument]);
                         } catch(error) {
                             return this.tools.exception("Runtime " + error_msg + error);
                         }
@@ -487,6 +443,9 @@ QWeb2.Element = (function() {
                 }
             }
         }
+        if (this.engine.preprocess_node) {
+            this.engine.preprocess_node.call(this);
+        }
     }
 
     QWeb2.tools.extend(Element.prototype, {
@@ -522,11 +481,7 @@ QWeb2.Element = (function() {
             switch (this.node.nodeType) {
                 case 3:
                 case 4:
-                    var text = this.node.data;
-                    if (this.engine.format_text_node) {
-                        text = this.engine.format_text_node.call(this, text);
-                    }
-                    this.top_string(text);
+                    this.top_string(this.node.data);
                 break;
                 case 1:
                     this.compile_element();

@@ -4,7 +4,6 @@ openerp.web_process = function (openerp) {
     openerp.web.ViewManager.include({
         start: function() {
             this._super();
-            var self = this;
             this.process_check();
             this.process_help = this.action ? this.action.help : 'Help: Not Defined';
             this.model = this.dataset.model;
@@ -28,6 +27,11 @@ openerp.web_process = function (openerp) {
         },
         initialize_process_view: function() {
             var self = this;
+            this.record_id = false;
+            if(this.active_view  == 'page' || this.active_view == 'form') {
+                this.record_id = this.views[this.active_view].controller.datarecord.id;
+            }
+
             $.when(this.help(), this.get_process_object()).pipe(function(help, process) {
                 self.process_help = help;
                 if(process && process.length) {
@@ -65,7 +69,7 @@ openerp.web_process = function (openerp) {
             this.process_id = parseInt(this.process_id, 10);
 
             this.process_dataset
-            .call("graph_get",[this.process_id, this.model || this.dataset.model, false, [80,80,150,100]])
+            .call("graph_get",[this.process_id, this.model || this.dataset.model, this.record_id, [80,80,150,100]])
             .done(function(res) {
                 self.process_dataset
                     .call("search_by_model",[self.model || self.dataset.model,self.session.context])
@@ -78,8 +82,7 @@ openerp.web_process = function (openerp) {
             return def.promise();
         },
         help : function() {
-            var self = this,
-                def = $.Deferred();
+            var def = $.Deferred();
             if(!this.subflow_model) {
                 def.resolve(this.action ? (this.action.help!=false ? this.action.help : 'Help: Not Defined') : 'Help: Not Defined');
             } else {
@@ -142,22 +145,14 @@ openerp.web_process = function (openerp) {
             var self = this,
                 process_graph = new Graph();
             var process_renderer = function(r, n) {
-                var process_node,
-                    process_node_text,
-                    process_node_desc,
-                    process_set;
-
-                var node_button,
-                    node_menu,
-                    img_src;
-
-                var bg = "node",
-                    clip_rect = "".concat(n.node.x,",",n.node.y,",150,100");
+                var clip_rect = "".concat(n.node.x,",",n.node.y,",150,100");
 
                 //Image part
-                bg = n.node.kind == "subflow" ? "node-subflow" : "node";
+                var bg = n.node.kind == "subflow" ? "node-subflow" : "node";
                 bg = n.node.gray ? bg + "-gray" : bg;
-                img_src = '/web_process/static/src/img/'+ bg + '.png';
+                bg = n.node.active ? 'node-current': bg;
+
+                var img_src = '/web_process/static/src/img/'+ bg + '.png';
 
                 r['image'](img_src, n.node.x, n.node.y,150, 100)
                     .attr({"clip-rect": clip_rect})
@@ -165,9 +160,9 @@ openerp.web_process = function (openerp) {
                         return false;
                 });
                 //Node
-                process_node = r['rect'](n.node.x, n.node.y, 150, 100).attr({stroke: "none"});
+                var process_node = r['rect'](n.node.x, n.node.y, 150, 100).attr({stroke: "none"});
                 // Node text
-                process_node_text =  r.text(n.node.x, n.node.y, (n.node.name))
+                var process_node_text =  r.text(n.node.x, n.node.y, (n.node.name))
                     .attr({"fill": "#fff", "font-weight": "bold", "cursor": "pointer"});
                 process_node_text.translate((process_node.getBBox().width / 2) + 5, 10);
                 if(n.node.subflow) {
@@ -179,9 +174,10 @@ openerp.web_process = function (openerp) {
                     });
                 }
                 //Node Description
-                new_notes = n.node.notes;
+                var new_notes = n.node.notes;
                 if(n.node.notes.length > 25) {
-                    var new_notes= temp_str = '';
+                    var to;
+                    var temp_str = new_notes = '';
                     var from = to = 0;
                     while (1) {
                         from = 25;
@@ -194,7 +190,11 @@ openerp.web_process = function (openerp) {
                         to += from;
                     }
                 }
-                process_node_desc = r.text(n.node.x+85, n.node.y+50, (new_notes));
+
+                if(n.node.res)
+                    new_notes = n.node.res.name + '\n' + new_notes;
+
+                r.text(n.node.x+85, n.node.y+50, (new_notes));
                 r['image']('/web/static/src/img/icons/gtk-info.png', n.node.x+20, n.node.y+70, 16, 16)
                     .attr({"cursor": "pointer", "title": "Help"})
                     .click(function() {
@@ -209,7 +209,7 @@ openerp.web_process = function (openerp) {
                     });
                 }
 
-                process_set = r.set().push(process_node);
+                var process_set = r.set().push(process_node);
                 process_set.mousedown(function() {
                     return false;
                 });
@@ -220,7 +220,7 @@ openerp.web_process = function (openerp) {
                 node['res_model'] = self.model,
                 node['res_id'] = false,
                 node['id'] = node_id;
-                process_graph.addNode(node['name'], {node: node,render: process_renderer});
+                process_graph.addNode(node.id, {node: node,render: process_renderer});
             });
 
             _.each(res['transitions'], function(transitions) {
@@ -228,7 +228,7 @@ openerp.web_process = function (openerp) {
                 var dst = res['nodes'][transitions['target']];
                 // make active
                 transitions['active'] = src.active && !dst.gray;
-                process_graph.addEdge(src['name'], dst['name'], {directed : true});
+                process_graph.addEdge(src.id, dst.id, {directed : true});
             });
             var width = $(document).width();
             var height = $(document).height();

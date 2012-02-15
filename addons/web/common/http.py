@@ -25,9 +25,9 @@ import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
 
-import nonliterals
-import session
-import openerplib
+from . import nonliterals
+from . import session
+from . import openerplib
 
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
            'WebRequest', 'JsonRequest', 'HttpRequest']
@@ -357,11 +357,13 @@ def session_context(request, storage_path, session_cookie='sessionid'):
         # session id, and are generally noise
         removed_sessions = set()
         for key, value in request.session.items():
-            if (isinstance(value, session.OpenERPSession) 
-                and not value._uid
-                and not value.jsonp_requests
-                and value._creation_time + (60*5) < time.time()  # FIXME do not use a fixed value
-            ):
+            if not isinstance(value, session.OpenERPSession):
+                continue
+            if getattr(value, '_suicide', False) or (
+                        not value._uid
+                    and not value.jsonp_requests
+                    # FIXME do not use a fixed value
+                    and value._creation_time + (60*5) < time.time()):
                 _logger.debug('remove session %s', key)
                 removed_sessions.add(key)
                 del request.session[key]
@@ -516,7 +518,7 @@ class Root(object):
                     if os.path.isfile(manifest_path) and os.path.isdir(path_static):
                         manifest = ast.literal_eval(open(manifest_path).read())
                         manifest['addons_path'] = addons_path
-                        _logger.info("Loading %s", module)
+                        _logger.debug("Loading %s", module)
                         if openerp_addons_namespace:
                             m = __import__('openerp.addons.' + module)
                         else:
@@ -541,17 +543,17 @@ class Root(object):
         :returns: a callable matching the path sections, or ``None``
         :rtype: ``Controller | None``
         """
-        if len(l):
-            for i in range(len(l), 0, -1):
-                ps = "/" + "/".join(l[0:i])
-                if ps in controllers_path:
-                    c = controllers_path[ps]
-                    rest = l[i:] or ['index']
-                    meth = rest[0]
+        if l:
+            ps = '/' + '/'.join(l)
+            meth = 'index'
+            while ps:
+                c = controllers_path.get(ps)
+                if c:
                     m = getattr(c, meth)
                     if getattr(m, 'exposed', False):
                         _logger.debug("Dispatching to %s %s %s", ps, c, meth)
                         return m
+                ps, _slash, meth = ps.rpartition('/')
         return None
 
 class LibException(Exception):

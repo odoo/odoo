@@ -154,7 +154,6 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
         // for extended search view
         var ext = new openerp.web.search.ExtendedSearch(this, this.model);
         lines.push([ext]);
-        this.inputs.push(ext);
         this.extended_search = ext;
 
         var render = QWeb.render("SearchView", {
@@ -187,7 +186,10 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
         }).then(function(result) {
             self.managed_filters = result;
             var filters = self.$element.find(".oe_search-view-filters-management");
-            filters.html(QWeb.render("SearchView.managed-filters", {filters: result}));
+            filters.html(QWeb.render("SearchView.managed-filters", {
+                filters: result,
+                disabled_filter_message: _t('Filter disabled due to invalid syntax')
+            }));
             filters.change(self.on_filters_management);
         });
     },
@@ -425,13 +427,9 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
         this.$element.find('table:last').hide();
 
         $('.searchview_extended_groups_list').empty();
-        _.each(this.inputs, function (input) {
-            if(input.datewidget && input.datewidget.value) {
-                input.datewidget.set_value(false);
-            }
-        });
-        return $.async_when().pipe(
-            reload_view !== false ? this.on_clear : null);
+        return $.async_when.apply(
+            null, _(this.inputs).invoke('clear')).pipe(
+                reload_view !== false ? this.on_clear : null);
     },
     /**
      * Triggered when the search view gets cleared
@@ -474,6 +472,7 @@ openerp.web.search.fields = new openerp.web.Registry({
     'text': 'openerp.web.search.CharField',
     'boolean': 'openerp.web.search.BooleanField',
     'integer': 'openerp.web.search.IntegerField',
+    'id': 'openerp.web.search.IntegerField',
     'float': 'openerp.web.search.FloatField',
     'selection': 'openerp.web.search.SelectionField',
     'datetime': 'openerp.web.search.DateTimeField',
@@ -617,7 +616,11 @@ openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.
             }
         }
         this.attrs = attrs;
-    }
+    },
+    /**
+     * Specific clearing operations, if any
+     */
+    clear: function () {}
 });
 openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends openerp.web.search.FilterGroup# */{
     template: 'SearchView.filters',
@@ -899,6 +902,22 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
             defaults[this.attrs.name] = false;
         }
         return this._super(defaults);
+    },
+    clear: function () {
+        var self = this, d = $.Deferred(), selection = this.attrs.selection;
+        for(var index=0; index<selection.length; ++index) {
+            var item = selection[index];
+            if (!item[1]) {
+                setTimeout(function () {
+                    // won't override mutable, because we immediately bail out
+                    //noinspection JSReferencingMutableVariableFromClosure
+                    self.$element.val(index);
+                    d.resolve();
+                }, 0);
+                return d.promise();
+            }
+        }
+        return d.resolve().promise();
     }
 });
 openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @lends openerp.web.search.BooleanField# */{
@@ -946,15 +965,20 @@ openerp.web.search.DateField = openerp.web.search.Field.extend(/** @lends opener
     template: "SearchView.date",
     start: function () {
         this._super();
+        // FIXME: this insanity puts a div inside a span
         this.datewidget = new openerp.web.DateWidget(this);
         this.datewidget.prependTo(this.$element);
-        this.datewidget.$element.find("input").attr("size", 15);
-        this.datewidget.$element.find("input").attr("autofocus",
-            this.attrs.default_focus === '1' ? 'autofocus' : undefined);
+        this.datewidget.$element.find("input")
+            .attr("size", 15)
+            .attr("autofocus", this.attrs.default_focus === '1' ? 'autofocus' : null)
+            .removeAttr('style');
         this.datewidget.set_value(this.defaults[this.attrs.name] || false);
     },
     get_value: function () {
         return this.datewidget.get_value() || null;
+    },
+    clear: function () {
+        this.datewidget.set_value(false);
     }
 });
 /**
@@ -1050,7 +1074,7 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
     }
 });
 
-openerp.web.search.ExtendedSearch = openerp.web.search.Widget.extend({
+openerp.web.search.ExtendedSearch = openerp.web.search.Input.extend({
     template: 'SearchView.extended_search',
     init: function (parent, model) {
         this._super(parent);

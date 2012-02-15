@@ -71,6 +71,15 @@ $(document).ready(function () {
         strictEqual(
             openerp.web.format_value(0.0085, {type:'float', widget:'float_time'}),
             '00:01');
+        strictEqual(
+            openerp.web.format_value(-1.0, {type:'float', widget:'float_time'}),
+            '-01:00');
+        strictEqual(
+            openerp.web.format_value(-0.9853, {type:'float', widget:'float_time'}),
+            '-00:59');
+        strictEqual(
+            openerp.web.format_value(-0.0085, {type:'float', widget:'float_time'}),
+            '-00:01');
     });
     test("format_float", function () {
         var fl = 12.1234;

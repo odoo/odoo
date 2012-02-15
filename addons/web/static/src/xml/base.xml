@@ -3,7 +3,7 @@
 -->
 <templates id="template" xml:space="preserve">
 <t t-name="Notification">
-    <div class="oe_notification">
+    <div class="oe_notification" t-translation="off">
         <div id="oe_notification_default">
             <a class="ui-notify-cross ui-notify-close" href="#">x</a>
             <h1>#{title}</h1>
@@ -120,6 +120,8 @@
                             <option t-att-value="db"><t t-esc="db"/></option>
                         </t>
                     </select>
+                    <input t-if="!db_list" name="drop_db" class="required"
+                           type="text" autofocus="autofocus"/>
                 </td>
             </tr>
             <tr>
@@ -152,6 +154,8 @@
                             <option t-att-value="db"><t t-esc="db"/></option>
                         </t>
                     </select>
+                    <input t-if="!db_list" name="drop_db" class="required"
+                           type="text" autofocus="autofocus"/>
                 </td>
             </tr>
             <tr>
@@ -381,12 +385,12 @@
 </t>
 <t t-name="Menu.secondary">
     <div t-attf-class="oe_toggle_secondary_menu">
-        <span class="oe_menu_fold" title="Fold menu">&amp;laquo;</span>
-        <span class="oe_menu_unfold" title="Unfold menu">&amp;raquo;</span>
+        <span class="oe_menu_fold" title="Fold menu"><t t-raw="'&amp;laquo;'"/></span>
+        <span class="oe_menu_unfold" title="Unfold menu"><t t-raw="'&amp;raquo;'"/></span>
     </div>
     <div t-foreach="widget.data.data.children" t-as="menu" style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu.id">
         <t t-foreach="menu.children" t-as="menu">
-            <t t-set="classname">oe_secondary_menu_item</t>
+            <t t-set="classname" t-translation="off">oe_secondary_menu_item</t>
             <t t-set="level" t-value="0"/>
             <t t-call="Menu.secondary.children"/>
         </t>
@@ -401,7 +405,7 @@
     </a>
     <div t-attf-class="oe_secondary_submenu" t-if="menu.children.length" t-att-style="menu_first and level == 1 ? undefined : 'display: none'">
         <t t-foreach="menu.children" t-as="menu">
-            <t t-set="classname">oe_secondary_submenu_item</t>
+            <t t-set="classname" t-translation="off">oe_secondary_submenu_item</t>
             <t t-call="Menu.secondary.children"/>
         </t>
     </div>
@@ -418,7 +422,7 @@
                 <div class="oe_vm_switch">
                     <t t-if="views.length != 1" t-foreach="views" t-as="view">
 
-                        <button type="button" t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="view.view_type">
+                        <button type="button" t-attf-class="oe_vm_switch_#{view.view_type}" t-att-data-view-type="view.view_type" t-att-title="view.label || view.view_type">
                             <span><t t-esc="view.label || view.view_type"/></span>
                         </button>
                     </t>
@@ -480,7 +484,6 @@
         <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</option>
         <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id">Edit Action</option>
         <option value="edit_workflow">Edit Workflow</option>
-        <option value="customize_object">Customize Object</option>
     </t>
 </t>
 <t t-name="ViewManagerDebugViewLog">
@@ -525,11 +528,11 @@
     </div>
 </t>
 <t t-name="Sidebar.section.items">
-            <li t-foreach="items" t-as="item" t-att-class="item.classname">
-                <a class="oe_sidebar_action_a" t-att-id="item.element_id" t-att-title="item.title" href="#">
-                    <t t-esc="item.label"/>
-                </a>
-            </li>
+    <li t-foreach="items" t-as="item" t-att-class="item.classname">
+        <a class="oe_sidebar_action_a" t-att-id="item.element_id" t-att-title="item.title" href="#">
+            <t t-esc="item.label"/>
+        </a>
+    </li>
 </t>
 
 <t t-name="TranslateDialog">
@@ -576,20 +579,21 @@
         t-att-data-id="record.id" t-att-data-level="level + 1">
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
+    <t t-set="rank" t-value="'oe-treeview-first'"/>
     <t t-set="style" t-value="'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px;'"/>
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
         t-att-data-id="record.id"
         t-att-style="color_for(record) + style "
-        t-att-class="(fields[field.attrs.name].type === 'float') or (fields[field.attrs.name].type === 'integer')
-                    ? (class +' ' +'oe-number') : class">
+        t-attf-class="#{class} #{rank} #{(fields[field.attrs.name].type === 'float') or (fields[field.attrs.name].type === 'integer') ? 'oe-number' : ''}">
 
         <span t-if="!field.attrs.modifiers.invisible" >
             <t t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
         </span>
 
         <t t-set="class" t-value="'treeview-td'"/>
+        <t t-set="rank" t-value="''"/>
         <t t-set="style" t-value="''"/>
     </td>
 </tr>
@@ -676,10 +680,9 @@
 
     <t t-jquery="td.oe-actions">
         this.removeAttr('t-if');
-        var $title = $(document.createElement('h3')).addClass('oe_view_title');
-        $title.append($(document.createElement('t')).attr(
-            't-esc', 'fields_view.arch.attrs.string'));
-        this.prepend($title);
+    </t>
+    <t t-jquery="td.oe-actions" t-operation="prepend">
+        <h3 class="oe_view_title"><t t-esc="fields_view.arch.attrs.string"/></h3>
     </t>
 </t>
 <th t-name="Listview.navigation.button" t-if="!no_leaf and options.pager !== false"
@@ -792,6 +795,62 @@
         </li>
     </ul>
 </t>
+<form t-name="FormView.set_default" class="oe_forms oe_frame">
+    <t t-set="args" t-value="widget.dialog_options.args"/>
+    <table style="width: 100%">
+        <tr>
+            <td>
+                <label for="formview_default_fields"
+                       class="oe_label oe_align_right">
+                    Default:
+                </label>
+            </td>
+            <td class="required">
+                <select id="formview_default_fields">
+                    <option value=""/>
+                    <option t-foreach="args.fields" t-as="field"
+                            t-att-value="field.name">
+                        <t t-esc="field.string"/> = <t t-esc="field.displayed"/>
+                    </option>
+                </select>
+            </td>
+        </tr>
+        <tr t-if="args.conditions.length">
+            <td>
+                <label for="formview_default_conditions"
+                       class="oe_label oe_align_right">
+                    Condition:
+                </label>
+            </td>
+            <td>
+                <select id="formview_default_conditions">
+                    <option value=""/>
+                    <option t-foreach="args.conditions" t-as="cond"
+                            t-att-value="cond.name + '=' + cond.value">
+                        <t t-esc="cond.string"/>=<t t-esc="cond.displayed"/>
+                    </option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="radio" id="formview_default_self"
+                       value="self" name="scope" checked="checked"/>
+                <label for="formview_default_self" class="oe_label"
+                       style="display: inline;">
+                    Only you
+                </label>
+                <br/>
+                <input type="radio" id="formview_default_all"
+                       value="all" name="scope"/>
+                <label for="formview_default_all" class="oe_label"
+                       style="display: inline;">
+                    All users
+                </label>
+            </td>
+        </tr>
+    </table>
+</form>
 <t t-name="Widget">
     Unhandled widget
     <t t-js="dict">console.warn('Unhandled widget', dict.widget);</t>
@@ -908,6 +967,10 @@
             <span class="oe_tooltip_technical_title">Modifiers:</span>
             <t t-esc="widget.node.attrs.modifiers"/>
         </li>
+        <li t-if="widget.field and widget.field.change_default" data-item="change_default">
+            <span class="oe_tooltip_technical_title">Change default:</span>
+            Yes
+        </li>
         <li t-if="widget.node.attrs.on_change" data-item="on_change">
             <span class="oe_tooltip_technical_title">On change:</span>
             <t t-esc="widget.node.attrs.on_change"/>
@@ -929,7 +992,7 @@
     </ul>
 </t>
 <t t-name="WidgetParagraph">
-    <p t-attf-class="oe_form_paragraph oe_align_#{widget.align}"><t t-esc="widget.string"/></p>
+    <p t-attf-class="oe_form_paragraph oe_align_#{widget.align} #{widget.multilines ? 'oe_multilines' : ''}"><t t-esc="widget.string"/></p>
 </t>
 <t t-name="FieldChar">
     <input t-att-type="widget.password ? 'password' : 'text'" size="1"
@@ -947,7 +1010,7 @@
 </t>
 <t t-name="FieldURI.readonly">
     <div>
-        <a href="#" class="oe_form_uri">#</a>
+        <a href="#" class="oe_form_uri"/>
     </div>
 </t>
 <t t-name="FieldEmail">
@@ -1219,7 +1282,11 @@
     <option class="oe-filters-title" value="">Filters</option>
     <optgroup label="-- Filters --">
         <t t-foreach="filters" t-as="filter">
-            <option t-attf-value="get:#{filter_index}"><t t-esc="filter.name"/></option>
+            <option t-attf-value="get:#{filter_index}"
+                    t-att-disabled="filter.disabled and 'disabled'"
+                    t-att-title="filter.disabled and disabled_filter_message">
+                <t t-esc="filter.name"/>
+            </option>
         </t>
     </optgroup>
     <optgroup label="-- Actions --">
@@ -1295,7 +1362,7 @@
         <span t-if="attrs.help">?</span>
     </label>
     <div t-att-style="style">
-        <span t-att-id="element_id"></span>
+        <span t-att-id="element_id"/>
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
@@ -1314,7 +1381,8 @@
             <t t-foreach="attrs.selection" t-as="option">
                 <t t-set="selected" t-value="defaults[attrs.name] === option[0]"/>
                 <option t-if="selected"
-                        t-att-value="option_index" selected="selected">
+                        t-attf-selected="selected"
+                        t-att-value="option_index">
                     <t t-esc="option[1]"/>
                 </option>
                 <option t-if="!selected" t-att-value="option_index">
@@ -1480,9 +1548,9 @@
     </table>
 </t>
 <t t-name="view_editor.row">
-    <tr  class="oe_view_editor_row" t-att-id="'viewedit-' + rec.id"  t-att-level="rec.level" t-foreach="data" t-as="rec">
-        <td class="oe_view_editor_colum"  width="85%">
-            <table class="oe_view_editor_tree_grid">
+    <tr  t-att-id="'viewedit-' + rec.id"  t-att-level="rec.level" t-foreach="data" t-as="rec">
+        <td width="90%">
+            <table class="oe_view_editor_field">
                 <tr>
                     <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
                         <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
@@ -1496,30 +1564,24 @@
                 </tr>
             </table>
         </td>
-        <td align="left" class="oe_view_editor_colum"  width="15%">
-            <table width="100%">
-                <tr>
-                    <td width="20%">
-                        <img t-if="rec.att_list.length"
-                            id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
-                    </td>
-                    <td width="20%">
-                        <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
-                    </td>
-                    <td width="20%">
-                        <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
-                            id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
-                    </td>
-                    <td width="20%">
-                        <img t-if="rec.att_list.length"
-                            id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
-                    </td>
-                    <td width="20%">
-                        <img t-if="rec.att_list.length"
-                            id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
-                    </td>
-                </tr>
-            </table>
+        <td width="2%">
+            <img t-if="rec.att_list.length"
+                id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
+        </td>
+        <td width="2%">
+            <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
+        </td>
+        <td width="2%">
+            <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
+                id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
+        </td>
+        <td width="2%">
+            <img t-if="rec.att_list.length"
+                id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
+        </td>
+        <td width="2%">
+            <img t-if="rec.att_list.length"
+                id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
         </td>
         <t t-if="rec.child_id.length">
             <t t-set="data" t-value="rec.child_id"/>
@@ -1609,7 +1671,7 @@
             <tr class="oe_export_row">
                 <t t-foreach="(field.id).split('/')" t-as="level" >
                     <t t-if="(field.id).split('/')[0] != level">
-                        <td width="18">&amp;nbsp;</td>
+                        <td width="18" t-translation="off">&amp;nbsp;</td>
                     </t>
                 </t>
                 <td valign="top" align="left" style="cursor: pointer;" width="18">

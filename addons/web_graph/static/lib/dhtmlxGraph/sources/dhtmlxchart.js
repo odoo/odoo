@@ -3093,7 +3093,6 @@ dhtmlx.Canvas = {
 		//use excanvas in IE
 		if (!this._canvas.getContext){
 			if (dhtmlx._isIE){
-				dhtmlx.require("thirdparty/excanvas/excanvas.js");	//sync loading
 				G_vmlCanvasManager.init_(document);
 				G_vmlCanvasManager.initElement(this._canvas);
 			} else	//some other not supported browser
