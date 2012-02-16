@@ -204,15 +204,19 @@ class mail_message(osv.osv):
         # push the message to suscribed users
         subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
+        # not pure-email: check for subscriptions
+        if not 'need_action_user_id' in vals: vals['need_action_user_id'] = False
+        if not 'model' in vals: vals['model'] = False
+        if not 'res_id' in vals: vals['res_id'] = 0
         sub_ids = subscription_obj.search(cr, uid, ['&',
                         ('res_model', '=', vals['model']),
                         ('res_id', '=', vals['res_id'])], context=context)
         subs = subscription_obj.browse(cr, uid, sub_ids, context=context)
         for sub in subs:
             notification_obj.create(cr, uid, {'user_id': sub.user_id.id, 'message_id': msg_id}, context=context)
-            if vals.get('need_action_user_id', False) == sub.user_id: need_action_pushed = True
+            if vals['need_action_user_id'] == sub.user_id: need_action_pushed = True
         # push to need_action_user_id if user does not follow the object
-        if vals.get('need_action_user_id', False) and not need_action_pushed:
+        if vals['need_action_user_id'] and not need_action_pushed:
             notification_obj.create(cr, uid, {'user_id': vals['need_action_user_id'], 'message_id': msg_id}, context=context)
         return msg_id
     
