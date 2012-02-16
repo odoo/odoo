@@ -236,7 +236,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     _(records).each(function (record) {
                         var value = record[self.group_field];
                         if(value) {
-                            record[self.group_field] = value.toLowerCase().replace(/[\s\/]+/g,'_');
+                            value = value.toLowerCase().replace(/[\s\/]+/g,'_');
                         }
                         var key = _.str.sprintf('%s_%s', self.ordinate, value);
                         r[key] = record[self.ordinate];
