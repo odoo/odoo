@@ -105,14 +105,12 @@ openerp.web.page = function (openerp) {
         scheme: 'mailto'
     });
     openerp.web.page.FieldUrlReadonly = openerp.web.page.FieldURIReadonly.extend({
-        format_value: function (value) {
-            return value.slice(2);
-        },
         set_value: function (value) {
             var s = /(\w+):(.+)/.exec(value);
-            if (!s || !(s[1] === 'http' || s[1] === 'https')) { return; }
-            this.scheme = s[1];
-            this._super(s[2]);
+            if (!s) {
+                value = "http://" + value;
+            }
+            this.$element.find('a').attr('href', value).text(value);
         }
     });
     openerp.web.page.FieldBooleanReadonly = openerp.web.form.FieldBoolean.extend({
