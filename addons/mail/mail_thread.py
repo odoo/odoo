@@ -241,23 +241,19 @@ class mail_thread(osv.osv):
 
     # Message loading
     def message_load_ids(self, cr, uid, ids, context=None):
-        """ OpenSocial feature added this method
-        get ids of thread messages
+        """ OpenSocial feature: return thread messages ids (for web compatibility)
+        loading messages: search in mail.messages where res_id = ids, (res_)model = current model
         """
         msg_obj = self.pool.get('mail.message')
-        msg_ids = [msg_obj.search(cr, uid, ['&', ('res_id', '=', id), ('model', '=', self._name)], context=context) for id in ids]
-        return msg_ids[0]
+        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', ids), ('model', '=', self._name)], context=context)
+        return msg_ids
         
     def message_load(self, cr, uid, ids, context=None):
-        """ OpenSocial feature added this method
-        loading message: search in mail.messages where res_id = ids, (res_)model = current model
+        """ OpenSocial feature: return thread messages
+        loading messages: search in mail.messages where res_id = ids, (res_)model = current model
         """
-        msg_ids = []
-        msg_obj = self.pool.get('mail.message')
-        for id in ids:
-            msg_ids += msg_obj.search(cr, uid, ['&', ('res_id', '=', id), ('model', '=', self._name)], context=context)
-        msgs = msg_obj.read(cr, uid, msg_ids, context=context)
-        return msgs
+        msg_ids = self.message_load_ids(cr, uid, ids, context=context)
+        return self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
 
     #------------------------------------------------------
     # Email specific
@@ -528,9 +524,10 @@ class mail_thread(osv.osv):
         Find by: res_id (thread id), model (self._name), need_action_user_id != false
         """
         msg_obj = self.pool.get('mail.message')
-        for id in ids:
-             msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', '=', id), ('model', '=', self._name)], context=context)
-             msg_obj.write(cr, uid, msg_ids, {'need_action_user_id': False}, context=context)
+        msg_ids = msg_obj.search(cr, uid,
+                        ['&', '&', ('res_id', 'in', ids), ('model', '=', self._name), ('need_action_user_id', '!=', False)], context=context)
+        msg_obj.write(cr, uid, msg_ids, {'need_action_user_id': False}, context=context)
+        return True
             
     #------------------------------------------------------
     # Subscription mechanism
@@ -538,22 +535,17 @@ class mail_thread(osv.osv):
     
     def message_get_subscribers(self, cr, uid, ids, context=None):
         subscription_obj = self.pool.get('mail.subscription')
-        for id in ids:
-            sub_ids = subscription_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', '=', id)], context=context)
-            subs = subscription_obj.browse(cr, uid, sub_ids, context=context)
-        return subs
-    
-    def message_get_subscribers_web(self, cr, uid, ids, context=None):
-        subscription_obj = self.pool.get('mail.subscription')
-        for id in ids:
-            sub_ids = subscription_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', '=', id)], context=context)
-            subs = subscription_obj.read(cr, uid, sub_ids, context=context)
+        sub_ids = subscription_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
+        subs = subscription_obj.read(cr, uid, sub_ids, context=context)
         return subs
     
     def message_is_subscriber(self, cr, uid, ids, context=None):
-        for subscription in self.message_get_subscribers(cr, uid, ids, context=context):
-            if subscription.user_id == uid: return True
-        return False
+        subscription_obj = self.pool.get('mail.subscription')
+        sub_ids = subscription_obj.search(cr, uid,
+                        ['&', '&',  ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', '=', uid)], context=context)
+        if len(sub_ids) > 1:
+            print 'cacaprout error !'
+        return True if sub_ids else False
     
     def message_subscribe(self, cr, uid, ids, context=None):
         subscription_obj = self.pool.get('mail.subscription')
@@ -565,9 +557,8 @@ class mail_thread(osv.osv):
     def message_unsubscribe(self, cr, uid, ids, context=None):
         subscription_obj = self.pool.get('mail.subscription')
         subscriber_id = uid # TODO
-        sub_ids = []
-        for id in ids:
-            sub_ids += subscription_obj.search(cr, uid, ['&', '&', ('res_model', '=', self._name), ('res_id', '=', id), ('user_id', '=', subscriber_id)], context=context)
+        sub_ids = subscription_obj.search(cr, uid,
+                        ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', '=', subscriber_id)], context=context)
         subscription_obj.unlink(cr, uid, sub_ids, context=context)
         return True
 

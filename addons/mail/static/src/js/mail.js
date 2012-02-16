@@ -14,47 +14,55 @@ openerp.mail = function(session) {
         template: 'ThreadView',
         
         init: function() {
-//             this.timeout;
             this.follow_state = 0;
             this._super.apply(this, arguments);
             /* DataSets */
             this.ds = new session.web.DataSet(this, this.view.model);
-            this.ds_sub = new session.web.DataSet(this, 'mail.subscription');
-//             this.ds_msg = new session.web.DataSet(this, 'mail.message');
         },
         
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            /* bind follow and unfollow buttons */
-            self.$element.find('button.oe_mail_button_follow').bind('click', function () { self.do_follow(); });
-            self.$element.find('button.oe_mail_button_follow').hide();
-            self.$element.find('button.oe_mail_button_unfollow').bind('click', function () { self.do_unfollow(); });
-            self.$element.find('button.oe_mail_button_unfollow').hide();
+            /* bind buttons */
             self.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
             self.$element.find('button.oe_mail_button_followers').bind('click', function () { self.do_toggle_followers(); });
-            /* find wich (un)follow buttons to show */
-            var call_res = this.ds.call('message_is_subscriber', [[this.session.uid]]).then(function (records) {
-                if (records == true) { self.follow_state = 1; self.$element.find('button.oe_mail_button_unfollow').show(); }
-                else { self.follow_state = 0; self.$element.find('button.oe_mail_button_follow').show(); }
-                });
+            self.$element.find('button.oe_mail_button_follow').bind('click', function () { self.do_follow(); });
+            self.$element.find('button.oe_mail_button_unfollow').bind('click', function () { self.do_unfollow(); });
+            /* hide follow/unfollow buttons */
+            self.$element.find('button.oe_mail_button_follow').hide();
+            self.$element.find('button.oe_mail_button_unfollow').hide();
         },
         
         stop: function () {
-//             clearTimeout(this.timeout);
-            this._super();
+            console.log('stop');
+            this._super.apply(this, arguments);
         },
         
         set_value: function() {
+            var self = this;
             this._super.apply(this, arguments);
+            /* hide follow/unfollow buttons */
+            self.$element.find('button.oe_mail_button_follow').hide();
+            self.$element.find('button.oe_mail_button_unfollow').hide();
             if (! this.view.datarecord.id) { return; }
-            return this.fetch_data();
+            /* find wich (un)follow buttons to show */
+            var call_res = this.ds.call('message_is_subscriber', [[this.view.datarecord.id]]).then(function (records) {
+                if (records == true) { self.follow_state = 1; self.$element.find('button.oe_mail_button_unfollow').show(); }
+                else { self.follow_state = 0; self.$element.find('button.oe_mail_button_follow').show(); }
+                });
+            /* fetch comments and subscribers */
+            this.fetch_subscribers();
+            return this.fetch_comments();
         },
         
-        fetch_data: function () {
+        fetch_comments: function () {
             var load_res = this.ds.call('message_load', [[this.view.datarecord.id]]).then(
                 this.proxy('display_comments'));
-            var follow_res = this.ds.call('message_get_subscribers_web', [[this.view.datarecord.id]]).then(
+            return load_res;
+        },
+        
+        fetch_subscribers: function () {
+            var follow_res = this.ds.call('message_get_subscribers', [[this.view.datarecord.id]]).then(
                 this.proxy('display_followers'));
             return follow_res;
         },
@@ -69,35 +77,37 @@ openerp.mail = function(session) {
                     });
                 $('<div class="oe_mail_comment">').html(render_res).appendTo(self.$element.find('div.oe_mail_msg'));
             });
-//             this.timeout = setTimeout(this.proxy('fetch_messages'), 5000);
         },
         
         display_followers: function (records) {
             this.$element.find('div.oe_mail_followers').empty();
             var self = this;
             _(records).each(function (record) {
-                console.log(record);
 //                 <div class="oe_mail_followers_vignette" title="Raoul Grobedon"><img src="people.png"/></div>
                 $('<div class="oe_mail_followers_vignette">').text(record.user_id[1]).appendTo(self.$element.find('div.oe_mail_followers'));
             });
         },
         
         do_follow: function () {
-            this.$element.find('button.oe_mail_button_unfollow').show();
-            this.$element.find('button.oe_mail_button_follow').hide();
-            return this.ds_sub.create({'res_model': this.view.model, 'user_id': this.session.uid, 'res_id': this.view.datarecord.id}).then();
+            this.do_toggle_follow();
+            return this.ds.call('message_subscribe', [[this.view.datarecord.id]]).then();
         },
         
         do_unfollow: function () {
-            this.$element.find('button.oe_mail_button_follow').show();
-            this.$element.find('button.oe_mail_button_unfollow').hide();
+            this.do_toggle_follow();
             return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).then();
         },
         
         do_comment: function () {
             var body_text = this.$element.find('textarea').val();
             return this.ds.call('message_append_note', [[this.view.datarecord.id], 'Reply comment', body_text, type='comment']).then(
-                this.proxy('fetch_messages'));
+                this.proxy('fetch_comments'));
+        },
+        
+        do_toggle_follow: function () {
+            this.follow_state = 1 - this.follow_state;
+            this.$element.find('button.oe_mail_button_unfollow').toggle();
+            this.$element.find('button.oe_mail_button_follow').toggle();
         },
         
         do_toggle_followers: function () {
