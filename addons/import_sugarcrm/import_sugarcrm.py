@@ -113,7 +113,7 @@ class sugar_import(import_framework):
             return False
         fields = ['name']
         data = [val]
-        return self.import_object(fields, data, 'res.partner.canal', 'crm_channel', val)
+        return self.import_object(fields, data, 'crm.case.channel', 'crm_channel', val)
     
     def get_all_states(self, external_val, country_id):
         """Get states or create new state unless country_id is False"""
