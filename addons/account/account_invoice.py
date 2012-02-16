@@ -1488,14 +1488,14 @@ class account_invoice_line(osv.osv):
     #
     # Set the tax field according to the account and the fiscal position
     #
-    def onchange_account_id(self, cr, uid, ids, product_id, partner_id, fposition_id, account_id):
+    def onchange_account_id(self, cr, uid, ids, product_id, partner_id, inv_type, fposition_id, account_id):
         if not account_id:
             return {}
         taxes = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
         fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
         tax_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
 
-        product_change_result = self.product_id_change(cr, uid, ids, product_id, False,
+        product_change_result = self.product_id_change(cr, uid, ids, product_id, False, type=inv_type,
                                                        partner_id=partner_id, fposition_id=fposition_id)
         unique_tax_ids = set(tax_ids)
         if product_change_result and 'value' in product_change_result and 'invoice_line_tax_id' in product_change_result['value']:
