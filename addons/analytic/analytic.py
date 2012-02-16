@@ -47,14 +47,14 @@ class account_analytic_account(osv.osv):
             recres[account.id] = recursive_computation(account)
         return recres
 
-    def _debit_credit_bal_qtty(self, cr, uid, ids, name, arg, context=None):
+    def _debit_credit_bal_qtty(self, cr, uid, ids, fields, arg, context=None):
         res = {}
         if context is None:
             context = {}
         child_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         for i in child_ids:
             res[i] =  {}
-            for n in name:
+            for n in fields:
                 res[i][n] = 0.0
 
         if not child_ids:
@@ -89,9 +89,11 @@ class account_analytic_account(osv.osv):
               WHERE a.id IN %s
               """ + where_date + """
               GROUP BY a.id""", where_clause_args)
-        for ac_id, debit, credit, balance, quantity in cr.fetchall():
-            res[ac_id] = {'debit': debit, 'credit': credit, 'balance': balance, 'quantity': quantity}
-        return self._compute_level_tree(cr, uid, ids, child_ids, res, ['debit', 'credit', 'balance', 'quantity'], context)
+        for row in cr.dictfetchall():
+            res[row['id']] = {}
+            for field in fields:
+                res[row['id']][field] = row[field]
+        return self._compute_level_tree(cr, uid, ids, child_ids, res, fields, context)
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
