@@ -61,7 +61,7 @@
                         <field name="name"/>
                         <field name="date_begin"/>
                         <field name="date_end"/>
-                        <field name="type" on_change="onchange_evnet_type(type,context)" widget="selection"/>
+                        <field name="type" on_change="onchange_evnet_type(type,context)"/>
                         <field name="user_id"/>
                         <field name="address_id" />
                     </group>
@@ -101,13 +101,13 @@
                                         <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                     </group>
                             </form>
-                            </field> 
+                            </field>
                         <field name="state" select="1" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                         <group col="4" colspan="2">
                            <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
                            <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
                            <button string="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
-                           <button string="Set To Draft" name="button_draft" states="cancel" type="object" icon="gtk-convert"/>
+                           <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                         </group>
                     </page>
                     <page string="Speakers" groups="base.group_extended">
@@ -157,7 +157,7 @@
                     <button string="Confirm Event" help="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
                     <button string="Cancel Event" help="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
                     <button string="Event Done" help="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
-                    <button string="Set To Draft" help="Set To Draft" name="button_draft" states="confirm,cancel,done" type="object" icon="gtk-convert"/>
+                    <button string="Set To Draft" help="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
@@ -172,7 +172,7 @@
             <field name="arch" type="xml">
                 <calendar color="type" date_start="date_begin" date_stop="date_end" string="Event Organization">
                     <field name="name"/>
-                    <field name="type" widget="selection"/>
+                    <field name="type"/>
                 </calendar>
             </field>
         </record>
@@ -201,7 +201,7 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <group>
-                        <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
+                        <filter icon="terp-check" string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
@@ -244,7 +244,7 @@
             name="Registration"
             res_model="event.registration"
             src_model="event.event"
-            view_mode="tree,form,calendar,graph"
+            view_mode="calendar,tree,form,graph"
             context="{'search_default_event_id': [active_id], 'default_event_id': active_id}"
             view_type="form"/>
 
@@ -278,7 +278,7 @@
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                     <button name="case_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                     <button name="case_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
-                    <button string="Set To Draft" name="do_draft" states="cancel,done" type="object" icon="gtk-convert"/>
+                    <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
@@ -291,16 +291,16 @@
                 <form string="Registration">
                     <group col="6" colspan="4">
                         <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
+                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
+                        <field name="contact_id" attrs="{'readonly':[('state','!=', 'draft')]}" domain="[('partner_id','=',partner_id)]" on_change="onchange_contact_id(contact_id, context)"/>
+                        <field name="nb_register"/>
                         <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                         <field name="origin"/>
-                        <field name="nb_register"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Additional Information">
                             <group colspan="2" col="2">
                                 <separator string="Contact Information" colspan="2"/>
-                                <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)" groups="base.group_extended"/>
-                                <field name="contact_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_contact_id(contact_id, context)" groups="base.group_extended"/>
                                 <field name="name"/>
                                 <field name="email"/>
                                 <field name="phone"/>
@@ -319,7 +319,7 @@
                                 <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                 <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                                 <button name="case_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                <button string="Set To Draft" name="do_draft" states="cancel,done" type="object" icon="gtk-convert"/>
+                                <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                             </group>
                         </page>
                         <page string="Emails" groups="base.group_extended">

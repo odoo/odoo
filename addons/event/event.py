@@ -36,15 +36,15 @@ class event_type(osv.osv):
     _description = __doc__
     _columns = {
         'name': fields.char('Event type', size=64, required=True),
-        'default_reply_to': fields.char('Default Reply-To', size=64 ),
-        'default_email_event': fields.many2one('email.template','Registration Confirmation Email'),
-        'default_email_registration':fields.many2one('email.template','Registration Confirmation Email'),
-        'default_registration_min':fields.integer('Default Minimum Registration'),
-        'default_registration_max':fields.integer('Default Maximum Registration'),
+        'default_reply_to': fields.char('Default Reply-To', size=64,help="It will select this default reply-to value when you choose this event" ),
+        'default_email_event': fields.many2one('email.template','Event Confirmation Email', help="It will select this default confirmation event mail value when you choose this event"),
+        'default_email_registration':fields.many2one('email.template','Registration Confirmation Email',help="It will select this default confirmation registration mail value when you choose this event"),
+        'default_registration_min':fields.integer('Default Minimum Registration',help="It will select this default minimum value when you choose this event"),
+        'default_registration_max':fields.integer('Default Maximum Registration',help="It will select this default maximum value when you choose this event"),
     }
     _defaults = {
         'default_registration_min' : 0,
-        'default_registration_max':1000,
+        'default_registration_max':0,
         }
 
 event_type()
@@ -63,7 +63,14 @@ class event_event(osv.osv):
         for record in reads:
             date= time.strptime(record.date_begin,'%Y-%m-%d %H:%M:%S')
             date =time.strftime('%Y-%m-%d',date)
-            name = record.name+' ('+date+')'
+            registers=''
+            if record.register_max !=0:
+                register_max = str(record.register_max)
+                register_tot = record.register_current+record.register_prospect
+                register_tot = str(register_tot)
+                registers = register_tot+'/'+register_max
+            name = record.name+' ('+date+') '+registers
+            #TODO create a best method to give the name
             res.append((record['id'], name))
         return res
 
@@ -147,18 +154,18 @@ class event_event(osv.osv):
     
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
+        'name': fields.char('Event Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
-        'type': fields.many2one('event.type', 'Type', help="Type of Event like Seminar, Exhibition, Conference, Training.", readonly=False, states={'done': [('readonly', True)]}),
-        'register_max': fields.integer('Maximum Registrations', help="Provide Maximum Number of Registrations", readonly=True, states={'draft': [('readonly', False)]}),
-        'register_min': fields.integer('Minimum Registrations', help="The minimum number of participants required to confirm this event.", readonly=True, states={'draft': [('readonly', False)]}),
+        'type': fields.many2one('event.type', 'Type of Event', readonly=False, states={'done': [('readonly', True)]}),
+        'register_max': fields.integer('Maximum Registrations', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
+        'register_min': fields.integer('Minimum Registrations', help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
         'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_current',
-            help="Total of Open and Done Registrations"),
+            help="Total of Confirmed and Done Registrations"),
         'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_prospect',
-            help="Total of Prospect Registrations"),
+            ),
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
-        'date_begin': fields.datetime('Starting Date', required=True, help="Beginning Date of Event", readonly=True, states={'draft': [('readonly', False)]}),
-        'date_end': fields.datetime('Closing Date', required=True, help="Closing Date of Event", readonly=True, states={'draft': [('readonly', False)]}),
+        'date_begin': fields.datetime('Starting Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'date_end': fields.datetime('Closing Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Confirmed'),
@@ -173,7 +180,7 @@ class event_event(osv.osv):
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
         'speaker_ids': fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers', readonly=False, states={'done': [('readonly', True)]}),
         'address_id': fields.many2one('res.partner.address','Location Address', readonly=False, states={'done': [('readonly', True)]}),
-        'speaker_confirmed': fields.boolean('Speaker Confirmed', readonly=False, states={'done': [('readonly', True)]}),
+        'speaker_confirmed': fields.boolean('Speaker Confirmed',help='You can choose this checkbox for your information', readonly=False, states={'done': [('readonly', True)]}),
         'country_id': fields.related('address_id', 'country_id',
                     type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}),
         'note': fields.text('Description', readonly=False, states={'done': [('readonly', True)]}),
@@ -219,14 +226,14 @@ class event_registration(osv.osv):
 
     _columns = {
         'id': fields.integer('ID'),
-        'origin': fields.char('Origin', size=124,  readonly=True, states={'draft': [('readonly', False)]}),
+        'origin': fields.char('Origin', size=124,readonly=True),
         'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Number of participants for this registration."),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
         'partner_id_address': fields.many2one('res.partner.address', 'Partner', states={'done': [('readonly', True)]}),
         "contact_id": fields.many2one('res.partner.address', 'Partner Contact', readonly=False, states={'done': [('readonly', True)]}), #TODO: filter only the contacts that have a function into the selected partner_id
         'date_closed': fields.datetime('Closure Date', readonly=True),
-        'date_open': fields.datetime('Open Date', readonly=True),
+        'date_open': fields.datetime('Registration Date', readonly=True),
         'email_from': fields.related('event_id','reply_to',string='Reply-to Email', type='char', size=128, readonly=True,),
         'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('email_from', '=', False),('model','=',_name)]),
         'date_deadline': fields.related('event_id','date_end', type='datetime', string="Event End Date", readonly=True),
@@ -243,11 +250,13 @@ class event_registration(osv.osv):
         'nb_register': 1,
         'state': 'draft',
         'user_id': lambda self, cr, uid, ctx: uid,
+        'date_open':fields.date.context_today,
     }
+    _order = 'date_open desc'
 
     def do_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
-    def do_open(self, cr, uid, ids, context=None):
+    def registration_open(self, cr, uid, ids, context=None):
         """ Open Registration
         """
         res = self.write(cr, uid, ids, {'state': 'open','date_open':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
@@ -267,8 +276,8 @@ class event_registration(osv.osv):
         return res
 
     # event uses add_note wizard from crm, which expects case_* methods
-    def case_open(self, cr, uid, ids, context=None):
-        self.do_open(cr, uid, ids, context)
+    def case_open(self, cr, uid, ids, context):
+        return self.registration_open(cr, uid, ids, context)
 
     # event uses add_note wizard from crm, which expects case_* methods
     #def case_close(self, cr, uid, ids, context=None):
