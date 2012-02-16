@@ -164,9 +164,10 @@ class stock_partial_picking(osv.osv_memory):
 
                 calc_qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, \
                                     move.quantity, move.move_id.product_uom.id)
-
                 #Adding a check whether any move line contains exceeding qty to original moveline
-                if calc_qty > move.move_id.product_qty:
+                
+                if round(calc_qty, self.pool.get('decimal.precision').precision_get(cr, uid, 'Product UOM')) > \
+                round(move.move_id.product_qty, self.pool.get('decimal.precision').precision_get(cr, uid, 'Product UOM')):
                     precision = '%0.' + str(dp.get_precision('Product UoM')(cr)[1] or 0) + 'f'
                     raise osv.except_osv(_('Processing Error'),
                     _('Processing quantity %s %s for %s is larger than the available quantity %s %s !')\
