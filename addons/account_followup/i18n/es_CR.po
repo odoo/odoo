@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-13 18:59+0000\n"
-"Last-Translator: Carlos Vásquez (CLEARCORP) "
-"<carlos.vasquez@clearcorp.co.cr>\n"
+"PO-Revision-Date: 2012-02-15 14:55+0000\n"
+"Last-Translator: Freddy Gonzalez <freddy.gonzalez@clearcorp.co.cr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-14 05:43+0000\n"
+"X-Launchpad-Export-Date: 2012-02-16 05:05+0000\n"
 "X-Generator: Launchpad (build 14781)\n"
 "Language: \n"
 
@@ -45,6 +44,7 @@ msgstr "Seguimiento"
 msgid ""
 "Check if you want to print followups without changing followups level."
 msgstr ""
+"Valide si desea iimprimir seguimientos sin cambiar los niveles de seguimiento"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -69,6 +69,24 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Estimado %(partner_name)s, \n"
+"\n"
+"Sentimos ver que debemos enviar un recordatorio de que su cuenta está ahora "
+"seriamente sobrepasada\n"
+"\n"
+"Es esencial que el pago sea realizado inmediatamente, en otro caso deberemos "
+"considerar no seguir dando soporte a su compañía con (bienes/servicios).\n"
+"Por favor, tome las medidas adecuadas en vistas a realizar este pago en los "
+"próximos 8 días.\n"
+"\n"
+"Si hay algún problema con la factura a pagar del cual no estemos informados, "
+"no dude en contactar con nuestro departamento financiero en el "
+"(+32).10..68.94.39 para que podamos solventar este hecho rápidamente.\n"
+"\n"
+"Los detalles del pago vencido están impresos más abajo.\n"
+"\n"
+"Cordiales saludos,\n"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -105,7 +123,7 @@ msgstr "Leyenda"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow up Entries with period in current year"
-msgstr ""
+msgstr "Asientos de seguimiento con el periodo en este año"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -115,7 +133,7 @@ msgstr "Aceptar"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
-msgstr ""
+msgstr "Monto"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
@@ -149,6 +167,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"¡La fecha de su asiento no está en el periodo definido! Usted debería "
+"cambiar la fecha o borar esta restricción del diario."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -285,6 +305,18 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Estimado %(partner_name)s, \n"
+"\n"
+"A excepción de que fuese un error nuestro, parece que el siguiente importe "
+"sigue impagado. Por favor, tome las medidas oportunas para realizar el pago "
+"en los próximos 8 días.\n"
+"\n"
+"Si su pago ha sido realizado después de que este correo haya sido enviado, "
+"por favor, ignore el mensaje. No dude en contactar con nuestro departamente "
+"financiero en el (+32) .10.69.94.39.\n"
+"\n"
+"Cordiales saludos,\n"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -319,6 +351,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Todos los correos han sido enviados con éxito a los clientes:\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -326,6 +361,8 @@ msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
 msgstr ""
+"Su descripción no es válida, utilice la leyenda apropiada o %% si desea "
+"utilizar el carácter porcentaje."
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -334,6 +371,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"La cuenta seleccionada en su asiento fuerza a tener una moneda secundaria. "
+"Debería eliminar la moneda secundaria de la cuenta o asignar al diario una "
+"vista multi-moneda"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -348,7 +388,7 @@ msgstr "Estadísticas seguimiento por empresa"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
+msgstr "Mensaje"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -365,6 +405,11 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\n"
+"\n"
+"¡ E-Mail enviado al siguiente cliente satisfactoriamente. !\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -418,7 +463,7 @@ msgstr "Apuntes contables"
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "No puede crear asientos en una cuenta de tipo vista"
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -428,7 +473,7 @@ msgstr "Enviar correo electrónico de confirmación"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -508,7 +553,7 @@ msgstr "Informe de seguimientos"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Steps"
-msgstr ""
+msgstr "Pasos del seguimiento"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -540,12 +585,12 @@ msgstr "Nivel superior seguimiento máx."
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
-msgstr ""
+msgstr "Revisar seguimientos de facturas"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "La compañía debe ser la misma para su cuenta y periodos relacionados"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -555,6 +600,11 @@ msgid ""
 "code to adapt the email content to the good context (good name, good date) "
 "and you can manage the multi language of messages."
 msgstr ""
+"Defina niveles de seguimiento y sus mensajes y espera relacionados. Para "
+"cada paso, especifique el mensaje y el día de retraso. Use la leyenda para "
+"saber el código a utilizar para adaptar el contenido del email al contexto "
+"adecuado (nombre correcto, fecha correcta) y podrá gestionar los mensajes "
+"multi-idioma."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -569,6 +619,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"E-Mail no enviado a los siguientes clientes, ¡ E-mail no disponible !\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -584,7 +637,7 @@ msgstr "%(date)s: Fecha actual"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Incluyendo asientos marcados como litigio"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -600,7 +653,7 @@ msgstr "Descripción"
 #. module: account_followup
 #: constraint:account_followup.followup:0
 msgid "Only One Followup by Company."
-msgstr ""
+msgstr "Solo un seguimiento por compañía"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -636,7 +689,7 @@ msgstr "Seguimientos enviados"
 #. module: account_followup
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "¡El nombre de la compañía debe ser único!"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -694,11 +747,26 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Estimado %(partner_name)s\n"
+"\n"
+"Despues de varios avisos, su cuenta no ha sido aún saldada.\n"
+"\n"
+"A menos que el pago íntegro sea realizado en los próximos 8 días, tomaremos "
+"acciones legales para la recuperación de la deuda sin avisos adicionales.\n"
+"\n"
+"Creemos que esta acción será innecesaria y el detalle de los pagos debidos "
+"está impreso más abajo.\n"
+"\n"
+"En caso de cualquier consulta concerniente a esta cuestión, no dude en "
+"contactar con nuestro departamento financiero en el (+32).10.68.94.39\n"
+"\n"
+"Cordiales saludos,\n"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "No puede crear asientos en cuentas cerradas"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -723,7 +791,7 @@ msgstr "Ref. cliente :"
 #. module: account_followup
 #: field:account.followup.print.all,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Imprimir prueba"
 
 #. module: account_followup
 #: view:account.followup.print.all:0

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-13 09:57+0000\n"
-"Last-Translator: sum1201 <Unknown>\n"
+"PO-Revision-Date: 2012-02-16 04:45+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-14 05:44+0000\n"
+"X-Launchpad-Export-Date: 2012-02-16 05:05+0000\n"
 "X-Generator: Launchpad (build 14781)\n"
 
 #. module: account
@@ -37,7 +37,7 @@ msgstr "其它设置"
 msgid ""
 "Determine the display order in the report 'Accounting \\ Reporting \\ "
 "Generic Reporting \\ Taxes \\ Taxes Report'"
-msgstr ""
+msgstr "确定以下报表的显示顺序：”会计-报表-通用报表-税-税报表“"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -334,7 +334,7 @@ msgid ""
 "You can set up here the format you want this record to be displayed. If you "
 "leave the automatic formatting, it will be computed based on the financial "
 "reports hierarchy (auto-computed field 'level')."
-msgstr ""
+msgstr "这里可以设置你想要记录显示格式.如果保留自动,它将基于财务报告结构计算(自动计算字段\"level\")"
 
 #. module: account
 #: view:account.installer:0
@@ -361,7 +361,7 @@ msgstr "本视图供财务人员在系统中录入单据。如果您在系统里
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "凭证上不能使用视图类型的科目"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -683,7 +683,7 @@ msgstr "应收款科目"
 msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
-msgstr ""
+msgstr "凭证日期不在所选期间内！可以修改凭证日期或在凭证簿上去掉这个检查项。"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -907,7 +907,7 @@ msgstr "到期"
 msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
 "belong to chart of accounts \"%s\"!"
-msgstr ""
+msgstr "你不能复核这张会计凭证，因为会计科目 \"%s\"不属于科目表 \"%s\"！"
 
 #. module: account
 #: code:addons/account/account_move_line.py:835
@@ -915,7 +915,7 @@ msgstr ""
 msgid ""
 "This account does not allow reconciliation! You should update the account "
 "definition to change this."
-msgstr ""
+msgstr "这个科目不能做核销！可以在会计科目设置里修改。"
 
 #. module: account
 #: view:account.invoice:0
@@ -1921,7 +1921,7 @@ msgstr "如果设为True当分录的日期不在会计周期内，将不接受�
 #: code:addons/account/account_invoice.py:73
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
-msgstr ""
+msgstr "你必须定义一个类型为 '%s'的成本凭证簿！"
 
 #. module: account
 #: field:account.installer,config_logo:0
@@ -1935,7 +1935,7 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
-msgstr ""
+msgstr "凭证上的科目要求输入一个外币。你可以在科目设置中去掉这个外币或在凭证簿设置上选择一个支持多币种的输入界面。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_financial_report_tree
@@ -1963,7 +1963,7 @@ msgstr "与某销售凭证簿关联的分析凭证"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Italic Text (smaller)"
-msgstr ""
+msgstr "斜体（小一些）"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2163,7 +2163,7 @@ msgstr "没定义销售/采购 的账簿!"
 #. module: account
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
-msgstr ""
+msgstr "RIB/IBAN 无效"
 
 #. module: account
 #: view:product.category:0
@@ -4037,6 +4037,8 @@ msgid ""
 "some non legal fields or you must unconfirm the journal entry first! \n"
 "%s"
 msgstr ""
+"你不能修改已复核的会计凭证！你只可以修改一些非关键字段或者先取消复核这张凭证！\n"
+"%s"
 
 #. module: account
 #: field:res.company,paypal_account:0
@@ -4194,7 +4196,7 @@ msgstr "科目一览表"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Main Title 1 (bold, underlined)"
-msgstr ""
+msgstr "主标题 （加粗，下划线）"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -4282,7 +4284,7 @@ msgid ""
 "wizard that generate Chart of Accounts from templates, this is useful when "
 "you want to generate accounts of this template only when loading its child "
 "template."
-msgstr ""
+msgstr "如果你不想在根据模版生成科目表的向导里用这个模版，不要勾选这个字段。用于你仅需要在用到本模版的子模板时才生成这个模版的会计科目。"
 
 #. module: account
 #: view:account.use.model:0
@@ -4333,7 +4335,7 @@ msgstr "定期模型"
 #: code:addons/account/account_move_line.py:1251
 #, python-format
 msgid "Encoding error"
-msgstr ""
+msgstr "输入错误"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -4383,7 +4385,7 @@ msgstr "钱箱额"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "Example"
-msgstr ""
+msgstr "例子"
 
 #. module: account
 #: code:addons/account/account_invoice.py:828
@@ -4455,7 +4457,7 @@ msgstr "凭证创建出错。当前货币与科目适用的外币\"%s - %s\"不�
 #. module: account
 #: selection:account.bank.statement,state:0
 msgid "New"
-msgstr ""
+msgstr "新建"
 
 #. module: account
 #: field:account.invoice.refund,date:0
@@ -4504,7 +4506,7 @@ msgstr "杂项"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} 发票 (编号 ${object.number or 'n/a' })"
 
 #. module: account
 #: help:res.partner,last_reconciliation_date:0
@@ -4568,7 +4570,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Supplier Refund, otherwise a "
 "Partner bank account number."
-msgstr ""
+msgstr "发票的收款银行帐号。如果是客户发票或供应商红字发票，这里是本公司的银行账号，否则这里是业务伙伴的银行账号。"
 
 #. module: account
 #: view:account.state.open:0
@@ -4719,7 +4721,7 @@ msgstr "打印在这会计期间生成的辅助核算(或成本)账簿 ,该报�
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "发票号必须在公司范围内唯一"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -4741,7 +4743,7 @@ msgstr "会计"
 msgid ""
 "From this view, have an analysis of your treasury. It sums the balance of "
 "every accounting entries made on liquidity accounts per period."
-msgstr ""
+msgstr "在这里分析贵公司的资金。这里汇总了每个期间在流动资产科目上的会计凭证。"
 
 #. module: account
 #: field:account.journal,group_invoice_lines:0
@@ -4914,7 +4916,7 @@ msgstr ""
 #: field:account.financial.report,children_ids:0
 #: model:ir.model,name:account.model_account_financial_report
 msgid "Account Report"
-msgstr ""
+msgstr "科目报表"
 
 #. module: account
 #: field:account.journal.column,name:0
@@ -5046,7 +5048,7 @@ msgstr "销售"
 #. module: account
 #: view:account.financial.report:0
 msgid "Report"
-msgstr ""
+msgstr "报表"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -5365,7 +5367,7 @@ msgstr "分析最近7天内的分录"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Normal Text"
-msgstr ""
+msgstr "普通文本"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -5436,6 +5438,8 @@ msgid ""
 "No fiscal year defined for this date !\n"
 "Please create one from the configuration of the accounting menu."
 msgstr ""
+"尚未为此日期定义财年！\n"
+"请从会计管理的配置菜单中创建一个财年。"
 
 #. module: account
 #: view:account.move.line.reconcile:0
@@ -5494,7 +5498,7 @@ msgstr "税金的计算方法"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "Due Date Computation"
-msgstr ""
+msgstr "计算截至日期"
 
 #. module: account
 #: field:report.invoice.created,create_date:0
@@ -5685,12 +5689,12 @@ msgstr "筛选"
 #: code:addons/account/account.py:2256
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model !"
-msgstr ""
+msgstr "模型中存在错误的表达式 \"%(...)s\""
 
 #. module: account
 #: field:account.bank.statement.line,date:0
 msgid "Entry Date"
-msgstr ""
+msgstr "分录日期"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1155
@@ -6069,7 +6073,7 @@ msgstr "应收款"
 #. module: account
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "科目和期间必须属于同一个公司"
 
 #. module: account
 #: view:account.invoice:0
