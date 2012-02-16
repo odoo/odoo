@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Events Sales Order',
+    'name': 'Events Sales',
     'version': '0.1',
     'category': 'Tools',
     'complexity': "easy",

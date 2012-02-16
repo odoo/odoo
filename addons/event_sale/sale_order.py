@@ -24,7 +24,7 @@ from osv import fields, osv
 class product(osv.osv):
     _inherit='product.product'
     _columns={
-    'event_ok':fields.boolean('Event'),
+    'event_ok':fields.boolean('Event',help='Match a product with an event'),
     'event_type_id':fields.many2one('event.type','Type of Event'),
     }
 product()
@@ -32,7 +32,7 @@ product()
 class sale_order_line(osv.osv):
     _inherit='sale.order.line'
     _columns={
-        'event':fields.many2one('event.event','Event'),
+        'event':fields.many2one('event.event','Event',help="Choose an event and it will authomaticaly create a registration for this event"),
         'event_type_id':fields.related('event_type',type='many2one', relation="event.type", string="Event Type"),
         'event_ok':fields.related('event_ok',string='event_ok' ,type='boolean'),
     }
@@ -72,13 +72,12 @@ class sale_order_line(osv.osv):
                 'name':registration.order_id.partner_invoice_id.name,
                 'partner_id':registration.order_id.partner_id.id,
                 'contact_id':registration.order_id.partner_invoice_id.id,
-                'nb_register':registration.product_uom_qty,
+                'nb_register':int(registration.product_uom_qty),
                 'email':registration.order_id.partner_id.email,
                 'phone':registration.order_id.partner_id.phone,
                 'street':registration.order_id.partner_invoice_id.street,
                 'city':registration.order_id.partner_invoice_id.city,
                 'origin':registration.order_id.name,
-                'nb_register':1,
                 'event_id':registration.event.id,
                 }
                 self.pool.get('event.registration').create(cr,uid,dic,context=context)
@@ -87,4 +86,13 @@ class sale_order_line(osv.osv):
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context)
 
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        print 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'
+        if not default:
+            default = {}
+            default.update({
+                'event_id',1
+                  })
+        print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+        return super(sale_order, self).copy(cr, uid, id, default, context=context)
 
