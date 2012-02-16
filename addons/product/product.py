@@ -75,7 +75,7 @@ class product_uom(osv.osv):
     _description = 'Product Unit of Measure'
 
     def _compute_factor_inv(self, factor):
-        return factor and round(1.0 / factor, 6) or 0.0
+        return factor and (1.0 / factor) or 0.0
 
     def _factor_inv(self, cursor, user, ids, name, arg, context=None):
         res = {}
