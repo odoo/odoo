@@ -21,7 +21,6 @@
 
 from osv import fields, osv
 from tools.translate import _
-import time
 
 
 class crm_make_sale(osv.osv_memory):
@@ -98,7 +97,7 @@ class crm_make_sale(osv.osv_memory):
                     'partner_invoice_id': partner_addr['invoice'],
                     'partner_order_id': partner_addr['contact'],
                     'partner_shipping_id': partner_addr['delivery'],
-                    'date_order': time.strftime('%Y-%m-%d'),
+                    'date_order': fields.date.context_today(self,cr,uid,context=context),
                     'fiscal_position': fpos,
                 }
                 if partner.id:

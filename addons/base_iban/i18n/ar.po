@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2009-02-03 06:26+0000\n"
-"Last-Translator: <>\n"
+"PO-Revision-Date: 2012-02-12 19:37+0000\n"
+"Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:01+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-13 04:49+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -43,12 +43,12 @@ msgstr ""
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
 msgid "zip"
-msgstr ""
+msgstr "الرمز البريد"
 
 #. module: base_iban
 #: help:res.partner.bank,iban:0
 msgid "International Bank Account Number"
-msgstr ""
+msgstr "رقم الحساب البنكي الدولي"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -58,7 +58,7 @@ msgstr "الحسابات المصرفية"
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_country_field
 msgid "country_id"
-msgstr ""
+msgstr "هوية_البلد"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:136
@@ -71,7 +71,7 @@ msgstr ""
 #. module: base_iban
 #: field:res.partner.bank,iban:0
 msgid "IBAN"
-msgstr ""
+msgstr "الرقم الدولي للحساب البنكي"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:140
@@ -82,9 +82,46 @@ msgstr ""
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
-msgstr ""
+msgstr "حساب الرقم الدولي للحساب البنكي"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
 msgstr ""
+
+#, python-format
+#~ msgid "The IBAN is invalid, It should begin with the country code"
+#~ msgstr "رقم الحساب الدولي غير صالح, يجب ان يبدأ بكود البلد"
+
+#, python-format
+#~ msgid ""
+#~ "The IBAN does not seems to be correct. You should have entered something "
+#~ "like this %s"
+#~ msgstr ""
+#~ "يبدو ان رقم الحساب الدولي غير صحيح. يتوجب عليك ادخال شيء ما مثل هذا %s"
+
+#~ msgid "Create IBAN bank accounts"
+#~ msgstr "انشيء رقم دولي للحساب البنكي للحسابات البنكية"
+
+#~ msgid "iban"
+#~ msgstr "الرقم الدولي للحساب البنكي"
+
+#~ msgid "bic"
+#~ msgstr ""
+#~ "هي وسيلة لتكون قادرة على تحديد المؤسسات المالية بحيث يتم تسهيل عملية "
+#~ "الاتصالات السلكية واللاسلكية في المؤسسات المالية / البنوك."
+
+#~ msgid ""
+#~ "\n"
+#~ "This module installs the base for IBAN (International Bank Account Number) "
+#~ "bank accounts and checks for its validity.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "تثبت هذه الوحدة الاساس للرقم الدولي للحساب البنكي وتتحقق من صلاحيتها.\n"
+#~ "\n"
+#~ "    "
+
+#~ msgid "acc_number"
+#~ msgstr "رقم_ الحساب"

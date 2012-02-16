@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2010-08-03 03:38+0000\n"
-"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
+"PO-Revision-Date: 2012-02-10 03:09+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:02+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-11 05:07+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -23,22 +23,24 @@ msgid ""
 "Please define BIC/Swift code on bank for bank type IBAN Account to make "
 "valid payments"
 msgstr ""
+"\n"
+"请为 IBAN类型的银行指定 BIC/Swift代码，以便自动付款。"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:139
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it"
-msgstr ""
+msgstr "这个IBAN没有通过验证，请检查一下"
 
 #. module: base_iban
 #: model:res.partner.bank.type,format_layout:base_iban.bank_iban
 msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-msgstr ""
+msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
 msgid "bank_bic"
-msgstr ""
+msgstr "bank_bic"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
@@ -66,7 +68,7 @@ msgstr "country_id"
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like "
 "this %s"
-msgstr ""
+msgstr "IBAN格式不对，正确的格式类似 %s"
 
 #. module: base_iban
 #: field:res.partner.bank,iban:0
@@ -77,7 +79,7 @@ msgstr "IBAN"
 #: code:addons/base_iban/base_iban.py:140
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr ""
+msgstr "IBAN编号不正确，应该以国家编号开头"
 
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
@@ -87,7 +89,7 @@ msgstr "IBAN账号"
 #. module: base_iban
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
-msgstr ""
+msgstr "RIB/IBAN 无效"
 
 #~ msgid "acc_number"
 #~ msgstr "acc_number"

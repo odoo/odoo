@@ -61,11 +61,13 @@ class mrp_bom(osv.osv):
     _columns={
         'sub_products':fields.one2many('mrp.subproduct', 'bom_id', 'sub_products'),
     }
+
 mrp_bom()
 
 class mrp_production(osv.osv):
     _description = 'Production'
     _inherit= 'mrp.production'
+
 
     def action_confirm(self, cr, uid, ids):
         """ Confirms production order and calculates quantity based on subproduct_type.
@@ -124,4 +126,22 @@ class mrp_production(osv.osv):
         return super(mrp_production, self)._get_subproduct_factor(cr, uid, production_id, move_id, context=context)
 
 mrp_production()
+
+class change_production_qty(osv.osv_memory):
+    _inherit = 'change.production.qty'
+
+    def _update_product_to_produce(self, cr, uid, prod, qty, context=None):
+        bom_obj = self.pool.get('mrp.bom')
+        move_lines_obj = self.pool.get('stock.move')
+        prod_obj = self.pool.get('mrp.production')
+        for m in prod.move_created_ids:
+            if m.product_id.id == prod.product_id.id:
+                move_lines_obj.write(cr, uid, [m.id], {'product_qty': qty})
+            else:
+                for sub_product_line in prod.bom_id.sub_products:
+                    if sub_product_line.product_id.id == m.product_id.id:
+                        factor = prod_obj._get_subproduct_factor(cr, uid, prod.id, m.id, context=context)
+                        subproduct_qty = sub_product_line.subproduct_type == 'variable' and qty * factor or sub_product_line.product_qty
+                        move_lines_obj.write(cr, uid, [m.id], {'product_qty': subproduct_qty})
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

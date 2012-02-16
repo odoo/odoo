@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-08 02:51-0600\n"
-"Last-Translator: Carlos Vásquez - CLEARCORP <carlos.vasquez@clearcorp.co.cr>\n"
+"PO-Revision-Date: 2012-02-15 14:55+0000\n"
+"Last-Translator: Freddy Gonzalez <freddy.gonzalez@clearcorp.co.cr>\n"
 "Language-Team: \n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:14+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-16 05:05+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
+"Language: \n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -41,8 +41,10 @@ msgstr "Seguimiento"
 
 #. module: account_followup
 #: help:account.followup.print.all,test_print:0
-msgid "Check if you want to print followups without changing followups level."
+msgid ""
+"Check if you want to print followups without changing followups level."
 msgstr ""
+"Valide si desea iimprimir seguimientos sin cambiar los niveles de seguimiento"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -50,17 +52,41 @@ msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.\n"
+"We are disappointed to see that despite sending a reminder, that your "
+"account is now seriously overdue.\n"
 "\n"
-"It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account which means that we will no longer be able to supply your company with (goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
+"It is essential that immediate payment is made, otherwise we will have to "
+"consider placing a stop on your account which means that we will no longer "
+"be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the "
+"next 8 days.\n"
 "\n"
-"If there is a problem with paying invoice that we are not aware of, do not hesitate to contact our accounting department at (+32).10.68.94.39. so that we can resolve the matter quickly.\n"
+"If there is a problem with paying invoice that we are not aware of, do not "
+"hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+"we can resolve the matter quickly.\n"
 "\n"
 "Details of due payments is printed below.\n"
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Estimado %(partner_name)s, \n"
+"\n"
+"Sentimos ver que debemos enviar un recordatorio de que su cuenta está ahora "
+"seriamente sobrepasada\n"
+"\n"
+"Es esencial que el pago sea realizado inmediatamente, en otro caso deberemos "
+"considerar no seguir dando soporte a su compañía con (bienes/servicios).\n"
+"Por favor, tome las medidas adecuadas en vistas a realizar este pago en los "
+"próximos 8 días.\n"
+"\n"
+"Si hay algún problema con la factura a pagar del cual no estemos informados, "
+"no dude en contactar con nuestro departamento financiero en el "
+"(+32).10..68.94.39 para que podamos solventar este hecho rápidamente.\n"
+"\n"
+"Los detalles del pago vencido están impresos más abajo.\n"
+"\n"
+"Cordiales saludos,\n"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -82,8 +108,11 @@ msgstr "Asunto correo electrónico"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_followup_stat
-msgid "Follow up on the reminders sent over to your partners for unpaid invoices."
-msgstr "Seguimiento de los recordatorios enviados a sus clientes por facturas no pagadas."
+msgid ""
+"Follow up on the reminders sent over to your partners for unpaid invoices."
+msgstr ""
+"Seguimiento de los recordatorios enviados a sus clientes por facturas no "
+"pagadas."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -94,7 +123,7 @@ msgstr "Leyenda"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow up Entries with period in current year"
-msgstr ""
+msgstr "Asientos de seguimiento con el periodo en este año"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -104,7 +133,7 @@ msgstr "Aceptar"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
-msgstr ""
+msgstr "Monto"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
@@ -134,8 +163,12 @@ msgstr "Total debe"
 
 #. module: account_followup
 #: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal."
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
 msgstr ""
+"¡La fecha de su asiento no está en el periodo definido! Usted debería "
+"cambiar la fecha o borar esta restricción del diario."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -202,8 +235,15 @@ msgstr "Debe"
 
 #. module: account_followup
 #: view:account.followup.print:0
-msgid "This feature allows you to send reminders to partners with pending invoices. You can send them the default message for unpaid invoices or manually enter a message should you need to remind them of a specific information."
-msgstr "Esta funcionalidad le permite enviar recordatorios a las empresas con facturas pendientes. Puede enviarles el mensaje por defecto para facturas impagadas o introducir manualmente un mensaje si necesita recordarles alguna información específica."
+msgid ""
+"This feature allows you to send reminders to partners with pending invoices. "
+"You can send them the default message for unpaid invoices or manually enter "
+"a message should you need to remind them of a specific information."
+msgstr ""
+"Esta funcionalidad le permite enviar recordatorios a las empresas con "
+"facturas pendientes. Puede enviarles el mensaje por defecto para facturas "
+"impagadas o introducir manualmente un mensaje si necesita recordarles alguna "
+"información específica."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -213,7 +253,9 @@ msgstr "Ref."
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr "Indica el orden de secuencia cuando se muestra una lista de líneas de seguimiento."
+msgstr ""
+"Indica el orden de secuencia cuando se muestra una lista de líneas de "
+"seguimiento."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -253,12 +295,28 @@ msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.\n"
+"Exception made if there was a mistake of ours, it seems that the following "
+"amount stays unpaid. Please, take appropriate measures in order to carry out "
+"this payment in the next 8 days.\n"
 "\n"
-"Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to contact our accounting department at (+32).10.68.94.39.\n"
+"Would your payment have been carried out after this mail was sent, please "
+"ignore this message. Do not hesitate to contact our accounting department at "
+"(+32).10.68.94.39.\n"
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Estimado %(partner_name)s, \n"
+"\n"
+"A excepción de que fuese un error nuestro, parece que el siguiente importe "
+"sigue impagado. Por favor, tome las medidas oportunas para realizar el pago "
+"en los próximos 8 días.\n"
+"\n"
+"Si su pago ha sido realizado después de que este correo haya sido enviado, "
+"por favor, ignore el mensaje. No dude en contactar con nuestro departamente "
+"financiero en el (+32) .10.69.94.39.\n"
+"\n"
+"Cordiales saludos,\n"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -293,16 +351,29 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Todos los correos han sido enviados con éxito a los clientes:\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
-msgid "Your description is invalid, use the right legend or %% if you want to use the percent character."
+msgid ""
+"Your description is invalid, use the right legend or %% if you want to use "
+"the percent character."
 msgstr ""
+"Su descripción no es válida, utilice la leyenda apropiada o %% si desea "
+"utilizar el carácter porcentaje."
 
 #. module: account_followup
 #: constraint:account.move.line:0
-msgid "The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal."
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
 msgstr ""
+"La cuenta seleccionada en su asiento fuerza a tener una moneda secundaria. "
+"Debería eliminar la moneda secundaria de la cuenta o asignar al diario una "
+"vista multi-moneda"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -317,7 +388,7 @@ msgstr "Estadísticas seguimiento por empresa"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
+msgstr "Mensaje"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -334,11 +405,19 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\n"
+"\n"
+"¡ E-Mail enviado al siguiente cliente satisfactoriamente. !\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
-msgid "This field allow you to select a forecast date to plan your follow-ups"
-msgstr "Este campo le permite seleccionar una fecha de previsión para planificar sus seguimientos"
+msgid ""
+"This field allow you to select a forecast date to plan your follow-ups"
+msgstr ""
+"Este campo le permite seleccionar una fecha de previsión para planificar sus "
+"seguimientos"
 
 #. module: account_followup
 #: field:account.followup.print,date:0
@@ -384,7 +463,7 @@ msgstr "Apuntes contables"
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "No puede crear asientos en una cuenta de tipo vista"
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -394,7 +473,7 @@ msgstr "Enviar correo electrónico de confirmación"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -474,7 +553,7 @@ msgstr "Informe de seguimientos"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Steps"
-msgstr ""
+msgstr "Pasos del seguimiento"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -506,17 +585,26 @@ msgstr "Nivel superior seguimiento máx."
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
-msgstr ""
+msgstr "Revisar seguimientos de facturas"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "La compañía debe ser la misma para su cuenta y periodos relacionados"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
-msgid "Define follow up levels and their related messages and delay. For each step, specify the message and the day of delay. Use the legend to know the using code to adapt the email content to the good context (good name, good date) and you can manage the multi language of messages."
+msgid ""
+"Define follow up levels and their related messages and delay. For each step, "
+"specify the message and the day of delay. Use the legend to know the using "
+"code to adapt the email content to the good context (good name, good date) "
+"and you can manage the multi language of messages."
 msgstr ""
+"Defina niveles de seguimiento y sus mensajes y espera relacionados. Para "
+"cada paso, especifique el mensaje y el día de retraso. Use la leyenda para "
+"saber el código a utilizar para adaptar el contenido del email al contexto "
+"adecuado (nombre correcto, fecha correcta) y podrá gestionar los mensajes "
+"multi-idioma."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -531,6 +619,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"E-Mail no enviado a los siguientes clientes, ¡ E-mail no disponible !\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -546,7 +637,7 @@ msgstr "%(date)s: Fecha actual"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Incluyendo asientos marcados como litigio"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -562,7 +653,7 @@ msgstr "Descripción"
 #. module: account_followup
 #: constraint:account_followup.followup:0
 msgid "Only One Followup by Company."
-msgstr ""
+msgstr "Solo un seguimiento por compañía"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -576,8 +667,12 @@ msgstr "Asientos de empresa"
 
 #. module: account_followup
 #: help:account.followup.print.all,partner_lang:0
-msgid "Do not change message text, if you want to send email in partner language, or configure from company"
-msgstr "No cambie el texto del mensaje si quiere enviar correos en el idioma de la empresa o configurarlo desde la compañía."
+msgid ""
+"Do not change message text, if you want to send email in partner language, "
+"or configure from company"
+msgstr ""
+"No cambie el texto del mensaje si quiere enviar correos en el idioma de la "
+"empresa o configurarlo desde la compañía."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
@@ -594,7 +689,7 @@ msgstr "Seguimientos enviados"
 #. module: account_followup
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "¡El nombre de la compañía debe ser único!"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -641,19 +736,37 @@ msgid ""
 "\n"
 "Despite several reminders, your account is still not settled.\n"
 "\n"
-"Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.\n"
+"Unless full payment is made in next 8 days, then legal action for the "
+"recovery of the debt will be taken without further notice.\n"
 "\n"
-"I trust that this action will prove unnecessary and details of due payments is printed below.\n"
+"I trust that this action will prove unnecessary and details of due payments "
+"is printed below.\n"
 "\n"
-"In case of any queries concerning this matter, do not hesitate to contact our accounting department at (+32).10.68.94.39.\n"
+"In case of any queries concerning this matter, do not hesitate to contact "
+"our accounting department at (+32).10.68.94.39.\n"
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Estimado %(partner_name)s\n"
+"\n"
+"Despues de varios avisos, su cuenta no ha sido aún saldada.\n"
+"\n"
+"A menos que el pago íntegro sea realizado en los próximos 8 días, tomaremos "
+"acciones legales para la recuperación de la deuda sin avisos adicionales.\n"
+"\n"
+"Creemos que esta acción será innecesaria y el detalle de los pagos debidos "
+"está impreso más abajo.\n"
+"\n"
+"En caso de cualquier consulta concerniente a esta cuestión, no dude en "
+"contactar con nuestro departamento financiero en el (+32).10.68.94.39\n"
+"\n"
+"Cordiales saludos,\n"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "No puede crear asientos en cuentas cerradas"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -678,7 +791,7 @@ msgstr "Ref. cliente :"
 #. module: account_followup
 #: field:account.followup.print.all,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Imprimir prueba"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -749,6 +862,7 @@ msgstr "Criterios seguimiento"
 #~ msgid "Follow-up and Date Selection"
 #~ msgstr "Selección seguimiento y fecha"
 
+#, python-format
 #~ msgid ""
 #~ "\n"
 #~ "\n"
@@ -763,12 +877,13 @@ msgstr "Criterios seguimiento"
 #~ msgid "Amount In Currency"
 #~ msgstr "Importe en divisa"
 
+#, python-format
 #~ msgid ""
 #~ "Mail not sent to following Partners, Email not available !\n"
 #~ "\n"
 #~ msgstr ""
-#~ "¡No se ha enviado correo electrónico a las siguientes empresas, su email "
-#~ "no está disponible!\n"
+#~ "¡No se ha enviado correo electrónico a las siguientes empresas, su email no "
+#~ "está disponible!\n"
 #~ "\n"
 
 #~ msgid "Accounting follow-ups management"
@@ -777,6 +892,7 @@ msgstr "Criterios seguimiento"
 #~ msgid "Follow-Up Lines"
 #~ msgstr "Líneas de seguimiento"
 
+#, python-format
 #~ msgid ""
 #~ "All emails have been successfully sent to Partners:.\n"
 #~ "\n"
@@ -792,13 +908,13 @@ msgstr "Criterios seguimiento"
 #~ "\n"
 #~ "Dear %(partner_name)s,\n"
 #~ "\n"
-#~ "Exception made if there was a mistake of ours, it seems that the "
-#~ "following amount staid unpaid. Please, take appropriate measures in order "
-#~ "to carry out this payment in the next 8 days.\n"
+#~ "Exception made if there was a mistake of ours, it seems that the following "
+#~ "amount staid unpaid. Please, take appropriate measures in order to carry out "
+#~ "this payment in the next 8 days.\n"
 #~ "\n"
 #~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our "
-#~ "accounting department at (+32).10.68.94.39.\n"
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department at (+32).10.68.94.39.\n"
 #~ "\n"
 #~ "Best Regards,\n"
 #~ "\t\t\t"
@@ -810,8 +926,8 @@ msgstr "Criterios seguimiento"
 #~ "importes están pendientes de pago. Por favor, tome las medidas apropiadas "
 #~ "para llevar a cabo este pago en los próximos 8 días.\n"
 #~ "\n"
-#~ "Si el pago hubiera sido realizado después de enviar este correo, por "
-#~ "favor no lo tenga en cuenta. No dude en ponerse en contacto con nuestro "
+#~ "Si el pago hubiera sido realizado después de enviar este correo, por favor "
+#~ "no lo tenga en cuenta. No dude en ponerse en contacto con nuestro "
 #~ "departamento de contabilidad.\n"
 #~ "\n"
 #~ "Saludos cordiales,\n"
@@ -826,8 +942,8 @@ msgstr "Criterios seguimiento"
 #~ "Unless full payment is made in next 8 days , then legal action for the "
 #~ "recovery of the debt, will be taken without further notice.\n"
 #~ "\n"
-#~ "I trust that this action will prove unnecessary and details of due "
-#~ "payments is printed below.\n"
+#~ "I trust that this action will prove unnecessary and details of due payments "
+#~ "is printed below.\n"
 #~ "\n"
 #~ "In case of any queries concerning this matter, do not hesitate to contact "
 #~ "our accounting department at (+32).10.68.94.39.\n"
@@ -847,8 +963,8 @@ msgstr "Criterios seguimiento"
 #~ "Confiamos en que esta medida será innecesaria y los detalles de los pagos "
 #~ "pendientes se listan a continuación.\n"
 #~ "\n"
-#~ "En caso de cualquier consulta relativa a este asunto, no dude en ponerse "
-#~ "en contacto con nuestro departamento de contabilidad.\n"
+#~ "En caso de cualquier consulta relativa a este asunto, no dude en ponerse en "
+#~ "contacto con nuestro departamento de contabilidad.\n"
 #~ "\n"
 #~ "Saludos cordiales,\n"
 #~ "\t\t\t"
@@ -861,14 +977,14 @@ msgstr "Criterios seguimiento"
 #~ "account is now seriously overdue.\n"
 #~ "\n"
 #~ "It is essential that immediate payment is made, otherwise we will have to "
-#~ "consider placing a stop on your account which means that we will no "
-#~ "longer be able to supply your company with (goods/services).\n"
-#~ "Please, take appropriate measures in order to carry out this payment in "
-#~ "the next 8 days\n"
+#~ "consider placing a stop on your account which means that we will no longer "
+#~ "be able to supply your company with (goods/services).\n"
+#~ "Please, take appropriate measures in order to carry out this payment in the "
+#~ "next 8 days\n"
 #~ "\n"
-#~ "If there is a problem with paying invoice that we are not aware of, do "
-#~ "not hesitate to contact our accounting department at (+32).10.68.94.39. "
-#~ "so that we can resolve the matter quickly.\n"
+#~ "If there is a problem with paying invoice that we are not aware of, do not "
+#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+#~ "we can resolve the matter quickly.\n"
 #~ "\n"
 #~ "Details of due payments is printed below.\n"
 #~ "\n"
@@ -878,18 +994,18 @@ msgstr "Criterios seguimiento"
 #~ "\n"
 #~ "Estimado %(partner_name)s,\n"
 #~ "\n"
-#~ "Estamos preocupados de ver que, a pesar de enviar un recordatorio, los "
-#~ "pagos de su cuenta están ahora muy atrasados.\n"
+#~ "Estamos preocupados de ver que, a pesar de enviar un recordatorio, los pagos "
+#~ "de su cuenta están ahora muy atrasados.\n"
 #~ "\n"
-#~ "Es esencial que realice el pago de forma inmediata, de lo contrario "
-#~ "tendrá que considerar la suspensión de su cuenta, lo que significa que no "
-#~ "seremos capaces de suministrar productos/servicios a su empresa.\n"
-#~ "Por favor, tome las medidas apropiadas para llevar a cabo este pago en "
-#~ "los próximos 8 días.\n"
+#~ "Es esencial que realice el pago de forma inmediata, de lo contrario tendrá "
+#~ "que considerar la suspensión de su cuenta, lo que significa que no seremos "
+#~ "capaces de suministrar productos/servicios a su empresa.\n"
+#~ "Por favor, tome las medidas apropiadas para llevar a cabo este pago en los "
+#~ "próximos 8 días.\n"
 #~ "\n"
-#~ "Si hay un problema con el pago de la(s) factura(s) que desconocemos, no "
-#~ "dude en ponerse en contacto con nuestro departamento de contabilidad de "
-#~ "manera que podamos resolver el asunto lo más rápido posible.\n"
+#~ "Si hay un problema con el pago de la(s) factura(s) que desconocemos, no dude "
+#~ "en ponerse en contacto con nuestro departamento de contabilidad de manera "
+#~ "que podamos resolver el asunto lo más rápido posible.\n"
 #~ "\n"
 #~ "Los detalles de los pagos pendientes se listan a continuación.\n"
 #~ "\n"
@@ -899,14 +1015,15 @@ msgstr "Criterios seguimiento"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo no válido en la definición de acción."
 
+#, python-format
 #~ msgid ""
 #~ "E-Mail not sent to following Partners, Email not available !\n"
 #~ "\n"
 #~ msgstr ""
-#~ "Correo no enviado a las empresas siguientes, su email no estaba "
-#~ "disponible.\n"
+#~ "Correo no enviado a las empresas siguientes, su email no estaba disponible.\n"
 #~ "\n"
 
+#, python-format
 #~ msgid ""
 #~ "All E-mails have been successfully sent to Partners:.\n"
 #~ "\n"
@@ -914,6 +1031,7 @@ msgstr "Criterios seguimiento"
 #~ "Todos los correos han sido enviados a las empresas correctamente:.\n"
 #~ "\n"
 
+#, python-format
 #~ msgid ""
 #~ "\n"
 #~ "\n"
@@ -925,6 +1043,7 @@ msgstr "Criterios seguimiento"
 #~ "Correo enviado a las siguientes empresas correctamente.\n"
 #~ "\n"
 
+#, python-format
 #~ msgid "Follwoup Summary"
 #~ msgstr "Informe de seguimiento"
 
@@ -943,8 +1062,8 @@ msgstr "Criterios seguimiento"
 #~ "Unless full payment is made in next 8 days , then legal action for the "
 #~ "recovery of the debt, will be taken without further notice.\n"
 #~ "\n"
-#~ "I trust that this action will prove unnecessary and details of due "
-#~ "payments is printed below.\n"
+#~ "I trust that this action will prove unnecessary and details of due payments "
+#~ "is printed below.\n"
 #~ "\n"
 #~ "In case of any queries concerning this matter, do not hesitate to contact "
 #~ "our accounting department at (+32).10.68.94.39.\n"
@@ -976,14 +1095,14 @@ msgstr "Criterios seguimiento"
 #~ "account is now seriously overdue.\n"
 #~ "\n"
 #~ "It is essential that immediate payment is made, otherwise we will have to "
-#~ "consider placing a stop on your account which means that we will no "
-#~ "longer be able to supply your company with (goods/services).\n"
-#~ "Please, take appropriate measures in order to carry out this payment in "
-#~ "the next 8 days\n"
+#~ "consider placing a stop on your account which means that we will no longer "
+#~ "be able to supply your company with (goods/services).\n"
+#~ "Please, take appropriate measures in order to carry out this payment in the "
+#~ "next 8 days\n"
 #~ "\n"
-#~ "If there is a problem with paying invoice that we are not aware of, do "
-#~ "not hesitate to contact our accounting department at (+32).10.68.94.39. "
-#~ "so that we can resolve the matter quickly.\n"
+#~ "If there is a problem with paying invoice that we are not aware of, do not "
+#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+#~ "we can resolve the matter quickly.\n"
 #~ "\n"
 #~ "Details of due payments is printed below.\n"
 #~ "\n"
@@ -992,18 +1111,18 @@ msgstr "Criterios seguimiento"
 #~ "\n"
 #~ "Estimado %(partner_name)s,\n"
 #~ "\n"
-#~ "Estamos preocupados de ver que, a pesar de enviar un recordatorio, los "
-#~ "pagos de su cuenta están ahora muy atrasados.\n"
+#~ "Estamos preocupados de ver que, a pesar de enviar un recordatorio, los pagos "
+#~ "de su cuenta están ahora muy atrasados.\n"
 #~ "\n"
-#~ "Es esencial que realice el pago de forma inmediata, de lo contrario "
-#~ "tendrá que considerar la suspensión de su cuenta, lo que significa que no "
-#~ "seremos capaces de suministrar productos/servicios a su empresa.\n"
+#~ "Es esencial que realice el pago de forma inmediata, de lo contrario tendrá "
+#~ "que considerar la suspensión de su cuenta, lo que significa que no seremos "
+#~ "capaces de suministrar productos/servicios a su empresa.\n"
 #~ "Por favor, tome las medidas oportunas para llevar a cabo este pago en los "
 #~ "próximos 8 días.\n"
 #~ "\n"
-#~ "Si hay un problema con el pago de la(s) factura(s) que desconocemos, no "
-#~ "dude en ponerse en contacto con nuestro departamento de contabilidad de "
-#~ "manera que podamos resolver el asunto lo más rápido posible.\n"
+#~ "Si hay un problema con el pago de la(s) factura(s) que desconocemos, no dude "
+#~ "en ponerse en contacto con nuestro departamento de contabilidad de manera "
+#~ "que podamos resolver el asunto lo más rápido posible.\n"
 #~ "\n"
 #~ "Los detalles de los pagos pendientes se listan a continuación.\n"
 #~ "\n"
@@ -1013,13 +1132,13 @@ msgstr "Criterios seguimiento"
 #~ "\n"
 #~ "Dear %(partner_name)s,\n"
 #~ "\n"
-#~ "Exception made if there was a mistake of ours, it seems that the "
-#~ "following amount staid unpaid. Please, take appropriate measures in order "
-#~ "to carry out this payment in the next 8 days.\n"
+#~ "Exception made if there was a mistake of ours, it seems that the following "
+#~ "amount staid unpaid. Please, take appropriate measures in order to carry out "
+#~ "this payment in the next 8 days.\n"
 #~ "\n"
 #~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our "
-#~ "accounting department at (+32).10.68.94.39.\n"
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department at (+32).10.68.94.39.\n"
 #~ "\n"
 #~ "Best Regards,\n"
 #~ msgstr ""
@@ -1030,8 +1149,8 @@ msgstr "Criterios seguimiento"
 #~ "importes están pendientes de pago. Por favor, tome las medidas oportunas "
 #~ "para llevar a cabo este pago en los próximos 8 días.\n"
 #~ "\n"
-#~ "Si el pago hubiera sido realizado después de enviar este correo, por "
-#~ "favor no lo tenga en cuenta. No dude en ponerse en contacto con nuestro "
+#~ "Si el pago hubiera sido realizado después de enviar este correo, por favor "
+#~ "no lo tenga en cuenta. No dude en ponerse en contacto con nuestro "
 #~ "departamento de contabilidad.\n"
 #~ "\n"
 #~ "Saludos cordiales,\n"
@@ -1040,8 +1159,7 @@ msgstr "Criterios seguimiento"
 #~ msgstr "No puede crear una línea de movimiento en una cuenta cerrada."
 
 #~ msgid "Company must be same for its related account and period."
-#~ msgstr ""
-#~ "La compañía debe ser la misma para la cuenta y periodo relacionados."
+#~ msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
 
 #~ msgid "You can not create move line on view account."
 #~ msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
@@ -1059,38 +1177,35 @@ msgstr "Criterios seguimiento"
 #~ "        Accounting/Periodical Processing/Billing/Send followups\n"
 #~ "\n"
 #~ "    It will generate a PDF with all the letters according to the the\n"
-#~ "    different levels of recall defined. You can define different "
-#~ "policies\n"
+#~ "    different levels of recall defined. You can define different policies\n"
 #~ "    for different companies. You can also send mail to the customer.\n"
 #~ "\n"
 #~ "    Note that if you want to change the followup level for a given "
 #~ "partner/account entry, you can do from in the menu:\n"
-#~ "        Accounting/Reporting/Generic Reporting/Partner Accounts/Follow-"
-#~ "ups Sent\n"
+#~ "        Accounting/Reporting/Generic Reporting/Partner Accounts/Follow-ups "
+#~ "Sent\n"
 #~ "\n"
 #~ msgstr ""
 #~ "\n"
 #~ "    Módulos para automatizar cartas para facturas impagadas, con "
 #~ "recordatorios multi-nivel.\n"
 #~ "\n"
-#~ "    Puede definir sus múltiples niveles de recordatorios a través del "
-#~ "menú:\n"
+#~ "    Puede definir sus múltiples niveles de recordatorios a través del menú:\n"
 #~ "        Contabilidad/Configuración/Misceláneos/Recordatorios\n"
 #~ "\n"
-#~ "    Una vez definido, puede automatizar la impresión de recordatorios "
-#~ "cada día\n"
+#~ "    Una vez definido, puede automatizar la impresión de recordatorios cada "
+#~ "día\n"
 #~ "    simplemente haciendo clic en el menú:\n"
-#~ "        Contabilidad/Procesos periódicos/Facturación/Enviar "
-#~ "recordatorios\n"
+#~ "        Contabilidad/Procesos periódicos/Facturación/Enviar recordatorios\n"
 #~ "\n"
 #~ "    Se generará un PDF con todas las cartas en función de \n"
 #~ "    los diferentes niveles de recordatorios definidos. Puede definir "
 #~ "diferentes reglas\n"
-#~ "    para diferentes empresas. Puede también enviar un correo electrónico "
-#~ "al cliente.\n"
+#~ "    para diferentes empresas. Puede también enviar un correo electrónico al "
+#~ "cliente.\n"
 #~ "\n"
 #~ "    Tenga en cuenta que si quiere modificar los niveles de recordatorios "
 #~ "para una empresa/apunte contable, lo puede hacer desde el menú:\n"
-#~ "        Contabilidad/Informes/Informes genéricos/Cuentas empresas/"
-#~ "Recordatorios enviados\n"
+#~ "        Contabilidad/Informes/Informes genéricos/Cuentas "
+#~ "empresas/Recordatorios enviados\n"
 #~ "\n"

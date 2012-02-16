@@ -2,27 +2,27 @@
 <openerp>
     <data>
     <report id="account_print_check_top"
-            string="Print Check"
+            string="Print Check (Top)"
             model="account.voucher"
             name="account.print.check.top"
             rml="account_check_writing/report/check_print_top.rml"
-            menu="False"
+            multi="True"
             auto="False"/>
 
     <report id="account_print_check_middle"
-            string="Print Check"
+            string="Print Check (Middle)"
             model="account.voucher"
             name="account.print.check.middle"
             rml="account_check_writing/report/check_print_middle.rml"
-            menu="False"
+            multi="True"
             auto="False"/>
             
     <report id="account_print_check_bottom"
-            string="Print Check"
+            string="Print Check (Bottom)"
             model="account.voucher"
             name="account.print.check.bottom"
             rml="account_check_writing/report/check_print_bottom.rml"
-            menu="False"
+            multi="True"
             auto="False"/>
             
      </data>

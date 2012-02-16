@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2010-03-20 08:27+0000\n"
-"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
+"PO-Revision-Date: 2012-02-10 07:27+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:40+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-11 05:09+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -50,7 +50,7 @@ msgstr "飞机票"
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "Validated By"
-msgstr ""
+msgstr "审核人"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0 field:hr.expense.expense,department_id:0
@@ -61,7 +61,7 @@ msgstr "部门"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "New Expense"
-msgstr ""
+msgstr "新建报销单"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -114,7 +114,7 @@ msgstr "费用表的同意日期，它填好时按下同意按钮。"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Expenses during current month"
-msgstr ""
+msgstr "本月的报销单"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -129,12 +129,12 @@ msgstr "员工的发票"
 #. module: hr_expense
 #: view:product.product:0
 msgid "Products"
-msgstr ""
+msgstr "产品"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Confirm Expenses"
-msgstr ""
+msgstr "确认报销单"
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -254,7 +254,7 @@ msgstr "请设置产品采购的默认费用科目，'属性_科目_费用_类�
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Expenses during last month"
-msgstr ""
+msgstr "上个月的报销单"
 
 #. module: hr_expense
 #: report:hr.expense:0 view:hr.expense.expense:0
@@ -265,12 +265,12 @@ msgstr "员工"
 #. module: hr_expense
 #: view:hr.expense.expense:0 selection:hr.expense.expense,state:0
 msgid "New"
-msgstr ""
+msgstr "新建"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Confirmed Expense"
-msgstr ""
+msgstr "已确认的报销单"
 
 #. module: hr_expense
 #: report:hr.expense:0 field:hr.expense.report,product_qty:0
@@ -359,7 +359,7 @@ msgstr "审核日期"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "My Department"
-msgstr ""
+msgstr "我的部门"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -399,7 +399,7 @@ msgstr "12月"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Invoiced Expenses"
-msgstr ""
+msgstr "报销单开票"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0 view:hr.expense.report:0
@@ -497,7 +497,7 @@ msgstr "客户项目"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.product_normal_form_view_installer
 msgid "Review Your Expenses Products"
-msgstr ""
+msgstr "查看你的费用产品"
 
 #. module: hr_expense
 #: report:hr.expense:0 field:hr.expense.expense,date:0
@@ -549,12 +549,12 @@ msgstr "人力资源费用"
 #. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template
 msgid "Car Travel Expenses"
-msgstr ""
+msgstr "差旅费"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Submit to Manager"
-msgstr ""
+msgstr "提交给经理"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_confirmedexpenses0
@@ -564,7 +564,7 @@ msgstr "员工使这费用表生效"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Expenses to Invoice"
-msgstr ""
+msgstr "要开票的报销单"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_supplierinvoice0
@@ -585,7 +585,7 @@ msgstr "等待中"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Approved Expenses"
-msgstr ""
+msgstr "已批准的报销单"
 
 #. module: hr_expense
 #: report:hr.expense:0 field:hr.expense.line,unit_amount:0
@@ -664,6 +664,8 @@ msgid ""
 "based on real costs, set the cost at 0.00. The user will set the real price "
 "when recording his expense sheet."
 msgstr ""
+"为员工可以使用的每个费用类型设置一个产品（交通费、住宿费、餐费等）。如果你报销固定费用，设置产品的成本和单位。如果实报实销，设置成本为0。用户在输入报销单"
+"时会输入实际金额。"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0 view:hr.expense.report:0
@@ -675,7 +677,7 @@ msgstr "已审批"
 #: code:addons/hr_expense/hr_expense.py:141
 #, python-format
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "供应商发票"
 
 #. module: hr_expense
 #: field:hr.expense.line,product_id:0 view:hr.expense.report:0
@@ -824,7 +826,7 @@ msgstr "合计"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Expenses during current year"
-msgstr ""
+msgstr "本年的报销单"
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0

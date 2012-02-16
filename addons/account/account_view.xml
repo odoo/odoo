@@ -524,8 +524,9 @@
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
                     <group>
-                        <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
-                        <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+                        <filter string="Draft" name="state_draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                        <filter string="Open" name="state_open" domain="[('state','=','open')]" icon="terp-check"/>
+                        <filter string="Confirmed" name="state_confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="name"/>
@@ -1275,14 +1276,6 @@
             groups="group_account_user"
         />
 
-        <record id="action_move_line_select" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_account_move_line_filter"/>
-        </record>
-
         <record id="action_view_move_line" model="ir.actions.act_window">
             <field name="name">Lines to reconcile</field>
             <field name="res_model">account.move.line</field>
@@ -1301,7 +1294,6 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
-            <field name="domain">[]</field>
             <field name="context">{'search_default_account_id': [active_id]}</field>
         </record>
 
@@ -1364,7 +1356,10 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Items">
-                            <field colspan="4" name="line_id" nolabel="1" height="250" widget="one2many_list" context="{'lines':line_id ,'journal':journal_id }">
+                            <field name="balance" invisible="1"/>
+                            <field colspan="4" name="line_id" nolabel="1" height="250" widget="one2many_list" 
+                            on_change="onchange_line_id(line_id)"
+                            context="{'balance': balance , 'journal': journal_id }">
                                 <form string="Journal Item">
                                     <group col="6" colspan="4">
                                         <field name="name"/>
@@ -2490,11 +2485,20 @@
             <field name="model_id" ref="base.model_ir_actions_todo"/>
             <field eval="5" name="sequence"/>
             <field name="code">
-act_window_ids = pool.get('ir.actions.act_window').search(cr, uid,[('name', 'in', ('Accounting Chart Configuration', 'Generate Chart of Accounts from a Chart Template'))], context=context)
+# check for unconfigured companies
+account_installer_obj = self.pool.get('account.installer')
+account_installer_obj.check_unconfigured_cmp(cr, uid, context=context)
+action_ids = []
+# fetch the act_window actions related to chart of account configuration
+# we use ir.actions.todo to enable the possibility for other modules to insert their own
+# wizards during the configuration process
+ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_wizard_multi_chart')
+if ref:
+    action_ids += [ref[1]]
 ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_account_configuration_installer')
 if ref:
-    act_window_ids += [ref[1]]
-todo_ids = pool.get('ir.actions.todo').search(cr, uid, [('action_id', 'in', act_window_ids)], context=context)
+    action_ids += [ref[1]]
+todo_ids = pool.get('ir.actions.todo').search(cr, uid, [('action_id', 'in', action_ids)], context=context)
 pool.get('ir.actions.todo').write(cr, uid, todo_ids, {'state':'open'}, context=context)
 action = pool.get('res.config').next(cr, uid, [], context)
 </field>

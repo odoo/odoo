@@ -98,11 +98,16 @@ class delivery_carrier(osv.osv):
         return False
 
     def create_grid_lines(self, cr, uid, ids, vals, context=None):
-        if context == None:
+        if context is None:
             context = {}
         grid_line_pool = self.pool.get('delivery.grid.line')
         grid_pool = self.pool.get('delivery.grid')
         for record in self.browse(cr, uid, ids, context=context):
+            # if using advanced pricing per destination: do not change
+            if record.use_detailed_pricelist:
+                continue
+			
+            # not using advanced pricing per destination: override grid
             grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
 
             if grid_id and not (record.normal_price or record.free_if_more_than):
@@ -149,9 +154,11 @@ class delivery_carrier(osv.osv):
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
-        res_id = super(delivery_carrier, self).write(cr, uid, ids, vals, context=context)
+        if isinstance(ids, (int,long)):
+            ids = [ids]
+        res = super(delivery_carrier, self).write(cr, uid, ids, vals, context=context)
         self.create_grid_lines(cr, uid, ids, vals, context=context)
-        return res_id
+        return res
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(delivery_carrier, self).create(cr, uid, vals, context=context)

@@ -55,39 +55,37 @@ class account_financial_report(osv.osv):
             res += self._get_children_by_order(cr, uid, ids2, context=context)
         return res
 
-    def _get_balance(self, cr, uid, ids, name, args, context=None):
+    def _get_balance(self, cr, uid, ids, field_names, args, context=None):
         account_obj = self.pool.get('account.account')
         res = {}
-        res_all = {}
         for report in self.browse(cr, uid, ids, context=context):
-            balance = 0.0
-            if report.id in res_all:
-                balance = res_all[report.id]
-            elif report.type == 'accounts':
-                # it's the sum of balance of the linked accounts
+            if report.id in res:
+                continue
+            res[report.id] = dict((fn, 0.0) for fn in field_names)
+            if report.type == 'accounts':
+                # it's the sum of the linked accounts
                 for a in report.account_ids:
-                    balance += a.balance
+                    for field in field_names:
+                        res[report.id][field] += getattr(a, field)
             elif report.type == 'account_type':
-                # it's the sum of balance of the leaf accounts with such an account type
+                # it's the sum the leaf accounts with such an account type
                 report_types = [x.id for x in report.account_type_ids]
                 account_ids = account_obj.search(cr, uid, [('user_type','in', report_types), ('type','!=','view')], context=context)
                 for a in account_obj.browse(cr, uid, account_ids, context=context):
-                    balance += a.balance
+                    for field in field_names:
+                        res[report.id][field] += getattr(a, field)
             elif report.type == 'account_report' and report.account_report_id:
                 # it's the amount of the linked report
-                res2 = self._get_balance(cr, uid, [report.account_report_id.id], 'balance', False, context=context)
-                res_all.update(res2)
+                res2 = self._get_balance(cr, uid, [report.account_report_id.id], field_names, False, context=context)
                 for key, value in res2.items():
-                    balance += value
+                    for field in field_names:
+                        res[report.id][field] += value[field]
             elif report.type == 'sum':
-                # it's the sum of balance of the children of this account.report
-                #for child in report.children_ids:
-                res2 = self._get_balance(cr, uid, [rec.id for rec in report.children_ids], 'balance', False, context=context)
-                res_all.update(res2)
+                # it's the sum of the children of this account.report
+                res2 = self._get_balance(cr, uid, [rec.id for rec in report.children_ids], field_names, False, context=context)
                 for key, value in res2.items():
-                    balance += value
-            res[report.id] = balance
-            res_all[report.id] = balance
+                    for field in field_names:
+                        res[report.id][field] += value[field]
         return res
 
     _columns = {
@@ -95,7 +93,9 @@ class account_financial_report(osv.osv):
         'parent_id': fields.many2one('account.financial.report', 'Parent'),
         'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
         'sequence': fields.integer('Sequence'),
-        'balance': fields.function(_get_balance, 'Balance'),
+        'balance': fields.function(_get_balance, 'Balance', multi='balance'),
+        'debit': fields.function(_get_balance, 'Debit', multi='balance'),
+        'credit': fields.function(_get_balance, 'Credit', multi="balance"),
         'level': fields.function(_get_level, string='Level', store=True, type='integer'),
         'type': fields.selection([
             ('sum','View'),

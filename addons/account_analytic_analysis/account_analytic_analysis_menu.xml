@@ -43,13 +43,13 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Associated Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="State" icon="terp-personal" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Parent" icon="terp-folder-orange" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <!--
+                        <separator orientation="vertical"/>
                         <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by' : 'date_start'}" />
-                        -->
                         <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" />
                     </group>
                 </search>

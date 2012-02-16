@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-06-30 06:07+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-02-11 14:17+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:05+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-12 04:43+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phases
@@ -42,12 +42,12 @@ msgstr "分组..."
 #. module: project_long_term
 #: field:project.phase,user_ids:0
 msgid "Assigned Users"
-msgstr ""
+msgstr "指定的用户"
 
 #. module: project_long_term
 #: field:project.phase,progress:0
 msgid "Progress"
-msgstr ""
+msgstr "进行"
 
 #. module: project_long_term
 #: constraint:project.project:0
@@ -57,7 +57,7 @@ msgstr "错误！项目的开始日期必须小于项目的结束日期"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "In Progress Phases"
-msgstr ""
+msgstr "进行中的阶段"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -88,7 +88,7 @@ msgstr "天"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_user_allocation
 msgid "Phase User Allocation"
-msgstr ""
+msgstr "阶段用户分配"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_task
@@ -105,6 +105,8 @@ msgid ""
 "users, convert your phases into a series of tasks when you start working on "
 "the project."
 msgstr ""
+"一个项目可以分成不同的阶段。每个阶段可以分配不同的用户，阶段可前后衔接起来，为自动排程添加日期限制。用长期计划的目的是规划你的可用用户，在项目开始的时候把"
+"这些阶段再次分解为任务。"
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -128,7 +130,7 @@ msgstr "某个周期的计量单位"
 #: view:project.phase:0
 #: view:project.user.allocation:0
 msgid "Planning of Users"
-msgstr ""
+msgstr "规划用户"
 
 #. module: project_long_term
 #: help:project.phase,date_end:0
@@ -172,7 +174,7 @@ msgstr "截止日期"
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute All My Projects"
-msgstr ""
+msgstr "计算我的所有项目"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -189,7 +191,7 @@ msgstr " (copy)"
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Project User Allocation"
-msgstr ""
+msgstr "项目用户分配"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -207,12 +209,12 @@ msgstr "计算（_O）"
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "New"
-msgstr ""
+msgstr "新建"
 
 #. module: project_long_term
 #: help:project.phase,progress:0
 msgid "Computed based on related tasks"
-msgstr ""
+msgstr "按相关任务计算"
 
 #. module: project_long_term
 #: field:project.phase,product_uom:0
@@ -233,7 +235,7 @@ msgstr "资源"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "My Projects"
-msgstr ""
+msgstr "我的项目"
 
 #. module: project_long_term
 #: help:project.user.allocation,date_start:0
@@ -248,13 +250,13 @@ msgstr "相关任务"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "New Phases"
-msgstr ""
+msgstr "新阶段"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Please specify a project to schedule."
-msgstr ""
+msgstr "请输入要排程的项目"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_start:0
@@ -286,7 +288,7 @@ msgstr "阶段的开始日期必须早于项目的结束日期"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Start Month"
-msgstr ""
+msgstr "开始月份"
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
@@ -303,7 +305,7 @@ msgstr "强制该阶段在此日期前完成"
 #: help:project.phase,user_ids:0
 msgid ""
 "The ressources on the project can be computed automatically by the scheduler"
-msgstr ""
+msgstr "调度器会自动计算项目的资源"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -313,7 +315,7 @@ msgstr "草稿"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Pending Phases"
-msgstr ""
+msgstr "暂停的阶段"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -389,7 +391,7 @@ msgstr "工作的时间"
 #: model:ir.ui.menu,name:project_long_term.menu_compute_phase
 #: view:project.compute.phases:0
 msgid "Schedule Phases"
-msgstr ""
+msgstr "阶段排程"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -404,7 +406,7 @@ msgstr "总小时数"
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Users"
-msgstr ""
+msgstr "用户"
 
 #. module: project_long_term
 #: view:project.user.allocation:0
@@ -449,7 +451,7 @@ msgstr "时长"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project Users"
-msgstr ""
+msgstr "项目用户"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
@@ -467,6 +469,8 @@ msgid ""
 "view.\n"
 "               "
 msgstr ""
+"要对所有项目或某个指定项目的阶段排程。然后会打开一个甘特图。\n"
+"               "
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
@@ -504,7 +508,7 @@ msgstr "默认按天"
 #: view:project.phase:0
 #: field:project.phase,user_force_ids:0
 msgid "Force Assigned Users"
-msgstr ""
+msgstr "强制分配的用户"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule

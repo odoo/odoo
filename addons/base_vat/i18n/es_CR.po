@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-08 02:53-0600\n"
-"Last-Translator: Carlos Vásquez - CLEARCORP <carlos.vasquez@clearcorp.co.cr>\n"
+"PO-Revision-Date: 2012-02-15 17:43+0000\n"
+"Last-Translator: Freddy Gonzalez <freddy.gonzalez@clearcorp.co.cr>\n"
 "Language-Team: \n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:13+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-16 05:05+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
+"Language: \n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:141
@@ -24,36 +24,42 @@ msgid ""
 "This VAT number does not seem to be valid.\n"
 "Note: the expected format is %s"
 msgstr ""
+"Este número de IVA no parece ser válida.\n"
+"Nota: el formato es%s esperado"
 
 #. module: base_vat
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "¡El nombre de la compañía debe ser único!"
 
 #. module: base_vat
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "¡Error! No puede crear miembros asociados recursivamente."
 
 #. module: base_vat
 #: field:res.company,vat_check_vies:0
 msgid "VIES VAT Check"
-msgstr ""
+msgstr "Compruebe VIES del IVA"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Compañias"
 
 #. module: base_vat
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "¡Error! No puede crear compañías recursivas."
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
-msgid "Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement."
-msgstr "Marque esta opción si la empresa está sujeta al IVA. Será utilizado para la declaración legal del IVA."
+msgid ""
+"Check this box if the partner is subjected to the VAT. It will be used for "
+"the VAT legal statement."
+msgstr ""
+"Marque esta opción si la empresa está sujeta al IVA. Será utilizado para la "
+"declaración legal del IVA."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -62,8 +68,13 @@ msgstr "Empresa"
 
 #. module: base_vat
 #: help:res.company,vat_check_vies:0
-msgid "If checked, Partners VAT numbers will be fully validated against EU's VIES service rather than via a simple format validation (checksum)."
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
 msgstr ""
+"Si se marca, los socios de los números de IVA estará plenamente validado "
+"contra LIFE de la UE en lugar de servicio a través de una validación de "
+"formato sencillo (checksum)."
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
@@ -74,25 +85,26 @@ msgstr "Sujeto a IVA"
 #~ msgstr "¡XML inválido para la definición de la vista!"
 
 #~ msgid ""
-#~ "Enable the VAT Number for the partner. Check the validity of that VAT "
-#~ "Number."
+#~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
 #~ msgstr ""
-#~ "Activa el IVA (Impuesto Valor Añadido) para la empresa. Comprueba la "
-#~ "validez del CIF/NIF."
+#~ "Activa el IVA (Impuesto Valor Añadido) para la empresa. Comprueba la validez "
+#~ "del CIF/NIF."
 
 #~ msgid "VAT"
 #~ msgstr "IVA"
 
+#, python-format
 #~ msgid ""
-#~ "The Vat does not seems to be correct. You should have entered something "
-#~ "like this %s"
+#~ "The Vat does not seems to be correct. You should have entered something like "
+#~ "this %s"
 #~ msgstr ""
-#~ "El CIF/NIF parece que no sea correcto. Debería haber introducido algo "
-#~ "como esto %s"
+#~ "El CIF/NIF parece que no sea correcto. Debería haber introducido algo como "
+#~ "esto %s"
 
 #~ msgid "Base VAT - To check VAT number validity"
 #~ msgstr "Base CIF/NIF - Para comprobar la validez de los CIF/NIF"
 
+#, python-format
 #~ msgid "The VAT is invalid, It should begin with the country code"
 #~ msgstr "El CIF/NIF no es válido, debería empezar con el código del país"
 
@@ -114,8 +126,8 @@ msgstr "Sujeto a IVA"
 #~ "    Permite la validación del CIF/NIF de las empresas. Comprueba si el "
 #~ "CIF/NIF es un número válido.\n"
 #~ "\n"
-#~ "    Este módulo usa los métodos especificados en http://sima-pc.com/nif."
-#~ "php para\n"
+#~ "    Este módulo usa los métodos especificados en http://sima-pc.com/nif.php "
+#~ "para\n"
 #~ "    la validación del CIF/NIF asignado a las empresas de los países "
 #~ "europeos.\n"
 #~ "    "

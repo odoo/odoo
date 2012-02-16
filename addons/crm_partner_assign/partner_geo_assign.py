@@ -57,6 +57,16 @@ class res_partner_grade(osv.osv):
     }
 res_partner_grade()
 
+class res_partner_activation(osv.osv):
+    _name = 'res.partner.activation'
+    _order = 'sequence'
+
+    _columns = {
+        'sequence' : fields.integer('Sequence'),
+        'name' : fields.char('Name', size=32, required=True),
+    }
+
+res_partner_activation()
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
@@ -68,7 +78,11 @@ class res_partner(osv.osv):
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
         'opportunity_assigned_ids': fields.one2many('crm.lead', 'partner_assigned_id',\
             'Assigned Opportunities'),
-        'grade_id': fields.many2one('res.partner.grade', 'Partner Grade')
+        'grade_id': fields.many2one('res.partner.grade', 'Partner Grade'),
+        'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
+        'date_partnership' : fields.date('Partnership Date'),
+        'date_review' : fields.date('Latest Partner Review'),
+        'date_review_next' : fields.date('Next Partner Review'),
     }
     _defaults = {
         'partner_weight': lambda *args: 0
@@ -88,7 +102,7 @@ class res_partner(osv.osv):
                 self.write(cr, uid, [partner.id], {
                     'partner_latitude': result[0],
                     'partner_longitude': result[1],
-                    'date_localization': time.strftime('%Y-%m-%d')
+                    'date_localization': fields.date.context_today(self,cr,uid,context=context)
                 }, context=context)
         return True
 res_partner()
@@ -114,7 +128,7 @@ class crm_lead(osv.osv):
             partners = self.pool.get('res.partner').browse(cr, uid, [partner_assigned_id], context=context)
             user_id = partners[0] and partners[0].user_id.id or False
             return {'value':
-                        {'date_assign': time.strftime('%Y-%m-%d'),
+                        {'date_assign': fields.date.context_today(self,cr,uid,context=context),
                          'user_id' : user_id}
                    }
 
@@ -137,9 +151,9 @@ class crm_lead(osv.osv):
             if partner.user_id:
                 for lead_id in ids:
                     self.allocate_salesman(cr, uid, [lead_id], [partner.user_id.id], context=context)
-            self.write(cr, uid, [lead.id], {'date_assign': time.strftime('%Y-%m-%d'), 'partner_assigned_id': partner_id}, context=context)
+            self.write(cr, uid, [lead.id], {'date_assign': fields.date.context_today(self,cr,uid,context=context), 'partner_assigned_id': partner_id}, context=context)
         return res
-        
+
 
     def assign_geo_localize(self, cr, uid, ids, latitude=False, longitude=False, context=None):
         for lead in self.browse(cr, uid, ids, context=context):

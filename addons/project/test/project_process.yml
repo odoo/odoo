@@ -62,7 +62,7 @@
   I copy the tasks of project.
 -
   !python {model: project.project}: |
-    self.template_copy(cr, uid, ref("project_integrate_openerp"))
+    self.copy(cr, uid, ref("project_integrate_openerp"))
 -
   I cancel Project.
 -

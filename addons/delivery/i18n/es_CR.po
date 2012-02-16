@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-08 03:04-0600\n"
-"Last-Translator: Carlos Vásquez - CLEARCORP <carlos.vasquez@clearcorp.co.cr>\n"
+"PO-Revision-Date: 2012-02-15 20:38+0000\n"
+"Last-Translator: Freddy Gonzalez <freddy.gonzalez@clearcorp.co.cr>\n"
 "Language-Team: \n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:03+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-16 05:04+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
+"Language: \n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -41,7 +41,7 @@ msgstr "Peso neto"
 #. module: delivery
 #: view:stock.picking:0
 msgid "Delivery Order"
-msgstr "Orden de entrega"
+msgstr "Albarán de salida"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -69,7 +69,7 @@ msgstr "Línea de la cuadrícula"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "El socio que está haciendo el servicio de entrega."
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -89,12 +89,14 @@ msgstr "Albarán para ser facturado"
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "Advanced Pricing"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr "Indica el orden de secuencia cuando se muestra una lista de cuadrícula de envío."
+msgstr ""
+"Indica el orden de secuencia cuando se muestra una lista de cuadrícula de "
+"envío."
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -115,13 +117,21 @@ msgstr "Factor variable"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
-msgid "The delivery price list allows you to compute the cost and sales price of the delivery according to the weight of the products and other criteria. You can define several price lists for one delivery method, per country or a zone in a specific country defined by a postal code range."
-msgstr "La lista de precios por entrega le permite calcular el coste y precio de venta de la entrega en funvión del peso de los productos y de otros criterios. Puede definir varios precios por un método de entrega, por país, o por zona de un páis específico, definido por un rango de códigos postales."
+msgid ""
+"The delivery price list allows you to compute the cost and sales price of "
+"the delivery according to the weight of the products and other criteria. You "
+"can define several price lists for one delivery method, per country or a "
+"zone in a specific country defined by a postal code range."
+msgstr ""
+"La lista de precios por entrega le permite calcular el coste y precio de "
+"venta de la entrega en funvión del peso de los productos y de otros "
+"criterios. Puede definir varios precios por un método de entrega, por país, "
+"o por zona de un páis específico, definido por un rango de códigos postales."
 
 #. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Monto"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -143,7 +153,7 @@ msgstr "Método de envío"
 #: code:addons/delivery/delivery.py:213
 #, python-format
 msgid "No price available!"
-msgstr ""
+msgstr "¡Precio no disponible!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -193,8 +203,13 @@ msgstr "Pedido de venta"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form1
-msgid "Define your delivery methods and their pricing. The delivery costs can be added on the sale order form or in the invoice, based on the delivery orders."
+msgid ""
+"Define your delivery methods and their pricing. The delivery costs can be "
+"added on the sale order form or in the invoice, based on the delivery orders."
 msgstr ""
+"Defina sus métodos de entrega y sus precios. Los gastos de envío se puede "
+"agregar en el formulario de pedido de venta o en la factura, en base a las "
+"órdenes de entrega."
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -204,7 +219,7 @@ msgstr "Lote"
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "Transporte de Empresa"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -216,6 +231,8 @@ msgstr "Cuadrícula de envío"
 #, python-format
 msgid "No line matched this product or order in the choosed delivery grid."
 msgstr ""
+"No hay línea coincida con este producto o el orden en la red de suministro "
+"elegido."
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -249,8 +266,12 @@ msgstr "C.Postal inicial"
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
-msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
 msgstr ""
+"Importe a fin de beneficiarse de un envío libre, expresada en la moneda de "
+"la empresa"
 
 #. module: delivery
 #: code:addons/delivery/stock.py:89
@@ -265,8 +286,12 @@ msgstr "Cuadrícula"
 
 #. module: delivery
 #: help:delivery.grid,active:0
-msgid "If the active field is set to False, it will allow you to hide the delivery grid without removing it."
-msgstr "Si el campo activo se desmarca, permite ocultar la cuadrícula de envío sin eliminarla."
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"grid without removing it."
+msgstr ""
+"Si el campo activo se desmarca, permite ocultar la cuadrícula de envío sin "
+"eliminarla."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -277,17 +302,17 @@ msgstr "C.Postal final"
 #: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "Default price"
-msgstr ""
+msgstr "Precio por defecto"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_define_delivery_steps_wizard
 msgid "delivery.define.delivery.steps.wizard"
-msgstr ""
+msgstr "delivery.define.delivery.steps.wizard"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr ""
+msgstr "Precio Normal"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -320,18 +345,25 @@ msgstr "Peso"
 
 #. module: delivery
 #: help:delivery.carrier,use_detailed_pricelist:0
-msgid "Check this box if you want to manage delivery prices that depends on the destination, the weight, the total of the order, etc."
+msgid ""
+"Check this box if you want to manage delivery prices that depends on the "
+"destination, the weight, the total of the order, etc."
 msgstr ""
+"Marque esta casilla si desea administrar los precios de entrega que depende "
+"del destino, el peso, el total de la orden, etc"
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
-msgid "Keep empty if the pricing depends on the advanced pricing per destination"
+msgid ""
+"Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
+"Mantenga vacío si el precio depende de la fijación de precios avanzada por "
+"destino"
 
 #. module: delivery
 #: constraint:stock.move:0
 msgid "You can not move products from or to a location of the type view."
-msgstr ""
+msgstr "No puede mover productos desde o hacia una ubicación de tipo vista."
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:70
@@ -354,7 +386,7 @@ msgstr "¡La orden no está en estado borrador!"
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
 msgid "Choose Your Default Picking Policy"
-msgstr ""
+msgstr "Elija su Política de envio por defecto"
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -390,7 +422,7 @@ msgstr "Precio coste"
 #. module: delivery
 #: field:delivery.define.delivery.steps.wizard,picking_policy:0
 msgid "Picking Policy"
-msgstr ""
+msgstr "Política de envío"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -401,12 +433,13 @@ msgstr "Variable"
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "Este método de entrega será utilizado cuando se facture a partir del albarán."
+msgstr ""
+"Este método de entrega será utilizado cuando se facture a partir del albarán."
 
 #. module: delivery
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Referencia debe ser única por compañía!"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -422,22 +455,28 @@ msgstr "Cantidad"
 #: view:delivery.define.delivery.steps.wizard:0
 #: model:ir.actions.act_window,name:delivery.action_define_delivery_steps
 msgid "Setup Your Picking Policy"
-msgstr ""
+msgstr "Configuración de Política de envió"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form1
 msgid "Define Delivery Methods"
-msgstr ""
+msgstr "Defina método de entrega"
 
 #. module: delivery
 #: help:delivery.carrier,free_if_more_than:0
-msgid "If the order is more expensive than a certain amount, the customer can benefit from a free shipping"
+msgid ""
+"If the order is more expensive than a certain amount, the customer can "
+"benefit from a free shipping"
 msgstr ""
+"Si la orden es más caro que una cierta cantidad, el cliente puede "
+"beneficiarse de un envío gratuito"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
-msgid "Complete this field if you plan to invoice the shipping based on picking."
-msgstr "Complete este campo si tiene previsto facturar el envío según el albarán."
+msgid ""
+"Complete this field if you plan to invoice the shipping based on picking."
+msgstr ""
+"Complete este campo si tiene previsto facturar el envío según el albarán."
 
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
@@ -448,17 +487,23 @@ msgstr "Cancelar"
 #: code:addons/delivery/delivery.py:130
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "Gratis si hay más de%.2f"
 
 #. module: delivery
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "¡La referencia de la compra debe ser única por compañía!"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid "Define the delivery methods you are using and their pricing in order to reinvoice the delivery costs when you are doing invoicing based on delivery orders"
+msgid ""
+"Define the delivery methods you are using and their pricing in order to "
+"reinvoice the delivery costs when you are doing invoicing based on delivery "
+"orders"
 msgstr ""
+"Definir los métodos de entrega que se está utilizando y su política de "
+"precios con el fin de reinvoice los gastos de envío cuando usted está "
+"haciendo la facturación sobre la base de órdenes de entrega"
 
 #. module: delivery
 #: view:res.partner:0
@@ -478,7 +523,7 @@ msgstr "Debe asignar un lote de producción para este producto"
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If More Than"
-msgstr ""
+msgstr "Gratis Si más de"
 
 #. module: delivery
 #: view:delivery.sale.order:0
@@ -499,8 +544,12 @@ msgstr "Descripción"
 
 #. module: delivery
 #: help:delivery.carrier,active:0
-msgid "If the active field is set to False, it will allow you to hide the delivery carrier without removing it."
-msgstr "Si el campo activo se desmarca, permite ocultar el transportista sin eliminarlo."
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"carrier without removing it."
+msgstr ""
+"Si el campo activo se desmarca, permite ocultar el transportista sin "
+"eliminarlo."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -546,17 +595,17 @@ msgstr "¡El transportista %s (id: %d) no dispone de cuadrícula de envío!"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr ""
+msgstr "Información de precios"
 
 #. module: delivery
 #: selection:delivery.define.delivery.steps.wizard,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Entrega de todos los productos a la vez"
 
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "Anticipado Precio por destino"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -587,7 +636,7 @@ msgstr "La orden debe estar en estado borrador para añadir líneas de envío."
 #. module: delivery
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "¡Error! No puede crear miembros asociados recursivamente."
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -608,12 +657,12 @@ msgstr "Costes de envío"
 #. module: delivery
 #: selection:delivery.define.delivery.steps.wizard,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Entregar cada producto cuando esté disponible"
 
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
@@ -650,6 +699,7 @@ msgstr "Tipo de precio"
 #~ msgid "Notes"
 #~ msgstr "Notas"
 
+#, python-format
 #~ msgid "No grid avaible !"
 #~ msgstr "¡No hay cuadrícula disponible!"
 
@@ -659,11 +709,13 @@ msgstr "Tipo de precio"
 #~ msgid "Carrier Partner"
 #~ msgstr "Empresa transportista"
 
+#, python-format
 #~ msgid "No line matched this order in the choosed delivery grids !"
 #~ msgstr ""
 #~ "¡No existe línea que concuerde con esta orden en las cuadrículas de envío "
 #~ "seleccionadas!"
 
+#, python-format
 #~ msgid "No price available !"
 #~ msgstr "¡No existe precio disponible!"
 
@@ -680,8 +732,7 @@ msgstr "Tipo de precio"
 #~ msgstr "Transportistas y envíos"
 
 #~ msgid "This delivery method will be used when invoicing from packing."
-#~ msgstr ""
-#~ "Este método de envío se utilizará cuando se facture desde albaranes."
+#~ msgstr "Este método de envío se utilizará cuando se facture desde albaranes."
 
 #~ msgid ""
 #~ "Complete this field if you plan to invoice the shipping based on packing."
@@ -693,13 +744,12 @@ msgstr "Tipo de precio"
 #~ msgid ""
 #~ "Allows you to add delivery methods in sales orders and packing. You can "
 #~ "define your own carrier and delivery grids for prices. When creating "
-#~ "invoices from picking, Open ERP is able to add and compute the shipping "
-#~ "line."
+#~ "invoices from picking, Open ERP is able to add and compute the shipping line."
 #~ msgstr ""
 #~ "Permite añadir los métodos de envío en los pedidos de venta y albaranes. "
 #~ "Puede definir sus propias tablas de transportistas y destinos para el "
-#~ "cálculo de precios. Al crear facturas desde albaranes, OpenERP es capaz "
-#~ "de sumar y calcular la línea de gastos de envío."
+#~ "cálculo de precios. Al crear facturas desde albaranes, OpenERP es capaz de "
+#~ "sumar y calcular la línea de gastos de envío."
 
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "¡Error! No puede crear miembros asociados recursivos."
@@ -710,8 +760,8 @@ msgstr "Tipo de precio"
 #~ msgid ""
 #~ "Allows you to add delivery methods in sale orders and picking.\n"
 #~ "     You can define your own carrier and delivery grids for prices.\n"
-#~ "     When creating invoices from picking, OpenERP is able to add and "
-#~ "compute the shipping line.\n"
+#~ "     When creating invoices from picking, OpenERP is able to add and compute "
+#~ "the shipping line.\n"
 #~ "\n"
 #~ "     "
 #~ msgstr ""
@@ -724,15 +774,14 @@ msgstr "Tipo de precio"
 #~ "     "
 
 #~ msgid ""
-#~ "Create and manage the delivery methods you need for your sales "
-#~ "activities. Each delivery method can be assigned to a price list which "
-#~ "computes the price of the delivery according to the products sold or "
-#~ "delivered."
+#~ "Create and manage the delivery methods you need for your sales activities. "
+#~ "Each delivery method can be assigned to a price list which computes the "
+#~ "price of the delivery according to the products sold or delivered."
 #~ msgstr ""
 #~ "Cree y gestione los métodos de entrega que necesite para su actividad de "
-#~ "ventas. Cada método de entrega puede ser asignado a una lista de precios "
-#~ "que calcula el precio de la entrega en función de los productos vendidos "
-#~ "o entregados."
+#~ "ventas. Cada método de entrega puede ser asignado a una lista de precios que "
+#~ "calcula el precio de la entrega en función de los productos vendidos o "
+#~ "entregados."
 
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "¡La referencia del pedido debe ser única!"
