@@ -32,6 +32,7 @@
 
 import subprocess
 import os
+import sys
 import report
 import tempfile
 import time
