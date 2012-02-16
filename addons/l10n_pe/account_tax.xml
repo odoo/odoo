@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="ITAX_18" model="account.tax.template">
+      <field name="chart_template_id" ref="pe_chart_template"/>
+      <field name="name">IGV 18% Venta</field>
+      <field name="amount">0.180000</field>
+      <field name="type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="account_collected_id" ref="401110"/>
+      <field name="account_paid_id" ref="401110"/>
+      <field name="base_code_id" ref="vat_code_base_sale_18"/>
+      <field name="tax_code_id" ref="vat_code_igv_receive_18"/>
+      <field name="ref_base_code_id" ref="vat_code_base_sale_18"/>
+      <field name="ref_tax_code_id" ref="vat_code_igv_receive_18"/>
+    </record>
+
+    <record id="OTAX_18" model="account.tax.template">
+      <field name="chart_template_id" ref="pe_chart_template"/>
+      <field name="name">IGV 18% Compra</field>
+      <field name="amount">0.180000</field>
+      <field name="type">percent</field>
+      <field name="type_tax_use">purchase</field>
+      <field name="account_collected_id" ref="401110"/>
+      <field name="account_paid_id" ref="401110"/>
+      <field name="base_code_id" ref="vat_code_base_purchase_18"/>
+      <field name="tax_code_id" ref="vat_code_igv_pay_18"/>
+      <field name="ref_base_code_id" ref="vat_code_base_purchase_18"/>
+      <field name="ref_tax_code_id" ref="vat_code_igv_pay_18"/>
+    </record>
+
+    <record id="OTAX_02" model="account.tax.template">
+      <field name="chart_template_id" ref="pe_chart_template"/>
+      <field name="name">Percepción IGV 2%</field>
+      <field name="amount">0.02000</field>
+      <field name="type">percent</field>
+      <field name="type_tax_use">purchase</field>
+      <field name="account_collected_id" ref="401110"/>
+      <field name="account_paid_id" ref="401110"/>
+      <!--field name="base_code_id" ref="vat_code_base_purchase_18"/-->
+      <field name="tax_code_id" ref="vat_code_igv_pay_18"/>
+      <!--field name="ref_base_code_id" ref="vat_code_base_purchase_18"/-->
+      <field name="ref_tax_code_id" ref="vat_code_igv_pay_18"/>
+    </record>
+
+  </data>
+</openerp>
