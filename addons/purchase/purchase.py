@@ -709,6 +709,21 @@ class purchase_order_line(osv.osv):
             partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned,
             name=name, price_unit=price_unit, notes=notes, context=context)
 
+    def _get_date_planned(self, cr, uid, supplier_info, date_order_str, context=None):
+        """Return the datetime value to use as Schedule Date (``date_planned``) for
+           PO Lines that correspond to the given product.supplierinfo,
+           when ordered at `date_order_str`.
+
+           :param browse_record | False supplier_info: product.supplierinfo, used to
+               determine delivery delay (if False, default delay = 0)
+           :param str date_order_str: date of order, as a string in
+               DEFAULT_SERVER_DATE_FORMAT
+           :rtype: datetime
+           :return: desired Schedule Date for the PO line
+        """
+        supplier_delay = int(supplier_info.delay) if supplier_info else 0
+        return datetime.strptime(date_order_str, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=supplier_delay)
+
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
             name=False, price_unit=False, notes=False, context=None):
@@ -761,10 +776,11 @@ class purchase_order_line(osv.osv):
             date_order = fields.date.context_today(cr,uid,context=context)
 
         qty = qty or 1.0
-        seller_delay = 0
+        main_supplierinfo = False
         supplierinfo_ids = product_supplierinfo.search(cr, uid, [('name','=',partner_id),('product_id','=',product.id)])
+
         for supplierinfo in product_supplierinfo.browse(cr, uid, supplierinfo_ids, context=context):
-            seller_delay = supplierinfo.delay
+            main_supplierinfo = supplierinfo
             if supplierinfo.product_uom.id != uom_id:
                 res['warning'] = {'title': _('Warning'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }
             min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
@@ -772,7 +788,8 @@ class purchase_order_line(osv.osv):
                 res['warning'] = {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
                 qty = min_qty
 
-        dt = (datetime.strptime(date_order, '%Y-%m-%d') + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
+        dt = self._get_date_planned(cr, uid, main_supplierinfo, date_order, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
         res['value'].update({'date_planned': date_planned or dt, 'product_qty': qty})
 
         # - determine price_unit and taxes_id
