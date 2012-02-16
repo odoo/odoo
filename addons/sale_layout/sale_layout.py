@@ -148,4 +148,21 @@ class sale_order(osv.osv):
 
 sale_order()
 
+
+class stock_picking(osv.osv):
+    _inherit = "stock.picking"
+    
+    def action_invoice_create(self, cr, uid, ids, journal_id=False, group=False, type='out_invoice', context=None):
+        result = super(stock_picking, self).action_invoice_create(cr, uid, ids,
+                 journal_id=journal_id, group=group, type=type, context=context)
+        invoice_line_pool = self.pool.get('account.invoice.line')
+        for picking in self.browse(cr, uid, result.keys(), context=context):
+            if picking.sale_id:
+                for sale_line in picking.sale_id.order_line:
+                    invoice_lines = [line.id for line in sale_line.invoice_lines]
+                    invoice_line_pool.write(cr, uid, invoice_lines, {'sequence': sale_line.sequence}, context=context) 
+        return result
+    
+stock_picking()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
