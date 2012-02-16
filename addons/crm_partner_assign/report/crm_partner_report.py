@@ -49,7 +49,7 @@ class crm_partner_report_assign(osv.osv):
         cr.execute("""
             CREATE OR REPLACE VIEW crm_partner_report_assign AS (
                 SELECT
-                    coalesce(i.id,-p.id) as id,
+                    coalesce(i.id, p.id - 1000000000) as id,
                     p.id as partner_id,
                     (SELECT country_id FROM res_partner_address a WHERE a.partner_id=p.id AND country_id is not null limit 1) as country_id,
                     p.grade_id,
