@@ -21,7 +21,7 @@
             parent="menu_purchase_config_pricelist" sequence="20"/>
 
         <menuitem
-            action="product.product_pricelist_action2" id="menu_product_pricelist_action2_purchase"
+            action="product.product_pricelist_action_for_purchase" id="menu_product_pricelist_action2_purchase"
             parent="menu_purchase_config_pricelist" sequence="10"/>
 
         <!--<menuitem
@@ -30,7 +30,7 @@
             groups="base.group_extended"/>-->
 
         <menuitem
-            id="menu_product_in_config_purchase" name="Product"
+            id="menu_product_in_config_purchase" name="Products"
             parent="menu_purchase_config_purchase" sequence="30"/>
 
         <menuitem
@@ -90,12 +90,13 @@
 
           <!--Inventory control-->
       <menuitem id="menu_procurement_management_inventory" name="Receive Products"
-            parent="base.menu_purchase_root" sequence="4"/>
-      <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_inventory"
-            name="Incoming Shipments" sequence="9"
+            parent="base.menu_purchase_root" sequence="4"
             groups="base.group_extended"/>
+      <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_inventory"
+            name="Incoming Shipments" sequence="9"/>
       <menuitem action="stock.action_reception_picking_move" id="menu_action_picking_tree_in_move"
-            parent="menu_procurement_management_inventory" sequence="11"/>
+            parent="menu_procurement_management_inventory" sequence="11"
+            groups="base.group_extended"/>
 
      <!--Invoice control-->
      <menuitem id="menu_procurement_management_invoice" name="Invoice Control"
@@ -107,12 +108,12 @@
         <field name="view_mode">tree,form,calendar,graph</field>
         <field eval="False" name="view_id"/>
         <field name="domain">[('type','=','in_invoice')]</field>
-        <field name="context">{'type':'in_invoice', 'journal_type': 'purchase', 'search_default_draft': 1}</field>
+        <field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase', 'search_default_draft': 1}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
             <field name="help">Use this menu to control the invoices to be received from your supplier. OpenERP pregenerates draft invoices from your purchase orders or receptions, according to your settings. Once you receive a supplier invoice, you can match it with the draft invoice and validate it.</field>
     </record>
 
-     <menuitem name="Supplier Invoices to Receive"
+     <menuitem name="Based on draft invoices"
           id="menu_procurement_management_pending_invoice"
           action="action_invoice_pending"
           parent="menu_procurement_management_invoice"
@@ -171,8 +172,8 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Purchase Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1}" />
-                            <field name="partner_address_id"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}"  options='{"quick_create": false}'/>
+                            <field name="partner_address_id" options='{"quick_create": false}'/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="origin" groups="base.group_extended"/>
                             <newline/>
@@ -246,7 +247,7 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]"  help="Purchase order which are in the exception state"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="Not invoices" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
+                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
                     <separator orientation="vertical"/>
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>
@@ -282,7 +283,7 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="Not invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
+                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
                     <separator orientation="vertical"/>
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>
@@ -311,14 +312,13 @@
             <field name="arch" type="xml">
                 <tree colors="grey:state=='cancel';blue:state in ('wait','confirmed');red:state in ('except_invoice','except_picking')" string="Purchase Order">
                     <field name="name" string="Reference"/>
-                    <field name="date_order" string="Order Date"/>
+                    <field name="date_order" />
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field name="location_id"/>
-                    <field name="minimum_planned_date"/>
+                    <field name="minimum_planned_date" invisible="context.get('quotation_only', False)"/>
                     <field name="origin"/>
-                    <field name="invoiced_rate" widget="progressbar"/>
-                    <field name="shipped_rate" widget="progressbar"/>
+                    <field name="invoiced_rate" widget="progressbar" invisible="context.get('quotation_only', False)"/>
+                    <field name="shipped_rate" widget="progressbar" invisible="context.get('quotation_only', False)"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount"/>
                     <field name="amount_total" sum="Total amount"/>
                     <field name="state"/>
@@ -359,9 +359,9 @@
                 <form string="Purchase Order Line">
                     <notebook colspan="4">
                         <page string="Order Line">
-                            <field name="product_id" colspan="4" context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'warehouse':parent.warehouse_id}" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
-                            <field name="product_qty" context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'warehouse':parent.warehouse_id}" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
-                            <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
+                            <field name="product_id" colspan="4" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)" required="1"/>
+                            <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
+                            <field name="product_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
                             <field colspan="4" name="name"/>
                             <field name="date_planned" widget="date"/>
                             <field name="price_unit"/>
@@ -406,9 +406,6 @@
                     <field name="product_uom"/>
                     <field name="price_subtotal"/>
                     <field name="date_planned"  widget="date" width="135"/>
-
-
-
                     <field name="state" invisible="1"/>
                     <field name="invoiced" invisible="1"/>
                 </tree>
@@ -483,7 +480,7 @@
         <act_window
             context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
             id="act_res_partner_2_purchase_order"
-            name="Purchase Orders"
+            name="RFQs and Purchases"
             groups="purchase.group_purchase_user"
             res_model="purchase.order"
             src_model="res.partner"/>
@@ -498,14 +495,14 @@
 
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
-            <field name="name">On Purchase Order Lines</field>
+            <field name="name">Based on Purchase Order lines</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
             <field name="domain">[('order_id.invoice_method','&lt;&gt;','picking'), ('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="purchase_order_line_search"/>
-            <field name="help">If you set the invoicing control on a purchase order as "Based on Purchase Order Lines", you can track here all the purchase order lines for which you have not received the supplier invoice yet. Once you are ready to receive a supplier invoice, you can generate a draft supplier invoice based on the lines from this menu.</field>
+            <field name="help">If you set the Invoicing Control on a purchase order as "Based on Purchase Order lines", you can track here all the purchase order lines for which you have not yet received the supplier invoice. Once you are ready to receive a supplier invoice, you can generate a draft supplier invoice based on the lines from this menu.</field>
         </record>
         <record id="purchase_line_form_action_tree2" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>

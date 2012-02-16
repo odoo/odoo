@@ -70,7 +70,7 @@
         <field name="model">document.directory</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Directories" col="6">
+            <form string="Directories" col="4">
                 <field name="name" select="1" colspan="4"/>
                 <field name="parent_id"/>
                 <field name="storage_id" widget="selection" />
@@ -93,7 +93,7 @@
                         <field name="ressource_parent_type_id"/>
                         <field name="ressource_id" select="2" readonly="1"/>
                     </group>
-                    <group colspan="4" col="2" attrs="{'invisible': [('type','!=','ressource'),('resource_parent_type_id','=',False)]}">
+                    <group colspan="4" col="2" attrs="{'invisible': [('type','!=','ressource'),('ressource_parent_type_id','=',False)]}">
                         <field name="resource_find_all" groups="base.group_extended" />
                     </group>
 
@@ -372,7 +372,6 @@
         <field name="model" eval="'document.directory'"/>
         <field name="name">Browse Files</field>
         <field name="value" eval="'ir.actions.act_window,%d'%action_document_file_directory_form"/>
-        <field name="object" eval="True"/>
     </record>
 
     <record model="ir.ui.view" id="view_attachment_form_inherit">
@@ -414,6 +413,7 @@
     </record>
 
     <act_window domain="[('partner_id', '=', active_id)]"
+        context="{'default_partner_id': active_id}"
         id="act_res_partner_document" name="Related Documents"
         res_model="ir.attachment"
         src_model="res.partner"
@@ -421,6 +421,7 @@
 
     <act_window
         domain="[('parent_id', '=', active_id)]"
+        context="{'default_parent_id': active_id}"
     	id="zoom_directory" name="Related Documents"
         res_model="ir.attachment"
         src_model="document.directory"/>

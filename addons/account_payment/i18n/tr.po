@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-05-29 17:44+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-09 22:36+0000\n"
+"Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:18+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-10 04:48+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -41,21 +41,6 @@ msgstr "Uygulanacak Ödeme Şeklini Seç"
 #: view:payment.order:0
 msgid "Group By..."
 msgstr "Gruplandır..."
-
-#. module: account_payment
-#: model:ir.module.module,description:account_payment.module_meta_information
-msgid ""
-"\n"
-"This module provides :\n"
-"* a more efficient way to manage invoice payment.\n"
-"* a basic mechanism to easily plug various automated payment.\n"
-"    "
-msgstr ""
-"\n"
-"Bu modül şunları sağlar :\n"
-"* a fatura ödemelerini daha verimli yönetmek.\n"
-"* a çeşitli otomatik ödemeleri kolaylıkla uygulayan bir temel mekanizma.\n"
-"    "
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -88,7 +73,9 @@ msgid ""
 msgstr "Geçerli tarihte ödenecek tutar hali hazırda ödenmiş tutardan düşülür"
 
 #. module: account_payment
+#: field:payment.line,company_id:0
 #: field:payment.mode,company_id:0
+#: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Firma"
 
@@ -98,11 +85,17 @@ msgid "Preferred date"
 msgstr "İstenen Tarih"
 
 #. module: account_payment
+#: model:res.groups,name:account_payment.group_account_payment
+msgid "Accounting / Payments"
+msgstr "Muhasebe / Ödemeler"
+
+#. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
 msgstr "Boş"
 
 #. module: account_payment
+#: view:payment.order.create:0
 #: field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "Girişler"
@@ -117,11 +110,6 @@ msgstr "Kullanılmış Hesap"
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Vade Tarihi"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -177,10 +165,22 @@ msgid "The payment line name must be unique!"
 msgstr "Ödeme satırı adı eşsiz olmalı!"
 
 #. module: account_payment
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr "Geçersiz BBA Yapılı İletişim !"
+
+#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "Ödeme Emirleri"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -306,14 +306,6 @@ msgid "Search Payment Orders"
 msgstr "Ödeme Emri Ara"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-"Bir paydaş belirtmeden alacak/borç hesabı için hareket satırı "
-"oluşturmazsınız."
-
-#. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
 msgstr "Oluşturuldu"
@@ -339,9 +331,11 @@ msgid "Communication Type"
 msgstr "İletişim Türü"
 
 #. module: account_payment
-#: model:ir.module.module,shortdesc:account_payment.module_meta_information
-msgid "Payment Management"
-msgstr "Ödeme Yönetimi"
+#: field:payment.line,partner_id:0
+#: field:payment.mode,partner_id:0
+#: report:payment.order:0
+msgid "Partner"
+msgstr "Ortak"
 
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
@@ -357,6 +351,14 @@ msgstr "Vade Tarihi"
 #: field:account.invoice,amount_to_pay:0
 msgid "Amount to be paid"
 msgstr "Ödenecek tutar"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
 
 #. module: account_payment
 #: report:payment.order:0
@@ -451,7 +453,6 @@ msgstr "Kullanıcı"
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
-#: model:ir.actions.act_window,name:account_payment.act_account_invoice_2_payment_line
 msgid "Payment Lines"
 msgstr "Ödeme Kalemleri"
 
@@ -462,8 +463,8 @@ msgstr "Yevmiye Kalemleri"
 
 #. module: account_payment
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
+msgid "You can not create journal items on an account of type view."
+msgstr "Görünüm tipindeki hesaplarda yevmiye kaydı oluşturamazsınız."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -535,14 +536,14 @@ msgid "Invoice Ref"
 msgstr "Fatura Ref."
 
 #. module: account_payment
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Fatura Numarası Her Şirkette Tekil Olmalı!"
+
+#. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
 msgstr "Referansınız"
-
-#. module: account_payment
-#: field:payment.order,mode:0
-msgid "Payment mode"
-msgstr "Ödeme Biçimi"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -580,10 +581,20 @@ msgid "Cancel"
 msgstr "İptal"
 
 #. module: account_payment
+#: field:payment.line,bank_id:0
+msgid "Destination Bank Account"
+msgstr "Hedef Banka Hesabı"
+
+#. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
 msgstr "Bilgi"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr "İlişkili hesap ve dönem için aynı şirket olmalı."
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -617,11 +628,6 @@ msgstr "Paydaş Para Biriminde Tutar"
 #: field:payment.line,communication2:0
 msgid "Communication 2"
 msgstr "İletişim 2"
-
-#. module: account_payment
-#: field:payment.line,bank_id:0
-msgid "Destination Bank account"
-msgstr "Hedef Banka Hesabı"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -703,6 +709,11 @@ msgid "Order"
 msgstr "Emir"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr "Kapalı bir hesap için yevmiye kayıtları oluşturamazsınız."
+
+#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Toplam"
@@ -714,10 +725,9 @@ msgid "Make Payment"
 msgstr "Ödeme Yap"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: report:payment.order:0
-msgid "Partner"
-msgstr "Ortak"
+#: field:payment.order,mode:0
+msgid "Payment mode"
+msgstr "Ödeme Biçimi"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
@@ -729,16 +739,14 @@ msgstr "Ödeme Doldur"
 msgid "Bank Account for the Payment Mode"
 msgstr "Ödeme Yönetimi için Banka Hesabı"
 
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Hesap Görünümünde hareket oluşturamazsınız."
-
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
 
 #~ msgid "_Cancel"
 #~ msgstr "_iptal"
+
+#~ msgid "Payment Management"
+#~ msgstr "Ödeme Yönetimi"
 
 #~ msgid "Date"
 #~ msgstr "Tarih"
@@ -760,3 +768,28 @@ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
 
 #~ msgid "Payment type"
 #~ msgstr "Ödeme Tipi"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module provides :\n"
+#~ "* a more efficient way to manage invoice payment.\n"
+#~ "* a basic mechanism to easily plug various automated payment.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Bu modül şunları sağlar :\n"
+#~ "* a fatura ödemelerini daha verimli yönetmek.\n"
+#~ "* a çeşitli otomatik ödemeleri kolaylıkla uygulayan bir temel mekanizma.\n"
+#~ "    "
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
+
+#~ msgid "Destination Bank account"
+#~ msgstr "Hedef Banka Hesabı"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Hesap Görünümünde hareket oluşturamazsınız."

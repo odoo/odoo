@@ -29,13 +29,16 @@ class account_common_journal_report(osv.osv_memory):
         'amount_currency': fields.boolean("With Currency", help="Print Report with the currency column if the currency is different then the company currency"),
     }
 
-    def _build_context(self, cr, uid, ids, data, context=None):
+    def _build_contexts(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
-        result = super(account_common_journal_report, self)._build_context(cr, uid, ids, data, context=context)
+        result = super(account_common_journal_report, self)._build_contexts(cr, uid, ids, data, context=context)
+
         if data['form']['filter'] == 'filter_date':
             cr.execute('SELECT period_id FROM account_move_line WHERE date >= %s AND date <= %s', (data['form']['date_from'], data['form']['date_to']))
             result['periods'] = map(lambda x: x[0], cr.fetchall())
+        elif data['form']['filter'] == 'filter_period':
+            result['periods'] = self.pool.get('account.period').build_ctx_periods(cr, uid, data['form']['period_from'], data['form']['period_to'])
         return result
 
     def pre_print_report(self, cr, uid, ids, data, context=None):
@@ -49,4 +52,4 @@ class account_common_journal_report(osv.osv_memory):
 
 account_common_journal_report()
 
-#vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

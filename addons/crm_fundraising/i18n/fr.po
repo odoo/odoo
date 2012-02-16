@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-18 16:44+0000\n"
 "Last-Translator: Quentin THEURET <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:42+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:00+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,planned_revenue:0
@@ -101,14 +101,20 @@ msgid "Messages"
 msgstr "Messages"
 
 #. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "My company"
+msgstr ""
+
+#. module: crm_fundraising
 #: view:crm.fundraising:0
 msgid "Amount"
 msgstr "Montant"
 
 #. module: crm_fundraising
-#: model:crm.case.categ,name:crm_fundraising.categ_fund4
-msgid "Arts And Culture"
-msgstr "Arts et culture"
+#: selection:crm.fundraising,state:0
+#: selection:crm.fundraising.report,state:0
+msgid "Cancelled"
+msgstr "Annulée"
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
@@ -117,14 +123,14 @@ msgid "Est.Revenue"
 msgstr "Revenu est."
 
 #. module: crm_fundraising
-#: field:crm.fundraising,partner_address_id:0
-msgid "Partner Contact"
-msgstr "Contact du partenaire"
+#: view:crm.fundraising:0
+msgid "Open Funds"
+msgstr ""
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "   Month   "
-msgstr "   Mois   "
+#: field:crm.fundraising,ref:0
+msgid "Reference"
+msgstr "Référence"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,type_id:0
@@ -161,15 +167,15 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Funds raised in current year"
+msgstr ""
+
+#. module: crm_fundraising
 #: model:ir.actions.act_window,name:crm_fundraising.action_report_crm_fundraising
 #: model:ir.ui.menu,name:crm_fundraising.menu_report_crm_fundraising_tree
 msgid "Fundraising Analysis"
 msgstr "Analyse de levée de fonds"
-
-#. module: crm_fundraising
-#: model:ir.module.module,shortdesc:crm_fundraising.module_meta_information
-msgid "CRM Fundraising"
-msgstr "CRM : levée de fonds"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -199,14 +205,21 @@ msgstr "Réhabilitation sociale et soutien rural"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
+msgid "Pending Funds"
+msgstr ""
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
 #: view:crm.fundraising.report:0
 msgid "Payment Mode"
 msgstr "Mode de paiement"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Reply"
-msgstr "Répondre"
+#: selection:crm.fundraising,state:0
+#: view:crm.fundraising.report:0
+msgid "New"
+msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising,email_from:0
@@ -214,14 +227,15 @@ msgid "Email"
 msgstr "Courriel"
 
 #. module: crm_fundraising
-#: field:crm.fundraising,canal_id:0
-msgid "Channel"
-msgstr "Canal"
-
-#. module: crm_fundraising
 #: selection:crm.fundraising,priority:0
 msgid "Lowest"
 msgstr "Minimum"
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+#: view:crm.fundraising.report:0
+msgid "My Sales Team(s)"
+msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising,create_date:0
@@ -264,17 +278,6 @@ msgid "Employee Email"
 msgstr "Courriel de l'employé"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "    Month-1    "
-msgstr "    Mois -1    "
-
-#. module: crm_fundraising
-#: selection:crm.fundraising,state:0
-#: selection:crm.fundraising.report,state:0
-msgid "Cancelled"
-msgstr "Annulée"
-
-#. module: crm_fundraising
 #: model:crm.case.categ,name:crm_fundraising.categ_fund2
 msgid "Learning And Education"
 msgstr "Formation et éducation"
@@ -300,13 +303,17 @@ msgid "Number of Days to close the case"
 msgstr "Nombre de jours pour clôturer le cas"
 
 #. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Funds raised in current month"
+msgstr ""
+
+#. module: crm_fundraising
 #: view:crm.fundraising:0
 msgid "References"
 msgstr "Références"
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
-#: model:ir.module.module,description:crm_fundraising.module_meta_information
 msgid "Fundraising"
 msgstr "Levée de fonds"
 
@@ -368,14 +375,14 @@ msgid "Salesman"
 msgstr "Vendeur"
 
 #. module: crm_fundraising
-#: field:crm.fundraising,ref:0
-msgid "Reference"
-msgstr "Référence"
-
-#. module: crm_fundraising
 #: field:crm.fundraising,ref2:0
 msgid "Reference 2"
 msgstr "Référence 2"
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Funds raised in last month"
+msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -386,9 +393,9 @@ msgid "Category"
 msgstr "Catégorie"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "  Year  "
-msgstr "  Année  "
+#: model:crm.case.categ,name:crm_fundraising.categ_fund4
+msgid "Arts And Culture"
+msgstr "Arts et culture"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,planned_cost:0
@@ -408,8 +415,6 @@ msgstr ""
 "émis pour cet enregistrement. Séparez les adresses par une virgule."
 
 #. module: crm_fundraising
-#: selection:crm.fundraising,state:0
-#: view:crm.fundraising.report:0
 #: selection:crm.fundraising.report,state:0
 msgid "Draft"
 msgstr "Brouillon"
@@ -438,11 +443,6 @@ msgstr "En attente"
 #: view:crm.fundraising:0
 msgid "Communication & History"
 msgstr "Communication et historique"
-
-#. module: crm_fundraising
-#: model:ir.ui.menu,name:crm_fundraising.menu_crm_fundraising_stage_act
-msgid "Stages"
-msgstr "Étapes"
 
 #. module: crm_fundraising
 #: selection:crm.fundraising.report,month:0
@@ -481,9 +481,9 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "#Fundraising"
-msgstr "Nb. de levée de fonds"
+#: model:crm.case.resource.type,name:crm_fundraising.type_fund2
+msgid "Cheque"
+msgstr "Chèque"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,active:0
@@ -516,9 +516,9 @@ msgid "January"
 msgstr "Janvier"
 
 #. module: crm_fundraising
-#: model:crm.case.resource.type,name:crm_fundraising.type_fund2
-msgid "Cheque"
-msgstr "Chèque"
+#: view:crm.fundraising.report:0
+msgid "#Fundraising"
+msgstr "Nb. de levée de fonds"
 
 #. module: crm_fundraising
 #: model:ir.actions.act_window,help:crm_fundraising.crm_fund_categ_action
@@ -533,6 +533,11 @@ msgstr ""
 #: help:crm.fundraising,email_from:0
 msgid "These people will receive email."
 msgstr "Ces personnes recevront un courriel"
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "Fund Category"
+msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising,date:0
@@ -550,14 +555,14 @@ msgid "History"
 msgstr "Historique"
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Attachments"
-msgstr "Pièces jointes"
+#: field:crm.fundraising,partner_address_id:0
+msgid "Partner Contact"
+msgstr "Contact du partenaire"
 
 #. module: crm_fundraising
-#: model:ir.model,name:crm_fundraising.model_crm_case_stage
-msgid "Stage of case"
-msgstr "Étape de cas"
+#: view:crm.fundraising.report:0
+msgid "Month of fundraising"
+msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -571,6 +576,11 @@ msgstr "Estimations"
 #: field:crm.fundraising.report,state:0
 msgid "State"
 msgstr "État"
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "Unassigned"
+msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -591,11 +601,15 @@ msgstr "Annuler"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-#: selection:crm.fundraising,state:0
 #: view:crm.fundraising.report:0
 #: selection:crm.fundraising.report,state:0
 msgid "Open"
 msgstr "Ouverte"
+
+#. module: crm_fundraising
+#: selection:crm.fundraising,state:0
+msgid "In Progress"
+msgstr ""
 
 #. module: crm_fundraising
 #: model:ir.actions.act_window,help:crm_fundraising.crm_case_category_act_fund_all1
@@ -616,11 +630,6 @@ msgid "Responsible"
 msgstr "Responsable"
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Current"
-msgstr "Actuel"
-
-#. module: crm_fundraising
 #: help:crm.fundraising,section_id:0
 msgid ""
 "Sales team to which Case belongs to. Define Responsible user and Email "
@@ -631,14 +640,25 @@ msgstr ""
 "messages."
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Details"
-msgstr "Détails"
-
-#. module: crm_fundraising
 #: model:ir.model,name:crm_fundraising.model_crm_fundraising_report
 msgid "CRM Fundraising Report"
 msgstr "Rapport de levée de fonds de la CRM"
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "Reply"
+msgstr "Répondre"
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Date of fundraising"
+msgstr ""
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+#: field:crm.fundraising.report,amount_revenue_prob:0
+msgid "Est. Rev*Prob."
+msgstr "Revenu estim. * proba."
 
 #. module: crm_fundraising
 #: field:crm.fundraising.report,type_id:0
@@ -646,10 +666,9 @@ msgid "Fundraising Type"
 msgstr "Type de levée de fonds"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-#: field:crm.fundraising.report,amount_revenue_prob:0
-msgid "Est. Rev*Prob."
-msgstr "Revenu estim. * proba."
+#: view:crm.fundraising:0
+msgid "New Funds"
+msgstr ""
 
 #. module: crm_fundraising
 #: model:ir.actions.act_window,help:crm_fundraising.crm_fundraising_stage_act
@@ -679,15 +698,6 @@ msgstr "Probabilité (%)"
 #: field:crm.fundraising,partner_name:0
 msgid "Employee's Name"
 msgstr "Nom de l'employé"
-
-#. module: crm_fundraising
-#: help:crm.fundraising,canal_id:0
-msgid ""
-"The channels represent the different communication  modes available with the "
-"customer."
-msgstr ""
-"Les canaux représentent les différents moyens de communication disponibles "
-"avec ce client."
 
 #. module: crm_fundraising
 #: help:crm.fundraising,state:0
@@ -725,6 +735,11 @@ msgstr "Liquide"
 #: view:crm.fundraising:0
 msgid "Funds by Categories"
 msgstr "Fonds par catégories"
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Month-1"
+msgstr ""
 
 #. module: crm_fundraising
 #: selection:crm.fundraising.report,month:0
@@ -783,3 +798,40 @@ msgstr "Année"
 #: field:crm.fundraising,duration:0
 msgid "Duration"
 msgstr "Durée"
+
+#~ msgid "   Month   "
+#~ msgstr "   Mois   "
+
+#~ msgid "Channel"
+#~ msgstr "Canal"
+
+#~ msgid "  Year  "
+#~ msgstr "  Année  "
+
+#~ msgid "Attachments"
+#~ msgstr "Pièces jointes"
+
+#~ msgid "Details"
+#~ msgstr "Détails"
+
+#~ msgid "Current"
+#~ msgstr "Actuel"
+
+#~ msgid "CRM Fundraising"
+#~ msgstr "CRM : levée de fonds"
+
+#~ msgid "Stages"
+#~ msgstr "Étapes"
+
+#~ msgid ""
+#~ "The channels represent the different communication  modes available with the "
+#~ "customer."
+#~ msgstr ""
+#~ "Les canaux représentent les différents moyens de communication disponibles "
+#~ "avec ce client."
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Mois -1    "
+
+#~ msgid "Stage of case"
+#~ msgstr "Étape de cas"

@@ -420,6 +420,7 @@ class Partner(osv.osv):
             line_dict = invoice_line_obj.product_id_change(cr, uid, {},
                             product_id, False, quantity, '', 'out_invoice', partner.id, fpos_id, price_unit=amount, context=context)
             line_value.update(line_dict['value'])
+            line_value['price_unit'] = amount
             if line_value.get('invoice_line_tax_id', False):
                 tax_tab = [(6, 0, line_value['invoice_line_tax_id'])]
                 line_value['invoice_line_tax_id'] = tax_tab

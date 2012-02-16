@@ -47,67 +47,16 @@ class account_use_model(osv.osv_memory):
 
     def create_entries(self, cr, uid, ids, context=None):
         account_model_obj = self.pool.get('account.model')
-        account_period_obj = self.pool.get('account.period')
-        account_move_obj = self.pool.get('account.move')
-        account_move_line_obj = self.pool.get('account.move.line')
-        pt_obj = self.pool.get('account.payment.term')
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}
-        move_ids = []
-        entry = {}
         data =  self.read(cr, uid, ids, context=context)[0]
         record_id = context and context.get('model_line', False) or False
         if record_id:
-            data_model = account_model_obj.browse(cr, uid, data['model'], context=context)
+            model_ids = data['model']
         else:
-            data_model = account_model_obj.browse(cr, uid, context['active_ids'], context=context)
-        for model in data_model:
-            entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%d')}
-            period_id = account_period_obj.find(cr, uid, context=context)
-            if not period_id:
-                raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
-            period_id = period_id[0]
-            move_id = account_move_obj.create(cr, uid, {
-                'ref': entry['name'],
-                'period_id': period_id,
-                'journal_id': model.journal_id.id,
-            })
-            move_ids.append(move_id)
-            for line in model.lines_id:
-                analytic_account_id = False
-                if line.analytic_account_id:
-                    if not model.journal_id.analytic_journal_id:
-                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (model.journal_id.name,))
-                    analytic_account_id = line.analytic_account_id.id
-                val = {
-                    'move_id': move_id,
-                    'journal_id': model.journal_id.id,
-                    'period_id': period_id,
-                    'analytic_account_id': analytic_account_id
-                }
-                date_maturity = time.strftime('%Y-%m-%d')
-                if line.date_maturity == 'partner' and line.partner_id and line.partner_id.property_payment_term:
-                    payment_term_id = line.partner_id.property_payment_term.id
-                    pterm_list = pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_maturity)
-                    if pterm_list:
-                        pterm_list = [l[0] for l in pterm_list]
-                        pterm_list.sort()
-                        date_maturity = pterm_list[-1]
-                val.update({
-                    'name': line.name,
-                    'quantity': line.quantity,
-                    'debit': line.debit,
-                    'credit': line.credit,
-                    'account_id': line.account_id.id,
-                    'move_id': move_id,
-                    'partner_id': line.partner_id.id,
-                    'date': time.strftime('%Y-%m-%d'),
-                    'date_maturity': date_maturity
-                })
-                c = context.copy()
-                c.update({'journal_id': model.journal_id.id,'period_id': period_id})
-                account_move_line_obj.create(cr, uid, val, context=c)
+            model_ids = context['active_ids']
+        move_ids = account_model_obj.generate(cr, uid, model_ids, context=context)
 
         context.update({'move_ids':move_ids})
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_move_form')], context=context)

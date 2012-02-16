@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2010-08-02 15:06+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Albanian <sq@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:20+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:35+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
+
+#. module: project_mrp
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -28,8 +33,13 @@ msgid "Procurement Task"
 msgstr ""
 
 #. module: project_mrp
-#: model:ir.module.module,shortdesc:project_mrp.module_meta_information
-msgid "Procurement and Project Management integration"
+#: model:ir.model,name:project_mrp.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: project_mrp
+#: field:procurement.order,sale_line_id:0
+msgid "Sale order line"
 msgstr ""
 
 #. module: project_mrp
@@ -44,7 +54,12 @@ msgstr ""
 
 #. module: project_mrp
 #: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sale Order Task"
 msgstr ""
 
 #. module: project_mrp
@@ -87,39 +102,13 @@ msgid "Order Task"
 msgstr ""
 
 #. module: project_mrp
-#: model:process.node,name:project_mrp.process_node_saleordertask0
-msgid "Sale Order Task"
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
 msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
 msgid "Create Task"
-msgstr ""
-
-#. module: project_mrp
-#: model:ir.module.module,description:project_mrp.module_meta_information
-msgid ""
-"\n"
-"This module creates a link between procurement orders\n"
-"containing \"service\" lines and project management tasks.\n"
-"\n"
-"When installed, this module will automatically create a new task\n"
-"for each procurement order line, when the corresponding product\n"
-"meets the following characteristics:\n"
-"  * Type = Service\n"
-"  * Procurement method (Order fulfillment) = MTO (make to order)\n"
-"  * Supply/Procurement method = Produce\n"
-"\n"
-"The new task is created outside of any existing project, but\n"
-"can be added to a project manually.\n"
-"\n"
-"When the project task is completed or cancelled, the workflow of the "
-"corresponding\n"
-"procurement line is updated accordingly.\n"
-"\n"
-"This module is useful to be able to invoice services based on tasks\n"
-"automatically created via sale orders.\n"
-"\n"
 msgstr ""
 
 #. module: project_mrp
@@ -130,4 +119,9 @@ msgstr ""
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
+msgstr ""
+
+#. module: project_mrp
+#: field:project.task,sale_line_id:0
+msgid "Sale Order Line"
 msgstr ""

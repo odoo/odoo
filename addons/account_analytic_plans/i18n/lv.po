@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-09-01 12:44+0000\n"
 "Last-Translator: Nauris Sedlers <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:17+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -53,11 +53,6 @@ msgid "Analytic Plan"
 msgstr "Analītiskais Plāns"
 
 #. module: account_analytic_plans
-#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
-msgid "Multiple-plans management in Analytic Accounting"
-msgstr "Vairāku plānu apstrāde Analītiskajā Grāmatvedībā"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
 #: view:account.crossovered.analytic:0
 #: field:account.crossovered.analytic,journal_ids:0
@@ -71,7 +66,7 @@ msgid "Analytic Plan Line"
 msgstr "Analītiskā Plāna Rinda"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:60
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
 msgid "User Error"
 msgstr "Lietotāja Kļūda"
@@ -87,11 +82,6 @@ msgid "Ok"
 msgstr "Labi"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Nav iespējams veikt grāmatojumus slēgtā kontā."
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
 msgstr "Modeļa Plāns"
@@ -102,9 +92,9 @@ msgid "Account2 Id"
 msgstr "Konta2 Id"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Konta Id"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -112,9 +102,11 @@ msgid "Amount"
 msgstr "Summa"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Code"
-msgstr "Kods"
+#: constraint:account.journal:0
+msgid ""
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -137,9 +129,26 @@ msgid "Bank Statement Line"
 msgstr "Konta Izraksta Rinda"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Analītiskais Konts"
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid "Define your Analytic Plans"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement:0
+msgid "The journal and period chosen have to belong to the same company."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -150,13 +159,6 @@ msgstr "Žurnāla kodam ir jābūt unikālam katram uzņēmumam!"
 #: field:account.crossovered.analytic,ref:0
 msgid "Analytic Account Reference"
 msgstr "Analītiskā Konta Reference"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-"Tu nevari izveidot grāmatojumu izejošam/ienākošam kontam bez partnera"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
@@ -182,11 +184,12 @@ msgstr "Drukāt"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+#: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "Procenti"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #, python-format
 msgid "A model having this name and code already exists !"
 msgstr "Modelis ar šo vārdu un kodu jau eksistē!"
@@ -242,6 +245,14 @@ msgid "Invoice Line"
 msgstr "Rēķina Rinda"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Currency"
 msgstr "Valūta"
@@ -252,9 +263,9 @@ msgid "Start Date"
 msgstr "Sākuma Datums"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Company"
-msgstr "Uzņēmums"
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Konta Id"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -277,8 +288,8 @@ msgid "To Date"
 msgstr "Līdz Datumam"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "Žurnālam '%s'  ir jādefinē atbilstošs analītiskais žurnāls!"
@@ -294,81 +305,14 @@ msgid "analytic.plan.create.model.action"
 msgstr "analytic.plan.create.model.action"
 
 #. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account :"
 msgstr "Analītiskais Konts:"
-
-#. module: account_analytic_plans
-#: model:ir.module.module,description:account_analytic_plans.module_meta_information
-msgid ""
-"This module allows to use several analytic plans, according to the general "
-"journal,\n"
-"so that multiple analytic lines are created when the invoice or the entries\n"
-"are confirmed.\n"
-"\n"
-"For example, you can define the following analytic structure:\n"
-"  Projects\n"
-"      Project 1\n"
-"          SubProj 1.1\n"
-"          SubProj 1.2\n"
-"      Project 2\n"
-"  Salesman\n"
-"      Eric\n"
-"      Fabien\n"
-"\n"
-"Here, we have two plans: Projects and Salesman. An invoice line must\n"
-"be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-"Fabien. The amount can also be split. The following example is for\n"
-"an invoice that touches the two subproject and assigned to one salesman:\n"
-"\n"
-"Plan1:\n"
-"    SubProject 1.1 : 50%\n"
-"    SubProject 1.2 : 50%\n"
-"Plan2:\n"
-"    Eric: 100%\n"
-"\n"
-"So when this line of invoice will be confirmed, it will generate 3 analytic "
-"lines,\n"
-"for one account entry.\n"
-"The analytic plan validates the minimum and maximum percentage at the time "
-"of creation\n"
-"of distribution models.\n"
-"        "
-msgstr ""
-"Šis modulis ļauj izmantot vairākus analītiskos plānus, atbilstoši galvenajam "
-"žurnālam,\n"
-"tādejādi apstiprinot rēķinus vai ievades rindas, tiek izveidotas vairākas "
-"analītisko\n"
-"kontu rindas.\n"
-"\n"
-"Piemēram, jūs varat nodefinēt sekojošu analītisko struktūru:\n"
-"  Projekts\n"
-"      Projekts 1\n"
-"          Apakš Projekts 1.1\n"
-"          Apakš Projekts 1.2\n"
-"      Projekts 2\n"
-"  Pārdevēji\n"
-"      Ēriks\n"
-"      Gatis\n"
-"\n"
-"Šeit mums ir redzami divi plāni: Projekti un Pārdevēji. Rēķina rindā ir "
-"jāievada\n"
-"divas analītiskās pazīmes: Apakš Projekts 1.1 un Gatis.\n"
-"Arī kopējo summu var sadalīt. Sekojošais piemērs ir rēķiniem\n"
-"kas saistīti ar viena pārdevēja diviem apakš projektiem:\n"
-"\n"
-"Plāns1:\n"
-"    Apakš Projekts 1.1: 50%\n"
-"    Apakš Projekts 1.2: 50%\n"
-"Plāns2:\n"
-"    Gatis: 100%\n"
-"\n"
-"Tādejādi grāmatojot šo rēķina rindiņu, tā izveidos 3 analītiskās rindiņas,\n"
-"katram konta ierakstam.\n"
-"Analītiskais plāns sadalījuma modeļa izveides brīdi pārbauda noteikto "
-"minimālo\n"
-"un maksimālo procentuālo sadalījumu.\n"
-"        "
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -396,11 +340,6 @@ msgid "Account1 Id"
 msgstr "Konts1 Id"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Uzņēmumam ir jāsakrīt ar saistīto kontu un periodu."
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
 msgstr "Minimāli Atļautie (%)"
@@ -411,7 +350,7 @@ msgid "Root account of this plan."
 msgstr "Šā plāna pamata konts."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
@@ -422,6 +361,11 @@ msgstr "Kļūda"
 #: view:analytic.plan.create.model:0
 msgid "Save This Distribution as a Model"
 msgstr "Saglabāt šo Sadalījumu kā Modeli"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -440,11 +384,16 @@ msgid "Print Crossovered Analytic"
 msgstr "Izdrukāt Šķērssaistīto Analītiku"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Nav norādīts analītiskais žurnāls!"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Analītiskais Konts"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
@@ -455,6 +404,11 @@ msgstr "Bankas Konta Izraksts"
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
 msgstr "Konts3 Id"
+
+#. module: account_analytic_plans
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -473,12 +427,17 @@ msgid "Account4 Id"
 msgstr "Konts4 Id"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
+
+#. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Lines"
 msgstr "Analītiskā Sadaklījuma Rindas"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "The Total Should be Between %s and %s"
 msgstr "Kopsummai ir jābūt starp %s un %s"
@@ -530,6 +489,11 @@ msgid "Journal"
 msgstr "Žurnāls"
 
 #. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Code"
+msgstr "Kods"
+
+#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
 msgid "analytic.plan.create.model"
 msgstr "analytic.plan.create.model"
@@ -545,6 +509,24 @@ msgid "Distribution Models"
 msgstr "Sadalījuma Modeļi"
 
 #. module: account_analytic_plans
+#: model:ir.actions.act_window,help:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid ""
+"To setup a multiple analytic plans environment, you must define the root "
+"analytic accounts for each plan set. Then, you must attach a plan set to "
+"your account journals."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr "Uzņēmums"
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
 msgstr "Secība"
@@ -555,12 +537,89 @@ msgid "The name of the journal must be unique per company !"
 msgstr "Žurnāla nosaukumam katrai kompānijai ir jābūt unikālam!"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "Value Error"
 msgstr "Vērtības Kļūda"
 
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Jūs nevarat izveidor grāmatojumu pārskata kontam."
+#~ msgid "Multiple-plans management in Analytic Accounting"
+#~ msgstr "Vairāku plānu apstrāde Analītiskajā Grāmatvedībā"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Nav iespējams veikt grāmatojumus slēgtā kontā."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Uzņēmumam ir jāsakrīt ar saistīto kontu un periodu."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Jūs nevarat izveidor grāmatojumu pārskata kontam."
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Šis modulis ļauj izmantot vairākus analītiskos plānus, atbilstoši galvenajam "
+#~ "žurnālam,\n"
+#~ "tādejādi apstiprinot rēķinus vai ievades rindas, tiek izveidotas vairākas "
+#~ "analītisko\n"
+#~ "kontu rindas.\n"
+#~ "\n"
+#~ "Piemēram, jūs varat nodefinēt sekojošu analītisko struktūru:\n"
+#~ "  Projekts\n"
+#~ "      Projekts 1\n"
+#~ "          Apakš Projekts 1.1\n"
+#~ "          Apakš Projekts 1.2\n"
+#~ "      Projekts 2\n"
+#~ "  Pārdevēji\n"
+#~ "      Ēriks\n"
+#~ "      Gatis\n"
+#~ "\n"
+#~ "Šeit mums ir redzami divi plāni: Projekti un Pārdevēji. Rēķina rindā ir "
+#~ "jāievada\n"
+#~ "divas analītiskās pazīmes: Apakš Projekts 1.1 un Gatis.\n"
+#~ "Arī kopējo summu var sadalīt. Sekojošais piemērs ir rēķiniem\n"
+#~ "kas saistīti ar viena pārdevēja diviem apakš projektiem:\n"
+#~ "\n"
+#~ "Plāns1:\n"
+#~ "    Apakš Projekts 1.1: 50%\n"
+#~ "    Apakš Projekts 1.2: 50%\n"
+#~ "Plāns2:\n"
+#~ "    Gatis: 100%\n"
+#~ "\n"
+#~ "Tādejādi grāmatojot šo rēķina rindiņu, tā izveidos 3 analītiskās rindiņas,\n"
+#~ "katram konta ierakstam.\n"
+#~ "Analītiskais plāns sadalījuma modeļa izveides brīdi pārbauda noteikto "
+#~ "minimālo\n"
+#~ "un maksimālo procentuālo sadalījumu.\n"
+#~ "        "

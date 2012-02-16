@@ -23,7 +23,7 @@
 {
     'name': 'Audit Trail',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'description': """
 This module lets administrator track every user operation on all the objects of the system.
 ===========================================================================================
@@ -43,7 +43,7 @@ delete on objects and can check logs.
     ],
     'demo_xml': ['audittrail_demo.xml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0062572348749',
     'images': ['images/audittrail1.jpeg','images/audittrail2.jpeg','images/audittrail3.jpeg'],
 }

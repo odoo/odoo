@@ -30,6 +30,7 @@
           <field name="view_type">form</field>
           <field name="view_mode">graph,tree</field>
           <field name="domain">[('type','=','liquidity')]</field>
+          <field name="context">{'default_type': 'liquidity'}</field>
           <field name="view_id" ref="account.view_treasory_graph"/>
       </record>
         <record id="board_account_form" model="ir.ui.view">
@@ -38,17 +39,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Board">
-                    <hpaned>
-                        <child1>
-                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Customer Invoices to Approve" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
-                            <action colspan="4" height="160" width="400" name="%(action_company_analysis_tree)d" string="Company Analysis" groups="account.group_account_manager"/>
-                        </child1>
-                        <child2>
-                            <action colspan="4" height="220" name="%(action_treasory_graph)d" string="Treasury" groups="account.group_account_manager,account.group_account_user"/>
-                            <action colspan="4" height="220" name="%(action_aged_receivable)d" string="Aged Receivables" groups="account.group_account_manager,account.group_account_user"/>
-                            <!--  <action colspan="4" height="220" name="%(action_aged_income)d" string="Aged income"/> -->
-                        </child2>
-                    </hpaned>
+                    <board style="2-1">
+                        <column>
+                            <action name="%(account.action_invoice_tree1)d" creatable="true" string="Draft Customer Invoices" domain="[('state','in',('draft','proforma2')), ('type','=','out_invoice')]"/>
+                            <action name="%(action_company_analysis_tree)d" string="Company Analysis"/>
+                        </column>
+                        <column>
+                            <action name="%(action_treasory_graph)d" string="Treasury"/> <!--groups="account.group_account_manager,account.group_account_user"-->
+                        </column>
+                    </board>
                 </form>
             </field>
         </record>

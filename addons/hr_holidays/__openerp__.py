@@ -23,8 +23,9 @@
 {
     "name": "Leaves Management",
     "version": "1.5",
-    "author": ['OpenERP SA', 'Axelor'],
+    "author": "OpenERP SA",
     "category": "Human Resources",
+    "sequence": 28,
     'complexity': "easy",
     "website": "http://www.openerp.com",
     "description": """
@@ -72,7 +73,8 @@ Note that:
              'test/hr_holidays_report.yml',
              ],
     'installable': True,
-    'active': False,
+    'application': True,
+    'auto_install': False,
     'certificate': '0086579209325',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

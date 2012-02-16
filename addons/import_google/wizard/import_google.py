@@ -51,7 +51,6 @@ class google_import(import_framework):
 
     def initialize(self):
         google = self.obj.pool.get('google.login')
-        self.external_id_field = 'Id'
         self.gd_client = google.google_login(self.context.get('user'),
                                        self.context.get('password'),
                                         self.context.get('instance'))
@@ -353,3 +352,5 @@ class google_import(import_framework):
                 }
 
         }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

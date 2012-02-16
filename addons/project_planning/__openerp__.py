@@ -21,10 +21,10 @@
 
 
 {
-    'name': 'Planning Management Module',
+    'name': 'Resources Planing',
     'version': '1.0',
-    'category': 'Hidden',
-    'complexity': "easy",
+    "category": "Project Management",
+    'complexity': "expert",
     'description': """Keep track of your planning
 This module helps you to manage your plannings.
 ===============================================
@@ -61,7 +61,7 @@ At the end of the month, the planning manager can also check if the encoded time
         'test/project_planning_report.yml'
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0034901836973',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

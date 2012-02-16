@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2011-01-14 12:59+0000\n"
 "Last-Translator: Pekka Pylvänäinen <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:24+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:39+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -39,23 +39,30 @@ msgid "Confirmation Date"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: view:hr.expense.report:0
+#: view:hr.expense.expense:0 view:hr.expense.report:0
 msgid "Group By..."
 msgstr "Ryhmittele"
 
 #. module: hr_expense
-#: model:product.template,name:hr_expense.product_product_expense_air_product_template
+#: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Ticket"
 msgstr "Lentolippu"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,department_id:0
-#: view:hr.expense.report:0
-#: field:hr.expense.report,department_id:0
+#: report:hr.expense:0
+msgid "Validated By"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0 field:hr.expense.expense,department_id:0
+#: view:hr.expense.report:0 field:hr.expense.report,department_id:0
 msgid "Department"
 msgstr "Osasto"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "New Expense"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -68,8 +75,7 @@ msgid "# of Invoiced Lines"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,company_id:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,company_id:0 view:hr.expense.report:0
 #: field:hr.expense.report,company_id:0
 msgid "Company"
 msgstr "Yritys"
@@ -90,14 +96,12 @@ msgid "Expenses Statistics"
 msgstr ""
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: view:hr.expense.report:0
-#: model:process.node,name:hr_expense.process_node_approved0
-msgid "Approved"
-msgstr "Hyväksytty"
+#: view:hr.expense.report:0 field:hr.expense.report,day:0
+msgid "Day"
+msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.line,uom_id:0
+#: field:hr.expense.line,uom_id:0 view:product.product:0
 msgid "UoM"
 msgstr ""
 
@@ -106,6 +110,11 @@ msgstr ""
 msgid ""
 "Date of the acceptation of the sheet expense. It's filled when the button "
 "Accept is pressed."
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Expenses during current month"
 msgstr ""
 
 #. module: hr_expense
@@ -119,29 +128,24 @@ msgid "Employee's Invoice"
 msgstr "Työntekijän lasku"
 
 #. module: hr_expense
-#: model:ir.module.module,description:hr_expense.module_meta_information
-msgid ""
-"\n"
-"    This module aims to manage employee's expenses.\n"
-"\n"
-"    The whole workflow is implemented:\n"
-"    * Draft expense\n"
-"    * Confirmation of the sheet by the employee\n"
-"    * Validation by his manager\n"
-"    * Validation by the accountant and invoice creation\n"
-"    * Payment of the invoice to the employee\n"
-"\n"
-"    This module also uses the analytic accounting and is compatible with\n"
-"    the invoice on timesheet module so that you will be able to "
-"automatically\n"
-"    re-invoice your customer's expenses if your work by project.\n"
-"    "
+#: view:product.product:0
+msgid "Products"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Confirm Expenses"
 msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
 msgid "Cancelled"
 msgstr "Peruttu"
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_refused0
+msgid "The direct manager refuses the sheet.Reset as draft."
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -159,13 +163,7 @@ msgid "Accepted"
 msgstr "Hyväksytty"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-msgid "   Month   "
-msgstr ""
-
-#. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.expense,ref:0
+#: report:hr.expense:0 field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
 msgstr ""
@@ -183,8 +181,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,nbr:0
+#: view:hr.expense.report:0 field:hr.expense.report,nbr:0
 msgid "# of Lines"
 msgstr ""
 
@@ -192,11 +189,6 @@ msgstr ""
 #: model:process.transition,name:hr_expense.process_transition_refuseexpense0
 msgid "Refuse expense"
 msgstr "Hylkää kustannus"
-
-#. module: hr_expense
-#: model:product.template,name:hr_expense.product_product_expense_car_product_template
-msgid "Car Travel"
-msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.report,price_average:0
@@ -220,6 +212,12 @@ msgid "The accoutant validates the sheet"
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:187
+#, python-format
+msgid "The employee's home address must have a partner linked."
+msgstr ""
+
+#. module: hr_expense
 #: field:hr.expense.report,delay_valid:0
 msgid "Delay to Valid"
 msgstr ""
@@ -230,8 +228,7 @@ msgid "Gives the sequence order when displaying a list of expense lines."
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.line,analytic_account:0
-#: view:hr.expense.report:0
+#: field:hr.expense.line,analytic_account:0 view:hr.expense.report:0
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr "Analyyttinen kirjanpito"
@@ -242,14 +239,13 @@ msgid "Date "
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,state:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,state:0 view:hr.expense.report:0
 #: field:hr.expense.report,state:0
 msgid "State"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:144
+#: code:addons/hr_expense/hr_expense.py:173
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product purchase, "
@@ -257,22 +253,33 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,employee_id:0
 #: view:hr.expense.report:0
+msgid "Expenses during last month"
+msgstr ""
+
+#. module: hr_expense
+#: report:hr.expense:0 view:hr.expense.expense:0
+#: field:hr.expense.expense,employee_id:0 view:hr.expense.report:0
 msgid "Employee"
 msgstr "Työntekijä"
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.report,product_qty:0
+#: view:hr.expense.expense:0 selection:hr.expense.expense,state:0
+msgid "New"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Confirmed Expense"
+msgstr ""
+
+#. module: hr_expense
+#: report:hr.expense:0 field:hr.expense.report,product_qty:0
 msgid "Qty"
 msgstr "Määrä"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,price_total:0
+#: view:hr.expense.report:0 field:hr.expense.report,price_total:0
 msgid "Total Price"
 msgstr "Loppusumma"
 
@@ -282,9 +289,9 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:144
-#: code:addons/hr_expense/hr_expense.py:157
-#: code:addons/hr_expense/hr_expense.py:159
+#: code:addons/hr_expense/hr_expense.py:173
+#: code:addons/hr_expense/hr_expense.py:185
+#: code:addons/hr_expense/hr_expense.py:187
 #, python-format
 msgid "Error !"
 msgstr "Virhe !"
@@ -316,14 +323,12 @@ msgid "Reimburse expense"
 msgstr "Hyvitä kustannus"
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0
-#: field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,no_of_products:0
+#: view:hr.expense.report:0 field:hr.expense.report,no_of_products:0
 msgid "# of Products"
 msgstr ""
 
@@ -343,20 +348,18 @@ msgid "Reimbursement"
 msgstr "Hyväksynnät"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:158
-#, python-format
-msgid "The employee must have a Home address"
-msgstr "Työntekijällä on oltava kotiosoite"
-
-#. module: hr_expense
 #: view:hr.expense.report:0
 msgid "    Month-1    "
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-#: field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
 msgid "Validation Date"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "My Department"
 msgstr ""
 
 #. module: hr_expense
@@ -367,16 +370,14 @@ msgid "Expenses Analysis"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.line,expense_id:0
+#: view:hr.expense.expense:0 field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 #: model:process.process,name:hr_expense.process_process_expenseprocess0
 msgid "Expense"
 msgstr "Kustannus"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,line_ids:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
 msgstr "Kustannusrivit"
@@ -397,8 +398,12 @@ msgid "December"
 msgstr "Joulukuu"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
 #: view:hr.expense.report:0
+msgid "Invoiced Expenses"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0 view:hr.expense.report:0
 #: field:hr.expense.report,month:0
 msgid "Month"
 msgstr ""
@@ -420,8 +425,7 @@ msgid "Employee encode all his expenses"
 msgstr "Työntekijä suojaa kaikki kustannuksensa"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: view:hr.expense.report:0
+#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
 #: selection:hr.expense.report,state:0
 msgid "Invoiced"
 msgstr "Laskutettu"
@@ -432,13 +436,7 @@ msgid "Can Constitute an Expense"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-msgid "  Year  "
-msgstr ""
-
-#. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: selection:hr.expense.report,state:0
+#: selection:hr.expense.expense,state:0 selection:hr.expense.report,state:0
 msgid "Reimbursed"
 msgstr "Hyvitetty"
 
@@ -453,8 +451,6 @@ msgid "Create Customer invoice"
 msgstr "Luo asiakaslasku"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: selection:hr.expense.expense,state:0
 #: selection:hr.expense.report,state:0
 msgid "Draft"
 msgstr "Luonnos"
@@ -500,14 +496,12 @@ msgid "Customer Project"
 msgstr "Asiakasprojekti"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,user_id:0
-msgid "User"
-msgstr "Käyttäjä"
+#: model:ir.actions.act_window,name:hr_expense.product_normal_form_view_installer
+msgid "Review Your Expenses Products"
+msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.expense,date:0
+#: report:hr.expense:0 field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
 msgid "Date"
 msgstr ""
@@ -520,6 +514,17 @@ msgstr "Marraskuu"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Extended Filters..."
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0 field:hr.expense.expense,user_id:0
+msgid "User"
+msgstr "Käyttäjä"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:185
+#, python-format
+msgid "The employee must have a Home address."
 msgstr ""
 
 #. module: hr_expense
@@ -543,13 +548,23 @@ msgid "HR Expenses"
 msgstr "Henkilöstökustannukset"
 
 #. module: hr_expense
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Submit to Manager"
+msgstr ""
+
+#. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_confirmedexpenses0
 msgid "The employee validates his expense sheet"
 msgstr "Työntekijä tarkistaa kustannustaulukkonsa"
 
 #. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_refused0
-msgid "The direct manager refuses the sheet.Reset as draft."
+#: view:hr.expense.expense:0
+msgid "Expenses to Invoice"
 msgstr ""
 
 #. module: hr_expense
@@ -570,14 +585,13 @@ msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.report:0
-#: field:hr.expense.report,day:0
-msgid "Day"
+msgid "Approved Expenses"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.module.module,shortdesc:hr_expense.module_meta_information
-msgid "Human Resources Expenses Tracking"
-msgstr "Henkilöstökustannuksien jäljitys"
+#: report:hr.expense:0 field:hr.expense.line,unit_amount:0
+msgid "Unit Price"
+msgstr "Yksikköhinta"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -585,8 +599,7 @@ msgid "References"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.report,invoice_id:0
+#: view:hr.expense.expense:0 field:hr.expense.report,invoice_id:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
 msgid "Invoice"
 msgstr "Lasku"
@@ -644,14 +657,29 @@ msgid "Expense is refused."
 msgstr "Kustannus on hylätty."
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.line,unit_amount:0
-msgid "Unit Price"
-msgstr "Yksikköhinta"
+#: model:ir.actions.act_window,help:hr_expense.product_normal_form_view_installer
+msgid ""
+"Define one product for each expense type allowed for an employee (travel by "
+"car, hostel, restaurant, etc). If you reimburse the employees at a fixed "
+"rate, set a cost and a unit of measure on the product. If you reimburse "
+"based on real costs, set the cost at 0.00. The user will set the real price "
+"when recording his expense sheet."
+msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.line,product_id:0
-#: view:hr.expense.report:0
+#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
+#: model:process.node,name:hr_expense.process_node_approved0
+msgid "Approved"
+msgstr "Hyväksytty"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:141
+#, python-format
+msgid "Supplier Invoices"
+msgstr ""
+
+#. module: hr_expense
+#: field:hr.expense.line,product_id:0 view:hr.expense.report:0
 #: field:hr.expense.report,product_id:0
 #: model:ir.model,name:hr_expense.model_product_product
 msgid "Product"
@@ -663,8 +691,7 @@ msgid "Expenses of My Department"
 msgstr "Osastoni kustannukset"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,name:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,name:0
 #: field:hr.expense.line,description:0
 msgid "Description"
 msgstr ""
@@ -722,8 +749,7 @@ msgid "This Month"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,user_valid:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,user_valid:0 view:hr.expense.report:0
 #: field:hr.expense.report,user_id:0
 msgid "Validation User"
 msgstr "Tarkistava käyttäjä"
@@ -754,7 +780,7 @@ msgid "Creates supplier invoice."
 msgstr ""
 
 #. module: hr_expense
-#: model:product.template,name:hr_expense.product_product_expense_hotel_product_template
+#: model:product.template,name:hr_expense.hotel_rent_product_template
 msgid "Hotel Accommodation"
 msgstr "Hotellimajoitus"
 
@@ -785,10 +811,14 @@ msgid "Approve"
 msgstr "Hyväksy"
 
 #. module: hr_expense
-#: view:hr.expense.line:0
-#: field:hr.expense.line,total_amount:0
+#: view:hr.expense.line:0 field:hr.expense.line,total_amount:0
 msgid "Total"
 msgstr "Yhteensä"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Expenses during current year"
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -805,6 +835,7 @@ msgstr "Kustannus on vahvistettu."
 #: model:ir.actions.act_window,name:hr_expense.expense_all
 #: model:ir.ui.menu,name:hr_expense.menu_expense_all
 #: model:ir.ui.menu,name:hr_expense.next_id_49
+#: model:product.category,name:hr_expense.cat_expense
 msgid "Expenses"
 msgstr "Kustannukset"
 
@@ -814,8 +845,7 @@ msgid "Error: Invalid ean code"
 msgstr "Virhe: Väärä EAN-koodi"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,year:0
+#: view:hr.expense.report:0 field:hr.expense.report,year:0
 msgid "Year"
 msgstr "Vuosi"
 
@@ -862,6 +892,9 @@ msgstr "Uudelleenlaskutus"
 
 #~ msgid "My Draft expenses"
 #~ msgstr "Omat Luonnokset kustannuksista"
+
+#~ msgid "Human Resources Expenses Tracking"
+#~ msgstr "Henkilöstökustannuksien jäljitys"
 
 #~ msgid "Expense Process"
 #~ msgstr "Kustannusprosessi"

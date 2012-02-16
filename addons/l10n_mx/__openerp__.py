@@ -20,7 +20,7 @@
 #
 ##############################################################################
 {
-    "name" : "Mexico - Chart of Account",
+    "name" : "Mexico - Accounting",
     "version" : "1.0",
     "author" : "RelTek Mexico",
     "category" : "Localization/Account Charts",
@@ -34,7 +34,7 @@ Mexican accounting chart and localization.
     "demo_xml" : [],
     "update_xml" : ['account_tax_code.xml',"account_chart.xml",
                     'account_tax.xml','l10n_chart_mx_wizard.xml'],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "00858539161332598061",
     'images': ['images/config_chart_l10n_mx.jpeg','images/l10n_mx_chart.jpeg'],

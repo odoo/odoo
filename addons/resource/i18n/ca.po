@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-02-05 23:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:40+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:57+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -27,9 +27,9 @@ msgstr ""
 "seleccionat, el festiu/absència és solament per a aquest recurs."
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Friday"
-msgstr "Divendres"
+#: selection:resource.resource,resource_type:0
+msgid "Material"
+msgstr "Material"
 
 #. module: resource
 #: field:resource.resource,resource_type:0
@@ -52,6 +52,7 @@ msgstr "Absències de recursos"
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
+#: field:resource.resource,calendar_id:0
 msgid "Working Time"
 msgstr "Horari de treball"
 
@@ -88,6 +89,12 @@ msgid "Resources"
 msgstr "Recursos"
 
 #. module: resource
+#: code:addons/resource/resource.py:392
+#, python-format
+msgid "Make sure the Working time has been configured with proper week days!"
+msgstr ""
+
+#. module: resource
 #: field:resource.calendar,manager:0
 msgid "Workgroup manager"
 msgstr "Responsable del grup de treball"
@@ -119,9 +126,9 @@ msgid "Company"
 msgstr "Companyia"
 
 #. module: resource
-#: selection:resource.resource,resource_type:0
-msgid "Material"
-msgstr "Material"
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Friday"
+msgstr "Divendres"
 
 #. module: resource
 #: field:resource.calendar.attendance,dayofweek:0
@@ -165,6 +172,11 @@ msgid "Search Working Period Leaves"
 msgstr "Cerca absències en períodes de treball"
 
 #. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency factor"
+msgstr "Factor d'eficiència"
+
+#. module: resource
 #: field:resource.calendar.leaves,date_to:0
 msgid "End Date"
 msgstr "Data final"
@@ -175,7 +187,6 @@ msgid "Closing Days"
 msgstr "Dies tancats"
 
 #. module: resource
-#: model:ir.module.module,shortdesc:resource.module_meta_information
 #: model:ir.ui.menu,name:resource.menu_resource_config
 #: view:resource.calendar.leaves:0
 #: field:resource.calendar.leaves,resource_id:0
@@ -193,28 +204,6 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: resource
-#: model:ir.module.module,description:resource.module_meta_information
-msgid ""
-"\n"
-"    Module for resource management\n"
-"     A resource represent something that can be scheduled\n"
-"     (a developer on a task or a workcenter on manufacturing orders).\n"
-"     This module manages a resource calendar associated to every resource.\n"
-"     It also manages the leaves of every resource.\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"    Mòdul per a la gestió de recursos\n"
-"     Un recurs representa alguna cosa que pot ser programat en un calendari\n"
-"     (un desenvolupador en una tasca o un centre de producció en ordres de "
-"producció).\n"
-"     Aquest mòdul gestiona un calendari associat a cada recurs.\n"
-"     També gestiona les absències de cada recurs.\n"
-"\n"
-"    "
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
 msgstr "Dimecres"
@@ -222,7 +211,6 @@ msgstr "Dimecres"
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
-#: field:resource.resource,calendar_id:0
 msgid "Working Period"
 msgstr "Horari laboral"
 
@@ -251,6 +239,18 @@ msgid "Resource's Calendar"
 msgstr "Calendari del recurs"
 
 #. module: resource
+#: field:resource.calendar.attendance,hour_from:0
+msgid "Work from"
+msgstr "Treballa des de"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
+msgid ""
+"Define working hours and time table that could be scheduled to your project "
+"members"
+msgstr ""
+
+#. module: resource
 #: help:resource.resource,user_id:0
 msgid "Related user name for the resource to manage its access."
 msgstr "Usuari relacionat amb el recurs per gestionar l'accés"
@@ -261,9 +261,9 @@ msgid "Define the schedule of resource"
 msgstr "Defineix l'horari del recurs"
 
 #. module: resource
-#: field:resource.calendar.attendance,hour_from:0
-msgid "Work from"
-msgstr "Treballa des de"
+#: view:resource.calendar.leaves:0
+msgid "Starting Date of Leave"
+msgstr ""
 
 #. module: resource
 #: field:resource.resource,code:0
@@ -310,11 +310,6 @@ msgid "Resource Leaves"
 msgstr "Absències de recursos"
 
 #. module: resource
-#: view:resource.resource:0
-msgid "General Information"
-msgstr "Informació general"
-
-#. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
 msgid ""
 "Resources allow you to create and manage resources that should be involved "
@@ -338,9 +333,10 @@ msgid "(vacation)"
 msgstr "(vacances)"
 
 #. module: resource
-#: field:resource.resource,time_efficiency:0
-msgid "Efficiency factor"
-msgstr "Factor d'eficiència"
+#: code:addons/resource/resource.py:392
+#, python-format
+msgid "Configuration Error!"
+msgstr ""
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -358,7 +354,7 @@ msgid "Start Date"
 msgstr "Data d'inici"
 
 #. module: resource
-#: code:addons/resource/resource.py:246
+#: code:addons/resource/resource.py:310
 #, python-format
 msgid " (copy)"
 msgstr " (còpia)"
@@ -367,3 +363,6 @@ msgstr " (còpia)"
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Dissabte"
+
+#~ msgid "General Information"
+#~ msgstr "Informació general"

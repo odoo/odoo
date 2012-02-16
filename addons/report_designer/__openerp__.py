@@ -21,11 +21,12 @@
 
 
 {
-    "name" : "Reporting Hidden Installer",
+    "name" : "Report Designer",
     "version" : "1.0",
     "depends" : ["base", "base_setup"],
     "author" : "OpenERP SA",
-    "category": "Hidden",
+    "complexity" : "expert",
+    "category": "Tools",
     "description": """
 Installer for reporting Hidden.
 ==============================
@@ -40,7 +41,7 @@ modules like base_report_designer and base_report_creator.
     ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00764037194670093149',
     'images': ['images/config_reporting_Hidden.jpeg'],
 }

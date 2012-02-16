@@ -6,21 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-08-03 06:18+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:19+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:34+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 #: view:report_timesheet.user:0
 msgid "Timesheet by user"
 msgstr "Tööajakaart kasutaja järgi"
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:0
+msgid "Timesheet lines in this year"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
@@ -31,12 +36,6 @@ msgstr "Arveldamise tüüp"
 #: report:account.analytic.profit:0
 msgid "Profit"
 msgstr "Kasum"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:68
-#, python-format
-msgid "Analytic account incomplete"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
@@ -59,8 +58,13 @@ msgid "Income"
 msgstr "Tulu"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.line:0
-msgid "To Invoice"
+#: view:report_timesheet.account.date:0
+msgid "Daily Timesheets for this year"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:0
+msgid "Re-open project"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -87,6 +91,12 @@ msgstr "Kirje nimi"
 msgid ""
 "The product to invoice is defined on the employee form, the price will be "
 "deduced by this pricelist on the product."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:129
+#, python-format
+msgid "You cannot modify an invoiced analytic line!"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -146,14 +156,14 @@ msgid "Uninvoiced line with billing rate"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,account_id:0
 msgid "Project"
 msgstr "Projekt"
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.account,pricelist_id:0
-msgid "Sale Pricelist"
-msgstr "Müügi hinnakiri"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,amount:0
@@ -161,14 +171,20 @@ msgid "Amount"
 msgstr "Kogus"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Reactivate Account"
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
 msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,name:0
 msgid "The detail of each work done will be displayed on the invoice"
 msgstr "Iga tehtud töö detailid kuvatakse arvel."
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:209
+#, python-format
+msgid "Warning !"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
@@ -196,8 +212,12 @@ msgid "Group By..."
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
-#: view:hr.timesheet.invoice.create.final:0
 msgid "Create Invoices"
 msgstr "Loo arved"
 
@@ -208,12 +228,7 @@ msgid "Daily timesheet per account"
 msgstr "Igapäevane tööajakaart konto kohta"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Final invoice for analytic account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:76
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:64
 #, python-format
 msgid "Analytic Account incomplete"
 msgstr ""
@@ -252,11 +267,6 @@ msgid "The time of each work done will be displayed on the invoice"
 msgstr "Iga tehtud tööle kulutatud aeg kuvatakse arvel."
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create.final,balance_product:0
-msgid "Balance product"
-msgstr "Toote saldo"
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_account_analytic_account_2_report_timehsheet_account
 msgid "Timesheets"
 msgstr "Tööajalehed"
@@ -267,14 +277,14 @@ msgid "hr.timesheet.analytic.cost.ledger"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
-msgid "Final Invoice"
-msgstr "Lõplik arve"
+#: field:hr.timesheet.analytic.profit,date_from:0
+msgid "From"
+msgstr "Alates"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Do you want details for each line of the invoices ?"
-msgstr "Kas sa tahad arvele detaile iga rea kohta?"
+#: report:account.analytic.profit:0
+msgid "User or Journal Name"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_invoice
@@ -282,6 +292,11 @@ msgstr "Kas sa tahad arvele detaile iga rea kohta?"
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_invoice
 msgid "Costs to invoice"
 msgstr "Kulud arveldamiseks"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.user:0
+msgid "Timesheet by user in this month"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,account_id:0
@@ -306,9 +321,10 @@ msgid "Debit"
 msgstr "Deebet"
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,employee_ids:0
-msgid "Employee"
-msgstr "Töötaja"
+#: view:hr.timesheet.analytic.cost.ledger:0
+#: view:hr.timesheet.analytic.profit:0
+msgid "Print"
+msgstr "Prindi"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -323,8 +339,8 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,customer_name:0
-msgid "Name"
+#: view:hr.timesheet.invoice.create.final:0
+msgid "Force to use a special product"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -333,7 +349,7 @@ msgid "Lines to Invoice"
 msgstr "Read arveldada"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:118
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:128
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -344,14 +360,8 @@ msgid "Gratis"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: model:ir.module.module,description:hr_timesheet_invoice.module_meta_information
-msgid ""
-"\n"
-"Module to generate invoices based on costs (human resources, expenses, "
-"...).\n"
-"You can define price lists in analytic account, make some theoretical "
-"revenue\n"
-"reports, eso."
+#: view:account.analytic.line:0
+msgid "To Invoice"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -371,7 +381,7 @@ msgid "Timesheet Profit"
 msgstr "Tööajalehe kasum"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:80
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:68
 #, python-format
 msgid "Partner incomplete"
 msgstr ""
@@ -413,15 +423,20 @@ msgid "Theorical"
 msgstr "Teoreetiline"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:119
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:132
 #, python-format
-msgid "You can not modify an invoiced analytic line!"
+msgid "Configuration Error"
 msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
 msgid "Analytic lines to invoice report"
 msgstr "Analüütilised read arve aruandesse"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.account,to_invoice:0
+msgid "Invoice on Timesheet & Costs"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_user_stat_all
@@ -450,12 +465,8 @@ msgid "Yes (100%)"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Employee or Journal Name"
-msgstr "Töötaja või päeviku nimi"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:191
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:55
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:220
 #, python-format
 msgid "Invoices"
 msgstr ""
@@ -467,6 +478,19 @@ msgstr ""
 #: selection:report_timesheet.account.date,month:0
 #: selection:report_timesheet.user,month:0
 msgid "December"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create.final:0
+msgid "Invoice contract"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -485,15 +509,9 @@ msgid "Currency"
 msgstr "Valuuta"
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,employee_ids:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,user_id:0
-#: field:report_timesheet.account,user_id:0
-#: field:report_timesheet.account.date,user_id:0
-#: field:report_timesheet.invoice,user_id:0
-#: field:report_timesheet.user,user_id:0
-msgid "User"
-msgstr "Kasutaja"
+#: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
+msgid "Journal Items"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,product:0
@@ -503,11 +521,17 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:0
+msgid "Users"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Non Assigned timesheets to users"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: view:account.analytic.line:0
 #: field:report.timesheet.line,invoice_id:0
 msgid "Invoiced"
 msgstr ""
@@ -518,9 +542,17 @@ msgid "Max. Quantity"
 msgstr "Maks kogus"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Invoice Balance amount"
-msgstr "Arve saldo kogus"
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:132
+#, python-format
+msgid "No income account defined for product '%s'"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -531,11 +563,6 @@ msgstr ""
 #: view:report_timesheet.account:0
 msgid "Timesheet by account"
 msgstr "Tööajakaart konto järgi"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,date_from:0
-msgid "From"
-msgstr "Alates"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -572,6 +599,15 @@ msgstr ""
 #: model:ir.actions.report.xml,name:hr_timesheet_invoice.account_analytic_account_cost_ledger
 msgid "Cost Ledger"
 msgstr "Kuluraamat"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "October"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
@@ -611,7 +647,7 @@ msgid "Date"
 msgstr "Kuupäev"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:81
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:69
 #, python-format
 msgid "Please fill in the Address field in the Partner: %s."
 msgstr ""
@@ -641,10 +677,15 @@ msgid "Eff."
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create
-msgid "Invoice analytic lines"
-msgstr "Arvelda analüütilised read"
+#: field:hr.timesheet.analytic.profit,employee_ids:0
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,user_id:0
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr "Kasutaja"
 
 #. module: hr_timesheet_invoice
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -666,27 +707,17 @@ msgid "January"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Credit"
 msgstr "Kreedit"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:69
-#, python-format
-msgid ""
-"Please fill in the partner and pricelist field in the analytic account:\n"
-"%s"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:120
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:108
 #, python-format
 msgid "Error"
 msgstr ""
@@ -697,10 +728,20 @@ msgid "End of period"
 msgstr "Perioodi lõpp"
 
 #. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create.final:0
+msgid "Do you want to display work details on the invoice ?"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 #: field:report.analytic.account.close,balance:0
 msgid "Balance"
 msgstr "Bilanss"
+
+#. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,quantity:0
@@ -729,19 +770,9 @@ msgid "Print Timesheet Profit"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: field:account.analytic.account,to_invoice:0
-msgid "Reinvoice Costs"
-msgstr "Taasarvelda kulud"
-
-#. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Totals:"
 msgstr "Kogusummad:"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,date_to:0
-msgid "To"
-msgstr "Kuni"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -768,11 +799,21 @@ msgid "September"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: field:account.analytic.line,invoice_id:0
 #: model:ir.model,name:hr_timesheet_invoice.model_account_invoice
 #: view:report.timesheet.line:0
 msgid "Invoice"
 msgstr "Arve"
+
+#. module: hr_timesheet_invoice
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -787,6 +828,11 @@ msgstr "Tühista"
 #: view:account.analytic.account:0
 msgid "Close"
 msgstr ""
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,price:0
+msgid "Display cost of the item you reinvoice"
+msgstr "Kuva taasarveldatava eseme maksumus"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -806,18 +852,12 @@ msgid "Timesheet Line"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:142
-#, python-format
-msgid "Balance product needed"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
 msgid "Billing Data"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:77
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:65
 #, python-format
 msgid ""
 "Please fill in the Partner or Customer and Sale Pricelist fields in the "
@@ -826,29 +866,33 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
 msgid "Label for the customer"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.cost.ledger:0
-#: view:hr.timesheet.analytic.profit:0
-msgid "Print"
-msgstr "Prindi"
+#: field:hr.timesheet.analytic.profit,date_to:0
+msgid "To"
+msgstr "Kuni"
 
 #. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "October"
+#: view:hr.timesheet.invoice.create:0
+#: view:hr.timesheet.invoice.create.final:0
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
+msgid "Create Invoice"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,price:0
-msgid "Display cost of the item you reinvoice"
-msgstr "Kuva taasarveldatava eseme maksumus"
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:108
+#, python-format
+msgid "At least one line has no product !"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,date:0
@@ -856,9 +900,8 @@ msgid "The real date of each work will be displayed on the invoice"
 msgstr "Iga töö tegelik kuupäev kuvatakse arvel"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:120
-#, python-format
-msgid "At least one line has no product !"
+#: field:account.analytic.account,pricelist_id:0
+msgid "Customer Pricelist"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -878,6 +921,7 @@ msgstr "Igapäevane tööajakaart konto järgi"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,product:0
+#: field:hr.timesheet.invoice.create.final,product:0
 #: field:report.account.analytic.line.to.invoice,product_id:0
 #: view:report.timesheet.line:0
 #: field:report.timesheet.line,product_id:0
@@ -914,7 +958,7 @@ msgid "Journal"
 msgstr "Päevik"
 
 #. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,balance_product:0
+#: help:hr.timesheet.invoice.create.final,product:0
 msgid "The product that will be used to invoice the remaining amount"
 msgstr ""
 
@@ -926,9 +970,19 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: view:report_timesheet.account.date:0
+msgid "Daily Timesheets of this month"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
 #, python-format
 msgid "No Records Found for Report!"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,amount_max:0
+msgid "Keep empty if this contract is not limited to a total fixed price."
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -965,8 +1019,8 @@ msgid "February"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
-msgid "Invoice on analytic lines"
+#: field:hr_timesheet_invoice.factor,customer_name:0
+msgid "Name"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -978,11 +1032,6 @@ msgstr "Igapäevane tööajakaart konto järgi"
 #: field:report.account.analytic.line.to.invoice,sale_price:0
 msgid "Sale price"
 msgstr "Müügihind"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Employees"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
@@ -1009,6 +1058,12 @@ msgid "Discount in percentage"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:209
+#, python-format
+msgid "Invoice is already linked to some of the analytic line(s)!"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
 msgid "Types of invoicing"
 msgstr "Arveldamise tüübid"
@@ -1030,6 +1085,11 @@ msgid "Units"
 msgstr "Ühikud"
 
 #. module: hr_timesheet_invoice
+#: view:report_timesheet.user:0
+msgid "Timesheet by user in this year"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: field:account.analytic.line,to_invoice:0
 msgid "Type of Invoicing"
 msgstr ""
@@ -1040,9 +1100,13 @@ msgid "Analytic Lines to Invoice"
 msgstr "Analüütilised read arveldada"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:142
-#, python-format
-msgid "Please fill a Balance product in the wizard"
+#: view:report.timesheet.line:0
+msgid "Timesheet lines in this month"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:0
+msgid "Invoicing Statistics"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -1070,6 +1134,11 @@ msgstr "Maksumus"
 msgid "Year"
 msgstr ""
 
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:0
+msgid "Timesheet lines during last 7 days"
+msgstr ""
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Vigane XML vaate arhitektuurile!"
 
@@ -1093,6 +1162,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Iga tehtud töö maksumus kuvatakse arvel. Ilmselt sa ei taha seda märgistada."
 
+#~ msgid "Invoice analytic lines"
+#~ msgstr "Arvelda analüütilised read"
+
 #~ msgid "Visible name"
 #~ msgstr "Nähtav nimi"
 
@@ -1108,8 +1180,20 @@ msgstr ""
 #~ msgid "Date or Code"
 #~ msgstr "Kuupäev või kood"
 
+#~ msgid "Do you want details for each line of the invoices ?"
+#~ msgstr "Kas sa tahad arvele detaile iga rea kohta?"
+
+#~ msgid "Final Invoice"
+#~ msgstr "Lõplik arve"
+
+#~ msgid "Balance product"
+#~ msgstr "Toote saldo"
+
 #~ msgid "Open Analytic Accounts"
 #~ msgstr "Lahtised analüütilised kontod"
+
+#~ msgid "Sale Pricelist"
+#~ msgstr "Müügi hinnakiri"
 
 #~ msgid "Filter on Accounts"
 #~ msgstr "Filter kontodel"
@@ -1117,8 +1201,14 @@ msgstr ""
 #~ msgid "Create invoices"
 #~ msgstr "Loo arved"
 
+#~ msgid "Invoice Balance amount"
+#~ msgstr "Arve saldo kogus"
+
 #~ msgid "Uninvoiced Entries"
 #~ msgstr "Arveldamata kirjed"
+
+#~ msgid "Employee or Journal Name"
+#~ msgstr "Töötaja või päeviku nimi"
 
 #~ msgid "Status"
 #~ msgstr "Staatus"
@@ -1126,8 +1216,14 @@ msgstr ""
 #~ msgid "The product that will be used to invoice the remaining amount."
 #~ msgstr "Toode, mida kasutatakse järelejäänud koguse arveldamiseks."
 
+#~ msgid "Reinvoice Costs"
+#~ msgstr "Taasarvelda kulud"
+
 #~ msgid "Analytic Accounts"
 #~ msgstr "Analüütilised kontod"
+
+#~ msgid "Employee"
+#~ msgstr "Töötaja"
 
 #~ msgid "Entries to invoice"
 #~ msgstr "Kirjed arveldada"

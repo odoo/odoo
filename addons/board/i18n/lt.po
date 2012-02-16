@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-13 22:30+0000\n"
-"Last-Translator: Paulius Sladkevičius - inovera.lt <komsas@gmail.com>\n"
+"Last-Translator: Paulius Sladkevičius <komsas@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:25+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:41+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: board
 #: view:res.log.report:0
@@ -27,22 +27,9 @@ msgid "Menu Create"
 msgstr "Sukurti meniu"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-#: model:ir.model,name:board.model_board_note_type
-msgid "Note Type"
-msgstr "Pastabos tipas"
-
-#. module: board
-#: view:board.note:0
-#: field:board.note,user_id:0
-msgid "Author"
-msgstr "Autorius"
-
-#. module: board
-#: model:ir.module.module,shortdesc:board.module_meta_information
-msgid "Dashboard main module"
-msgstr "Veiklos monitoringo modulis"
+#: view:board.menu.create:0
+msgid "Menu Information"
+msgstr "Meniu informacija"
 
 #. module: board
 #: view:res.users:0
@@ -50,30 +37,25 @@ msgid "Latest Connections"
 msgstr "Paskutiniai prisijungimai"
 
 #. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
-#, python-format
-msgid "User Error!"
-msgstr "Naudotojo klaida"
+#: view:res.log.report:0
+msgid "Log created in last month"
+msgstr ""
 
 #. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.open_board_administration_form
-#: model:ir.ui.menu,name:board.menu_board_admin
 msgid "Administration Dashboard"
 msgstr "Administravimo veiklos monitoringas"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note,note:0
-#: model:ir.model,name:board.model_board_note
-msgid "Note"
-msgstr "Pastaba"
-
-#. module: board
-#: view:board.note:0
 #: view:res.log.report:0
 msgid "Group By..."
 msgstr "Grupuoti pagal..."
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log created in current year"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -81,7 +63,11 @@ msgid "Board"
 msgstr "Lenta"
 
 #. module: board
-#: view:board.board:0
+#: field:board.menu.create,menu_name:0
+msgid "Menu Name"
+msgstr "Meniu pavadinimas"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
 #: view:res.log.report:0
 msgid "Weekly Global Activity"
@@ -104,21 +90,20 @@ msgid "Month"
 msgstr "Mėnuo"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr "Atidaryti veiklos monitoringą"
+#: view:res.log.report:0
+msgid "Log created in current month"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
 #: view:res.log.report:0
 msgid "Monthly Activity per Document"
 msgstr "Mėnesinis aktyvumas pagal dokumentus"
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
-msgstr "Žurnalo analizė"
+#: view:board.board:0
+msgid "Configuration Overview"
+msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
@@ -137,7 +122,6 @@ msgid "August"
 msgstr "Rugpjūtis"
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_user_connection_tree
 msgid "User Connections"
 msgstr "Naudotojų prisijungimai"
@@ -148,25 +132,19 @@ msgid "Creation Date"
 msgstr "Sukūrimo data"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_note_form
-#: model:ir.ui.menu,name:board.menu_view_board_note_form
-msgid "Publish a note"
-msgstr "Publikuoti pastabą"
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr "Žurnalo analizė"
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
-msgstr "Meniu informacija"
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr "Objektas"
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "June"
 msgstr "Birželis"
-
-#. module: board
-#: field:board.note,type:0
-msgid "Note type"
-msgstr "Pastabos tipas"
 
 #. module: board
 #: field:board.board,line_ids:0
@@ -179,20 +157,15 @@ msgid "Log Report"
 msgstr "Žurnalo ataskaita"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note,date:0
-msgid "Date"
-msgstr "Data"
+#: code:addons/board/wizard/board_menu_create.py:46
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Prašome įdėti monitoringo rodinį (-ius)!"
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "July"
 msgstr "Liepa"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Extended Filters..."
-msgstr "Išplėsti filtrai..."
 
 #. module: board
 #: view:res.log.report:0
@@ -236,9 +209,9 @@ msgid "January"
 msgstr "Sausis"
 
 #. module: board
-#: view:board.note:0
-msgid "Notes"
-msgstr "Pastabos"
+#: view:board.board:0
+msgid "Users"
+msgstr ""
 
 #. module: board
 #: selection:res.log.report,month:0
@@ -262,15 +235,15 @@ msgstr "Balandis"
 #: view:board.board:0
 #: field:board.board,name:0
 #: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.admin_menu_dasboard
 #: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
 msgstr "Veiklos monitoringas"
 
 #. module: board
-#: model:ir.module.module,description:board.module_meta_information
-msgid "Base module for all dashboards."
-msgstr "Veiklos monitoringo pagrindinis modulis"
+#: code:addons/board/wizard/board_menu_create.py:45
+#, python-format
+msgid "User Error!"
+msgstr "Naudotojo klaida"
 
 #. module: board
 #: field:board.board.line,action_id:0
@@ -288,12 +261,11 @@ msgid "Model"
 msgstr "Modelis"
 
 #. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "Meniu pavadinimas"
+#: model:ir.actions.act_window,name:board.board_homepage_action
+msgid "Home Page"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_latest_activities_tree
 msgid "Latest Activities"
 msgstr "Paskutinis aktyvumas"
@@ -360,11 +332,6 @@ msgid "May"
 msgstr "Gegužė"
 
 #. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr "Objektas"
-
-#. module: board
 #: view:res.log.report:0
 #: field:res.log.report,name:0
 msgid "Year"
@@ -380,20 +347,29 @@ msgstr "Atšaukti"
 msgid "Dashboard View"
 msgstr "Veiklos monitoringo vaizdas"
 
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
-#, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr "Prašome įdėti monitoringo rodinį (-ius)!"
+#~ msgid "Author"
+#~ msgstr "Autorius"
 
-#. module: board
-#: view:board.note:0
-#: field:board.note,name:0
-msgid "Subject"
-msgstr "Tema"
+#~ msgid "Note"
+#~ msgstr "Pastaba"
+
+#~ msgid "Date"
+#~ msgstr "Data"
+
+#~ msgid "Note Type"
+#~ msgstr "Pastabos tipas"
+
+#~ msgid "Notes"
+#~ msgstr "Pastabos"
+
+#~ msgid "Note type"
+#~ msgstr "Pastabos tipas"
 
 #~ msgid "Dashboards"
 #~ msgstr "Veiklos monitoringas"
+
+#~ msgid "Subject"
+#~ msgstr "Tema"
 
 #~ msgid "Configuration"
 #~ msgstr "Nustatymai"
@@ -407,6 +383,12 @@ msgstr "Tema"
 #~ msgid "board.board"
 #~ msgstr "Veiklos monitoringas"
 
+#~ msgid "Dashboard main module"
+#~ msgstr "Veiklos monitoringo modulis"
+
+#~ msgid "Publish a note"
+#~ msgstr "Publikuoti pastabą"
+
 #~ msgid "board.note"
 #~ msgstr "Pastaba"
 
@@ -416,5 +398,14 @@ msgstr "Tema"
 #~ msgid "board.note.type"
 #~ msgstr "Monitoringo pastabų tipas"
 
+#~ msgid "Base module for all dashboards."
+#~ msgstr "Veiklos monitoringo pagrindinis modulis"
+
+#~ msgid "Open Dashboard"
+#~ msgstr "Atidaryti veiklos monitoringą"
+
 #~ msgid "board.board.line"
 #~ msgstr "Monitoringo eilutė"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Išplėsti filtrai..."

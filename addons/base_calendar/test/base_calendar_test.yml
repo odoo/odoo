@@ -15,7 +15,7 @@
     Now I will set recurrence for this event to occur monday and friday of week
 -
     !python {model: calendar.event}: |
-     data = {'fr': 1, 'mo': 1, 'interval': 1, 'rrule_type': 'weekly', 'end_type': 'end_date', 'end_date': '2011-05-31 00:00:00'}
+     data = {'fr': 1, 'mo': 1, 'interval': 1, 'rrule_type': 'weekly', 'end_type': 'end_date', 'end_date': '2011-05-31 00:00:00', 'recurrency' : True}
      self.write(cr, uid, [ref("calendar_event_technicalpresentation0")], data)
 -   |
     In order to check that recurrent events are views successfully in calendar view,

@@ -4,13 +4,33 @@
         <!-- 
             Asset Category Demo
         -->
-        
+
         <record id="account_asset_category_fixedassets0" model="account.asset.category">
             <field name="account_expense_depreciation_id" ref="account.a_expense"/>
             <field name="account_asset_id" ref="account.xfa"/>
             <field name="account_depreciation_id" ref="account.xfa"/>
             <field name="journal_id" ref="account.expenses_journal"/>
-            <field name="name">Fixed Assets</field>
+            <field name="name">Hardware - 3 Years</field>
+            <field name="method_number">3</field>
+        </record>
+
+        <record id="account_asset_category_sale" model="account.asset.category">
+            <field name="account_expense_depreciation_id" ref="account.a_expense"/>
+            <field name="account_asset_id" ref="account.xfa"/>
+            <field name="account_depreciation_id" ref="account.xfa"/>
+            <field name="journal_id" ref="account.expenses_journal"/>
+            <field name="name">Cars - 5 Years</field>
+            <field name="method_number">5</field>
+        </record>
+
+
+        <record id="account_asset_category_sale" model="account.asset.category">
+            <field name="account_expense_depreciation_id" ref="account.a_sale"/>
+            <field name="account_asset_id" ref="account.xfa"/>
+            <field name="account_depreciation_id" ref="account.xfa"/>
+            <field name="journal_id" ref="account.expenses_journal"/>
+            <field name="name">Revenue Recognition Maintenance Contract - 3 Years</field>
+            <field name="method_number">3</field>
         </record>
 
         <!-- 
@@ -43,7 +63,7 @@
             <field name="state">open</field>
             <field eval="12" name="method_period"/>
             <field eval="20" name="method_number"/>
-            <field name="purchase_date">2011-01-01</field>
+            <field name="purchase_date">2012-01-01</field>
             <field name="name">Office</field>
             <field eval="500000.0" name="purchase_value"/>
             <field name="category_id" ref="account_asset_category_fixedassets0"/>

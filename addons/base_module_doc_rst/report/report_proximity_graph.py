@@ -33,7 +33,7 @@ class report_graph(report.interface.report_int):
         module_obj = pool_obj.get('ir.module.module')
         nodes = [('base','unknown')]
         edges = []
-        def get_dpend_module(module_id):
+        def get_depend_module(module_id):
             module_record = module_obj.browse(cr, uid, module_id, context=context)
             if module_record.name not in nodes:
                 # Add new field ir.module.module object in server side. field name = module_type/
@@ -46,8 +46,8 @@ class report_graph(report.interface.report_int):
                         continue
                     id = module_obj.browse(cr, uid, module_obj.search(cr, uid, [('name', '=' ,depen.name)]), context=context)
                     if id:
-                        get_dpend_module(id[0].id)
-        get_dpend_module(module_id)
+                        get_depend_module(id[0].id)
+        get_depend_module(module_id)
         graph = pydot.Dot(graph_type='digraph',fontsize='10', label="\\nProximity Graph. \\n\\nGray Color-Official Modules, Red  Color-Extra Addons Modules, Blue Color-Community Modules, Purple Color-Unknow Modules"
                                      , center='1')
         for node in nodes:
@@ -75,7 +75,8 @@ class report_graph(report.interface.report_int):
         return output.read()
 
     def create(self, cr, uid, ids, data, context=None):
-        pdf_string = self.get_proximity_graph(cr, uid, data['id'])
+        pdf_string = self.get_proximity_graph(cr, uid, context.get('active_id'))
         return (pdf_string, 'pdf')
 
 report_graph('report.proximity.graph', 'ir.module.module')
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

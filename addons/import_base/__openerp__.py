@@ -20,20 +20,22 @@
 ##############################################################################
 
 {
-    'name': 'Base framework for module that need to import complex data',
+    'name': 'Framework for complex import',
     'version': '0.9',
-    'category': 'Hidden',
+    'category': 'Hidden/Dependency',
     'description': """
         This module provide a class import_framework to help importing 
         complex data from other software
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
+    'depends': ['base','mail'],
     'init_xml': [],
     'update_xml': ["import_base_view.xml"],
     'demo_xml': [],
     'test': [], #TODO provide test
     'installable': True,
-    'active': False,
+    'auto_install': False,
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

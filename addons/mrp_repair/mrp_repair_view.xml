@@ -59,13 +59,14 @@
                                         <field name="location_id"/>
                                         <field name="location_dest_id"/>
                                         <newline/>
-                                        <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
+                                        <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
                                         <group colspan="2">
                                             <field name="to_invoice"/>
                                             <field name="invoiced"/>
                                         </group>
                                         <newline/>
-                                        <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                        <separator colspan="4" string="Taxes"/>
+                                        <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" nolabel="1"/>
                                         <separator colspan="4" string="States"/>
                                         <field name="state"/>
                                     </page>
@@ -77,7 +78,7 @@
                                  </notebook>
                             </form>
                             <tree string="Operations" editable="bottom">
-                                <field name="type" on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
+                                <field name="type" on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
                                 <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
                                 <field name='name'/>
                                 <field name="prodlot_id" />
@@ -137,7 +138,8 @@
                                             <field name="invoiced"/>
                                         </group>
                                         <newline/>
-                                        <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                        <separator colspan="4" string="Taxes"/>
+                                        <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" nolabel="1"/>
                                      </page>
                                      <page string="History" groups="base.group_extended">
                                         <field colspan="4" name="invoice_line_id" />

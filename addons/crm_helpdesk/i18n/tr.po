@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-02-21 15:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-01-24 22:32+0000\n"
+"Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:46+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:04+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,delay_close:0
@@ -42,6 +42,11 @@ msgstr "Bugün"
 #: selection:crm.helpdesk.report,month:0
 msgid "March"
 msgstr "Mart"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "Helpdesk requests occurred in current year"
+msgstr "Bu yıl oluşturulan Destek talepleri"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,company_id:0
@@ -73,6 +78,11 @@ msgid "Add Internal Note"
 msgstr "Şirket dahili not ekle"
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "Date of helpdesk requests"
+msgstr "Destek talebi tarihi"
+
+#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "Notes"
 msgstr "Notlar"
@@ -83,15 +93,15 @@ msgid "Messages"
 msgstr "Mesajlar"
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "My company"
+msgstr "Şirketim"
+
+#. module: crm_helpdesk
 #: selection:crm.helpdesk,state:0
 #: selection:crm.helpdesk.report,state:0
 msgid "Cancelled"
 msgstr "İptal Edildi"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,partner_address_id:0
-msgid "Partner Contact"
-msgstr "İş Ortağı iletişim"
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
@@ -104,11 +114,6 @@ msgstr "Danışma Masası Analizi"
 #: field:crm.helpdesk.report,date_closed:0
 msgid "Close Date"
 msgstr "Kapanış Tarihi"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "   Month   "
-msgstr "   Ay   "
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,ref:0
@@ -149,12 +154,9 @@ msgid "Section"
 msgstr "Bölüm"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,priority:0
 #: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,priority:0
-msgid "Priority"
-msgstr "Öncelik"
+msgid "Helpdesk requests occurred in last month"
+msgstr "geçen ay yapılan destek talepleri"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -162,14 +164,16 @@ msgid "Send New Email"
 msgstr "Yeni e-posta gönder"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Won"
-msgstr "Kazanıldı"
+#: view:crm.helpdesk:0
+msgid "Helpdesk requests during last 7 days"
+msgstr "son 7 günde yapılan destek talepleri"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Teslim Tarihi Geçen"
+#: view:crm.helpdesk:0
+#: selection:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:0
+msgid "New"
+msgstr "Yeni"
 
 #. module: crm_helpdesk
 #: model:ir.model,name:crm_helpdesk.model_crm_helpdesk_report
@@ -182,9 +186,9 @@ msgid "Email"
 msgstr "E-posta"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,canal_id:0
+#: field:crm.helpdesk,channel_id:0
 #: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,canal_id:0
+#: field:crm.helpdesk.report,channel_id:0
 msgid "Channel"
 msgstr "Kanal"
 
@@ -198,6 +202,12 @@ msgstr "En düşük"
 #: view:crm.helpdesk.report:0
 msgid "# Mails"
 msgstr "Posta sayısı"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+#: view:crm.helpdesk.report:0
+msgid "My Sales Team(s)"
+msgstr "Satış Ekiplerim"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,create_date:0
@@ -241,6 +251,11 @@ msgstr "Kategoriler"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
+msgid "New Helpdesk Request"
+msgstr "Yeni Destek Talebi"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
 msgid "History Information"
 msgstr "Geçmiş Bilgisi"
 
@@ -251,8 +266,14 @@ msgstr "Tarihler"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
-msgid "    Month-1    "
-msgstr "    Ay-1    "
+msgid "Month of helpdesk requests"
+msgstr "Destek taleplerinin ayı"
+
+#. module: crm_helpdesk
+#: code:addons/crm_helpdesk/crm_helpdesk.py:101
+#, python-format
+msgid "No Subject"
+msgstr "Konu Yok"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -260,14 +281,14 @@ msgid "#Helpdesk"
 msgstr "# Danışma Masası"
 
 #. module: crm_helpdesk
-#: help:crm.helpdesk,email_cc:0
-msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
-msgstr ""
-"Bu e-posta adresleri gönderilmeden önce bütün gelen ve giden e-postaların CC "
-"satırına eklenecektir. Birden fazla e-posta adresini virgül ile ayırınız."
+#: view:crm.helpdesk:0
+msgid "All pending Helpdesk Request"
+msgstr "Bekleyen bütün destek talepleri"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "Year of helpdesk requests"
+msgstr "Destek Talebinin Yılı"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -301,9 +322,9 @@ msgid "Update Date"
 msgstr "Güncelleme Tarihi"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Query"
-msgstr "Soru"
+#: view:crm.helpdesk.report:0
+msgid "Helpdesk requests occurred in current month"
+msgstr "Bu ay oluşan destek talepleri"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -322,9 +343,9 @@ msgid "Category"
 msgstr "Kategori"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "  Year  "
-msgstr "  Yıl  "
+#: view:crm.helpdesk:0
+msgid "Responsible User"
+msgstr "Sorumlu Kullanıcı"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -338,9 +359,19 @@ msgid "Planned Costs"
 msgstr "Planlanan Maliyet"
 
 #. module: crm_helpdesk
-#: model:ir.module.module,description:crm_helpdesk.module_meta_information
-msgid "Helpdesk Management"
-msgstr "Danışma Masası Yönetimi"
+#: help:crm.helpdesk,channel_id:0
+msgid "Communication channel."
+msgstr "İletişim Kanalı"
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,email_cc:0
+msgid ""
+"These email addresses will be added to the CC field of all inbound and "
+"outbound emails for this record before being sent. Separate multiple email "
+"addresses with a comma"
+msgstr ""
+"Bu e-posta adresleri gönderilmeden önce bütün gelen ve giden e-postaların CC "
+"satırına eklenecektir. Birden fazla e-posta adresini virgül ile ayırınız."
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -348,7 +379,6 @@ msgid "Search Helpdesk"
 msgstr "Danışma Masası'nı Ara"
 
 #. module: crm_helpdesk
-#: selection:crm.helpdesk,state:0
 #: selection:crm.helpdesk.report,state:0
 msgid "Draft"
 msgstr "Taslak"
@@ -362,9 +392,15 @@ msgstr "Düşük"
 #. module: crm_helpdesk
 #: field:crm.helpdesk,date_closed:0
 #: selection:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:0
 #: selection:crm.helpdesk.report,state:0
 msgid "Closed"
 msgstr "Kapandı"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Reply"
+msgstr "Yanıtla"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -413,9 +449,9 @@ msgid "Active"
 msgstr "Aktif"
 
 #. module: crm_helpdesk
-#: model:ir.module.module,shortdesc:crm_helpdesk.module_meta_information
-msgid "CRM Helpdesk"
-msgstr "MİY Danışma Masası"
+#: selection:crm.helpdesk.report,month:0
+msgid "November"
+msgstr "Kasım"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -454,19 +490,22 @@ msgid "Date"
 msgstr "Tarih"
 
 #. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "November"
-msgstr "Kasım"
-
-#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "History"
 msgstr "Geçmiş"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "Attachments"
-msgstr "Ekler"
+#: field:crm.helpdesk,priority:0
+#: view:crm.helpdesk.report:0
+#: field:crm.helpdesk.report,priority:0
+msgid "Priority"
+msgstr "Öncelik"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,partner_address_id:0
+msgid "Partner Contact"
+msgstr "İş Ortağı iletişim"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -522,7 +561,7 @@ msgstr "Kapat"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-#: selection:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:0
 #: selection:crm.helpdesk.report,state:0
 msgid "Open"
 msgstr "Aç"
@@ -531,6 +570,11 @@ msgstr "Aç"
 #: view:crm.helpdesk:0
 msgid "Helpdesk Support Tree"
 msgstr "Danışma Masası Destek Ağacı"
+
+#. module: crm_helpdesk
+#: selection:crm.helpdesk,state:0
+msgid "In Progress"
+msgstr "Sürüyor"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -551,19 +595,9 @@ msgid "Responsible"
 msgstr "Sorumlu"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Current"
-msgstr "Şimdiki"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Details"
-msgstr "Detaylar"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Reply"
-msgstr "Yanıtla"
+#: field:crm.helpdesk.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "Teslim Tarihi Geçen"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,description:0
@@ -597,14 +631,6 @@ msgstr ""
 "gözden geçirebilirsiniz."
 
 #. module: crm_helpdesk
-#: help:crm.helpdesk,canal_id:0
-msgid ""
-"The channels represent the different communication  modes available with the "
-"customer."
-msgstr ""
-"Kanallar müşteriye uygun olan farklı iletişim modlarını temsil ederler."
-
-#. module: crm_helpdesk
 #: help:crm.helpdesk,state:0
 msgid ""
 "The state is set to 'Draft', when a case is created.                         "
@@ -635,8 +661,8 @@ msgstr "Ad"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
-msgid "Lost"
-msgstr "Kayboldu"
+msgid "Month-1"
+msgstr "Ay-1"
 
 #. module: crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_help_support_main
@@ -654,6 +680,11 @@ msgid "My Case(s)"
 msgstr "Benim takip ettiğim vaka(lar)"
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Query"
+msgstr "Soru"
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,id:0
 msgid "ID"
 msgstr "Kimlik"
@@ -666,6 +697,21 @@ msgid ""
 msgstr ""
 "Destek taleplerini daha iyi yönetmek ve sınıflandırmak için danışma masası "
 "kategorileri oluşturun ve yönetin."
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Todays's Helpdesk Requests"
+msgstr "Bugünün destek talepleri"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Request Date"
+msgstr "Talep Tarihi"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid "Open Helpdesk Request"
+msgstr "Destek Talebi Aç"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk,priority:0
@@ -712,3 +758,39 @@ msgstr "Yıl"
 #: field:crm.helpdesk,duration:0
 msgid "Duration"
 msgstr "Süre"
+
+#~ msgid "   Month   "
+#~ msgstr "   Ay   "
+
+#~ msgid "Won"
+#~ msgstr "Kazanıldı"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Ay-1    "
+
+#~ msgid "  Year  "
+#~ msgstr "  Yıl  "
+
+#~ msgid "Helpdesk Management"
+#~ msgstr "Danışma Masası Yönetimi"
+
+#~ msgid "CRM Helpdesk"
+#~ msgstr "MİY Danışma Masası"
+
+#~ msgid "Attachments"
+#~ msgstr "Ekler"
+
+#~ msgid "Current"
+#~ msgstr "Şimdiki"
+
+#~ msgid "Details"
+#~ msgstr "Detaylar"
+
+#~ msgid ""
+#~ "The channels represent the different communication  modes available with the "
+#~ "customer."
+#~ msgstr ""
+#~ "Kanallar müşteriye uygun olan farklı iletişim modlarını temsil ederler."
+
+#~ msgid "Lost"
+#~ msgstr "Kayboldu"

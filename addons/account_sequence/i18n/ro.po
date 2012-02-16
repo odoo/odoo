@@ -7,38 +7,43 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-03-24 12:20+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:52+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:09+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
-msgstr ""
+msgstr "Configurarea Aplicatiei Secventei Contului"
 
 #. module: account_sequence
 #: constraint:account.move:0
 msgid ""
-"You cannot create entries on different periods/journals in the same move"
+"You can not create more than one move per period on centralized journal"
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
 msgstr ""
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
 #: help:account.move.line,internal_sequence_number:0
 msgid "Internal Sequence Number"
-msgstr ""
+msgstr "Numar Secventa Interna"
 
 #. module: account_sequence
 #: help:account.sequence.installer,number_next:0
 msgid "Next number of this sequence"
-msgstr ""
+msgstr "Urmatorul numar al acestei secvente"
 
 #. module: account_sequence
 #: field:account.sequence.installer,number_next:0
@@ -51,19 +56,6 @@ msgid "Increment Number"
 msgstr "Increment"
 
 #. module: account_sequence
-#: model:ir.module.module,description:account_sequence.module_meta_information
-msgid ""
-"\n"
-"    This module maintains internal sequence number for accounting entries.\n"
-"    "
-msgstr ""
-
-#. module: account_sequence
-#: model:ir.module.module,shortdesc:account_sequence.module_meta_information
-msgid "Entries Sequence Numbering"
-msgstr ""
-
-#. module: account_sequence
 #: help:account.sequence.installer,number_increment:0
 msgid "The next number of the sequence will be incremented by this number"
 msgstr ""
@@ -73,17 +65,17 @@ msgstr ""
 #. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "Configure Your Account Sequence Application"
-msgstr ""
+msgstr "Configurati Aplicatia Succesiunii Contului"
 
 #. module: account_sequence
-#: field:account.sequence.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Configurare procese"
+#: view:account.sequence.installer:0
+msgid "Configure"
+msgstr "Configurare"
 
 #. module: account_sequence
 #: help:account.sequence.installer,suffix:0
 msgid "Suffix value of the record for the sequence"
-msgstr ""
+msgstr "Valoarea sufixului inregistrarii pentru secventa"
 
 #. module: account_sequence
 #: field:account.sequence.installer,company_id:0
@@ -96,11 +88,13 @@ msgid ""
 "This sequence will be used to maintain the internal number for the journal "
 "entries related to this journal."
 msgstr ""
+"Aceasta succesiune va fi folosita pentru a pastra numarul intern pentru "
+"inregistrarile in jurnal asociate acestui jurnal."
 
 #. module: account_sequence
 #: field:account.sequence.installer,padding:0
 msgid "Number padding"
-msgstr ""
+msgstr "Numar umplutura"
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_move_line
@@ -111,11 +105,11 @@ msgstr "Poziții jurnal"
 #: field:account.move,internal_sequence_number:0
 #: field:account.move.line,internal_sequence_number:0
 msgid "Internal Number"
-msgstr ""
+msgstr "Numar intern"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
+msgid "You can not create journal items on an account of type view."
 msgstr ""
 
 #. module: account_sequence
@@ -124,6 +118,8 @@ msgid ""
 "OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
 "get the required padding size."
 msgstr ""
+"OpenERP va adauga automat '0' in partea stanga a campului 'Numarul Urmator' "
+"pentru a obtine marimea ceruta a umpluturii."
 
 #. module: account_sequence
 #: field:account.sequence.installer,name:0
@@ -132,39 +128,31 @@ msgstr "Nume"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
+msgid "You can not create journal items on closed account."
 msgstr ""
 
 #. module: account_sequence
-#: constraint:account.move:0
+#: constraint:account.journal:0
 msgid ""
-"You cannot create more than one move per period on centralized journal"
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
 msgstr ""
 
 #. module: account_sequence
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
 msgstr ""
+"Valoare gresita a creditului sau debitului in inregistrarea contabila!"
 
 #. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
-msgstr ""
-
-#. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_sequence_installer
-msgid "account.sequence.installer"
-msgstr ""
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure"
-msgstr "Configurare"
+msgstr "Secventa Interna"
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "Valoarea prefixului inregistrarii pentru secventa"
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_move
@@ -189,6 +177,21 @@ msgstr "titlu"
 #. module: account_sequence
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
+msgstr "Numele jurnalului trebuie sa fie unic per companie !"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
 msgstr ""
 
 #. module: account_sequence
@@ -199,13 +202,12 @@ msgstr "Prefix"
 #. module: account_sequence
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr ""
+msgstr "Codul jurnalului trebuie sa fie unic per companie !"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
+#: model:ir.model,name:account_sequence.model_account_sequence_installer
+msgid "account.sequence.installer"
+msgstr "acount.sequence.installer(program.de.instalare.secventa.cont)"
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_journal
@@ -215,9 +217,39 @@ msgstr "Jurnal"
 #. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "You can enhance the Account Sequence Application by installing ."
-msgstr ""
+msgstr "Puteti mari Aplicatia Secventei Contului instaland ."
 
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr ""
+#~ msgid "Configuration Progress"
+#~ msgstr "Configurare procese"
+
+#~ msgid "Entries Sequence Numbering"
+#~ msgstr "Numerotarea succesiva a inregistrarilor"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module maintains internal sequence number for accounting entries.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Acest modul pastreaza numarul secventei interne pentru inregistrari "
+#~ "contabile.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "You cannot create entries on different periods/journals in the same move"
+#~ msgstr ""
+#~ "Nu puteti crea inregistrari in perioade/jurnale diferite in aceeasi miscare"
+
+#~ msgid ""
+#~ "You cannot create more than one move per period on centralized journal"
+#~ msgstr ""
+#~ "Nu puteti crea decat o singura miscare pe perioada in jurnalul centralizat"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Nu puteti crea o linie de miscare intr-un cont inchis."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Compania trebuie sa fie aceeasi pentru contul si perioada asociate."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Nu puteti crea linia miscarii in vizualizarea contului."

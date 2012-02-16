@@ -31,10 +31,10 @@ class project_task(osv.osv):
     }
 
     def _validate_subflows(self, cr, uid, ids):
+        wf_service = netsvc.LocalService("workflow")
         for task in self.browse(cr, uid, ids):
             if task.procurement_id:
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'procurement.order', task.procurement_id.id, 'subflow.done', cr)
+                wf_service.trg_write(uid, 'procurement.order', task.procurement_id.id, cr)
 
     def do_close(self, cr, uid, ids, *args, **kwargs):
         res = super(project_task, self).do_close(cr, uid, ids, *args, **kwargs)
@@ -56,6 +56,12 @@ product_product()
 
 class sale_order(osv.osv):
     _inherit ='sale.order'
+
+    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
+        proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
+                uid, order, line, move_id, date_planned, context=context)
+        proc_data['sale_line_id'] = line.id
+        return proc_data
 
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
         if not ids:
@@ -90,11 +96,12 @@ class sale_order(osv.osv):
                 res_sale[item['sale_id']]['number_of_done'] += item['total']
 
         for sale in self.browse(cr, uid, ids, context=context):
-            res_sale[sale.id]['number_of_stockable'] -= res_sale[sale.id]['total_no_task']
-            #adjust previously percentage because now we must also count the product of type service
-            res[sale.id] = res[sale.id] * float(res_sale[sale.id]['number_of_stockable']) / (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task'])
-            #add the task
-            res[sale.id] += res_sale[sale.id]['number_of_done'] * 100 /  (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task'])
+            if 'number_of_stockable' in res_sale[sale.id]:
+                res_sale[sale.id]['number_of_stockable'] -= res_sale[sale.id]['total_no_task']
+                #adjust previously percentage because now we must also count the product of type service
+                res[sale.id] = res[sale.id] * float(res_sale[sale.id]['number_of_stockable']) / (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task'])
+                #add the task
+                res[sale.id] += res_sale[sale.id]['number_of_done'] * 100 /  (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task'])
         return res
 
     _columns = {

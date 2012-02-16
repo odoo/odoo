@@ -28,17 +28,19 @@ class crm_partner_report_assign(osv.osv):
     _auto = False
     _description = "CRM Partner Report"
     _columns = {
-        'name': fields.char('Partner name', size=64, required=False, readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', required=False, readonly=True),
         'grade_id':fields.many2one('res.partner.grade', 'Grade', readonly=True),
+        'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'date_review' : fields.date('Latest Partner Review'),
+        'date_partnership' : fields.date('Partnership Date'),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
-        'nbr': fields.integer('# of Partner', readonly=True),
         'opp': fields.integer('# of Opportunity', readonly=True),
+        'turnover': fields.float('Turnover', readonly=True),
+        'period_id': fields.many2one('account.period', 'Invoice Period', readonly=True),
     }
-
     def init(self, cr):
-
         """
             CRM Lead Report
             @param cr: the current row, from the database cursor
@@ -47,17 +49,24 @@ class crm_partner_report_assign(osv.osv):
         cr.execute("""
             CREATE OR REPLACE VIEW crm_partner_report_assign AS (
                 SELECT
-                    p.id,
-                    p.name,
+                    coalesce(i.id, p.id - 1000000000) as id,
+                    p.id as partner_id,
                     (SELECT country_id FROM res_partner_address a WHERE a.partner_id=p.id AND country_id is not null limit 1) as country_id,
                     p.grade_id,
+                    p.activation,
+                    p.date_review,
+                    p.date_partnership,
                     p.user_id,
                     p.section_id,
-                    1 as nbr,
-                    (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS opp
+                    (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS opp,
+                    i.price_total as turnover,
+                    i.period_id
                 FROM
                     res_partner p
-
+                    left join account_invoice_report i
+                        on (i.partner_id=p.id and i.type in ('out_invoice','out_refund') and i.state in ('open','paid'))
             )""")
 
 crm_partner_report_assign()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -127,7 +127,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         return self.davpath
 
     def log_message(self, format, *args):
-        self._logger.log(netsvc.logging.DEBUG_RPC,format % args)
+        self._logger.debug(format % args)
 
     def log_error(self, format, *args):
         self._logger.warning(format % args)
@@ -649,3 +649,5 @@ init_principals_redirect()
 
 
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

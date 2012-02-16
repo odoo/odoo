@@ -42,6 +42,7 @@
             <field name="name">Shelf 1</field>
             <field name="location_id" ref="stock_location_stock"/>
         </record>
+        
 
         <!--
     Resource: stock.inventory
@@ -49,10 +50,7 @@
 
         <record id="stock_inventory_0" model="stock.inventory">
             <field name="name">Starting Inventory</field>
-            <field name="date_done">2005-08-02 13:42:43</field>
-            <field name="state">done</field>
         </record>
-
         <!--
     Resource: stock.inventory.line
     -->
@@ -263,16 +261,8 @@
         <record forcecreate="True" id="property_stock_valuation_account_id" model="ir.property">
             <field name="name">property_stock_valuation_account_id</field>
             <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_valuation_account_id')]"/>
-            <field eval="'account.account,'+str(ref('account.a_recv'))" model="account.account" name="value"/>
+            <field eval="'account.account,'+str(ref('account.stk'))" model="account.account" name="value"/>
              <field name="company_id" ref="base.main_company"/>
-        </record>
-        <record id="stock_picking_1" model="stock.picking">
-            <field name="name">PACKO1</field>
-            <field name="type">out</field>
-            <field name="move_type">direct</field>
-            <field name="invoice_state">2binvoiced</field>
-            <field name="address_id"  ref="res_partner_address_fabien0"/>
-            <field name="company_id" ref="base.main_company"/>
         </record>
     </data>
 </openerp>

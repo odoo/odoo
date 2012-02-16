@@ -160,7 +160,7 @@ class account_invoice_line(osv.osv):
                 ('line','Separator Line'),
                 ('break','Page Break'),]
             ,'Type', select=True, required=True),
-        'sequence': fields.integer('Sequence Number', help="Gives the sequence order when displaying a list of invoice lines."),
+        'sequence': fields.integer('Sequence Number', select=True, help="Gives the sequence order when displaying a list of invoice lines."),
         'functional_field': fields.function(_fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='char', fnct_search=None, obj=None, store=False, string="Source Account"),
     }
 

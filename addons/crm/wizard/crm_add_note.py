@@ -1,4 +1,4 @@
-from crm import crm
+from .. import crm
 from osv import fields, osv
 from tools.translate import _
 from mail.mail_message import truncate_text
@@ -49,3 +49,5 @@ class crm_add_note(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 crm_add_note()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

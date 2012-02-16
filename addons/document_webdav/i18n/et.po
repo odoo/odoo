@@ -7,20 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-08-03 06:12+0000\n"
 "Last-Translator: lyyser <Unknown>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:36+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:51+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,create_date:0
 #: field:document.webdav.file.property,create_date:0
 msgid "Date Created"
+msgstr ""
+
+#. module: document_webdav
+#: model:ir.ui.menu,name:document_webdav.menu_document_props
+msgid "Documents"
 msgstr ""
 
 #. module: document_webdav
@@ -64,8 +69,8 @@ msgid "These properties will be added to WebDAV requests"
 msgstr ""
 
 #. module: document_webdav
-#: model:ir.ui.menu,name:document_webdav.menu_file_props
-msgid "DAV properties for documents"
+#: model:ir.actions.act_window,name:document_webdav.action_file_props_form
+msgid "DAV Properties for Documents"
 msgstr ""
 
 #. module: document_webdav
@@ -81,25 +86,8 @@ msgid "Document"
 msgstr ""
 
 #. module: document_webdav
-#: model:ir.module.module,description:document_webdav.module_meta_information
-msgid ""
-" With this module, the WebDAV server for the documents is activated.\n"
-"        You can then use any compatible browser to remotely see the "
-"attachments of OpenObject.\n"
-"\n"
-"        After installation, the webDAV server can be controlled by a "
-"[webdav] section in the server's config.\n"
-"        Server Configuration Parameter:\n"
-"        [webdav]\n"
-"        ; enable = True ; Serve webdav over the http(s) servers\n"
-"        ; vdir = webdav ; the directory that webdav will be served at\n"
-"          ; this default val means that webdav will be\n"
-"          ; on \"http://localhost:8069/webdav/\n"
-"        ; verbose = True ; Turn on the verbose messages of webdav\n"
-"        ; debug = True ; Turn on the debugging messages of webdav\n"
-"          ; since the messages are routed to the python logging, with\n"
-"          ; levels \"debug\" and \"debug_rpc\" respectively, you can leave\n"
-"          ; these options on\n"
+#: model:ir.ui.menu,name:document_webdav.menu_folder_props
+msgid "Folders"
 msgstr ""
 
 #. module: document_webdav
@@ -132,8 +120,8 @@ msgid ""
 msgstr ""
 
 #. module: document_webdav
-#: model:ir.ui.menu,name:document_webdav.menu_dir_props
-msgid "DAV properties for folders"
+#: model:ir.actions.act_window,name:document_webdav.action_dir_props_form
+msgid "DAV Properties for Folders"
 msgstr ""
 
 #. module: document_webdav
@@ -190,8 +178,8 @@ msgid "Creator"
 msgstr ""
 
 #. module: document_webdav
-#: model:ir.module.module,shortdesc:document_webdav.module_meta_information
-msgid "WebDAV server for Document Management"
+#: model:ir.ui.menu,name:document_webdav.menu_properties
+msgid "DAV Properties"
 msgstr ""
 
 #. module: document_webdav

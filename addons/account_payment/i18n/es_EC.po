@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-01-13 03:47+0000\n"
 "Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:18+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:33+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -41,21 +41,6 @@ msgstr "Seleccione el modo de pago a aplicar."
 #: view:payment.order:0
 msgid "Group By..."
 msgstr "Agrupar por..."
-
-#. module: account_payment
-#: model:ir.module.module,description:account_payment.module_meta_information
-msgid ""
-"\n"
-"This module provides :\n"
-"* a more efficient way to manage invoice payment.\n"
-"* a basic mechanism to easily plug various automated payment.\n"
-"    "
-msgstr ""
-"\n"
-"Este módulo proporciona:\n"
-"* Una forma más eficiente para gestionar el pago de las facturas.\n"
-"* Un mecanismo básico para conectar fácilmente varios pagos automatizados.\n"
-"    "
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -90,7 +75,9 @@ msgstr ""
 "menos el importe que ya está en la orden de pago"
 
 #. module: account_payment
+#: field:payment.line,company_id:0
 #: field:payment.mode,company_id:0
+#: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Compañia"
 
@@ -100,11 +87,17 @@ msgid "Preferred date"
 msgstr "Fecha preferida"
 
 #. module: account_payment
+#: model:res.groups,name:account_payment.group_account_payment
+msgid "Accounting / Payments"
+msgstr ""
+
+#. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
 msgstr "Libre"
 
 #. module: account_payment
+#: view:payment.order.create:0
 #: field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "Asientos"
@@ -119,11 +112,6 @@ msgstr "Cuenta usada"
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Fecha de vencimiento"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Usted no puede crear la línea de avanzar en cuenta cerrada."
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -179,10 +167,22 @@ msgid "The payment line name must be unique!"
 msgstr "¡El nombre de la línea de pago debe ser única!"
 
 #. module: account_payment
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "Órdenes de pago"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -308,14 +308,6 @@ msgid "Search Payment Orders"
 msgstr "Buscar Ordenes de Pago"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-"Usted no puede crear la línea de pasar por cobrar / cuentas por pagar sin "
-"empresa relacionada"
-
-#. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
 msgstr "Creado"
@@ -341,9 +333,11 @@ msgid "Communication Type"
 msgstr "Tipo de comunicación"
 
 #. module: account_payment
-#: model:ir.module.module,shortdesc:account_payment.module_meta_information
-msgid "Payment Management"
-msgstr "Gestión de pagos"
+#: field:payment.line,partner_id:0
+#: field:payment.mode,partner_id:0
+#: report:payment.order:0
+msgid "Partner"
+msgstr "Empresa"
 
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
@@ -359,6 +353,14 @@ msgstr "Fecha de vencimiento"
 #: field:account.invoice,amount_to_pay:0
 msgid "Amount to be paid"
 msgstr "Monto a pagar"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
 
 #. module: account_payment
 #: report:payment.order:0
@@ -454,7 +456,6 @@ msgstr "Usuario"
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
-#: model:ir.actions.act_window,name:account_payment.act_account_invoice_2_payment_line
 msgid "Payment Lines"
 msgstr "Líneas de pago"
 
@@ -465,8 +466,8 @@ msgstr "Lineas de Asientos Contables"
 
 #. module: account_payment
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -539,14 +540,14 @@ msgid "Invoice Ref"
 msgstr "Factura de Ref"
 
 #. module: account_payment
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
+
+#. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
 msgstr "Su referencia"
-
-#. module: account_payment
-#: field:payment.order,mode:0
-msgid "Payment mode"
-msgstr "Modo de pago"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -584,10 +585,20 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: account_payment
+#: field:payment.line,bank_id:0
+msgid "Destination Bank Account"
+msgstr ""
+
+#. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
 msgstr "Información"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -621,11 +632,6 @@ msgstr "Importe en la moneda de la empresa"
 #: field:payment.line,communication2:0
 msgid "Communication 2"
 msgstr "Comunicación 2"
-
-#. module: account_payment
-#: field:payment.line,bank_id:0
-msgid "Destination Bank account"
-msgstr "Cuenta bancaria destino"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -707,6 +713,11 @@ msgid "Order"
 msgstr "Orden"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Total"
@@ -718,10 +729,9 @@ msgid "Make Payment"
 msgstr "Hacer Pago"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: report:payment.order:0
-msgid "Partner"
-msgstr "Empresa"
+#: field:payment.order,mode:0
+msgid "Payment mode"
+msgstr "Modo de pago"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
@@ -732,11 +742,6 @@ msgstr "Llenar Pago"
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Cuenta bancaria para el modo de pago"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo no válido en la definición de acción."
@@ -752,6 +757,9 @@ msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
 
 #~ msgid "_Cancel"
 #~ msgstr "_Cancelar"
+
+#~ msgid "Payment Management"
+#~ msgstr "Gestión de pagos"
 
 #~ msgid "Populate payment"
 #~ msgstr "Rellenar la orden"
@@ -783,6 +791,9 @@ msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
 #~ msgid "Draft Payment Order"
 #~ msgstr "Orden de pago borrador"
 
+#~ msgid "Destination Bank account"
+#~ msgstr "Cuenta bancaria destino"
+
 #~ msgid "Cash Journal for the Payment Mode"
 #~ msgstr "Diario de caja para el modo de pago"
 
@@ -803,3 +814,25 @@ msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
 
 #~ msgid "Select the Payment Type for the Payment Mode."
 #~ msgstr "Seleccione el tipo de pago para el modo de pago."
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Usted no puede crear la línea de avanzar en cuenta cerrada."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
+
+#~ msgid ""
+#~ "\n"
+#~ "This module provides :\n"
+#~ "* a more efficient way to manage invoice payment.\n"
+#~ "* a basic mechanism to easily plug various automated payment.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Este módulo proporciona:\n"
+#~ "* Una forma más eficiente para gestionar el pago de las facturas.\n"
+#~ "* Un mecanismo básico para conectar fácilmente varios pagos automatizados.\n"
+#~ "    "

@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Import Data from SugarCRM',
+    'name': 'SugarCRM Import',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'description': """This Module Import SugarCRM "Leads", "Opportunities", "Users", "Accounts", 
@@ -28,12 +28,14 @@
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['import_base','crm', 'document'],
-    'init_xml': [],
-    'update_xml': ["wizard/import_message_view.xml",
-                   "import_sugarcrm_view.xml"],
-    'demo_xml': [],
+    'data': [
+        "wizard/import_message_view.xml",
+        "import_sugarcrm_view.xml",
+        "security/ir.model.access.csv",
+    ],
+    'demo': [],
     'test': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

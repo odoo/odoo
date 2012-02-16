@@ -16,7 +16,7 @@
                    <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert" help="Set to Draft"/>
 	               <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
 	               <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
-	               <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
+	               <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
 	               <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
                </group>
 	       </xpath>
@@ -30,13 +30,12 @@
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
            <xpath expr="/form/notebook/page/field[@name='workcenter_lines']/tree/field[@name='hour']" position="after">
-                <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop"/>
+                <field name="state"/>
                 <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
                 <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
                 <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
-                <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause"/>
+                <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause"/>
                 <button name="button_done" string="Finished" states="startworking" icon="terp-check"/>
-                <field name="state"/>
            </xpath>
         </field>
     </record>
@@ -58,11 +57,9 @@
                 <field name="cycle"/>
                 <field name="hour"/>
                 <field name="state" />
-                <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert" help="Set to Draft"/>
                 <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
                 <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
-                <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
-                <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
+                <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
                 <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
             </tree>
         </field>
@@ -116,7 +113,7 @@
                         <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
                         <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
                         <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
-                        <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause"/>
+                        <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause"/>
                         <button name="button_done" string="Finished" states="startworking" icon="terp-check"/>
                     </group>
                 </page>
@@ -180,12 +177,7 @@
         <field name="model">mrp.production.workcenter.line</field>
         <field name="type">gantt</field>
         <field name="arch" type="xml">
-            <gantt color="workcenter_id" date_delay="hour" date_start="date_planned" string="Operations">
-                <level object="mrp.workcenter" link="production_id" domain="[]">
-                    <field name="product"/>
-                    <field name="hour"/>
-                    <field name="production_id"/>
-                </level>
+            <gantt date_delay="hour" date_start="date_planned" string="Operations" default_group_by="production_id">
             </gantt>
         </field>
     </record>
@@ -219,12 +211,7 @@
         <field name="model">mrp.production.workcenter.line</field>
         <field name="type">gantt</field>
         <field name="arch" type="xml">
-            <gantt color="production_id" date_delay="hour" date_start="date_planned">
-                <level object="mrp.workcenter" link="workcenter_id" domain="[]">
-                    <field name="product"/>
-                    <field name="hour"/>
-                    <field name="production_id"/>
-                </level>
+            <gantt date_delay="hour" date_start="date_planned" default_group_by="workcenter_id">
             </gantt>
         </field>
     </record>
@@ -268,8 +255,6 @@
         <field name="model" eval="'mrp.production.workcenter.line'"/>
         <field name="name">Work Orders</field>
         <field name="value" eval="'ir.actions.act_window,'+str(mrp_production_wc_action_form)"/>
-        <field name="object" eval="True"/>
-
     </record>
 
     <menuitem name="Work Orders" parent="mrp.menu_mrp_manufacturing"

@@ -110,7 +110,7 @@
                       <button colspan="2" name="%(action_create_payment_order)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
                       <field name="company_id" widget='selection' groups="base.group_multi_company"/>
                     </group>
-                    <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1" default_get="{'order_id': active_id or False}" >
+                    <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1" context="{'order_id': active_id or False}" >
                         <form string="Payment Line">
                             <notebook>
                                 <page string="Payment">
@@ -251,7 +251,7 @@
                             <separator colspan="4" string="Transaction Information"/>
                             <field name="date"/>
                             <group colspan="2">
-                                <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,comapny_currency)"/>
+                                <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)"/>
                                 <field name="currency" nolabel="1"/>
                             </group>
                             <field name="partner_id" on_change="onchange_partner(partner_id, False)" select="1"/>
@@ -321,8 +321,6 @@
                 </field>
             </field>
         </record>
-
-        <act_window domain="[('move_line_id.move_id.id', '=', move_id)]" id="act_account_invoice_2_payment_line" name="Payment Lines" res_model="payment.line" src_model="account.invoice"/>
 
     </data>
 </openerp>

@@ -27,6 +27,7 @@ from osv import osv, fields
 import netsvc
 from tools.translate import _
 import logging
+import decimal_precision as dp
 
 _logger = logging.getLogger('mps') 
 
@@ -80,8 +81,8 @@ class stock_sale_forecast(osv.osv):
                                         help = 'Shows which period this forecast concerns.'),
         'product_id': fields.many2one('product.product', 'Product', readonly=True, required=True, states={'draft':[('readonly',False)]}, \
                                         help = 'Shows which product this forecast concerns.'),
-        'product_qty': fields.float('Forecast Quantity', required=True, readonly=True, states={'draft':[('readonly',False)]}, \
-                                        help= 'Forecast Product quantity.'),
+        'product_qty': fields.float('Forecast Quantity', digits_compute=dp.get_precision('Product UoM'), required=True, readonly=True, \
+                                        states={'draft':[('readonly',False)]}, help= 'Forecast Product quantity.'),
         'product_amt': fields.float('Product Amount', readonly=True, states={'draft':[('readonly',False)]}, \
                                         help='Forecast value which will be converted to Product Quantity according to prices.'),
         'product_uom_categ': fields.many2one('product.uom.categ', 'Product UoM Category'),  # Invisible field for product_uom domain
@@ -448,7 +449,7 @@ class stock_planning(osv.osv):
         'history': fields.text('Procurement History', readonly=True, help = "History of procurement or internal supply of this planning line."),
         'state' : fields.selection([('draft','Draft'),('done','Done')],'State',readonly=True),
         'period_id': fields.many2one('stock.period' , 'Period', required=True, \
-                help = 'Period for this planning. Requisition will be created for beginning of the period.'),
+                help = 'Period for this planning. Requisition will be created for beginning of the period.', select=True),
         'warehouse_id': fields.many2one('stock.warehouse','Warehouse', required=True),
         'product_id': fields.many2one('product.product' , 'Product', required=True, help = 'Product which this planning is created for.'),
         'product_uom_categ' : fields.many2one('product.uom.categ', 'Product UoM Category'), # Invisible field for product_uom domain

@@ -7,24 +7,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-05-25 13:59+0000\n"
 "Last-Translator: OpenBMS JSC <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:23+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:39+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Hourly cost computation"
-msgstr "Tính toán chi phí theo giờ"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Tiền công/tiền lương"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Gross"
+#: view:hr.contract:0
+msgid "Information"
 msgstr ""
 
 #. module: hr_contract
@@ -38,11 +38,6 @@ msgid "Trial Start Date"
 msgstr "Ngày bắt đầu thử việc"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Passport"
-msgstr "Hộ chiếu"
-
-#. module: hr_contract
 #: view:hr.employee:0
 msgid "Medical Examination"
 msgstr "Kiểm tra sức khỏe"
@@ -51,11 +46,6 @@ msgstr "Kiểm tra sức khỏe"
 #: field:hr.employee,vehicle:0
 msgid "Company Vehicle"
 msgstr "Xe công ty"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "Tên loại lương"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -68,19 +58,9 @@ msgid "Current"
 msgstr "Hiện tại"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr ""
-
-#. module: hr_contract
 #: view:hr.contract:0
-msgid "Overpassed"
-msgstr "Quá hạn"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Wage Types"
-msgstr "Các loại tiền công"
+msgid "Group By..."
+msgstr "Nhóm theo..."
 
 #. module: hr_contract
 #: field:hr.contract,department_id:0
@@ -88,9 +68,9 @@ msgid "Department"
 msgstr "Phòng ban"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Basic"
-msgstr "Cơ bản"
+#: view:hr.contract:0
+msgid "Overpassed"
+msgstr "Quá hạn"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -100,19 +80,14 @@ msgid "Employee"
 msgstr "Người LĐ"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Net"
-msgstr "Thuần"
+#: view:hr.contract:0
+msgid "Search Contract"
+msgstr "Tìm kiếm hợp đồng"
 
 #. module: hr_contract
-#: model:ir.module.module,shortdesc:hr_contract.module_meta_information
-msgid "Human Resources Contracts"
-msgstr "Các loại HĐ Nguồn nhân lực"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,factor_days:0
-msgid "Hours in the period"
-msgstr "Số giờ trong giai đoạn"
+#: view:hr.contract:0
+msgid "Contracts in progress"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
@@ -135,13 +110,8 @@ msgstr "Thông tin cá nhân"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Job"
-msgstr "Việc làm"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Search Contract"
-msgstr "Tìm kiếm hợp đồng"
+msgid "Contracts whose end date already passed"
+msgstr ""
 
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
@@ -149,21 +119,9 @@ msgid "Latest contract of the employee"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,advantages_net:0
-msgid "Deductions"
-msgstr "Giảm trừ"
-
-#. module: hr_contract
-#: model:ir.module.module,description:hr_contract.module_meta_information
-msgid ""
-"\n"
-"    Add all information on the employee form to manage contracts:\n"
-"    * Marital status,\n"
-"    * Security number,\n"
-"    * Place of birth, birth date, ...\n"
-"    You can assign several contracts per employee.\n"
-"    "
-msgstr ""
+#: view:hr.contract:0
+msgid "Job"
+msgstr "Việc làm"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -193,15 +151,6 @@ msgid "Contract Types"
 msgstr "Các loại HĐ"
 
 #. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
-msgstr "Loại tiền công"
-
-#. module: hr_contract
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
@@ -212,9 +161,9 @@ msgid "End Date"
 msgstr "Ngày kết thúc"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Tiền công/tiền lương"
+#: help:hr.contract,wage:0
+msgid "Basic Salary of the employee"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,name:0
@@ -233,9 +182,8 @@ msgid "Notes"
 msgstr "Ghi chú"
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
 msgstr ""
 
 #. module: hr_contract
@@ -256,11 +204,6 @@ msgid "Contract Type"
 msgstr "Loại HĐ"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type.period:0
-msgid "Search Wage Period"
-msgstr ""
-
-#. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,working_hours:0
 msgid "Working Schedule"
@@ -272,11 +215,9 @@ msgid "Job Info"
 msgstr "Thông tin Công việc"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,period_id:0
-#: view:hr.contract.wage.type.period:0
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
-msgid "Wage Period"
-msgstr "Chu kỳ Tiền công"
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
@@ -299,54 +240,14 @@ msgid "Error! contract start-date must be lower then contract end-date."
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
-msgstr "Tìm kiếm Loại Tiền công"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,type:0
-msgid "Type"
-msgstr "Loại"
-
-#. module: hr_contract
-#: field:hr.contract,trial_date_end:0
-msgid "Trial End Date"
-msgstr "Ngày Kết thúc Thử việc"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr "Nhóm theo..."
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,name:0
-msgid "Period Name"
-msgstr "Tên chu kỳ"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Period"
-msgstr "Chu kỳ"
+#: field:hr.contract,visa_no:0
+msgid "Visa No"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
 msgid "Place of Birth"
 msgstr "Nơi sinh"
-
-#. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr "Chu kỳ Lương"
-
-#. module: hr_contract
-#: help:hr.contract.wage.type,factor_type:0
-#: help:hr.contract.wage.type.period,factor_days:0
-msgid ""
-"This field is used by the timesheet system to compute the price of an hour "
-"of work wased on the contract of the employee"
-msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -359,19 +260,68 @@ msgid "Medical Examination Date"
 msgstr "Ngày Kiểm tra Sức khỏe"
 
 #. module: hr_contract
-#: field:hr.contract,advantages_gross:0
-msgid "Allowances"
-msgstr "Các khoản Phụ cấp"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Main Data"
-msgstr "Dữ liệu Chính"
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
+msgstr "Ngày Kết thúc Thử việc"
 
 #. module: hr_contract
 #: view:hr.contract.type:0
 msgid "Search Contract Type"
 msgstr ""
 
+#~ msgid "Hourly cost computation"
+#~ msgstr "Tính toán chi phí theo giờ"
+
+#~ msgid "Wage Type Name"
+#~ msgstr "Tên loại lương"
+
+#~ msgid "Basic"
+#~ msgstr "Cơ bản"
+
+#~ msgid "Human Resources Contracts"
+#~ msgstr "Các loại HĐ Nguồn nhân lực"
+
+#~ msgid "Hours in the period"
+#~ msgstr "Số giờ trong giai đoạn"
+
 #~ msgid "Function"
 #~ msgstr "Chức năng"
+
+#~ msgid "Passport"
+#~ msgstr "Hộ chiếu"
+
+#~ msgid "Deductions"
+#~ msgstr "Giảm trừ"
+
+#~ msgid "Wage Types"
+#~ msgstr "Các loại tiền công"
+
+#~ msgid "Net"
+#~ msgstr "Thuần"
+
+#~ msgid "Wage Type"
+#~ msgstr "Loại tiền công"
+
+#~ msgid "Wage Period"
+#~ msgstr "Chu kỳ Tiền công"
+
+#~ msgid "Search Wage Type"
+#~ msgstr "Tìm kiếm Loại Tiền công"
+
+#~ msgid "Allowances"
+#~ msgstr "Các khoản Phụ cấp"
+
+#~ msgid "Main Data"
+#~ msgstr "Dữ liệu Chính"
+
+#~ msgid "Period"
+#~ msgstr "Chu kỳ"
+
+#~ msgid "Wage period"
+#~ msgstr "Chu kỳ Lương"
+
+#~ msgid "Type"
+#~ msgstr "Loại"
+
+#~ msgid "Period Name"
+#~ msgstr "Tên chu kỳ"

@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Automatic task creation from procurement lines',
+    'name': 'Create Tasks on SO',
     'version': '1.0',
-    'category': 'Hidden/Link',
+    "category": "Project Management",
     'complexity': "easy",
     'description': """
 Automatically creates project tasks from procurement lines
@@ -54,10 +54,10 @@ task is completed.
     'depends': ['project', 'procurement', 'sale', 'mrp_jit'],
     'init_xml': [],
     'update_xml': ['project_mrp_workflow.xml', 'process/project_mrp_process.xml', 'project_mrp_view.xml'],
-    'demo_xml': [],
+    'demo_xml': ['project_mrp_demo.xml'],
     'test': ['test/project_task_procurement.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0031976495453',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

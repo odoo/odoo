@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-    <data noupdate="1">
+    <data>
         <!-- Demo Leads -->
         <record id="crm_case_itisatelesalescampaign0" model="crm.lead">
             <field name="type_id" ref="crm.type_lead1"/>
@@ -9,13 +9,13 @@
             <field name="user_id" ref="base.user_root"/>
             <field eval="'The Oil Company'" name="partner_name"/>
             <field eval="'draft'" name="state"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-	    <field eval="'Luc Latour'" name="contact_name"/>
+            <field name="section_id" ref="crm.section_sales_marketing_department"/>
+            <field eval="'Luc Latour'" name="contact_name"/>
             <field name="title" ref="base.res_partner_title_sir"/>
-	    <field eval="'Training Manager'" name="function"/>
-	    <field eval="'Paris'" name="city"/>
-	    <field name="country_id" ref="base.fr"/>
-	    <field eval="'luc.latour@oilcompany.fr'" name="email_from"/>
+        <field eval="'Training Manager'" name="function"/>
+        <field eval="'Paris'" name="city"/>
+        <field name="country_id" ref="base.fr"/>
+        <field eval="'luc.latour@oilcompany.fr'" name="email_from"/>
             <field eval="'0033 621 782-0636'" name="mobile"/>
             <field eval="1" name="active"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
@@ -29,12 +29,12 @@
             <field name="type">lead</field>
             <field name="user_id" ref="base.user_root"/>
             <field eval="'Le Club SARL'" name="partner_name"/>
-	    <field eval="'Marc Dufour'" name="contact_name"/>
+        <field eval="'Marc Dufour'" name="contact_name"/>
             <field name="title" ref="base.res_partner_title_sir"/>
-	    <field eval="'Purchase Manager'" name="function"/>
-	    <field eval="'Bordeaux'" name="city"/>
-	    <field name="country_id" ref="base.fr"/>
-	    <field eval="'md@leclub.fr'" name="email_from"/>
+        <field eval="'Purchase Manager'" name="function"/>
+        <field eval="'Bordeaux'" name="city"/>
+        <field name="country_id" ref="base.fr"/>
+        <field eval="'md@leclub.fr'" name="email_from"/>
             <field eval="'draft'" name="state"/>
             <field name="section_id" ref="crm.section_sales_department"/>
             <field eval="'(392) 895-7917'" name="mobile"/>
@@ -50,9 +50,9 @@
             <field name="type">lead</field>
             <field name="user_id" ref="base.user_demo"/>
             <field eval="'The Kompany'" name="partner_name"/>
-	    <field eval="'John Miller'" name="contact_name"/>
-	    <field eval="'New-York'" name="city"/>
-	    <field name="country_id" ref="base.us"/>
+        <field eval="'John Miller'" name="contact_name"/>
+        <field eval="'New-York'" name="city"/>
+        <field name="country_id" ref="base.us"/>
             <field eval="'draft'" name="state"/>
             <field name="section_id" ref="crm.section_sales_department"/>
             <field eval="'(820) 167-3208'" name="mobile"/>
@@ -68,9 +68,9 @@
             <field eval="'3'" name="priority"/>
             <field name="type">lead</field>
             <field eval="'The Gas Company'" name="partner_name"/>
-	    <field eval="'Henry Mc Coy'" name="contact_name"/>
-	    <field eval="'London'" name="city"/>
-	    <field name="country_id" ref="base.uk"/>
+        <field eval="'Henry Mc Coy'" name="contact_name"/>
+        <field eval="'London'" name="city"/>
+        <field name="country_id" ref="base.uk"/>
             <field eval="'draft'" name="state"/>
             <field name="section_id" ref="crm.section_sales_department"/>
             <field eval="'(077) 582-4035'" name="mobile"/>
@@ -87,12 +87,12 @@
             <field name="type">lead</field>
             <field name="user_id" ref="base.user_root"/>
             <field eval="'Stonage IT'" name="partner_name"/>
-	    <field eval="'Carrie Helle'" name="contact_name"/>
-	    <field eval="'Purchase Manager'" name="function"/>
-	    <field eval="'Bruxelles'" name="city"/>
-	    <field name="country_id" ref="base.be"/>
+        <field eval="'Carrie Helle'" name="contact_name"/>
+        <field eval="'Purchase Manager'" name="function"/>
+        <field eval="'Bruxelles'" name="city"/>
+        <field name="country_id" ref="base.be"/>
             <field eval="'draft'" name="state"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="crm.section_sales_marketing_department"/>
             <field eval="'(333) 715-1450'" name="mobile"/>
             <field eval="1" name="active"/>
             <field name="categ_id" ref="crm.categ_oppor1"/>
@@ -111,10 +111,10 @@
             <field name="type">lead</field>
             <field name="user_id" ref="base.user_root"/>
             <field eval="'Opensides'" name="partner_name"/>
-	    <field eval="'Tina Pinero'" name="contact_name"/>
-	    <field eval="'Consultant'" name="function"/>
-	    <field eval="'Roma'" name="city"/>
-	    <field name="country_id" ref="base.it"/>
+        <field eval="'Tina Pinero'" name="contact_name"/>
+        <field eval="'Consultant'" name="function"/>
+        <field eval="'Roma'" name="city"/>
+        <field name="country_id" ref="base.it"/>
             <field eval="'draft'" name="state"/>
             <field name="section_id" ref="crm.section_sales_department"/>
             <field eval="'(468) 017-2684'" name="mobile"/>
@@ -131,10 +131,10 @@
             <field name="type">lead</field>
             <field name="user_id" ref="base.user_demo"/>
             <field eval="'Gardner Group'" name="partner_name"/>
-	    <field eval="'Wendi Baltz'" name="contact_name"/>
-	    <field eval="'Journalist'" name="function"/>
-	    <field eval="'Kiev'" name="city"/>
-	    <field name="country_id" ref="base.ua"/>
+        <field eval="'Wendi Baltz'" name="contact_name"/>
+        <field eval="'Journalist'" name="function"/>
+        <field eval="'Kiev'" name="city"/>
+        <field name="country_id" ref="base.ua"/>
             <field eval="'draft'" name="state"/>
             <field name="section_id" ref="crm.section_sales_department"/>
             <field eval="'(463) 014-1208'" name="mobile"/>
@@ -155,12 +155,12 @@
             <field name="categ_id" ref="crm.categ_oppor6"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Survey Expert'" name="partner_name"/>
-	    <field eval="'John Smith'" name="contact_name"/>
-	    <field eval="'Sales'" name="function"/>
-	    <field eval="'Cambridge'" name="city"/>
-	    <field name="country_id" ref="base.uk"/>
+        <field eval="'John Smith'" name="contact_name"/>
+        <field eval="'Sales'" name="function"/>
+        <field eval="'Cambridge'" name="city"/>
+        <field name="country_id" ref="base.uk"/>
             <field eval="'smith_john@gmail.com'" name="email_from"/>
-	    <field eval="'(282) 596-8584'" name="phone"/>
+        <field eval="'(282) 596-8584'" name="phone"/>
         </record>
         <record id="crm_case_business_card0" model="crm.lead">
             <field eval="1" name="active"/>
@@ -174,12 +174,12 @@
             <field name="categ_id" ref="crm.categ_oppor5"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Marketing Business'" name="partner_name"/>
-	    <field eval="'Laure Smith'" name="contact_name"/>
-	    <field eval="'Sales'" name="function"/>
-	    <field eval="'Oxford'" name="city"/>
-	    <field name="country_id" ref="base.uk"/>
+        <field eval="'Laure Smith'" name="contact_name"/>
+        <field eval="'Sales'" name="function"/>
+        <field eval="'Oxford'" name="city"/>
+        <field name="country_id" ref="base.uk"/>
             <field eval="'l.smith@marketing-business.com'" name="email_from"/>
-	    <field eval="'(252) 578-7894'" name="phone"/>
+        <field eval="'(252) 578-7894'" name="phone"/>
         </record>
         <record id="crm_case_imported_contact0" model="crm.lead">
             <field eval="1" name="active"/>
@@ -204,7 +204,7 @@
             <field name="categ_id" ref="crm.categ_oppor3"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="'Agrolait'" name="partner_name"/>
-	    <field eval="'Sylvie Lelitre'" name="contact_name"/>
+        <field eval="'Sylvie Lelitre'" name="contact_name"/>
         </record>
         <record id="crm_case_company_partnership0" model="crm.lead">
             <field eval="1" name="active"/>
@@ -270,7 +270,9 @@
             <field name="categ_id" ref="crm.categ_oppor3"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="'Pricing Information of Onsite Intervention'" name="name"/>
-	    <field eval="'Send price list regarding our interventions'" name="title_action"/>
+            <field eval="'Send price list regarding our interventions'" name="title_action"/>
+            <field eval="time.strftime('%Y-%m-03')" name="date_action"/>
+            <field eval="time.strftime('%Y-%m-08')" name="date_deadline"/>
             <field name="partner_name">BalmerInc S.A.</field>
             <field name="street">Rue des Palais 51, bte 33</field>
             <field name="city">Bruxelles</field>
@@ -291,14 +293,16 @@
             <field name="categ_id" ref="crm.categ_oppor3"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="'Interest in your Kitchen Design Project'" name="name"/>
-	    <field eval="'Send Catalogue by E-Mail'" name="title_action"/>
+            <field eval="'Send Catalogue by E-Mail'" name="title_action"/>
+            <field eval="time.strftime('%Y-01-10')" name="date_action"/>
+            <field eval="time.strftime('%Y-02-23')" name="date_deadline"/>
             <field name="partner_name">Lucie Vonck</field>
             <field name="street">Chaussée de Namur</field>
             <field name="city">Grand-Rosière</field>
             <field eval="1367" name="zip"/>
             <field name="country_id" ref="base.be"/>
         </record>
-   	<record id="crm_case_unifliege" model="crm.lead">
+       <record id="crm_case_unifliege" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
             <field name="type_id" ref="crm.type_lead2"/>
@@ -313,7 +317,9 @@
             <field name="categ_id" ref="crm.categ_oppor6"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="'Plan train our students on your product'" name="name"/>
-	    <field eval="'Call to define real needs about training'" name="title_action"/>
+            <field eval="'Call to define real needs about training'" name="title_action"/>
+            <field eval="time.strftime('%Y-%m-04')" name="date_action"/>
+            <field eval="time.strftime('%Y-%m-13')" name="date_deadline"/>
             <field eval="4000" name="zip"/>
             <field name="partner_name">Université de Liège</field>
             <field name="street">Place du 20Août</field>
@@ -321,7 +327,7 @@
             <field eval="75016" name="zip"/>
             <field name="country_id" ref="base.be"/>
         </record>
-   	<record id="crm_case_bankwealthy2" model="crm.lead">
+       <record id="crm_case_bankwealthy2" model="crm.lead">
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
             <field name="type_id" ref="crm.type_lead2"/>
@@ -336,7 +342,9 @@
             <field name="categ_id" ref="crm.categ_oppor2"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="'Plan to buy 66 keyboards and 66 mouses'" name="name"/>
-	    <field eval="'Propose the kit keyboard+mouse'" name="title_action"/>
+            <field eval="'Propose the kit keyboard+mouse'" name="title_action"/>
+            <field eval="time.strftime('%Y-04-12')" name="date_action"/>
+            <field eval="time.strftime('%Y-04-25')" name="date_deadline"/>
             <field name="partner_name">Bank Wealthy and sons</field>
             <field name="street">1 rue Rockfeller</field>
             <field name="city">Paris</field>
@@ -359,6 +367,7 @@
             <field name="categ_id" ref="crm.categ_oppor7"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <field eval="'Need 20 Days of Consultancy'" name="name"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date_deadline"/>
             <field eval="'info@mycompany.net'" name="email_from"/>
         </record>
         <record id="crm_case_abcfuelcounits0" model="crm.lead">
@@ -376,8 +385,10 @@
             <field name="categ_id" ref="crm.categ_oppor5"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field eval="'Need new design for my website'" name="name"/>
+            <field eval="time.strftime('%Y-05-01')" name="date_action"/>
+            <field eval="time.strftime('%Y-06-30')" name="date_deadline"/>
             <field eval="'info@opensides.be'" name="email_from"/>
-	    <field eval="'Convert to quote'" name="title_action"/>
+            <field eval="'Convert to quote'" name="title_action"/>
             <field name="partner_name">Dubois sprl</field>
             <field name="street">Avenue de la Liberté 56</field>
             <field name="city">Brussels</field>
@@ -399,7 +410,7 @@
             <field name="stage_id" ref="crm.stage_lead6"/>
             <field eval="'Want to subscribe to your online solution'" name="name"/>
         </record>
-	<record id="crm_case_dirtminingltdunits0" model="crm.lead">
+    <record id="crm_case_dirtminingltdunits0" model="crm.lead">
             <field eval="30" name="probability"/>
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
@@ -413,7 +424,7 @@
             <field name="stage_id" ref="crm.stage_lead6"/>
             <field eval="'Interest in your Partnership Contract'" name="name"/>
         </record>
- 	<record id="crm_case_dirtminingltdunits10" model="crm.lead">
+     <record id="crm_case_dirtminingltdunits10" model="crm.lead">
             <field eval="30" name="probability"/>
             <field name="partner_address_id" ref="base.res_partner_address_3000"/>
             <field eval="1" name="active"/>
@@ -428,14 +439,16 @@
             <field name="categ_id" ref="crm.categ_oppor2"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="'Plan to attend a training'" name="name"/>
-	    <field eval="'Call to give info about next training session'" name="title_action"/>
+            <field eval="time.strftime('%Y-04-10')" name="date_action"/>
+            <field eval="time.strftime('%Y-06-12')" name="date_deadline"/>
+            <field eval="'Call to give info about next training session'" name="title_action"/>
             <field name="partner_name">Axelor</field>
             <field name="street">12 rue Albert Einstein</field>
             <field name="city">Champs sur Marne</field>
             <field eval="77420" name="zip"/>
             <field name="country_id" ref="base.fr"/>
         </record>
-   	<record id="crm_case_construstazunits0" model="crm.lead">
+       <record id="crm_case_construstazunits0" model="crm.lead">
             <field eval="60" name="probability"/>
             <field name="partner_address_id" ref="base.res_partner_address_thymbra"/>
             <field eval="1" name="active"/>
@@ -458,7 +471,7 @@
             <field eval="1659" name="zip"/>
             <field name="country_id" ref="base.ar"/>
         </record>
-   	<record id="crm_case_ericdubois4" model="crm.lead">
+       <record id="crm_case_ericdubois4" model="crm.lead">
             <field eval="65" name="probability"/>
             <field name="partner_address_id" ref="base.res_partner_address_ericdubois0"/>
             <field eval="1" name="active"/>
@@ -473,6 +486,8 @@
             <field name="categ_id" ref="crm.categ_oppor1"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field eval="'Interest in your customizable PC'" name="name"/>
+            <field eval="time.strftime('%Y-08-05')" name="date_action"/>
+            <field eval="time.strftime('%Y-10-10')" name="date_deadline"/>
             <field eval="'Ask for the good receprion of the proposition'" name="title_action"/>
             <field name="partner_name">Eric Dubois</field>
             <field name="street">Chaussée de Binche, 27</field>
@@ -480,7 +495,7 @@
             <field eval="7000" name="zip"/>
             <field name="country_id" ref="base.be"/>
         </record>
-   	<record id="crm_case_fabiendupont" model="crm.lead">
+       <record id="crm_case_fabiendupont" model="crm.lead">
             <field name="partner_address_id" ref="base.res_partner_address_fabiendupont0"/>
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>
@@ -493,7 +508,7 @@
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field eval="'Need more info about the onsite intervention'" name="name"/>
         </record>
-   	<record id="crm_case_shelvehouse" model="crm.lead">
+       <record id="crm_case_shelvehouse" model="crm.lead">
             <field name="partner_address_id" ref="base.res_partner_address_henrychard1"/>
             <field eval="1" name="active"/>
             <field name="type">opportunity</field>

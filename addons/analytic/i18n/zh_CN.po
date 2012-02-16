@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-08-03 00:16+0000\n"
-"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-09 15:18+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:40+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-10 04:49+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -33,15 +33,6 @@ msgid "Specifies the amount of quantity to count."
 msgstr "指定金额的数量用来计算"
 
 #. module: analytic
-#: model:ir.module.module,description:analytic.module_meta_information
-msgid ""
-"Module for defining analytic accounting object.\n"
-"    "
-msgstr ""
-"模块定义辅助核算对象\n"
-"    "
-
-#. module: analytic
 #: field:account.analytic.account,state:0
 msgid "State"
 msgstr "状态"
@@ -50,11 +41,6 @@ msgstr "状态"
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
 msgstr "项管理"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Draft"
-msgstr "草稿"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -94,14 +80,14 @@ msgstr ""
 "当项目结束状态为'完成'"
 
 #. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr "新增"
+
+#. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
 msgstr "项类型"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "模板"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -131,9 +117,18 @@ msgid "Company"
 msgstr "公司"
 
 #. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Maximum Quantity"
-msgstr "最大数量"
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really usefull for "
+"consolidation purposes of several companies charts with different "
+"currencies, for example."
+msgstr ""
+"如果选择公司，请注意保持成本科目货币与公司货币一致。\n"
+"针对视图类型的成本科目，你可以把公司字段留空，并修改币种。这样你就可以把多个公司不同货币的成本科目合并起来。"
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -151,9 +146,9 @@ msgid "Date"
 msgstr "日期"
 
 #. module: analytic
-#: field:account.analytic.account,currency_id:0
-msgid "Account currency"
-msgstr "币别"
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "模板"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -169,9 +164,14 @@ msgid ""
 msgstr "计算公式是数量乘以产品成本价。币别是公司本位币。"
 
 #. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr "树"
+
+#. module: analytic
 #: help:account.analytic.account,quantity_max:0
-msgid "Sets the higher limit of quantity of hours."
-msgstr "设置较高的小时数限制"
+msgid "Sets the higher limit of time to work on the contract."
+msgstr "设置在这个合同上工作的最高时限。"
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -189,16 +189,20 @@ msgid "Contact"
 msgstr "联系"
 
 #. module: analytic
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "错误！此币别必须是选定公司的默认币别。"
+#: field:account.analytic.account,code:0
+msgid "Code/Reference"
+msgstr "编号"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
 msgstr "已取消"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid "Error !"
+msgstr "错误！"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -223,9 +227,14 @@ msgid "Date End"
 msgstr "结束日期"
 
 #. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Account Code"
-msgstr "辅助核算项代码"
+#: field:account.analytic.account,quantity_max:0
+msgid "Maximum Time"
+msgstr "最长时间"
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr "成本会计"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -235,9 +244,18 @@ msgstr "所有项名称"
 #. module: analytic
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.module.module,shortdesc:analytic.module_meta_information
 msgid "Analytic Account"
 msgstr "辅助核算项"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr "货币"
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr "无法在视图类型的科目上创建分析凭证行"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -263,3 +281,30 @@ msgstr "待处理"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "辅助核算条目"
+
+#~ msgid ""
+#~ "Module for defining analytic accounting object.\n"
+#~ "    "
+#~ msgstr ""
+#~ "模块定义辅助核算对象\n"
+#~ "    "
+
+#~ msgid "Draft"
+#~ msgstr "草稿"
+
+#~ msgid "Maximum Quantity"
+#~ msgstr "最大数量"
+
+#~ msgid "Account Code"
+#~ msgstr "辅助核算项代码"
+
+#~ msgid "Sets the higher limit of quantity of hours."
+#~ msgstr "设置较高的小时数限制"
+
+#~ msgid "Account currency"
+#~ msgstr "币别"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "错误！此币别必须是选定公司的默认币别。"

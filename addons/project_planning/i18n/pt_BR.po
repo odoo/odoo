@@ -7,22 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-01-25 15:23+0000\n"
 "Last-Translator: Adriano Prado <adrianojprado@hotmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:50+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
-
-#. module: project_planning
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "Erro! A moeda deve ser a mesma da empresa selecionada"
+"X-Launchpad-Export-Date: 2012-02-09 07:08+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,tasks:0
@@ -74,11 +67,6 @@ msgstr "Meu Planejamento do Projeto"
 #: field:report_account_analytic.planning.user,timesheet:0
 msgid "Timesheet"
 msgstr "Planilha de Horas"
-
-#. module: project_planning
-#: model:ir.module.module,shortdesc:project_planning.module_meta_information
-msgid "Planning Management Module"
-msgstr "Módulo Planejamento"
 
 #. module: project_planning
 #: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
@@ -177,9 +165,9 @@ msgid "Extra Info"
 msgstr "Info. Extra"
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "To :"
-msgstr "Para :"
+#: field:report_account_analytic.planning,total_planned:0
+msgid "Total Planned"
+msgstr "Total Planejado"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,timesheet:0
@@ -264,9 +252,9 @@ msgid "Planning"
 msgstr "Planejamento"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,total_planned:0
-msgid "Total Planned"
-msgstr "Total Planejado"
+#: report:report_account_analytic.planning.print:0
+msgid "To :"
+msgstr "Para :"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -293,13 +281,9 @@ msgid "Delegate"
 msgstr "Delegar"
 
 #. module: project_planning
-#: help:report_account_analytic.planning.user,free:0
-msgid ""
-"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
-"without Tasks + Holiday Leaves)"
-msgstr ""
-"Calculado como Dias Úteis - (Tempo de Alocação das Tarefas + Tempo de "
-"Alocação sem Tarefas + Feriados)"
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr "Análises do Planejamento"
 
 #. module: project_planning
 #: help:report_account_analytic.planning,business_days:0
@@ -362,9 +346,13 @@ msgstr ""
 "com a caixa de seleção 'Selecionada na Tarefa' definida como VERDADEIRO."
 
 #. module: project_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
-msgstr "Análises do Planejamento"
+#: help:report_account_analytic.planning.user,free:0
+msgid ""
+"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
+"without Tasks + Holiday Leaves)"
+msgstr ""
+"Calculado como Dias Úteis - (Tempo de Alocação das Tarefas + Tempo de "
+"Alocação sem Tarefas + Feriados)"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
@@ -424,39 +412,6 @@ msgstr "Usuário"
 #: view:report_account_analytic.planning:0
 msgid "Total Remaining Tasks"
 msgstr "Total de Tarefas Restantes"
-
-#. module: project_planning
-#: model:ir.module.module,description:project_planning.module_meta_information
-msgid ""
-"\n"
-"This module helps you to manage your plannings.\n"
-"\n"
-"This module is based on the analytic accounting and is totally integrated "
-"with\n"
-"* the timesheets encoding\n"
-"* the holidays management\n"
-"* the project management\n"
-"\n"
-"So that, each department manager can know if someone in his team has still "
-"unallocated time for a given planning (taking in consideration the validated "
-"leaves) or if he still needs to encode tasks.\n"
-"\n"
-"At the end of the month, the planning manager can also check if the encoded "
-"timesheets are respecting the planned time on each analytic account.\n"
-msgstr ""
-"\n"
-"Este módulo ajuda a gerenciar seus planejamentos.\n"
-"\n"
-"Este módulo é baseado na Contabilidade Analítica e está totalmente "
-"Integrado.\n"
-" * A codificação das Planilhas de Horas\n"
-" * O gerenciamento de Feriados\n"
-" * O gerenciamento de Projetos\n"
-"\n"
-"De modo que, cada gerente de departamento pode saber se alguém em sua equipe "
-"tem ainda tempo não alocado para um determinado planejamento (levando em "
-"consideração as planilhas validadas) ou se ele ainda é preciso codificar "
-"tarefas.\n"
 
 #. module: project_planning
 #: model:ir.model,name:project_planning.model_res_company
@@ -538,6 +493,11 @@ msgid "Reactivate"
 msgstr "Reativar"
 
 #. module: project_planning
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
+
+#. module: project_planning
 #: field:report_account_analytic.planning,user_id:0
 msgid "Responsible"
 msgstr "Responsável"
@@ -576,6 +536,11 @@ msgstr "Tempo de Alocação Total das Tarefas"
 #: field:report_account_analytic.planning,date_to:0
 msgid "End Date"
 msgstr "Data Final"
+
+#. module: project_planning
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr ""
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -620,3 +585,42 @@ msgid ""
 msgstr ""
 "Este valor é determinado pela soma da alocação do tempo com tarefa (s) "
 "vinculada, expresso em dias."
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Erro! A moeda deve ser a mesma da empresa selecionada"
+
+#~ msgid "Planning Management Module"
+#~ msgstr "Módulo Planejamento"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module helps you to manage your plannings.\n"
+#~ "\n"
+#~ "This module is based on the analytic accounting and is totally integrated "
+#~ "with\n"
+#~ "* the timesheets encoding\n"
+#~ "* the holidays management\n"
+#~ "* the project management\n"
+#~ "\n"
+#~ "So that, each department manager can know if someone in his team has still "
+#~ "unallocated time for a given planning (taking in consideration the validated "
+#~ "leaves) or if he still needs to encode tasks.\n"
+#~ "\n"
+#~ "At the end of the month, the planning manager can also check if the encoded "
+#~ "timesheets are respecting the planned time on each analytic account.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Este módulo ajuda a gerenciar seus planejamentos.\n"
+#~ "\n"
+#~ "Este módulo é baseado na Contabilidade Analítica e está totalmente "
+#~ "Integrado.\n"
+#~ " * A codificação das Planilhas de Horas\n"
+#~ " * O gerenciamento de Feriados\n"
+#~ " * O gerenciamento de Projetos\n"
+#~ "\n"
+#~ "De modo que, cada gerente de departamento pode saber se alguém em sua equipe "
+#~ "tem ainda tempo não alocado para um determinado planejamento (levando em "
+#~ "consideração as planilhas validadas) ou se ele ainda é preciso codificar "
+#~ "tarefas.\n"

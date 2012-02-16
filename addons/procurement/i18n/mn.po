@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2010-12-24 18:23+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:43+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:01+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -53,7 +53,7 @@ msgid "Draft procurement of the product and location of that orderpoint"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:288
+#: code:addons/procurement/procurement.py:291
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Энэ бараанд нийлүүлэгч тодорхойлоогүй байна !"
@@ -69,7 +69,7 @@ msgid "Procurement Method"
 msgstr "Нөхөн дүүргэх хэлбэр"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:304
+#: code:addons/procurement/procurement.py:307
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "Нийлүүлэгчийн хаяг байхгүй"
@@ -78,6 +78,11 @@ msgstr "Нийлүүлэгчийн хаяг байхгүй"
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
 msgid "Compute Stock Minimum Rules Only"
 msgstr "Зохистой нөөцийн дүрмийг хангах"
+
+#. module: procurement
+#: view:procurement.order:0
+msgid "Temporary Procurement Exceptions"
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -152,19 +157,14 @@ msgstr ""
 "байна' төлөвт шилжинэ."
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Permanent Procurement Exceptions"
+msgstr ""
+
+#. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Minimum Stock Rules Search"
 msgstr "Зохистой нөөцийн дүрэм хайх"
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,product_min_qty:0
-msgid ""
-"When the virtual stock goes belong the Min Quantity, OpenERP generates a "
-"procurement to bring the virtual stock to the Max Quantity."
-msgstr ""
-"Барааны ирээдүйн үлдэгдэл нь байх ёстой доод хэмжээнээс буурсан байвал "
-"систем түүнийг доо хэмжээнд хүргэхийн тулд нөхөн дүүргэлтийн захиалга "
-"үүсгэнэ."
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -175,6 +175,11 @@ msgstr "Төлөвлөгчийн тохиргоо"
 #: model:ir.model,name:procurement.model_stock_move
 msgid "Stock Move"
 msgstr "Барааны хөдөлгөөн"
+
+#. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "Бүх хуваарийг тооцоолох"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -192,9 +197,20 @@ msgid "Automatic orderpoint"
 msgstr "Автоматаар үлдэгдэл нөхөх"
 
 #. module: procurement
-#: field:mrp.property,composition:0
-msgid "Properties composition"
-msgstr "Шинжүүдийн нэгтгэл"
+#: code:addons/procurement/schedulers.py:123
+#, python-format
+msgid ""
+"Here is the procurement scheduling report.\n"
+"\n"
+"        Start Time: %s \n"
+"        End Time: %s \n"
+"        Total Procurements processed: %d \n"
+"        Procurements with exceptions: %d \n"
+"        Skipped Procurements (scheduled date outside of scheduler range) %d "
+"\n"
+"\n"
+"        Exceptions:\n"
+msgstr ""
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -205,6 +221,14 @@ msgstr "Баталсан"
 #: view:procurement.order:0
 msgid "Retry"
 msgstr "Дахин оролдох"
+
+#. module: procurement
+#: help:stock.warehouse.orderpoint,product_max_qty:0
+msgid ""
+"When the virtual stock goes below the Min Quantity, OpenERP generates a "
+"procurement to bring the virtual stock to the Quantity specified as Max "
+"Quantity."
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -234,6 +258,12 @@ msgstr ""
 #. module: procurement
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:386
+#, python-format
+msgid "Procurement '%s' is in exception: "
 msgstr ""
 
 #. module: procurement
@@ -272,6 +302,12 @@ msgid "Best price (not yet active!)"
 msgstr "Шилдэг үнэ (одоохондоо идэвхжээгүй!)"
 
 #. module: procurement
+#: code:addons/procurement/schedulers.py:111
+#, python-format
+msgid "PROC %d: from stock - %3.2f %-5s - %s"
+msgstr ""
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Product & Location"
 msgstr "Бараа & Байршил"
@@ -282,7 +318,6 @@ msgid "Compute Procurement"
 msgstr "Татан авалт бодох"
 
 #. module: procurement
-#: model:ir.module.module,shortdesc:procurement.module_meta_information
 #: field:stock.move,procurements:0
 msgid "Procurements"
 msgstr "Нийлүүлэлт"
@@ -320,7 +355,7 @@ msgid "Quantity"
 msgstr "Тоо хэмжээ"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:377
+#: code:addons/procurement/procurement.py:379
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Хангалттай бараа байхгүй, зохистой нөөцийн дүрэм байхгүй."
@@ -337,14 +372,23 @@ msgid "References"
 msgstr "Дугаар"
 
 #. module: procurement
+#: view:product.product:0
+#: field:product.product,orderpoint_ids:0
+msgid "Minimum Stock Rule"
+msgstr ""
+
+#. module: procurement
 #: view:res.company:0
 msgid "Configuration"
 msgstr "Тохиргоо"
 
 #. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
-msgstr "Нөөцийн тоймчлол"
+#: code:addons/procurement/procurement.py:328
+#, python-format
+msgid ""
+"Please check the quantity in procurement order(s), it should not be 0 or "
+"less!"
+msgstr ""
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -409,25 +453,17 @@ msgid "Compute Stock"
 msgstr "Үлдэгдэл тооцоолох"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Late"
-msgstr "Хожимдсон"
+#: help:stock.warehouse.orderpoint,product_min_qty:0
+msgid ""
+"When the virtual stock goes below the Min Quantity specified for this field, "
+"OpenERP generates a procurement to bring the virtual stock to the Max "
+"Quantity."
+msgstr ""
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
 msgstr "Үйлчилгээ"
-
-#. module: procurement
-#: model:ir.module.module,description:procurement.module_meta_information
-msgid ""
-"\n"
-"    This is the module for computing Procurements.\n"
-"    "
-msgstr ""
-"\n"
-"    Татан авалтын тооцооллын модуль.\n"
-"    "
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -458,14 +494,9 @@ msgid "plus"
 msgstr "нэмэх"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:325
-#, python-format
-msgid ""
-"Please check the Quantity in Procurement Order(s), it should not be less "
-"than 1!"
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
 msgstr ""
-"Татан авалтын захиалгын тоо хэмжээг шалгана уу, энэ нь нэгээс бага байх "
-"ёсгүй!"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -473,15 +504,6 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,product_max_qty:0
-msgid ""
-"When the virtual stock goes belong the Max Quantity, OpenERP generates a "
-"procurement to bring the virtual stock to the Max Quantity."
-msgstr ""
-"Барааны ирээдүйн үлдэгдэл байх ёстой дээд хэмжээнээс давсан байвал систем "
-"дээд хэмжээнд хүргэхийн тулд урвуу нөхөн дүүргэлтийн захиалга үүсгэнэ."
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
@@ -543,6 +565,12 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: procurement
+#: code:addons/procurement/procurement.py:383
+#, python-format
+msgid "Not enough stock."
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
 msgstr "Идэвхитэй"
@@ -563,7 +591,13 @@ msgid "Exception"
 msgstr "Алдаа"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:179
+#: code:addons/procurement/procurement.py:381
+#, python-format
+msgid "No minimum orderpoint rule defined."
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/schedulers.py:151
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "Автомат ҮН: %s"
@@ -577,6 +611,11 @@ msgstr "Автоматаар үлдэгдэл нөхөх"
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
 msgstr "Хамгийн бага эрхтэй оролцогч"
+
+#. module: procurement
+#: help:stock.warehouse.orderpoint,qty_multiple:0
+msgid "The procurement quantity will be rounded up to this multiple."
+msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -614,24 +653,22 @@ msgid "Order to Max"
 msgstr "Хамгийн их захиалга"
 
 #. module: procurement
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr ""
+
+#. module: procurement
 #: field:procurement.order,date_close:0
 msgid "Date Closed"
 msgstr "Хаагдсан огноо"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:372
-#, python-format
-msgid "Procurement '%s' is in exception: not enough stock."
-msgstr "'%s' нөхөн дүүргэлтэд алдаа гарлаа: үлдэгдэл хүрэлцэхгүй."
+#: field:mrp.property,composition:0
+msgid "Properties composition"
+msgstr "Шинжүүдийн нэгтгэл"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s State!"
-msgstr "%s төлөвтэй нөхөн дүүргэлтийн захиалгыг устгах боломжгүй!"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:324
+#: code:addons/procurement/procurement.py:327
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Өгөгдөл хангалтгүй !"
@@ -674,13 +711,6 @@ msgid "Done"
 msgstr "Дууссан"
 
 #. module: procurement
-#: help:stock.warehouse.orderpoint,qty_multiple:0
-msgid "The procurement quantity will by rounded up to this multiple."
-msgstr ""
-"Автомат нөхөн дүүргэлт хийх үед нөхөж авах тоо хэмжээ нь дараах утгаар "
-"тоймлогдоно."
-
-#. module: procurement
 #: view:make.procurement:0
 #: view:procurement.order:0
 #: selection:procurement.order,state:0
@@ -706,14 +736,15 @@ msgid "Not urgent"
 msgstr "Яаралтай бус"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute_all
-msgid "Compute all schedulers"
-msgstr "Бүх хуваарийг тооцоолох"
+#: code:addons/procurement/procurement.py:297
+#, python-format
+msgid "No default supplier defined for this product"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
-msgid "Current"
-msgstr "Одоо"
+msgid "Late"
+msgstr "Хожимдсон"
 
 #. module: procurement
 #: view:board.board:0
@@ -730,6 +761,7 @@ msgstr "Дэлгэрэнгүй"
 #: model:ir.actions.act_window,name:procurement.procurement_action_board
 #: model:ir.actions.act_window,name:procurement.procurement_exceptions
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
 msgid "Procurement Exceptions"
 msgstr "Нөхөн дүүргэлтийн саналууд"
 
@@ -739,6 +771,7 @@ msgstr "Нөхөн дүүргэлтийн саналууд"
 #: model:ir.actions.act_window,name:procurement.act_stock_warehouse_2_stock_warehouse_orderpoint
 #: model:ir.actions.act_window,name:procurement.action_orderpoint_form
 #: model:ir.ui.menu,name:procurement.menu_stock_order_points
+#: view:product.product:0
 #: view:stock.warehouse.orderpoint:0
 msgid "Minimum Stock Rules"
 msgstr "Зохистой нөөцийн дүрмүүд"
@@ -749,11 +782,17 @@ msgid "Close Move at end"
 msgstr "Эцэст нь хөдөлгөөнийг дуусгах"
 
 #. module: procurement
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
+msgstr "Нөөцийн тоймчлол"
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Scheduled Date"
 msgstr "Төлөвлөгдсөн огноо"
 
 #. module: procurement
+#: model:ir.model,name:procurement.model_product_product
 #: field:make.procurement,product_id:0
 #: view:procurement.order:0
 #: field:procurement.order,product_id:0
@@ -844,6 +883,17 @@ msgid "MRP & Logistics Scheduler"
 msgstr "Үйлдвэрлэл & Логистик"
 
 #. module: procurement
+#: code:addons/procurement/procurement.py:138
+#, python-format
+msgid "Cannot delete Procurement Order(s) which are in %s state!"
+msgstr ""
+
+#. module: procurement
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr ""
+
+#. module: procurement
 #: field:mrp.property,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
@@ -860,7 +910,7 @@ msgid "Product UoS"
 msgstr "Хоёрдогч х.нэгж"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:353
+#: code:addons/procurement/procurement.py:356
 #, python-format
 msgid "from stock: products assigned."
 msgstr "агуулахаас: бараа хувиарлагдсан."
@@ -921,7 +971,67 @@ msgid "Procurement Details"
 msgstr "Нөхөн дүүргэлтийн дэлгэрэнгүй"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:180
+#: view:procurement.order:0
+msgid "Procurement started late"
+msgstr ""
+
+#. module: procurement
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/schedulers.py:152
 #, python-format
 msgid "SCHEDULER"
 msgstr "ТӨЛӨВЛӨГЧ"
+
+#. module: procurement
+#: code:addons/procurement/schedulers.py:88
+#, python-format
+msgid "PROC %d: on order - %3.2f %-5s - %s"
+msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "    This is the module for computing Procurements.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Татан авалтын тооцооллын модуль.\n"
+#~ "    "
+
+#, python-format
+#~ msgid ""
+#~ "Please check the Quantity in Procurement Order(s), it should not be less "
+#~ "than 1!"
+#~ msgstr ""
+#~ "Татан авалтын захиалгын тоо хэмжээг шалгана уу, энэ нь нэгээс бага байх "
+#~ "ёсгүй!"
+
+#~ msgid "Current"
+#~ msgstr "Одоо"
+
+#~ msgid ""
+#~ "When the virtual stock goes belong the Min Quantity, OpenERP generates a "
+#~ "procurement to bring the virtual stock to the Max Quantity."
+#~ msgstr ""
+#~ "Барааны ирээдүйн үлдэгдэл нь байх ёстой доод хэмжээнээс буурсан байвал "
+#~ "систем түүнийг доо хэмжээнд хүргэхийн тулд нөхөн дүүргэлтийн захиалга "
+#~ "үүсгэнэ."
+
+#~ msgid ""
+#~ "When the virtual stock goes belong the Max Quantity, OpenERP generates a "
+#~ "procurement to bring the virtual stock to the Max Quantity."
+#~ msgstr ""
+#~ "Барааны ирээдүйн үлдэгдэл байх ёстой дээд хэмжээнээс давсан байвал систем "
+#~ "дээд хэмжээнд хүргэхийн тулд урвуу нөхөн дүүргэлтийн захиалга үүсгэнэ."
+
+#, python-format
+#~ msgid "Cannot delete Procurement Order(s) which are in %s State!"
+#~ msgstr "%s төлөвтэй нөхөн дүүргэлтийн захиалгыг устгах боломжгүй!"
+
+#~ msgid "The procurement quantity will by rounded up to this multiple."
+#~ msgstr ""
+#~ "Автомат нөхөн дүүргэлт хийх үед нөхөж авах тоо хэмжээ нь дараах утгаар "
+#~ "тоймлогдоно."

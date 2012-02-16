@@ -21,7 +21,7 @@
 
 from osv import osv, fields
 # from tools.translate import _
-from document_ftp import ftpserver
+from .. import ftpserver
 
 class document_ftp_browse(osv.osv_memory):
     _name = 'document.ftp.browse'
@@ -61,3 +61,5 @@ class document_ftp_browse(osv.osv_memory):
         }
 
 document_ftp_browse()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

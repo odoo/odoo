@@ -3,14 +3,8 @@
 <data noupdate="1">
 
     <record id="group_uos" context="{'noadmin':True}" model="res.groups">
-        <field name="name">Useability / Product UoS View</field>
-    </record>
-
-    <record id="base.group_sale_manager" model="res.groups">
-        <field name="name">Sales / Manager</field>
-    </record>
-    <record id="base.group_sale_salesman" model="res.groups">
-        <field name="name">Sales / User</field>
+        <field name="name">Product UoS View</field>
+        <field name="category_id" ref="base.module_category_usability"/>
     </record>
 
     <record id="product_comp_rule" model="ir.rule">
@@ -21,7 +15,8 @@
     </record>
 
     <record id="group_product_variant" model="res.groups" context="{'noadmin':True}">
-        <field name="name">Useability / Product Variant</field>
+        <field name="name">Product Variant</field>
+        <field name="category_id" ref="base.module_category_usability"/>
     </record>
 
     <record model="ir.rule" id="product_pricelist_comp_rule">

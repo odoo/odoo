@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-08-02 21:04+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-07 11:12+0000\n"
 "Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:32+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:48+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
 msgid "Responsible User"
-msgstr "Odgovorni korisnik"
+msgstr "Odgovorna osoba"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -33,15 +33,9 @@ msgid "Budgetary Positions"
 msgstr "Proračunska pozicija"
 
 #. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "The General Budget '%s' has no Accounts!"
-msgstr ""
-
-#. module: account_budget
 #: report:account.budget:0
 msgid "Printed at:"
-msgstr "Ispisano na:"
+msgstr "Ispisano:"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -51,12 +45,12 @@ msgstr "Potvrdi"
 #. module: account_budget
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
-msgstr ""
+msgstr "Potvrdi korisnika"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
 msgid "Print Summary"
-msgstr ""
+msgstr "Ispis sažetka"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
@@ -87,7 +81,7 @@ msgstr "na"
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
 msgid "Print Budgets"
-msgstr ""
+msgstr "Ispis proračuna"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -97,7 +91,7 @@ msgstr "Valuta:"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
 msgid "Account Budget crossvered report"
-msgstr ""
+msgstr "Kombinirani izvještaj proračuna"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -131,10 +125,19 @@ msgid ""
 "revenue per analytic account and monitor its evolution based on the actuals "
 "realised during that period."
 msgstr ""
+"Proračun predstavlja predviđanje prihoda i rashoda vaše organizacije u "
+"budućnosti. Sa proračunom organizacija može pratiti koliko novca prihoduje u "
+"nekom razdoblju i na koji način ga je najbolje podijeliti po nekim "
+"kategorijama. S praćenjem kuda se novac troši, manje su šanse da ga "
+"potrošite previše, a veće su šanse da ćete uspijeti ostvariti svoje "
+"financijske ciljeve.  Predvidite proračuna detaljizirajući očekivanu zaradu "
+"po analitičkim kontima i prateći razvoj prema stvarnim ostvarenjima kroz "
+"period vremena."
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "The Budget '%s' has no accounts!"
 msgstr ""
 
 #. module: account_budget
@@ -152,7 +155,7 @@ msgstr "Opis"
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -164,17 +167,17 @@ msgstr "Ukupno :"
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Organizacija"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "To Approve"
-msgstr ""
+msgstr "Za odobriti"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Vrati u nacrt"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -187,7 +190,7 @@ msgstr "Planirani iznos"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Perc(%)"
-msgstr "Post(%)"
+msgstr "Posto(%)"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -199,7 +202,7 @@ msgstr "Završeno"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Practical Amt"
-msgstr ""
+msgstr "Stvarni iznos"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -207,7 +210,7 @@ msgstr ""
 #: view:crossovered.budget:0
 #: field:crossovered.budget.lines,practical_amount:0
 msgid "Practical Amount"
-msgstr ""
+msgstr "Stvarni iznos"
 
 #. module: account_budget
 #: field:crossovered.budget,date_to:0
@@ -219,7 +222,7 @@ msgstr "Završni datum"
 #: model:ir.model,name:account_budget.model_account_budget_analytic
 #: model:ir.model,name:account_budget.model_account_budget_report
 msgid "Account Budget report for analytic account"
-msgstr ""
+msgstr "Izvještaj konta proračuna za analitički konto"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -235,13 +238,13 @@ msgstr "Naziv"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
+msgstr "Redak proračuna"
 
 #. module: account_budget
 #: view:account.analytic.account:0
 #: view:account.budget.post:0
 msgid "Lines"
-msgstr "Retci"
+msgstr "Stavke"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -251,13 +254,18 @@ msgstr "Retci"
 #: model:ir.actions.report.xml,name:account_budget.account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget
 msgid "Budget"
-msgstr "Budžet"
+msgstr "Proračun"
+
+#. module: account_budget
+#: view:crossovered.budget:0
+msgid "To Approve Budgets"
+msgstr "Nepotvrđeni proračuni"
 
 #. module: account_budget
 #: code:addons/account_budget/account_budget.py:119
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Greška!"
 
 #. module: account_budget
 #: field:account.budget.post,code:0
@@ -269,7 +277,7 @@ msgstr "Šifra"
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
-msgstr ""
+msgstr "Ovaj asistent ispisuje proračun"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
@@ -281,14 +289,12 @@ msgstr ""
 #: model:ir.ui.menu,name:account_budget.next_id_31
 #: model:ir.ui.menu,name:account_budget.next_id_pos
 msgid "Budgets"
-msgstr "Budžeti"
+msgstr "Proračuni"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Ovaj asistent se koristi za ispis sažetka proračuna"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -298,7 +304,7 @@ msgstr "Otkazano"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr ""
+msgstr "Odobri"
 
 #. module: account_budget
 #: field:crossovered.budget,date_from:0
@@ -311,7 +317,7 @@ msgstr "Početni datum"
 #: field:crossovered.budget.lines,general_budget_id:0
 #: model:ir.model,name:account_budget.model_account_budget_post
 msgid "Budgetary Position"
-msgstr ""
+msgstr "Proračunska pozicija"
 
 #. module: account_budget
 #: field:account.budget.analytic,date_from:0
@@ -324,13 +330,13 @@ msgstr "Početak razdoblja"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
-msgstr ""
+msgstr "Izvještaj sažetka kombiniranog proračuna"
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Theoretical Amt"
-msgstr ""
+msgstr "Teoretski iznos"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -349,33 +355,11 @@ msgid "Print"
 msgstr "Ispis"
 
 #. module: account_budget
-#: model:ir.module.module,description:account_budget.module_meta_information
-msgid ""
-"This module allows accountants to manage analytic and crossovered budgets.\n"
-"\n"
-"Once the Master Budgets and the Budgets are defined (in "
-"Accounting/Budgets/),\n"
-"the Project Managers can set the planned amount on each Analytic Account.\n"
-"\n"
-"The accountant has the possibility to see the total of amount planned for "
-"each\n"
-"Budget and Master Budget in order to ensure the total planned is not\n"
-"greater/lower than what he planned for this Budget/Master Budget. Each list "
-"of\n"
-"record can also be switched to a graphical view of it.\n"
-"\n"
-"Three reports are available:\n"
-"    1. The first is available from a list of Budgets. It gives the "
-"spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
-"\n"
-"    2. The second is a summary of the previous one, it only gives the "
-"spreading, for the selected Budgets, of the Analytic Accounts.\n"
-"\n"
-"    3. The last one is available from the Analytic Chart of Accounts. It "
-"gives the spreading, for the selected Analytic Accounts, of the Master "
-"Budgets per Budgets.\n"
-"\n"
-msgstr ""
+#: view:account.budget.post:0
+#: view:crossovered.budget:0
+#: field:crossovered.budget.lines,theoritical_amount:0
+msgid "Theoretical Amount"
+msgstr "Teoretski iznos"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
@@ -386,19 +370,19 @@ msgstr "Konto analitike"
 #. module: account_budget
 #: report:account.budget:0
 msgid "Budget :"
-msgstr "Budžet"
+msgstr "Proračun"
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Planned Amt"
-msgstr ""
+msgstr "Planirani iznos"
 
 #. module: account_budget
 #: view:account.budget.post:0
 #: field:account.budget.post,account_ids:0
 msgid "Accounts"
-msgstr ""
+msgstr "Konta"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -412,7 +396,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
 msgid "Budget Lines"
-msgstr "Stavke budžeta"
+msgstr "Stavke proračuna"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -424,20 +408,20 @@ msgid "Cancel"
 msgstr "Odustani"
 
 #. module: account_budget
-#: model:ir.module.module,shortdesc:account_budget.module_meta_information
-msgid "Budget Management"
-msgstr "Upravljanje budžetom"
-
-#. module: account_budget
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Greška! Ne možete kreirati rekurzivna analitička konta."
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Analysis from"
 msgstr "Analiza od"
+
+#. module: account_budget
+#: view:crossovered.budget:0
+msgid "Draft Budgets"
+msgstr "Nacrti proračuna"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -483,9 +467,6 @@ msgstr "Analiza od"
 #~ msgid "Spread amount"
 #~ msgstr "Iznos širenja"
 
-#~ msgid "Theoretical Amount"
-#~ msgstr "Teoretski iznos"
-
 #~ msgid "Total Planned Amount"
 #~ msgstr "Ukupni planirani iznos"
 
@@ -515,3 +496,67 @@ msgstr "Analiza od"
 
 #~ msgid "Budget Item Detail"
 #~ msgstr "Detalji budžetske stavke"
+
+#~ msgid "Budget Management"
+#~ msgstr "Upravljanje budžetom"
+
+#, python-format
+#~ msgid "The General Budget '%s' has no Accounts!"
+#~ msgstr "Osnovni proračun '%s' nema konta!"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Greška! Valuta mora biti ista kao i valuta odabrane organizacije"
+
+#~ msgid ""
+#~ "This module allows accountants to manage analytic and crossovered budgets.\n"
+#~ "\n"
+#~ "Once the Master Budgets and the Budgets are defined (in "
+#~ "Accounting/Budgets/),\n"
+#~ "the Project Managers can set the planned amount on each Analytic Account.\n"
+#~ "\n"
+#~ "The accountant has the possibility to see the total of amount planned for "
+#~ "each\n"
+#~ "Budget and Master Budget in order to ensure the total planned is not\n"
+#~ "greater/lower than what he planned for this Budget/Master Budget. Each list "
+#~ "of\n"
+#~ "record can also be switched to a graphical view of it.\n"
+#~ "\n"
+#~ "Three reports are available:\n"
+#~ "    1. The first is available from a list of Budgets. It gives the "
+#~ "spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
+#~ "\n"
+#~ "    2. The second is a summary of the previous one, it only gives the "
+#~ "spreading, for the selected Budgets, of the Analytic Accounts.\n"
+#~ "\n"
+#~ "    3. The last one is available from the Analytic Chart of Accounts. It "
+#~ "gives the spreading, for the selected Analytic Accounts, of the Master "
+#~ "Budgets per Budgets.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Ovaj modul omogućava računovođama upravljanje analitičkim i kombiniranim "
+#~ "proračunom.\n"
+#~ "\n"
+#~ "Jednom kad su  glavni proračun i ostali proračuni definirani (u "
+#~ "Računovodstvo/Proračuni/),\n"
+#~ "voditelji projekata mogu postaviti planirane iznose na svaki analitički "
+#~ "konto.\n"
+#~ "\n"
+#~ "Računovođa ima mogućnost vidjeti ukupni planirani iznos za svaki proračun i "
+#~ "\n"
+#~ "glavni proračun kako bi se uvjerio da zborj nije veći/manji od planiranog \n"
+#~ "proračuna/glavnog proračuna. Svaki popis zapisa se također može pogledati i "
+#~ "grafički.\n"
+#~ "\n"
+#~ "Dostupna su tri izvještaja:\n"
+#~ "     1. Prvi je dostupan s popisa proračuna. Daje prikaz analitičkih konta "
+#~ "po glavnom\n"
+#~ "      proračunu za te proračune.\n"
+#~ "\n"
+#~ "    2. Drugi je sažetak prvog, daje samo prikaz analitičkih konta za "
+#~ "izabrani proračun. \n"
+#~ "\n"
+#~ "    3. Zadnji je dostupan iz analitičkog kontnog plana. Daje prikaz glavnog "
+#~ "proračuna, po proračunima za izabrana analitička konta.\n"
+#~ "\n"

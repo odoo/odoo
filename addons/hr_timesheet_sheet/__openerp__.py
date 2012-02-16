@@ -21,9 +21,10 @@
 
 
 {
-    'name': 'Timesheets',
+    'name': 'Timesheets Validation',
     'version': '1.0',
     'category': 'Human Resources',
+    "sequence": 16,
     'description': """
 This module helps you to easily encode and validate timesheet and attendances within the same view.
 ===================================================================================================
@@ -67,7 +68,8 @@ The validation can be configured in the company:
                  ],
     'test':['test/test_hr_timesheet_sheet.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0073297700829',
+    'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

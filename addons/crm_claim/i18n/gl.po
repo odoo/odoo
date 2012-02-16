@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-04-07 07:21+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:44+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:02+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -37,11 +37,6 @@ msgstr "Responsabilidades"
 #: field:crm.claim,date_action_next:0
 msgid "Next Action Date"
 msgstr "Fecha da próxima acción"
-
-#. module: crm_claim
-#: field:crm.claim.report,probability:0
-msgid "Probability"
-msgstr "Probabilidade"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -87,10 +82,15 @@ msgstr ""
 "dunha reclamación."
 
 #. module: crm_claim
-#: selection:crm.claim,priority:0
-#: selection:crm.claim.report,priority:0
-msgid "Highest"
-msgstr "A máis alta"
+#: code:addons/crm_claim/crm_claim.py:132
+#, python-format
+msgid "The claim '%s' has been opened."
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "Date Closed"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -139,24 +139,9 @@ msgid "Preventive"
 msgstr "Preventivo"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Fixed"
-msgstr "Fixo"
-
-#. module: crm_claim
-#: field:crm.claim,partner_address_id:0
-msgid "Partner Contact"
-msgstr "Contacto"
-
-#. module: crm_claim
 #: field:crm.claim.report,date_closed:0
 msgid "Close Date"
 msgstr "Data de peche"
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "   Month   "
-msgstr "   Mes   "
 
 #. module: crm_claim
 #: field:crm.claim,ref:0
@@ -164,9 +149,19 @@ msgid "Reference"
 msgstr "Referencia"
 
 #. module: crm_claim
-#: field:crm.claim,action_next:0
-msgid "Next Action"
-msgstr "Seguinte acción"
+#: view:crm.claim.report:0
+msgid "Date of claim"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "All pending Claims"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "# Mails"
+msgstr "Nº de emails"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -185,8 +180,14 @@ msgstr "Data límite"
 #: field:crm.claim,partner_id:0
 #: view:crm.claim.report:0
 #: field:crm.claim.report,partner_id:0
+#: model:ir.model,name:crm_claim.model_res_partner
 msgid "Partner"
 msgstr "Socio"
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "Month of claim"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim,type_action:0
@@ -222,9 +223,11 @@ msgid "Send New Email"
 msgstr "Enviar novo email"
 
 #. module: crm_claim
-#: field:crm.claim.report,delay_expected:0
-msgid "Overpassed Deadline"
-msgstr "Data límite excedida"
+#: view:crm.claim:0
+#: selection:crm.claim,state:0
+#: view:crm.claim.report:0
+msgid "New"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -242,6 +245,21 @@ msgstr "E-mail"
 #: selection:crm.claim.report,priority:0
 msgid "Lowest"
 msgstr "A máis baixa"
+
+#. module: crm_claim
+#: field:crm.claim,action_next:0
+msgid "Next Action"
+msgstr "Seguinte acción"
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "My Sales Team(s)"
+msgstr ""
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim3
+msgid "Won't fix"
+msgstr "No se corrixirá"
 
 #. module: crm_claim
 #: field:crm.claim,create_date:0
@@ -296,19 +314,14 @@ msgid "Dates"
 msgstr "Datas"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "    Month-1    "
-msgstr "    Mes-1    "
-
-#. module: crm_claim
 #: view:crm.claim:0
 msgid "Contact"
 msgstr "Contacto"
 
 #. module: crm_claim
-#: model:ir.ui.menu,name:crm_claim.menu_crm_claim_stage_act
-msgid "Stages"
-msgstr "Etapas"
+#: view:crm.claim.report:0
+msgid "Month-1"
+msgstr ""
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
@@ -354,6 +367,7 @@ msgstr "Mes"
 
 #. module: crm_claim
 #: field:crm.claim,type_action:0
+#: view:crm.claim.report:0
 #: field:crm.claim.report,type_action:0
 msgid "Action Type"
 msgstr "Tipo de acción"
@@ -362,6 +376,11 @@ msgstr "Tipo de acción"
 #: field:crm.claim,write_date:0
 msgid "Update Date"
 msgstr "Data de actualización"
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "Year of claim"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -381,9 +400,9 @@ msgid "Value Claims"
 msgstr "Valor reclamacións"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "  Year  "
-msgstr "  Ano  "
+#: view:crm.claim:0
+msgid "Responsible User"
+msgstr ""
 
 #. module: crm_claim
 #: help:crm.claim,email_cc:0
@@ -397,8 +416,6 @@ msgstr ""
 "diferentes enderezos de correo cunha coma."
 
 #. module: crm_claim
-#: selection:crm.claim,state:0
-#: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
 msgid "Draft"
 msgstr "Borrador"
@@ -415,6 +432,11 @@ msgstr "Baixo"
 #: selection:crm.claim.report,state:0
 msgid "Closed"
 msgstr "Pechado"
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "Reply"
+msgstr "Resposta"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -446,14 +468,14 @@ msgid "Global CC"
 msgstr "CC global"
 
 #. module: crm_claim
-#: model:ir.module.module,shortdesc:crm_claim.module_meta_information
-msgid "Customer & Supplier Relationship Management"
-msgstr "Xestión de relacións con clientes e provedores"
-
-#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "June"
 msgstr "Xuño"
+
+#. module: crm_claim
+#: view:res.partner:0
+msgid "Partners Claim"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,partner_phone:0
@@ -466,14 +488,9 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Awaiting Response"
-msgstr "Esperando resposta"
-
-#. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
-msgid "Claim Categories"
-msgstr "Categorías das reclamacións"
+#: field:crm.claim,active:0
+msgid "Active"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -501,23 +518,6 @@ msgid "October"
 msgstr "Outubro"
 
 #. module: crm_claim
-#: model:ir.module.module,description:crm_claim.module_meta_information
-msgid ""
-"\n"
-"This modules allows you to track your customers/suppliers claims and "
-"flames.\n"
-"It is fully integrated with the email gateway so that you can create\n"
-"automatically new claims based on incoming emails.\n"
-"    "
-msgstr ""
-"\n"
-"Este módulo permítelle realizar un seguimento das reclamacións e urxencias "
-"dos seus clientes/provedores. Está totalmente integrado na pasarela de "
-"correo electrónico para que poida crear automaticamente as novas "
-"reclamacións a partir dos correos electrónicos entrantes.\n"
-"    "
-
-#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "January"
 msgstr "Xaneiro"
@@ -534,10 +534,18 @@ msgid "These people will receive email."
 msgstr "Estas persoas recibirán un e-mail."
 
 #. module: crm_claim
+#: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
+msgid "Claim Categories"
+msgstr "Categorías das reclamacións"
+
+#. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
+#: model:ir.actions.act_window,name:crm_claim.act_claim_partner
+#: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
+#: field:res.partner,claims_ids:0
 msgid "Claims"
 msgstr "Reclamacións"
 
@@ -564,14 +572,15 @@ msgid "Claim"
 msgstr "Reclamación"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Attachments"
-msgstr "Anexos"
+#: selection:crm.claim,priority:0
+#: selection:crm.claim.report,priority:0
+msgid "Highest"
+msgstr "A máis alta"
 
 #. module: crm_claim
-#: model:ir.model,name:crm_claim.model_crm_case_stage
-msgid "Stage of case"
-msgstr "Fase do caso"
+#: field:crm.claim,partner_address_id:0
+msgid "Partner Contact"
+msgstr "Contacto"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -605,7 +614,6 @@ msgstr "Pechar"
 
 #. module: crm_claim
 #: view:crm.claim:0
-#: selection:crm.claim,state:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
 msgid "Open"
@@ -613,6 +621,12 @@ msgstr "Abrir"
 
 #. module: crm_claim
 #: view:crm.claim:0
+msgid "New Claims"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
+#: selection:crm.claim,state:0
 msgid "In Progress"
 msgstr "En curso"
 
@@ -623,19 +637,24 @@ msgid "Responsible"
 msgstr "Responsable"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Current"
-msgstr "Actual"
+#: view:crm.claim.report:0
+msgid "Claims created in current year"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Details"
-msgstr "Detalles"
+msgid "Unassigned Claims"
+msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Reply"
-msgstr "Resposta"
+#: view:crm.claim.report:0
+msgid "Claims created in current month"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim.report,delay_expected:0
+msgid "Overpassed Deadline"
+msgstr "Data límite excedida"
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
@@ -674,12 +693,6 @@ msgid "Resolution Actions"
 msgstr "Accións para resolución"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.act_claim_partner
-#: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
-msgid "Report a Claim"
-msgstr "Introducir reclamación"
-
-#. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
 msgid ""
 "Record and track your customers' claims. Claims may be linked to a sales "
@@ -698,6 +711,21 @@ msgstr ""
 #: field:crm.claim.report,email:0
 msgid "# Emails"
 msgstr "Nº de emails"
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Actions Done"
+msgstr "Accións realizadas"
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "Claims created in last month"
+msgstr ""
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Actions Defined"
+msgstr "Accións definidas"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -726,9 +754,15 @@ msgid "February"
 msgstr "Febreiro"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim3
-msgid "Won't fix"
-msgstr "No se corrixirá"
+#: view:crm.claim.report:0
+#: field:crm.claim.report,name:0
+msgid "Year"
+msgstr "Ano"
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "My company"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -744,6 +778,11 @@ msgstr "O(s) meu(s) caso(s)"
 #: field:crm.claim,id:0
 msgid "ID"
 msgstr "ID"
+
+#. module: crm_claim
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -772,13 +811,54 @@ msgid "Create Date"
 msgstr "Crear data"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-#: field:crm.claim.report,name:0
-msgid "Year"
-msgstr "Ano"
+#: view:crm.claim:0
+msgid "In Progress Claims"
+msgstr ""
 
-#~ msgid "Actions Defined"
-#~ msgstr "Accións definidas"
+#~ msgid "Probability"
+#~ msgstr "Probabilidade"
 
-#~ msgid "Actions Done"
-#~ msgstr "Accións realizadas"
+#~ msgid "   Month   "
+#~ msgstr "   Mes   "
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Mes-1    "
+
+#~ msgid "Stages"
+#~ msgstr "Etapas"
+
+#~ msgid "  Year  "
+#~ msgstr "  Ano  "
+
+#~ msgid "Customer & Supplier Relationship Management"
+#~ msgstr "Xestión de relacións con clientes e provedores"
+
+#~ msgid ""
+#~ "\n"
+#~ "This modules allows you to track your customers/suppliers claims and "
+#~ "flames.\n"
+#~ "It is fully integrated with the email gateway so that you can create\n"
+#~ "automatically new claims based on incoming emails.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Este módulo permítelle realizar un seguimento das reclamacións e urxencias "
+#~ "dos seus clientes/provedores. Está totalmente integrado na pasarela de "
+#~ "correo electrónico para que poida crear automaticamente as novas "
+#~ "reclamacións a partir dos correos electrónicos entrantes.\n"
+#~ "    "
+
+#~ msgid "Stage of case"
+#~ msgstr "Fase do caso"
+
+#~ msgid "Attachments"
+#~ msgstr "Anexos"
+
+#~ msgid "Details"
+#~ msgstr "Detalles"
+
+#~ msgid "Current"
+#~ msgstr "Actual"
+
+#~ msgid "Report a Claim"
+#~ msgstr "Introducir reclamación"

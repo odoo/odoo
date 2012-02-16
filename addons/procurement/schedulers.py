@@ -24,12 +24,21 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from osv import osv
 from tools.translate import _
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 import tools
 import netsvc
 import pooler
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
+
+    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
+        ''' Runs through scheduler.
+        @param use_new_cursor: False or the dbname
+        '''
+        self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, context=context)
+        self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
+                use_new_cursor=use_new_cursor, context=context)
 
     def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, context=None):
         '''
@@ -53,7 +62,7 @@ class procurement_order(osv.osv):
 
             procurement_obj = self.pool.get('procurement.order')
             if not ids:
-                ids = procurement_obj.search(cr, uid, [], order="date_planned")
+                ids = procurement_obj.search(cr, uid, [('state', '=', 'exception')], order="date_planned")
             for id in ids:
                 wf_service.trg_validate(uid, 'procurement.order', id, 'button_restart', cr)
             if use_new_cursor:
@@ -74,7 +83,7 @@ class procurement_order(osv.osv):
                     else:
                         offset += 1
                         report_later += 1
-                for proc in procurement_obj.browse(cr, uid, ids, context=context):
+
                     if proc.state == 'exception':
                         report.append(_('PROC %d: on order - %3.2f %-5s - %s') % \
                                 (proc.id, proc.product_qty, proc.product_uom.name,
@@ -97,12 +106,13 @@ class procurement_order(osv.osv):
                     else:
                         report_later += 1
                     report_total += 1
-                for proc in procurement_obj.browse(cr, uid, report_ids, context=context):
+
                     if proc.state == 'exception':
                         report.append(_('PROC %d: from stock - %3.2f %-5s - %s') % \
                                 (proc.id, proc.product_qty, proc.product_uom.name,
                                     proc.product_id.name,))
                         report_except += 1
+
                 if use_new_cursor:
                     cr.commit()
                 offset += len(ids)
@@ -137,6 +147,17 @@ class procurement_order(osv.osv):
                     pass
         return {}
 
+    def _prepare_automatic_op_procurement(self, cr, uid, product, warehouse, location_id, context=None):
+        return {'name': _('Automatic OP: %s') % (product.name,),
+                'origin': _('SCHEDULER'),
+                'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                'product_id': product.id,
+                'product_qty': -product.virtual_available,
+                'product_uom': product.uom_id.id,
+                'location_id': location_id,
+                'company_id': warehouse.company_id.id,
+                'procure_method': 'make_to_order',}
+
     def create_automatic_op(self, cr, uid, context=None):
         """
         Create procurement of  virtual stock < 0
@@ -155,34 +176,45 @@ class procurement_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
 
         warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
-        products_id = product_obj.search(cr, uid, [('purchase_ok', '=', True)], order='id', context=context)
+        products_ids = product_obj.search(cr, uid, [('purchase_ok', '=', True)], order='id', context=context)
 
         for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
             context['warehouse'] = warehouse
-            for product in product_obj.browse(cr, uid, products_id, context=context):
-                if product.virtual_available >= 0.0:
+            # Here we check products availability.
+            # We use the method 'read' for performance reasons, because using the method 'browse' may crash the server.
+            for product_read in product_obj.read(cr, uid, products_ids, ['virtual_available'], context=context):
+                if product_read['virtual_available'] >= 0.0:
                     continue
 
-                newdate = datetime.today()
+                product = product_obj.browse(cr, uid, [product_read['id']], context=context)[0]
                 if product.supply_method == 'buy':
                     location_id = warehouse.lot_input_id.id
                 elif product.supply_method == 'produce':
                     location_id = warehouse.lot_stock_id.id
                 else:
                     continue
-                proc_id = proc_obj.create(cr, uid, {
-                    'name': _('Automatic OP: %s') % (product.name,),
-                    'origin': _('SCHEDULER'),
-                    'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
-                    'product_id': product.id,
-                    'product_qty': -product.virtual_available,
-                    'product_uom': product.uom_id.id,
-                    'location_id': location_id,
-                    'company_id': warehouse.company_id.id,
-                    'procure_method': 'make_to_order',
-                    })
+                proc_id = proc_obj.create(cr, uid,
+                            self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
+                            context=context)
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
+        return True
+
+    def _get_orderpoint_date_planned(self, cr, uid, orderpoint, start_date, context=None):
+        date_planned = start_date + \
+                       relativedelta(days=orderpoint.product_id.seller_delay or 0.0)
+        return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
+
+    def _prepare_orderpoint_procurement(self, cr, uid, orderpoint, product_qty, context=None):
+        return {'name': orderpoint.name,
+                'date_planned': self._get_orderpoint_date_planned(cr, uid, orderpoint, datetime.today(), context=context),
+                'product_id': orderpoint.product_id.id,
+                'product_qty': product_qty,
+                'company_id': orderpoint.company_id.id,
+                'product_uom': orderpoint.product_uom.id,
+                'location_id': orderpoint.location_id.id,
+                'procure_method': 'make_to_order',
+                'origin': orderpoint.name}
 
     def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
             use_new_cursor=False, context=None, user_id=False):
@@ -229,8 +261,6 @@ class procurement_order(osv.osv):
                     if reste > 0:
                         qty += op.qty_multiple - reste
 
-                    newdate = datetime.today() + relativedelta(
-                            days = int(op.product_id.seller_delay))
                     if qty <= 0:
                         continue
                     if op.product_id.type not in ('consu'):
@@ -249,17 +279,9 @@ class procurement_order(osv.osv):
                             qty = to_generate
 
                     if qty:
-                        proc_id = procurement_obj.create(cr, uid, {
-                            'name': op.name,
-                            'date_planned': newdate.strftime('%Y-%m-%d'),
-                            'product_id': op.product_id.id,
-                            'product_qty': qty,
-                            'company_id': op.company_id.id,
-                            'product_uom': op.product_uom.id,
-                            'location_id': op.location_id.id,
-                            'procure_method': 'make_to_order',
-                            'origin': op.name
-                        })
+                        proc_id = procurement_obj.create(cr, uid,
+                                                         self._prepare_orderpoint_procurement(cr, uid, op, qty, context=context),
+                                                         context=context)
                         wf_service.trg_validate(uid, 'procurement.order', proc_id,
                                 'button_confirm', cr)
                         wf_service.trg_validate(uid, 'procurement.order', proc_id,

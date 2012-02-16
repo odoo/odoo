@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-04-06 08:02+0000\n"
 "Last-Translator: Mihai Satmarean <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:33+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:48+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -25,43 +25,45 @@ msgstr "Trimitere bunuri"
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled Paths"
-msgstr "Căi aduse"
+msgstr "Trasee retrase"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
-msgstr "Mișcă"
+msgstr "Miscare"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "Pushed Flows"
-msgstr "Fluxuri împinse"
+msgstr "Fluxuri inaintate"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr "Automatic fără adăugare de paşi"
+msgstr "Automat Fără adăugare de paşi"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Parameters"
-msgstr "Parametrii"
+msgstr "Parametri"
 
 #. module: stock_location
+#: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
-msgstr "Amplasament Sursă"
+msgstr "Locaţia Sursă"
 
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
 msgstr ""
+"Vă permite să anulati miscări asociate fluxului de extragere din productie"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
-msgstr "Fluxuri trase"
+msgstr "Fluxuri retrase"
 
 #. module: stock_location
 #: constraint:stock.move:0
@@ -71,7 +73,7 @@ msgstr "Trebuie să atribuiţi un lot de producţie pentru acest produs"
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
-msgstr ""
+msgstr "Locatia folosită de către Locatia Destinatie pentru aprovizionare"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -86,23 +88,19 @@ msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
 msgstr ""
+"Procurare extrasă venită din locatia originală %s, regulă extragere %s, prin "
+"Aprovizionarea originală %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
 msgid "Location"
-msgstr "Amplasament"
+msgstr "Locație"
 
 #. module: stock_location
 #: field:product.pulled.flow,invoice_state:0
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
 msgstr "Stare facură"
-
-#. module: stock_location
-#: help:product.pulled.flow,name:0
-msgid "This field will fill the packing Origin and the name of its moves"
-msgstr ""
-"Acest câmp va completa Originea ambalarii şi numele de miscarilor proprii"
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
@@ -114,17 +112,12 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
-"Se foloseşte pentru definirea traseului de urmat pentru produs în arborele "
-"de amplasamente.\n"
-"Valoarea 'Mişcare automată' va crea o mişcare de stoc după cea curentă şi va "
+"Se foloseşte pentru definirea traseului pe care produsul trebuie să il "
+"urmeze in arborele de locatii.\n"
+"Valoarea 'Mişcare automată' va crea o mişcare in stoc după cea curentă şi va "
 "fi validată automat. Cu 'Operare manuală', mişcarea de stoc va trebui "
-"validată de un operator. Cu 'Automat fără adăugare de paşi' amplasamentul "
-"este înlocuit în mişcarea originală."
-
-#. module: stock_location
-#: model:ir.module.module,shortdesc:stock_location.module_meta_information
-msgid "Warehouse Locations Paths"
-msgstr ""
+"validată de un operator. Cu 'Automat Fără adăugare de paşi' locatia este "
+"înlocuită în mişcarea originală."
 
 #. module: stock_location
 #: view:product.product:0
@@ -134,7 +127,7 @@ msgstr "Condiţii"
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
-msgstr ""
+msgstr "Zona de impachetat"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
@@ -154,7 +147,7 @@ msgstr "Cumpără"
 #. module: stock_location
 #: view:product.product:0
 msgid "Pushed flows"
-msgstr ""
+msgstr "Fluxuri inaintate"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
@@ -169,144 +162,62 @@ msgstr "Mişcare stoc"
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
-msgstr ""
+msgstr "Fluxuri extrase"
 
 #. module: stock_location
 #: field:product.pulled.flow,company_id:0
 #: field:stock.location.path,company_id:0
 msgid "Company"
-msgstr "Firmă"
+msgstr "Companie"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Logistics Flows"
-msgstr ""
+msgstr "Fluxuri Logistică"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
 "Dacă este bifat, atunci când această mişcare este anulată, anulează de "
-"asemenea mișcarea legată"
+"asemenea mișcarea asociată"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Produce"
-msgstr "Se produce"
+msgstr "Produceti"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr "Produce la comanda"
+msgstr "Făcut la comandă"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr "Produce pe stoc"
+msgstr "Făcut pe stoc"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
 msgid "Partner Address"
-msgstr "Adresă Partener"
+msgstr "Adresa Partenerului"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "To Be Invoiced"
-msgstr "Pentru a fi facturat"
+msgstr "Urmează a fi facturat"
 
 #. module: stock_location
 #: help:stock.location.path,delay:0
 msgid "Number of days to do this transition"
-msgstr "Număr de zile pentru efectuarea acestei tranziţii"
+msgstr "Numărul de zile pentru efectuarea acestei tranziţii"
 
 #. module: stock_location
-#: model:ir.module.module,description:stock_location.module_meta_information
-msgid ""
-"\n"
-"This module supplements the Warehouse application by adding support for per-"
-"product\n"
-"location paths, effectively implementing Push and Pull inventory flows.\n"
-"\n"
-"Typically this could be used to:\n"
-"* Manage product manufacturing chains\n"
-"* Manage default locations per product\n"
-"* Define routes within your warehouse according to business needs, such as:\n"
-"   - Quality Control\n"
-"   - After Sales Services\n"
-"   - Supplier Returns\n"
-"* Help rental management, by generating automated return moves for rented "
-"products\n"
-"\n"
-"Once this module is installed, an additional tab appear on the product form, "
-"where you can add\n"
-"Push and Pull flow specifications. The demo data of  CPU1 product for that "
-"push/pull :\n"
-"\n"
-"Push flows\n"
-"----------\n"
-"Push flows are useful when the arrival of certain products in a given "
-"location should always\n"
-"be followed by a corresponding move to another location, optionally after a "
-"certain delay.\n"
-"The original Warehouse application already supports such Push flow "
-"specifications on the\n"
-"Locations themselves, but these cannot be refined per-product.\n"
-"\n"
-"A push flow specification indicates which location is chained with which "
-"location, and with\n"
-"what parameters. As soon as a given quantity of products is moved in the "
-"source location,\n"
-"a chained move is automatically foreseen according to the parameters set on "
-"the flow specification\n"
-"(destination location, delay, type of move, journal, etc.) The new move can "
-"be automatically\n"
-"processed, or require a manual confirmation, depending on the parameters.\n"
-"\n"
-"Pull flows\n"
-"----------\n"
-"Pull flows are a bit different from Pull flows, in the sense that they are "
-"not related to\n"
-"the processing of product moves, but rather to the processing of procurement "
-"orders.\n"
-"What is being pulled is a need, not directly products.\n"
-"A classical example of Push flow is when you have an Outlet company, with a "
-"parent Company\n"
-"that is responsible for the supplies of the Outlet.\n"
-"\n"
-"  [ Customer ] <- A - [ Outlet ]  <- B -  [ Holding ] <~ C ~ [ Supplier ]\n"
-"\n"
-"When a new procurement order (A, coming from the confirmation of a Sale "
-"Order for example) arrives\n"
-"in the Outlet, it is converted into another procurement (B, via a Push flow "
-"of type 'move')\n"
-"requested from the Holding. When procurement order B is processed by the "
-"Holding company, and\n"
-"if the product is out of stock, it can be converted into a Purchase Order "
-"(C) from the Supplier\n"
-"(Push flow of type Purchase). The result is that the procurement order, the "
-"need, is pushed\n"
-"all the way between the Customer and Supplier.\n"
-"\n"
-"Technically, Pull flows allow to process procurement orders differently, not "
-"only depending on\n"
-"the product being considered, but also depending on which location holds the "
-"\"need\" for that\n"
-"product (i.e. the destination location of that procurement order).\n"
-"\n"
-"Use-Case\n"
-"--------\n"
-"\n"
-"You can use the demo data as follow:\n"
-"  CPU1: Sell some CPU1 from Shop 1 and run the scheduler\n"
-"     - Warehouse: delivery order, Shop 1: reception\n"
-"  CPU3:\n"
-"     - When receiving the product, it goes to Quality Control location then "
-"stored to shelf 2.\n"
-"     - When delivering the customer: Pick List -> Packing -> Delivery Order "
-"from Gate A\n"
-"    "
+#: help:product.pulled.flow,name:0
+msgid "This field will fill the packing Origin and the name of its moves"
 msgstr ""
+"Acest câmp va completa Originea ambalării şi numele miscărilor proprii"
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
@@ -317,7 +228,7 @@ msgstr "Tipul de aprovizionare"
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company belong packings and moves"
 msgstr ""
-"Este folosit pentru a şti cărei companii aparţin ambalaje şi mișcările"
+"Este folosit pentru a şti cărei companii ii aparţin ambalajele şi mișcările"
 
 #. module: stock_location
 #: field:product.pulled.flow,name:0
@@ -329,8 +240,13 @@ msgstr "Nume"
 msgid ""
 "These rules set the right path of the product in the whole location tree."
 msgstr ""
-"Aceste reguli stabilesc traseul corect spre produs în întregul arbore de "
-"amplasamente."
+"Aceste reguli stabilesc traseul corect al produsului in intregul arbore de "
+"locatii."
+
+#. module: stock_location
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr ""
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -346,13 +262,13 @@ msgstr "Produs"
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
 msgid "Procure Method"
-msgstr "Metodă procurare"
+msgstr "Metoda de aprovizionare"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
 #: field:stock.location.path,picking_type:0
 msgid "Shipping Type"
-msgstr "Tip expediere"
+msgstr "Tip de expediere"
 
 #. module: stock_location
 #: help:product.pulled.flow,procure_method:0
@@ -361,14 +277,14 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"\"Produce pe stoc\": Atunci când este necesar, să ia din stoc sau să aştepte "
-"până la re-alimentare. \"Produce la comandă\": Atunci când este necesar, să "
-"cumpere sau să producă pentru cererea de aprovizionare."
+"'Productie pe stoc': Atunci cand este necesar, va lua din stoc sau va "
+"astepta pană la re-aprovizionare. 'Productie la comandă': Atunci cand este "
+"necesar, cumpără sau produce pentru cererea de aprovizionare."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
-msgstr "Este amplasamentul destinaţie care are nevoie de alimentare"
+msgstr "Este locatia destinatie care necesită aprovizionare"
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -379,18 +295,18 @@ msgstr "Produse"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location via procurement %d"
-msgstr ""
+msgstr "Retras dintr-o altă locatie via aprovizionare %d"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
 msgid "Quality Control"
-msgstr "Control calitate"
+msgstr "Controlul Calitătii"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
-msgstr "Neaplicabil"
+msgstr "Nu se aplică"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
@@ -404,11 +320,13 @@ msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
 msgstr ""
+"Ridicarea pentru aprovizionarea retrasă provenită din locatia originală %s, "
+"regula de retragere %s, prin intermediul Aprovizionării originale %s ($%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
 msgid "Pushed Flow"
-msgstr "Flux împins"
+msgstr "Flux inaintare"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:89
@@ -417,6 +335,8 @@ msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
 msgstr ""
+"Miscarea pentru aprovizionarea retrasă provenită din locatia originală %s, "
+"regula de retragere %s, prin intermediul Aprovizionării originale %s (#%d)"
 
 #. module: stock_location
 #: constraint:stock.move:0
@@ -429,9 +349,10 @@ msgid "Procurement"
 msgstr "Aprovizionare"
 
 #. module: stock_location
+#: field:product.pulled.flow,location_id:0
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
-msgstr "Amplasament destinaţie"
+msgstr "Locaţia destinaţie"
 
 #. module: stock_location
 #: field:stock.location.path,auto:0
@@ -443,7 +364,7 @@ msgstr "Mişcare automată"
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
-msgstr "Obţinerea de bunuri"
+msgstr "Achizitie mărfuri"
 
 #. module: stock_location
 #: view:product.product:0
@@ -462,7 +383,8 @@ msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
 msgstr ""
-"În funcţie de companie, alege ce vrei pentru a primi sau trimite produse"
+"În funcţie de companie, alegeti ceea ce doriti pentru a primi sau trimite "
+"produse"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order
@@ -472,14 +394,12 @@ msgstr "Procesare comandă"
 #. module: stock_location
 #: field:stock.location.path,name:0
 msgid "Operation"
-msgstr "Operație"
+msgstr "Operaţiune"
 
 #. module: stock_location
-#: view:product.product:0
-#: field:product.product,path_ids:0
 #: view:stock.location.path:0
 msgid "Location Paths"
-msgstr "Trasee amplasamente"
+msgstr "Trasee locatii"
 
 #. module: stock_location
 #: field:product.pulled.flow,journal_id:0
@@ -491,7 +411,7 @@ msgstr "Jurnal"
 #: field:product.pulled.flow,cancel_cascade:0
 #: field:stock.move,cancel_cascade:0
 msgid "Cancel Cascade"
-msgstr "Anulare în cascadă"
+msgstr "Anulare cascadă"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
@@ -516,3 +436,174 @@ msgstr "Facturat"
 
 #~ msgid "Procurement & Locations"
 #~ msgstr "Aprovizionare & Locaţii"
+
+#~ msgid "Warehouse Locations Paths"
+#~ msgstr "Trasee Locatii Depozit"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module supplements the Warehouse application by adding support for per-"
+#~ "product\n"
+#~ "location paths, effectively implementing Push and Pull inventory flows.\n"
+#~ "\n"
+#~ "Typically this could be used to:\n"
+#~ "* Manage product manufacturing chains\n"
+#~ "* Manage default locations per product\n"
+#~ "* Define routes within your warehouse according to business needs, such as:\n"
+#~ "   - Quality Control\n"
+#~ "   - After Sales Services\n"
+#~ "   - Supplier Returns\n"
+#~ "* Help rental management, by generating automated return moves for rented "
+#~ "products\n"
+#~ "\n"
+#~ "Once this module is installed, an additional tab appear on the product form, "
+#~ "where you can add\n"
+#~ "Push and Pull flow specifications. The demo data of  CPU1 product for that "
+#~ "push/pull :\n"
+#~ "\n"
+#~ "Push flows\n"
+#~ "----------\n"
+#~ "Push flows are useful when the arrival of certain products in a given "
+#~ "location should always\n"
+#~ "be followed by a corresponding move to another location, optionally after a "
+#~ "certain delay.\n"
+#~ "The original Warehouse application already supports such Push flow "
+#~ "specifications on the\n"
+#~ "Locations themselves, but these cannot be refined per-product.\n"
+#~ "\n"
+#~ "A push flow specification indicates which location is chained with which "
+#~ "location, and with\n"
+#~ "what parameters. As soon as a given quantity of products is moved in the "
+#~ "source location,\n"
+#~ "a chained move is automatically foreseen according to the parameters set on "
+#~ "the flow specification\n"
+#~ "(destination location, delay, type of move, journal, etc.) The new move can "
+#~ "be automatically\n"
+#~ "processed, or require a manual confirmation, depending on the parameters.\n"
+#~ "\n"
+#~ "Pull flows\n"
+#~ "----------\n"
+#~ "Pull flows are a bit different from Pull flows, in the sense that they are "
+#~ "not related to\n"
+#~ "the processing of product moves, but rather to the processing of procurement "
+#~ "orders.\n"
+#~ "What is being pulled is a need, not directly products.\n"
+#~ "A classical example of Push flow is when you have an Outlet company, with a "
+#~ "parent Company\n"
+#~ "that is responsible for the supplies of the Outlet.\n"
+#~ "\n"
+#~ "  [ Customer ] <- A - [ Outlet ]  <- B -  [ Holding ] <~ C ~ [ Supplier ]\n"
+#~ "\n"
+#~ "When a new procurement order (A, coming from the confirmation of a Sale "
+#~ "Order for example) arrives\n"
+#~ "in the Outlet, it is converted into another procurement (B, via a Push flow "
+#~ "of type 'move')\n"
+#~ "requested from the Holding. When procurement order B is processed by the "
+#~ "Holding company, and\n"
+#~ "if the product is out of stock, it can be converted into a Purchase Order "
+#~ "(C) from the Supplier\n"
+#~ "(Push flow of type Purchase). The result is that the procurement order, the "
+#~ "need, is pushed\n"
+#~ "all the way between the Customer and Supplier.\n"
+#~ "\n"
+#~ "Technically, Pull flows allow to process procurement orders differently, not "
+#~ "only depending on\n"
+#~ "the product being considered, but also depending on which location holds the "
+#~ "\"need\" for that\n"
+#~ "product (i.e. the destination location of that procurement order).\n"
+#~ "\n"
+#~ "Use-Case\n"
+#~ "--------\n"
+#~ "\n"
+#~ "You can use the demo data as follow:\n"
+#~ "  CPU1: Sell some CPU1 from Shop 1 and run the scheduler\n"
+#~ "     - Warehouse: delivery order, Shop 1: reception\n"
+#~ "  CPU3:\n"
+#~ "     - When receiving the product, it goes to Quality Control location then "
+#~ "stored to shelf 2.\n"
+#~ "     - When delivering the customer: Pick List -> Packing -> Delivery Order "
+#~ "from Gate A\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Acest modul suplimentează aplicaţia Depozit adăugând sprijin pentru traseele "
+#~ "locaţiei per-produs, implementând efectiv Fluxurile de inventar înaintare şi "
+#~ "retragere.\n"
+#~ "\n"
+#~ "Acesta poate fi folosit de obicei pentru a:\n"
+#~ "* Gestiona seriile de fabricaţie a produselor\n"
+#~ "* Gestiona locaţiile predefinite per produs\n"
+#~ "* Defini trasee in cadrul depozitului dumneavoastră în conformitate cu "
+#~ "nevoile afacerii, cum ar fi:\n"
+#~ "   - Controlul Calităţii\n"
+#~ "   - Servicii după Vânzare\n"
+#~ "   - Returnări la furnizor\n"
+#~ "* Ajută managementul închirierilor, prin generarea unor mişcări automate de "
+#~ "returnare pentru produsele inchiriate\n"
+#~ "\n"
+#~ "Odată instalat acest modul, apare un tab suplimentar în formularul "
+#~ "produsului, unde puteti adăuga\n"
+#~ "specificatii ale fluxului de înaintare şi de retragere. Datele demo ale "
+#~ "produsului CPU1pentur acea înaintare/retragere :\n"
+#~ "\n"
+#~ "Fluxurile de înaintare\n"
+#~ "----------\n"
+#~ "Fluxurile de înaintare sunt folosite atunci când sosirea anumitor produse "
+#~ "într-o anumită locaţie ar trebui să fie urmată întotdeauna de o mişcare "
+#~ "corespunzătoare într-o altă locaţie, opţional după o anumită întârziere.\n"
+#~ "Aplicaţia originală Depozit deja suportă asemenea specificaţii ale fluxului "
+#~ "de înaintare chiar în\n"
+#~ "Locaţii, dar acestea nu pot fi rafinate per produs.\n"
+#~ "\n"
+#~ "O specificaţie a fluxului de înaintare indică ce locaţii sunt înlănţuite "
+#~ "între ele, şi cu\n"
+#~ "ce parametri. De îndată ce o anumită cantitate de produse este mutată în "
+#~ "locaţia sursă,\n"
+#~ "o mişcare înlănţuită este anticipată automat în funcţie de parametrii setaţi "
+#~ "în specificaţia fluxului\n"
+#~ "(locaţia destinaţie, întârziere, tip de mişcare, jurnal, etc.) Noua mişcare "
+#~ "poate fi procesată\n"
+#~ "automat sau poate necesita o confirmare manuală, în funcţie de parametri.\n"
+#~ "\n"
+#~ "Fluxuri de retragere\n"
+#~ "----------\n"
+#~ "Fluxurile de retragere sunt puţin diferite de Fluxurile de înaintare, în "
+#~ "sensul că ele nu sunt asociate\n"
+#~ "procesării mişcării produselor, ci sunt mai degrabă asociate procesării "
+#~ "comenzilor de aprovizionare.\n"
+#~ "Ceea ce este retras reprezintă o nevoie, nu produse în mod direct.\n"
+#~ "Un exemplu clasic de Flux de retragere este când aveţi o Companie outlet (de "
+#~ "desfacere) cu o Companie\n"
+#~ "principală (părinte) care este responsabilă pentru aprovizionarea Companiei "
+#~ "outlet.\n"
+#~ "\n"
+#~ "  [ Clientul ] <- A – [Societatea de desfacere ] <- B – [ Societarea care "
+#~ "controlează alte societăţi mai mici ] <~ C ~ [ Furnizor ]\n"
+#~ "\n"
+#~ "Atunci când o comandă nouă de aprovizionare (A, rezultând din confirmarea "
+#~ "unei Comenzi de vânzare, de exemplu) soseşte la Societatea de desfacere, ea "
+#~ "este transformată într-o altă aprovizionare (B, prin intermediul unui flux "
+#~ "de înaintare de tipul ’mişcare’) cerut de către Societatea principală. "
+#~ "Atunci când comanda de aprovizionare B este procesată de către Compania "
+#~ "principală şi dacă produsul nu se află pe stoc, ea poate fi transformată "
+#~ "într-o Comandă de Achiziţie (C) de la Furnizor (Flux de înaintare de tip "
+#~ "Achiziţie). Rezultatul este că ordinul de aprovizionare, nevoia, este "
+#~ "înaintat până la capăt între Client şi Furnizor.\n"
+#~ "\n"
+#~ "Tehnic vorbind, Fluxurile de retragerepermit procesarea comenzilor de "
+#~ "aprovizionare în mod diferit, nu doar în funcţie de produsul în discuţie, ci "
+#~ "şi în funcţie de locaţia care deţine ” nevoia” de acel produs (adică locaţia "
+#~ "destinaţie a acelei comenzi de aprovizionare).\n"
+#~ "\n"
+#~ "Folosire Caz\n"
+#~ "--------\n"
+#~ "\n"
+#~ "Puteti folosi datele demo după cum urmează:\n"
+#~ "  CPU1: Vindeţi nişte CPU1 din Magazinul 1 şi executaţi programatorul\n"
+#~ "     - Depozit: comanda de livrare, Magazin 1: recepţie\n"
+#~ "  CPU3:\n"
+#~ "     - Atunci când primiţi produsul, acesta ajunge în locaţia Controlului "
+#~ "Calităţii, apoi este stocat pe raftul 2.\n"
+#~ "     - Atunci când livraţi produsul clientului: Lista de ridicare -> "
+#~ "Ambalare -> Comanda de livrare de la Poarta A\n"
+#~ "    "

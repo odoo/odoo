@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2010-08-02 22:02+0000\n"
 "Last-Translator: Bundo <bundo@bundo.biz>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 04:51+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:01+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -80,7 +80,7 @@ msgid "Today"
 msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:44
+#: code:addons/subscription/subscription.py:136
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -106,12 +106,6 @@ msgstr "중단"
 #: view:subscription.subscription:0
 msgid "Set to Draft"
 msgstr "드래프트로 설정"
-
-#. module: subscription
-#: model:ir.module.module,description:subscription.module_meta_information
-msgid ""
-"Module allows to create new documents and add subscription on that document."
-msgstr "모듈은 새 문서 생성을 허용하며, 그 문서에 등록을 추가합니다."
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -153,22 +147,15 @@ msgid ""
 msgstr ""
 
 #. module: subscription
-#: selection:subscription.subscription.history,document_id:0
-msgid "Sale Order"
-msgstr "판매 주문"
-
-#. module: subscription
 #: field:subscription.document,name:0
 #: field:subscription.subscription,name:0
 msgid "Name"
 msgstr "이름"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:44
+#: code:addons/subscription/subscription.py:136
 #, python-format
-msgid ""
-"You cannot modify the Object linked to the Document Type!\n"
-"Create another Document instead !"
+msgid "You cannot delete an active subscription !"
 msgstr ""
 
 #. module: subscription
@@ -272,11 +259,6 @@ msgid "Process"
 msgstr "프로세스"
 
 #. module: subscription
-#: model:ir.module.module,shortdesc:subscription.module_meta_information
-msgid "Subscription and recurring operations"
-msgstr "등록 및 반복 오퍼레이션"
-
-#. module: subscription
 #: help:subscription.subscription,doc_source:0
 msgid ""
 "User can choose the source document on which he wants to create documents"
@@ -289,7 +271,7 @@ msgid "Document Types"
 msgstr "문서 타입"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:115
+#: code:addons/subscription/subscription.py:109
 #, python-format
 msgid "Wrong Source Document !"
 msgstr "잘못된 소스 문서!"
@@ -307,12 +289,7 @@ msgid "Done"
 msgstr "완료"
 
 #. module: subscription
-#: selection:subscription.subscription.history,document_id:0
-msgid "Invoice"
-msgstr "인보이스"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:115
+#: code:addons/subscription/subscription.py:109
 #, python-format
 msgid ""
 "Please provide another source document.\n"
@@ -332,14 +309,23 @@ msgstr "디폴트 값"
 msgid "Documents created"
 msgstr "문서가 생성됨"
 
+#~ msgid "Sale Order"
+#~ msgstr "판매 주문"
+
 #~ msgid "Configuration"
 #~ msgstr "구성"
 
 #~ msgid "Subscription document"
 #~ msgstr "등록 문서"
 
+#~ msgid "Subscription and recurring operations"
+#~ msgstr "등록 및 반복 오퍼레이션"
+
 #~ msgid "Tools"
 #~ msgstr "툴"
+
+#~ msgid "Invoice"
+#~ msgstr "인보이스"
 
 #~ msgid "All Subscriptions"
 #~ msgstr "모든 등록"
@@ -349,6 +335,10 @@ msgstr "문서가 생성됨"
 
 #~ msgid "Status"
 #~ msgstr "상태"
+
+#~ msgid ""
+#~ "Module allows to create new documents and add subscription on that document."
+#~ msgstr "모듈은 새 문서 생성을 허용하며, 그 문서에 등록을 추가합니다."
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

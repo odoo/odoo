@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="Account Balance.pdf">
-  <template pageSize="(595.0,842.0)" title="Account Balance" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+  <template title="Account Balance" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="35.0" y1="35.0" width="525" height="772"/>
     </pageTemplate>
@@ -296,7 +296,7 @@
         <td><para style="P14"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font color="white">[[ '..'*(a['level']-1) ]]</font><font>[[ a['name'] ]]</font> </para></td>
         <td><para style="P3"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['debit']) ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[formatLang(a['debit']) ]]</font></para></td>
         <td><para style="P3"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font')]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['credit']) ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[ formatLang(a['credit']) ]]</font> </para></td>
-        <td><para style="P3"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['balance'], currency_obj=company.currency_id) ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[ formatLang(a['balance'], currency = company.currency_id) ]]</font> </para></td>
+        <td><para style="P3"><font>[[ (a['type']&lt;&gt;'view' and setTag('para','para',{'fontName':"Helvetica"})) or removeParentNode('font') ]]</font><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['balance'], currency_obj=company.currency_id) ]]</font><font>[[ a['type']&lt;&gt;'view' and removeParentNode('font') ]] [[ formatLang(a['balance'], currency_obj=company.currency_id) ]]</font> </para></td>
       </tr>
     </blockTable>
     <para style="P11">

@@ -10,12 +10,14 @@
             <field name="arch" type="xml">
                 <form string="Close Cash Registers">
                     <separator colspan="4" string="Do you want to close your cash registers ?"/>
-                    <label string="OpenERP will close all cash registers he can close automatically without validation. He will also open all cash registers for which you have to control the ending belance before closing manually."/>
+                    <label string="OpenERP will close all cash registers he can close automatically without validation. He will also open all cash registers for which you have to control the ending balance before closing manually."/>
                     <separator colspan="4"/>
                     <group col="4" colspan="4">
                         <group col="2" colspan="2"/>
                         <button icon='gtk-stop' special="cancel"
-                            string="No" />
+                            string="No" invisible="context.get('cancel_action')"/>
+                        <button icon='gtk-stop' type="object" name="cancel_wizard"
+                            string="No" invisible="not context.get('cancel_action')"/>
                         <button name="close_statement" string="Yes"
                              type="object" icon="gtk-ok"/>
                    </group>

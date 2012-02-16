@@ -7,25 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2009-09-08 14:33+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:23+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:38+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Hourly cost computation"
-msgstr "시간 당 원가 계산"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "임금"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Gross"
-msgstr "총"
+#: view:hr.contract:0
+msgid "Information"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -35,11 +35,6 @@ msgstr ""
 #. module: hr_contract
 #: field:hr.contract,trial_date_start:0
 msgid "Trial Start Date"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Passport"
 msgstr ""
 
 #. module: hr_contract
@@ -53,11 +48,6 @@ msgid "Company Vehicle"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "임금 타입 명칭"
-
-#. module: hr_contract
 #: view:hr.employee:0
 msgid "Miscellaneous"
 msgstr ""
@@ -68,19 +58,9 @@ msgid "Current"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "시간 비용을 위한 펙터"
-
-#. module: hr_contract
 #: view:hr.contract:0
-msgid "Overpassed"
+msgid "Group By..."
 msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Wage Types"
-msgstr "임금 타입"
 
 #. module: hr_contract
 #: field:hr.contract,department_id:0
@@ -88,8 +68,8 @@ msgid "Department"
 msgstr ""
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Basic"
+#: view:hr.contract:0
+msgid "Overpassed"
 msgstr ""
 
 #. module: hr_contract
@@ -100,19 +80,14 @@ msgid "Employee"
 msgstr "직원"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Net"
-msgstr "순"
+#: view:hr.contract:0
+msgid "Search Contract"
+msgstr ""
 
 #. module: hr_contract
-#: model:ir.module.module,shortdesc:hr_contract.module_meta_information
-msgid "Human Resources Contracts"
-msgstr "인적 자원 계약"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,factor_days:0
-msgid "Hours in the period"
-msgstr "기간 내 시간 수"
+#: view:hr.contract:0
+msgid "Contracts in progress"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
@@ -135,12 +110,7 @@ msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Job"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Search Contract"
+msgid "Contracts whose end date already passed"
 msgstr ""
 
 #. module: hr_contract
@@ -149,20 +119,8 @@ msgid "Latest contract of the employee"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,advantages_net:0
-msgid "Deductions"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.module.module,description:hr_contract.module_meta_information
-msgid ""
-"\n"
-"    Add all information on the employee form to manage contracts:\n"
-"    * Marital status,\n"
-"    * Security number,\n"
-"    * Place of birth, birth date, ...\n"
-"    You can assign several contracts per employee.\n"
-"    "
+#: view:hr.contract:0
+msgid "Job"
 msgstr ""
 
 #. module: hr_contract
@@ -193,15 +151,6 @@ msgid "Contract Types"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
-msgstr "임금 타입"
-
-#. module: hr_contract
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
@@ -212,9 +161,9 @@ msgid "End Date"
 msgstr "종료 날짜"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "임금"
+#: help:hr.contract,wage:0
+msgid "Basic Salary of the employee"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,name:0
@@ -233,9 +182,8 @@ msgid "Notes"
 msgstr "노트"
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
 msgstr ""
 
 #. module: hr_contract
@@ -256,11 +204,6 @@ msgid "Contract Type"
 msgstr "계약 타입"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type.period:0
-msgid "Search Wage Period"
-msgstr ""
-
-#. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,working_hours:0
 msgid "Working Schedule"
@@ -272,11 +215,9 @@ msgid "Job Info"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,period_id:0
-#: view:hr.contract.wage.type.period:0
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
-msgid "Wage Period"
-msgstr "임금 기간"
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
@@ -299,54 +240,14 @@ msgid "Error! contract start-date must be lower then contract end-date."
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,type:0
-msgid "Type"
-msgstr "타입"
-
-#. module: hr_contract
-#: field:hr.contract,trial_date_end:0
-msgid "Trial End Date"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,name:0
-msgid "Period Name"
-msgstr "기간 이름"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Period"
+#: field:hr.contract,visa_no:0
+msgid "Visa No"
 msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
 msgid "Place of Birth"
 msgstr "출생지"
-
-#. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr "임금 기간"
-
-#. module: hr_contract
-#: help:hr.contract.wage.type,factor_type:0
-#: help:hr.contract.wage.type.period,factor_days:0
-msgid ""
-"This field is used by the timesheet system to compute the price of an hour "
-"of work wased on the contract of the employee"
-msgstr "이 필드는 타임시트 시스템이 직원과의 계약을 근거로 시간당 임금을 계산하는데 이용됩니다."
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -359,13 +260,8 @@ msgid "Medical Examination Date"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,advantages_gross:0
-msgid "Allowances"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Main Data"
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
 msgstr ""
 
 #. module: hr_contract
@@ -373,14 +269,41 @@ msgstr ""
 msgid "Search Contract Type"
 msgstr ""
 
+#~ msgid "Wage Types"
+#~ msgstr "임금 타입"
+
+#~ msgid "Factor for hour cost"
+#~ msgstr "시간 비용을 위한 펙터"
+
 #~ msgid "Number of children"
 #~ msgstr "자녀 수"
 
 #~ msgid "Generalities"
 #~ msgstr "일반성"
 
+#~ msgid "Gross"
+#~ msgstr "총"
+
+#~ msgid "Hourly cost computation"
+#~ msgstr "시간 당 원가 계산"
+
+#~ msgid "Net"
+#~ msgstr "순"
+
+#~ msgid "Human Resources Contracts"
+#~ msgstr "인적 자원 계약"
+
+#~ msgid "Type"
+#~ msgstr "타입"
+
+#~ msgid "Wage Type"
+#~ msgstr "임금 타입"
+
 #~ msgid "Medical examination date"
 #~ msgstr "건강 검진 날짜"
+
+#~ msgid "Hours in the period"
+#~ msgstr "기간 내 시간 수"
 
 #~ msgid "Function"
 #~ msgstr "기능"
@@ -391,6 +314,9 @@ msgstr ""
 #~ msgid "Marital Status"
 #~ msgstr "결혼 여부"
 
+#~ msgid "Period Name"
+#~ msgstr "기간 이름"
+
 #~ msgid "Employee Marital Status"
 #~ msgstr "직원 결혼 상태"
 
@@ -400,11 +326,25 @@ msgstr ""
 #~ msgid "Working hours per day"
 #~ msgstr "일일 근로시가"
 
+#~ msgid "Wage Period"
+#~ msgstr "임금 기간"
+
+#~ msgid "Wage Type Name"
+#~ msgstr "임금 타입 명칭"
+
 #~ msgid "Status Description"
 #~ msgstr "상태 설명"
 
 #~ msgid "Contract Wage Type"
 #~ msgstr "계약된 임금 타입"
+
+#~ msgid "Wage period"
+#~ msgstr "임금 기간"
+
+#~ msgid ""
+#~ "This field is used by the timesheet system to compute the price of an hour "
+#~ "of work wased on the contract of the employee"
+#~ msgstr "이 필드는 타임시트 시스템이 직원과의 계약을 근거로 시간당 임금을 계산하는데 이용됩니다."
 
 #~ msgid "Manager"
 #~ msgstr "매니저"

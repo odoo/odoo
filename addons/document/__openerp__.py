@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Integrated Document Management System',
+    'name': 'Document Management System',
     'version': '2.1',
     'category': 'Knowledge Management',
     'complexity': "normal",
@@ -61,7 +61,7 @@ ATTENTION:
         'test/document_test2.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0070515416461',
     'images': ['images/1_directories.jpeg','images/2_storage_media.jpeg','images/3_directories_structure.jpeg'],
 }

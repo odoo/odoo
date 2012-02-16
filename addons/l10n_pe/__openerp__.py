@@ -45,7 +45,7 @@ Plan contable peruano e impuestos de acuerdo a disposiciones vigentes de la SUNA
 			],
     "active": False,
     "installable": True,
-    "certificate" : "",
+    "certificate" : "0045046493412",
     'images': ['images/config_chart_l10n_pe.jpeg','images/l10n_pe_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

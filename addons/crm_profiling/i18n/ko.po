@@ -7,40 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-08-03 04:53+0000\n"
 "Last-Translator: Bundo <bundo@bundo.biz>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:28+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:43+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
-msgstr ""
-
-#. module: crm_profiling
-#: model:ir.module.module,description:crm_profiling.module_meta_information
-msgid ""
-"\n"
-"    This module allows users to perform segmentation within partners.\n"
-"    It uses the profiles criteria from the earlier segmentation module and "
-"improve it. Thanks to the new concept of questionnaire. You can now regroup "
-"questions into a questionnaire and directly use it on a partner.\n"
-"\n"
-"    It also has been merged with the earlier CRM & SRM segmentation tool "
-"because they were overlapping.\n"
-"\n"
-"    The menu items related are in \"CRM & SRM\\Configuration\\"
-"Segmentations\"\n"
-"\n"
-"\n"
-"    * Note: this module is not compatible with the module segmentation, "
-"since it's the same which has been renamed.\n"
-"    "
 msgstr ""
 
 #. module: crm_profiling
@@ -56,18 +35,20 @@ msgstr ""
 #: field:crm_profiling.answer,question_id:0
 #: field:crm_profiling.question,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_question
+#: field:open.questionnaire.line,question_id:0
 msgid "Question"
 msgstr "질문"
 
 #. module: crm_profiling
-#: wizard_button:open_questionnaire,init,open:0
+#: model:ir.actions.act_window,name:crm_profiling.action_open_questionnaire
+#: view:open.questionnaire:0
 msgid "Open Questionnaire"
 msgstr "질의서 열기"
 
 #. module: crm_profiling
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr ""
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
+msgstr "자식 프로파일"
 
 #. module: crm_profiling
 #: view:crm.segmentation:0
@@ -77,8 +58,14 @@ msgstr "파트너 세그먼테이션"
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_answer
+#: field:open.questionnaire.line,answer_id:0
 msgid "Answer"
 msgstr "답변"
+
+#. module: crm_profiling
+#: model:ir.model,name:crm_profiling.model_open_questionnaire_line
+msgid "open.questionnaire.line"
+msgstr ""
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_crm_segmentation
@@ -89,11 +76,6 @@ msgstr ""
 #: view:res.partner:0
 msgid "Profiling"
 msgstr "프로파일링"
-
-#. module: crm_profiling
-#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
-msgid "Crm Profiling management - To Perform Segmentation within Partners"
-msgstr ""
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -114,7 +96,12 @@ msgid "Answers"
 msgstr "답변"
 
 #. module: crm_profiling
-#: wizard_field:open_questionnaire,init,questionnaire_name:0
+#: model:ir.model,name:crm_profiling.model_open_questionnaire
+msgid "open.questionnaire"
+msgstr ""
+
+#. module: crm_profiling
+#: field:open.questionnaire,questionnaire_id:0
 msgid "Questionnaire name"
 msgstr "질의서 이름"
 
@@ -124,9 +111,20 @@ msgid "Use a questionnaire"
 msgstr "질의서 이용"
 
 #. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "_Cancel"
+msgstr ""
+
+#. module: crm_profiling
+#: field:open.questionnaire,question_ans_ids:0
+msgid "Question / Answers"
+msgstr ""
+
+#. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
+#: view:open.questionnaire:0
 msgid "Questionnaires"
 msgstr "질의서"
 
@@ -149,6 +147,11 @@ msgid "Use The Profiling Rules"
 msgstr "프로파일링 규칙 이용"
 
 #. module: crm_profiling
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
+
+#. module: crm_profiling
 #: view:crm_profiling.question:0
 #: field:crm_profiling.question,answers_ids:0
 msgid "Avalaible answers"
@@ -158,11 +161,6 @@ msgstr "가용한 답변들"
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
 msgstr "포함된 답변들"
-
-#. module: crm_profiling
-#: field:crm.segmentation,child_ids:0
-msgid "Child Profiles"
-msgstr "자식 프로파일"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -178,8 +176,7 @@ msgid "Parent Profile"
 msgstr "부모 프로파일"
 
 #. module: crm_profiling
-#: wizard_button:open_questionnaire,init,end:0
-#: wizard_button:open_questionnaire,open,end:0
+#: view:open.questionnaire:0
 msgid "Cancel"
 msgstr "취소"
 
@@ -189,21 +186,18 @@ msgid "Partner"
 msgstr ""
 
 #. module: crm_profiling
-#: code:addons/crm_profiling/crm_profiling.py:178
+#: code:addons/crm_profiling/wizard/open_questionnaire.py:77
 #: field:crm_profiling.questionnaire,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
-#: wizard_view:open_questionnaire,init:0
+#: view:open.questionnaire:0
+#: view:open.questionnaire.line:0
+#: field:open.questionnaire.line,wizard_id:0
 #, python-format
 msgid "Questionnaire"
 msgstr "질의서"
 
 #. module: crm_profiling
-#: model:ir.actions.wizard,name:crm_profiling.wizard_open_questionnaire
-msgid "Using a questionnaire"
-msgstr "질의서 이용"
-
-#. module: crm_profiling
-#: wizard_button:open_questionnaire,open,compute:0
+#: view:open.questionnaire:0
 msgid "Save Data"
 msgstr "데이터 저장"
 
@@ -211,6 +205,9 @@ msgstr "데이터 저장"
 #~ "Check this box if you want to use this tab as part of the segmentation rule. "
 #~ "If not checked, the criteria beneath will be ignored"
 #~ msgstr "이 탭을 세그먼테이션 규칙의 일부로 이용하려면 체크하십시오. 체크하지 않으면, 기저의 범주들이 무시됩니다."
+
+#~ msgid "Using a questionnaire"
+#~ msgstr "질의서 이용"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "액션 정의에서 유효하지 않은 모델 이름"

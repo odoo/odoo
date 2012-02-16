@@ -36,11 +36,23 @@ class accounting_report(osv.osv_memory):
         'period_to_cmp': fields.many2one('account.period', 'End Period'),
         'date_from_cmp': fields.date("Start Date"),
         'date_to_cmp': fields.date("End Date"),
+        'debit_credit': fields.boolean('Display Debit/Credit Columns', help="This option allow you to get more details about your the way your balances are computed. Because it is space consumming, we do not allow to use it while doing a comparison"),
     }
+
+    def _get_account_report(self, cr, uid, context=None):
+        # TODO deprecate this it doesnt work in web
+        menu_obj = self.pool.get('ir.ui.menu')
+        report_obj = self.pool.get('account.financial.report')
+        report_ids = []
+        if context.get('active_id'):
+            menu = menu_obj.browse(cr, uid, context.get('active_id')).name
+            report_ids = report_obj.search(cr, uid, [('name','ilike',menu)])
+        return report_ids and report_ids[0] or False
 
     _defaults = {
             'filter_cmp': 'filter_no',
             'target_move': 'posted',
+            'account_report_id': _get_account_report,
     }
 
     def _build_comparison_context(self, cr, uid, ids, data, context=None):
@@ -74,7 +86,7 @@ class accounting_report(osv.osv_memory):
         return res
 
     def _print_report(self, cr, uid, ids, data, context=None):
-        data['form'].update(self.read(cr, uid, ids, ['date_from_cmp',  'date_to_cmp',  'fiscalyear_id_cmp', 'period_from_cmp', 'period_to_cmp',  'filter_cmp', 'account_report_id', 'enable_filter', 'label_filter'], context=context)[0])
+        data['form'].update(self.read(cr, uid, ids, ['date_from_cmp',  'debit_credit', 'date_to_cmp',  'fiscalyear_id_cmp', 'period_from_cmp', 'period_to_cmp',  'filter_cmp', 'account_report_id', 'enable_filter', 'label_filter'], context=context)[0])
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.financial.report',

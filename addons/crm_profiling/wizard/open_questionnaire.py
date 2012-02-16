@@ -22,56 +22,56 @@
 from osv import osv, fields
 from tools.translate import _
 
+class open_questionnaire_line(osv.osv_memory):
+    _name = 'open.questionnaire.line'
+    _rec_name = 'question_id'
+    _columns = {
+        'question_id': fields.many2one('crm_profiling.question','Question', required=True),
+        'answer_id': fields.many2one('crm_profiling.answer', 'Answer'),
+        'wizard_id': fields.many2one('open.questionnaire', 'Questionnaire'),
+    }
+
+open_questionnaire_line()
+
 class open_questionnaire(osv.osv_memory):
     _name = 'open.questionnaire'
     _columns = {
-        'questionnaire_id': fields.many2one('crm_profiling.questionnaire', 'Questionnaire name', required=True),
+        'questionnaire_id': fields.many2one('crm_profiling.questionnaire', 'Questionnaire name'),
+        'question_ans_ids': fields.one2many('open.questionnaire.line', 'wizard_id', 'Question / Answers'),
     }
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(open_questionnaire, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        if context.has_key('form') and context.has_key('fields'):
-            field  = {}
-            form = context.get('form')
-            form += """
-                    <newline/>
-                    <separator string="" colspan="4"/>
-                    <group col="4" colspan="4">
-                        <group col="2" colspan="2"/>
-                        <button special="cancel" icon="gtk-cancel" string="Cancel"/>
-                        <button name="questionnaire_compute" string="Save Data" icon="terp-stock_format-scientific" type="object"/>
-                    </group>
-                </form>
-            """
-            res['fields'] = context.get('fields')
-            for key, value in res['fields'].items():
-                 field[key] = fields.many2one('crm_profiling.answer', value['string'])
-                 self._columns.update(field)
-            res['arch'] = form
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None: context = {}
+        res = super(open_questionnaire, self).default_get(cr, uid, fields, context=context)
+        questionnaire_id = context.get('questionnaire_id', False)
+        if questionnaire_id and 'question_ans_ids' in fields:
+            query = """
+                select question as question_id from profile_questionnaire_quest_rel where questionnaire = %s"""
+            cr.execute(query, (questionnaire_id,))
+            result = cr.dictfetchall()
+            res.update(question_ans_ids=result)
         return res
-
 
     def questionnaire_compute(self, cr, uid, ids, context=None):
         """ Adds selected answers in partner form """
         model = context.get('active_model')
+        answers = []
         if model == 'res.partner':
-            data = self.read(cr, uid, ids, context.get('fields').keys(), context=context)[0]
-            self.pool.get(model)._questionnaire_compute(cr, uid, data, context=context)
+            data = self.browse(cr, uid, ids[0], context=context)
+            for d in data.question_ans_ids:
+                 if d.answer_id:
+                     answers.append(d.answer_id.id)
+            self.pool.get(model)._questionnaire_compute(cr, uid, answers, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 
     def build_form(self, cr, uid, ids, context=None):
         """ Dynamically generates form according to selected questionnaire """
         models_data = self.pool.get('ir.model.data')
-        questionnaire_id = self.browse(cr, uid, ids, context=context)[0].questionnaire_id.id
-        quest_form, quest_fields = self.pool.get('crm_profiling.questionnaire').build_form(cr, uid, questionnaire_id, context=context)
-        context.update({
-                        'form': quest_form,
-                        'fields': quest_fields
-        })
-
-        result = models_data._get_id(cr, uid, 'crm_profiling', 'view_open_questionnaire_form')
+        result = models_data._get_id(cr, uid, 'crm_profiling', 'open_questionnaire_form')
         res_id = models_data.browse(cr, uid, result, context=context).res_id
+        datas = self.browse(cr, uid, ids[0], context=context)
+        context.update({'questionnaire_id': datas.questionnaire_id.id})
 
         return {
             'name': _('Questionnaire'),

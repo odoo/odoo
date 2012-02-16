@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import time
-
 from osv import fields
 from osv import osv
 from tools.translate import _
@@ -41,7 +39,7 @@ class account_analytic_line(osv.osv):
     }
 
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
     }
     _order = 'date desc'

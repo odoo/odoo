@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Display Warning Messages',
+    'name': 'Warning Messages and Alerts',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'complexity': "easy",
     'description': """
 Module to trigger warnings in OpenERP objects.
@@ -37,7 +37,7 @@ picking and invoice. The message is triggered by the form's onchange event.
     'update_xml': ['warning_view.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0080334018749',
     'images': ['images/customers_warnings.jpeg','images/sale_order_warning.jpeg'],
 }

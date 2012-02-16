@@ -26,9 +26,10 @@
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
     "category": "Project Management",
+    "sequence": 8,
     'complexity': "easy",
     "images": ["images/gantt.png", "images/project_dashboard.jpeg","images/project_task_tree.jpeg","images/project_task.jpeg","images/project.jpeg","images/task_analysis.jpeg"],
-    "depends": ["base_setup", "product", "analytic", "board",  "mail"],
+    "depends": ["base_setup", "product", "analytic", "board",  "mail", "resource"],
     "description": """
 Project management module tracks multi-level projects, tasks, work done on tasks, eso.
 ======================================================================================
@@ -55,17 +56,20 @@ Dashboard for project members that includes:
         "res_partner_view.xml",
         "report/project_report_view.xml",
         "board_project_view.xml",
-        'board_project_manager_view.xml'
+        'board_project_manager_view.xml',
+        'report/project_cumulative.xml'
     ],
     'demo_xml': [
         'project_demo.xml',
     ],
     'test':[
-        'test/test_project.yml',
-        'test/test_project_delegation.yml',
+        'test/project_demo.yml',
+        'test/project_process.yml',
+        'test/task_process.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
+    'application': True,
     'certificate': '0075116868317',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

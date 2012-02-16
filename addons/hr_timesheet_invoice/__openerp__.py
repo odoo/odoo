@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Invoice on analytic lines',
+    'name': 'Invoice on Timesheets',
     'version': '1.0',
-    'category': 'Hidden/Link',
+    'category': 'Sales Management',
     'description': """Generate your Invoices from Expenses, Timesheet Entries, ...
 Module to generate invoices based on costs (human resources, expenses, ...).
 ============================================================================
@@ -55,7 +55,7 @@ reports, etc.""",
              'test/hr_timesheet_invoice_report.yml',
              ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0056091842381',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

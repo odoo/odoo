@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2010-12-29 12:28+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:32+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:48+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -31,12 +31,6 @@ msgstr "Подтверждено"
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
 msgstr "Бюджетные статьи"
-
-#. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "The General Budget '%s' has no Accounts!"
-msgstr "Основной бюджет '%s' не имеет счетов!"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -140,9 +134,10 @@ msgstr ""
 "реализации в течение этого периода."
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr "Этот мастер используется для печати итогов по бюджетам"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "The Budget '%s' has no accounts!"
+msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -261,6 +256,11 @@ msgid "Budget"
 msgstr "Бюджет"
 
 #. module: account_budget
+#: view:crossovered.budget:0
+msgid "To Approve Budgets"
+msgstr ""
+
+#. module: account_budget
 #: code:addons/account_budget/account_budget.py:119
 #, python-format
 msgid "Error!"
@@ -291,11 +291,9 @@ msgid "Budgets"
 msgstr "Бюджеты"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "Ошибка! Валюта должна совпадать с валютой выбранной компании"
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Этот мастер используется для печати итогов по бюджетам"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -356,33 +354,11 @@ msgid "Print"
 msgstr "Распечатать"
 
 #. module: account_budget
-#: model:ir.module.module,description:account_budget.module_meta_information
-msgid ""
-"This module allows accountants to manage analytic and crossovered budgets.\n"
-"\n"
-"Once the Master Budgets and the Budgets are defined (in "
-"Accounting/Budgets/),\n"
-"the Project Managers can set the planned amount on each Analytic Account.\n"
-"\n"
-"The accountant has the possibility to see the total of amount planned for "
-"each\n"
-"Budget and Master Budget in order to ensure the total planned is not\n"
-"greater/lower than what he planned for this Budget/Master Budget. Each list "
-"of\n"
-"record can also be switched to a graphical view of it.\n"
-"\n"
-"Three reports are available:\n"
-"    1. The first is available from a list of Budgets. It gives the "
-"spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
-"\n"
-"    2. The second is a summary of the previous one, it only gives the "
-"spreading, for the selected Budgets, of the Analytic Accounts.\n"
-"\n"
-"    3. The last one is available from the Analytic Chart of Accounts. It "
-"gives the spreading, for the selected Analytic Accounts, of the Master "
-"Budgets per Budgets.\n"
-"\n"
-msgstr ""
+#: view:account.budget.post:0
+#: view:crossovered.budget:0
+#: field:crossovered.budget.lines,theoritical_amount:0
+msgid "Theoretical Amount"
+msgstr "Теоретическая сумма"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
@@ -431,11 +407,6 @@ msgid "Cancel"
 msgstr "Отмена"
 
 #. module: account_budget
-#: model:ir.module.module,shortdesc:account_budget.module_meta_information
-msgid "Budget Management"
-msgstr "Управление бюджетом"
-
-#. module: account_budget
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
 msgstr "Ошибка! Вы не можете создать рекурсивные счета аналитического учета."
@@ -445,6 +416,11 @@ msgstr "Ошибка! Вы не можете создать рекурсивны
 #: report:crossovered.budget.report:0
 msgid "Analysis from"
 msgstr "Анализ с"
+
+#. module: account_budget
+#: view:crossovered.budget:0
+msgid "Draft Budgets"
+msgstr ""
 
 #~ msgid "% performance"
 #~ msgstr "% эффективности"
@@ -528,8 +504,8 @@ msgstr "Анализ с"
 #~ msgid "Item"
 #~ msgstr "Статья"
 
-#~ msgid "Theoretical Amount"
-#~ msgstr "Теоретическая сумма"
+#~ msgid "Budget Management"
+#~ msgstr "Управление бюджетом"
 
 #~ msgid "Spread"
 #~ msgstr "Распределить"
@@ -539,3 +515,12 @@ msgstr "Анализ с"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Ошибка! Валюта должна совпадать с валютой выбранной компании"
+
+#, python-format
+#~ msgid "The General Budget '%s' has no Accounts!"
+#~ msgstr "Основной бюджет '%s' не имеет счетов!"

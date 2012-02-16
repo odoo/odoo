@@ -26,6 +26,8 @@ class bank(osv.osv):
     _inherit = "res.partner.bank"
     _columns = {
         'journal_id': fields.many2one('account.journal', 'Account Journal', help="This journal will be created automatically for this bank account when you save the record"),
+        'currency_id': fields.related('journal_id', 'currency', type="many2one", relation='res.currency', readonly=True,
+            string="Currency", help="Currency of the related account journal."),
     }
     def create(self, cr, uid, data, context={}):
         result = super(bank, self).create(cr, uid, data, context=context)
@@ -37,15 +39,23 @@ class bank(osv.osv):
         self.post_write(cr, uid, ids, context=context)
         return result
 
+    def _prepare_name(self, bank):
+        "Return the name to use when creating a bank journal"
+        return (bank.bank_name or '') + ' ' + bank.acc_number
+
     def post_write(self, cr, uid, ids, context={}):
+        if isinstance(ids, (int, long)):
+          ids = [ids]
+
         obj_acc = self.pool.get('account.account')
         obj_data = self.pool.get('ir.model.data')
+
         for bank in self.browse(cr, uid, ids, context):
             if bank.company_id and not bank.journal_id:
                 # Find the code and parent of the bank account to create
                 dig = 6
                 current_num = 1
-                ids = obj_acc.search(cr, uid, [('type','=','liquidity')], context=context) 
+                ids = obj_acc.search(cr, uid, [('type','=','liquidity')], context=context)
                 # No liquidity account exists, no template available
                 if not ids: continue
 
@@ -57,10 +67,9 @@ class bank(osv.osv):
                     if not ids:
                         break
                     current_num += 1
-
+                name = self._prepare_name(bank)
                 acc = {
-                    'name': (bank.bank_name or '')+' '+bank.acc_number,
-                    'currency_id': bank.company_id.currency_id.id,
+                    'name': name,
                     'code': new_code,
                     'type': 'liquidity',
                     'user_type': ref_acc_bank_temp.user_type.id,
@@ -74,7 +83,7 @@ class bank(osv.osv):
                 data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])
                 data = obj_data.browse(cr, uid, data_id[0], context=context)
                 view_id_cash = data.res_id
-                
+
                 jour_obj = self.pool.get('account.journal')
                 new_code = 1
                 while True:
@@ -86,12 +95,11 @@ class bank(osv.osv):
 
                 #create the bank journal
                 vals_journal = {
-                    'name':  (bank.bank_name or '')+' '+bank.acc_number,
+                    'name': name,
                     'code': code,
                     'type': 'bank',
                     'company_id': bank.company_id.id,
                     'analytic_journal_id': False,
-                    'currency_id': False,
                     'default_credit_account_id': acc_bank_id,
                     'default_debit_account_id': acc_bank_id,
                     'view_id': view_id_cash
@@ -101,3 +109,4 @@ class bank(osv.osv):
                 self.write(cr, uid, [bank.id], {'journal_id': journal_id}, context=context)
         return True
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-02-04 15:08+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
 "<openerp@novotrade.hu>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:03+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: process
 #: model:ir.model,name:process.model_process_node
@@ -30,6 +30,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the process "
 "without removing it."
 msgstr ""
+"Ha az aktív mező \"Hamis\"-ra van állítva, ez lehetővé teszi Önnek, hogy "
+"elrejtse a folyamatot, anélkül, hogy eltávolítaná."
 
 #. module: process
 #: field:process.node,menu_id:0
@@ -60,7 +62,7 @@ msgstr "Csomópont típusa"
 #. module: process
 #: field:process.node,help_url:0
 msgid "Help URL"
-msgstr "Segítség URL"
+msgstr "Segéd URL"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
@@ -86,7 +88,7 @@ msgstr "Feltételek"
 #. module: process
 #: view:process.transition:0
 msgid "Search Process Transition"
-msgstr ""
+msgstr "Folyamat átmenetek keresése"
 
 #. module: process
 #: field:process.condition,node_id:0
@@ -106,7 +108,7 @@ msgstr "Leírás"
 #. module: process
 #: model:ir.model,name:process.model_process_transition_action
 msgid "Process Transitions Actions"
-msgstr ""
+msgstr "Folyamat átmenet műveletek"
 
 #. module: process
 #: field:process.condition,model_id:0
@@ -142,12 +144,12 @@ msgstr "Folyamat átmenet"
 #. module: process
 #: model:ir.model,name:process.model_process_condition
 msgid "Condition"
-msgstr "Kondíció"
+msgstr "Feltétel"
 
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Dummy"
-msgstr "Hamis"
+msgstr "Utánzat"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_form
@@ -197,7 +199,7 @@ msgstr "Alfolyamat"
 #. module: process
 #: field:process.process,active:0
 msgid "Active"
-msgstr "aktív"
+msgstr "Aktív"
 
 #. module: process
 #: view:process.transition:0
@@ -207,7 +209,7 @@ msgstr "Kapcsolódó csoportok"
 #. module: process
 #: field:process.node,model_states:0
 msgid "States Expression"
-msgstr ""
+msgstr "Állapot kifejezés"
 
 #. module: process
 #: selection:process.transition.action,state:0
@@ -218,20 +220,6 @@ msgstr "Művelet"
 #: field:process.node,flow_start:0
 msgid "Starting Flow"
 msgstr "Folyamat indítása"
-
-#. module: process
-#: model:ir.module.module,description:process.module_meta_information
-msgid ""
-"\n"
-"     This module shows the basic processes involved\n"
-"     in the selected modules and in the sequence they\n"
-"     occur\n"
-"\n"
-"     Note: This applies to the modules containing modulename_process_xml\n"
-"     for e.g product/process/product_process_xml\n"
-"\n"
-"    "
-msgstr ""
 
 #. module: process
 #: field:process.condition,model_states:0
@@ -269,7 +257,7 @@ msgstr "Folyamat"
 #. module: process
 #: view:process.node:0
 msgid "Search ProcessNode"
-msgstr ""
+msgstr "Folyamat csomópont keresése"
 
 #. module: process
 #: view:process.node:0
@@ -278,7 +266,6 @@ msgid "Other Conditions"
 msgstr "Egyéb feltételek"
 
 #. module: process
-#: model:ir.module.module,shortdesc:process.module_meta_information
 #: model:ir.ui.menu,name:process.menu_process
 msgid "Enterprise Process"
 msgstr "Vállalati folyamat"
@@ -326,3 +313,25 @@ msgstr "Átmenetek"
 #: selection:process.transition.action,state:0
 msgid "Object Method"
 msgstr "Tárgy módszer"
+
+#~ msgid ""
+#~ "\n"
+#~ "     This module shows the basic processes involved\n"
+#~ "     in the selected modules and in the sequence they\n"
+#~ "     occur\n"
+#~ "\n"
+#~ "     Note: This applies to the modules containing modulename_process_xml\n"
+#~ "     for e.g product/process/product_process_xml\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "     Ez a modul megmutatja a kiválasztott modulokban \n"
+#~ "     és az általuk létrehozott sorrendben futó alapvető  \n"
+#~ "     folyamatokat. \n"
+#~ "\n"
+#~ "     Megjegyzés: Ez azokra a modulokra vonatozik, amelyek tartalmazzák az "
+#~ "következőt: modulename_process_xml, \n"
+#~ "     mint például: product/process/product_process_xml\n"
+#~ "\n"
+#~ "    "

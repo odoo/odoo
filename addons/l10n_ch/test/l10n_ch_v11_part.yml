@@ -1,0 +1,292 @@
+-
+  In order to test the V11 import,
+  I will create an invoice with a specified reference that I will partialy reconcile with a 1st V11
+  And then I will complete the reconcile with a second V11
+-  
+  I create an invoice ref 2000999 of EUR 250.00
+-
+  !record {model: account.invoice, id: v11_part_test_invoice, view: False}:
+    name: V11 YAML invoice
+    number: 2000999
+    company_id: base.main_company
+    journal_id: account.bank_journal
+    currency_id: base.EUR
+    account_id: account.a_recv
+    type : out_invoice
+    partner_id: base.res_partner_agrolait
+    address_contact_id: base.res_partner_address_8
+    address_invoice_id: base.res_partner_address_8
+    reference_type: bvr
+    reference: 20009997
+    date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
+    period_id: account.period_1
+    #invoice_line: 
+    partner_bank_id: main_partner_bank
+    check_total : 250.00
+    
+-
+  I create an invoice line
+-
+  !record {model: account.invoice.line, id: v11_part_test_invoice_line, view: False}:
+    account_id: account.a_expense
+    name: '[PC1] Basic PC'
+    price_unit: 250.00
+    quantity: 1.0
+    product_id: product.product_product_pc1
+    uos_id: product.product_uom_unit
+    invoice_id: v11_part_test_invoice
+
+-
+  I Validate invoice by clicking on Validate button
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: v11_part_test_invoice}  
+
+-
+  I specify the invoice number to fit with my v11
+-
+  !python {model: account.invoice}: |
+    invoice = self.browse(cr, uid, ref('v11_part_test_invoice'))
+    invoice.write({'number': 2000999})
+    
+
+-
+  I create a 1st bank statement
+  #########################################
+ #      Creating 1st bank statement      #
+#########################################
+-
+  !record {model: account.bank.statement, id: v11_part_test_bank_statement_1, view: False}:
+    #account_id:
+    #balance_end:
+    #balance_end_cash:
+    #balance_end_real:
+    #balance_start:
+    #closing_date:
+    #company_id:
+    #currency:
+    date: !eval "'%s-01-01' %(datetime.now().year)"
+    #ending_details_ids:
+    journal_id: account.bank_journal
+    #line_ids:
+    #move_line_ids
+    name: "/"
+    period_id: account.period_1
+    #starting_details_ids
+    state: draft
+    #total_entry_encoding
+    #user_id
+
+-
+  I import the 1st V11
+-
+  !python {model: bvr.import.wizard}: | 
+    import base64
+    import addons
+    import os
+    
+    # create our wizard
+    wiz_id = self.create(cr,uid,[])
+    wiz = self.browse(cr, uid, wiz_id)
+    
+    test_file_path = addons.get_module_resource(os.path.join('l10n_ch', 'test', 'test_part_1.v11'))
+    
+    # get our test file to test it
+    f_v11 = open(test_file_path)
+    
+    str64_v11 = base64.encodestring(f_v11.read())
+     
+    wiz.write({'file': str64_v11})
+    
+    # set the file in the wizard field
+    bank_statement_id = ref('v11_part_test_bank_statement_1')
+    
+    context['active_id'] = bank_statement_id 
+    context['active_ids'] = [bank_statement_id]
+    # launch the import
+    self.import_bvr(cr, uid, [wiz_id], context=context)
+    
+    
+-
+  I check my bank statement got a statement line
+-
+  !assert {model: account.bank.statement, id: v11_part_test_bank_statement_1, string: statement has 1 and only 1 statement line id}:
+   - len(line_ids) == 1
+   
+-
+  I check the voucher linked to the statement line contains a line with an amount of EUR 150.00
+-
+  !python {model: account.bank.statement}: |
+    statement = self.browse(cr, uid, ref('v11_part_test_bank_statement_1'))
+    
+    voucher_line_ids = statement.line_ids[0].voucher_id.line_ids
+    
+    assert voucher_line_ids, "No voucher line found"
+    
+    voucher_line_amount = voucher_line_ids[0].amount
+    assert voucher_line_amount == 150.00, "Amount isn't correct : %d" %(voucher_line_amount)
+
+-
+  I check amount of account voucher is equal to the bank statement line amount
+-
+  !python {model: account.bank.statement}: |
+    statement = self.browse(cr, uid, ref('v11_part_test_bank_statement_1'))
+    
+    statement_line_amount = statement.line_ids[0].amount
+    voucher_amount = statement.line_ids[0].voucher_id.amount
+    
+    assert statement_line_amount == voucher_amount, "Mismatch of amounts"
+    
+-
+  I enter the closing balance and press on compute button 
+-
+  !python {model: account.bank.statement}: |
+    statement = self.browse(cr, uid, ref('v11_part_test_bank_statement_1'))
+    statement.write({'balance_end_real': 150.00})
+    self.button_dummy(cr, uid, [ref('v11_part_test_bank_statement_1')], context=context)
+
+-
+  I check that the statement Balance is EUR 150.00
+-
+  !assert {model: account.bank.statement, id: v11_part_test_bank_statement_1, string: balance is 150.0}:
+   - balance_end == 150.0
+
+-
+  I confirm my 1st bank statement
+-
+  !python {model: account.bank.statement}: |
+    self.button_confirm_bank(cr, uid, [ref('v11_part_test_bank_statement_1')], context=context)
+  
+
+-
+  I check that my invoice is partially paid in open state, not reconciled, with a residual amount of EUR 100.0
+  #########################################
+ #        Checking partial result        #
+#########################################
+-
+  !assert {model: account.invoice, id: v11_part_test_invoice, string: 'invoice is open, reconciled and has no residual'}:
+   - state == "open"
+   - not reconciled
+   - residual == 100.0
+
+
+
+-
+  I create a 2nd bank statement
+  #########################################
+ #      Creating 2nd bank statement      #
+#########################################
+-
+  !record {model: account.bank.statement, id: v11_part_test_bank_statement_2, view: False}:
+    #account_id:
+    #balance_end:
+    #balance_end_cash:
+    #balance_end_real:
+    #balance_start:
+    #closing_date:
+    #company_id:
+    #currency:
+    date: !eval "'%s-01-01' %(datetime.now().year)"
+    #ending_details_ids:
+    journal_id: account.bank_journal
+    #line_ids:
+    #move_line_ids
+    name: "/"
+    period_id: account.period_1
+    #starting_details_ids
+    state: draft
+    #total_entry_encoding
+    #user_id
+
+-
+  I import the 2nd V11
+-
+  !python {model: bvr.import.wizard}: | 
+    import base64
+    import addons
+    import os
+    
+    # create our wizard
+    wiz_id = self.create(cr,uid,[])
+    wiz = self.browse(cr, uid, wiz_id)
+    
+    test_file_path = addons.get_module_resource(os.path.join('l10n_ch', 'test', 'test_part_2.v11'))
+    
+    # get our test file to test it
+    f_v11 = open(test_file_path)
+    
+    str64_v11 = base64.encodestring(f_v11.read())
+     
+    wiz.write({'file': str64_v11})
+    
+    # set the file in the wizard field
+    bank_statement_id = ref('v11_part_test_bank_statement_2')
+    
+    context['active_id'] = bank_statement_id 
+    context['active_ids'] = [bank_statement_id]
+    # launch the import
+    self.import_bvr(cr, uid, [wiz_id], context=context)
+    
+    
+-
+  I check my bank statement got a statement line
+-
+  !assert {model: account.bank.statement, id: v11_part_test_bank_statement_2, string: statement has 1 and only 1 statement line id}:
+   - len(line_ids) == 1
+   
+-
+  I check the voucher linked to the statement line contains a line with an amount of EUR 100.00
+-
+  !python {model: account.bank.statement}: |
+    statement = self.browse(cr, uid, ref('v11_part_test_bank_statement_2'))
+    
+    voucher_line_ids = statement.line_ids[0].voucher_id.line_ids
+    
+    assert voucher_line_ids, "No voucher line found"
+    
+    voucher_line_amount = voucher_line_ids[0].amount
+    assert voucher_line_amount == 100.00, "Amount isn't correct : %d" %(voucher_line_amount)
+
+-
+  I check amount of account voucher is equal to the bank statement line amount
+-
+  !python {model: account.bank.statement}: |
+    statement = self.browse(cr, uid, ref('v11_part_test_bank_statement_2'))
+    
+    statement_line_amount = statement.line_ids[0].amount
+    voucher_amount = statement.line_ids[0].voucher_id.amount
+    
+    assert statement_line_amount == voucher_amount, "Mismatch of amounts"
+    
+
+-
+  I enter the closing balance and press on compute button 
+-
+  !python {model: account.bank.statement}: |
+    statement = self.browse(cr, uid, ref('v11_part_test_bank_statement_2'))
+    statement.write({'balance_end_real': 100.00})
+    self.button_dummy(cr, uid, [ref('v11_part_test_bank_statement_2')], context=context)
+
+-
+  I check that the statement Balance is EUR 100.00
+-
+  !assert {model: account.bank.statement, id: v11_part_test_bank_statement_2, string: balance is 100.0}:
+   - balance_end == 100.0
+
+-
+  I confirm my 2nd bank statement
+-
+  !python {model: account.bank.statement}: |
+    self.button_confirm_bank(cr, uid, [ref('v11_part_test_bank_statement_2')], context=context)
+
+
+
+-
+  I check my invoice is paid, reconciled and has no residual
+  #########################################
+ #        Checking finale state          #
+#########################################
+-
+  !assert {model: account.invoice, id: v11_part_test_invoice, string: 'invoice is paid, reconciled and has no residual'}:
+   - state == "paid"
+   - reconciled
+   - residual == 0.0

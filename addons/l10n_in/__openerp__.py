@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Indian Chart of Account",
+    "name": "India - Accounting",
     "version": "1.0",
     "description": """
 Indian Accounting : Chart of Account.
@@ -39,7 +39,7 @@ Indian accounting chart and localization.
         "l10n_in_chart.xml",
         "l10n_in_wizard.xml",
     ],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "001308250150600713245",
     'images': ['images/config_chart_l10n_in.jpeg','images/l10n_in_chart.jpeg'],

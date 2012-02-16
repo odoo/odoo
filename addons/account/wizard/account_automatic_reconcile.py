@@ -34,9 +34,7 @@ class account_automatic_reconcile(osv.osv_memory):
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'period_id': fields.many2one('account.period', 'Period'),
         'max_amount': fields.float('Maximum write-off amount'),
-        'power': fields.selection([(p, str(p)) for p in range(2, 10)], 'Power', required=True, help='Number of partial amounts that can be combined to find a balance point can be chosen as the power of the automatic reconciliation'),
-        'date1': fields.date('Starting Date', required=True),
-        'date2': fields.date('Ending Date', required=True),
+        'power': fields.selection([(p, str(p)) for p in range(2, 5)], 'Power', required=True, help='Number of partial amounts that can be combined to find a balance point can be chosen as the power of the automatic reconciliation'),
         'reconciled': fields.integer('Reconciled transactions', readonly=True),
         'unreconciled': fields.integer('Not reconciled transactions', readonly=True),
         'allow_write_off': fields.boolean('Allow write off')
@@ -53,8 +51,6 @@ class account_automatic_reconcile(osv.osv_memory):
         return context.get('unreconciled', 0)
 
     _defaults = {
-        'date1': lambda *a: time.strftime('%Y-01-01'),
-        'date2': lambda *a: time.strftime('%Y-%m-%d'),
         'reconciled': _get_reconciled,
         'unreconciled': _get_unreconciled,
         'power': 2

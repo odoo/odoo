@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-05-22 16:29+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-01-25 00:10+0000\n"
+"Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:18+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -51,11 +51,6 @@ msgid "Analytic Plan"
 msgstr "Analiz Planı"
 
 #. module: account_analytic_plans
-#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
-msgid "Multiple-plans management in Analytic Accounting"
-msgstr "Analiz Hesabında çoklu plan yönetimi"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
 #: view:account.crossovered.analytic:0
 #: field:account.crossovered.analytic,journal_ids:0
@@ -69,7 +64,7 @@ msgid "Analytic Plan Line"
 msgstr "Analiz Planı Kalemi"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:60
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
 msgid "User Error"
 msgstr "Kullanıcı Hatası"
@@ -85,11 +80,6 @@ msgid "Ok"
 msgstr "Tamam"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
 msgstr "Model Planı"
@@ -100,9 +90,9 @@ msgid "Account2 Id"
 msgstr "Hesap2 No"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Hesap No"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Fatura Numarası Her Şirkette Tekil Olmalı!"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -110,9 +100,11 @@ msgid "Amount"
 msgstr "Tutar"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Code"
-msgstr "Kod"
+#: constraint:account.journal:0
+msgid ""
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -135,9 +127,26 @@ msgid "Bank Statement Line"
 msgstr "Banka Ekstresi Kalemi"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Analiz Hesabı"
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid "Define your Analytic Plans"
+msgstr "Analitik Planınızı Tanımlayın"
+
+#. module: account_analytic_plans
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr "Geçersiz BBA Yapılı İletişim !"
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement:0
+msgid "The journal and period chosen have to belong to the same company."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -148,13 +157,6 @@ msgstr "Yevmiye kodu her firma için benzersiz olmalı."
 #: field:account.crossovered.analytic,ref:0
 msgid "Analytic Account Reference"
 msgstr "Analiz Hesabı Referansı"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-"Bir paydaş belirtmeden borç/alacak hesabı için hareket işlemi yapamazsınız."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
@@ -180,11 +182,12 @@ msgstr "Yazdır"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+#: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "Yüzde"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #, python-format
 msgid "A model having this name and code already exists !"
 msgstr "Bu isimde ve kodda bir model zaten var !"
@@ -240,6 +243,14 @@ msgid "Invoice Line"
 msgstr "Fatura Kalemi"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Currency"
 msgstr "Para Birimi"
@@ -250,9 +261,9 @@ msgid "Start Date"
 msgstr "Başlangıç Tarihi"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Company"
-msgstr "Firma"
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Hesap No"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -275,8 +286,8 @@ msgid "To Date"
 msgstr "Tarihine kadar"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "'%s' Yevmiyesinde bir analiz yevmiyesi tanımlamalısınız!"
@@ -292,79 +303,14 @@ msgid "analytic.plan.create.model.action"
 msgstr "analiz.plan.oluştur.model.eylem"
 
 #. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analiz Satırı"
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account :"
 msgstr "Analiz Hesabı:"
-
-#. module: account_analytic_plans
-#: model:ir.module.module,description:account_analytic_plans.module_meta_information
-msgid ""
-"This module allows to use several analytic plans, according to the general "
-"journal,\n"
-"so that multiple analytic lines are created when the invoice or the entries\n"
-"are confirmed.\n"
-"\n"
-"For example, you can define the following analytic structure:\n"
-"  Projects\n"
-"      Project 1\n"
-"          SubProj 1.1\n"
-"          SubProj 1.2\n"
-"      Project 2\n"
-"  Salesman\n"
-"      Eric\n"
-"      Fabien\n"
-"\n"
-"Here, we have two plans: Projects and Salesman. An invoice line must\n"
-"be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-"Fabien. The amount can also be split. The following example is for\n"
-"an invoice that touches the two subproject and assigned to one salesman:\n"
-"\n"
-"Plan1:\n"
-"    SubProject 1.1 : 50%\n"
-"    SubProject 1.2 : 50%\n"
-"Plan2:\n"
-"    Eric: 100%\n"
-"\n"
-"So when this line of invoice will be confirmed, it will generate 3 analytic "
-"lines,\n"
-"for one account entry.\n"
-"The analytic plan validates the minimum and maximum percentage at the time "
-"of creation\n"
-"of distribution models.\n"
-"        "
-msgstr ""
-"Bu modül yevmiye defterine uygun olarak birkaç analiz planı kullanılmasına "
-"izin verir,\n"
-"böylece fatura ya da girişler onaylanırken çoklu analiz kalemlerinin "
-"oluşması\n"
-"sağlanır.\n"
-"\n"
-"Örneğin, aşağıdaki analitik yapıyı tanımlayabilirsiniz:\n"
-"  Projeler\n"
-"      Proje 1\n"
-"          AltProjj 1.1\n"
-"          AltProj 1.2\n"
-"      Proje 2\n"
-"  Satış Elemanı\n"
-"      Eric\n"
-"      Fabien\n"
-"\n"
-"Burada 2 planımız var: Projeler ve Satış Elemanı. Bir fatura satırına \n"
-"2 planda analitik girişler yapılabilmelidir: AltProj 1.1 ve\n"
-"Fabien. Tutar da bölünebilmeli. Aşağıdaki örnek iki projeye \n"
-"değinen ve bir satış elemanına atana bir faturadır:\n"
-"\n"
-"Plan1:\n"
-"    AltProje 1.1 : 50%\n"
-"    AltProje 1.2 : 50%\n"
-"Plan2:\n"
-"    Eric: 100%\n"
-"\n"
-"Faturanın bu kalemi onaylanırsa, bir hesap girişi için\n"
-"3 analitik satır oluşur.\n"
-"Analitik plan, dağıtım modelleri oluşturulurken enaz ve ençok yüzdeleri\n"
-"doğrular.\n"
-"        "
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -392,11 +338,6 @@ msgid "Account1 Id"
 msgstr "Hesap1 No"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
 msgstr "İzin verilen enaz (%)"
@@ -407,7 +348,7 @@ msgid "Root account of this plan."
 msgstr "Bu planın kök hesabı."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
@@ -418,6 +359,11 @@ msgstr "Hata"
 #: view:analytic.plan.create.model:0
 msgid "Save This Distribution as a Model"
 msgstr "Bu dağıtımı Model olarak kaydet"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -436,11 +382,16 @@ msgid "Print Crossovered Analytic"
 msgstr "Çarpraz Analiz Yazdır"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:341
+#: code:addons/account_analytic_plans/account_analytic_plans.py:485
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Analiz Yevmiyesi yok !"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Analiz Hesabı"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
@@ -451,6 +402,11 @@ msgstr "Banka Ekstresi"
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
 msgstr "Hesap3 No"
+
+#. module: account_analytic_plans
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -469,12 +425,17 @@ msgid "Account4 Id"
 msgstr "Hesap4 No"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
+
+#. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Lines"
 msgstr "Analiz Dağılım Kalemleri"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "The Total Should be Between %s and %s"
 msgstr "Toplam %s ve %s arasında olmalı"
@@ -526,6 +487,11 @@ msgid "Journal"
 msgstr "Yevmiye"
 
 #. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Code"
+msgstr "Kod"
+
+#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
 msgid "analytic.plan.create.model"
 msgstr "analitik.plan.oluştur.model"
@@ -541,6 +507,24 @@ msgid "Distribution Models"
 msgstr "Dağıtım Modelleri"
 
 #. module: account_analytic_plans
+#: model:ir.actions.act_window,help:account_analytic_plans.account_analytic_plan_form_action_installer
+msgid ""
+"To setup a multiple analytic plans environment, you must define the root "
+"analytic accounts for each plan set. Then, you must attach a plan set to "
+"your account journals."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr "Firma"
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
 msgstr "Sıra No"
@@ -551,15 +535,90 @@ msgid "The name of the journal must be unique per company !"
 msgstr "Yevmiye adı her firmada benzersiz olmalı."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "Value Error"
 msgstr "Değer Hatası"
 
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Hesap Görünümünde hareket oluşturamazsınız."
-
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
+
+#~ msgid "Multiple-plans management in Analytic Accounting"
+#~ msgstr "Analiz Hesabında çoklu plan yönetimi"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Bu modül yevmiye defterine uygun olarak birkaç analiz planı kullanılmasına "
+#~ "izin verir,\n"
+#~ "böylece fatura ya da girişler onaylanırken çoklu analiz kalemlerinin "
+#~ "oluşması\n"
+#~ "sağlanır.\n"
+#~ "\n"
+#~ "Örneğin, aşağıdaki analitik yapıyı tanımlayabilirsiniz:\n"
+#~ "  Projeler\n"
+#~ "      Proje 1\n"
+#~ "          AltProjj 1.1\n"
+#~ "          AltProj 1.2\n"
+#~ "      Proje 2\n"
+#~ "  Satış Elemanı\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Burada 2 planımız var: Projeler ve Satış Elemanı. Bir fatura satırına \n"
+#~ "2 planda analitik girişler yapılabilmelidir: AltProj 1.1 ve\n"
+#~ "Fabien. Tutar da bölünebilmeli. Aşağıdaki örnek iki projeye \n"
+#~ "değinen ve bir satış elemanına atana bir faturadır:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    AltProje 1.1 : 50%\n"
+#~ "    AltProje 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "Faturanın bu kalemi onaylanırsa, bir hesap girişi için\n"
+#~ "3 analitik satır oluşur.\n"
+#~ "Analitik plan, dağıtım modelleri oluşturulurken enaz ve ençok yüzdeleri\n"
+#~ "doğrular.\n"
+#~ "        "
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Hesap Görünümünde hareket oluşturamazsınız."

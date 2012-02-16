@@ -28,9 +28,9 @@
                         <field name="active" select="1"/>
                         <separator string="Pricing Information" colspan="4"/>
                         <group colspan="4" col="4">
-                            <field name="normal_price"/>
+                            <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
                             <newline/>
-                            <field name="free_if_more_than"/>
+                            <field name="free_if_more_than" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
                             <field name="amount" attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':[('free_if_more_than','=',False)]}"/>
                         </group>
                         <newline/>
@@ -233,7 +233,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','out')]</field>
             <field name="filter" eval="True"/>
-            <field name="context">{'contact_display': 'partner'}</field>
+            <field name="context">{'default_invoice_state': '2binvoiced', 'default_type': 'out', 'contact_display': 'partner'}</field>
             <field name="search_view_id" ref="stock.view_picking_out_search"/>
         </record>
 

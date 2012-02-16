@@ -169,7 +169,8 @@
                     <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="quantity" string="Quantity/Rate"/>
+                    <field name="quantity"/>
+                    <field name="rate"/>
                     <field name="amount"/>
                     <field name="total"/>
                     <field name="amount_select" invisible="1"/>
@@ -262,7 +263,7 @@
                     <group col="6" colspan="4">
                         <field name="employee_id" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
                         <field name="number"/>
-                        <field name="date_from"/>
+                        <field name="date_from" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
                         <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]" on_change="onchange_contract_id(date_from, date_to, employee_id, contract_id)"/>
                         <field name="struct_id" groups="base.group_extended" attrs="{'required':[('contract_id','&lt;&gt;',False)]}"/>
                         <field name="date_to"/>
@@ -319,7 +320,8 @@
                                     <field name="code"/>
                                     <field name="category_id"/>
                                     <field name="sequence" invisible="1"/>
-                                    <field name="quantity" string="Quantity/Rate"/>
+                                    <field name="quantity"/>
+                                    <field name="rate"/>
                                     <field name="amount"/>
                                     <field name="total"/>
                                 </tree>
@@ -329,7 +331,8 @@
                                         <field name="code" select="1"/>
                                         <field name="category_id"/>
                                         <field name="sequence" groups="base.group_extended"/>
-                                        <field name="quantity" string="Quantity/Rate"/>
+                                        <field name="quantity"/>
+                                        <field name="rate"/>
                                         <field name="amount"/>
                                         <field name="total"/>
                                         <field name="salary_rule_id" groups="base.group_extended"/>
@@ -392,7 +395,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="Employees" icon="terp-personal" name="employee_id" context="{'group_by':'employee_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="PaySlip Run" name="payslip_run_id" icon="terp-folder-orange" context="{'group_by':'payslip_run_id'}"/>
+                        <filter string="PaySlip Batch" name="payslip_run_id" icon="terp-folder-orange" context="{'group_by':'payslip_run_id'}"/>
                         <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Companies" name="company_id" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
                         <separator orientation="vertical"/>
@@ -483,6 +486,7 @@
             <field name="name">Salary Rule Categories Hierarchy</field>
             <field name="res_model">hr.salary.rule.category</field>
             <field name="view_type">tree</field>
+            <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_id" ref="hr_salary_rule_category_tree_view"/>
         </record>
         <menuitem
@@ -684,9 +688,9 @@
             <field name="model">hr.payslip.run</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Payslip Runs">
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Payslip Runs"/>
-                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','close')]" help="Done Payslip Runs"/>
+                <search string="Search Payslip Batches">
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Payslip Batches"/>
+                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','close')]" help="Done Payslip Batches"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="date_start"/>
@@ -700,7 +704,7 @@
             <field name="model">hr.payslip.run</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Payslips Run">
+                <tree string="Payslips Batches">
                     <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
@@ -715,7 +719,7 @@
             <field name="model">hr.payslip.run</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Payslips Run">
+                <form string="Payslips Batches">
                     <group col="6" colspan="4">
                         <field name="name" colspan="4"/>
                         <field name="credit_note"/>
@@ -738,7 +742,7 @@
         </record>
 
         <record id="action_hr_payslip_run_tree" model="ir.actions.act_window">
-            <field name="name">Payslips Run</field>
+            <field name="name">Payslips Batches</field>
             <field name="res_model">hr.payslip.run</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="hr_payslip_run_tree"/>
@@ -759,13 +763,14 @@
 
         <act_window name="Payslip Computation Details"
         	domain="[('slip_id', '=', active_id)]"
+        	context="{'default_slip_id': active_id}"
         	res_model="hr.payslip.line"
         	src_model="hr.payslip"
         	id="act_payslip_lines"/>
 
         <act_window name="Payslip Lines"
         	domain="[('register_id', '=', active_id)]"
-        	context="{'search_default_register_id': 1}"
+        	context="{'default_register_id': active_id, 'search_default_register_id': 1}"
         	res_model="hr.payslip.line"
         	src_model="hr.contribution.register"
         	id="act_contribution_reg_payslip_lines"/>

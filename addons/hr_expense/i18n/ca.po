@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2010-10-30 12:21+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:24+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:39+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -38,23 +38,30 @@ msgid "Confirmation Date"
 msgstr "Data de confirmació"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: view:hr.expense.report:0
+#: view:hr.expense.expense:0 view:hr.expense.report:0
 msgid "Group By..."
 msgstr "Agrupa per..."
 
 #. module: hr_expense
-#: model:product.template,name:hr_expense.product_product_expense_air_product_template
+#: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Ticket"
 msgstr "Billet d'avió"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,department_id:0
-#: view:hr.expense.report:0
-#: field:hr.expense.report,department_id:0
+#: report:hr.expense:0
+msgid "Validated By"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0 field:hr.expense.expense,department_id:0
+#: view:hr.expense.report:0 field:hr.expense.report,department_id:0
 msgid "Department"
 msgstr "Departament"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "New Expense"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -67,8 +74,7 @@ msgid "# of Invoiced Lines"
 msgstr "Nº de línies facturades"
 
 #. module: hr_expense
-#: field:hr.expense.expense,company_id:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,company_id:0 view:hr.expense.report:0
 #: field:hr.expense.report,company_id:0
 msgid "Company"
 msgstr "Companyia"
@@ -89,14 +95,12 @@ msgid "Expenses Statistics"
 msgstr "Estadístiques de despeses"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: view:hr.expense.report:0
-#: model:process.node,name:hr_expense.process_node_approved0
-msgid "Approved"
-msgstr "Aprovat"
+#: view:hr.expense.report:0 field:hr.expense.report,day:0
+msgid "Day"
+msgstr "Dia"
 
 #. module: hr_expense
-#: field:hr.expense.line,uom_id:0
+#: field:hr.expense.line,uom_id:0 view:product.product:0
 msgid "UoM"
 msgstr "UdM"
 
@@ -110,6 +114,11 @@ msgstr ""
 "acceptar."
 
 #. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Expenses during current month"
+msgstr ""
+
+#. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Notes"
 msgstr "Notes"
@@ -120,45 +129,24 @@ msgid "Employee's Invoice"
 msgstr "Factura d'empleat"
 
 #. module: hr_expense
-#: model:ir.module.module,description:hr_expense.module_meta_information
-msgid ""
-"\n"
-"    This module aims to manage employee's expenses.\n"
-"\n"
-"    The whole workflow is implemented:\n"
-"    * Draft expense\n"
-"    * Confirmation of the sheet by the employee\n"
-"    * Validation by his manager\n"
-"    * Validation by the accountant and invoice creation\n"
-"    * Payment of the invoice to the employee\n"
-"\n"
-"    This module also uses the analytic accounting and is compatible with\n"
-"    the invoice on timesheet module so that you will be able to "
-"automatically\n"
-"    re-invoice your customer's expenses if your work by project.\n"
-"    "
+#: view:product.product:0
+msgid "Products"
 msgstr ""
-"\n"
-"    Aquest mòdul permet gestionar les despeses dels treballadors.\n"
-"\n"
-"    S'ha implementat el flux complet:\n"
-"    * Despesa en esborrany\n"
-"    * Confirmació del full de despeses per l'empleat\n"
-"    * Validació pel seu responsable\n"
-"    * Validació pel comptable i creació de la factura\n"
-"    * Pagament de la factura a l'empleat\n"
-"\n"
-"    Aquest mòdul també utilitza la comptabilitat analítica i és compatible "
-"amb\n"
-"    el mòdul de facturació de fulls de serveis de forma que pugui\n"
-"    re-facturar automàticament les  seves despeses de clients si treballa "
-"per projectes.\n"
-"    "
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Confirm Expenses"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
 msgid "Cancelled"
 msgstr "Cancel·lat"
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_refused0
+msgid "The direct manager refuses the sheet.Reset as draft."
+msgstr "El gestor inmediat rebutja la fulla. Restablerta com esborrany."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -176,13 +164,7 @@ msgid "Accepted"
 msgstr "Acceptat"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-msgid "   Month   "
-msgstr "   Mes   "
-
-#. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.expense,ref:0
+#: report:hr.expense:0 field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
 msgstr "Referència"
@@ -202,8 +184,7 @@ msgstr ""
 "confirmar."
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,nbr:0
+#: view:hr.expense.report:0 field:hr.expense.report,nbr:0
 msgid "# of Lines"
 msgstr "Núm. de línies"
 
@@ -211,11 +192,6 @@ msgstr "Núm. de línies"
 #: model:process.transition,name:hr_expense.process_transition_refuseexpense0
 msgid "Refuse expense"
 msgstr "Refusar despeses"
-
-#. module: hr_expense
-#: model:product.template,name:hr_expense.product_product_expense_car_product_template
-msgid "Car Travel"
-msgstr "Viatge amb cotxe"
 
 #. module: hr_expense
 #: field:hr.expense.report,price_average:0
@@ -239,6 +215,13 @@ msgid "The accoutant validates the sheet"
 msgstr "El comptable valida la fulla"
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:187
+#, python-format
+msgid "The employee's home address must have a partner linked."
+msgstr ""
+"L'adreça particular del treballador ha de tenir una empresa vinculada."
+
+#. module: hr_expense
 #: field:hr.expense.report,delay_valid:0
 msgid "Delay to Valid"
 msgstr "Temps fins validar"
@@ -250,8 +233,7 @@ msgstr ""
 "Doneu l'ordre de seqüència al mostrar una llista de línies de despeses."
 
 #. module: hr_expense
-#: field:hr.expense.line,analytic_account:0
-#: view:hr.expense.report:0
+#: field:hr.expense.line,analytic_account:0 view:hr.expense.report:0
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr "Compte analític"
@@ -262,14 +244,13 @@ msgid "Date "
 msgstr "Data "
 
 #. module: hr_expense
-#: field:hr.expense.expense,state:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,state:0 view:hr.expense.report:0
 #: field:hr.expense.report,state:0
 msgid "State"
 msgstr "Estat"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:144
+#: code:addons/hr_expense/hr_expense.py:173
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product purchase, "
@@ -279,22 +260,33 @@ msgstr ""
 "`property_account_expense_categ`"
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,employee_id:0
 #: view:hr.expense.report:0
+msgid "Expenses during last month"
+msgstr ""
+
+#. module: hr_expense
+#: report:hr.expense:0 view:hr.expense.expense:0
+#: field:hr.expense.expense,employee_id:0 view:hr.expense.report:0
 msgid "Employee"
 msgstr "Empleat"
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.report,product_qty:0
+#: view:hr.expense.expense:0 selection:hr.expense.expense,state:0
+msgid "New"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Confirmed Expense"
+msgstr ""
+
+#. module: hr_expense
+#: report:hr.expense:0 field:hr.expense.report,product_qty:0
 msgid "Qty"
 msgstr "Qtat."
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,price_total:0
+#: view:hr.expense.report:0 field:hr.expense.report,price_total:0
 msgid "Total Price"
 msgstr "Preu total"
 
@@ -304,9 +296,9 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr "Alguns costos poden ser refacturats al client"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:144
-#: code:addons/hr_expense/hr_expense.py:157
-#: code:addons/hr_expense/hr_expense.py:159
+#: code:addons/hr_expense/hr_expense.py:173
+#: code:addons/hr_expense/hr_expense.py:185
+#: code:addons/hr_expense/hr_expense.py:187
 #, python-format
 msgid "Error !"
 msgstr "Error !"
@@ -338,14 +330,12 @@ msgid "Reimburse expense"
 msgstr "Reemborsar despeses"
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0
-#: field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr "Diari forçat"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,no_of_products:0
+#: view:hr.expense.report:0 field:hr.expense.report,no_of_products:0
 msgid "# of Products"
 msgstr "Núm. de productes"
 
@@ -365,21 +355,19 @@ msgid "Reimbursement"
 msgstr "Reembors"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:158
-#, python-format
-msgid "The employee must have a Home address"
-msgstr "L'empleat ha de tenir un domicili"
-
-#. module: hr_expense
 #: view:hr.expense.report:0
 msgid "    Month-1    "
 msgstr "    Mes-1    "
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-#: field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
 msgid "Validation Date"
 msgstr "Data de validació"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "My Department"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -389,16 +377,14 @@ msgid "Expenses Analysis"
 msgstr "Anàlisi de despeses"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.line,expense_id:0
+#: view:hr.expense.expense:0 field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 #: model:process.process,name:hr_expense.process_process_expenseprocess0
 msgid "Expense"
 msgstr "Despesa"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,line_ids:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
 msgstr "Línies de despeses"
@@ -419,8 +405,12 @@ msgid "December"
 msgstr "Desembre"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
 #: view:hr.expense.report:0
+msgid "Invoiced Expenses"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0 view:hr.expense.report:0
 #: field:hr.expense.report,month:0
 msgid "Month"
 msgstr "Mes"
@@ -442,8 +432,7 @@ msgid "Employee encode all his expenses"
 msgstr "Empleat codifica totes les seves despeses"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: view:hr.expense.report:0
+#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
 #: selection:hr.expense.report,state:0
 msgid "Invoiced"
 msgstr "Facturat"
@@ -454,13 +443,7 @@ msgid "Can Constitute an Expense"
 msgstr "Pot ser una despesa"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-msgid "  Year  "
-msgstr "  Any  "
-
-#. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: selection:hr.expense.report,state:0
+#: selection:hr.expense.expense,state:0 selection:hr.expense.report,state:0
 msgid "Reimbursed"
 msgstr "Reintegrat"
 
@@ -475,8 +458,6 @@ msgid "Create Customer invoice"
 msgstr "Crea factura de client"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: selection:hr.expense.expense,state:0
 #: selection:hr.expense.report,state:0
 msgid "Draft"
 msgstr "Esborrany"
@@ -522,14 +503,12 @@ msgid "Customer Project"
 msgstr "Projecte del client"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,user_id:0
-msgid "User"
-msgstr "Usuari"
+#: model:ir.actions.act_window,name:hr_expense.product_normal_form_view_installer
+msgid "Review Your Expenses Products"
+msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.expense,date:0
+#: report:hr.expense:0 field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
 msgid "Date"
 msgstr "Data"
@@ -543,6 +522,17 @@ msgstr "Novembre"
 #: view:hr.expense.report:0
 msgid "Extended Filters..."
 msgstr "Filtres estesos..."
+
+#. module: hr_expense
+#: view:hr.expense.expense:0 field:hr.expense.expense,user_id:0
+msgid "User"
+msgstr "Usuari"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:185
+#, python-format
+msgid "The employee must have a Home address."
+msgstr "El treballador ha de tenir una adreça particular"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -565,14 +555,24 @@ msgid "HR Expenses"
 msgstr "Despeses RRHH"
 
 #. module: hr_expense
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Submit to Manager"
+msgstr ""
+
+#. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_confirmedexpenses0
 msgid "The employee validates his expense sheet"
 msgstr "L'empleat valida la seva fulla de despeses"
 
 #. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_refused0
-msgid "The direct manager refuses the sheet.Reset as draft."
-msgstr "El gestor inmediat rebutja la fulla. Restablerta com esborrany."
+#: view:hr.expense.expense:0
+msgid "Expenses to Invoice"
+msgstr ""
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_supplierinvoice0
@@ -592,14 +592,13 @@ msgstr "En espera"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
-#: field:hr.expense.report,day:0
-msgid "Day"
-msgstr "Dia"
+msgid "Approved Expenses"
+msgstr ""
 
 #. module: hr_expense
-#: model:ir.module.module,shortdesc:hr_expense.module_meta_information
-msgid "Human Resources Expenses Tracking"
-msgstr "Seguiment de les despeses dels recursos humans"
+#: report:hr.expense:0 field:hr.expense.line,unit_amount:0
+msgid "Unit Price"
+msgstr "Preu unitat"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -607,8 +606,7 @@ msgid "References"
 msgstr "Referències"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.report,invoice_id:0
+#: view:hr.expense.expense:0 field:hr.expense.report,invoice_id:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
 msgid "Invoice"
 msgstr "Factura"
@@ -666,14 +664,29 @@ msgid "Expense is refused."
 msgstr "Despesa és rebutjada."
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.line,unit_amount:0
-msgid "Unit Price"
-msgstr "Preu unitat"
+#: model:ir.actions.act_window,help:hr_expense.product_normal_form_view_installer
+msgid ""
+"Define one product for each expense type allowed for an employee (travel by "
+"car, hostel, restaurant, etc). If you reimburse the employees at a fixed "
+"rate, set a cost and a unit of measure on the product. If you reimburse "
+"based on real costs, set the cost at 0.00. The user will set the real price "
+"when recording his expense sheet."
+msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.line,product_id:0
-#: view:hr.expense.report:0
+#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
+#: model:process.node,name:hr_expense.process_node_approved0
+msgid "Approved"
+msgstr "Aprovat"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:141
+#, python-format
+msgid "Supplier Invoices"
+msgstr ""
+
+#. module: hr_expense
+#: field:hr.expense.line,product_id:0 view:hr.expense.report:0
 #: field:hr.expense.report,product_id:0
 #: model:ir.model,name:hr_expense.model_product_product
 msgid "Product"
@@ -685,8 +698,7 @@ msgid "Expenses of My Department"
 msgstr "Despeses del meu departament"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,name:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,name:0
 #: field:hr.expense.line,description:0
 msgid "Description"
 msgstr "Descripció"
@@ -750,8 +762,7 @@ msgid "This Month"
 msgstr "Aquest mes"
 
 #. module: hr_expense
-#: field:hr.expense.expense,user_valid:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,user_valid:0 view:hr.expense.report:0
 #: field:hr.expense.report,user_id:0
 msgid "Validation User"
 msgstr "Validació usuari"
@@ -782,7 +793,7 @@ msgid "Creates supplier invoice."
 msgstr "Crea factura de proveïdor."
 
 #. module: hr_expense
-#: model:product.template,name:hr_expense.product_product_expense_hotel_product_template
+#: model:product.template,name:hr_expense.hotel_rent_product_template
 msgid "Hotel Accommodation"
 msgstr "Allotjament hotel"
 
@@ -819,10 +830,14 @@ msgid "Approve"
 msgstr "Aprova"
 
 #. module: hr_expense
-#: view:hr.expense.line:0
-#: field:hr.expense.line,total_amount:0
+#: view:hr.expense.line:0 field:hr.expense.line,total_amount:0
 msgid "Total"
 msgstr "Total"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Expenses during current year"
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -839,6 +854,7 @@ msgstr "La despesa és confirmada."
 #: model:ir.actions.act_window,name:hr_expense.expense_all
 #: model:ir.ui.menu,name:hr_expense.menu_expense_all
 #: model:ir.ui.menu,name:hr_expense.next_id_49
+#: model:product.category,name:hr_expense.cat_expense
 msgid "Expenses"
 msgstr "Despeses"
 
@@ -848,8 +864,7 @@ msgid "Error: Invalid ean code"
 msgstr "Error: Codi EAN no vàlid"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,year:0
+#: view:hr.expense.report:0 field:hr.expense.report,year:0
 msgid "Year"
 msgstr "Any"
 
@@ -930,6 +945,9 @@ msgstr "Refacturació"
 #~ msgid "Short Description"
 #~ msgstr "Descripció breu"
 
+#~ msgid "Human Resources Expenses Tracking"
+#~ msgstr "Seguiment de les despeses dels recursos humans"
+
 #~ msgid "Date Validated"
 #~ msgstr "Data validació"
 
@@ -953,3 +971,46 @@ msgstr "Refacturació"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom de model no vàlid en la definició de l'acció."
+
+#~ msgid "   Month   "
+#~ msgstr "   Mes   "
+
+#~ msgid "Car Travel"
+#~ msgstr "Viatge amb cotxe"
+
+#~ msgid "  Year  "
+#~ msgstr "  Any  "
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module aims to manage employee's expenses.\n"
+#~ "\n"
+#~ "    The whole workflow is implemented:\n"
+#~ "    * Draft expense\n"
+#~ "    * Confirmation of the sheet by the employee\n"
+#~ "    * Validation by his manager\n"
+#~ "    * Validation by the accountant and invoice creation\n"
+#~ "    * Payment of the invoice to the employee\n"
+#~ "\n"
+#~ "    This module also uses the analytic accounting and is compatible with\n"
+#~ "    the invoice on timesheet module so that you will be able to "
+#~ "automatically\n"
+#~ "    re-invoice your customer's expenses if your work by project.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Aquest mòdul permet gestionar les despeses dels treballadors.\n"
+#~ "\n"
+#~ "    S'ha implementat el flux complet:\n"
+#~ "    * Despesa en esborrany\n"
+#~ "    * Confirmació del full de despeses per l'empleat\n"
+#~ "    * Validació pel seu responsable\n"
+#~ "    * Validació pel comptable i creació de la factura\n"
+#~ "    * Pagament de la factura a l'empleat\n"
+#~ "\n"
+#~ "    Aquest mòdul també utilitza la comptabilitat analítica i és compatible "
+#~ "amb\n"
+#~ "    el mòdul de facturació de fulls de serveis de forma que pugui\n"
+#~ "    re-facturar automàticament les  seves despeses de clients si treballa "
+#~ "per projectes.\n"
+#~ "    "

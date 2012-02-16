@@ -7,15 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-06-08 10:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:34+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:49+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
+
+#. module: warning
+#: sql_constraint:purchase.order:0
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -32,11 +38,6 @@ msgstr "Vietsi myyntitilausriville"
 #: field:product.product,purchase_line_warn_msg:0
 msgid "Message for Purchase Order Line"
 msgstr "Viesti ostotilausriville"
-
-#. module: warning
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Virhe! Rekursiivisesti rinnastettuja jäseniä ei voi luoda."
 
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking
@@ -57,12 +58,6 @@ msgstr "Varoitus tätä tuotetta ostettaessa"
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
 msgstr "Tuote"
-
-#. module: warning
-#: sql_constraint:purchase.order:0
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "Tilauksen viite tulee olla yksilöllinen!"
 
 #. module: warning
 #: view:product.product:0
@@ -91,6 +86,11 @@ msgid "Blocking Message"
 msgstr "Estoviesti"
 
 #. module: warning
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Varatokeräily"
+
+#. module: warning
 #: view:res.partner:0
 msgid "Warning on the Invoice"
 msgstr "Varoitus laskulle"
@@ -112,11 +112,6 @@ msgid "Invoice"
 msgstr "Lasku"
 
 #. module: warning
-#: model:ir.module.module,shortdesc:warning.module_meta_information
-msgid "Module for Warnings form onchange Event"
-msgstr ""
-
-#. module: warning
 #: view:product.product:0
 msgid "Warning when Selling this Product"
 msgstr "Varoitus myytäessä tätä tuotetta"
@@ -127,15 +122,20 @@ msgid "Sale Order"
 msgstr "Myyntitilaus"
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Varatokeräily"
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Viesti laskulle"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Ostotilaus"
+
+#. module: warning
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr ""
 
 #. module: warning
 #: field:res.partner,sale_warn_msg:0
@@ -174,13 +174,18 @@ msgid "Alert for %s !"
 msgstr "Varoita %s !"
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Viesti laskulle"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
 
 #. module: warning
-#: model:ir.module.module,description:warning.module_meta_information
-msgid "Module for Warnings form onchange Event."
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
+
+#. module: warning
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
 msgstr ""
 
 #. module: warning
@@ -233,3 +238,9 @@ msgstr "Myyntitilaus"
 #: model:ir.model,name:warning.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Myyntitilauksen Rivi"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Virhe! Rekursiivisesti rinnastettuja jäseniä ei voi luoda."
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Tilauksen viite tulee olla yksilöllinen!"

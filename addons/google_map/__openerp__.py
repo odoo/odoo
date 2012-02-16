@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Google Map',
+    'name': 'Google Maps on Customers',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Customer Relationship Management',
     'description': """
 The module adds Google Map field in partner address.
 ====================================================
@@ -39,7 +39,7 @@ Using this you can directly open Google Map from the URL widget.""",
                   ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0029498930765',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

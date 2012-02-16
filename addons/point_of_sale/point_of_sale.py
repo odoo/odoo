@@ -22,12 +22,16 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import logging
+from PIL import Image
 
 import netsvc
 from osv import fields, osv
 from tools.translate import _
 from decimal import Decimal
 import decimal_precision as dp
+
+_logger = logging.getLogger(__name__)
 
 class pos_config_journal(osv.osv):
     """ Point of Sale journal configuration"""
@@ -46,6 +50,28 @@ class pos_order(osv.osv):
     _name = "pos.order"
     _description = "Point of Sale"
     _order = "id desc"
+    
+    def create_from_ui(self, cr, uid, orders, context=None):
+        #_logger.info("orders: %r", orders)
+        list = []
+        for order in orders:
+            # order :: {'name': 'Order 1329148448062', 'amount_paid': 9.42, 'lines': [[0, 0, {'discount': 0, 'price_unit': 1.46, 'product_id': 124, 'qty': 5}], [0, 0, {'discount': 0, 'price_unit': 0.53, 'product_id': 62, 'qty': 4}]], 'statement_ids': [[0, 0, {'journal_id': 7, 'amount': 9.42, 'name': '2012-02-13 15:54:12', 'account_id': 12, 'statement_id': 21}]], 'amount_tax': 0, 'amount_return': 0, 'amount_total': 9.42}
+            order_obj = self.pool.get('pos.order')
+            # get statements out of order because they will be generated with add_payment to ensure
+            # the module behavior is the same when using the front-end or the back-end
+            statement_ids = order.pop('statement_ids')
+            order_id = self.create(cr, uid, order, context)
+            list.append(order_id)
+            # call add_payment; refer to wizard/pos_payment for data structure
+            # add_payment launches the 'paid' signal to advance the workflow to the 'paid' state
+            data = {
+                'journal': statement_ids[0][2]['journal_id'],
+                'amount': order['amount_paid'],
+                'payment_name': order['name'],
+                'payment_date': statement_ids[0][2]['name'],
+            }
+            order_obj.add_payment(cr, uid, order_id, data, context=context)
+        return list
 
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
@@ -122,10 +148,10 @@ class pos_order(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
 
         'state': fields.selection([('draft', 'New'),
-                                   ('paid', 'Done'),
+                                   ('cancel', 'Cancelled'),
+                                   ('paid', 'Paid'),
                                    ('done', 'Posted'),
-                                   ('invoiced', 'Invoiced'),
-                                   ('cancel', 'Cancelled')],
+                                   ('invoiced', 'Invoiced')],
                                   'State', readonly=True),
 
         'invoice_id': fields.many2one('account.invoice', 'Invoice'),
@@ -174,6 +200,8 @@ class pos_order(osv.osv):
         move_obj = self.pool.get('stock.move')
 
         for order in self.browse(cr, uid, ids, context=context):
+            if not order.state=='draft':
+                continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_id = picking_obj.create(cr, uid, {
                 'origin': order.name,
@@ -325,7 +353,11 @@ class pos_order(osv.osv):
         }
         return abs
 
+    def action_invoice_state(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'invoiced'}, context=context)
+
     def action_invoice(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
         product_obj = self.pool.get('product.product')
@@ -341,7 +373,7 @@ class pos_order(osv.osv):
 
             acc = order.partner_id.property_account_receivable.id
             inv = {
-                'name': 'Invoice from POS: '+order.name,
+                'name': order.name,
                 'origin': order.name,
                 'account_id': acc,
                 'journal_id': order.sale_journal.id or None,
@@ -379,16 +411,18 @@ class pos_order(osv.osv):
                     and [(6, 0, inv_line['invoice_line_tax_id'])] or []
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
+            wf_service.trg_validate(uid, 'pos.order', order.id, 'invoice', cr)
 
         if not inv_ids: return {}
+        
         mod_obj = self.pool.get('ir.model.data')
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         res_id = res and res[1] or False
         return {
-            'name': _('PoS Invoices'),
+            'name': _('Customer Invoice'),
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': res_id,
+            'view_id': [res_id],
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
@@ -445,12 +479,9 @@ class pos_order(osv.osv):
 
                 # Search for the income account
                 if  line.product_id.property_account_income.id:
-                    income_account = line.\
-                                    product_id.property_account_income.id
-                elif line.product_id.categ_id.\
-                        property_account_income_categ.id:
-                    income_account = line.product_id.categ_id.\
-                                    property_account_income_categ.id
+                    income_account = line.product_id.property_account_income.id
+                elif line.product_id.categ_id.property_account_income_categ.id:
+                    income_account = line.product_id.categ_id.property_account_income_categ.id
                 else:
                     raise osv.except_osv(_('Error !'), _('There is no income '\
                         'account defined for this product: "%s" (id:%d)') \
@@ -681,20 +712,77 @@ pos_order_line()
 
 class pos_category(osv.osv):
     _name = 'pos.category'
-    _inherit = 'product.category'
+    _description = "PoS Category"
+    _order = "sequence, name"
+    def _check_recursion(self, cr, uid, ids, context=None):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from pos_category where id IN %s',(tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
+    ]
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
     _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('pos.category','Parent Category', select=True),
-        'child_id': fields.one2many('pos.category', 'parent_id', string='Child Categories'),
+        'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
     }
 pos_category()
 
+import io, StringIO
+
 class product_product(osv.osv):
     _inherit = 'product.product'
+    def _get_small_image(self, cr, uid, ids, prop, unknow_none, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            if not obj.product_image:
+                result[obj.id] = False
+                continue
+
+            image_stream = io.BytesIO(obj.product_image.decode('base64'))
+            img = Image.open(image_stream)
+            img.thumbnail((120, 100), Image.ANTIALIAS)
+            img_stream = StringIO.StringIO()
+            img.save(img_stream, "JPEG")
+            result[obj.id] = img_stream.getvalue().encode('base64')
+        return result
+
     _columns = {
-        'income_pdt': fields.boolean('Product for Input'),
-        'expense_pdt': fields.boolean('Product for Output'),
-        'img': fields.binary('Pos Image, must be 50x50'),
-        'pos_categ_id': fields.many2one('pos.category','POS Category', change_default=True, domain="[('type','=','normal')]" ,help="Select a pos category for the current product")
+        'income_pdt': fields.boolean('PoS Cash Input', help="This is a product you can use to put cash into a statement for the point of sale backend."),
+        'expense_pdt': fields.boolean('PoS Cash Output', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
+        'pos_categ_id': fields.many2one('pos.category','PoS Category',
+            help="If you want to sell this product through the point of sale, select the category it belongs to."),
+        'product_image_small': fields.function(_get_small_image, string='Small Image', type="binary",
+            store = {
+                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['product_image'], 10),
+            })
     }
 product_product()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

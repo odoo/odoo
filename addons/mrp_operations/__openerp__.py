@@ -62,12 +62,16 @@ So that we can compare the theoretic delay and real delay.
         'mrp_operations_view.xml',
         'mrp_operations_report.xml',
         'report/mrp_workorder_analysis_view.xml',
-        'process/mrp_operation_process.xml'
+        'process/mrp_operation_process.xml',
+        'mrp_operations_workflow_instance.xml'
     ],
-    'demo_xml': ['mrp_operation_data.xml'],
-    'test': ['test/mrp_operations.yml', 'test/mrp_operations_report.yml','test/mrp_operation_test.yml'],
+    'demo_xml': ['mrp_operation_data.xml', 
+                 'mrp_operations_demo.yml'],
+    'test': [ 
+             'test/workcenter_operations.yml',
+    ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0056233813133',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from lxml import etree
 
 class account_print_journal(osv.osv_memory):
     _inherit = "account.common.journal.report"
@@ -27,22 +28,52 @@ class account_print_journal(osv.osv_memory):
     _description = 'Account Print Journal'
 
     _columns = {
-        'sort_selection': fields.selection([('date', 'Date'),
-                                            ('ref', 'Reference Number'),],
+        'sort_selection': fields.selection([('l.date', 'Date'),
+                                            ('am.name', 'Journal Entry Number'),],
                                             'Entries Sorted by', required=True),
         'journal_ids': fields.many2many('account.journal', 'account_print_journal_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
     }
+
     _defaults = {
-        'sort_selection': 'date',
+        'sort_selection': 'am.name',
+        'filter': 'filter_period',
+        'journal_ids': False,
     }
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        '''
+        used to set the domain on 'journal_ids' field: we exclude or only propose the journals of type 
+        sale/purchase (+refund) accordingly to the presence of the key 'sale_purchase_only' in the context.
+        '''
+        if context is None: 
+            context = {}
+        res = super(account_print_journal, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        doc = etree.XML(res['arch'])
+
+        if context.get('sale_purchase_only'):
+            domain ="[('type', 'in', ('sale','purchase','sale_refund','purchase_refund'))]"
+        else:
+            domain ="[('type', 'not in', ('sale','purchase','sale_refund','purchase_refund'))]"
+        nodes = doc.xpath("//field[@name='journal_ids']")
+        for node in nodes:
+            node.set('domain', domain)
+        res['arch'] = etree.tostring(doc)
+        return res
+
 
     def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['sort_selection'], context=context)[0])
-        return {'type': 'ir.actions.report.xml', 'report_name': 'account.journal.period.print', 'datas': data}
+        if context.get('sale_purchase_only'):
+            report_name = 'account.journal.period.print.sale.purchase'
+        else:
+            report_name = 'account.journal.period.print'
+        return {'type': 'ir.actions.report.xml', 'report_name': report_name, 'datas': data}
 
 account_print_journal()
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

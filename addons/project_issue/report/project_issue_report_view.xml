@@ -54,9 +54,10 @@
                 <search string="Search">
                   <group>
                         <filter string="Year" icon="terp-go-year" help="Current Year"
+                        name="year"
                         domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                         />
-
+                        <separator orientation="vertical" />
                        <filter string="Month" icon="terp-go-month" name="This Month"
                         domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                         />
@@ -78,18 +79,8 @@
                             domain="[('state','=','done')]"/>
 
                            <separator orientation="vertical" />
-                           <field name="section_id"
-                               string="Sale Team    "
-                               widget="selection"
-                               context="{'invisible_section': False}">
 
-                               <filter icon="terp-crm"
-                                   context="{'invisible_section': False}"
-                                   domain="[('section_id.user_id','=',uid)]"
-                                   help="My Sale Team" />
-
-                           </field>
-                              <field name="project_id"/>
+                          <field name="project_id"/>
                           <field name="user_id"  select="1" widget="selection" filter_domain="[('user_id','ilike',self)]"/>
                           <field name="partner_id"/>
                           <field name="version_id" widget="selection" />
@@ -139,7 +130,7 @@
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
               <field name="view_mode">graph,tree</field>
-              <field name="context">{'search_default_This Month':1,'search_default_project':1,'group_by_no_leaf':1,'group_by':[]}</field>
+              <field name="context">{'search_default_year':1,'search_default_This Month':1,'search_default_project':1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_project_issue_report_tree"/>
             <field name="search_view_id" ref="view_project_issue_report_filter"/>
             <field name="help">This report on the project issues allows you to analyse the quality of your support or after-sales services. You can track the issues per age. You can analyse the time required to open or close an issue, the number of email to exchange and the time spent on average by issues.</field>

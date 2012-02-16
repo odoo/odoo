@@ -45,12 +45,11 @@ class pos_open_statement(osv.osv_memory):
 
         st_ids = []
         j_ids = journal_obj.search(cr, uid, [('journal_user','=',1)], context=context)
+        if not j_ids:
+            raise osv.except_osv(_('No Cash Register Defined !'), _('You must define which payment method must be available through the point of sale by reusing existing bank and cash through "Accounting > Configuration > Financial Accounting > Journals". Select a journal and check the field "PoS Payment Method" from the "Point of Sale" tab. You can also create new payment methods directly from menu "PoS Backend > Configuration > Payment Methods".'))
 
         for journal in journal_obj.browse(cr, uid, j_ids, context=context):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)], context=context)
-            if len(ids):
-                st_ids += ids
-                continue
 
             if journal.sequence_id:
                 number = sequence_obj.next_by_id(cr, uid, journal.sequence_id.id)
@@ -64,8 +63,8 @@ class pos_open_statement(osv.osv_memory):
                 'name': number 
             })
             statement_id = statement_obj.create(cr, uid, data, context=context)
-            st_ids.append(statement_id)
-
+            st_ids.append(int(statement_id))
+            
             if journal.auto_cash:
                 statement_obj.button_open(cr, uid, [statement_id], context)
 
@@ -73,19 +72,20 @@ class pos_open_statement(osv.osv_memory):
         tree_id = tree_res and tree_res[1] or False
         form_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_form2')
         form_id = form_res and form_res[1] or False
-        search_id = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_pos_open_cash_statement_filter')
-
+        search_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_bank_statement_filter')
+        search_id = search_res and search_res[1] or False
+        
         return {
-            'domain': "[('id', 'in',[ "+','.join(map(str,st_ids))+"])]",
-            'name': _('Open Cash Registers'),
+            'type': 'ir.actions.act_window',
+            'name': _('List of Cash Registers'),
             'view_type': 'form',
-            'view_mode': 'tree, form',
-            'search_view_id': search_id and search_id[1] or False ,
+            'view_mode': 'tree,form',
             'res_model': 'account.bank.statement',
+            'domain': str([('id', 'in', st_ids)]),
             'views': [(tree_id, 'tree'), (form_id, 'form')],
-            'context': {},
-            'type': 'ir.actions.act_window'
+            'search_view_id': search_id,
         }
+    
 pos_open_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

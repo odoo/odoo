@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <record id="action_incoming_product_board" model="ir.actions.act_window">
-            <field name="name">Incoming Product</field>
+            <field name="name">Incoming Shipments</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -12,7 +12,7 @@
         </record>
 
         <record id="action_outgoing_product_board" model="ir.actions.act_window">
-            <field name="name">Outgoing Product</field>
+            <field name="name">Delivery Orders</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -22,22 +22,22 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_stock_incoming_product_delay">
-            <field name="name">Incoming Products Delay</field>
+            <field name="name">Incoming Products</field>
             <field name="res_model">report.stock.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="domain">[('type','=','in'),('day','&lt;=', time.strftime('%Y-%m-%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]</field>
             <field name="view_id" ref="stock.view_stock_graph_board"></field>
-            <field name="context">{'search_default_month-1':1,'search_default_in':1,'group_by':['day'], 'group_by_no_leaf':1}</field>
+            <field name="context">{'search_default_in':1}</field>
          </record>
         <record model="ir.actions.act_window" id="action_stock_outgoing_product_delay">
-            <field name="name">Outgoing Products Delay</field>
+            <field name="name">Outgoing Products</field>
             <field name="res_model">report.stock.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="domain">[('type','=','out'),('day','&lt;=', time.strftime('%Y-%m-%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]</field>
             <field name="view_id" ref="stock.view_stock_graph_board"></field>
-            <field name="context">{'search_default_month-1':1,'search_default_out':1,'group_by':['day'], 'group_by_no_leaf':1}</field>
+            <field name="context">{'search_default_out':1}</field>
          </record>
         <record id="board_warehouse_form" model="ir.ui.view">
             <field name="name">board.warehouse.form</field>
@@ -45,17 +45,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Warehouse board">
-                    <hpaned position="200">
-                        <child1>
-                            <action colspan="4" name="%(action_incoming_product_board)d" string="Incoming Product"  width="510"/>
-                            <action colspan="4" name="%(action_outgoing_product_board)d" string="Outgoing Product" width="510"/>
-                        </child1>
+                    <board style="2-1">
+                        <column>
+                            <action name="%(action_incoming_product_board)d" string="Incoming Shipments" creatable="true"/>
+                            <action name="%(action_outgoing_product_board)d" string="Delivery Orders" creatable="true"/>
+                        </column>
 
-                        <child2>
-                            <action colspan="4" name="%(action_stock_incoming_product_delay)d" string="Incoming Products Delay" />
-                            <action colspan="4" name="%(action_stock_outgoing_product_delay)d" string="Outgoing Products Delay" />
-                        </child2>
-                    </hpaned>
+                        <column>
+                            <action name="%(action_stock_incoming_product_delay)d" string="Incoming Products"/>
+                            <action name="%(action_stock_outgoing_product_delay)d" string="Outgoing Products"/>
+                        </column>
+                    </board>
                 </form>
             </field>
         </record>

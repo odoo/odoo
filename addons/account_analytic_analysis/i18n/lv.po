@@ -7,22 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2009-09-08 14:28+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:17+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_invoiced:0
-msgid ""
-"Number of hours that can be invoiced plus those that already have been "
-"invoiced."
-msgstr "Apmaksai piestādāmo un jau piestādīto darba stundu summa."
+#: field:account.analytic.account,revenue_per_hour:0
+msgid "Revenue per Time (real)"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -31,41 +29,48 @@ msgstr ""
 "Aprēķināts izmantojot formulu: Maksimālā Rēķina Cena - Piestādītā Summa."
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,remaining_hours:0
-msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-msgstr ""
-"Aprēķināts izmantojot formulu: Maksimālais Daudzums - Kopējais Stundu Skaits."
+#: help:account.analytic.account,last_worked_date:0
+msgid "Date of the latest work done on this account."
+msgstr "Pēdējo darbu datums šajā kontā."
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
-#, python-format
-msgid "AccessError"
-msgstr "Piekļuves Kļūda"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_invoice_date:0
-msgid "Date of the last invoice created for this analytic account."
-msgstr "Šim analītiskajam kontam pēdējā izrakstītā rēķina datums."
-
-#. module: account_analytic_analysis
-#: model:ir.module.module,description:account_analytic_analysis.module_meta_information
+#: view:account.analytic.account:0
 msgid ""
-"\n"
-"This module is for modifying account analytic view to show\n"
-"important data to project manager of services companies.\n"
-"Adds menu to show relevant information to each manager..\n"
-"\n"
-"You can also view the report of account analytic summary\n"
-"user-wise as well as month wise.\n"
+"The contracts to be renewed because the deadline is passed or the working "
+"hours are higher than the allocated hours"
 msgstr ""
-"\n"
-"Šis modulis ir paredzēts kontu analītisko skatu lai parādītu\n"
-"svarīgus datus servisa uzņēmumu projektu vadītājiem.\n"
-"Pievieno izvēlni lai parādītu saistīto informāciju katram menedžerim.\n"
-"\n"
-"Jūs varat arī apskatīt konta analītikas kopskata pārskatu\n"
-"pa lietotājiem vai pa mēnešiem.\n"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending contracts to renew with your customer"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Analytic Accounts with a past deadline in one month."
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Group By..."
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "End Date"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Create Invoice"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -78,14 +83,42 @@ msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr "Aprēķināts izmantojot formulu: Teorētiskā Peļņa - Kopējās Izmaksas."
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin_rate:0
-msgid "Real Margin Rate (%)"
-msgstr "Patiesais Uzcenojums (%)"
+#: help:account.analytic.account,hours_quantity:0
+msgid ""
+"Number of time you spent on the analytic account (from timesheet). It "
+"computes quantities on all journal of type 'general'."
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts in progress"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,is_overdue_quantity:0
+msgid "Overdue Quantity"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
+msgid ""
+"You will find here the contracts to be renewed because the deadline is "
+"passed or the working hours are higher than the allocated hours. OpenERP "
+"automatically sets these analytic accounts to the pending state, in order to "
+"raise a warning during the timesheets recording. Salesmen should review all "
+"pending accounts and reopen or close the according to the negotiation with "
+"the customer."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
 msgstr "Teorētiskā Peļņa"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_qtt_non_invoiced:0
+msgid "Uninvoiced Time"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -97,9 +130,9 @@ msgstr ""
 "datums."
 
 #. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
-msgid "Billing"
-msgstr "Rēķinu izrakstīšana"
+#: view:account.analytic.account:0
+msgid "To Renew"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -107,28 +140,36 @@ msgid "Date of Last Cost/Work"
 msgstr "Pēdējo Darbu/Izmaksu Datums"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,total_cost:0
-msgid "Total Costs"
-msgstr "Kopējās Izmaksas"
+#: field:account.analytic.account,hours_qtt_invoiced:0
+msgid "Invoiced Time"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_quantity:0
+#: view:account.analytic.account:0
 msgid ""
-"Number of hours you spent on the analytic account (from timesheet). It "
-"computes on all journal of type 'general'."
+"A contract in OpenERP is an analytic account having a partner set on it."
 msgstr ""
-"Uz analītiskā konta patērēto stundu skaits (pēc laika tabeles). Tiek "
-"aprēķināts no visiem 'vispārējā' tipa žurnāliem."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
-msgid "Remaining Hours"
-msgstr "Atlikušās Stundas"
+msgid "Remaining Time"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue
+msgid "Contracts to Renew"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
 msgstr "Teorētiskais Uzcenojums"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid " +1 Month"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -141,10 +182,9 @@ msgstr ""
 "izmaksas piestādītu pēc normālas cenas no parastās cenu lapas."
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,user_ids:0
-#: field:account_analytic_analysis.summary.user,user:0
-msgid "User"
-msgstr "Lietotājs"
+#: view:account.analytic.account:0
+msgid "Pending"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
@@ -157,19 +197,22 @@ msgid "Computed using the formula: Invoiced Amount - Total Costs."
 msgstr "Aprēķināts izmantojot formulu: Piestādītā Summa - Kopējās Izmaksas."
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_qtt_non_invoiced:0
-msgid "Uninvoiced Hours"
-msgstr "Apmaksai Nepiestādītās Stundas"
+#: view:account.analytic.account:0
+msgid "Parent"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_date:0
-msgid "Date of the latest work done on this account."
-msgstr "Pēdējo darbu datums šajā kontā."
+#: field:account.analytic.account,user_ids:0
+#: field:account_analytic_analysis.summary.user,user:0
+msgid "User"
+msgstr "Lietotājs"
 
 #. module: account_analytic_analysis
-#: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
-msgid "report_account_analytic"
-msgstr "report_account_analytic"
+#: help:account.analytic.account,real_margin_rate:0
+msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
+msgstr ""
+"Aprēķināts izmantojot formulu: (Patiesais Uzcenojums / Kopējās Izmaksas) * "
+"100"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -182,33 +225,24 @@ msgid "Invoiced Amount"
 msgstr "Apmaksai Piestādītais Apjoms"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
-#, python-format
-msgid "You try to bypass an access rule (Document type: %s)."
-msgstr "Jūs mēģināt apiet piekļuves noteikumus (Dokumenta tips: %s)."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
 msgstr "Pēdējo Piestādīto Izmaksu Datums"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_qtt_invoiced:0
-msgid "Invoiced Hours"
-msgstr "Apmaksai Piestādītās Stundas"
+#: view:account.analytic.account:0
+msgid "Contract"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,real_margin_rate:0
+msgid "Real Margin Rate (%)"
+msgstr "Patiesais Uzcenojums (%)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Patiesais Uzcenojums"
-
-#. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "Kļūda! Valūtai jāsakrīt ar izvēlētā uzņēmuma valūtu."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -221,30 +255,26 @@ msgid "Hours summary by month"
 msgstr "Kopējās Stundas pēc mēnešiem"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,real_margin_rate:0
-msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
-"Aprēķināts izmantojot formulu: (Patiesais Uzcenojums / Kopējās Izmaksas) * "
-"100"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of hours (from journal of type 'general') that can be invoiced if you "
-"invoice based on analytic account."
-msgstr ""
-"Stundu kopskaits (no žurnāliem ar tipu 'vispārējais') ko iespējams piestādīt "
-"apmaksai balstoties uz analītisko kontu."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Analytic accounts"
-msgstr "Analītiskie konti"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "Kļūda! Jūs nedrīkstat veidot rekursīvus analītiskos kontus."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
 msgid "Remaining Revenue"
 msgstr "Atlikusī Peļņa"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,remaining_hours:0
+msgid "Computed using the formula: Maximum Time - Total Time"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,hours_qtt_invoiced:0
+msgid ""
+"Number of time (hours/days) that can be invoiced plus those that already "
+"have been invoiced."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -257,19 +287,13 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
-msgid "Computed using the formula: Invoiced Amount / Hours Tot."
-msgstr "Aprēķināts izmantojot formulu: Piestādītā Summa / Kopējās Stundas"
+msgid "Computed using the formula: Invoiced Amount / Total Time"
+msgstr ""
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,revenue_per_hour:0
-msgid "Revenue per Hours (real)"
-msgstr "Peļņa pēc Stundām (patiesā)"
-
-#. module: account_analytic_analysis
-#: field:account_analytic_analysis.summary.month,unit_amount:0
-#: field:account_analytic_analysis.summary.user,unit_amount:0
-msgid "Total Time"
-msgstr "Kopējais Laiks"
+#: field:account.analytic.account,total_cost:0
+msgid "Total Costs"
+msgstr "Kopējās Izmaksas"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -278,6 +302,7 @@ msgid "Month"
 msgstr "Mēnesis"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
@@ -285,10 +310,15 @@ msgid "Analytic Account"
 msgstr "Analītiskais Konts"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_overpassed
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_managed_overpassed
-msgid "Overpassed Accounts"
-msgstr "Caurskatītie Konti"
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
+msgid "Contracts"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Manager"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -297,14 +327,31 @@ msgid "All Uninvoiced Entries"
 msgstr "Visi Apmaksai Nepiestādītie Ieraksti"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_quantity:0
-msgid "Hours Tot"
-msgstr "Kopējās Stundas"
+#: help:account.analytic.account,last_invoice_date:0
+msgid "If invoice from the costs, this is the date of the latest invoiced."
+msgstr ""
 
 #. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "Kļūda! Jūs nedrīkstat veidot rekursīvus analītiskos kontus."
+#: view:account.analytic.account:0
+msgid "Associated Partner"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Open"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts that are not assigned to an account manager."
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,hours_quantity:0
+#: field:account_analytic_analysis.summary.month,unit_amount:0
+#: field:account_analytic_analysis.summary.user,unit_amount:0
+msgid "Total Time"
+msgstr "Kopējais Laiks"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -327,8 +374,94 @@ msgstr ""
 #~ msgid "Analytic Accounts"
 #~ msgstr "Analītiskie Konti"
 
+#~ msgid "Analytic accounts"
+#~ msgstr "Analītiskie konti"
+
 #~ msgid "My Current Accounts"
 #~ msgstr "Mani Tekošie Konti"
 
 #~ msgid "Current Analytic Accounts"
 #~ msgstr "Tekošie Analītiskie Konti"
+
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "Piekļuves Kļūda"
+
+#~ msgid ""
+#~ "Number of hours that can be invoiced plus those that already have been "
+#~ "invoiced."
+#~ msgstr "Apmaksai piestādāmo un jau piestādīto darba stundu summa."
+
+#~ msgid "Date of the last invoice created for this analytic account."
+#~ msgstr "Šim analītiskajam kontam pēdējā izrakstītā rēķina datums."
+
+#~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
+#~ msgstr ""
+#~ "Aprēķināts izmantojot formulu: Maksimālais Daudzums - Kopējais Stundu Skaits."
+
+#~ msgid ""
+#~ "\n"
+#~ "This module is for modifying account analytic view to show\n"
+#~ "important data to project manager of services companies.\n"
+#~ "Adds menu to show relevant information to each manager..\n"
+#~ "\n"
+#~ "You can also view the report of account analytic summary\n"
+#~ "user-wise as well as month wise.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Šis modulis ir paredzēts kontu analītisko skatu lai parādītu\n"
+#~ "svarīgus datus servisa uzņēmumu projektu vadītājiem.\n"
+#~ "Pievieno izvēlni lai parādītu saistīto informāciju katram menedžerim.\n"
+#~ "\n"
+#~ "Jūs varat arī apskatīt konta analītikas kopskata pārskatu\n"
+#~ "pa lietotājiem vai pa mēnešiem.\n"
+
+#~ msgid ""
+#~ "Number of hours you spent on the analytic account (from timesheet). It "
+#~ "computes on all journal of type 'general'."
+#~ msgstr ""
+#~ "Uz analītiskā konta patērēto stundu skaits (pēc laika tabeles). Tiek "
+#~ "aprēķināts no visiem 'vispārējā' tipa žurnāliem."
+
+#~ msgid "Remaining Hours"
+#~ msgstr "Atlikušās Stundas"
+
+#~ msgid "Billing"
+#~ msgstr "Rēķinu izrakstīšana"
+
+#~ msgid "Uninvoiced Hours"
+#~ msgstr "Apmaksai Nepiestādītās Stundas"
+
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "Jūs mēģināt apiet piekļuves noteikumus (Dokumenta tips: %s)."
+
+#~ msgid "report_account_analytic"
+#~ msgstr "report_account_analytic"
+
+#~ msgid "Invoiced Hours"
+#~ msgstr "Apmaksai Piestādītās Stundas"
+
+#~ msgid "Computed using the formula: Invoiced Amount / Hours Tot."
+#~ msgstr "Aprēķināts izmantojot formulu: Piestādītā Summa / Kopējās Stundas"
+
+#~ msgid "Revenue per Hours (real)"
+#~ msgstr "Peļņa pēc Stundām (patiesā)"
+
+#~ msgid ""
+#~ "Number of hours (from journal of type 'general') that can be invoiced if you "
+#~ "invoice based on analytic account."
+#~ msgstr ""
+#~ "Stundu kopskaits (no žurnāliem ar tipu 'vispārējais') ko iespējams piestādīt "
+#~ "apmaksai balstoties uz analītisko kontu."
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Kļūda! Valūtai jāsakrīt ar izvēlētā uzņēmuma valūtu."
+
+#~ msgid "Overpassed Accounts"
+#~ msgstr "Caurskatītie Konti"
+
+#~ msgid "Hours Tot"
+#~ msgstr "Kopējās Stundas"

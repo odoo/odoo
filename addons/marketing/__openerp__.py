@@ -25,7 +25,7 @@
     "version" : "1.1",
     "depends" : ["base", "base_setup"],
     "author" : "OpenERP SA",
-    "category": 'Marketing',
+    "category": 'Hidden/Dependency',
     'complexity': "expert",
     "description": """
 Menu for Marketing.
@@ -42,7 +42,7 @@ Contains the installer for marketing-related modules.
     ],
     'demo_xml': ['marketing_demo.xml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00598574977629228189',
     'images': ['images/config_marketing.jpeg'],
 }

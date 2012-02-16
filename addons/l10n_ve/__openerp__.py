@@ -23,7 +23,7 @@
 #
 ##############################################################################
 {
-    "name" : "Venezuela -Chart of Account",
+    "name" : "Venezuela - Accounting",
     "version" : "1.0",
     "author" : ['OpenERP SA', "Netquatro"],
     "category" : "Localization/Account Charts",
@@ -38,7 +38,7 @@ Este módulo es para manejar un catálogo de cuentas ejemplo para Venezuela.
     "demo_xml" : [],
     "update_xml" : ['account_tax_code.xml',"account_chart.xml",
                     'account_tax.xml','l10n_chart_ve_wizard.xml'],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "00763145921185574557",
     'images': ['images/config_chart_l10n_ve.jpeg','images/l10n_ve_chart.jpeg'],

@@ -15,8 +15,6 @@
             <field eval="&quot;Problem with the delivery of goods&quot;" name="name"/>
             <field eval="&quot;open&quot;" name="state"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field eval="&quot;(726) 782-0636&quot;" name="partner_mobile"/>
-            <field eval="1" name="active"/>
             <field name="categ_id" ref="crm_claim.categ_claim1"/>
             <field name="stage_id" ref="crm_claim.stage_claim1"/>
             <field eval="&quot;(769) 703-274&quot;" name="partner_phone"/>
@@ -31,8 +29,6 @@
             <field eval="&quot;Damaged Products&quot;" name="name"/>
             <field eval="&quot;open&quot;" name="state"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field eval="&quot;(392) 895-7917&quot;" name="partner_mobile"/>
-            <field eval="1" name="active"/>
             <field name="categ_id" ref="crm_claim.categ_claim2"/>
             <field name="stage_id" ref="crm_claim.stage_claim5"/>
             <field eval="&quot;(956) 293-2595&quot;" name="partner_phone"/>
@@ -47,8 +43,6 @@
             <field eval="&quot;Document related problems&quot;" name="name"/>
             <field eval="&quot;done&quot;" name="state"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field eval="&quot;(820) 167-3208&quot;" name="partner_mobile"/>
-            <field eval="1" name="active"/>
             <field name="categ_id" ref="crm_claim.categ_claim3"/>
             <field name="stage_id" ref="crm_claim.stage_claim2"/>
             <field eval="&quot;(079) 681-2139&quot;" name="partner_phone"/>
@@ -63,8 +57,6 @@
             <field eval="&quot;Product quality not maintained&quot;" name="name"/>
             <field eval="&quot;draft&quot;" name="state"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field eval="&quot;(077) 582-4035&quot;" name="partner_mobile"/>
-            <field eval="1" name="active"/>
             <field name="categ_id" ref="crm_claim.categ_claim1"/>
             <field name="stage_id" ref="crm_claim.stage_claim5"/>
             <field eval="&quot;(514) 698-4118&quot;" name="partner_phone"/>
@@ -79,8 +71,6 @@
             <field eval="&quot;Some products missing&quot;" name="name"/>
             <field eval="&quot;pending&quot;" name="state"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field eval="&quot;(333) 715-1450&quot;" name="partner_mobile"/>
-            <field eval="1" name="active"/>
             <field name="categ_id" ref="crm_claim.categ_claim3"/>
             <field name="stage_id" ref="crm_claim.stage_claim3"/>
             <field eval="&quot;(855) 924-4364&quot;" name="partner_phone"/>
@@ -88,14 +78,12 @@
         
         <record id="crm_case_claim06" model="crm.claim">
             <field name="partner_address_id" ref="base.res_partner_address_1"/>
-            <field eval="1" name="active"/>
             <field name="partner_id" ref="base.res_partner_9"/>
             <field eval="&quot;3&quot;" name="priority"/>
             <field name="user_id" ref="base.user_root"/>
             <field eval="&quot;Problem with the delivery of assignments&quot;" name="name"/>
             <field eval="&quot;cancel&quot;" name="state"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field eval="&quot;(468) 017-2684&quot;" name="partner_mobile"/>
             <field eval="time.strftime('%Y-%m-28 14:15:30')" name="date"/>
             <field name="categ_id" ref="crm_claim.categ_claim1"/>
             <field name="stage_id" ref="crm_claim.stage_claim5"/>
@@ -104,14 +92,12 @@
         </record>
         
         <record id="crm_case_claims07" model="crm.claim">
-            <field eval="1" name="active"/>
             <field name="partner_id" ref="base.res_partner_seagate"/>
             <field eval="&quot;3&quot;" name="priority"/>
             <field name="user_id" ref="base.user_root"/>
             <field eval="&quot;Documents unclear&quot;" name="name"/>
             <field eval="&quot;done&quot;" name="state"/>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field eval="&quot;    (463) 014-1208&quot;" name="partner_mobile"/>
             <field eval="time.strftime('%Y-%m-19 13:01:05')" name="date"/>
             <field name="categ_id" ref="crm_claim.categ_claim3"/>
             <field name="stage_id" ref="crm_claim.stage_claim2"/>

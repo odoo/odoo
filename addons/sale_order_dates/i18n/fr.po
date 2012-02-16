@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-01-13 12:19+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:47+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:05+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: sale_order_dates
 #: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "La référence de la commande doit être unique !"
+msgid "Order Reference must be unique per Company!"
+msgstr ""
 
 #. module: sale_order_dates
 #: help:sale.order,requested_date:0
@@ -38,14 +38,9 @@ msgid "Effective Date"
 msgstr "Date effective"
 
 #. module: sale_order_dates
-#: model:ir.module.module,shortdesc:sale_order_dates.module_meta_information
-msgid "Sales Order Dates"
-msgstr "Dates de commande de ventes"
-
-#. module: sale_order_dates
 #: help:sale.order,effective_date:0
 msgid "Date on which picking is created."
-msgstr "Date à laquelle le prélèvement a été créé."
+msgstr "Date à laquelle l'expédition a été faite."
 
 #. module: sale_order_dates
 #: field:sale.order,requested_date:0
@@ -58,16 +53,20 @@ msgid "Sales Order"
 msgstr "Commande de ventes"
 
 #. module: sale_order_dates
-#: model:ir.module.module,description:sale_order_dates.module_meta_information
-msgid ""
-"\n"
-"Add commitment, requested and effective dates on the sales order.\n"
-msgstr ""
-"\n"
-"Ajoute les dates d'engagement, demandée et effective sur le bon de "
-"commande.\n"
-
-#. module: sale_order_dates
 #: help:sale.order,commitment_date:0
 msgid "Date on which delivery of products is to be made."
 msgstr "Date à laquelle la livraison des produits doit être faite."
+
+#~ msgid ""
+#~ "\n"
+#~ "Add commitment, requested and effective dates on the sales order.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Ajoute les dates d'engagement, demandée et effective sur le bon de "
+#~ "commande.\n"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "La référence de la commande doit être unique !"
+
+#~ msgid "Sales Order Dates"
+#~ msgstr "Dates de commandes de vente"

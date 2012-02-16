@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Lunch",
+    "name": "Lunch Orders",
     "author": "OpenERP SA",
     'complexity': "easy",
     "Description": """
@@ -33,7 +33,7 @@
     """,
     "version": "0.1",
     "depends": ["base_tools"],
-    "category" : "Hidden",
+    "category" : "Tools",
     'description': """
     The base module to manage lunch
 

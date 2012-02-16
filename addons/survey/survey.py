@@ -50,6 +50,7 @@ class survey(osv.osv):
         return data
 
     _columns = {
+        'id': fields.integer('ID'),
         'title': fields.char('Survey Title', size=128, required=1),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
         'date_open': fields.datetime('Survey Open Date', readonly=1),
@@ -177,7 +178,6 @@ class survey_page(osv.osv):
         if context is None:
             context = {}
         data = super(survey_page, self).default_get(cr, uid, fields, context)
-        self.pool.get('survey.question').data_get(cr,uid,data,context)
         if context.has_key('survey_id'):
             data['survey_id'] = context.get('survey_id', False)
         return data
@@ -498,21 +498,10 @@ class survey_question(osv.osv):
             'context': context
         }
 
-    def data_get(self, cr, uid, data, context):
-        if data and context:
-            if context.get('line_order', False):
-                lines =  context.get('line_order')
-                seq = data.get('sequence', 0)
-                for line in  lines:
-                    seq = seq + 1
-                data.update({'sequence': seq})
-        return data
-
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
         data = super(survey_question, self).default_get(cr, uid, fields, context)
-        self.data_get(cr,uid,data,context)
         if context.has_key('page_id'):
             data['page_id']= context.get('page_id', False)
         return data
@@ -605,7 +594,6 @@ class survey_answer(osv.osv):
         if context is None:
             context = {}
         data = super(survey_answer, self).default_get(cr, uid, fields, context)
-        self.pool.get('survey.question').data_get(cr,uid,data,context)
         return data
 
 survey_answer()

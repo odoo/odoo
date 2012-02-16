@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Module Record',
+    'name': 'Record and Create Modules',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'description': """
 This module allows you to create a new module without any development.
 ======================================================================
@@ -47,7 +47,11 @@ Select datetime criteria of recording and objects to be recorded and Record modu
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'base_module_record_wizard.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'wizard/base_module_record_object_view.xml',
+        'wizard/base_module_record_data_view.xml',
+    ],
     'demo_xml': [],
     'installable': True,
     'certificate': '0083134865813',

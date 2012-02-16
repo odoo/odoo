@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-    "name" : "Cancel Entries",
+    "name" : "Cancel Journal Entries",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Hidden',
+    "category": 'Accounting & Finance',
     'complexity': "normal",
     "description": """
 Allows cancelling accounting entries.
@@ -38,7 +38,7 @@ This module adds 'Allow cancelling entries' field on form view of account journa
     'update_xml': ['account_cancel_view.xml' ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     "certificate" : "001101250473177981989",
 
 

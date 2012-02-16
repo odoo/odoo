@@ -3,7 +3,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-extend="Login">
-        <t t-jquery=".oe_box2 tr:first td:nth-child(2)" t-operation="append">
+        <t t-jquery=".login .pane div#logo" t-operation="after">
             <ul class="openid_providers">
                 <li><a href="#login,password" title="Password" data-url="" id="btn_password">Password</a></li>
                 <li><a href="#google" title="Google" data-url="https://www.google.com/accounts/o8/id">Google</a></li>
@@ -30,14 +30,35 @@
             </tr>
         </t>
     </t>
+    <t t-extend="Login">
+        <t t-jquery=".login .pane form ul li:nth-child(4)" t-operation="after">
+            <li>
+                Google Apps Domain
+            </li>
+            <li>
+                <input type="text" name="googleapps" />
+            </li>
+            <li>
+                Username
+            </li>
+            <li>
+                <input type="text" name="launchpad" />
+            </li>
+            <li>
+                OpenID URL
+            </li>
+            <li>
+                <input type="text" name="openid_url" />
+            </li>
+        </t>
+    </t>
 
     <t t-extend="Login">
-        <t t-jquery=".oe_box2 tr:has(input[name!='db'])">
-            //this.addClass('auth_choice');     // XXX for some reason, not all tr tags are HTMLElement's and thus, jQuery decide to not change the class...
-            this.attr('class', 'auth_choice');
+        <t t-jquery=".login .pane form ul li:has(input)">
             this.each(function() {
-                var $i = $(this);
-                $i.attr('data-provider', $i.find('input').attr('name'));
+                var $i = $(this),
+                    dp = $i.find('input').attr('name');
+                $i.add($i.prev()).attr('class', 'auth_choice').attr('data-provider', dp);
             });
         </t>
     </t>

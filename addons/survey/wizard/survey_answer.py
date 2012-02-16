@@ -23,6 +23,7 @@ import datetime
 from lxml import etree
 from time import strftime
 
+import base64
 import tools
 import netsvc
 from osv import osv
@@ -42,7 +43,8 @@ class survey_question_wiz(osv.osv_memory):
         """
         Fields View Get method :- generate the new view and display the survey pages of selected survey.
         """
-
+        if context is None:
+            context = {}
         result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, \
                                         view_type, context, toolbar,submenu)
 
@@ -55,8 +57,7 @@ class survey_question_wiz(osv.osv_memory):
         que_col_head = self.pool.get('survey.question.column.heading')
         user_obj = self.pool.get('res.users')
         mail_message = self.pool.get('mail.message')
-        if context is None:
-            context = {}
+        
         if view_type in ['form']:
             wiz_id = 0
             sur_name_rec = None
@@ -390,6 +391,11 @@ class survey_question_wiz(osv.osv_memory):
                     survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec.tot_comp_survey + 1})
                     sur_response_obj.write(cr, uid, [sur_name_read.response], {'state' : 'done'})
 
+                    # mark the survey request as done; call 'survey_req_done' on its actual model
+                    survey_req_obj = self.pool.get(context.get('active_model'))
+                    if survey_req_obj and hasattr(survey_req_obj, 'survey_req_done'):
+                        survey_req_obj.survey_req_done(cr, uid, context.get('active_ids', []), context=context)
+
                     if sur_rec.send_response:
                         survey_data = survey_obj.browse(cr, uid, survey_id)
                         response_id = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))['response']
@@ -407,21 +413,13 @@ class survey_question_wiz(osv.osv_memory):
                         attachments[survey_data.title + ".pdf"] = file_data
                         file.close()
                         os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
-                        user_email = False
-                        resp_email = False
+                        
+                        user_email = user_obj.browse(cr, uid, uid, context).user_email
+                        resp_email = survey_data.responsible_id and survey_data.responsible_id.user_email or False
 
-                        address_id = user_obj.browse(cr, uid, uid).address_id.id
-                        if address_id:
-                            cr.execute("select email from res_partner_address where id =%s", (address_id,))
-                            user_email = cr.fetchone()[0]
-                        resp_id = survey_data.responsible_id.address_id
-
-                        if resp_id:
-                            cr.execute("select email from res_partner_address where id =%s", (resp_id.id,))
-                            resp_email = cr.fetchone()[0]
                         if user_email and resp_email:
                             user_name = user_obj.browse(cr, uid, uid, context=context).name
-                            mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
+                            mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_name) + " has given the Response Of " + survey_data.title + " Survey.\nThe Response has been attached herewith.\n\n Thanks."
                             mail_message.schedule_with_attach(cr, uid, user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, attachments=attachments, context=context)
 
                     xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
@@ -449,6 +447,18 @@ class survey_question_wiz(osv.osv_memory):
             fp = open(ret_file_name, 'wb+');
             fp.write(result);
             fp.close();
+            
+            # hr.applicant: if survey answered directly in system: attach report to applicant
+            if context.get('active_model') == 'hr.applicant':
+                result = base64.b64encode(result)
+                file_name = file_name + '.pdf'
+                ir_attachment = self.pool.get('ir.attachment').create(cr, uid, 
+                                                                      {'name': file_name,
+                                                                       'datas': result,
+                                                                       'datas_fname': file_name,
+                                                                       'res_model': context.get('active_model'),
+                                                                       'res_id': context.get('active_ids')[0]},
+                                                                      context=context)
 
         except Exception,e:
             return (False, str(e))
@@ -520,9 +530,10 @@ class survey_question_wiz(osv.osv_memory):
                 return value
             if context.has_key('active') and context.get('active',False):
                 return value
-
+            
             sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))
             ans_list = []
+
             for key,val in safe_eval(sur_name_read.get('store_ans',"{}")).items():
                 for field in fields_list:
                     if field in list(val):
@@ -535,8 +546,10 @@ class survey_question_wiz(osv.osv_memory):
         Create the Answer of survey and store in survey.response object, and if set validation of question then check the value of question if value is wrong then raise the exception.
         """
         if context is None: context = {}
+
+        survey_question_wiz_id = super(survey_question_wiz,self).create(cr, uid, {'name': vals.get('name')}, context=context)
         if context.has_key('active') and context.get('active',False):
-            return True
+            return survey_question_wiz_id
 
         for key,val in vals.items():
             if key.split('_')[0] == "progress":
@@ -568,7 +581,7 @@ class survey_question_wiz(osv.osv_memory):
             surv_name_wiz.write(cr, uid, [context.get('sur_name_id',False)], {'response' : tools.ustr(response_id)})
 
         #click first time on next button then increemnet on total start suvey
-        if not sur_name_read['store_ans']:
+        if not safe_eval(sur_name_read['store_ans']):
             his_id = self.pool.get('survey.history').create(cr, uid, {'user_id': uid, \
                                               'date': strftime('%Y-%m-%d %H:%M:%S'), 'survey_id': sur_name_read['survey_id'][0]})
             survey_id = sur_name_read['survey_id'][0]
@@ -982,7 +995,7 @@ class survey_question_wiz(osv.osv_memory):
                 if que_rec['type'] in ['multiple_choice_only_one_ans','single_textbox','comment'] and  que_rec['is_require_answer'] and select_count <= 0:
                     raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg']))
 
-        return True
+        return survey_question_wiz_id
 
     def action_new_question(self,cr, uid, ids, context=None):
         """

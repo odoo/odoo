@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-10 23:40+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-13 13:18+0000\n"
+"Last-Translator: walid sayed <mashyuser@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:33+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-14 05:45+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,9 +22,10 @@ msgid "Parent Directory"
 msgstr "الوثائق"
 
 #. module: document
-#: model:ir.model,name:document.model_document_configuration
-msgid "Auto Directory Configuration"
-msgstr "التهيئة التلقائية للدليل"
+#: code:addons/document/document_directory.py:276
+#, python-format
+msgid "Directory name contains special characters!"
+msgstr "الدليل يحتوي علي رموز خاصة"
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -52,18 +53,13 @@ msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
 msgstr ""
-
-#. module: document
-#: code:addons/document/document_directory.py:276
-#, python-format
-msgid "Directory name contains special characters!"
-msgstr "الدليل يحتوي علي رموز خاصة"
+"لإستخدام الحقل كإسم على دلائل المصدر. اذا كان فارغ , سيتم استخدام‘‘الاسم‘‘."
 
 #. module: document
 #: view:document.directory:0
 #: view:document.storage:0
 msgid "Group By..."
-msgstr ""
+msgstr "تجميع حسب..."
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
@@ -96,6 +92,11 @@ msgstr "مارس"
 #: view:document.configuration:0
 msgid "title"
 msgstr "عنوان"
+
+#. module: document
+#: field:document.directory.dctx,expr:0
+msgid "Expression"
+msgstr "تعبير"
 
 #. module: document
 #: view:document.directory:0
@@ -145,6 +146,10 @@ msgstr "اسم الدليل يجب أن يكون فريدا"
 
 #. module: document
 #: view:ir.attachment:0
+msgid "Filter on my documents"
+msgstr ""
+
+#. module: document
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "فهرسة المحتوي"
@@ -155,19 +160,20 @@ msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
 msgstr ""
+"اذا كانت صحيحة, سيتم تثبيت كل المرفقات التي تتوافق مع هذا المصدر. اذا كانت "
+"خاطئة, واحدة منهم فقط ستكون مثبتة كجزء."
+
+#. module: document
+#: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
+msgid "Knowledge Management"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
 #: field:document.storage,dir_ids:0
-#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "دلائل"
-
-#. module: document
-#: field:document.configuration,sale_order:0
-msgid "Sale Order"
-msgstr "طلب بيع"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_user
@@ -175,21 +181,11 @@ msgid "Files details by Users"
 msgstr "الملفات حسب المستخدمين"
 
 #. module: document
-#: field:document.configuration,project:0
-msgid "Project"
-msgstr "المشروع"
-
-#. module: document
 #: code:addons/document/document_storage.py:573
 #: code:addons/document/document_storage.py:601
 #, python-format
 msgid "Error!"
 msgstr "خطأ !"
-
-#. module: document
-#: help:document.configuration,product:0
-msgid "Auto directory configuration for Products."
-msgstr "التهيئة التلقائية للدليل المنتجات"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
@@ -234,19 +230,19 @@ msgid "Document directory"
 msgstr "دليل الوثيقة"
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #: code:addons/document/document_directory.py:266
 #: code:addons/document/document_directory.py:271
 #: code:addons/document/document_directory.py:276
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "التحقق من صلاحية الخطأ"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
-msgstr ""
+msgstr "ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
@@ -259,18 +255,18 @@ msgstr "الوثائق"
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
-msgstr "خطأ ! لايمكنك تسمية الدليل الخارجي بنفس أسم الدليل الداخلي له مباشرة"
+msgstr "خطأ ! لايمكنك إنشاء مسارات متداخلة."
 
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,storage_id:0
 msgid "Storage"
-msgstr "واسطة تخزين"
+msgstr "مخزن"
 
 #. module: document
-#: view:document.configuration:0
-msgid "Configure Resource Directory"
-msgstr "تهيئة الدلائل"
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
+msgstr "نموذج المصدر"
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -315,17 +311,12 @@ msgstr "الملفات حسب الشريك"
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr ""
+msgstr "حقول السياق"
 
 #. module: document
 #: field:ir.attachment,store_fname:0
 msgid "Stored Filename"
 msgstr "تخزين أسم الملف"
-
-#. module: document
-#: field:document.directory,ressource_type_id:0
-msgid "Resource model"
-msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -382,6 +373,13 @@ msgid "Generated Files"
 msgstr "الملفات المنشأه تلقائيا"
 
 #. module: document
+#: view:document.configuration:0
+msgid ""
+"When executing this wizard, it will configure your directories automatically "
+"according to modules installed."
+msgstr ""
+
+#. module: document
 #: field:document.directory.content,directory_id:0
 #: field:document.directory.dctx,dir_id:0
 #: model:ir.actions.act_window,name:document.action_document_file_directory_form
@@ -393,9 +391,9 @@ msgid "Directory"
 msgstr "الدليل"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by Partner"
-msgstr "الملفات حسب الشريك"
+#: view:document.directory:0
+msgid "Security"
+msgstr "السرية"
 
 #. module: document
 #: field:document.directory,write_uid:0
@@ -409,11 +407,6 @@ msgstr "اخر مستخدم قام بالتعديل"
 #: model:ir.actions.act_window,name:document.zoom_directory
 msgid "Related Documents"
 msgstr "الوثائق ذات الصلة"
-
-#. module: document
-#: field:document.configuration,progress:0
-msgid "Configuration Progress"
-msgstr "اعداد الاجراءات"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -471,40 +464,6 @@ msgid "Define words in the context, for all child directories and files"
 msgstr "قم بتعريف كلمات معينة لتظهر في كل الدلائل والملفات الفرعية"
 
 #. module: document
-#: model:ir.module.module,description:document.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
-"    * User Authentication\n"
-"    * Document Indexation :- .pptx and .docx files are not support in "
-"windows platform.\n"
-"    * Dashboard for Document that includes:\n"
-"        * New Files (list)\n"
-"        * Files by Resource Type (graph)\n"
-"        * Files by Partner (graph)\n"
-"        * Files by Month (graph)\n"
-"    ATTENTION:\n"
-"    - When you install this module in a running company that have already "
-"PDF files stored into the database,\n"
-"      you will lose them all.\n"
-"    - After installing this module PDF's are no longer stored into the "
-"database,\n"
-"      but in the servers rootpad like /server/bin/filestore.\n"
-msgstr ""
-"نظام ادارة الوثائق يوفر :\n"
-"\n"
-"         * التحقق من موثيقية المستخدم للوثائق .\n"
-"         * لوحة الوثائق والتي تشمل :\n"
-"                   * قائمة بكل الملفات \n"
-"                   * مخطط دائري يوضح الوثائق المحملة حسب الدلائل \n"
-"                   *  مخطط دائري يوضح الوثائق المحملة حسب الشريك\n"
-"                    *  مخطط دائري يوضح الوثائق المحملة حسب الشهر\n"
-"احزر :\n"
-"    عند تثبيت هذا النظام كل الوثائق التي تم حفظها سابقا ستفقد \n"
-"   بعد تثبيت هذا النظام ستحفظ جميع الوثائق المنشأه من النظام في قاعدة "
-"البيانات \n"
-"   ستحفظ في الخادم في المسار /server/bin/filestore\n"
-
-#. module: document
 #: help:document.storage,online:0
 msgid ""
 "If not checked, media is currently offline and its contents not available"
@@ -545,11 +504,14 @@ msgid ""
 "name.\n"
 "If set, the directory will have to be a resource one."
 msgstr ""
+"أختر هذا الحقل اذا كنت تريد اسم الملف ليشمل اسم التسجيل.\n"
+"اذا وُضعت سيصبح المجلد مصدر له."
 
 #. module: document
+#: view:document.configuration:0
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
-msgid "Auto Configure Directory"
-msgstr "التهيئة التلقائية للدليل"
+msgid "Configure Directories"
+msgstr "ضبط اعدادات المجلدات"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -564,7 +526,7 @@ msgstr "مرفق"
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
 msgid "Model Id"
-msgstr ""
+msgstr "هوية النموذج"
 
 #. module: document
 #: field:document.storage,online:0
@@ -577,11 +539,7 @@ msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
 msgstr ""
-
-#. module: document
-#: view:document.directory:0
-msgid "Security"
-msgstr "السرية"
+"أختر هذا اذا كنت تريد استخدام نفس الهيكل كموضوع تم اختياره في النظام."
 
 #. module: document
 #: help:document.directory,ressource_id:0
@@ -589,6 +547,8 @@ msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
 msgstr ""
+"بجانب الموديل الرئيسي, يرفق هذا التعريف ذلك الملف لتسجيل محدد للنموذج "
+"الرئيسي."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -599,7 +559,7 @@ msgstr "أغسطس"
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "Directory cannot be parent of itself!"
-msgstr "الدليل لايمكن ان يكون دليل لنفسه"
+msgstr "لا يمكن أن يكون المسار رئيسي لنفسه!"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -667,24 +627,15 @@ msgid "Database"
 msgstr "قاعدة البيانات"
 
 #. module: document
-#: help:document.configuration,project:0
-msgid "Auto directory configuration for Projects."
-msgstr "التهيئة التلقائية للدليل المشروعات"
+#: selection:report.document.user,month:0
+#: selection:report.files.partner,month:0
+msgid "January"
+msgstr "يناير"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Related to"
 msgstr "علاقة مع"
-
-#. module: document
-#: model:ir.module.module,shortdesc:document.module_meta_information
-msgid "Integrated Document Management System"
-msgstr "نظام ادارة الوثائق المتكامل"
-
-#. module: document
-#: view:document.configuration:0
-msgid "Choose the following Resouces to auto directory configuration."
-msgstr ""
 
 #. module: document
 #: view:ir.attachment:0
@@ -707,9 +658,9 @@ msgid "Read Only"
 msgstr "للقراءة فقط"
 
 #. module: document
-#: field:document.directory.dctx,expr:0
-msgid "Expression"
-msgstr "تعبير"
+#: model:ir.actions.act_window,name:document.action_document_directory_form
+msgid "Document Directory"
+msgstr ""
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -723,11 +674,25 @@ msgid "Creator"
 msgstr "المُنشئ"
 
 #. module: document
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr "التسلسل"
+
+#. module: document
+#: view:document.configuration:0
+msgid ""
+"OpenERP's Document Management System supports mapping virtual folders with "
+"documents. The virtual folder of a document can be used to manage the files "
+"attached to the document, or to print and download any report. This tool "
+"will create directories automatically according to modules installed."
+msgstr ""
+
+#. module: document
 #: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
-msgstr ""
+msgstr "الملفات الشهرية"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -743,7 +708,7 @@ msgstr "البادئة"
 #. module: document
 #: field:report.document.wall,last:0
 msgid "Last Posted Time"
-msgstr ""
+msgstr "وقت أخر موضوع"
 
 #. module: document
 #: field:report.document.user,datas_fname:0
@@ -753,34 +718,34 @@ msgstr "إسم الملف"
 #. module: document
 #: view:document.configuration:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "معرف المصدر"
 
 #. module: document
 #: selection:document.storage,type:0
 msgid "External file storage"
-msgstr ""
+msgstr "مخزن الملف الخارجي"
 
 #. module: document
 #: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_wall
 #: view:report.document.wall:0
 msgid "Wall of Shame"
-msgstr ""
+msgstr "جدار شام"
 
 #. module: document
 #: help:document.storage,path:0
 msgid "For file storage, the root path of the storage"
-msgstr ""
+msgstr "لتخزين الملفات، المسار الجذري للتخزين"
 
 #. module: document
 #: model:ir.model,name:document.model_report_files_partner
 msgid "Files details by Partners"
-msgstr ""
+msgstr "تفاصيل ملفات الشركاء"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -790,12 +755,12 @@ msgstr "حقل"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr ""
+msgstr "محتوى الدليل الفعال"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
 msgid "Parent Model"
-msgstr ""
+msgstr "موديل الشريك"
 
 #. module: document
 #: view:report.document.user:0
@@ -812,19 +777,19 @@ msgid "Month"
 msgstr "الشهر"
 
 #. module: document
+#: view:report.document.user:0
+msgid "This Months Files"
+msgstr ""
+
+#. module: document
 #: model:ir.ui.menu,name:document.menu_reporting
 msgid "Reporting"
 msgstr "التقارير"
 
 #. module: document
-#: field:document.configuration,product:0
-msgid "Product"
-msgstr "المنتج"
-
-#. module: document
 #: field:document.directory,ressource_tree:0
 msgid "Tree Structure"
-msgstr ""
+msgstr "هيكل شجري"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -852,23 +817,17 @@ msgstr "مخزن الوثائق يتيح لك الوصول الي كل المر�
 #. module: document
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
-msgstr ""
+msgstr "بالنسبة لكل أدخال هنا, ستظهر الملفات الواقعية في هذا الملف."
 
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "ir.attachment"
 
 #. module: document
 #: view:board.board:0
 msgid "New Files"
 msgstr "الملفات الجديدة"
-
-#. module: document
-#: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
-msgid "January"
-msgstr "يناير"
 
 #. module: document
 #: view:document.directory:0
@@ -878,13 +837,11 @@ msgstr "ثابت"
 #. module: document
 #: view:report.files.partner:0
 msgid "Files By Partner"
-msgstr ""
+msgstr "ملفات الشريك"
 
 #. module: document
-#: help:document.directory.dctx,field:0
-msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
+#: view:ir.attachment:0
+msgid "Indexed Content - experimental"
 msgstr ""
 
 #. module: document
@@ -898,9 +855,8 @@ msgid "Notes"
 msgstr "ملاحظات"
 
 #. module: document
-#: help:document.configuration,sale_order:0
-msgid ""
-"Auto directory configuration for Sale Orders and Quotation with report."
+#: model:ir.model,name:document.model_document_configuration
+msgid "Directory Configuration"
 msgstr ""
 
 #. module: document
@@ -924,6 +880,13 @@ msgstr "فبراير"
 #: model:ir.ui.menu,name:document.menu_reports_document_manager1
 msgid "Statistics by User"
 msgstr "احصاءات حسب المستخدم"
+
+#. module: document
+#: help:document.directory.dctx,field:0
+msgid ""
+"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+"what is typed here."
+msgstr ""
 
 #. module: document
 #: field:document.directory,name:0
@@ -960,6 +923,12 @@ msgid "# of Files"
 msgstr "عدد الملفات"
 
 #. module: document
+#: code:addons/document/document.py:209
+#, python-format
+msgid "(copy)"
+msgstr "(نسخة)"
+
+#. module: document
 #: view:document.directory:0
 msgid ""
 "Only members of these groups will have access to this directory and its "
@@ -979,9 +948,9 @@ msgid "Mime Type"
 msgstr "نوع التنسيق الملف"
 
 #. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
-msgstr "التسلسل"
+#: view:report.document.user:0
+msgid "All Months Files"
+msgstr ""
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -989,8 +958,8 @@ msgid "Content Name"
 msgstr "أسم المحتوي"
 
 #. module: document
-#: code:addons/document/document.py:226
-#: code:addons/document/document.py:294
+#: code:addons/document/document.py:220
+#: code:addons/document/document.py:299
 #, python-format
 msgid "File name must be unique!"
 msgstr "أسم الملف يجب أن يكون فريدا"
@@ -1003,7 +972,7 @@ msgstr "التخزين الداخلي للملف"
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "Directory must have a parent or a storage"
-msgstr "الدليل يجب ان يكون له دليل فوقي"
+msgstr "المسار يجب ان يكون له مسار رئيسي أو مخزن"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -1012,8 +981,6 @@ msgid "Directories' Structure"
 msgstr "هيكلة الدلائل"
 
 #. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_document_by_resourcetype_graph
 #: view:report.document.user:0
 msgid "Files by Resource Type"
 msgstr "الملفات حسب نوع المورد"
@@ -1026,6 +993,7 @@ msgstr "السنة"
 
 #. module: document
 #: view:document.storage:0
+#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
 #: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
@@ -1040,3 +1008,75 @@ msgstr "البحث عن مخزن الوثائق"
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "نوع الوثيقة"
+
+#~ msgid "Auto Directory Configuration"
+#~ msgstr "التهيئة التلقائية للدليل"
+
+#~ msgid "Project"
+#~ msgstr "المشروع"
+
+#~ msgid "Sale Order"
+#~ msgstr "طلب بيع"
+
+#~ msgid "Auto directory configuration for Products."
+#~ msgstr "التهيئة التلقائية للدليل المنتجات"
+
+#~ msgid "Configure Resource Directory"
+#~ msgstr "تهيئة الدلائل"
+
+#~ msgid "Files by Partner"
+#~ msgstr "الملفات حسب الشريك"
+
+#~ msgid ""
+#~ "This is a complete document management system:\n"
+#~ "    * User Authentication\n"
+#~ "    * Document Indexation :- .pptx and .docx files are not support in "
+#~ "windows platform.\n"
+#~ "    * Dashboard for Document that includes:\n"
+#~ "        * New Files (list)\n"
+#~ "        * Files by Resource Type (graph)\n"
+#~ "        * Files by Partner (graph)\n"
+#~ "        * Files by Month (graph)\n"
+#~ "    ATTENTION:\n"
+#~ "    - When you install this module in a running company that have already "
+#~ "PDF files stored into the database,\n"
+#~ "      you will lose them all.\n"
+#~ "    - After installing this module PDF's are no longer stored into the "
+#~ "database,\n"
+#~ "      but in the servers rootpad like /server/bin/filestore.\n"
+#~ msgstr ""
+#~ "نظام ادارة الوثائق يوفر :\n"
+#~ "\n"
+#~ "         * التحقق من موثيقية المستخدم للوثائق .\n"
+#~ "         * لوحة الوثائق والتي تشمل :\n"
+#~ "                   * قائمة بكل الملفات \n"
+#~ "                   * مخطط دائري يوضح الوثائق المحملة حسب الدلائل \n"
+#~ "                   *  مخطط دائري يوضح الوثائق المحملة حسب الشريك\n"
+#~ "                    *  مخطط دائري يوضح الوثائق المحملة حسب الشهر\n"
+#~ "احزر :\n"
+#~ "    عند تثبيت هذا النظام كل الوثائق التي تم حفظها سابقا ستفقد \n"
+#~ "   بعد تثبيت هذا النظام ستحفظ جميع الوثائق المنشأه من النظام في قاعدة "
+#~ "البيانات \n"
+#~ "   ستحفظ في الخادم في المسار /server/bin/filestore\n"
+
+#~ msgid "Auto Configure Directory"
+#~ msgstr "التهيئة التلقائية للدليل"
+
+#~ msgid "Auto directory configuration for Projects."
+#~ msgstr "التهيئة التلقائية للدليل المشروعات"
+
+#~ msgid "Integrated Document Management System"
+#~ msgstr "نظام ادارة الوثائق المتكامل"
+
+#~ msgid "Product"
+#~ msgstr "المنتج"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "سير الإعدادات"
+
+#~ msgid "Choose the following Resouces to auto directory configuration."
+#~ msgstr "اختار المصادر التالية لتأكيد الدليل ذاتيًا."
+
+#~ msgid ""
+#~ "Auto directory configuration for Sale Orders and Quotation with report."
+#~ msgstr "تكوين الدليل الذاتي لاوامر البيع والاقتباس بالتقرير"

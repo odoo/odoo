@@ -6,21 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-13 08:17+0000\n"
 "Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:19+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:34+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 #: view:report_timesheet.user:0
 msgid "Timesheet by user"
 msgstr "Urenstaat per gebruiker"
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:0
+msgid "Timesheet lines in this year"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
@@ -31,12 +36,6 @@ msgstr "Declaratiesoorten"
 #: report:account.analytic.profit:0
 msgid "Profit"
 msgstr "Winst"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:68
-#, python-format
-msgid "Analytic account incomplete"
-msgstr "Kostenplaats incompleet"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
@@ -59,9 +58,14 @@ msgid "Income"
 msgstr "Inkomsten"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.line:0
-msgid "To Invoice"
-msgstr "Te factureren"
+#: view:report_timesheet.account.date:0
+msgid "Daily Timesheets for this year"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:0
+msgid "Re-open project"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
@@ -90,6 +94,12 @@ msgid ""
 msgstr ""
 "Het te factureren product is gedefinieerd op het medewerker formulier; de "
 "prijs wordt afgeleid van de prijslijst van het product."
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:129
+#, python-format
+msgid "You cannot modify an invoiced analytic line!"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_factor
@@ -148,14 +158,14 @@ msgid "Uninvoiced line with billing rate"
 msgstr "Niet-gefactureerde regel met factuurtarief"
 
 #. module: hr_timesheet_invoice
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,account_id:0
 msgid "Project"
 msgstr "Project"
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.account,pricelist_id:0
-msgid "Sale Pricelist"
-msgstr "Verkoopprijslijst"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,amount:0
@@ -163,14 +173,20 @@ msgid "Amount"
 msgstr "Bedrag"
 
 #. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Reactivate Account"
-msgstr "Rekening heractiveren"
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,name:0
 msgid "The detail of each work done will be displayed on the invoice"
 msgstr "De details van elk verricht werk zal getoond worden op de factuur"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:209
+#, python-format
+msgid "Warning !"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
@@ -198,8 +214,12 @@ msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: hr_timesheet_invoice
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
-#: view:hr.timesheet.invoice.create.final:0
 msgid "Create Invoices"
 msgstr "Maak facturen"
 
@@ -210,12 +230,7 @@ msgid "Daily timesheet per account"
 msgstr "Dagelijkse urenstaat per rekening"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Final invoice for analytic account"
-msgstr "Definitieve factuur voor kostenplaats"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:76
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:64
 #, python-format
 msgid "Analytic Account incomplete"
 msgstr "Kostenplaats incompleet"
@@ -254,11 +269,6 @@ msgid "The time of each work done will be displayed on the invoice"
 msgstr "De tijd van elk verricht werk zal getoond worden op de factuur"
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.invoice.create.final,balance_product:0
-msgid "Balance product"
-msgstr "Saldo product"
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_account_analytic_account_2_report_timehsheet_account
 msgid "Timesheets"
 msgstr "Roosters"
@@ -269,14 +279,14 @@ msgid "hr.timesheet.analytic.cost.ledger"
 msgstr "hr.timesheet.analytic.cost.ledger"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
-msgid "Final Invoice"
-msgstr "Definitieve factuur"
+#: field:hr.timesheet.analytic.profit,date_from:0
+msgid "From"
+msgstr "Vanaf"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Do you want details for each line of the invoices ?"
-msgstr "Wilt u details voor elke factuurregel?"
+#: report:account.analytic.profit:0
+msgid "User or Journal Name"
+msgstr "Gebruiker of dagboeknaam"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_invoice
@@ -284,6 +294,11 @@ msgstr "Wilt u details voor elke factuurregel?"
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_invoice
 msgid "Costs to invoice"
 msgstr "Nog te ontvangen facturen"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.user:0
+msgid "Timesheet by user in this month"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,account_id:0
@@ -308,9 +323,10 @@ msgid "Debit"
 msgstr "Debet"
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,employee_ids:0
-msgid "Employee"
-msgstr "Medewerker"
+#: view:hr.timesheet.analytic.cost.ledger:0
+#: view:hr.timesheet.analytic.profit:0
+msgid "Print"
+msgstr "Afdrukken"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -327,9 +343,9 @@ msgstr ""
 "dit waarschijnlijk niet aanzetten."
 
 #. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,customer_name:0
-msgid "Name"
-msgstr "Naam"
+#: view:hr.timesheet.invoice.create.final:0
+msgid "Force to use a special product"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
@@ -337,7 +353,7 @@ msgid "Lines to Invoice"
 msgstr "Te factureren boekingen"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:118
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:128
 #, python-format
 msgid "Error !"
 msgstr "Fout !"
@@ -348,21 +364,9 @@ msgid "Gratis"
 msgstr "Gratis"
 
 #. module: hr_timesheet_invoice
-#: model:ir.module.module,description:hr_timesheet_invoice.module_meta_information
-msgid ""
-"\n"
-"Module to generate invoices based on costs (human resources, expenses, "
-"...).\n"
-"You can define price lists in analytic account, make some theoretical "
-"revenue\n"
-"reports, eso."
-msgstr ""
-"\n"
-"Module voor het genereren van facturen op basis van kosten (personeel, "
-"declaraties, ...).\n"
-"U kunt prijslijsten definiëren in kostenplaatsen, een paar theoretische "
-"omzet overzichten\n"
-"maken, enz."
+#: view:account.analytic.line:0
+msgid "To Invoice"
+msgstr "Te factureren"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,to_invoice:0
@@ -384,7 +388,7 @@ msgid "Timesheet Profit"
 msgstr "Winst urenstaat"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:80
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:68
 #, python-format
 msgid "Partner incomplete"
 msgstr "Relatie incompleet"
@@ -426,15 +430,20 @@ msgid "Theorical"
 msgstr "Theoretisch"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:119
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:132
 #, python-format
-msgid "You can not modify an invoiced analytic line!"
-msgstr "U kunt een gefactureerde kostenplaatsboeking niet wijzigen!"
+msgid "Configuration Error"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
 msgid "Analytic lines to invoice report"
 msgstr "Kostenplaatsboekingen naar factuuroverzicht"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.account,to_invoice:0
+msgid "Invoice on Timesheet & Costs"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_user_stat_all
@@ -463,12 +472,8 @@ msgid "Yes (100%)"
 msgstr "Ja (100%)"
 
 #. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Employee or Journal Name"
-msgstr "Naam medewerker of dagboek"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:191
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:55
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:220
 #, python-format
 msgid "Invoices"
 msgstr "Facturen"
@@ -481,6 +486,19 @@ msgstr "Facturen"
 #: selection:report_timesheet.user,month:0
 msgid "December"
 msgstr "December"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create.final:0
+msgid "Invoice contract"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,month:0
@@ -498,15 +516,9 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,employee_ids:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,user_id:0
-#: field:report_timesheet.account,user_id:0
-#: field:report_timesheet.account.date,user_id:0
-#: field:report_timesheet.invoice,user_id:0
-#: field:report_timesheet.user,user_id:0
-msgid "User"
-msgstr "Gebruiker"
+#: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
+msgid "Journal Items"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,product:0
@@ -519,11 +531,17 @@ msgstr ""
 "kosten veroorzaakt."
 
 #. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:0
+msgid "Users"
+msgstr "Gebruikers"
+
+#. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Non Assigned timesheets to users"
 msgstr "Niet aan gebruikers toegewezen urenstaten"
 
 #. module: hr_timesheet_invoice
+#: view:account.analytic.line:0
 #: field:report.timesheet.line,invoice_id:0
 msgid "Invoiced"
 msgstr "Gefactureerd"
@@ -534,9 +552,17 @@ msgid "Max. Quantity"
 msgstr "Max. hoeveelheid"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create.final:0
-msgid "Invoice Balance amount"
-msgstr "Factureer saldobedrag"
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:132
+#, python-format
+msgid "No income account defined for product '%s'"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -547,11 +573,6 @@ msgstr "Facturatiesnelheid per gebruiker"
 #: view:report_timesheet.account:0
 msgid "Timesheet by account"
 msgstr "Urenstaat per rekening"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,date_from:0
-msgid "From"
-msgstr "Vanaf"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -588,6 +609,15 @@ msgstr "Augustus"
 #: model:ir.actions.report.xml,name:hr_timesheet_invoice.account_analytic_account_cost_ledger
 msgid "Cost Ledger"
 msgstr "Kostenstaat"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "October"
+msgstr "Oktober"
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
@@ -627,7 +657,7 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:81
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:69
 #, python-format
 msgid "Please fill in the Address field in the Partner: %s."
 msgstr "Vul aub het adresveld in in de relatie: %s."
@@ -657,10 +687,15 @@ msgid "Eff."
 msgstr "Eff."
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.invoice.create:0
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create
-msgid "Invoice analytic lines"
-msgstr "Factuur kostenplaatsregels"
+#: field:hr.timesheet.analytic.profit,employee_ids:0
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,user_id:0
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr "Gebruiker"
 
 #. module: hr_timesheet_invoice
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -682,31 +717,17 @@ msgid "January"
 msgstr "Januari"
 
 #. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Credit"
 msgstr "Credit"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:69
-#, python-format
-msgid ""
-"Please fill in the partner and pricelist field in the analytic account:\n"
-"%s"
-msgstr ""
-"Val aub de relatie en prijslijst velden in bij de kostenplaats:\n"
-"%s"
-
-#. module: hr_timesheet_invoice
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
-"Fout! De munteenheid moet hetzelfde zijn als de munteenheid van het "
-"geselecteerde bedrijf"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:120
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:108
 #, python-format
 msgid "Error"
 msgstr "Fout"
@@ -717,10 +738,20 @@ msgid "End of period"
 msgstr "Einde van periode"
 
 #. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create.final:0
+msgid "Do you want to display work details on the invoice ?"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 #: field:report.analytic.account.close,balance:0
 msgid "Balance"
 msgstr "Saldo"
+
+#. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid "You can not create journal items on an account of type view."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,quantity:0
@@ -749,19 +780,9 @@ msgid "Print Timesheet Profit"
 msgstr "Urenstaat resultaat afdrukken"
 
 #. module: hr_timesheet_invoice
-#: field:account.analytic.account,to_invoice:0
-msgid "Reinvoice Costs"
-msgstr "Belast kosten door"
-
-#. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Totals:"
 msgstr "Totalen:"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,date_to:0
-msgid "To"
-msgstr "Tot"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -788,11 +809,21 @@ msgid "September"
 msgstr "September"
 
 #. module: hr_timesheet_invoice
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: field:account.analytic.line,invoice_id:0
 #: model:ir.model,name:hr_timesheet_invoice.model_account_invoice
 #: view:report.timesheet.line:0
 msgid "Invoice"
 msgstr "Factuur"
+
+#. module: hr_timesheet_invoice
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -807,6 +838,11 @@ msgstr "Annuleren"
 #: view:account.analytic.account:0
 msgid "Close"
 msgstr "Sluiten"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,price:0
+msgid "Display cost of the item you reinvoice"
+msgstr "Toon kosten van elk doorbelast item"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -830,18 +866,12 @@ msgid "Timesheet Line"
 msgstr "Urenstaatregel"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:142
-#, python-format
-msgid "Balance product needed"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
 msgid "Billing Data"
 msgstr "Factuur gegevens"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:77
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:65
 #, python-format
 msgid ""
 "Please fill in the Partner or Customer and Sale Pricelist fields in the "
@@ -853,29 +883,33 @@ msgstr ""
 "%s"
 
 #. module: hr_timesheet_invoice
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
 msgid "Label for the customer"
 msgstr "Naam van de klant"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.cost.ledger:0
-#: view:hr.timesheet.analytic.profit:0
-msgid "Print"
-msgstr "Afdrukken"
+#: field:hr.timesheet.analytic.profit,date_to:0
+msgid "To"
+msgstr "Tot"
 
 #. module: hr_timesheet_invoice
-#: selection:report.account.analytic.line.to.invoice,month:0
-#: selection:report.timesheet.line,month:0
-#: selection:report_timesheet.account,month:0
-#: selection:report_timesheet.account.date,month:0
-#: selection:report_timesheet.user,month:0
-msgid "October"
-msgstr "Oktober"
+#: view:hr.timesheet.invoice.create:0
+#: view:hr.timesheet.invoice.create.final:0
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
+msgid "Create Invoice"
+msgstr ""
 
 #. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,price:0
-msgid "Display cost of the item you reinvoice"
-msgstr "Toon kosten van elk doorbelast item"
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:108
+#, python-format
+msgid "At least one line has no product !"
+msgstr "Tenminste één regel heeft geen product !"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,date:0
@@ -884,10 +918,9 @@ msgstr ""
 "De werkelijke datum van de werkzaamheden zal getoond worden op de factuur"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:120
-#, python-format
-msgid "At least one line has no product !"
-msgstr "Tenminste één regel heeft geen product !"
+#: field:account.analytic.account,pricelist_id:0
+msgid "Customer Pricelist"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.invoice:0
@@ -906,6 +939,7 @@ msgstr "Dagelijkse urenstaat per rekening"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,product:0
+#: field:hr.timesheet.invoice.create.final,product:0
 #: field:report.account.analytic.line.to.invoice,product_id:0
 #: view:report.timesheet.line:0
 #: field:report.timesheet.line,product_id:0
@@ -942,7 +976,7 @@ msgid "Journal"
 msgstr "Dagboek"
 
 #. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create.final,balance_product:0
+#: help:hr.timesheet.invoice.create.final,product:0
 msgid "The product that will be used to invoice the remaining amount"
 msgstr ""
 "Het product dat gebruikt wordt voor het factureren van het resterende bedrag"
@@ -957,10 +991,20 @@ msgstr ""
 "regels en klik de actieknop om automatisch de facturen te genereren."
 
 #. module: hr_timesheet_invoice
+#: view:report_timesheet.account.date:0
+msgid "Daily Timesheets of this month"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
 #, python-format
 msgid "No Records Found for Report!"
 msgstr "Geen gegevens gevonden voor overzicht!"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,amount_max:0
+msgid "Keep empty if this contract is not limited to a total fixed price."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.invoice:0
@@ -996,9 +1040,9 @@ msgid "February"
 msgstr "Februari"
 
 #. module: hr_timesheet_invoice
-#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
-msgid "Invoice on analytic lines"
-msgstr "Factureer op kostenplaatsregels"
+#: field:hr_timesheet_invoice.factor,customer_name:0
+msgid "Name"
+msgstr "Naam"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.account.date:0
@@ -1009,11 +1053,6 @@ msgstr "Dagelijkse urenstaat op rekening"
 #: field:report.account.analytic.line.to.invoice,sale_price:0
 msgid "Sale price"
 msgstr "Verkoopprijs"
-
-#. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Employees"
-msgstr "Medewerkers"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
@@ -1040,6 +1079,12 @@ msgid "Discount in percentage"
 msgstr "Korting in percentage"
 
 #. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:209
+#, python-format
+msgid "Invoice is already linked to some of the analytic line(s)!"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
 msgid "Types of invoicing"
 msgstr "Declaratiesoorten"
@@ -1061,6 +1106,11 @@ msgid "Units"
 msgstr "Eenheden"
 
 #. module: hr_timesheet_invoice
+#: view:report_timesheet.user:0
+msgid "Timesheet by user in this year"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: field:account.analytic.line,to_invoice:0
 msgid "Type of Invoicing"
 msgstr "Soort facturatie"
@@ -1071,9 +1121,13 @@ msgid "Analytic Lines to Invoice"
 msgstr "Te factureren kostenplaatsboekingen"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:142
-#, python-format
-msgid "Please fill a Balance product in the wizard"
+#: view:report.timesheet.line:0
+msgid "Timesheet lines in this month"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:0
+msgid "Invoicing Statistics"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -1101,6 +1155,11 @@ msgstr "Kosten"
 msgid "Year"
 msgstr "Jaar"
 
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:0
+msgid "Timesheet lines during last 7 days"
+msgstr ""
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -1124,11 +1183,24 @@ msgstr "Jaar"
 #~ msgid "Choose accounts you want to invoice"
 #~ msgstr "Kies rekeningen die u wilt factureren"
 
+#, python-format
+#~ msgid "Analytic account incomplete"
+#~ msgstr "Kostenplaats incompleet"
+
+#~ msgid "Final Invoice"
+#~ msgstr "Definitieve factuur"
+
+#~ msgid "Sale Pricelist"
+#~ msgstr "Verkoopprijslijst"
+
 #~ msgid "Open Analytic Accounts"
 #~ msgstr "Open kostenplaatsen"
 
 #~ msgid "Analytic Accounts"
 #~ msgstr "Kostenplaatsen"
+
+#~ msgid "Invoice analytic lines"
+#~ msgstr "Factuur kostenplaatsregels"
 
 #~ msgid ""
 #~ "The cost of each work done will be displayed on the invoice. You probably "
@@ -1155,6 +1227,9 @@ msgstr "Jaar"
 #~ msgid "Select period"
 #~ msgstr "Kies periode"
 
+#~ msgid "Do you want details for each line of the invoices ?"
+#~ msgstr "Wilt u details voor elke factuurregel?"
+
 #~ msgid "Entries to invoice"
 #~ msgstr "Te factureren boekingen"
 
@@ -1167,6 +1242,9 @@ msgstr "Jaar"
 #~ msgid "J.C. or Move name"
 #~ msgstr "Dagboekcode of naam boekstuk"
 
+#~ msgid "Invoice Balance amount"
+#~ msgstr "Factureer saldobedrag"
+
 #~ msgid "Uninvoiced Entries"
 #~ msgstr "Ongefactureerde boekingen"
 
@@ -1178,14 +1256,77 @@ msgstr "Jaar"
 #~ "Het product dat gebruikt zal worden om de resterende hoeveelheid te "
 #~ "factureren."
 
+#~ msgid "Reinvoice Costs"
+#~ msgstr "Belast kosten door"
+
 #~ msgid "Invoicing"
 #~ msgstr "Facturatie"
 
 #~ msgid "Invoice rate"
 #~ msgstr "Facturatiesnelheid"
 
+#~ msgid "Invoice on analytic lines"
+#~ msgstr "Factureer op kostenplaatsregels"
+
 #~ msgid "Unclosed Invoiceable Accounts"
 #~ msgstr "Open facturabele rekeningen"
 
 #~ msgid "Pending Analytic Accounts"
 #~ msgstr "Wachtende kostenplaatsen"
+
+#~ msgid "Balance product"
+#~ msgstr "Saldo product"
+
+#, python-format
+#~ msgid "You can not modify an invoiced analytic line!"
+#~ msgstr "U kunt een gefactureerde kostenplaatsboeking niet wijzigen!"
+
+#~ msgid "Employee or Journal Name"
+#~ msgstr "Naam medewerker of dagboek"
+
+#~ msgid "Employee"
+#~ msgstr "Medewerker"
+
+#~ msgid "Final invoice for analytic account"
+#~ msgstr "Definitieve factuur voor kostenplaats"
+
+#, python-format
+#~ msgid ""
+#~ "Please fill in the partner and pricelist field in the analytic account:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Val aub de relatie en prijslijst velden in bij de kostenplaats:\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr ""
+#~ "Fout! De munteenheid moet hetzelfde zijn als de munteenheid van het "
+#~ "geselecteerde bedrijf"
+
+#~ msgid "Reactivate Account"
+#~ msgstr "Rekening heractiveren"
+
+#~ msgid ""
+#~ "\n"
+#~ "Module to generate invoices based on costs (human resources, expenses, "
+#~ "...).\n"
+#~ "You can define price lists in analytic account, make some theoretical "
+#~ "revenue\n"
+#~ "reports, eso."
+#~ msgstr ""
+#~ "\n"
+#~ "Module voor het genereren van facturen op basis van kosten (personeel, "
+#~ "declaraties, ...).\n"
+#~ "U kunt prijslijsten definiëren in kostenplaatsen, een paar theoretische "
+#~ "omzet overzichten\n"
+#~ "maken, enz."
+
+#, python-format
+#~ msgid "Balance product needed"
+#~ msgstr "Balans product noodzakelijk"
+
+#, python-format
+#~ msgid "Please fill a Balance product in the wizard"
+#~ msgstr "Aub balans product invullen in assistent."

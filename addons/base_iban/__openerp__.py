@@ -19,9 +19,9 @@
 #
 ##############################################################################
 {
-    'name': 'Create IBAN bank accounts',
+    'name': 'IBAN Bank Accounts',
     'version': '1.0',
-    'category': 'Hidden',
+    "category": 'Hidden/Dependency',
     'complexity': "easy",
     'description': """
 This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for its validity.
@@ -35,7 +35,7 @@ The ability to extract the correctly represented local accounts from IBAN accoun
     'init_xml': ['base_iban_data.xml'],
     'update_xml': ['base_iban_view.xml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0050014379549',
     'images': ['images/base_iban1.jpeg'],
 }

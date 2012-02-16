@@ -6,25 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-08-03 05:43+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:23+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:39+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Hourly cost computation"
-msgstr "Izračun urne postavke"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Plača"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Gross"
-msgstr "Bruto"
+#: view:hr.contract:0
+msgid "Information"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -34,11 +34,6 @@ msgstr ""
 #. module: hr_contract
 #: field:hr.contract,trial_date_start:0
 msgid "Trial Start Date"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Passport"
 msgstr ""
 
 #. module: hr_contract
@@ -52,11 +47,6 @@ msgid "Company Vehicle"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "Naziv vrste plačila"
-
-#. module: hr_contract
 #: view:hr.employee:0
 msgid "Miscellaneous"
 msgstr ""
@@ -67,19 +57,9 @@ msgid "Current"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "Faktor za urni strošek"
-
-#. module: hr_contract
 #: view:hr.contract:0
-msgid "Overpassed"
+msgid "Group By..."
 msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Wage Types"
-msgstr "Vrste plačil"
 
 #. module: hr_contract
 #: field:hr.contract,department_id:0
@@ -87,8 +67,8 @@ msgid "Department"
 msgstr ""
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Basic"
+#: view:hr.contract:0
+msgid "Overpassed"
 msgstr ""
 
 #. module: hr_contract
@@ -99,19 +79,14 @@ msgid "Employee"
 msgstr "Zaposlenec"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Net"
-msgstr "Neto"
+#: view:hr.contract:0
+msgid "Search Contract"
+msgstr ""
 
 #. module: hr_contract
-#: model:ir.module.module,shortdesc:hr_contract.module_meta_information
-msgid "Human Resources Contracts"
-msgstr "Pogodbe - človeški viri"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,factor_days:0
-msgid "Hours in the period"
-msgstr "Ur v obdobju"
+#: view:hr.contract:0
+msgid "Contracts in progress"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
@@ -134,12 +109,7 @@ msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Job"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Search Contract"
+msgid "Contracts whose end date already passed"
 msgstr ""
 
 #. module: hr_contract
@@ -148,20 +118,8 @@ msgid "Latest contract of the employee"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,advantages_net:0
-msgid "Deductions"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.module.module,description:hr_contract.module_meta_information
-msgid ""
-"\n"
-"    Add all information on the employee form to manage contracts:\n"
-"    * Marital status,\n"
-"    * Security number,\n"
-"    * Place of birth, birth date, ...\n"
-"    You can assign several contracts per employee.\n"
-"    "
+#: view:hr.contract:0
+msgid "Job"
 msgstr ""
 
 #. module: hr_contract
@@ -192,15 +150,6 @@ msgid "Contract Types"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
-msgstr "Vrsta plače"
-
-#. module: hr_contract
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
@@ -211,9 +160,9 @@ msgid "End Date"
 msgstr "Končni datum"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Plača"
+#: help:hr.contract,wage:0
+msgid "Basic Salary of the employee"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,name:0
@@ -232,9 +181,8 @@ msgid "Notes"
 msgstr "Opombe"
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
 msgstr ""
 
 #. module: hr_contract
@@ -255,11 +203,6 @@ msgid "Contract Type"
 msgstr "Vrsta pogodbe"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type.period:0
-msgid "Search Wage Period"
-msgstr ""
-
-#. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,working_hours:0
 msgid "Working Schedule"
@@ -271,11 +214,9 @@ msgid "Job Info"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,period_id:0
-#: view:hr.contract.wage.type.period:0
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
-msgid "Wage Period"
-msgstr "Obdobje plačila"
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
@@ -298,56 +239,14 @@ msgid "Error! contract start-date must be lower then contract end-date."
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,type:0
-msgid "Type"
-msgstr "Tip"
-
-#. module: hr_contract
-#: field:hr.contract,trial_date_end:0
-msgid "Trial End Date"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,name:0
-msgid "Period Name"
-msgstr "Naziv obdobja"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Period"
+#: field:hr.contract,visa_no:0
+msgid "Visa No"
 msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
 msgid "Place of Birth"
 msgstr "Kraj rojstva"
-
-#. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr "Obdobje plačila"
-
-#. module: hr_contract
-#: help:hr.contract.wage.type,factor_type:0
-#: help:hr.contract.wage.type.period,factor_days:0
-msgid ""
-"This field is used by the timesheet system to compute the price of an hour "
-"of work wased on the contract of the employee"
-msgstr ""
-"To polje služi sistemu časovnic za izračun cene ure na osnovi pogodbe "
-"zaposlenca"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -360,13 +259,8 @@ msgid "Medical Examination Date"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,advantages_gross:0
-msgid "Allowances"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Main Data"
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
 msgstr ""
 
 #. module: hr_contract
@@ -382,8 +276,20 @@ msgstr ""
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Neveljaven XML za arhitekturo pogleda."
 
+#~ msgid "Gross"
+#~ msgstr "Bruto"
+
 #~ msgid "Number of children"
 #~ msgstr "Število otrok"
+
+#~ msgid "Net"
+#~ msgstr "Neto"
+
+#~ msgid "Type"
+#~ msgstr "Tip"
+
+#~ msgid "Wage Type"
+#~ msgstr "Vrsta plače"
 
 #~ msgid "Function"
 #~ msgstr "Funkcija"
@@ -393,6 +299,9 @@ msgstr ""
 
 #~ msgid "Marital Status"
 #~ msgstr "Zakonski stan"
+
+#~ msgid "Period Name"
+#~ msgstr "Naziv obdobja"
 
 #~ msgid "Salary"
 #~ msgstr "Plača"
@@ -412,14 +321,35 @@ msgstr ""
 #~ msgid "Contract Duration"
 #~ msgstr "Trajanje pogodbe"
 
+#~ msgid "Wage Types"
+#~ msgstr "Vrste plačil"
+
+#~ msgid "Hourly cost computation"
+#~ msgstr "Izračun urne postavke"
+
+#~ msgid "Wage Period"
+#~ msgstr "Obdobje plačila"
+
+#~ msgid "Human Resources Contracts"
+#~ msgstr "Pogodbe - človeški viri"
+
+#~ msgid "Wage Type Name"
+#~ msgstr "Naziv vrste plačila"
+
 #~ msgid "Medical examination date"
 #~ msgstr "Datum zdravniškega pregleda"
+
+#~ msgid "Hours in the period"
+#~ msgstr "Ur v obdobju"
 
 #~ msgid "Employee Marital Status"
 #~ msgstr "Zakonski stan zaposlenca"
 
 #~ msgid "Status Description"
 #~ msgstr "Opis statusa"
+
+#~ msgid "Wage period"
+#~ msgstr "Obdobje plačila"
 
 #~ msgid "Contract Wage Type"
 #~ msgstr "Vrsta plačila po pogodbi"
@@ -429,6 +359,16 @@ msgstr ""
 
 #~ msgid "Remuneration"
 #~ msgstr "Preštevilčenje"
+
+#~ msgid "Factor for hour cost"
+#~ msgstr "Faktor za urni strošek"
+
+#~ msgid ""
+#~ "This field is used by the timesheet system to compute the price of an hour "
+#~ "of work wased on the contract of the employee"
+#~ msgstr ""
+#~ "To polje služi sistemu časovnic za izračun cene ure na osnovi pogodbe "
+#~ "zaposlenca"
 
 #~ msgid "AUDIENS Number"
 #~ msgstr "Številka AUDIENS"

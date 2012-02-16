@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-09-09 07:17+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:27+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:43+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -26,6 +26,12 @@ msgid "Work Orders"
 msgstr "İş Emirleri"
 
 #. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:489
+#, python-format
+msgid "Operation is already finished!"
+msgstr ""
+
+#. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_canceloperation0
 msgid "Cancel the operation."
 msgstr "Operasyonları iptal et."
@@ -34,12 +40,6 @@ msgstr "Operasyonları iptal et."
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
 msgid "mrp_operations.operation.code"
 msgstr "mrp_operations.operation.code"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:133
-#, python-format
-msgid "Production Order Cannot start in [%s] state"
-msgstr "Ürün Siparişi [%s] durumunda başlatılamaz"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -86,9 +86,19 @@ msgid "Production Operation"
 msgstr "Üretim Operasyonu"
 
 #. module: mrp_operations
+#: view:mrp.production:0
+msgid "Set to Draft"
+msgstr ""
+
+#. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
 msgid "Free Serialisation"
 msgstr "Serbest Serileştirme"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Üretim Emri"
 
 #. module: mrp_operations
 #: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
@@ -100,6 +110,11 @@ msgstr "Mrp Operasyonları"
 #: field:mrp.workorder,day:0
 msgid "Day"
 msgstr "Gün"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+msgid "Cancel Order"
+msgstr ""
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_productionorder0
@@ -117,17 +132,16 @@ msgid "Creation of the work order"
 msgstr "İş emrinin oluşturulması"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:463
-#, python-format
-msgid "You cannot Pause the Operation other then Start/Resume state !"
-msgstr "Operasyonu Başlat/Devam et durumu dışında Duraklatamazsınız!"
-
-#. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-#: view:mrp.workorder:0
-#: field:mrp.workorder,workcenter_id:0
-msgid "Workcenter"
-msgstr "İş Merkezi"
+#: help:mrp.production.workcenter.line,state:0
+msgid ""
+"* When a work order is created it is set in 'Draft' state.\n"
+"* When user sets work order in start mode that time it will be set in 'In "
+"Progress' state.\n"
+"* When work order is in running mode, during that time if user wants to stop "
+"or to make changes in order then can set in 'Pending' state.\n"
+"* When the user cancels the work order it will be set in 'Canceled' state.\n"
+"* When order is completely processed that time it is set in 'Finished' state."
+msgstr ""
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_productionstart0
@@ -135,11 +149,11 @@ msgid "The work orders are created on the basis of the production order."
 msgstr "İş emirleri ürün siparişi bazında oluşturulur."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:133
-#: code:addons/mrp_operations/mrp_operations.py:463
-#: code:addons/mrp_operations/mrp_operations.py:467
-#: code:addons/mrp_operations/mrp_operations.py:479
-#: code:addons/mrp_operations/mrp_operations.py:482
+#: code:addons/mrp_operations/mrp_operations.py:134
+#: code:addons/mrp_operations/mrp_operations.py:470
+#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:486
+#: code:addons/mrp_operations/mrp_operations.py:489
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
@@ -152,9 +166,16 @@ msgid "Cancelled"
 msgstr "İptal edildi"
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
-msgid "Confirmed Work Orders"
-msgstr "Onaylanan İş Emirleri"
+#: code:addons/mrp_operations/mrp_operations.py:486
+#, python-format
+msgid "There is no Operation to be cancelled!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:482
+#, python-format
+msgid "Operation is Already Cancelled!"
+msgstr ""
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
@@ -168,17 +189,29 @@ msgid "Stock Move"
 msgstr "Stok Hareketi"
 
 #. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:479
+#, python-format
+msgid ""
+"In order to Finish the operation, it must be in the Start or Resume state!"
+msgstr ""
+
+#. module: mrp_operations
 #: field:mrp.workorder,nbr:0
 msgid "# of Lines"
 msgstr "# / Satır"
 
 #. module: mrp_operations
+#: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
-#: selection:mrp.production.workcenter.line,production_state:0
-#: selection:mrp.production.workcenter.line,state:0
-#: selection:mrp.workorder,state:0
-msgid "Draft"
-msgstr "Taslak"
+msgid "Finish Order"
+msgstr ""
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,date_finished:0
+#: field:mrp.production.workcenter.line,date_planned_end:0
+#: field:mrp_operations.operation,date_finished:0
+msgid "End Date"
+msgstr "Bitiş Tarihi"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -192,6 +225,14 @@ msgstr "Üretimde"
 #: field:mrp.workorder,state:0
 msgid "State"
 msgstr "Durum"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Draft"
+msgstr "Taslak"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
@@ -214,29 +255,14 @@ msgid "Month -1"
 msgstr "Ay -1"
 
 #. module: mrp_operations
-#: help:mrp.production.workcenter.line,state:0
-msgid ""
-"* When a work order is created it is set in 'Draft' state.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' state.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pause' state.\n"
-"* When the user cancels the work order it will be set in 'Canceled' state.\n"
-"* When order is completely processed that time it is set in 'Finished' state."
-msgstr ""
-"* Bir iş emri oluşturulduğunda, 'Taslak' durumuna geçer.\n"
-"* Kullanıcı iş emrini başlatma modunda ayarladığında ise, 'İşlemde' durumuna "
-"geçecektir.\n"
-"* İş emri çalışma modunda olduğunda, kullanıcı iş emrini durdurmak veya "
-"üzerinde değişiklik yapmak istediğinde, 'Duraklatma' durumuna geçebilir.\n"
-"* Kullanıcı iş emrini iptal ettiğinde,'İptal edildi' durumuna geçecektir.\n"
-"* İş emri tamamen işlendiğinde, 'Tamamlandı' durumuna gececektir."
+#: field:mrp.production.workcenter.line,uom:0
+msgid "UOM"
+msgstr "Birim"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:472
-#, python-format
-msgid "You cannot finish the operation without Starting/Resuming it !"
-msgstr "İşlemi Başlatmadan/Devam ettirmeden sonlandıramazsınız!"
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -244,16 +270,16 @@ msgid "Planned Date"
 msgstr "Planlama Tarihi"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:479
-#, python-format
-msgid "There is no Operation to be cancelled !"
-msgstr "İptal edilecek hiçbir Operasyon yok!"
-
-#. module: mrp_operations
 #: view:mrp.workorder:0
 #: field:mrp.workorder,product_qty:0
 msgid "Product Qty"
 msgstr "Ürün Mik."
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:134
+#, python-format
+msgid "Manufacturing order cannot start in state \"%s\"!"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -286,6 +312,11 @@ msgstr ""
 "sahip olacaktır."
 
 #. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Planned Year"
+msgstr ""
+
+#. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
 msgid "Order Date"
 msgstr "Sipariş Tarihi"
@@ -296,19 +327,25 @@ msgid "Future Work Orders"
 msgstr "Gelecekteki İş Emirleri"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:459
-#, python-format
-msgid ""
-"Operation has already started !You  can either Pause /Finish/Cancel the "
-"operation"
+#: view:mrp.workorder:0
+msgid "Work orders during last month"
 msgstr ""
-"Operasyon zaten başladı! Oparasyonu Duraklat /Tamamla/İptal et arasından "
-"seçim yapabilirsiniz"
+
+#. module: mrp_operations
+#: help:mrp.production.workcenter.line,delay:0
+msgid "The elapsed time between operation start and stop in this Work Center"
+msgstr ""
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
 msgid "Operation Cancelled"
 msgstr "Operasyon İptal Edildi"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+msgid "Pause Work Order"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -342,6 +379,11 @@ msgid "Work Order Report"
 msgstr "İş Emri Raporu"
 
 #. module: mrp_operations
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero!"
+msgstr ""
+
+#. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
 #: field:mrp.production.workcenter.line,date_start_date:0
 #: field:mrp_operations.operation,date_start:0
@@ -354,9 +396,11 @@ msgid "Waiting Goods"
 msgstr "Malzeme Bekleniyor"
 
 #. module: mrp_operations
-#: view:mrp.production:0
-#: view:mrp.production.workcenter.line:0
-#: selection:mrp.production.workcenter.line,state:0
+#: view:mrp.workorder:0
+msgid "Work orders made during current year"
+msgstr ""
+
+#. module: mrp_operations
 #: selection:mrp.workorder,state:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Pause"
@@ -370,9 +414,17 @@ msgid "In Progress"
 msgstr "İşlemde"
 
 #. module: mrp_operations
-#: model:ir.model,name:mrp_operations.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Üretim Emri"
+#: code:addons/mrp_operations/mrp_operations.py:470
+#, python-format
+msgid ""
+"In order to Pause the operation, it must be in the Start or Resume state!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:474
+#, python-format
+msgid "In order to Resume the operation, it must be in the Pause state!"
+msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -402,13 +454,9 @@ msgid "Set Draft"
 msgstr "Taslak Ayarla"
 
 #. module: mrp_operations
-#: view:mrp.workorder:0
-#: field:mrp.workorder,total_cycles:0
-msgid "Total Cycles"
-msgstr "Toplam Çevrim"
-
-#. module: mrp_operations
+#: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
+#: selection:mrp.production.workcenter.line,state:0
 msgid "Pending"
 msgstr "Beklemede"
 
@@ -418,10 +466,12 @@ msgid "Production Operation Code"
 msgstr "Üretim Operasyon Kodu"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:467
+#: code:addons/mrp_operations/mrp_operations.py:466
 #, python-format
-msgid " You cannot Resume the operation other then Pause state !"
-msgstr " Duraklatma durumu dışında operasyonu Devam ettiremezsiniz!"
+msgid ""
+"Operation has already started !Youcan either Pause/Finish/Cancel the "
+"operation"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -434,66 +484,14 @@ msgid "Started"
 msgstr "Başlatıldı"
 
 #. module: mrp_operations
-#: model:ir.module.module,description:mrp_operations.module_meta_information
-msgid ""
-"\n"
-"     This module adds state, date_start,date_stop in production order "
-"operation lines\n"
-"     (in the \"Work Centers\" tab)\n"
-"     State: draft, confirm, done, cancel\n"
-"     When finishing/confirming,cancelling production orders set all state "
-"lines to the according state\n"
-"     Create menus:\n"
-"         Production Management > All Operations\n"
-"         Production Management > All Operations > Operations To Do "
-"(state=\"confirm\")\n"
-"     Which is a view on \"Work Centers\" lines in production order,\n"
-"     editable tree\n"
-"\n"
-"    Add buttons in the form view of production order under workcenter tab:\n"
-"    * start (set state to confirm), set date_start\n"
-"    * done (set state to done), set date_stop\n"
-"    * set to draft (set state to draft)\n"
-"    * cancel set state to cancel\n"
-"\n"
-"    When the production order becomes \"ready to produce\", operations must\n"
-"    become 'confirmed'. When the production order is done, all operations\n"
-"    must become done.\n"
-"\n"
-"    The field delay is the delay(stop date - start date).\n"
-"    So that we can compare the theoretic delay and real delay.\n"
-"\n"
-"    "
+#: view:mrp.production.workcenter.line:0
+msgid "Production started late"
 msgstr ""
-"\n"
-"     Bu modül üretim emri operasyon satırlarına durum, date_start,date_stop "
-"ekler\n"
-"     (\"İş Merkezleri\" sekmesinde)\n"
-"     Durum: taslak, onayla, yapıldı, iptal et\n"
-"     Üretim siparişlerini tamamlarken/onaylarken, iptal ederken, tüm durum "
-"satırlarını duruma göre ayarlayın\n"
-"     Menü oluştur:\n"
-"         Üretim Yönetimi > Tüm Operasyonlar\n"
-"         Üretim Yönetimi > Tüm Operasyonlar > Gereçekleştirilecek "
-"Operasyonlar (durum=\"onayla\")\n"
-"     Üretim Emrinde \"İş Merkezleri\" satırlarında bir görünüm,\n"
-"     düzenlenebilir ağaç\n"
-"\n"
-"    İş merkezi sekmesinde üretim emri form görünümüne buton ekleyin:\n"
-"    * başlat (durumu onaylamak için ayarlayın), date_start'ı ayarlayın\n"
-"    * yapıldı (durumu yapıldı olarak ayarlayın), date_stop'u ayarlayın\n"
-"    * taslak olarak ayarlayın (durumu taslak olarak ayarlayın)\n"
-"    * iptal et durumu iptal etmek için ayarlayın\n"
-"\n"
-"    Üretim emri \"üretime hazır\" hale geldiğinde, operasyonlar\n"
-"    'onaylandı' durumuna geçer. Üretim siparişi yapıldığında, tüm "
-"operasyonlar\n"
-"    yapıldı durumuna geçmelidir.\n"
-"\n"
-"    Gecikme, alan gecikmesidir(stop date - start date).\n"
-"    Böylece teorik gecikme ve gerçek gecikmeyi kıyaslayabiliriz.\n"
-"\n"
-"    "
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Planned Day"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -501,10 +499,10 @@ msgid "June"
 msgstr "Haziran"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:482
-#, python-format
-msgid "Operation is already finished !"
-msgstr "Operasyon zaten tamamlandı!"
+#: view:mrp.workorder:0
+#: field:mrp.workorder,total_cycles:0
+msgid "Total Cycles"
+msgstr "Toplam Çevrim"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -533,12 +531,6 @@ msgid "November"
 msgstr "Kasım"
 
 #. module: mrp_operations
-#: help:mrp.production.workcenter.line,delay:0
-msgid "This is lead time between operation start and stop in this workcenter"
-msgstr ""
-"Bu, bu iş merkezinde operayon başlama ve bitişi arasındaki tedarik süresidir"
-
-#. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Search"
 msgstr "Ara"
@@ -554,12 +546,18 @@ msgid "January"
 msgstr "Ocak"
 
 #. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+msgid "Resume Work Order"
+msgstr ""
+
+#. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_doneoperation0
 msgid "Finish the operation."
 msgstr "Operasyonu tamamlayın."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:452
+#: code:addons/mrp_operations/mrp_operations.py:459
 #, python-format
 msgid "Operation is not started yet !"
 msgstr "Operasyon henüz başlatılmadı!"
@@ -570,10 +568,15 @@ msgid "Information from the production order."
 msgstr "Üretim emrinden bilgiler."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:452
+#: sql_constraint:mrp.production:0
+msgid "Reference must be unique per Company!"
+msgstr ""
+
+#. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:459
-#: code:addons/mrp_operations/mrp_operations.py:472
-#: code:addons/mrp_operations/mrp_operations.py:475
+#: code:addons/mrp_operations/mrp_operations.py:466
+#: code:addons/mrp_operations/mrp_operations.py:479
+#: code:addons/mrp_operations/mrp_operations.py:482
 #, python-format
 msgid "Sorry!"
 msgstr "Üzgünüz!"
@@ -590,15 +593,9 @@ msgid "Code"
 msgstr "Kodu"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:475
-#, python-format
-msgid "Operation is Already Cancelled  !"
-msgstr "Operasyon Zaten İptal Edildi!"
-
-#. module: mrp_operations
-#: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
-msgid "Work Center Production start end workflow"
-msgstr "İş Merkezi Üretim başlatma bitirme iş akışı"
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
+msgid "Confirmed Work Orders"
+msgstr "Onaylanan İş Emirleri"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
@@ -692,6 +689,9 @@ msgid "Search Work Orders"
 msgstr "İş Emri Ara"
 
 #. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: view:mrp.workorder:0
+#: field:mrp.workorder,workcenter_id:0
 #: field:mrp_operations.operation,workcenter_id:0
 #: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"
@@ -748,11 +748,6 @@ msgid "Finished"
 msgstr "Tamamlandı"
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,uom:0
-msgid "UOM"
-msgstr "Birim"
-
-#. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Hours by Work Center"
 msgstr "İş Merkezi Saatleri"
@@ -763,16 +758,19 @@ msgid "Working Hours"
 msgstr "Çalışma Saati"
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,date_finished:0
-#: field:mrp.production.workcenter.line,date_planned_end:0
-#: field:mrp_operations.operation,date_finished:0
-msgid "End Date"
-msgstr "Bitiş Tarihi"
+#: view:mrp.workorder:0
+msgid "Planned Month"
+msgstr ""
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "February"
 msgstr "Şubat"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Work orders made during current month"
+msgstr ""
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
@@ -798,6 +796,12 @@ msgstr "Operasyon yapıldı"
 #: view:mrp.workorder:0
 msgid "#Line Orders"
 msgstr "#Line Emir"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+msgid "Start Working"
+msgstr ""
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0
@@ -834,11 +838,6 @@ msgid "Duration"
 msgstr "Süre"
 
 #. module: mrp_operations
-#: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero !"
-msgstr "Sipariş miktarı negatif veya sıfır olamaz!"
-
-#. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr "Aynı üründn olmayan bir lot atamaya çalışıyorsunuz"
@@ -873,6 +872,9 @@ msgstr "Aynı üründn olmayan bir lot atamaya çalışıyorsunuz"
 #~ msgid "Production start Operation"
 #~ msgstr "Üretim Operasyonu Başlat"
 
+#~ msgid "Workcenter"
+#~ msgstr "İş Merkezi"
+
 #~ msgid "Work Orders to Do"
 #~ msgstr "Yapılacak İş Emirleri"
 
@@ -890,3 +892,126 @@ msgstr "Aynı üründn olmayan bir lot atamaya çalışıyorsunuz"
 
 #~ msgid "Start working"
 #~ msgstr "İşi Başlat"
+
+#, python-format
+#~ msgid "Production Order Cannot start in [%s] state"
+#~ msgstr "Ürün Siparişi [%s] durumunda başlatılamaz"
+
+#, python-format
+#~ msgid "You cannot Pause the Operation other then Start/Resume state !"
+#~ msgstr "Operasyonu Başlat/Devam et durumu dışında Duraklatamazsınız!"
+
+#~ msgid ""
+#~ "* When a work order is created it is set in 'Draft' state.\n"
+#~ "* When user sets work order in start mode that time it will be set in 'In "
+#~ "Progress' state.\n"
+#~ "* When work order is in running mode, during that time if user wants to stop "
+#~ "or to make changes in order then can set in 'Pause' state.\n"
+#~ "* When the user cancels the work order it will be set in 'Canceled' state.\n"
+#~ "* When order is completely processed that time it is set in 'Finished' state."
+#~ msgstr ""
+#~ "* Bir iş emri oluşturulduğunda, 'Taslak' durumuna geçer.\n"
+#~ "* Kullanıcı iş emrini başlatma modunda ayarladığında ise, 'İşlemde' durumuna "
+#~ "geçecektir.\n"
+#~ "* İş emri çalışma modunda olduğunda, kullanıcı iş emrini durdurmak veya "
+#~ "üzerinde değişiklik yapmak istediğinde, 'Duraklatma' durumuna geçebilir.\n"
+#~ "* Kullanıcı iş emrini iptal ettiğinde,'İptal edildi' durumuna geçecektir.\n"
+#~ "* İş emri tamamen işlendiğinde, 'Tamamlandı' durumuna gececektir."
+
+#, python-format
+#~ msgid "You cannot finish the operation without Starting/Resuming it !"
+#~ msgstr "İşlemi Başlatmadan/Devam ettirmeden sonlandıramazsınız!"
+
+#, python-format
+#~ msgid "There is no Operation to be cancelled !"
+#~ msgstr "İptal edilecek hiçbir Operasyon yok!"
+
+#, python-format
+#~ msgid ""
+#~ "Operation has already started !You  can either Pause /Finish/Cancel the "
+#~ "operation"
+#~ msgstr ""
+#~ "Operasyon zaten başladı! Oparasyonu Duraklat /Tamamla/İptal et arasından "
+#~ "seçim yapabilirsiniz"
+
+#, python-format
+#~ msgid " You cannot Resume the operation other then Pause state !"
+#~ msgstr " Duraklatma durumu dışında operasyonu Devam ettiremezsiniz!"
+
+#~ msgid ""
+#~ "\n"
+#~ "     This module adds state, date_start,date_stop in production order "
+#~ "operation lines\n"
+#~ "     (in the \"Work Centers\" tab)\n"
+#~ "     State: draft, confirm, done, cancel\n"
+#~ "     When finishing/confirming,cancelling production orders set all state "
+#~ "lines to the according state\n"
+#~ "     Create menus:\n"
+#~ "         Production Management > All Operations\n"
+#~ "         Production Management > All Operations > Operations To Do "
+#~ "(state=\"confirm\")\n"
+#~ "     Which is a view on \"Work Centers\" lines in production order,\n"
+#~ "     editable tree\n"
+#~ "\n"
+#~ "    Add buttons in the form view of production order under workcenter tab:\n"
+#~ "    * start (set state to confirm), set date_start\n"
+#~ "    * done (set state to done), set date_stop\n"
+#~ "    * set to draft (set state to draft)\n"
+#~ "    * cancel set state to cancel\n"
+#~ "\n"
+#~ "    When the production order becomes \"ready to produce\", operations must\n"
+#~ "    become 'confirmed'. When the production order is done, all operations\n"
+#~ "    must become done.\n"
+#~ "\n"
+#~ "    The field delay is the delay(stop date - start date).\n"
+#~ "    So that we can compare the theoretic delay and real delay.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "     Bu modül üretim emri operasyon satırlarına durum, date_start,date_stop "
+#~ "ekler\n"
+#~ "     (\"İş Merkezleri\" sekmesinde)\n"
+#~ "     Durum: taslak, onayla, yapıldı, iptal et\n"
+#~ "     Üretim siparişlerini tamamlarken/onaylarken, iptal ederken, tüm durum "
+#~ "satırlarını duruma göre ayarlayın\n"
+#~ "     Menü oluştur:\n"
+#~ "         Üretim Yönetimi > Tüm Operasyonlar\n"
+#~ "         Üretim Yönetimi > Tüm Operasyonlar > Gereçekleştirilecek "
+#~ "Operasyonlar (durum=\"onayla\")\n"
+#~ "     Üretim Emrinde \"İş Merkezleri\" satırlarında bir görünüm,\n"
+#~ "     düzenlenebilir ağaç\n"
+#~ "\n"
+#~ "    İş merkezi sekmesinde üretim emri form görünümüne buton ekleyin:\n"
+#~ "    * başlat (durumu onaylamak için ayarlayın), date_start'ı ayarlayın\n"
+#~ "    * yapıldı (durumu yapıldı olarak ayarlayın), date_stop'u ayarlayın\n"
+#~ "    * taslak olarak ayarlayın (durumu taslak olarak ayarlayın)\n"
+#~ "    * iptal et durumu iptal etmek için ayarlayın\n"
+#~ "\n"
+#~ "    Üretim emri \"üretime hazır\" hale geldiğinde, operasyonlar\n"
+#~ "    'onaylandı' durumuna geçer. Üretim siparişi yapıldığında, tüm "
+#~ "operasyonlar\n"
+#~ "    yapıldı durumuna geçmelidir.\n"
+#~ "\n"
+#~ "    Gecikme, alan gecikmesidir(stop date - start date).\n"
+#~ "    Böylece teorik gecikme ve gerçek gecikmeyi kıyaslayabiliriz.\n"
+#~ "\n"
+#~ "    "
+
+#, python-format
+#~ msgid "Operation is already finished !"
+#~ msgstr "Operasyon zaten tamamlandı!"
+
+#~ msgid "This is lead time between operation start and stop in this workcenter"
+#~ msgstr ""
+#~ "Bu, bu iş merkezinde operayon başlama ve bitişi arasındaki tedarik süresidir"
+
+#, python-format
+#~ msgid "Operation is Already Cancelled  !"
+#~ msgstr "Operasyon Zaten İptal Edildi!"
+
+#~ msgid "Work Center Production start end workflow"
+#~ msgstr "İş Merkezi Üretim başlatma bitirme iş akışı"
+
+#~ msgid "Order quantity cannot be negative or zero !"
+#~ msgstr "Sipariş miktarı negatif veya sıfır olamaz!"

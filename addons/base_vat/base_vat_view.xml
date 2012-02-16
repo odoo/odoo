@@ -7,12 +7,24 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
-            <field name="property_account_payable" position="after">
-                <group colspan="2" col="6">
-                    <field name="vat" on_change="vat_change(vat)" colspan="4" />
-                    <field name="vat_subjected" colspan="1" groups="base.group_extended" />
-                </group>
+                <field name="property_account_payable" position="after">
+                    <group colspan="2" col="6">
+                        <field name="vat" on_change="vat_change(vat)"/>
+                        <button name="button_check_vat" string="Check VAT" type="object" icon="gtk-execute"/>
+                        <field name="vat_subjected" colspan="1" groups="base.group_extended" />
+                    </group>
+                </field>
             </field>
+        </record>
+
+        <record id="company_form_vat" model="ir.ui.view">
+            <field name="name">res.company.form.vat.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="after">
+                    <field name="vat_check_vies" groups="base.group_extended" />
+                </field>
             </field>
         </record>
 

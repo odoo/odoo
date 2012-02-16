@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-11-13 08:48+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:22+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:37+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
@@ -172,6 +172,11 @@ msgid "Amount For Third Bank Statement"
 msgstr ""
 
 #. module: auction
+#: view:auction.lots:0
+msgid "Buy object"
+msgstr ""
+
+#. module: auction
 #: field:auction.lots,lot_num:0
 msgid "List Number"
 msgstr "Lijstnummer"
@@ -277,6 +282,11 @@ msgid "Bids"
 msgstr "Biedingen"
 
 #. module: auction
+#: field:report.auction,gross_revenue:0
+msgid "Gross Revenue"
+msgstr "Bruto opbrengst"
+
+#. module: auction
 #: view:auction.lots.buyer_map:0
 msgid "Buyer Map"
 msgstr ""
@@ -309,9 +319,9 @@ msgid "The Buyer \"%s\" has no Invoice Address."
 msgstr "De koper \"%s\"heeft geen factuuradres"
 
 #. module: auction
-#: view:auction.dates:0
-msgid "Commissions"
-msgstr "Commissies"
+#: model:ir.actions.act_window,name:auction.action_auction_object_categories
+msgid "Auction object Categories"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit_cost
@@ -381,6 +391,11 @@ msgstr ""
 #: code:addons/auction/wizard/auction_catalog_flagey_report.py:63
 #, python-format
 msgid "No Lots belong to this Auction Date"
+msgstr ""
+
+#. module: auction
+#: view:auction.lots:0
+msgid "New Object"
 msgstr ""
 
 #. module: auction
@@ -456,6 +471,12 @@ msgid "Buyers"
 msgstr "Kopers"
 
 #. module: auction
+#: view:auction.lots:0
+#: view:report.auction:0
+msgid "Object Category"
+msgstr ""
+
+#. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id4
 msgid "VAT 12%"
 msgstr ""
@@ -510,7 +531,7 @@ msgstr "Betaling"
 #: code:addons/auction/auction.py:686
 #, python-format
 msgid "The object \"%s\" has no buyer assigned."
-msgstr ""
+msgstr "De kavel \"%s\" heeft geen gekoppelde koper."
 
 #. module: auction
 #: selection:auction.deposit,method:0
@@ -523,9 +544,9 @@ msgid "Last Auction Date"
 msgstr ""
 
 #. module: auction
-#: model:account.tax,name:auction.tax_seller
-msgid "Seller Costs (12%)"
-msgstr ""
+#: field:report.object.encoded,obj_num:0
+msgid "# of Encoded obj."
+msgstr "# Ingevoerde kavels"
 
 #. module: auction
 #: field:auction.lots,paid_vnd:0
@@ -650,17 +671,12 @@ msgid "Account tax for seller"
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:68
+#: code:addons/auction/wizard/auction_lots_invoice.py:67
 #: code:addons/auction/wizard/auction_lots_numerotate.py:103
 #: code:addons/auction/wizard/auction_lots_numerotate.py:129
 #, python-format
 msgid "UserError"
 msgstr ""
-
-#. module: auction
-#: model:ir.module.module,shortdesc:auction.module_meta_information
-msgid "Auction Management"
-msgstr "Veilingbeheer"
 
 #. module: auction
 #: field:auction.dates,journal_seller_id:0
@@ -680,14 +696,8 @@ msgid "Draft"
 msgstr "Concept"
 
 #. module: auction
-#: help:auction.lots,state:0
-msgid ""
-" * The 'Draft' state is used when a object is encoding as a new object.      "
-"           \n"
-"* The 'Unsold' state is used when object does not sold for long time, user "
-"can also set it as draft state after unsold.                 \n"
-"* The 'Paid' state is used when user pay for the object                 \n"
-"* The 'Sold' state is used when user buy the object."
+#: view:auction.dates:0
+msgid "Invoiced Auction"
 msgstr ""
 
 #. module: auction
@@ -723,6 +733,7 @@ msgstr ""
 #: view:auction.lots:0
 #: field:auction.lots,auction_id:0
 #: report:auction.total.rml:0
+#: model:ir.module.category,name:auction.module_category_auction
 #: model:ir.ui.menu,name:auction.auction_menu_root
 #: view:report.auction:0
 msgid "Auction"
@@ -782,9 +793,9 @@ msgid "Auction Name"
 msgstr "Veilingnaam"
 
 #. module: auction
-#: field:report.object.encoded,obj_num:0
-msgid "# of Encoded obj."
-msgstr "# Ingevoerde kavels"
+#: model:account.tax,name:auction.tax_seller
+msgid "Seller Costs (12%)"
+msgstr ""
 
 #. module: auction
 #: field:aie.category,parent_id:0
@@ -958,6 +969,7 @@ msgstr "Nr"
 
 #. module: auction
 #: view:auction.catalog.flagey:0
+#: view:auction.taken:0
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -1078,16 +1090,17 @@ msgid "Active IDs not Found"
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/wizard/auction_aie_send.py:167
+#: code:addons/auction/wizard/auction_aie_send.py:166
 #: code:addons/auction/wizard/auction_aie_send_result.py:117
 #, python-format
 msgid "Connection to WWW.Auction-in-Europe.com failed !"
 msgstr "Verbinden met www.auction-in-europe.com mislukt!"
 
 #. module: auction
-#: field:report.auction,gross_revenue:0
-msgid "Gross Revenue"
-msgstr "Bruto opbrengst"
+#: model:ir.actions.act_window,name:auction.act_auction_lot_open_bid
+#: model:ir.actions.act_window,name:auction.action_bid_open
+msgid "Open Bids"
+msgstr ""
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.open_board_auction
@@ -1103,19 +1116,20 @@ msgstr "Naam"
 
 #. module: auction
 #: field:auction.deposit,name:0
+#: view:auction.lots:0
 #: field:auction.lots,bord_vnd_id:0
 msgid "Depositer Inventory"
-msgstr ""
+msgstr "Depositeur Inventaris"
 
 #. module: auction
 #: code:addons/auction/auction.py:692
 #, python-format
 msgid "The Buyer has no Invoice Address."
-msgstr ""
+msgstr "De koper heeft geen fatuuradres"
 
 #. module: auction
-#: view:report.object.encoded:0
-msgid "Total adj."
+#: model:ir.actions.act_window,name:auction.action_report_auction_adjudication_tree
+msgid "Auction Adjudication Report"
 msgstr ""
 
 #. module: auction
@@ -1176,6 +1190,15 @@ msgid "Debit:"
 msgstr "Debet:"
 
 #. module: auction
+#: code:addons/auction/wizard/auction_aie_send.py:166
+#: code:addons/auction/wizard/auction_aie_send_result.py:116
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:70
+#: code:addons/auction/wizard/auction_lots_numerotate.py:145
+#, python-format
+msgid "Error"
+msgstr "Fout"
+
+#. module: auction
 #: field:auction.lots,author_right:0
 msgid "Author rights"
 msgstr "Auteursrechten"
@@ -1187,6 +1210,11 @@ msgstr "Auteursrechten"
 #: view:auction.lots:0
 #: view:report.auction:0
 msgid "Group By..."
+msgstr ""
+
+#. module: auction
+#: view:report.auction:0
+msgid "Auction during last month."
 msgstr ""
 
 #. module: auction
@@ -1219,6 +1247,11 @@ msgid "Sellers"
 msgstr "Verkopers"
 
 #. module: auction
+#: view:auction.dates:0
+msgid "Draft Auction"
+msgstr ""
+
+#. module: auction
 #: help:auction.lots,lot_est2:0
 msgid "Maximum Estimate Price"
 msgstr ""
@@ -1231,7 +1264,7 @@ msgstr ""
 #. module: auction
 #: view:auction.lots.auction.move:0
 msgid "Move to Auction date"
-msgstr ""
+msgstr "Schuif naar veilingdatum"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -1283,6 +1316,7 @@ msgstr "Prioriteit"
 
 #. module: auction
 #: view:board.board:0
+#: model:ir.actions.act_window,name:auction.action_report_latest_objects_tree
 msgid "Latest objects"
 msgstr ""
 
@@ -1451,9 +1485,9 @@ msgid "VAT 5%"
 msgstr ""
 
 #. module: auction
-#: field:auction.dates,expo1:0
-msgid "First Exposition Day"
-msgstr "Eerste dag van expositie"
+#: model:ir.model,name:auction.model_auction_lots_buyer_map
+msgid "Map Buyer"
+msgstr ""
 
 #. module: auction
 #: report:buyer.list:0
@@ -1461,9 +1495,14 @@ msgid "Lot"
 msgstr "Kavel"
 
 #. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_auction_object_date_tree
+msgid "Auction Object Date"
+msgstr ""
+
+#. module: auction
 #: model:ir.model,name:auction.model_auction_artists
 msgid "auction.artists"
-msgstr ""
+msgstr "auction.artists"
 
 #. module: auction
 #: field:report.auction,avg_price:0
@@ -1478,13 +1517,13 @@ msgstr ""
 #. module: auction
 #: field:auction.dates,journal_id:0
 msgid "Buyer Journal"
-msgstr ""
+msgstr "Kopers journaal"
 
 #. module: auction
 #: selection:auction.lots,state:0
 #: selection:report.object.encoded,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Betaald"
 
 #. module: auction
 #: report:bids.lots:0
@@ -1562,7 +1601,7 @@ msgid "Auction manager "
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:68
+#: code:addons/auction/wizard/auction_lots_invoice.py:67
 #, python-format
 msgid ""
 "Two different buyers for the same invoice !\n"
@@ -1573,6 +1612,11 @@ msgstr ""
 #: view:auction.dates:0
 msgid "Invoice"
 msgstr ""
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Commissions"
+msgstr "Commissies"
 
 #. module: auction
 #: field:auction.lots,vnd_lim:0
@@ -1612,7 +1656,7 @@ msgstr "Contact opnemen met de verkoper"
 #. module: auction
 #: field:auction.taken,lot_ids:0
 msgid "Lots Emportes"
-msgstr ""
+msgstr "Erg  belangrijk"
 
 #. module: auction
 #: field:auction.lots,net_margin:0
@@ -1656,7 +1700,7 @@ msgstr "Betaald:"
 #. module: auction
 #: field:auction.deposit,total_neg:0
 msgid "Allow Negative Amount"
-msgstr ""
+msgstr "Sta negatief bedrag toe"
 
 #. module: auction
 #: help:auction.pay.buy,amount2:0
@@ -1668,7 +1712,7 @@ msgstr ""
 #: field:report.auction,auction:0
 #: field:report.auction.adjudication,name:0
 msgid "Auction date"
-msgstr ""
+msgstr "Veilingdatum"
 
 #. module: auction
 #: view:auction.lots.sms.send:0
@@ -1678,7 +1722,7 @@ msgstr ""
 #. module: auction
 #: field:auction.dates,auction1:0
 msgid "First Auction Day"
-msgstr ""
+msgstr "Eerste veilingsdag"
 
 #. module: auction
 #: view:auction.lots.make.invoice.buyer:0
@@ -1686,15 +1730,20 @@ msgid "Create Invoices For Buyer"
 msgstr ""
 
 #. module: auction
+#: model:res.groups,name:auction.group_auction_manager
+msgid "Manager"
+msgstr "Beheerder"
+
+#. module: auction
 #: view:auction.dates:0
 msgid "Names"
-msgstr ""
+msgstr "Namen"
 
 #. module: auction
 #: view:auction.artists:0
 #: model:ir.ui.menu,name:auction.menu_auction_artist
 msgid "Artists"
-msgstr ""
+msgstr "Artiesten"
 
 #. module: auction
 #: view:auction.pay.buy:0
@@ -1709,7 +1758,7 @@ msgstr ""
 #. module: auction
 #: model:ir.actions.act_window,name:auction.act_auction_lot_line_open
 msgid "Open lots"
-msgstr ""
+msgstr "Open percelen"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.act_auction_lot_open_deposit
@@ -1724,29 +1773,39 @@ msgstr ""
 #. module: auction
 #: view:auction.lots:0
 msgid "Lots"
+msgstr "Percelen"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_auction_artist
+msgid "Auction Artists"
 msgstr ""
 
 #. module: auction
 #: field:auction.lots,seller_price:0
 msgid "Seller price"
+msgstr "Verkopersprijs"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax20
+msgid "Frais de vente0"
 msgstr ""
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.buy_id_list
 msgid "Buyer List"
-msgstr ""
+msgstr "Lijst van kopers"
 
 #. module: auction
 #: report:buyer.list:0
 msgid "Buyer costs("
-msgstr ""
+msgstr "Kopers kosten("
 
 #. module: auction
 #: field:auction.pay.buy,statement_id1:0
 #: field:auction.pay.buy,statement_id2:0
 #: field:auction.pay.buy,statement_id3:0
 msgid "Statement"
-msgstr ""
+msgstr "Afschrift"
 
 #. module: auction
 #: help:auction.lots,seller_price:0
@@ -1755,10 +1814,9 @@ msgid "Seller Price"
 msgstr ""
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax20
 #: model:account.tax,name:auction.auction_tax6
 msgid "Frais de vente"
-msgstr ""
+msgstr "Verkopen"
 
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id1
@@ -1768,17 +1826,17 @@ msgstr ""
 #. module: auction
 #: model:account.tax,name:auction.auction_tax
 msgid "Droit d'auteur"
-msgstr ""
+msgstr "Auteursrecht"
 
 #. module: auction
-#: model:ir.model,name:auction.model_auction_lots_buyer_map
-msgid "Map Buyer"
-msgstr ""
+#: field:auction.dates,expo1:0
+msgid "First Exposition Day"
+msgstr "Eerste dag van expositie"
 
 #. module: auction
 #: field:report.auction.object.date,name:0
 msgid "Created date"
-msgstr ""
+msgstr "Aanmaakdatum"
 
 #. module: auction
 #: help:auction.lots,bord_vnd_id:0
@@ -1791,19 +1849,24 @@ msgstr ""
 #: field:auction.lots,net_revenue:0
 #: field:report.object.encoded,net_revenue:0
 msgid "Net revenue"
-msgstr ""
+msgstr "Netto opbrengst"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_catalog_flagey_report.py:63
-#: code:addons/auction/wizard/auction_pay_buy.py:87
+#: code:addons/auction/wizard/auction_pay_buy.py:89
 #, python-format
 msgid "Error!"
 msgstr ""
 
 #. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_latest_doposit_tree
+msgid "Latest Deposits"
+msgstr "Laatste stortingen"
+
+#. module: auction
 #: report:auction.total.rml:0
 msgid "# of items:"
-msgstr ""
+msgstr "# Items"
 
 #. module: auction
 #: model:account.tax,name:auction.tax_buyer_author
@@ -1813,26 +1876,7 @@ msgstr ""
 #. module: auction
 #: field:report.object.encoded,estimation:0
 msgid "Estimation"
-msgstr ""
-
-#. module: auction
-#: model:ir.module.module,description:auction.module_meta_information
-msgid ""
-"\n"
-"     This module manages the records of the artists,\n"
-"     the articles to be put up for auction,the buyers and\n"
-"     sellers.\n"
-"\n"
-"     It completely manages an auction such as managing bids,\n"
-"     keeping track of the sold articles along with the paid\n"
-"     and unpaid objects including delivery of the articles.\n"
-"     Dashboards for auction that includes:\n"
-"       * My Latest Objects (list)\n"
-"       * My Latest Deposits (list)\n"
-"       * Objects Statistics (list)\n"
-"       * My Objects By Day (list)\n"
-"    "
-msgstr ""
+msgstr "Schatting"
 
 #. module: auction
 #: view:auction.taken:0
@@ -1842,12 +1886,12 @@ msgstr ""
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.buyer_form_id
 msgid "Buyer Form"
-msgstr ""
+msgstr "Kopersformulier"
 
 #. module: auction
 #: field:auction.bid,partner_id:0
 msgid "Buyer Name"
-msgstr ""
+msgstr "Naam koper"
 
 #. module: auction
 #: view:report.auction:0
@@ -1858,18 +1902,18 @@ msgstr ""
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_lots_make_invoice
 msgid "Invoice Seller objects"
-msgstr ""
+msgstr "Factureer kavels verkoper"
 
 #. module: auction
 #: field:auction.lots,gross_margin:0
 msgid "Gross Margin (%)"
-msgstr ""
+msgstr "Bruto marge (%)"
 
 #. module: auction
 #: selection:auction.dates,state:0
 #: selection:report.auction.adjudication,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Gesloten"
 
 #. module: auction
 #: view:auction.dates:0
@@ -1884,12 +1928,12 @@ msgstr ""
 #. module: auction
 #: field:auction.lots,ach_avance:0
 msgid "Buyer Advance"
-msgstr ""
+msgstr "Voorschot koper"
 
 #. module: auction
 #: field:auction.lots,obj_comm:0
 msgid "Commission"
-msgstr ""
+msgstr "Commissie"
 
 #. module: auction
 #: view:board.board:0
@@ -1914,7 +1958,7 @@ msgstr ""
 #. module: auction
 #: view:auction.lots:0
 msgid "Catalog"
-msgstr ""
+msgstr "Catalogus"
 
 #. module: auction
 #: help:auction.lots,auction_id:0
@@ -1924,12 +1968,17 @@ msgstr ""
 #. module: auction
 #: field:auction.deposit.cost,account:0
 msgid "Destination Account"
-msgstr ""
+msgstr "Rekeningnummer bestemming"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_config_menu
 msgid "Configuration"
 msgstr "Instellingen"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_auction_object_date_tree_my
+msgid "My Auction Object Date"
+msgstr ""
 
 #. module: auction
 #: code:addons/auction/wizard/auction_pay_buy.py:80
@@ -1951,12 +2000,12 @@ msgstr ""
 #. module: auction
 #: field:auction.deposit.cost,deposit_id:0
 msgid "Deposit"
-msgstr ""
+msgstr "Storting"
 
 #. module: auction
 #: field:auction.dates,expo2:0
 msgid "Last Exposition Day"
-msgstr ""
+msgstr "Laatste expositie dag"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_able
@@ -1971,7 +2020,7 @@ msgstr ""
 #. module: auction
 #: field:auction.artists,name:0
 msgid "Artist/Author Name"
-msgstr ""
+msgstr "Naam kunstenaar/auteur"
 
 #. module: auction
 #: selection:report.auction,month:0
@@ -1979,9 +2028,10 @@ msgid "December"
 msgstr ""
 
 #. module: auction
+#: view:auction.deposit:0
 #: field:auction.lots,image:0
 msgid "Image"
-msgstr ""
+msgstr "Afbeelding"
 
 #. module: auction
 #: help:auction.lots,buyer_price:0
@@ -2008,7 +2058,7 @@ msgstr ""
 #: view:auction.lots:0
 #: selection:auction.lots,state:0
 msgid "Taken away"
-msgstr ""
+msgstr "Weggehaald"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.seller_form_id
@@ -2016,9 +2066,14 @@ msgid "Seller List"
 msgstr "Lijst verkopers"
 
 #. module: auction
+#: view:report.object.encoded:0
+msgid "Total adj."
+msgstr ""
+
+#. module: auction
 #: view:auction.deposit:0
 msgid "Deposit Costs"
-msgstr ""
+msgstr "Stortingskosten"
 
 #. module: auction
 #: field:auction.lot.category,name:0
@@ -2028,7 +2083,7 @@ msgstr "Naam categorie"
 #. module: auction
 #: report:buyer.list:0
 msgid "........."
-msgstr ""
+msgstr "........."
 
 #. module: auction
 #: view:report.auction:0
@@ -2038,13 +2093,13 @@ msgstr ""
 #. module: auction
 #: report:report.auction.buyer.result:0
 msgid "Adj"
-msgstr ""
+msgstr "Toewijzing"
 
 #. module: auction
 #: view:auction.dates:0
 #: model:ir.model,name:auction.model_auction_dates
 msgid "Auction Dates"
-msgstr ""
+msgstr "Veilingdata"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction_open
@@ -2057,8 +2112,9 @@ msgstr ""
 #: field:report.auction.adjudication,user_id:0
 #: field:report.auction.object.date,user_id:0
 #: field:report.object.encoded,user_id:0
+#: model:res.groups,name:auction.group_auction_user
 msgid "User"
-msgstr ""
+msgstr "Gebruiker"
 
 #. module: auction
 #: view:auction.pay.buy:0
@@ -2069,7 +2125,7 @@ msgstr ""
 #: code:addons/auction/auction.py:692
 #, python-format
 msgid "Missed Address !"
-msgstr ""
+msgstr "Adres ontbreekt!"
 
 #. module: auction
 #: help:auction.lots,net_revenue:0
@@ -2077,38 +2133,40 @@ msgid "Buyer Price - Seller Price - Indirect Cost"
 msgstr ""
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.act_auction_lot_open_bid
-msgid "Open Bids"
+#: help:auction.lots,state:0
+msgid ""
+" * The 'Draft' state is used when a object is encoding as a new object.      "
+"           \n"
+"* The 'Unsold' state is used when object does not sold for long time, user "
+"can also set it as draft state after unsold.                 \n"
+"* The 'Paid' state is used when user pay for the object                 \n"
+"* The 'Sold' state is used when user buy the object."
 msgstr ""
 
 #. module: auction
 #: field:auction.artists,pseudo:0
 msgid "Pseudo"
-msgstr ""
+msgstr "Pseudo"
 
 #. module: auction
 #: view:auction.lots:0
 msgid "Not sold"
-msgstr ""
+msgstr "Niet verkocht"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax3
 #: field:auction.dates,buyer_costs:0
 msgid "Buyer Costs"
-msgstr ""
+msgstr "Kosten koper"
 
 #. module: auction
 #: report:auction.total.rml:0
 msgid "Auction Date:"
-msgstr ""
+msgstr "Veilingdatum:"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_aie_send.py:167
-#: code:addons/auction/wizard/auction_aie_send_result.py:116
-#: code:addons/auction/wizard/auction_lots_buyer_map.py:70
-#: code:addons/auction/wizard/auction_lots_numerotate.py:145
-#, python-format
-msgid "Error"
+#: view:auction.deposit:0
+msgid "Objects Description"
 msgstr ""
 
 #. module: auction
@@ -2116,22 +2174,22 @@ msgstr ""
 #: field:auction.lots,ach_inv_id:0
 #: view:auction.lots.make.invoice.buyer:0
 msgid "Buyer Invoice"
-msgstr ""
+msgstr "Factuur koper"
 
 #. module: auction
 #: report:auction.bids:0
 msgid "Tel"
-msgstr ""
+msgstr "Tel"
 
 #. module: auction
 #: field:auction.lots,artist_id:0
 msgid "Artist/Author"
-msgstr ""
+msgstr "Kunstenaar/Auteur"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.total_result1
 msgid "Auction Totals with lists"
-msgstr ""
+msgstr "Veiling totaallijst"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -2146,12 +2204,12 @@ msgstr ""
 #: view:auction.lots.sms.send:0
 #: view:auction.pay.buy:0
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_object_encoded
 msgid "Object encoded"
-msgstr ""
+msgstr "Kavel ingevoerd"
 
 #. module: auction
 #: view:auction.bid:0
@@ -2161,7 +2219,7 @@ msgstr ""
 #. module: auction
 #: report:bids.phones.details:0
 msgid "Est"
-msgstr ""
+msgstr "Schatting"
 
 #. module: auction
 #: view:auction.dates:0
@@ -2171,7 +2229,7 @@ msgstr ""
 #. module: auction
 #: view:report.object.encoded:0
 msgid "Object statistic"
-msgstr ""
+msgstr "Kavel statistiek"
 
 #. module: auction
 #: help:auction.dates,journal_seller_id:0
@@ -2181,15 +2239,10 @@ msgstr ""
 #. module: auction
 #: field:auction.dates,auction2:0
 msgid "Last Auction Day"
-msgstr ""
+msgstr "Laatste veilingdag"
 
 #. module: auction
-#: view:auction.deposit:0
-msgid "Objects Description"
-msgstr ""
-
-#. module: auction
-#: code:addons/auction/wizard/auction_pay_buy.py:87
+#: code:addons/auction/wizard/auction_pay_buy.py:89
 #, python-format
 msgid "No auction date for \"%s\": Please set one."
 msgstr ""
@@ -2199,7 +2252,7 @@ msgstr ""
 #: field:auction.deposit,info:0
 #: report:bids.phones.details:0
 msgid "Description"
-msgstr ""
+msgstr "Omschrijving"
 
 #. module: auction
 #: selection:report.auction,month:0
@@ -2209,17 +2262,17 @@ msgstr ""
 #. module: auction
 #: field:auction.lots,obj_price:0
 msgid "Adjudication price"
-msgstr ""
+msgstr "Prijs van toewijzing"
 
 #. module: auction
 #: field:auction.dates,acc_income:0
 msgid "Income Account"
-msgstr ""
+msgstr "Inkomsten rekening"
 
 #. module: auction
 #: field:auction.lots.sms.send,password:0
 msgid "Password"
-msgstr ""
+msgstr "Wachtwoord"
 
 #. module: auction
 #: selection:report.auction,month:0
@@ -2234,31 +2287,36 @@ msgstr ""
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Pay objects"
-msgstr ""
+msgstr "Betaal kavels"
 
 #. module: auction
 #: view:report.object.encoded:0
 msgid "# objects"
-msgstr ""
+msgstr "# Kavels"
 
 #. module: auction
 #: report:auction.total.rml:0
 msgid "Adjudication:"
-msgstr ""
+msgstr "Toewijzing:"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.details_bids_phones
 msgid "Bids per lot (phone)"
-msgstr ""
+msgstr "Biedingen per perceel ( telefonisch)"
 
 #. module: auction
 #: field:report.auction,buyer_login:0
 msgid "Buyer Login"
-msgstr ""
+msgstr "Login koper"
 
 #. module: auction
 #: field:auction.deposit,tax_id:0
 msgid "Expenses"
+msgstr "Uitgaven"
+
+#. module: auction
+#: view:report.auction:0
+msgid "Auction during current month."
 msgstr ""
 
 #. module: auction
@@ -2267,9 +2325,14 @@ msgid "Auction payer"
 msgstr ""
 
 #. module: auction
+#: view:report.auction:0
+msgid "Auction during current year."
+msgstr ""
+
+#. module: auction
 #: report:auction.total.rml:0
 msgid "Auction name:"
-msgstr ""
+msgstr "Naam van de veiling:"
 
 #. module: auction
 #: view:board.board:0
@@ -2279,7 +2342,7 @@ msgstr ""
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.art2
 msgid "Artists Biography"
-msgstr ""
+msgstr "Biografie kunstenaar"
 
 #. module: auction
 #: view:report.auction:0
@@ -2290,7 +2353,7 @@ msgstr ""
 #. module: auction
 #: field:auction.lots,history_ids:0
 msgid "Auction history"
-msgstr ""
+msgstr "Geschiedenis van veiling"
 
 #~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
 #~ msgstr ""
@@ -2298,9 +2361,6 @@ msgstr ""
 
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "Fout, ongeldige EAN-code"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor overzicht"
 
 #~ msgid ""
 #~ "Error: The default UOM and the purchase UOM must be in the same category."
@@ -2376,17 +2436,92 @@ msgstr ""
 #~ msgid "Antique/Others"
 #~ msgstr "Antiek/overig"
 
+#~ msgid "Old Auctions"
+#~ msgstr "Oude veilingen"
+
+#~ msgid "Next Auctions"
+#~ msgstr "Volgende veilingen"
+
+#~ msgid "#"
+#~ msgstr "#"
+
+#~ msgid "Attendance"
+#~ msgstr "Aanwezigheid"
+
+#~ msgid "Antique/Religiosa"
+#~ msgstr "Antiek/Religie"
+
+#~ msgid "Antique/Lightings"
+#~ msgstr "Antiek/Verlichting"
+
+#~ msgid "Antique/Sculpture, bronze, eso."
+#~ msgstr "Antiek/Beeldhouwkunst, Brons, etc."
+
+#~ msgid "Listing Huissiers"
+#~ msgstr "Lijst van deurwaarders"
+
+#~ msgid "Seller's Summary"
+#~ msgstr "Verkopers samenvatting"
+
+#~ msgid "Total"
+#~ msgstr "Totaal"
+
+#~ msgid "Send to website"
+#~ msgstr "Verstuur naar website"
+
+#~ msgid "Bid information"
+#~ msgstr "Bod informatie"
+
+#~ msgid "Antique/Graphic Arts"
+#~ msgstr "Antiek/Grafische kunst"
+
+#~ msgid "Antique/Oriental Arts"
+#~ msgstr "Antiek/Oosterse kunst"
+
+#~ msgid "Buyer's auction"
+#~ msgstr "Verkopers veiling"
+
+#~ msgid "Antique/Furnitures"
+#~ msgstr "Antiek/Meubilair"
+
+#~ msgid "Amount to paid"
+#~ msgstr "Te betalen bedrag"
+
+#~ msgid "No of buyers"
+#~ msgstr "Aantal kopers"
+
+#~ msgid "Avg adjudication"
+#~ msgstr "Gemiddelde hoeveelheid toewijzingen"
+
+#~ msgid "Antique/Clocks and watches"
+#~ msgstr "Antiek/Klokken en horloges"
+
+#~ msgid "Antique/Wine"
+#~ msgstr "Antiek/Wijn"
+
+#~ msgid "Antique/Posters"
+#~ msgstr "Antiek/Posters"
+
+#~ msgid "Antique/African Arts"
+#~ msgstr "Antiek/Afrikaanse kunst"
+
 #~ msgid "Mark as taken away"
 #~ msgstr "Markeren als weggehaald"
 
 #~ msgid "Unclassifieds"
 #~ msgstr "Niet geclassificeerd"
 
+#~ msgid "fr"
+#~ msgstr "fr"
+
 #~ msgid "Antique/Oriental Arts/Chineese furnitures"
 #~ msgstr "Antiek/Oosterse kunst/Chinese meubels"
 
 #~ msgid "Define Artists"
 #~ msgstr "Definieer kunstenaars"
+
+#~ msgid "Auction Management"
+#~ msgstr "Veilingbeheer"
 
 #~ msgid "Error ! You can not create recursive accounts."
 #~ msgstr "Fout ! U kunt geen recursieve rekeningen aanmaken."
@@ -2396,6 +2531,69 @@ msgstr ""
 
 #~ msgid "Payment's history"
 #~ msgstr "Betalingsgeschiedenis"
+
+#~ msgid "de"
+#~ msgstr "de"
+
+#~ msgid "Auction module"
+#~ msgstr "Veilingmodule"
+
+#~ msgid "Antique/Miniatures / Collections"
+#~ msgstr "Antiek/Miniaturen en verzamelingen"
+
+#~ msgid "Seller information"
+#~ msgstr "Informatie verkoper"
+
+#~ msgid "Antique/Art from the Ivory Coast"
+#~ msgstr "Antiek/Kunst van Ivoorkust"
+
+#~ msgid "Avg margin"
+#~ msgstr "Gem. marge"
+
+#~ msgid "Cont. Art/Photo"
+#~ msgstr "Cont. kunst/foto"
+
+#~ msgid "Antique/Art from the Ivory Coast/African Arts"
+#~ msgstr "Antiek/Ivoorkust/Afrikaanse kunst"
+
+#~ msgid "auction.deposit.cost"
+#~ msgstr "auction.deposit.cost"
+
+#~ msgid "Old Auction Dates"
+#~ msgstr "Oude veilingsdata"
+
+#~ msgid "First Number"
+#~ msgstr "Eerste nummer"
+
+#~ msgid "Antique/Engravings"
+#~ msgstr "Antiek/Gravures"
+
+#~ msgid "Antique/Musical Instruments"
+#~ msgstr "Antiek/Muziekinstrumenten"
+
+#~ msgid "Sum of adjudication"
+#~ msgstr "Som van toewijzingen"
+
+#~ msgid "Unmark as taken away"
+#~ msgstr "Deselecteren als weggehaald"
+
+#~ msgid "Employee"
+#~ msgstr "Medewerker"
+
+#~ msgid "Antique/Collectible & art objects"
+#~ msgstr "Antiek/Verzamel & Kunstobjecten"
+
+#~ msgid "Next Auction Dates"
+#~ msgstr "Volgende veilingdata"
+
+#~ msgid "Antique/Scientific Instruments"
+#~ msgstr "Antiek/Scheikundige instrumenten"
+
+#~ msgid "Sum of adjustication"
+#~ msgstr "Som van toewijzingen"
+
+#~ msgid "Short Description"
+#~ msgstr "Korte omschrijving"
 
 #~ msgid "Adjudication by Auction"
 #~ msgstr "Toewijzing per kavel"
@@ -2436,6 +2634,31 @@ msgstr ""
 #~ msgid "Encoded Objects Per Day"
 #~ msgstr "Ingevoerde kavels per dag"
 
+#~ msgid "Unplanned objects"
+#~ msgstr "Niet geplande kavels"
+
+#~ msgid "All objects are assigned to buyers !"
+#~ msgstr "Alle kavels zijn toegewezen aan kopers !"
+
+#~ msgid "Object Reference"
+#~ msgstr "Kavelreferentie"
+
+#~ msgid ""
+#~ "Warning, this will erase the object adjudication price and its buyer !"
+#~ msgstr "Waarschuwing, Dit zal de kaveltoewijzing en de koper verwijderen!"
+
+#~ msgid "Objects to sell"
+#~ msgstr "Te verkopen kavels"
+
+#~ msgid "Unplanned Objects"
+#~ msgstr "Niet geplande kavels"
+
+#~ msgid "Object Inventory"
+#~ msgstr "Kavel inventarisatie"
+
+#~ msgid "Unsold Objects"
+#~ msgstr "Niet verkochte kavels"
+
 #~ msgid "Contemporary Art"
 #~ msgstr "Hedendaagse kunst"
 
@@ -2454,11 +2677,74 @@ msgstr ""
 #~ msgid "Detailed lots"
 #~ msgstr "Gedetailleerde percelen"
 
+#~ msgid "Cont. Art/Jewelry"
+#~ msgstr "Vervolg Kunst/Juwelen"
+
+#~ msgid "Cont. Art/Curiosa"
+#~ msgstr "Vervolg Kunst/Curiosa"
+
+#~ msgid "Cont. Art/Sculpture"
+#~ msgstr "Vervolg Kunst/Beeldhouwwerk"
+
+#~ msgid "Bid auctions"
+#~ msgstr "Bod veilingen"
+
+#~ msgid "Send on your website"
+#~ msgstr "Naar uw website gestuurd."
+
+#~ msgid "Artist/Author 2"
+#~ msgstr "Artiest/auteur 2"
+
+#~ msgid "Antique/Porcelain, Ceramics, Glassmaking, ..."
+#~ msgstr "Antieke/porselein, Keramisch, Glasfabricage,..."
+
+#~ msgid "Lot Category"
+#~ msgstr "Perceel Categorie"
+
+#~ msgid "Cont. Art/Shows"
+#~ msgstr "Vervolg Kunst/Toont"
+
+#~ msgid "Lot Number"
+#~ msgstr "Perceel nummer"
+
+#~ msgid "Numerotation (automatic)"
+#~ msgstr "Nummering ( automatisch)"
+
+#~ msgid "Report Sign In/Out"
+#~ msgstr "Raport in/uitloggen"
+
 #~ msgid "Numerotation"
 #~ msgstr "Nummering"
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+#~ msgid "Auction reporting graph view"
+#~ msgstr "Veilingrapport grafiekoverzicht"
+
+#~ msgid "Auction report"
+#~ msgstr "Veilingrapport"
+
+#~ msgid "auction.lot.category"
+#~ msgstr "Veiling.perceel.categorie"
+
+#~ msgid "Cont. Art/Arts"
+#~ msgstr "Vervolg Kunst/Kunsten"
+
+#~ msgid "Antique/Argenterie"
+#~ msgstr "Antiek/Munten"
+
+#~ msgid "Auction reporting tree view"
+#~ msgstr "Veilingrapportage in boomstructuur"
+
+#~ msgid "Auction Reporting on seller view2"
+#~ msgstr "Veilingrapportage op verkoper overzicht2"
+
+#~ msgid "Auction Reporting on  view2"
+#~ msgstr "Veilingrapportage overicht2"
+
+#~ msgid "Auction reporting form view"
+#~ msgstr "Veilingrapportage formulier"
+
+#~ msgid "Auction reporting2 tree view"
+#~ msgstr "Veilingrapportage2 boomstructuur"
 
 #~ msgid "Antique/Books, manuscripts, eso."
 #~ msgstr "Antiek/boeken, manuscripten, enz."
@@ -2595,3 +2881,15 @@ msgstr ""
 
 #~ msgid "Antique/Metal Ware"
 #~ msgstr "Antiek/metaalwaren"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Fout! U kunt geen recursieve geassocieerde leden aanmaken."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige naam in actie-definitie."
+
+#~ msgid "Statements"
+#~ msgstr "Afschriften"

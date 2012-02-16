@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
-import wizard_tech_guide_rst
+import tech_rst_guide
 import generate_relation_graph
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

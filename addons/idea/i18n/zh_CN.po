@@ -6,20 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-09-20 11:46+0000\n"
-"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-08 03:33+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:15+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:29+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
 msgid "If True creator of the idea will be visible to others"
 msgstr "如为真，创建者的创意其他人都可见。"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "By States"
+msgstr "以状态分类"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_select
@@ -59,41 +64,25 @@ msgid "Group By..."
 msgstr "分组..."
 
 #. module: idea
-#: model:ir.module.module,description:idea.module_meta_information
-msgid ""
-"\n"
-"    This module allows your user to easily and efficiently participate in "
-"the innovation of the enterprise.\n"
-"    It allows everybody to express ideas about different subjects.\n"
-"    Then, other users can comment on these ideas and vote for particular "
-"ideas.\n"
-"    Each idea has a score based on the different votes.\n"
-"    The managers can obtain an easy view on best ideas from all the users.\n"
-"    Once installed, check the menu 'Ideas' in the 'Tools' main menu."
-msgstr ""
-"\n"
-"    这模块使你轻松有效参与企业的创新。\n"
-"  它允许大家对创意表达不同的看法。\n"
-"  然后，其他用户可以评价这创意和投票支持具体的创意。\n"
-"  每个创意都根据不同投票来算得分。\n"
-"  经理能通过一个简单视图从所有用户中得到最佳的创意。\n"
-"  一旦安装，在“工具”菜单点选“创意”菜单。"
-
-#. module: idea
-#: model:ir.module.module,shortdesc:idea.module_meta_information
-msgid "Idea Manager"
-msgstr "创意管理"
-
-#. module: idea
 #: selection:report.vote,month:0
 msgid "March"
 msgstr "3月"
 
 #. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:92
+#: view:idea.idea:0
+msgid "Accepted Ideas"
+msgstr "已接受点子"
+
+#. module: idea
+#: code:addons/idea/wizard/idea_post_vote.py:94
 #, python-format
 msgid "Idea must be in 'Open' state before vote for that idea."
 msgstr "创意投票状态必须为\"开启\"。"
+
+#. module: idea
+#: view:report.vote:0
+msgid "Open Date"
+msgstr "启用日期"
 
 #. module: idea
 #: view:report.vote:0
@@ -135,9 +124,9 @@ msgid "Category of ideas"
 msgstr "创意分类"
 
 #. module: idea
-#: code:addons/idea/idea.py:253
-#: code:addons/idea/wizard/idea_post_vote.py:89
-#: code:addons/idea/wizard/idea_post_vote.py:92
+#: code:addons/idea/idea.py:274
+#: code:addons/idea/wizard/idea_post_vote.py:91
+#: code:addons/idea/wizard/idea_post_vote.py:94
 #, python-format
 msgid "Warning !"
 msgstr "警告 !"
@@ -146,11 +135,6 @@ msgstr "警告 !"
 #: view:idea.idea:0
 msgid "Your comment"
 msgstr "你的评价"
-
-#. module: idea
-#: view:report.vote:0
-msgid "   Month   "
-msgstr "   月份   "
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote
@@ -182,7 +166,7 @@ msgid "# of Lines"
 msgstr "# 明细"
 
 #. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:89
+#: code:addons/idea/wizard/idea_post_vote.py:91
 #, python-format
 msgid "You can not give Vote for this idea more than %s times"
 msgstr "您最多投%s次"
@@ -250,6 +234,12 @@ msgid "State"
 msgstr "状态"
 
 #. module: idea
+#: view:idea.idea:0
+#: selection:idea.idea,state:0
+msgid "New"
+msgstr "新增"
+
+#. module: idea
 #: selection:idea.idea,my_vote:0
 #: selection:idea.post.vote,vote:0
 #: selection:idea.vote,score:0
@@ -279,10 +269,25 @@ msgstr ""
 "如果创意被接受，它的状态变为“已接受”"
 
 #. module: idea
+#: view:idea.idea:0
+msgid "New Ideas"
+msgstr "新创建的点子"
+
+#. module: idea
+#: view:report.vote:0
+msgid "Idea Vote created last month"
+msgstr "上月创建的点子投票记录"
+
+#. module: idea
 #: field:idea.category,visibility:0
 #: field:idea.idea,visibility:0
 msgid "Open Idea?"
 msgstr "启功创意？"
+
+#. module: idea
+#: view:report.vote:0
+msgid "Idea Vote created in current month"
+msgstr "本月创建的点子投票记录"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -304,9 +309,9 @@ msgid "Categories"
 msgstr "分类"
 
 #. module: idea
-#: view:report.vote:0
-msgid "    Month-1    "
-msgstr "    上月    "
+#: view:idea.category:0
+msgid "Parent Category"
+msgstr "上级分类"
 
 #. module: idea
 #: field:idea.idea,open_date:0
@@ -331,9 +336,9 @@ msgid "Maximum Vote per User"
 msgstr "每人最多投票次数"
 
 #. module: idea
-#: view:idea.category:0
-msgid "Parent Category"
-msgstr "上级分类"
+#: view:idea.vote.stat:0
+msgid "vote_stat of ideas"
+msgstr "开始对创意投票"
 
 #. module: idea
 #: field:idea.comment,content:0
@@ -361,6 +366,7 @@ msgid "Month"
 msgstr "月份"
 
 #. module: idea
+#: view:idea.idea:0
 #: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
 #: model:ir.actions.act_window,name:idea.action_idea_idea_open
 msgid "Open Ideas"
@@ -385,11 +391,6 @@ msgid "Very Good"
 msgstr "非常好"
 
 #. module: idea
-#: view:report.vote:0
-msgid "  Year  "
-msgstr "  年  "
-
-#. module: idea
 #: selection:idea.idea,state:0
 #: selection:report.vote,idea_state:0
 msgid "Opened"
@@ -402,13 +403,13 @@ msgstr "创意投票"
 
 #. module: idea
 #: view:idea.idea:0
-msgid "New Idea"
-msgstr "新创意"
+msgid "By Idea Category"
+msgstr "以点子类别分类"
 
 #. module: idea
-#: view:idea.vote.stat:0
-msgid "vote_stat of ideas"
-msgstr "开始对创意投票"
+#: view:idea.idea:0
+msgid "New Idea"
+msgstr "新创意"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category_tree
@@ -417,7 +418,6 @@ msgid "Ideas by Categories"
 msgstr "创意分类"
 
 #. module: idea
-#: selection:idea.idea,state:0
 #: selection:report.vote,idea_state:0
 msgid "Draft"
 msgstr "草稿"
@@ -465,9 +465,9 @@ msgid "Date"
 msgstr "日期"
 
 #. module: idea
-#: view:idea.post.vote:0
-msgid "Post"
-msgstr "发布"
+#: selection:report.vote,month:0
+msgid "November"
+msgstr "11月"
 
 #. module: idea
 #: field:idea.idea,my_vote:0
@@ -506,19 +506,14 @@ msgid "Idea Summary"
 msgstr "创意摘要"
 
 #. module: idea
-#: selection:report.vote,month:0
-msgid "November"
-msgstr "11月"
+#: view:idea.post.vote:0
+msgid "Post"
+msgstr "发布"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "History"
 msgstr "日志"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Vots Statistics"
-msgstr "投票统计"
 
 #. module: idea
 #: field:report.vote,date:0
@@ -544,6 +539,11 @@ msgid "Set to one if  you require only one Vote per user"
 msgstr "如果你需要每个用户只投一票设置一个"
 
 #. module: idea
+#: view:idea.idea:0
+msgid "By Creators"
+msgstr "以点子创建者分类"
+
+#. module: idea
 #: view:idea.post.vote:0
 msgid "Cancel"
 msgstr "取消"
@@ -555,9 +555,14 @@ msgstr "关闭"
 
 #. module: idea
 #: view:idea.idea:0
-#: view:report.vote:0
 msgid "Open"
 msgstr "开启"
+
+#. module: idea
+#: view:idea.idea:0
+#: view:report.vote:0
+msgid "In Progress"
+msgstr "进行中"
 
 #. module: idea
 #: view:report.vote:0
@@ -579,15 +584,15 @@ msgid "Post vote"
 msgstr "投票"
 
 #. module: idea
-#: view:idea.idea:0
-msgid "Current"
-msgstr "当前的"
-
-#. module: idea
 #: field:idea.vote.stat,score:0
 #: field:report.vote,score:0
 msgid "Score"
 msgstr "得分"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Votes Statistics"
+msgstr "投票统计"
 
 #. module: idea
 #: view:idea.vote:0
@@ -613,12 +618,6 @@ msgid "Refused"
 msgstr "已拒绝"
 
 #. module: idea
-#: code:addons/idea/idea.py:253
-#, python-format
-msgid "Draft/Accepted/Cancelled ideas Could not be voted"
-msgstr "草稿/已接受/已取消的创意不能投票"
-
-#. module: idea
 #: view:idea.vote:0
 msgid "Vote date"
 msgstr "投票日期"
@@ -629,14 +628,19 @@ msgid "February"
 msgstr "2月"
 
 #. module: idea
-#: view:report.vote:0
-msgid "    Today    "
-msgstr "    今日    "
+#: field:idea.category,complete_name:0
+msgid "Name"
+msgstr "名称"
 
 #. module: idea
 #: field:idea.vote.stat,nbr:0
 msgid "Number of Votes"
 msgstr "投票数"
+
+#. module: idea
+#: view:report.vote:0
+msgid "Month-1"
+msgstr "上月"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -654,9 +658,19 @@ msgid "Vote Status"
 msgstr "投票状态"
 
 #. module: idea
+#: view:report.vote:0
+msgid "Idea Vote created in current year"
+msgstr "本年度的创意投票"
+
+#. module: idea
 #: field:idea.idea,vote_avg:0
 msgid "Average Score"
 msgstr "平均分"
+
+#. module: idea
+#: constraint:idea.category:0
+msgid "Error ! You cannot create recursive categories."
+msgstr "错误！您不能创建循环分类。"
 
 #. module: idea
 #: field:idea.comment,idea_id:0
@@ -687,6 +701,12 @@ msgid "Year"
 msgstr "年"
 
 #. module: idea
+#: code:addons/idea/idea.py:274
+#, python-format
+msgid "You can not vote on a Draft/Accepted/Cancelled ideas."
+msgstr "您不能给是草稿、已接受、已取消的创意投票。"
+
+#. module: idea
 #: view:idea.select:0
 msgid "Select Idea for Vote"
 msgstr "选择创意投票"
@@ -711,6 +731,9 @@ msgstr "选择创意投票"
 
 #~ msgid "Statistics on Votes"
 #~ msgstr "统计投票"
+
+#~ msgid "Idea Manager"
+#~ msgstr "创意管理"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -754,3 +777,44 @@ msgstr "选择创意投票"
 #~ "这模块允许你在企业创新里简单和有效地使用.\n"
 #~ "它允许每个人对不同注意表达构想, 其它用户能评价这些构想和对具体的构想进行投票. 每个构想根据不同投票决定得分.\n"
 #~ "管理人员可以很容易得到所有用户对构想的评价."
+
+#~ msgid "  Year  "
+#~ msgstr "  年  "
+
+#~ msgid "    Month-1    "
+#~ msgstr "    上月    "
+
+#~ msgid "Current"
+#~ msgstr "当前的"
+
+#~ msgid "    Today    "
+#~ msgstr "    今日    "
+
+#~ msgid "Vots Statistics"
+#~ msgstr "投票统计"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module allows your user to easily and efficiently participate in "
+#~ "the innovation of the enterprise.\n"
+#~ "    It allows everybody to express ideas about different subjects.\n"
+#~ "    Then, other users can comment on these ideas and vote for particular "
+#~ "ideas.\n"
+#~ "    Each idea has a score based on the different votes.\n"
+#~ "    The managers can obtain an easy view on best ideas from all the users.\n"
+#~ "    Once installed, check the menu 'Ideas' in the 'Tools' main menu."
+#~ msgstr ""
+#~ "\n"
+#~ "    这模块使你轻松有效参与企业的创新。\n"
+#~ "  它允许大家对创意表达不同的看法。\n"
+#~ "  然后，其他用户可以评价这创意和投票支持具体的创意。\n"
+#~ "  每个创意都根据不同投票来算得分。\n"
+#~ "  经理能通过一个简单视图从所有用户中得到最佳的创意。\n"
+#~ "  一旦安装，在“工具”菜单点选“创意”菜单。"
+
+#~ msgid "   Month   "
+#~ msgstr "   月份   "
+
+#, python-format
+#~ msgid "Draft/Accepted/Cancelled ideas Could not be voted"
+#~ msgstr "草稿/已接受/已取消的创意不能投票"

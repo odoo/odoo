@@ -7,25 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-21 11:41+0000\n"
 "Last-Translator: Sonja Anđelković <sardelic.sonja@gmail.com>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:23+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:39+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Hourly cost computation"
-msgstr "Proračun troškova po satu"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Plata"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Gross"
-msgstr "Bruto"
+#: view:hr.contract:0
+msgid "Information"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -38,11 +38,6 @@ msgid "Trial Start Date"
 msgstr "Datum početka Probnog Perioda"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Passport"
-msgstr "Pasoš"
-
-#. module: hr_contract
 #: view:hr.employee:0
 msgid "Medical Examination"
 msgstr "Lekarski Pregled"
@@ -51,11 +46,6 @@ msgstr "Lekarski Pregled"
 #: field:hr.employee,vehicle:0
 msgid "Company Vehicle"
 msgstr "Vozilo firme"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "Naziv Vrste Ugovora"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -68,19 +58,9 @@ msgid "Current"
 msgstr "Trenutno"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "Faktor za utrošak po satu"
-
-#. module: hr_contract
 #: view:hr.contract:0
-msgid "Overpassed"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Wage Types"
-msgstr "Vrste plata"
+msgid "Group By..."
+msgstr "Grupiši po..."
 
 #. module: hr_contract
 #: field:hr.contract,department_id:0
@@ -88,9 +68,9 @@ msgid "Department"
 msgstr "Odeljenje"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Basic"
-msgstr "Osnovni"
+#: view:hr.contract:0
+msgid "Overpassed"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -100,19 +80,14 @@ msgid "Employee"
 msgstr "Zaposleni"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Net"
-msgstr "Neto"
+#: view:hr.contract:0
+msgid "Search Contract"
+msgstr "Pretraga ugovora"
 
 #. module: hr_contract
-#: model:ir.module.module,shortdesc:hr_contract.module_meta_information
-msgid "Human Resources Contracts"
-msgstr "Ugovori HR-a"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,factor_days:0
-msgid "Hours in the period"
-msgstr "Sati u periodu"
+#: view:hr.contract:0
+msgid "Contracts in progress"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
@@ -135,13 +110,8 @@ msgstr "Lične informacije"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Job"
-msgstr "Posao"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Search Contract"
-msgstr "Pretraga ugovora"
+msgid "Contracts whose end date already passed"
+msgstr ""
 
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
@@ -149,29 +119,9 @@ msgid "Latest contract of the employee"
 msgstr "Poslednji ugovor zaposlenog"
 
 #. module: hr_contract
-#: field:hr.contract,advantages_net:0
-msgid "Deductions"
-msgstr "Odbitak"
-
-#. module: hr_contract
-#: model:ir.module.module,description:hr_contract.module_meta_information
-msgid ""
-"\n"
-"    Add all information on the employee form to manage contracts:\n"
-"    * Marital status,\n"
-"    * Security number,\n"
-"    * Place of birth, birth date, ...\n"
-"    You can assign several contracts per employee.\n"
-"    "
-msgstr ""
-"\n"
-"    Dodajte sve informacije u obrazac zaposlenog da bi upravljali "
-"ugovorima:\n"
-"    * Bračni status,\n"
-"    * Šifra,\n"
-"    * Mesto rođenja, datum rođenja, ...\n"
-"    Možete da dodelite više ugovora jednom zaposlenom.\n"
-"    "
+#: view:hr.contract:0
+msgid "Job"
+msgstr "Posao"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -201,15 +151,6 @@ msgid "Contract Types"
 msgstr "Tip ugovora"
 
 #. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
-msgstr "Vrsta Plate"
-
-#. module: hr_contract
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr "Greška! Ne možete da kreirate rekurzivnu Hierarhiju Zaposlenih"
@@ -220,9 +161,9 @@ msgid "End Date"
 msgstr "Datum završetka"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Plata"
+#: help:hr.contract,wage:0
+msgid "Basic Salary of the employee"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,name:0
@@ -241,11 +182,9 @@ msgid "Notes"
 msgstr "Beleške"
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
 msgstr ""
-"Greška! Ne možete da odaberete odeljenje za koje je odeljenje menadžer."
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -265,11 +204,6 @@ msgid "Contract Type"
 msgstr "Tip ugovora"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type.period:0
-msgid "Search Wage Period"
-msgstr "Pretraga Perioda Plate"
-
-#. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,working_hours:0
 msgid "Working Schedule"
@@ -281,11 +215,9 @@ msgid "Job Info"
 msgstr "Informacije o poslu"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,period_id:0
-#: view:hr.contract.wage.type.period:0
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
-msgid "Wage Period"
-msgstr "Period Plate"
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
@@ -309,56 +241,14 @@ msgstr ""
 "Greška! datum početka ugovora mora da bude manji od datuma završetka."
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
-msgstr "Pretraga tipa plate"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,type:0
-msgid "Type"
-msgstr "Tip"
-
-#. module: hr_contract
-#: field:hr.contract,trial_date_end:0
-msgid "Trial End Date"
-msgstr "Datum završetka probe"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr "Grupiši po..."
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,name:0
-msgid "Period Name"
-msgstr "Naziv perioda"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Period"
-msgstr "Period"
+#: field:hr.contract,visa_no:0
+msgid "Visa No"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
 msgid "Place of Birth"
 msgstr "Mesto rođenja"
-
-#. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr "Period plate"
-
-#. module: hr_contract
-#: help:hr.contract.wage.type,factor_type:0
-#: help:hr.contract.wage.type.period,factor_days:0
-msgid ""
-"This field is used by the timesheet system to compute the price of an hour "
-"of work wased on the contract of the employee"
-msgstr ""
-"Ovo polje se koristi od strane sistema vremenskih kartica za izračunavanje "
-"cene radnog sata baziranog na ugovoru radnika."
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -371,16 +261,104 @@ msgid "Medical Examination Date"
 msgstr "Datum medicinskog pregleda"
 
 #. module: hr_contract
-#: field:hr.contract,advantages_gross:0
-msgid "Allowances"
-msgstr "Dozvole"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Main Data"
-msgstr "Osnovni podaci"
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
+msgstr "Datum završetka probe"
 
 #. module: hr_contract
 #: view:hr.contract.type:0
 msgid "Search Contract Type"
 msgstr "Pretraga Tipa ugovora"
+
+#~ msgid "Hourly cost computation"
+#~ msgstr "Proračun troškova po satu"
+
+#~ msgid "Gross"
+#~ msgstr "Bruto"
+
+#~ msgid "Passport"
+#~ msgstr "Pasoš"
+
+#~ msgid "Wage Type Name"
+#~ msgstr "Naziv Vrste Ugovora"
+
+#~ msgid "Factor for hour cost"
+#~ msgstr "Faktor za utrošak po satu"
+
+#~ msgid "Wage Types"
+#~ msgstr "Vrste plata"
+
+#~ msgid "Basic"
+#~ msgstr "Osnovni"
+
+#~ msgid "Net"
+#~ msgstr "Neto"
+
+#~ msgid "Human Resources Contracts"
+#~ msgstr "Ugovori HR-a"
+
+#~ msgid "Hours in the period"
+#~ msgstr "Sati u periodu"
+
+#~ msgid "Deductions"
+#~ msgstr "Odbitak"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Add all information on the employee form to manage contracts:\n"
+#~ "    * Marital status,\n"
+#~ "    * Security number,\n"
+#~ "    * Place of birth, birth date, ...\n"
+#~ "    You can assign several contracts per employee.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Dodajte sve informacije u obrazac zaposlenog da bi upravljali "
+#~ "ugovorima:\n"
+#~ "    * Bračni status,\n"
+#~ "    * Šifra,\n"
+#~ "    * Mesto rođenja, datum rođenja, ...\n"
+#~ "    Možete da dodelite više ugovora jednom zaposlenom.\n"
+#~ "    "
+
+#~ msgid "Wage Type"
+#~ msgstr "Vrsta Plate"
+
+#~ msgid ""
+#~ "Error ! You cannot select a department for which the employee is the manager."
+#~ msgstr ""
+#~ "Greška! Ne možete da odaberete odeljenje za koje je odeljenje menadžer."
+
+#~ msgid "Search Wage Period"
+#~ msgstr "Pretraga Perioda Plate"
+
+#~ msgid "Wage Period"
+#~ msgstr "Period Plate"
+
+#~ msgid "Search Wage Type"
+#~ msgstr "Pretraga tipa plate"
+
+#~ msgid "Type"
+#~ msgstr "Tip"
+
+#~ msgid "Period Name"
+#~ msgstr "Naziv perioda"
+
+#~ msgid "Period"
+#~ msgstr "Period"
+
+#~ msgid "Wage period"
+#~ msgstr "Period plate"
+
+#~ msgid ""
+#~ "This field is used by the timesheet system to compute the price of an hour "
+#~ "of work wased on the contract of the employee"
+#~ msgstr ""
+#~ "Ovo polje se koristi od strane sistema vremenskih kartica za izračunavanje "
+#~ "cene radnog sata baziranog na ugovoru radnika."
+
+#~ msgid "Allowances"
+#~ msgstr "Dozvole"
+
+#~ msgid "Main Data"
+#~ msgstr "Osnovni podaci"

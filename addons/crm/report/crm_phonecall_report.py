@@ -21,7 +21,7 @@
 
 from osv import fields,osv
 import tools
-from crm import crm
+from .. import crm
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -99,3 +99,5 @@ class crm_phonecall_report(osv.osv):
                     crm_phonecall c
             )""")
 crm_phonecall_report()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

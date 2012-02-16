@@ -121,7 +121,7 @@
 
 
 {
-    "name" : "Deutschland - SKR03 and SKR04",
+    "name" : "Deutschland - Accounting",
     "version" : "1.0",
     "author" : "openbig.org",
     "website" : "http://www.openbig.org",
@@ -152,3 +152,5 @@ German accounting chart and localization.
     "certificate": "00517849017945584893",
     'images': ['images/config_chart_l10n_de.jpeg','images/l10n_de_chart.jpeg'],
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

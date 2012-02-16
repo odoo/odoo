@@ -27,7 +27,7 @@ class stock_split_into(osv.osv_memory):
     _name = "stock.split.into"
     _description = "Split into"
     _columns = {
-        'quantity': fields.float('Quantity',digits_compute=dp.get_precision('Product UOM')),
+        'quantity': fields.float('Quantity',digits_compute=dp.get_precision('Product UoM')),
     }
     _defaults = {
         'quantity': lambda *x: 0,
@@ -82,3 +82,5 @@ class stock_split_into(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 stock_split_into()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -52,7 +52,7 @@ class report_custom(report_rml):
         if context is None:
             context = {}
         month = datetime(datas['form']['year'], datas['form']['month'], 1)
-        emp_ids = context.get('active_ids', [])
+        emp_ids = datas['active_ids']
         user_xml = ['<month>%s</month>' % _(month2name[month.month]), '<year>%s</year>' % month.year]
         if emp_ids:
             for emp in obj_emp.read(cr, uid, emp_ids, ['name']):
@@ -96,7 +96,7 @@ class report_custom(report_rml):
                     days_xml.append(today_xml)
                     today, tomor = tomor, tomor + one_day
                 user_xml.append(user_repr % '\n'.join(days_xml))
-                
+
         rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
         rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         header_xml = '''
@@ -105,7 +105,7 @@ class report_custom(report_rml):
         <company>%s</company>
         </header>
         ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
-       
+
         first_date = str(month)
         som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')
         eom = som + timedelta(int(dy)-1)
@@ -130,7 +130,7 @@ class report_custom(report_rml):
         month=som.month
         month_dict[j]=som.strftime('%B')
         width_dict[j]=cell
-        
+
         while day_diff1>0:
             if month+i<=12:
                 if day_diff1 > lengthmonth(year,i+month): # Not on 30 else you have problems when entering 01-01-2009 for example

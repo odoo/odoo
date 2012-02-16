@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2010-08-16 09:47+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:21+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
-
-#. module: account_analytic_default
-#: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
-msgid "Account Analytic Default"
-msgstr "Konto Analytisk Forhåndsvalg"
+"X-Launchpad-Export-Date: 2012-02-09 06:36+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -128,25 +123,14 @@ msgid "Analytic Defaults"
 msgstr "Analytiske Standarder"
 
 #. module: account_analytic_default
-#: model:ir.module.module,description:account_analytic_default.module_meta_information
-msgid ""
-"\n"
-"Allows to automatically select analytic accounts based on criterions:\n"
-"* Product\n"
-"* Partner\n"
-"* User\n"
-"* Company\n"
-"* Date\n"
-"    "
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
 msgstr ""
-"\n"
-"Tillater å automatisk velge analytisk konto basert på kriteriser:\n"
-"* Produkt\n"
-"* Partner\n"
-"* Bruker\n"
-"* Firma\n"
-"* Dato\n"
-"    "
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Analytical defaults whose end date is greater than today or None"
+msgstr ""
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -199,6 +183,9 @@ msgstr ""
 msgid "Sales Order Line"
 msgstr "Salgsordrelinje"
 
+#~ msgid "Account Analytic Default"
+#~ msgstr "Konto Analytisk Forhåndsvalg"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ugyldig modulnavn i handlingsdefinisjonen."
 
@@ -211,3 +198,22 @@ msgstr "Salgsordrelinje"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ugyldig XML for visningsarkitektur!"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allows to automatically select analytic accounts based on criterions:\n"
+#~ "* Product\n"
+#~ "* Partner\n"
+#~ "* User\n"
+#~ "* Company\n"
+#~ "* Date\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Tillater å automatisk velge analytisk konto basert på kriteriser:\n"
+#~ "* Produkt\n"
+#~ "* Partner\n"
+#~ "* Bruker\n"
+#~ "* Firma\n"
+#~ "* Dato\n"
+#~ "    "

@@ -7,20 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-03-22 18:08+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:34+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:50+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
 msgid "Product"
 msgstr "Produto"
+
+#. module: mrp_subproduct
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Fixed"
+msgstr "Fixo"
 
 #. module: mrp_subproduct
 #: sql_constraint:mrp.bom:0
@@ -43,21 +48,14 @@ msgid "Manufacturing Order"
 msgstr "Orde de fabricación"
 
 #. module: mrp_subproduct
-#: model:ir.module.module,shortdesc:mrp_subproduct.module_meta_information
-msgid ""
-"MRP Sub Product - To produce several products from one production order"
+#: constraint:mrp.bom:0
+msgid "BoM line product should not be same as BoM product."
 msgstr ""
-"MRP Subproduto - Para producir varios produtos desde unha orde de fabricación"
 
 #. module: mrp_subproduct
-#: field:mrp.subproduct,product_qty:0
-msgid "Product Qty"
-msgstr "Cantidade produto"
-
-#. module: mrp_subproduct
-#: field:mrp.bom,sub_products:0
-msgid "sub_products"
-msgstr "sub_produtos"
+#: view:mrp.bom:0
+msgid "Sub Products"
+msgstr "Subprodutos"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,subproduct_type:0
@@ -70,23 +68,9 @@ msgid "Bill of Material"
 msgstr "Lista de material"
 
 #. module: mrp_subproduct
-#: model:ir.module.module,description:mrp_subproduct.module_meta_information
-msgid ""
-"\n"
-"This module allows you to produce several products from one production "
-"order.\n"
-"You can configure sub-products in the bill of material.\n"
-"Without this module:\n"
-"    A + B + C -> D\n"
-"With this module:\n"
-"    A + B + C -> D + E\n"
-"    "
-msgstr ""
-"\n"
-"Este módulo permítelle producir varios produtos desde unha orde de "
-"produción. Pode configurar os subprodutos na lista de materiais. Sen este "
-"módulo: A + B + C -> D Con este módulo: A + B + C -> D + E\n"
-"    "
+#: field:mrp.subproduct,product_qty:0
+msgid "Product Qty"
+msgstr "Cantidade produto"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
@@ -99,14 +83,14 @@ msgid "BoM"
 msgstr "Lista de materiais"
 
 #. module: mrp_subproduct
-#: constraint:mrp.bom:0
-msgid "Error ! You can not create recursive BoM."
-msgstr "Erro! Non pode crear Listas de Material recorrentes."
+#: sql_constraint:mrp.production:0
+msgid "Reference must be unique per Company!"
+msgstr ""
 
 #. module: mrp_subproduct
-#: view:mrp.bom:0
-msgid "Sub Products"
-msgstr "Subprodutos"
+#: field:mrp.bom,sub_products:0
+msgid "sub_products"
+msgstr "sub_produtos"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -114,16 +98,56 @@ msgid "Variable"
 msgstr "Variable"
 
 #. module: mrp_subproduct
-#: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero !"
-msgstr "A cantidade do pedido non pode ser negativa ou cero!"
-
-#. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
 msgid "Sub Product"
 msgstr "Subproduto"
 
 #. module: mrp_subproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Fixo"
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero!"
+msgstr ""
+
+#. module: mrp_subproduct
+#: help:mrp.subproduct,subproduct_type:0
+msgid ""
+"Define how the quantity of subproducts will be set on the production orders "
+"using this BoM.  'Fixed' depicts a situation where the quantity of created "
+"subproduct is always equal to the quantity set on the BoM, regardless of how "
+"many are created in the production order.  By opposition, 'Variable' means "
+"that the quantity will be computed as    '(quantity of subproduct set on the "
+"BoM / quantity of manufactured product set on the BoM * quantity of "
+"manufactured product in the production order.)'"
+msgstr ""
+
+#. module: mrp_subproduct
+#: constraint:mrp.bom:0
+msgid "Error ! You cannot create recursive BoM."
+msgstr ""
+
+#~ msgid ""
+#~ "MRP Sub Product - To produce several products from one production order"
+#~ msgstr ""
+#~ "MRP Subproduto - Para producir varios produtos desde unha orde de fabricación"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows you to produce several products from one production "
+#~ "order.\n"
+#~ "You can configure sub-products in the bill of material.\n"
+#~ "Without this module:\n"
+#~ "    A + B + C -> D\n"
+#~ "With this module:\n"
+#~ "    A + B + C -> D + E\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Este módulo permítelle producir varios produtos desde unha orde de "
+#~ "produción. Pode configurar os subprodutos na lista de materiais. Sen este "
+#~ "módulo: A + B + C -> D Con este módulo: A + B + C -> D + E\n"
+#~ "    "
+
+#~ msgid "Order quantity cannot be negative or zero !"
+#~ msgstr "A cantidade do pedido non pode ser negativa ou cero!"
+
+#~ msgid "Error ! You can not create recursive BoM."
+#~ msgstr "Erro! Non pode crear Listas de Material recorrentes."

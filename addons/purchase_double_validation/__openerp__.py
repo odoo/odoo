@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    "name" : "Double Validation for Purchase",
+    "name" : "Double Validation on Purchases",
     "version" : "1.1",
-    "category": 'Hidden',
+    'category': 'Purchase Management',
     'complexity': "easy",
     "images" : ["images/purchase_validation.jpeg"],
     "depends" : ["base","purchase"],
@@ -37,13 +37,19 @@ that exceeds minimum amount set by configuration wizard.
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
-	   'purchase_double_validation_workflow.xml',
-	   'purchase_double_validation_installer.xml'
-	    ],
-    'test': ['test/purchase_double_validation_test.yml'],
+        'purchase_double_validation_workflow.xml',
+        'purchase_double_validation_installer.xml',
+        'board_purchase_view.xml'
+    ],
+    'test': [
+        'test/purchase_double_validation_demo.yml',
+        'test/purchase_double_validation_test.yml'
+    ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00436592682510544157',
 
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

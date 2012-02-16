@@ -6,30 +6,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-12 11:23+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"PO-Revision-Date: 2012-02-14 10:09+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:24+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-15 05:27+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: project_gtd
-#: help:project.task,timebox_id:0
-msgid "Time-laps during which task has to be treated"
-msgstr "处理任务的时间段"
+#: view:project.task:0
+msgid "In Progress"
+msgstr "进行中"
 
 #. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_gtd_timebox
-msgid "project.gtd.timebox"
-msgstr "project.gtd.timebox"
+#: view:project.task:0
+msgid "Show only tasks having a deadline"
+msgstr "只显示有截止日期的项目"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Reactivate"
 msgstr "重新激活"
+
+#. module: project_gtd
+#: help:project.task,timebox_id:0
+msgid "Time-laps during which task has to be treated"
+msgstr "处理任务的时间段"
 
 #. module: project_gtd
 #: help:project.gtd.timebox,sequence:0
@@ -47,16 +52,27 @@ msgid "Timebox Empty Process Completed Successfully."
 msgstr "清空时间箱成功"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr "没有子时间箱"
+#: view:project.task:0
+msgid "Pending Tasks"
+msgstr "暂停的任务"
 
 #. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:112
-#, python-format
-msgid "GTD"
-msgstr "GTD"
+#: view:project.task:0
+msgid "Next"
+msgstr "下一项"
+
+#. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
+msgid ""
+"Timeboxes are defined in the \"Getting Things Done\" methodology. A timebox "
+"defines a period of time in order to categorize your tasks: today, this "
+"week, this month, long term."
+msgstr "时间箱是GTD方法的一个术语。时间箱用于根据一定的时间区间来对任务进行分类：今天的事，本周的事，这个月的事，长期的事"
+
+#. module: project_gtd
+#: model:project.gtd.timebox,name:project_gtd.timebox_daily
+msgid "Today"
+msgstr "今日"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
@@ -69,22 +85,15 @@ msgid "Project Timebox Empty"
 msgstr "清空时间箱"
 
 #. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_daily
-msgid "Today"
-msgstr "今日"
+#: view:project.task:0
+msgid "Pending"
+msgstr "暂停"
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0
-#: field:project.gtd.timebox,name:0
-#: view:project.task:0
-#: field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
+#: view:project.task:0 field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "时间箱"
-
-#. module: project_gtd
-#: model:ir.module.module,shortdesc:project_gtd.module_meta_information
-msgid "Getting Things Done - Time Management Module"
-msgstr "GTD - 时间管理模块"
 
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_to_id:0
@@ -98,9 +107,21 @@ msgid "Error !"
 msgstr "错误！"
 
 #. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.open_gtd_task
+#: model:ir.ui.menu,name:project_gtd.menu_open_gtd_timebox_tree
+#: view:project.task:0
+msgid "My Tasks"
+msgstr "我的任务"
+
+#. module: project_gtd
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
 msgstr "错误！不能创建循环引用的任务"
+
+#. module: project_gtd
+#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
+msgid "This Week"
+msgstr "本周"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
@@ -114,22 +135,14 @@ msgid "Empty Timebox"
 msgstr "空时间箱"
 
 #. module: project_gtd
-#: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
-msgid ""
-"Timeboxes are defined in the \"Getting Things Done\" methodology. A timebox "
-"defines a period of time in order to categorize your tasks: today, this "
-"week, this month, long term."
-msgstr "时间箱是GTD方法的一个术语。时间箱用于根据一定的时间区间来对任务进行分类：今天的事，本周的事，这个月的事，长期的事"
+#: view:project.task:0
+msgid "Tasks having no timebox assigned yet"
+msgstr "还没有指定时间箱的任务"
 
 #. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
-msgid "This Week"
-msgstr "本周"
-
-#. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_monthly
-msgid "This Month"
-msgstr "本月"
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr "错误！任务结束日期必须大于任务开始日期"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
@@ -168,39 +181,20 @@ msgid "Car"
 msgstr "汽车"
 
 #. module: project_gtd
-#: model:ir.module.module,description:project_gtd.module_meta_information
-msgid ""
-"\n"
-"This module implements all concepts defined by the Getting Things Done\n"
-"methodology. This world-wide used methodology is used for personal\n"
-"time management improvement.\n"
-"\n"
-"Getting Things Done (commonly abbreviated as GTD) is an action management\n"
-"method created by David Allen, and described in a book of the same name.\n"
-"\n"
-"GTD rests on the principle that a person needs to move tasks out of the mind "
-"by\n"
-"recording them externally. That way, the mind is freed from the job of\n"
-"remembering everything that needs to be done, and can concentrate on "
-"actually\n"
-"performing those tasks.\n"
-"    "
-msgstr ""
-"\n"
-"这个模块实现了GTD的概念。这个世界通行的方法是用来提升个人时间管理的。\n"
-"\n"
-"Getting Things Done（GTD）是由David Allen提出的一种行为管理方法，他还\n"
-"写了一本同名的书阐述这个方法。\n"
-"\n"
-"GTD基于一个原则：个人应该把任务从脑子里移除到外部的记录系统上。这样，\n"
-"大脑就不需要再记忆所有该做的事情，只需要关注正在做的事。\n"
-"    "
+#: view:project.task:0
+msgid "Show Context"
+msgstr "显示情境"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
 #: view:project.timebox.fill.plan:0
 msgid "Plannify Timebox"
 msgstr "计划中的时间箱"
+
+#. module: project_gtd
+#: model:ir.model,name:project_gtd.model_project_gtd_timebox
+msgid "project.gtd.timebox"
+msgstr "project.gtd.timebox"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
@@ -210,17 +204,22 @@ msgid "Timeboxes"
 msgstr "时间箱"
 
 #. module: project_gtd
+#: view:project.task:0
+msgid "In Progress and draft tasks"
+msgstr "正在进行或草稿状态的任务"
+
+#. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0
-#: field:project.gtd.context,name:0
+#: view:project.gtd.context:0 field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr "上下文"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
-msgstr "下一项"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
+msgstr "没有子时间箱"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
@@ -228,26 +227,29 @@ msgid "_Ok"
 msgstr "确定(_O)"
 
 #. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:110
-#, python-format
-msgid "Getting Things Done"
-msgstr "GTD"
-
-#. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
 msgid "Office"
 msgstr "办公"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0
-#: field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "序列"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Show the context field"
+msgstr "显示情境字段"
 
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
 msgid "Gives the sequence order when displaying a list of contexts."
 msgstr "输入序号用于情境列表的排序"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Show Deadlines"
+msgstr "显示截止日期"
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
@@ -260,8 +262,7 @@ msgid "Tasks selection"
 msgstr "任务选择"
 
 #. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:111
-#, python-format
+#: view:project.task:0
 msgid "Inbox"
 msgstr "收件箱"
 
@@ -287,6 +288,11 @@ msgid ""
 "you to categorize your tasks according to the context in which they have to "
 "be done: at the office, at home, when I take my car, etc."
 msgstr "情境是GTD方法中的概念。它使你能够按照执行的地点对任务进行分类，如：在办公室、在家、开车的时候"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "For reopening the tasks"
+msgstr "为重启任务"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -363,6 +369,9 @@ msgstr "上一个"
 #~ msgid "Inbox Tasks"
 #~ msgstr "收件箱任务"
 
+#~ msgid "Getting Things Done - Time Management Module"
+#~ msgstr "GTD - 时间管理模块"
+
 #~ msgid "Timebox Tasks"
 #~ msgstr "时间箱任务"
 
@@ -396,6 +405,10 @@ msgstr "上一个"
 #~ msgid "My Open Tasks"
 #~ msgstr "我打开的任务"
 
+#, python-format
+#~ msgid "Getting Things Done"
+#~ msgstr "GTD"
+
 #~ msgid "Child Timeboxes"
 #~ msgstr "子时间箱"
 
@@ -414,3 +427,37 @@ msgstr "上一个"
 #, python-format
 #~ msgid "No timebox of the type \"%s\" defined !"
 #~ msgstr "无\"%s\"类型时间盒被定义"
+
+#, python-format
+#~ msgid "GTD"
+#~ msgstr "GTD"
+
+#~ msgid "This Month"
+#~ msgstr "本月"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module implements all concepts defined by the Getting Things Done\n"
+#~ "methodology. This world-wide used methodology is used for personal\n"
+#~ "time management improvement.\n"
+#~ "\n"
+#~ "Getting Things Done (commonly abbreviated as GTD) is an action management\n"
+#~ "method created by David Allen, and described in a book of the same name.\n"
+#~ "\n"
+#~ "GTD rests on the principle that a person needs to move tasks out of the mind "
+#~ "by\n"
+#~ "recording them externally. That way, the mind is freed from the job of\n"
+#~ "remembering everything that needs to be done, and can concentrate on "
+#~ "actually\n"
+#~ "performing those tasks.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "这个模块实现了GTD的概念。这个世界通行的方法是用来提升个人时间管理的。\n"
+#~ "\n"
+#~ "Getting Things Done（GTD）是由David Allen提出的一种行为管理方法，他还\n"
+#~ "写了一本同名的书阐述这个方法。\n"
+#~ "\n"
+#~ "GTD基于一个原则：个人应该把任务从脑子里移除到外部的记录系统上。这样，\n"
+#~ "大脑就不需要再记忆所有该做的事情，只需要关注正在做的事。\n"
+#~ "    "

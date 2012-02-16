@@ -37,7 +37,6 @@
 
         <record model="ir.values" id="action_account_move_line_reconcile_prompt_values">
             <field name="model_id" ref="account.model_account_move_line" />
-            <field name="object" eval="1" />
             <field name="name">Reconcile Entries</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' +str(ref('action_view_account_move_line_reconcile'))" />

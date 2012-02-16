@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2009-02-04 06:32+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:30+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:45+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -59,7 +59,7 @@ msgid "Print Attendance Report Error"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:156
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
 #, python-format
 msgid "The sign-out date must be in the past"
 msgstr ""
@@ -115,13 +115,9 @@ msgid "Define attendance reason"
 msgstr ""
 
 #. module: hr_attendance
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
-
-#. module: hr_attendance
+#: code:addons/hr_attendance/report/attendance_by_month.py:184
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
+#, python-format
 msgid "Attendances By Month"
 msgstr ""
 
@@ -138,10 +134,10 @@ msgid "Attendance Reasons"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:156
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:162
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:169
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
 #, python-format
 msgid "UserError"
 msgstr ""
@@ -153,24 +149,19 @@ msgid "Ending Date"
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Employee attendance"
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:136
+#: code:addons/hr_attendance/hr_attendance.py:140
 #, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:169
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
 #, python-format
 msgid "The Sign-in date must be in the past"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:162
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
 #, python-format
 msgid "A sign-in must be right after a sign-out !"
 msgstr ""
@@ -189,6 +180,7 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
 msgid "Print"
 msgstr ""
 
@@ -198,13 +190,8 @@ msgid "Hr Attendance Search"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.module.module,description:hr_attendance.module_meta_information
-msgid ""
-"\n"
-"    This module aims to manage employee's attendances.\n"
-"    Keeps account of the attendances of the employees on the basis of the\n"
-"    actions(Sign in/Sign out) performed by them.\n"
-"       "
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
+msgid "Attendances By Week"
 msgstr ""
 
 #. module: hr_attendance
@@ -267,9 +254,19 @@ msgid "Month"
 msgstr ""
 
 #. module: hr_attendance
+#: field:hr.action.reason,action_type:0
+msgid "Action Type"
+msgstr ""
+
+#. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid ""
 "(*) A negative delay means that the employee worked more than encoded."
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "My Attendance"
 msgstr ""
 
 #. module: hr_attendance
@@ -289,9 +286,9 @@ msgid "Sign In Sign Out"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:103
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:125
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:141
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:105
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:129
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:146
 #: view:hr.sign.in.out:0
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_sigh_in_out
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_sigh_in_out
@@ -305,12 +302,17 @@ msgid "hr.sign.out.ask"
 msgstr ""
 
 #. module: hr_attendance
+#: view:hr.attendance.week:0
+msgid "Print Attendance Report Weekly"
+msgstr ""
+
+#. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "August"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
 #, python-format
 msgid "A sign-out must be right after a sign-in !"
 msgstr ""
@@ -323,11 +325,6 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_error
 msgid "Print Error Attendance Report"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.module.module,shortdesc:hr_attendance.module_meta_information
-msgid "Attendances Of Employees"
 msgstr ""
 
 #. module: hr_attendance
@@ -348,11 +345,6 @@ msgstr ""
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "October"
-msgstr ""
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "My Attendances"
 msgstr ""
 
 #. module: hr_attendance
@@ -398,16 +390,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.sign.in.out,emp_id:0
-msgid "Employee ID"
-msgstr ""
-
-#. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
 msgid "Print Week Attendance Report"
 msgstr ""
 
 #. module: hr_attendance
+#: field:hr.sign.in.out,emp_id:0
 #: field:hr.sign.in.out.ask,emp_id:0
 msgid "Empoyee ID"
 msgstr ""
@@ -415,6 +403,7 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Cancel"
@@ -455,7 +444,7 @@ msgid "Employee"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:136
+#: code:addons/hr_attendance/hr_attendance.py:140
 #, python-format
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
@@ -518,11 +507,6 @@ msgstr ""
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "February"
-msgstr ""
-
-#. module: hr_attendance
-#: field:hr.action.reason,action_type:0
-msgid "Action's type"
 msgstr ""
 
 #. module: hr_attendance

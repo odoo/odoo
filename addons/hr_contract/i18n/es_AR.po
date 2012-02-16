@@ -6,25 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2009-09-15 20:56+0000\n"
 "Last-Translator: Silvana Herrera <sherrera@thymbra.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:23+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:39+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Hourly cost computation"
-msgstr "Cálculo de costo por hora"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Salario"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Gross"
-msgstr "Bruto"
+#: view:hr.contract:0
+msgid "Information"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -34,11 +34,6 @@ msgstr ""
 #. module: hr_contract
 #: field:hr.contract,trial_date_start:0
 msgid "Trial Start Date"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Passport"
 msgstr ""
 
 #. module: hr_contract
@@ -52,11 +47,6 @@ msgid "Company Vehicle"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "Nombre de tipo de salario"
-
-#. module: hr_contract
 #: view:hr.employee:0
 msgid "Miscellaneous"
 msgstr ""
@@ -67,19 +57,9 @@ msgid "Current"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "Factor para el costo de hora"
-
-#. module: hr_contract
 #: view:hr.contract:0
-msgid "Overpassed"
+msgid "Group By..."
 msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Wage Types"
-msgstr "Tipos de salario"
 
 #. module: hr_contract
 #: field:hr.contract,department_id:0
@@ -87,8 +67,8 @@ msgid "Department"
 msgstr ""
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Basic"
+#: view:hr.contract:0
+msgid "Overpassed"
 msgstr ""
 
 #. module: hr_contract
@@ -99,19 +79,14 @@ msgid "Employee"
 msgstr "Empleado"
 
 #. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Net"
-msgstr "Neto"
+#: view:hr.contract:0
+msgid "Search Contract"
+msgstr ""
 
 #. module: hr_contract
-#: model:ir.module.module,shortdesc:hr_contract.module_meta_information
-msgid "Human Resources Contracts"
-msgstr "Contratos de recursos humanos"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,factor_days:0
-msgid "Hours in the period"
-msgstr "Horas en el período"
+#: view:hr.contract:0
+msgid "Contracts in progress"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
@@ -134,12 +109,7 @@ msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Job"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Search Contract"
+msgid "Contracts whose end date already passed"
 msgstr ""
 
 #. module: hr_contract
@@ -148,20 +118,8 @@ msgid "Latest contract of the employee"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,advantages_net:0
-msgid "Deductions"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.module.module,description:hr_contract.module_meta_information
-msgid ""
-"\n"
-"    Add all information on the employee form to manage contracts:\n"
-"    * Marital status,\n"
-"    * Security number,\n"
-"    * Place of birth, birth date, ...\n"
-"    You can assign several contracts per employee.\n"
-"    "
+#: view:hr.contract:0
+msgid "Job"
 msgstr ""
 
 #. module: hr_contract
@@ -192,15 +150,6 @@ msgid "Contract Types"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
-msgstr "Tipo de salario"
-
-#. module: hr_contract
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
@@ -211,9 +160,9 @@ msgid "End Date"
 msgstr "Fecha de fin"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Salario"
+#: help:hr.contract,wage:0
+msgid "Basic Salary of the employee"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,name:0
@@ -232,9 +181,8 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
 msgstr ""
 
 #. module: hr_contract
@@ -255,11 +203,6 @@ msgid "Contract Type"
 msgstr "Tipo de contrato"
 
 #. module: hr_contract
-#: view:hr.contract.wage.type.period:0
-msgid "Search Wage Period"
-msgstr ""
-
-#. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,working_hours:0
 msgid "Working Schedule"
@@ -271,11 +214,9 @@ msgid "Job Info"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,period_id:0
-#: view:hr.contract.wage.type.period:0
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
-msgid "Wage Period"
-msgstr "Período de salario"
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
@@ -298,56 +239,14 @@ msgid "Error! contract start-date must be lower then contract end-date."
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,type:0
-msgid "Type"
-msgstr "Tipo"
-
-#. module: hr_contract
-#: field:hr.contract,trial_date_end:0
-msgid "Trial End Date"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract.wage.type.period,name:0
-msgid "Period Name"
-msgstr "Nombre del período"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Period"
+#: field:hr.contract,visa_no:0
+msgid "Visa No"
 msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
 msgid "Place of Birth"
 msgstr "Lugar de nacimiento"
-
-#. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr "Período de salario"
-
-#. module: hr_contract
-#: help:hr.contract.wage.type,factor_type:0
-#: help:hr.contract.wage.type.period,factor_days:0
-msgid ""
-"This field is used by the timesheet system to compute the price of an hour "
-"of work wased on the contract of the employee"
-msgstr ""
-"Este campo es usado por el sistema de horarios para calcular el precio de "
-"una hora de trabajo basado en el contrato del empleado"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -360,19 +259,23 @@ msgid "Medical Examination Date"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,advantages_gross:0
-msgid "Allowances"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Main Data"
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
 msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract.type:0
 msgid "Search Contract Type"
 msgstr ""
+
+#~ msgid "Wage Types"
+#~ msgstr "Tipos de salario"
+
+#~ msgid "Factor for hour cost"
+#~ msgstr "Factor para el costo de hora"
+
+#~ msgid "Hourly cost computation"
+#~ msgstr "Cálculo de costo por hora"
 
 #~ msgid "Generalities"
 #~ msgstr "Generalidades"
@@ -383,11 +286,29 @@ msgstr ""
 #~ "¡El nombre del objeto debe empezar con x_ y no contener ningún caracter "
 #~ "especial!"
 
+#~ msgid "Gross"
+#~ msgstr "Bruto"
+
 #~ msgid "Number of children"
 #~ msgstr "Número de hijos"
 
+#~ msgid "Net"
+#~ msgstr "Neto"
+
+#~ msgid "Human Resources Contracts"
+#~ msgstr "Contratos de recursos humanos"
+
+#~ msgid "Type"
+#~ msgstr "Tipo"
+
 #~ msgid "Medical examination date"
 #~ msgstr "Fecha de exámen médico"
+
+#~ msgid "Wage Type"
+#~ msgstr "Tipo de salario"
+
+#~ msgid "Hours in the period"
+#~ msgstr "Horas en el período"
 
 #~ msgid "Function"
 #~ msgstr "Función"
@@ -398,8 +319,14 @@ msgstr ""
 #~ msgid "Marital Status"
 #~ msgstr "Estado civil"
 
+#~ msgid "Period Name"
+#~ msgstr "Nombre del período"
+
 #~ msgid "Employee Marital Status"
 #~ msgstr "Estado civil del empleado"
+
+#~ msgid "Wage Period"
+#~ msgstr "Período de salario"
 
 #~ msgid "Salary"
 #~ msgstr "Salario"
@@ -410,11 +337,24 @@ msgstr ""
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML inválido para la definición de la vista!"
 
+#~ msgid "Wage Type Name"
+#~ msgstr "Nombre de tipo de salario"
+
 #~ msgid "AUDIENS Number"
 #~ msgstr "Número de AUDIENS"
 
 #~ msgid "Status Description"
 #~ msgstr "Descripción del estado civil"
+
+#~ msgid ""
+#~ "This field is used by the timesheet system to compute the price of an hour "
+#~ "of work wased on the contract of the employee"
+#~ msgstr ""
+#~ "Este campo es usado por el sistema de horarios para calcular el precio de "
+#~ "una hora de trabajo basado en el contrato del empleado"
+
+#~ msgid "Wage period"
+#~ msgstr "Período de salario"
 
 #~ msgid "Contract Wage Type"
 #~ msgstr "Contratar tipo de salario"

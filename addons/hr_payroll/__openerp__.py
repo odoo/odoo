@@ -23,7 +23,8 @@
     'name': 'Payroll',
     'version': '1.0',
     'category': 'Human Resources',
-    'complexity': "expert",
+    "sequence": 38,
+    'complexity': "normal",
     'description': """
 Generic Payroll system.
 =======================
@@ -69,8 +70,9 @@ Generic Payroll system.
         'hr_payroll_demo.xml'
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '001046261404562128861',
+    'application': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

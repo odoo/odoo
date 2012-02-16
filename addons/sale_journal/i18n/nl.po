@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-18 08:10+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-02-13 07:31+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:18+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-14 05:44+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
+
+#. module: sale_journal
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr "Orderreferentie moet uniek zijn per bedrijf!"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -22,19 +27,24 @@ msgid "Note"
 msgstr "Notitie"
 
 #. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr "Factuur soort"
+
+#. module: sale_journal
 #: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and picking."
-msgstr "Het soort dagboek gebruikt voor verkopen en picking."
+msgid ""
+"This invoicing type will be used, by default, for invoicing the current "
+"partner."
+msgstr ""
+"Deze factuurmethode wordt standaard gebruikt bij het factureren van deze "
+"relatie."
 
 #. module: sale_journal
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique !"
-msgstr "Orderreferentie moet uniek zijn!"
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Facturatie"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr ""
+"Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -56,61 +66,16 @@ msgid "Notes"
 msgstr "Notities"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Method"
-msgstr "Facturatie methode"
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Facturatie-methode"
 
 #. module: sale_journal
-#: model:ir.module.module,description:sale_journal.module_meta_information
-msgid ""
-"\n"
-"    The sales journal modules allows you to categorise your\n"
-"    sales and deliveries (picking lists) between different journals.\n"
-"    This module is very helpful for bigger companies that\n"
-"    works by departments.\n"
-"\n"
-"    You can use journal for different purposes, some examples:\n"
-"    * isolate sales of different departments\n"
-"    * journals for deliveries by truck or by UPS\n"
-"\n"
-"    Journals have a responsible and evolves between different status:\n"
-"    * draft, open, cancel, done.\n"
-"\n"
-"    Batch operations can be processed on the different journals to\n"
-"    confirm all sales at once, to validate or invoice packing, ...\n"
-"\n"
-"    It also supports batch invoicing methods that can be configured by\n"
-"    partners and sales orders, examples:\n"
-"    * daily invoicing,\n"
-"    * monthly invoicing, ...\n"
-"\n"
-"    Some statistics by journals are provided.\n"
-"    "
-msgstr ""
-"\n"
-"    Met de verkoop dagboek module categoriseert u verkopen\n"
-"    en leveringen (picklijsten) tussen verschillende dagboeken.\n"
-"    Deze module is handig voor grotere bedrijven die werken\n"
-"    met afdelingen.\n"
-"\n"
-"    U kunt het dagboek op meer manieren gebruiken, bijv.:\n"
-"    * isoleren verkopen van verschillende afdelingen\n"
-"    * dagboek van leveringen per vrachtauto of per UPS\n"
-"\n"
-"    Dagboeken hebben een verantwoordelijke en doorlopen\n"
-"    verschillende statussen: concept, open, geannuleerd, gereed.\n"
-"\n"
-"    Batch verwerkingen kunnen worden uitgevoerd op de\n"
-"    verschillende dagboeken voor het bevestigen van alle verkopen\n"
-"    ineens, het bevestigen of factureren van leveringen, ...\n"
-"\n"
-"    Het ondersteunt ook batch facturatie methoden die kunnen\n"
-"    worden geconfigureerd per relatie, verkooporder, voorbeelden:\n"
-"    * dagelijkse facturatie,\n"
-"    * maandelijkse facturatie, ...\n"
-"\n"
-"    Some statistics by journals are provided.\n"
-"    "
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Factuursoorten"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -121,11 +86,6 @@ msgstr "Niet gegroepeerd"
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
 msgstr "Gegroepeerd"
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -140,14 +100,9 @@ msgstr ""
 "maandelijks, etc."
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Facturatie-methode"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sales Order"
-msgstr "Verkooporder"
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr "Referentie moet uniek zijn per bedrijf!"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -168,11 +123,9 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Factuursoorten"
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
+msgstr "Verkooporder"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
@@ -180,9 +133,9 @@ msgid "Picking List"
 msgstr "Picklijst"
 
 #. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr "Beheer verkopen en verzendingen per dagboek"
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "Facturatie"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ongeldige XML voor overzicht"
@@ -431,3 +384,68 @@ msgstr "Beheer verkopen en verzendingen per dagboek"
 
 #~ msgid "Sales Orders by Journal"
 #~ msgstr "Verkooporders per dagboek"
+
+#~ msgid "Invoicing Method"
+#~ msgstr "Facturatie methode"
+
+#~ msgid "Order Reference must be unique !"
+#~ msgstr "Orderreferentie moet uniek zijn!"
+
+#~ msgid "The type of journal used for sales and picking."
+#~ msgstr "Het soort dagboek gebruikt voor verkopen en picking."
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
+
+#~ msgid ""
+#~ "\n"
+#~ "    The sales journal modules allows you to categorise your\n"
+#~ "    sales and deliveries (picking lists) between different journals.\n"
+#~ "    This module is very helpful for bigger companies that\n"
+#~ "    works by departments.\n"
+#~ "\n"
+#~ "    You can use journal for different purposes, some examples:\n"
+#~ "    * isolate sales of different departments\n"
+#~ "    * journals for deliveries by truck or by UPS\n"
+#~ "\n"
+#~ "    Journals have a responsible and evolves between different status:\n"
+#~ "    * draft, open, cancel, done.\n"
+#~ "\n"
+#~ "    Batch operations can be processed on the different journals to\n"
+#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
+#~ "\n"
+#~ "    It also supports batch invoicing methods that can be configured by\n"
+#~ "    partners and sales orders, examples:\n"
+#~ "    * daily invoicing,\n"
+#~ "    * monthly invoicing, ...\n"
+#~ "\n"
+#~ "    Some statistics by journals are provided.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Met de verkoop dagboek module categoriseert u verkopen\n"
+#~ "    en leveringen (picklijsten) tussen verschillende dagboeken.\n"
+#~ "    Deze module is handig voor grotere bedrijven die werken\n"
+#~ "    met afdelingen.\n"
+#~ "\n"
+#~ "    U kunt het dagboek op meer manieren gebruiken, bijv.:\n"
+#~ "    * isoleren verkopen van verschillende afdelingen\n"
+#~ "    * dagboek van leveringen per vrachtauto of per UPS\n"
+#~ "\n"
+#~ "    Dagboeken hebben een verantwoordelijke en doorlopen\n"
+#~ "    verschillende statussen: concept, open, geannuleerd, gereed.\n"
+#~ "\n"
+#~ "    Batch verwerkingen kunnen worden uitgevoerd op de\n"
+#~ "    verschillende dagboeken voor het bevestigen van alle verkopen\n"
+#~ "    ineens, het bevestigen of factureren van leveringen, ...\n"
+#~ "\n"
+#~ "    Het ondersteunt ook batch facturatie methoden die kunnen\n"
+#~ "    worden geconfigureerd per relatie, verkooporder, voorbeelden:\n"
+#~ "    * dagelijkse facturatie,\n"
+#~ "    * maandelijkse facturatie, ...\n"
+#~ "\n"
+#~ "    Some statistics by journals are provided.\n"
+#~ "    "
+
+#~ msgid "Managing sales and deliveries by journal"
+#~ msgstr "Beheer verkopen en verzendingen per dagboek"

@@ -32,13 +32,21 @@ import import_sugarcrm
 
 import logging
 
+import sys
+
+
+debug = False
+
 
 class LoginError(Exception): pass
 
 def login(username, password, url):
     setURL(url)
     loc = sugarsoapLocator()
-    portType = loc.getsugarsoapPortType(url)
+    if debug:
+        portType = loc.getsugarsoapPortType(url, tracefile=sys.stdout)
+    else:
+        portType = loc.getsugarsoapPortType(url)
     request = loginRequest()
     uauth = ns0.user_auth_Def(request)
     request._user_auth = uauth
@@ -168,3 +176,5 @@ def search(portType, sessionid, module_name, offset, max_results, query=None, or
             ans_list.append(ans_dir)
     #end for
     return ans_list
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

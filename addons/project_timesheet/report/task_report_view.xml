@@ -31,11 +31,12 @@
             <field name="arch" type="xml">
             	<search string="Tasks by User">
             		<group>
-                        <filter icon="terp-go-year" string=" Year "
+                        <filter icon="terp-go-year" string="Year"
                             name="year"
                             domain="[('name','&lt;=', time.strftime('%%Y-%%m-%%d')),('name','&gt;=',time.strftime('%%Y-01-01'))]"
                             help="Task Hours in current year"/>
-                        <filter icon="terp-go-month" string=" Month "
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-go-month" string="Month"
                             name="month"
                             domain="[('name','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('name','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Task Hours in current month"/>
@@ -76,7 +77,7 @@
             <field name="res_model">report.timesheet.task.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{'search_default_month':1, 'search_default_group_user_id':1}</field>
+            <field name="context">{'search_default_year':1,'search_default_month':1, 'search_default_group_user_id':1}</field>
         </record>
         <menuitem id="menu_timesheet_task_user" parent="hr_timesheet.menu_hr_reporting_timesheet"
                     action="action_report_timesheet_task_user" sequence="1"/>

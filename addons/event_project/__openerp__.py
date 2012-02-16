@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Event Project - Create Retro-Planning to manage your Events',
+    'name': 'Retro-Planning on Events',
     'version': '0.1',
-    'category': 'Hidden/Link',
+    'category': 'Tools',
     'complexity': "easy",
     'description': """
 Organization and management of events.
@@ -37,7 +37,7 @@ This module allows you to create retro planning for managing your events.
     'update_xml': ['wizard/event_project_retro_view.xml', 'event_project_view.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0069726863885',
 }
 

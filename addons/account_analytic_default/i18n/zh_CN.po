@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-07-01 10:20+0000\n"
-"Last-Translator: digitalsatori <digisatori@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-08 03:53+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:21+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
-
-#. module: account_analytic_default
-#: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
-msgid "Account Analytic Default"
-msgstr "默认的科目辅助核算"
+"X-Launchpad-Export-Date: 2012-02-09 06:36+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -126,25 +121,14 @@ msgid "Analytic Defaults"
 msgstr "默认辅助核算项"
 
 #. module: account_analytic_default
-#: model:ir.module.module,description:account_analytic_default.module_meta_information
-msgid ""
-"\n"
-"Allows to automatically select analytic accounts based on criterions:\n"
-"* Product\n"
-"* Partner\n"
-"* User\n"
-"* Company\n"
-"* Date\n"
-"    "
-msgstr ""
-"\n"
-"允许根据准则自动选辅助核算项：\n"
-"  *产品\n"
-"  *业务伙伴\n"
-"  *用户\n"
-"  *公司\n"
-"  *日期\n"
-"    "
+#: sql_constraint:stock.picking:0
+msgid "Reference must be unique per Company!"
+msgstr "编号必须在公司内唯一！"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Analytical defaults whose end date is greater than today or None"
+msgstr "默认分析科目的截止日期大于今天或为空"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -212,3 +196,25 @@ msgstr "销售订单明细"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "在动作定义使用了无效的模式名称。"
+
+#~ msgid "Account Analytic Default"
+#~ msgstr "默认的科目辅助核算"
+
+#~ msgid ""
+#~ "\n"
+#~ "Allows to automatically select analytic accounts based on criterions:\n"
+#~ "* Product\n"
+#~ "* Partner\n"
+#~ "* User\n"
+#~ "* Company\n"
+#~ "* Date\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "允许根据准则自动选辅助核算项：\n"
+#~ "  *产品\n"
+#~ "  *业务伙伴\n"
+#~ "  *用户\n"
+#~ "  *公司\n"
+#~ "  *日期\n"
+#~ "    "

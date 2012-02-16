@@ -21,13 +21,14 @@
 
 from osv import fields, osv
 from tools.translate import _
+import decimal_precision as dp
 
 class change_production_qty(osv.osv_memory):
     _name = 'change.production.qty'
     _description = 'Change Quantity of Products'
     
     _columns = {
-        'product_qty': fields.float('Product Qty', required=True),
+        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product UoM'), required=True),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -47,7 +48,12 @@ class change_production_qty(osv.osv_memory):
         if 'product_qty' in fields:
             res.update({'product_qty': prod.product_qty})  
         return res
-        
+
+    def _update_product_to_produce(self, cr, uid, prod, qty, context=None):
+        move_lines_obj = self.pool.get('stock.move')
+        for m in prod.move_created_ids:
+            move_lines_obj.write(cr, uid, [m.id], {'product_qty': qty})
+
     def change_prod_qty(self, cr, uid, ids, context=None):
         """ 
         Changes the Quantity of Product.
@@ -56,7 +62,7 @@ class change_production_qty(osv.osv_memory):
         @param uid: ID of the user currently logged in
         @param ids: List of IDs selected 
         @param context: A standard dictionary 
-        @return:  
+        @return:
         """
         record_id = context and context.get('active_id',False)
         assert record_id, _('Active Id is not found')
@@ -66,7 +72,7 @@ class change_production_qty(osv.osv_memory):
             prod = prod_obj.browse(cr, uid, record_id, context=context)
             prod_obj.write(cr, uid,prod.id, {'product_qty': wiz_qty.product_qty})
             prod_obj.action_compute(cr, uid, [prod.id])
-        
+
             move_lines_obj = self.pool.get('stock.move')
             for move in prod.move_lines:
                 bom_point = prod.bom_id
@@ -77,20 +83,19 @@ class change_production_qty(osv.osv_memory):
                         raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
                     prod_obj.write(cr, uid, [prod.id], {'bom_id': bom_id})
                     bom_point = bom_obj.browse(cr, uid, [bom_id])[0]
-        
+
                 if not bom_id:
                     raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
-        
+
                 factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
                 res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, [])
                 for r in res[0]:
                     if r['product_id'] == move.product_id.id:
                         move_lines_obj.write(cr, uid, [move.id], {'product_qty' :  r['product_qty']})
-            for m in prod.move_created_ids:
-                move_lines_obj.write(cr, uid, [m.id], {'product_qty': wiz_qty.product_qty})
-    
+            self._update_product_to_produce(cr, uid, prod, wiz_qty.product_qty, context=context)
+
         return {}
-    
+
 change_production_qty()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

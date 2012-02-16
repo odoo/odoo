@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-05-29 17:52+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:40+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:57+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -33,15 +33,6 @@ msgid "Specifies the amount of quantity to count."
 msgstr "Sayılacak miktarı belirtir."
 
 #. module: analytic
-#: model:ir.module.module,description:analytic.module_meta_information
-msgid ""
-"Module for defining analytic accounting object.\n"
-"    "
-msgstr ""
-"Analiz hesabı nesnesini tanımlama modülü.\n"
-"    "
-
-#. module: analytic
 #: field:account.analytic.account,state:0
 msgid "State"
 msgstr "Durum"
@@ -50,11 +41,6 @@ msgstr "Durum"
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
 msgstr "Hesap Yöneticisi"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Draft"
-msgstr "Taslak"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -99,14 +85,14 @@ msgstr ""
 " Proje tamamlandığında durum 'Bitti' olarak belirlenir."
 
 #. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr ""
+
+#. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
 msgstr "Hesap Tipi"
-
-#. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "Şablon"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -136,9 +122,16 @@ msgid "Company"
 msgstr "Şirket"
 
 #. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Maximum Quantity"
-msgstr "Maksimum Miktar"
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really usefull for "
+"consolidation purposes of several companies charts with different "
+"currencies, for example."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -156,9 +149,9 @@ msgid "Date"
 msgstr "Tarih"
 
 #. module: analytic
-#: field:account.analytic.account,currency_id:0
-msgid "Account currency"
-msgstr "Hesap para birimi"
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "Şablon"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -176,9 +169,14 @@ msgstr ""
 "hesaplanır. Her zaman şirketin ana para birimi cinsinden ifade edilmelidir."
 
 #. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr "Hesap Sıradüzeni"
+
+#. module: analytic
 #: help:account.analytic.account,quantity_max:0
-msgid "Sets the higher limit of quantity of hours."
-msgstr "Saat miktarının üst limitini belirler."
+msgid "Sets the higher limit of time to work on the contract."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -196,16 +194,20 @@ msgid "Contact"
 msgstr "İletişim"
 
 #. module: analytic
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "Hata! Para birimi, seçilen şirketin para birimiyle aynı olmalıdır"
+#: field:account.analytic.account,code:0
+msgid "Code/Reference"
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
 msgstr "İptal edildi"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -232,9 +234,14 @@ msgid "Date End"
 msgstr "Bitiş Tarihi"
 
 #. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Account Code"
-msgstr "Hesap Kodu"
+#: field:account.analytic.account,quantity_max:0
+msgid "Maximum Time"
+msgstr ""
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -244,9 +251,18 @@ msgstr "Tam Hesap Adı"
 #. module: analytic
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.module.module,shortdesc:analytic.module_meta_information
 msgid "Analytic Account"
 msgstr "Analitik Hesap"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr ""
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -272,3 +288,30 @@ msgstr "Açık"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Analitik Girişler"
+
+#~ msgid "Draft"
+#~ msgstr "Taslak"
+
+#~ msgid "Maximum Quantity"
+#~ msgstr "Maksimum Miktar"
+
+#~ msgid "Account currency"
+#~ msgstr "Hesap para birimi"
+
+#~ msgid "Sets the higher limit of quantity of hours."
+#~ msgstr "Saat miktarının üst limitini belirler."
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Hata! Para birimi, seçilen şirketin para birimiyle aynı olmalıdır"
+
+#~ msgid "Account Code"
+#~ msgstr "Hesap Kodu"
+
+#~ msgid ""
+#~ "Module for defining analytic accounting object.\n"
+#~ "    "
+#~ msgstr ""
+#~ "Analiz hesabı nesnesini tanımlama modülü.\n"
+#~ "    "

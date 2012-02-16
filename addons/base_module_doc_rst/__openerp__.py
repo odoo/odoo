@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Module Technical Guide in Restructured Text ',
+    'name': 'Generate Docs of Modules',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Tools',
     'description': """
 This module generates the Technical Guides of selected modules in Restructured Text format (RST).
 =================================================================================================
@@ -35,10 +35,17 @@ This module generates the Technical Guides of selected modules in Restructured T
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],
-    'update_xml': ['base_module_doc_rst_view.xml', 'base_module_doc_rst_wizard.xml', 'module_report.xml'],
+    'update_xml': [
+        'base_module_doc_rst_view.xml',
+        'wizard/generate_relation_graph_view.xml',
+        'wizard/tech_guide_rst_view.xml',
+        'module_report.xml',
+    ],
     'demo_xml': [],
     'installable': True,
     'certificate': '001288481437217734509',
     'images': ['images/base_module_doc_rst1.jpeg'],
 }
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

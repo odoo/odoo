@@ -48,6 +48,13 @@ class project_issue(crm.crm_case, osv.osv):
     _order = "priority, create_date desc"
     _inherit = ['mail.thread']
 
+    def write(self, cr, uid, ids, vals, context=None):
+        #Update last action date everytime the user change the stage, the state or send a new email
+        logged_fields = ['type_id', 'state', 'message_ids']
+        if any([field in vals for field in logged_fields]):
+            vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
+        return super(project_issue, self).write(cr, uid, ids, vals, context)
+
     def case_open(self, cr, uid, ids, *args):
         """
         @param self: The object pointer
@@ -92,32 +99,31 @@ class project_issue(crm.crm_case, osv.osv):
 
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
+            res[issue.id] = {}
             for field in fields:
-                res[issue.id] = {}
                 duration = 0
                 ans = False
                 hours = 0
 
+                date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
                 if field in ['working_hours_open','day_open']:
                     if issue.date_open:
-                        date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
                         date_open = datetime.strptime(issue.date_open, "%Y-%m-%d %H:%M:%S")
                         ans = date_open - date_create
                         date_until = issue.date_open
                         #Calculating no. of working hours to open the issue
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
-                                 datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
-                                 datetime.strptime(issue.date_open, '%Y-%m-%d %H:%M:%S'))
+                                                           date_create,
+                                                           date_open)
                 elif field in ['working_hours_close','day_close']:
                     if issue.date_closed:
-                        date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
                         date_close = datetime.strptime(issue.date_closed, "%Y-%m-%d %H:%M:%S")
                         date_until = issue.date_closed
                         ans = date_close - date_create
                         #Calculating no. of working hours to close the issue
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
-                                datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
-                                datetime.strptime(issue.date_closed, '%Y-%m-%d %H:%M:%S'))
+                               date_create,
+                               date_close)
                 elif field in ['days_since_creation']:
                     if issue.create_date:
                         days_since_creation = datetime.today() - datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
@@ -139,7 +145,11 @@ class project_issue(crm.crm_case, osv.osv):
                     duration = float(ans.days)
                     if issue.project_id and issue.project_id.resource_calendar_id:
                         duration = float(ans.days) * 24
-                        new_dates = cal_obj.interval_min_get(cr, uid, issue.project_id.resource_calendar_id.id, datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'), duration, resource=resource_id)
+
+                        new_dates = cal_obj.interval_min_get(cr, uid,
+                                                             issue.project_id.resource_calendar_id.id,
+                                                             date_create,
+                                                             duration, resource=resource_id)
                         no_days = []
                         date_until = datetime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
                         for in_time, out_time in new_dates:
@@ -148,10 +158,12 @@ class project_issue(crm.crm_case, osv.osv):
                             if out_time > date_until:
                                 break
                         duration = len(no_days)
+
                 if field in ['working_hours_open','working_hours_close']:
                     res[issue.id][field] = hours
                 else:
                     res[issue.id][field] = abs(float(duration))
+
         return res
 
     def _get_issue_task(self, cr, uid, ids, context=None):
@@ -196,7 +208,7 @@ class project_issue(crm.crm_case, osv.osv):
                                  domain="[('partner_id','=',partner_id)]"),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
-        'state': fields.selection([('draft', 'New'), ('open', 'To Solve'), ('cancel', 'Cancelled'), ('done', 'Closed'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
+        'state': fields.selection([('draft', 'New'), ('open', 'In Progress'), ('cancel', 'Cancelled'), ('done', 'Done'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
@@ -209,9 +221,9 @@ class project_issue(crm.crm_case, osv.osv):
         'date': fields.datetime('Date'),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'type_id': fields.many2one ('project.task.type', 'Resolution', domain="[('project_ids', '=', project_id)]"),
+        'type_id': fields.many2one ('project.task.type', 'Stages', domain="[('project_ids', '=', project_id)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -226,7 +238,8 @@ class project_issue(crm.crm_case, osv.osv):
                                 multi='compute_day', type="float", store=True),
         'inactivity_days': fields.function(_compute_day, string='Days since last action', \
                                 multi='compute_day', type="integer", help="Difference in days between last action and current date"),
-         'color': fields.integer('Color Index'),
+        'color': fields.integer('Color Index'),
+        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -299,9 +312,10 @@ class project_issue(crm.crm_case, osv.osv):
                 'name': bug.name,
                 'partner_id': bug.partner_id.id,
                 'description':bug.description,
-                'date': bug.date,
+                'date_deadline': bug.date,
                 'project_id': bug.project_id.id,
-                'priority': bug.priority,
+                # priority must be in ['0','1','2','3','4'], while bug.priority is in ['1','2','3','4','5']
+                'priority': str(int(bug.priority) - 1),
                 'user_id': bug.user_id.id,
                 'planned_hours': 0.0,
             })
@@ -364,7 +378,6 @@ class project_issue(crm.crm_case, osv.osv):
                     self.write(cr, uid, task.id, {'type_id': index and types[index-1] or False})
         return True
 
-
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
         result = {}
         if not task_id:
@@ -382,7 +395,7 @@ class project_issue(crm.crm_case, osv.osv):
         """
         cases = self.browse(cr, uid, ids)
         for case in cases:
-            data = {}
+            data = {'state' : 'draft'}
             if case.project_id.project_escalation_id:
                 data['project_id'] = case.project_id.project_escalation_id.id
                 if case.project_id.project_escalation_id.user_id:
@@ -475,7 +488,6 @@ project_issue()
 class project(osv.osv):
     _inherit = "project.project"
     _columns = {
-        'resource_calendar_id' : fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256)
     }

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16:10+0000\n"
-"PO-Revision-Date: 2011-01-11 11:16:10+0000\n"
+"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-02-08 00:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,7 @@ msgid "Today"
 msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:44
+#: code:addons/subscription/subscription.py:136
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -103,11 +103,6 @@ msgstr ""
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Set to Draft"
-msgstr ""
-
-#. module: subscription
-#: model:ir.module.module,description:subscription.module_meta_information
-msgid "Module allows to create new documents and add subscription on that document."
 msgstr ""
 
 #. module: subscription
@@ -148,21 +143,15 @@ msgid "If the active field is set to False, it will allow you to hide the subscr
 msgstr ""
 
 #. module: subscription
-#: selection:subscription.subscription.history,document_id:0
-msgid "Sale Order"
-msgstr ""
-
-#. module: subscription
 #: field:subscription.document,name:0
 #: field:subscription.subscription,name:0
 msgid "Name"
 msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:44
+#: code:addons/subscription/subscription.py:136
 #, python-format
-msgid "You cannot modify the Object linked to the Document Type!\n"
-"Create another Document instead !"
+msgid "You cannot delete an active subscription !"
 msgstr ""
 
 #. module: subscription
@@ -264,11 +253,6 @@ msgid "Process"
 msgstr ""
 
 #. module: subscription
-#: model:ir.module.module,shortdesc:subscription.module_meta_information
-msgid "Subscription and recurring operations"
-msgstr ""
-
-#. module: subscription
 #: help:subscription.subscription,doc_source:0
 msgid "User can choose the source document on which he wants to create documents"
 msgstr ""
@@ -280,7 +264,7 @@ msgid "Document Types"
 msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:115
+#: code:addons/subscription/subscription.py:109
 #, python-format
 msgid "Wrong Source Document !"
 msgstr ""
@@ -298,12 +282,7 @@ msgid "Done"
 msgstr ""
 
 #. module: subscription
-#: selection:subscription.subscription.history,document_id:0
-msgid "Invoice"
-msgstr ""
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:115
+#: code:addons/subscription/subscription.py:109
 #, python-format
 msgid "Please provide another source document.\n"
 "This one does not exist !"

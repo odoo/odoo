@@ -7,16 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-03-27 19:32+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-08 19:53+0000\n"
+"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:52+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:09+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -27,9 +26,14 @@ msgstr "Configuración de Aplicación de Secuencia de Cuenta"
 #. module: account_sequence
 #: constraint:account.move:0
 msgid ""
-"You cannot create entries on different periods/journals in the same move"
+"You can not create more than one move per period on centralized journal"
 msgstr ""
-"No puede crear asientos con movimientos en distintos periodos/diarios"
+"No puede crear más de un movimiento por periodo en un diario centralizado"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr "La compañía debe ser la misma para su cuenta y periodo relacionados"
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -53,23 +57,6 @@ msgid "Increment Number"
 msgstr "Incremento del número"
 
 #. module: account_sequence
-#: model:ir.module.module,description:account_sequence.module_meta_information
-msgid ""
-"\n"
-"    This module maintains internal sequence number for accounting entries.\n"
-"    "
-msgstr ""
-"\n"
-"    Este módulo gestiona el número de secuencia interno para los asientos "
-"contables\n"
-"    "
-
-#. module: account_sequence
-#: model:ir.module.module,shortdesc:account_sequence.module_meta_information
-msgid "Entries Sequence Numbering"
-msgstr "Numeración de la secuencia de asientos"
-
-#. module: account_sequence
 #: help:account.sequence.installer,number_increment:0
 msgid "The next number of the sequence will be incremented by this number"
 msgstr ""
@@ -81,9 +68,9 @@ msgid "Configure Your Account Sequence Application"
 msgstr "Configurar su Aplicación de Secuencia de la Cuenta"
 
 #. module: account_sequence
-#: field:account.sequence.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Progreso de la configuración"
+#: view:account.sequence.installer:0
+msgid "Configure"
+msgstr "Configurar"
 
 #. module: account_sequence
 #: help:account.sequence.installer,suffix:0
@@ -122,8 +109,8 @@ msgstr "Número interno"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
+msgid "You can not create journal items on an account of type view."
+msgstr "No puede crear asientos en una cuenta de tipo vista"
 
 #. module: account_sequence
 #: help:account.sequence.installer,padding:0
@@ -141,15 +128,17 @@ msgstr "Nombre"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "No puede crear un apunte en una cuenta cerrada."
+msgid "You can not create journal items on closed account."
+msgstr "No puede crear asientos en cuentas cerradas"
 
 #. module: account_sequence
-#: constraint:account.move:0
+#: constraint:account.journal:0
 msgid ""
-"You cannot create more than one move per period on centralized journal"
+"Configuration error! The currency chosen should be shared by the default "
+"accounts too."
 msgstr ""
-"No puede crear más de un apunte por periodo en un diario centralizado"
+"¡Error de configuración! La moneda elegida debería ser también la misma en "
+"las cuentas por defecto"
 
 #. module: account_sequence
 #: sql_constraint:account.move.line:0
@@ -160,16 +149,6 @@ msgstr "¡Valor haber o debe erróneo en el asiento contable!"
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr "Secuencia interna"
-
-#. module: account_sequence
-#: model:ir.model,name:account_sequence.model_account_sequence_installer
-msgid "account.sequence.installer"
-msgstr "contabilidad.secuencia.instalador"
-
-#. module: account_sequence
-#: view:account.sequence.installer:0
-msgid "Configure"
-msgstr "Configurar"
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -202,6 +181,26 @@ msgid "The name of the journal must be unique per company !"
 msgstr "¡El nombre del diaro debe ser único por compañía!"
 
 #. module: account_sequence
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+"La cuenta seleccionada en su asiento fuerza a tener una moneda secundaria. "
+"Debería eliminar la moneda secundaria de la cuenta o asignar al diario una "
+"vista multi-moneda"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
+"¡La fecha de su asiento no está en el periodo definido! Usted debería "
+"cambiar la fecha o borrar esta restricción del diario."
+
+#. module: account_sequence
 #: field:account.sequence.installer,prefix:0
 msgid "Prefix"
 msgstr "Prefijo"
@@ -212,11 +211,9 @@ msgid "The code of the journal must be unique per company !"
 msgstr "¡El código del diario debe ser único por compañía!"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-"No puede crear un movimiento en una cuenta a cobrar/a pagar sin una empresa."
+#: model:ir.model,name:account_sequence.model_account_sequence_installer
+msgid "account.sequence.installer"
+msgstr "contabilidad.secuencia.instalador"
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_journal
@@ -229,7 +226,37 @@ msgid "You can enhance the Account Sequence Application by installing ."
 msgstr ""
 "Puede realzar la Aplicación de Secuencia de la Cuenta mediante instalación ."
 
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "No puede crear un movimiento en una cuenta de tipo vista."
+#~ msgid ""
+#~ "You cannot create entries on different periods/journals in the same move"
+#~ msgstr ""
+#~ "No puede crear asientos con movimientos en distintos periodos/diarios"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This module maintains internal sequence number for accounting entries.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Este módulo gestiona el número de secuencia interno para los asientos "
+#~ "contables\n"
+#~ "    "
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "No puede crear un movimiento en una cuenta de tipo vista."
+
+#~ msgid "Entries Sequence Numbering"
+#~ msgstr "Numeración de la secuencia de asientos"
+
+#~ msgid "Configuration Progress"
+#~ msgstr "Progreso de la configuración"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "No puede crear un apunte en una cuenta cerrada."
+
+#~ msgid ""
+#~ "You cannot create more than one move per period on centralized journal"
+#~ msgstr ""
+#~ "No puede crear más de un apunte por periodo en un diario centralizado"

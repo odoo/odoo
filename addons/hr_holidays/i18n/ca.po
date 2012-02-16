@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2011-08-06 12:11+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:24+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:40+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -22,13 +22,12 @@ msgid "Blue"
 msgstr "Blau"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
 #: field:hr.holidays,holiday_type:0
 msgid "Allocation Type"
 msgstr "Tipus d'assignació"
 
 #. module: hr_holidays
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr "A l'espera de segona aprovació"
 
@@ -48,18 +47,22 @@ msgid "Group By..."
 msgstr "Agrupa per..."
 
 #. module: hr_holidays
-#: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
-msgid "Sick Leave"
-msgstr "Absència per malaltia"
+#: view:hr.holidays:0
+msgid "Allocation Mode"
+msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,department_id:0
+#: view:hr.holidays:0 field:hr.holidays,department_id:0
 msgid "Department"
 msgstr "Departament"
 
 #. module: hr_holidays
-#: selection:hr.holidays,state:0
+#: model:ir.actions.act_window,name:hr_holidays.request_approve_holidays
+msgid "Requests Approve"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Refused"
 msgstr "Rebutjada"
 
@@ -67,6 +70,11 @@ msgstr "Rebutjada"
 #: help:hr.holidays,category_id:0
 msgid "Category of Employee"
 msgstr "Categoria de l'empleat"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid " Month-1"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -98,13 +106,6 @@ msgid "Set to Draft"
 msgstr "Canvia a esborrany"
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
-msgid "Holidays"
-msgstr "Absències"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Cyan"
 msgstr "Cian clar"
@@ -113,6 +114,11 @@ msgstr "Cian clar"
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Green"
 msgstr "Verd clar"
+
+#. module: hr_holidays
+#: field:hr.employee,current_leave_id:0
+msgid "Current Leave Type"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -134,10 +140,15 @@ msgid "Summary Of Leaves"
 msgstr "Resum d'absències"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
+#: selection:hr.employee,current_leave_state:0 view:hr.holidays:0
 #: selection:hr.holidays,state:0
 msgid "Approved"
 msgstr "Aprovada"
+
+#. module: hr_holidays
+#: field:hr.employee,last_login:0
+msgid "Latest Connection"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -145,7 +156,7 @@ msgid "Refuse"
 msgstr "Rebutja"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:344
 #, python-format
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
@@ -154,8 +165,21 @@ msgstr ""
 "(%s)"
 
 #. module: hr_holidays
+#: help:hr.holidays,state:0
+msgid ""
+"The state is set to 'Draft', when a holiday request is created.            \n"
+"The state is 'Waiting Approval', when holiday request is confirmed by user.  "
+"          \n"
+"The state is 'Refused', when holiday request is refused by manager.          "
+"  \n"
+"The state is 'Approved', when holiday request is approved by manager."
+msgstr ""
+
+#. module: hr_holidays
 #: view:board.board:0
-#: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Leaves"
 msgstr "Absències"
 
@@ -165,12 +189,17 @@ msgid "Leave"
 msgstr "Absència"
 
 #. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
+msgid "Leave Requests to Approve"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
 msgid "Leaves by Department"
 msgstr "Ausencias por departamento"
 
 #. module: hr_holidays
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "Cancel·lat"
 
@@ -186,9 +215,22 @@ msgstr ""
 "absències disponibles per a algú."
 
 #. module: hr_holidays
+#: help:hr.employee,remaining_leaves:0
+msgid ""
+"Total number of legal leaves allocated to this employee, change this value "
+"to create allocation/leave requests."
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Validation"
 msgstr "Validació"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:377
+#, python-format
+msgid "Warning !"
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -201,11 +243,14 @@ msgid "HR Holidays Summary Report By Employee"
 msgstr "Informe de RRHH de resumen de ausencias por empleado"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
+#: help:hr.holidays,manager_id:0
+msgid "This area is automatically filled by the user who validate the leave"
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
-#: view:hr.holidays.status:0
-#: field:hr.holidays.status,name:0
+#: view:hr.holidays.status:0 field:hr.holidays.status,name:0
 #: field:hr.holidays.summary.dept,holiday_type:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
@@ -214,34 +259,16 @@ msgid "Leave Type"
 msgstr "Tipus d'absència"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:186
-#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:199
+#: code:addons/hr_holidays/hr_holidays.py:344
 #, python-format
 msgid "Warning!"
 msgstr "Avís!"
 
 #. module: hr_holidays
-#: selection:hr.holidays,state:0
-msgid "Draft"
-msgstr "Esborrany"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Magenta"
 msgstr "Magenta"
-
-#. module: hr_holidays
-#: help:hr.holidays,state:0
-msgid ""
-"When the holiday request is created the state is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the state is "
-"'Waiting Approval'.            If the admin accepts it, the state is "
-"'Approved'. If it is refused, the state is 'Refused'."
-msgstr ""
-"L'estat d'una petició d'absència en el moment de crear-se és 'Esborrany'.\n"
-" Quan l'usuari la confirma, s'envia al responsable i el seu estat canvia a "
-"'Esperant aprovació'. Si el responsable l'autoritza, l'estat canvia a "
-"'Aprovada', però si la rebutja el seu estat canvia a 'Rebutjada'."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -267,82 +294,10 @@ msgid "Confirm"
 msgstr "Confirma"
 
 #. module: hr_holidays
-#: sql_constraint:hr.holidays:0
-msgid "The start date must be before the end date !"
-msgstr "La data d'inici ha de ser anterior a la data de fi!"
-
-#. module: hr_holidays
-#: model:ir.module.module,description:hr_holidays.module_meta_information
-msgid ""
-"Human Resources: Holidays tracking and workflow\n"
-"\n"
-"    This module allows you to manage leaves and leaves' requests.\n"
-"    Implements a dashboard for human resource management that includes.\n"
-"        * My Leaves\n"
-"        * My Expenses\n"
-"    Note that:\n"
-"    - A synchronisation with an internal agenda (use of the CRM module) is "
-"possible: in order to automatically create a case when an holiday request is "
-"accepted, you have to link the holidays status to a case section. You can "
-"set up this info and your colour preferences in\n"
-"                HR / Configuration / Holidays Status\n"
-"    - An employee can make an ask for more off-days by making a new "
-"Allocation It will increase his total of that leave type available (if the "
-"request is accepted).\n"
-"    - There are two ways to print the employee's holidays:\n"
-"        * The first will allow to choose employees by department and is used "
-"by clicking the menu item located in\n"
-"                HR / Holidays Request / Print Summary of Holidays\n"
-"        * The second will allow you to choose the holidays report for "
-"specific employees. Go on the list\n"
-"                HR / Employees / Employees\n"
-"            then select the ones you want to choose, click on the print icon "
-"and select the option\n"
-"                'Print Summary of Employee's Holidays'\n"
-"    - The wizard allows you to choose if you want to print either the "
-"Confirmed & Validated holidays or only the Validated ones. These states must "
-"be set up by a user from the group 'HR'. You can define these features in "
-"the security tab from the user data in\n"
-"                Administration / Users / Users\n"
-"            for example, you maybe will do it for the user 'admin'\n"
-"            .\n"
+#: code:addons/hr_holidays/hr_holidays.py:384
+#, python-format
+msgid "Leave Request for %s"
 msgstr ""
-"Recursos humans: Gestió d'absències i flux de treball\n"
-"\n"
-"    Aquest mòdul us permet gestionar les absències i les peticions "
-"d'absències dels treballadors.\n"
-"    Implementa un panell per a gestió de recursos humans que inclou:\n"
-"        * Les meves absències\n"
-"        * Les meves despeses\n"
-"    Tingueu en compte que:\n"
-"\n"
-"    - Es possible la sincronització amb l'agenda interna (del mòdul CRM): "
-"Amb la finalitat de crear automàticament un cas quan s'accepta una "
-"sol·licitud d'absència, heu de vincular l'estat d'absència a una secció de "
-"cas. Podeu configurar aquesta informació i les seves preferències de color "
-"a:\n"
-"                Recursos Humans / Configuració / Absències / Tipus "
-"d'absència\n"
-"    - Un treballador pot sol·licitar més dies lliures mitjançant una nova "
-"assignació. Això incrementarà el total de dies disponibles d'aquest tipus "
-"d'absència (si s'accepta la petició).\n"
-"    - Hi ha dos formes de imprimir les absències dels treballadors:\n"
-"        * La primera us permetrà escollir treballadors per departament i "
-"s'usa fent clic en l'opció de menú:\n"
-"                Recursos Humans / Informe / Absències / Absències per "
-"departament\n"
-"        * La segona us permetrà escollir l'informe d'absències per "
-"treballador específics a través de:\n"
-"                Recursos Humans / Informe / Absències / Anàlisi d'absència\n"
-"           Seleccioneu aquells treballadors dels que vulgueu l'informe i "
-"premeu sobre la icona imprimeix.\n"
-"    - L'assistent us permet escollir si voleu imprimir les absències "
-"confirmades, les validades o ambdues.\n"
-"Aquests estats han de ser configurats per un usuari del grup 'Recursos "
-"Humans'. Podeu definir aquestes opcions en la pestanya seguretat de les "
-"dades de l'usuari:\n"
-"                Administració / Usuaris / Usuaris\n"
-"           Per exemple, podeu fer-ho per a l'usuari 'Administrador'.\n"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
@@ -350,8 +305,7 @@ msgid "Remaining Leaves"
 msgstr "Vacances disponibles"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,state:0
+#: view:hr.holidays:0 field:hr.holidays,state:0
 msgid "State"
 msgstr "Estat"
 
@@ -361,11 +315,16 @@ msgid "Total holidays by type"
 msgstr "Total absències per tipus"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,employee_id:0
+#: view:hr.employee:0 view:hr.holidays:0 field:hr.holidays,employee_id:0
 #: field:hr.holidays.remaining.leaves.user,name:0
+#: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
 msgstr "Empleat"
+
+#. module: hr_holidays
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+msgid "New"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -400,11 +359,29 @@ msgstr ""
 "d'absència."
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,number_of_days:0
+#: code:addons/hr_holidays/hr_holidays.py:382
+#, python-format
+msgid "Allocation for %s"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0 field:hr.holidays,number_of_days:0
 #: field:hr.holidays,number_of_days_temp:0
 msgid "Number of Days"
 msgstr "Número de dies"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:377
+#, python-format
+msgid ""
+"The feature behind the field 'Remaining Legal Leaves' can only be used when "
+"there is only one leave type with the option 'Allow to Override Limit' "
+"unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
+"decide on which leave type the update has to be done. \n"
+"You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
+"Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
+"the employees if the configuration does not allow to use this field."
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -426,7 +403,7 @@ msgstr ""
 "validador."
 
 #. module: hr_holidays
-#: selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Waiting Approval"
 msgstr "Esperant aprovació"
 
@@ -460,6 +437,12 @@ msgid "Lavender"
 msgstr "Lavanda"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Month"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "Leave Requests"
@@ -477,7 +460,7 @@ msgid "Employee's Holidays"
 msgstr "Absències de l'empleat"
 
 #. module: hr_holidays
-#: field:hr.holidays,category_id:0
+#: view:hr.holidays:0 field:hr.holidays,category_id:0
 msgid "Category"
 msgstr "Categoria"
 
@@ -512,13 +495,17 @@ msgid "Black"
 msgstr "Negre"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_holidays_leaves_assign_legal
+msgid "Allocate Leaves for Employees"
+msgstr ""
+
+#. module: hr_holidays
 #: field:resource.calendar.leaves,holiday_id:0
 msgid "Holiday"
 msgstr "Absències"
 
 #. module: hr_holidays
-#: field:hr.holidays,case_id:0
-#: field:hr.holidays.status,categ_id:0
+#: field:hr.holidays,case_id:0 field:hr.holidays.status,categ_id:0
 msgid "Meeting"
 msgstr "Reunió"
 
@@ -545,6 +532,11 @@ msgid "User"
 msgstr "Usuari/a"
 
 #. module: hr_holidays
+#: sql_constraint:hr.holidays:0
+msgid "The start date must be before the end date !"
+msgstr "La data d'inici ha de ser anterior a la data de fi!"
+
+#. module: hr_holidays
 #: field:hr.holidays.status,active:0
 msgid "Active"
 msgstr "Actiu"
@@ -555,14 +547,14 @@ msgid "Leaves To Validate"
 msgstr "Absències per validar"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-msgid "Extended Filters..."
-msgstr "Filtres estesos..."
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr_holidays
-#: sql_constraint:hr.holidays:0
-msgid "The number of days must be greater than 0 !"
-msgstr "El número de dies ha de ser superior a 0!"
+#: view:hr.employee:0 field:hr.employee,remaining_leaves:0
+msgid "Remaining Legal Leaves"
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -570,15 +562,21 @@ msgid "First Approval"
 msgstr "Primera aprovació"
 
 #. module: hr_holidays
-#: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Casual Leave"
-msgstr "Absència ocasional"
+#: model:hr.holidays.status,name:hr_holidays.holiday_status_unpaid
+msgid "Unpaid"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
 msgstr "Resum d'absències"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Holidays during last month"
+msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -587,9 +585,24 @@ msgid "Error"
 msgstr "Error"
 
 #. module: hr_holidays
+#: view:hr.employee:0
+msgid "Assign Leaves"
+msgstr ""
+
+#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Blue"
 msgstr "Blau clar"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "My Department Leaves"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.employee,current_leave_state:0
+msgid "Current Leave Status"
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays,type:0
@@ -616,19 +629,23 @@ msgid "General"
 msgstr "General"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: field:hr.holidays,notes:0
+#: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
+msgid "Compensatory Days"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0 field:hr.holidays,notes:0
 msgid "Reasons"
 msgstr "Raons"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
 msgstr "Anàlisi d'absències"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0
-#: view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "Cancel·la"
 
@@ -642,15 +659,13 @@ msgstr ""
 "Absències per departament"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: selection:hr.holidays.summary.dept,holiday_type:0
+#: view:hr.holidays:0 selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Validated"
 msgstr "Validat"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: selection:hr.holidays,type:0
+#: view:hr.holidays:0 selection:hr.holidays,type:0
 msgid "Allocation Request"
 msgstr "Petició d'assignació"
 
@@ -660,13 +675,13 @@ msgid "Leave Detail"
 msgstr "Detall absència"
 
 #. module: hr_holidays
+#: field:hr.holidays,double_validation:0
 #: field:hr.holidays.status,double_validation:0
 msgid "Apply Double Validation"
 msgstr "Aplica doble validació"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0
-#: view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "Imprimeix"
 
@@ -676,6 +691,7 @@ msgid "Details"
 msgstr "Detalls"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
 msgstr "Les meves absències"
@@ -686,8 +702,7 @@ msgid "By Employee Category"
 msgstr "Per categoria d'empleat"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: selection:hr.holidays,type:0
+#: view:hr.holidays:0 selection:hr.holidays,type:0
 msgid "Leave Request"
 msgstr "Petició d'absència"
 
@@ -695,6 +710,16 @@ msgstr "Petició d'absència"
 #: field:hr.holidays,name:0
 msgid "Description"
 msgstr "Descripció"
+
+#. module: hr_holidays
+#: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
+msgid "Legal Leaves"
+msgstr ""
+
+#. module: hr_holidays
+#: sql_constraint:hr.holidays:0
+msgid "The number of days must be greater than 0 !"
+msgstr "El número de dies ha de ser superior a 0!"
 
 #. module: hr_holidays
 #: help:hr.holidays,holiday_type:0
@@ -707,7 +732,7 @@ msgstr ""
 "categoria."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:186
+#: code:addons/hr_holidays/hr_holidays.py:199
 #, python-format
 msgid "You cannot delete a leave which is not in draft state !"
 msgstr "No podeu eliminar una absència que no estigui en l'estat esborrany!"
@@ -733,11 +758,6 @@ msgid "Department(s)"
 msgstr "Departament(s)"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-msgid "This Month"
-msgstr "Aquest mes"
-
-#. module: hr_holidays
 #: field:hr.holidays,manager_id2:0
 msgid "Second Approval"
 msgstr "Segona aprovació"
@@ -746,6 +766,11 @@ msgstr "Segona aprovació"
 #: field:hr.holidays,date_to:0
 msgid "End Date"
 msgstr "Data final"
+
+#. module: hr_holidays
+#: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
+msgid "Sick Leaves"
+msgstr ""
 
 #. module: hr_holidays
 #: help:hr.holidays.status,limit:0
@@ -771,6 +796,13 @@ msgid "Violet"
 msgstr "Violeta"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
+msgid ""
+"You can assign remaining Legal Leaves for each employee, OpenERP will "
+"automatically create and validate allocation requests."
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Allowed"
 msgstr "Màxim permès"
@@ -785,9 +817,9 @@ msgstr ""
 "en segon nivell (si el tipus d'absència necessita segona validació)"
 
 #. module: hr_holidays
-#: model:ir.module.module,shortdesc:hr_holidays.module_meta_information
-msgid "Human Resources: Holidays management"
-msgstr "Recursos humans: Gestió d'absències"
+#: view:hr.holidays:0
+msgid "Mode"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
@@ -795,22 +827,17 @@ msgid "HR Holidays Summary Report By Department"
 msgstr "Informe de RRHH de resum d'absències per departament"
 
 #. module: hr_holidays
-#: help:hr.holidays,manager_id:0
-msgid "This area is automaticly filled by the user who validate the leave"
-msgstr ""
-"Aquest espai es emplenat automàticament per l'usuari que valida l'absència"
-
-#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Approve"
 msgstr "Aprova"
 
 #. module: hr_holidays
-#: field:hr.holidays,date_from:0
+#: view:hr.holidays:0 field:hr.holidays,date_from:0
 msgid "Start Date"
 msgstr "Data d'inici"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
@@ -838,5 +865,117 @@ msgstr "Per confirmar"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+msgid "Year"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
 msgid "To Approve"
 msgstr "Per aprovar"
+
+#~ msgid "Sick Leave"
+#~ msgstr "Absència per malaltia"
+
+#~ msgid "Holidays"
+#~ msgstr "Absències"
+
+#~ msgid "Draft"
+#~ msgstr "Esborrany"
+
+#~ msgid ""
+#~ "When the holiday request is created the state is 'Draft'.\n"
+#~ " It is confirmed by the user and request is sent to admin, the state is "
+#~ "'Waiting Approval'.            If the admin accepts it, the state is "
+#~ "'Approved'. If it is refused, the state is 'Refused'."
+#~ msgstr ""
+#~ "L'estat d'una petició d'absència en el moment de crear-se és 'Esborrany'.\n"
+#~ " Quan l'usuari la confirma, s'envia al responsable i el seu estat canvia a "
+#~ "'Esperant aprovació'. Si el responsable l'autoritza, l'estat canvia a "
+#~ "'Aprovada', però si la rebutja el seu estat canvia a 'Rebutjada'."
+
+#~ msgid "Casual Leave"
+#~ msgstr "Absència ocasional"
+
+#~ msgid "This Month"
+#~ msgstr "Aquest mes"
+
+#~ msgid "This area is automaticly filled by the user who validate the leave"
+#~ msgstr ""
+#~ "Aquest espai es emplenat automàticament per l'usuari que valida l'absència"
+
+#~ msgid "Human Resources: Holidays management"
+#~ msgstr "Recursos humans: Gestió d'absències"
+
+#~ msgid ""
+#~ "Human Resources: Holidays tracking and workflow\n"
+#~ "\n"
+#~ "    This module allows you to manage leaves and leaves' requests.\n"
+#~ "    Implements a dashboard for human resource management that includes.\n"
+#~ "        * My Leaves\n"
+#~ "        * My Expenses\n"
+#~ "    Note that:\n"
+#~ "    - A synchronisation with an internal agenda (use of the CRM module) is "
+#~ "possible: in order to automatically create a case when an holiday request is "
+#~ "accepted, you have to link the holidays status to a case section. You can "
+#~ "set up this info and your colour preferences in\n"
+#~ "                HR / Configuration / Holidays Status\n"
+#~ "    - An employee can make an ask for more off-days by making a new "
+#~ "Allocation It will increase his total of that leave type available (if the "
+#~ "request is accepted).\n"
+#~ "    - There are two ways to print the employee's holidays:\n"
+#~ "        * The first will allow to choose employees by department and is used "
+#~ "by clicking the menu item located in\n"
+#~ "                HR / Holidays Request / Print Summary of Holidays\n"
+#~ "        * The second will allow you to choose the holidays report for "
+#~ "specific employees. Go on the list\n"
+#~ "                HR / Employees / Employees\n"
+#~ "            then select the ones you want to choose, click on the print icon "
+#~ "and select the option\n"
+#~ "                'Print Summary of Employee's Holidays'\n"
+#~ "    - The wizard allows you to choose if you want to print either the "
+#~ "Confirmed & Validated holidays or only the Validated ones. These states must "
+#~ "be set up by a user from the group 'HR'. You can define these features in "
+#~ "the security tab from the user data in\n"
+#~ "                Administration / Users / Users\n"
+#~ "            for example, you maybe will do it for the user 'admin'\n"
+#~ "            .\n"
+#~ msgstr ""
+#~ "Recursos humans: Gestió d'absències i flux de treball\n"
+#~ "\n"
+#~ "    Aquest mòdul us permet gestionar les absències i les peticions "
+#~ "d'absències dels treballadors.\n"
+#~ "    Implementa un panell per a gestió de recursos humans que inclou:\n"
+#~ "        * Les meves absències\n"
+#~ "        * Les meves despeses\n"
+#~ "    Tingueu en compte que:\n"
+#~ "\n"
+#~ "    - Es possible la sincronització amb l'agenda interna (del mòdul CRM): "
+#~ "Amb la finalitat de crear automàticament un cas quan s'accepta una "
+#~ "sol·licitud d'absència, heu de vincular l'estat d'absència a una secció de "
+#~ "cas. Podeu configurar aquesta informació i les seves preferències de color "
+#~ "a:\n"
+#~ "                Recursos Humans / Configuració / Absències / Tipus "
+#~ "d'absència\n"
+#~ "    - Un treballador pot sol·licitar més dies lliures mitjançant una nova "
+#~ "assignació. Això incrementarà el total de dies disponibles d'aquest tipus "
+#~ "d'absència (si s'accepta la petició).\n"
+#~ "    - Hi ha dos formes de imprimir les absències dels treballadors:\n"
+#~ "        * La primera us permetrà escollir treballadors per departament i "
+#~ "s'usa fent clic en l'opció de menú:\n"
+#~ "                Recursos Humans / Informe / Absències / Absències per "
+#~ "departament\n"
+#~ "        * La segona us permetrà escollir l'informe d'absències per "
+#~ "treballador específics a través de:\n"
+#~ "                Recursos Humans / Informe / Absències / Anàlisi d'absència\n"
+#~ "           Seleccioneu aquells treballadors dels que vulgueu l'informe i "
+#~ "premeu sobre la icona imprimeix.\n"
+#~ "    - L'assistent us permet escollir si voleu imprimir les absències "
+#~ "confirmades, les validades o ambdues.\n"
+#~ "Aquests estats han de ser configurats per un usuari del grup 'Recursos "
+#~ "Humans'. Podeu definir aquestes opcions en la pestanya seguretat de les "
+#~ "dades de l'usuari:\n"
+#~ "                Administració / Usuaris / Usuaris\n"
+#~ "           Per exemple, podeu fer-ho per a l'usuari 'Administrador'.\n"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Filtres estesos..."
