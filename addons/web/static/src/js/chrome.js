@@ -45,6 +45,12 @@ openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.
 
 });
 
+openerp.web.dialog = function(element) {
+    var result = element.dialog.apply(element, _.rest(_.toArray(arguments)));
+    result.dialog("widget").addClass("openerp");
+    return result;
+}
+
 openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog# */{
     dialog_title: "",
     /**
@@ -86,7 +92,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         if (this.dialog_options.autoOpen) {
             this.open();
         } else {
-            this.$element.dialog(this.get_options());
+            openerp.web.dialog(this.$element, this.get_options());
         }
     },
     get_options: function(options) {
@@ -125,7 +131,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
             this.$element.html(this.render());
         }
         var o = this.get_options(options);
-        this.$element.dialog(o).dialog('open');
+        openerp.web.dialog(this.$element, o).dialog('open');
         if (o.height === 'auto' && o.max_height) {
             this.$element.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
         }
@@ -166,7 +172,7 @@ openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
         }
     },
     on_managed_error: function(error) {
-        $('<div>' + QWeb.render('CrashManagerWarning', {error: error}) + '</div>').dialog({
+    	openerp.web.dialog($('<div>' + QWeb.render('CrashManagerWarning', {error: error}) + '</div>'), {
             title: "OpenERP " + _.str.capitalize(error.type),
             buttons: [
                 {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
@@ -407,7 +413,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
      * @param {String} error.error message of the error dialog
      */
     display_error: function (error) {
-        return $('<div>').dialog({
+        return openerp.web.dialog($('<div>'), {
             modal: true,
             title: error.title,
             buttons: [
@@ -704,7 +710,7 @@ openerp.web.Header =  openerp.web.OldWidget.extend(/** @lends openerp.web.Header
                 window.location = $.param.querystring(
                         window.location.href, 'debug');
             });
-            $help.dialog({autoOpen: true,
+            openerp.web.dialog($help, {autoOpen: true,
                 modal: true, width: 960, title: _t("About")});
         });
     },
@@ -828,7 +834,7 @@ openerp.web.Header =  openerp.web.OldWidget.extend(/** @lends openerp.web.Header
         });
     },
     display_error: function (error) {
-        return $('<div>').dialog({
+        return openerp.web.dialog($('<div>'), {
             modal: true,
             title: error.title,
             buttons: [
