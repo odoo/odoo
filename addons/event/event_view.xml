@@ -76,7 +76,7 @@
                                 <field name="phone"/>
                                 <field name="nb_register" />
                                 <field name="state"/>
-                                <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
+                                <button name="button_reg_close" string="participated" states="open" type="object" icon="gtk-apply"/>
                                 <button name="case_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                                 <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                             </tree>
@@ -96,7 +96,7 @@
                                         <separator string="" colspan="4"/>
                                         <newline/>
                                         <field name="state" select="1" colspan="2"/>
-                                        <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
+                                        <button name="button_reg_close" string="participated" states="open" type="object" icon="gtk-apply"/>
                                         <button name="case_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                                         <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                     </group>
@@ -122,6 +122,7 @@
                             <field name="register_min"/>
                             <field name="register_max"/>
                             <field name="register_current"/>
+                            <field name="register_participated"/>
                             <field name="register_prospect"/>
                         </group>
                         <group col="2" colspan="2">
@@ -268,6 +269,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Registration" >
+                    <field name="create_date"/>
                     <field name="name"/>
                     <field name="email"/>
                     <field name="event_id" />
@@ -277,7 +279,7 @@
                     <field name="state"/>
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                     <button name="case_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                    <button name="case_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
+                    <button name="case_close" string="participated" states="open" type="object" icon="gtk-apply"/>
                     <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                 </tree>
             </field>
@@ -307,7 +309,7 @@
                             </group>
                             <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Dates" colspan="2"/>
-                                <field name="date_open"/>
+                                <field name="create_date"/>
                                 <field name="date_closed"/>
                                 <field name="date" />
                                 <field name="date_deadline" />
@@ -317,7 +319,7 @@
                             <group col="8" colspan="4">
                                 <field name="state" select="1" colspan="2" widget="statusbar" statusbar_visible="draft,open,done"/>
                                 <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                                <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
+                                <button name="button_reg_close" string="participated" states="open" type="object" icon="gtk-apply"/>
                                 <button name="case_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                                 <button string="Set To Unconfirmed" name="do_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                             </group>

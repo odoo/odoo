@@ -27,6 +27,7 @@ from tools.translate import _
 import decimal_precision as dp
 from crm import wizard
 import time
+from datetime import datetime
 
 wizard.mail_compose_message.SUPPORTED_MODELS.append('event.registration')
 
@@ -36,7 +37,7 @@ class event_type(osv.osv):
     _description = __doc__
     _columns = {
         'name': fields.char('Event type', size=64, required=True),
-        'default_reply_to': fields.char('Default Reply-To', size=64,help="It will select this default reply-to value when you choose this event" ),
+        'default_reply_to': fields.char('Default Reply-To', size=64,help="The email address of the organizer which is put in the 'Reply-To' of all emails sent automatically at event or registrations confirmation. You can also put your email address of your mail gateway if you use one." ),
         'default_email_event': fields.many2one('email.template','Event Confirmation Email', help="It will select this default confirmation event mail value when you choose this event"),
         'default_email_registration':fields.many2one('email.template','Registration Confirmation Email',help="It will select this default confirmation registration mail value when you choose this event"),
         'default_registration_min':fields.integer('Default Minimum Registration',help="It will select this default minimum value when you choose this event"),
@@ -62,7 +63,7 @@ class event_event(osv.osv):
         res = []
         for record in reads:
             date= time.strptime(record.date_begin,'%Y-%m-%d %H:%M:%S')
-            date =time.strftime('%Y-%m-%d',date)
+            date =time.strftime('%d/%m/%Y',date)
             registers=''
             if record.register_max !=0:
                 register_max = str(record.register_max)
@@ -117,7 +118,7 @@ class event_event(osv.osv):
                                ('state', 'not in', ['draft', 'cancel'])], context=context)
                 register_pool.mail_user_confirm(cr, uid, reg_ids)
         return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
-
+    
     def _get_register(self, cr, uid, ids, fields, args, context=None):
         """Get Confirm or uncofirm register value.
         @param ids: List of Event registration type's id
@@ -132,24 +133,19 @@ class event_event(osv.osv):
             for field in fields:
                 res[event.id][field] = False
             state = []
+            state_done = []
             if 'register_current' in fields:
-                state += ['open', 'done']
+                state += ['open']
             if 'register_prospect' in fields:
                 state.append('draft')
+            #TODO refactor this part of code to have only one search
+            reg_ids = register_pool.search(cr, uid, [('event_id', '=', event.id),('state', '=', 'open')], context=context)
+            reg_ids1=  register_pool.search(cr, uid, [('event_id', '=', event.id),('state', '=', 'done')], context=context)
+            reg_ids2=  register_pool.search(cr, uid, [('event_id', '=', event.id),('state', '=', 'draft')], context=context)
+            res[event.id]['register_current'] = len(reg_ids)
+            res[event.id]['register_prospect'] = len(reg_ids2)
+            res[event.id]['register_participated'] = len(reg_ids1)
 
-            reg_ids = register_pool.search(cr, uid, [
-                        ('event_id', '=', event.id),
-                       ('state', 'in', state)], context=context)
-
-            number = 0.0
-            if reg_ids:
-                cr.execute('SELECT SUM(nb_register) FROM event_registration WHERE id IN %s', (tuple(reg_ids),))
-                number = cr.fetchone()
-
-            if 'register_current' in fields:
-                res[event.id]['register_current'] = number and number[0] or 0.0
-            if 'register_prospect' in fields:
-                res[event.id]['register_prospect'] = number and number[0] or 0.0
         return res
     
 
@@ -159,10 +155,9 @@ class event_event(osv.osv):
         'type': fields.many2one('event.type', 'Type of Event', readonly=False, states={'done': [('readonly', True)]}),
         'register_max': fields.integer('Maximum Registrations', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
         'register_min': fields.integer('Minimum Registrations', help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
-        'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_current',
-            help="Total of Confirmed and Done Registrations"),
-        'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_prospect',
-            ),
+        'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_current'),
+        'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_prospect'),
+        'register_participated': fields.function(_get_register, string='Participated Registrations', multi='register_prospect'),
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
         'date_begin': fields.datetime('Starting Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('Closing Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -223,16 +218,16 @@ class event_registration(osv.osv):
     _name= 'event.registration'
     _description = __doc__
     _inherit = ['mail.thread','res.partner.address']
-
     _columns = {
         'id': fields.integer('ID'),
-        'origin': fields.char('Origin', size=124,readonly=True),
-        'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Number of participants for this registration."),
+        'origin': fields.char('Origin', size=124,readonly=True,help="Name of the sale order which create the registration"),
+        'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
         'partner_id_address': fields.many2one('res.partner.address', 'Partner', states={'done': [('readonly', True)]}),
         "contact_id": fields.many2one('res.partner.address', 'Partner Contact', readonly=False, states={'done': [('readonly', True)]}), #TODO: filter only the contacts that have a function into the selected partner_id
-        'date_closed': fields.datetime('Closure Date', readonly=True),
+        'create_date': fields.datetime('Creation Date' , readonly=True),
+        'date_closed': fields.datetime('Participated Date', readonly=True),
         'date_open': fields.datetime('Registration Date', readonly=True),
         'email_from': fields.related('event_id','reply_to',string='Reply-to Email', type='char', size=128, readonly=True,),
         'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('email_from', '=', False),('model','=',_name)]),
@@ -243,23 +238,24 @@ class event_registration(osv.osv):
         'state': fields.selection([('draft', 'Unconfirmed'),
                                     ('open', 'Confirmed'),
                                     ('cancel', 'Cancelled'),
-                                    ('done', 'Done')], 'State', \
+                                    ('done', 'Participated')], 'State', \
                                     size=16, readonly=True)
     }
+
     _defaults = {
         'nb_register': 1,
         'state': 'draft',
         'user_id': lambda self, cr, uid, ctx: uid,
-        'date_open':fields.date.context_today,
     }
-    _order = 'date_open desc'
+    _order = 'create_date desc'
+
 
     def do_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
     def registration_open(self, cr, uid, ids, context=None):
         """ Open Registration
         """
-        res = self.write(cr, uid, ids, {'state': 'open','date_open':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        res = self.write(cr, uid, ids, {'state': 'open'}, context=context)
         self.mail_user(cr, uid, ids)
         self.message_append(cr, uid, ids, _('Open'))
         return res

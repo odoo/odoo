@@ -33,7 +33,7 @@ class sale_order_line(osv.osv):
     _inherit='sale.order.line'
     _columns={
         'event':fields.many2one('event.event','Event',help="Choose an event and it will authomaticaly create a registration for this event"),
-        'event_type_id':fields.related('event_type',type='many2one', relation="event.type", string="Event Type"),
+        'event_type_id':fields.related('event_type_id',type='many2one', relation="event.type", string="Event Type"),
         'event_ok':fields.related('event_ok',string='event_ok' ,type='boolean'),
     }
 
@@ -84,15 +84,4 @@ class sale_order_line(osv.osv):
                 message = ("A registration is create from the %s sale order.") % (registration.order_id.name,)
                 self.pool.get('event.registration').log(cr, uid, registration.event.id, message)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context)
-
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        print 'wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'
-        if not default:
-            default = {}
-            default.update({
-                'event_id',1
-                  })
-        print '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
-        return super(sale_order, self).copy(cr, uid, id, default, context=context)
 
