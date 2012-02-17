@@ -12,7 +12,6 @@ import xmlrpclib
 
 import openerp
 import common
-import core
 
 DB = common.DB
 ADMIN_USER = common.ADMIN_USER
@@ -23,7 +22,7 @@ setUpModule = common.start_openerp
 
 tearDownModule = common.stop_openerp
 
-class test_xmlrpc(core.RpcCase):
+class test_xmlrpc(common.RpcCase):
 
     def test_00_xmlrpc_create_database_polling(self):
         """
