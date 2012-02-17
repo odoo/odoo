@@ -1073,6 +1073,9 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
 
         this._current_state = null;
     },
+    render_element: function() {
+    	this.$element.addClass("openerp");
+    },
     start: function() {
         var self = this;
         if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {

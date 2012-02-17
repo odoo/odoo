@@ -104,12 +104,11 @@ html_template = """<!DOCTYPE html>
             $(function() {
                 var s = new openerp.init(%(modules)s);
                 var wc = new s.web.WebClient();
-                wc.$element = $(document.body);
-                wc.start();
+                wc.appendTo($(document.body));
             });
         </script>
     </head>
-    <body class="openerp" id="oe"></body>
+    <body></body>
 </html>
 """
 
