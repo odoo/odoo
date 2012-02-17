@@ -422,7 +422,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.on_form_changed();
         }
         if (!_.isEmpty(result.warning)) {
-            $(QWeb.render("CrashManagerWarning", result.warning)).dialog({
+        	openerp.web.dialog($(QWeb.render("CrashManagerWarning", result.warning)), {
                 modal: true,
                 buttons: [
                     {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
@@ -1249,7 +1249,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         var exec_action = function() {
             if (self.node.attrs.confirm) {
                 var def = $.Deferred();
-                var dialog = $('<div>' + self.node.attrs.confirm + '</div>').dialog({
+                var dialog = openerp.web.dialog($('<div>' + self.node.attrs.confirm + '</div>'), {
                     title: _t('Confirm'),
                     modal: true,
                     buttons: [
@@ -2043,6 +2043,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             minLength: 0,
             delay: 0
         });
+        this.$input.autocomplete("widget").addClass("openerp");
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {
             if (e.which === 13) {
@@ -3026,7 +3027,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         this.context = context || {};
         this.options = _.defaults(options || {}, {"auto_write": true});
         this.render_element();
-        this.$element.dialog({
+        openerp.web.dialog(this.$element, {
             title: options.title || '',
             modal: true,
             width: 960,

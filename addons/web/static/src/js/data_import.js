@@ -151,7 +151,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         });
     },
     toggle_import_button: function (newstate) {
-        this.$element.dialog('widget')
+    	openerp.web.dialog(this.$element, 'widget')
                 .find('.oe-dialog-import-button')
                 .button('option', 'disabled', !newstate);
     },

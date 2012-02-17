@@ -916,7 +916,7 @@ session.web.Sidebar = session.web.OldWidget.extend({
             var ids = self.widget_parent.get_selected_ids();
             if (ids.length == 0) {
                 //TODO: make prettier warning?
-                $("<div />").text(_t("You must choose at least one record.")).dialog({
+            	openerp.web.dialog($("<div />").text(_t("You must choose at least one record.")), {
                     title: _t("Warning"),
                     modal: true
                 });

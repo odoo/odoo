@@ -103,11 +103,12 @@ html_template = """<!DOCTYPE html>
         <script type="text/javascript">
             $(function() {
                 var s = new openerp.init(%(modules)s);
-                %(init)s
+                var wc = new s.web.WebClient();
+                wc.appendTo($(document.body));
             });
         </script>
     </head>
-    <body class="openerp" id="oe"></body>
+    <body></body>
 </html>
 """
 
@@ -270,7 +271,6 @@ class WebClient(openerpweb.Controller):
             'js': js,
             'css': css,
             'modules': simplejson.dumps(self.server_wide_modules(req)),
-            'init': 'new s.web.WebClient().start();',
         }
         return r
 

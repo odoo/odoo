@@ -232,7 +232,7 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
             context.add({"group_by": groupbys});
             var dial_html = QWeb.render("SearchView.managed-filters.add");
             var $dial = $(dial_html);
-            $dial.dialog({
+            openerp.web.dialog($dial, {
                 modal: true,
                 title: _t("Filter Entry"),
                 buttons: [
@@ -281,7 +281,7 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
                 selected_menu_id : menu.$element.find('a.active').data('menu')
             }));
         $dialog.find('input').val(this.fields_view.name);
-        $dialog.dialog({
+        openerp.web.dialog($dialog, {
             modal: true,
             title: _t("Add to Dashboard"),
             buttons: [
