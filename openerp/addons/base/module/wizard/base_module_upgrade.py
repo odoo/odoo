@@ -42,6 +42,9 @@ class base_module_upgrade(osv.osv_memory):
          @return: New arch of view.
         """
         res = super(base_module_upgrade, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        if view_type != 'form':
+            return res
+
         record_id = context and context.get('active_id', False) or False
         active_model = context.get('active_model')
         if (not record_id) or (not active_model):
