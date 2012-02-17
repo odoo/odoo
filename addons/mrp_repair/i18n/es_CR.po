@@ -7,15 +7,16 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-08 02:53-0600\n"
-"Last-Translator: Carlos Vásquez - CLEARCORP <carlos.vasquez@clearcorp.co.cr>\n"
+"PO-Revision-Date: 2012-02-17 00:19+0000\n"
+"Last-Translator: Carlos Vásquez (CLEARCORP) "
+"<carlos.vasquez@clearcorp.co.cr>\n"
 "Language-Team: \n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 05:49+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-17 05:00+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
+"Language: \n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -25,19 +26,29 @@ msgstr "Línea de cargo"
 #. module: mrp_repair
 #: help:mrp.repair,state:0
 msgid ""
-" * The 'Draft' state is used when a user is encoding a new and unconfirmed repair order.             \n"
-"* The 'Confirmed' state is used when a user confirms the repair order.             \n"
-"* The 'Ready to Repair' state is used to start to repairing, user can start repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' state is used to generate the invoice before or after repairing done.             \n"
+" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
+"repair order.             \n"
+"* The 'Confirmed' state is used when a user confirms the repair order.       "
+"      \n"
+"* The 'Ready to Repair' state is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' state is used to generate the invoice before or after "
+"repairing done.             \n"
 "* The 'Done' state is set when repairing is completed.            \n"
 "* The 'Cancelled' state is used when user cancel repair order."
 msgstr ""
-" *El estado 'Borrador' se utiliza cuando un usuario está introduciendo una nueva orden de reparación sin confirmar             \n"
-"*El estado 'Confirmado' se utiliza cuando un usuario cofnirma la orden de reparación.             \n"
-"*El estado 'Listo para reparar' se utiliza para iniciar la reparación, el usuario puede iniciar la reparación solo depués de la confirmación de la orden de reparación \n"
-"*El estado 'A facturar' se utiliza pra generar la factura antes o depués de la realización de la reparación.\n"
+" *El estado 'Borrador' se utiliza cuando un usuario está introduciendo una "
+"nueva orden de reparación sin confirmar             \n"
+"*El estado 'Confirmado' se utiliza cuando un usuario cofnirma la orden de "
+"reparación.             \n"
+"*El estado 'Listo para reparar' se utiliza para iniciar la reparación, el "
+"usuario puede iniciar la reparación solo depués de la confirmación de la "
+"orden de reparación \n"
+"*El estado 'A facturar' se utiliza pra generar la factura antes o depués de "
+"la realización de la reparación.\n"
 "*El estado 'Realizado' se utiliza cuando la reapración ha sido terminada.\n"
-"*El estado 'Cancelado' se utiliza cuando un usuario cancela la orden de reparación."
+"*El estado 'Cancelado' se utiliza cuando un usuario cancela la orden de "
+"reparación."
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -46,8 +57,19 @@ msgstr "Movimiento de inventario"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
-msgid "Repair orders allow you to organize your product repairs. In a repair order, you can detail the components you remove, add or replace and record the time you spent on the different operations. The repair order uses the warranty date on the production lot in order to know if whether the repair should be invoiced to the customer or not."
-msgstr "Las órdenes de reparación le permiten organizar sus reparaciones del producto. En una orden de reparación, puede detallar los componentes que elimina, añade o sustituye y registrar el tiempo que consumido en las diferentes operaciones. La orden de reparación utiliza la fecha de garantía de el lote de producción para saber si la reparación debe ser facturada al cliente o no."
+msgid ""
+"Repair orders allow you to organize your product repairs. In a repair order, "
+"you can detail the components you remove, add or replace and record the time "
+"you spent on the different operations. The repair order uses the warranty "
+"date on the production lot in order to know if whether the repair should be "
+"invoiced to the customer or not."
+msgstr ""
+"Las órdenes de reparación le permiten organizar sus reparaciones del "
+"producto. En una orden de reparación, puede detallar los componentes que "
+"elimina, añade o sustituye y registrar el tiempo que consumido en las "
+"diferentes operaciones. La orden de reparación utiliza la fecha de garantía "
+"de el lote de producción para saber si la reparación debe ser facturada al "
+"cliente o no."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -61,8 +83,16 @@ msgstr "Recrear factura"
 
 #. module: mrp_repair
 #: help:mrp.repair,deliver_bool:0
-msgid "Check this box if you want to manage the delivery once the product is repaired. If cheked, it will create a picking with selected product. Note that you can select the locations in the Info tab, if you have the extended view."
-msgstr "Marque esta opción si desea gestionar la entrega una vez que el producto es reparado. Si esta marcada, se creará un albarán con el producto seleccionado. Tenga en cuenta que puede seleccionar las ubicaciones en la pestaña Información, si tiene la vista extendida."
+msgid ""
+"Check this box if you want to manage the delivery once the product is "
+"repaired. If cheked, it will create a picking with selected product. Note "
+"that you can select the locations in the Info tab, if you have the extended "
+"view."
+msgstr ""
+"Marque esta opción si desea gestionar la entrega una vez que el producto es "
+"reparado. Si esta marcada, se creará un albarán con el producto "
+"seleccionado. Tenga en cuenta que puede seleccionar las ubicaciones en la "
+"pestaña Información, si tiene la vista extendida."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
@@ -180,7 +210,9 @@ msgstr "Movimiento"
 #: code:addons/mrp_repair/mrp_repair.py:370
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
-msgstr "¡Debe seleccionar una dirección de factura de empresa en el formulario de reparación!"
+msgstr ""
+"¡Debe seleccionar una dirección de factura de empresa en el formulario de "
+"reparación!"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
@@ -287,15 +319,22 @@ msgstr "Cantidad (UdM)"
 #. module: mrp_repair
 #: help:mrp.repair.line,state:0
 msgid ""
-" * The 'Draft' state is set automatically as draft when repair order in draft state.                         \n"
-"* The 'Confirmed' state is set automatically as confirm when repair order in confirm state.                         \n"
-"* The 'Done' state is set automatically when repair order is completed.                        \n"
+" * The 'Draft' state is set automatically as draft when repair order in "
+"draft state.                         \n"
+"* The 'Confirmed' state is set automatically as confirm when repair order in "
+"confirm state.                         \n"
+"* The 'Done' state is set automatically when repair order is completed.      "
+"                  \n"
 "* The 'Cancelled' state is set automatically when user cancel repair order."
 msgstr ""
-" * El estado 'Borrador' se establece automáticamente cuando crea una orden de reparación.                         \n"
-"* El estado 'Confirmado' se establece automáticamente cuando se confirma la orden de reparación.                         \n"
-"* El estado 'Hecho' se establece automáticamente cuando se completa la orden de reparación.                        \n"
-"* El estado 'Cancelado' se establece automáticamente cuando el usuario cancela la orden de reparación."
+" * El estado 'Borrador' se establece automáticamente cuando crea una orden "
+"de reparación.                         \n"
+"* El estado 'Confirmado' se establece automáticamente cuando se confirma la "
+"orden de reparación.                         \n"
+"* El estado 'Hecho' se establece automáticamente cuando se completa la orden "
+"de reparación.                        \n"
+"* El estado 'Cancelado' se establece automáticamente cuando el usuario "
+"cancela la orden de reparación."
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -304,8 +343,12 @@ msgstr "Total :"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0
-msgid "This operation will cancel the Repair process, but will not cancel it's Invoice. Do you want to continue?"
-msgstr "Esta operación cancelará el proceso de reparación, pero no cancelará la factura. ¿Desea continuar?"
+msgid ""
+"This operation will cancel the Repair process, but will not cancel it's "
+"Invoice. Do you want to continue?"
+msgstr ""
+"Esta operación cancelará el proceso de reparación, pero no cancelará la "
+"factura. ¿Desea continuar?"
 
 #. module: mrp_repair
 #: field:mrp.repair,pricelist_id:0
@@ -371,7 +414,9 @@ msgstr "Cancelada"
 #: code:addons/mrp_repair/mrp_repair.py:337
 #, python-format
 msgid "Production lot is required for opration line with product '%s'"
-msgstr "El lote de producción es obligatorio para el funcionamiento en línea con el producto '%s'"
+msgstr ""
+"El lote de producción es obligatorio para el funcionamiento en línea con el "
+"producto '%s'"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -562,8 +607,17 @@ msgstr "Finalizada"
 
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
-msgid "The guarantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the guarantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."
-msgstr "El plazo de garantía se calcula como: Fecha del último movimiento + Garantía definida en el producto seleccionado. Si la fecha actual está por debajo del límite de garantía, cada operación y honorario que se añadan se marcarán como \"No a facturar\" por defecto. Tenga en cuenta que después puede cambiarlo manualmente."
+msgid ""
+"The guarantee limit is computed as: last move date + warranty defined on "
+"selected product. If the current date is below the guarantee limit, each "
+"operation and fee you will add will be set as 'not to invoiced' by default. "
+"Note that you can change manually afterwards."
+msgstr ""
+"El plazo de garantía se calcula como: Fecha del último movimiento + Garantía "
+"definida en el producto seleccionado. Si la fecha actual está por debajo del "
+"límite de garantía, cada operación y honorario que se añadan se marcarán "
+"como \"No a facturar\" por defecto. Tenga en cuenta que después puede "
+"cambiarlo manualmente."
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_id:0
@@ -603,8 +657,14 @@ msgstr "Ubicación de entrega"
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
-msgid "This field allow you to change the workflow of the repair order. If value selected is different from 'No Invoice', it also allow you to select the pricelist and invoicing address."
-msgstr "Este campo le permite cambiar el flujo del pedido de reparación. Si el valor seleccionado es distinto de \"No facturar\", también le permitirá seleccionar la tarifa y la dirección de facturación."
+msgid ""
+"This field allow you to change the workflow of the repair order. If value "
+"selected is different from 'No Invoice', it also allow you to select the "
+"pricelist and invoicing address."
+msgstr ""
+"Este campo le permite cambiar el flujo del pedido de reparación. Si el valor "
+"seleccionado es distinto de \"No facturar\", también le permitirá "
+"seleccionar la tarifa y la dirección de facturación."
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
@@ -742,8 +802,11 @@ msgstr "Estados"
 
 #. module: mrp_repair
 #: help:mrp.repair,partner_id:0
-msgid "This field allow you to choose the parner that will be invoiced and delivered"
-msgstr "Este campo le permite seleccionar la empresa a la que se facturará y entregará el producto."
+msgid ""
+"This field allow you to choose the parner that will be invoiced and delivered"
+msgstr ""
+"Este campo le permite seleccionar la empresa a la que se facturará y "
+"entregará el producto."
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_total:0
@@ -809,6 +872,7 @@ msgstr "¡No existe empresa!"
 #~ msgid "Make invoices"
 #~ msgstr "Realizar facturas"
 
+#, python-format
 #~ msgid "You have to select a partner in the repair form !"
 #~ msgstr "¡Debe seleccionar una empresa en el formulario de reparación!"
 
@@ -821,13 +885,13 @@ msgstr "¡No existe empresa!"
 #~ msgid ""
 #~ "Check this box if you want to manage the delivery once the product is "
 #~ "repaired. If cheked, it will create a packing with selected product. Note "
-#~ "that you can select the locations in the Info tab, if you have the "
-#~ "extended view."
+#~ "that you can select the locations in the Info tab, if you have the extended "
+#~ "view."
 #~ msgstr ""
 #~ "Seleccione esta opción si desea gestionar la entrega una vez el producto "
 #~ "esté reparado. Si la selecciona, se creará un albarán con el producto "
-#~ "seleccionado. Es posible seleccionar la ubicación en la pestaña \"Info\" "
-#~ "si se tiene activa la vista extendida."
+#~ "seleccionado. Es posible seleccionar la ubicación en la pestaña \"Info\" si "
+#~ "se tiene activa la vista extendida."
 
 #~ msgid "Repair Ref"
 #~ msgstr "Ref. reparación"
@@ -841,8 +905,8 @@ msgstr "¡No existe empresa!"
 #~ msgid ""
 #~ "The garantee limit is computed as: last move date + warranty defined on "
 #~ "selected product. If the current date is below the garantee limit, each "
-#~ "operation and fee you will add will be set as 'not to invoiced' by "
-#~ "default. Note that you can change manually afterwards."
+#~ "operation and fee you will add will be set as 'not to invoiced' by default. "
+#~ "Note that you can change manually afterwards."
 #~ msgstr ""
 #~ "El límite de garantía es calculado como: fecha del último movimiento + "
 #~ "garantía definida para el producto seleccionado. Si la fecha actual es "
@@ -854,8 +918,8 @@ msgstr "¡No existe empresa!"
 #~ msgstr "Nombre de modelo no válido en la definición de la acción."
 
 #~ msgid ""
-#~ "This operation  will  cancel the  Repair process, but  will not cancel "
-#~ "it's Invoice. Do you want to continue?"
+#~ "This operation  will  cancel the  Repair process, but  will not cancel it's "
+#~ "Invoice. Do you want to continue?"
 #~ msgstr ""
 #~ "Esta operación cancelará el proceso de reparación, pero no su factura. "
 #~ "¿Desea continuar?"
@@ -868,8 +932,7 @@ msgstr "¡No existe empresa!"
 
 #~ msgid "Products Repairs Module - Manage All products Repairs"
 #~ msgstr ""
-#~ "Módulo reparación de productos - Gestiona todas las reparaciones de "
-#~ "productos"
+#~ "Módulo reparación de productos - Gestiona todas las reparaciones de productos"
 
 #~ msgid ""
 #~ "\n"
@@ -883,8 +946,8 @@ msgstr "¡No existe empresa!"
 #~ "           * Notes for the technician and for the final customer\n"
 #~ msgstr ""
 #~ "\n"
-#~ "           El objetivo es tener un módulo completo para gestionar todas "
-#~ "las reparaciones de productos. Este módulo cubre los siguientes asuntos:\n"
+#~ "           El objetivo es tener un módulo completo para gestionar todas las "
+#~ "reparaciones de productos. Este módulo cubre los siguientes asuntos:\n"
 #~ "           * Añadir/quitar productos en la reparación.\n"
 #~ "           * Impacto en stocks.\n"
 #~ "           * Facturación (productos y/o servicios).\n"
