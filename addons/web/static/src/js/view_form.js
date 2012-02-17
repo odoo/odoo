@@ -2043,6 +2043,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             minLength: 0,
             delay: 0
         });
+        this.$input.autocomplete("widget").addClass("openerp");
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {
             if (e.which === 13) {
