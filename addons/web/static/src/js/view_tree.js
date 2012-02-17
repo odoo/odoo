@@ -224,21 +224,25 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
             active_model: self.dataset.model,
             active_id: id,
             active_ids: [id]};
-        this.rpc('/web/treeview/action', {
+        return this.rpc('/web/treeview/action', {
             id: id,
             model: this.dataset.model,
             context: new openerp.web.CompoundContext(
                 this.dataset.get_context(), local_context)
-        }, function (actions) {
+        }).pipe(function (actions) {
             if (!actions.length) { return; }
             var action = actions[0][2];
             var c = new openerp.web.CompoundContext(local_context);
             if (action.context) {
                 c.add(action.context);
             }
-            action.context = c;
-            self.do_action(action);
-        });
+            return self.rpc('/web/session/eval_domain_and_context', {
+                contexts: [c], domains: []
+            }).pipe(function (res) {
+                action.context = res.context;
+                return self.do_action(action);
+            }, null);
+        }, null);
     },
 
     // show & hide the contents
