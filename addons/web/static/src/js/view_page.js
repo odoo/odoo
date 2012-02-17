@@ -92,11 +92,13 @@ openerp.web.page = function (openerp) {
     openerp.web.page.FieldURIReadonly = openerp.web.page.FieldCharReadonly.extend({
         form_template: 'FieldURI.readonly',
         scheme: null,
+        format_value: function (value) {
+            return value;
+        },
         set_value: function (value) {
-            var displayed = this._super.apply(this, arguments);
             this.$element.find('a')
-                    .attr('href', this.scheme + ':' + displayed)
-                    .text(displayed);
+                    .attr('href', this.scheme + ':' + value)
+                    .text(this.format_value(value));
         }
     });
     openerp.web.page.FieldEmailReadonly = openerp.web.page.FieldURIReadonly.extend({
@@ -105,9 +107,10 @@ openerp.web.page = function (openerp) {
     openerp.web.page.FieldUrlReadonly = openerp.web.page.FieldURIReadonly.extend({
         set_value: function (value) {
             var s = /(\w+):(.+)/.exec(value);
-            if (!s || !(s[1] === 'http' || s[1] === 'https')) { return; }
-            this.scheme = s[1];
-            this._super(s[2]);
+            if (!s) {
+                value = "http://" + value;
+            }
+            this.$element.find('a').attr('href', value).text(value);
         }
     });
     openerp.web.page.FieldBooleanReadonly = openerp.web.form.FieldBoolean.extend({
@@ -242,7 +245,7 @@ openerp.web.page = function (openerp) {
             }
         }
     });
-    openerp.web.page.readonly = openerp.web.form.widgets.clone({
+    openerp.web.page.readonly = openerp.web.form.widgets.extend({
         'frame': 'openerp.web.page.WidgetFrameReadonly',
         'char': 'openerp.web.page.FieldCharReadonly',
         'id': 'openerp.web.page.FieldCharReadonly',

@@ -1,6 +1,6 @@
 #!/usr/bin/python
-import http
-import nonliterals
-import release
-import session
-import xml2json
+from . import http
+from . import nonliterals
+from . import release
+from . import session
+from . import xml2json

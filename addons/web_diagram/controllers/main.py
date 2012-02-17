@@ -1,5 +1,11 @@
-import web.common.http as openerpweb
-from web.controllers.main import View
+try:
+    # embedded
+    import openerp.addons.web.common.http as openerpweb
+    from openerp.addons.web.controllers.main import View
+except ImportError:
+    # standalone
+    import web.common.http as openerpweb
+    from web.controllers.main import View
 
 class DiagramView(View):
     _cp_path = "/web_diagram/diagram"
@@ -110,4 +116,7 @@ class DiagramView(View):
                 n['options'][node_fields_string[i]] = act[fld]
 
         id_model = req.session.model(model).read([id],['name'], req.session.context)[0]['name']
-        return dict(nodes=nodes, conn=connectors, id_model=id_model)
+        return dict(nodes=nodes,
+                    conn=connectors,
+                    id_model=id_model,
+                    parent_field=graphs['node_parent_field'])

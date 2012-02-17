@@ -136,6 +136,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
 
         var res_nodes = result['nodes'];
         var res_connectors = result['conn'];
+        this.parent_field = result.parent_field;
 
         //Custom logic
         var self = this;
@@ -240,30 +241,34 @@ openerp.web.DiagramView = openerp.web.View.extend({
 
         var form_fields;
 
-        if(model == self.node) {
-            form_fields = ['wkf_id'];
+        if (model === self.node) {
+            form_fields = [this.parent_field];
+            if (!id) {
+                form_controller.on_record_loaded.add_last(function() {
+                    _.each(form_fields, function(fld) {
+                        if (!(fld in form_controller.fields)) { return; }
+                        var field = form_controller.fields[fld];
+                        field.set_value([self.id,self.active_model]);
+                        field.dirty = true;
+                    });
+                });
+            } else {
+                form_controller.on_record_loaded.add_first(function() {
+                    _.each(form_fields, function(fld) {
+                        if (!(fld in form_controller.fields)) { return; }
+                        var field = form_controller.fields[fld];
+                        field.$input.prop('disabled', true);
+                        field.$drop_down.unbind();
+                        field.$menu_btn.unbind();
+                    });
+                });
+            }
         } else {
-            form_fields = ['act_from', 'act_to'];
+            form_fields = [
+                this.connectors.attrs.source,
+                this.connectors.attrs.destination];
         }
 
-        if(model == self.node || id) {
-            $.each(form_fields, function(index, fld) {
-                form_controller.on_record_loaded.add_first(function() {
-                    form_controller.fields[fld].modifiers.readonly = true;
-                    form_controller.fields[fld].$input.attr('disabled', true);
-                    form_controller.fields[fld].$drop_down.unbind();
-                    form_controller.fields[fld].$menu_btn.unbind();
-                });
-            });
-        }
-        if(!id && (model == self.node)) {
-            $.each(form_fields, function(index, fld) {
-                form_controller.on_record_loaded.add_last(function() {
-                    form_controller.fields[fld].set_value([self.id,self.active_model]);
-                    form_controller.fields[fld].dirty = true;
-                });
-            });
-        }
         if (!_.isEmpty(defaults)) {
             form_controller.on_record_loaded.add_last(function () {
                 _(form_fields).each(function (field) {

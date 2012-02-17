@@ -20,17 +20,27 @@ openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.
             expires: 2500
         });
     },
-    notify: function(title, text) {
+    notify: function(title, text, sticky) {
+        sticky = !!sticky;
+        var opts = {};
+        if (sticky) {
+            opts.expires = false;
+        }
         this.$element.notify('create', {
             title: title,
             text: text
-        });
+        }, opts);
     },
-    warn: function(title, text) {
+    warn: function(title, text, sticky) {
+        sticky = !!sticky;
+        var opts = {};
+        if (sticky) {
+            opts.expires = false;
+        }
         this.$element.notify('create', 'oe_notification_alert', {
             title: title,
             text: text
-        });
+        }, opts);
     }
 
 });
@@ -606,6 +616,10 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
         }
         var $e = this.$element;
         var db = $e.find("form [name=db]").val();
+        if (!db) {
+            this.do_warn("Login", "No database selected !");
+            return false;
+        }
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
 
@@ -945,7 +959,8 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
     do_menu_click: function($clicked_menu, manual) {
         var $sub_menu, $main_menu,
             active = $clicked_menu.is('.active'),
-            sub_menu_visible = false;
+            sub_menu_visible = false,
+            has_submenu_items = false;
 
         if (this.$secondary_menu.has($clicked_menu).length) {
             $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
@@ -956,15 +971,18 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
         }
 
         sub_menu_visible = $sub_menu.is(':visible');
+        has_submenu_items = !!$sub_menu.children().length;
         this.$secondary_menu.find('.oe_secondary_menu').hide();
 
         $('.active', this.$element.add(this.$secondary_menu)).removeClass('active');
         $main_menu.add($clicked_menu).add($sub_menu).addClass('active');
 
-        if (!(this.folded && manual)) {
-            this.do_show_secondary($sub_menu, $main_menu);
-        } else {
-            this.do_show_secondary();
+        if (has_submenu_items) {
+            if (!(this.folded && manual)) {
+                this.do_show_secondary($sub_menu, $main_menu);
+            } else {
+                this.do_show_secondary();
+            }
         }
 
         if ($main_menu != $clicked_menu) {
@@ -980,7 +998,7 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
                 return true;
             }
         } else if (this.folded) {
-            if (active && sub_menu_visible) {
+            if ((active && sub_menu_visible) || !has_submenu_items) {
                 $sub_menu.hide();
                 return true;
             }
@@ -1147,12 +1165,14 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
         n.warn.apply(n, arguments);
     },
     on_logout: function() {
-        this.session.session_logout();
-        $(window).unbind('hashchange', this.on_hashchange);
-        this.do_push_state({});
-        //would be cool to be able to do this, but I think it will make addons do strange things
-        //this.show_login();
-        window.location.reload();
+        var self = this;
+        this.session.session_logout().then(function () {
+            $(window).unbind('hashchange', self.on_hashchange);
+            self.do_push_state({});
+            //would be cool to be able to do this, but I think it will make addons do strange things
+            //this.show_login();
+            window.location.reload();
+        });
     },
     bind_hashchange: function() {
         $(window).bind('hashchange', this.on_hashchange);

@@ -109,9 +109,20 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         _(fields).each(function (field, field_name) {
             // Ignore spec for id field
             // Don't import function fields (function and related)
-            if (field_name === 'id' || 'function' in field) {
+            if (field_name === 'id') {
                 return;
             }
+            // Skip if there's no state which could disable @readonly,
+            // if a field is ever always readonly we can't import it
+            if (field.readonly) {
+                // no states at all
+                if (_.isEmpty(field.states)) { return; }
+                // no state altering @readonly
+                if (!_.any(field.states, function (modifiers) {
+                    return _(modifiers).chain().pluck(0).contains('readonly').value();
+                })) { return; }
+            }
+
             var f = {
                 id: field_name,
                 name: field_name,

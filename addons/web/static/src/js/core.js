@@ -254,6 +254,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      * @param {Object} mapping a mapping of keys to object-paths
      */
     init: function (mapping) {
+        this.parent = null;
         this.map = mapping || {};
     },
     /**
@@ -269,6 +270,9 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
     get_object: function (key, silent_error) {
         var path_string = this.map[key];
         if (path_string === undefined) {
+            if (this.parent) {
+                return this.parent.get_object(key, silent_error);
+            }
             if (silent_error) { return void 'nooo'; }
             throw new openerp.web.KeyNotFound(key);
         }
@@ -287,6 +291,21 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
         return object_match;
     },
     /**
+     * Checks if the registry contains an object mapping for this key.
+     *
+     * @param {String} key key to look for
+     */
+    contains: function (key) {
+        if (key === undefined) { return false; }
+        if (key in this.map) {
+            return true
+        }
+        if (this.parent) {
+            return this.parent.contains(key);
+        }
+        return false;
+    },
+    /**
      * Tries a number of keys, and returns the first object matching one of
      * the keys.
      *
@@ -299,7 +318,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
     get_any: function (keys) {
         for (var i=0; i<keys.length; ++i) {
             var key = keys[i];
-            if (key === undefined || !(key in this.map)) {
+            if (!this.contains(key)) {
                 continue;
             }
 
@@ -324,11 +343,22 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      * Creates and returns a copy of the current mapping, with the provided
      * mapping argument added in (replacing existing keys if needed)
      *
+     * Parent and child remain linked, a new key in the parent (which is not
+     * overwritten by the child) will appear in the child.
+     *
      * @param {Object} [mapping={}] a mapping of keys to object-paths
      */
+    extend: function (mapping) {
+        var child = new openerp.web.Registry(mapping);
+        child.parent = this;
+        return child;
+    },
+    /**
+     * @deprecated use Registry#extend
+     */
     clone: function (mapping) {
-        return new openerp.web.Registry(
-            _.extend({}, this.map, mapping || {}));
+        console.warn('Registry#clone is deprecated, use Registry#extend');
+        return this.extend(mapping);
     }
 });
 
@@ -644,6 +674,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     },
     session_logout: function() {
         this.set_cookie('session_id', '');
+        return this.rpc("/web/session/destroy", {});
     },
     on_session_valid: function() {
     },
@@ -702,17 +733,21 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             var params = { mods: all_modules, lang: lang};
             var to_load = _.difference(result, self.module_list).join(',');
             self.module_list = all_modules;
-            return $.when(
-                self.rpc('/web/webclient/csslist', {mods: to_load}, self.do_load_css),
-                self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
-                self.rpc('/web/webclient/translations', params).pipe(function(trans) {
-                    openerp.web._t.database.set_bundle(trans);
-                    var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
-                    return self.rpc('/web/webclient/jslist', {mods: to_load}).pipe(function(files) {
-                        return self.do_load_js(file_list.concat(files)); 
-                    });
-                })
-            ).then(function() {
+
+            var loaded = $.Deferred().resolve().promise();
+            if (to_load.length) {
+                loaded = $.when(
+                    self.rpc('/web/webclient/csslist', {mods: to_load}, self.do_load_css),
+                    self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
+                    self.rpc('/web/webclient/translations', params).pipe(function(trans) {
+                        openerp.web._t.database.set_bundle(trans);
+                        var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
+                        return self.rpc('/web/webclient/jslist', {mods: to_load}).pipe(function(files) {
+                            return self.do_load_js(file_list.concat(files));
+                        });
+                    }))
+            }
+            return loaded.then(function() {
                 self.on_modules_loaded();
                 if (!no_session_valid_signal) {
                     self.on_session_valid();
@@ -1184,9 +1219,7 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
     add_module_translation: function(mod) {
         var self = this;
         _.each(mod.messages, function(message) {
-            if (self.db[message.id] === undefined) {
-                self.db[message.id] = message.string;
-            }
+            self.db[message.id] = message.string;
         });
     },
     build_translation_function: function() {

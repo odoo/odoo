@@ -27,6 +27,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             type: 'ir.actions.act_window',
             target: "current",
             limit: this.dataset.limit || 80,
+            auto_search : true,
             flags: {
                 sidebar: false,
                 deletable: false,
@@ -45,9 +46,10 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                 {text: _t("Create"), click: function() { self.on_create_view(); }},
                 {text: _t("Edit"), click: function() { self.xml_element_id = 0; self.get_arch(); }},
                 {text: _t("Remove"), click: function() { self.do_delete_view(); }},
-                {text: _t("Close"), click: function() { self.view_edit_dialog.close(); }}
+                {text: _t("Close"), click: function() { self.view_edit_dialog.close(); window.location.reload(); }}
             ]
         }).open();
+        this.view_edit_dialog.on_close.add_last(function(){window.location.reload();});
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new openerp.web.ActionManager(this);
         this.action_manager.appendTo(this.view_edit_dialog);
@@ -162,11 +164,12 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         }
     },
     do_delete_view: function() {
+        var self = this;
         if (confirm(_t("Do you really want to remove this view?"))) {
             var controller = this.action_manager.inner_viewmanager.views[this.action_manager.inner_viewmanager.active_view].controller;
             this.dataset.unlink([this.main_view_id]).then(function() {
                 controller.reload_content();
-                this.main_view_id = self.parent.fields_view.view_id;
+                self.main_view_id = self.parent.fields_view.view_id;
             });
         }
     },
@@ -227,14 +230,14 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
     get_arch: function() {
         var self = this;
         var view_arch_list = [];
-        this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type']).then(function(arch) {
+        this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type','priority']).then(function(arch) {
             if (arch.length) {
                 var arch_object = self.parse_xml(arch[0].arch, self.main_view_id);
                 self.main_view_type = arch[0].type == 'tree'? 'list': arch[0].type;
-                view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch});
+                view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch,"priority":arch[0].priority});
                 self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}).then(function(result) {
                     _.each(result, function(res) {
-                        view_arch_list.push({"view_id": res.id, "arch": res.arch});
+                        view_arch_list.push({"view_id": res.id, "arch": res.arch,"priority":res.priority});
                         self.inherit_view(arch_object, res);
                     });
                     return self.edit_view({"main_object": arch_object,
@@ -303,7 +306,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                 case 3:
                     //for field[@name='type']
                     obj = _.detect(arch_object, function(element){
-                        if ((_.intersection(_.flatten(element.att_list), _.uniq(check))).length == check.length) {
+                        if ((_.intersection(_.flatten(element.att_list), _.uniq(check))).length == _.uniq(check).length) {
                             return element;
                         }
                     });
@@ -361,6 +364,20 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             title: _.str.sprintf(_t("View Editor %d - %s"), self.main_view_id, self.model),
             height: '90%',
             buttons: [
+                {text: _t("Inherited View"), click: function(){
+                    var selected_row = self.edit_xml_dialog.$element.find('.ui-selected');
+                    if (selected_row.length) {
+                        if(selected_row.find('a').text().search("field") != -1){
+                            if (confirm(_t("Do you really wants to create an inherited view here?"))) {
+                                self.inherited_view(selected_row);
+                            }
+                        }else{
+                            alert("Can't Update View");
+                        }
+                    }else{
+                        alert("Select an element");
+                    }
+                }},
                 {text: _t("Preview"), click: function() {
                     var action = {
                         context: self.session.user_context,
@@ -368,6 +385,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                         views: [[self.main_view_id, self.main_view_type]],
                         type: 'ir.actions.act_window',
                         target: "new",
+                        auto_search: true,
                         flags: {
                             sidebar: false,
                             views_switcher: false,
@@ -378,6 +396,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                     action_manager.do_action(action);
                 }},
                 {text: _t("Close"), click: function(){
+                    self.action_manager.inner_viewmanager.views[self.action_manager.inner_viewmanager.active_view].controller.reload_content();
                     self.edit_xml_dialog.close();
                 }}
             ]
@@ -396,6 +415,53 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         this.edit_xml_dialog.$element.find("img[id^='side-']").click(function() {
             self.on_select_img(this);
         });
+    },
+    inherited_view: function(selected_row){
+        var self = this;
+        var row_id = parseInt((selected_row.attr('id')).split('-')[1]);
+        var obj = self.get_object_by_id(row_id,self.one_object['main_object'], [])[0];
+        var view_name = this.model + '.inherit_' + Math.round(Math.random() * 1000);
+        var view_find = selected_row;
+        var view_id;
+        var min_level = parseInt(selected_row.attr('level'));
+        while (1) {
+            view_find = view_find.prev();
+            if (view_find.length == 0 ||
+                    self.edit_xml_dialog.$element.find(view_find).find('a').text().search("view_id") != -1 &&
+                    parseInt(view_find.attr('level')) < min_level ) {
+                view_id = parseInt($(view_find).find('a').text().replace(/[^0-9]+/g, ''));
+                break;
+            }
+            if (view_find.attr('level') < min_level) {
+            	min_level = parseInt(view_find.attr('level'));
+            }
+        }
+        var val = _.detect(obj.att_list, function(val) {return val[0] == "name";});
+        var priority = _.detect(self.one_object['arch'], function(val) {return val.view_id == view_id;});
+        var arch = _.str.sprintf("<?xml version='1.0'?>\n\t <field name='%s' position='after'> </field>", val[1]);
+        var vals = {'model': self.model, 'name': view_name, 'priority': priority.priority + 1, 'type': "form", 'arch': arch,'inherit_id':self.main_view_id};
+        this.dataset.create(vals, function(suc) {
+            var arch_to_obj = self.parse_xml(arch,suc.result);
+            obj.child_id.push(arch_to_obj[0]);
+            self.one_object['parent_child_id'] = self.parent_child_list(self.one_object['main_object'],[]);
+            self.one_object['arch'].push({'view_id':suc.result,"arch":arch,'priority': priority.priority + 1});
+            self.increase_level(arch_to_obj[0],obj.level+1);
+            self.render_inherited_view(selected_row,arch_to_obj[0]);
+        });
+    },
+    render_inherited_view: function(selected_row,obj){
+        var self = this,row_id = parseInt((selected_row.attr('id')).split('-')[1]);
+        var clone = this.create_clone(selected_row.clone(),obj);
+        if (selected_row.find("img[id^='parentimg-']").length == 0) {
+            ($(selected_row.find('a').parent()).siblings('td'))
+            .append($('<img width="16" height="16"></img>').attr('src', '/web/static/src/img/collapse.gif').
+             attr('id','parentimg-'+ row_id).click(function(){
+                self.do_parent_img_hide_show(this);
+            }));
+        }
+        self.edit_xml_dialog.$element.
+            find("tr[id='viewedit-"+row_id+"']").after(clone.removeClass('ui-selected'));
+        _.each(obj.child_id,function(obj){self.render_inherited_view(clone,obj);});
     },
     on_select_img: function(element_img) {
         var self = this;
@@ -449,7 +515,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
     },
     do_node_add: function(side){
         var self = this;
-        var tr = $(side).find('a').text();
+        var tr = self.get_object_by_id(this.one_object.clicked_tr_id, this.one_object['main_object'], [])[0].att_list[0];
         var parent_tr = ($(side).prevAll("tr[level=" + String(this.one_object.clicked_tr_level - 1) + "]"))[0];
         var field_dataset = new openerp.web.DataSetSearch(this, this.model, null, null);
         parent_tr = $(parent_tr).find('a').text();
@@ -562,13 +628,13 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             arch.arch = _.detect(children, function(xml_child) {
                 var temp_obj = self.create_View_Node(xml_child),
                     insert = _.intersection(_.flatten(temp_obj.att_list),_.uniq(check_list));
-                if (insert.length == check_list.length ) {return xml_child;}
+                if (insert.length == _.uniq(check_list).length ) {return xml_child;}
             });
         }
         arch_to_pass = _.filter($(arch.arch), function (child) {
             return child.nodeType == 1;
         });
-        return self.do_save_xml(arch_to_pass[0], obj[0].child_id[0],[], move_direct, update_values,arch);
+        return self.do_save_xml(arch_to_pass[0], obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
     },
     get_object_by_id: function(id, one_object, result) {
         var self = this;
@@ -583,7 +649,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         }
         return result;
     },
-    create_clone: function(clone, new_node_obj, position){
+    create_clone: function(clone, new_node_obj){
         var self = this;
         clone.find('a').text(new_node_obj.name);
         ($(clone.find('a').parent()).siblings('td')).css( "padding-left", 20 * new_node_obj.level);
@@ -599,7 +665,8 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         return clone;
     },
     do_save_xml: function(arch1, obj, child_list, move_direct, update_values, arch){
-        var self = this, children_list =  $(arch1).children(), list_obj_xml = _.zip(children_list, obj.child_id);
+        var self = this, children_list =  $(arch1).children(),list_obj_xml;
+        try{list_obj_xml = _.zip(children_list, obj.child_id);}catch(err){return;}
         if (this.one_object.clicked_tr_id) {
             if (obj.id == this.one_object.clicked_tr_id) {
                 var parent = false, index = _.indexOf(child_list, obj);
@@ -823,6 +890,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
                     return res instanceof Array? _.include(res, widget.name): false;
                 });
+                
                 value = value instanceof Array ? value[1] : value;
                 self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">' + widget.string + ':</td>' + type_widget.render() + '</tr>');
                 type_widget.start();
@@ -845,7 +913,7 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
             res_groups.read_slice([], {}).done(function (res_grp) {
                 _.each(res_grp, function (res) {
                     var key = res.id;
-                    group_names[key] = res.name;
+                    group_names[key]=res.full_name;
                     group_ids.push(res.id);
                 });
                 model_data.read_slice([], {domain: [
@@ -933,16 +1001,16 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         var action_manager = new openerp.web.ActionManager(self);
         $.when(action_manager.do_action(action)).then(function() {
             var controller = action_manager.dialog_viewmanager.views['form'].controller;
-            // TODO NIV: use page view
-            controller.do_set_readonly.add_last(function(){
+            controller.on_button_cancel.add_last(function(){
+                action_manager.stop()
+            });
+            controller.do_save.add_last(function(){
                 action_manager.stop();
-                new_fields_name = new openerp.web.DataSetSearch(self,'ir.model.fields', null, null);
-                new_fields_name.read_ids([controller.datarecord.id], ['name']).then(function(result) {
-                self.add_node_dialog.$element.find('select[id=field_value]').append($("<option selected></option>").attr("value", result[0].name).text(result[0].name));
+                var value =controller.fields.name.value;
+                self.add_node_dialog.$element.find('select[id=field_value]').append($("<option selected></option>").attr("value",value).text(value));
                     _.detect(self.add_widget,function(widget){
-                        widget.name == "field_value"? widget.selection.push(result[0].name): false;
+                        widget.name == "field_value"? widget.selection.push(value): false;
                     });
-                });
             });
         });
     }
@@ -1039,7 +1107,7 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         var index = 0;
         value = value === null? false: value;
         for (var i = 0, ii = this.selection.length; i < ii; i++) {
-            if ((this.selection[i] instanceof Array && this.selection[i][1] === value) || this.selection[i] === value) index = i;
+            if ((this.selection[i] instanceof Array && this.selection[i][0] === value) || this.selection[i] === value) index = i;
         }
         this.$element.find("select[id=" + this.name + "]")[0].selectedIndex = index;
     },
@@ -1092,10 +1160,10 @@ var _CHILDREN = {
     'calendar': ['field'],
     'notebook': ['page'],
     'page': ['notebook', 'group', 'field', 'label', 'button', 'newline', 'separator'],
-    'group': ['field', 'label', 'button', 'separator', 'newline'],
+    'group': ['field', 'label', 'button', 'separator', 'newline','group'],
     'board': ['column'],
     'action': [],
-    'field': ['form', 'tree', 'graph'],
+    'field': ['form', 'tree', 'graph','field'],
     'label': [],
     'button' : [],
     'newline': [],

@@ -469,13 +469,13 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
      * @param {String} name name to perform a search for/on
      * @param {Array} [domain=[]] filters for the objects returned, OpenERP domain
      * @param {String} [operator='ilike'] matching operator to use with the provided name value
-     * @param {Number} [limit=100] maximum number of matches to return
+     * @param {Number} [limit=0] maximum number of matches to return
      * @param {Function} callback function to call with name_search result
      * @returns {$.Deferred}
      */
     name_search: function (name, domain, operator, limit, callback) {
         return this.call_and_eval('name_search',
-            [name || '', domain || false, operator || 'ilike', this.get_context(), limit || 100],
+            [name || '', domain || false, operator || 'ilike', this.get_context(), limit || 0],
             1, 3, callback);
     },
     /**
@@ -522,7 +522,13 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
 
         this._sort.unshift((reverse ? '-' : '') + field);
         return undefined;
-    }
+    },
+    size: function () {
+        return this.ids.length;
+    },
+    alter_ids: function(n_ids) {
+    	this.ids = n_ids;
+    },
 });
 openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
     init: function(parent, model, context, ids) {
@@ -568,6 +574,7 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
         this._super(parent, model, context);
         this.domain = domain || [];
         this.offset = 0;
+        this._length;
         // subset records[offset:offset+limit]
         // is it necessary ?
         this.ids = [];
@@ -599,6 +606,7 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
         }).pipe(function (result) {
             self.ids = result.ids;
             self.offset = offset;
+            self._length = result.length;
             return result.records;
         });
     },
@@ -619,6 +627,12 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
             if (callback)
                 callback(result);
         }, error_callback);
+    },
+    size: function () {
+        if (this._length !== undefined) {
+            return this._length;
+        }
+        return this._super();
     }
 });
 openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
@@ -640,7 +654,6 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
             defaults: this.last_default_get};
         this.to_create.push(_.extend(_.clone(cached), {values: _.clone(cached.values)}));
         this.cache.push(cached);
-        this.on_change();
         var prom = $.Deferred().then(callback);
         prom.resolve({result: cached.id});
         return prom.promise();
@@ -751,7 +764,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                         self.cache.push({id: id, values: record});
                     } else {
                         // I assume cache value is prioritary
-                        _.defaults(cached.values, record);
+                    	cached.values = _.defaults(_.clone(cached.values), record);
                     }
                 });
                 return_records();
@@ -774,7 +787,11 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
             }
         }
         return this._super(method, args, callback, error_callback);
-    }
+    },
+    alter_ids: function(n_ids) {
+    	this._super(n_ids);
+        this.on_change();
+    },
 });
 openerp.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
 

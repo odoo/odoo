@@ -386,7 +386,7 @@ openerp.web.list_editable = function (openerp) {
         template: 'ListView.row.frame'
     });
     var form_widgets = openerp.web.form.widgets;
-    openerp.web.list.form.widgets = form_widgets.clone({
+    openerp.web.list.form.widgets = form_widgets.extend({
         'frame': 'openerp.web.list.form.WidgetFrame'
     });
     // All form widgets inherit a problematic behavior from
@@ -395,7 +395,7 @@ openerp.web.list_editable = function (openerp) {
     // former should completely remove the cell. We need to override update_dom
     // on all widgets since we can't just hit on widget itself (I think)
     var list_form_widgets = openerp.web.list.form.widgets;
-    _(list_form_widgets.map).each(function (widget_path, key) {
+    _(form_widgets.map).each(function (widget_path, key) {
         if (key === 'frame') { return; }
         var new_path = 'openerp.web.list.form.' + key;
 

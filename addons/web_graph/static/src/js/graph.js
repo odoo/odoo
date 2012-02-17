@@ -183,7 +183,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         var self = this;
         var group_list,
         view_chart = (self.chart == 'line')?'line':(self.chart == 'area')?'area':'';
-        if (!this.group_field) {
+        if (!this.group_field || !results.length) {
             if (self.chart == 'bar'){
                 view_chart = (this.orientation === 'horizontal') ? 'barH' : 'bar';
             }
@@ -216,9 +216,12 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     .pluck(this.group_field)
                     .uniq()
                     .map(function (value, index) {
+                        var groupval = '';
+                        if(value) {
+                            groupval = value.toLowerCase().replace(/[\s\/]+/g,'_');
+                        }
                         return {
-                            group: self.ordinate + '_' +
-                                    value.toLowerCase().replace(/[\s\/]+/g,'_'),
+                            group: _.str.sprintf('%s_%s', self.ordinate, groupval),
                             text: value,
                             color: COLOR_PALETTE[index % COLOR_PALETTE.length]
                         };
@@ -231,9 +234,11 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     // second argument is coerced to a str, no good for boolean
                     r[self.abscissa] = records[0][self.abscissa];
                     _(records).each(function (record) {
-                        var key = _.str.sprintf('%s_%s',
-                            self.ordinate,
-                            record[self.group_field].toLowerCase().replace(/[\s\/]+/g,'_'));
+                        var value = record[self.group_field];
+                        if(value) {
+                            value = value.toLowerCase().replace(/[\s\/]+/g,'_');
+                        }
+                        var key = _.str.sprintf('%s_%s', self.ordinate, value);
                         r[key] = record[self.ordinate];
                     });
                     return r;
@@ -349,7 +354,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             self.renderer = null;
             var chart =  new dhtmlXChart({
                 view:"pie3D",
-                container:self.element_id+"-piechart",
+                container:self.widget_parent.element_id+"-piechart",
                 value:"#"+self.ordinate+"#",
                 pieInnerText:function(obj) {
                     var sum = chart.sum("#"+self.ordinate+"#");

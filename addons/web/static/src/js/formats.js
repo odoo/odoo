@@ -61,6 +61,28 @@ openerp.web.insert_thousand_seps = function (num) {
     return (negative ? '-' : '') + openerp.web.intersperse(
         num, _t.database.parameters.grouping, _t.database.parameters.thousands_sep);
 };
+
+/**
+ * removes literal (non-format) text from a date or time pattern, as datejs can
+ * not deal with literal text in format strings (whatever the format), whereas
+ * strftime allows for literal characters
+ *
+ * @param {String} value original format
+ */
+openerp.web.strip_raw_chars = function (value) {
+    var isletter = /[a-zA-Z]/, output = [];
+    for(var index=0; index < value.length; ++index) {
+        var character = value[index];
+        if(isletter.test(character) && (index === 0 || value[index-1] !== '%')) {
+            continue;
+        }
+        output.push(character);
+    }
+    return output.join('');
+};
+var normalize_format = function (format) {
+    return Date.normalizeFormat(openerp.web.strip_raw_chars(format));
+};
 /**
  * Formats a single atomic value based on a field descriptor
  *
@@ -101,7 +123,12 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             formatted[0] = openerp.web.insert_thousand_seps(formatted[0]);
             return formatted.join(l10n.decimal_point);
         case 'float_time':
-            return _.str.sprintf("%02d:%02d",
+            var pattern = '%02d:%02d';
+            if (value < 0) {
+                value = Math.abs(value);
+                pattern = '-' + pattern;
+            }
+            return _.str.sprintf(pattern,
                     Math.floor(value),
                     Math.round((value % 1) * 60));
         case 'many2one':
@@ -111,16 +138,16 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
 
-            return value.format(l10n.date_format
-                        + ' ' + l10n.time_format);
+            return value.toString(normalize_format(l10n.date_format)
+                        + ' ' + normalize_format(l10n.time_format));
         case 'date':
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
-            return value.format(l10n.date_format);
+            return value.toString(normalize_format(l10n.date_format));
         case 'time':
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
-            return value.format(l10n.time_format);
+            return value.toString(normalize_format(l10n.time_format));
         case 'selection':
             // Each choice is [value, label]
             if(_.isArray(value)) {
@@ -137,8 +164,8 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
 };
 
 openerp.web.parse_value = function (value, descriptor, value_if_empty) {
-    var date_pattern = Date.normalizeFormat(_t.database.parameters.date_format),
-        time_pattern = Date.normalizeFormat(_t.database.parameters.time_format);
+    var date_pattern = normalize_format(_t.database.parameters.date_format),
+        time_pattern = normalize_format(_t.database.parameters.time_format);
     switch (value) {
         case false:
         case "":
@@ -171,12 +198,17 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
                 throw new Error(value + " is not a correct float");
             return parsed;
         case 'float_time':
+            var factor = 1;
+            if (value[0] === '-') {
+                value = value.slice(1);
+                factor = -1;
+            }
             var float_time_pair = value.split(":");
             if (float_time_pair.length != 2)
-                return openerp.web.parse_value(value, {type: "float"});
+                return factor * openerp.web.parse_value(value, {type: "float"});
             var hours = openerp.web.parse_value(float_time_pair[0], {type: "integer"});
             var minutes = openerp.web.parse_value(float_time_pair[1], {type: "integer"});
-            return hours + (minutes / 60);
+            return factor * (hours + (minutes / 60));
         case 'progressbar':
             return openerp.web.parse_value(value, {type: "float"});
         case 'datetime':

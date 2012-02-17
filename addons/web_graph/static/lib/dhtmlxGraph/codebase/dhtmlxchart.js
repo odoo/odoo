@@ -647,7 +647,6 @@ dhtmlx.chart.barH = {
                     if (i.fixNum) n = parseFloat((new Number(n)).toFixed(i.fixNum));
                     var o = Math.floor(k + l * m) + 0.5;
                     n != e && j.lines && this.i(a, o, b, o, c.y, this.e.xAxis.color, 0.2);
-                    console.log("111111111111");
                     this.renderTextAt(false, true, o, b + 2, j.template(n.toString()), "dhx_axis_item_x");
                     l++
                 }
@@ -2190,7 +2189,6 @@ dhtmlx.Canvas = {
         });
         a.appendChild(this.l);
         if (!this.l.getContext) if (dhtmlx.r) {
-            dhtmlx.require("thirdparty/excanvas/excanvas.js");
             G_vmlCanvasManager.init_(document);
             G_vmlCanvasManager.initElement(this.l)
         }

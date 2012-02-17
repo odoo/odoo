@@ -38,6 +38,34 @@ def extract_xmljs(fileobj, keywords, comment_tags, options):
              tuples
     :rtype: ``iterator``
     """
+    assert False, """ the XMLJS extractor does not work and was removed:
+
+    * Babel apparently does not accept two extractors for the same set of files
+      so it would not run the xmljs extractor at all, extraction of JS stuff
+      needs to be done from the XML extractor
+    * The regex above fails up if there are back-slashed quotes within the
+      translatable string (the string marked with _t), it just won't match the
+      string
+    * While extraction succeeds on XML entities (e.g. &quot;), translation
+      matching will fail if those entities are kept in the PO msgid as the
+      XML parser will get an un-escaped string, without those entities (so a
+      text extractor will extract ``Found match &quot;%s&quot;``, but the msgid
+      of the PO file must be ``Found match "%s"`` or the translation will fail
+    * single-quoted strings are not valid JSON string, so single-quoted strings
+      matched by the regex (likely since XML attributes are double-quoted,
+      single quotes within them don't have to be escaped) will blow up when
+      json-parsed for their content
+
+    I think that's about it.
+
+    If this extractor is reimplemented, it should be integrated into
+    extract_qweb, either in the current pass (probably not a good idea) or as
+    a separate pass using iterparse, matching either elements with t-js or
+    some other kinds of t-* directives (@t-esc, @t-raw, @t-att, others?),
+    shove the attribute content into a StringIO and pass *that* to Babel's
+    own extract_javascript; then add a line offset in order to yield the
+    correct line number.
+    """
     content = fileobj.read()
     found = XMLJS_EXPR.finditer(content)
     index = 0
