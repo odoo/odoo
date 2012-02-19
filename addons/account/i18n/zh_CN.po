@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-16 04:45+0000\n"
+"PO-Revision-Date: 2012-02-17 07:55+0000\n"
 "Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-16 05:05+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-02-18 04:58+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -5213,7 +5213,7 @@ msgstr "客户红字发票"
 #: constraint:account.move:0
 msgid ""
 "You can not create more than one move per period on centralized journal"
-msgstr ""
+msgstr "余额凭证簿每个期间只能有一张会计凭证"
 
 #. module: account
 #: field:account.tax,ref_tax_sign:0
@@ -6759,6 +6759,8 @@ msgid ""
 "Please define BIC/Swift code on bank for bank type IBAN Account to make "
 "valid payments"
 msgstr ""
+"\n"
+"请为 IBAN类型的银行指定 BIC/Swift代码，以便自动付款。"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -6906,7 +6908,7 @@ msgstr "对账报表"
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
 msgid "Accounting Report"
-msgstr ""
+msgstr "会计报表"
 
 #. module: account
 #: report:account.invoice:0
@@ -7058,7 +7060,7 @@ msgstr "发票日期"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Group by year of Invoice Date"
-msgstr ""
+msgstr "按发票年度分组"
 
 #. module: account
 #: help:res.partner,credit:0
@@ -7156,7 +7158,7 @@ msgstr "创建"
 #. module: account
 #: view:res.partner:0
 msgid "Information About the Bank"
-msgstr ""
+msgstr "关于该银行的信息"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reporting
@@ -7292,7 +7294,7 @@ msgstr "普通"
 #: model:ir.actions.act_window,name:account.action_email_templates
 #: model:ir.ui.menu,name:account.menu_email_templates
 msgid "Email Templates"
-msgstr ""
+msgstr "电子邮件模板"
 
 #. module: account
 #: view:account.move.line:0
@@ -7330,7 +7332,7 @@ msgstr ""
 #. module: account
 #: field:account.model.line,date_maturity:0
 msgid "Maturity Date"
-msgstr ""
+msgstr "到期日期"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1302
@@ -7496,7 +7498,7 @@ msgstr "销售税"
 #. module: account
 #: field:account.financial.report,name:0
 msgid "Report Name"
-msgstr ""
+msgstr "报表名称"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_cash
@@ -7555,7 +7557,7 @@ msgstr "序列"
 #. module: account
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "错误！您不能创建循环分类。"
 
 #. module: account
 #: help:account.model.line,quantity:0
@@ -7750,7 +7752,7 @@ msgstr "没有发票明细"
 #. module: account
 #: view:account.financial.report:0
 msgid "Report Type"
-msgstr ""
+msgstr "报表类型"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -7964,7 +7966,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice.report:0
 msgid "Group by Invoice Date"
-msgstr ""
+msgstr "按发票日期分组"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -8158,7 +8160,7 @@ msgstr "通用报表"
 #: view:account.invoice.report:0
 #: view:analytic.entries.report:0
 msgid "current month"
-msgstr ""
+msgstr "本月"
 
 #. module: account
 #: code:addons/account/account.py:1052
@@ -8284,7 +8286,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.account:0
 msgid "Contacts"
-msgstr ""
+msgstr "联系人"
 
 #. module: account
 #: field:account.tax.code,parent_id:0
@@ -8646,7 +8648,7 @@ msgstr ""
 #: view:account.move.line:0
 #: field:account.move.line,narration:0
 msgid "Internal Note"
-msgstr ""
+msgstr "内部备注"
 
 #. module: account
 #: view:report.account.sales:0
@@ -9000,7 +9002,7 @@ msgstr "图表"
 #. module: account
 #: view:account.analytic.account:0
 msgid "Contract Data"
-msgstr ""
+msgstr "合同信息"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_sale
@@ -9340,7 +9342,7 @@ msgstr "启用"
 #. module: account
 #: view:accounting.report:0
 msgid "Comparison"
-msgstr ""
+msgstr "比较"
 
 #. module: account
 #: code:addons/account/account_invoice.py:372
@@ -9686,7 +9688,7 @@ msgstr "会计年度序列"
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "No detail"
-msgstr ""
+msgstr "不详"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:102
@@ -9697,7 +9699,7 @@ msgstr "没有为此产品  \"%s\" (id:%d)：定义利润科目"
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "凭证上不能使用已关闭的科目"
 
 #. module: account
 #: field:account.account,unrealized_gain_loss:0
@@ -9845,7 +9847,7 @@ msgstr "科目留空？ "
 #. module: account
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr ""
+msgstr "所选的凭证簿和期间必须属于相同公司。"
 
 #. module: account
 #: view:account.invoice:0
@@ -10047,7 +10049,7 @@ msgstr "打印辅助核算账簿"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Group by month of Invoice Date"
-msgstr ""
+msgstr "按发票月份分组"
 
 #. module: account
 #: view:account.analytic.line:0

@@ -30,18 +30,20 @@ class outlook_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     _columns = {
-        'name':fields.char('Outlook Plug-in', size=64, readonly=True, help="outlook plug-in file. Save as this file and install this plug-in in outlook."),
+        'name':fields.char('Outlook Plug-in 32bits', size=64, readonly=True, help="outlook plug-in file. Save as this file and install this plug-in in outlook."),
+        'name2':fields.char('Outlook Plug-in 64bits', size=64, readonly=True, help="outlook plug-in file. Save as this file and install this plug-in in outlook."),
         'description':fields.text('Description', readonly=True)
     }
 
     _defaults = {
-        'name' : '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup.msi',
+        'name' : '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup32.msi',
+        'name2' : '/plugin_outlook/static/openerp-outlook-plugin/OpenERPOutlookPluginSetup64.msi',
         'description' : """
-Click on icon next to the link above to download the installer and execute it.
+Click on icon next to the link above to download the installer either for 32 or 64 bits and execute it.
 
 System requirements:
     1.  MS Outlook 2005 or above.
-    2.  MS .Net Framework 3.5 .
+    2.  MS .Net Framework 3.5 or above.
 """
         }
 
