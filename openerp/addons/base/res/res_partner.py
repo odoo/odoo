@@ -134,23 +134,32 @@ class res_partner(osv.osv):
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website',size=64, help="Website of Partner."),
         'comment': fields.text('Notes'),
-        'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),
         'category_id': fields.many2many('res.partner.category', 'res_partner_category_rel', 'partner_id', 'category_id', 'Categories'),
         'events': fields.one2many('res.partner.event', 'partner_id', 'Events'),
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
-        'active': fields.boolean('Active'),
         'customer': fields.boolean('Customer', help="Check this box if the partner is a customer."),
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
-        'city': fields.related('address', 'city', type='char', string='City'),
-        'function': fields.related('address', 'function', type='char', string='function'),
-        'subname': fields.related('address', 'name', type='char', string='Contact Name'),
-        'phone': fields.related('address', 'phone', type='char', string='Phone'),
-        'mobile': fields.related('address', 'mobile', type='char', string='Mobile'),
-        'country': fields.related('address', 'country_id', type='many2one', relation='res.country', string='Country'),
         'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
-        'email': fields.related('address', 'email', type='char', size=240, string='E-mail'),
-        'company_id': fields.many2one('res.company', 'Company', select=1),
+        'color': fields.integer('Color Index'),
+        'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
+        'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
+        'function': fields.char('Function', size=128),
+        'street': fields.char('Street', size=128),
+        'street2': fields.char('Street2', size=128),
+        'zip': fields.char('Zip', change_default=True, size=24),
+        'city': fields.char('City', size=128),
+        'state_id': fields.many2one("res.country.state", 'Fed. State', domain="[('country_id','=',country_id)]"),
+        'country_id': fields.many2one('res.country', 'Country'),
+        'email': fields.char('E-Mail', size=240),
+        'phone': fields.char('Phone', size=64),
+        'fax': fields.char('Fax', size=64),
+        'mobile': fields.char('Mobile', size=64),
+        'birthdate': fields.char('Birthdate', size=64),
+        'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
+#        'company_id': fields.related('partner_id','company_id',type='many2one',relation='res.company',string='Company', store=True),
+        'company_id': fields.many2one('res.company', 'Company',select=1),
+        'is_company': fields.boolean('Company', help="Check if you want to create company"),
         'color': fields.integer('Color Index'),
     }
     def _default_category(self, cr, uid, context=None):
@@ -166,6 +175,8 @@ class res_partner(osv.osv):
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
         'color': 0,
+        'is_company': lambda *a: 0,
+        'type': 'default',
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -243,9 +254,8 @@ class res_partner(osv.osv):
     def address_get(self, cr, uid, ids, adr_pref=None):
         if adr_pref is None:
             adr_pref = ['default']
-        address_obj = self.pool.get('res.partner.address')
-        address_ids = address_obj.search(cr, uid, [('partner_id', 'in', ids)])
-        address_rec = address_obj.read(cr, uid, address_ids, ['type'])
+        address_ids = self.search(cr, uid, [('partner_id', 'in', ids)])
+        address_rec = self.read(cr, uid, address_ids, ['type'])
         res = list((addr['type'],addr['id']) for addr in address_rec)
         adr = dict(res)
         # get the id of the (first) default address if there is one,
@@ -292,107 +302,6 @@ class res_partner(osv.osv):
                                         ('name','=','main_partner')])[0],
             ).res_id
 res_partner()
-
-class res_partner_address(osv.osv):
-    _description ='Partner Addresses'
-    _name = 'res.partner.address'
-    _order = 'type, name'
-    _columns = {
-        'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
-        'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
-        'function': fields.char('Function', size=128),
-        'title': fields.many2one('res.partner.title','Title'),
-        'name': fields.char('Contact Name', size=64, select=1),
-        'street': fields.char('Street', size=128),
-        'street2': fields.char('Street2', size=128),
-        'zip': fields.char('Zip', change_default=True, size=24),
-        'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'Fed. State', domain="[('country_id','=',country_id)]"),
-        'country_id': fields.many2one('res.country', 'Country'),
-        'email': fields.char('E-Mail', size=240),
-        'phone': fields.char('Phone', size=64),
-        'fax': fields.char('Fax', size=64),
-        'mobile': fields.char('Mobile', size=64),
-        'birthdate': fields.char('Birthdate', size=64),
-        'is_customer_add': fields.related('partner_id', 'customer', type='boolean', string='Customer'),
-        'is_supplier_add': fields.related('partner_id', 'supplier', type='boolean', string='Supplier'),
-        'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
-#        'company_id': fields.related('partner_id','company_id',type='many2one',relation='res.company',string='Company', store=True),
-        'company_id': fields.many2one('res.company', 'Company',select=1),
-        'color': fields.integer('Color Index'),
-    }
-    _defaults = {
-        'active': lambda *a: 1,
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner.address', context=c),
-    }
-    def name_get(self, cr, user, ids, context=None):
-        if context is None:
-            context = {}
-        if not len(ids):
-            return []
-        res = []
-        for r in self.read(cr, user, ids, ['name','zip','country_id', 'city','partner_id', 'street']):
-            if context.get('contact_display', 'contact')=='partner' and r['partner_id']:
-                res.append((r['id'], r['partner_id'][1]))
-            else:
-                # make a comma-separated list with the following non-empty elements
-                elems = [r['name'], r['country_id'] and r['country_id'][1], r['city'], r['street']]
-                addr = ', '.join(filter(bool, elems))
-                if (context.get('contact_display', 'contact')=='partner_address') and r['partner_id']:
-                    res.append((r['id'], "%s: %s" % (r['partner_id'][1], addr or '/')))
-                else:
-                    res.append((r['id'], addr or '/'))
-        return res
-
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
-        if not args:
-            args=[]
-        if not context:
-            context={}
-        if context.get('contact_display', 'contact')=='partner ' or context.get('contact_display', 'contact')=='partner_address '  :
-            ids = self.search(cr, user, [('partner_id',operator,name)], limit=limit, context=context)
-        else:
-            if not name:
-                ids = self.search(cr, user, args, limit=limit, context=context)
-            else:
-                ids = self.search(cr, user, [('zip','=',name)] + args, limit=limit, context=context)
-            if not ids:
-                ids = self.search(cr, user, [('city',operator,name)] + args, limit=limit, context=context)
-            if name:
-                ids += self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
-                ids += self.search(cr, user, [('partner_id',operator,name)] + args, limit=limit, context=context)
-        return self.name_get(cr, user, ids, context=context)
-
-    def get_city(self, cr, uid, id):
-        return self.browse(cr, uid, id).city
-
-    def _display_address(self, cr, uid, address, context=None):
-        '''
-        The purpose of this function is to build and return an address formatted accordingly to the
-        standards of the country where it belongs.
-
-        :param address: browse record of the res.partner.address to format
-        :returns: the address formatted in a display that fit its country habits (or the default ones
-            if not country is specified)
-        :rtype: string
-        '''
-        # get the address format
-        address_format = address.country_id and address.country_id.address_format or \
-                                         '%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s' 
-        # get the information that will be injected into the display format
-        args = {
-            'state_code': address.state_id and address.state_id.code or '',
-            'state_name': address.state_id and address.state_id.name or '',
-            'country_code': address.country_id and address.country_id.code or '',
-            'country_name': address.country_id and address.country_id.name or '',
-        }
-        address_field = ['title', 'street', 'street2', 'zip', 'city']
-        for field in address_field :
-            args[field] = getattr(address, field) or ''
-
-        return address_format % args
-
-res_partner_address()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

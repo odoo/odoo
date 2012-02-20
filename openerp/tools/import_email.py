@@ -86,8 +86,8 @@ class ReceiverEmail2Event(object):
 
     def get_partners(self, headers, msg):
         alladdresses = self.get_addresses(headers, msg)
-        address_ids = self.rpc(('res.partner.address', 'search', [('email', 'in', alladdresses)]))
-        addresses = self.rpc(('res.partner.address', 'read', address_ids))
+        address_ids = self.rpc(('res.partner', 'search', [('email', 'in', alladdresses)]))
+        addresses = self.rpc(('res.partner', 'read', address_ids))
         return [x['partner_id'][0] for x in addresses]
 
     def __call__(self, request):

@@ -20,7 +20,7 @@
           =====================
         -->
 
-        <record id="view_res_partner_address_filter" model="ir.ui.view">
+        <!--record id="view_res_partner_address_filter" model="ir.ui.view">
             <field name="name">res.partner.address.select</field>
             <field name="model">res.partner.address</field>
             <field name="type">search</field>
@@ -200,14 +200,14 @@
         </record>
         <menuitem action="action_partner_address_form" id="menu_partner_address_form"
             groups="base.group_extended" name="Contacts"
-            parent="base.menu_address_book" sequence="30"/>
+            parent="base.menu_address_book" sequence="30"/-->
 
         <!--
           =========================================
           the short form used in the partner form
           =========================================
         -->
-        <record id="view_partner_address_form2" model="ir.ui.view">
+        <!--record id="view_partner_address_form2" model="ir.ui.view">
             <field name="name">res.partner.address.form2</field>
             <field name="model">res.partner.address</field>
             <field name="type">form</field>
@@ -234,7 +234,7 @@
                     <field name="email" widget="email"/>
                 </form>
             </field>
-        </record>
+        </record-->
 
         <!--
           =======================
@@ -315,7 +315,7 @@
                     <field name="phone"/>
                     <field name="email"/>
                     <field name="city"/>
-                    <field name="country"/>
+                    <!--field name="country"/-->
                     <field name="user_id"/>
                 </tree>
             </field>
@@ -341,11 +341,10 @@
                         </group>
                     </group>
                     <notebook colspan="4">
-                        <page string="General">
+                        <!--page string="General">
                             <field colspan="4" mode="form,tree" name="address" nolabel="1" select="1" height="260">
                                 <form string="Partner Contacts">
                                     <group colspan="4" col="6">
-                                        <field name="name" string="Contact Name"/>
                                         <field domain="[('domain', '=', 'contact')]" name="title" size="0"/>
                                         <field name="function"/>
                                     </group>
@@ -375,13 +374,13 @@
                                     <field name="country_id"/>
                                     <field name="phone"/>
                                     <field name="email"/>
-                                </tree>
-                            </field>
-                            <group  groups="base.group_extended">
+                                </tree-->
+                            <!--/field-->
+                            <!--group  groups="base.group_extended">
                                     <separator colspan="4" string="Categories"/>
                                     <field  colspan="4" name="category_id" nolabel="1"/>
                             </group>
-                        </page>
+                        </page-->
                         <page string="Sales &amp; Purchases">
                             <separator string="General Information" colspan="4"/>
                             <field name="user_id"/>
@@ -413,8 +412,8 @@
                         <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="address" select="1"/>
-                        <field name="country" select="1"/>
+                        <!--field name="address" select="1"/-->
+                        <!--field name="country" select="1"/-->
                         <field name="category_id" select="1" groups="base.group_extended"/>
                         <field name="user_id" select="1">
                             <filter help="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
@@ -465,7 +464,7 @@
                                                     <div class="oe_kanban_title2">
                                                         <field name="title"/>
                                                         <t t-if="record.title.raw_value and record.country.raw_value">,</t>
-                                                        <field name="country"/>
+                                                        <!--field name="country"/-->
                                                     </div>
                                                     <div class="oe_kanban_title3">
                                                         <field name="subname"/>
