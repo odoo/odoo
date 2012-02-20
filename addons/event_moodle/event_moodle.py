@@ -26,13 +26,14 @@ import time
 import random
 from random import sample
 
+
 class event_moodle(osv.osv):
     _name = 'event.moodle'
     _columns = {
         'moodle_username' : fields.char('Moodle username', 128,help="You can also connect with your username that you define when you create a tokken"),
         'moodle_password' : fields.char('Moodle password', 128),
         'moodle_token' : fields.char('Moodle token', 128,help="Put your token that you created in your moodle serveur"),
-        'serveur_moodle': fields.char('Moodle server', 128, required=True,help="URL where you have your moodle server ")
+        'serveur_moodle': fields.char('Moodle server', 128, required=True,help="URL where you have your moodle server "),
     }
 
     url=''
@@ -50,6 +51,7 @@ class event_moodle(osv.osv):
         create the good url with the information of the configuration
         @return url for moodle connexion
         """
+        url=""
         config_moodle = self.browse(cr, uid, ids, context=context)
         if config_moodle[0].moodle_username and config_moodle[0].moodle_password:
             url='http://'+config_moodle[0].serveur_moodle+'/moodle/webservice/xmlrpc/simpleserver.php?wsusername='+config_moodle[0].moodle_username+'&wspassword='+config_moodle[0].moodle_password
@@ -60,7 +62,7 @@ class event_moodle(osv.osv):
             #connexion with token
         self.url = url
         return url
-    #create a good url for xmlrpc connect
+        #create a good url for xmlrpc connect
 
     def create_moodle_user(self,cr,uid,ids,dic_user):
         """
