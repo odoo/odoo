@@ -533,11 +533,16 @@ class mail_thread(osv.osv):
     # Subscription mechanism
     #------------------------------------------------------
     
-    def message_get_subscribers(self, cr, uid, ids, context=None):
+    def message_get_subscribers_ids(self, cr, uid, ids, context=None):
         subscription_obj = self.pool.get('mail.subscription')
         sub_ids = subscription_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         subs = subscription_obj.read(cr, uid, sub_ids, context=context)
-        return subs
+        return [sub['user_id'] for sub in subs]
+    
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        user_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context)
+        users = self.pool.get('res.users').read(cr, uid, user_ids, context=context)
+        return users
     
     def message_is_subscriber(self, cr, uid, ids, context=None):
         subscription_obj = self.pool.get('mail.subscription')
@@ -547,12 +552,13 @@ class mail_thread(osv.osv):
             print 'cacaprout error !'
         return True if sub_ids else False
     
-    def message_subscribe(self, cr, uid, ids, context=None):
+    def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
         subscription_obj = self.pool.get('mail.subscription')
-        subscriber_id = uid # TODO
+        sub_user_ids = [uid] if user_ids is None else user_ids
         for id in ids:
-            subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': subscriber_id}, context=context)
-        return True
+            create_ids = [subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context)
+                            for user_id in sub_user_ids]
+        return create_ids
 
     def message_unsubscribe(self, cr, uid, ids, context=None):
         subscription_obj = self.pool.get('mail.subscription')
