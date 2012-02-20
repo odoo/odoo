@@ -69,19 +69,19 @@
     Testing that some domain expressions work
 -
     !python {model: res.partner }: |
-        ids = self.search(cr, uid, [('partner_id','=','Agrolait')])
+        ids = self.search(cr, uid, [('parent_id','=','Agrolait')])
         assert len(ids) >= 1, ids
 -
     Trying the "in" operator, for scalar value
 -
     !python {model: res.partner }: |
-        ids = self.search(cr, uid, [('partner_id','in','Agrolait')])
+        ids = self.search(cr, uid, [('parent_id','in','Agrolait')])
         assert len(ids) >= 1, ids
 -
     Trying the "in" operator for list value
 -
     !python {model: res.partner }: |
-        ids = self.search(cr, uid, [('partner_id','in',['Agrolait','ASUStek'])])
+        ids = self.search(cr, uid, [('parent_id','in',['Agrolait','ASUStek'])])
         assert len(ids) >= 1, ids
 -
     Check we can use "in" operator for plain fields.

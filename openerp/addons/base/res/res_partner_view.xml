@@ -317,6 +317,7 @@
                     <field name="city"/>
                     <!--field name="country"/-->
                     <field name="user_id"/>
+                    <field name="parent_id"/>
                 </tree>
             </field>
         </record>
@@ -422,6 +423,7 @@
                    <newline />
                    <group expand="0" string="Group By...">
                        <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
+                       <filter string="Parent" context="{'group_by': 'parent_id'}"/>
                    </group>
                </search>
             </field>
