@@ -443,6 +443,13 @@ class account_bank_statement_line(osv.osv):
                 account_id = part.property_account_receivable.id
             res['value']['account_id'] = account_id
         return res
+    
+    def onchange_date(self, cr, uid, statement_lines, date, bank_period_id, context=None):
+        voucher_obj = self.pool.get('account.voucher')
+        for line in self.browse(cr, uid, statement_lines, context=context):
+            if line.voucher_id:
+                voucher_obj.write(cr, uid, [line.voucher_id.id],{'date': date, 'period_id': bank_period_id}, context=context)
+        return True
 
     _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"
@@ -472,7 +479,7 @@ class account_bank_statement_line(osv.osv):
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': lambda self, cr, uid, context, *a: context.get('date'),
         'type': 'general',
     }
 
