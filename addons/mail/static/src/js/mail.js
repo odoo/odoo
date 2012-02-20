@@ -84,7 +84,8 @@ openerp.mail = function(session) {
             var self = this;
             _(records).each(function (record) {
 //                 <div class="oe_mail_followers_vignette" title="Raoul Grobedon"><img src="people.png"/></div>
-                $('<div class="oe_mail_followers_vignette">').text(record.user_id[1]).appendTo(self.$element.find('div.oe_mail_followers'));
+                //$('<div class="oe_mail_followers_vignette">').text(record.user_id[1]).appendTo(self.$element.find('div.oe_mail_followers'));
+                $('<div class="oe_mail_followers_vignette">').text(record.name).appendTo(self.$element.find('div.oe_mail_followers'));
             });
         },
         
