@@ -149,7 +149,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     _logger.debug('loading %d packages...', len(graph))
 
     # get db timestamp
-    cr.execute("select now()::timestamp")
+    cr.execute("select (now() at time zone 'UTC')::timestamp")
     dt_before_load = cr.fetchone()[0]
 
     # register, instantiate and initialize models for each modules

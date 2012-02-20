@@ -750,7 +750,7 @@ class BaseModel(object):
             name_id = 'model_'+self._name.replace('.', '_')
             cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, context['module']))
             if not cr.rowcount:
-                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
+                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
                     (name_id, context['module'], 'ir.model', model_id)
                 )
 
@@ -816,7 +816,7 @@ class BaseModel(object):
                     cr.execute("select name from ir_model_data where name=%s", (name1,))
                     if cr.fetchone():
                         name1 = name1 + "_" + str(id)
-                    cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
+                    cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
                         (name1, context['module'], 'ir.model.fields', id)
                     )
             else:
@@ -3416,8 +3416,8 @@ class BaseModel(object):
                     return "date_trunc('second', %s) as %s" % (f_qual, f)
                 if f == self.CONCURRENCY_CHECK_FIELD:
                     if self._log_access:
-                        return "COALESCE(%s.write_date, %s.create_date, now())::timestamp AS %s" % (self._table, self._table, f,)
-                    return "now()::timestamp AS %s" % (f,)
+                        return "COALESCE(%s.write_date, %s.create_date, (now() at time zone 'UTC'))::timestamp AS %s" % (self._table, self._table, f,)
+                    return "(now() at time zone 'UTC')::timestamp AS %s" % (f,)
                 if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                     return 'length(%s) as "%s"' % (f_qual, f)
                 return f_qual
@@ -3598,7 +3598,7 @@ class BaseModel(object):
             return
         if not (context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access):
             return
-        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
+        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp)"
         for sub_ids in cr.split_for_in_conditions(ids):
             ids_to_check = []
             for id in sub_ids:
@@ -3882,7 +3882,7 @@ class BaseModel(object):
 
         if self._log_access:
             upd0.append('write_uid=%s')
-            upd0.append('write_date=now()')
+            upd0.append("write_date=(now() at time zone 'UTC')")
             upd1.append(user)
 
         if len(upd0):
@@ -4149,7 +4149,7 @@ class BaseModel(object):
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
             upd0 += ',create_uid,create_date'
-            upd1 += ',%s,now()'
+            upd1 += ",%s,(now() at time zone 'UTC')"
             upd2.append(user)
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
         self.check_access_rule(cr, user, [id_new], 'create', context=context)
@@ -4852,15 +4852,15 @@ class BaseModel(object):
     def _transient_clean_rows_older_than(self, cr, seconds):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
         cr.execute("SELECT id FROM " + self._table + " WHERE"
-            " COALESCE(write_date, create_date, now())::timestamp <"
-            " (now() - interval %s)", ("%s seconds" % seconds,))
+            " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp <"
+            " ((now() at time zone 'UTC') - interval %s)", ("%s seconds" % seconds,))
         ids = [x[0] for x in cr.fetchall()]
         self.unlink(cr, SUPERUSER_ID, ids)
 
     def _transient_clean_old_rows(self, cr, count):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
         cr.execute(
-            "SELECT id, COALESCE(write_date, create_date, now())::timestamp"
+            "SELECT id, COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
             " AS t FROM " + self._table +
             " ORDER BY t LIMIT %s", (count,))
         ids = [x[0] for x in cr.fetchall()]
