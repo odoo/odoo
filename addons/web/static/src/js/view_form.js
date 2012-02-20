@@ -3147,7 +3147,11 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
     },
     start: function() {
         this._super();
+        this.selection.$element = $(".oe_form_view_reference_selection", this.$element);
+        this.selection.render_element();
         this.selection.start();
+        this.m2o.$element = $(".oe_form_view_reference_m2o", this.$element);
+        this.m2o.render_element();
         this.m2o.start();
     },
     is_valid: function() {
