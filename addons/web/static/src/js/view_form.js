@@ -3090,7 +3090,7 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
         };
         this.get_fields_values = view.get_fields_values;
         this.get_selected_ids = view.get_selected_ids;
-        this.do_onchange = this.on_form_changed = this.on_nop;
+        this.do_onchange = this.on_form_changed = this.do_notify_change = this.on_nop;
         this.dataset = this.view.dataset;
         this.widgets_counter = 0;
         this.view_id = 'reference_' + _.uniqueId();
