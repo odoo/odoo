@@ -11,7 +11,7 @@ openerp.mail = function(session) {
     /* ThreadView widget: thread of comments */
     mail.ThreadView = session.web.form.Field.extend({
         // QWeb template to use when rendering the object
-        template: 'ThreadView',
+        form_template: 'ThreadView',
         
         init: function() {
             this.follow_state = 0;
