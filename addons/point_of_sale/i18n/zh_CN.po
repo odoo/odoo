@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2011-06-29 01:01+0000\n"
-"Last-Translator: shjerryzhou <Unknown>\n"
+"PO-Revision-Date: 2012-02-20 02:30+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:10+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-20 05:40+0000\n"
+"X-Generator: Launchpad (build 14833)\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -37,6 +37,8 @@ msgid ""
 "new payment methods directly from menu \"PoS Backend > Configuration > "
 "Payment Methods\"."
 msgstr ""
+"你需要定义可以在POS上使用的付款方式。如果要使用现有的现金和银行账户，可以进入菜单“会计-配置-财务会计-"
+"凭证簿”，选择凭证簿并在销售点标签页勾选“POS付款方式”。你还可以在菜单“POS后台-配置-付款方式”中新建付款方式。"
 
 #. module: point_of_sale
 #: view:pos.order:0 view:report.pos.order:0
@@ -46,22 +48,22 @@ msgstr "今天"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.plain_water
 msgid "Plain Water"
-msgstr ""
+msgstr "白开水"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Year from Creation date of cash register"
-msgstr ""
+msgstr "收银机已创建年数"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Post All Orders"
-msgstr ""
+msgstr "上传所有订单"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_2l_product_template
 msgid "Spa Reine 2L"
-msgstr ""
+msgstr "士巴矿泉水 2L"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_box_out
@@ -94,7 +96,7 @@ msgstr "增加付款:"
 #. module: point_of_sale
 #: field:pos.box.out,name:0
 msgid "Description / Reason"
-msgstr ""
+msgstr "说明/原因"
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,product_name:0
@@ -105,7 +107,7 @@ msgstr "产品名称"
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Month from Creation date of cash register"
-msgstr ""
+msgstr "收银机已创建月数"
 
 #. module: point_of_sale
 #: report:account.statement:0 field:pos.box.entries,amount:0
@@ -120,19 +122,19 @@ msgstr "金额"
 msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
-msgstr ""
+msgstr "设置错误！所选币种应与默认科目共享。"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_category view:pos.category:0
 msgid "PoS Categories"
-msgstr ""
+msgstr "POS 类别"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_box_out
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl2
 msgid "Take Money Out"
-msgstr ""
+msgstr "取钱"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -160,7 +162,7 @@ msgstr "开始日期"
 msgid ""
 "You do not have any open cash register. You must create a payment method or "
 "open a cash register."
-msgstr ""
+msgstr "你尚未打开任何收银机,，你必须创建一个付款方式 或者打开收银机。"
 
 #. module: point_of_sale
 #: report:account.statement:0 field:report.pos.order,partner_id:0
@@ -190,17 +192,17 @@ msgstr "收银机管理"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_45g_product_template
 msgid "Lays Naturel 45g"
-msgstr ""
+msgstr "Lays Naturel 45g"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Accounting Information"
-msgstr ""
+msgstr "会计信息"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_2l_product_template
 msgid "Coca-Cola Regular 2L"
-msgstr ""
+msgstr "Coca-Cola Regular 2L"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_month
@@ -210,7 +212,7 @@ msgstr "月销售情况"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda_orange
 msgid "Orange"
-msgstr ""
+msgstr "橙"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_today
@@ -236,7 +238,7 @@ msgstr "总价格"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_brune_33cl_product_template
 msgid "Leffe Brune 33cl"
-msgstr ""
+msgstr "Leffe Brune 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user
@@ -247,12 +249,12 @@ msgstr "销售报表"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beverage
 msgid "Beverages"
-msgstr ""
+msgstr "饮料类"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_50cl_product_template
 msgid "Stella Artois 50cl"
-msgstr ""
+msgstr "Stella Artois 50cl"
 
 #. module: point_of_sale
 #: view:pos.details:0
@@ -262,7 +264,7 @@ msgstr "日期"
 #. module: point_of_sale
 #: field:pos.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
+msgstr "上级类别"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.lines:0 report:pos.payment.report.user:0
@@ -284,7 +286,7 @@ msgstr "折扣(%)"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_speciale_product_template
 msgid "Dr. Oetker Ristorante Speciale"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Speciale"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -294,7 +296,7 @@ msgstr "总数量"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_33cl_product_template
 msgid "Fanta Orange 33cl"
-msgstr ""
+msgstr "Fanta Orange 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
@@ -309,7 +311,7 @@ msgstr "今日关闭的钱箱"
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Day from Creation date of cash register"
-msgstr ""
+msgstr "收银机已创建日数"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale
@@ -320,17 +322,17 @@ msgstr "每天经营"
 #: code:addons/point_of_sale/point_of_sale.py:285
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "设置错误!"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.sparkling_water
 msgid "Sparkling Water"
-msgstr ""
+msgstr "纯净水"
 
 #. module: point_of_sale
 #: view:pos.box.entries:0
 msgid "Fill in this form if you put money in the cash register:"
-msgstr ""
+msgstr "如果你放钱在此收银机 , 填写此表格"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -345,7 +347,7 @@ msgstr "8月"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_lemon_33cl_product_template
 msgid "Pepsi Max Cool Lemon 33cl"
-msgstr ""
+msgstr "Pepsi Max Cool Lemon 33cl"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
@@ -360,12 +362,12 @@ msgstr "POS单明细"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_50cl_product_template
 msgid "Fanta Orange 50cl"
-msgstr ""
+msgstr "Fanta Orange 50cl"
 
 #. module: point_of_sale
 #: field:pos.category,child_id:0
 msgid "Children Categories"
-msgstr ""
+msgstr "儿童分类"
 
 #. module: point_of_sale
 #: field:pos.make.payment,payment_date:0
@@ -377,7 +379,7 @@ msgstr "付款日期"
 msgid ""
 "If you want to sell this product through the point of sale, select the "
 "category it belongs to."
-msgstr ""
+msgstr "如果你想通过POS出售这些产品，选择它所属的类别。"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
@@ -392,7 +394,7 @@ msgstr "十月"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_1l_product_template
 msgid "Coca-Cola Light 1L"
-msgstr ""
+msgstr "Coca-Cola Light 1L"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
@@ -402,7 +404,7 @@ msgstr "摘要"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_50cl_product_template
 msgid "Chaudfontaine 50cl"
-msgstr ""
+msgstr "Chaudfontaine 50cl"
 
 #. module: point_of_sale
 #: report:pos.invoice:0 report:pos.lines:0 field:pos.order.line,qty:0
@@ -414,7 +416,7 @@ msgstr "数量"
 #. module: point_of_sale
 #: field:pos.order.line,name:0
 msgid "Line No"
-msgstr ""
+msgstr "行号"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -425,7 +427,7 @@ msgstr "期间"
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
 #, python-format
 msgid "No Cash Register Defined !"
-msgstr ""
+msgstr "没有定义收银机"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -435,7 +437,7 @@ msgstr "净合计:"
 #. module: point_of_sale
 #: field:pos.make.payment,payment_name:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "付款参考"
 
 #. module: point_of_sale
 #: report:pos.details_summary:0
@@ -445,13 +447,13 @@ msgstr "支付方式"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
 msgid "Post POS Journal Entries"
-msgstr ""
+msgstr "发表POS机日记帐分录"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:408
 #, python-format
 msgid "Customer Invoice"
-msgstr ""
+msgstr "客户发票"
 
 #. module: point_of_sale
 #: view:pos.box.out:0
@@ -472,7 +474,7 @@ msgstr "打印报表"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_bolognese_product_template
 msgid "Dr. Oetker Ristorante Bolognese"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Bolognese"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:105
@@ -483,7 +485,7 @@ msgstr "请检查是否%s设置了收入类科目"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pizza
 msgid "Pizza"
-msgstr ""
+msgstr "披萨"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_return.py:85
@@ -500,7 +502,7 @@ msgstr "发票金额"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.coke
 msgid "Coke"
-msgstr ""
+msgstr "可乐"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -511,7 +513,7 @@ msgstr "电话:"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_confirm
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_pos_confirm
 msgid "Create Sale Entries"
-msgstr ""
+msgstr "新建销售记录"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -526,7 +528,7 @@ msgstr "付款"
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Cash Analysis created in current month"
-msgstr ""
+msgstr "当前月份的收款分析"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
@@ -536,22 +538,22 @@ msgstr "期末结余"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_50cl_product_template
 msgid "Pepsi Max 50cl"
-msgstr ""
+msgstr "Pepsi Max 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.san_pellegrino_1l_product_template
 msgid "San Pellegrino 1L"
-msgstr ""
+msgstr "San Pellegrino 1L"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Post Entries"
-msgstr ""
+msgstr "上传记录"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_1l_product_template
 msgid "Spa Reine 1L"
-msgstr ""
+msgstr "Spa Reine 1L"
 
 #. module: point_of_sale
 #: report:pos.details_summary:0
@@ -583,13 +585,13 @@ msgstr "结束日期"
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created during current year"
-msgstr ""
+msgstr "当前年度创建的POS订单"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale view:pos.order:0
 msgid "PoS Orders"
-msgstr ""
+msgstr "POS订单"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -604,12 +606,12 @@ msgstr "付款合计"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_all_menu_all_register
 msgid "List of Cash Registers"
-msgstr ""
+msgstr "收款机清单"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_50cl_product_template
 msgid "Maes 50cl"
-msgstr ""
+msgstr "Maes 50cl"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_transaction_pos
@@ -619,7 +621,7 @@ msgstr "POS交易"
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "未开票"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
@@ -645,17 +647,17 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_2l_product_template
 msgid "Fanta Orange 2L"
-msgstr ""
+msgstr "Fanta Orange 2L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_33cl_product_template
 msgid "Spa Reine 33cl"
-msgstr ""
+msgstr "Spa Reine 33cl"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_discount
 msgid "Add a Global Discount"
-msgstr ""
+msgstr "增加一个全局折扣"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal_incl:0
@@ -665,18 +667,18 @@ msgstr "小计"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_prosciutto_product_template
 msgid "Dr. Oetker Ristorante Prosciutto"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Prosciutto"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_light_paprika_170g_product_template
 #: model:product.template,name:point_of_sale.lays_paprika_170g_product_template
 msgid "Lays Light Paprika 170g"
-msgstr ""
+msgstr "Lays Light Paprika 170g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_50cl_product_template
 msgid "Coca-Cola Light Lemon 50cl"
-msgstr ""
+msgstr "Coca-Cola Light Lemon 50cl"
 
 #. module: point_of_sale
 #: field:report.cash.register,balance_end_real:0
@@ -692,12 +694,12 @@ msgstr "关闭收银机"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_naturel_45g_product_template
 msgid "Croky Naturel 45g"
-msgstr ""
+msgstr "Croky Naturel 45g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_product_putmoneyforchange1_product_template
 msgid "Cash Out"
-msgstr ""
+msgstr "提款"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
@@ -708,12 +710,12 @@ msgstr "期初余额"
 #: model:ir.model,name:point_of_sale.model_pos_category
 #: field:product.product,pos_categ_id:0
 msgid "PoS Category"
-msgstr ""
+msgstr "POS 类别"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_75cl_product_template
 msgid "Chimay Bleu 75cl"
-msgstr ""
+msgstr "Chimay Bleu 75cl"
 
 #. module: point_of_sale
 #: report:pos.payment.report.user:0
@@ -730,7 +732,7 @@ msgstr "# 明细"
 msgid ""
 "This field authorize Validation of Cashbox without controlling the closing "
 "balance."
-msgstr ""
+msgstr "这字段授权没有余额控制的钱箱验证"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
@@ -741,7 +743,7 @@ msgstr "销售详情"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pils
 msgid "Pils"
-msgstr ""
+msgstr "Pils"
 
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
@@ -771,7 +773,7 @@ msgstr "交易数合计"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_petillante_50cl_product_template
 msgid "Chaudfontaine Petillante 50cl"
-msgstr ""
+msgstr "Chaudfontaine Petillante 50cl"
 
 #. module: point_of_sale
 #: field:pos.order.line,create_date:0
@@ -786,7 +788,7 @@ msgstr "今天的销售情况"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_300g_product_template
 msgid "Lays Naturel XXL 300g"
-msgstr ""
+msgstr "Lays Naturel XXL 300g"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
@@ -836,12 +838,12 @@ msgstr "订单日期"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_33cl_product_template
 msgid "Stella Artois 33cl"
-msgstr ""
+msgstr "Stella Artois 33cl"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Cash Analysis created during this year"
-msgstr ""
+msgstr "年度收款分析"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -863,7 +865,7 @@ msgstr "财务状况备注:"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_2l_product_template
 msgid "Evian 2L"
-msgstr ""
+msgstr "Evian 2L"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
@@ -883,12 +885,12 @@ msgstr "税："
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_2l_product_template
 msgid "Coca-Cola Light 2L"
-msgstr ""
+msgstr "Coca-Cola Light 2L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_funghi_product_template
 msgid "Dr. Oetker Ristorante Funghi"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Funghi"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,disc:0
@@ -898,12 +900,12 @@ msgstr "折扣"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lindemans_kriek_37,5cl_product_template
 msgid "Lindemans Kriek 37.5cl"
-msgstr ""
+msgstr "Lindemans Kriek 37.5cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_33cl_product_template
 msgid "Coca-Cola Zero 33cl"
-msgstr ""
+msgstr "Coca-Cola Zero 33cl"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -954,12 +956,12 @@ msgstr "用户"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_33cl_product_template
 msgid "Coca-Cola Light 33cl"
-msgstr ""
+msgstr "Coca-Cola Light 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.perrier_1l_product_template
 msgid "Perrier 1L"
-msgstr ""
+msgstr "Perrier 1L"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
@@ -974,7 +976,7 @@ msgstr "POS"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.boon_framboise_37,5cl_product_template
 msgid "Boon Framboise 37.5cl"
-msgstr ""
+msgstr "Boon Framboise 37.5cl"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
@@ -999,7 +1001,7 @@ msgstr "账簿"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_faro_37,5cl_product_template
 msgid "Timmermans Faro 37.5cl"
-msgstr ""
+msgstr "Timmermans Faro 37.5cl"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0 view:pos.order:0 field:pos.order,state:0
@@ -1027,12 +1029,12 @@ msgstr "销售(参考)"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_kriek_37,5cl_product_template
 msgid "Timmermans Kriek 37.5cl"
-msgstr ""
+msgstr "Timmermans Kriek 37.5cl"
 
 #. module: point_of_sale
 #: field:account.journal,check_dtls:0
 msgid "Control Balance Before Closing"
-msgstr ""
+msgstr "结账前调整余额"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -1057,7 +1059,7 @@ msgstr "用户"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.food
 msgid "Food"
-msgstr ""
+msgstr "食品"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1072,19 +1074,19 @@ msgstr "价格"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_stracciatella_2,5l_product_template
 msgid "ijsboerke Stracciatella 2.5L"
-msgstr ""
+msgstr "ijsboerke Stracciatella 2.5L"
 
 #. module: point_of_sale
 #: field:account.journal,journal_user:0
 msgid "PoS Payment Method"
-msgstr ""
+msgstr "POS付款方式"
 
 #. module: point_of_sale
 #: help:product.product,expense_pdt:0
 msgid ""
 "This is a product you can use to take cash from a statement for the point of "
 "sale backend, exemple: money lost, transfer to bank, etc."
-msgstr ""
+msgstr "这是一个产品，你可以用来从POS后端声明 取现, 例如：钱丢了，转移到银行等"
 
 #. module: point_of_sale
 #: field:report.cash.register,date:0
@@ -1094,18 +1096,18 @@ msgstr "创建日期"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_33cl_product_template
 msgid "Coca-Cola Regular 33cl"
-msgstr ""
+msgstr "Coca-Cola Regular 33cl"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:65
 #, python-format
 msgid "Unable to Delete !"
-msgstr ""
+msgstr "不能删除！"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_oven_150g_product_template
 msgid "Lays Paprika Oven Baked 150g"
-msgstr ""
+msgstr "Lays Paprika Oven Baked 150g"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
@@ -1122,7 +1124,7 @@ msgstr "名称"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_33cl_product_template
 msgid "Spa Barisart 33cl"
-msgstr ""
+msgstr "Spa Barisart 33cl"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:284
@@ -1130,14 +1132,14 @@ msgstr ""
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)"
-msgstr ""
+msgstr "没有定义伙伴付款的应收账户：\"%s\" (id:%d)"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid ""
 "Generate all sale journal entries for non invoiced orders linked to a closed "
 "cash register or statement."
-msgstr ""
+msgstr "为已关闭的钱箱对应的未开票订单生成会计凭证。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:293
@@ -1172,7 +1174,7 @@ msgstr "每个公司的账簿名称必须唯一！"
 #: model:product.template,name:point_of_sale.lays_light_naturel_170g_product_template
 #: model:product.template,name:point_of_sale.lays_naturel_170g_product_template
 msgid "Lays Light Naturel 170g"
-msgstr ""
+msgstr "Lays Light Naturel 170g"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0 report:pos.lines:0
@@ -1185,28 +1187,28 @@ msgstr "打印日期"
 #: code:addons/point_of_sale/point_of_sale.py:282
 #, python-format
 msgid "There is no receivable account defined to make payment"
-msgstr ""
+msgstr "没有定义进行付款的应收账户"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
 msgid "Do you want to open cash registers ?"
-msgstr ""
+msgstr "你要打开收银机吗?"
 
 #. module: point_of_sale
 #: help:pos.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "显示产品类别列表的顺序号"
 
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "PoS Cash Output"
-msgstr ""
+msgstr "POS 现金支出"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda
 msgid "Soda"
-msgstr ""
+msgstr "苏打"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0 view:pos.order:0 view:report.cash.register:0
@@ -1233,7 +1235,7 @@ msgstr "没有价格表！"
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Update"
-msgstr ""
+msgstr "更新"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1243,17 +1245,17 @@ msgstr "基础"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.categ_others
 msgid "Others"
-msgstr ""
+msgstr "其它"
 
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Point-of-Sale"
-msgstr ""
+msgstr "销售点"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_50cl_product_template
 msgid "Evian 50cl"
-msgstr ""
+msgstr "Evian 50cl"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1268,7 +1270,7 @@ msgstr "销售单"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_2l_product_template
 msgid "Coca-Cola Light Lemon 2L"
-msgstr ""
+msgstr "Coca-Cola Light Lemon 2L"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.invoice:0 field:pos.order,amount_tax:0
@@ -1285,12 +1287,12 @@ msgstr "销售明细"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_oven_150g_product_template
 msgid "Lays Naturel Oven Baked 150g"
-msgstr ""
+msgstr "Lays Naturel Oven Baked 150g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_decaf_33cl_product_template
 msgid "Coca-Cola Light Decaf 33cl"
-msgstr ""
+msgstr "Coca-Cola Light Decaf 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_normal_action
@@ -1302,12 +1304,12 @@ msgstr "产品"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_4formaggi_product_template
 msgid "Dr. Oetker Ristorante Quattro Formaggi"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Quattro Formaggi"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_1l_product_template
 msgid "Coca-Cola Zero 1L"
-msgstr ""
+msgstr "Coca-Cola Zero 1L"
 
 #. module: point_of_sale
 #: report:pos.sales.user:0 report:pos.sales.user.today:0
@@ -1326,12 +1328,12 @@ msgstr "POS"
 #: model:ir.actions.act_window,name:point_of_sale.action_product_output
 #: model:ir.ui.menu,name:point_of_sale.products_for_output_operations
 msgid "Products 'Put Money In'"
-msgstr ""
+msgstr "“现金入库”产品"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_bolognaise_250g_product_template
 msgid "Croky Bolognaise 250g"
-msgstr ""
+msgstr "Croky Bolognaise 250g"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1352,14 +1354,14 @@ msgstr "有关销售员"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_sale_all
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale_all
 msgid "All Sales Orders"
-msgstr ""
+msgstr "全部销售订单"
 
 #. module: point_of_sale
 #: help:product.product,income_pdt:0
 msgid ""
 "This is a product you can use to put cash into a statement for the point of "
 "sale backend."
-msgstr ""
+msgstr "这个产品用来记录在POS后台将现金放入钱箱的动作。"
 
 #. module: point_of_sale
 #: view:pos.receipt:0
@@ -1369,12 +1371,12 @@ msgstr "打印销售订单的收据"
 #. module: point_of_sale
 #: field:pos.make.payment,journal:0
 msgid "Payment Mode"
-msgstr ""
+msgstr "付款方式"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_45g_product_template
 msgid "Lays Paprika 45g"
-msgstr ""
+msgstr "Lays Paprika 45g"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1403,7 +1405,7 @@ msgstr "用户的销售订单"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_1l_product_template
 msgid "Evian 1L"
-msgstr ""
+msgstr "Evian 1L"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_open_statement
@@ -1413,7 +1415,7 @@ msgstr "打开收银机"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.water
 msgid "Water"
-msgstr ""
+msgstr "水"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
@@ -1428,7 +1430,7 @@ msgstr "7月"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_poivre_sel_oven_150g_product_template
 msgid "Lays Sel et Poivre Oven Baked 150g"
-msgstr ""
+msgstr "Lays Sel et Poivre Oven Baked 150g"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
@@ -1438,7 +1440,7 @@ msgstr "产品数量"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_rouge_33cl_product_template
 msgid "Chimay Rouge 33cl"
-msgstr ""
+msgstr "Chimay Rouge 33cl"
 
 #. module: point_of_sale
 #: field:report.pos.order,delay_validation:0
@@ -1458,12 +1460,12 @@ msgstr "POS付款"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_50cl_product_template
 msgid "Coca-Cola Light 50cl"
-msgstr ""
+msgstr "Coca-Cola Light 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jupiler_50cl_product_template
 msgid "Jupiler 50cl"
-msgstr ""
+msgstr "Jupiler 50cl"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
@@ -1473,7 +1475,7 @@ msgstr "结束期间"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_33cl_product_template
 msgid "Coca-Cola Light Lemon 33cl"
-msgstr ""
+msgstr "Coca-Cola Light Lemon 33cl"
 
 #. module: point_of_sale
 #: field:account.journal,auto_cash:0
@@ -1483,17 +1485,17 @@ msgstr "自动打开"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_ketchup_250g_product_template
 msgid "Lays Ketchup 250g"
-msgstr ""
+msgstr "Lays Ketchup 250g"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.perrier_50cl_product_template
 msgid "Perrier 50cl"
-msgstr ""
+msgstr "Perrier 50cl"
 
 #. module: point_of_sale
 #: selection:report.pos.order,state:0
 msgid "Synchronized"
-msgstr ""
+msgstr "已同步"
 
 #. module: point_of_sale
 #: view:report.cash.register:0 field:report.cash.register,month:0
@@ -1509,7 +1511,7 @@ msgstr "对账单名称"
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Year of order date"
-msgstr ""
+msgstr "订单年度"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
@@ -1535,7 +1537,7 @@ msgstr "按用户日利润率查看销售报表"
 #. module: point_of_sale
 #: view:pos.open.statement:0
 msgid "Open Registers"
-msgstr ""
+msgstr "打开收银机"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,journal_id:0
@@ -1550,22 +1552,22 @@ msgstr "期初余额"
 #. module: point_of_sale
 #: view:account.bank.statement:0 selection:report.pos.order,state:0
 msgid "Closed"
-msgstr ""
+msgstr "已关闭"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_vegetale_product_template
 msgid "Dr. Oetker Ristorante Vegetale"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Vegetale"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created by today"
-msgstr ""
+msgstr "今天创建的POS订单"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_2l_product_template
 msgid "Coca-Cola Zero 2L"
-msgstr ""
+msgstr "Coca-Cola Zero 2L"
 
 #. module: point_of_sale
 #: field:pos.order,amount_paid:0 selection:pos.order,state:0
@@ -1585,12 +1587,12 @@ msgstr "折扣"
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Cash Analysis created in last month"
-msgstr ""
+msgstr "上月收入分析"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beers
 msgid "Beers"
-msgstr ""
+msgstr "Beers"
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
@@ -1598,12 +1600,12 @@ msgid ""
 "OpenERP will close all cash registers he can close automatically without "
 "validation. He will also open all cash registers for which you have to "
 "control the ending belance before closing manually."
-msgstr ""
+msgstr "对不无需盘点余额的钱箱，OpenERP会批量自动关闭；对于需要盘点余额的钱箱，只能逐个手工关闭。"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Cash Analysis created by today"
-msgstr ""
+msgstr "本日收入分析"
 
 #. module: point_of_sale
 #: selection:report.cash.register,state:0
@@ -1613,7 +1615,7 @@ msgstr "报价单"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_product_putmoneyforchange0_product_template
 msgid "Cash In"
-msgstr ""
+msgstr "收到货款"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1645,7 +1647,7 @@ msgstr "对账单明细"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_paprika_45g_product_template
 msgid "Croky Paprika 45g"
-msgstr ""
+msgstr "Croky Paprika 45g"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1679,7 +1681,7 @@ msgid ""
 "The system will open all cash registers, so that you can start recording "
 "payments. We suggest you to control the opening balance of each register, "
 "using their CashBox tab."
-msgstr ""
+msgstr "系统将打开所用钱箱，以便开始收银。我们建议你在钱箱标签页盘点一下期初现金。"
 
 #. module: point_of_sale
 #: report:pos.invoice:0 report:pos.lines:0 field:pos.order.line,price_unit:0
@@ -1701,7 +1703,7 @@ msgstr "发票"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.rochefort_8_33cl_product_template
 msgid "Rochefort \"8\" 33cl"
-msgstr ""
+msgstr "Rochefort \"8\" 33cl"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0 selection:report.cash.register,state:0
@@ -1716,12 +1718,12 @@ msgstr "单据参考"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.timmermans_geuze_37,5cl_product_template
 msgid "Timmermans Geuze 37.5cl"
-msgstr ""
+msgstr "Timmermans Geuze 37.5cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_pickles_250g_product_template
 msgid "Lays Pickels 250g"
-msgstr ""
+msgstr "Lays Pickels 250g"
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,net_margin_per_qty:0
@@ -1737,7 +1739,7 @@ msgstr "用户月销售情况"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_et_fruit_50cl_product_template
 msgid "Spa et Fruit Orange 50cl"
-msgstr ""
+msgstr "Spa et Fruit Orange 50cl"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
@@ -1748,7 +1750,7 @@ msgstr "按用户和利润查看销售情况"
 #: code:addons/point_of_sale/wizard/pos_payment.py:59
 #, python-format
 msgid "Paiement"
-msgstr ""
+msgstr "付款"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1758,7 +1760,7 @@ msgstr "税:"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_33cl_product_template
 msgid "Pepsi Max 33cl"
-msgstr ""
+msgstr "Pepsi Max 33cl"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
@@ -1780,7 +1782,7 @@ msgstr "产品"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_pollo_product_template
 msgid "Dr. Oetker Ristorante Pollo"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Pollo"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
@@ -1790,27 +1792,27 @@ msgstr "销售单明细"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.grisette_cerise_25cl_product_template
 msgid "Grisette Cerise 25cl"
-msgstr ""
+msgstr "Grisette Cerise 25cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_33cl_product_template
 msgid "Chaudfontaine 33cl"
-msgstr ""
+msgstr "Chaudfontaine 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_margherita_product_template
 msgid "Dr. Oetker La Margherita"
-msgstr ""
+msgstr "Dr. Oetker La Margherita"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root
 msgid "PoS Backend"
-msgstr ""
+msgstr "POS后端"
 
 #. module: point_of_sale
 #: view:pos.order:0 selection:pos.order,state:0
 msgid "Posted"
-msgstr ""
+msgstr "已登帐"
 
 #. module: point_of_sale
 #: field:pos.order,date_order:0
@@ -1826,12 +1828,12 @@ msgstr "用户销售明细"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_2l_product_template
 msgid "Pepsi 2L"
-msgstr ""
+msgstr "Pepsi 2L"
 
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Order"
-msgstr ""
+msgstr "订单"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:472
@@ -1842,12 +1844,12 @@ msgstr "没有为此产品定义收入类科目： \\\"%s\\\" (id:%d)"
 #. module: point_of_sale
 #: view:pos.details:0
 msgid "POS Details"
-msgstr ""
+msgstr "POS详细信息"
 
 #. module: point_of_sale
 #: field:pos.details,user_ids:0
 msgid "Salesmen"
-msgstr ""
+msgstr "销售员"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_cash_register
@@ -1863,7 +1865,7 @@ msgstr "总净重："
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
 msgid "Manager"
-msgstr ""
+msgstr "经理"
 
 #. module: point_of_sale
 #: field:pos.details,date_start:0 field:pos.sale.user,date_start:0
@@ -1894,12 +1896,12 @@ msgstr "开启收银机"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lindemans_pecheresse_37,5cl_product_template
 msgid "Lindemans Pecheresse 37.5cl"
-msgstr ""
+msgstr "Lindemans Pecheresse 37.5cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_33cl_product_template
 msgid "Pepsi 33cl"
-msgstr ""
+msgstr "Pepsi 33cl"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -1917,12 +1919,12 @@ msgstr "付款分析报表"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_25cl_product_template
 msgid "Fanta Orange 25cl"
-msgstr ""
+msgstr "Fanta Orange 25cl"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Generate Journal Entries"
-msgstr ""
+msgstr "生成会计凭证"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
@@ -1942,39 +1944,39 @@ msgstr "发票日期"
 #. module: point_of_sale
 #: field:pos.box.entries,name:0
 msgid "Reason"
-msgstr ""
+msgstr "原因"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_33cl_product_template
 msgid "Orangina 33cl"
-msgstr ""
+msgstr "Orangina 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_product_input
 #: model:ir.ui.menu,name:point_of_sale.products_for_input_operations
 msgid "Products 'Take Money Out'"
-msgstr ""
+msgstr "“现金出库”产品"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_33cl_product_template
 msgid "Chimay Bleu 33cl"
-msgstr ""
+msgstr "Chimay Bleu 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_account_journal_form
 #: model:ir.ui.menu,name:point_of_sale.menu_action_account_journal_form_open
 msgid "Payment Methods"
-msgstr ""
+msgstr "付款方式"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.chips
 msgid "Chips"
-msgstr ""
+msgstr "薯片"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_spinaci_product_template
 msgid "Dr. Oetker Ristorante Spinaci"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Spinaci"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:293
@@ -1993,7 +1995,7 @@ msgstr "今日用户的付款分析"
 #: model:ir.actions.act_window,name:point_of_sale.action_box_entries
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl
 msgid "Put Money In"
-msgstr ""
+msgstr "现金入库"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:238
@@ -2010,12 +2012,12 @@ msgstr "条款号"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_vanille_2,5l_product_template
 msgid "ijsboerke Vanille 2.5L"
-msgstr ""
+msgstr "ijsboerke Vanille 2.5L"
 
 #. module: point_of_sale
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "已取消"
 
 #. module: point_of_sale
 #: report:pos.user.product:0
@@ -2025,7 +2027,7 @@ msgstr "结束日期"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_1,5l_product_template
 msgid "Orangina 1.5L"
-msgstr ""
+msgstr "Orangina 1.5L"
 
 #. module: point_of_sale
 #: field:pos.order,picking_id:0
@@ -2035,7 +2037,7 @@ msgstr "领料/提货"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.ice_cream
 msgid "Ice Cream"
-msgstr ""
+msgstr "冰淇淋"
 
 #. module: point_of_sale
 #: field:pos.order,shop_id:0 field:report.pos.order,shop_id:0
@@ -2050,12 +2052,12 @@ msgstr "银行对账单明细"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.belle_vue_kriek_25cl_product_template
 msgid "Belle-Vue Kriek 25cl"
-msgstr ""
+msgstr "Belle-Vue Kriek 25cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_petillante_1,5l_product_template
 msgid "Chaudfontaine Petillante 1.5l"
-msgstr ""
+msgstr "Chaudfontaine Petillante 1.5l"
 
 #. module: point_of_sale
 #: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
@@ -2066,7 +2068,7 @@ msgstr "POS分析报表"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_1,5l_product_template
 msgid "Chaudfontaine 1.5l"
-msgstr ""
+msgstr "Chaudfontaine 1.5l"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_close_statement
@@ -2077,17 +2079,17 @@ msgstr "关闭收银机"
 #: code:addons/point_of_sale/point_of_sale.py:65
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
-msgstr ""
+msgstr "只有新的或被取消的销售流水可以删除"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_50cl_product_template
 msgid "Coca-Cola Regular 50cl"
-msgstr ""
+msgstr "Coca-Cola Regular 50cl"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Generate Entries"
-msgstr ""
+msgstr "生成凭证"
 
 #. module: point_of_sale
 #: field:pos.box.entries,product_id:0 field:pos.box.out,product_id:0
@@ -2119,17 +2121,17 @@ msgstr "确定"
 msgid ""
 "This field authorize the automatic creation of the cashbox, without control "
 "of the initial balance."
-msgstr ""
+msgstr "此字段控制钱箱的自动新建，无需做期初现金盘点"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_50cl_product_template
 msgid "Coca-Cola Zero 50cl"
-msgstr ""
+msgstr "Coca-Cola Zero 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_tonno_product_template
 msgid "Dr. Oetker Ristorante Tonno"
-msgstr ""
+msgstr "Copy text \t Dr. Oetker Ristorante Tonno"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -2139,29 +2141,29 @@ msgstr "供应商发票"
 #. module: point_of_sale
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr ""
+msgstr "所选的凭证簿和期间必须属于相同公司。"
 
 #. module: point_of_sale
 #: view:pos.order:0 selection:pos.order,state:0
 #: selection:report.pos.order,state:0
 msgid "New"
-msgstr ""
+msgstr "新建"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:238
 #, python-format
 msgid "In order to set to draft a sale, it must be cancelled."
-msgstr ""
+msgstr "只有已取消的订单才能设置为草稿。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_zero_orange_33cl_product_template
 msgid "Fanta Zero Orange 33cl"
-msgstr ""
+msgstr "Fanta Zero Orange 33cl"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Day of order date"
-msgstr ""
+msgstr "订单日期"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -2171,7 +2173,7 @@ msgstr "报告"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_33cl_product_template
 msgid "Maes 33cl"
-msgstr ""
+msgstr "Maes 33cl"
 
 #. module: point_of_sale
 #: view:pos.box.entries:0
@@ -2191,28 +2193,28 @@ msgstr "设置"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orval_33cl_product_template
 msgid "Orval 33cl"
-msgstr ""
+msgstr "Orval 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_1l_product_template
 msgid "Coca-Cola Regular 1L"
-msgstr ""
+msgstr "Coca-Cola Regular 1L"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:253
 #, python-format
 msgid "Unable to cancel the picking."
-msgstr ""
+msgstr "无法取消发货"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created during current month"
-msgstr ""
+msgstr "本月新建的POS订单"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created last month"
-msgstr ""
+msgstr "上月新建的POS订单"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_invoice
@@ -2227,23 +2229,23 @@ msgstr "12月"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_1,5l_product_template
 msgid "Spa Barisart 1.5l"
-msgstr ""
+msgstr "Spa Barisart 1.5l"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:329 view:pos.order:0
 #, python-format
 msgid "Return Products"
-msgstr ""
+msgstr "退货"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jupiler_33cl_product_template
 msgid "Jupiler 33cl"
-msgstr ""
+msgstr "Jupiler 33cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_chocolat_2,5l_product_template
 msgid "ijsboerke Chocolat 2.5L"
-msgstr ""
+msgstr "ijsboerke Chocolat 2.5L"
 
 #. module: point_of_sale
 #: view:pos.box.out:0
@@ -2289,12 +2291,12 @@ msgstr "否"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_50cl_product_template
 msgid "Spa Barisart 50cl"
-msgstr ""
+msgstr "Spa Barisart 50cl"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.special_beers
 msgid "Special Beers"
-msgstr ""
+msgstr "特制啤酒"
 
 #. module: point_of_sale
 #: field:pos.order.line,notice:0
@@ -2304,7 +2306,7 @@ msgstr "折扣通告"
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Re-Print"
-msgstr ""
+msgstr "重新打印"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
@@ -2314,7 +2316,7 @@ msgstr "草稿"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_zero_orange_1,5l_product_template
 msgid "Fanta Zero Orange 1.5L"
-msgstr ""
+msgstr "Fanta Zero Orange 1.5L"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -2330,17 +2332,17 @@ msgstr "请提供业务伙伴。"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruity_beers
 msgid "Fruity Beers"
-msgstr ""
+msgstr "果酒"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_dame_blanche_2,5l_product_template
 msgid "ijsboerke Dame Blanche 2.5L"
-msgstr ""
+msgstr "ijsboerke Dame Blanche 2.5L"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_moka_2,5l_product_template
 msgid "ijsboerke Moka 2.5L"
-msgstr ""
+msgstr "ijsboerke Moka 2.5L"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2352,7 +2354,7 @@ msgstr "查询销售订单"
 msgid ""
 "Payment methods are defined by accounting journals having the field Payment "
 "Method checked."
-msgstr ""
+msgstr "付款方式是一些勾选了付款方式字段的凭证簿"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
@@ -2363,7 +2365,7 @@ msgstr "销售用户"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_hawaii_product_template
 msgid "Dr. Oetker Ristorante Hawaii"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Hawaii"
 
 #. module: point_of_sale
 #: view:pos.receipt:0
@@ -2383,7 +2385,7 @@ msgstr "POS订单明细"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_petillante_33cl_product_template
 msgid "Chaudfontaine Petillante 33cl"
-msgstr ""
+msgstr "Chaudfontaine Petillante 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_normal_action
@@ -2393,11 +2395,12 @@ msgid ""
 "contains detailed information about your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
+"您必须定义产品信息用于您的销售或采购。产品可以是原材料、可库存商品、消耗品或服务。产品表单包含产品相关的生产物流、售价、分类、供应商等等信息。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_2l_product_template
 msgid "Pepsi Max 2L"
-msgstr ""
+msgstr "Pepsi Max 2L"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:358
@@ -2408,12 +2411,12 @@ msgstr "错误"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_300g_product_template
 msgid "Lays Paprika XXL 300g"
-msgstr ""
+msgstr "Lays Paprika XXL 300g"
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
 msgid "Do you want to close your cash registers ?"
-msgstr ""
+msgstr "是否关闭钱箱？"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -2429,7 +2432,7 @@ msgstr "请为此销售单生成发票。"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_mozzarella_product_template
 msgid "Dr. Oetker Ristorante Mozzarella"
-msgstr ""
+msgstr "Dr. Oetker Ristorante Mozzarella"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_close_statement.py:66
@@ -2447,7 +2450,7 @@ msgstr "折扣（%）"
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "General Information"
-msgstr ""
+msgstr "常规信息"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -2467,7 +2470,7 @@ msgstr "单据明细"
 #. module: point_of_sale
 #: view:account.journal:0
 msgid "Extended Configuration"
-msgstr ""
+msgstr "扩展配置"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
@@ -2477,12 +2480,12 @@ msgstr "税额小计w/o"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_50cl_product_template
 msgid "Spa Reine 50cl"
-msgstr ""
+msgstr "Spa Reine 50cl"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_blonde_33cl_product_template
 msgid "Leffe Blonde 33cl"
-msgstr ""
+msgstr "Leffe Blonde 33cl"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment
@@ -2502,7 +2505,7 @@ msgstr "今日用户销售情况"
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Customer Code"
-msgstr ""
+msgstr "客户编号"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box_out.py:86
@@ -2528,7 +2531,7 @@ msgstr "销售明细"
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Yesterday"
-msgstr ""
+msgstr "昨天"
 
 #. module: point_of_sale
 #: field:pos.order,note:0
@@ -2538,12 +2541,12 @@ msgstr "内部备注"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_decaf_33cl_product_template
 msgid "Coca-Cola Zero Decaf 33cl"
-msgstr ""
+msgstr "Coca-Cola Zero Decaf 33cl"
 
 #. module: point_of_sale
 #: view:pos.box.out:0
 msgid "Describe why you take money from the cash register:"
-msgstr ""
+msgstr "描述从钱箱移出现金的原因："
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
@@ -2590,19 +2593,19 @@ msgstr "按用户月利润查看销售情况"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_9_33cl_product_template
 msgid "Leffe Brune \"9\" 33cl"
-msgstr ""
+msgstr "Leffe Brune \"9\" 33cl"
 
 #. module: point_of_sale
 #: help:account.journal,journal_user:0
 msgid ""
 "Check this box if this journal define a payment method that can be used in "
 "point of sales."
-msgstr ""
+msgstr "如果这个凭证簿可以作为POS上的一个付款方式，勾选这里。"
 
 #. module: point_of_sale
 #: field:pos.category,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "序号"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_return.py:316 view:pos.make.payment:0
@@ -2613,7 +2616,7 @@ msgstr "付款"
 #. module: point_of_sale
 #: constraint:pos.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "错误！您不能创建循环分类。"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_sales_user_today
@@ -2623,12 +2626,12 @@ msgstr "今日用户销售情况"
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Month of order date"
-msgstr ""
+msgstr "订单月份"
 
 #. module: point_of_sale
 #: field:product.product,income_pdt:0
 msgid "PoS Cash Input"
-msgstr ""
+msgstr "POS现金入库"
 
 #. module: point_of_sale
 #: view:report.cash.register:0 field:report.cash.register,year:0
@@ -2639,18 +2642,18 @@ msgstr "年"
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:31
 msgid "Disc (%)"
-msgstr ""
+msgstr "折扣 (%)"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:41
 msgid "Subtotal:"
-msgstr ""
+msgstr "小计:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:45
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:268
 msgid "Tax:"
-msgstr ""
+msgstr "税："
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:64
@@ -2660,65 +2663,65 @@ msgstr "折扣"
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:71
 msgid "+/-"
-msgstr ""
+msgstr "+/-"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:105
 msgid "Paid:"
-msgstr ""
+msgstr "已付："
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:113
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:288
 msgid "Change:"
-msgstr ""
+msgstr "零钞"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:124
 msgid "Back to Products"
-msgstr ""
+msgstr "返回产品列表"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:127
 msgid "Validate"
-msgstr ""
+msgstr "确认"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:140
 msgid "pending orders"
-msgstr ""
+msgstr "暂停的订单"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:145
 msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
-msgstr ""
+msgstr "数据库中有不能保存的暂停操作，你确认要退出？"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:236
 msgid "Print"
-msgstr ""
+msgstr "打印"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:238
 msgid "Next Order"
-msgstr ""
+msgstr "下一订单"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:248
 msgid "Phone:"
-msgstr ""
+msgstr "电话:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:249
 msgid "User:"
-msgstr ""
+msgstr "用户:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:250
 msgid "Shop:"
-msgstr ""
+msgstr "门店"
 
 #~ msgid "Set to draft"
 #~ msgstr "设为草稿"

@@ -634,7 +634,7 @@
                         <field name="date_planned"/>
                         <field name="origin"/>
                         <newline/>
-                        <field name="product_id" on_change="product_id_change(product_id)"/>
+                        <field name="product_id" on_change="product_id_change(product_id)" domain="[('supply_method','=','produce')]"/>
                         <field name="product_qty"/>
                         <field name="product_uom"/>
                         <button type="action"

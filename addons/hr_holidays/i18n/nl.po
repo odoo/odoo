@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2011-01-12 16:13+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"PO-Revision-Date: 2012-02-19 13:05+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:40+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-20 05:40+0000\n"
+"X-Generator: Launchpad (build 14833)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -49,7 +49,7 @@ msgstr "Groepeer op..."
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Allocation Mode"
-msgstr ""
+msgstr "Reserveringsmode"
 
 #. module: hr_holidays
 #: view:hr.holidays:0 field:hr.holidays,department_id:0
@@ -59,7 +59,7 @@ msgstr "Afdeling"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_holidays
 msgid "Requests Approve"
-msgstr ""
+msgstr "Goedkeuringsaanvraag"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
@@ -74,7 +74,7 @@ msgstr "Medewerker categorie"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid " Month-1"
-msgstr ""
+msgstr " Maand-1"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -118,7 +118,7 @@ msgstr "Lichtgroen"
 #. module: hr_holidays
 #: field:hr.employee,current_leave_id:0
 msgid "Current Leave Type"
-msgstr ""
+msgstr "Huidige verlof"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -148,7 +148,7 @@ msgstr "Goedgekeurd"
 #. module: hr_holidays
 #: field:hr.employee,last_login:0
 msgid "Latest Connection"
-msgstr ""
+msgstr "Laatste verbinding"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -174,6 +174,13 @@ msgid ""
 "  \n"
 "The state is 'Approved', when holiday request is approved by manager."
 msgstr ""
+"De status is ingesteld op 'Concept', wanneer een aanvraag is aangemaakt.\n"
+"De status is ingesteld op 'Wacht op goedkeuring', wanneer een aanvraag is "
+"bevestigd door een gebruiker.\n"
+"De status is ingesteld op 'Afgewezen', wanneer een aanvraag is afgewezen "
+"door een manager.\n"
+"De status is ingesteld op 'Goedgekeurd', wanneer een aanvraag is goedgekeurd "
+"door een manager."
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -191,7 +198,7 @@ msgstr "Verlof"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
 msgid "Leave Requests to Approve"
-msgstr ""
+msgstr "Verlofaanvragen goed te keuren"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
@@ -220,6 +227,8 @@ msgid ""
 "Total number of legal leaves allocated to this employee, change this value "
 "to create allocation/leave requests."
 msgstr ""
+"Totaal aantal wettelijke verloven toegewezen aan deze werknemer. Wijzig deze "
+"waarde om toewijzigen/verlofaanvragen te maken."
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -230,7 +239,7 @@ msgstr "Controle"
 #: code:addons/hr_holidays/hr_holidays.py:377
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Waarschuwing !"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -246,6 +255,8 @@ msgstr "HR Vakantie samenvatting overzicht per medewerker"
 #: help:hr.holidays,manager_id:0
 msgid "This area is automatically filled by the user who validate the leave"
 msgstr ""
+"Dit gedeelte wodrt automatisch ingevuld door de gebruiker die het verlof "
+"goedkeurd."
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status_id:0
@@ -297,7 +308,7 @@ msgstr "Bevestigen"
 #: code:addons/hr_holidays/hr_holidays.py:384
 #, python-format
 msgid "Leave Request for %s"
-msgstr ""
+msgstr "Verlofaanvraag voor %s"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
@@ -324,7 +335,7 @@ msgstr "Medewerker"
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "New"
-msgstr ""
+msgstr "Nieuw"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -360,7 +371,7 @@ msgstr "Fout! Verlof begindatum moet liggen vóór de verlof einddatum !"
 #: code:addons/hr_holidays/hr_holidays.py:382
 #, python-format
 msgid "Allocation for %s"
-msgstr ""
+msgstr "Reservering voor %s"
 
 #. module: hr_holidays
 #: view:hr.holidays:0 field:hr.holidays,number_of_days:0
@@ -380,6 +391,15 @@ msgid ""
 "Requests' located in 'Human Resources \\ Leaves' to manage the leave days of "
 "the employees if the configuration does not allow to use this field."
 msgstr ""
+"De functie achter het veld 'Overgebleven wettelijke verloven' kan alleen "
+"worden gebruikt wanneer er maar één verlofsoort is met de optie 'Toestaan om "
+"de limiet te overschrijden' uitgevinkt. (%s gevonden). Anders is de update "
+"is dubbelzinnig, omdat we niet kunnen bepalen op welke verlofsoort de update "
+"gedaan moet worden.\n"
+"U kunt ervoor kiezen om gebruik te van de klassieke menu's 'Verlofaanvragen' "
+"en 'Reserveringsaanvragen' in 'Personeelszaken\\Verloven' om de verlofdagen "
+"van het personeel te beheren, indien de configuratie het onmogelijk maakt om "
+"dit veld te gebruiken."
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -437,7 +457,7 @@ msgstr "Lavendel"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Month"
-msgstr ""
+msgstr "Maand"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -449,7 +469,7 @@ msgstr "Verlofaanvragen"
 #. module: hr_holidays
 #: field:hr.holidays.status,limit:0
 msgid "Allow to Override Limit"
-msgstr "Overschreiding toestaan"
+msgstr "Toestaan om de limiet te overschrijden"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.employee:0
@@ -495,7 +515,7 @@ msgstr "Zwart"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_holidays_leaves_assign_legal
 msgid "Allocate Leaves for Employees"
-msgstr ""
+msgstr "Wijs verloven voor werknemers toe"
 
 #. module: hr_holidays
 #: field:resource.calendar.leaves,holiday_id:0
@@ -547,12 +567,12 @@ msgstr "Goed te keuren verlof"
 #. module: hr_holidays
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Fout ! U kunt geen recursieve werknemershiërarchie aanmaken."
 
 #. module: hr_holidays
 #: view:hr.employee:0 field:hr.employee,remaining_leaves:0
 msgid "Remaining Legal Leaves"
-msgstr ""
+msgstr "Overgebleven wettelijke verlofdagen"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -562,7 +582,7 @@ msgstr "Eerste goedkeuring"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_unpaid
 msgid "Unpaid"
-msgstr ""
+msgstr "Onbetaald"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -574,7 +594,7 @@ msgstr "Verlof samenvatting"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Holidays during last month"
-msgstr ""
+msgstr "Vakanties gedurende afgelopen maand"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -585,7 +605,7 @@ msgstr "Fout"
 #. module: hr_holidays
 #: view:hr.employee:0
 msgid "Assign Leaves"
-msgstr ""
+msgstr "Verlof toewijzen"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -595,12 +615,12 @@ msgstr "Lichtblauw"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "My Department Leaves"
-msgstr ""
+msgstr "Mijn afdelingsverloven"
 
 #. module: hr_holidays
 #: field:hr.employee,current_leave_state:0
 msgid "Current Leave Status"
-msgstr ""
+msgstr "Huidige verlofstatus"
 
 #. module: hr_holidays
 #: field:hr.holidays,type:0
@@ -629,7 +649,7 @@ msgstr "Algemeen"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
 msgid "Compensatory Days"
-msgstr ""
+msgstr "Compensatie dagen"
 
 #. module: hr_holidays
 #: view:hr.holidays:0 field:hr.holidays,notes:0
@@ -712,7 +732,7 @@ msgstr "Omschrijving"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves"
-msgstr ""
+msgstr "Wettelijke verloven"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -768,7 +788,7 @@ msgstr "Einddatum"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
 msgid "Sick Leaves"
-msgstr ""
+msgstr "Ziekteverlof"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,limit:0
@@ -799,6 +819,8 @@ msgid ""
 "You can assign remaining Legal Leaves for each employee, OpenERP will "
 "automatically create and validate allocation requests."
 msgstr ""
+"U kunt de overgebleven wettelijke verlofdagen voor iedere werknemer "
+"toewijzen. OpenERP zal automatisch reserveringsverzoeken maken en valideren."
 
 #. module: hr_holidays
 #: field:hr.holidays.status,max_leaves:0
@@ -818,7 +840,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Mode"
-msgstr ""
+msgstr "Modus"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
@@ -865,7 +887,7 @@ msgstr "Te bevestigen"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Year"
-msgstr ""
+msgstr "Jaar"
 
 #. module: hr_holidays
 #: view:hr.holidays:0

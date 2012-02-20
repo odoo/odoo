@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-13 16:01+0000\n"
+"PO-Revision-Date: 2012-02-18 15:04+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-14 05:43+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-02-19 05:42+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -189,7 +189,7 @@ msgstr "Naar Concept"
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Invoice Exception"
-msgstr "Factuur uitzondering"
+msgstr "Fouten in facturatie"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
@@ -296,7 +296,7 @@ msgstr "September"
 #: report:purchase.order:0 field:purchase.order,amount_tax:0
 #: view:purchase.order.line:0 field:purchase.order.line,taxes_id:0
 msgid "Taxes"
-msgstr "BTW"
+msgstr "Belastingen"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
@@ -361,7 +361,7 @@ msgstr "Prijslijst"
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Shipping Exception"
-msgstr "Verzenduitzondering"
+msgstr "Fouten in verzendingen"
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
@@ -477,7 +477,7 @@ msgstr "Het geeft aan dat een picking is uitgevoerd"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are in exception state"
-msgstr "Inkooporders welke zich de uitzondering fase bevinden"
+msgstr "Inkooporders met fouten"
 
 #. module: purchase
 #: report:purchase.order:0 field:purchase.report,validator:0
@@ -548,16 +548,16 @@ msgid ""
 "supplier invoice, you can generate a draft supplier invoice based on the "
 "lines from this menu."
 msgstr ""
-"Als u de facturatiecontrole van een inkooporder instelt op \"Van order\", "
-"kunt u hier alle inkooporderregels volgen waarvoor u nog geen leverancier "
-"factuur heeft ontvangen. Zodra u klaar bent om een leverancier factuur te "
-"ontvangen, kunt u een concept leverancier factuur genereren op basis van de "
-"regels uit dit menu."
+"Als u de facturatiecontrole van een inkooporder instelt op \"Gebaseerd op "
+"inkooporderregels\", kunt u hier alle inkooporderregels volgen waarvoor u "
+"nog geen leverancier factuur heeft ontvangen. Zodra u klaar bent om een "
+"leverancier factuur te ontvangen, kunt u een concept leverancier factuur "
+"genereren op basis van de regels uit dit menu."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase order which are in the exception state"
-msgstr "Inkooporders welke zich de concept uitzondering fase bevinden"
+msgstr "Inkooporders met fouten"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
@@ -577,7 +577,7 @@ msgstr "Tel.:"
 #: model:ir.model,name:purchase.model_stock_picking
 #: field:purchase.order,picking_ids:0
 msgid "Picking List"
-msgstr "Pakbon"
+msgstr "Picklijst"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -613,7 +613,7 @@ msgstr "Totaalprijs"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_import_create_supplier_installer
 msgid "Create or Import Suppliers"
-msgstr "Maak o0f import leveranciers"
+msgstr "Maak of import leveranciers"
 
 #. module: purchase
 #: view:stock.picking:0
@@ -648,7 +648,7 @@ msgstr "Fout !"
 msgid "You can not move products from or to a location of the type view."
 msgstr ""
 "Het is niet mogelijk om producten te verplaatsen naar een locatie van het "
-"type 'view'."
+"type 'aanzicht'."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:737
@@ -930,7 +930,7 @@ msgstr "Goed te keuren inkooporders"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
-msgstr "Totaalbedrag excl. BTW"
+msgstr "Totaalbedrag excl. belastingen"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -1041,7 +1041,7 @@ msgstr "Gebaseerd op inkooporderregels"
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr "Het bedrag excl. BTW"
+msgstr "Het bedrag excl. belastingen"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:754
@@ -1071,7 +1071,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Bedrag excl. BTW"
+msgstr "Netto bedrag"
 
 #. module: purchase
 #: help:purchase.order,invoiced:0
@@ -1187,7 +1187,7 @@ msgstr "Pakbon gegenereerd"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Exception"
-msgstr "Uitzondering"
+msgstr "Fout"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1646,7 +1646,7 @@ msgstr "Inkooporder welke regels bevatten die nog niet zijn gefactureerd"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Untaxed amount"
-msgstr "Bedrag excl. BTW"
+msgstr "Netto Bedrag"
 
 #. module: purchase
 #: view:stock.picking:0
@@ -1707,7 +1707,7 @@ msgid ""
 "receptions\", you can track here all the product receptions and create "
 "invoices for those receptions."
 msgstr ""
-"Als u de facturatiecontrole op een inkooporder instelt als \"Op basis van "
+"Als u de facturatiecontrole op een inkooporder instelt als \"Gebaseerd op "
 "ontvangsten\", kunt u hier alle productontvangsten volgen en facturen "
 "aanmaken voor deze ontvangsten."
 
