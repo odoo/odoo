@@ -92,7 +92,7 @@ class hr_expense_report(osv.osv):
                      sum(l.unit_quantity * u.factor) as product_qty,
                      s.company_id as company_id,
                      sum(l.unit_quantity*l.unit_amount) as price_total,
-                     (sum(l.unit_quantity*l.unit_amount)/sum(l.unit_quantity * u.factor))::decimal(16,2) as price_average,
+                     (sum(l.unit_quantity*l.unit_amount)/sum(case when l.unit_quantity=0 or u.factor=0 then 1 else l.unit_quantity * u.factor end))::decimal(16,2) as price_average,
                      count(*) as nbr,
                      (select unit_quantity from hr_expense_line where id=l.id and product_id is not null) as no_of_products,
                      (select analytic_account from hr_expense_line where id=l.id and analytic_account is not null) as no_of_account,
