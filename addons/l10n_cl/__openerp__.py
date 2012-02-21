@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {
-    "name": "Argentina Localization Chart Account",
+    "name": "Chile Localization Chart Account",
     "version": "1.0",
     "description": """
 Chilean accounting chart and tax localization.
