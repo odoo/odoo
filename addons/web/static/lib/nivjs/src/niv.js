@@ -26,10 +26,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 niv = (function() {
 	var niv = {};
 
-	/* Simple JavaScript Inheritance
-	 * By John Resig http://ejohn.org/
-	 * MIT Licensed.
-	 */
+	/*
+     * Simple JavaScript Inheritance By John Resig http://ejohn.org/ MIT
+     * Licensed.
+     */
 	// Inspired by base2 and Prototype
 	(function(){
 	  var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
@@ -110,11 +110,18 @@ niv = (function() {
 	        return this.__parented_parent;
 	    },
 	    getChildren: function() {
-	        return this.__parented_children || [];
+	        return this.__parented_children ? _.clone(this.__parented_children) : [];
 	    },
 	    isDestroyed: function() {
 	        return this.__parented_stopped;
-	    }
+	    },
+	    destroy: function() {
+	        _.each(this.getChildren(), function(el) {
+	            el.destroy();
+	        });
+	        this.setParent(undefined);
+	        this.__parented_stopped = true;
+	    },
 	};
 
 	return niv;

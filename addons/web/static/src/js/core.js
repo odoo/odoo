@@ -925,6 +925,40 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     }
 });
 
+openerp.web.ParentedMixin = {
+    __parented_mixin: true,
+    setParent: function(parent) {
+        if(this.getParent()) {
+            if (this.getParent().__parented_mixin) {
+                this.getParent().__parented_children = _.without(this.getParent().getChildren(), this);
+            }
+            this.__parented_parent = undefined;
+        }
+        this.__parented_parent = parent;
+        if(parent && parent.__parented_mixin) {
+            if (!parent.getChildren())
+                parent.__parented_children = [];
+            parent.getChildren().push(this);
+        }
+    },
+    getParent: function() {
+        return this.__parented_parent;
+    },
+    getChildren: function() {
+        return this.__parented_children ? _.clone(this.__parented_children) : [];
+    },
+    isDestroyed: function() {
+        return this.__parented_stopped;
+    },
+    destroy: function() {
+        _.each(this.getChildren(), function(el) {
+            el.destroy();
+        });
+        this.setParent(undefined);
+        this.__parented_stopped = true;
+    },
+};
+
 /**
  * Base class for all visual components. Provides a lot of functionalities helpful
  * for the management of a part of the DOM.
@@ -973,8 +1007,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.Widget# */{
-    __parented_mixin: true,
+openerp.web.Widget = openerp.web.CallbackEnabled.extend(openerp.web.ParentedMixin).extend(/** @lends openerp.web.Widget# */{
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -1009,29 +1042,6 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
 
         this.setParent(parent);
     },
-    setParent: function(parent) {
-        if(this.getParent()) {
-            if (this.getParent().__parented_mixin) {
-                this.getParent().__parented_children = _.without(this.getParent().getChildren(), this);
-            }
-            this.__parented_parent = undefined;
-        }
-        this.__parented_parent = parent;
-        if(parent && parent.__parented_mixin) {
-            if (!parent.getChildren())
-                parent.__parented_children = [];
-            parent.getChildren().push(this);
-        }
-    },
-    getParent: function() {
-        return this.__parented_parent;
-    },
-    getChildren: function() {
-        return this.__parented_children || [];
-    },
-    isDestroyed: function() {
-        return this.__parented_stopped;
-    },
     /**
      * Destroys the current widget, also destroys all its children before destroying itself.
      */
@@ -1042,8 +1052,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         if(this.$element != null) {
             this.$element.remove();
         }
-        this.setParent(undefined);
-        this.__parented_stopped = true;
+        this._super();
     },
     /**
      * Renders the current widget and appends it to the given jQuery object or Widget.
