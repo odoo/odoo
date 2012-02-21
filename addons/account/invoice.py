@@ -80,8 +80,11 @@ class account_invoice(osv.osv):
 
     def _reconciled(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for id in ids:
-            res[id] = self.test_paid(cr, uid, [id])
+        wf_service = netsvc.LocalService("workflow")
+        for inv in self.browse(cr, uid, ids, context=context):
+            res[inv.id] = self.test_paid(cr, uid, [inv.id])
+            if not res[inv.id] and inv.state == 'paid':
+                wf_service.trg_validate(uid, 'account.invoice', inv.id, 'open_test', cr)
         return res
 
     def _get_reference_type(self, cr, uid, context=None):
