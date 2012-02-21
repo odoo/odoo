@@ -19,7 +19,6 @@ class TestO2MSerialization(unittest2.TestCase):
     def setUp(self):
         self.cr = openerp.modules.registry.RegistryManager.get(DB).db.cursor()
         self.partner = openerp.modules.registry.RegistryManager.get(DB)['res.partner']
-#        self.address = openerp.modules.registry.RegistryManager.get(DB)['res.partner.address']
 
     def tearDown(self):
         self.cr.rollback()
