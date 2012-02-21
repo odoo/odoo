@@ -158,7 +158,7 @@ class res_partner(osv.osv):
         'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
 #        'company_id': fields.related('partner_id','company_id',type='many2one',relation='res.company',string='Company', store=True),
         'company_id': fields.many2one('res.company', 'Company',select=1),
-        'is_company': fields.boolean('Company', help="Check if you want to create company"),
+        'is_company': fields.boolean('Company', help="Check the field to create company otherwise it is personal contacts"),
         'color': fields.integer('Color Index'),
     }
     def _default_category(self, cr, uid, context=None):
