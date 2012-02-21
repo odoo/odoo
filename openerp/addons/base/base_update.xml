@@ -124,38 +124,38 @@
                     </group>
                     <notebook colspan="4">
                         <page string="User">
-                          <group colspan="4" col="6">
-                            <!-- Second nested group to avoid misalignment with email prefs groups
-                                 in simplified view -->
-                            <group colspan="6" col="6">
-                                <group col="3" colspan="2">
-                                    <group col="2" colspan="2">
-                                        <separator string="Preferences" colspan="2"/>
-                                        <field name="context_lang"/>
-                                        <field name="context_tz"/>
-                                        <field name="menu_tips"/>
+                            <group colspan="4" col="6">
+                                <!-- Second nested group to avoid misalignment with email prefs groups
+                                    in simplified view -->
+                                <group name="gr_pref" colspan="6" col="6">
+                                    <group name="gr_pref_inner" col="3" colspan="2">
+                                        <group col="2" colspan="2">
+                                            <separator string="Preferences" colspan="2"/>
+                                            <field name="context_lang"/>
+                                            <field name="context_tz"/>
+                                            <field name="menu_tips"/>
+                                        </group>
+                                        <group name="gr_photo" col="2" colspan="1">
+                                            <separator string="Photo" colspan="2"/>
+                                            <field name="photo" widget='image' nolabel="1" colspan="2"/>
+                                        </group>
                                     </group>
-                                    <group col="2" colspan="1">
-                                        <separator string="Photo" colspan="2"/>
-                                        <field name="photo" widget='image' nolabel="1" colspan="2"/>
+                                    <group name="default_filters" colspan="2" col="2">
+                                        <separator string="Default Filters" colspan="2"/>
+                                        <field name="company_id" required="1" context="{'user_preference': 0}" groups="base.group_multi_company"/>
+                                    </group>
+                                    <group colspan="2" col="2" groups="base.group_extended">
+                                        <separator string="Action" colspan="2"/>
+                                        <field name="action_id"/>
+                                        <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                                     </group>
                                 </group>
-                                <group name="default_filters" colspan="2" col="2">
-                                    <separator string="Default Filters" colspan="2"/>
-                                    <field name="company_id" required="1" context="{'user_preference': 0}" groups="base.group_multi_company"/>
-                                </group>
-                                <group colspan="2" col="2" groups="base.group_extended">
-                                    <separator string="Action" colspan="2"/>
-                                    <field name="action_id"/>
-                                    <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
+                                <group colspan="6" col="2">
+                                    <separator string="Email Preferences" colspan="2"/>
+                                    <field name="user_email" widget="email"/>
+                                    <field name="signature"/>
                                 </group>
                             </group>
-                            <group colspan="6" col="2">
-                                <separator string="Email Preferences" colspan="2"/>
-                                <field name="user_email" widget="email"/>
-                                <field name="signature"/>
-                            </group>
-                          </group>
                         </page>
                         <page string="Access Rights">
                             <field nolabel="1" name="groups_id"/>
