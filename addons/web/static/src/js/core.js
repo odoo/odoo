@@ -1022,14 +1022,15 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
                 parent.__parented_children = [];
             parent.getChildren().push(this);
         }
-        // useful to know if the widget was destroyed and should not be used anymore
-        this.widget_is_stopped = false;
     },
     getParent: function() {
         return this.__parented_parent;
     },
     getChildren: function() {
         return this.__parented_children || [];
+    },
+    isStopped: function() {
+        return this.__parented_stopped;
     },
     /**
      * Renders the current widget and appends it to the given jQuery object or Widget.
@@ -1132,7 +1133,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
             this.$element.remove();
         }
         this.setParent(undefined);
-        this.widget_is_stopped = true;
+        this.__parented_stopped = true;
     },
     /**
      * Informs the action manager to do an action. This supposes that
@@ -1162,10 +1163,10 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         var def = $.Deferred().then(success, error);
         var self = this;
         openerp.connection.rpc(url, data). then(function() {
-            if (!self.widget_is_stopped)
+            if (!self.isStopped())
                 def.resolve.apply(def, arguments);
         }, function() {
-            if (!self.widget_is_stopped)
+            if (!self.isStopped())
                 def.reject.apply(def, arguments);
         });
         return def.promise();
