@@ -23,6 +23,9 @@ from osv import fields, osv
 import logging
 import addons
 
+import io, StringIO
+from PIL import Image
+
 class hr_employee_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
@@ -145,6 +148,27 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
     _inherits = {'resource.resource': "resource_id"}
+
+    def _get_photo_mini(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            print obj
+            if not obj.photo:
+                result[obj.id] = False
+                continue
+
+            image_stream = io.BytesIO(obj.photo.decode('base64'))
+            img = Image.open(image_stream)
+            img.thumbnail((180, 150), Image.ANTIALIAS)
+            img_stream = StringIO.StringIO()
+            img.save(img_stream, "JPEG")
+            result[obj.id] = img_stream.getvalue().encode('base64')
+        return result
+
+    def _set_photo_mini(self, cr, uid, id, name, value, args, context=None):
+        self.write(cr, uid, [id], {'photo': value}, context=context)
+        return True
+    
     _columns = {
         'country_id': fields.many2one('res.country', 'Nationality'),
         'birthday': fields.date("Date of Birth"),
@@ -171,6 +195,10 @@ class hr_employee(osv.osv):
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
         'photo': fields.binary('Photo'),
+        'photo_mini': fields.function(_get_photo_mini, fnct_inv=_set_photo_mini, string='Photo Mini', type="binary",
+            store = {
+                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['photo'], 10),
+            }),
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
