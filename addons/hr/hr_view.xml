@@ -33,7 +33,7 @@
                         <field name="parent_id" />
                         </group>
                         <group colspan="2" col="1">
-                          <field name="photo" widget='image' nolabel="1"/>
+                          <field name="photo_mini" widget='image' nolabel="1"/>
                         </group>
                     </group>
                     <notebook colspan="6">
@@ -217,23 +217,6 @@
             <field name="resource">ir.ui.menu</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
-        </record>
-
-        <!-- add photo option in res.users -->
-        <record id="view_users_form_hr_photo" model="ir.ui.view">
-            <field name="name">res.users.form_hr_photo</field>
-            <field name="model">res.users</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_users_form"/>
-            <field name="arch" type="xml">
-                <field name="photo" widget='image' nolabel="1" colspan="2" position="replace">
-                    <field name="photo" widget='image' nolabel="1" colspan="2" attrs="{'invisible': [('hr_photo_prior','=',True)]}"/>
-                    <field name="photo_calc" widget='image' nolabel="1" colspan="2" attrs="{'invisible': [('hr_photo_prior','=',False)]}"/>
-                </field>
-                <group name="gr_photo" col="2" colspan="1" position="inside">
-                    <field name="hr_photo_prior" colspan="2"/>
-                </group>
-            </field>
         </record>
 
         <!--
