@@ -317,7 +317,7 @@
                     <field name="city"/>
                     <!--field name="country"/-->
                     <field name="user_id"/>
-                    <field name="parent_id"/>
+                    <field name="parent_id" string="Company"/>
                 </tree>
             </field>
         </record>
@@ -378,13 +378,15 @@
                             <newline/>
                             <field name="customer" select="1"/>
                             <field name="supplier"/>
-                            <newline/>
-                            <field name="child_ids" nolabel="1" attrs="{'invisible': [('is_company','=', False)]}" colspan="8"/>
+                            <!--field name="child_ids" nolabel="1" attrs="{'invisible': [('is_company','=', False)]}" colspan="8"/-->
                         </page>
                         <page string="History" groups="base.group_extended" invisible="True">
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="comment" nolabel="1"/>
+                        </page>
+                        <page string="Contacts" attrs="{'invisible': [('is_company','=', False)]}">
+                        <field name="child_ids" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
