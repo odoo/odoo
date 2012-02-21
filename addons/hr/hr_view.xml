@@ -226,8 +226,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
+                <field name="photo" widget='image' nolabel="1" colspan="2" position="replace">
+                    <field name="photo" widget='image' nolabel="1" colspan="2" attrs="{'invisible': [('hr_photo_prior','=',True)]}"/>
+                    <field name="photo_calc" widget='image' nolabel="1" colspan="2" attrs="{'invisible': [('hr_photo_prior','=',False)]}"/>
+                </field>
                 <group name="gr_photo" col="2" colspan="1" position="inside">
-                    <field name="hr_photo_prior"/>
+                    <field name="hr_photo_prior" colspan="2"/>
                 </group>
             </field>
         </record>
