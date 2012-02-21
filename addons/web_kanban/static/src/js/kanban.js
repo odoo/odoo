@@ -176,7 +176,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     },
     do_clear_groups: function() {
         _.each(this.groups, function(group) {
-            group.stop();
+            group.destroy();
         });
         this.groups = [];
         this.$element.find('.oe_kanban_groups_headers, .oe_kanban_groups_records').empty();
@@ -327,7 +327,7 @@ openerp.web_kanban.KanbanGroup = openerp.web.OldWidget.extend({
         this.$has_been_started.resolve();
         return def;
     },
-    stop: function() {
+    destroy: function() {
         this._super();
         if (this.$records) {
             this.$records.remove();
@@ -469,7 +469,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.OldWidget.extend({
         if (confirm(_t("Are you sure you want to delete this record ?"))) {
             return $.when(this.view.dataset.unlink([this.id])).then(function() {
                 self.group.remove_record(self.id);
-                self.stop();
+                self.destroy();
             });
         }
     },
@@ -520,7 +520,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.OldWidget.extend({
                 self.set_record(records[0]);
                 self.do_render();
             } else {
-                self.stop();
+                self.destroy();
             }
         });
     },

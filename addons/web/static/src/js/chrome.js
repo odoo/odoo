@@ -148,7 +148,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
     on_resized: function() {
         //openerp.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
     },
-    stop: function () {
+    destroy: function () {
         // Destroy widget
         this.close();
         this.$element.dialog('destroy');
@@ -240,7 +240,7 @@ openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loadin
         this.session.on_rpc_request.add_first(this.request_call);
         this.session.on_rpc_response.add_last(this.response_call);
     },
-    stop: function() {
+    destroy: function() {
         this.session.on_rpc_request.remove(this.request_call);
         this.session.on_rpc_response.remove(this.response_call);
         this.on_rpc_event(-this.count);
@@ -318,7 +318,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
             self.hide();
         });
     },
-    stop: function () {
+    destroy: function () {
         this.hide();
         this.$option_id.empty();
 
@@ -383,7 +383,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
             setTimeout(function () {
                 self.getParent().do_login(
                         info.db, admin.login, admin.password);
-                self.stop();
+                self.destroy();
                 self.unblockUI();
             });
         });
@@ -799,7 +799,7 @@ openerp.web.Header =  openerp.web.OldWidget.extend(/** @lends openerp.web.Header
                         var inner_viewmanager = action_manager.inner_viewmanager;
                         inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
                         .then(function() {
-                            self.dialog.stop();
+                            self.dialog.destroy();
                             // needs to refresh interface in case language changed
                             window.location.reload();
                         });
@@ -1101,7 +1101,7 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
             self.header.do_update();
             self.menu.do_reload();
             if(self.action_manager)
-                self.action_manager.stop();
+                self.action_manager.destroy();
             self.action_manager = new openerp.web.ActionManager(self);
             self.action_manager.appendTo($("#oe_app"));
             self.bind_hashchange();
@@ -1153,7 +1153,7 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
     },
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {
-            el.stop();
+            el.destroy();
         });
         this.$element.children().remove();
     },

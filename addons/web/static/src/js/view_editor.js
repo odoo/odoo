@@ -1002,10 +1002,10 @@ openerp.web.ViewEditor =   openerp.web.OldWidget.extend({
         $.when(action_manager.do_action(action)).then(function() {
             var controller = action_manager.dialog_viewmanager.views['form'].controller;
             controller.on_button_cancel.add_last(function(){
-                action_manager.stop()
+                action_manager.destroy()
             });
             controller.do_save.add_last(function(){
-                action_manager.stop();
+                action_manager.destroy();
                 var value =controller.fields.name.value;
                 self.add_node_dialog.$element.find('select[id=field_value]').append($("<option selected></option>").attr("value",value).text(value));
                     _.detect(self.add_widget,function(widget){

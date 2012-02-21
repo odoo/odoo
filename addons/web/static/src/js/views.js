@@ -30,19 +30,19 @@ session.web.ActionManager = session.web.OldWidget.extend({
     },
     dialog_stop: function () {
         if (this.dialog) {
-            this.dialog_viewmanager.stop();
+            this.dialog_viewmanager.destroy();
             this.dialog_viewmanager = null;
-            this.dialog.stop();
+            this.dialog.destroy();
             this.dialog = null;
         }
     },
     content_stop: function () {
         if (this.inner_viewmanager) {
-            this.inner_viewmanager.stop();
+            this.inner_viewmanager.destroy();
             this.inner_viewmanager = null;
         }
         if (this.client_widget) {
-            this.client_widget.stop();
+            this.client_widget.destroy();
             this.client_widget = null;
         }
     },
@@ -142,7 +142,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
                 if(on_close)
                     this.dialog.on_close.add(on_close);
             } else {
-                this.dialog_viewmanager.stop();
+                this.dialog_viewmanager.destroy();
             }
             this.dialog.dialog_title = action.name;
             this.dialog_viewmanager = new session.web.ViewManagerAction(this, action);
@@ -385,7 +385,7 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
     setup_search_view: function(view_id, search_defaults) {
         var self = this;
         if (this.searchview) {
-            this.searchview.stop();
+            this.searchview.destroy();
         }
         this.searchview = new session.web.SearchView(
                 this, this.dataset,

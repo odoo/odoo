@@ -33,7 +33,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
 
         this.renderer = null;
     },
-    stop: function () {
+    destroy: function () {
         if (this.renderer) {
             clearTimeout(this.renderer);
         }

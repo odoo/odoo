@@ -969,7 +969,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
  *
  * And of course, when you don't need that widget anymore, just do:
  *
- * my_widget.stop();
+ * my_widget.destroy();
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
@@ -994,7 +994,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      * @extends openerp.web.CallbackEnabled
      *
      * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
-     * When that widget is destroyed by calling stop(), the current instance will be
+     * When that widget is destroyed by calling destroy(), the current instance will be
      * destroyed too. Can be null.
      * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
      * to bind the current Widget to an already existing part of the DOM, which is not compatible
@@ -1035,9 +1035,9 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
     /**
      * Destroys the current widget, also destroys all its children before destroying itself.
      */
-    stop: function() {
+    destroy: function() {
         _.each(_.clone(this.getChildren()), function(el) {
-            el.stop();
+            el.destroy();
         });
         if(this.$element != null) {
             this.$element.remove();

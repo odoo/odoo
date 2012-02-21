@@ -240,7 +240,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
     do_reload: function() {
         var view_manager = this.view.getParent(),
             action_manager = view_manager.getParent();
-        this.view.stop();
+        this.view.destroy();
         action_manager.do_action(view_manager.action);
     }
 });
@@ -463,8 +463,8 @@ openerp.web_dashboard.ApplicationInstaller = openerp.web.OldWidget.extend({
         });
         return r;
     },
-    stop: function() {
-        this.action_manager.stop();
+    destroy: function() {
+        this.action_manager.destroy();
         return this._super();
     }
 });

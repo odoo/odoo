@@ -552,7 +552,7 @@ openerp.web.search.Widget = openerp.web.OldWidget.extend( /** @lends openerp.web
      * "Stops" the widgets. Called when the view destroys itself, this
      * lets the widgets clean up after themselves.
      */
-    stop: function () {
+    destroy: function () {
         delete this.view;
         this._super();
     },
@@ -1159,7 +1159,7 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
             _this.add_prop();
         });
         this.$element.find('.searchview_extended_delete_group').click(function () {
-            _this.stop();
+            _this.destroy();
         });
     },
     get_domain: function() {
@@ -1172,7 +1172,7 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
             _.map(_.range(_.max([0,props.length - 1])), function() { return op; }),
             props);
     },
-    stop: function() {
+    destroy: function() {
         var parent = this.getParent();
         if (this.getParent().getChildren().length == 1)
             this.getParent().hide();
@@ -1210,16 +1210,16 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
             _this.changed();
         });
         this.$element.find('.searchview_extended_delete_prop').click(function () {
-            _this.stop();
+            _this.destroy();
         });
     },
-    stop: function() {
+    destroy: function() {
         var parent;
         if (this.getParent().getChildren().length == 1)
             parent = this.getParent();
         this._super();
         if (parent)
-            parent.stop();
+            parent.destroy();
     },
     changed: function() {
         var nval = this.$element.find(".searchview_extended_prop_field").val();
@@ -1235,7 +1235,7 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
     select_field: function(field) {
         var self = this;
         if(this.attrs.selected != null) {
-            this.value.stop();
+            this.value.destroy();
             this.value = null;
             this.$element.find('.searchview_extended_prop_op').html('');
         }
