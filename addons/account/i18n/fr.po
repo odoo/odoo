@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-13 20:00+0000\n"
-"Last-Translator: t.o <Unknown>\n"
+"PO-Revision-Date: 2012-02-18 23:14+0000\n"
+"Last-Translator: GaCriv <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-14 05:44+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-02-19 05:42+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1200
@@ -161,7 +161,7 @@ msgstr "Balance agée clients à aujourd'hui"
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
 msgid "Import from invoice or payment"
-msgstr "Importer depuis une facture ou un paiement"
+msgstr "Importer depuis une facture ou un règlement"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -447,10 +447,10 @@ msgid ""
 "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
 "Cash Registers, or Customer/Supplier payments."
 msgstr ""
-"Cette écran est utilisé par les comptables pour saisir des écritures en "
-"masse. Des écritures sont créées par OpenERP, si vous utilisez les "
-"fonctionnalités de relevés bancaires, gestion d'espèces et de paiements des "
-"clients ou des fournisseurs."
+"Cet écran est utilisé par les comptables pour saisir des écritures en masse. "
+"Des écritures sont créées par OpenERP, si vous utilisez les fonctionnalités "
+"de relevés bancaires, gestion d'espèces et de règlements des clients ou des "
+"fournisseurs."
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1109,7 +1109,7 @@ msgstr ""
 #: code:addons/account/account.py:2596
 #, python-format
 msgid "I can not locate a parent code for the template account!"
-msgstr ""
+msgstr "Impossible de trouver un code parent pour le modèle de compte !"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1213,6 +1213,7 @@ msgstr ""
 msgid ""
 "You have to provide an account for the write off/exchange difference entry !"
 msgstr ""
+"Vous devez fournir un compte pour l'écriture d'écart/l'écart de change !"
 
 #. module: account
 #: view:account.tax:0
@@ -1251,7 +1252,7 @@ msgstr "Générer les écritures avant :"
 #. module: account
 #: view:account.move.line:0
 msgid "Unbalanced Journal Items"
-msgstr ""
+msgstr "Écritures déséquilibrées"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
@@ -1640,7 +1641,7 @@ msgstr "Une table temporaire utilisée dans la vue Tableau de Bord"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr "Avoirs fournisseur"
+msgstr "Avoirs fournisseurs"
 
 #. module: account
 #: selection:account.account,type:0
@@ -1737,12 +1738,12 @@ msgid ""
 "the Payment column of a line, you can press F1 to open the reconciliation "
 "form."
 msgstr ""
-"Un relevé bancaire comporte toutes les transactions financières effectuées "
+"Un relevé bancaire comporte  les transactions financières enregistrées "
 "durant une certaine période sur un compte de dépôt ou tout type de compte "
 "financier. Le solde initial sera proposé automatiquement. Le solde final est "
 "celui indiqué sur le relevé fourni par votre banque. Quand vous êtes dans la "
-"colonne paiement d'une ligne, vous pouvez ouvrir le formulaire de "
-"rapprochement en cliquant sur F1."
+"colonne règlement d'une ligne, vous pouvez ouvrir le formulaire de "
+"rapprochement en cliquant sur F1 ou Shift+F1 dans votre navigateur."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -2040,6 +2041,9 @@ msgid ""
 "will be added, Loss : Amount will be deducted.), as calculated in Profit & "
 "Loss Report"
 msgstr ""
+"Ce compte est utilisé pour les transferts au compte de résultat (S'il est "
+"indiqué \"produit\" : le montant sera ajouté, \"charge\" : le montant sera "
+"déduit), comme calculé dans l'édition du compte de résultat."
 
 #. module: account
 #: model:process.node,note:account.process_node_reconciliation0
@@ -2435,7 +2439,7 @@ msgstr "Laisser vide pour tous les exercices fiscaux ouverts"
 #. module: account
 #: field:account.invoice.report,account_line_id:0
 msgid "Account Line"
-msgstr ""
+msgstr "Ligne du compte"
 
 #. module: account
 #: code:addons/account/account.py:1468
@@ -2494,7 +2498,7 @@ msgstr ""
 #: model:ir.model,name:account.model_account_payment_term
 #: field:res.partner,property_payment_term:0
 msgid "Payment Term"
-msgstr "Condition de paiement"
+msgstr "Condition de règlement"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
@@ -2606,7 +2610,7 @@ msgid ""
 "the start and end of the month or quarter."
 msgstr ""
 "Ce menu permet d'imprimer une déclaration de TVA fondée sur des factures ou "
-"des paiements. Sélectionnez une ou plusieurs périodes de l'exercice "
+"des règlements. Sélectionnez une ou plusieurs périodes de l'exercice "
 "comptable. Les informations requises par une déclaration fiscale sont "
 "générées automatiquement par OpenERP à partir des factures (ou des "
 "paiements, dans certains pays). Ces données sont actualisées en temps réel. "
@@ -2707,7 +2711,7 @@ msgstr "Ce rapport donne un aperçu de la situation d'un journal particulier"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr ""
+msgstr "Ligne d'écriture lettrée (écriture d'écart)"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_tax
@@ -4381,7 +4385,7 @@ msgstr "Propriétés des comptes du client"
 msgid "Paypal username (usually email) for receiving online payments."
 msgstr ""
 "Identifiant Paypal (généralement l'adresse de courriel) pour recevoir les "
-"paiements en ligne."
+"règlements en ligne."
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -5183,7 +5187,7 @@ msgstr "Type de période"
 #: field:account.invoice,payment_ids:0
 #: selection:account.vat.declaration,based_on:0
 msgid "Payments"
-msgstr "Paiements"
+msgstr "Règlements"
 
 #. module: account
 #: view:account.tax:0
@@ -5205,7 +5209,7 @@ msgstr "Code Python (TVA Incl)"
 #: model:ir.actions.act_window,name:account.action_payment_term_form
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
 msgid "Payment Terms"
-msgstr "Conditions de Paiement"
+msgstr "Conditions de règlement"
 
 #. module: account
 #: help:account.chart.template,complete_tax_set:0
@@ -5224,7 +5228,7 @@ msgstr ""
 #: field:account.financial.report,children_ids:0
 #: model:ir.model,name:account.model_account_financial_report
 msgid "Account Report"
-msgstr ""
+msgstr "Rapport de comptabilité"
 
 #. module: account
 #: field:account.journal.column,name:0
@@ -5709,7 +5713,7 @@ msgid ""
 "sequences to the higher ones"
 msgstr ""
 "Le champ séquence est utilisé pour classer les lignes des conditions de "
-"paiement des plus basses séquences vers les plus hautes."
+"règlement des plus basses séquences vers les plus hautes."
 
 #. module: account
 #: view:account.fiscal.position.template:0
@@ -5990,7 +5994,7 @@ msgid ""
 "the whole amount will be threated."
 msgstr ""
 "Sélectionnez ici le type d'évaluation relatif à cette ligne de conditions de "
-"paiement. Notez que vous devez avoir une dernière ligne de type \"Balance\" "
+"règlement. Notez que vous devez avoir une dernière ligne de type \"Balance\" "
 "pour assurer que le montant total sera traité."
 
 #. module: account
@@ -6125,7 +6129,7 @@ msgstr "  365 jours  "
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3
 msgid "Customer Refunds"
-msgstr "Avoir client"
+msgstr "Avoirs clients"
 
 #. module: account
 #: field:account.account,foreign_balance:0
@@ -6166,7 +6170,7 @@ msgstr ""
 #. module: account
 #: view:account.subscription:0
 msgid "Running Subscription"
-msgstr ""
+msgstr "Abonnement en cours"
 
 #. module: account
 #: report:account.invoice:0
@@ -6213,7 +6217,7 @@ msgstr "Ecriture analytique"
 #: view:res.company:0
 #: field:res.company,overdue_msg:0
 msgid "Overdue Payments Message"
-msgstr "Message pour les paiements en retard"
+msgstr "Message pour les règlements en retard"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_all_a
@@ -6338,7 +6342,7 @@ msgstr "Factures ouvertes et payées"
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children flat"
-msgstr ""
+msgstr "Afficher les enfants"
 
 #. module: account
 #: code:addons/account/account.py:629
@@ -6941,7 +6945,7 @@ msgstr "Style des rapports financiers"
 #. module: account
 #: selection:account.financial.report,sign:0
 msgid "Preserve balance sign"
-msgstr ""
+msgstr "Préserver le signe de la balance"
 
 #. module: account
 #: view:account.vat.declaration:0
@@ -7001,6 +7005,9 @@ msgid ""
 "row to display the amount of debit/credit/balance that precedes the filter "
 "you've set."
 msgstr ""
+"Si vous choisissez de filtrer par date ou période, ce champ vous permet "
+"d'ajouter une ligne pour afficher les montants débit/crédit/balance en amont "
+"du filtre choisi."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7149,7 +7156,7 @@ msgstr ""
 #: field:account.chart.template,complete_tax_set:0
 #: field:wizard.multi.charts.accounts,complete_tax_set:0
 msgid "Complete Set of Taxes"
-msgstr ""
+msgstr "Complétez le jeu de taxes."
 
 #. module: account
 #: view:account.chart.template:0
@@ -7589,7 +7596,7 @@ msgstr "Vous devriez choisir des périodes appartenant à la même société"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_review_payment_terms_installer
 msgid "Review your Payment Terms"
-msgstr "Réexaminer vos conditions de paiement"
+msgstr "Réexaminer vos conditions de règlement"
 
 #. module: account
 #: field:account.fiscalyear.close,report_name:0
@@ -7676,7 +7683,7 @@ msgstr "Utiliser le modèle"
 #: code:addons/account/account.py:429
 #, python-format
 msgid "Unable to adapt the initial balance (negative value)!"
-msgstr ""
+msgstr "Impossible d'adapter la balance initiale (valeur négative) !"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_purchase
@@ -7725,7 +7732,7 @@ msgstr "Racine/vue"
 #: code:addons/account/account.py:3121
 #, python-format
 msgid "OPEJ"
-msgstr ""
+msgstr "AN"
 
 #. module: account
 #: report:account.invoice:0
@@ -7779,7 +7786,7 @@ msgid ""
 "the limit date for the payment of this line."
 msgstr ""
 "Ce champ est utilisé pour les comptes de tiers. Vous pouvez fixer la date "
-"d'écheance pour le paiement."
+"d'échéance pour le règlement."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_multi_currency
@@ -7903,10 +7910,10 @@ msgid ""
 "terms for each letter. Each customer or supplier can be assigned to one of "
 "these payment terms."
 msgstr ""
-"Les conditions de paiement définissent pour une facture client ou une "
+"Les conditions de règlement définissent pour une facture client ou une "
 "facture fournisseur, les échéances et leur nombre . Les relances clients "
 "périodiques seront établies à partir de ces informations. Les conditions de "
-"paiement peuvent être attribuées à chaque client ou fournisseur."
+"règlement peuvent être attribuées à chaque client ou fournisseur."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -8545,8 +8552,8 @@ msgid ""
 "This payment term will be used instead of the default one for the current "
 "partner"
 msgstr ""
-"Cette condition de règlement sera utilisée à la place de celle par défaut "
-"pour le partenaire courant."
+"Cette condition de règlement sera utilisée à la place de celle fixée par "
+"défaut pour le partenaire courant."
 
 #. module: account
 #: view:account.tax.template:0
@@ -8618,11 +8625,11 @@ msgid ""
 "the start and end of the month or quarter."
 msgstr ""
 "Ce menu permet d'imprimer une déclaration de TVA fondée sur les factures ou "
-"les paiements. Vous pouvez sélectionner une ou plusieurs périodes de "
+"les règlements. Vous pouvez sélectionner une ou plusieurs périodes de "
 "l'exercice. Les informations requises pour cette déclaration  sont générées "
 "automatiquement par OpenERP à partir des factures (ou des paiements, dans "
 "certains pays). Ces données sont actualisées en temps réel. Cela permet de "
-"connaitre à tout moment  les taxes dues en début et fin de mois ou de "
+"connaître à tout moment  les taxes dues en début et fin de mois ou de "
 "trimestre."
 
 #. module: account
@@ -8657,7 +8664,7 @@ msgstr "Plan comptable"
 #: model:process.node,name:account.process_node_paymententries0
 #: model:process.transition,name:account.process_transition_reconcilepaid0
 msgid "Payment"
-msgstr "Paiement"
+msgstr "Règlement"
 
 #. module: account
 #: field:account.bank.statement,balance_end_real:0
@@ -8810,6 +8817,8 @@ msgstr ""
 msgid ""
 "In order to close a period, you must first post related journal entries."
 msgstr ""
+"Afin de pouvoir clôturer la période, vous devez préalablement valider les "
+"écritures de cette période."
 
 #. module: account
 #: view:account.entries.report:0
@@ -8827,7 +8836,7 @@ msgstr "Le compte partenaire utilisé pour cette facture"
 #: code:addons/account/account.py:3296
 #, python-format
 msgid "Tax %.2f%%"
-msgstr ""
+msgstr "Taxe %.2f%%"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -8938,7 +8947,7 @@ msgstr "Factures impayées"
 #, python-format
 msgid "The payment term of supplier does not have a payment term line!"
 msgstr ""
-"Les conditions de paiement du fournisseur n'ont  aucune ligne d'échéance!"
+"Les conditions de règlement du fournisseur n'ont  aucune ligne d'échéance!"
 
 #. module: account
 #: field:account.move.line.reconcile,debit:0
@@ -9013,7 +9022,7 @@ msgstr "Texte plus petit"
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
 msgid "Invoicing & Payments"
-msgstr "Facturation et paiements"
+msgstr "Facturation et règlements"
 
 #. module: account
 #: help:account.invoice,internal_number:0
@@ -9068,7 +9077,7 @@ msgid ""
 "The latest payment term line should be of the type \"Balance\" !"
 msgstr ""
 "Vous ne pouvez pas valider une écriture non équilibrée!\n"
-"Vérifiez que vous avez configuré correctement les conditions de paiement!\n"
+"Vérifiez que vous avez configuré correctement les conditions de règlement!\n"
 "La dernière ligne des échéances doit être de type \"solde\"."
 
 #. module: account
@@ -9099,7 +9108,7 @@ msgstr ""
 #: field:report.invoice.created,currency_id:0
 #: field:res.partner.bank,currency_id:0
 msgid "Currency"
-msgstr "Devises"
+msgstr "Devise"
 
 #. module: account
 #: help:account.bank.statement.line,sequence:0
@@ -9321,7 +9330,7 @@ msgstr "Information"
 #. module: account
 #: model:process.node,note:account.process_node_bankstatement0
 msgid "Registered payment"
-msgstr "Paiement enregistré"
+msgstr "Règlement enregistré"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -9735,7 +9744,7 @@ msgstr "Factures clients et fournisseurs"
 #: model:process.transition,name:account.process_transition_paymentorderbank0
 #: model:process.transition,name:account.process_transition_paymentreconcile0
 msgid "Payment entries"
-msgstr "Écritures de paiement"
+msgstr "Écritures de règlement"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -9820,7 +9829,7 @@ msgid ""
 msgstr ""
 "Sélectionnez 'Vente' pour le journal de ventes. Sélectionnez 'Achats' pour "
 "le journal des achats. Sélectionnez 'Caisse' ou 'Banque' pour les journaux "
-"qui sont utilisés dans les paiements des clients ou des fournisseurs. "
+"qui sont utilisés dans les règlements des clients ou des fournisseurs. "
 "Sélectionnez 'Général' pour les journaux d' opérations diverses. "
 "Sélectionnez 'Ouverture / Fermeture' pour les journaux qui contiendront les "
 "écritures générées lors des nouveaux exercices."
@@ -10058,7 +10067,7 @@ msgid ""
 "Please define partner on it!"
 msgstr ""
 "La date d'échéance d'une écriture générée par la ligne '% s' du modèle "
-"s'appuie sur les termes de paiement du partenaire !\n"
+"s'appuie sur les conditions de règlement du partenaire !\n"
 "Définir un partenaire pour elle, SVP !"
 
 #. module: account
@@ -10478,7 +10487,7 @@ msgstr "Relevés brouillon"
 msgid ""
 "Manual or automatic creation of payment entries according to the statements"
 msgstr ""
-"Création manuelle ou automatique des écritures de paiement selon les "
+"Création manuelle ou automatique des écritures de règlement selon les "
 "déclarations"
 
 #. module: account
@@ -12197,11 +12206,8 @@ msgstr ""
 #~ msgid "x Expenses Credit Notes Journal"
 #~ msgstr "Journal des Dépenses de Notes de Crédits"
 
-#~ msgid ""
-#~ "Check this if the user is allowed to reconcile entries in this account."
-#~ msgstr ""
-#~ "Cochez cette case si l'utilisateur peut réconcilier les entrées dans ce "
-#~ "compte."
+#~ msgid "The optional quantity on entries"
+#~ msgstr "La quantité optionelle des entrées"
 
 #~ msgid "Journal Purchase"
 #~ msgstr "Journal d'Achat"
@@ -12570,11 +12576,14 @@ msgstr ""
 #~ msgid "Invoice Sequence"
 #~ msgstr "Séquence de facture"
 
-#~ msgid "The optional quantity on entries"
-#~ msgstr "La quantité optionelle des entrées"
-
 #~ msgid "The sequence used for invoice numbers in this journal."
 #~ msgstr "La séquence utilisée pour les numéros de facture de ce journal."
+
+#~ msgid ""
+#~ "Check this if the user is allowed to reconcile entries in this account."
+#~ msgstr ""
+#~ "Cochez cette case si l'utilisateur peut réconcilier les entrées dans ce "
+#~ "compte."
 
 #~ msgid "Message"
 #~ msgstr "Messages"

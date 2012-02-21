@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2011-01-13 08:39+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"PO-Revision-Date: 2012-02-20 09:55+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:35+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-21 05:55+0000\n"
+"X-Generator: Launchpad (build 14838)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0 field:hr.attendance,sheet_id:0
@@ -56,7 +56,7 @@ msgstr "Afdeling"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 view:timesheet.report:0
 msgid "Timesheet in current year"
-msgstr ""
+msgstr "Urenstaten in huidige jaar"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_tasktimesheet0
@@ -89,7 +89,7 @@ msgstr "#Kosten"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 view:timesheet.report:0
 msgid "Timesheet of last month"
-msgstr ""
+msgstr "Urenstaten van afgelopen maand"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 field:hr.timesheet.report,company_id:0
@@ -126,13 +126,14 @@ msgstr "Gebaseerd op de urenstaat"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 view:timesheet.report:0
 msgid "Group by day of date"
-msgstr ""
+msgstr "Groepeer op dag of datum"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:615
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet!"
 msgstr ""
+"Het is niet mogelijk een boeking van een bevestigde urenstaat te wijzigen!"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_validatetimesheet0
@@ -142,7 +143,7 @@ msgstr "Bevestigen"
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Approved"
-msgstr ""
+msgstr "Goedgekeurd"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -161,6 +162,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must assign the "
 "employee to an analytic journal!"
 msgstr ""
+"Om een urenstaat te kunnen aanmaken voor een werknemer, moet de werknemer "
+"worden gekoppeld aan een kostenplaats!"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -209,7 +212,7 @@ msgstr " Maand-1 "
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "My Departments Timesheet"
-msgstr ""
+msgstr "Urenstaten van mijn afdeling"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
@@ -219,7 +222,7 @@ msgstr "Urenstaat per dag"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,name:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Project / Kostenplaats"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_validatetimesheet0
@@ -361,7 +364,7 @@ msgstr "Uren"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 view:timesheet.report:0
 msgid "Group by month of date"
-msgstr ""
+msgstr "Groepeer op maand of datum"
 
 #. module: hr_timesheet_sheet
 #: constraint:hr.attendance:0
@@ -399,7 +402,7 @@ msgstr "Werk op taak"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Daily"
-msgstr ""
+msgstr "Dagelijks"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0 field:timesheet.report,quantity:0
@@ -456,6 +459,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must link the employee "
 "to a product, like 'Consultant'!"
 msgstr ""
+"Om een urenstaat te kunnen aanmaken voor een werknemer, moet de werknemer "
+"worden gekoppeld aan een product, bijvoorbeeld 'Consultant'!"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
@@ -466,7 +471,7 @@ msgstr "Het opent uw huidige urenstaat"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:241
 #, python-format
 msgid "You cannot duplicate a timesheet!"
-msgstr ""
+msgstr "Het is niet mogelijk een urenstaat te dupliceren!"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 field:hr.timesheet.report,month:0
@@ -492,6 +497,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must link the employee "
 "to a product!"
 msgstr ""
+"Om een urenstaat te kunnen aanmaken voor een werknemer, moet de werknemer "
+"worden gekoppeld aan een product!"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_attendancetimesheet0
@@ -501,7 +508,7 @@ msgstr "In-/uitklokken"
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Wacht op goedkeuring"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
@@ -526,7 +533,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,name:0
 msgid "Note"
-msgstr ""
+msgstr "Opmerking"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
@@ -647,6 +654,8 @@ msgid ""
 "You cannot have 2 timesheets that overlaps!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
 msgstr ""
+"Het is niet mogelijk om 2 overlappende urenstaten te hebben!\n"
+"Gebruik het menu 'Mijn huidige urenstaat' om dit probleem te verhelpen."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
@@ -671,6 +680,8 @@ msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs!"
 msgstr ""
+"Deze urenstaat kan niet worden gecontroleerd, omdat deze geen gelijke "
+"hoeveelheid aan- en uitmeldingen heeft!"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
@@ -690,7 +701,7 @@ msgstr "Bedrijven"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Summary"
-msgstr ""
+msgstr "Samenvatting"
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
@@ -698,6 +709,8 @@ msgid ""
 "You cannot have 2 timesheets that overlaps !\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
 msgstr ""
+"Het is niet mogelijk om 2 overlappende urenstaten te hebben!\n"
+"Gebruik het menu 'Mijn huidige urenstaat' om dit probleem te verhelpen."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -709,6 +722,8 @@ msgstr "Ongevalideerde urenstaten"
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries!"
 msgstr ""
+"Het is niet mogelijk een urenstaat te verwijderen, waar al "
+"aanwezigheidsboekingen op zijn gedaan."
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,quantity:0
@@ -720,6 +735,7 @@ msgstr "Aantal"
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed!"
 msgstr ""
+"Het is niet mogelijk een urenstaat te verwijderen welke al is bevestigd."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 field:hr.timesheet.report,general_account_id:0
@@ -730,7 +746,7 @@ msgstr "Algemene rekening"
 #. module: hr_timesheet_sheet
 #: help:res.company,timesheet_range:0
 msgid "Periodicity on which you validate your timesheets."
-msgstr ""
+msgstr "Frequentie waarmee u de urenstaten controleert."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
@@ -781,6 +797,8 @@ msgstr "Status is 'concept'."
 #: constraint:hr.analytic.timesheet:0
 msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
 msgstr ""
+"Het is niet mogelijk een bevestigde/gereed zijnde boeking van een urenstaat "
+"te wijzigen!"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
@@ -800,7 +818,7 @@ msgstr "Factureer op werkzaamheden"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 view:timesheet.report:0
 msgid "Timesheet in current month"
-msgstr ""
+msgstr "Urenstaten in huidige maand"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
@@ -816,7 +834,7 @@ msgstr "Urenstaat openen"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 view:timesheet.report:0
 msgid "Group by year of date"
-msgstr ""
+msgstr "Groepeer per jaar of datum"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_validatedtimesheet0
@@ -855,7 +873,7 @@ msgstr "Urenstaat zoeken"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Confirmed Timesheets"
-msgstr ""
+msgstr "Bevestigde urenstaten"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
@@ -908,7 +926,7 @@ msgstr "Verplaatst taakregel naar de urenstaatregel"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
 msgid "Total Attendances"
-msgstr ""
+msgstr "Totale aanwezigheid"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
@@ -936,7 +954,7 @@ msgstr "Februari"
 #. module: hr_timesheet_sheet
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "De naam van het bedrijf moet uniek zijn!"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -977,17 +995,21 @@ msgid ""
 "In order to create a timesheet for this employee, you must assign the "
 "employee to an analytic journal, like 'Timesheet'!"
 msgstr ""
+"Om een urenstaat te kunnen aanmaken voor een werknemer, dient u een "
+"werknemer aan een kostenplaats, bijvoorbeeld 'urenstaat' te koppelen!"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:318
 #, python-format
 msgid "You cannot sign in/sign out from an other date than today"
 msgstr ""
+"Het is niet mogelijk om in te loggen/uit te loggen bij een andere dag dan "
+"vandaag"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Submited to Manager"
-msgstr ""
+msgstr "Verzonden naar de manager"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,account_ids:0
@@ -1007,6 +1029,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must assign it to a "
 "user!"
 msgstr ""
+"Om een urenstaat te kunnen aanmaken voor een werknemer, dient u een "
+"werknemer aan een gebruiker te koppelen!"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0 field:timesheet.report,total_attendance:0

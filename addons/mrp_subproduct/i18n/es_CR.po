@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-17 00:20+0000\n"
-"Last-Translator: Carlos Vásquez (CLEARCORP) "
-"<carlos.vasquez@clearcorp.co.cr>\n"
+"PO-Revision-Date: 2012-02-17 20:45+0000\n"
+"Last-Translator: Freddy Gonzalez <freddy.gonzalez@clearcorp.co.cr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-17 05:00+0000\n"
+"X-Launchpad-Export-Date: 2012-02-18 04:59+0000\n"
 "X-Generator: Launchpad (build 14814)\n"
 "Language: \n"
 
@@ -53,6 +52,7 @@ msgstr "Orden fabricación"
 #: constraint:mrp.bom:0
 msgid "BoM line product should not be same as BoM product."
 msgstr ""
+"Producto BoM línea no debe ser el mismo como producto lista de materiales."
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
@@ -87,7 +87,7 @@ msgstr "Lista de materiales (LdM)"
 #. module: mrp_subproduct
 #: sql_constraint:mrp.production:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Referencia debe ser única por compañía!"
 
 #. module: mrp_subproduct
 #: field:mrp.bom,sub_products:0
@@ -107,7 +107,7 @@ msgstr "Sub producto"
 #. module: mrp_subproduct
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "¡La cantidad de la orden no puede ser negativa o cero!"
 
 #. module: mrp_subproduct
 #: help:mrp.subproduct,subproduct_type:0
@@ -120,11 +120,20 @@ msgid ""
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
 msgstr ""
+"Definir cómo la cantidad de subproductos se encuentra en las órdenes de "
+"producción que utilizan este lista de materiales. 'Fijo' representa una "
+"situación en la que la cantidad de subproducto creado es siempre igual a la "
+"cantidad de conjunto sobre la lista de materiales, independientemente de "
+"cuántos se crean en el orden de producción. Por oposición, \"variable\" "
+"significa que la cantidad se calcula como (la cantidad de subproducto "
+"establecido en la Lista de Materiales / cantidad de producto manufacturado, "
+"situado en la cantidad de * Lista de Materiales de producto manufacturado en "
+"el orden de producción). \""
 
 #. module: mrp_subproduct
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
-msgstr ""
+msgstr "¡Error! No puede crear una LdM recursiva"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "¡XML inválido para la definición de la vista!"

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-13 16:01+0000\n"
+"PO-Revision-Date: 2012-02-18 11:54+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-14 05:45+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-02-19 05:43+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -30,7 +30,7 @@ msgstr "'Pulled' pad"
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
-msgstr "Verplaats"
+msgstr "Mutatie"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
@@ -57,22 +57,24 @@ msgstr "Bronlocatie"
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
 msgstr ""
+"Maakt het mogelijk om een mutatie te annuleren, welke is gerelateerd aan een "
+"pull flow."
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
-msgstr ""
+msgstr "Pulled Flows"
 
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr "Het is verplicht een productie batch toe te wijzen aan dit product"
+msgstr "U moet een productie partij toewijzen voor dit product"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
-msgstr ""
+msgstr "Locatie gebruikt door bestemmingslocatie om te leveren"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -87,6 +89,8 @@ msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
 msgstr ""
+"Pulled verwerving komende van de originele locatie %s, pull regel %s, via "
+"originele verwerving %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -145,7 +149,7 @@ msgstr "Kopen"
 #. module: stock_location
 #: view:product.product:0
 msgid "Pushed flows"
-msgstr ""
+msgstr "Pushed flows"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
@@ -155,12 +159,12 @@ msgstr "Leveringsgebied"
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
-msgstr "Voorraad Verplaatsing"
+msgstr "Voorraadmutatie"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
-msgstr ""
+msgstr "Pulled flows"
 
 #. module: stock_location
 #: field:product.pulled.flow,company_id:0
@@ -177,8 +181,8 @@ msgstr "Logistieke bewegingen"
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
-"Indien aangevinkt en de verplaatsing wordt geannuleerd, annuleer dan tevens "
-"de gekoppelde verplaatsing."
+"Indien aangevinkt en de mutatie wordt geannuleerd, annuleer dan tevens de "
+"gekoppelde mutatie."
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -188,7 +192,7 @@ msgstr "Produceren"
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr "Op order maken"
+msgstr "Maak op bestelling"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
@@ -215,6 +219,8 @@ msgstr "Het aantal dagen tot wanneer deze verplaatsing wordt uitgevoerd"
 #: help:product.pulled.flow,name:0
 msgid "This field will fill the packing Origin and the name of its moves"
 msgstr ""
+"Dit veld zal de oorsprong van de verpakking weergeven en de namen van de "
+"mutaties"
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
@@ -225,8 +231,8 @@ msgstr "Verwervingswijze"
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company belong packings and moves"
 msgstr ""
-"Wordt gebruikt om te bepalen in welk bedrijf de verpakingen en "
-"verplaatsingen horen."
+"Wordt gebruikt om te bepalen in welk bedrijf de mutaties en verplaatsingen "
+"horen."
 
 #. module: stock_location
 #: field:product.pulled.flow,name:0
@@ -238,7 +244,7 @@ msgstr "Naam"
 msgid ""
 "These rules set the right path of the product in the whole location tree."
 msgstr ""
-"Deze regel stelt het correcte pad van het produkt in de hele locatieboom in."
+"Deze regel stelt het correcte pad van het product in de hele locatieboom in."
 
 #. module: stock_location
 #: constraint:stock.move:0
@@ -294,7 +300,7 @@ msgstr "Producten"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location via procurement %d"
-msgstr ""
+msgstr "Pulled  van andere locatie via verwerving %d"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -310,7 +316,7 @@ msgstr "Niet van toepassing"
 #. module: stock_location
 #: field:stock.location.path,delay:0
 msgid "Delay (days)"
-msgstr "Uitstel (dagen)"
+msgstr "Vertraging (days)"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:67
@@ -319,11 +325,13 @@ msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
 msgstr ""
+"Picking van pulled verwerving komende van de originele locatie %s, pull "
+"regel %s, via originele verwerving %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
 msgid "Pushed Flow"
-msgstr ""
+msgstr "Pushed Flow"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:89
@@ -332,6 +340,8 @@ msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
 msgstr ""
+"Mutatie van een pulled verwerving, komende van originele locatie %s, pull "
+"regel %s, via originele verwerving %s (#%d)"
 
 #. module: stock_location
 #: constraint:stock.move:0
@@ -379,6 +389,8 @@ msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
 msgstr ""
+"Afhankelijk van het bedrijf, kies welke producten u wilt verzenden of "
+"ontvangen"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order
@@ -405,7 +417,7 @@ msgstr "Dagboek"
 #: field:product.pulled.flow,cancel_cascade:0
 #: field:stock.move,cancel_cascade:0
 msgid "Cancel Cascade"
-msgstr ""
+msgstr "Annuleer Cascade"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0

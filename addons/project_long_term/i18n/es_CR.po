@@ -8,14 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-17 00:30+0000\n"
-"Last-Translator: Carlos Vásquez (CLEARCORP) "
-"<carlos.vasquez@clearcorp.co.cr>\n"
+"PO-Revision-Date: 2012-02-17 22:43+0000\n"
+"Last-Translator: Freddy Gonzalez <freddy.gonzalez@clearcorp.co.cr>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-17 05:01+0000\n"
+"X-Launchpad-Export-Date: 2012-02-18 04:59+0000\n"
 "X-Generator: Launchpad (build 14814)\n"
 "Language: es\n"
 
@@ -44,12 +43,12 @@ msgstr "Agrupar por..."
 #. module: project_long_term
 #: field:project.phase,user_ids:0
 msgid "Assigned Users"
-msgstr ""
+msgstr "Usuarios asignados"
 
 #. module: project_long_term
 #: field:project.phase,progress:0
 msgid "Progress"
-msgstr ""
+msgstr "Progreso"
 
 #. module: project_long_term
 #: constraint:project.project:0
@@ -61,7 +60,7 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "In Progress Phases"
-msgstr ""
+msgstr "Fases en progreso"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -92,7 +91,7 @@ msgstr "Día"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_user_allocation
 msgid "Phase User Allocation"
-msgstr ""
+msgstr "Fase de asignación de usuario"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_task
@@ -109,6 +108,12 @@ msgid ""
 "users, convert your phases into a series of tasks when you start working on "
 "the project."
 msgstr ""
+"Un proyecto se puede dividir en las diferentes fases. Para cada fase, se "
+"puede definir la asignación de los usuarios, describe las diferentes tareas "
+"y vincular la fase de las fases anterior y posterior, añadir restricciones "
+"de fecha para la programación automática. Utilice la planificación a largo "
+"plazo con el fin de Planifica tus usuarios disponibles, convertir sus fases "
+"en una serie de tareas cuando empiezas a trabajar en el proyecto."
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -132,7 +137,7 @@ msgstr "UdM (Unidad de Medida) es la unidad de medida para la duración"
 #: view:project.phase:0
 #: view:project.user.allocation:0
 msgid "Planning of Users"
-msgstr ""
+msgstr "Planificación de los Usuarios"
 
 #. module: project_long_term
 #: help:project.phase,date_end:0
@@ -178,7 +183,7 @@ msgstr "Fecha límite"
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute All My Projects"
-msgstr ""
+msgstr "Computar todos mis proyectos"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -195,7 +200,7 @@ msgstr " (copia)"
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Project User Allocation"
-msgstr ""
+msgstr "Proyecto de asignación de usuario"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -213,12 +218,12 @@ msgstr "C_alcular"
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "New"
-msgstr ""
+msgstr "Nuevo"
 
 #. module: project_long_term
 #: help:project.phase,progress:0
 msgid "Computed based on related tasks"
-msgstr ""
+msgstr "Computada sobre la base de las tareas relacionadas con"
 
 #. module: project_long_term
 #: field:project.phase,product_uom:0
@@ -239,7 +244,7 @@ msgstr "Recursos"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "My Projects"
-msgstr ""
+msgstr "Mis proyectos"
 
 #. module: project_long_term
 #: help:project.user.allocation,date_start:0
@@ -254,13 +259,13 @@ msgstr "Tareas relacionadas"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "New Phases"
-msgstr ""
+msgstr "Nuevas Fases"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Please specify a project to schedule."
-msgstr ""
+msgstr "Por favor, especifique un proyecto para programar."
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_start:0
@@ -294,7 +299,7 @@ msgstr "La fecha-inicio de la fase debe ser anterior a la fecha-fin."
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Start Month"
-msgstr ""
+msgstr "Mes de inicio"
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
@@ -312,6 +317,8 @@ msgstr "Forzar que la fase termine antes de esta fecha"
 msgid ""
 "The ressources on the project can be computed automatically by the scheduler"
 msgstr ""
+"El Recurso en el proyecto se puede calcular de forma automática por el "
+"planificador"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -321,7 +328,7 @@ msgstr "Borrador"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Pending Phases"
-msgstr ""
+msgstr "Fases pendientes"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -398,7 +405,7 @@ msgstr "Horario de trabajo"
 #: model:ir.ui.menu,name:project_long_term.menu_compute_phase
 #: view:project.compute.phases:0
 msgid "Schedule Phases"
-msgstr ""
+msgstr "Fases de la lista"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -413,7 +420,7 @@ msgstr "Total horas"
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Users"
-msgstr ""
+msgstr "Usuarios"
 
 #. module: project_long_term
 #: view:project.user.allocation:0
@@ -458,7 +465,7 @@ msgstr "Duración"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project Users"
-msgstr ""
+msgstr "Usuarios del proyecto"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
@@ -476,6 +483,9 @@ msgid ""
 "view.\n"
 "               "
 msgstr ""
+"Para programar las fases de la totalidad o un proyecto específico. A "
+"continuación, abra una vista de Gantt.\n"
+"               "
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
@@ -513,7 +523,7 @@ msgstr "Por defecto en días"
 #: view:project.phase:0
 #: field:project.phase,user_force_ids:0
 msgid "Force Assigned Users"
-msgstr ""
+msgstr "Obligar a los usuarios asignados"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
