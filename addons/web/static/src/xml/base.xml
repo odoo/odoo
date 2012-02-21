@@ -728,7 +728,6 @@
     </td>
 </tr>
 <t t-name="ListView.row.form">
-    <t t-raw="frame.render()"/>
 </t>
 
 <t t-name="FormView">
@@ -1519,21 +1518,21 @@
         <td t-if="edited and !options.deletable" class="oe-listview-padding"/>
     </t>
 </t>
-<t t-name="ListView.row.frame" t-extend="WidgetFrame">
-    <t t-jquery="tr">
-        $(document.createElement('t'))
-            .append(this.contents())
-            .attr({
-                't-foreach': this.attr('t-foreach'),
-                't-as': this.attr('t-as')
-            })
-            .replaceAll(this)
-            .after($(document.createElement('td')).append(
-                $(document.createElement('button')).attr({
-                    'class': 'oe-edit-row-save', 'type': 'button'})
-                  .html(' ')))
-            .unwrap();
+<t t-name="ListView.row.frame">
+    <t t-foreach="widget.table" t-as="row">
+        <t t-foreach="row" t-as="td">
+            <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
+                t-att-width="td.width"
+                t-att-valign="td.table ? 'top' : undefined"
+                t-attf-class="oe_form_frame_cell #{td.classname} #{td.element_class}"
+            >
+                <t t-raw="td.render()"/>
+            </td>
+        </t>
     </t>
+    <td>
+        <button class="oe-edit-row-save" type="button"> </button>
+    </td>
 </t>
 <t t-name="view_editor">
     <table class="oe_view_editor">

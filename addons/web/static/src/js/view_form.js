@@ -103,7 +103,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$element.html(this.rendered);
         
         this.root_frame = instanciate_widget(this.registry.get_object('frame'), this, this.fields_view.arch);
-        this.root_frame.appendTo($(".oe_form_header", this.$element));
+        var to_append = $(".oe_form_header", this.$element);
+        this.root_frame.appendTo(to_append.length > 0 ? to_append : this.$element);
+        this.root_frame.$element.children().unwrap();
         
         this.$form_header = this.$element.find('.oe_form_header:first');
         this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
