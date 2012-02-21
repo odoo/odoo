@@ -441,7 +441,8 @@ class mail_message(osv.osv):
                     if part.get_content_subtype() == 'html':
                         msg['body_html'] = content
                         msg['subtype'] = 'html' # html version prevails
-                        body = tools.ustr(tools.html2plaintext(content))
+                        #this filter will remove "&#13;" unused charector which generaed by space
+                        body = filter(lambda c: c not in "&#13;", tools.ustr(tools.html2plaintext(content)))
                     elif part.get_content_subtype() == 'plain':
                         body = content
                 elif part.get_content_maintype() in ('application', 'image'):
