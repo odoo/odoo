@@ -58,7 +58,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         var qdict = {
             current_layout : this.$element.find('.oe-dashboard').attr('data-layout')
         };
-        var $dialog = $('<div>').dialog({
+        var $dialog = openerp.web.dialog($('<div>'), {
                             modal: true,
                             title: _t("Edit Layout"),
                             width: 'auto',
