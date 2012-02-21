@@ -35,6 +35,9 @@ from tools.translate import _
 import openerp
 import openerp.exceptions
 
+import io, StringIO
+from PIL import Image
+
 _logger = logging.getLogger(__name__)
 
 class groups(osv.osv):
@@ -200,6 +203,20 @@ class users(osv.osv):
             self.write(cr, uid, ids, {'groups_id': [(4, extended_group_id)]}, context=context)
         return True
 
+    def _get_photo_mini(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            if not obj.photo:
+                result[obj.id] = False
+                continue
+
+            image_stream = io.BytesIO(obj.photo.decode('base64'))
+            img = Image.open(image_stream)
+            img.thumbnail((120, 100), Image.ANTIALIAS)
+            img_stream = StringIO.StringIO()
+            img.save(img_stream, "JPEG")
+            result[obj.id] = img_stream.getvalue().encode('base64')
+        return result
 
     def _get_interface_type(self, cr, uid, ids, name, args, context=None):
         """Implementation of 'view' function field getter, returns the type of interface of the users.
@@ -242,6 +259,10 @@ class users(osv.osv):
         'user_email': fields.char('Email', size=64),
         'signature': fields.text('Signature', size=64),
         'photo': fields.binary('Photo'),
+        'photo_mini': fields.function(_get_photo_mini, string='Photo Mini', type="binary",
+            store = {
+                'res.users': (lambda self, cr, uid, ids, c={}: ids, ['photo'], 10),
+            }),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
