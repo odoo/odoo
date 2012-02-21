@@ -237,21 +237,14 @@ openerp.web.list_editable = function (openerp) {
                 self.edition_id = record_id;
                 self.edition_form = new openerp.web.ListEditableFormView(self.view, self.dataset, false);
                 self.edition_form.$element = $new_row;
+                self.edition_form.editable_list = self;
                 // HO HO
                 // empty
                 $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
                     // put in $.when just in case  FormView.on_loaded becomes asynchronous
                     $new_row.find('> td')
-                          .addClass('oe-field-cell')
-                          .removeAttr('width')
                       .end()
                       .find('td:last').removeClass('oe-field-cell').end();
-                    if (self.options.selectable) {
-                        $new_row.prepend('<th>');
-                    }
-                    if (self.options.isClarkGable) {
-                        $new_row.prepend('<th>');
-                    }
                     // pad in case of groupby
                     _(self.columns).each(function (column) {
                         if (column.meta) {
