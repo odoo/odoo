@@ -241,6 +241,7 @@ class users(osv.osv):
                                                             "otherwise leave empty. After a change of password, the user has to login again."),
         'user_email': fields.char('Email', size=64),
         'signature': fields.text('Signature', size=64),
+        'photo': fields.binary('Photo'),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
