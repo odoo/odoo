@@ -582,30 +582,14 @@ class account_voucher(osv.osv):
         reconcile_pool = self.pool.get('account.move.reconcile')
         move_pool = self.pool.get('account.move')
         move_line_pool = self.pool.get('account.move.line')
-        wf_service = netsvc.LocalService("workflow")
-
         for voucher in self.browse(cr, uid, ids, context=context):
-            recs = []
-            invoice_ids = []
             for line in voucher.move_ids:
                 if line.reconcile_id:
-                    invoice_ids = [rec_line.invoice.id for rec_line in line.reconcile_id.line_id if rec_line.invoice]
-                    recs.append(line.reconcile_id.id)
                     move_lines = [move_line.id for move_line in line.reconcile_id.line_id]
                     move_lines.remove(line.id)
-                    partial_ids = reconcile_pool.create(cr, uid, {
-                        'type': 'auto',
-                        'line_id': False,
-                        'line_partial_ids': [(6, 0, move_lines)]})
-                    
-                    move_line_pool.write(cr, uid, move_lines, {
-                        'reconcile_id': False,
-                        'reconcile_partial_id': partial_ids
-                    }, update_check=False)
-                elif line.reconcile_partial_id:
-                    invoice_ids = [rec_line.invoice.id for rec_line in line.reconcile_partial_id.line_partial_ids if rec_line.invoice]
-            if recs:
-                reconcile_pool.unlink(cr, uid, recs)
+                    reconcile_pool.unlink(cr, uid, line.reconcile_id.id)
+                    if len(move_lines) >= 2:
+                        move_line_pool.reconcile_partial(cr, uid, move_lines, 'auto',context=context)
             if voucher.move_id:
                 move_pool.button_cancel(cr, uid, [voucher.move_id.id])
                 move_pool.unlink(cr, uid, [voucher.move_id.id])
@@ -613,8 +597,6 @@ class account_voucher(osv.osv):
             'state':'cancel',
             'move_id':False,
         }
-        if invoice_ids:
-            wf_service.trg_validate(uid, 'account.invoice', invoice_ids[0], 'open_test', cr)
         self.write(cr, uid, ids, res)
         return True
 
