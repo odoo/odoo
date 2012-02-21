@@ -150,7 +150,7 @@ class delivery_grid_line(osv.osv):
     _description = "Delivery Grid Line"
     _columns = {
         'name': fields.char('Name', size=32, required=True),
-        'grid_id': fields.many2one('delivery.grid', 'Grid',required=True),
+        'grid_id': fields.many2one('delivery.grid', 'Grid',required=True, ondelete='cascade'),
         'type': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable', required=True),
         'operator': fields.selection([('==','='),('<=','<='),('>=','>=')], 'Operator', required=True),
         'max_value': fields.float('Maximum Value', required=True),
