@@ -33,7 +33,7 @@ class event_moodle(osv.osv):
         'moodle_username' : fields.char('Moodle username', 128,help="You can also connect with your username that you define when you create a tokken"),
         'moodle_password' : fields.char('Moodle password', 128),
         'moodle_token' : fields.char('Moodle token', 128,help="Put your token that you created in your moodle serveur"),
-        'serveur_moodle': fields.char('Moodle server', 128, required=True,help="URL where you have your moodle server "),
+        'serveur_moodle': fields.char('Moodle server', 128, required=True,help="URL where you have your moodle server without http:// for exemple:127.0.0.1 or localhost"),
     }
 
     url=''
@@ -55,8 +55,12 @@ class event_moodle(osv.osv):
         cr.execute(req_sql)
         sql_res = cr.dictfetchall()
         new_ids=[]
+        if sql_res == []:
+            raise osv.except_osv(('Error!'),("Configure moodle connexion before"))
         for id_moodle in sql_res:
              new_ids.append(id_moodle['id'])
+
+        #change this code and take directly the good ids
         url=""
         config_moodle = self.browse(cr, uid, [new_ids[-1]], context=context)
         if config_moodle[0].moodle_username and config_moodle[0].moodle_password:
@@ -163,7 +167,7 @@ class event_event(osv.osv):
         dic_courses= [{'fullname' :name_event,'shortname' :'','startdate':date,'summary':event[0].note,'categoryid':1}]
         #create a dict course
         moodle_pool = self.pool.get('event.moodle')
-        response_courses =moodle_pool.create_moodle_courses(cr,uid,[1],dic_courses)
+        response_courses =moodle_pool.create_moodle_courses(cr,uid,ids,dic_courses)
         self.write(cr,uid,ids,{'moodle_id':response_courses[0]['id']})
         #create a course in moodle and keep the id
         for registration in event[0].registration_ids:
@@ -187,7 +191,7 @@ class event_event(osv.osv):
                else:
                    userid = []
                    userid.append(registration.moodle_users_id)
-        response_user = moodle_pool.create_moodle_user(cr,uid,[1],list_users)
+        response_user = moodle_pool.create_moodle_user(cr,uid,ids,list_users)
         #create users in moodle
         enrolled =[]
 
@@ -199,7 +203,7 @@ class event_event(osv.osv):
             'userid' :list,
             'courseid' :response_courses[0]['id']
             }]
-            moodle_pool.moodle_enrolled(cr,uid,[1],enrolled)
+            moodle_pool.moodle_enrolled(cr,uid,ids,enrolled)
             #link a course with users
 
 
@@ -211,7 +215,7 @@ class event_event(osv.osv):
             'userid' :dic['id'],
             'courseid' :response_courses[0]['id']
             }]
-            moodle_pool.moodle_enrolled(cr,uid,[1],enrolled)
+            moodle_pool.moodle_enrolled(cr,uid,ids,enrolled)
             #link a course with users
         return super(event_event, self).button_confirm(cr, uid, ids, context)
 
@@ -223,7 +227,7 @@ class event_registration(osv.osv):
     'moodle_user_password': fields.char('password for moodle user', 128),
     'moodle_users': fields.char('moodle username', 128),
     'moodle_users_id': fields.integer('moodle uid'),
-    'moodle_check_user':fields.char('Moodle username',128,help='Try to find an existing username')
+    'moodle_check_user':fields.char('Check Moodle Username',128,help='Try to find an existing moodle username')
     }
     _defaults={
     'moodle_check_user':''
@@ -244,11 +248,11 @@ class event_registration(osv.osv):
                 'password' : passwd,
                 'city' : register[0].city,
                 'firstname' : register[0].name,
-                'lastname': '',
+                'lastname': '',#no need and difficult to now the difference between firstname and lastname
                 'email': register[0].email
                 }]
                 #create a dictionary for an use
-                response_user = moodle_pool.create_moodle_user(cr,uid,[1],dic_users)
+                response_user = moodle_pool.create_moodle_user(cr,uid,ids,dic_users)
                 self.pool.get('event.registration').write(cr,uid,ids,{'moodle_users_id':response_user[0]['id'],'moodle_user_password':passwd,'moodle_users':name_user})
                 #write in database the password and the username
                 enrolled=[{
@@ -262,11 +266,15 @@ class event_registration(osv.osv):
                 'userid' :register[0].moodle_users_id,
                 'courseid' :register[0].event_id.moodle_id
                 }]
-            moodle_pool.moodle_enrolled(cr,uid,[1],enrolled)
+            moodle_pool.moodle_enrolled(cr,uid,ids,enrolled)
         return super(event_registration, self).case_open(cr, uid, ids, context)
 
 
     def onchange_moodle_name(self,cr,uid,ids,moodle_check_user,context=None):
+        """
+            @param moodle_check_user: the moodle id
+            search the moodle id if exist you fill in the field
+        """
         req_sql="select name,email,phone,city,street,moodle_users,moodle_users_id from event_registration"
         cr.execute(req_sql)
         sql_res = cr.dictfetchall()
@@ -278,20 +286,4 @@ class event_registration(osv.osv):
             else:
                res = {'value' :{'moodle_users_id': 0}}
         return res
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
