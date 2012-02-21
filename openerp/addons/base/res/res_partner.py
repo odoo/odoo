@@ -232,9 +232,8 @@ class res_partner(osv.osv):
     def _email_send(self, cr, uid, ids, email_from, subject, body, on_error=None):
         partners = self.browse(cr, uid, ids)
         for partner in partners:
-            if len(partner.address):
-                if partner.address[0].email:
-                    tools.email_send(email_from, [partner.address[0].email], subject, body, on_error)
+            if partner.email:
+                tools.email_send(email_from, [partner.email], subject, body, on_error)
         return True
 
     def email_send(self, cr, uid, ids, email_from, subject, body, on_error=''):
