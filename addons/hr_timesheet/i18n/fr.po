@@ -7,17 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-01-13 23:05+0000\n"
+"PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: lholivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:31+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Erreur : l'UdV doit appartenir à une autre catégorie que l'UdM"
+"X-Launchpad-Export-Date: 2012-02-18 06:40+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:43
@@ -79,7 +76,7 @@ msgstr "Feuille de temps de l'employé"
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Work done stats"
-msgstr "Statistiques tâches terminées"
+msgstr "Statistiques des tâches terminées"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -154,12 +151,12 @@ msgstr "Nom de l'employé"
 #. module: hr_timesheet
 #: field:hr.sign.out.project,account_id:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Compte projet / analytique"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
 msgid "Print Employees Timesheet"
-msgstr "Imprimer la feuille de temps de l'employé"
+msgstr "Imprimer la feuille de temps des employés"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:175
@@ -179,7 +176,7 @@ msgstr "Erreur utilisateur"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #, python-format
 msgid "No cost unit defined for this employee !"
-msgstr "Pas d'unité de coût définit pour cet utilisateur"
+msgstr "Pas d'unité de coût définie pour cet employé"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:43
@@ -266,6 +263,8 @@ msgstr "Catégories"
 #: constraint:hr.analytic.timesheet:0
 msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
 msgstr ""
+"Les relevés confirmés/terminés d'un feuille de temps ne peuvent plus être "
+"modifiés !"
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -332,12 +331,12 @@ msgstr "Pointages des entrées/sorties par projets"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
-msgstr ""
+msgstr "Definissez votre structure analytique"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "Sign in / Sign out"
-msgstr "Pointer l'entrée / Pointer la sortie"
+msgstr "Pointer en entrée / en sortie"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:175
@@ -466,7 +465,7 @@ msgstr ""
 #: field:hr.sign.in.project,emp_id:0
 #: field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
-msgstr "N° de l'employé"
+msgstr "Identifiant de l'employé"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -611,8 +610,8 @@ msgid ""
 "No analytic account defined on the project.\n"
 "Please set one or we can not automatically fill the timesheet."
 msgstr ""
-"Aucun compte analytique définit sur le projet.\n"
-"Veuillez en indiquer un, ou il sera impossible de remplir la feuille de "
+"Aucun compte analytique défini sur le projet.\n"
+"Veuillez en indiquer un, sinon il sera impossible de remplir la feuille de "
 "temps automatiquement."
 
 #. module: hr_timesheet
@@ -652,147 +651,3 @@ msgstr "Comptabilité"
 #: view:hr.sign.out.project:0
 msgid "Change Work"
 msgstr "Changer de travail"
-
-#~ msgid "Day"
-#~ msgstr "Jour"
-
-#~ msgid "My Working Hours"
-#~ msgstr "Mes Heures de Travail"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Compte analytique"
-
-#~ msgid "Timesheet Process"
-#~ msgstr "Traiter les feuilles de temps"
-
-#, python-format
-#~ msgid "ValidateError"
-#~ msgstr "Erreur de Validation"
-
-#~ msgid "Sum"
-#~ msgstr "Somme"
-
-#~ msgid "Hour"
-#~ msgstr "Heure"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valide pour l'architecture de la vue"
-
-#~ msgid "Choose Users"
-#~ msgstr "Choisir les utilisateurs"
-
-#~ msgid "Timesheet line"
-#~ msgstr "Ligne de feuille de présence"
-
-#~ msgid "My Working Hours of The Day"
-#~ msgstr "Mes heures travaillés du jours"
-
-#~ msgid "To be invoiced"
-#~ msgstr "A facturer"
-
-#~ msgid "Sign in status"
-#~ msgstr "Statut"
-
-#~ msgid "User"
-#~ msgstr "Utilisateur"
-
-#~ msgid "Employee's name"
-#~ msgstr "Nom de l'employé"
-
-#~ msgid "Analysis summary"
-#~ msgstr "Résumé analyse"
-
-#~ msgid "Choose your month"
-#~ msgstr "Choisissez le mois"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-#~ "spéciaux !"
-
-#~ msgid "Working Time"
-#~ msgstr "Temps de Travail"
-
-#~ msgid "Current Server Date"
-#~ msgstr "Date du serveur"
-
-#~ msgid "Working Hours of The Day"
-#~ msgstr "Heures de Travail du Jour"
-
-#~ msgid "Working Hours"
-#~ msgstr "Heures de travail"
-
-#~ msgid "Analytic line"
-#~ msgstr "Ligne analytique"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Erreur: code EAN invalide"
-
-#~ msgid "Total"
-#~ msgstr "Total"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même "
-#~ "catégorie."
-
-#, python-format
-#~ msgid ""
-#~ "No analytic journal available for this employee.\n"
-#~ "Define an employee for the selected user and assign an analytic journal."
-#~ msgstr ""
-#~ "Aucun journal analytique disponible pour cet employé.\n"
-#~ "Définissez un employé pour l'utilisateur sélectionné et assignez lui un "
-#~ "journal analytique."
-
-#~ msgid "Service on Timesheet"
-#~ msgstr "Service sur feuille de temps"
-
-#~ msgid "Human Resources (Timesheet encoding)"
-#~ msgstr "Ressources humaines (Inscription des feuilles de temps)"
-
-#~ msgid "Anlytic account"
-#~ msgstr "Compte analytique"
-
-#~ msgid "Partner Id"
-#~ msgstr "Identifiant du partenaire"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Erreur ! Vous ne pouvez pas sélectionner un département pour lequel "
-#~ "l'employé est le responsable."
-
-#~ msgid ""
-#~ "\n"
-#~ "This module implements a timesheet system. Each employee can encode and\n"
-#~ "track their time spent on the different projects. A project is an\n"
-#~ "analytic account and the time spent on a project generates costs on\n"
-#~ "the analytic account.\n"
-#~ "\n"
-#~ "Lots of reporting on time and employee tracking are provided.\n"
-#~ "\n"
-#~ "It is completely integrated with the cost accounting module. It allows you\n"
-#~ "to set up a management by affair.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Ce module implémente un système de feuille de temps. Chaque employé peut "
-#~ "saisir et\n"
-#~ "faire le suivi de son temps passé sur différents projets. Un projet est un\n"
-#~ "compte analytique et le temps passé sur un projet génère un coût ce compte.\n"
-#~ "\n"
-#~ "Beaucoup de rapports sur le suivi des temps et des employés sont fournis.\n"
-#~ "\n"
-#~ "Il est complètement intégré avec le module de calcul des coûts. Il permet "
-#~ "une gestion \"par affaire\".\n"
-#~ "    "
-
-#~ msgid ""
-#~ "Through Working Hours you can register your working hours by project every "
-#~ "day."
-#~ msgstr ""
-#~ "Via les heures de travail, vous pouvez répartir quotidiennement vos heures "
-#~ "travaillées par projet."

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-13 14:02+0000\n"
+"PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-14 05:44+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-02-18 06:54+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -57,8 +57,8 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location typed as "
 "'internal'."
 msgstr ""
-"Prognose hoeveelheid (berekend als volgt: hoeveelheid op voorraad - uitgaand "
-"+ inkomend)\n"
+"Virtuele voorraad (berekend als volgt: hoeveelheid op voorraad - uitgaand + "
+"inkomend)\n"
 "Bij een enkele voorraadlocatie, zijn dit de producten opgeslagen in deze ene "
 "locatie en de onderliggende locaties.\n"
 "Bij een enkel magazijn, zijn dit de producten opgeslagen in de "
@@ -162,8 +162,8 @@ msgid ""
 "any or in the default UoM of the product otherrwise."
 msgstr ""
 "De minimale hoeveelheid om deze regel te activeren, uitgedrukt in de "
-"meeteenheid van de leverancier indien bekend, anders in de standaard "
-"meeteenheid van het product."
+"maateenheid van de leverancier indien bekend, anders in de standaard "
+"maateenheid van het product."
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -242,7 +242,7 @@ msgid ""
 "selection from a sale order line."
 msgstr ""
 "Bepaalt of het product zichtbaar is in de lijst van producten bij selectie "
-"vanuit een orderregel."
+"vanuit een verkooporderregel."
 
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
@@ -386,7 +386,7 @@ msgstr "Uitgaand"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference UoM for this category"
-msgstr "Meeteenheid referentie voor deze categorie"
+msgstr "Maateenheid referentie voor deze categorie"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
@@ -446,7 +446,7 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location typed as "
 "'internal'."
 msgstr ""
-"Huidige hoeveelheid van producten.\n"
+"Aanwezige voorraad van de producten.\n"
 "Bij een enkele voorraadlocatie, zijn dit de producten opgeslagen in deze ene "
 "locatie en de onderliggende locaties.\n"
 "Bij een enkel magazijn, zijn dit de producten opgeslagen in de "
@@ -473,7 +473,7 @@ msgstr "Omschrijving verkoop"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Storage Localisation"
-msgstr "Plek in magazijn"
+msgstr "Positie in magazijn"
 
 #. module: product
 #: help:product.packaging,length:0
@@ -597,7 +597,7 @@ msgstr "Product voorraadmaateenheid aanzicht"
 #. module: product
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr "In te kopen"
+msgstr "Inkoop product"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu2_product_template
@@ -730,7 +730,7 @@ msgstr "Leverancier"
 #. module: product
 #: field:product.product,qty_available:0
 msgid "Quantity On Hand"
-msgstr "Aantal Op Voorraad"
+msgstr "Aanwezige voorraad"
 
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
@@ -799,7 +799,7 @@ msgstr "Leveranciers"
 #. module: product
 #: view:product.product:0
 msgid "To Purchase"
-msgstr "In te kopen"
+msgstr "Inkoop product"
 
 #. module: product
 #: help:product.supplierinfo,min_qty:0
@@ -809,8 +809,8 @@ msgid ""
 "otherwise."
 msgstr ""
 "De minimale bestelhoeveelheid bij deze leverancier, uitgedrukt in de "
-"meeteenheid van de leverancier indien bekend, anders in de standaard "
-"meeteenheid van het product."
+"maateenheid van de leverancier indien bekend, anders in de standaard "
+"maateenheid van het product."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -823,8 +823,8 @@ msgid ""
 "This price will be considered as a price for the supplier UoM if any or the "
 "default Unit of Measure of the product otherwise"
 msgstr ""
-"Deze prijs zal worden beschouwd als de prijs per meeteenheid leverancier "
-"indien bekend, anders per standaard meeteenheid van het product."
+"Deze prijs zal worden beschouwd als de prijs per maateenheid leverancier "
+"indien bekend, anders per standaard maateenheid van het product."
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -834,7 +834,7 @@ msgstr "Accessoires"
 #. module: product
 #: field:product.template,sale_delay:0
 msgid "Customer Lead Time"
-msgstr "Voorbereidingstijd klant"
+msgstr "Levertijd aan klant"
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -848,9 +848,9 @@ msgid ""
 "management. For example, in food industries, you will manage a stock of ham "
 "but invoice in Kg. Keep empty to use the default UOM."
 msgstr ""
-"Gebruikt door bedrijven met twee meeteenheden: verkoop en voorraadbeheer. "
+"Gebruikt door bedrijven met twee maateenheden: verkoop en voorraadbeheer. "
 "Bijvoorbeeld: in de voedselindustrie houdt u voorraad per ham maar verkoopt "
-"u per Kg. Laat leeg om de standaard meeteenheid te gebruiken."
+"u per Kg. Laat leeg om de standaard maateenheid te gebruiken."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -1153,15 +1153,15 @@ msgid ""
 "be converted to each other. For example, in the unit of measure category "
 "\"Time\", you will have the following UoM: Hours, Days."
 msgstr ""
-"De meeteenheden maken en beheren die worden gebruikt. Als enkele "
+"De maateenheden maken en beheren die worden gebruikt. Als enkele "
 "meeteenheden in dezelfde categorie vallen, kunnen ze naar elkaar worden "
-"geconverteerd. Bijvoorbeeld, in de meeteenheid categorie \"Tijd\", heeft u "
-"de volgende meeteenheden: Uren, Dagen."
+"geconverteerd. Bijvoorbeeld, in de maateenheid categorie \"Tijd\", heeft u "
+"de volgende maateenheden: Uren, Dagen."
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
-msgstr "Groter dan de referentie meeteenheid"
+msgstr "Groter dan de referentie maateenheid"
 
 #. module: product
 #: field:product.category,parent_right:0
@@ -1301,13 +1301,13 @@ msgid ""
 "Determine if the product is visible in the list of products within a "
 "selection from a purchase order line."
 msgstr ""
-"Bepaal of het product zichtbaar is in de lijst van producten binnen een "
-"keuze voor een bestelopdrachtregel."
+"Bepaalt of het product zichtbaar is in de lijst van producten bij selectie "
+"vanuit een inkooporderregel."
 
 #. module: product
 #: field:product.template,weight_net:0
 msgid "Net weight"
-msgstr "Nettogewicht"
+msgstr "Netto gewicht"
 
 #. module: product
 #: field:product.packaging,width:0
@@ -1322,7 +1322,7 @@ msgstr "Gerelateerd veld op het product formulier"
 #. module: product
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr "Meeteenheid"
+msgstr "Maateenheid"
 
 #. module: product
 #: field:product.template,procure_method:0
@@ -1426,7 +1426,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Second UoM"
-msgstr "Tweede meeteenheid"
+msgstr "Tweede maateenheid"
 
 #. module: product
 #: code:addons/product/product.py:143
@@ -1474,7 +1474,7 @@ msgstr "Prijslijstversie"
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Quantity Available"
-msgstr "Aanwezige hoeveelheid"
+msgstr "Virtuele voorraad"
 
 #. module: product
 #: help:product.pricelist.item,sequence:0
@@ -1522,7 +1522,7 @@ msgstr "Gewichten"
 #. module: product
 #: field:product.uom,category_id:0
 msgid "UoM Category"
-msgstr "Categorie meeteenheid"
+msgstr "Categorie maateenheid"
 
 #. module: product
 #: field:product.template,loc_rack:0
@@ -1532,7 +1532,7 @@ msgstr "Stelling"
 #. module: product
 #: field:product.template,uom_po_id:0
 msgid "Purchase Unit of Measure"
-msgstr "Inkoop meeteenheid"
+msgstr "Inkoop maateenheid"
 
 #. module: product
 #: field:product.template,supply_method:0
@@ -1609,14 +1609,14 @@ msgstr "cm"
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
-msgstr "Meeteenheid product"
+msgstr "Maateenheid product"
 
 #. module: product
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
-"Fout: de standaard meeteenheid en de inkoop-meeteenheid moet in de zelfde "
+"Fout: de standaard maateenheid en de inkoopeenheid moet in de zelfde "
 "categorie liggen."
 
 #. module: product
@@ -1627,7 +1627,7 @@ msgstr "Afronding"
 #. module: product
 #: view:product.uom:0
 msgid "Unit of Measure Properties"
-msgstr "Meeteenheid eigenschappen"
+msgstr "Maateenheid eigenschappen"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelf1_product_template
@@ -1657,7 +1657,7 @@ msgstr "Hout 10mm"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference UoM"
-msgstr "Kleiner dan de referentie meeteenheid"
+msgstr "Kleiner dan de referentie maateenheid"
 
 #. module: product
 #: field:product.price.type,active:0
@@ -1676,7 +1676,7 @@ msgstr "Marge variantprijs"
 #. module: product
 #: sql_constraint:product.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr "De conversie ratio voor een meeteenheid kan niet 0 zijn !"
+msgstr "De conversie ratio voor een maateenheid kan niet 0 zijn !"
 
 #. module: product
 #: help:product.packaging,ean:0
@@ -1709,7 +1709,7 @@ msgid ""
 "How many times this UoM is smaller than the reference UoM in this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
 msgstr ""
-"Hoeveel keer deze meeteenheid kleiner is dan de referentie meeteenheid in "
+"Hoeveel keer deze maateenheid kleiner is dan de referentie maateenheid in "
 "deze categorie:\n"
 "1 * (referentie eenheid) = ratio * (deze eenheid)"
 
@@ -1722,7 +1722,7 @@ msgstr "Prijs types"
 #. module: product
 #: help:product.template,uom_id:0
 msgid "Default Unit of Measure used for all stock operation."
-msgstr "Standaard meeteenheid voor alle voorraadhandelingen"
+msgstr "Standaard maateenheid voor alle voorraadhandelingen"
 
 #. module: product
 #: model:product.category,name:product.product_category_misc0
@@ -1763,7 +1763,7 @@ msgstr "Artikelnummer leverancier"
 #. module: product
 #: view:product.product:0
 msgid "Default UOM"
-msgstr "Standaard meeteenheid"
+msgstr "Standaard maateenheid"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1845,7 +1845,7 @@ msgstr "Kent de prioriteit toe in de lijst van product leveranciers."
 #. module: product
 #: field:product.template,uom_id:0
 msgid "Default Unit Of Measure"
-msgstr "Standaard meeteenheid"
+msgstr "Standaard maateenheid"
 
 #. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
@@ -1920,7 +1920,7 @@ msgstr "Naam van deze prijssoort"
 #. module: product
 #: field:product.supplierinfo,product_uom:0
 msgid "Supplier UoM"
-msgstr "Leverancier meeteenheid"
+msgstr "Leverancier maateenheid"
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -1933,8 +1933,8 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
-"Standaard meeteenheid voor gebruik in inkooporders. Het moet in dezelfde "
-"categorie liggen als de standaard meeteenheid."
+"Standaard maateenheid voor gebruik in inkooporders. Het moet in dezelfde "
+"categorie liggen als de standaard maateenheid."
 
 #. module: product
 #: model:product.template,description:product.product_product_cpu1_product_template
@@ -1980,12 +1980,12 @@ msgstr "Kenmerken"
 #. module: product
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr "Kan verkocht worden"
+msgstr "Verkoop product"
 
 #. module: product
 #: field:product.template,produce_delay:0
 msgid "Manufacturing Lead Time"
-msgstr "Opzettijd productie"
+msgstr "Productietijd"
 
 #. module: product
 #: field:product.supplierinfo,pricelist_ids:0
@@ -2069,7 +2069,7 @@ msgstr "Prijslijstnaam"
 #. module: product
 #: field:product.supplierinfo,delay:0
 msgid "Delivery Lead Time"
-msgstr "Leveringstermijn"
+msgstr "Levertijd"
 
 #. module: product
 #: help:product.uom,active:0
@@ -2077,7 +2077,7 @@ msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
 msgstr ""
-"Als het actief veld uitstaat wordt de meeteenheid verborgen zonder deze te "
+"Als het actief veld uitstaat wordt de maateenheid verborgen zonder deze te "
 "verwijderen."
 
 #. module: product
@@ -2089,7 +2089,7 @@ msgstr "Maateenheid categorieën"
 #. module: product
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
-msgstr "Levertijd leverancier"
+msgstr "Levertijd"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -2131,7 +2131,7 @@ msgstr "HDD Seagate 7200.8 80GB"
 #. module: product
 #: help:product.supplierinfo,qty:0
 msgid "This is a quantity which is converted into Default Uom."
-msgstr "Dit is een aantal dat is geconverteerd in de standaard meeteenheid."
+msgstr "Dit is een aantal dat is geconverteerd in de standaard maateenheid."
 
 #. module: product
 #: field:product.packaging,ul:0
@@ -2171,7 +2171,7 @@ msgstr "Afbeelding"
 #. module: product
 #: field:product.uom,uom_type:0
 msgid "UoM Type"
-msgstr "Meeteenheid soort"
+msgstr "Maateenheid soort"
 
 #. module: product
 #: help:product.product,active:0
@@ -2189,7 +2189,7 @@ msgid ""
 "that cannot be further split, such as a piece."
 msgstr ""
 "Het berekende aantal wordt een veelvoud van deze waarde. Gebruik 1.0 voor "
-"een meeteenheid die niet verder kan worden gesplitst, zoals een stuk."
+"een maateenheid die niet verder kan worden gesplitst, zoals een stuk."
 
 #. module: product
 #: view:product.product:0
@@ -2223,7 +2223,7 @@ msgid ""
 "How many times this UoM is bigger than the reference UoM in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
 msgstr ""
-"Hoeveel keer deze meeteenheid groter is dan de referentie meeteenheid in "
+"Hoeveel keer deze maateenheid groter is dan de referentie maateenheid in "
 "deze categorie:\n"
 "1 * (deze eenheid) = ratio * (referentie eenheid)"
 
@@ -2290,7 +2290,7 @@ msgstr "Min. prijsmarge"
 #. module: product
 #: field:product.template,weight:0
 msgid "Gross weight"
-msgstr "Massa"
+msgstr "Bruto gewicht"
 
 #. module: product
 #: model:product.template,name:product.product_product_assemblysection0_product_template
@@ -2389,7 +2389,7 @@ msgstr "Volume"
 #. module: product
 #: field:product.template,loc_case:0
 msgid "Case"
-msgstr "Dossier"
+msgstr "Schap"
 
 #. module: product
 #: view:product.product:0
@@ -2498,7 +2498,7 @@ msgid ""
 " uos = uom * coeff"
 msgstr ""
 "Factor bij de conversie can meeteenheid vaar verkoopeenheid\n"
-" verkoopeenheid = meeteenheid * factor"
+" verkoopeenheid = maateenheid * factor"
 
 #. module: product
 #: constraint:res.partner:0
@@ -2510,431 +2510,3 @@ msgstr ""
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Korting"
-
-#~ msgid "Priority"
-#~ msgstr "Prioriteit"
-
-#~ msgid ""
-#~ "Quantities of products that are planned to arrive in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Aantallen producten die gepland zijn om te worden ontvangen op de gekozen "
-#~ "locaties, of alle interne als geen locaties zijn gekozen"
-
-#~ msgid ""
-#~ "Futur stock for this product according to the selected location or all "
-#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
-#~ "Incoming."
-#~ msgstr ""
-#~ "Toekomstige voorraad van dit project op de gekozen locaties of alle interne "
-#~ "als geen locatie is gekozen. Berekend als Werkelijke voorraad - Uitgaand + "
-#~ "Inkomend"
-
-#~ msgid "Customer Price"
-#~ msgstr "Klantprijs"
-
-#~ msgid "List Price"
-#~ msgstr "Prijs van prijslijst"
-
-#~ msgid "Prices Types"
-#~ msgstr "Soorten prijzen"
-
-#~ msgid "Weigths"
-#~ msgstr "Gewichten"
-
-#~ msgid "The number of layer on a palet or box"
-#~ msgstr "Het nummer van de laag op de pallet of in de doos"
-
-#~ msgid "Prices Computations"
-#~ msgstr "Prijsberekeningen"
-
-#~ msgid "Configuration"
-#~ msgstr "Instellingen"
-
-#~ msgid "Number of Layer"
-#~ msgstr "Nummer van de laag"
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "Fout ! U kunt geen recursieve categorieën aanmaken."
-
-#~ msgid "Factor"
-#~ msgstr "Factor"
-
-#~ msgid "Supplier Info"
-#~ msgstr "Leveranciersinfo"
-
-#~ msgid "Partner Product Name"
-#~ msgstr "Productnaam relatie"
-
-#~ msgid ""
-#~ "This pricelist will be used, instead of the default one,                     "
-#~ "for sales to the current partner"
-#~ msgstr ""
-#~ "Deze prijslijst wordt gehanteerd in plaats van de standaard for de verkopen "
-#~ "richting deze relatie."
-
-#~ msgid ""
-#~ "Quantities of products that are planned to leave in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Aantal producten dat gepland is om de gekozen locatie te verlaten of alle "
-#~ "interne als geen locaties zijn gekozen."
-
-#~ msgid ""
-#~ "Current quantities of products in selected locations or all internal if none "
-#~ "have been selected."
-#~ msgstr ""
-#~ "Actueel aantal producten op de gekozen locaties of op alle interne als geen "
-#~ "locaties zijn gekozen."
-
-#~ msgid "Can be sold"
-#~ msgstr "Verkoopbaar"
-
-#~ msgid "Rate"
-#~ msgstr "Ratio"
-
-#~ msgid ""
-#~ "Used by companies that manages two unit of measure: invoicing and stock "
-#~ "management. For example, in food industries, you will manage a stock of ham "
-#~ "but invoice in Kg. Keep empty to use the default UOM."
-#~ msgstr ""
-#~ "Wordt gebruikt door bedrijven die twee maateenheden hanteren voor facturatie "
-#~ "en voorraad beheer. Bijvoorbeeld in de voedselsector is het gebruikelijk om "
-#~ "een voorraad ham te beheren maar te factureren per Kg. Leeg laten om de "
-#~ "standaard maateenheid te gebruiken."
-
-#~ msgid "Price list"
-#~ msgstr "Prijslijst"
-
-#~ msgid "Pricelists Types"
-#~ msgstr "Soorten prijslijsten"
-
-#~ msgid "The total number of products you can put by palet or box."
-#~ msgstr "Het totale aantal producten dat op een pallet of in een doos past."
-
-#~ msgid "Product suppliers, with their product name, price, etc."
-#~ msgstr "Leveranciers met hun productnaam, prijs e.d."
-
-#~ msgid "Products Categories"
-#~ msgstr "Productcategoriën"
-
-#~ msgid "Prices & Suppliers"
-#~ msgstr "Prijzen en leveranciers"
-
-#~ msgid "The weight of a full of products palet or box."
-#~ msgstr "Het gewicht van een een doos/pallet vol met producten"
-
-#~ msgid "Delivery Delay"
-#~ msgstr "Uitstel van levering"
-
-#~ msgid ""
-#~ "Delay in days between the confirmation of the purchase order and the "
-#~ "reception of the products in your warehouse. Used by the scheduler for "
-#~ "automatic computation of the purchase order planning."
-#~ msgstr ""
-#~ "Vertraging in dagen tussen de bevestiging van de inkooporder en de ontvangst "
-#~ "van de producten in het magazijn. Dit gegeven wordt gebruikt bij de "
-#~ "inkooporder planning."
-
-#~ msgid ""
-#~ "Default Unit of Measure used for purchase orders. It must in the same "
-#~ "category than the default unit of measure."
-#~ msgstr ""
-#~ "Deze eenheid wordt standaard gebruikt bij de inkooporders. Deze eenheid moet "
-#~ "in dezelfde categorie zitten als de standaardmeeteenheid."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
-
-#~ msgid "Default UoM"
-#~ msgstr "Standaard meeteenheid"
-
-#~ msgid "Suppliers of Product"
-#~ msgstr "Productleveranciers"
-
-#~ msgid ""
-#~ "The computed quantity will be a multiple of this value. Use 1.0 for products "
-#~ "that can not be split."
-#~ msgstr ""
-#~ "De berekende hoeveelheid zal een veelvoud van deze waarde zijn. Gebruik 1.0 "
-#~ "voor producten die niet opgesplitst kunnen worden."
-
-#~ msgid "You can see the list of suppliers for that product."
-#~ msgstr "U kunt de lijst van leveranciers voor dat product bekijken."
-
-#~ msgid "Rentable Product"
-#~ msgstr "Verhuurbaar product"
-
-#~ msgid ""
-#~ "Unit of Measure of a category can be converted between each others in the "
-#~ "same category."
-#~ msgstr ""
-#~ "De meeteenheid van een categorie kan geconverteerd worden naar andere "
-#~ "meeteenheden binnen dezelfde categorie."
-
-#~ msgid "Products & Pricelists"
-#~ msgstr "Producten & prijslijsten"
-
-#~ msgid ""
-#~ "Will change the way procurements are processed. Consumables are stockable "
-#~ "products with infinite stock, or for use when you have no stock management "
-#~ "in the system."
-#~ msgstr ""
-#~ "Wijzigt de manier waarop verwervingsverzoeken worden verwerkt. "
-#~ "Verbruiksartikelen zijn voorraadartikelen met oneindige voorraad, of voor "
-#~ "gebruik wanneer u geen voorraadbeheer in het systeem gebruikt."
-
-#~ msgid ""
-#~ "This is the average time between the confirmation of the customer order and "
-#~ "the delivery of the finished products. It's the time you promise to your "
-#~ "customers."
-#~ msgstr ""
-#~ "Dit is de gemiddelde tijd tussen de bevestiging van de klantorder en de "
-#~ "levering van het eindproduct. Het is de tijd die u uw klant belooft."
-
-#~ msgid ""
-#~ "The cost of the product for accounting stock valuation. It can serves as a "
-#~ "base price for supplier price."
-#~ msgstr ""
-#~ "De kosten van het product voor het waarderen van de voorraad. Het kan dienen "
-#~ "als basis voor een leveranciersprijs."
-
-#~ msgid ""
-#~ "The minimal quantity to purchase for this supplier, expressed in the default "
-#~ "unit of measure."
-#~ msgstr ""
-#~ "Het minimale aantal om in te kopen voor deze leverancier, uitgedrukt in de "
-#~ "standaard meeteenheid."
-
-#~ msgid "Product Process"
-#~ msgstr "Productproces"
-
-#~ msgid "Procure Method"
-#~ msgstr "Verwervingsmethode"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#~ msgid ""
-#~ "Produce will generate production order or tasks, according to the product "
-#~ "type. Purchase will trigger purchase orders when requested."
-#~ msgstr ""
-#~ "Produceren zal een productie-opdracht of -taken genereren, overeenkomend met "
-#~ "de productsoort. Inkopen zal een bestelopdracht genereren."
-
-#~ msgid "Virtual Stock"
-#~ msgstr "Virtuele voorraad"
-
-#~ msgid "Units of Measure Categories"
-#~ msgstr "Categorieën meeteenheden"
-
-#~ msgid "In Production"
-#~ msgstr "In productie"
-
-#~ msgid "Create new Product"
-#~ msgstr "Maak nieuw product"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor weergave!"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr ""
-#~ "Fout: verkoopeenheid moet in een andere categorie staan dan de maateenheid"
-
-#~ msgid ""
-#~ "Determine if the product can be visible in the list of product within a "
-#~ "selection from a sale order line."
-#~ msgstr ""
-#~ "Bepaald of het product wordt opgenomen in de lijst van producten bij een "
-#~ "verkoopopdrachtregel."
-
-#~ msgid ""
-#~ "Name of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr ""
-#~ "Naam van het product voor deze relatie. Deze wordt gebruikt bij het "
-#~ "afdrukken van offertes. Laat deze leeg om de eigen productnaam te gebruiken."
-
-#~ msgid "Real Stock"
-#~ msgstr "Aanwezige voorraad"
-
-#~ msgid "Purchase UoM"
-#~ msgstr "Besteleenheid"
-
-#~ msgid ""
-#~ "Gives the different ways to package the same product. This has no impact on "
-#~ "the packing order and is mainly used if you use the EDI module."
-#~ msgstr ""
-#~ "Geeft de verschillende manieren van verpakken van hetzelfde product aan. Dit "
-#~ "heeft geen effect op de verpakkingsvolgorde. Het wordt voornamelijk gebruikt "
-#~ "als er gebruik wordt maakt van de EDI-module."
-
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
-#~ msgstr ""
-#~ "De coëfficient voor de formule:\n"
-#~ "coeff (basiseenheid) = 1 (deze eenheid) .  Factor = 1 / Ratio"
-
-#~ msgid "Partner Product Code"
-#~ msgstr "Productcode relatie"
-
-#~ msgid "Cancel"
-#~ msgstr "Annuleren"
-
-#~ msgid ""
-#~ "Code of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr ""
-#~ "Productcode voor deze relatie. Dit zal gebruikt worden bij het afdrukken van "
-#~ "een offerte-aanvraag. Laat deze leeg om de interne productcode gebruiken."
-
-#~ msgid ""
-#~ "Will change the way procurements are processed. Consumables are stockable "
-#~ "products with infinite stock, or for use when you have no inventory "
-#~ "management in the system."
-#~ msgstr ""
-#~ "Wijzigt de manier waarop verwervingen verwerkt worden. Verbruiksartikelen "
-#~ "zijn voorraadartikelen met oneindige voorraad, of wanneer u geen "
-#~ "magazijnbeheer in het systeem gebruikt."
-
-#~ msgid "Price type"
-#~ msgstr "Soort prijs"
-
-#~ msgid ""
-#~ "Coefficient to convert UOM to UOS\n"
-#~ " uom = uos * coeff"
-#~ msgstr ""
-#~ "Coëfficiënt om Meeteenheid naar Verkoopeenheid te converteren\n"
-#~ "ME = VE * coëfficiënt"
-
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
-#~ msgstr ""
-#~ "De coëfficient voor de formule:\n"
-#~ " 1 (basiseenheid) = coëff (deze eenheid) .  Factor = 1 / Ratio"
-
-#~ msgid ""
-#~ "Average time to produce this product. This is only for the production order "
-#~ "and, if it is a multi-level bill of material, it's only for the level of "
-#~ "this product. Different delays will be summed for all levels and purchase "
-#~ "orders."
-#~ msgstr ""
-#~ "Gemiddelde tijd om dit product te produceren. Dit geldt alleen voor een "
-#~ "productieorder. Als het een multi-niveau materiaallijst gaat, geld dit "
-#~ "alleen voor het niveau van dit product. Verschillende vertragingen zullen "
-#~ "worden gesommeerd voor alle niveau's en bestelopdrachten."
-
-#~ msgid ""
-#~ "Set a category of product if this rule only apply to products of a category "
-#~ "and his childs. Keep empty for all products"
-#~ msgstr ""
-#~ "Selecteer een productcategorie als deze regel alleen betrekking heeft op "
-#~ "producten van één categorie en diens subcategorieën. Laat deze leeg voor "
-#~ "alle producten."
-
-#~ msgid "KGM"
-#~ msgstr "kg"
-
-#~ msgid ""
-#~ "Choose here the Unit of Measure in which the prices and quantities are "
-#~ "expressed below."
-#~ msgstr ""
-#~ "Kies hier de meeteenheid waarin de prijzen en aantallen worden uitgedrukt."
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Uitgebreide filters..."
-
-#~ msgid "Stockable"
-#~ msgstr "Voorraad"
-
-#~ msgid ""
-#~ "Error: The default UOM and the Supplier Product UOM must be in the same "
-#~ "category."
-#~ msgstr ""
-#~ "Fout! De standaard meeteenheid van de leverancier en die van het product "
-#~ "moeten in dezelfde categorie vallen."
-
-#, python-format
-#~ msgid ""
-#~ "No active version for the selected pricelist !\n"
-#~ "Please create or activate one."
-#~ msgstr ""
-#~ "Geen actieve versie van de geselecteerde prijslijst beschikbaar!\n"
-#~ "Maak er één aan of activeer er één."
-
-#~ msgid ""
-#~ "\n"
-#~ "    This is the base module for managing products and pricelists in "
-#~ "OpenERP.\n"
-#~ "\n"
-#~ "    Products support variants, different pricing methods, suppliers\n"
-#~ "    information, make to stock/order, different unit of measures,\n"
-#~ "    packaging and properties.\n"
-#~ "\n"
-#~ "    Pricelists support:\n"
-#~ "    * Multiple-level of discount (by product, category, quantities)\n"
-#~ "    * Compute price based on different criteria:\n"
-#~ "        * Other pricelist,\n"
-#~ "        * Cost price,\n"
-#~ "        * List price,\n"
-#~ "        * Supplier price, ...\n"
-#~ "    Pricelists preferences by product and/or partners.\n"
-#~ "\n"
-#~ "    Print product labels with barcode.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Dit is de basis module voor beheer van producten en prijslijsten in "
-#~ "OpenERP.\n"
-#~ "\n"
-#~ "    Producten ondersteunen varianten, verschillende prijsmethoden, "
-#~ "leveranciers\n"
-#~ "    informatie, maken voor voorraad/order, verschillende meetenheden,\n"
-#~ "    verpakking en eigenschappen.\n"
-#~ "\n"
-#~ "    Prijslijst ondersteuning:\n"
-#~ "    * Meer-niveau korting (per product, categorie, aantallen)\n"
-#~ "    * Prijs berekenen op basis van verschillende criteria:\n"
-#~ "        * Andere prijslijst,\n"
-#~ "        * Kostprijs,\n"
-#~ "        * Verkoopprijs,\n"
-#~ "        * Inkoopprijs, ...\n"
-#~ "    Prijslijsten voorkeuren per product en/of relaties.\n"
-#~ "\n"
-#~ "    Product labels met barcode afdrukken.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "Future stock for this product according to the selected locations or all "
-#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
-#~ "Incoming."
-#~ msgstr ""
-#~ "Toekomstige voorraad voor dit product op de geselecteerde locaties of op "
-#~ "alle interne locaties als niets is geselecteerd. Berekend als: werkelijke "
-#~ "voorraad - uitgaand + inkomend."
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
-
-#, python-format
-#~ msgid ""
-#~ "Could not resolve product category, you have defined cyclic categories of "
-#~ "products!"
-#~ msgstr ""
-#~ "Kan product categorie niet bepalen, u heeft cyclische product categorieën "
-#~ "gedefinieerd!"
-
-#~ msgid "tonne"
-#~ msgstr "ton"
-
-#, python-format
-#~ msgid ""
-#~ "Conversion from Product UoM m to Default UoM PCE is not possible as they "
-#~ "both belong to different Category!."
-#~ msgstr ""
-#~ "Conversie van product UoM Mtr naar default UoM Stuks is niet mogelijk "
-#~ "doordat beide UoM's tot verschillende categorieën behoren."

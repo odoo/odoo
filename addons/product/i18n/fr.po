@@ -7,48 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-09 09:40+0000\n"
+"PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-10 04:48+0000\n"
-"X-Generator: Launchpad (build 14771)\n"
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Second UoM"
-msgstr "UdM secondaire"
-
-#. module: product
-#: field:product.uom,category_id:0
-msgid "UoM Category"
-msgstr "Catégorie d'UdM"
-
-#. module: product
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même "
-"catégorie."
-
-#. module: product
-#: field:product.template,uos_coeff:0
-msgid "UOM -> UOS Coeff"
-msgstr "Coeff UdM -> UdV"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Erreur : l'UdV doit appartenir à une autre catégorie que l'UdM"
-
-#~ msgid ""
-#~ "Coefficient to convert UOM to UOS\n"
-#~ " uom = uos * coeff"
-#~ msgstr ""
-#~ "Coefficient de conversion de l'UdM vers l'UdV\n"
-#~ " UdM = UdV * coeff"
+"X-Launchpad-Export-Date: 2012-02-18 06:55+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -1425,6 +1391,12 @@ msgstr ""
 "clients."
 
 #. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Second UoM"
+msgstr "UdM secondaire"
+
+#. module: product
 #: code:addons/product/product.py:143
 #, python-format
 msgid "Error !"
@@ -1516,6 +1488,11 @@ msgid "Weights"
 msgstr "Poids"
 
 #. module: product
+#: field:product.uom,category_id:0
+msgid "UoM Category"
+msgstr "Catégorie d'UdM"
+
+#. module: product
 #: field:product.template,loc_rack:0
 msgid "Rack"
 msgstr "Rayon"
@@ -1598,6 +1575,14 @@ msgstr "cm"
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
 msgstr "Unité de mesure du produit"
+
+#. module: product
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même "
+"catégorie."
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -1810,6 +1795,11 @@ msgstr "Variantes"
 #: model:ir.ui.menu,name:product.menu_products_category
 msgid "Products by Category"
 msgstr "Produits par catégorie"
+
+#. module: product
+#: field:product.template,uos_coeff:0
+msgid "UOM -> UOS Coeff"
+msgstr "Coeff UdM -> UdV"
 
 #. module: product
 #: help:product.supplierinfo,sequence:0
@@ -2480,425 +2470,3 @@ msgstr ""
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Réduction sur le prix"
-
-#~ msgid ""
-#~ "The minimal quantity to purchase for this supplier, expressed in the default "
-#~ "unit of measure."
-#~ msgstr ""
-#~ "La quantité minimum d'achat pour ce fournisseur, exprimée dans l'unité de "
-#~ "mesure par défaut"
-
-#~ msgid "Customer Price"
-#~ msgstr "Prix client"
-
-#~ msgid "List Price"
-#~ msgstr "Liste de prix"
-
-#~ msgid "Prices Types"
-#~ msgstr "Types de prix"
-
-#~ msgid "Weigths"
-#~ msgstr "Poids"
-
-#~ msgid "The number of layer on a palet or box"
-#~ msgstr "Le nombre de couche sur une palette ou dans une boite"
-
-#~ msgid "Virtual Stock"
-#~ msgstr "Stock virtuel"
-
-#~ msgid "Units of Measure Categories"
-#~ msgstr "Catégories des unités de mesure"
-
-#~ msgid "Prices Computations"
-#~ msgstr "Calculs des prix"
-
-#~ msgid "Configuration"
-#~ msgstr "Configuration"
-
-#~ msgid "Number of Layer"
-#~ msgstr "Nombre de couche"
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "Erreur ! Vous ne pouvez pas créer de catégories récursives"
-
-#~ msgid "Create new Product"
-#~ msgstr "Créer un nouveau produit"
-
-#~ msgid "In Production"
-#~ msgstr "En production"
-
-#~ msgid "Priority"
-#~ msgstr "Priorité"
-
-#~ msgid "Factor"
-#~ msgstr "Facteur"
-
-#~ msgid "Supplier Info"
-#~ msgstr "Information fournisseur"
-
-#~ msgid "Partner Product Name"
-#~ msgstr "Nom du produit partenaire"
-
-#~ msgid ""
-#~ "This pricelist will be used, instead of the default one,                     "
-#~ "for sales to the current partner"
-#~ msgstr ""
-#~ "Cette liste de prix sera utilisée au lieu de celle par défaut pour les "
-#~ "ventes au partenaire courant."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valide pour l'architecture de la vue"
-
-#~ msgid ""
-#~ "Determine if the product can be visible in the list of product within a "
-#~ "selection from a sale order line."
-#~ msgstr ""
-#~ "Détermine si le produit peut être visible dans la liste des produits à "
-#~ "l'intérieur d'une sélection d'une ligne de commande."
-
-#~ msgid ""
-#~ "Name of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr ""
-#~ "Nom du produit pour ce partenaire, il sera utilisé lors de l'impression "
-#~ "d'une demande de devis. Laisser vide pour utilisation interne"
-
-#~ msgid "Real Stock"
-#~ msgstr "Quantité disponible"
-
-#~ msgid "Can be sold"
-#~ msgstr "Peut être vendu"
-
-#~ msgid "Rate"
-#~ msgstr "Rapport"
-
-#~ msgid "Price list"
-#~ msgstr "Liste de prix"
-
-#~ msgid ""
-#~ "Gives the different ways to package the same product. This has no impact on "
-#~ "the packing order and is mainly used if you use the EDI module."
-#~ msgstr ""
-#~ "Donne les différentes manières de coliser le même produit. Ceci n'a pas "
-#~ "d'impacte sur l'ordre de colisage et est principalement utilisé si vous "
-#~ "utilisez le module EDI."
-
-#~ msgid "Pricelists Types"
-#~ msgstr "Types de listes de prix"
-
-#~ msgid "Partner Product Code"
-#~ msgstr "Code du produit partenaire"
-
-#~ msgid "Cancel"
-#~ msgstr "Annuler"
-
-#~ msgid "The total number of products you can put by palet or box."
-#~ msgstr ""
-#~ "Le nombre maximum de produit que vous pouvez mettre par palette ou par boite"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-#~ "spéciaux !"
-
-#~ msgid ""
-#~ "Code of the product for this partner, will be used when printing a request "
-#~ "for quotation. Keep empty to use the internal one."
-#~ msgstr ""
-#~ "Code de produit pour ce partenaire qui sera utilisé lors de l'impression "
-#~ "d'un devis. Laisser vide pour utiliser le code interne"
-
-#~ msgid "Product suppliers, with their product name, price, etc."
-#~ msgstr "Fournisseurs de produit, avec le noms des produits, prix, etc."
-
-#~ msgid "Price type"
-#~ msgstr "Type de prix"
-
-#~ msgid "Products Categories"
-#~ msgstr "Catégories de produits"
-
-#~ msgid "Prices & Suppliers"
-#~ msgstr "Prix & fournisseurs"
-
-#~ msgid "The weight of a full of products palet or box."
-#~ msgstr "Le poids d'une palette ou d'une boite de produits remplie"
-
-#~ msgid "Delivery Delay"
-#~ msgstr "Délai de livraison"
-
-#~ msgid ""
-#~ "Average time to produce this product. This is only for the production order "
-#~ "and, if it is a multi-level bill of material, it's only for the level of "
-#~ "this product. Different delays will be summed for all levels and purchase "
-#~ "orders."
-#~ msgstr ""
-#~ "Temps moyen pour produire ce produit. Ceci est seulement pour l'ordre de "
-#~ "fabrication et, si il s'agit d'une facture multi-nivaux de matériel, c'est "
-#~ "seulement pour le niveau de ce produit. Des délais différents seront sommé "
-#~ "pour tous les nivaux et ordres d'approvisionnement."
-
-#~ msgid ""
-#~ "Default Unit of Measure used for purchase orders. It must in the same "
-#~ "category than the default unit of measure."
-#~ msgstr ""
-#~ "L'unité de mesure par défaut pour les commandes d'achats. Qui doit être dans "
-#~ "la même catégorie que l'unité de mesure par défaut."
-
-#~ msgid ""
-#~ "Set a category of product if this rule only apply to products of a category "
-#~ "and his childs. Keep empty for all products"
-#~ msgstr ""
-#~ "Indiquer une catégorie de produit si la règle n'est appliquée que sur une "
-#~ "catégorie de produits et ses fils. Laisser vide si elle s'applique à tous "
-#~ "les produits"
-
-#~ msgid "You can see the list of suppliers for that product."
-#~ msgstr "Vous pouvez voir la liste des fournisseurs pour ce produit."
-
-#~ msgid ""
-#~ "The cost of the product for accounting stock valuation. It can serves as a "
-#~ "base price for supplier price."
-#~ msgstr ""
-#~ "Le coût du produit pour la valorisation comptable du stock. Il peut servir "
-#~ "de base pour le prix fournisseur."
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Modèle invalide pour la définition de l'action."
-
-#~ msgid "Suppliers of Product"
-#~ msgstr "Fournisseur du Produit"
-
-#~ msgid ""
-#~ "Unit of Measure of a category can be converted between each others in the "
-#~ "same category."
-#~ msgstr ""
-#~ "Les Unités de mesure d'une catégorie peuvent être convertie entre elles dans "
-#~ "la même catégorie."
-
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
-#~ msgstr ""
-#~ "Le coefficient pour la formule:\n"
-#~ "coeff (unité de base) = 1 (cette unité). Facteur = 1 / Taux."
-
-#~ msgid ""
-#~ "The computed quantity will be a multiple of this value. Use 1.0 for products "
-#~ "that can not be split."
-#~ msgstr ""
-#~ "La quantité calculée sera un multiple de cette valeur. Utilisez 1.0 pour les "
-#~ "produits qui ne peuvent pas être séparés."
-
-#~ msgid ""
-#~ "Quantities of products that are planned to arrive in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Quantités de produits qui ont été planifiée pour arriver dans les "
-#~ "emplacements sélectionnés ou tous les internes si aucun n'a été sélectionné."
-
-#~ msgid ""
-#~ "Futur stock for this product according to the selected location or all "
-#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
-#~ "Incoming."
-#~ msgstr ""
-#~ "Stock prévisionnel pour ce produit d'après les emplacements sélectionnés ou "
-#~ "tous les internes si aucun n'a été sélectionné. Calculé ainsi: Stock Réel - "
-#~ "Sortant + Entrant."
-
-#~ msgid "Product Process"
-#~ msgstr "Processus des Produit"
-
-#~ msgid ""
-#~ "Quantities of products that are planned to leave in selected locations or "
-#~ "all internal if none have been selected."
-#~ msgstr ""
-#~ "Quantités de produits qui sont planifiés pour partir vers les emplacements "
-#~ "sélectionnés ou tous les internes si aucun n'a été sélectionné."
-
-#~ msgid ""
-#~ "Current quantities of products in selected locations or all internal if none "
-#~ "have been selected."
-#~ msgstr ""
-#~ "Quantités actuelles de produit dans les emplacements sélectionnés ou tous "
-#~ "les internes si aucun n'a été sélectionné."
-
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
-#~ msgstr ""
-#~ "Coefficient pour la formule:\n"
-#~ "1 (unité de base) = coeff (cette unité). Taux = 1 / Facteur."
-
-#~ msgid "KGM"
-#~ msgstr "KGM"
-
-#~ msgid ""
-#~ "Delay in days between the confirmation of the purchase order and the "
-#~ "reception of the products in your warehouse. Used by the scheduler for "
-#~ "automatic computation of the purchase order planning."
-#~ msgstr ""
-#~ "Délai en jours entre la confirmation de la commande d'achat et la réception "
-#~ "du produit dans l'entrepôt. Utilisé par le planificateur pour le calcul "
-#~ "automatique des commandes d'achats prévisionnelles."
-
-#~ msgid "Products & Pricelists"
-#~ msgstr "Produits & Liste de prix"
-
-#~ msgid ""
-#~ "Will change the way procurements are processed. Consumables are stockable "
-#~ "products with infinite stock, or for use when you have no stock management "
-#~ "in the system."
-#~ msgstr ""
-#~ "Changera la façon de traiter les approvisionnements. Les consommables sont "
-#~ "des produits stockables avec stock infini, ou à utiliser lorsque vous ne "
-#~ "souhaiter pas gérer les stock dans le système."
-
-#~ msgid ""
-#~ "This is the average time between the confirmation of the customer order and "
-#~ "the delivery of the finished products. It's the time you promise to your "
-#~ "customers."
-#~ msgstr ""
-#~ "Le temps moyen  entre la confirmation de commande client et la livraison du "
-#~ "produit fini. C'est le temps que vous avez promis à vos clients."
-
-#~ msgid "Default UoM"
-#~ msgstr "UdM par défaut"
-
-#~ msgid ""
-#~ "Used by companies that manages two unit of measure: invoicing and stock "
-#~ "management. For example, in food industries, you will manage a stock of ham "
-#~ "but invoice in Kg. Keep empty to use the default UOM."
-#~ msgstr ""
-#~ "Utilisé par les entreprises qui gèrent deux unités de mesure : facturation "
-#~ "et gestion de stock. Par exemple, dans l'industrie alimentaire, on gère un "
-#~ "stock de jambons mais on facture au Kg. Laissez vide pour utiliser une unité "
-#~ "de mesure par défaut."
-
-#~ msgid "Purchase UoM"
-#~ msgstr "UdM d'achat"
-
-#~ msgid "Procure Method"
-#~ msgstr "Méthode d'approvisionnement"
-
-#~ msgid "Rentable Product"
-#~ msgstr "Peut être loué"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Filtres étendus..."
-
-#~ msgid "Stockable"
-#~ msgstr "Stockable"
-
-#~ msgid "tonne"
-#~ msgstr "tonne"
-
-#~ msgid ""
-#~ "Error: The default UOM and the Supplier Product UOM must be in the same "
-#~ "category."
-#~ msgstr ""
-#~ "Erreur : l'UdM par défaut et l'UdM du fournisseur doivent appartenir à la "
-#~ "même catégorie."
-
-#, python-format
-#~ msgid ""
-#~ "No active version for the selected pricelist !\n"
-#~ "Please create or activate one."
-#~ msgstr ""
-#~ "Aucune version active pour la liste de prix sélectionnée !\n"
-#~ "Veuillez créer ou activer une liste."
-
-#~ msgid ""
-#~ "Future stock for this product according to the selected locations or all "
-#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
-#~ "Incoming."
-#~ msgstr ""
-#~ "Stock prévisionnel de ce produit dans les emplacement sélectionnés, ou dans "
-#~ "tous les emplacements internes si aucun n'a été sélectionné. Formule de "
-#~ "calcul : stock réel - sorties + entrées."
-
-#, python-format
-#~ msgid ""
-#~ "Could not resolve product category, you have defined cyclic categories of "
-#~ "products!"
-#~ msgstr ""
-#~ "Impossible de parcourir la catégorie de produit : il y a une boucle dans la "
-#~ "définition des catégories de produits !"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Erreur ! Vous ne pouvez pas créer de membres associés récursifs."
-
-#~ msgid ""
-#~ "Choose here the Unit of Measure in which the prices and quantities are "
-#~ "expressed below."
-#~ msgstr ""
-#~ "Choisissez ici l'unité de mesure dans laquelle les prix et les quantités "
-#~ "sont exprimées ci-dessous."
-
-#, python-format
-#~ msgid ""
-#~ "Conversion from Product UoM m to Default UoM PCE is not possible as they "
-#~ "both belong to different Category!."
-#~ msgstr ""
-#~ "La conversion de l'UdM vers l'UdM par défaut PCE est impossible car elles ne "
-#~ "sont pas de la même catégorie !"
-
-#~ msgid ""
-#~ "Will change the way procurements are processed. Consumables are stockable "
-#~ "products with infinite stock, or for use when you have no inventory "
-#~ "management in the system."
-#~ msgstr ""
-#~ "Permet de changer la façon dont les approvisionnements sont gérés. Les "
-#~ "consommables sont des produits physiques avec un stock infini, pour lesquels "
-#~ "vous n'avez pas de gestion de stock dans le système."
-
-#~ msgid ""
-#~ "Produce will generate production order or tasks, according to the product "
-#~ "type. Purchase will trigger purchase orders when requested."
-#~ msgstr ""
-#~ "\"Produire\" générera un ordre de production ou une tâche, en fonction du "
-#~ "type de produit. \"Acheter\" déclenchera un ordre d'achat lorsque ce sera "
-#~ "nécessaire."
-
-#~ msgid ""
-#~ "\n"
-#~ "    This is the base module for managing products and pricelists in "
-#~ "OpenERP.\n"
-#~ "\n"
-#~ "    Products support variants, different pricing methods, suppliers\n"
-#~ "    information, make to stock/order, different unit of measures,\n"
-#~ "    packaging and properties.\n"
-#~ "\n"
-#~ "    Pricelists support:\n"
-#~ "    * Multiple-level of discount (by product, category, quantities)\n"
-#~ "    * Compute price based on different criteria:\n"
-#~ "        * Other pricelist,\n"
-#~ "        * Cost price,\n"
-#~ "        * List price,\n"
-#~ "        * Supplier price, ...\n"
-#~ "    Pricelists preferences by product and/or partners.\n"
-#~ "\n"
-#~ "    Print product labels with barcode.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Ce module est le module de base pour la gestion des produits et des "
-#~ "listes de prix dans OpenERP.\n"
-#~ "\n"
-#~ "    Les produits supportent les variantes, différentes méthodes de prix, des "
-#~ "informations\n"
-#~ "    à propos des fournisseurs, les méthodes d'approvisionnement (production "
-#~ "sur stock/à la demande), différentes unités de mesure,\n"
-#~ "    différents conditionnements et propriétés.\n"
-#~ "\n"
-#~ "    Les listes de prix supportent :\n"
-#~ "    * Le multi-niveaux de remise (par produit, par catégorie ou quantités)\n"
-#~ "    * Le calcul des prix basé sur différents critères :\n"
-#~ "        * Autre liste de prix,\n"
-#~ "        * Prix de revient,\n"
-#~ "        * Prix de vente,\n"
-#~ "        * Prix fournisseur, ...\n"
-#~ "    Les préférences de listes de prix par produit et/ou partenaires.\n"
-#~ "\n"
-#~ "    Impression des étiquettes de produit avec code-barres.\n"
-#~ "    "

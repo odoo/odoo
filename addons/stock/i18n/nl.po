@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-15 11:36+0000\n"
+"PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-16 05:04+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-02-18 07:07+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -658,6 +658,10 @@ msgid ""
 "according to the original purchase order. You can validate the shipment "
 "totally or partially."
 msgstr ""
+"Inkomende leveringen, is een lijst met inkooporders welke u gaat ontvangen "
+"van uw leveranciers. Een inkomende levering bevat een lijst met producten "
+"welke moeten worden ontvangen, overeenkomstig de originele inkooporder. Het "
+"is mogelijk de inkooporder in zijn geheel of gedeeltelijk te ontvangen."
 
 #. module: stock
 #: field:stock.move.split.lines,wizard_exist_id:0
@@ -1255,7 +1259,7 @@ msgstr "Paklijst"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Waiting Another Move"
-msgstr ""
+msgstr "Wachten op andere mutatie"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1491,7 +1495,7 @@ msgstr "Er zijn geen facturen gemaakt"
 #. module: stock
 #: field:stock.location,posy:0
 msgid "Shelves (Y)"
-msgstr "Positie Y"
+msgstr "Schap (Y)"
 
 #. module: stock
 #: help:stock.incoterms,active:0
@@ -1526,6 +1530,14 @@ msgid ""
 "* Done: has been processed, can't be modified or cancelled anymore\n"
 "* Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"Concept: Nog niet bevestigd en zolang deze niet bevestigd is wordt deze niet "
+"gepland\n"
+"Bevestigd: Nog wachtend voor de beschikbaarheid van de producten\n"
+"Beschikbaar: Producten zijn ontvangen, wachtend op bevestiging\n"
+"Wachtend: Wachten op een andere mutatie welke gedaan moet worden, voordat "
+"deze automatisch beschikbaar komt (bijv. bij \"Maak op bestelling\")\n"
+"Gereed: Is verwerkt, kan neut meer worden aangepast of worden geannuleerd \n"
+"Geannuleerd: Is geannuleerd, kan niet meer worden bevestigd"
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -1565,6 +1577,15 @@ msgid ""
 " When the picking is done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"Wanneer een voorraadmutatie is aangemaakt is deze eerst in de 'Concept' "
+"status.\n"
+" Daarna wordt deze ingesteld op de 'Niet beschikbaar' status als de planner "
+"geen producten kan vinden.\n"
+" Als de producten zijn gereserveerd, wordt de status ingesteld op "
+"'Beschikbaar'.\n"
+" Wanneer de picking gedaan is, dan wordt de status ingesteld op 'Gereed'.\n"
+"De status is 'Wachtend' als een mutatie aan het wachten is op een andere "
+"mutatie."
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1677,7 +1698,7 @@ msgstr "Traceer partij"
 #. module: stock
 #: view:stock.picking:0
 msgid "Back Orders"
-msgstr "Back Orders"
+msgstr "Backorders"
 
 #. module: stock
 #: view:product.product:0 view:product.template:0
@@ -1687,7 +1708,7 @@ msgstr "Tegenboeking locatie"
 #. module: stock
 #: view:stock.location:0
 msgid "Localization"
-msgstr "Vertalingen"
+msgstr "Positie in magazijn"
 
 #. module: stock
 #: code:addons/stock/product.py:429
@@ -2047,7 +2068,7 @@ msgstr "Kosten"
 #: field:product.template,property_stock_account_input:0
 #: field:stock.change.standard.price,stock_account_input:0
 msgid "Stock Input Account"
-msgstr "Voorraadtoenamerekening"
+msgstr "Voorraadtoename rekening"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2254,6 +2275,12 @@ msgid ""
 "the supplier or the purchase order reference. Then you can confirm all "
 "products received using the buttons on the right of each line."
 msgstr ""
+"Hier kunt u individuele producten ontvangen, ongeacht van welke inkooporder "
+"of picking deze afkomstig is. Hier vind u een lijst van alle producten "
+"waarop u wacht. Wanneer u en inkooporder ontvangt, dan kunt u filteren op de "
+"naam van de leverancier of de referentie van de inkooporder. Vervolgens kan "
+"u de ontvangst van de producten bevestigen door gebruik te maken van de "
+"knoppen aan de rechterzijde van iedere regel."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -2643,7 +2670,7 @@ msgstr "Contactpersoon Adres :"
 #. module: stock
 #: field:stock.move,backorder_id:0
 msgid "Back Order"
-msgstr "Nalevering"
+msgstr "Backorder"
 
 #. module: stock
 #: field:stock.incoterms,active:0 field:stock.location,active:0
@@ -2749,7 +2776,7 @@ msgstr "Bevestig Voorraad"
 #. module: stock
 #: view:product.category:0
 msgid "Accounting Stock Properties"
-msgstr "Administratieve voorraadinstellingen"
+msgstr "Boekhoudkundige instellingen voorraad"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_out
@@ -2877,7 +2904,7 @@ msgstr "Product Verkoopeenh."
 #. module: stock
 #: field:stock.location,posz:0
 msgid "Height (Z)"
-msgstr "Positie Z"
+msgstr "Hoogte (Z)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_consume
@@ -2909,7 +2936,7 @@ msgstr "Varianten"
 #. module: stock
 #: field:stock.location,posx:0
 msgid "Corridor (X)"
-msgstr "Positie X"
+msgstr "Rij (X)"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
@@ -3537,6 +3564,9 @@ msgid ""
 "Technical field used to record the currency chosen by the user during a "
 "picking confirmation (when average price costing method is used)"
 msgstr ""
+"Technisch veld wat wordt gebruikt om de door de gebruiker gekozen valuta op "
+"te slaan, tijdens een picking bevestiging (wanneer de gemiddelde inkoopprijs "
+"methode wordt gebruikt)"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:53
@@ -3603,6 +3633,12 @@ msgid ""
 " When the picking it done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"Wanneer een voorraadmutatie is aangemaakt is deze in de 'Concept' status.\n"
+" Daarna wordt deze ingesteld op de 'Bevestigd'.\n"
+" Als voorraad beschikbaar is wordt de status ingesteld op 'Beschikbaar'.\n"
+" Wanneer de picking gedaan is, dan wordt de status ingesteld op 'Gereed'.\n"
+"De status is 'Wachtend' als een mutatie aan het wachten is op een andere "
+"mutatie."
 
 #. module: stock
 #: view:stock.picking:0
@@ -3835,7 +3871,7 @@ msgstr "Splits mutatie"
 #. module: stock
 #: field:stock.picking,backorder_id:0
 msgid "Back Order of"
-msgstr "Bacorder van"
+msgstr "Backorder van"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:106
@@ -3902,7 +3938,7 @@ msgstr "Geproduceerd aantal"
 #: field:product.template,property_stock_account_output:0
 #: field:stock.change.standard.price,stock_account_output:0
 msgid "Stock Output Account"
-msgstr "Voorraadafnamerekening"
+msgstr "Voorraadafname rekening"
 
 #. module: stock
 #: field:stock.location,chained_location_type:0
@@ -4042,843 +4078,4 @@ msgstr "Gereed om te verwerken"
 #: help:stock.location,posx:0 help:stock.location,posy:0
 #: help:stock.location,posz:0
 msgid "Optional localization details, for information purpose only"
-msgstr "Optioneel lokalisatie details, alleen voor informatieve redenen"
-
-#~ msgid "Packing List"
-#~ msgstr "Pakbon"
-
-#~ msgid "LIFO"
-#~ msgstr "LIFO"
-
-#~ msgid "STOCK_SAVE"
-#~ msgstr "STOCK_SAVE"
-
-#~ msgid "Sub Products"
-#~ msgstr "Sub-producten"
-
-#~ msgid "terp-account"
-#~ msgstr "terp-account"
-
-#~ msgid "STOCK_SORT_ASCENDING"
-#~ msgstr "STOCK_SORT_ASCENDING"
-
-#~ msgid "Revision"
-#~ msgstr "Revisie"
-
-#~ msgid "STOCK_MEDIA_FORWARD"
-#~ msgstr "STOCK_MEDIA_FORWARD"
-
-#~ msgid "STOCK_ZOOM_100"
-#~ msgstr "STOCK_ZOOM_100"
-
-#~ msgid "Return packing"
-#~ msgstr "Retourzending"
-
-#~ msgid "Fill Inventory for specific location"
-#~ msgstr "Voorraad voor specifieke locatie"
-
-#~ msgid "Amount"
-#~ msgstr "Hoeveelheid"
-
-#~ msgid "Products Received"
-#~ msgstr "Ontvangen producten"
-
-#~ msgid "Move History"
-#~ msgstr "Notatie"
-
-#~ msgid "STOCK_NEW"
-#~ msgstr "STOCK_NEW"
-
-#~ msgid "STOCK_CANCEL"
-#~ msgstr "STOCK_CANCEL"
-
-#~ msgid "Make Parcel"
-#~ msgstr "Maak pakket"
-
-#~ msgid "Packing result"
-#~ msgstr "Picking resultaat"
-
-#~ msgid "STOCK_QUIT"
-#~ msgstr "STOCK_QUIT"
-
-#~ msgid "STOCK_GOTO_TOP"
-#~ msgstr "STOCK_GOTO_TOP"
-
-#~ msgid "STOCK_ABOUT"
-#~ msgstr "STOCK_ABOUT"
-
-#~ msgid "terp-hr"
-#~ msgstr "terp-hr"
-
-#~ msgid "terp-purchase"
-#~ msgstr "terp-inkopen"
-
-#~ msgid "STOCK_DND"
-#~ msgstr "STOCK_DND"
-
-#~ msgid "Products Sent"
-#~ msgstr "Verzonden producten"
-
-#~ msgid "STOCK_GOTO_FIRST"
-#~ msgstr "STOCK_GOTO_FIRST"
-
-#~ msgid "Serial"
-#~ msgstr "Serie"
-
-#~ msgid "Customer Refund"
-#~ msgstr "Crediteren"
-
-#~ msgid "STOCK_FLOPPY"
-#~ msgstr "STOCK_FLOPPY"
-
-#~ msgid "Stock location"
-#~ msgstr "Voorraadlocatie"
-
-#~ msgid "Unreceived Products"
-#~ msgstr "Nog te ontvangen goederen"
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "STOCK_UNDERLINE"
-#~ msgstr "STOCK_UNDERLINE"
-
-#~ msgid "Move Lines"
-#~ msgstr "Verplaats regels"
-
-#~ msgid "Include all childs for the location"
-#~ msgstr "Inclusief alle onderliggende"
-
-#~ msgid "Track line"
-#~ msgstr "Volgregel"
-
-#~ msgid "STOCK_BOLD"
-#~ msgstr "STOCK_BOLD"
-
-#~ msgid "terp-graph"
-#~ msgstr "terp-graph"
-
-#~ msgid "STOCK_PREFERENCES"
-#~ msgstr "STOCK_PREFERENCES"
-
-#~ msgid "Stock Level 1"
-#~ msgstr "Voorraadniveau 1"
-
-#~ msgid "STOCK_MEDIA_REWIND"
-#~ msgstr "STOCK_MEDIA_REWIND"
-
-#~ msgid "Stock Properties"
-#~ msgstr "Voorraadinstellingen"
-
-#~ msgid "Make Picking"
-#~ msgstr "Maak picking"
-
-#~ msgid "Draft Moves"
-#~ msgstr "Concept-goederenstromen"
-
-#~ msgid "Product Id"
-#~ msgstr "Product-id"
-
-#~ msgid "Customer Invoice"
-#~ msgstr "Verkoopfactuur"
-
-#~ msgid "STOCK_CUT"
-#~ msgstr "STOCK_CUT"
-
-#~ msgid ""
-#~ "For the current product (template), this stock location will be used, "
-#~ "instead of the default one, as the source location for stock moves generated "
-#~ "when you do an inventory"
-#~ msgstr ""
-#~ "Het huidige product (template) wordt deze locatie gebruikt, in plaats van de "
-#~ "standaard, als de bronlocatie voor voorraadbewegingen voorkomende uit "
-#~ "inventarisaties."
-
-#~ msgid "This account will be used to value the output stock"
-#~ msgstr "Deze grootboekkaart zal worden gebruikt voor de uitgaande voorraad"
-
-#~ msgid "STOCK_ZOOM_FIT"
-#~ msgstr "STOCK_ZOOM_FIT"
-
-#~ msgid ""
-#~ "This journal will be used for the accounting move generated by stock move"
-#~ msgstr "Dit dagboek wordt gebruikt om voorraadstromen te registreren."
-
-#~ msgid "Calendar of Deliveries"
-#~ msgstr "Leveringskalender"
-
-#~ msgid "STOCK_SAVE_AS"
-#~ msgstr "STOCK_SAVE_AS"
-
-#~ msgid "STOCK_DIALOG_ERROR"
-#~ msgstr "STOCK_DIALOG_ERROR"
-
-#~ msgid "Latest Date of Inventory"
-#~ msgstr "Laatste voorraaddatum"
-
-#~ msgid "STOCK_INDEX"
-#~ msgstr "STOCK_INDEX"
-
-#~ msgid "STOCK_GOTO_BOTTOM"
-#~ msgstr "STOCK_GOTO_BOTTOM"
-
-#~ msgid "New Reception Packing"
-#~ msgstr "Nieuw ontvangstbon aanmaken"
-
-#~ msgid "Tracking Lot"
-#~ msgstr "Track en Trace"
-
-#~ msgid "STOCK_GO_FORWARD"
-#~ msgstr "STOCK_GO_FORWARD"
-
-#~ msgid "STOCK_UNDELETE"
-#~ msgstr "STOCK_UNDELETE"
-
-#~ msgid "STOCK_EXECUTE"
-#~ msgstr "STOCK_EXECUTE"
-
-#~ msgid "STOCK_DIALOG_QUESTION"
-#~ msgstr "STOCK_DIALOG_QUESTION"
-
-#~ msgid "Tracking/Serial"
-#~ msgstr "Tracking/Serial"
-
-#~ msgid "STOCK_SELECT_FONT"
-#~ msgstr "STOCK_SELECT_FONT"
-
-#~ msgid "STOCK_PASTE"
-#~ msgstr "STOCK_PASTE"
-
-#~ msgid "Tracking Number"
-#~ msgstr "Volgnummer"
-
-#~ msgid "terp-stock"
-#~ msgstr "terp-stock"
-
-#~ msgid "STOCK_MEDIA_RECORD"
-#~ msgstr "STOCK_MEDIA_RECORD"
-
-#~ msgid "Non Assigned Products:"
-#~ msgstr "Niet-toegewezen producten"
-
-#~ msgid "Packing Done"
-#~ msgstr "Pakket aangemaakt"
-
-#~ msgid "Available Packing"
-#~ msgstr "Beschikbare verpakkingen"
-
-#~ msgid "terp-report"
-#~ msgstr "terp-report"
-
-#~ msgid "Location Content (With children)"
-#~ msgstr "Locatie inhoud (incl onderliggende)"
-
-#~ msgid "STOCK_FILE"
-#~ msgstr "STOCK_FILE"
-
-#~ msgid "STOCK_EDIT"
-#~ msgstr "STOCK_EDIT"
-
-#~ msgid "STOCK_CONNECT"
-#~ msgstr "STOCK_CONNECT"
-
-#~ msgid "STOCK_GO_DOWN"
-#~ msgstr "STOCK_GO_DOWN"
-
-#~ msgid "STOCK_OK"
-#~ msgstr "STOCK_OK"
-
-#~ msgid "New Internal Packing"
-#~ msgstr "Nieuwe interne verpakking"
-
-#~ msgid "Finished products"
-#~ msgstr "Afgewerkte producten"
-
-#~ msgid "Date create"
-#~ msgstr "Date create"
-
-#~ msgid "Set to Zero"
-#~ msgstr "Zet op nul"
-
-#~ msgid "All Stock Moves"
-#~ msgstr "Alle voorraadbewegingen"
-
-#~ msgid "STOCK_HELP"
-#~ msgstr "STOCK_HELP"
-
-#~ msgid "This account will be used to value the input stock"
-#~ msgstr ""
-#~ "Deze grootboekkaart wordt gebruikt om de inkomende voorraad op te waarderen"
-
-#, python-format
-#~ msgid "Invoice state"
-#~ msgstr "Factuur status"
-
-#~ msgid "STOCK_UNDO"
-#~ msgstr "STOCK_UNDO"
-
-#~ msgid "Date Created"
-#~ msgstr "Date Created"
-
-#~ msgid "STOCK_GO_BACK"
-#~ msgstr "STOCK_GO_BACK"
-
-#~ msgid "STOCK_JUSTIFY_FILL"
-#~ msgstr "STOCK_JUSTIFY_FILL"
-
-#~ msgid "Allocation Method"
-#~ msgstr "Allocatiemethode"
-
-#~ msgid "terp-administration"
-#~ msgstr "terp-administratie"
-
-#~ msgid "STOCK_APPLY"
-#~ msgstr "STOCK_APPLY"
-
-#, python-format
-#~ msgid "Please select at least two inventories."
-#~ msgstr "Selecteer tenminste twee inventarisaties"
-
-#~ msgid "The packing has been successfully made !"
-#~ msgstr "Het pakket is succesvol aangemaakt!"
-
-#~ msgid "Dest. Address"
-#~ msgstr "Best. Adres"
-
-#~ msgid "Periodical Inventory"
-#~ msgstr "Periodieke voorraadcontrole"
-
-#~ msgid "terp-crm"
-#~ msgstr "terp-crm"
-
-#~ msgid "STOCK_STRIKETHROUGH"
-#~ msgstr "STOCK_STRIKETHROUGH"
-
-#~ msgid "terp-partner"
-#~ msgstr "terp-partner"
-
-#~ msgid "Draft Periodical Inventories"
-#~ msgstr "Concept periodieke voorraadcontroles"
-
-#~ msgid "STOCK_MISSING_IMAGE"
-#~ msgstr "STOCK_MISSING_IMAGE"
-
-#~ msgid "STOCK_SPELL_CHECK"
-#~ msgstr "STOCK_SPELL_CHECK"
-
-#~ msgid "Stock Tracking Lots"
-#~ msgstr "Stock Tracking Lots"
-
-#~ msgid "Origin Reference"
-#~ msgstr "Oorspronkelijke referentie"
-
-#~ msgid "Available Moves"
-#~ msgstr "Beschikbare goederenbewegingen"
-
-#~ msgid "STOCK_HARDDISK"
-#~ msgstr "STOCK_HARDDISK"
-
-#~ msgid "Open Products"
-#~ msgstr "Lopende producten"
-
-#~ msgid "Input Packing List"
-#~ msgstr "Inkomende paklijst"
-
-#~ msgid "STOCK_COPY"
-#~ msgstr "STOCK_COPY"
-
-#~ msgid "Supplier Refund"
-#~ msgstr "Credit inkoopfactuur"
-
-#~ msgid "STOCK_CDROM"
-#~ msgstr "STOCK_CDROM"
-
-#~ msgid "Not from Packing"
-#~ msgstr "Niet van verpakking"
-
-#~ msgid "Internal Ref"
-#~ msgstr "Interne ref"
-
-#~ msgid "STOCK_REFRESH"
-#~ msgstr "STOCK_REFRESH"
-
-#~ msgid "STOCK_STOP"
-#~ msgstr "STOCK_STOP"
-
-#~ msgid "STOCK_FIND_AND_REPLACE"
-#~ msgstr "STOCK_FIND_AND_REPLACE"
-
-#~ msgid "Validate"
-#~ msgstr "Bevestig"
-
-#~ msgid "STOCK_DIALOG_WARNING"
-#~ msgstr "STOCK_DIALOG_WARNING"
-
-#~ msgid "STOCK_ZOOM_IN"
-#~ msgstr "STOCK_ZOOM_IN"
-
-#~ msgid "STOCK_CONVERT"
-#~ msgstr "STOCK_CONVERT"
-
-#~ msgid "Move lines"
-#~ msgstr "Transactieregels"
-
-#~ msgid "Partial packing"
-#~ msgstr "Deelverzending"
-
-#~ msgid "terp-calendar"
-#~ msgstr "terp-kalender"
-
-#~ msgid "STOCK_ITALIC"
-#~ msgstr "STOCK_ITALIC"
-
-#~ msgid "STOCK_YES"
-#~ msgstr "STOCK_YES"
-
-#~ msgid "Fill From Unreceived Products"
-#~ msgstr "Vul vanuit de niet ontvangen producten"
-
-#~ msgid "Dest. Move"
-#~ msgstr "Best. Mutatie"
-
-#~ msgid "New Periodical Inventory"
-#~ msgstr "Nieuwe periodieke voorraadcontrole"
-
-#~ msgid "FIFO"
-#~ msgstr "FIFO"
-
-#~ msgid "Delivery Orders to Process"
-#~ msgstr "Nog te genereren leveringsopdrachten"
-
-#~ msgid "Invoice Status"
-#~ msgstr "Factuurstatus"
-
-#~ msgid "STOCK_JUSTIFY_LEFT"
-#~ msgstr "STOCK_JUSTIFY_LEFT"
-
-#~ msgid "Future Stock Forecast"
-#~ msgstr "Toekomstig voorraadniveau"
-
-#~ msgid ""
-#~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-#~ msgstr ""
-#~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-
-#~ msgid "Planned Date"
-#~ msgstr "Geplande datum"
-
-#, python-format
-#~ msgid "No production sequence defined"
-#~ msgstr "Geen productievolgorde gedefinieerd"
-
-#~ msgid "STOCK_COLOR_PICKER"
-#~ msgstr "STOCK_COLOR_PICKER"
-
-#~ msgid "Lots by location"
-#~ msgstr "Partijen per Locatie"
-
-#~ msgid "STOCK_DELETE"
-#~ msgstr "STOCK_DELETE"
-
-#~ msgid "STOCK_CLEAR"
-#~ msgstr "STOCK_CLEAR"
-
-#~ msgid "Created Date"
-#~ msgstr "Creeerdatum"
-
-#~ msgid "terp-mrp"
-#~ msgstr "terp-mrp"
-
-#~ msgid "STOCK_GO_UP"
-#~ msgstr "STOCK_GO_UP"
-
-#~ msgid "STOCK_SORT_DESCENDING"
-#~ msgstr "STOCK_SORT_DESCENDING"
-
-#~ msgid "STOCK_HOME"
-#~ msgstr "STOCK_HOME"
-
-#~ msgid "STOCK_PROPERTIES"
-#~ msgstr "STOCK_PROPERTIES"
-
-#~ msgid "Create invoices"
-#~ msgstr "Maak facturen"
-
-#~ msgid "Set Stock to Zero"
-#~ msgstr "Zet de voorraad op nul"
-
-#~ msgid "Packing to Process"
-#~ msgstr "Te verwerking verpakkingen"
-
-#~ msgid "STOCK_MEDIA_STOP"
-#~ msgstr "STOCK_MEDIA_STOP"
-
-#~ msgid "Make packing"
-#~ msgstr "Maak picking"
-
-#~ msgid "STOCK_DND_MULTIPLE"
-#~ msgstr "STOCK_DND_MULTIPLE"
-
-#~ msgid "STOCK_REMOVE"
-#~ msgstr "STOCK_REMOVE"
-
-#~ msgid "STOCK_DIALOG_AUTHENTICATION"
-#~ msgstr "STOCK_DIALOG_AUTHENTICATION"
-
-#~ msgid "STOCK_ZOOM_OUT"
-#~ msgstr "STOCK_ZOOM_OUT"
-
-#~ msgid "Nearest"
-#~ msgstr "Dichtsbijzijnde"
-
-#~ msgid "STOCK_SELECT_COLOR"
-#~ msgstr "STOCK_SELECT_COLOR"
-
-#~ msgid "STOCK_PRINT"
-#~ msgstr "STOCK_PRINT"
-
-#~ msgid "STOCK_NO"
-#~ msgstr "STOCK_NO"
-
-#~ msgid "Workshop"
-#~ msgstr "Werkplaats"
-
-#~ msgid "STOCK_REDO"
-#~ msgstr "STOCK_REDO"
-
-#~ msgid "Tiny sprl"
-#~ msgstr "Tiny sprl"
-
-#~ msgid "STOCK_CLOSE"
-#~ msgstr "STOCK_CLOSE"
-
-#~ msgid "Split move lines in two"
-#~ msgstr "Splits in tweeën"
-
-#~ msgid "Auto-Packing"
-#~ msgstr "Auto-Picking"
-
-#~ msgid "STOCK_JUMP_TO"
-#~ msgstr "STOCK_JUMP_TO"
-
-#~ msgid "terp-tools"
-#~ msgstr "terp-tools"
-
-#~ msgid "Location Overview"
-#~ msgstr "Locatieoverzicht"
-
-#~ msgid "STOCK_DIALOG_INFO"
-#~ msgstr "STOCK_DIALOG_INFO"
-
-#~ msgid "Split move line"
-#~ msgstr "Splits voorraadbeweging"
-
-#~ msgid "terp-sale"
-#~ msgstr "terp-sale"
-
-#~ msgid "STOCK_ADD"
-#~ msgstr "STOCK_ADD"
-
-#~ msgid "Chained Delay (days)"
-#~ msgstr "Vaste vertraginen (dagen)"
-
-#~ msgid "STOCK_MEDIA_PAUSE"
-#~ msgstr "STOCK_MEDIA_PAUSE"
-
-#~ msgid "STOCK_PRINT_PREVIEW"
-#~ msgstr "STOCK_PRINT_PREVIEW"
-
-#~ msgid "STOCK_FIND"
-#~ msgstr "STOCK_FIND"
-
-#~ msgid ""
-#~ "This is used only if you selected a chained location type.\n"
-#~ "The 'Automatic Move' value will create a stock move after the current one "
-#~ "that will be validated automatically. With 'Manual Operation', the stock "
-#~ "move has to be validated by a worker. With 'Automatic No Step Added', the "
-#~ "location is replaced in the original move."
-#~ msgstr "Deze wordt alleen gebruikt als er een locatie geselecteerd wordt."
-
-#~ msgid ""
-#~ "This account will be used, instead of the default one, to value input stock"
-#~ msgstr ""
-#~ "Deze grootboekkaart zal gebruikt worden, in plaats van de standaard, om de "
-#~ "inkomende goederen te waarderen."
-
-#~ msgid "Components"
-#~ msgstr "Componenten"
-
-#~ msgid "Max. Planned Date"
-#~ msgstr "Geplande datum"
-
-#~ msgid "STOCK_MEDIA_PLAY"
-#~ msgstr "STOCK_MEDIA_PLAY"
-
-#~ msgid "STOCK_OPEN"
-#~ msgstr "STOCK_OPEN"
-
-#~ msgid "STOCK_MEDIA_PREVIOUS"
-#~ msgstr "STOCK_MEDIA_PREVIOUS"
-
-#~ msgid "Stock Locations Structure"
-#~ msgstr "Voorraadlocatiestructuur"
-
-#~ msgid "STOCK_DISCONNECT"
-#~ msgstr "STOCK_DISCONNECT"
-
-#~ msgid ""
-#~ "This account will be used, instead of the default one, to value output stock"
-#~ msgstr ""
-#~ "Deze grootboekkaart zal gebruikt worden, in plaats van de standaard, om de "
-#~ "uitgaande voorraad te waarderen."
-
-#~ msgid "Confirm (Do Not Process Now)"
-#~ msgstr "Bevestigen (Nog niet verwerken)"
-
-#~ msgid "Moves Tracked"
-#~ msgstr "Vastgelegde verplaatsingen"
-
-#~ msgid "STOCK_NETWORK"
-#~ msgstr "STOCK_NETWORK"
-
-#~ msgid "terp-project"
-#~ msgstr "terp-project"
-
-#~ msgid "STOCK_UNINDENT"
-#~ msgstr "STOCK_UNINDENT"
-
-#~ msgid "STOCK_GOTO_LAST"
-#~ msgstr "STOCK_GOTO_LAST"
-
-#~ msgid "STOCK_DIRECTORY"
-#~ msgstr "STOCK_DIRECTORY"
-
-#~ msgid ""
-#~ "For the current product (template), this stock location will be used, "
-#~ "instead of the default one, as the source location for stock moves generated "
-#~ "by production orders"
-#~ msgstr ""
-#~ "Deze voorraadlocatie wordt aangehouden in plaats van de standaardlocatie"
-
-#~ msgid "Add"
-#~ msgstr "Toevoegen"
-
-#~ msgid "STOCK_JUSTIFY_CENTER"
-#~ msgstr "STOCK_JUSTIFY_CENTER"
-
-#~ msgid "Confirmed Packing Waiting Availability"
-#~ msgstr "Verpakkingsbevesting wacht op beschikbaarheid"
-
-#~ msgid "Set Stock to 0"
-#~ msgstr "Zet voorraad op nul"
-
-#~ msgid "Localisation"
-#~ msgstr "Regio's"
-
-#~ msgid "Do you want to set stocks to zero ?"
-#~ msgstr "Wil u de voorraden op nul zetten?"
-
-#~ msgid "Direct Delivery"
-#~ msgstr "Rechtstreekse Levering"
-
-#~ msgid "STOCK_REVERT_TO_SAVED"
-#~ msgstr "STOCK_REVERT_TO_SAVED"
-
-#~ msgid "Split in Two"
-#~ msgstr "Splits in tweeën"
-
-#~ msgid ""
-#~ "For the current product (template), this stock location will be used, "
-#~ "instead of the default one, as the source location for stock moves generated "
-#~ "by procurements"
-#~ msgstr ""
-#~ "Voor het huidige product (template), wordt deze locatie gebruitkt, in plaats "
-#~ "van de standaard, als de bronlocatie van de voorraadbewegingen voortkomende "
-#~ "uit verkrijgingen."
-
-#~ msgid "stock.picking.move.wizard"
-#~ msgstr "stock.picking.move.wizard"
-
-#~ msgid "Date Order"
-#~ msgstr "Orderdatum"
-
-#~ msgid "Supplier Invoice"
-#~ msgstr "Inkoopfactuur"
-
-#, python-format
-#~ msgid "to be invoiced"
-#~ msgstr "te factureren"
-
-#~ msgid "terp-product"
-#~ msgstr "terp-product"
-
-#~ msgid "Close"
-#~ msgstr "Sluiten"
-
-#~ msgid "Print Item Labels"
-#~ msgstr "Print labels"
-
-#~ msgid "Inventory Account"
-#~ msgstr "Voorraadrekening"
-
-#~ msgid "Set Stocks to Zero"
-#~ msgstr "Zet voorraden op nul"
-
-#~ msgid "Low Level"
-#~ msgstr "Low Level"
-
-#~ msgid "STOCK_INDENT"
-#~ msgstr "STOCK_INDENT"
-
-#~ msgid "Delivery"
-#~ msgstr "Levering"
-
-#~ msgid "Locations' Values"
-#~ msgstr "Locatie waarden"
-
-#~ msgid "STOCK_JUSTIFY_RIGHT"
-#~ msgstr "STOCK_JUSTIFY_RIGHT"
-
-#~ msgid "Inventory line"
-#~ msgstr "Voorraadregel"
-
-#~ msgid "Others info"
-#~ msgstr "Andere informatie"
-
-#~ msgid "STOCK_MEDIA_NEXT"
-#~ msgstr "STOCK_MEDIA_NEXT"
-
-#~ msgid "Move State"
-#~ msgstr "Mutatiestatus"
-
-#, python-format
-#~ msgid "Invoice is not created"
-#~ msgstr "Factuur is niet gegenereerd"
-
-#, python-format
-#~ msgid "Message !"
-#~ msgstr "Bericht !"
-
-#~ msgid "Future Delivery Orders"
-#~ msgstr "Aankomende uit te leveren orders"
-
-#, python-format
-#~ msgid "Invoice is already created."
-#~ msgstr "Factuur is reeds gegenereerd"
-
-#, python-format
-#~ msgid "Please select one and only one inventory !"
-#~ msgstr "Selecteer één voorraad locatie"
-
-#~ msgid "Quantity per lot"
-#~ msgstr "Aantal per batch"
-
-#~ msgid "Stock by Lots"
-#~ msgstr "Voorraad per batch"
-
-#~ msgid "Track Production Lots"
-#~ msgstr "Traceer productiebatches"
-
-#, python-format
-#~ msgid "Invoice cannot be created from Packing."
-#~ msgstr "Factuur kan niet worden gegenereerd vanuit Pick-order"
-
-#~ msgid "Inventory Management"
-#~ msgstr "Voorraadbeheer"
-
-#~ msgid "Total :"
-#~ msgstr "Totaal :"
-
-#~ msgid "Force to use a Production Lot during receptions"
-#~ msgstr "Forceer het gebruik van een batchnummer bij goederenontvangst"
-
-#~ msgid "Force to use a Production Lot during production order"
-#~ msgstr "Forceer het gebruik van een batchnummer bij productieorders"
-
-#~ msgid "Force to use a Production Lot during deliveries"
-#~ msgstr "Forceer het gebruik van batchnummers bij leveringen"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor weergave!"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
-
-#~ msgid "Tracking prefix"
-#~ msgstr "Traceer voorloper"
-
-#~ msgid "Tracking Lots"
-#~ msgstr "Traceer lots"
-
-#~ msgid ""
-#~ "Tracking lot is the code that will be put on the logistical unit/pallet"
-#~ msgstr "Lotnummer is de identificatie voor de logistieke eenheid/pallet"
-
-#~ msgid "Units"
-#~ msgstr "Maateenh"
-
-#~ msgid "Tracking a move"
-#~ msgstr "Tracking van een transactie"
-
-#~ msgid ""
-#~ "Scheduled date for the movement of the products or real date if the move is "
-#~ "done."
-#~ msgstr ""
-#~ "Geplande datum voor een verplaatsing van het product of de werkelijke datum "
-#~ "als de verplaatsing reeds heeft plaatsgevonden."
-
-#~ msgid "Outgoing Product"
-#~ msgstr "Uitgaande producten"
-
-#, python-format
-#~ msgid "Delivery Information"
-#~ msgstr "Levering informatie"
-
-#~ msgid "Action"
-#~ msgstr "Actie"
-
-#~ msgid "Units of Measure Categories"
-#~ msgstr "Meeteenheidcategorieën (UoM)"
-
-#~ msgid "Not Available"
-#~ msgstr "Niet beschikbaar"
-
-#~ msgid "Stock Replacement"
-#~ msgstr "Voorraad verplaatsing"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Foutieve handeling!"
-
-#, python-format
-#~ msgid "Receive"
-#~ msgstr "Ontvangen"
+msgstr "Optionele positie details, alleen voor informatieve redenen"

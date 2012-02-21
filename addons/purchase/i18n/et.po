@@ -7,83 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2010-12-16 05:14+0000\n"
+"PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:05+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:735
-#, python-format
-msgid "No Pricelist !"
-msgstr "Hinnakiri puudub !"
-
-#. module: purchase
-#: model:ir.actions.report.xml,name:purchase.report_purchase_order
-#: model:ir.model,name:purchase.model_purchase_order
-#: model:process.node,name:purchase.process_node_purchaseorder0
-#: field:procurement.order,purchase_id:0 view:purchase.order:0
-#: model:res.request.link,name:purchase.req_link_purchase_order
-#: field:stock.picking,purchase_id:0
-msgid "Purchase Order"
-msgstr "Ostutukorraldus"
-
-#. module: purchase
-#: field:purchase.order,name:0 view:purchase.order.line:0
-#: field:purchase.order.line,order_id:0
-msgid "Order Reference"
-msgstr "Tellimuse viide"
-
-#. module: purchase
-#: field:purchase.order,validator:0 view:purchase.report:0
-msgid "Validated by"
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:737
-#, python-format
-msgid ""
-"You have to select a partner in the purchase form !\n"
-"Please set one partner before choosing a product."
-msgstr ""
-"Sa pead valima partneri ostuvormil!\n"
-"Palun määra partner enne toote valimist."
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:236
-#, python-format
-msgid "Invalid action !"
-msgstr "Vigane tegevus !"
-
-#. module: purchase
-#: report:purchase.order:0
-msgid "Our Order Reference"
-msgstr "Meie tellimuse viide"
-
-#. module: purchase
-#: field:purchase.order.line,move_ids:0
-msgid "Reservation"
-msgstr "Reserveerimine"
-
-#. module: purchase
-#: report:purchase.order:0
-msgid "Your Order Reference"
-msgstr "Sinu tellimuse viide"
-
-#. module: purchase
-#: field:purchase.order,invoice_method:0
-msgid "Invoicing Control"
-msgstr "Arveldamishaldus"
-
-#~ msgid "From Order"
-#~ msgstr "Tellimusest"
-
-#~ msgid "Request For Quotations"
-#~ msgstr "Hinnapäringud"
+"X-Launchpad-Export-Date: 2012-02-18 07:01+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -196,6 +127,12 @@ msgstr ""
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "From a Pick list"
 msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:735
+#, python-format
+msgid "No Pricelist !"
+msgstr "Hinnakiri puudub !"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_wizard
@@ -346,6 +283,22 @@ msgid "Taxes"
 msgstr "Maksud"
 
 #. module: purchase
+#: model:ir.actions.report.xml,name:purchase.report_purchase_order
+#: model:ir.model,name:purchase.model_purchase_order
+#: model:process.node,name:purchase.process_node_purchaseorder0
+#: field:procurement.order,purchase_id:0 view:purchase.order:0
+#: model:res.request.link,name:purchase.req_link_purchase_order
+#: field:stock.picking,purchase_id:0
+msgid "Purchase Order"
+msgstr "Ostutukorraldus"
+
+#. module: purchase
+#: field:purchase.order,name:0 view:purchase.order.line:0
+#: field:purchase.order.line,order_id:0
+msgid "Order Reference"
+msgstr "Tellimuse viide"
+
+#. module: purchase
 #: report:purchase.order:0
 msgid "Net Total :"
 msgstr "Netosumma:"
@@ -461,6 +414,11 @@ msgstr ""
 #, python-format
 msgid "Warning"
 msgstr ""
+
+#. module: purchase
+#: field:purchase.order,validator:0 view:purchase.report:0
+msgid "Validated by"
+msgstr "Valideerija:"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -658,6 +616,16 @@ msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:737
+#, python-format
+msgid ""
+"You have to select a partner in the purchase form !\n"
+"Please set one partner before choosing a product."
+msgstr ""
+"Sa pead valima partneri ostuvormil!\n"
+"Palun määra partner enne toote valimist."
+
+#. module: purchase
 #: code:addons/purchase/purchase.py:349
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
@@ -721,6 +689,12 @@ msgstr ""
 #: field:purchase.order.line,move_dest_id:0
 msgid "Reservation Destination"
 msgstr "Reserveeringu sihtkoht"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:236
+#, python-format
+msgid "Invalid action !"
+msgstr "Vigane tegevus !"
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
@@ -1443,6 +1417,11 @@ msgid "Order of Month"
 msgstr ""
 
 #. module: purchase
+#: report:purchase.order:0
+msgid "Our Order Reference"
+msgstr "Meie tellimuse viide"
+
+#. module: purchase
 #: view:purchase.order:0 view:purchase.order.line:0
 msgid "Search Purchase Order"
 msgstr ""
@@ -1585,6 +1564,11 @@ msgid "Reference UoM"
 msgstr ""
 
 #. module: purchase
+#: field:purchase.order.line,move_ids:0
+msgid "Reservation"
+msgstr "Reserveerimine"
+
+#. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders that include lines not invoiced."
 msgstr ""
@@ -1623,6 +1607,11 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
 msgid "Purchase Analysis"
 msgstr ""
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "Your Order Reference"
+msgstr "Sinu tellimuse viide"
 
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,minimum_planned_date:0
@@ -1690,6 +1679,11 @@ msgstr ""
 #: field:res.partner,property_product_pricelist_purchase:0
 msgid "Purchase Pricelist"
 msgstr "Ostuhinnakiri"
+
+#. module: purchase
+#: field:purchase.order,invoice_method:0
+msgid "Invoicing Control"
+msgstr "Arveldamishaldus"
 
 #. module: purchase
 #: view:stock.picking:0
@@ -1902,229 +1896,3 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
 msgstr ""
-
-#~ msgid "Manual"
-#~ msgstr "Käsitsi"
-
-#, python-format
-#~ msgid ""
-#~ "You have to select a pricelist in the purchase form !\n"
-#~ "Please set one before choosing a product."
-#~ msgstr ""
-#~ "Sa pead valima hinnakirja ostuvormil!\n"
-#~ "Palun vali üks enne toote valimist."
-
-#~ msgid "Product recept invoice"
-#~ msgstr "Toote kviitungi arve"
-
-#~ msgid "Confirmed Purchase"
-#~ msgstr "Kinnitatud ost"
-
-#~ msgid "Purchase Process"
-#~ msgstr "Ostuprotseduur"
-
-#~ msgid "Planned Date"
-#~ msgstr "Planeeritud kuupäev"
-
-#~ msgid "Merge purchases"
-#~ msgstr "Ühenda ostud"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Vigane XML vaate arhitektuurile!"
-
-#~ msgid "Invoice from Purchase"
-#~ msgstr "Ostuarve"
-
-#~ msgid "Confirming Purchase"
-#~ msgstr "Kinnita ost"
-
-#~ msgid "Partner Ref."
-#~ msgstr "Partneri viide."
-
-#~ msgid "Purchases Properties"
-#~ msgstr "Ostude omadused"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
-
-#~ msgid "Confirming Purchase Order"
-#~ msgstr "Kinnitan ostukorralduse"
-
-#~ msgid "Purchase Invoice"
-#~ msgstr "Ostuarve"
-
-#~ msgid "Approving Purchase Order"
-#~ msgstr "Kiidan heaks ostukorralduse"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
-
-#~ msgid "Supplier Invoice pre-generated on receptions for control"
-#~ msgstr "Vastuvõtmistel kontrolliks eelgenereeritud tarnija arve"
-
-#~ msgid "From Picking"
-#~ msgstr "Noppest"
-
-#~ msgid "Packing"
-#~ msgstr "Pakkimine"
-
-#~ msgid "Product Receipt"
-#~ msgstr "Toote kviitung"
-
-#, python-format
-#~ msgid "Wrong Product UOM !"
-#~ msgstr "Vale toote MÜ!"
-
-#~ msgid "Invoice based on deliveries"
-#~ msgstr "Arve kättetoimetamiste põhjal"
-
-#~ msgid ""
-#~ "From Order: a draft invoice will be pre-generated based on the purchase "
-#~ "order. The accountant will just have to validate this invoice for control.\n"
-#~ "From Picking: a draft invoice will be pre-genearted based on validated "
-#~ "receptions.\n"
-#~ "Manual: no invoice will be pre-generated. The accountant will have to encode "
-#~ "manually."
-#~ msgstr ""
-#~ "Korraldusest: mustandarve eelgenereeritakse ostukorralduse põhjal. "
-#~ "Raamatupidaja peab lihtsalt valideerima selle arve kontrolliks.\n"
-#~ "Noppest: mustandarve eelgenereeritakse valideeritud vastuvõtmiste põhjal.\n"
-#~ "Manuaalne: arvet ei eelgenereerita. Raamatupidaja peab kodeerima manuaalselt."
-
-#~ msgid "Pre-generated supplier invoice to control based on order"
-#~ msgstr "Korralduse põhjal eelgenereeritud tarnija arve kontrolliks"
-
-#~ msgid "Packing is created for the products reception control."
-#~ msgstr "Pakkeleht luuakse toodete vastuvõtmise kontrollimiseks."
-
-#~ msgid "Confirm Purchase order from Request for quotation"
-#~ msgstr "Kinnita ostukorraldus hinnapäringust"
-
-#~ msgid "Encoded manually by the user."
-#~ msgstr "Kodeeritud manuaalselt kasutaja poolt."
-
-#, python-format
-#~ msgid ""
-#~ "You have to select a product UOM in the same category than the purchase UOM "
-#~ "of the product"
-#~ msgstr ""
-#~ "Sa pead valima toote mõõtühiku samast kategooriast, mis toote ostu mõõtõhik."
-
-#~ msgid "Scheduled date"
-#~ msgstr "Planeeritud kuupäev"
-
-#~ msgid "Delivery & Invoices"
-#~ msgstr "Kättetoimetamine ja arved"
-
-#~ msgid "Creates invoice from packin list"
-#~ msgstr "Loob arve pakkelehelt"
-
-#~ msgid "Packing Invoice"
-#~ msgstr "Pakkimise arve"
-
-#~ msgid "Control invoices on receptions"
-#~ msgstr "Halda arveid vastuvõtmisel"
-
-#~ msgid "Invoice from Packing list"
-#~ msgstr "Arve pakkelehelt"
-
-#~ msgid "Create Packing list"
-#~ msgstr "Loo pakkeleht"
-
-#, python-format
-#~ msgid "You must first cancel all packing attached to this purchase order."
-#~ msgstr ""
-#~ "Sa pead kõigepealt tühistama kõik pakendamised, mis on manustatud sellele "
-#~ "ostukorraldusele."
-
-#~ msgid "Date Ordered"
-#~ msgstr "Tellimise kuupäev"
-
-#~ msgid "From Packing list, Create invoice."
-#~ msgstr "Loo arve pakkelehest"
-
-#~ msgid "When controlling invoice from orders"
-#~ msgstr "Kontrollides arveid korraldustest"
-
-#~ msgid "Request for quotation is proposed by the system."
-#~ msgstr "Hinnapäringut pakutakse süsteemi poolt"
-
-#~ msgid "Approved by Supplier"
-#~ msgstr "Heaks kiidetud tarnija poolt"
-
-#~ msgid "Approved Purchase"
-#~ msgstr "Heaks kiidetud ost"
-
-#~ msgid "When purchase order is approved , it creates its packing list."
-#~ msgstr "Kui ostukorraldus on heaks kiidetud, loob see pakkimise nimekirja."
-
-#~ msgid "After approved purchase order , it comes into the supplier invoice"
-#~ msgstr "Peale ostukorralduse heaks kiitmist läheb see kliendiarveks"
-
-#~ msgid ""
-#~ "Module for purchase management\n"
-#~ "    Request for quotation, Create Supplier Invoice, Print Order..."
-#~ msgstr ""
-#~ "Moodul ostuhalduseks\n"
-#~ "    Hinnapäringud, Tarnija arvete loomine, Korralduste printimine..."
-
-#~ msgid "Confirm Purchase order from Request for quotation without origin"
-#~ msgstr "Kinnita ostukorraldus päritoluta hinnapäringust."
-
-#~ msgid "You cannot have 2 pricelist versions that overlap!"
-#~ msgstr "Sul ei saa olla 2 hinnakirja versiooni, mis kattuvad!"
-
-#~ msgid "Approve Purchase order after Confirming"
-#~ msgstr "Kiida ostukorraldus heaks peale kinnitamist"
-
-#~ msgid "Purchase Order lines"
-#~ msgstr "Ostukorralduse read"
-
-#, python-format
-#~ msgid "You must first cancel all invoices attached to this purchase order."
-#~ msgstr ""
-#~ "Sa pead kõigepealt tühistama kõik arved, mis on lisatud sellele "
-#~ "ostukorraldusele."
-
-#~ msgid "Purchase order is confirmed by the user."
-#~ msgstr "Ostukorraldus on kinnitatud kasutaja poolt."
-
-#~ msgid "After Purchase order , Create invoice."
-#~ msgstr "Pärast ostukorraldust loo arve."
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "Kinnita ostukorraldus"
-
-#~ msgid "Order Status"
-#~ msgstr "Korralduse staatus"
-
-#~ msgid "Order Ref"
-#~ msgstr "Korralduse viide"
-
-#~ msgid "Purchase orders"
-#~ msgstr "Ostukorraldused"
-
-#~ msgid "Purchase order is approved by supplier."
-#~ msgstr "Ostukorraldus on heaks kiidetud tarnija poolt."
-
-#~ msgid "Purchase order"
-#~ msgstr "Ostukorraldus"
-
-#~ msgid "New Purchase Order"
-#~ msgstr "Uus ostukorraldus"
-
-#, python-format
-#~ msgid "Could not cancel this purchase order !"
-#~ msgstr "Seda ostukorraldust ei saa tühistada !"
-
-#, python-format
-#~ msgid "Could not cancel purchase order !"
-#~ msgstr "Ostukorraldust ei saa tühistada !"
-
-#~ msgid "Purchase Orders in Progress"
-#~ msgstr "Ostukorraldused töötlemisel"
-
-#~ msgid "Date"
-#~ msgstr "Kuupäev"

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-10 15:39+0000\n"
+"PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-11 05:09+0000\n"
-"X-Generator: Launchpad (build 14771)\n"
+"X-Launchpad-Export-Date: 2012-02-18 06:13+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -67,12 +67,12 @@ msgstr "资产"
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
-msgstr ""
+msgstr "表示这个资产的第一次计提折旧应该是采购日期而不是1月1日"
 
 #. module: account_asset
 #: field:account.asset.history,name:0
 msgid "History name"
-msgstr ""
+msgstr "历史名称"
 
 #. module: account_asset
 #: field:account.asset.asset,company_id:0
@@ -127,7 +127,7 @@ msgstr "资产类别"
 msgid ""
 "This wizard will post the depreciation lines of running assets that belong "
 "to the selected period."
-msgstr ""
+msgstr "这个向导将生成所选期间正在使用的固定资产的折旧行"
 
 #. module: account_asset
 #: field:account.asset.asset,account_move_line_ids:0
@@ -145,7 +145,7 @@ msgstr "折旧明细"
 #. module: account_asset
 #: help:account.asset.asset,salvage_value:0
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr ""
+msgstr "折旧后资产的剩余价值金额"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
@@ -196,7 +196,7 @@ msgstr "会计分录中包含错误的借贷值！"
 #. module: account_asset
 #: view:asset.asset.report:0 field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
-msgstr ""
+msgstr "折旧行编号"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -219,12 +219,12 @@ msgstr "引用"
 #. module: account_asset
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "BBA传输结构有误！"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Account Asset"
-msgstr ""
+msgstr "资产会计"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
@@ -264,7 +264,7 @@ msgstr "计算指定时间段内的折旧"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Change Duration"
-msgstr ""
+msgstr "修改周期"
 
 #. module: account_asset
 #: field:account.asset.category,account_analytic_id:0
@@ -279,14 +279,14 @@ msgstr "计算方法"
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
 msgid "State here the time during 2 depreciations, in months"
-msgstr ""
+msgstr "在这里输入两次折旧的间隔月数"
 
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr ""
+msgstr "等比折旧仅用于“折旧次数”的计时方式"
 
 #. module: account_asset
 #: help:account.asset.history,method_time:0
@@ -297,6 +297,9 @@ msgid ""
 "Ending Date: Choose the time between 2 depreciations and the date the "
 "depreciations won't go beyond."
 msgstr ""
+"用于计算折旧行的日期和次数的方法。\n"
+"折旧次数：设定折旧次数和两次折旧之间的间隔时间\n"
+"截止日期：设定两次折旧的间隔时间和折旧的截止日期"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
@@ -424,12 +427,12 @@ msgstr "计时方法"
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Analytic information"
-msgstr ""
+msgstr "分析信息"
 
 #. module: account_asset
 #: view:asset.modify:0
 msgid "Asset durations to modify"
-msgstr ""
+msgstr "要修改的资产周期"
 
 #. module: account_asset
 #: constraint:account.move.line:0
@@ -466,6 +469,9 @@ msgid ""
 "  * Ending Date: Choose the time between 2 depreciations and the date the "
 "depreciations won't go beyond."
 msgstr ""
+"选择用于计算折旧行的日期和次数的方法。\n"
+"折旧次数：设定折旧次数和两次折旧之间的间隔时间\n"
+"截止日期：设定两次折旧的间隔时间和折旧的截止日期"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -486,7 +492,7 @@ msgstr "业务伙伴"
 #. module: account_asset
 #: view:asset.asset.report:0 field:asset.asset.report,depreciation_value:0
 msgid "Amount of Depreciation Lines"
-msgstr ""
+msgstr "折旧行金额"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -591,7 +597,7 @@ msgstr "基本设置"
 #. module: account_asset
 #: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
-msgstr ""
+msgstr "年限百分比"
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -640,7 +646,7 @@ msgstr "递减"
 msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
-msgstr ""
+msgstr "选择要对正在使用的固定资产自动提折旧的期间"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -650,7 +656,7 @@ msgstr "当前"
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Amount to Depreciate"
-msgstr ""
+msgstr "要折旧的金额"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -693,6 +699,9 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that state."
 msgstr ""
+"新建的固定资产是“草稿”状态。\n"
+"被确认的固定资产是“正在运行”状态，可以折旧并过账到财务。\n"
+"你可以在折旧结束后关闭这个固定资产。如果最后一个折旧行已过帐，资产自动进入这个状态。"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -704,7 +713,7 @@ msgstr "名称"
 msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
-msgstr ""
+msgstr "如果你像让这类固定资产在开发票之后自动确认为“运行”状态，勾选这里。"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -743,7 +752,7 @@ msgstr "上月采购的资产"
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:49
 #, python-format
 msgid "Created Asset Moves"
-msgstr ""
+msgstr "新建固定资产会计凭证"
 
 #. module: account_asset
 #: constraint:account.move.line:0
@@ -756,12 +765,12 @@ msgid ""
 "From this report, you can have an overview on all depreciation. The tool "
 "search can also be used to personalise your Assets reports and so, match "
 "this analysis to your needs;"
-msgstr ""
+msgstr "在这个报表里，你可以看到所有折旧的信息。可以用搜索工具个性化你的固定资产报表以满足你的分析需要。"
 
 #. module: account_asset
 #: help:account.asset.category,method_period:0
 msgid "State here the time between 2 depreciations, in months"
-msgstr ""
+msgstr "在这里输入两次折旧的间隔月份"
 
 #. module: account_asset
 #: field:account.asset.asset,method_number:0
@@ -772,25 +781,25 @@ msgstr ""
 #: selection:account.asset.history,method_time:0
 #: field:asset.modify,method_number:0
 msgid "Number of Depreciations"
-msgstr ""
+msgstr "折旧次数"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Create Move"
-msgstr ""
+msgstr "新建会计凭证"
 
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
 msgid "Post Depreciation Lines"
-msgstr ""
+msgstr "折旧行过账"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Confirm Asset"
-msgstr ""
+msgstr "确认固定资产"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
 msgid "Asset Hierarchy"
-msgstr ""
+msgstr "固定资产树"

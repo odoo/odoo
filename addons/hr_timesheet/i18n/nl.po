@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2011-01-13 08:01+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"PO-Revision-Date: 2012-02-20 09:25+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:31+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-02-21 06:35+0000\n"
+"X-Generator: Launchpad (build 14838)\n"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:43
@@ -106,7 +106,7 @@ msgstr "Vr"
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
 msgid "UoM"
-msgstr ""
+msgstr "Eenheid"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -151,7 +151,7 @@ msgstr "Naam medewerker"
 #. module: hr_timesheet
 #: field:hr.sign.out.project,account_id:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Project / Kostenplaats"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
@@ -194,7 +194,7 @@ msgstr "Waarschuwing"
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Relatie"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -219,7 +219,7 @@ msgstr "Zon"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Kostenplaats"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -263,6 +263,8 @@ msgstr "Categorieën"
 #: constraint:hr.analytic.timesheet:0
 msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
 msgstr ""
+"Het is niet mogelijk een bevestigde/gereed zijnde boeking van een urenstaat "
+"te wijzigen!"
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -314,7 +316,7 @@ msgstr "Werkomschrijving"
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Invoice Analysis"
-msgstr ""
+msgstr "Factuur analyse"
 
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
@@ -330,7 +332,7 @@ msgstr "Klok in / Klok uit per project"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
-msgstr ""
+msgstr "Definieer uw kostenplaatsstructuur"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -365,11 +367,14 @@ msgid ""
 "analyse costs and revenues. In OpenERP, analytic accounts are also used to "
 "track customer contracts."
 msgstr ""
+"U dient een kostenplaatsstructuur te maken op basis van de gewenste analyses "
+"op kosten en opbrengsten. In OpenERP worden kostenplaatsen ook gebruikt om "
+"klantcontracten te beheren."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic Line"
-msgstr ""
+msgstr "Kostenplaatsboeking"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:40
@@ -515,7 +520,7 @@ msgstr "Medewerker"
 msgid ""
 "Through this menu you can register and follow your workings hours by project "
 "every day."
-msgstr ""
+msgstr "In dit menu kunt u uw gewerkte uren per project, per dag bekijken."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -648,161 +653,3 @@ msgstr "Financieel"
 #: view:hr.sign.out.project:0
 msgid "Change Work"
 msgstr "Verander taak"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Fout: Ongeldige EAN-code"
-
-#~ msgid "Day"
-#~ msgstr "Dag"
-
-#~ msgid "My Working Hours"
-#~ msgstr "Mijn werkuren"
-
-#, python-format
-#~ msgid "ValidateError"
-#~ msgstr "Validatiefout"
-
-#~ msgid "Sum"
-#~ msgstr "Som"
-
-#~ msgid "Choose Users"
-#~ msgstr "Kies gebruikers"
-
-#~ msgid "To be invoiced"
-#~ msgstr "Nog te factureren"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Fout: de standaard meeteenheid en de inkoopeenheid moet in de zelfde "
-#~ "categorie liggen."
-
-#~ msgid "Sign in status"
-#~ msgstr "Klok in status"
-
-#~ msgid "User"
-#~ msgstr "Gebruiker"
-
-#~ msgid "Choose your month"
-#~ msgstr "Kies uw maand"
-
-#~ msgid "Current Server Date"
-#~ msgstr "Huidige tijd op server"
-
-#~ msgid "Working Hours"
-#~ msgstr "Werkuren"
-
-#~ msgid "Total"
-#~ msgstr "Totaal"
-
-#~ msgid "Timesheet Process"
-#~ msgstr "Urenstaat proces"
-
-#, python-format
-#~ msgid ""
-#~ "No analytic journal available for this employee.\n"
-#~ "Define an employee for the selected user and assign an analytic journal."
-#~ msgstr ""
-#~ "Geen kostenplaats journaal aanwezig voor deze werknemer.\n"
-#~ "Definieer een werknemer voor de geselecteerde gebruiker en wijs een "
-#~ "kostenplaats journaal toe."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
-
-#~ msgid "Human Resources (Timesheet encoding)"
-#~ msgstr "Personeelszaken (Invoer urenstaat)"
-
-#, python-format
-#~ msgid "UnknownError"
-#~ msgstr "Onbekende fout"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#~ msgid "Hour"
-#~ msgstr "Uur"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor weergave!"
-
-#~ msgid "Analytic line"
-#~ msgstr "Kostenplaatsboeking"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr ""
-#~ "Fout: Verkoopeenheid moet in een andere categorie staan dan de maateenheid"
-
-#~ msgid "Working Hours of The Day"
-#~ msgstr "Werkuren van vandaag"
-
-#~ msgid "Employee's name"
-#~ msgstr "Naam werknemer"
-
-#~ msgid "Consultancy - Senior Developer"
-#~ msgstr "Consultancy - Senior ontwikkelaar"
-
-#~ msgid "My Working Hours of The Day"
-#~ msgstr "Mijn werkuren van vandaag"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Kostenplaats"
-
-#~ msgid "Working Time"
-#~ msgstr "Gewerkte tijd"
-
-#~ msgid "Analysis summary"
-#~ msgstr "Samenvatting analyse"
-
-#~ msgid "Timesheet line"
-#~ msgstr "Regel urenstaat"
-
-#~ msgid "Service on Timesheet"
-#~ msgstr "Diensten op urenverantwoording"
-
-#~ msgid "Anlytic account"
-#~ msgstr "Kostenplaats"
-
-#~ msgid "Partner Id"
-#~ msgstr "Relatie Id"
-
-#~ msgid ""
-#~ "Through Working Hours you can register your working hours by project every "
-#~ "day."
-#~ msgstr ""
-#~ "Via Gewerkte uren kunt u elke dag uw gewerkte uren per project vastleggen."
-
-#~ msgid ""
-#~ "\n"
-#~ "This module implements a timesheet system. Each employee can encode and\n"
-#~ "track their time spent on the different projects. A project is an\n"
-#~ "analytic account and the time spent on a project generates costs on\n"
-#~ "the analytic account.\n"
-#~ "\n"
-#~ "Lots of reporting on time and employee tracking are provided.\n"
-#~ "\n"
-#~ "It is completely integrated with the cost accounting module. It allows you\n"
-#~ "to set up a management by affair.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Deze module implementeert een urenverantwoording systeem. Elke medewerker "
-#~ "kan haar gewerkte\n"
-#~ "tijd vastleggen op de verschillende projecten. Een project is een "
-#~ "kostenplaats rekening en\n"
-#~ "de gewerkte tijd op een project genereert een kostenboeking op de "
-#~ "kostenplaats.\n"
-#~ "\n"
-#~ "Veel overzichten op tijd en medewerkers zijn voorzien.\n"
-#~ "\n"
-#~ "Het is volledig geïntegreerd met de kostenplaatsen administratie. Het laat u "
-#~ "een \n"
-#~ "\"management by affair\" opzetten.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Fout ! U kunt geen afdeling selecteren waarvan de medewerker de beheerder is."

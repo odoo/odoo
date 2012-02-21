@@ -7,81 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2011-10-11 18:12+0000\n"
+"PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: Aare Vesi <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:27+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_deliveryorder0
-msgid "Delivery Order"
-msgstr "Tarnetellimus"
-
-#. module: sale
-#: field:sale.order,order_line:0
-msgid "Order Lines"
-msgstr "Korralduse read"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Untaxed amount"
-msgstr "Maksustamata summa"
-
-#. module: sale
-#: code:addons/sale/sale.py:295 code:addons/sale/sale.py:1074
-#: code:addons/sale/sale.py:1303
-#, python-format
-msgid "Invalid action !"
-msgstr "Vigane tegevus !"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Set to Draft"
-msgstr "Sea mustandiks"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Order"
-msgstr "Korraldus"
-
-#. module: sale
-#: view:sale.order:0
-msgid "States"
-msgstr "Staatused"
-
-#. module: sale
-#: field:sale.order,amount_untaxed:0
-msgid "Untaxed Amount"
-msgstr "Maksustamata summa"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_form
-#: model:ir.ui.menu,name:sale.menu_sale_order view:sale.order:0
-msgid "Sales Orders"
-msgstr "Müügitellimused"
-
-#~ msgid "Sales orders"
-#~ msgstr "Müügitellimused"
-
-#, python-format
-#~ msgid "You must first cancel all invoices attached to this sale order."
-#~ msgstr ""
-#~ "Pead kõigepealt tühistama kõik arved mis on seotud selle ostutellimusega."
-
-#, python-format
-#~ msgid "Could not cancel sale order !"
-#~ msgstr "Müügitellimust ei saa tühistada!"
-
-#, python-format
-#~ msgid "Could not cancel this sale order !"
-#~ msgstr "Seda müügitellimust ei saa tühistada !"
-
-#~ msgid "Purchase Pricelists"
-#~ msgstr "Ostu hinnakirjad"
+"X-Launchpad-Export-Date: 2012-02-18 07:04+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -589,6 +522,11 @@ msgid "Invoiced"
 msgstr "Arveldatud"
 
 #. module: sale
+#: model:process.node,name:sale.process_node_deliveryorder0
+msgid "Delivery Order"
+msgstr "Tarnetellimus"
+
+#. module: sale
 #: field:sale.order,date_confirm:0
 msgid "Confirmation Date"
 msgstr ""
@@ -694,6 +632,16 @@ msgid "Order N°"
 msgstr "Korraldus Nr."
 
 #. module: sale
+#: field:sale.order,order_line:0
+msgid "Order Lines"
+msgstr "Korralduse read"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Untaxed amount"
+msgstr "Maksustamata summa"
+
+#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
 msgid "Lines to Invoice"
@@ -728,6 +676,13 @@ msgstr "Kokku :"
 #: view:sale.report:0
 msgid "My Sales"
 msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:295 code:addons/sale/sale.py:1074
+#: code:addons/sale/sale.py:1303
+#, python-format
+msgid "Invalid action !"
+msgstr "Vigane tegevus !"
 
 #. module: sale
 #: view:sale.order:0
@@ -1128,6 +1083,11 @@ msgstr ""
 #: model:process.node,name:sale.process_node_packinglist0
 msgid "Pick List"
 msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Set to Draft"
+msgstr "Sea mustandiks"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
@@ -1590,6 +1550,11 @@ msgid "Logistic"
 msgstr ""
 
 #. module: sale
+#: view:sale.order.line:0
+msgid "Order"
+msgstr "Korraldus"
+
+#. module: sale
 #: code:addons/sale/sale.py:1017
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:71
 #, python-format
@@ -1617,6 +1582,11 @@ msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
 msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "States"
+msgstr "Staatused"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -1907,6 +1877,11 @@ msgid "Old Quotations"
 msgstr ""
 
 #. module: sale
+#: field:sale.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Maksustamata summa"
+
+#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:170
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 #: view:sale.advance.payment.inv:0 view:sale.order:0
@@ -1964,6 +1939,12 @@ msgstr ""
 #: model:ir.ui.menu,name:sale.menu_email_templates
 msgid "Email Templates"
 msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_form
+#: model:ir.ui.menu,name:sale.menu_sale_order view:sale.order:0
+msgid "Sales Orders"
+msgstr "Müügitellimused"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
@@ -2176,393 +2157,3 @@ msgstr ""
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
 msgstr "Arve kohaletoimetamiste põhjal"
-
-#~ msgid "Sales Configuration"
-#~ msgstr "Müükide seadistused"
-
-#~ msgid "My sales order waiting Invoice"
-#~ msgstr "Minu müügitellimused mis ootavad arvet"
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr "Viga: vaikimisi MÜ ja ostu MÜ peavad olema samast kategooriast."
-
-#~ msgid "Recreate Procurement"
-#~ msgstr "Loo hange uuesti"
-
-#~ msgid "You invoice has been successfully created !"
-#~ msgstr "sinu arve on loodud !"
-
-#~ msgid "Origin"
-#~ msgstr "Päritolu"
-
-#~ msgid "Reference"
-#~ msgstr "Viide"
-
-#~ msgid "Procure Method"
-#~ msgstr "Hankimise viis"
-
-#~ msgid "Net Price"
-#~ msgstr "Netohind"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Vigane XML vaate arhitektuurile!"
-
-#~ msgid "Canceled"
-#~ msgstr "Tühistatud"
-
-#~ msgid "Sale Procurement"
-#~ msgstr "Müügihange"
-
-#~ msgid "Status"
-#~ msgstr "Staatus"
-
-#~ msgid "Sale Pricelists"
-#~ msgstr "Müügi Hinnakirjad"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
-
-#~ msgid "Sale Invoice"
-#~ msgstr "Müügiarve"
-
-#~ msgid "Make invoices"
-#~ msgstr "Loo arved"
-
-#~ msgid "Partial Delivery"
-#~ msgstr "Osaline kohaletoimetamine"
-
-#~ msgid "Steps To Deliver a Sale Order"
-#~ msgstr "Sammud müügikorralduse kohaletoimetamiseks"
-
-#~ msgid "Automatic Declaration"
-#~ msgstr "Automaatne deklareerimine"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
-
-#~ msgid ""
-#~ "Whenever confirm button is clicked, the draft state is moved to manual. that "
-#~ "is, quotation is moved to  sale order."
-#~ msgstr ""
-#~ "Kui kinnita nuppu vajutatakse siis mustandi olek muudetakse manuaalseks ja "
-#~ "hinnapakkumine müügikorralduseks."
-
-#~ msgid ""
-#~ "This is the list of picking list that have been generated for this invoice"
-#~ msgstr "See on nimekiri noppelehtedest, mis on genereeritud sellele arvele."
-
-#~ msgid "Shipping Policy"
-#~ msgstr "Saatmispoliitika"
-
-#~ msgid "Manual Designation"
-#~ msgstr "Käsitsi määramine"
-
-#~ msgid ""
-#~ "The sale order will automatically create the invoice proposition (draft "
-#~ "invoice). Ordered and delivered quantities may not be the same. You have to "
-#~ "choose if you invoice based on ordered or shipped quantities. If the product "
-#~ "is a service, shipped quantities means hours spent on the associated tasks."
-#~ msgstr ""
-#~ "Müügikorraldus loob automaatselt arve ettepaneku (mustand arve). Tellitud ja "
-#~ "kätte toimetatud kogused ei pruugi olla samad. Sa pead valima, kas sa "
-#~ "arveldad tellitud või saadetud koguste põhjal. Kui toode on teenus siis "
-#~ "saadetud kogused tähendavad seotud ülesannetele kulutatud tunde."
-
-#~ msgid "My sales order in progress"
-#~ msgstr "Minu edenemisel müügikorraldused"
-
-#~ msgid "Procurement is created after confirmation of sale order."
-#~ msgstr "Hange luuakse pärast müügikorralduse kinnitamist."
-
-#~ msgid "Outgoing Products"
-#~ msgstr "Väljuvad tooted"
-
-#~ msgid "All at Once"
-#~ msgstr "Kõik korraga"
-
-#~ msgid "Sale Shop"
-#~ msgstr "Müügikauplus"
-
-#~ msgid "Manual Description"
-#~ msgstr "Manuaalne kirjeldus"
-
-#~ msgid ""
-#~ "Packing list is created when 'Assign' is being clicked after confirming the "
-#~ "sale order. This transaction moves the sale order to packing list."
-#~ msgstr ""
-#~ "Pakkeleht luuakse, kui klõpsatakse 'Omista' pärast müügikorralduse "
-#~ "kinnitamist. See tehing liigutab müügikorralduse pakkelehele."
-
-#~ msgid ""
-#~ "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
-#~ "will automatic create after delivery."
-#~ msgstr ""
-#~ "Kui sa valid Tarnepoliitikaks 'Automaatne arve pärast tarnimist' siis arve "
-#~ "luuakse automaatselt pärast tarnimist."
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Viga: TÜ kategooria peab erinema MÜ kategooriast"
-
-#~ msgid "Packing"
-#~ msgstr "Pakkimine"
-
-#~ msgid "Payment accounts"
-#~ msgstr "Maksekontod"
-
-#~ msgid "Manages the delivery and invoicing progress"
-#~ msgstr "Haldab tarne ja arveldamise edenemist"
-
-#~ msgid "Packing Default Policy"
-#~ msgstr "Pakkimise vaikimisi poliitika"
-
-#~ msgid "Draft customer invoice, to be reviewed by accountant."
-#~ msgstr "Kliendi arve mustand, raamatupidajale üle vaatamiseks."
-
-#~ msgid "Sales Order To Be Invoiced"
-#~ msgstr "Müügikorraldus arveldada"
-
-#~ msgid "Draft Invoice"
-#~ msgstr "Arve mustand"
-
-#~ msgid "Procurement for each line"
-#~ msgstr "Hankimine igale reale"
-
-#~ msgid "Shipping Default Policy"
-#~ msgstr "Tarnimise vaikimisi poliitika"
-
-#~ msgid "Sales Process"
-#~ msgstr "Müügiprotsess"
-
-#~ msgid "Uninvoiced Lines"
-#~ msgstr "Arveldamata read"
-
-#~ msgid ""
-#~ "In sale order , procuerement for each line and it comes into the procurement "
-#~ "order"
-#~ msgstr ""
-#~ "Müügikorraldusel hankimine igale reale ja see muutub hankekorralduseks."
-
-#~ msgid "Configure Sale Order Logistic"
-#~ msgstr "Seadista müügikorralduse logistika"
-
-#~ msgid "Shipping & Manual Invoice"
-#~ msgstr "Saatmine ja käsitsi arveldamine"
-
-#~ msgid "Procurement Corrected"
-#~ msgstr "Hange korrastatud"
-
-#~ msgid "Product sales"
-#~ msgstr "Toote müügid"
-
-#~ msgid "Packing Policy"
-#~ msgstr "Pakkimise poliitika"
-
-#~ msgid "My sales in shipping exception"
-#~ msgstr "Minu müügid saatmise erandis"
-
-#~ msgid "Our Salesman"
-#~ msgstr "Meie müügimees"
-
-#~ msgid "One procurement for each product."
-#~ msgstr "Üks hange igale tootele."
-
-#~ msgid "Create Advance Invoice"
-#~ msgstr "Loo ettemaksuarve"
-
-#~ msgid ""
-#~ "Invoice is created when 'Create Invoice' is being clicked after confirming "
-#~ "the sale order. This transaction moves the sale order to invoices."
-#~ msgstr ""
-#~ "Arve luuakse, kui klõpsatakse 'Loo arve' pärast müügikorralduse kinnitamist. "
-#~ "See tehing liigutab müügikorralduse arvetele."
-
-#~ msgid "Direct Delivery"
-#~ msgstr "Otsetarne"
-
-#~ msgid "Sequence"
-#~ msgstr "Järjekord"
-
-#~ msgid "Make Invoice"
-#~ msgstr "Loo arve"
-
-#~ msgid "Other data"
-#~ msgstr "Muud andmed"
-
-#~ msgid "Do you really want to create the invoices ?"
-#~ msgstr "Kas soovid tõesti luua arved ?"
-
-#~ msgid "Invoice based on packing lists"
-#~ msgstr "Arve pakkelehtede põhjal"
-
-#~ msgid "Set Default"
-#~ msgstr "Sea vaikeväärtus"
-
-#~ msgid "Advance Payment"
-#~ msgstr "Ettemaks"
-
-#~ msgid "Quotation (A sale order in draft state)"
-#~ msgstr "Hinnapakkumine (Müügikorraldus mustandi olekus)"
-
-#~ msgid "Open Advance Invoice"
-#~ msgstr "Ava ettemaksuarve"
-
-#, python-format
-#~ msgid "Cannot delete Sale Order(s) which are already confirmed !"
-#~ msgstr "Ei saa kustutada juba kinnitatud müügikorraldust!"
-
-#~ msgid "New Quotation"
-#~ msgstr "Uus hinnapakkumine"
-
-#~ msgid "Invoice Corrected"
-#~ msgstr "Arve korrigeeritud"
-
-#~ msgid "Payment Terms"
-#~ msgstr "Maksetingimused"
-
-#~ msgid "Total amount"
-#~ msgstr "Kogusumma"
-
-#~ msgid "Configure Picking Policy for Sale Order"
-#~ msgstr "Seadista noppepoliitika müügikorraldusele"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Viga: Vigane EAN kood"
-
-#~ msgid ""
-#~ "This is the list of invoices that have been generated for this sale order. "
-#~ "The same sale order may have been invoiced in several times (by line for "
-#~ "example)."
-#~ msgstr ""
-#~ "See on nimekiri arvetest, mis on genereeritud sellele müügikorraldusele. "
-#~ "Sama müügikorraldus võib olla arveldatud mitu korda (rea kaupa nt)."
-
-#~ msgid "Delivery Delay"
-#~ msgstr "Kohaletoimetamise viivitus"
-
-#~ msgid "Related invoices"
-#~ msgstr "Seotud arved"
-
-#~ msgid "Customer Ref"
-#~ msgstr "Kliendi viide"
-
-#~ msgid "Payment Accounts"
-#~ msgstr "Maksekontod"
-
-#~ msgid "Invoice from the Packing"
-#~ msgstr "Arve pakkimisest"
-
-#, python-format
-#~ msgid "You cannot cancel a sale order line that has already been invoiced !"
-#~ msgstr "Sa ei saa tühistada müügikorralduse rida, mis on juba arveldatud!"
-
-#, python-format
-#~ msgid "You must first cancel all packing attached to this sale order."
-#~ msgstr ""
-#~ "Sa pead kõigepealt tühistama kõik pakkimised, mis sellele müügikorraldusele "
-#~ "lisatud."
-
-#~ msgid "Related Packing"
-#~ msgstr "Seotud pakkimine"
-
-#, python-format
-#~ msgid ""
-#~ "You have to select a customer in the sale form !\n"
-#~ "Please set one customer before choosing a product."
-#~ msgstr ""
-#~ "Sa pead valima kliendi müügivormis!\n"
-#~ "Palun määra üks klient enne toote valimist."
-
-#~ msgid "Sales Management"
-#~ msgstr "Müügihaldus"
-
-#~ msgid "Sales order"
-#~ msgstr "Müügikorraldus"
-
-#~ msgid "All Sales Order"
-#~ msgstr "Kõik müügikorraldused"
-
-#~ msgid "My Sales Order"
-#~ msgstr "Minu müügikorraldus"
-
-#~ msgid "Delivery, from the warehouse to the customer."
-#~ msgstr "Kohaletoimetamine laost kliendile."
-
-#~ msgid "Complete Delivery"
-#~ msgstr "Täielik kohaletoimetamine"
-
-#~ msgid "After confirming order, Create the invoice."
-#~ msgstr "Pärast korralduse kinnitamist loo arve."
-
-#~ msgid "Sale Order Procurement"
-#~ msgstr "Müügikorralduste hanked"
-
-#~ msgid "Invoice on Order After Delivery"
-#~ msgstr "Arve korraldusele pärast kohaletoimetamist"
-
-#~ msgid "Order Ref"
-#~ msgstr "Korralduse viide"
-
-#~ msgid "Confirm sale order and Create invoice."
-#~ msgstr "Kinnita müügikorraldus ja loo arve."
-
-#~ msgid "Sales order lines"
-#~ msgstr "Müügikorralduste read"
-
-#~ msgid "Sale Order"
-#~ msgstr "Müügikorraldus"
-
-#~ msgid "Sale Order Lines"
-#~ msgstr "Müügikorralduse read"
-
-#~ msgid ""
-#~ "The name and address of the contact that requested the order or quotation."
-#~ msgstr "Kontakti nimi ja aadress, kes taotles korraldust või hinnapakkumist."
-
-#~ msgid "Sale Order Line"
-#~ msgstr "Müügikorralduse rida"
-
-#~ msgid "Sale Order line"
-#~ msgstr "Müügikorralduse rida"
-
-#~ msgid "Delivery Order Only"
-#~ msgstr "Ainult kohaletoimetamise korraldus"
-
-#~ msgid "Invoice after delivery"
-#~ msgstr "Arvelda pärast kohaletoimetamist"
-
-#~ msgid "Deliver"
-#~ msgstr "Kohale toimetama"
-
-#~ msgid "Payment Before Delivery"
-#~ msgstr "Maksmine enne kohaletoimetamist"
-
-#~ msgid "Packing List & Delivery Order"
-#~ msgstr "Pakkeleht ja kohaletoimetamise korraldus"
-
-#~ msgid ""
-#~ "Confirming the packing list moves them to delivery order. This can be done "
-#~ "by clicking on 'Validate' button."
-#~ msgstr ""
-#~ "Pakkelehe kinnitamine liigutab need kohaletoimetamise korraldusele. Seda "
-#~ "saab teha klõpsates 'Valideeri' nuppu."
-
-#~ msgid ""
-#~ "By default, Open ERP is able to manage complex routing and paths of products "
-#~ "in your warehouse and partner locations. This will configure the most common "
-#~ "and simple methods to deliver products to the customer in one or two "
-#~ "operations by the worker."
-#~ msgstr ""
-#~ "Open ERP suudab vaikimisi hallata kompleksmarsruutimist ja toodete radasid "
-#~ "sinu loas ja partnerasukohtades. See seadistab kõige tavalisemad ja "
-#~ "lihtsamad meetodid toodete kohaletoimetamiseks kliendile ühe või kahe "
-#~ "operatsioonina töötaja poolt."
-
-#~ msgid ""
-#~ "This Configuration step use to set default picking policy when make sale "
-#~ "order"
-#~ msgstr ""
-#~ "Seda seadistuse sammu kasutatakse seadmaks vaikimisi tarnimise reeglit, kui "
-#~ "luuakse müügikorraldus"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-04-25 14:11+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-30 06:07+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2012-02-18 06:24+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: base_module_doc_rst
 #: view:ir.module.module:0
@@ -43,25 +43,9 @@ msgstr ""
 "Пожалуйста, выберите файл, куда будет записано Техническое руководство"
 
 #. module: base_module_doc_rst
-#: model:ir.module.module,description:base_module_doc_rst.module_meta_information
-msgid ""
-"\n"
-"    * This module generates the Technical Guides of selected modules in "
-"Restructured Text format (RST)\n"
-"    * It uses the Sphinx (http://sphinx.pocoo.org) implementation of RST\n"
-"    * It creates a tarball (.tgz file suffix) containing an index file and "
-"one file per module\n"
-"    * Generates Relationship Graph\n"
-"    "
-msgstr ""
-"\n"
-"    * Этот модуль генерирует Техническое Руководство для выбранных модулей в "
-"формате Restructured Text format (RST)\n"
-"    * Он использует реализацию RST из Sphinx (http://sphinx.pocoo.org)\n"
-"    * Это создает архив (с расширением .tgz), содержащий файл индекса и один "
-"файл на каждый модуль\n"
-"    * Создает граф отношений\n"
-"    "
+#: model:ir.model,name:base_module_doc_rst.model_ir_module_module
+msgid "Module"
+msgstr "Модуль"
 
 #. module: base_module_doc_rst
 #: wizard_field:tech.guide.rst,init,name:0
@@ -86,11 +70,6 @@ msgid "Relationship Graph"
 msgstr "Граф отношений"
 
 #. module: base_module_doc_rst
-#: model:ir.model,name:base_module_doc_rst.model_ir_module_module
-msgid "Module"
-msgstr "Модуль"
-
-#. module: base_module_doc_rst
 #: wizard_field:tech.guide.rst,init,rst_file:0
 msgid "file"
 msgstr "файл"
@@ -99,11 +78,6 @@ msgstr "файл"
 #: wizard_button:tech.guide.rst,init,end:0
 msgid "Close"
 msgstr "Закрыть"
-
-#. module: base_module_doc_rst
-#: model:ir.module.module,shortdesc:base_module_doc_rst.module_meta_information
-msgid "Module Technical Guide in Restructured Text "
-msgstr "Техническая документация модуля хранится в формате RST "
 
 #. module: base_module_doc_rst
 #: model:ir.actions.report.xml,name:base_module_doc_rst.report_proximity_graph

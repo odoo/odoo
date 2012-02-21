@@ -7,30 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2011-11-07 12:56+0000\n"
+"PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: hedererjs <hedererjs@asperience.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 05:58+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
-
-#. module: stock
-#: field:stock.inventory.line,product_uom:0
-#: field:stock.move.consume,product_uom:0 field:stock.move.scrap,product_uom:0
-msgid "Product UOM"
-msgstr "UdM du produit"
-
-#. module: stock
-#: field:stock.move,product_uos_qty:0
-msgid "Quantity (UOS)"
-msgstr "Quantité (UdV)"
-
-#. module: stock
-#: field:stock.move,product_uos:0
-msgid "Product UOS"
-msgstr "UdV du produit"
+"X-Launchpad-Export-Date: 2012-02-18 07:07+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -578,7 +562,7 @@ msgstr "Emplacement de destination"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move_line
 msgid "stock.partial.move.line"
-msgstr ""
+msgstr "stock.partial.move.line"
 
 #. module: stock
 #: code:addons/stock/stock.py:760
@@ -635,7 +619,7 @@ msgstr "Emplacement / Produit"
 #. module: stock
 #: field:stock.move,address_id:0
 msgid "Destination Address "
-msgstr ""
+msgstr "Adresse de destination "
 
 #. module: stock
 #: code:addons/stock/stock.py:1333
@@ -771,7 +755,7 @@ msgstr "Destinataire"
 #. module: stock
 #: model:stock.location,name:stock.location_refrigerator
 msgid "Refrigerator"
-msgstr ""
+msgstr "Réfrigérateur"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
@@ -1236,7 +1220,7 @@ msgstr "Eclater les lignes d'inventaire"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Physical Inventory"
-msgstr "Stock physique"
+msgstr "Inventaire physique"
 
 #. module: stock
 #: help:stock.location,chained_company_id:0
@@ -1263,6 +1247,12 @@ msgstr ""
 #: view:stock.move.split:0
 msgid "Lot number"
 msgstr "Numéro de lot"
+
+#. module: stock
+#: field:stock.inventory.line,product_uom:0
+#: field:stock.move.consume,product_uom:0 field:stock.move.scrap,product_uom:0
+msgid "Product UOM"
+msgstr "UdM du produit"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
@@ -1592,7 +1582,7 @@ msgstr "Date de commande"
 #: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
 msgid "INV: %s"
-msgstr ""
+msgstr "INV: %s"
 
 #. module: stock
 #: view:stock.location:0 field:stock.location,location_id:0
@@ -2016,7 +2006,7 @@ msgstr "Prix"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_memory
 msgid "stock.return.picking.memory"
-msgstr ""
+msgstr "stock.return.picking.memory"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2113,7 +2103,7 @@ msgstr "Unité logistique d'expédition : palette, boite, colis,..."
 #. module: stock
 #: view:stock.location:0
 msgid "Customer Locations"
-msgstr ""
+msgstr "Emplacements clients"
 
 #. module: stock
 #: view:stock.change.product.qty:0 view:stock.change.standard.price:0
@@ -2780,6 +2770,11 @@ msgid "Inventory '%s' is done."
 msgstr "L'inventaire '%s' est terminé."
 
 #. module: stock
+#: field:stock.move,product_uos_qty:0
+msgid "Quantity (UOS)"
+msgstr "Quantité (UdV)"
+
+#. module: stock
 #: code:addons/stock/stock.py:1743
 #, python-format
 msgid ""
@@ -2837,7 +2832,7 @@ msgstr "Incoterms"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_picking_line
 msgid "stock.partial.picking.line"
-msgstr ""
+msgstr "stock.partial.picking.line"
 
 #. module: stock
 #: report:lot.stock.overview:0 report:lot.stock.overview_all:0
@@ -3035,6 +3030,11 @@ msgid "Please provide Proper Quantity !"
 msgstr "Veuillez fournir la bonne quantité !"
 
 #. module: stock
+#: field:stock.move,product_uos:0
+msgid "Product UOS"
+msgstr "UdV du produit"
+
+#. module: stock
 #: field:stock.location,posz:0
 msgid "Height (Z)"
 msgstr "Hauteur (Z)"
@@ -3089,12 +3089,12 @@ msgstr "Produits par catégorie"
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Waiting Another Operation"
-msgstr ""
+msgstr "En attente d'une autre opération"
 
 #. module: stock
 #: view:stock.location:0
 msgid "Supplier Locations"
-msgstr ""
+msgstr "Emplacements fournisseurs"
 
 #. module: stock
 #: field:stock.partial.move.line,wizard_id:0
@@ -3167,7 +3167,7 @@ msgstr "Emplacement source"
 #. module: stock
 #: view:stock.move:0
 msgid " Waiting"
-msgstr ""
+msgstr " En attente"
 
 #. module: stock
 #: view:product.template:0
@@ -4071,7 +4071,7 @@ msgstr "Éclater en lot de production"
 #: code:addons/stock/wizard/stock_move.py:213
 #, python-format
 msgid "Processing Error"
-msgstr ""
+msgstr "Erreur de traitement"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -4249,1096 +4249,3 @@ msgstr ""
 msgid "Optional localization details, for information purpose only"
 msgstr ""
 "Détails facultatifs sur la localisation, uniquement à but informatif."
-
-#~ msgid "LIFO"
-#~ msgstr "LIFO"
-
-#~ msgid "STOCK_SAVE"
-#~ msgstr "STOCK_SAVE"
-
-#~ msgid "Sub Products"
-#~ msgstr "Sous produits"
-
-#~ msgid "terp-account"
-#~ msgstr "terp-account"
-
-#~ msgid "STOCK_SORT_ASCENDING"
-#~ msgstr "STOCK_SORT_ASCENDING"
-
-#~ msgid "Revision"
-#~ msgstr "Révision"
-
-#~ msgid "STOCK_MEDIA_FORWARD"
-#~ msgstr "STOCK_MEDIA_FORWARD"
-
-#~ msgid "STOCK_ZOOM_100"
-#~ msgstr "STOCK_ZOOM_100"
-
-#~ msgid "Fill Inventory for specific location"
-#~ msgstr "Effectuer un inventaire pour l'emplacement spécifié"
-
-#~ msgid "Amount"
-#~ msgstr "Montant"
-
-#~ msgid "Products Received"
-#~ msgstr "Réception produit"
-
-#~ msgid "Force to use a Production Lot during receptions"
-#~ msgstr "Force l'utilisation des lot de productions en réception"
-
-#~ msgid "Move History"
-#~ msgstr "Historique du mouvement"
-
-#~ msgid "STOCK_NEW"
-#~ msgstr "STOCK_NEW"
-
-#~ msgid "STOCK_CANCEL"
-#~ msgstr "STOCK_CANCEL"
-
-#~ msgid "STOCK_QUIT"
-#~ msgstr "STOCK_QUIT"
-
-#~ msgid "STOCK_GOTO_TOP"
-#~ msgstr "STOCK_GOTO_TOP"
-
-#~ msgid "STOCK_ABOUT"
-#~ msgstr "STOCK_ABOUT"
-
-#~ msgid "terp-hr"
-#~ msgstr "terp-hr"
-
-#~ msgid "terp-purchase"
-#~ msgstr "terp-purchase"
-
-#~ msgid "STOCK_DND"
-#~ msgstr "STOCK_DND"
-
-#~ msgid "Products Sent"
-#~ msgstr "Produits envoyés"
-
-#~ msgid "STOCK_GOTO_FIRST"
-#~ msgstr "STOCK_GOTO_FIRST"
-
-#~ msgid "Serial"
-#~ msgstr "Numéro de Série"
-
-#~ msgid "Customer Refund"
-#~ msgstr "Note de Crédit Client"
-
-#~ msgid "STOCK_FLOPPY"
-#~ msgstr "STOCK_FLOPPY"
-
-#~ msgid "Stock location"
-#~ msgstr "Emplacement de stock"
-
-#~ msgid "Unreceived Products"
-#~ msgstr "Produits non reçus"
-
-#~ msgid "Status"
-#~ msgstr "État"
-
-#~ msgid "STOCK_UNDERLINE"
-#~ msgstr "STOCK_UNDERLINE"
-
-#~ msgid "Move Lines"
-#~ msgstr "Lignes de mouvements"
-
-#~ msgid "Include all childs for the location"
-#~ msgstr "Inclure tous les sous-emplacements"
-
-#~ msgid "Track line"
-#~ msgstr "Suivre la ligne"
-
-#~ msgid "STOCK_BOLD"
-#~ msgstr "STOCK_BOLD"
-
-#~ msgid "terp-graph"
-#~ msgstr "terp-graph"
-
-#~ msgid "STOCK_PREFERENCES"
-#~ msgstr "STOCK_PREFERENCES"
-
-#~ msgid "Stock Level 1"
-#~ msgstr "Stock niveau 1"
-
-#~ msgid "STOCK_MEDIA_REWIND"
-#~ msgstr "STOCK_MEDIA_REWIND"
-
-#~ msgid "Stock Properties"
-#~ msgstr "Propriétés du Stock"
-
-#~ msgid "Make Picking"
-#~ msgstr "Faire colisage"
-
-#~ msgid "Draft Moves"
-#~ msgstr "Mouvements en brouillon"
-
-#~ msgid "Product Id"
-#~ msgstr "Identifiant produit"
-
-#~ msgid "Customer Invoice"
-#~ msgstr "Facture client"
-
-#~ msgid "STOCK_CUT"
-#~ msgstr "STOCK_CUT"
-
-#~ msgid "This account will be used to value the output stock"
-#~ msgstr "Ce compte sera utilisé pour valoriser le stock sortant"
-
-#~ msgid "STOCK_ZOOM_FIT"
-#~ msgstr "STOCK_ZOOM_FIT"
-
-#~ msgid ""
-#~ "This journal will be used for the accounting move generated by stock move"
-#~ msgstr ""
-#~ "Ce journal sera utilisé pour les mouvements de compte générés par les "
-#~ "mouvements de stock"
-
-#~ msgid "Calendar of Deliveries"
-#~ msgstr "Calendrier des livraisons"
-
-#~ msgid "STOCK_SAVE_AS"
-#~ msgstr "STOCK_SAVE_AS"
-
-#~ msgid "STOCK_DIALOG_ERROR"
-#~ msgstr "STOCK_DIALOG_ERROR"
-
-#~ msgid "Latest Date of Inventory"
-#~ msgstr "Dernière date d'inventaire"
-
-#~ msgid "STOCK_INDEX"
-#~ msgstr "STOCK_INDEX"
-
-#~ msgid "STOCK_GOTO_BOTTOM"
-#~ msgstr "STOCK_GOTO_BOTTOM"
-
-#~ msgid "Quantity per lot"
-#~ msgstr "Quantité par Lot"
-
-#~ msgid "STOCK_GO_FORWARD"
-#~ msgstr "STOCK_GO_FORWARD"
-
-#~ msgid "STOCK_UNDELETE"
-#~ msgstr "STOCK_UNDELETE"
-
-#~ msgid "STOCK_EXECUTE"
-#~ msgstr "STOCK_EXECUTE"
-
-#~ msgid "STOCK_DIALOG_QUESTION"
-#~ msgstr "STOCK_DIALOG_QUESTION"
-
-#~ msgid "STOCK_SELECT_FONT"
-#~ msgstr "STOCK_SELECT_FONT"
-
-#~ msgid "STOCK_PASTE"
-#~ msgstr "STOCK_PASTE"
-
-#~ msgid "Tracking Number"
-#~ msgstr "Numéro de suivi"
-
-#~ msgid "terp-stock"
-#~ msgstr "terp-stock"
-
-#~ msgid "STOCK_MEDIA_RECORD"
-#~ msgstr "STOCK_MEDIA_RECORD"
-
-#~ msgid "Non Assigned Products:"
-#~ msgstr "Produits non assignés"
-
-#~ msgid "terp-report"
-#~ msgstr "terp-report"
-
-#~ msgid "STOCK_FILE"
-#~ msgstr "STOCK_FILE"
-
-#~ msgid "STOCK_EDIT"
-#~ msgstr "STOCK_EDIT"
-
-#~ msgid "STOCK_CONNECT"
-#~ msgstr "STOCK_CONNECT"
-
-#~ msgid "STOCK_GO_DOWN"
-#~ msgstr "STOCK_GO_DOWN"
-
-#~ msgid "STOCK_OK"
-#~ msgstr "STOCK_OK"
-
-#~ msgid "Finished products"
-#~ msgstr "produits finis"
-
-#~ msgid "Date create"
-#~ msgstr "Date de création"
-
-#~ msgid "Set to Zero"
-#~ msgstr "Mettre à zéro"
-
-#~ msgid "All Stock Moves"
-#~ msgstr "Tous les mouvements de stocks"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valide pour l'architecture de la vue"
-
-#~ msgid "STOCK_HELP"
-#~ msgstr "STOCK_HELP"
-
-#~ msgid "This account will be used to value the input stock"
-#~ msgstr "Ce compte sera utilisé pour mettre la valeur de l'entrée de stock"
-
-#, python-format
-#~ msgid "Invoice state"
-#~ msgstr "État de la facture"
-
-#~ msgid "STOCK_UNDO"
-#~ msgstr "STOCK_UNDO"
-
-#~ msgid "Date Created"
-#~ msgstr "Date de création"
-
-#~ msgid "STOCK_GO_BACK"
-#~ msgstr "STOCK_GO_BACK"
-
-#~ msgid "STOCK_JUSTIFY_FILL"
-#~ msgstr "STOCK_JUSTIFY_FILL"
-
-#~ msgid "Allocation Method"
-#~ msgstr "Méthod d'attribution"
-
-#~ msgid "terp-administration"
-#~ msgstr "terp-administration"
-
-#~ msgid "STOCK_APPLY"
-#~ msgstr "STOCK_APPLY"
-
-#, python-format
-#~ msgid "Please select at least two inventories."
-#~ msgstr "Merci de sélectionner au moins deux inventaires"
-
-#~ msgid "Dest. Address"
-#~ msgstr "Adresse de Dest."
-
-#~ msgid "Periodical Inventory"
-#~ msgstr "Inventaire périodique"
-
-#~ msgid "terp-crm"
-#~ msgstr "terp-crm"
-
-#~ msgid "STOCK_STRIKETHROUGH"
-#~ msgstr "STOCK_STRIKETHROUGH"
-
-#~ msgid "terp-partner"
-#~ msgstr "terp-partner"
-
-#~ msgid "Draft Periodical Inventories"
-#~ msgstr "Inventaires périodiques en brouillon"
-
-#~ msgid "STOCK_MISSING_IMAGE"
-#~ msgstr "STOCK_MISSING_IMAGE"
-
-#~ msgid "STOCK_SPELL_CHECK"
-#~ msgstr "STOCK_SPELL_CHECK"
-
-#~ msgid "Origin Reference"
-#~ msgstr "Référence d'origine"
-
-#~ msgid "Available Moves"
-#~ msgstr "Mouvements disponibles"
-
-#~ msgid "STOCK_HARDDISK"
-#~ msgstr "STOCK_HARDDISK"
-
-#~ msgid "Open Products"
-#~ msgstr "Consulter les Produits"
-
-#~ msgid "STOCK_COPY"
-#~ msgstr "STOCK_COPY"
-
-#~ msgid "Supplier Refund"
-#~ msgstr "Note de crédit fournisseur"
-
-#~ msgid "STOCK_CDROM"
-#~ msgstr "STOCK_CDROM"
-
-#~ msgid "STOCK_REFRESH"
-#~ msgstr "STOCK_REFRESH"
-
-#~ msgid "STOCK_STOP"
-#~ msgstr "STOCK_STOP"
-
-#~ msgid "STOCK_FIND_AND_REPLACE"
-#~ msgstr "STOCK_FIND_AND_REPLACE"
-
-#~ msgid "Validate"
-#~ msgstr "Valider"
-
-#~ msgid "STOCK_DIALOG_WARNING"
-#~ msgstr "STOCK_DIALOG_WARNING"
-
-#~ msgid "STOCK_ZOOM_IN"
-#~ msgstr "STOCK_ZOOM_IN"
-
-#~ msgid "STOCK_CONVERT"
-#~ msgstr "STOCK_CONVERT"
-
-#~ msgid "Move lines"
-#~ msgstr "Lignes de mouvements"
-
-#~ msgid "Partial packing"
-#~ msgstr "Colisage partiel"
-
-#~ msgid "terp-calendar"
-#~ msgstr "terp-calendar"
-
-#~ msgid "STOCK_ITALIC"
-#~ msgstr "STOCK_ITALIC"
-
-#~ msgid "STOCK_YES"
-#~ msgstr "STOCK_YES"
-
-#~ msgid "Fill From Unreceived Products"
-#~ msgstr "Remplir à partir des Produits Non Reçus"
-
-#~ msgid "Dest. Move"
-#~ msgstr "Emplacement de Dest."
-
-#~ msgid "FIFO"
-#~ msgstr "FIFO"
-
-#~ msgid "Delivery Orders to Process"
-#~ msgstr "Bordereaux de livraison à Traiter"
-
-#~ msgid "STOCK_JUSTIFY_LEFT"
-#~ msgstr "STOCK_JUSTIFY_LEFT"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-#~ "spéciaux !"
-
-#~ msgid "Planned Date"
-#~ msgstr "Date prévu"
-
-#, python-format
-#~ msgid "No production sequence defined"
-#~ msgstr "Pas de séquence de production définit"
-
-#~ msgid "STOCK_COLOR_PICKER"
-#~ msgstr "STOCK_COLOR_PICKER"
-
-#~ msgid "Lots by location"
-#~ msgstr "Lots par emplacement"
-
-#~ msgid "STOCK_DELETE"
-#~ msgstr "STOCK_DELETE"
-
-#~ msgid "STOCK_CLEAR"
-#~ msgstr "STOCK_CLEAR"
-
-#~ msgid "Created Date"
-#~ msgstr "Date de création"
-
-#~ msgid "terp-mrp"
-#~ msgstr "terp-mrp"
-
-#~ msgid "STOCK_GO_UP"
-#~ msgstr "STOCK_GO_UP"
-
-#~ msgid "STOCK_SORT_DESCENDING"
-#~ msgstr "STOCK_SORT_DESCENDING"
-
-#~ msgid "STOCK_HOME"
-#~ msgstr "STOCK_HOME"
-
-#~ msgid "STOCK_PROPERTIES"
-#~ msgstr "STOCK_PROPERTIES"
-
-#~ msgid "Create invoices"
-#~ msgstr "Créer les factures"
-
-#~ msgid "Set Stock to Zero"
-#~ msgstr "Mettre le stock à zéro"
-
-#~ msgid "STOCK_MEDIA_STOP"
-#~ msgstr "STOCK_MEDIA_STOP"
-
-#~ msgid "STOCK_DND_MULTIPLE"
-#~ msgstr "STOCK_DND_MULTIPLE"
-
-#~ msgid "STOCK_REMOVE"
-#~ msgstr "STOCK_REMOVE"
-
-#~ msgid "STOCK_DIALOG_AUTHENTICATION"
-#~ msgstr "STOCK_DIALOG_AUTHENTICATION"
-
-#~ msgid "STOCK_ZOOM_OUT"
-#~ msgstr "STOCK_ZOOM_OUT"
-
-#~ msgid "Nearest"
-#~ msgstr "Le plus proche"
-
-#~ msgid "STOCK_SELECT_COLOR"
-#~ msgstr "STOCK_SELECT_COLOR"
-
-#~ msgid "STOCK_PRINT"
-#~ msgstr "STOCK_PRINT"
-
-#~ msgid "STOCK_NO"
-#~ msgstr "STOCK_NO"
-
-#~ msgid "Workshop"
-#~ msgstr "Magasin"
-
-#~ msgid "STOCK_REDO"
-#~ msgstr "STOCK_REDO"
-
-#~ msgid "Tiny sprl"
-#~ msgstr "Tiny sprl"
-
-#~ msgid "STOCK_CLOSE"
-#~ msgstr "STOCK_CLOSE"
-
-#~ msgid "Force to use a Production Lot during deliveries"
-#~ msgstr "Forcer à utiliser les lot de production lors des réceptions"
-
-#~ msgid "Split move lines in two"
-#~ msgstr "Diviser les lignes en deux"
-
-#~ msgid "STOCK_JUMP_TO"
-#~ msgstr "STOCK_JUMP_TO"
-
-#~ msgid "terp-tools"
-#~ msgstr "terp-tools"
-
-#~ msgid "Location Overview"
-#~ msgstr "Aperçu de l'Emplacement"
-
-#~ msgid "STOCK_DIALOG_INFO"
-#~ msgstr "STOCK_DIALOG_INFO"
-
-#~ msgid "Split move line"
-#~ msgstr "Diviser la ligne de mouvement"
-
-#~ msgid "terp-sale"
-#~ msgstr "terp-sale"
-
-#~ msgid "STOCK_ADD"
-#~ msgstr "STOCK_ADD"
-
-#~ msgid "Chained Delay (days)"
-#~ msgstr "Délai lié (jours)"
-
-#~ msgid "STOCK_MEDIA_PAUSE"
-#~ msgstr "STOCK_MEDIA_PAUSE"
-
-#~ msgid "STOCK_PRINT_PREVIEW"
-#~ msgstr "STOCK_PRINT_PREVIEW"
-
-#~ msgid "STOCK_FIND"
-#~ msgstr "STOCK_FIND"
-
-#~ msgid ""
-#~ "This account will be used, instead of the default one, to value input stock"
-#~ msgstr ""
-#~ "Ce compte sera utilisé, à la place de celui par défaut, pour valoriser le "
-#~ "stock entrant"
-
-#~ msgid "Components"
-#~ msgstr "Composants"
-
-#~ msgid "Max. Planned Date"
-#~ msgstr "Date précu maxi."
-
-#~ msgid "STOCK_MEDIA_PLAY"
-#~ msgstr "STOCK_MEDIA_PLAY"
-
-#~ msgid "STOCK_OPEN"
-#~ msgstr "STOCK_OPEN"
-
-#~ msgid "STOCK_MEDIA_PREVIOUS"
-#~ msgstr "STOCK_MEDIA_PREVIOUS"
-
-#~ msgid "Stock Locations Structure"
-#~ msgstr "Structure des emplacements de stock"
-
-#~ msgid "STOCK_DISCONNECT"
-#~ msgstr "STOCK_DISCONNECT"
-
-#~ msgid ""
-#~ "This account will be used, instead of the default one, to value output stock"
-#~ msgstr ""
-#~ "Ce compte sera utilisé, au lieu de celui par défaut, pour la valeur du stock "
-#~ "de sortie"
-
-#~ msgid "STOCK_NETWORK"
-#~ msgstr "STOCK_NETWORK"
-
-#~ msgid "terp-project"
-#~ msgstr "terp-project"
-
-#~ msgid "Stock by Lots"
-#~ msgstr "Stock par lots"
-
-#~ msgid "STOCK_UNINDENT"
-#~ msgstr "STOCK_UNINDENT"
-
-#~ msgid "STOCK_GOTO_LAST"
-#~ msgstr "STOCK_GOTO_LAST"
-
-#~ msgid "STOCK_DIRECTORY"
-#~ msgstr "STOCK_DIRECTORY"
-
-#~ msgid "Add"
-#~ msgstr "Ajouter"
-
-#~ msgid "STOCK_JUSTIFY_CENTER"
-#~ msgstr "STOCK_JUSTIFY_CENTER"
-
-#~ msgid "Set Stock to 0"
-#~ msgstr "Mettre les stocks à 0"
-
-#~ msgid "Localisation"
-#~ msgstr "Emplacement"
-
-#~ msgid "Do you want to set stocks to zero ?"
-#~ msgstr "Voules vous mettre les stocks à zéro ?"
-
-#~ msgid "Direct Delivery"
-#~ msgstr "Livraison directe"
-
-#~ msgid "STOCK_REVERT_TO_SAVED"
-#~ msgstr "STOCK_REVERT_TO_SAVED"
-
-#~ msgid "Split in Two"
-#~ msgstr "Diviser les lignes"
-
-#~ msgid "stock.picking.move.wizard"
-#~ msgstr "stock.picking.move.wizard"
-
-#~ msgid "Date Order"
-#~ msgstr "Date de commande"
-
-#~ msgid "Supplier Invoice"
-#~ msgstr "Facture fournisseur"
-
-#, python-format
-#~ msgid "to be invoiced"
-#~ msgstr "à facturer"
-
-#~ msgid "terp-product"
-#~ msgstr "terp-product"
-
-#~ msgid "Close"
-#~ msgstr "Fermer"
-
-#~ msgid "Print Item Labels"
-#~ msgstr "Impression des étiquettes"
-
-#~ msgid "Inventory Account"
-#~ msgstr "Compte d'inventaire"
-
-#~ msgid "Set Stocks to Zero"
-#~ msgstr "Mettre les stocks à zéro"
-
-#~ msgid "Low Level"
-#~ msgstr "Bas niveau"
-
-#~ msgid "STOCK_INDENT"
-#~ msgstr "STOCK_INDENT"
-
-#~ msgid "Delivery"
-#~ msgstr "Livraison"
-
-#~ msgid "STOCK_JUSTIFY_RIGHT"
-#~ msgstr "STOCK_JUSTIFY_RIGHT"
-
-#~ msgid "Inventory line"
-#~ msgstr "Ligne d'inventaire"
-
-#~ msgid "Others info"
-#~ msgstr "Autres infos"
-
-#~ msgid "STOCK_MEDIA_NEXT"
-#~ msgstr "STOCK_MEDIA_NEXT"
-
-#~ msgid "Move State"
-#~ msgstr "État du Mouvement"
-
-#, python-format
-#~ msgid "Message !"
-#~ msgstr "Message !"
-
-#~ msgid "New Periodical Inventory"
-#~ msgstr "Nouvel inventaire périodique"
-
-#, python-format
-#~ msgid "Invoice is not created"
-#~ msgstr "La facture n'est pas créée"
-
-#, python-format
-#~ msgid "Invoice is already created."
-#~ msgstr "La facture est déjà créée."
-
-#~ msgid ""
-#~ "For the current product (template), this stock location will be used, "
-#~ "instead of the default one, as the source location for stock moves generated "
-#~ "by production orders"
-#~ msgstr ""
-#~ "Pour le produit (modèle) courant, cet emplacement de stock sera utilisé, à "
-#~ "la place de celui par défaut, comme emplacement source pour les mouvements "
-#~ "de stock générés par les ordres de production"
-
-#~ msgid ""
-#~ "For the current product (template), this stock location will be used, "
-#~ "instead of the default one, as the source location for stock moves generated "
-#~ "by procurements"
-#~ msgstr ""
-#~ "Pour le produit (modèle) courant, cet emplacement de stock sera utilisé, à "
-#~ "la place de celui par défaut, comme emplacement source pour les mouvements "
-#~ "de stock générés par les approvisionnements"
-
-#~ msgid "Track Production Lots"
-#~ msgstr "Suivre les lots de production"
-
-#~ msgid "Tracking Lot"
-#~ msgstr "Lot de suivi"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom de modèle non valide dans la définition de l'action."
-
-#~ msgid "Packing List"
-#~ msgstr "Liste de colisage"
-
-#~ msgid "New Internal Packing"
-#~ msgstr "Nouveau colisage interne"
-
-#~ msgid "Available Packing"
-#~ msgstr "Colisage disponible"
-
-#~ msgid "Location Content (With children)"
-#~ msgstr "Contenu de l'emplacement (sous-emplacements compris)"
-
-#~ msgid "Future Stock Forecast"
-#~ msgstr "Stock prévisionnel"
-
-#~ msgid "Internal Ref"
-#~ msgstr "Réf. interne"
-
-#~ msgid ""
-#~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-#~ msgstr ""
-#~ "Le module de gestion de stock d'OpenERP peut gérer des entrepôts multiples, "
-#~ "et emplacements de stockage multiples et structurés.\n"
-#~ "Grâce à la gestion à double entrée, le contrôle d'inventaire est puissant et "
-#~ "flexible : \n"
-#~ "* Historiques et planification des mouvements\n"
-#~ "* Différentes méthodes d'inventaire (FIFO, LIFO, …) \n"
-#~ "* Valeur du stock (prix standard ou moyen, …) \n"
-#~ "* Robustesse face aux différences d'inventaire \n"
-#~ "* Réorganisation automatique des règles (niveau de stock, flux tendus,…) \n"
-#~ "* Prise en compte des codes à barres\n"
-#~ "* Détection rapide des erreurs grâce au système à double entrée\n"
-#~ "* Traçabilité (amont / avale, lots de production, numéro de série, …)\n"
-#~ "    "
-
-#~ msgid ""
-#~ "This is used only if you selected a chained location type.\n"
-#~ "The 'Automatic Move' value will create a stock move after the current one "
-#~ "that will be validated automatically. With 'Manual Operation', the stock "
-#~ "move has to be validated by a worker. With 'Automatic No Step Added', the "
-#~ "location is replaced in the original move."
-#~ msgstr ""
-#~ "Ceci est employé seulement si vous choisissiez un type d'emplacement chaîné. "
-#~ "\n"
-#~ "La valeur \"Mouvement automatique\" créera un mouvement de stock, après le "
-#~ "mouvement courant, qui sera validé automatiquement.\n"
-#~ "Avec \"Opération manuelle\", le mouvement de stock doit être validé par un "
-#~ "opérateur.\n"
-#~ "Avec \"Automatique sans étape supplémentaire\", l'emplacement est remplacé "
-#~ "dans le mouvement de stock initial."
-
-#~ msgid "Packing to Process"
-#~ msgstr "Colisage à traiter"
-
-#~ msgid "Confirm (Do Not Process Now)"
-#~ msgstr "Confirmer (ne pas traiter maintenant)"
-
-#~ msgid "Moves Tracked"
-#~ msgstr "Mouvements suivis"
-
-#~ msgid "Confirmed Packing Waiting Availability"
-#~ msgstr "Colisage confirmé en attente de disponibilité"
-
-#~ msgid "Locations' Values"
-#~ msgstr "Valeurs des emplacements"
-
-#~ msgid "New Reception Packing"
-#~ msgstr "Nouveau colisage entrant"
-
-#~ msgid "Packing result"
-#~ msgstr "Résultat de colisage"
-
-#~ msgid "Packing Done"
-#~ msgstr "Colisage terminé"
-
-#~ msgid "The packing has been successfully made !"
-#~ msgstr "Le colisage à été réalisé avec succès !"
-
-#~ msgid "Input Packing List"
-#~ msgstr "Liste de colisage en entrée"
-
-#~ msgid "Make packing"
-#~ msgstr "Faire le colisage"
-
-#~ msgid "Auto-Packing"
-#~ msgstr "Colisage automatique"
-
-#~ msgid "Not from Packing"
-#~ msgstr "Pas basée sur le colisage"
-
-#~ msgid "Invoice Status"
-#~ msgstr "État de la facturation"
-
-#~ msgid "Return packing"
-#~ msgstr "Colisage en retour"
-
-#~ msgid ""
-#~ "Tracking lot is the code that will be put on the logistical unit/pallet"
-#~ msgstr ""
-#~ "Le lot de suivi est le code qui sera mis sur l'unité logistique / palette"
-
-#~ msgid "Future Delivery Orders"
-#~ msgstr "Ordres de livraison à venir"
-
-#~ msgid "Make Parcel"
-#~ msgstr "Faire le colis"
-
-#~ msgid ""
-#~ "For the current product (template), this stock location will be used, "
-#~ "instead of the default one, as the source location for stock moves generated "
-#~ "when you do an inventory"
-#~ msgstr ""
-#~ "Cet emplacement de stock sera utilisé au lieu de celui par défaut, comme "
-#~ "emplacement source sur les movements de stock générés quand vous effectuez "
-#~ "un inventaire"
-
-#~ msgid "Force to use a Production Lot during production order"
-#~ msgstr "Forcer à utiliser un lot de production lors de la fabrication"
-
-#~ msgid "Tracking/Serial"
-#~ msgstr "Suivi/N° de série"
-
-#~ msgid "Tracking prefix"
-#~ msgstr "Préfix du suivi"
-
-#~ msgid "Tracking a move"
-#~ msgstr "Suivi de mouvement"
-
-#~ msgid "Stock Tracking Lots"
-#~ msgstr "Lot de suivi de stock"
-
-#~ msgid "Tracking Lots"
-#~ msgstr "Lots de suivi"
-
-#~ msgid "Units"
-#~ msgstr "Unités"
-
-#~ msgid ""
-#~ "Scheduled date for the movement of the products or real date if the move is "
-#~ "done."
-#~ msgstr ""
-#~ "Date prévisionnelle pour le mouvement du produit ou la date réelle si le "
-#~ "mouvement est terminé."
-
-#~ msgid "Total :"
-#~ msgstr "Total :"
-
-#~ msgid ""
-#~ "When doing real-time inventory valuation, counterpart Journal Items for all "
-#~ "outgoing stock moves will be posted in this account. This is the default "
-#~ "value for all products in this category, it can also directly be set on each "
-#~ "product."
-#~ msgstr ""
-#~ "Si vous valorisez les stocks en temps réel, les écritures des contreparties "
-#~ "des mouvements de stock sortant seront comptabilisées sur ce compte. C'est "
-#~ "la valeur par défaut pour tous les produits dans cette catégorie, et vous "
-#~ "pouvez également l'indiquer directement sur chaque produit."
-
-#~ msgid "Inventory Management"
-#~ msgstr "Gestion des stocks"
-
-#, python-format
-#~ msgid ""
-#~ "There is no inventory variation account defined on the product category: "
-#~ "\"%s\" (id: %d)"
-#~ msgstr ""
-#~ "Aucun compte d'écart d'inventaire na été défini dans cette catégorie de "
-#~ "produits : \"%s\" (id. : %d)"
-
-#~ msgid "Partial Picking"
-#~ msgstr "Traitement partiel"
-
-#~ msgid "Internal Picking list"
-#~ msgstr "Bon de transfert interne"
-
-#~ msgid "Action"
-#~ msgstr "Action"
-
-#~ msgid "Outgoing Product"
-#~ msgstr "Produit sortant"
-
-#~ msgid "Incoming Products Delay"
-#~ msgstr "Délai des produits entrants"
-
-#, python-format
-#~ msgid "Delivery Information"
-#~ msgstr "Information sur la livraison"
-
-#~ msgid "Stock Replacement"
-#~ msgstr "Renouvellement de stock"
-
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Action invalide !"
-
-#, python-format
-#~ msgid "Receive Information"
-#~ msgstr "Information de réception"
-
-#, python-format
-#~ msgid "Cannot deliver products which are already delivered !"
-#~ msgstr "Impossible de livrer des produits qui sont déjà livrés !"
-
-#~ msgid "OpenERP S.A."
-#~ msgstr "OpenERP S.A."
-
-#~ msgid "Track moves"
-#~ msgstr "Suivre les mouvements"
-
-#~ msgid ""
-#~ "OpenERP Inventory Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "* Dashboard for warehouse that includes:\n"
-#~ "    * Products to receive in delay (date < = today)\n"
-#~ "    * Procurement in exception\n"
-#~ "    * Graph : Number of Receive products vs planned (bar graph on week par "
-#~ "day)\n"
-#~ "    * Graph : Number of Delivery products vs planned (bar graph on week par "
-#~ "day)\n"
-#~ "    "
-#~ msgstr ""
-#~ "Le module de Gestion de Stock d'OpenERP permet de gérer des emplacements de "
-#~ "stock structurés, multiples et multi-entrepôts.\n"
-#~ "Grâce à la gestion en double entrée, la contrôle du stock est puissant et "
-#~ "flexible:\n"
-#~ "* Historique et prévisions des mouvements\n"
-#~ "* Différentes méthodes de gestion de stock (FIFO, LIFO,...)\n"
-#~ "* Valorisation du stock (coût standard ou coût moyen,...)\n"
-#~ "* Robustesse lors de l'apparition d'écarts de stock\n"
-#~ "* Règles de réapprovisionnement automatique (niveau de stock, juste-à-"
-#~ "temps,...)\n"
-#~ "* Possibilité d'utiliser des code-barres\n"
-#~ "* Détection rapide des erreurs grâce au système à double-entrée\n"
-#~ "* Traçabilité (amont/aval, numéro de lot, numéro de série,...)\n"
-#~ "* Tableau de bord pour l'entrepôt, incluant:\n"
-#~ "    * Produits à réceptionner à date (date <= aujourd'hui)\n"
-#~ "    * Approvisionnements en exception\n"
-#~ "    * Graphique : nombre de produits réceptionnés par rapport aux prévisions "
-#~ "(barres par jour par semaine) \n"
-#~ "    * Graphique : nombre de produits livrés par rapport aux prévisions "
-#~ "(barres par jour par semaine)\n"
-#~ "    "
-
-#~ msgid "Incoming Product"
-#~ msgstr "Produit entrant"
-
-#, python-format
-#~ msgid "Product "
-#~ msgstr "Produit "
-
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "Erreur ! Il est impossible de créer des catégories récursives."
-
-#~ msgid "Split lines"
-#~ msgstr "Eclater les lignes"
-
-#, python-format
-#~ msgid "is consumed with"
-#~ msgstr "est consommé avec"
-
-#, python-format
-#~ msgid "Receive"
-#~ msgstr "Reçus"
-
-#~ msgid "Stock Variation Account"
-#~ msgstr "COmpte des variation de stock"
-
-#, python-format
-#~ msgid "Variation Account is not specified for Product Category: %s"
-#~ msgstr ""
-#~ "Le compte de variation de stock n'est pas spécifié dans la catégorie de "
-#~ "produit: %s"
-
-#~ msgid "Tracking serial"
-#~ msgstr "Suivre le numéro de série"
-
-#~ msgid "To Do"
-#~ msgstr "À faire"
-
-#~ msgid "Lot weight"
-#~ msgstr "Poids du lot"
-
-#, python-format
-#~ msgid "INV: "
-#~ msgstr "INV: "
-
-#~ msgid "Destination Address"
-#~ msgstr "Adresse de destination"
-
-#, python-format
-#~ msgid "is scheduled"
-#~ msgstr "est planifié"
-
-#~ msgid "Existing Lot"
-#~ msgstr "Lot existant"
-
-#~ msgid "XML File"
-#~ msgstr "Fichier XML"
-
-#, python-format
-#~ msgid "quantity."
-#~ msgstr "quantité."
-
-#, python-format
-#~ msgid "Deliver"
-#~ msgstr "Livraison"
-
-#~ msgid "Units of Measure Categories"
-#~ msgstr "Catégories des unités de mesure"
-
-#~ msgid "Exist Split lines"
-#~ msgstr "Il existe les lignes de séparation"
-
-#~ msgid "stock.move.memory.in"
-#~ msgstr "stock.move.memory.in"
-
-#~ msgid ""
-#~ "When doing real-time inventory valuation, counterpart Journal Items for all "
-#~ "incoming stock moves will be posted in this account. If not set on the "
-#~ "product, the one from the product category is used."
-#~ msgstr ""
-#~ "Lors de la valorisation en temps réel de l'inventaire, une contrepartie "
-#~ "d'écritures comptables pour tous les mouvements de stock entrants sera "
-#~ "inscrite dans ce compte. Si la valorisation n'est pas établie sur le "
-#~ "produit, la catégorie de produit est utilisée."
-
-#~ msgid "Not Available"
-#~ msgstr "Indisponible"
-
-#~ msgid "Products Categories"
-#~ msgstr "Catégories de produits"
-
-#~ msgid "stock.move.memory.out"
-#~ msgstr "stock.move.memory.out"
-
-#~ msgid "Partial Move"
-#~ msgstr "Mouvement partiel"
-
-#~ msgid "Stock ups upload"
-#~ msgstr "Réapprovisionnement"
-
-#~ msgid "Stock ups"
-#~ msgstr "Réapprovisionnement"
-
-#, python-format
-#~ msgid ""
-#~ "Can not create Journal Entry, Output Account defined on this product and "
-#~ "Variant account on category of this product are same."
-#~ msgstr ""
-#~ "Vous ne pouvez pas créer de journal d'écritures, le compte de sortie défini "
-#~ "sur le produit et le compte de variante sur la catégorie du produit sont les "
-#~ "mêmes."
-
-#~ msgid "Stock ups final"
-#~ msgstr "Réapprovisionnement final"
-
-#~ msgid "Stock Replacement result"
-#~ msgstr "Résultat du réapprovisionnement du stock"
-
-#, python-format
-#~ msgid "Process Document"
-#~ msgstr "Document du processus"
-
-#~ msgid "Keep in one lot"
-#~ msgstr "Garder dans un seul lot"
-
-#, python-format
-#~ msgid ""
-#~ "Can not create Journal Entry, Input Account defined on this product and "
-#~ "Variant account on category of this product are same."
-#~ msgstr ""
-#~ "Vous ne pouvez pas créer de pièces comptables, le compte d'entrée défini sur "
-#~ "le produit et le compte de variante sur la catégorie du produit sont les "
-#~ "mêmes."
-
-#~ msgid ""
-#~ "When doing real-time inventory valuation, counterpart Journal Items for all "
-#~ "incoming stock moves will be posted in this account. This is the default "
-#~ "value for all products in this category, it can also directly be set on each "
-#~ "product."
-#~ msgstr ""
-#~ "Lors de la valorisation en temps-réel du stock, des pièces comptables de "
-#~ "contrepartie pour tous les mouvements de stock entrants seront "
-#~ "comptabilisées dans ce compte. C'est la valeur par défaut pour tous les "
-#~ "produits de cette catégorie, il peut aussi être directement indiqué dans "
-#~ "chaque produit."
-
-#~ msgid "Outgoing Products Delay"
-#~ msgstr "Retard de sortie des produits"
-
-#~ msgid ""
-#~ "When doing real-time inventory valuation, counterpart Journal Items for all "
-#~ "outgoing stock moves will be posted in this account. If not set on the "
-#~ "product, the one from the product category is used."
-#~ msgstr ""
-#~ "Lors de la valorisation en temps-réel du stock, des pièces comptables de "
-#~ "contrepartie seront écrites dans ce compte. S'il n'est pas indiqué sur le "
-#~ "produit, celui de la catégorie du produit sera utilisé."
-
-#~ msgid ""
-#~ "The Incoming Shipments is the list of all orders you will receive from your "
-#~ "supplier. An incoming shipment contains a list of products to be received "
-#~ "according to the original purchase order. You can validate the shipment "
-#~ "totally or partially."
-#~ msgstr ""
-#~ "Les réceptions sont toutes les commandes que vous recevrez de vos "
-#~ "fournisseurs. Une réception contient la liste des produits à recevoir en "
-#~ "fonction de la commande d'achat originale. Vous pouvez valider une livraison "
-#~ "en totalité ou partiellement."
-
-#~ msgid "Delivery Order:"
-#~ msgstr "Bon de livraison"
-
-#~ msgid "Cost Price:"
-#~ msgstr "Prix de revient :"
