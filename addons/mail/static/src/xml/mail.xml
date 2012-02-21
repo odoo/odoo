@@ -47,12 +47,14 @@
         </div>
     </t>
 
-    <div t-name="WallView" class="oe_mail_wall">
+    <div t-name="WallView" class="oe_mail_wall_main">
         <div class="oe_mail_post_comment">
-            <textarea rows="3" cols="15">Type your comment</textarea><br />
-            <button type="button" class="oe_mail_action_comment">Post comment</button>
+            <textarea class="oe_mail_action_textarea" onfocus="this.value='';">Enter your comment here...</textarea><br />
+            <button type="button" class="oe_mail_button_comment">Post comment</button>
         </div>
-        <div class="oe_mail_comments">
+        <div class="oe_mail_msg">
+            <div class="oe_mail_comment">
+            </div>
         </div>
     </div>
     

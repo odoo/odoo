@@ -34,7 +34,6 @@ openerp.mail = function(session) {
         },
         
         stop: function () {
-            console.log('stop');
             this._super.apply(this, arguments);
         },
         
@@ -134,39 +133,37 @@ openerp.mail = function(session) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            console.log(this);
-            self.$element.find('button.oe_mail_action_comment').bind('click', function () { self.do_comment(); });
-            this.ds_msg.call('get_pushed_messages', [[], self.filter_search]).then(
-                this.proxy('display_records'));
+            self.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
+            return this.fetch_comments();
         },
         
         stop: function () {
             this._super();
         },
 
-        fetch_messages: function () {
-            console.log('debug--fetch_messages');
-            return this.ds_msg.call('get_pushed_messages', []).then(
-                this.proxy('display_records'));
+        fetch_comments: function () {
+            var load_res = this.ds_msg.call('get_pushed_messages', [[this.session.uid]]).then(
+                this.proxy('display_comments'));
+            return load_res;
         },
         
-        display_records: function (records) {
-            this.$element.find('div.oe_mail_comments').empty();
+        display_comments: function (records) {
+            this.$element.find('div.oe_mail_msg').empty();
             var self = this;
             _(records).each(function (record) {
+                console.log(record);
                 var template = 'ThreadMsgView';
                 var render_res = session.web.qweb.render(template, {
                     'record': record,
                     });
-                $('<div class="oe_mail_msg">').html(render_res).appendTo(self.$element.find('div.oe_mail_comments'));
+                $('<div class="oe_mail_comment">').html(render_res).appendTo(self.$element.find('div.oe_mail_msg'));
             });
-//             this.timeout = setTimeout(this.proxy('fetch_messages'), 5000);
         },
 
         do_comment: function () {
             var body_text = this.$element.find('textarea').val();
-            return this.ds.call('message_append_note', [[this.view.datarecord.id], 'Reply comment', body_text, type='comment']).then(
-                this.proxy('fetch_messages'));
+            return this.ds_msg.call('create', [{'subject': 'Status tweet', 'model': 'res.users', 'body_text': body_text, 'type': 'comment'}]).then(
+                this.proxy('fetch_comments'));
         },
     });
 };
