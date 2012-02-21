@@ -201,8 +201,8 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             return;
         }
         if (results['success']) {
-            if (this.widget_parent.widget_parent.active_view == "list") {
-                this.widget_parent.reload_content();
+            if (this.getParent().getParent().active_view == "list") {
+                this.getParent().reload_content();
             }
             this.stop();
             return;

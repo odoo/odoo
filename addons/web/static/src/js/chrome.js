@@ -261,7 +261,7 @@ openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loadin
             $(".loading",this.$element).text(_.str.sprintf(
                 _t("Loading (%d)"), this.count));
             $(".loading",this.$element).show();
-            this.widget_parent.$element.addClass('loading');
+            this.getParent().$element.addClass('loading');
         } else {
             this.count = 0;
             clearTimeout(this.long_running_timer);
@@ -271,7 +271,7 @@ openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loadin
                 $.unblockUI();
             }
             $(".loading",this.$element).fadeOut();
-            this.widget_parent.$element.removeClass('loading');
+            this.getParent().$element.removeClass('loading');
         }
     }
 });
@@ -381,7 +381,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
 
             var admin = result[1][0];
             setTimeout(function () {
-                self.widget_parent.do_login(
+                self.getParent().do_login(
                         info.db, admin.login, admin.password);
                 self.stop();
                 self.unblockUI();
@@ -437,7 +437,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
                     if (self.db_list) {
                         self.db_list.push(self.to_object(fields)['db_name']);
                         self.db_list.sort();
-                        self.widget_parent.set_db_list(self.db_list);
+                        self.getParent().set_db_list(self.db_list);
                     }
                     var form_obj = self.to_object(fields);
                     self.wait_for_newdb(result, {
@@ -469,7 +469,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
                     $db_list.find(':selected').remove();
                     if (self.db_list) {
                         self.db_list.splice(_.indexOf(self.db_list, db, true), 1);
-                        self.widget_parent.set_db_list(self.db_list);
+                        self.getParent().set_db_list(self.db_list);
                     }
                     self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
                 });

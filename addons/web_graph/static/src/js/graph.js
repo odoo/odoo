@@ -97,7 +97,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.$element.html(QWeb.render("GraphView", {
             "fields_view": this.fields_view,
             "chart": this.chart,
-            'element_id': this.widget_parent.element_id
+            'element_id': this.getParent().element_id
         }));
 
         var fields = _(this.columns).pluck('name').concat([this.abscissa]);
@@ -272,7 +272,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             self.renderer = null;
             var charts = new dhtmlXChart({
                 view: view_chart,
-                container: self.widget_parent.element_id+"-"+self.chart+"chart",
+                container: self.getParent().element_id+"-"+self.chart+"chart",
                 value:"#"+group_list[0].group+"#",
                 gradient: (self.chart == "bar") ? "3d" : "light",
                 alpha: (self.chart == "area") ? 0.6 : 1,
@@ -309,8 +309,8 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     }
                 }
             });
-            self.$element.find("#"+self.widget_parent.element_id+"-"+self.chart+"chart").width(
-                self.$element.find("#"+self.widget_parent.element_id+"-"+self.chart+"chart").width()+120);
+            self.$element.find("#"+self.getParent().element_id+"-"+self.chart+"chart").width(
+                self.$element.find("#"+self.getParent().element_id+"-"+self.chart+"chart").width()+120);
 
             for (var m = 1; m<group_list.length;m++){
                 var column = group_list[m];
@@ -333,8 +333,8 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                 });
             }
             charts.parse(results, "json");
-            self.$element.find("#"+self.widget_parent.element_id+"-"+self.chart+"chart").height(
-                self.$element.find("#"+self.widget_parent.element_id+"-"+self.chart+"chart").height()+50);
+            self.$element.find("#"+self.getParent().element_id+"-"+self.chart+"chart").height(
+                self.$element.find("#"+self.getParent().element_id+"-"+self.chart+"chart").height()+50);
             charts.attachEvent("onItemClick", function(id) {
                 self.open_list_view(charts.get(id));
             });
@@ -354,7 +354,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             self.renderer = null;
             var chart =  new dhtmlXChart({
                 view:"pie3D",
-                container:self.widget_parent.element_id+"-piechart",
+                container:self.getParent().element_id+"-piechart",
                 value:"#"+self.ordinate+"#",
                 pieInnerText:function(obj) {
                     var sum = chart.sum("#"+self.ordinate+"#");
@@ -406,8 +406,8 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         }
 
         var views;
-        if (this.widget_parent.action) {
-            views = this.widget_parent.action.views;
+        if (this.getParent().action) {
+            views = this.getParent().action.views;
             if (!_(views).detect(function (view) {
                     return view[1] === 'list' })) {
                 views = [[false, 'list']].concat(views);

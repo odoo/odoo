@@ -303,10 +303,10 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
                     });
                     self.rpc('/web/searchview/add_to_dashboard', {
                         menu_id: menu_id,
-                        action_id: self.widget_parent.action.id,
+                        action_id: self.getParent().action.id,
                         context_to_save: context,
                         domain: domain,
-                        view_mode: self.widget_parent.active_view,
+                        view_mode: self.getParent().active_view,
                         name: title
                     }, function(r) {
                         if (r === false) {
@@ -1173,9 +1173,9 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
             props);
     },
     stop: function() {
-        var parent = this.widget_parent;
-        if (this.widget_parent.widget_children.length == 1)
-            this.widget_parent.hide();
+        var parent = this.getParent();
+        if (this.getParent().widget_children.length == 1)
+            this.getParent().hide();
         this._super();
         parent.check_last_element();
     },
@@ -1215,8 +1215,8 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
     },
     stop: function() {
         var parent;
-        if (this.widget_parent.widget_children.length == 1)
-            parent = this.widget_parent;
+        if (this.getParent().widget_children.length == 1)
+            parent = this.getParent();
         this._super();
         if (parent)
             parent.stop();

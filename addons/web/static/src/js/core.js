@@ -1017,6 +1017,9 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         // useful to know if the widget was destroyed and should not be used anymore
         this.widget_is_stopped = false;
     },
+    getParent: function() {
+        return this.widget_parent;
+    },
     /**
      * Renders the current widget and appends it to the given jQuery object or Widget.
      *

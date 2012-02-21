@@ -2782,7 +2782,7 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends open
         var pop = new openerp.web.form.FormOpenPopup(this);
         pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {
             title: _t("Open: ") + this.name,
-            readonly: this.widget_parent.is_readonly()
+            readonly: this.getParent().is_readonly()
         });
         pop.on_write_completed.add_last(function() {
             self.reload_content();
