@@ -1006,6 +1006,9 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         
         this.$element = $(document.createElement(this.tag_name));
 
+        this.setParent(parent);
+    },
+    setParent: function(parent) {
         this.widget_parent = parent;
         this.widget_children = [];
         if(parent && parent.widget_children) {
