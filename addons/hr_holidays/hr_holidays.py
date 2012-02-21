@@ -361,7 +361,7 @@ class hr_holidays(osv.osv):
     def create_notificate(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids, context=context)[0]
         self.message_append_note(cr, uid, ids, _('System notification'),
-                    _("""The %s request '%s' has been created and is in draft mode. In this mode, it can be modified freely. 
+                    _("""The %s request '%s' has been created and is in draft mode. In this mode, it can be modified freely. \
                     Click on Confirm to confirm your request and ask for its validation by the managers.""")
                     % ('leave' if obj.type == 'remove' else 'allocation', obj.name), type='notification', context=context)
         return True
