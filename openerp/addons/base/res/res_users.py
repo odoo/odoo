@@ -353,9 +353,14 @@ class users(osv.osv):
             pass
         return result
 
+    def _get_photo(self, cr, uid, context=None):
+        photo_path = openerp.modules.get_module_resource('base','images','photo.png')
+        return open(photo_path, 'rb').read().encode('base64')
+
     _defaults = {
         'password' : '',
         'context_lang': 'en_US',
+        'photo': _get_photo,
         'active' : True,
         'menu_id': _get_menu,
         'company_id': _get_company,
