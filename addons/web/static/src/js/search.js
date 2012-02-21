@@ -1114,7 +1114,7 @@ openerp.web.search.ExtendedSearch = openerp.web.search.Input.extend({
         if(this.$element.closest("table.oe-searchview-render-line").css("display") == "none") {
             return null;
         }
-        return _.reduce(this.widget_children,
+        return _.reduce(this.getChildren(),
             function(mem, x) { return mem.concat(x.get_domain());}, []);
     },
     on_activate: function() {
@@ -1133,9 +1133,9 @@ openerp.web.search.ExtendedSearch = openerp.web.search.Input.extend({
         }
     },
     check_last_element: function() {
-        _.each(this.widget_children, function(x) {x.set_last_group(false);});
-        if (this.widget_children.length >= 1) {
-            this.widget_children[this.widget_children.length - 1].set_last_group(true);
+        _.each(this.getChildren(), function(x) {x.set_last_group(false);});
+        if (this.getChildren().length >= 1) {
+            this.getChildren()[this.getChildren().length - 1].set_last_group(true);
         }
     }
 });
@@ -1148,7 +1148,7 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
     },
     add_prop: function() {
         var prop = new openerp.web.search.ExtendedSearchProposition(this, this.fields);
-        var render = prop.render({'index': this.widget_children.length - 1});
+        var render = prop.render({'index': this.getChildren().length - 1});
         this.$element.find('.searchview_extended_propositions_list').append(render);
         prop.start();
     },
@@ -1163,7 +1163,7 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
         });
     },
     get_domain: function() {
-        var props = _(this.widget_children).chain().map(function(x) {
+        var props = _(this.getChildren()).chain().map(function(x) {
             return x.get_proposition();
         }).compact().value();
         var choice = this.$element.find(".searchview_extended_group_choice").val();
@@ -1174,7 +1174,7 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
     },
     stop: function() {
         var parent = this.getParent();
-        if (this.getParent().widget_children.length == 1)
+        if (this.getParent().getChildren().length == 1)
             this.getParent().hide();
         this._super();
         parent.check_last_element();
@@ -1215,7 +1215,7 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
     },
     stop: function() {
         var parent;
-        if (this.getParent().widget_children.length == 1)
+        if (this.getParent().getChildren().length == 1)
             parent = this.getParent();
         this._super();
         if (parent)

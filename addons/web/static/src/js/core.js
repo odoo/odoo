@@ -1012,21 +1012,24 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
     setParent: function(parent) {
         if(this.getParent()) {
             if (this.getParent().__parented_mixin) {
-                this.getParent().widget_children = _.without(this.getParent().widget_children, this);
+                this.getParent().__parented_children = _.without(this.getParent().getChildren(), this);
             }
             this.__parented_parent = undefined;
         }
         this.__parented_parent = parent;
         if(parent && parent.__parented_mixin) {
-            if (!parent.widget_children)
-                parent.widget_children = [];
-            parent.widget_children.push(this);
+            if (!parent.getChildren())
+                parent.__parented_children = [];
+            parent.getChildren().push(this);
         }
         // useful to know if the widget was destroyed and should not be used anymore
         this.widget_is_stopped = false;
     },
     getParent: function() {
         return this.__parented_parent;
+    },
+    getChildren: function() {
+        return this.__parented_children || [];
     },
     /**
      * Renders the current widget and appends it to the given jQuery object or Widget.
@@ -1122,7 +1125,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      * Destroys the current widget, also destroys all its children before destroying itself.
      */
     stop: function() {
-        _.each(_.clone(this.widget_children), function(el) {
+        _.each(_.clone(this.getChildren()), function(el) {
             el.stop();
         });
         if(this.$element != null) {

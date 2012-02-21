@@ -1152,7 +1152,7 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
         this.loading.appendTo(this.$element);
     },
     destroy_content: function() {
-        _.each(_.clone(this.widget_children), function(el) {
+        _.each(_.clone(this.getChildren()), function(el) {
             el.stop();
         });
         this.$element.children().remove();
