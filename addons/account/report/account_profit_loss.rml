@@ -229,7 +229,7 @@
           <para style="terp_default_Bold_9"></para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">[[ final_result()['type'] == get_trans('Net Profit') and final_result()['type'] or removeParentNode('blockTable') ]]</para>
+          <para style="terp_default_Bold_9">[[ final_result()['type'] == get_trans('Net Profit') and translate(final_result()['type']) or removeParentNode('blockTable') ]]</para>
         </td>
         <td>
           <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == get_trans('Net Profit') and  formatLang(abs(final_result()['balance'])) ]] [[ final_result()['balance'] and final_result()['type'] == get_trans('Net Profit') and company.currency_id.symbol ]]</para>
@@ -284,7 +284,7 @@
           <para style="terp_default_Bold_9"></para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">[[ final_result()['type'] == get_trans('Net Loss') and final_result()['type'] or removeParentNode('blockTable') ]]</para>
+          <para style="terp_default_Bold_9">[[ final_result()['type'] == get_trans('Net Loss') and translate(final_result()['type']) or removeParentNode('blockTable') ]]</para>
         </td>
         <td>
           <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == get_trans('Net Loss') and  formatLang(abs(final_result()['balance'])) ]] [[ final_result()['balance'] and final_result()['type'] == get_trans('Net Loss') and company.currency_id.symbol ]]</para>
