@@ -80,7 +80,7 @@ class res_company(osv.osv):
         for company in self.browse(cr, uid, ids, context=context):
             result[company.id] = {}.fromkeys(field_names, False)
             if company.partner_id:
-                address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
+                address_data = part_obj.address_get(cr, uid, [company.parent_id.id], adr_pref=['default'])
                 if address_data['default']:
                     address = part_obj.read(cr, uid, address_data['default'], field_names, context=context)
                     for field in field_names:

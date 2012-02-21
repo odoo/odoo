@@ -253,7 +253,7 @@ class res_partner(osv.osv):
     def address_get(self, cr, uid, ids, adr_pref=None):
         if adr_pref is None:
             adr_pref = ['default']
-        address_ids = self.search(cr, uid, [('partner_id', 'in', ids)])
+        address_ids = self.search(cr, uid, [('parent_id', 'in', ids)])
         address_rec = self.read(cr, uid, address_ids, ['type'])
         res = list((addr['type'],addr['id']) for addr in address_rec)
         adr = dict(res)
