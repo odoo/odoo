@@ -537,7 +537,7 @@ class mail_thread(osv.osv):
         subscription_obj = self.pool.get('mail.subscription')
         sub_ids = subscription_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         subs = subscription_obj.read(cr, uid, sub_ids, context=context)
-        return [sub['user_id'] for sub in subs]
+        return [sub['user_id'][0] for sub in subs]
     
     def message_get_subscribers(self, cr, uid, ids, context=None):
         user_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context)
