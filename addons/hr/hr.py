@@ -23,6 +23,9 @@ from osv import fields, osv
 import logging
 import addons
 
+import io, StringIO
+from PIL import Image
+
 class hr_employee_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
@@ -145,6 +148,23 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
     _inherits = {'resource.resource': "resource_id"}
+
+    def _get_photo_mini(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            print obj
+            if not obj.photo:
+                result[obj.id] = False
+                continue
+
+            image_stream = io.BytesIO(obj.photo.decode('base64'))
+            img = Image.open(image_stream)
+            img.thumbnail((120, 100), Image.ANTIALIAS)
+            img_stream = StringIO.StringIO()
+            img.save(img_stream, "JPEG")
+            result[obj.id] = img_stream.getvalue().encode('base64')
+        return result
+
     _columns = {
         'country_id': fields.many2one('res.country', 'Nationality'),
         'birthday': fields.date("Date of Birth"),
@@ -171,6 +191,10 @@ class hr_employee(osv.osv):
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
         'photo': fields.binary('Photo'),
+        'photo_mini': fields.function(_get_photo_mini, string='Photo Mini', type="binary",
+            store = {
+                'hr.epployee': (lambda self, cr, uid, ids, c={}: ids, ['photo'], 10),
+            }),
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
@@ -273,6 +297,36 @@ class res_users(osv.osv):
                 logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
 
         return user_id
+
+    def _get_photo_calc(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        empl_obj = self.pool.get('hr.employee')
+        for user in self.browse(cr, uid, ids, context=context):
+            result[user.id] = user.photo
+            if user.hr_photo_prior:
+                empl_ids = empl_obj.search(cr, uid, [('user_id', '=', user.id)], context=context)
+                if empl_ids:
+                    empl = empl_obj.browse(cr, uid, empl_ids, context=context)[0]
+                    result[user.id] = empl.photo
+        return result
+
+    def _get_photo_calc_mini(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        empl_obj = self.pool.get('hr.employee')
+        for user in self.browse(cr, uid, ids, context=context):
+            result[user.id] = user.photo_mini
+            if user.hr_photo_prior:
+                empl_ids = empl_obj.search(cr, uid, [('user_id', '=', user.id)], context=context)
+                if empl_ids:
+                    empl = empl_obj.browse(cr, uid, empl_ids, context=context)[0]
+                    result[user.id] = empl.photo_mini
+        return result
+
+    _columns = {
+        'hr_photo_prior': fields.boolean('Use employee photo'),
+        'photo_calc': fields.function(_get_photo_calc, string='Photo', type="binary", readonly=True),
+        'photo_calc_mini': fields.function(_get_photo_calc_mini, string='Photo Mini', type="binary", readonly=True),
+    }
 
 res_users()
 

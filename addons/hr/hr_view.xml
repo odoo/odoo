@@ -219,6 +219,19 @@
             <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
         </record>
 
+        <!-- add photo option in res.users -->
+        <record id="view_users_form_hr_photo" model="ir.ui.view">
+            <field name="name">res.users.form_hr_photo</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <group name="gr_photo" col="2" colspan="1" position="inside">
+                    <field name="hr_photo_prior"/>
+                </group>
+            </field>
+        </record>
+
         <!--
         =======================
         Employee architecture
