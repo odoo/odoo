@@ -218,6 +218,18 @@ class users(osv.osv):
             result[obj.id] = img_stream.getvalue().encode('base64')
         return result
 
+    def _get_photo_calc(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for user in self.browse(cr, uid, ids, context=context):
+            result[user.id] = user.photo
+        return result
+
+    def _get_photo_calc_mini(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for user in self.browse(cr, uid, ids, context=context):
+            result[user.id] = user.photo_mini
+        return result
+
     def _get_interface_type(self, cr, uid, ids, name, args, context=None):
         """Implementation of 'view' function field getter, returns the type of interface of the users.
         @param field_name: Name of the field
@@ -258,11 +270,13 @@ class users(osv.osv):
                                                             "otherwise leave empty. After a change of password, the user has to login again."),
         'user_email': fields.char('Email', size=64),
         'signature': fields.text('Signature', size=64),
-        'photo': fields.binary('Photo'),
-        'photo_mini': fields.function(_get_photo_mini, string='Photo Mini', type="binary",
+        'photo': fields.binary('User Photo'),
+        'photo_mini': fields.function(_get_photo_mini, string='User Photo Mini', type="binary",
             store = {
                 'res.users': (lambda self, cr, uid, ids, c={}: ids, ['photo'], 10),
             }),
+        'photo_calc': fields.function(_get_photo_calc, string='Photo', type="binary", readonly=True),
+        'photo_calc_mini': fields.function(_get_photo_calc_mini, string='Photo Mini', type="binary", readonly=True),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
