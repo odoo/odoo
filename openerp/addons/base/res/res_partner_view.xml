@@ -373,7 +373,7 @@
                             <field name="active" groups="base.group_extended"/>
                             <field name="website" widget="url"/>
                             <field name="date"/>
-                            <field name="parent_id" string="Partner Company" groups="base.group_extended" attrs="{'invisible': [('is_company','=', True)]}"/>
+                            <field name="parent_id" string="Parent Company" groups="base.group_extended" attrs="{'invisible': [('is_company','=', True)]}"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <newline/>
                             <field name="customer" select="1"/>
