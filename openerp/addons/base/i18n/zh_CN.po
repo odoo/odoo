@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-02-15 05:51+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2012-02-21 05:45+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-16 05:04+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-02-21 05:54+0000\n"
+"X-Generator: Launchpad (build 14838)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -486,7 +486,7 @@ msgstr "用于平板电脑的功能"
 msgid ""
 "The user this filter is available to. When left empty the filter is usable "
 "by the system only."
-msgstr ""
+msgstr "该过滤器所用于的用户。留空代表该过滤器只用于系统。"
 
 #. module: base
 #: help:res.partner,website:0
@@ -1386,6 +1386,8 @@ msgid ""
 "use the accounting application of OpenERP, journals and accounts will be "
 "created automatically based on these data."
 msgstr ""
+"配置贵公司的银行帐户，并选择那些出现在报表页脚的信息。从列表视图中，您可以重新排列的银行帐户。如果你使用的的OpenERP会计应用，凭证簿和科目基于将这些"
+"数据被自动创建。"
 
 #. module: base
 #: view:ir.module.module:0
@@ -4278,6 +4280,12 @@ msgid ""
 "    * Cheque Register\n"
 "    "
 msgstr ""
+"\n"
+"会计凭证模块包括所有满足银行、现金、销售、采购、费用等凭证输入的需求。 \n"
+"- 转账凭证\n"
+"- 收款凭证 \n"
+"- 付款凭证\n"
+"    "
 
 #. module: base
 #: field:res.partner,ean13:0
@@ -4389,6 +4397,14 @@ msgid ""
 "automatically new claims based on incoming emails.\n"
 "    "
 msgstr ""
+"\n"
+"这个模块允许您跟踪您的客户/供应商索赔和申诉。\n"
+"============================================================================="
+"===\n"
+"\n"
+"它完整集成电子邮件网关使您可以根据传入的电子邮件\n"
+"自动创建新的索赔。\n"
+"    "
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -4465,6 +4481,9 @@ msgid ""
 "anonymization process to recover your previous data.\n"
 "    "
 msgstr ""
+"\n"
+"这个字段允许你隐藏一个数据库\n"
+"    "
 
 #. module: base
 #: help:publisher_warranty.contract,name:0
@@ -4535,6 +4554,12 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"采购模块是向供应商采购产品生成采购订单。 从采购订单创建供应商发票 采购管理的控制台包括： \n"
+"当前的采购订单 \n"
+"每月的数量和金额图表\n"
+"\n"
+"    "
 
 #. module: base
 #: view:ir.model.fields:0
@@ -4597,6 +4622,9 @@ msgid ""
 "You can also use the geolocalization without using the GPS coordinates.\n"
 "    "
 msgstr ""
+"\n"
+"这模块用于系统给业务伙伴定位的地理信息，其基于google的geolocalization服务\n"
+"    "
 
 #. module: base
 #: help:ir.actions.act_window,help:0
@@ -4654,7 +4682,7 @@ msgstr "苏里南"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet
 msgid "Bill Time on Tasks"
-msgstr ""
+msgstr "按任务开发票"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
@@ -4743,6 +4771,9 @@ msgid ""
 "above. Specify the interval information and partner to be invoice.\n"
 "    "
 msgstr ""
+"\n"
+"模块允许创建新的文档和对文档增加订阅\n"
+"    "
 
 #. module: base
 #: field:ir.actions.server,srcmodel_id:0
@@ -4907,6 +4938,7 @@ msgid ""
 "the same values as those available in the condition field, e.g. `Dear [[ "
 "object.partner_id.name ]]`"
 msgstr ""
+"电子邮件内容中可包含以双括号括住的表达式，这将会被替换成条件域中的值。例如“尊敬的[[ object.partner_id.name ]]”"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_form
@@ -4927,6 +4959,9 @@ msgid ""
 "modules like share, lunch, pad, idea, survey and subscription.\n"
 "    "
 msgstr ""
+"\n"
+"安装一些工具类的模块，如午餐、调查问卷、周期性凭证和审计线索之类。\n"
+"    "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_specific_industry_applications
@@ -5033,6 +5068,14 @@ msgid ""
 "Also implements IETF RFC 5785 for services discovery on a http server,\n"
 "which needs explicit configuration in openerp-server.conf, too.\n"
 msgstr ""
+"\n"
+"安装了这个模块，就为文档管理激活了WebDAV服务器。你就可以用兼容的浏览器远程查看OpenERP的文档了。安装后的WebDAV服务器可以由服务器配置文件"
+"的webdav部分控制。服务器配置参数: [webdav] ; enable = True ; 在服务器上启用webdav ; vdir = "
+"webdav ; webdav的虚拟目录，默认值的意思是是 \"http://localhost:8069/webdav/ ; verbose = "
+"True ; 打开webdav的动态信息 ; debug = True ; 打开webdav的调试信息 Also implements IETF RFC "
+"5785 for services discovery on a http server, which needs explicit "
+"configuration in openerp-server.conf, too. 这里还实现了IETF RFC "
+"5785标准用于在http服务器上发现服务。也需要在openerp-server.conf里显示地配置。\n"
 
 #. module: base
 #: model:res.country,name:base.sm
@@ -5055,6 +5098,13 @@ msgid ""
 "of the survey\n"
 "    "
 msgstr ""
+"\n"
+"此模块用于问卷调查。它依赖不同用户问题的答复或者回顾。\n"
+"==================================\n"
+" 一个问卷可以有多个页面。每个页面可以有多个问题，每个问题会有多个答案。\n"
+" 针对完成的问卷，不同的用户可能给出不同的问题答案。\n"
+" 对于问卷邀请，会发送带有用户名和密码的邮件给业务合作伙伴。\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.bm
@@ -5310,6 +5360,9 @@ msgid ""
 "It adds sales name and sales Reference on production order.\n"
 "    "
 msgstr ""
+"\n"
+"这模块提方便用户一次安装MRP和销售模块。它基本是用于跟踪从销售订单生成生产单。它在生产单中加入销售名称和销售订单。\n"
+"    "
 
 #. module: base
 #: selection:res.request,state:0
@@ -5348,7 +5401,7 @@ msgid ""
 "You can define price lists in analytic account, make some theoretical "
 "revenue\n"
 "reports, etc."
-msgstr ""
+msgstr "模块生成发票基于的成本(人力资源,费用....) 你能在辅助核算项定义价格表，建立一些理论收入的报表。"
 
 #. module: base
 #: field:ir.ui.menu,parent_id:0
@@ -5422,7 +5475,7 @@ msgid ""
 "    - VAT100-ready tax structure\n"
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
-msgstr ""
+msgstr "英国会计科目表"
 
 #. module: base
 #: field:ir.attachment,create_uid:0
@@ -5503,6 +5556,10 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"比利时会计科目表\n"
+"\n"
+"    "
 
 #. module: base
 #: field:ir.property,fields_id:0
@@ -5664,6 +5721,13 @@ msgid ""
 "        * Graph : Products to send in delay (date < = today)\n"
 "    "
 msgstr ""
+"\n"
+"系统的库存管理模块可以管理多个仓库,多层次的库存存储地点结构. 由于才用复式记账管理所以其库存控制是强大和灵活的. * 库存调拨日志和计划. * "
+"不同的库存管理方式(先进先出,先进后出...) * 库存估价(标准价或平均价.....) * 对库存差异的鲁棒性. * "
+"自动再订购规则(按库存设置,JIT...) * 支持条码. * 通过复式记账系统能快速发现错误. * 可追溯(先上,向下,生产批次,序号...) * "
+"仓库控制台包括: * 接收的产品(日期 <=今天) * 异常需求. * 图表: 实际产品接收数量和计划的对比(每个工作日的条状图) * 图表: "
+"实际产品发货数量和计划的对比(每个工作日的条状图)\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module
@@ -5734,6 +5798,13 @@ msgid ""
 "Budgets per Budgets.\n"
 "\n"
 msgstr ""
+"\n"
+"此模块使得会计可以管理预算。一旦输入了主预算和预算，管理层可以设置每个辅助核算项目的计划金额。会计可以看到主预算和预算合计的金额，以避免预算合计超出主预算"
+"金额。预算列表可以以图表方式查看。有三个报表： \n"
+"1.第一个报表挂在预算列表上。此报表列出此预算在每个主预算上的辅助核算项目金额。 \n"
+"2.第二个报表挂在预算列表上，作为第一个报表的汇总。列出此预算上的辅助核算项目金额（跨主预算）。 \n"
+"3.第三个报表挂在辅助核算项目树上。此报表列出此辅助核算项目在每个预算上的主预算金额。\n"
+"\n"
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -5844,6 +5915,10 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    OpenERP与CODA银行接口模块\n"
+"\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.et
@@ -5892,6 +5967,27 @@ msgid ""
 "of distribution models.\n"
 "        "
 msgstr ""
+"\n"
+"此模块允许你在输入会计凭证或发票时选择分摊模型，以便凭证或发票过账时生成多个辅助核算凭证行。 \n"
+"例如，你有以下辅助核算项目： \n"
+"项目 \n"
+"项目1 \n"
+"子项目1.1\n"
+"子项目1.2 \n"
+"项目2 \n"
+"\n"
+"销售员 \n"
+"Eric \n"
+"Fabien \n"
+"这里我们有两个分配模型：项目和销售员。一个发票行需要生成两个纬度的辅助核算项目行：发票金额在项目间分摊和在销售员间分摊。分摊模型这样定义： \n"
+"\n"
+"plan1： \n"
+"子项目1.1：50% \n"
+"子项目1.2：50% \n"
+"plan2： Eric：100% \n"
+"\n"
+"这样当这张发票过账后，会生成3个辅助核算凭证行属于一个会计凭证行。在创建分摊模型时可以验证最大或最小分摊百分比。\n"
+"        "
 
 #. module: base
 #: help:res.country.state,code:0
@@ -5947,6 +6043,9 @@ msgid ""
 "You can also view the report of account analytic summary\n"
 "user-wise as well as month wise.\n"
 msgstr ""
+"\n"
+"此模块在分析会计视图为公司的项目经理显示重要的数据,增加菜单为管理者显示有关信息。 \n"
+"你可以按用户或月度查看会计分析报表\n"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_install
@@ -5982,6 +6081,9 @@ msgid ""
 "http://translations.launchpad.net/openerp-costa-rica\n"
 "    "
 msgstr ""
+"\n"
+"哥斯达黎加会计科目\n"
+"    "
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -6035,7 +6137,7 @@ msgstr "所有权价值"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_module_quality
 msgid "Analyse Module Quality"
-msgstr ""
+msgstr "模块质量评估"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6280,6 +6382,8 @@ msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
 "log at DEBUG level(this is very verbose and may include confidential info!)"
 msgstr ""
+"打开此项时, 在DEBUG日志模式下, SMTP的详细日志会记录到 openerp-server.log 中.(注意,日志记录得比较详尽, "
+"会包含一些SMTP帐户信息, 在调试完毕后, 请关闭此项)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_report_creator
@@ -6869,7 +6973,7 @@ msgstr "印尼语 / Bahasa Indonesia"
 msgid ""
 "If you enable this option, existing translations (including custom ones) "
 "will be overwritten and replaced by those in this file"
-msgstr ""
+msgstr "选中此项时, 上传文件中的翻译项会替换掉系统中对应的翻译项(包括用户自定义的)."
 
 #. module: base
 #: field:ir.ui.view,inherit_id:0
@@ -7625,7 +7729,7 @@ msgstr "缅甸"
 #. module: base
 #: help:ir.model.fields,modules:0
 msgid "List of modules in which the field is defined"
-msgstr ""
+msgstr "模块定义的字段列表"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9366,7 +9470,7 @@ msgstr "网站"
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
 msgid "None"
-msgstr ""
+msgstr "不加密"
 
 #. module: base
 #: view:ir.module.category:0
