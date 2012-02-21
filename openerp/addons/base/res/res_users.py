@@ -203,20 +203,24 @@ class users(osv.osv):
             self.write(cr, uid, ids, {'groups_id': [(4, extended_group_id)]}, context=context)
         return True
 
-    def _get_photo_mini(self, cr, uid, ids, name, args, context=None):
+    def _get_avatar_mini(self, cr, uid, ids, name, args, context=None):
         result = {}
         for obj in self.browse(cr, uid, ids, context=context):
-            if not obj.photo:
+            if not obj.avatar:
                 result[obj.id] = False
                 continue
 
-            image_stream = io.BytesIO(obj.photo.decode('base64'))
+            image_stream = io.BytesIO(obj.avatar.decode('base64'))
             img = Image.open(image_stream)
-            img.thumbnail((120, 100), Image.ANTIALIAS)
+            img.thumbnail((180, 150), Image.ANTIALIAS)
             img_stream = StringIO.StringIO()
             img.save(img_stream, "JPEG")
             result[obj.id] = img_stream.getvalue().encode('base64')
         return result
+
+    def _set_avatar_mini(self, cr, uid, id, name, value, args, context=None):
+        self.write(cr, uid, [id], {'avatar': value}, context=context)
+        return True
 
     def _get_interface_type(self, cr, uid, ids, name, args, context=None):
         """Implementation of 'view' function field getter, returns the type of interface of the users.
@@ -258,10 +262,10 @@ class users(osv.osv):
                                                             "otherwise leave empty. After a change of password, the user has to login again."),
         'user_email': fields.char('Email', size=64),
         'signature': fields.text('Signature', size=64),
-        'photo': fields.binary('User Photo'),
-        'photo_mini': fields.function(_get_photo_mini, string='User Photo Mini', type="binary",
+        'avatar': fields.binary('User Avatar'),
+        'avatar_mini': fields.function(_get_avatar_mini, fnct_inv=_set_avatar_mini, string='User Avatar Mini', type="binary",
             store = {
-                'res.users': (lambda self, cr, uid, ids, c={}: ids, ['photo'], 10),
+                'res.users': (lambda self, cr, uid, ids, c={}: ids, ['avatar'], 10),
             }),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
@@ -374,14 +378,14 @@ class users(osv.osv):
             pass
         return result
 
-    def _get_photo(self, cr, uid, context=None):
-        photo_path = openerp.modules.get_module_resource('base','images','photo.png')
-        return open(photo_path, 'rb').read().encode('base64')
+    def _get_avatar(self, cr, uid, context=None):
+        avatar_path = openerp.modules.get_module_resource('base','images','photo.png')
+        return open(avatar_path, 'rb').read().encode('base64')
 
     _defaults = {
         'password' : '',
         'context_lang': 'en_US',
-        'photo': _get_photo,
+        'avatar': _get_avatar,
         'active' : True,
         'menu_id': _get_menu,
         'company_id': _get_company,

@@ -93,8 +93,8 @@
                             <field name="menu_tips" readonly="0" groups="base.group_no_one"/>
                         </group>
                         <group col="2" colspan="1">
-                            <separator string="Photo" colspan="2"/>
-                            <field name="photo" widget='image' nolabel="1" colspan="2"/>
+                            <separator string="Avatar" colspan="2"/>
+                            <field name="avatar" widget='image' nolabel="1" colspan="2"/>
                         </group>
                     </group>
                     <group name="default_filters" colspan="2" col="2">
@@ -124,20 +124,19 @@
                     </group>
                     <notebook colspan="4">
                         <page string="User">
-                            <group colspan="4" col="6">
+                            <group colspan="4" col="7">
                                 <!-- Second nested group to avoid misalignment with email prefs groups
                                     in simplified view -->
-                                <group colspan="6" col="6">
+                                <group colspan="7" col="7">
+                                    <group col="2" colspan="1">
+                                        <separator string="Avatar" colspan="2"/>
+                                        <field name="avatar_mini" widget='image' nolabel="1" colspan="2"/>
+                                    </group>
                                     <group col="3" colspan="2">
                                         <separator string="Preferences" colspan="3"/>
-                                        <group col="2" colspan="2">
-                                            <field name="context_lang"/>
-                                            <field name="context_tz"/>
-                                            <field name="menu_tips"/>
-                                        </group>
-                                        <group name="gr_photo" col="2" colspan="1">
-                                            <field name="photo" widget='image' nolabel="1" colspan="2"/>
-                                        </group>
+                                        <field name="context_lang"/>
+                                        <field name="context_tz"/>
+                                        <field name="menu_tips"/>
                                     </group>
                                     <group name="default_filters" colspan="2" col="2">
                                         <separator string="Default Filters" colspan="2"/>
@@ -149,7 +148,7 @@
                                         <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                                     </group>
                                 </group>
-                                <group colspan="6" col="2">
+                                <group colspan="7" col="2">
                                     <separator string="Email Preferences" colspan="2"/>
                                     <field name="user_email" widget="email"/>
                                     <field name="signature"/>
