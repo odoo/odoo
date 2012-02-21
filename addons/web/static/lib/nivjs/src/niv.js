@@ -93,9 +93,28 @@ niv = (function() {
 	niv.ParentedMixin = {
 	    __parented_mixin: true,
 	    setParent: function(parent) {
-	        
+	        if(this.getParent()) {
+	            if (this.getParent().__parented_mixin) {
+	                this.getParent().__parented_children = _.without(this.getParent().getChildren(), this);
+	            }
+	            this.__parented_parent = undefined;
+	        }
+	        this.__parented_parent = parent;
+	        if(parent && parent.__parented_mixin) {
+	            if (!parent.getChildren())
+	                parent.__parented_children = [];
+	            parent.getChildren().push(this);
+	        }
+	    },
+	    getParent: function() {
+	        return this.__parented_parent;
+	    },
+	    getChildren: function() {
+	        return this.__parented_children || [];
+	    },
+	    isDestroyed: function() {
+	        return this.__parented_stopped;
 	    }
-	    
 	};
 
 	return niv;

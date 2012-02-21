@@ -1029,8 +1029,21 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
     getChildren: function() {
         return this.__parented_children || [];
     },
-    isStopped: function() {
+    isDestroyed: function() {
         return this.__parented_stopped;
+    },
+    /**
+     * Destroys the current widget, also destroys all its children before destroying itself.
+     */
+    stop: function() {
+        _.each(_.clone(this.getChildren()), function(el) {
+            el.stop();
+        });
+        if(this.$element != null) {
+            this.$element.remove();
+        }
+        this.setParent(undefined);
+        this.__parented_stopped = true;
     },
     /**
      * Renders the current widget and appends it to the given jQuery object or Widget.
@@ -1123,19 +1136,6 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         return $.Deferred().done().promise();
     },
     /**
-     * Destroys the current widget, also destroys all its children before destroying itself.
-     */
-    stop: function() {
-        _.each(_.clone(this.getChildren()), function(el) {
-            el.stop();
-        });
-        if(this.$element != null) {
-            this.$element.remove();
-        }
-        this.setParent(undefined);
-        this.__parented_stopped = true;
-    },
-    /**
      * Informs the action manager to do an action. This supposes that
      * the action manager can be found amongst the ancestors of the current widget.
      * If that's not the case this method will simply return `false`.
@@ -1163,10 +1163,10 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         var def = $.Deferred().then(success, error);
         var self = this;
         openerp.connection.rpc(url, data). then(function() {
-            if (!self.isStopped())
+            if (!self.isDestroyed())
                 def.resolve.apply(def, arguments);
         }, function() {
-            if (!self.isStopped())
+            if (!self.isDestroyed())
                 def.reject.apply(def, arguments);
         });
         return def.promise();
