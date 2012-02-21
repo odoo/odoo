@@ -124,6 +124,7 @@ class stock_picking(osv.osv):
         picking_ids = result.keys()
         invoice_ids = result.values()
         invoices = {}
+        inv_type = type
         for invoice in invoice_obj.browse(cursor, user, invoice_ids,
                 context=context):
             invoices[invoice.id] = invoice
@@ -134,7 +135,26 @@ class stock_picking(osv.osv):
                 continue
             sale_lines = picking.sale_id.order_line
             invoice_created = invoices[result[picking.id]]
+            
+            for line in sale_lines:
+                if inv_type in ('out_invoice', 'out_refund'):
+                    account_id = line.product_id.product_tmpl_id.\
+                            property_account_income.id
+                    if not account_id:
+                        account_id = line.product_id.categ_id.\
+                                property_account_income_categ.id
+                else:
+                    account_id = line.product_id.product_tmpl_id.\
+                            property_account_expense.id
+                    if not account_id:
+                        account_id = line.product_id.categ_id.\
+                                property_account_expense_categ.id
+            
+            new_acc = self.pool.get('account.fiscal.position').map_account(cursor, user, picking.sale_id.fiscal_position, account_id)
+            
             for inv in invoice_obj.browse(cursor, user, [invoice_created.id], context=context):
+                for lines in inv.invoice_line:
+                    invoice_line_obj.write(cursor, user , lines.id, {'account_id': new_acc}, context=context)
                 if not inv.fiscal_position:
                     invoice_obj.write(cursor, user, [inv.id], {'fiscal_position': picking.sale_id.fiscal_position.id}, context=context)
             if picking.sale_id.client_order_ref:
