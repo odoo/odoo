@@ -367,6 +367,9 @@
                                 <field name="category_id" nolabel="1"  colspan="8" />
                             </group>
                         </page>
+                        <page string="Contacts" attrs="{'invisible': [('is_company','=', False)]}">
+                        <field name="child_ids" nolabel="1"/>
+                        </page>
                         <page string="Sales &amp; Purchases">
                             <separator string="General Information" colspan="4"/>
                             <field name="user_id"/>
@@ -384,9 +387,6 @@
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="comment" nolabel="1"/>
-                        </page>
-                        <page string="Contacts" attrs="{'invisible': [('is_company','=', False)]}">
-                        <field name="child_ids" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
