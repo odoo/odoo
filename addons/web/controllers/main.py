@@ -352,7 +352,7 @@ class Database(openerpweb.Controller):
     def get_list(self, req):
         proxy = req.session.proxy("db")
         dbs = proxy.list()
-        h = req.httprequest.headers['Host'].split(':')[0]
+        h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
         d = h.split('.')[0]
         r = req.config.dbfilter.replace('%h', h).replace('%d', d)
         dbs = [i for i in dbs if re.match(r, i)]
