@@ -91,6 +91,7 @@ niv = (function() {
 	}).call(niv);
 	
 	niv.ParentedMixin = {
+	    __parented_mixin: true,
 	    setParent: function(parent) {
 	        
 	    }

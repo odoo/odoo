@@ -974,6 +974,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
  * That will kill the widget in a clean way and erase its content from the dom.
  */
 openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.Widget# */{
+    __parented_mixin: true,
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -1009,16 +1010,23 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         this.setParent(parent);
     },
     setParent: function(parent) {
-        this.widget_parent = parent;
-        this.widget_children = [];
-        if(parent && parent.widget_children) {
+        if(this.getParent()) {
+            if (this.getParent().__parented_mixin) {
+                this.getParent().widget_children = _.without(this.getParent().widget_children, this);
+            }
+            this.__parented_parent = undefined;
+        }
+        this.__parented_parent = parent;
+        if(parent && parent.__parented_mixin) {
+            if (!parent.widget_children)
+                parent.widget_children = [];
             parent.widget_children.push(this);
         }
         // useful to know if the widget was destroyed and should not be used anymore
         this.widget_is_stopped = false;
     },
     getParent: function() {
-        return this.widget_parent;
+        return this.__parented_parent;
     },
     /**
      * Renders the current widget and appends it to the given jQuery object or Widget.
@@ -1120,10 +1128,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         if(this.$element != null) {
             this.$element.remove();
         }
-        if (this.widget_parent && this.widget_parent.widget_children) {
-            this.widget_parent.widget_children = _.without(this.widget_parent.widget_children, this);
-        }
-        this.widget_parent = null;
+        this.setParent(undefined);
         this.widget_is_stopped = true;
     },
     /**
@@ -1132,20 +1137,20 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      * If that's not the case this method will simply return `false`.
      */
     do_action: function(action, on_finished) {
-        if (this.widget_parent) {
-            return this.widget_parent.do_action(action, on_finished);
+        if (this.getParent()) {
+            return this.getParent().do_action(action, on_finished);
         }
         return false;
     },
     do_notify: function() {
-        if (this.widget_parent) {
-            return this.widget_parent.do_notify.apply(this,arguments);
+        if (this.getParent()) {
+            return this.getParent().do_notify.apply(this,arguments);
         }
         return false;
     },
     do_warn: function() {
-        if (this.widget_parent) {
-            return this.widget_parent.do_warn.apply(this,arguments);
+        if (this.getParent()) {
+            return this.getParent().do_warn.apply(this,arguments);
         }
         return false;
     },
