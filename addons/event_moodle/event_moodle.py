@@ -41,7 +41,7 @@ class event_moodle(osv.osv):
         """
         Use to configure moodle
         """
-        self.write(cr,uid,[1],{'id':1})
+        self.write(cr,uid,ids,{'id':1})
         #save information that you need to create the url
         return {'type': 'ir.actions.act_window_close'}
         #use to quit the wizard
@@ -51,8 +51,14 @@ class event_moodle(osv.osv):
         create the good url with the information of the configuration
         @return url for moodle connexion
         """
+        req_sql="select id from event_moodle"
+        cr.execute(req_sql)
+        sql_res = cr.dictfetchall()
+        new_ids=[]
+        for id_moodle in sql_res:
+             new_ids.append(id_moodle['id'])
         url=""
-        config_moodle = self.browse(cr, uid, ids, context=context)
+        config_moodle = self.browse(cr, uid, [new_ids[-1]], context=context)
         if config_moodle[0].moodle_username and config_moodle[0].moodle_password:
             url='http://'+config_moodle[0].serveur_moodle+'/moodle/webservice/xmlrpc/simpleserver.php?wsusername='+config_moodle[0].moodle_username+'&wspassword='+config_moodle[0].moodle_password
             #connexion with password and username
@@ -157,7 +163,7 @@ class event_event(osv.osv):
         dic_courses= [{'fullname' :name_event,'shortname' :'','startdate':date,'summary':event[0].note,'categoryid':1}]
         #create a dict course
         moodle_pool = self.pool.get('event.moodle')
-        response_courses = moodle_pool.create_moodle_courses(cr,uid,[1],dic_courses)
+        response_courses =moodle_pool.create_moodle_courses(cr,uid,[1],dic_courses)
         self.write(cr,uid,ids,{'moodle_id':response_courses[0]['id']})
         #create a course in moodle and keep the id
         for registration in event[0].registration_ids:
