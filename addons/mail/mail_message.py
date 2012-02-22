@@ -207,16 +207,13 @@ class mail_message(osv.osv):
     def get_pushed_messages(self, cr, uid, ids, filter_search=False, context=None):
         """OpenSocial: wall: get messages to display (=pushed notifications)
             :param filter_search: TODO
-            :return: dict { res_model: { res_id: [pushed message list] }}
+            :return: list of mail.messages, unsorted
         """
         notification_obj = self.pool.get('mail.notification')
         notification_ids = notification_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
-        
         msg_ids = [notification.message_id.id for notification in notifications]
-        msgs = self.read(cr, uid, msg_ids, context=context)        
-        # sort: TODO
-        
+        msgs = self.read(cr, uid, msg_ids, context=context)
         return msgs
     
     #------------------------------------------------------
