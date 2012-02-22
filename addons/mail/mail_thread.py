@@ -76,6 +76,7 @@ class mail_thread(osv.osv):
     def message_create(self, cr, uid, ids, vals, context=None):
         """OpenSocial: wrapper of mail.message create method
         - creates the mail.message
+        - automatically subscribe the message writer if not already done
         - push the message to subscribed users"""
         subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
@@ -88,6 +89,11 @@ class mail_thread(osv.osv):
         need_action_pushed = False
         
         msg_id = self.pool.get('mail.message').create(cr, uid, vals, context=context)
+        
+        # automatically subscribe the writer of the message if not subscribed
+        if vals['user_id']:
+            if not self.message_is_subscriber(cr, uid, ids, context=context):
+                self.message_subscribe(cr, uid, ids, context=context)
         
         # push the message to suscribed users
         users = self.message_get_subscribers(cr, uid, ids, context=context)
@@ -574,11 +580,12 @@ class mail_thread(osv.osv):
         return users
     
     def message_is_subscriber(self, cr, uid, ids, context=None):
+        # TODO: use message_get_subscribers ? as all subscriptions are in mail.subscription table, not necessary
         subscription_obj = self.pool.get('mail.subscription')
         sub_ids = subscription_obj.search(cr, uid,
                         ['&', '&',  ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', '=', uid)], context=context)
         if len(sub_ids) > 1:
-            print 'cacaprout error !'
+            pass # TODO
         return True if sub_ids else False
     
     def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
