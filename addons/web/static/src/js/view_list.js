@@ -96,7 +96,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (this._limit === undefined) {
             this._limit = (this.options.limit
                         || this.defaults.limit
-                        || (this.widget_parent.action || {}).limit
+                        || (this.getParent().action || {}).limit
                         || 80);
         }
         return this._limit;

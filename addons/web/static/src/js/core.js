@@ -925,6 +925,40 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     }
 });
 
+openerp.web.ParentedMixin = {
+    __parented_mixin: true,
+    setParent: function(parent) {
+        if(this.getParent()) {
+            if (this.getParent().__parented_mixin) {
+                this.getParent().__parented_children = _.without(this.getParent().getChildren(), this);
+            }
+            this.__parented_parent = undefined;
+        }
+        this.__parented_parent = parent;
+        if(parent && parent.__parented_mixin) {
+            if (!parent.__parented_children)
+                parent.__parented_children = [];
+            parent.__parented_children.push(this);
+        }
+    },
+    getParent: function() {
+        return this.__parented_parent;
+    },
+    getChildren: function() {
+        return this.__parented_children ? _.clone(this.__parented_children) : [];
+    },
+    isDestroyed: function() {
+        return this.__parented_destroyed;
+    },
+    destroy: function() {
+        _.each(this.getChildren(), function(el) {
+            el.destroy();
+        });
+        this.setParent(undefined);
+        this.__parented_destroyed = true;
+    },
+};
+
 /**
  * Base class for all visual components. Provides a lot of functionalities helpful
  * for the management of a part of the DOM.
@@ -969,11 +1003,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
  *
  * And of course, when you don't need that widget anymore, just do:
  *
- * my_widget.stop();
+ * my_widget.destroy();
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.Widget# */{
+openerp.web.Widget = openerp.web.CallbackEnabled.extend(openerp.web.ParentedMixin).extend(/** @lends openerp.web.Widget# */{
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -993,7 +1027,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      * @extends openerp.web.CallbackEnabled
      *
      * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
-     * When that widget is destroyed by calling stop(), the current instance will be
+     * When that widget is destroyed by calling destroy(), the current instance will be
      * destroyed too. Can be null.
      * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
      * to bind the current Widget to an already existing part of the DOM, which is not compatible
@@ -1006,13 +1040,19 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         
         this.$element = $(document.createElement(this.tag_name));
 
-        this.widget_parent = parent;
-        this.widget_children = [];
-        if(parent && parent.widget_children) {
-            parent.widget_children.push(this);
+        this.setParent(parent);
+    },
+    /**
+     * Destroys the current widget, also destroys all its children before destroying itself.
+     */
+    destroy: function() {
+        _.each(this.getChildren(), function(el) {
+            el.destroy();
+        });
+        if(this.$element != null) {
+            this.$element.remove();
         }
-        // useful to know if the widget was destroyed and should not be used anymore
-        this.widget_is_stopped = false;
+        this._super();
     },
     /**
      * Renders the current widget and appends it to the given jQuery object or Widget.
@@ -1105,41 +1145,25 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         return $.Deferred().done().promise();
     },
     /**
-     * Destroys the current widget, also destroys all its children before destroying itself.
-     */
-    stop: function() {
-        _.each(_.clone(this.widget_children), function(el) {
-            el.stop();
-        });
-        if(this.$element != null) {
-            this.$element.remove();
-        }
-        if (this.widget_parent && this.widget_parent.widget_children) {
-            this.widget_parent.widget_children = _.without(this.widget_parent.widget_children, this);
-        }
-        this.widget_parent = null;
-        this.widget_is_stopped = true;
-    },
-    /**
      * Informs the action manager to do an action. This supposes that
      * the action manager can be found amongst the ancestors of the current widget.
      * If that's not the case this method will simply return `false`.
      */
     do_action: function(action, on_finished) {
-        if (this.widget_parent) {
-            return this.widget_parent.do_action(action, on_finished);
+        if (this.getParent()) {
+            return this.getParent().do_action(action, on_finished);
         }
         return false;
     },
     do_notify: function() {
-        if (this.widget_parent) {
-            return this.widget_parent.do_notify.apply(this,arguments);
+        if (this.getParent()) {
+            return this.getParent().do_notify.apply(this,arguments);
         }
         return false;
     },
     do_warn: function() {
-        if (this.widget_parent) {
-            return this.widget_parent.do_warn.apply(this,arguments);
+        if (this.getParent()) {
+            return this.getParent().do_warn.apply(this,arguments);
         }
         return false;
     },
@@ -1148,10 +1172,10 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         var def = $.Deferred().then(success, error);
         var self = this;
         openerp.connection.rpc(url, data). then(function() {
-            if (!self.widget_is_stopped)
+            if (!self.isDestroyed())
                 def.resolve.apply(def, arguments);
         }, function() {
-            if (!self.widget_is_stopped)
+            if (!self.isDestroyed())
                 def.reject.apply(def, arguments);
         });
         return def.promise();

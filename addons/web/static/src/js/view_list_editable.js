@@ -139,7 +139,7 @@ openerp.web.list_editable = function (openerp) {
             }
             cancelled.then(function () {
                 self.view.unpad_columns();
-                self.edition_form.stop();
+                self.edition_form.destroy();
                 self.edition_form.$element.remove();
                 delete self.edition_form;
                 delete self.edition_id;

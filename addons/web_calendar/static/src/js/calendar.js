@@ -42,7 +42,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this._super();
         return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': true}, this.on_loaded);
     },
-    stop: function() {
+    destroy: function() {
         scheduler.clearAll();
         this._super();
     },

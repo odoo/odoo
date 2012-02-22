@@ -74,13 +74,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 }, this.on_loaded);
         }
     },
-    stop: function() {
+    destroy: function() {
         if (this.sidebar) {
-            this.sidebar.attachments.stop();
-            this.sidebar.stop();
+            this.sidebar.attachments.destroy();
+            this.sidebar.destroy();
         }
         _.each(this.widgets, function(w) {
-            w.stop();
+            w.destroy();
         });
         this._super();
     },
@@ -923,7 +923,7 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
 
         this.width = this.node.attrs.width;
     },
-    stop: function() {
+    destroy: function() {
         this._super.apply(this, arguments);
         $.fn.tipsy.clear();
     },
@@ -2554,7 +2554,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             this.previous_readonly = this.readonly;
             if (this.viewmanager) {
                 this.is_loaded = this.is_loaded.pipe(function() {
-                    self.viewmanager.stop();
+                    self.viewmanager.destroy();
                     return $.when(self.load_views()).then(function() {
                         self.reload_current_view();
                     });
@@ -2734,7 +2734,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
             this.previous_readonly = this.readonly;
             if (this.list_view) {
                 this.is_loaded = this.is_loaded.pipe(function() {
-                    self.list_view.stop();
+                    self.list_view.destroy();
                     return $.when(self.load_view()).then(function() {
                         self.reload_content();
                     });
@@ -2782,7 +2782,7 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends open
         var pop = new openerp.web.form.FormOpenPopup(this);
         pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {
             title: _t("Open: ") + this.name,
-            readonly: this.widget_parent.is_readonly()
+            readonly: this.getParent().is_readonly()
         });
         pop.on_write_completed.add_last(function() {
             self.reload_content();
@@ -2866,7 +2866,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
     setup_search_view: function(search_defaults) {
         var self = this;
         if (this.searchview) {
-            this.searchview.stop();
+            this.searchview.destroy();
         }
         this.searchview = new openerp.web.SearchView(this,
                 this.dataset, false,  search_defaults);
@@ -2896,7 +2896,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                 $buttons.prepend(QWeb.render("SelectCreatePopup.search.buttons"));
                 var $cbutton = $buttons.find(".oe_selectcreatepopup-search-close");
                 $cbutton.click(function() {
-                    self.stop();
+                    self.destroy();
                 });
                 var $sbutton = $buttons.find(".oe_selectcreatepopup-search-select");
                 if(self.options.disable_multiple_selection) {
@@ -2904,7 +2904,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                 }
                 $sbutton.click(function() {
                     self.on_select_elements(self.selected_ids);
-                    self.stop();
+                    self.destroy();
                 });
             });
         });
@@ -2988,7 +2988,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         if (this.created_elements.length > 0) {
             this.on_select_elements(this.created_elements);
         }
-        this.stop();
+        this.destroy();
     },
     on_default_get: function(res) {}
 });
@@ -2999,7 +2999,7 @@ openerp.web.form.SelectCreateListView = openerp.web.ListView.extend({
     },
     select_record: function(index) {
         this.popup.on_select_elements([this.dataset.ids[index]]);
-        this.popup.stop();
+        this.popup.destroy();
     },
     do_select: function(ids, records) {
         this._super(ids, records);
@@ -3075,12 +3075,12 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
             var $nbutton = $buttons.find(".oe_formopenpopup-form-save");
             $nbutton.click(function() {
                 self.view_form.do_save().then(function() {
-                    self.stop();
+                    self.destroy();
                 });
             });
             var $cbutton = $buttons.find(".oe_formopenpopup-form-close");
             $cbutton.click(function() {
-                self.stop();
+                self.destroy();
             });
             if (self.options.readonly) {
                 $nbutton.hide();

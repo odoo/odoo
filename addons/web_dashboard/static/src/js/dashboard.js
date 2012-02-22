@@ -238,9 +238,9 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         this.$element.html(rendered);
     },
     do_reload: function() {
-        var view_manager = this.view.widget_parent,
-            action_manager = view_manager.widget_parent;
-        this.view.stop();
+        var view_manager = this.view.getParent(),
+            action_manager = view_manager.getParent();
+        this.view.destroy();
         action_manager.do_action(view_manager.action);
     }
 });
@@ -341,7 +341,7 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
                 });
             })
             .delegate('li:not(.oe-done)', 'click', function () {
-                self.widget_parent.widget_parent.widget_parent.do_execute_action({
+                self.getParent().getParent().getParent().do_execute_action({
                         type: 'object',
                         name: 'action_launch'
                     }, self.dataset,
@@ -463,8 +463,8 @@ openerp.web_dashboard.ApplicationInstaller = openerp.web.OldWidget.extend({
         });
         return r;
     },
-    stop: function() {
-        this.action_manager.stop();
+    destroy: function() {
+        this.action_manager.destroy();
         return this._super();
     }
 });

@@ -148,7 +148,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
     on_resized: function() {
         //openerp.log("Dialog resized to %d x %d", this.$element.width(), this.$element.height());
     },
-    stop: function () {
+    destroy: function () {
         // Destroy widget
         this.close();
         this.$element.dialog('destroy');
@@ -240,7 +240,7 @@ openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loadin
         this.session.on_rpc_request.add_first(this.request_call);
         this.session.on_rpc_response.add_last(this.response_call);
     },
-    stop: function() {
+    destroy: function() {
         this.session.on_rpc_request.remove(this.request_call);
         this.session.on_rpc_response.remove(this.response_call);
         this.on_rpc_event(-this.count);
@@ -261,7 +261,7 @@ openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loadin
             $(".loading",this.$element).text(_.str.sprintf(
                 _t("Loading (%d)"), this.count));
             $(".loading",this.$element).show();
-            this.widget_parent.$element.addClass('loading');
+            this.getParent().$element.addClass('loading');
         } else {
             this.count = 0;
             clearTimeout(this.long_running_timer);
@@ -271,7 +271,7 @@ openerp.web.Loading = openerp.web.OldWidget.extend(/** @lends openerp.web.Loadin
                 $.unblockUI();
             }
             $(".loading",this.$element).fadeOut();
-            this.widget_parent.$element.removeClass('loading');
+            this.getParent().$element.removeClass('loading');
         }
     }
 });
@@ -318,7 +318,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
             self.hide();
         });
     },
-    stop: function () {
+    destroy: function () {
         this.hide();
         this.$option_id.empty();
 
@@ -381,9 +381,9 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
 
             var admin = result[1][0];
             setTimeout(function () {
-                self.widget_parent.do_login(
+                self.getParent().do_login(
                         info.db, admin.login, admin.password);
-                self.stop();
+                self.destroy();
                 self.unblockUI();
             });
         });
@@ -437,7 +437,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
                     if (self.db_list) {
                         self.db_list.push(self.to_object(fields)['db_name']);
                         self.db_list.sort();
-                        self.widget_parent.set_db_list(self.db_list);
+                        self.getParent().set_db_list(self.db_list);
                     }
                     var form_obj = self.to_object(fields);
                     self.wait_for_newdb(result, {
@@ -469,7 +469,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
                     $db_list.find(':selected').remove();
                     if (self.db_list) {
                         self.db_list.splice(_.indexOf(self.db_list, db, true), 1);
-                        self.widget_parent.set_db_list(self.db_list);
+                        self.getParent().set_db_list(self.db_list);
                     }
                     self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
                 });
@@ -799,7 +799,7 @@ openerp.web.Header =  openerp.web.OldWidget.extend(/** @lends openerp.web.Header
                         var inner_viewmanager = action_manager.inner_viewmanager;
                         inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
                         .then(function() {
-                            self.dialog.stop();
+                            self.dialog.destroy();
                             // needs to refresh interface in case language changed
                             window.location.reload();
                         });
@@ -1101,7 +1101,7 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
             self.header.do_update();
             self.menu.do_reload();
             if(self.action_manager)
-                self.action_manager.stop();
+                self.action_manager.destroy();
             self.action_manager = new openerp.web.ActionManager(self);
             self.action_manager.appendTo($("#oe_app"));
             self.bind_hashchange();
@@ -1152,8 +1152,8 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
         this.loading.appendTo(this.$element);
     },
     destroy_content: function() {
-        _.each(_.clone(this.widget_children), function(el) {
-            el.stop();
+        _.each(_.clone(this.getChildren()), function(el) {
+            el.destroy();
         });
         this.$element.children().remove();
     },
