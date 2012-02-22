@@ -162,8 +162,9 @@ openerp.mail = function(session) {
 
         do_comment: function () {
             var body_text = this.$element.find('textarea').val();
-            return this.ds_msg.call('create', [{'subject': 'Status tweet', 'model': 'res.users', 'body_text': body_text, 'type': 'comment'}]).then(
-                this.proxy('fetch_comments'));
+            return this.ds_msg.call('create', [
+                {'subject': 'Status tweet', 'model': 'res.users', 'body_text': body_text, 'type': 'comment', 'res_id': this.session.uid, 'user_id': this.session.uid}
+                ]).then(this.proxy('fetch_comments'));
         },
     });
 };

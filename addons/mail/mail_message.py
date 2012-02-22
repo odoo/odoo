@@ -214,11 +214,9 @@ class mail_message(osv.osv):
         notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
         
         msg_ids = [notification.message_id.id for notification in notifications]
-        msgs = self.read(cr, uid, msg_ids, context=context)
-        print msgs
+        msgs = self.read(cr, uid, msg_ids, context=context)        
+        # sort: TODO
         
-        # sort
-            
         return msgs
     
     #------------------------------------------------------
