@@ -108,7 +108,6 @@ class res_partner_bank(osv.osv):
             value = ''
         if not context.get('address'):
             return value
-
         for address in self.pool.get('res.partner').resolve_o2m_commands_to_record_dicts(
             cursor, user, 'address', context['address'], ['type', field], context=context):
 
