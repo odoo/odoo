@@ -160,6 +160,7 @@ class res_partner(osv.osv):
         'company_id': fields.many2one('res.company', 'Company',select=1),
         'is_company': fields.boolean('Company', help="Check the field to create company otherwise it is personal contacts"),
         'color': fields.integer('Color Index'),
+        'is_company_address': fields.boolean('Company Address', help="Check the field to use the company address"),
     }
     def _default_category(self, cr, uid, context=None):
         if context is None:
