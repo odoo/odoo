@@ -936,9 +936,9 @@ openerp.web.ParentedMixin = {
         }
         this.__parented_parent = parent;
         if(parent && parent.__parented_mixin) {
-            if (!parent.getChildren())
+            if (!parent.__parented_children)
                 parent.__parented_children = [];
-            parent.getChildren().push(this);
+            parent.__parented_children.push(this);
         }
     },
     getParent: function() {
@@ -948,14 +948,14 @@ openerp.web.ParentedMixin = {
         return this.__parented_children ? _.clone(this.__parented_children) : [];
     },
     isDestroyed: function() {
-        return this.__parented_stopped;
+        return this.__parented_destroyed;
     },
     destroy: function() {
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
         this.setParent(undefined);
-        this.__parented_stopped = true;
+        this.__parented_destroyed = true;
     },
 };
 
@@ -1046,7 +1046,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(openerp.web.ParentedMixi
      * Destroys the current widget, also destroys all its children before destroying itself.
      */
     destroy: function() {
-        _.each(_.clone(this.getChildren()), function(el) {
+        _.each(this.getChildren(), function(el) {
             el.destroy();
         });
         if(this.$element != null) {
