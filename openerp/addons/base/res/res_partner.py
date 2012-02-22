@@ -124,7 +124,7 @@ class res_partner(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
-        'title': fields.many2one('res.partner.title','Partner Firm'),
+        'title': fields.many2one('res.partner.title','Title'),
         'parent_id': fields.many2one('res.partner','Parent Partner'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Partner Ref.'),
         'ref': fields.char('Reference', size=64, select=1),
@@ -160,6 +160,7 @@ class res_partner(osv.osv):
         'company_id': fields.many2one('res.company', 'Company',select=1),
         'is_company': fields.boolean('Company', help="Check the field to create company otherwise it is personal contacts"),
         'color': fields.integer('Color Index'),
+        'photo': fields.binary('Photo'),
         'is_company_address': fields.boolean('Company Address', help="Check the field to use the company address"),
     }
     def _default_category(self, cr, uid, context=None):

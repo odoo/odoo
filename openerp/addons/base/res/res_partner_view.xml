@@ -327,11 +327,15 @@
             <field name="arch" type="xml">
                 <form string="Partners" col='1'>
                     <group col="8" colspan="4">
-                        <group colspan="5" col="4">
-                            <field name="name" select="1"/>
-                            <field name="function"/>
-                            <field name="title" size="0" groups="base.group_extended"/>
-                            <field name="parent_id" string="Parent Company" groups="base.group_extended" attrs="{'invisible': [('is_company','=', True)]}"/>
+                        <group colspan="4" col="4">
+                            <group col="2">
+                                <field name="name" select="1"/>
+                                <field name="title" size="0" groups="base.group_extended"/>
+                            </group>
+                            <group col="2">
+                                <field name="function"/>
+                                <field name="parent_id" string="Parent Company" groups="base.group_extended" attrs="{'invisible': [('is_company','=', True)]}"/>
+                            </group>
                         </group>
                         <group col="2">
                             <field name="customer" select="1"/>
@@ -341,6 +345,10 @@
                             <field name="is_company" select="1"/>
                             <field name="is_company_address"/>
                         </group>
+                        <group col="2">
+                            <field name="photo" widget='image' nolabel="1"/>
+                        </group>
+                        
                     </group>
                     <notebook colspan="4">
                         <page string="General">
