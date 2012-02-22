@@ -313,7 +313,8 @@ class graph(object):
             self.order[level] = self.order[level]+1
 
         for sec_end in self.transitions.get(node, []):
-            self.init_order(sec_end, self.result[sec_end]['x'])
+            if node!=sec_end:
+                self.init_order(sec_end, self.result[sec_end]['x'])
 
 
     def order_heuristic(self):
@@ -457,7 +458,8 @@ class graph(object):
             if self.transitions.get((mid_node), False):
                 if last:
                     self.result[mid_node]['y'] = last + len(self.transitions[mid_node])/2 + 1
-                last = self.tree_order(mid_node)
+                if node!=mid_node:
+                    last = self.tree_order(mid_node)
             else:
                 if last:
                     self.result[mid_node]['y'] = last + 1
@@ -473,7 +475,8 @@ class graph(object):
             if self.transitions.get(child, False):
                 if last:
                     self.result[child]['y'] = last + len(self.transitions[child])/2 + 1
-                last = self.tree_order(child, last)
+                if node!=child:
+                    last = self.tree_order(child, last)
 
         if last_child:
             last = self.result[last_child]['y']
