@@ -4100,6 +4100,7 @@
             <field name="property_account_payable" ref="a_pay"/>          <!-- crediteuren -->
             <field name="property_account_expense_categ" ref="a_expense"/><!-- aankoop grondstoffen -->
             <field name="property_account_income_categ" ref="a_sale"/>    <!-- verkoop rekening -->
+            <field name="property_reserve_and_surplus_account" ref="a_9999"/>
         </record>
 
 <!-- BTW  Template
@@ -4136,10 +4137,13 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable0"/>
-            <field name="account_paid_id" ref="vat_refund0"/>
+            <field name="account_paid_id" ref="vat_payable0"/>
             <field name="base_code_id" ref="omz_code_1e"/>
             <field name="ref_base_code_id" ref="omz_code_1e"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">sale</field>
+            <field name="sequence">10</field>
         </record>
         <record id="btw_6" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4148,12 +4152,15 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.06" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable6"/>
-            <field name="account_paid_id" ref="vat_refund6"/>
+            <field name="account_paid_id" ref="vat_payable6"/>
             <field name="base_code_id" ref="omz_code_1b"/>
             <field name="tax_code_id" ref="btw_code_1b"/>
             <field name="ref_base_code_id" ref="omz_code_1b"/>
             <field name="ref_tax_code_id" ref="btw_code_1b"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">sale</field>
+            <field name="sequence">5</field>
         </record>
         <record id="btw_19" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4162,12 +4169,15 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.19" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable19"/>
-            <field name="account_paid_id" ref="vat_refund19"/>
+            <field name="account_paid_id" ref="vat_payable19"/>
             <field name="base_code_id" ref="omz_code_1a"/>
             <field name="tax_code_id" ref="btw_code_1a"/>
             <field name="ref_base_code_id" ref="omz_code_1a"/>
             <field name="ref_tax_code_id" ref="btw_code_1a"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">sale</field>
+            <field name="sequence">2</field>
         </record>
 <!-- TODO - nakijken btw overig op percentage-->
         <record id="btw_overig" model="account.tax.template">
@@ -4177,12 +4187,15 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.19" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable19"/>
-            <field name="account_paid_id" ref="vat_refund19"/>
+            <field name="account_paid_id" ref="vat_payable19"/>
             <field name="base_code_id" ref="omz_code_1a"/>
             <field name="tax_code_id" ref="btw_code_1a"/>
             <field name="ref_base_code_id" ref="omz_code_1c"/>
             <field name="ref_tax_code_id" ref="btw_code_1c"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">sale</field>
+            <field name="sequence">10</field>
         </record>
 
 <!--Inkoop BTW -->
@@ -4193,10 +4206,13 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.06" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_refund6"/>
-            <field name="account_paid_id" ref="vat_payable6"/>
+            <field name="account_paid_id" ref="vat_refund6"/>
             <field name="tax_code_id" ref="btw_code_5b"/>
             <field name="ref_tax_code_id" ref="btw_code_5b"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
+            <field name="sequence">5</field>
         </record>
         <record id="btw_19_buy" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4205,10 +4221,13 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.19" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_refund19"/>
-            <field name="account_paid_id" ref="vat_payable19"/>
+            <field name="account_paid_id" ref="vat_refund19"/>
             <field name="tax_code_id" ref="btw_code_5b"/>
             <field name="ref_tax_code_id" ref="btw_code_5b"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
+            <field name="sequence">2</field>
         </record>
         <record id="btw_overig_buy" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4217,10 +4236,13 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.19" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_refund19"/>
-            <field name="account_paid_id" ref="vat_payable19"/>
+            <field name="account_paid_id" ref="vat_refund19"/>
             <field name="tax_code_id" ref="btw_code_5b"/>
             <field name="ref_tax_code_id" ref="btw_code_5b"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
+            <field name="sequence">10</field>
         </record>
 <!--BTW verlegd-->
 	<record id="btw_verk_0" model="account.tax.template">
@@ -4230,10 +4252,13 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable_verlegd"/>
-            <field name="account_paid_id" ref="vat_refund_verlegd"/>
+            <field name="account_paid_id" ref="vat_payable_verlegd"/>
             <field eval="omz_code_1e" name="base_code_id"/>
             <field eval="omz_code_1e" name="ref_base_code_id"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
+            <field name="sequence">10</field>
         </record>
         <record id="btw_ink_0" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4242,11 +4267,14 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.19" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable_verlegd"/>
-            <field name="account_paid_id" ref="vat_refund_verlegd"/>
+            <field name="account_paid_id" ref="vat_payable_verlegd"/>
             <field eval="omz_code_2a" name="base_code_id"/>
             <field eval="omz_code_2a" name="ref_base_code_id"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
             <field eval="True" name="child_depend"/>
+            <field name="sequence">10</field>
         </record>
 				        <record id="btw_ink_0_1" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4255,10 +4283,13 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type">percent</field>
 				            <field eval="btw_ink_0" name="parent_id"/>
 				            <field name="account_collected_id" ref="vat_payable_verlegd"/>
-				            <field name="account_paid_id" ref="vat_refund_verlegd"/>
+				            <field name="account_paid_id" ref="vat_payable_verlegd"/>
 				            <field eval="btw_code_2a" name="tax_code_id"/>
 				            <field eval="btw_code_2a" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
 				        <record id="btw_ink_0_2" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4267,10 +4298,13 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type">percent</field>
 				            <field eval="btw_ink_0" name="parent_id"/>
 				            <field name="account_collected_id" ref="vat_payable_verlegd"/>
-				            <field name="account_paid_id" ref="vat_refund_verlegd"/>
+				            <field name="account_paid_id" ref="vat_payable_verlegd"/>
 				            <field eval="btw_code_5b" name="tax_code_id"/>
 				            <field eval="btw_code_5b" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
         <record id="btw_ink2_0" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4279,11 +4313,14 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.19" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_refund_verlegd"/>
-            <field name="account_paid_id" ref="vat_payable_verlegd"/>
+            <field name="account_paid_id" ref="vat_refund_verlegd"/>
             <field eval="omz_code_2a" name="base_code_id"/>
             <field eval="omz_code_2a" name="ref_base_code_id"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
             <field eval="True" name="child_depend"/>
+            <field name="sequence">10</field>
         </record>
 				        <record id="btw_ink2_0_1" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4292,10 +4329,13 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type">percent</field>
 				            <field eval="btw_ink2_0" name="parent_id"/>
 				            <field name="account_collected_id" ref="vat_refund_verlegd"/>
-				            <field name="account_paid_id" ref="vat_payable_verlegd"/>
+				            <field name="account_paid_id" ref="vat_refund_verlegd"/>
 				            <field eval="btw_code_2a" name="tax_code_id"/>
 				            <field eval="btw_code_2a" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
 				        <record id="btw_ink2_0_2" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4304,10 +4344,13 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="type">percent</field>
 				            <field eval="btw_ink2_0" name="parent_id"/>
 				            <field name="account_collected_id" ref="vat_refund_verlegd"/>
-				            <field name="account_paid_id" ref="vat_payable_verlegd"/>
+				            <field name="account_paid_id" ref="vat_refund_verlegd"/>
 				            <field eval="btw_code_5b" name="tax_code_id"/>
 				            <field eval="btw_code_5b" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
 <!-- Binnen de EU -->
 <!-- BTW inkoop -->
@@ -4320,7 +4363,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="True" name="child_depend"/>
             <field eval="omz_code_4b" name="base_code_id"/>
             <field eval="omz_code_4b" name="ref_base_code_id"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
+            <field name="sequence">10</field>
         </record>
 				        <record id="btw_I_6_1" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4332,7 +4378,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="account_paid_id" ref="vat_payable6"/>
 				            <field eval="btw_code_4b" name="tax_code_id"/>
 				            <field eval="btw_code_4b" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
 				        <record id="btw_I_6_2" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4344,7 +4393,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="account_paid_id" ref="vat_refund6"/>
 				            <field eval="btw_code_5b" name="tax_code_id"/>
 				            <field eval="btw_code_5b" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
         <record id="btw_I_19" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4355,7 +4407,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="True" name="child_depend"/>
             <field eval="omz_code_4b" name="base_code_id"/>
             <field eval="omz_code_4b" name="ref_base_code_id"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
+            <field name="sequence">10</field>
         </record>
 				        <record id="btw_I_19_1" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4367,7 +4422,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="account_paid_id" ref="vat_payable19"/>
 				            <field eval="btw_code_4b" name="tax_code_id"/>
 				            <field eval="btw_code_4b" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
 				        <record id="btw_I_19_2" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4379,7 +4437,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="account_paid_id" ref="vat_refund19"/>
 				            <field eval="btw_code_5b" name="tax_code_id"/>
 				            <field eval="btw_code_5b" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
         <record id="btw_I_overig" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4390,7 +4451,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="True" name="child_depend"/>
             <field eval="omz_code_4b" name="base_code_id"/>
             <field eval="omz_code_4b" name="ref_base_code_id"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
+            <field name="sequence">10</field>
         </record>
 				        <record id="btw_I_overig_1" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4402,7 +4466,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="account_paid_id" ref="vat_payable19"/>
 				            <field eval="btw_code_4b" name="tax_code_id"/>
 				            <field eval="btw_code_4b" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
 				        <record id="btw_I_overig_2" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4414,7 +4481,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="account_paid_id" ref="vat_refund19"/>
 				            <field eval="btw_code_5b" name="tax_code_id"/>
 				            <field eval="btw_code_5b" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
 <!-- BTW verkoop -->				        
         <record id="btw_X0" model="account.tax.template">
@@ -4424,10 +4494,13 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable0"/>
-            <field name="account_paid_id" ref="vat_refund0"/>
+            <field name="account_paid_id" ref="vat_payable0"/>
             <field name="base_code_id" ref="omz_code_3b"/>
             <field name="ref_base_code_id" ref="omz_code_3b"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">sale</field>
+            <field name="sequence">10</field>
         </record>
         <record id="btw_X2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4436,10 +4509,13 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable0"/>
-            <field name="account_paid_id" ref="vat_refund0"/>
+            <field name="account_paid_id" ref="vat_payable0"/>
             <field name="base_code_id" ref="omz_code_3c"/>
             <field name="ref_base_code_id" ref="omz_code_3c"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">sale</field>
+            <field name="sequence">10</field>
         </record>
 
 <!-- Buiten de EU -->
@@ -4453,7 +4529,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="True" name="child_depend"/>
             <field eval="omz_code_4a" name="base_code_id"/>
             <field eval="omz_code_4a" name="ref_base_code_id"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
+            <field name="sequence">10</field>
         </record>
 				        <record id="btw_E1_1" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4465,7 +4544,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="account_paid_id" ref="vat_payable6"/>
 				            <field eval="btw_code_4a" name="tax_code_id"/>
 				            <field eval="btw_code_4a" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
 				        <record id="btw_E1_2" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4477,7 +4559,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="account_paid_id" ref="vat_refund6"/>
 				            <field eval="btw_code_5b" name="tax_code_id"/>
 				            <field eval="btw_code_5b" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
         <record id="btw_E2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4488,7 +4573,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="True" name="child_depend"/>
             <field eval="omz_code_4a" name="base_code_id"/>
             <field eval="omz_code_4a" name="ref_base_code_id"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
+            <field name="sequence">10</field>
         </record>
 				        <record id="btw_E2_1" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4500,7 +4588,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="account_paid_id" ref="vat_payable19"/>
 				            <field eval="btw_code_4a" name="tax_code_id"/>
 				            <field eval="btw_code_4a" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
 				        <record id="btw_E2_2" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4512,7 +4603,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="account_paid_id" ref="vat_refund19"/>
 				            <field eval="btw_code_5b" name="tax_code_id"/>
 				            <field eval="btw_code_5b" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
         <record id="btw_E_overig" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4523,7 +4617,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="True" name="child_depend"/>
             <field eval="omz_code_4a" name="base_code_id"/>
             <field eval="omz_code_4a" name="ref_base_code_id"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
+            <field name="sequence">10</field>
         </record>
 				        <record id="btw_E_overig_1" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4535,7 +4632,10 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="account_paid_id" ref="vat_payable19"/>
 				            <field eval="btw_code_4a" name="tax_code_id"/>
 				            <field eval="btw_code_4a" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
 				        <record id="btw_E_overig_2" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4547,8 +4647,12 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				            <field name="account_paid_id" ref="vat_refund19"/>
 				            <field eval="btw_code_5b" name="tax_code_id"/>
 				            <field eval="btw_code_5b" name="ref_tax_code_id"/>
+                                            <field name="ref_base_sign" eval="-1"/>
+                                            <field name="ref_tax_sign" eval="-1"/>
 				            <field name="type_tax_use">purchase</field>
+                                            <field name="sequence">10</field>
 				        </record>
+
 <!-- BTW Verkoop -->
         <record id="btw_X1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -4557,10 +4661,133 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable0"/>
-            <field name="account_paid_id" ref="vat_refund0"/>
+            <field name="account_paid_id" ref="vat_payable0"/>
             <field name="base_code_id" ref="omz_code_3a"/>
             <field name="ref_base_code_id" ref="omz_code_3a"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">sale</field>
+            <field name="sequence">10</field>
         </record>
-	</data>
+
+	<!-- Nu de belastingen ook gedefinieerd zijn kunne
+	     ze gekoppeld worden aan de rekeningen -->
+ 	<record id="a_7001" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_6_buy')])]"/>
+        </record>
+        <record id="a_expense" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_19_buy')])]"/>
+        </record>
+        <record id="a_7003" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_overig_buy')])]"/>
+        </record>
+        <record id="a_7010" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_ink_0_1'), ref('l10n_nl.btw_ink_0_2')])]"/>
+        </record>
+        <record id="a_7014" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_I_6_1'), ref('l10n_nl.btw_I_6_2')])]"/>
+        </record>
+        <record id="a_7015" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_I_19_1'), ref('l10n_nl.btw_I_19_2')])]"/>
+        </record>
+        <record id="a_7016" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_I_overig_1'), ref('l10n_nl.btw_I_overig_2')])]"/>
+        </record>
+        <record id="a_7017" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_E1_1'), ref('l10n_nl.btw_E1_2')])]"/>
+        </record>
+        <record id="a_7018" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_E2_1'), ref('l10n_nl.btw_E2_2')])]"/>
+        </record>
+        <record id="a_7019" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_E_overig_1'), ref('l10n_nl.btw_E_overig_2')])]"/>
+        </record>
+        <record id="a_8000" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_X0')])]"/>
+        </record>
+        <record id="a_8001" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_6')])]"/>
+        </record>
+        <record id="a_8002" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_19')])]"/>
+        </record>
+        <record id="a_8003" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_overig')])]"/>
+        </record>
+        <record id="a_8010" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_0')])]"/>
+        </record>
+        <record id="a_8011" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_6')])]"/>
+        </record>
+        <record id="a_sale" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_19')])]"/>
+        </record>
+        <record id="a_8013" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_overig')])]"/>
+        </record>
+        <record id="a_8020" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_0')])]"/>
+        </record>
+        <record id="a_8021" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_0')])]"/>
+        </record>
+        <record id="a_8040" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_0')])]"/>
+        </record>
+        <record id="a_8041" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_6')])]"/>
+        </record>
+        <record id="a_8042" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_19')])]"/>
+        </record>
+        <record id="a_8043" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_overig')])]"/>
+        </record>
+        <record id="a_8050" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_0')])]"/>
+        </record>
+        <record id="a_8051" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_6')])]"/>
+        </record>
+        <record id="a_8052" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_19')])]"/>
+        </record>
+        <record id="a_8060" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_0')])]"/>
+        </record>
+        <record id="a_8061" model="account.account.template">
+            <field name="tax_ids"
+                   eval="[(6, 0, [ref('l10n_nl.btw_0')])]"/>
+        </record>
+        
+    </data>
 </openerp>
