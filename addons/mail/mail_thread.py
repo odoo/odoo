@@ -576,7 +576,7 @@ class mail_thread(osv.osv):
     
     def message_get_subscribers(self, cr, uid, ids, context=None):
         user_ids = self._message_get_subscribers_ids(cr, uid, ids, context=context)
-        users = self.pool.get('res.users').read(cr, uid, user_ids, context=context)
+        users = self.pool.get('res.users').read(cr, uid, user_ids, fields=['id', 'name', 'avatar_mini'], context=context)
         return users
     
     def message_is_subscriber(self, cr, uid, ids, context=None):
