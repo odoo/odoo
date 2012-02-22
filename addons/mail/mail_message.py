@@ -197,31 +197,18 @@ class mail_message(osv.osv):
     #------------------------------------------------------
     
     def create(self, cr, uid, vals, context=None):
-        # OpenSocial: notifications do not come from any user but from system
-        if vals.get('type') == 'notification': vals['user_id'] = False
-        need_action_pushed = False
+        # temporary log directly created messages (to debug OpenSocial)
+        if not 'mail.thread' in context:
+            _logger.warning('Creating message without using mail.thread API')
+            _logger.warning('Message details: %s', str(vals))
         msg_id = super(mail_message, self).create(cr, uid, vals, context)
-        # push the message to suscribed users
-        subscription_obj = self.pool.get('mail.subscription')
-        notification_obj = self.pool.get('mail.notification')
-        # not pure-email: check for subscriptions
-        if not 'need_action_user_id' in vals: vals['need_action_user_id'] = False
-        if not 'model' in vals: vals['model'] = False
-        if not 'res_id' in vals: vals['res_id'] = 0
-        sub_ids = subscription_obj.search(cr, uid, ['&',
-                        ('res_model', '=', vals['model']),
-                        ('res_id', '=', vals['res_id'])], context=context)
-        subs = subscription_obj.browse(cr, uid, sub_ids, context=context)
-        for sub in subs:
-            notification_obj.create(cr, uid, {'user_id': sub.user_id.id, 'message_id': msg_id}, context=context)
-            if vals['need_action_user_id'] == sub.user_id: need_action_pushed = True
-        # push to need_action_user_id if user does not follow the object
-        if vals['need_action_user_id'] and not need_action_pushed:
-            notification_obj.create(cr, uid, {'user_id': vals['need_action_user_id'], 'message_id': msg_id}, context=context)
         return msg_id
     
     def get_pushed_messages(self, cr, uid, ids, filter_search=False, context=None):
-        """Wall: get messages to display"""
+        """OpenSocial: wall: get messages to display (=pushed notifications)
+            :param filter_search: TODO
+            :return: dict { res_model: { res_id: [pushed message list] }}
+        """
         notification_obj = self.pool.get('mail.notification')
         notification_ids = notification_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
@@ -230,7 +217,7 @@ class mail_message(osv.osv):
         msgs = self.read(cr, uid, msg_ids, context=context)
         print msgs
         
-        # TODO / REMARK: classify based on res_model / res_id to have a 1_level hierarchy ?
+        # sort
             
         return msgs
     
