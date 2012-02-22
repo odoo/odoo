@@ -94,7 +94,7 @@
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
-                            string="Payment Method"/>
+                            string="Payment Method" attrs="{'readonly':[('number','!=',False)]}"/>
                         <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
@@ -157,7 +157,7 @@
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
-                            string="Payment Method"/>
+                            string="Payment Method" attrs="{'readonly':[('number','!=',False)]}"/>
                         <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
@@ -296,7 +296,7 @@
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
-                            string="Payment Method"/>
+                            string="Payment Method" attrs="{'readonly':[('number','!=',False)]}"/>
                         <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
