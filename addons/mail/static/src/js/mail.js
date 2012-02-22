@@ -70,6 +70,7 @@ openerp.mail = function(session) {
             this.$element.find('div.oe_mail_msg').empty();
             var self = this;
             _(records).each(function (record) {
+                record.mini_url = self.thread_get_mini('res.users', 'avatar_mini', record.user_id[0]);
                 var template = 'ThreadMsgView';
                 var render_res = session.web.qweb.render(template, {
                     'record': record,
@@ -77,14 +78,14 @@ openerp.mail = function(session) {
                 $('<div class="oe_mail_comment">').html(render_res).appendTo(self.$element.find('div.oe_mail_msg'));
             });
         },
-        
+
         display_followers: function (records) {
             this.$element.find('div.oe_mail_followers').empty();
             var self = this;
             _(records).each(function (record) {
-//                 <div class="oe_mail_followers_vignette" title="Raoul Grobedon"><img src="people.png"/></div>
-                //$('<div class="oe_mail_followers_vignette">').text(record.user_id[1]).appendTo(self.$element.find('div.oe_mail_followers'));
-                $('<div class="oe_mail_followers_vignette">').text(record.name).appendTo(self.$element.find('div.oe_mail_followers'));
+                $('<div class="oe_mail_followers_vignette">').html(
+                    '<img src="' + self.thread_get_mini('res.users', 'avatar_mini', record.id) + '" title="' + record.name + '" alt="' + record.name + '"/>'
+                    ).appendTo(self.$element.find('div.oe_mail_followers'));
             });
         },
         
@@ -113,6 +114,12 @@ openerp.mail = function(session) {
         do_toggle_followers: function () {
             this.$element.find('div.oe_mail_followers').toggle();
         },
+
+        thread_get_mini: function(model, field, id) {
+            id = id || '';
+            var url = this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+            return url;
+        },
     });
     
     /* Add WallView widget to registry */
@@ -128,6 +135,7 @@ openerp.mail = function(session) {
             this.filter_search = params['filter_search'];
             /* DataSets */
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
+            this.ds_users = new session.web.DataSet(this, 'res.users');
         },
 
         start: function() {
@@ -149,22 +157,49 @@ openerp.mail = function(session) {
         
         display_comments: function (records) {
             this.$element.find('div.oe_mail_msg').empty();
+            sorted_records = this.sort_comments(records);
             var self = this;
-            _(records).each(function (record) {
-                console.log(record);
-                var template = 'ThreadMsgView';
-                var render_res = session.web.qweb.render(template, {
-                    'record': record,
+            _(sorted_records).each(function (rec_models, model) { // each model
+                _(rec_models).each(function (record_id, id) { // each record
+                    var template = 'WallThreadView';
+                    var render_res = session.web.qweb.render(template, {
+                        'record_model': model,
+                        'record_id': id,
                     });
-                $('<div class="oe_mail_comment">').html(render_res).appendTo(self.$element.find('div.oe_mail_msg'));
+                    $('<div class="oe_mail_thread">').html(render_res).appendTo(self.$element.find('div.oe_mail_msg'));
+                    _(record_id).each(function (record) { // each record
+                        record.mini_url = self.thread_get_mini('res.users', 'avatar_mini', record.user_id[0]);
+                        var template = 'ThreadMsgView';
+                        var render_res = session.web.qweb.render(template, {
+                            'record': record,
+                            });
+                        $('<div class="oe_mail_comment">').html(render_res).appendTo(self.$element.find('div.oe_mail_thread_content:last'));
+                    });
+                });
             });
+        },
+
+        sort_comments: function (records) {
+            sorted_comments = {};
+            _(records).each(function (record) {
+                if (! (record.model in sorted_comments)) { sorted_comments[record.model] = {}; }
+                if (! (record.res_id in sorted_comments[record.model])) {
+                    sorted_comments[record.model][record.res_id] = []; }
+                sorted_comments[record.model][record.res_id].push(record);
+            });
+            return sorted_comments;
         },
 
         do_comment: function () {
             var body_text = this.$element.find('textarea').val();
-            return this.ds_msg.call('create', [
-                {'subject': 'Status tweet', 'model': 'res.users', 'body_text': body_text, 'type': 'comment', 'res_id': this.session.uid, 'user_id': this.session.uid}
-                ]).then(this.proxy('fetch_comments'));
+            return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, type='comment']).then(
+                this.proxy('fetch_comments'));
+        },
+
+        thread_get_mini: function(model, field, id) {
+            id = id || '';
+            var url = this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+            return url;
         },
     });
 };

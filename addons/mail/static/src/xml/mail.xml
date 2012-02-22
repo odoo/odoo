@@ -25,9 +25,39 @@
             </div>
         </div>
     </div>
-    
+
+    <div t-name="WallView" class="oe_mail_wall_main">
+        <div class="oe_mail_main_left">
+            <div class="oe_mail_post_comment">
+                <textarea class="oe_mail_action_textarea" onfocus="this.value='';">Enter your comment here...</textarea><br />
+                <button type="button" class="oe_mail_button_comment">Post comment</button>
+            </div>
+            <div class="oe_mail_msg">
+                <div class="oe_mail_comment">
+                </div>
+            </div>
+        </div>
+        <div class="oe_mail_main_right">
+            <div class="oe_mail_followers_actions">
+                <button type="button" class="oe_mail_button_followers">See followers</button>
+            </div>
+            <div class="oe_mail_followers">
+            </div>
+        </div>
+    </div>
+
+    <t t-name="WallThreadView">
+        <div class="oe_mail_thread_header">
+            Discussion about document <t t-raw="record_model"/> (id: <t t-raw="record_id"/>)
+        </div>
+        <div class="oe_mail_thread_content">
+        </div>
+    </t>
+
     <t t-name="ThreadMsgView">
-        <div class="oe_mail_msg_image">Image</div>
+        <div class="oe_mail_msg_image">
+            <img t-att-src="record.mini_url"/>
+        </div>
         <div class="oe_mail_msg_content">
             <p class="oe_mail_msg_p">
                 <t t-if="record.type == 'notification'">
@@ -46,16 +76,5 @@
            </p>
         </div>
     </t>
-
-    <div t-name="WallView" class="oe_mail_wall_main">
-        <div class="oe_mail_post_comment">
-            <textarea class="oe_mail_action_textarea" onfocus="this.value='';">Enter your comment here...</textarea><br />
-            <button type="button" class="oe_mail_button_comment">Post comment</button>
-        </div>
-        <div class="oe_mail_msg">
-            <div class="oe_mail_comment">
-            </div>
-        </div>
-    </div>
     
 </template>

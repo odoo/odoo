@@ -50,15 +50,15 @@
 .oe_mail_msg {
 }
 
-/*.oe_mail_msg:after {
-  content: "";
-  display: block;
-  clear: both; 
-}*/
-
 .oe_mail_comment {
     white-space: normal;
     margin-bottom: 5px;
+}
+
+.oe_mail_comment:after {
+  content: "";
+  display: block;
+  clear: both; 
 }
 
 .oe_mail_msg_image {
@@ -67,7 +67,6 @@
 }
 
 .oe_mail_msg_image img {
-    width: 80%;
     margin-left: 10%;
 }
 
@@ -105,3 +104,9 @@
 .oe_mail_followers_vignette img {
     width: 80%;
 }
+
+/* Wall CSS */
+.oe_mail_thread_content div.oe_mail_comment {
+    margin-left: 5%;
+}
+
