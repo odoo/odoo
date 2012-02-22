@@ -1086,7 +1086,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         var rendered = null;
         if (this.template)
             rendered = openerp.web.qweb.render(this.template, {widget: this});
-        if (rendered) {
+        if (_.str.trim(rendered)) {
             var elem = $(rendered);
             this.$element.replaceWith(elem);
             this.$element = elem;
