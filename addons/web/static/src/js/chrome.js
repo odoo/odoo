@@ -1080,7 +1080,7 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
         this._current_state = null;
     },
     render_element: function() {
-    	this.$element.addClass("openerp");
+        this.$element.addClass("openerp openerp2");
     },
     start: function() {
         var self = this;

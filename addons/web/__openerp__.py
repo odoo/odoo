@@ -59,6 +59,7 @@
         "static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css",
         "static/lib/jquery.ui.notify/css/ui.notify.css",
         "static/lib/jquery.tipsy/tipsy.css",
+        "static/src/css/base_old.css",
         "static/src/css/base.css",
         "static/src/css/data_export.css",
         "static/src/css/data_import.css",
