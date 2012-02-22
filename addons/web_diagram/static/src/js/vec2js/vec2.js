@@ -322,7 +322,6 @@
         }
         return true;
     };
-    console.log("vec2 module fully loaded");
 })(window);
 
 (function(window){
@@ -479,7 +478,6 @@
         return this.contains(new Vec2(x,y));
     };
 
-    console.log("bounds module fully loaded");
 
 })(window);
         

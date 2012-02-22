@@ -455,7 +455,6 @@
 
     window.CuteGraph.wordwrap = wordwrap;
 
-    console.log("graph module fully loaded");
 
 })(window);
 
