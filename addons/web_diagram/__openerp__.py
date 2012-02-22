@@ -9,6 +9,8 @@
         'static/lib/js/dracula_graffle.js',
         'static/lib/js/dracula_graph.js',
         'static/lib/js/dracula_algorithms.js',
+        'static/src/js/vec2js/vec2.js',
+        'static/src/js/graph.js',
         'static/src/js/diagram.js'
     ],
     'css' : [

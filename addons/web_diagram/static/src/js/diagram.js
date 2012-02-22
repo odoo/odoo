@@ -128,17 +128,54 @@ openerp.web.DiagramView = openerp.web.View.extend({
             act_to: node.id
         });
     },
+
     draw_diagram: function(result) {
-        this.selected_node = null;
-        var diagram = new Graph();
+        console.log(result);
+        var res_nodes  = result['nodes'];
+        var res_edges  = result['conn'];
+        var id_to_node = {}
+        var edge_list  = [];
 
-        this.active_model = result['id_model'];
 
-        var res_nodes = result['nodes'];
-        var res_connectors = result['conn'];
-        this.parent_field = result.parent_field;
+        var style = {   "background"    : 'url("grid.png")',
+                        "edge"          : "#A0A0A0",
+                        "edge_label"    : "#555",
+                        "text"          : "#333",
+                        "outline"       : "#000",
+                        "selected"      : "#0097BE",
+                        "gray"          : "#DCDCDC",
+                        "white"         : "#FFF",
+                        "node_size_x"   : 90,
+                        "node_size_y"   : 60,
+                        "edge_spacing"  : 100,                 
+                        "edge_label_font_size" : 9              };
 
+        var r  = new Raphael(document.getElementById("dia-canvas"), '100%','500px');
+        var graph  = new CuteGraph(r,style);
+
+        _.each(res_nodes, function(node) {
+            id_to_node[node.id] = new CuteNode(    graph,
+                                                    node.x,
+                                                    node.y,
+                                                    CuteGraph.wordwrap(node.name, 17),
+                                                    node.shape === 'rectangle' ? 'rect' : 'circle',
+                                                    node.color === 'white' ? style.white : style.gray    );
+
+        });
+
+        _.each(res_edges, function(edge) {
+            edge_list.push( new CuteEdge(  graph,
+                                            CuteGraph.wordwrap(edge.signal, 32),
+                                            id_to_node[edge.s_id],
+                                            id_to_node[edge.d_id]   ));
+        });
+
+        /*
         //Custom logic
+        this.selected_node = null;
+        this.active_model = result['id_model'];
+        this.parent_field = result.parent_field;
+        var diagram = new Graph();
         var self = this;
         var renderer = function(r, n) {
             var shape = (n.node.shape === 'rectangle') ? 'rect' : 'ellipse';
@@ -193,7 +230,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
                     self.add_edit_node(edge_ids[index], self.connector);
                 });
             }
-        });
+        });*/
     },
 
     add_edit_node: function(id, model, defaults) {
