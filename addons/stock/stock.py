@@ -1572,10 +1572,28 @@ class stock_move(osv.osv):
         'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')],states={'done': [('readonly', True)]}),
 
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True,states={'done': [('readonly', True)]}),
+        'product_qty': fields.float('Ordered quantity', 
+             digits_compute=dp.get_precision('Product UoM'), required=True, 
+             states={'done': [('readonly', True)]},
+             help="This is the quantity of products from an inventory "
+                  "point of view. For moves in the state 'done', this is the "
+                  "quantity of products that were actually moved. For other "
+                  "moves, this is the quantity of product that is planned to "
+                  "be moved. Lowering this quantity does not generate a "
+                  "backorder. Changing this quantity on assigned moves affects "
+                  "the product reservation, and should be done with care."),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True,states={'done': [('readonly', True)]}),
-        'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product UoM'), states={'done': [('readonly', True)]}),
-        'product_uos': fields.many2one('product.uom', 'Product UOS', states={'done': [('readonly', True)]}),
+        'product_uos_qty': fields.float('Ordered quantity (UOS)',
+            digits_compute=dp.get_precision('Product UoM'),
+            states={'done': [('readonly', True)]},
+             help="This is the quantity of products from a sales or invoicing "
+                  "point of view. For moves in the state 'done', this is the "
+                  "quantity of products that were actually moved. For other "
+                  "moves, this is the quantity of product that is planned to "
+                  "be moved. Lowering this quantity does not generate a "
+                  "backorder. Changing this quantity on assigned moves affects "
+                  "the product reservation, and should be done with care."),
+        'product_uos': fields.many2one('product.uom', 'Unit of Sale', states={'done': [('readonly', True)]}),
         'product_packaging': fields.many2one('product.packaging', 'Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
 
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True,states={'done': [('readonly', True)]}, help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
