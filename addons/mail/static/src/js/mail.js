@@ -16,6 +16,7 @@ openerp.mail = function(session) {
         init: function() {
             this.is_sub = 0;
             this.see_sub = 1;
+            this.user_init = 0;
             this._super.apply(this, arguments);
             /* DataSets */
             this.ds = new session.web.DataSet(this, this.view.model);
@@ -53,7 +54,10 @@ openerp.mail = function(session) {
                 });
             console.log(this);
             /* fetch comments and subscribers */
-            this.fetch_current_user();
+            if (this.user_init == 0) {
+                this.fetch_current_user();
+                this.user_init = 1;
+            }
             this.fetch_subscribers();
             return this.fetch_comments();
         },
