@@ -91,10 +91,8 @@ class stock_fill_inventory(osv.osv_memory):
             for move in move_obj.browse(cr, uid, move_ids, context=context):
                 lot_id = move.prodlot_id.id
                 prod_id = move.product_id.id
-                qty = move.product_qty
                 
-                if datas.get((prod_id, lot_id)):
-                    qty += datas[(prod_id, lot_id)]['product_qty']
+                qty = location_obj._product_get(cr, uid, location, [prod_id], context=context)[prod_id]
                 
                 datas[(prod_id, lot_id)] = {'product_id': prod_id, 'location_id': location, 'product_qty': qty, 'product_uom': move.product_id.uom_id.id, 'prod_lot_id': lot_id}
             
