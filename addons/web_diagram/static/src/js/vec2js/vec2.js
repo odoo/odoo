@@ -6,24 +6,17 @@
     // A Javascript 2D vector library
     // conventions :
     // method that returns a float value do not modify the vector
-    // method that implement operators are applied onto the calling vector eg:
+    // method that implement operators return a new vector with the modifications without
+    // modifying the calling vector or the parameters.
     // 
-    //      v1.add(v2); // v2 is added onto v1, v2 is modified, v1 is not
-    //
-    // but the parameters are never modified
-    // those methods also return the result so that the calls can be chained.
-    // method that implement operators are usually also available with a '_new'
-    // suffix. those method do not modify the calling vector and return the result
-    // as a new vector instead.
-    //
-    //      v3 = v1.add_new(v2) // v3 is set to v1 + v2. v1 and v2 are not modified
+    //      v3 = v1.add(v2); // v3 is set to v1 + v2, v1, v2 are not modified
     //
     // methods that take a single vector as a parameter are usually also available with
     // q '_xy' suffix. Those method takes two floats representing the x,y coordinates of
     // the vector parameter and allow you to avoid to needlessly create a vector object : 
     //
-    //      v1.add(new Vec2(3,4));
-    //      v1.add_xy(3,4);             //equivalent to previous line
+    //      v2 = v1.add(new Vec2(3,4));
+    //      v2 = v1.add_xy(3,4);             //equivalent to previous line
     //
     // angles are in radians by default but method that takes angle as parameters 
     // or return angle values usually have a variant with a '_deg' suffix that works in degrees
@@ -102,149 +95,55 @@
     Vec2.prototype.clone = function(){
         return new Vec2(this.x,this.y);
     };
-    // sets the coordinate of this vector to (0,0)
-    Vec2.prototype.zero = function(){
-        this.x = 0;
-        this.y = 0;
-        return this;
-    };
-    // sets the coordinates of this to be equal to the coordinates of v
-    Vec2.prototype.set = function(v){
-        this.x = v.x;
-        this.y = v.y;
-        return this;
-    };
-    // sets the coordinate of this to be equal to the vector (x,y)
-    Vec2.prototype.set_xy = function(x,y){
-        this.x = x;
-        this.y = y;
-        return this;
-    };
-    // sets this to be the sum of this and vector v
-    Vec2.prototype.add = function(v){
-        this.x += v.x;
-        this.y += v.y;
-        return this;
-    };
-    // sets this to be the sum of this and the vector (x,y)
-    Vec2.prototype.add_xy = function(x,y){
-        this.x += x;
-        this.y += y;
-        return this;
-    };
     // return the sum of this and vector v as a new vector
-    Vec2.prototype.add_new = function(v){
+    Vec2.prototype.add = function(v){
         return new Vec2(this.x+v.x,this.y+v.y);
     };
     // return the sum of this and vector (x,y) as a new vector
-    Vec2.prototype.add_new_xy = function(x,y){
+    Vec2.prototype.add_xy = function(x,y){
         return new Vec2(this.x+x,this.y+y);
     };
-    // sets this to be (this - v) where v is a vector and - is the vector substraction
-    Vec2.prototype.sub = function(v){
-        this.x -= v.x;
-        this.y -= v.y;
-        return this;
-    };
-    // sets this to be (this - (x,y)) where - is the vector substraction
-    Vec2.prototype.sub_xy = function(x,y){
-        this.x -= x;
-        this.y -= y;
-        return this;
-    };
     // returns (this - v) as a new vector where v is a vector and - is the vector substraction
-    Vec2.prototype.sub_new = function(v){
+    Vec2.prototype.sub = function(v){
         return new Vec2(this.x-v.x,this.y-v.y);
     };
     // returns (this - (x,y)) as a new vector where - is vector substraction
-    Vec2.prototype.sub_new_xy = function(x,y){
+    Vec2.prototype.sub_xy = function(x,y){
         return new Vec2(this.x-x,this.y-y);
     };
-    // sets this to be (this * v) where v is a vector and * is the by component product and 
-    Vec2.prototype.mult = function(v){
-        this.x *= v.x;
-        this.y *= v.y;
-        return this;
-    };
-    // sets this to be (this * (x,y) ) where v is a vector and * is the by component product 
-    Vec2.prototype.mult_xy = function(x,y){
-        this.x *= x;
-        this.y *= y;
-        return this;
-    };
     // return (this * v) as a new vector where v is a vector and * is the by component product
-    Vec2.prototype.mult_new = function(v){
+    Vec2.prototype.mult = function(v){
         return new Vec2(this.x*v.x,this.y*v.y);
     };
     // return (this * (x,y)) as a new vector where * is the by component product
-    Vec2.prototype.mult_new_xy = function(x,y){
+    Vec2.prototype.mult_xy = function(x,y){
         return new Vec2(this.x*x,this.y*y);
     };
-    // multiply all components of this vector by float f
-    Vec2.prototype.scale = function(f){
-        this.x *= f;
-        this.y *= f;
-        return this;
-    };
     // return this scaled by float f as a new fector
-    Vec2.prototype.scale_new = function(f){
+    Vec2.prototype.scale = function(f){
         return new Vec2(this.x*f, this.y*f);
     };
-    //sets this vector to be the negative of itself
-    Vec2.prototype.neg = function(f){
-        this.x = -this.x;
-        this.y = -this.y;
-        return this;
-    };
     // return the negation of this vector
-    Vec2.prototype.neg_new = function(f){
+    Vec2.prototype.neg = function(f){
         return new Vec2(-this.x,-this.y);
     };
-    // normalizes this vector
-    Vec2.prototype.normalize = function(){
-        var len = this.len();
-        if(len == 0){
-            this.x = 1;
-        }else if(len != 1){
-            this.scale(1.0/len);
-        }
-        return this;
-    };
     // return this vector normalized as a new vector
-    Vec2.prototype.normalize_new = function(){
+    Vec2.prototype.normalize = function(){
         var len = this.len();
         if(len == 0){
             return new Vec2(0,1);
         }else if(len != 1){
-            return this.scale_new(1.0/len);
+            return this.scale(1.0/len);
         }
         return new Vec2(this.x,this.y);
     };
-    // sets the length of this vector to float l without changing its angle. (negative values of l will invert direction) 
-    Vec2.prototype.set_len = function(l){
-        this.normalize();
-        this.scale(l);
-        return this;
-    };
     // return a new vector with the same direction as this vector of length float l. (negative values of l will invert direction)
-    Vec2.prototype.set_len_new = function(l){
-        var v = this.normalize_new();
-        v.scale(l);
-        return v;
-    };
-    // projects this vector onto the vector v
-    Vec2.prototype.project = function(v){
-        var d = this.dot(v);
-        this.set(v);
-        this.normalize();
-        this.scale(d);
-        return this;
+    Vec2.prototype.set_len = function(l){
+        return this.normalize().scale(l);
     };
     // return the projection of this onto the vector v as a new vector
-    Vec2.prototype.project_new = function(v){
-        var vc = this.clone();
-        vc.project(v);
-        return vc;
+    Vec2.prototype.project = function(v){
+        return v.set_len(this.dot(v));
     };
     // return a string representation of this vector
     Vec2.prototype.toString = function(){
@@ -256,45 +155,25 @@
         str += "]";
         return str;
     };
-    // rotate this vector counterclockwise by rad radians. 
+    //return this vector counterclockwise rotated by rad radians as a new vector
     Vec2.prototype.rotate = function(rad){
         var c = Math.cos(rad);
         var s = Math.sin(rad);
         var px = this.x * c - this.y *s;
         var py = this.x * s + this.y *c;
-        this.x = px;
-        this.y = py;
-        return this;
-    };
-    //rotate this vector counterclockwise by deg degrees
-    Vec2.prototype.rotate_deg = function(deg){
-        return this.rotate(deg * deg2rad);
-    };
-    //return this vector counterclockwise rotated by rad radians as a new vector
-    Vec2.prototype.rotate_new = function(rad){
-        var v = this.clone();
-        return v.rotate(rad);
+        return new Vec2(px,py);
     };
     //return this vector counterclockwise rotated by deg degrees as a new vector
-    Vec2.prototype.rotate_deg_new = function(deg){
-        var v = this.clone();
-        return v.rotate_deg(deg);
+    Vec2.prototype.rotate_deg = function(deg){
+        return this.rotate(deg * deg2rad);
     };
     //linearly interpolate this vector towards the vector v by float factor alpha.
     // alpha == 0 : does nothing
     // alpha == 1 : sets this to v
     Vec2.prototype.lerp = function(v,alpha){
         var inv_alpha = 1 - alpha;
-        this.x = this.x * inv_alpha + v.x * alpha;
-        this.y = this.y * inv_alpha + v.y * alpha;
-    };
-    // returns this vector lerped to v by alpha as a new vector
-    Vec2.prototype.lerp_new = function(v,alpha){
-        var inv_alpha = 1 - alpha;
-        var v2  = new Vec2( this.x * inv_alpha + v.x * alpha,
+        return new Vec2(    this.x * inv_alpha + v.x * alpha,
                             this.y * inv_alpha + v.y * alpha    );
-        return v2;
-    
     };
     // returns the angle between this vector and the vector (1,0) in radians
     Vec2.prototype.angle = function(){
@@ -359,8 +238,8 @@
         // make all computations in a space where the ellipse is a circle 
         // centered on zero
         var c = new Vec2(this.cx,this.cy);
-        a = a.sub_new(c).mult_xy(1/this.hx,1/this.hy);
-        b = b.sub_new(c).mult_xy(1/this.hx,1/this.hy);
+        a = a.sub(c).mult_xy(1/this.hx,1/this.hy);
+        b = b.sub(c).mult_xy(1/this.hx,1/this.hy);
 
 
         if(a.len_sq() < 1 && b.len_sq() < 1){   //both points inside the ellipse
@@ -368,7 +247,7 @@
         }
 
         // compute the roots of the intersection
-        var ab = b.sub_new(a);
+        var ab = b.sub(a);
         var A = (ab.x*ab.x + ab.y*ab.y);
         var B = 2*( ab.x*a.x + ab.y*a.y);
         var C = a.x*a.x + a.y*a.y - 1;
@@ -383,18 +262,16 @@
         var u2 = (-B - u) / (2*A);
 
         if(u1 >= 0 && u1 <= 1){
-            var pos = a.clone();
-            pos.add(ab.scale_new(u1));
+            var pos = a.add(ab.scale(u1));
             collisions.push(pos);
         }
         if(u1 != u2 && u2 >= 0 && u2 <= 1){
-            var pos = a.clone();
-            pos.add(ab.scale_new(u2));
+            var pos = a.add(ab.scale(u2));
             collisions.push(pos);
         }
         for(var i = 0; i < collisions.length; i++){
-            collisions[i].mult_xy(this.hx,this.hy);
-            collisions[i].add_xy(this.cx,this.cy);
+            collisions[i] = collisions[i].mult_xy(this.hx,this.hy);
+            collisions[i] = collisions[i].add_xy(this.cx,this.cy);
         }
         return collisions;
     };
@@ -470,7 +347,7 @@
     };
     // returns true if the ellipse contains the position defined by the vector 'vec'
     BEllipse.prototype.contains_vec = function(v){
-        v = v.mult_new_xy(this.hx,this.hy);
+        v = v.mult_xy(this.hx,this.hy);
         return v.len_sq() <= 1;
     };
     // returns true if the ellipse contains the position (x,y) 

@@ -111,34 +111,16 @@ openerp.web.DiagramView = openerp.web.View.extend({
             this.get_diagram_info();
         }
     },
-    select_node: function (node, element) {
-        if (!this.selected_node) {
-            this.selected_node = node;
-            element.attr('stroke', 'red');
-            return;
-        }
-        // Re-click selected node, deselect it
-        if (node.id === this.selected_node.id) {
-            this.selected_node = null;
-            element.attr('stroke', 'black');
-            return;
-        }
-        this.add_edit_node(null, this.connector, {
-            act_from: this.selected_node.id,
-            act_to: node.id
-        });
-    },
 
     draw_diagram: function(result) {
+        var self = this;
         console.log(result);
         var res_nodes  = result['nodes'];
         var res_edges  = result['conn'];
         var id_to_node = {}
-        var edge_list  = [];
 
 
-        var style = {   "background"    : 'url("grid.png")',
-                        "edge"          : "#A0A0A0",
+        var style = {   "edge"          : "#A0A0A0",
                         "edge_label"    : "#555",
                         "text"          : "#333",
                         "outline"       : "#000",
@@ -148,89 +130,48 @@ openerp.web.DiagramView = openerp.web.View.extend({
                         "node_size_x"   : 90,
                         "node_size_y"   : 60,
                         "edge_spacing"  : 100,                 
-                        "edge_label_font_size" : 9              };
+                        "edge_label_font_size" : 10              };
+
+        $('#dia-canvas *').remove();    // remove previous diagram
 
         var r  = new Raphael(document.getElementById("dia-canvas"), '100%','500px');
         var graph  = new CuteGraph(r,style);
 
         _.each(res_nodes, function(node) {
-            id_to_node[node.id] = new CuteNode(    graph,
-                                                    node.x,
-                                                    node.y,
-                                                    CuteGraph.wordwrap(node.name, 17),
-                                                    node.shape === 'rectangle' ? 'rect' : 'circle',
-                                                    node.color === 'white' ? style.white : style.gray    );
-
+            var n = new CuteNode(     graph,
+                                      node.x,
+                                      node.y,
+                                      CuteGraph.wordwrap(node.name, 17),
+                                      node.shape === 'rectangle' ? 'rect' : 'circle',
+                                      node.color === 'white' ? style.white : style.gray    );
+            n.id = node.id;
+            id_to_node[node.id] = n;
         });
 
         _.each(res_edges, function(edge) {
-            edge_list.push( new CuteEdge(  graph,
+            var e =  new CuteEdge(          graph,
                                             CuteGraph.wordwrap(edge.signal, 32),
                                             id_to_node[edge.s_id],
-                                            id_to_node[edge.d_id]   ));
+                                            id_to_node[edge.d_id]   );
+            e.id = edge.id;
         });
 
-        /*
-        //Custom logic
-        this.selected_node = null;
-        this.active_model = result['id_model'];
-        this.parent_field = result.parent_field;
-        var diagram = new Graph();
-        var self = this;
-        var renderer = function(r, n) {
-            var shape = (n.node.shape === 'rectangle') ? 'rect' : 'ellipse';
+        CuteNode.double_click_callback = function(cutenode){
+            self.add_edit_node( cutenode.id, self.node );
+        }
 
-            var node = r[shape](n.node.x, n.node.y).attr({
-                "fill": n.node.color
+        CuteEdge.double_click_callback = function(cuteedge){
+            self.add_edit_node(cuteedge.id,self.connector);
+        }
+
+        CuteEdge.creation_callback = function(node_start, node_end){
+            console.log("creating edge from:",node_start," to:",node_end);
+            self.add_edit_node(null, self.connector, {
+                act_from: node_start.id,
+                act_to: node_end.id
             });
-
-            var nodes = r.set(node, r.text(n.node.x, n.node.y, (n.label || n.id)))
-                .attr("cursor", "pointer")
-                .dblclick(function() {
-                    self.add_edit_node(n.node.id, self.node);
-                })
-                .mousedown(function () { node.moved = false; })
-                .mousemove(function () { node.moved = true; })
-                .click(function () {
-                    // Ignore click from move event
-                    if (node.moved) { return; }
-                    self.select_node(n.node, node);
-                });
-
-            if (shape === 'rect') {
-                node.attr({width: "60", height: "44"});
-                node.next.attr({"text-anchor": "middle", x: n.node.x + 20, y: n.node.y + 20});
-            } else {
-                node.attr({rx: "40", ry: "20"});
-            }
-
-            return nodes;
-        };
-
-        _.each(res_nodes, function(res_node) {
-            diagram.addNode(res_node['name'],{node: res_node,render: renderer});
-        });
-
-        // Id for Path(Edges)
-        var edge_ids = [];
-
-        _.each(res_connectors, function(connector, index) {
-            edge_ids.push(index);
-            diagram.addEdge(connector['source'], connector['destination'], {directed : true, label: connector['signal']});
-        });
-
-        self.$element.find('.diagram').empty();
-
-        var layouter = new Graph.Layout.Ordered(diagram);
-        var render_diagram = new Graph.Renderer.Raphael('dia-canvas', diagram, $('div#dia-canvas').width(), $('div#dia-canvas').height());
-
-        _.each(diagram.edges, function(edge, index) {
-            if(edge.connection) {
-                edge.connection.fg.attr({cursor: "pointer"}).dblclick(function() {
-                    self.add_edit_node(edge_ids[index], self.connector);
-                });
-            }
-        });*/
+            return {label:""};  // TODO destroy edge on cancel
+        }
     },
 
     add_edit_node: function(id, model, defaults) {

@@ -1,5 +1,6 @@
 
 (function(window){
+    
 
 
     // this serves as the end of an edge when creating a link
@@ -61,7 +62,10 @@
             graph.creating_edge = false;
             self.edge_tmp.remove();
             if(graph.target_node && graph.target_node != node){
-                new GraphEdge(graph,'new edge!', node,graph.target_node);
+                edge_prop = GraphEdge.creation_callback(node,graph.target_node);
+                if(edge_prop){
+                    new GraphEdge(graph,edge_prop.label, node,graph.target_node);
+                }
             }
         }
         conn_circle.drag(drag_move,drag_down,drag_up);
@@ -289,7 +293,7 @@
             for(var i = 0; i < edges.length; i++){
                 edges[i].label_disable();
             }
-            set_pos(this.opos.add_new_xy(dx,dy));
+            set_pos(this.opos.add_xy(dx,dy));
         }
         var drag_up = function(){
             //we re-enable the 
@@ -314,10 +318,20 @@
         node_fig.hover(hover_in,hover_out);
         node_label.hover(hover_in,hover_out);
 
+        function double_click(){
+            GraphNode.double_click_callback(self);
+        }
+        node_fig.dblclick(double_click);
+        node_label.dblclick(double_click);
+
         this.connectors.push(new Connector(graph,this,-sx/2,0));
         this.connectors.push(new Connector(graph,this,sx/2,0));
         this.connectors.push(new Connector(graph,this,0,-sy/2));
         this.connectors.push(new Connector(graph,this,0,sy/2));
+    }
+
+    GraphNode.double_click_callback = function(node){
+        console.log("double click from node:",node);
     }
 
     // creates a new edge with label 'label' from start to end. start and end must implement get_pos_*, 
@@ -329,6 +343,7 @@
         var curvature = 0;  // 0 = straight, != 0 curved
         var s,e;            // positions of the start and end point of the line between start and end
         var mc;             // position of the middle of the curve (bezier control point) 
+        var mc1,mc2;        // control points of the cubic bezier for the loop edges
         var elfs =  graph.style.edge_label_font_size || 10 ; 
         var label_enabled = true;
         this.uid = 0;       // unique id used to order the curved edges
@@ -342,7 +357,7 @@
             var cpos = path.getTotalLength() * 0.5;
             var cindex = Math.abs(Math.floor(curvature));
             var mod = ((cindex % 3)) * (elfs * 3.1) - (elfs * 0.5);
-            var verticality = Math.abs(end.get_pos().sub_new(start.get_pos()).normalize().dot_xy(0,1));
+            var verticality = Math.abs(end.get_pos().sub(start.get_pos()).normalize().dot_xy(0,1));
             verticality = Math.max(verticality-0.5,0)*2;
 
             var lpos = path.getPointAtLength(cpos + mod * verticality);
@@ -358,12 +373,12 @@
             }
             s = start.get_pos();
             e = end.get_pos();
-            mc = s.lerp_new(e,0.5); //middle of the line s->e
-            var se = e.sub_new(s);
-            se.normalize();
-            se.rotate_deg(-90);
-            se.scale(curvature * graph.style.edge_spacing);
-            mc.add(se);
+            mc = s.lerp(e,0.5); //middle of the line s->e
+            var se = e.sub(s);
+            se = se.normalize();
+            se = se.rotate_deg(-90);
+            se = se.scale(curvature * graph.style.edge_spacing);
+            mc = mc.add(se);
             if(start.get_bound){
                 var col = start.get_bound().collide_segment(s,mc);
                 if(col.length > 0){
@@ -377,6 +392,14 @@
                 }
             }
         }
+        /*
+        function update_loop_pos(){
+            s = start.get_pos();
+            mc = s.add_new(Vec2.new_polar_deg(graph.style.edge_loop_radius,45*self.uid));
+            var p = mc.normalize_new().rotate_deg(90);
+            mc1 = mc.add_new
+        */
+            
         
         function make_line(){
             return "M" + s.x + "," + s.y + "L" + e.x + "," + e.y ;
@@ -431,12 +454,31 @@
             edge_label.remove();
         }
 
+        function double_click(){
+            GraphEdge.double_click_callback(self);
+        }
+        edge.dblclick(double_click);
+        edge_label.dblclick(double_click);
+
         this.label_enable  = label_enable;
         this.label_disable = label_disable;
         this.update = update;
         this.remove = remove;
-        
     }
+
+    GraphEdge.double_click_callback = function(edge){
+        console.log("double click from edge:",edge);
+    }
+
+    // this is the default edge creation callback. It is called before an edge is created
+    // It returns an object containing the properties of the edge.
+    // If it returns null, the edge is not created.
+    GraphEdge.creation_callback = function(start,end){
+        var edge_prop = {};
+        edge_prop.label = 'new edge!';
+        return edge_prop;
+    }
+
     // returns a new string with the same content as str, but with lines of maximum 'width' characters.
     // lines are broken on words, or into words if a word is longer than 'width'
     function wordwrap( str, width) {
@@ -460,6 +502,7 @@
 
 /*
 window.onload = function(){
+    //Example 
     var style = {   "background"    :'url("grid.png")',
                     "edge"          :"#A0A0A0",
                     "edge_label"    :"#555",
@@ -470,15 +513,17 @@ window.onload = function(){
                     "white"         :"#FFF",
                     "node_size_x"   : 110,
                     "node_size_y"   : 80,
-                    "edge_spacing"  : 100                 };
+                    "edge_spacing"  : 100,                 
+                    "edge_label_font_size" : 10         
+                    "edge_loop_radius": 50 };
 
     var r = new Raphael(document.getElementById("canvas_container"),'100%','100%');
 
     var g = new CuteGraph(r,style);
     
-    var n1 = new GraphNode(g,100,250,'Hello World','circle',colors.white);
-    var n2 = new GraphNode(g,400,250,'Hello Planet','rect',colors.white);
-    var n3 = new GraphNode(g,250,400,'Lonely Node','rect',colors.gray);
-    var e1 = new GraphEdge(g,'test',n1,n2);
+    var n1 = new CuteNode(g,100,250,'Hello World','circle',colors.white);
+    var n2 = new CuteNode(g,400,250,'Hello Planet','rect',colors.white);
+    var n3 = new CuteNode(g,250,400,'Lonely Node','rect',colors.gray);
+    var e1 = new CuteEdge(g,'test',n1,n2);
 }*/
 
