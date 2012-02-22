@@ -41,8 +41,7 @@
     // in degrees
     Vec2.new_polar_deg = function(len,angle){
         var v = new Vec2(len,0);
-        v.rotate_deg(angle);
-        return v;
+        return v.rotate_deg(angle);
     };
     // This static method creates a new vector from polar coordinates with the angle expressed in
     // radians

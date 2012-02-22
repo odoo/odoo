@@ -152,7 +152,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
             var e =  new CuteEdge(          graph,
                                             CuteGraph.wordwrap(edge.signal, 32),
                                             id_to_node[edge.s_id],
-                                            id_to_node[edge.d_id]   );
+                                            id_to_node[edge.d_id] || id_to_node[edge.s_id]  );  //WORKAROUND
             e.id = edge.id;
         });
 

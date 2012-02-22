@@ -1,7 +1,5 @@
 
 (function(window){
-    
-
 
     // this serves as the end of an edge when creating a link
     function EdgeEnd(pos_x,pos_y){
@@ -119,7 +117,9 @@
 
             graph[n1.uid][n2.uid].push(e);
             links[n1.uid].push(e);
-            links[n2.uid].push(e);
+            if(n1 != n2){
+                links[n2.uid].push(e);
+            }
         };
         //return the list of edges from n1 to n2
         this.get_edge_list = function(n1,n2){
@@ -155,6 +155,59 @@
                 }
             }
         };
+        // Returns the angle in degrees of the edge loop. We do not support more than 8 loops on one node
+        this.get_loop_angle = function(n,e){
+            var loop_list = this.get_edge_list(n,n);
+            var lc = loop_list.length;
+
+            var slots = []; // the 8 angles where we can put the loops 
+            for(var angle = 0; angle < 360; angle += 45){
+                slots.push(Vec2.new_polar_deg(1,angle));
+            }
+            
+            //we assign to each slot a score. The higher the score, the closer it is to other edges.
+            var links = this.get_linked_edge_list(n);
+            for(var i = 0; i < links.length; i++){
+                var edge = links[i];
+                if(!edge.is_loop || edge.is_loop()){
+                    continue;
+                }
+                var end = edge.get_end();
+                if (end == n){
+                    end = edge.get_start();
+                }
+                var dir = end.get_pos().sub(n.get_pos()).normalize();
+                for(var s = 0; s < slots.length; s++){
+                    var score = slots[s].dot(dir);
+                    if(score < 0){
+                        score = -0.2*Math.pow(score,2);
+                    }else{
+                        score = Math.pow(score,2);
+                    }
+                    if(!slots[s].score){
+                        slots[s].score = score;
+                    }else{
+                        slots[s].score += score;
+                    }
+                }
+            }
+            //we want the loops with lower uid to get the slots with the lower score
+            slots.sort(function(a,b){ return a.score < b.score ? -1: 1; });
+            
+            var index = 0;
+            for(var i = 0; i < links.length; i++){
+                var edge = links[i];
+                if(!edge.is_loop || !edge.is_loop()){
+                    continue;
+                }
+                if(edge.uid < e.uid){
+                    index++;
+                }
+            }
+            index = index % slots.length;
+            
+            return slots[index].angle_deg();
+        }
     }
 
     // creates a new Graph Node on Raphael document r, centered on [pos_x,pos_y], with label 'label', 
@@ -338,6 +391,7 @@
     // if tmp is true, the edge is not added to the graph, used for drag edges. TODO pass graph in constructor,
     // replace tmp == false by graph == null 
     function GraphEdge(graph,label,start,end,tmp){
+        var self = this;
         var r = graph.r;
         var update_time = -1;
         var curvature = 0;  // 0 = straight, != 0 curved
@@ -347,12 +401,13 @@
         var elfs =  graph.style.edge_label_font_size || 10 ; 
         var label_enabled = true;
         this.uid = 0;       // unique id used to order the curved edges
-        var self = this;
+        var edge_path = ""; // svg definition of the edge vector path
 
         if(!tmp){
             graph.add_edge(start,end,this);
         }
         
+        //Return the position of the label
         function get_label_pos(path){
             var cpos = path.getTotalLength() * 0.5;
             var cindex = Math.abs(Math.floor(curvature));
@@ -363,53 +418,85 @@
             var lpos = path.getPointAtLength(cpos + mod * verticality);
             return new Vec2(lpos.x,lpos.y - elfs *(1-verticality));
         }
-            
-        //computes new start and end line coordinates
-        function update_start_end_pos(){
-            if(!tmp){
-                curvature = graph.get_edge_curvature(start,end,self);
-            }else{
-                curvature = 0;
-            }
-            s = start.get_pos();
-            e = end.get_pos();
-            mc = s.lerp(e,0.5); //middle of the line s->e
-            var se = e.sub(s);
-            se = se.normalize();
-            se = se.rotate_deg(-90);
-            se = se.scale(curvature * graph.style.edge_spacing);
-            mc = mc.add(se);
-            if(start.get_bound){
-                var col = start.get_bound().collide_segment(s,mc);
-                if(col.length > 0){
-                    s = col[0];
-                }
-            }
-            if(end.get_bound){
-                var col = end.get_bound().collide_segment(mc,e);
-                if(col.length > 0){
-                    e = col[0];
-                }
-            }
-        }
-        /*
-        function update_loop_pos(){
-            s = start.get_pos();
-            mc = s.add_new(Vec2.new_polar_deg(graph.style.edge_loop_radius,45*self.uid));
-            var p = mc.normalize_new().rotate_deg(90);
-            mc1 = mc.add_new
-        */
-            
-        
+
+        //Straight line from s to e
         function make_line(){
             return "M" + s.x + "," + s.y + "L" + e.x + "," + e.y ;
         }
+        //Curved line from s to e by mc
         function make_curve(){
             return "M" + s.x + "," + s.y + "Q" + mc.x + "," + mc.y + " " + e.x + "," + e.y;
         }
+        //Curved line from s to e by mc1 mc2
+        function make_loop(){
+            return "M" + s.x + " " + s.y + 
+                   "C" + mc1.x + " " + mc1.y + " " + mc2.x + " " + mc2.y + " " + e.x + " " + e.y;
+        }
+            
+        //computes new start and end line coordinates
+        function update_curve(){
+            if(start != end){
+                if(!tmp){
+                    curvature = graph.get_edge_curvature(start,end,self);
+                }else{
+                    curvature = 0;
+                }
+                s = start.get_pos();
+                e = end.get_pos();
+                
+                mc = s.lerp(e,0.5); //middle of the line s->e
+                var se = e.sub(s);
+                se = se.normalize();
+                se = se.rotate_deg(-90);
+                se = se.scale(curvature * graph.style.edge_spacing);
+                mc = mc.add(se);
 
-        update_start_end_pos();
-        var edge = r.path(make_curve()).attr({'stroke':graph.style.edge, 'stroke-width':2, 'arrow-end':'block-wide-long', 'cursor':'pointer'}).insertBefore(graph.get_node_list()[0].get_fig());       
+                if(start.get_bound){
+                    var col = start.get_bound().collide_segment(s,mc);
+                    if(col.length > 0){
+                        s = col[0];
+                    }
+                }
+                if(end.get_bound){
+                    var col = end.get_bound().collide_segment(mc,e);
+                    if(col.length > 0){
+                        e = col[0];
+                    }
+                }
+                
+                if(curvature != 0){
+                    edge_path = make_curve();
+                }else{
+                    edge_path = make_line();
+                }
+            }else{ // start == end
+                console.log("loop!");
+                var rad = graph.style.edge_loop_radius || 100;
+                s = start.get_pos();
+                e = end.get_pos();
+
+                var r = Vec2.new_polar_deg(rad,graph.get_loop_angle(start,self));
+                mc = s.add(r);
+                p = r.rotate_deg(90);
+                mc1 = mc.add(p.set_len(rad*0.5));
+                mc2 = mc.add(p.set_len(-rad*0.5));
+                
+                if(start.get_bound){
+                    var col = start.get_bound().collide_segment(s,mc1);
+                    if(col.length > 0){
+                        s = col[0];
+                    }
+                    var col = start.get_bound().collide_segment(e,mc2);
+                    if(col.length > 0){
+                        e = col[0];
+                    }
+                }
+                edge_path = make_loop();
+            }
+        }
+        
+        update_curve();
+        var edge = r.path(edge_path).attr({'stroke':graph.style.edge, 'stroke-width':2, 'arrow-end':'block-wide-long', 'cursor':'pointer'}).insertBefore(graph.get_node_list()[0].get_fig());       
         var labelpos = get_label_pos(edge);
         var edge_label = r.text(labelpos.x, labelpos.y - elfs, label).attr({'fill':graph.style.edge_label, 'cursor':'pointer', 'font-size':elfs});
         
@@ -441,8 +528,8 @@
         }
         //update the positions 
         function update(){
-            update_start_end_pos();
-            edge.attr({'path':make_curve()});
+            update_curve();
+            edge.attr({'path':edge_path});
             if(label_enabled){
                 var labelpos = get_label_pos(edge);
                 edge_label.attr({'x':labelpos.x, 'y':labelpos.y - 14});
@@ -460,10 +547,14 @@
         edge.dblclick(double_click);
         edge_label.dblclick(double_click);
 
+
         this.label_enable  = label_enable;
         this.label_disable = label_disable;
         this.update = update;
         this.remove = remove;
+        this.is_loop = function(){ return start == end; };
+        this.get_start = function(){ return start; };
+        this.get_end   = function(){ return end; };
     }
 
     GraphEdge.double_click_callback = function(edge){
