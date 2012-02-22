@@ -63,11 +63,25 @@
 
 .oe_mail_msg_image {
     float: left;
-    width: 14%;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    overflow: hidden;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    -o-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .oe_mail_msg_image img {
-    margin-left: 10%;
+    width: 100px;
+    height: auto;
+    clip: rect(10px, 100px, 110px, 0px);
 }
 
 .oe_mail_msg_content {
