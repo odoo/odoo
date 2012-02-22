@@ -933,11 +933,12 @@ class account_fiscalyear(osv.osv):
                 if de.strftime('%Y-%m-%d') > fy.date_stop:
                     de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
 
+                context_today = fields.date.context_today(self,cr,uid,context=context)
                 period_obj.create(cr, uid, {
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
-                    'date_start': ds.strftime('%Y-%m-%d'),
-                    'date_stop': de.strftime('%Y-%m-%d'),
+                    'date_start': context_today,
+                    'date_stop': context_today,
                     'fiscalyear_id': fy.id,
                 })
                 ds = ds + relativedelta(months=interval)
@@ -950,13 +951,13 @@ class account_fiscalyear(osv.osv):
     def finds(self, cr, uid, dt=None, exception=True, context=None):
         if context is None: context = {}
         if not dt:
-            dt = time.strftime('%Y-%m-%d')
+            dt = fields.date.context_today(self,cr,uid,context=context)
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
         if context.get('company_id', False):
-            args.append(('company_id', '=', context['company_id']))
+            company_id = context['company_id']
         else:
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-            args.append(('company_id', '=', company_id))
+        args.append(('company_id', '=', company_id))
         ids = self.search(cr, uid, args, context=context)
         if not ids:
             if exception:
@@ -1039,7 +1040,7 @@ class account_period(osv.osv):
     def find(self, cr, uid, dt=None, context=None):
         if context is None: context = {}
         if not dt:
-            dt = time.strftime('%Y-%m-%d')
+            dt = fields.date.context_today(self,cr,uid,context=context)
 #CHECKME: shouldn't we check the state of the period?
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
         if context.get('company_id', False):
@@ -1280,7 +1281,7 @@ class account_move(osv.osv):
         'name': '/',
         'state': 'draft',
         'period_id': _get_period,
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
@@ -2269,7 +2270,7 @@ class account_model(osv.osv):
                 'ref': entry['name'],
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
-                'date': context.get('date',time.strftime('%Y-%m-%d'))
+                'date': context.get('date', fields.date.context_today(self,cr,uid,context=context))
             })
             move_ids.append(move_id)
             for line in model.lines_id:
@@ -2306,7 +2307,7 @@ class account_model(osv.osv):
                     'account_id': line.account_id.id,
                     'move_id': move_id,
                     'partner_id': line.partner_id.id,
-                    'date': context.get('date',time.strftime('%Y-%m-%d')),
+                    'date': context.get('date', fields.date.context_today(self,cr,uid,context=context)),
                     'date_maturity': date_maturity
                 })
                 account_move_line_obj.create(cr, uid, val, context=ctx)
@@ -2359,7 +2360,7 @@ class account_subscription(osv.osv):
         'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
     }
     _defaults = {
-        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_start': fields.date.context_today,
         'period_type': 'month',
         'period_total': 12,
         'period_nbr': 1,

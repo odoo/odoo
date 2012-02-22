@@ -35,5 +35,6 @@ import report_helper
 import webkit_report
 import ir_report
 import wizard
+import convert
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

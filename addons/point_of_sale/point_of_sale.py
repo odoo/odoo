@@ -55,9 +55,22 @@ class pos_order(osv.osv):
         #_logger.info("orders: %r", orders)
         list = []
         for order in orders:
-            list.append(self.create(cr, uid, order, context))
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'pos.order', list[-1], 'paid', cr)
+            # order :: {'name': 'Order 1329148448062', 'amount_paid': 9.42, 'lines': [[0, 0, {'discount': 0, 'price_unit': 1.46, 'product_id': 124, 'qty': 5}], [0, 0, {'discount': 0, 'price_unit': 0.53, 'product_id': 62, 'qty': 4}]], 'statement_ids': [[0, 0, {'journal_id': 7, 'amount': 9.42, 'name': '2012-02-13 15:54:12', 'account_id': 12, 'statement_id': 21}]], 'amount_tax': 0, 'amount_return': 0, 'amount_total': 9.42}
+            order_obj = self.pool.get('pos.order')
+            # get statements out of order because they will be generated with add_payment to ensure
+            # the module behavior is the same when using the front-end or the back-end
+            statement_ids = order.pop('statement_ids')
+            order_id = self.create(cr, uid, order, context)
+            list.append(order_id)
+            # call add_payment; refer to wizard/pos_payment for data structure
+            # add_payment launches the 'paid' signal to advance the workflow to the 'paid' state
+            data = {
+                'journal': statement_ids[0][2]['journal_id'],
+                'amount': order['amount_paid'],
+                'payment_name': order['name'],
+                'payment_date': statement_ids[0][2]['name'],
+            }
+            order_obj.add_payment(cr, uid, order_id, data, context=context)
         return list
 
     def unlink(self, cr, uid, ids, context=None):

@@ -87,7 +87,7 @@
           <para style="terp_tblheader_General">Partner VAT</para>
         </td>
         <td>
-          <para style="terp_tblheader_General">Tax Code</para>
+          <para style="terp_tblheader_General">Code (Tax Code)</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Right">Amount</para>
@@ -105,7 +105,7 @@
             <para style="terp_default_9">[[ l['vat'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ l['intra_code'] ]]</para>
+            <para style="terp_default_9">[[ l['code'] (l['intra_code']) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ l['amount'] or O.OO ]] [[ company.currency_id.symbol ]]</para>

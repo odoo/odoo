@@ -1207,7 +1207,7 @@ class project_task_history(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible'),
     }
     _defaults = {
-        'date': lambda s,c,u,ctx: time.strftime('%Y-%m-%d')
+        'date': fields.date.context_today,
     }
 project_task_history()
 

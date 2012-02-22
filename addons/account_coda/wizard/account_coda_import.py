@@ -567,7 +567,7 @@ class account_coda_import(osv.osv_memory):
                 'name' : codafilename,
                 'coda_data': codafile,
                 'coda_creation_date' : coda_statement['date'],
-                'date': time.strftime('%Y-%m-%d'),
+                'date': fields.date.context_today(self, cr, uid, context=context),
                 'user_id': uid,
                 })
             context.update({'coda_id': coda_id})

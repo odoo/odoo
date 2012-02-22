@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-09 09:13+0000\n"
-"Last-Translator: Frederic Clementi - Camptocamp.com <Unknown>\n"
+"PO-Revision-Date: 2012-02-13 21:37+0000\n"
+"Last-Translator: t.o <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-10 04:47+0000\n"
-"X-Generator: Launchpad (build 14771)\n"
+"X-Launchpad-Export-Date: 2012-02-14 05:43+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -43,6 +43,8 @@ msgstr "Relance"
 msgid ""
 "Check if you want to print followups without changing followups level."
 msgstr ""
+"Cochez cette case si vous voulez imprimer les relances sans en changer les "
+"niveaux."
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -101,7 +103,7 @@ msgstr "Légende"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow up Entries with period in current year"
-msgstr ""
+msgstr "Relances sur l'excercice courant"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -145,6 +147,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"La date de votre écriture ne correspond pas à la période définie! Vous devez "
+"modifier la date ou supprimer la contrainte de date du journal."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -281,6 +285,17 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Cher %(partner_name)s,\n"
+"\n"
+"Sauf erreur ou omission de notre part, nous constatons que votre compte "
+"client présente à ce jour un solde débiteur.\n"
+"L’échéance étant dépassée, nous vous demandons de bien vouloir régulariser "
+"cette situation par retour de courrier. Dans le cas où votre règlement "
+"aurait été adressé entre temps, nous vous prions de ne pas tenir compte de "
+"la présente. \n"
+"Vous remerciant par avance, nous vous prions d'agréer,  l’expression de nos "
+"salutations distinguées.\n"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -333,6 +348,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Le compte sélectionné dans votre ligne d'écriture requiert une deuxième "
+"devise. Vous devez soit supprimer la deuxième devise sur le compte, soit "
+"sélectionner une vue multi-devise sur le journal."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -347,7 +365,7 @@ msgstr "Statistiques des relances par partenaire"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
+msgstr "Message"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -421,7 +439,7 @@ msgstr "Lignes d'écriture"
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Vous ne pouvez pas passer d'écriture sur un compte de type 'vue'"
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -431,7 +449,7 @@ msgstr "Envoyer un Message de confirmation"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -548,7 +566,7 @@ msgstr ""
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "La société doit être la même pour son compte et la période liée."
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -639,7 +657,7 @@ msgstr "Relances envoyées"
 #. module: account_followup
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Le nom de la société doit être unique !"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
