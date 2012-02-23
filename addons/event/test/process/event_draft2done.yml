@@ -1,0 +1,87 @@
+-
+  I want to organize an event, 
+  into this conference I should create two registration.
+  One confirmed and attended the event and the other cancelled.
+
+  create an event
+-
+  !record {model: event.event, id: event_event}:
+   name: event
+   date_begin: 2012-01-01 19:05:15
+   date_end: 2012-01-01 20:05:15
+-
+  create a registration
+-
+  !record {model: event.registration, id: event_registration1}:
+   event_id: event_event
+   name: test_confirm
+-
+   !record {model: event.registration, id: event_registration2}:
+    event_id: event_event
+    name: test_cancel
+-
+   accept registration1
+-
+   !python {model: event.registration}: |
+     self.case_open(cr, uid, [ref("event_registration1")],context=context)
+-
+   i check that registration is "confirmed"
+-
+   !assert {model: event.registration, id: event_registration1}:
+     - state == 'open', "event should be confirmed."
+-
+   finish the registration
+-
+   !python {model: event.registration}: |
+     self.button_reg_close(cr, uid, [ref("event_registration1")],context=context)
+-
+    check if registration is correctly finnished
+-
+  !assert {model: event.registration, id: event_registration1}:
+      - state == 'done'
+-
+    cancel the second registration
+-
+  !python {model: event.registration}: |
+    self.button_reg_cancel(cr, uid, [ref("event_registration2")],context=context)
+-
+  Check that registration is cancelled.
+-
+  !assert {model: event.registration, id: event_registration2}:
+    - state == 'cancel', "event should be closed."
+-
+    confirm the event
+-
+  !python {model: event.event}: |
+    self.button_confirm(cr, uid, [ref("event_event")])
+-
+  check that event is in "confirmed" state. 
+-
+  !assert {model: event.event, id: event_event}:
+    - state == 'confirm', "event should be confirmed."
+-
+  done the event  
+-
+  !python {model: event.event}: |
+    self.button_done(cr, uid, [ref("event_event")])
+-
+  Check that event is in "close" state. 
+-
+  !assert {model: event.event, id: event_event}:
+    - state == 'done', "Event should be Closed."
+-
+    reset event to draft
+-
+  !python {model: event.event}: |
+    self.button_draft(cr, uid, [ref("event_event")])
+-
+    cancel the event
+-
+  !python {model: event.event}: |
+    self.button_cancel(cr, uid, [ref("event_event")])
+-
+    check if the event is cancelled
+-
+  !assert {model: event.event, id: event_event}:
+     - state == 'cancel', "Event should be Closed."
+
