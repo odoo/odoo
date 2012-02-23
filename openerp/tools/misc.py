@@ -633,12 +633,12 @@ ALL_LANGUAGES = {
 }
 
 def scan_languages():
-    # Now it will take all languages from get languages function without filter it with base module languages
-    lang_dict = ALL_LANGUAGES
-    ret = [(lang, lang_dict.get(lang, lang)) for lang in list(lang_dict)]
-    ret.sort(key=lambda k:k[1])
-    return ret
+    """ Returns all languages supported by OpenERP for translation
 
+    :returns: a list of (lang_code, lang_name) pairs
+    :rtype: [(str, unicode)]
+    """
+    return sorted(ALL_LANGUAGES.iteritems(), key=lambda k: k[1])
 
 def get_user_companies(cr, user):
     def _get_company_children(cr, ids):
