@@ -201,8 +201,6 @@
                     <newline/>
                     <group col="8" colspan="4">
                         <field name="state" widget="statusbar" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
-                        <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"
-                                icon="gtk-cancel"/>
                         <button name="button_plan_in_progress" string="Start Appraisal" states="draft" type="object"
                                 icon="gtk-execute"/>
                         <button name="button_done" string="Done" states="progress" type="object"
@@ -211,6 +209,8 @@
                                 icon="terp-stock_effects-object-colorize"/>
                         <button name="button_final_validation" string="Validate Appraisal" states="wait" type="object"
                                 icon="gtk-go-forward"/>
+                        <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"
+                                icon="gtk-cancel"/>
                     </group>
               </form>
             </field>
@@ -316,7 +316,11 @@
                     <newline/>
                     <separator string="State" colspan="4"/>
                     <group colspan="4" col="6">
-                         <field name="state"/>
+                         <field name="state" widget="statusbar" statusbar_visible="waiting_answer,done"/>
+                                <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" />
+                                <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
+                                <button string="Cancel" name="survey_req_cancel" states="draft,waiting_answer" type="object" icon="gtk-cancel"/>
+                                <button string="Reset to Draft" name="survey_req_draft" states="done" type="object" icon="terp-stock_effects-object-colorize" />
                     </group>
                 </form>
             </field>
@@ -338,6 +342,8 @@
                     <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <button name="%(mail.action_email_compose_message_wizard)d" string="Send Reminder Email" icon="terp-mail-message-new" type="action" colspan="2" states="waiting_answer"/>
                     <field name="state"/>
+                    <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" />
+                    <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to" />
                 </tree>
             </field>
         </record>
