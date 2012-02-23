@@ -25,7 +25,7 @@
                             <newline/>
                             <field name="charge_delivery" attrs="{'invisible':[('sale_orders','!=',True), ('deli_orders','!=',True)]}"/>
 		                    <newline/>
-		                    <field name="picking_policy" />
+		                    <field name="picking_policy" attrs="{'invisible':[('deli_orders','!=',True)]}"/>
 		                    <newline/>
 		                </group>
 	                </group>
