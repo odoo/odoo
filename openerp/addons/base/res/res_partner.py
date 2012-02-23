@@ -156,7 +156,7 @@ class res_partner(osv.osv):
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
         'is_company': fields.boolean('Company', help="Check if the partner is a company, uncheck it for a person"),
-        'is_company_address': fields.boolean('Use Parent Address', help="Check to use the parent partner's address"),
+        'use_parent_address': fields.boolean('Use Company Address', help="Check to use the company's address"),
         'photo': fields.binary('Photo'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
@@ -188,8 +188,8 @@ class res_partner(osv.osv):
     def do_share(self, cr, uid, ids, *args):
         return True
     
-    def onchange_address(self, cr, uid, ids, is_company_address, parent_id, context=None):
-        if is_company_address and parent_id:
+    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+        if use_parent_address and parent_id:
             parent = self.browse(cr, uid, parent_id, context=context)
             return {'value': {
                 'street': parent.street,
