@@ -147,17 +147,6 @@
                    <group colspan="4">
                        <field colspan="4" name="email_cc" widget="char" size="512"/>
                    </group>
-                    <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
-                        <tree string="History">
-                            <field name="display_text" string="History Information"/>
-                            <field name="email_from" invisible="1"/>
-                            <button
-                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-                                name="%(mail.action_email_compose_message_wizard)d"
-                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-                                icon="terp-mail-replied" type="action" />
-                        </tree>
-                    </field>
                     <button string="Add Internal Note"
                         name="%(crm.action_crm_add_note)d"
                         context="{'model': 'crm.lead' }"
