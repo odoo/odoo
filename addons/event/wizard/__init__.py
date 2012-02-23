@@ -20,7 +20,5 @@
 ##############################################################################
 
 
-import event_confirm_registration
 import event_confirm
-import partner_event_registration
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

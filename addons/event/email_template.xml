@@ -10,7 +10,7 @@
         <field name="body_text">
         hello ${object.contact_id.name},
 
-        The event ${object.event_id.name} that you register is confirmed 
+        The event ${object.event_id.name} that you registered from is confirmed and will be held from ${object.event_id.date_begin} to ${object.event_id.date_end}. For any further information please contact our event department.
 
         we thank you for your participation
 
@@ -29,7 +29,8 @@
         <field name="subject">Ticket for ${object.event_id.name}</field>
         <field name="body_text">
         hello ${object.contact_id.name},
-        You have just been registered for the event ${object.event_id.name}  to be held from ${object.event_id.date_begin} to ${object.event_id.date_end}
+
+        We confirm your registration to the event ${object.event_id.name} to be held from ${object.event_id.date_begin} to ${object.event_id.date_end}
 
         we thank you for your participation
 
