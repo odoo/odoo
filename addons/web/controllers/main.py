@@ -762,11 +762,13 @@ class Menu(openerpweb.Controller):
         Menus = s.model('ir.ui.menu')
         # If a menu action is defined use its domain to get the root menu items
         user_menu_id = s.model('res.users').read([s._uid], ['menu_id'], context)[0]['menu_id']
+
+        menu_domain = [('parent_id', '=', False)]
         if user_menu_id:
-            menu_domain = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'], context)[0]['domain']
-            menu_domain = ast.literal_eval(menu_domain)
-        else:
-            menu_domain = [('parent_id', '=', False)]
+            domain_string = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'], context)[0]['domain']
+            if domain_string:
+                menu_domain = ast.literal_eval(domain_string)
+
         return Menus.search(menu_domain, 0, False, False, context)
 
     def do_load(self, req):
