@@ -67,12 +67,38 @@ class sale_config_picking_policy(osv.osv_memory):
         'wiki_sale_faq' : fields.boolean("Install a sales FAQ?"),
         'crm_partner_assign' : fields.boolean("Manage a several address per customer"),
         'google_map' : fields.boolean("Google maps on customer"),
+        'create_leads': fields.boolean("Create Leads from an Email Account"),
+        'server' : fields.char('Server Name', size=256, required=True),
+        'port' : fields.integer('Port', required=True),
+        'type':fields.selection([
+                   ('pop', 'POP Server'),
+                   ('imap', 'IMAP Server'),
+                   ('local', 'Local Server'),
+               ], 'Server Type', required=True),
+        'is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
+        'user' : fields.char('Username', size=256, required=True),
+        'password' : fields.char('Password', size=1024, required=True),
+        'plugin_thunderbird': fields.boolean('Push your email from Thunderbird to an OpenERP document'),
+        'plugin_outlook': fields.boolean('Push your email from Outlook to an OpenERP document'),
 
     }
     _defaults = {
         'order_policy': 'manual',
         'tax_policy': 'no_tax',
+        'type': 'pop',
     }
+    
+    def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
+        port = 0
+        values = {}
+        if server_type == 'pop':
+            port = ssl and 995 or 110
+        elif server_type == 'imap':
+            port = ssl and 993 or 143
+        else:
+            values['server'] = ''
+        values['port'] = port
+        return {'value':values}
 
     def onchange_order(self, cr, uid, ids, sale, deli, context=None):
         res = {}

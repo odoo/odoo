@@ -31,7 +31,6 @@
 	                </group>
 
 	                <separator string="Sale Order" colspan="4"/>
-
                     <group  colspan="4" col="8">
                         <group  colspan="4" col="4">
                            <field name="group_sale_pricelist_per_customer"/>
@@ -62,7 +61,6 @@
                     </group>
 
                     <separator string="Contracts" colspan="4"/>
-
                     <group  colspan="4" col="8">
                         <group  colspan="4" col="4">
                            <field name="analytic_user_function"/>
@@ -71,9 +69,31 @@
                            <newline/>
                         </group>
                     </group>
+                    
+                    <separator string="Emails" colspan="8"/>
+                    <group col="8" colspan="4">
+                        <field name="create_leads"/>
+                        <group col="4" colspan="4" attrs="{'invisible': [('create_leads','=',False)]}">
+                            <group col="8" colspan="4">
+                                <field name="server"/>
+                                <field name="type" nolabel="1" on_change="onchange_server_type(type, is_ssl)"/>
+                                <field name="port"/>
+                                <field name="is_ssl" on_change="onchange_server_type(type, is_ssl)"/>
+                            </group>
+                            <newline/>
+                            <group col="4" colspan="2">
+                                <field name="user"/>
+                                <field name="password"/>
+                            </group>
+                        </group>
+                        <group col="4" colspan="4">
+                            <field name="plugin_thunderbird"/>
+                            <newline/>
+                            <field name="plugin_outlook"/>
+                        </group>
+                    </group>
 
                     <separator string="Import and Synchronize data from an other application" colspan="4"/>
-
                     <group  colspan="4" col="8">
                         <group  colspan="4" col="4">
                            <field name="import_sugarcrm"/>
@@ -89,7 +109,6 @@
                     </group>
 
                     <separator string="Documents and Wiki" colspan="4"/>
-
                     <group  colspan="4" col="8">
                         <group  colspan="4" col="4">
                            <newline/>
@@ -99,7 +118,6 @@
                     </group>
 
                     <separator string="Documents and Wiki" colspan="4"/>
-
                     <group  colspan="4" col="8">
                         <group  colspan="4" col="4">
                            <newline/>
@@ -109,7 +127,6 @@
                     </group>
 
                     <separator string="Customer Form" colspan="4"/>
-
                     <group colspan="4" col="8">
                         <group  colspan="4" col="4">
                            <field name="crm_partner_assign"/>
@@ -120,8 +137,8 @@
                     </group>
 
 	                <group>
-                            <button string="Cancel" icon="gtk-cancel" special="cancel" />
-                            <button string="Apply" icon="gtk-apply" name="apply_cb" type="object" />
+                        <button string="Cancel" icon="gtk-cancel" special="cancel" />
+                        <button string="Apply" icon="gtk-apply" name="apply_cb" type="object" />
                     </group>
                 </form>
             </field>
