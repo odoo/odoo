@@ -72,7 +72,7 @@
                     
                     <separator string="Emails" colspan="8"/>
                     <group col="8" colspan="4">
-                        <field name="create_leads"/>
+                        <field name="create_leads" colspan="4"/>
                         <group col="4" colspan="4" attrs="{'invisible': [('create_leads','=',False)]}">
                             <group col="8" colspan="4">
                                 <field name="server"/>
@@ -104,15 +104,6 @@
                         <group  colspan="4" col="4">
                            <newline/>
                            <field name="crm_caldav"/>
-                           <newline/>
-                        </group>
-                    </group>
-
-                    <separator string="Documents and Wiki" colspan="4"/>
-                    <group  colspan="4" col="8">
-                        <group  colspan="4" col="4">
-                           <newline/>
-                           <field name="wiki_sale_faq" />
                            <newline/>
                         </group>
                     </group>
