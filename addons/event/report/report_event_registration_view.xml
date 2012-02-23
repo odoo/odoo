@@ -78,7 +78,6 @@
                           string="Confirmed Registrations"
                           help="Registrations in confirmed or done state"
                           context="{'no_of_draft_invisible':1}"/>
-                   
                     <separator orientation="vertical"/>
                     <field name="event_id" string="Event"/>
                     <field name="user_id" widget="selection">
@@ -101,10 +100,9 @@
                         <filter string="Participant" icon="terp-personal" context="{'group_by':'name_registration'}" help="Registration contact"/>
                         <separator orientation="vertical"/>
                         <filter string="Event" name="event" icon="terp-crm" context="{'group_by':'event_id', 'max_reg_event_visible':0}"/>
-                        
                         <separator orientation="vertical"/>
                         <filter string="Event Type" icon="terp-crm"  context="{'group_by':'event_type'}"/>
-                        <filter string="event_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'event_state'}" help="Events States"/>
+                        <filter string="Event State" icon="terp-stock_effects-object-colorize" context="{'group_by':'event_state'}" help="Events States"/>
                         <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical" />
