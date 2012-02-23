@@ -94,6 +94,7 @@ niv = (function() {
             return Class;
         };
     }).call(lib);
+    // end of John Resig's code
 
     lib.DestroyableMixin = {
         isDestroyed : function() {
@@ -239,6 +240,7 @@ niv = (function() {
             return this;
         }
     });
+    // end of Backbone's events class
     
     var checkEventDispatcher = function(ev) {
         if (!ev.__events) {
