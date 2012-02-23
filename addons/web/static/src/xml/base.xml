@@ -20,9 +20,9 @@
 <t t-name="WebClient">
     <div class="oe_webclient">
         <div class="oe_topbar">
-            <div id="oe_header" class="header"></div>
-            <div id="oe_menu" class="menu"></div>
+            <div class="oe_menu_placeholder" id="oe_menu_temporary_id"/>
         </div>
+        <div id="oe_header" class="header"></div>
         <div class="oe_leftbar">
             <!--
             <a href="#" class="oe_logo"><img src="img/logo.png"/></a>
@@ -45,7 +45,6 @@
                 </td>
             </tr>
             </table>
-
         </div>
     </div>
 </t>
@@ -375,15 +374,13 @@
         ><t t-esc="shortcut.name"/></li>
 </ul>
 <t t-name="Menu">
-    <table align="center">
-    <tr>
-        <td t-foreach="widget.data.data.children" t-as="menu">
+    <ul class="oe_menu" t-if="widget.data">
+        <li t-foreach="widget.data.data.children" t-as="menu">
             <a href="#" t-att-data-menu="menu.id">
                 <t t-esc="menu.name"/>
             </a>
-        </td>
-    </tr>
-    </table>
+        </li>
+    </ul>
 </t>
 <t t-name="Menu.secondary">
     <div t-attf-class="oe_toggle_secondary_menu">

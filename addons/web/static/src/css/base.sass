@@ -41,7 +41,100 @@
 // }}}
 
 .openerp2
-    // Minh's playground.
+    // Common styles {{{
+    padding: 0
+    margin: 0
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    color: #4c4c4c
+    font-size: 13px
+    background: white
+    position: relative
+
+    a
+        color: #4c4c4c
+        text-decoration: none
+    // }}}
+
+    // WebClient {{{
+    .oe_webclient
+        position: absolute
+        top: 0
+        bottom: 0
+        left: 0
+        right: 0
+    // }}}
+
+    // Topbar {{{
+    .oe_topbar
+        width: 100%
+        height: 31px
+        border-top: solid 1px #d3d3d3
+        border-bottom: solid 1px black
+        @include vertical-gradient(#646060, #262626)
+
+        .oe_topbar_item
+            float: left
+            li
+                float: left
+                a
+                    display: block
+                    padding: 5px 10px 7px
+                    line-height: 20px
+                    height: 20px
+                    color: #eee
+                    vertical-align: top
+                    text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+                    &:hover
+                        background: #303030
+                        color: white
+                        @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+            .oe_active
+                background: #303030
+                font-weight: bold
+                color: white
+                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+
+        .oe_topbar_avatar
+            width: 24px
+            height: 24px
+            margin: -2px 2px 0 0
+            @include radius(4px)
+    // }}}
+
+    // Menu {{{
+    .oe_menu
+        float: left
+        padding: 0
+        margin: 0
+        li
+            list-style-type: none
+            float: left
+        a
+            display: block
+            padding: 5px 10px 7px
+            line-height: 20px
+            height: 20px
+            color: #eee
+            vertical-align: top
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+            &:hover
+                background: #303030
+                color: white
+                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+        .oe_active
+            background: #303030
+            font-weight: bold
+            color: white
+            @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+    // }}}
+
+.openerp
+    // Transitional overrides for old styles {{{
+    .oe-shortcuts
+        position: static
+    #oe_header
+        clear: both
+    // }}}
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
