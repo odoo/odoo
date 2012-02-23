@@ -1117,7 +1117,7 @@ openerp.point_of_sale = function(db) {
             this.order = options.order;
             this.shop = options.shop;
             this.order.bind('destroy', _.bind( function() {
-                return this.stop();
+                this.destroy();
             }, this));
             this.shop.bind('change:selectedOrder', _.bind( function(shop) {
                 var selectedOrder;
@@ -1384,7 +1384,7 @@ openerp.point_of_sale = function(db) {
                 }, this));
             }, this));
         },
-        stop: function() {
+        destroy: function() {
             $('.oe_footer').show();
             $('.oe_toggle_secondary_menu').show();
             pos = undefined;
