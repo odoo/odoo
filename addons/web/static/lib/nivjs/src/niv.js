@@ -27,6 +27,9 @@ niv = (function() {
     var lib = {};
 
     /*
+     * Unmodified John Resig's inheritance
+     */
+    /*
      * Simple JavaScript Inheritance By John Resig http://ejohn.org/ MIT
      * Licensed.
      */
@@ -91,8 +94,17 @@ niv = (function() {
             return Class;
         };
     }).call(lib);
+    
+    lib.DestroyableMixin = {
+        isDestroyed : function() {
+            return this.__destroyable_destroyed;
+        },
+        destroy : function() {
+            this.__destroyable_destroyed = true;
+        }
+    };
 
-    lib.ParentedMixin = {
+    lib.ParentedMixin = _.extend({}, lib.DestroyableMixin, {
         __parented_mixin : true,
         setParent : function(parent) {
             if (this.getParent()) {
@@ -116,17 +128,14 @@ niv = (function() {
             return this.__parented_children ? _.clone(this.__parented_children)
                     : [];
         },
-        isDestroyed : function() {
-            return this.__parented_destroyed;
-        },
         destroy : function() {
             _.each(this.getChildren(), function(el) {
                 el.destroy();
             });
             this.setParent(undefined);
-            this.__parented_destroyed = true;
+            lib.DestroyableMixin.destroy.call(this);
         }
-    };
+    });
 
     return lib;
 })();
