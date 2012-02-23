@@ -1065,12 +1065,10 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
     }
 });
 
-openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebClient */{
+openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClient */{
     /**
      * @constructs openerp.web.WebClient
-     * @extends openerp.web.OldWidget
-     *
-     * @param element_id
+     * @extends openerp.web.Widget
      */
     init: function(parent) {
         var self = this;
@@ -1079,11 +1077,9 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
 
         this._current_state = null;
     },
-    render_element: function() {
-        this.$element.addClass("openerp openerp2");
-    },
     start: function() {
         var self = this;
+        this.$element.addClass("openerp openerp2");
         if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
             this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
@@ -1123,7 +1119,7 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
         var self = this;
         this.destroy_content();
         this.show_common();
-        self.$table = $(QWeb.render("Interface", {}));
+        self.$table = $(QWeb.render("WebClient", {}));
         self.$element.append(self.$table);
         self.header = new openerp.web.Header(self);
         self.header.on_logout.add(this.proxy('on_logout'));
