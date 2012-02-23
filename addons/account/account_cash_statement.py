@@ -213,7 +213,7 @@ class account_cash_statement(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context).type == 'cash':
             amount_total = 0.0
-            for line in vals.get('starting_details_ids',False):
+            for line in vals.get('starting_details_ids',[]):
                 if line and len(line)==3 and line[2]:
                     amount_total+= line[2]['pieces'] * line[2]['number']
             vals.update(balance_start= amount_total)
