@@ -275,19 +275,20 @@ class mail_thread(osv.osv):
                             context = context)
 
     # Message loading
-    def message_load_ids(self, cr, uid, ids, context=None):
+    def message_load_ids(self, cr, uid, ids, limit=50, offset=0, context=None):
         """ OpenSocial feature: return thread messages ids (for web compatibility)
         loading messages: search in mail.messages where res_id = ids, (res_)model = current model
         """
         msg_obj = self.pool.get('mail.message')
-        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', ids), ('model', '=', self._name)], context=context)
+        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', ids), ('model', '=', self._name)],
+            limit=limit, offset=offset, context=context)
         return msg_ids
         
-    def message_load(self, cr, uid, ids, context=None):
+    def message_load(self, cr, uid, ids, limit=50, offset=0, context=None):
         """ OpenSocial feature: return thread messages
         loading messages: search in mail.messages where res_id = ids, (res_)model = current model
         """
-        msg_ids = self.message_load_ids(cr, uid, ids, context=context)
+        msg_ids = self.message_load_ids(cr, uid, ids, limit=limit, offset=offset, context=context)
         return self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
 
     #------------------------------------------------------
