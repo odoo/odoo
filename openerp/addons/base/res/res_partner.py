@@ -189,6 +189,14 @@ class res_partner(osv.osv):
 
     def do_share(self, cr, uid, ids, *args):
         return True
+    
+    def onchange_address(self, cr, uid, ids, is_company_address, parent_id, context=None):
+        if is_company_address != False  and parent_id:
+            data = self.read(cr, uid, parent_id, ['street', 'street2', 'zip', 'city', 'email', 'phone', 'fax', 'mobile', 'country_id', 'state_id', 'website', 'ref', 'lang'], context=context)
+        else:
+            data = self.read(cr, uid, ids[0], ['street', 'street2', 'zip', 'city', 'email', 'phone', 'fax', 'mobile', 'country_id', 'state_id', 'website', 'ref', 'lang'], context=context)
+
+        return {'value': {'street': data['street'], 'street2':data['street2'], 'zip':data['zip'], 'city':data['city'], 'email':data['email'], 'phone':data['phone'], 'fax':data['fax'], 'mobile':data['mobile'], 'country_id':data['country_id'], 'state_id':data['state_id'], 'website':data['website'], 'ref':data['ref'], 'lang':data['lang']}}
 
     def _check_ean_key(self, cr, uid, ids, context=None):
         for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
