@@ -212,25 +212,12 @@ class account_cash_statement(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context).type == 'cash':
-            open_close = self._get_cash_open_close_box_lines(cr, uid, context)
-            if vals.get('starting_details_ids', False):
-                for start in vals.get('starting_details_ids'):
-                    dict_val = start[2]
-                    for end in open_close['end']:
-                       if end[2]['pieces'] == dict_val['pieces']:
-                           end[2]['number'] += dict_val['number']
-            vals.update({
-#                'ending_details_ids': open_close['start'],
-                'starting_details_ids': open_close['end']
-            })
-        else:
-            vals.update({
-                'ending_details_ids': False,
-                'starting_details_ids': False
-            })
-        res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)
-        self.write(cr, uid, [res_id], {})
-        return res_id
+            amount_total = 0.0
+            for line in vals.get('starting_details_ids',False):
+                if line and len(line)==3 and line[2]:
+                    amount_total+= line[2]['pieces'] * line[2]['number']
+            vals.update(balance_start= amount_total)
+        return super(account_cash_statement, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         """
