@@ -34,31 +34,6 @@ class sale_config_picking_policy(osv.osv_memory):
     _inherit = 'res.config'
 
     _columns = {
-        'name': fields.char('Name', size=64),
-        'sale_orders': fields.boolean('Based on Sales Orders',),
-        'deli_orders': fields.boolean('Based on Delivery Orders'),
-        'task_work': fields.boolean('Based on Tasks\' Work'),
-        'timesheet': fields.boolean('Based on Timesheet'),
-        'order_policy': fields.selection([
-            ('manual', 'Invoice Based on Sales Orders'),
-            ('picking', 'Invoice Based on Deliveries'),
-        ], 'Main Method Based On', required=True, help="You can generate invoices based on sales orders or based on shippings."),
-        'charge_delivery': fields.boolean('Do you charge the delivery?'),
-        'picking_policy' : fields.boolean("Deliver all products at once?"),
-        'group_sale_pricelist_per_customer':fields.boolean("Activate pricelist to manage prices per customer "),
-        'group_sale_uom_per_product':fields.boolean("Allow different unit of measure per product"),
-        'group_sale_delivery_address':fields.boolean(" Allow delivery address different from invoice address"),
-        'group_sale_disc_per_sale_order_line':fields.boolean("Allow to apply discounts per sale order lines "),
-        'group_sale_notes_subtotal':fields.boolean("Allow notes and subtotals"),
-        'group_sale_alerts_per_customer_products':fields.boolean("Allow to define alerts by products or customers"),
-        'tax_value' : fields.float('Value'),
-        'tax_policy': fields.selection([
-            ('no_tax', 'No Tax'),
-            ('global_on_order', 'Global On Order'),
-            ('on_order_line', 'On Order Lines'),
-        ], 'Taxes'),
-        'sale_margin' : fields.boolean("Display Margin For Users"),
-        'sale_journal' : fields.boolean("Invoice_journal?"),
         'analytic_user_function' : fields.boolean("Use specific User function on Contract/analytic accounts"),
         'analytic_journal_billing_rate' : fields.boolean("Manage Different billing rates on contract/analytic accounts"),
         'import_sugarcrm' : fields.boolean("Import data from sugarCRM?"),
@@ -82,10 +57,16 @@ class sale_config_picking_policy(osv.osv_memory):
         'plugin_outlook': fields.boolean('Push your email from Outlook to an OpenERP document'),
 
     }
+
+    def default_module_get(self, cr, uid, ids, context=None):
+        #TODO: Need to be implemented
+        print "Not Implemented!"
+        return {}
+
     _defaults = {
-        'order_policy': 'manual',
-        'tax_policy': 'no_tax',
         'type': 'pop',
+        'google_map': default_module_get,
+        'crm_caldav': default_module_get,
     }
     
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
@@ -100,13 +81,13 @@ class sale_config_picking_policy(osv.osv_memory):
         values['port'] = port
         return {'value':values}
 
-    def onchange_order(self, cr, uid, ids, sale, deli, context=None):
-        res = {}
-        if sale:
-            res.update({'order_policy': 'manual'})
-        elif deli:
-            res.update({'order_policy': 'picking'})
-        return {'value':res}
+#    def onchange_order(self, cr, uid, ids, sale, deli, context=None):
+#        res = {}
+#        if sale:
+#            res.update({'order_policy': 'manual'})
+#        elif deli:
+#            res.update({'order_policy': 'picking'})
+#        return {'value':res}
 
     def execute(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
