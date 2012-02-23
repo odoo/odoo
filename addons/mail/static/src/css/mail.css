@@ -1,24 +1,31 @@
-/** ThreadView widget **/
+/* Wall */
 
-.oe_mail_main {
-    overflow: auto;
-    padding: 5px 5px 5px 5px;
-}
-
-.oe_mail_wall_main {
+.oe_mail_wall {
     overflow: auto;
     padding: 5px 5px 5px 5px;
 }
 
 /* 2 columns view */
-.oe_mail_main_left {
+.oe_mail_wall_left {
     float: left;
     width: 65%;
 }
 
-.oe_mail_main_right {
+.oe_mail_wall_right {
     float: right;
     width: 34%;
+}
+
+.oe_mail_wall_thread_content {
+    margin-left: 5%;
+}
+
+
+/* Thread */
+
+.oe_mail_thread_main {
+    overflow: auto;
+    padding: 5px 5px 5px 5px;
 }
 
 /* Left-side CSS */
@@ -26,12 +33,58 @@
     margin-bottom: 10px;
 }
 
-.oe_mail_post_comment {
+.oe_mail_followers {
     margin-bottom: 10px;
+}
+
+.oe_mail_followers_action, .oe_mail_followers_display {
+}
+
+/* 2 columns view */
+.oe_mail_thread_left {
+    float: left;
+    width: 65%;
+}
+
+.oe_mail_thread_right {
+    float: right;
+    width: 34%;
 }
 
 .oe_mail_button_follow, .oe_mail_button_unfollow, .oe_mail_button_followers {
     width: 120px;
+}
+
+/* Subscribers */
+.oe_mail_followers_vignette {
+    float: left;
+    width: 20%%;
+}
+
+.oe_mail_followers_vignette img {
+    width: 80%;
+}
+
+/* ThreadDisplay */
+
+.oe_mail_thread {
+}
+
+.oe_mail_thread_act {
+}
+
+.oe_mail_thread_display {
+}
+
+.oe_mail_thread_msg, .oe_mail_thread_act {
+    white-space: normal;
+    margin-bottom: 5px;
+}
+
+.oe_mail_thread_msg:after, .oe_mail_thread_act:after {
+  content: "";
+  display: block;
+  clear: both; 
 }
 
 .oe_mail_button_comment {
@@ -44,27 +97,10 @@
     padding: 5px;
 }
 
-.oe_mail_action_comment {
-}
-
-.oe_mail_msg {
-}
-
-.oe_mail_comment {
-    white-space: normal;
-    margin-bottom: 5px;
-}
-
-.oe_mail_comment:after {
-  content: "";
-  display: block;
-  clear: both; 
-}
-
 .oe_mail_msg_image {
     float: left;
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     text-align: center;
     overflow: hidden;
     -moz-border-radius: 3px;
@@ -79,14 +115,14 @@
 }
 
 .oe_mail_msg_image img {
-    width: 100px;
+    width: 60px;
     height: auto;
     clip: rect(10px, 100px, 110px, 0px);
 }
 
 .oe_mail_msg_content {
-    width: 85%;
-    margin-left: 15%;
+    width: 89%;
+    margin-left: 11%;
 }
 
 .oe_mail_msg_p {
@@ -108,19 +144,3 @@
 .oe_mail_msg_date, .oe_mail_msg_date a {
     color: #4E43E7;
 }
-
-/* Right-side CSS */
-.oe_mail_followers_vignette {
-    float: left;
-    width: 20%%;
-}
-
-.oe_mail_followers_vignette img {
-    width: 80%;
-}
-
-/* Wall CSS */
-.oe_mail_thread_content div.oe_mail_comment {
-    margin-left: 5%;
-}
-
