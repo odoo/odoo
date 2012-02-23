@@ -64,7 +64,7 @@
 		<para style="nospace"><xsl:value-of select="state"/></para>
 		<para style="nospace"><xsl:value-of select="country"/></para>
 		<xsl:if test="position() &lt; last()">
-		<nextFrame/>
+			<nextFrame/>
 		</xsl:if>
 	</xsl:template>
 	
