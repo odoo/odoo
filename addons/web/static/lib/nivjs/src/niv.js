@@ -97,35 +97,35 @@ niv = (function() {
 
     lib.DestroyableMixin = {
         isDestroyed : function() {
-            return this.__destroyable_destroyed;
+            return this.__destroyableDestroyed;
         },
         destroy : function() {
-            this.__destroyable_destroyed = true;
+            this.__destroyableDestroyed = true;
         }
     };
 
     lib.ParentedMixin = _.extend({}, lib.DestroyableMixin, {
-        __parented_mixin : true,
+        __parentedMixin : true,
         setParent : function(parent) {
             if (this.getParent()) {
-                if (this.getParent().__parented_mixin) {
-                    this.getParent().__parented_children = _.without(this
+                if (this.getParent().__parentedMixin) {
+                    this.getParent().__parentedChildren = _.without(this
                             .getParent().getChildren(), this);
                 }
-                this.__parented_parent = undefined;
+                this.__parentedParent = undefined;
             }
-            this.__parented_parent = parent;
-            if (parent && parent.__parented_mixin) {
-                if (!parent.__parented_children)
-                    parent.__parented_children = [];
-                parent.__parented_children.push(this);
+            this.__parentedParent = parent;
+            if (parent && parent.__parentedMixin) {
+                if (!parent.__parentedChildren)
+                    parent.__parentedChildren = [];
+                parent.__parentedChildren.push(this);
             }
         },
         getParent : function() {
-            return this.__parented_parent;
+            return this.__parentedParent;
         },
         getChildren : function() {
-            return this.__parented_children ? _.clone(this.__parented_children)
+            return this.__parentedChildren ? _.clone(this.__parentedChildren)
                     : [];
         },
         destroy : function() {
@@ -136,15 +136,21 @@ niv = (function() {
             lib.DestroyableMixin.destroy.call(this);
         }
     });
+    
+    lib.internal = {};
 
     /*
-     * We steal backbone's events :)
+     * Yes, we steal Backbone's events :)
+     * 
+     * This class just handle the dispatching of events, it is not meant to be extended,
+     * nor used directly. All integration with parenting and automatic unregistration of
+     * events is done in EventDispatcherMixin.
      */
     // (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.
     // Backbone may be freely distributed under the MIT license.
     // For all details and documentation:
     // http://backbonejs.org
-    lib.EventDispatcher = lib.Class.extend({
+    lib.internal.Events = lib.Class.extend({
 
         // Bind an event, specified by a string name, `ev`, to a `callback`
         // function. Passing `"all"` will bind the callback to all events fired.
@@ -222,7 +228,7 @@ niv = (function() {
                 });
             }
             // Traverse each list, stopping when the saved tail is reached.
-            rest = slice.call(arguments, 1);
+            rest = Array.prototype.slice.call(arguments, 1);
             while (node = events.pop()) {
                 tail = node.tail;
                 args = node.event ? [ node.event ].concat(rest) : rest;
@@ -231,12 +237,32 @@ niv = (function() {
                 }
             }
             return this;
+        }
+    });
+    
+    var checkEventDispatcher = function(ev) {
+        if (!ev.__events) {
+            ev.__events = new lib.internal.Events();
+            ev.__registeredEvents = [];
+        }
+    };
+    lib.EventDispatcherMixin = _.extend({}, lib.ParentedMixin, {
+        __eventDispatcherMixin: true,
+        bind: function(eventName, object, func) {
+            checkEventDispatcher(this);
+            this.__events.on(eventName, func, object);
+            if (object && object.__eventDispatcherMixin) {
+                checkEventDispatcher(object);
+                object.__registeredEvents.push({name: eventName, func: func, source: this});
+            }
         },
-        bind: function() {
-            return this.on.apply(this, arguments);
-        },
-        unbind: function() {
-            return this.on.apply(this, arguments);
+        destroy: function() {
+            checkEventDispatcher(this);
+            _.each(this.__registeredEvents, _.bind(function(event) {
+                event.source.__events.off(event.name, event.func, this);
+            }, this));
+            this.__events.off(); // to ease garbage collector's duty
+            lib.ParentedMixin.destroy.call(this);
         }
     });
 

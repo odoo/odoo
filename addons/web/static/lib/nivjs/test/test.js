@@ -37,3 +37,19 @@ test("ParentedMixin works", function() {
     x.destroy();
     equal(true, y.isDestroyed());
 });
+
+module("Events");
+
+test("Events works", function() {
+    var x = new niv.internal.Events();
+    var tmp = 0;
+    var fct = function() {tmp = 1;};
+    x.on("test", fct);
+    equal(0, tmp);
+    x.trigger("test");
+    equal(1, tmp);
+    tmp = 0;
+    x.off("test", fct);
+    x.trigger("test");
+    equal(0, tmp);
+});
