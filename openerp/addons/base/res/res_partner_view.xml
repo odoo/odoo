@@ -428,7 +428,12 @@
                 <kanban>
                     <field name="color"/>
                     <field name="name"/>
+                    <field name="title"/>
                     <field name="email"/>
+                    <field name="parent_id"/>
+                    <field name="is_company"/>
+                    <field name="function"/>
+                    <field name="phone"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
@@ -439,6 +444,8 @@
                                             <tr>
                                                 <td class="oe_kanban_title1" align="left" valign="middle">
                                                     <field name="name"/>
+                                                    <t t-if="record.name.raw_value and record.title.raw_value">,</t>
+                                                    <field name="title"/>
                                                 </td>
                                                 <td valign="top" width="22">
                                                     <img t-att-src="kanban_gravatar(record.email.value, 22)" class="oe_kanban_gravatar"/>
@@ -450,18 +457,21 @@
                                         <table class="oe_kanban_table">
                                             <tr>
                                                 <td valign="top" width="64" align="left">
-                                                    <img src="/base/static/src/img/kanban_partner.png" width="64" height="64"/>
+                                                    <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" width="64" height="64"/>
                                                 </td>
                                                 <td valign="top" align="left">
                                                     <div class="oe_kanban_title2">
-                                                        <field name="title"/>
-                                                        <t t-if="record.title.raw_value and record.country.raw_value">,</t>
-                                                        <!--field name="country"/-->
+                                                        <t t-if="record.parent_id.raw_value">
+                                                            <field name="parent_id"/>
+                                                        </t>
+                                                        <t t-if="record.is_company.raw_value">
+                                                            <field name="country_id"/>
+                                                        </t>
                                                     </div>
                                                     <div class="oe_kanban_title3">
-                                                        <field name="subname"/>
-                                                        <t t-if="record.subname.raw_value and record.function.raw_value">,</t>
-                                                        <field name="function"/>
+                                                        <t t-if="record.function.raw_value">
+                                                            <field name="function"/>
+                                                        </t>
                                                     </div>
                                                     <div class="oe_kanban_title3">
                                                         <i><field name="email"/>
