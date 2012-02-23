@@ -108,6 +108,7 @@ class res_partner_bank(osv.osv):
             value = ''
         if not context.get('address'):
             return value
+
         for address in self.pool.get('res.partner').resolve_o2m_commands_to_record_dicts(
             cursor, user, 'address', context['address'], ['type', field], context=context):
 
@@ -218,11 +219,11 @@ class res_partner_bank(osv.osv):
         if partner_id:
             part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             result['owner_name'] = part.name
-            result['street'] = part and part.street or False
-            result['city'] = part and part.city or False
-            result['zip'] =  part and part.zip or False
-            result['country_id'] =  part and part.country_id and part.country_id.id or False
-            result['state_id'] = part and part.state_id and part.state_id.id or False
+            result['street'] = part.street or False
+            result['city'] = part.city or False
+            result['zip'] =  part.zip or False
+            result['country_id'] =  part.country_id.id
+            result['state_id'] = part.state_id.id
         return {'value': result}
 
 res_partner_bank()

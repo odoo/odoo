@@ -272,19 +272,21 @@ class res_partner(osv.osv):
     def address_get(self, cr, uid, ids, adr_pref=None):
         if adr_pref is None:
             adr_pref = ['default']
-        address_ids = self.search(cr, uid, [('parent_id', 'in', ids)])
-        address_rec = self.read(cr, uid, address_ids, ['type'])
-        res = list((addr['type'],addr['id']) for addr in address_rec)
-        adr = dict(res)
+        # retrieve addresses from the partner itself and its children
+        res = []
+        for p in self.browse(cr, uid, ids, context):
+            res.append((p.type, p.id))
+            res.extend((c.type, c.id) for c in p.child_ids)
+        addr = dict(reversed(res))
         # get the id of the (first) default address if there is one,
         # otherwise get the id of the first address in the list
         if res:
-            default_address = adr.get('default', res[0][1])
+            default_address = addr.get('default', res[0][1])
         else:
             default_address = False
         result = {}
         for a in adr_pref:
-            result[a] = adr.get(a, default_address)
+            result[a] = addr.get(a, default_address)
         return result
 
     def gen_next_ref(self, cr, uid, ids):
