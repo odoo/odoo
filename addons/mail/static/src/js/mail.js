@@ -18,6 +18,7 @@ openerp.mail = function(session) {
             this.res_model = params['res_model'];
             this.res_id = params['res_id'];
             this.uid = params['uid'];
+            this.records = params['records'] || false;
             /* DataSets */
             this.ds = new session.web.DataSet(this, this.res_model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
@@ -43,7 +44,8 @@ openerp.mail = function(session) {
             });
             /* display user, fetch comments */
             this.display_current_user();
-            this.fetch_comments();
+            if (this.records == false) this.fetch_comments();
+            else this.display_comments(this.records);
         },
         
         stop: function () {
@@ -228,7 +230,7 @@ openerp.mail = function(session) {
             this._super(parent);
             this.filter_search = params['filter_search'];
             /* DataSets */
-            this.ds_msg = new session.web.DataSet(this, 'mail.message');
+            this.ds_thread = new session.web.DataSet(this, 'mail.thread');
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
 
@@ -244,7 +246,7 @@ openerp.mail = function(session) {
         },
 
         fetch_comments: function () {
-            var load_res = this.ds_msg.call('get_pushed_messages', [[this.session.uid]]).then(
+            var load_res = this.ds_thread.call('get_pushed_messages', [[this.session.uid]]).then(
                 this.proxy('display_comments'));
             return load_res;
         },
@@ -261,7 +263,9 @@ openerp.mail = function(session) {
                         'record_id': id,
                     });
                     $('<div class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('div.oe_mail_wall_threads'));
-                    self.thread_display = new mail.ThreadDisplay(self, {'res_model': model, 'res_id': parseInt(id), 'uid': self.session.uid});
+                    self.thread_display = new mail.ThreadDisplay(self,
+                        {'res_model': model, 'res_id': parseInt(id), 'uid': self.session.uid, 'records': record_id}
+                        );
                     self.thread_display.appendTo(self.$element.find('div.oe_mail_wall_thread_content:last'));
                 });
             });

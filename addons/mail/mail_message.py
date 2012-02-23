@@ -204,18 +204,6 @@ class mail_message(osv.osv):
         msg_id = super(mail_message, self).create(cr, uid, vals, context)
         return msg_id
     
-    def get_pushed_messages(self, cr, uid, ids, filter_search=False, context=None):
-        """OpenSocial: wall: get messages to display (=pushed notifications)
-            :param filter_search: TODO
-            :return: list of mail.messages, unsorted
-        """
-        notification_obj = self.pool.get('mail.notification')
-        notification_ids = notification_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
-        notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
-        msg_ids = [notification.message_id.id for notification in notifications]
-        msgs = self.read(cr, uid, msg_ids, context=context)
-        return msgs
-    
     #------------------------------------------------------
     # E-Mail api
     #------------------------------------------------------

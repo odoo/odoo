@@ -284,13 +284,25 @@ class mail_thread(osv.osv):
             limit=limit, offset=offset, context=context)
         return msg_ids
         
-    def message_load(self, cr, uid, ids, limit=50, offset=0, context=None):
+    def message_load(self, cr, uid, ids, limit=5, offset=0, context=None):
         """ OpenSocial feature: return thread messages
         loading messages: search in mail.messages where res_id = ids, (res_)model = current model
         """
         msg_ids = self.message_load_ids(cr, uid, ids, limit=limit, offset=offset, context=context)
         return self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
-
+    
+    def get_pushed_messages(self, cr, uid, ids, filter_search=False, limit=5, offset=0, context=None):
+        """OpenSocial: wall: get messages to display (=pushed notifications)
+            :param filter_search: TODO
+            :return: list of mail.messages, unsorted
+        """
+        notification_obj = self.pool.get('mail.notification')
+        notification_ids = notification_obj.search(cr, uid, [('user_id', '=', uid)], limit=limit, offset=offset, context=context)
+        notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
+        msg_ids = [notification.message_id.id for notification in notifications]
+        msgs = self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
+        return msgs
+    
     #------------------------------------------------------
     # Email specific
     #------------------------------------------------------
