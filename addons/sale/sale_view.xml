@@ -501,68 +501,71 @@
         <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5" groups="base.group_extended"/>
         <menuitem id="menu_invoicing_sales_order_lines" parent="base.menu_invoiced" action="action_order_line_tree2" sequence="2" groups="base.group_no_one"/>
 
-        <!-- configartion view -->
+        <!-- Configartion View -->
 
-        <record id="view_config_picking_policy_11" model="ir.ui.view">
-            <field name="name">Setup Your Invoicing Method</field>
+        <record id="view_config_picking_policy_sales" model="ir.ui.view">
+            <field name="name">Configure Sales Applications</field>
             <field name="model">sale.config.picking_policy</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_config_picking_policy_1"/>
+            <field name="inherit_id" ref="base.view_config_picking_policy"/>
             <field name="arch" type="xml">
-              <!--data>
-                < form position="attributes">
-                  <attribute name="string">Setup your Invoicing Method</attribute>
-                </form>
-
-                <xpath expr="//separator[@string=&quot;title&quot;]" position="attributes">
-                    <attribute name="string">Setup your Invoicing Method</attribute>
-                </xpath>
-                <xpath expr="//label[@string='description']" position="attributes">
-                    <attribute name="string">This tool will help you to install the right module and configure the system according to the method you use to invoice your customers.</attribute>
-                </xpath-->
-                <field name="picking_policy" position="before">
-                    <newline/>
-                    <field name="time_unit" />
-                    <newline/>
-                </field>
-                <!--group string="res_config_contents" position="replace">
-                    <group colspan="4" col="4">
-                       <field name="sale_orders" on_change="onchange_order(sale_orders,deli_orders)"/>
-                       <newline/>
-                       <field name="deli_orders" on_change="onchange_order(sale_orders,deli_orders)"/>
-                       <newline/>
-                       <field name="task_work"/>
-                       <newline/>
-                       <field name="timesheet"/>
-                       <newline/>
-                       <separator string="Options" colspan="4"/>
-                       <field name="order_policy" attrs="{'invisible':['|',('sale_orders','!=',True),('deli_orders','!=',True)]}"/>
-                       <newline/>
-                       <field name="charge_delivery" attrs="{'invisible':[('sale_orders','!=',True), ('deli_orders','!=',True)]}"/>
-                       <newline/>
-                       <field name="time_unit" widget="selection" domain="[('category_id','=',%(product.uom_categ_wtime)s)]" attrs="{'invisible':[('task_work','=',False),('timesheet','=',False)]}"/>
+                <xpath expr="//form/separator[@string='Contracts']" position="before">
+                    <separator string="Picking and Invoice Policy" colspan="4"/>
+                    <group  colspan="4" col="8">
+                        <group  colspan="4" col="4">
+                           <field name="sale_orders" on_change="onchange_order(sale_orders,deli_orders)"/>
+                           <newline/>
+                           <field name="deli_orders" on_change="onchange_order(sale_orders,deli_orders)"/>
+                           <newline/>
+                           <field name="task_work"/>
+                           <newline/>
+                           <field name="timesheet"/>
+                           <newline/>
+                        </group>
+                        <group colspan="4" col="4">
+                            <newline/>
+                            <field name="order_policy" attrs="{'invisible':['|',('sale_orders','!=',True),('deli_orders','!=',True)]}"/>
+                            <newline/>
+                            <field name="charge_delivery" attrs="{'invisible':[('sale_orders','!=',True), ('deli_orders','!=',True)]}"/>
+                            <newline/>
+                            <field name="picking_policy" attrs="{'invisible':[('deli_orders','!=',True)]}"/>
+                            <newline/>
+                            <field name="time_unit" attrs="{'invisible':[('task_work','!=',True),('timesheet','!=',True)]}"/>
+                        </group>
                     </group>
-                 </group>
-              </data-->
+                    
+                    <separator string="Sale Order" colspan="4"/>
+                    <group  colspan="4" col="8">
+                        <group  colspan="4" col="4">
+                           <field name="group_sale_pricelist_per_customer"/>
+                           <newline/>
+                           <group colspan="4" col="4">
+                                <field name="tax_policy" align="0.0"/>
+                                <field name="tax_value" nolabel="1" align="0.0"/>
+                           </group>
+                           <newline/>
+                           <field name="sale_margin"/>
+                           <newline/>
+                           <field name="group_sale_alerts_per_customer_products"/>
+                           <newline/>
+                        </group>
+                        <group colspan="4" col="4">
+                            <newline/>
+                            <field name="group_sale_uom_per_product"/>
+                            <newline/>
+                            <field name="group_sale_delivery_address"/>
+                            <newline/>
+                            <field name="group_sale_disc_per_sale_order_line"/>
+                            <newline/>
+                            <field name="group_sale_notes_subtotal"/>
+                            <newline/>
+                            <field name="sale_journal"/>
+                            <newline/>
+                        </group>
+                    </group>
+                </xpath>
             </field>
         </record>
-
-        <!--record id="action_config_picking_policy" model="ir.actions.act_window">
-            <field name="name">Setup your Invoicing Method</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.config.picking_policy</field>
-            <field name="view_id" ref="view_config_picking_policy"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <register configuration wizard >
-        <record id="config_wizard_step_sale_picking_policy" model="ir.actions.todo">
-            <field name="action_id" ref="action_config_picking_policy"/>
-            <field name="category_id" ref="base.category_sales_management_config"/>
-            <field name="type">once</field>
-        </record-->
 
     </data>
 </openerp>
