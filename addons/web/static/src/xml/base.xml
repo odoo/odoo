@@ -21,8 +21,9 @@
     <div class="oe_webclient">
         <div class="oe_topbar">
             <div class="oe_menu_placeholder"/>
+            <div class="oe_dropdown_menu_placeholder"/>
         </div>
-        <div id="oe_header" class="header"></div>
+        <div id="oe_header" class="header" style="display: none"></div>
         <div class="oe_leftbar">
             <!--
             <a href="#" class="oe_logo"><img src="img/logo.png"/></a>
@@ -407,6 +408,22 @@
             <t t-call="Menu.secondary.children"/>
         </t>
     </div>
+</t>
+
+<t t-name="DropDownMenu">
+    <ul class="oe_dropdown_menu oe_topbar_item">
+        <li class="oe_dropdown">
+            <a href="#" class="oe_dropdown_toggle">
+                <img class="oe_topbar_avatar" src="http://www.amigrave.com/ClarkGableSmall.jpg"/>
+                Clark Gable
+            </a>
+            <ul class="oe_dropdown_options">
+                <!--<li><a href="#" data-menu="profile">Profile</a></li>-->
+                <li><a href="#" data-menu="settings">Settings</a></li>
+                <li><a href="#" data-menu="logout">Log out</a></li>
+            </ul>
+        </li>
+    </ul>
 </t>
 
 <t t-name="ViewManager">

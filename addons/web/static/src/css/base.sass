@@ -51,7 +51,6 @@
     position: relative
 
     a
-        color: #4c4c4c
         text-decoration: none
     // }}}
 
@@ -73,7 +72,6 @@
         @include vertical-gradient(#646060, #262626)
 
         .oe_topbar_item
-            float: left
             li
                 float: left
                 a
@@ -126,6 +124,69 @@
             font-weight: bold
             color: white
             @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+    // }}}
+
+    // DropDown Menu {{{
+    .oe_dropdown_menu
+        float: right
+        padding: 0
+        margin: 0
+        li
+            list-style-type: none
+            float: left
+        .oe_dropdown
+            position: relative
+
+        .dropdown-toggle:after
+            width: 0
+            height: 0
+            display: inline-block
+            content: "&darr"
+            text-indent: -99999px
+            vertical-align: top
+            margin-top: 8px
+            margin-left: 4px
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid white
+            @include opacity(0.5)
+
+        .oe_dropdown_options
+            float: left
+            background: #333
+            background: rgba(37,37,37,0.9)
+            display: none
+            position: absolute
+            top: 32px
+            right: -1px
+            border: 0
+            z-index: 900
+            width: 160px
+            margin-left: 0
+            margin-right: 0
+            padding: 6px 0
+            zoom: 1
+            border-color: #999
+            border-color: rgba(0, 0, 0, 0.2)
+            border-style: solid
+            border-width: 0 1px 1px
+            @include radius(0 0 6px 6px)
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+            @include background-clip()
+            li
+                float: none
+                display: block
+                background-color: none
+                a
+                    display: block
+                    padding: 4px 15px
+                    clear: both
+                    font-weight: normal
+                    line-height: 18px
+                    color: #eee
+                    &:hover
+                        @include vertical-gradient(#292929, #191919)
+                        @include box-shadow(none)
     // }}}
 
 .openerp

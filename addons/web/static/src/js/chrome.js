@@ -984,7 +984,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         return false;
     },
     do_hide_secondary: function() {
-        this.$secondary_menu.hide();
+        //this.$secondary_menu.hide();
     },
     do_show_secondary: function($sub_menu, $main_menu) {
         var self = this;
@@ -1005,6 +1005,78 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         }
     },
     on_action: function(action) {
+    }
+});
+
+openerp.web.DropDownMenu =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
+    template: "DropDownMenu",
+    /**
+     * @constructs openerp.web.DropDownMenu
+     * @extends openerp.web.OldWidget
+     *
+     * @param parent
+     */
+    init: function(parent) {
+        this._super(parent);
+    },
+    start: function() {
+        var self = this;
+        this._super.apply(this, arguments);
+        $('html').bind('click', function() {
+            self.$element.find('.oe_dropdown_options').hide();
+        });
+        this.$element.find('.oe_dropdown_toggle').click(function() {
+            self.$element.find('.oe_dropdown_options').toggle();
+            return false;
+        });
+        this.$element.find('.oe_dropdown_options li a').click(function() {
+            var f = self['on_menu_' + $(this).data('menu')];
+            f && f();
+            self.$element.find('.oe_dropdown_options').hide();
+            return false;
+        });
+    },
+    on_menu_logout: function() {
+    },
+    on_menu_settings: function() {
+        var self = this;
+        var action_manager = new openerp.web.ActionManager(this);
+        var dataset = new openerp.web.DataSet (this,'res.users',this.context);
+        dataset.call ('action_get','',function (result){
+            self.rpc('/web/action/load', {action_id:result}, function(result){
+                action_manager.do_action(_.extend(result['result'], {
+                    res_id: self.session.uid,
+                    res_model: 'res.users',
+                    flags: {
+                        action_buttons: false,
+                        search_view: false,
+                        sidebar: false,
+                        views_switcher: false,
+                        pager: false
+                    }
+                }));
+            });
+        });
+        this.dialog = new openerp.web.Dialog(this,{
+            title: _t("Preferences"),
+            width: '700px',
+            buttons: [
+                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
+                {text: _t("Change password"), click: function(){ self.change_password(); }},
+                {text: _t("Save"), click: function(){
+                        var inner_viewmanager = action_manager.inner_viewmanager;
+                        inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
+                        .then(function() {
+                            self.dialog.destroy();
+                            // needs to refresh interface in case language changed
+                            window.location.reload();
+                        });
+                    }
+                }
+            ]
+        }).open();
+       action_manager.appendTo(this.dialog);
+       action_manager.render(this.dialog);
     }
 });
 
@@ -1071,6 +1143,9 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         self.menu = new openerp.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
         self.menu.on_action.add(this.proxy('on_menu_action'));
+        self.dropdown_menu = new openerp.web.DropDownMenu(self);
+        self.dropdown_menu.replace(this.$element.find('.oe_dropdown_menu_placeholder'));
+        self.dropdown_menu.on_menu_logout.add(this.proxy('on_logout'));
     },
     show_common: function() {
         var self = this;
