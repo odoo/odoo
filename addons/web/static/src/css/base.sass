@@ -1,3 +1,47 @@
-// vim:tabstop=4:shiftwidth=4:softtabstop=4
+// Mixins {{{
+@mixin vertical-gradient($startColor: #555, $endColor: #333)
+    background: $startColor
+    background: -moz-linear-gradient($startColor, $endColor)
+    background: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor))
+    background: -webkit-linear-gradient($startColor, $endColor)
+
+@mixin radial-gradient($gradient)
+    background-position: center center
+    background-image: radial-gradient($gradient)
+    background-image: -moz-radial-gradient($gradient)
+    background-image: -webkit-radial-gradient(circle, $gradient)
+
+@mixin radius($radius: 5px)
+    -moz-border-radius: $radius
+    -webkit-border-radius: $radius
+    border-radius: $radius
+
+@mixin box-shadow($bsval: 0px 1px 4px #777)
+    -moz-box-shadow: $bsval
+    -webkit-box-shadow: $bsval
+    -box-shadow: $bsval
+
+@mixin transition($transval: (border linear 0.2s, box-shadow linear 0.2s))
+    -webkit-transition: $transval
+    -moz-transition: $transval
+    -ms-transition: $transval
+    -o-transition: $transval
+    transition: $transval
+
+@mixin opacity($opacity: .5)
+    filter: alpha(opacity=$opacity * 100)
+    -khtml-opacity: $opacity
+    -moz-opacity: $opacity
+    opacity: $opacity
+
+@mixin background-clip($clip: padding-box)
+    -webkit-background-clip: $clip
+    -moz-background-clip: $clip
+    background-clip: $clip
+// }}}
+
 .openerp2
     // Minh's playground.
+
+// au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
+// vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

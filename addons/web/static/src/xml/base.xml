@@ -18,15 +18,24 @@
     </div>
 </t>
 <t t-name="WebClient">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
-    <tr>
-        <td colspan="2" valign="top">
+    <div class="oe_webclient">
+        <div class="oe_topbar">
             <div id="oe_header" class="header"></div>
             <div id="oe_menu" class="menu"></div>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" valign="top" height="100%">
+        </div>
+        <div class="oe_leftbar">
+            <!--
+            <a href="#" class="oe_logo"><img src="img/logo.png"/></a>
+
+            <div class="oe_secondary_menu"/>
+
+            <div class="oe_footer">
+                Powered by <a href="http://www.openerp.com" class="openerp"><span class="red">Open</span>ERP</a>
+            </div>
+            -->
+        </div>
+        <div class="oe_application">
+            <!-- This table will be removed as soon as we decide what will happen to the sidebar -->
             <table cellspacing="0" cellpadding="0" border="0" height="100%" width="100%">
             <tr>
                 <td valign="top" id="oe_secondary_menu" class="secondary_menu"></td>
@@ -36,16 +45,9 @@
                 </td>
             </tr>
             </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <div id="oe_footer" class="oe_footer">
-                <p class="oe_footer_powered">Powered by <a href="http://www.openerp.com">OpenERP</a></p>
-            </div>
-        </td>
-    </tr>
-    </table>
+
+        </div>
+    </div>
 </t>
 <t t-name="Loading">
     <div id="oe_loading">
