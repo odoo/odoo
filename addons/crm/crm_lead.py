@@ -189,7 +189,6 @@ class crm_lead(crm_case, osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', type='char', size=64),
 
 
@@ -266,75 +265,97 @@ class crm_lead(crm_case, osv.osv):
     def stage_find_won(self, cr, uid, section_id):
         return self.stage_find_percent(cr, uid, 100.0, section_id)
 
-    def case_open(self, cr, uid, ids, *args):
-        for l in self.browse(cr, uid, ids):
-            # When coming from draft override date and stage otherwise just set state
-            if l.state == 'draft':
-                if l.type == 'lead':
-                    message = _("The lead '%s' has been opened.") % l.name
-                elif l.type == 'opportunity':
-                    message = _("The opportunity '%s' has been opened.") % l.name
-                else:
-                    message = _("The case '%s' has been opened.") % l.name
-                self.log(cr, uid, l.id, message)
-                value = {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')}
-                self.write(cr, uid, [l.id], value)
-                if l.type == 'opportunity' and not l.stage_id:
-                    stage_id = self.stage_find(cr, uid, l.section_id.id or False, [('sequence','>',0)])
-                    if stage_id:
-                        self.stage_set(cr, uid, [l.id], stage_id)
-        res = super(crm_lead, self).case_open(cr, uid, ids, *args)
+    def _case_open_notification(self, lead, context=None):
+        if lead.state != 'draft':
+            return False
+        if lead.type == 'lead':
+            message = _("The lead <em>%s</em> has been opened and its state is now in progress. Salesman %s can now set this lead as pending, close it to mark it as done, or cancel it. If there is an opportunity to create from this lead, click on Convert to Opportunity.") % (lead.name, lead.user_id.name)
+        elif lead.type == 'opportunity':
+            message = _("The opportunity <em>%s</em> has been opened.") % lead.name
+        else:
+            message = _("The case <em>%s</em> has been opened.") % lead.name
+        lead.message_append_note('' ,message, need_action_user_id=lead.user_id.id)
+
+    def _case_close_notification(self, lead, context=None):
+        if lead[0].type == 'lead':
+            message = _("The lead <em>%s</em> has been closed.") % lead[0].name
+        else:
+            message = _("The case <em>%s</em> has been closed.") % lead[0].name
+
+        lead[0].message_append_note('' ,message, need_action_user_id=lead[0].user_id.id)
+
+    def _case_mark_lost_notification(self, lead, context=None):
+        message = _("The opportunity <em>%s</em> has been marked as lost.") % lead.name
+        lead.message_append_note('' ,message, need_action_user_id=lead.user_id.id)
+
+    def _case_mark_won_notification(self, lead, context=None):
+        message = _("The opportunity <em>%s</em> has been been won.") % lead.name
+        lead.message_append_note('' ,message, need_action_user_id=lead.user_id.id)
+
+    def _case_cancel_notification(self, lead, context=None):
+        message = _("The lead <em>%s</em> has been cancelled.") % (lead[0].name)
+        lead[0].message_append_note('' ,message, need_action_user_id=lead[0].user_id.id)
+
+    def _case_pending_notification(self, case, context=None):
+        message = _("The lead <em>%s</em> is pending.") % (case[0].name,)
+        case[0].message_append_note('' ,message, need_action_user_id=case[0].user_id.id)
+
+    def _case_escalate_notification(self, case, context=None):
+        message = _("The lead <em>%s</em> is pending.") % (case.name,)
+        case.message_append_note('' ,message, need_action_user_id=case.user_id.id)
+
+    def case_open(self, cr, uid, ids, context=None):
+        res = super(crm_lead, self).case_open(cr, uid, ids, context)
+        for lead in self.browse(cr, uid, ids, context=context):
+            value = {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')}
+            self.write(cr, uid, [lead.id], value)
+            if lead.type == 'opportunity' and not lead.stage_id:
+                stage_id = self.stage_find(cr, uid, lead.section_id.id or False, [('sequence','>',0)])
+                if stage_id:
+                    self.stage_set(cr, uid, [lead.id], stage_id)
         return res
 
-    def case_close(self, cr, uid, ids, *args):
-        res = super(crm_lead, self).case_close(cr, uid, ids, *args)
+    def case_close(self, cr, uid, ids, context=None):
+        res = super(crm_lead, self).case_close(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
-        for case in self.browse(cr, uid, ids):
-            if case.type == 'lead':
-                message = _("The lead '%s' has been closed.") % case.name
-            else:
-                message = _("The case '%s' has been closed.") % case.name
-            self.log(cr, uid, case.id, message)
         return res
 
-    def case_cancel(self, cr, uid, ids, *args):
+    def case_cancel(self, cr, uid, ids, context=None):
         """Overrides cancel for crm_case for setting probability
         """
-        res = super(crm_lead, self).case_cancel(cr, uid, ids, args)
+        res = super(crm_lead, self).case_cancel(cr, uid, ids, context)
         self.write(cr, uid, ids, {'probability' : 0.0})
         return res
 
-    def case_reset(self, cr, uid, ids, *args):
+    def case_reset(self, cr, uid, ids, context=None):
         """Overrides reset as draft in order to set the stage field as empty
         """
-        res = super(crm_lead, self).case_reset(cr, uid, ids, *args)
+        res = super(crm_lead, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'stage_id': False, 'probability': 0.0})
         return res
 
-    def case_mark_lost(self, cr, uid, ids, *args):
+    def case_mark_lost(self, cr, uid, ids, context=None):
         """Mark the case as lost: state = done and probability = 0%
         """
-        res = super(crm_lead, self).case_close(cr, uid, ids, *args)
+        res = super(crm_lead, self).case_close(cr, uid, ids, context)
         self.write(cr, uid, ids, {'probability' : 0.0})
-        for l in self.browse(cr, uid, ids):
-            stage_id = self.stage_find_lost(cr, uid, l.section_id.id or False)
+        for lead in self.browse(cr, uid, ids):
+            stage_id = self.stage_find_lost(cr, uid, lead.section_id.id or False)
             if stage_id:
-                self.stage_set(cr, uid, [l.id], stage_id)
-            message = _("The opportunity '%s' has been marked as lost.") % l.name
-            self.log(cr, uid, l.id, message)
+                self.stage_set(cr, uid, [lead.id], stage_id)
+            self._case_mark_lost_notification(lead, context=context)
         return res
 
-    def case_mark_won(self, cr, uid, ids, *args):
+    def case_mark_won(self, cr, uid, ids, context=None):
         """Mark the case as lost: state = done and probability = 0%
         """
-        res = super(crm_lead, self).case_close(cr, uid, ids, *args)
+        res = super(crm_lead, self).case_close(cr, uid, ids, context=None)
         self.write(cr, uid, ids, {'probability' : 100.0})
-        for l in self.browse(cr, uid, ids):
-            stage_id = self.stage_find_won(cr, uid, l.section_id.id or False)
+        for lead in self.browse(cr, uid, ids):
+            stage_id = self.stage_find_won(cr, uid, lead.section_id.id or False)
             if stage_id:
-                self.stage_set(cr, uid, [l.id], stage_id)
-            message = _("The opportunity '%s' has been been won.") % l.name
-            self.log(cr, uid, l.id, message)
+                self.stage_set(cr, uid, [lead.id], stage_id)
+            self._case_mark_won_notification(lead, context=context)
         return res
 
     def set_priority(self, cr, uid, ids, priority):
@@ -342,12 +363,12 @@ class crm_lead(crm_case, osv.osv):
         """
         return self.write(cr, uid, ids, {'priority' : priority})
 
-    def set_high_priority(self, cr, uid, ids, *args):
+    def set_high_priority(self, cr, uid, ids, context=None):
         """Set lead priority to high
         """
         return self.set_priority(cr, uid, ids, '1')
 
-    def set_normal_priority(self, cr, uid, ids, *args):
+    def set_normal_priority(self, cr, uid, ids, context=None):
         """Set lead priority to normal
         """
         return self.set_priority(cr, uid, ids, '3')
@@ -782,7 +803,7 @@ class crm_lead(crm_case, osv.osv):
                 #re-open
                 values.update(state=crm.AVAILABLE_STATES[1][0])
                 if not case.date_open:
-                    values['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT) 
+                    values['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
 
