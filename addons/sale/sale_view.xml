@@ -503,14 +503,14 @@
 
         <!-- configartion view -->
 
-        <record id="view_config_picking_policy" model="ir.ui.view">
+        <record id="view_config_picking_policy_11" model="ir.ui.view">
             <field name="name">Setup Your Invoicing Method</field>
             <field name="model">sale.config.picking_policy</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_view_base"/>
+            <field name="inherit_id" ref="base.view_config_picking_policy_1"/>
             <field name="arch" type="xml">
-              <data>
-                <form position="attributes">
+              <!--data>
+                < form position="attributes">
                   <attribute name="string">Setup your Invoicing Method</attribute>
                 </form>
 
@@ -519,12 +519,13 @@
                 </xpath>
                 <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">This tool will help you to install the right module and configure the system according to the method you use to invoice your customers.</attribute>
-                </xpath>
-                <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-                    <attribute name="string"/>
-                    <attribute name="rowspan">12</attribute>
-                </xpath>
-                <group string="res_config_contents" position="replace">
+                </xpath-->
+                <field name="picking_policy" position="before">
+                    <newline/>
+                    <field name="time_unit" />
+                    <newline/>
+                </field>
+                <!--group string="res_config_contents" position="replace">
                     <group colspan="4" col="4">
                        <field name="sale_orders" on_change="onchange_order(sale_orders,deli_orders)"/>
                        <newline/>
@@ -542,11 +543,11 @@
                        <field name="time_unit" widget="selection" domain="[('category_id','=',%(product.uom_categ_wtime)s)]" attrs="{'invisible':[('task_work','=',False),('timesheet','=',False)]}"/>
                     </group>
                  </group>
-              </data>
+              </data-->
             </field>
         </record>
 
-        <record id="action_config_picking_policy" model="ir.actions.act_window">
+        <!--record id="action_config_picking_policy" model="ir.actions.act_window">
             <field name="name">Setup your Invoicing Method</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.config.picking_policy</field>
@@ -556,12 +557,12 @@
             <field name="target">new</field>
         </record>
 
-        <!-- register configuration wizard -->
+        <register configuration wizard >
         <record id="config_wizard_step_sale_picking_policy" model="ir.actions.todo">
             <field name="action_id" ref="action_config_picking_policy"/>
             <field name="category_id" ref="base.category_sales_management_config"/>
             <field name="type">once</field>
-        </record>
+        </record-->
 
     </data>
 </openerp>
