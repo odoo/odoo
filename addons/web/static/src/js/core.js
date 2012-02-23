@@ -925,40 +925,6 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     }
 });
 
-openerp.web.ParentedMixin = {
-    __parented_mixin: true,
-    setParent: function(parent) {
-        if(this.getParent()) {
-            if (this.getParent().__parented_mixin) {
-                this.getParent().__parented_children = _.without(this.getParent().getChildren(), this);
-            }
-            this.__parented_parent = undefined;
-        }
-        this.__parented_parent = parent;
-        if(parent && parent.__parented_mixin) {
-            if (!parent.__parented_children)
-                parent.__parented_children = [];
-            parent.__parented_children.push(this);
-        }
-    },
-    getParent: function() {
-        return this.__parented_parent;
-    },
-    getChildren: function() {
-        return this.__parented_children ? _.clone(this.__parented_children) : [];
-    },
-    isDestroyed: function() {
-        return this.__parented_destroyed;
-    },
-    destroy: function() {
-        _.each(this.getChildren(), function(el) {
-            el.destroy();
-        });
-        this.setParent(undefined);
-        this.__parented_destroyed = true;
-    },
-};
-
 /**
  * Base class for all visual components. Provides a lot of functionalities helpful
  * for the management of a part of the DOM.
@@ -1007,7 +973,7 @@ openerp.web.ParentedMixin = {
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-openerp.web.Widget = openerp.web.CallbackEnabled.extend(openerp.web.ParentedMixin).extend(/** @lends openerp.web.Widget# */{
+openerp.web.Widget = openerp.web.CallbackEnabled.extend(niv.ParentedMixin).extend(/** @lends openerp.web.Widget# */{
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
