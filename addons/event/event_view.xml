@@ -2,11 +2,8 @@
 <openerp>
     <data>
 
-        <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
-        <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17"/>
-
-        <menuitem name="Events Organisation" id="base.menu_event_main" parent="base.marketing_menu" />
-        <menuitem name="Events" id="base.menu_event_association" parent="base.menu_association" />
+       <menuitem  name="Events" id="base.main_menu"/>
+        <menuitem name="Events Organisation" id="base.menu_event_main" parent="base.main_menu" />
 
     <!-- EVENTS  -->
 
@@ -43,11 +40,8 @@
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.marketing_menu" sequence="30"/>
-        <menuitem name="Configuration" id="base.menu_marketing_config_association" parent="base.menu_association" sequence="30"/>
-
+        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.main_menu" sequence="30"/>
         <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root"/>
-        <menuitem name="Events Type" id="menu_event_type_association" action="action_event_type" parent="base.menu_marketing_config_association"/>
 
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
@@ -259,8 +253,6 @@
             view_type="form"/>
 
        <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="base.menu_event_main" />
-       <menuitem name="Events" id="menu_event_event_assiciation" action="action_event_view" parent="base.menu_event_association" />
-
 
         <!-- EVENTS/REGISTRATIONS/EVENTS  -->
         <record model="ir.ui.view" id="view_event_registration_tree">
@@ -423,15 +415,11 @@
         </record>
 
         <menuitem
-            name="Registrations"
+            name="registrations"
             id="menu_action_registration" parent="base.menu_event_main"
             action="action_registration"/>
 
-        <menuitem
-            name="Registrations"
-            id="menu_action_registration_association" parent="base.menu_event_association"
-            action="action_registration"/>
 
-        <menuitem name="Reporting" id="base.menu_report_association" parent="base.marketing_menu" sequence="20"/>
+        <menuitem name="Reporting" id="base.menu_report_association" parent="base.main_menu" sequence="20"/>
     </data>
 </openerp>
