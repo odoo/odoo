@@ -440,12 +440,12 @@ class Root(object):
         self.root = '/web/webclient/home'
         self.config = options
 
-        if self.config.backend == 'local':
-            conn = LocalConnector()
-        else:
-            conn = openerplib.get_connector(hostname=self.config.server_host,
-                   port=self.config.server_port)
-        self.config.connector = conn
+        if not hasattr(self.config, 'connector'):
+            if self.config.backend == 'local':
+                self.config.connector = LocalConnector()
+            else:
+                self.config.connector = openerplib.get_connector(
+                    hostname=self.config.server_host, port=self.config.server_port)
 
         self.session_cookie = 'sessionid'
         self.addons = {}
