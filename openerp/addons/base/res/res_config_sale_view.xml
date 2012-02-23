@@ -2,12 +2,13 @@
     <data>
 
         <record id="view_config_picking_policy_1" model="ir.ui.view">
-            <field name="name">Setup Your Invoicing Method</field>
+            <field name="name">Sales Application</field>
             <field name="model">sale.config.picking_policy</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sale Configuration">
-                    <group string="Picking and Invoice Policy" colspan="4" col="8">
+                    <separator string="Picking and Invoice Policy" colspan="4"/>
+                    <group  colspan="4" col="8">
 	                    <group  colspan="4" col="4">
 	                       <field name="sale_orders" on_change="onchange_order(sale_orders,deli_orders)"/>
 	                       <newline/>
@@ -29,12 +30,16 @@
 		                </group>
 	                </group>
 
-                    <group string="Sale Order" colspan="4" col="8">
+	                <separator string="Sale Order" colspan="4"/>
+
+                    <group  colspan="4" col="8">
                         <group  colspan="4" col="4">
                            <field name="group_sale_pricelist_per_customer"/>
                            <newline/>
-                           <field name="tax_policy"/>
-                           <field name="tax_value" nolabel="1"/>
+                           <group colspan="4" col="4">
+                                <field name="tax_policy" align="0.0"/>
+                                <field name="tax_value" nolabel="1" align="0.0"/>
+                           </group>
                            <newline/>
                            <field name="sale_margin"/>
                            <newline/>
@@ -56,7 +61,9 @@
                         </group>
                     </group>
 
-                    <group string="Contracts" colspan="4" col="8">
+                    <separator string="Contracts" colspan="4"/>
+
+                    <group  colspan="4" col="8">
                         <group  colspan="4" col="4">
                            <field name="analytic_user_function"/>
                            <newline/>
@@ -65,7 +72,9 @@
                         </group>
                     </group>
 
-                    <group string="Import and Synchronize data from an other application" colspan="4" col="8">
+                    <separator string="Import and Synchronize data from an other application" colspan="4"/>
+
+                    <group  colspan="4" col="8">
                         <group  colspan="4" col="4">
                            <field name="import_sugarcrm"/>
                            <newline/>
@@ -79,7 +88,9 @@
                         </group>
                     </group>
 
-                    <group string="Documents and Wiki" colspan="4" col="8">
+                    <separator string="Documents and Wiki" colspan="4"/>
+
+                    <group  colspan="4" col="8">
                         <group  colspan="4" col="4">
                            <newline/>
                            <field name="wiki_sale_faq" />
@@ -87,7 +98,9 @@
                         </group>
                     </group>
 
-                    <group string="Documents and Wiki" colspan="4" col="8">
+                    <separator string="Documents and Wiki" colspan="4"/>
+
+                    <group  colspan="4" col="8">
                         <group  colspan="4" col="4">
                            <newline/>
                            <field name="wiki_sale_faq" />
@@ -95,7 +108,9 @@
                         </group>
                     </group>
 
-                    <group string="Customer Form" colspan="4" col="8">
+                    <separator string="Customer Form" colspan="4"/>
+
+                    <group colspan="4" col="8">
                         <group  colspan="4" col="4">
                            <field name="crm_partner_assign"/>
                            <newline/>
@@ -113,7 +128,7 @@
         </record>
 
         <record id="action_config_picking_policy" model="ir.actions.act_window">
-            <field name="name">Setup your Invoicing Method</field>
+            <field name="name">Sales Application</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.config.picking_policy</field>
             <field name="view_id" ref="view_config_picking_policy_1"/>
