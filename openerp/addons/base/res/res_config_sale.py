@@ -44,7 +44,6 @@ class sale_config_picking_policy(osv.osv_memory):
             ('picking', 'Invoice Based on Deliveries'),
         ], 'Main Method Based On', required=True, help="You can generate invoices based on sales orders or based on shippings."),
         'charge_delivery': fields.boolean('Do you charge the delivery?'),
-        #'time_unit': fields.many2one('product.uom','Main Working Time Unit'),
         'picking_policy' : fields.boolean("Deliver all products at once?"),
         'group_sale_pricelist_per_customer':fields.boolean("Activate pricelist to manage prices per customer "),
         'group_sale_uom_per_product':fields.boolean("Allow different unit of measure per product"),
@@ -60,12 +59,19 @@ class sale_config_picking_policy(osv.osv_memory):
         ], 'Taxes'),
         'sale_margin' : fields.boolean("Display Margin For Users"),
         'sale_journal' : fields.boolean("Invoice_journal?"),
+        'analytic_user_function' : fields.boolean("Use specific User function on Contract/analytic accounts"),
+        'analytic_journal_billing_rate' : fields.boolean("Manage Different billing rates on contract/analytic accounts"),
+        'import_sugarcrm' : fields.boolean("Import data from sugarCRM?"),
+        'import_google' : fields.boolean("Import Contacts & Meetings from Google"),
+        'crm_caldav' : fields.boolean("Use caldev to synchronize Meetings"),
+        'wiki_sale_faq' : fields.boolean("Install a sales FAQ?"),
+        'crm_partner_assign' : fields.boolean("Manage a several address per customer"),
+        'google_map' : fields.boolean("Google maps on customer"),
 
     }
     _defaults = {
         'order_policy': 'manual',
         'tax_policy': 'no_tax',
-        #'time_unit': lambda self, cr, uid, c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c) and self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c)[0] or False,
     }
 
     def onchange_order(self, cr, uid, ids, sale, deli, context=None):
