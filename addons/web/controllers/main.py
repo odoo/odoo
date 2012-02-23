@@ -113,6 +113,57 @@ html_template = """<!DOCTYPE html>
 </html>
 """
 
+def sass2scss(src):
+    # Validated by diff -u of sass2scss against:
+    # sass-convert -F sass -T scss openerp.sass openerp.scss
+    block = []
+    sass = ('', block)
+    reComment = re.compile(r'//.*$')
+    reIndent = re.compile(r'^\s+')
+    reIgnore = re.compile(r'^\s*(//.*)?$')
+    reFixes = { re.compile(r'\(\((.*)\)\)') : r'(\1)', }
+    lastLevel = 0
+    prevBlocks = {}
+    for l in src.split('\n'):
+        l = l.rstrip()
+        if reIgnore.search(l): continue
+        l = reComment.sub('', l)
+        l = l.rstrip()
+        indent = reIndent.match(l)
+        level = indent.end() if indent else 0
+        l = l[level:]
+        if level>lastLevel:
+            prevBlocks[lastLevel] = block
+            newBlock = []
+            block[-1] = (block[-1], newBlock)
+            block = newBlock
+        elif level<lastLevel:
+            block = prevBlocks[level]
+        lastLevel = level
+        if not l: continue
+        # Fixes
+        for ereg, repl in reFixes.items():
+            l = ereg.sub(repl if type(repl)==str else repl(), l)
+        block.append(l)
+
+    def write(sass, level=-1):
+        out = ""
+        indent = '  '*level
+        if type(sass)==tuple:
+            if level>=0:
+                out += indent+sass[0]+" {\n"
+            for e in sass[1]:
+                out += write(e, level+1)
+            if level>=0:
+                out = out.rstrip(" \n")
+                out += ' }\n'
+            if level==0:
+                out += "\n"
+        else:
+            out += indent+sass+";\n"
+        return out
+    return write(sass)
+
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
 
