@@ -449,7 +449,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
             submitHandler: function (form) {
                 var $form = $(form),
                     fields = $form.serializeArray(),
-                    $db_list = $form.find('select[name=drop_db]'),
+                    $db_list = $form.find('[name=drop_db]'),
                     db = $db_list.val();
 
                 if (!confirm("Do you really want to delete the database: " + db + " ?")) {
