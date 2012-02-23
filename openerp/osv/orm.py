@@ -2733,6 +2733,50 @@ class BaseModel(object):
         _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
             source_table, source_field, dest_model._table, ondelete)
 
+    def _drop_constraint(self, cr, source_table, constraint_name):
+        cr.execute("ALTER TABLE %s DROP CONSTRAINT %s" % (source_table,constraint_name))
+
+    def _m2o_fix_foreign_key(self, cr, source_table, source_field, dest_model, ondelete):
+        # Find FK constraint(s) currently established for the m2o field,
+        # and see whether they are stale or not 
+        cr.execute("""SELECT confdeltype as ondelete_rule, conname as constraint_name,
+                             cl2.relname as foreign_table
+                      FROM pg_constraint as con, pg_class as cl1, pg_class as cl2,
+                           pg_attribute as att1, pg_attribute as att2
+                      WHERE con.conrelid = cl1.oid 
+                        AND cl1.relname = %s 
+                        AND con.confrelid = cl2.oid 
+                        AND array_lower(con.conkey, 1) = 1 
+                        AND con.conkey[1] = att1.attnum 
+                        AND att1.attrelid = cl1.oid 
+                        AND att1.attname = %s 
+                        AND array_lower(con.confkey, 1) = 1 
+                        AND con.confkey[1] = att2.attnum 
+                        AND att2.attrelid = cl2.oid 
+                        AND att2.attname = %s 
+                        AND con.contype = 'f'""", (source_table, source_field, 'id'))
+        constraints = cr.dictfetchall()
+        if constraints:
+            if len(constraints) == 1:
+                # Is it the right constraint?
+                cons, = constraints 
+                if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
+                    or cons['foreign_table'] != dest_model._table:
+                    _schema.debug("Table '%s': dropping obsolete FK constraint: '%s'",
+                                  source_table, cons['constraint_name'])
+                    self._drop_constraint(cr, source_table, cons['constraint_name'])
+                    self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
+                # else it's all good, nothing to do!
+            else:
+                # Multiple FKs found for the same field, drop them all, and re-create
+                for cons in constraints:
+                    _schema.debug("Table '%s': dropping duplicate FK constraints: '%s'",
+                                  source_table, cons['constraint_name'])
+                    self._drop_constraint(cr, source_table, cons['constraint_name'])
+                self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
+
+
+
     def _auto_init(self, cr, context=None):
         """
 
@@ -2932,31 +2976,8 @@ class BaseModel(object):
 
                             if isinstance(f, fields.many2one):
                                 dest_model = self.pool.get(f._obj)
-                                ref = dest_model._table
-                                if ref != 'ir_actions':
-                                    cr.execute('SELECT confdeltype, conname FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, '
-                                                'pg_attribute as att1, pg_attribute as att2 '
-                                            'WHERE con.conrelid = cl1.oid '
-                                                'AND cl1.relname = %s '
-                                                'AND con.confrelid = cl2.oid '
-                                                'AND cl2.relname = %s '
-                                                'AND array_lower(con.conkey, 1) = 1 '
-                                                'AND con.conkey[1] = att1.attnum '
-                                                'AND att1.attrelid = cl1.oid '
-                                                'AND att1.attname = %s '
-                                                'AND array_lower(con.confkey, 1) = 1 '
-                                                'AND con.confkey[1] = att2.attnum '
-                                                'AND att2.attrelid = cl2.oid '
-                                                'AND att2.attname = %s '
-                                                "AND con.contype = 'f'", (self._table, ref, k, 'id'))
-                                    res2 = cr.dictfetchall()
-                                    if res2:
-                                        if res2[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get((f.ondelete or 'set null').upper(), 'a'):
-                                            cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res2[0]['conname'] + '"')
-                                            self._m2o_add_foreign_key_checked(k, dest_model, f.ondelete)
-                                            cr.commit()
-                                            _schema.debug("Table '%s': column '%s': XXX",
-                                                self._table, k)
+                                if dest_model._table != 'ir_actions':
+                                    self._m2o_fix_foreign_key(cr, self._table, k, dest_model, f.ondelete)
 
                     # The field doesn't exist in database. Create it if necessary.
                     else:
@@ -3152,6 +3173,9 @@ class BaseModel(object):
         _sql_constraints.
 
         """
+        def unify_cons_text(txt):
+            return txt.lower().replace(', ',',').replace(' (','(')
+
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
 
@@ -3181,7 +3205,7 @@ class BaseModel(object):
                 # constraint does not exists:
                 sql_actions['add']['execute'] = True
                 sql_actions['add']['msg_err'] = sql_actions['add']['msg_err'] % (sql_actions['add']['query'], )
-            elif con.lower() not in [item['condef'].lower() for item in existing_constraints]:
+            elif unify_cons_text(con) not in [unify_cons_text(item['condef']) for item in existing_constraints]:
                 # constraint exists but its definition has changed:
                 sql_actions['drop']['execute'] = True
                 sql_actions['drop']['msg_ok'] = sql_actions['drop']['msg_ok'] % (existing_constraints[0]['condef'].lower(), )
