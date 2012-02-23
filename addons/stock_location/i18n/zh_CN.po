@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2011-05-04 10:22+0000\n"
-"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-02-08 03:39+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:48+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -120,10 +120,19 @@ msgid "Conditions"
 msgstr "条件"
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_product_product
-#: field:product.pulled.flow,product_id:0
-msgid "Product"
-msgstr "产品"
+#: model:stock.location,name:stock_location.location_pack_zone
+msgid "Pack Zone"
+msgstr "装箱区"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_b
+msgid "Gate B"
+msgstr "B 大门"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_a
+msgid "Gate A"
+msgstr "A 大门"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -136,6 +145,11 @@ msgid "Pushed flows"
 msgstr "推式流"
 
 #. module: stock_location
+#: model:stock.location,name:stock_location.location_dispatch_zone
+msgid "Dispatch Zone"
+msgstr "派件区"
+
+#. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
 msgstr "库存调拨"
@@ -146,10 +160,10 @@ msgid "Pulled flows"
 msgstr "拉式流"
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr "账簿"
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "公司"
 
 #. module: stock_location
 #: view:product.product:0
@@ -219,9 +233,20 @@ msgid ""
 msgstr "这些规则确定了产品在整个库位树的正确路径。"
 
 #. module: stock_location
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr "您不能将产品移动到该类型的视图中。"
+
+#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "手动操作"
+
+#. module: stock_location
+#: model:ir.model,name:stock_location.model_product_product
+#: field:product.pulled.flow,product_id:0
+msgid "Product"
+msgstr "产品"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
@@ -259,6 +284,11 @@ msgstr "产品"
 #, python-format
 msgid "Pulled from another location via procurement %d"
 msgstr "通过需求%d 拉到另一个库位"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.stock_location_qualitytest0
+msgid "Quality Control"
+msgstr "质量控制"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
@@ -339,9 +369,9 @@ msgid ""
 msgstr "根据公司,选择您是收货还是发货"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
+#: model:stock.location,name:stock_location.location_order
+msgid "Order Processing"
+msgstr "订单处理"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -354,10 +384,10 @@ msgid "Location Paths"
 msgstr "库位路径"
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr "公司"
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "账簿"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
@@ -384,26 +414,8 @@ msgstr "已开票"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "无效的视图结构xml文件!"
 
-#~ msgid "Gate A"
-#~ msgstr "A 大门"
-
-#~ msgid "Quality Control"
-#~ msgstr "质量控制"
-
-#~ msgid "Gate B"
-#~ msgstr "B 大门"
-
-#~ msgid "Dispatch Zone"
-#~ msgstr "派件区"
-
-#~ msgid "Order Processing"
-#~ msgstr "订单处理"
-
 #~ msgid "Warehouse Locations Paths"
 #~ msgstr "仓库库位路径"
-
-#~ msgid "Pack Zone"
-#~ msgstr "装箱区"
 
 #~ msgid ""
 #~ "\n"

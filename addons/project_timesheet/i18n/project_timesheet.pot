@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Project-Id-Version: OpenERP Server 6.1rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-02-08 00:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -94,8 +94,7 @@ msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
-msgid "Year"
+msgid "Timesheet/Task hours Report Per Month"
 msgstr ""
 
 #. module: project_timesheet
@@ -116,6 +115,12 @@ msgstr ""
 #. module: project_timesheet
 #: field:report.timesheet.task.user,task_hrs:0
 msgid "Task Hours"
+msgstr ""
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:0
+#: field:report.timesheet.task.user,year:0
+msgid "Year"
 msgstr ""
 
 #. module: project_timesheet
@@ -286,10 +291,8 @@ msgid "Task hours of last month"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:59
-#, python-format
-msgid "No product defined on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
 msgstr ""
 
 #. module: project_timesheet
@@ -318,13 +321,16 @@ msgid "Partner"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
+#: code:addons/project_timesheet/project_timesheet.py:247
+#, python-format
+msgid "Invalid Analytic Account !"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
+#: code:addons/project_timesheet/project_timesheet.py:59
+#, python-format
+msgid "No product defined on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
 msgstr ""
 
 #. module: project_timesheet
@@ -344,6 +350,12 @@ msgstr ""
 #. module: project_timesheet
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:247
+#, python-format
+msgid "You cannot select a Analytic Account which is in Close or Cancelled state"
 msgstr ""
 
 #. module: project_timesheet

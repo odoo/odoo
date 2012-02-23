@@ -49,6 +49,21 @@ class account_fiscalyear_close(osv.osv_memory):
         @param ids: List of Account fiscalyear close state’s IDs
 
         """
+        def _reconcile_fy_closing(cr, uid, ids, context=None):
+            """
+            This private function manually do the reconciliation on the account_move_line given as `ids´, and directly 
+            through psql. It's necessary to do it this way because the usual `reconcile()´ function on account.move.line
+            object is really resource greedy (not supposed to work on reconciliation between thousands of records) and 
+            it does a lot of different computation that are useless in this particular case.
+            """
+            #check that the reconcilation concern journal entries from only one company
+            cr.execute('select distinct(company_id) from account_move_line where id in %s',(tuple(ids),))
+            if len(cr.fetchall()) > 1:
+                raise osv.except_osv(_('Warning !'), _('The entries to reconcile should belong to the same company'))
+            r_id = self.pool.get('account.move.reconcile').create(cr, uid, {'type': 'auto'})
+            cr.execute('update account_move_line set reconcile_id = %s where id in %s',(r_id, tuple(ids),))
+            return r_id
+
         obj_acc_period = self.pool.get('account.period')
         obj_acc_fiscalyear = self.pool.get('account.fiscalyear')
         obj_acc_journal = self.pool.get('account.journal')
@@ -78,6 +93,7 @@ class account_fiscalyear_close(osv.osv_memory):
 
         new_journal = data[0].journal_id.id
         new_journal = obj_acc_journal.browse(cr, uid, new_journal, context=context)
+        company_id = new_journal.company_id.id
 
         if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
             raise osv.except_osv(_('UserError'),
@@ -105,6 +121,7 @@ class account_fiscalyear_close(osv.osv_memory):
             'name': '/',
             'ref': '',
             'period_id': period.id,
+            'date': period.date_start,
             'journal_id': new_journal.id,
         }
         move_id = obj_acc_move.create(cr, uid, vals, context=context)
@@ -116,9 +133,9 @@ class account_fiscalyear_close(osv.osv_memory):
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
             WHERE a.active
               AND a.type != 'view'
-              AND t.close_method = %s''', ('unreconciled', ))
+              AND a.company_id = %s
+              AND t.close_method = %s''', (company_id, 'unreconciled', ))
         account_ids = map(lambda x: x[0], cr.fetchall())
-
         if account_ids:
             cr.execute('''
                 INSERT INTO account_move_line (
@@ -130,11 +147,11 @@ class account_fiscalyear_close(osv.osv_memory):
                   (SELECT name, create_uid, create_date, write_uid, write_date,
                      statement_id, %s,currency_id, date_maturity, partner_id,
                      blocked, credit, 'draft', debit, ref, account_id,
-                     %s, date, %s, amount_currency, quantity, product_id, company_id
+                     %s, (%s) AS date, %s, amount_currency, quantity, product_id, company_id
                    FROM account_move_line
                    WHERE account_id IN %s
                      AND ''' + query_line + '''
-                     AND reconcile_id IS NULL)''', (new_journal.id, period.id, move_id, tuple(account_ids),))
+                     AND reconcile_id IS NULL)''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
 
             #We have also to consider all move_lines that were reconciled
             #on another fiscal year, and report them too
@@ -149,7 +166,7 @@ class account_fiscalyear_close(osv.osv_memory):
                      b.name, b.create_uid, b.create_date, b.write_uid, b.write_date,
                      b.statement_id, %s, b.currency_id, b.date_maturity,
                      b.partner_id, b.blocked, b.credit, 'draft', b.debit,
-                     b.ref, b.account_id, %s, b.date, %s, b.amount_currency,
+                     b.ref, b.account_id, %s, (%s) AS date, %s, b.amount_currency,
                      b.quantity, b.product_id, b.company_id
                      FROM account_move_line b
                      WHERE b.account_id IN %s
@@ -157,7 +174,7 @@ class account_fiscalyear_close(osv.osv_memory):
                        AND b.period_id IN ('''+fy_period_set+''')
                        AND b.reconcile_id IN (SELECT DISTINCT(reconcile_id)
                                           FROM account_move_line a
-                                          WHERE a.period_id IN ('''+fy2_period_set+''')))''', (new_journal.id, period.id, move_id, tuple(account_ids),))
+                                          WHERE a.period_id IN ('''+fy2_period_set+''')))''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
 
         #2. report of the accounts with defferal method == 'detail'
         cr.execute('''
@@ -166,7 +183,8 @@ class account_fiscalyear_close(osv.osv_memory):
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
             WHERE a.active
               AND a.type != 'view'
-              AND t.close_method = %s''', ('detail', ))
+              AND a.company_id = %s
+              AND t.close_method = %s''', (company_id, 'detail', ))
         account_ids = map(lambda x: x[0], cr.fetchall())
 
         if account_ids:
@@ -180,11 +198,11 @@ class account_fiscalyear_close(osv.osv_memory):
                   (SELECT name, create_uid, create_date, write_uid, write_date,
                      statement_id, %s,currency_id, date_maturity, partner_id,
                      blocked, credit, 'draft', debit, ref, account_id,
-                     %s, date, %s, amount_currency, quantity, product_id, company_id
+                     %s, (%s) AS date, %s, amount_currency, quantity, product_id, company_id
                    FROM account_move_line
                    WHERE account_id IN %s
                      AND ''' + query_line + ''')
-                     ''', (new_journal.id, period.id, move_id, tuple(account_ids),))
+                     ''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
 
 
         #3. report of the accounts with defferal method == 'balance'
@@ -194,7 +212,8 @@ class account_fiscalyear_close(osv.osv_memory):
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
             WHERE a.active
               AND a.type != 'view'
-              AND t.close_method = %s''', ('balance', ))
+              AND a.company_id = %s
+              AND t.close_method = %s''', (company_id, 'balance', ))
         account_ids = map(lambda x: x[0], cr.fetchall())
 
         query_1st_part = """
@@ -239,9 +258,8 @@ class account_fiscalyear_close(osv.osv_memory):
         #reconcile all the move.line of the opening move
         ids = obj_acc_move_line.search(cr, uid, [('journal_id', '=', new_journal.id),
             ('period_id.fiscalyear_id','=',new_fyear.id)])
-        context['fy_closing'] = True
         if ids:
-            reconcile_id = obj_acc_move_line.reconcile(cr, uid, ids, context=context)
+            reconcile_id = _reconcile_fy_closing(cr, uid, ids, context=context)
             #set the creation date of the reconcilation at the first day of the new fiscalyear, in order to have good figures in the aged trial balance
             self.pool.get('account.move.reconcile').write(cr, uid, [reconcile_id], {'create_date': new_fyear.date_start}, context=context)
 

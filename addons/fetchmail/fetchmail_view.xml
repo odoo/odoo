@@ -34,7 +34,7 @@
                         <page string="Server &amp; Login">
                             <group col="2" colspan="2" attrs="{'invisible' : [('type', '=', 'local')]}">
                                 <separator string="Server Information" colspan="2"/>
-                                <field name="server" colspan="4" attrs="{'required' : [('type', '!=', 'local')]}" />
+                                <field name="server" colspan="2" attrs="{'required' : [('type', '!=', 'local')]}" />
                                 <field name="port" required="1" attrs="{'required' : [('type', '!=', 'local')]}" />
                                 <field name="is_ssl" select="1" on_change="onchange_server_type(type, is_ssl)"/>
                             </group>
@@ -100,11 +100,11 @@
         </record>
 
         <menuitem
-            parent="base.next_id_15"
+            parent="base.menu_email"
             id="menu_action_fetchmail_server_tree"
             action="action_email_server_tree"
             name="Incoming Mail Servers"
-            sequence="40"
+            sequence="14"
         />
 
       <record model="ir.ui.view" id="email_message_tree_view">

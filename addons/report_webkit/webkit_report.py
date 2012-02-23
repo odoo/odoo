@@ -32,12 +32,14 @@
 
 import subprocess
 import os
+import sys
 import report
 import tempfile
 import time
 import logging
 
 from mako.template import Template
+from mako.lookup import TemplateLookup
 from mako import exceptions
 
 import netsvc
@@ -56,58 +58,54 @@ def mako_template(text):
 
     This template uses UTF-8 encoding
     """
-    # default_filters=['unicode', 'h'] can be used to set global filters
-    return Template(text, input_encoding='utf-8', output_encoding='utf-8')
-
+    tmp_lookup  = TemplateLookup() #we need it in order to allow inclusion and inheritance
+    return Template(text, input_encoding='utf-8', output_encoding='utf-8', lookup=tmp_lookup)
 
 class WebKitParser(report_sxw):
     """Custom class that use webkit to render HTML reports
        Code partially taken from report openoffice. Thanks guys :)
     """
-
     def __init__(self, name, table, rml=False, parser=False,
         header=True, store=False):
         self.parser_instance = False
-        self.localcontext={}
+        self.localcontext = {}
         report_sxw.__init__(self, name, table, rml, parser,
             header, store)
 
-    def get_lib(self, cursor, uid, company) :
+    def get_lib(self, cursor, uid):
         """Return the lib wkhtml path"""
-        #TODO Detect lib in system first
-        path = self.pool.get('res.company').read(cursor, uid, company, ['lib_path',])
-        path = path['lib_path']
-        if not path:
-            raise except_osv(
-                             _('Wkhtmltopdf library path is not set in company'),
-                             _('Please install executable on your system'+
-                             ' (sudo apt-get install wkhtmltopdf) or download it from here:'+
-                             ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+
-                             ' path to the executable on the Company form.'+
-                             'Minimal version is 0.9.9')
-                            )
-        if os.path.isabs(path) :
-            if (os.path.exists(path) and os.access(path, os.X_OK)\
-                and os.path.basename(path).startswith('wkhtmltopdf')):
-                return path
-            else:
-                raise except_osv(
-                                _('Wrong Wkhtmltopdf path set in company'+
-                                'Given path is not executable or path is wrong'),
-                                'for path %s'%(path)
-                                )
-        else :
-            raise except_osv(
-                            _('path to Wkhtmltopdf is not absolute'),
-                            'for path %s'%(path)
-                            )
+        proxy = self.pool.get('ir.config_parameter')
+        webkit_path = proxy.get_param(cursor, uid, 'webkit_path')
+
+        if not webkit_path:
+            try:
+                defpath = os.environ.get('PATH', os.defpath).split(os.pathsep)
+                if hasattr(sys, 'frozen'):
+                    defpath.append(os.getcwd())
+                    if tools.config['root_path']:
+                        defpath.append(os.path.dirname(tools.config['root_path']))
+                webkit_path = tools.which('wkhtmltopdf', path=os.pathsep.join(defpath))
+            except IOError:
+                webkit_path = None
+
+        if webkit_path:
+            return webkit_path
+
+        raise except_osv(
+                         _('Wkhtmltopdf library path is not set'),
+                         _('Please install executable on your system' \
+                         ' (sudo apt-get install wkhtmltopdf) or download it from here:' \
+                         ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the' \
+                         ' path in the ir.config_parameter with the webkit_path key.' \
+                         'Minimal version is 0.9.9')
+                        )
+
     def generate_pdf(self, comm_path, report_xml, header, footer, html_list, webkit_header=False):
         """Call webkit in order to generate pdf"""
         if not webkit_header:
             webkit_header = report_xml.webkit_header
         tmp_dir = tempfile.gettempdir()
-        out = report_xml.name+str(time.time())+'.pdf'
-        out = os.path.join(tmp_dir, out.replace(' ',''))
+        out_filename = tempfile.mktemp(suffix=".pdf", prefix="webkit.tmp.")
         files = []
         file_to_del = []
         if comm_path:
@@ -161,8 +159,7 @@ class WebKitParser(report_sxw):
             html_file.close()
             file_to_del.append(html_file.name)
             command.append(html_file.name)
-        command.append(out)
-        generate_command = ' '.join(command)
+        command.append(out_filename)
         try:
             status = subprocess.call(command, stderr=subprocess.PIPE) # ignore stderr
             if status :
@@ -174,18 +171,18 @@ class WebKitParser(report_sxw):
             for f_to_del in file_to_del :
                 os.unlink(f_to_del)
 
-        pdf = file(out, 'rb').read()
+        pdf = file(out_filename, 'rb').read()
         for f_to_del in file_to_del :
             os.unlink(f_to_del)
 
-        os.unlink(out)
+        os.unlink(out_filename)
         return pdf
 
     def translate_call(self, src):
         """Translate String."""
         ir_translation = self.pool.get('ir.translation')
         res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid,
-                                         self.name, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
+                                         None, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
         if not res :
             return src
         return res
@@ -298,7 +295,7 @@ class WebKitParser(report_sxw):
                 logger.error(msg)
                 raise except_osv(_('Webkit render'), msg)
             return (deb, 'html')
-        bin = self.get_lib(cursor, uid, company.id)
+        bin = self.get_lib(cursor, uid)
         pdf = self.generate_pdf(bin, report_xml, head, foot, htmls)
         return (pdf, 'pdf')
 

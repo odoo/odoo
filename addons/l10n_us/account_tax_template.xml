@@ -1,0 +1,93 @@
+<openerp>
+    <data noupdate="1">
+        <!-- Taxes -->
+        <record id="otaxs" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_us.account_chart_template_basic"/>
+            <field name="name">default purchase tax</field>
+            <field eval="0.15" name="amount"/>
+            <field name="sequence">1</field>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="tax_code_purch_S"/>
+            <field name="tax_code_id" ref="tax_code_output_S"/>
+            <field name="ref_base_code_id" ref="tax_code_purch_S"/>
+            <field name="ref_tax_code_id" ref="tax_code_output_S"/>
+            <field name="type_tax_use">purchase</field>
+        </record>
+
+        <record id="otaxx" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_us.account_chart_template_basic"/>
+            <field name="name">Exempted Tax (Purchase)</field>
+            <field eval="0.0" name="amount"/>
+            <field name="sequence">10</field>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="tax_code_purch_X"/>
+            <field name="tax_code_id" ref="tax_code_output_X"/>
+            <field name="ref_base_code_id" ref="tax_code_purch_X"/>
+            <field name="ref_tax_code_id" ref="tax_code_output_X"/>
+            <field name="type_tax_use">purchase</field>
+        </record>
+
+        <!-- Sales + Input VAT -->
+
+        <record id="itaxs" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_us.account_chart_template_basic"/>
+            <field name="name">default sale tax</field>
+            <field eval="0.15" name="amount"/>
+            <field name="sequence">1</field>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="tax_code_sales_S"/>
+            <field name="tax_code_id" ref="tax_code_input_S"/>
+            <field name="ref_base_code_id" ref="tax_code_sales_S"/>
+            <field name="ref_tax_code_id" ref="tax_code_input_S"/>
+            <field name="type_tax_use">sale</field>
+        </record>
+
+        <record id="itaxx" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_us.account_chart_template_basic"/>
+            <field name="name">Exempted Tax (Sale)</field>
+            <field eval="0.0" name="amount"/>
+            <field name="sequence">10</field>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="tax_code_sales_X"/>
+            <field name="tax_code_id" ref="tax_code_input_X"/>
+            <field name="ref_base_code_id" ref="tax_code_sales_X"/>
+            <field name="ref_tax_code_id" ref="tax_code_input_X"/>
+            <field name="type_tax_use">sale</field>
+        </record>
+
+
+        <!-- = = = = = = = = = = = = = = = -->
+         <!-- Fiscal Mapping Templates     -->
+        <!-- = = = = = = = = = = = = = = = -->
+
+
+        <record id="fiscal_position_normal_taxes_template" model="account.fiscal.position.template">
+            <field name="name">Normal Taxes</field>
+            <field name="chart_template_id" ref="l10n_us.account_chart_template_basic"/>
+        </record>
+
+        <record id="fiscal_position_tax_exempt_template" model="account.fiscal.position.template">
+            <field name="name">Tax Exempt</field>
+            <field name="chart_template_id" ref="l10n_us.account_chart_template_basic"/>
+        </record>
+
+        <!-- = = = = = = = = = = = = = = = -->
+        <!-- Fiscal Position Tax Templates -->
+        <!-- = = = = = = = = = = = = = = = -->
+
+
+        <record id="fiscal_position_tax_exempt" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tax_exempt_template"/>
+            <field name="tax_src_id" ref="itaxs"/>
+            <field name="tax_dest_id" ref="itaxx"/>
+        </record>
+
+        <record id="fiscal_position_tax_exempt2" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tax_exempt_template"/>
+            <field name="tax_src_id" ref="otaxs"/>
+            <field name="tax_dest_id" ref="otaxx"/>
+        </record>
+
+    </data>
+</openerp>
+

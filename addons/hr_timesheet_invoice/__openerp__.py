@@ -55,7 +55,7 @@ reports, etc.""",
              'test/hr_timesheet_invoice_report.yml',
              ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0056091842381',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

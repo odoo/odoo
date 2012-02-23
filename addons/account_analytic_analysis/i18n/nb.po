@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-08-23 11:12+0000\n"
 "Last-Translator: Rolv Råen (adEgo) <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:50+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "No Account Manager"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -50,11 +45,11 @@ msgid "Pending contracts to renew with your customer"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:551
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:722
-#, python-format
-msgid "AccessError"
-msgstr "AccessError"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -166,13 +161,6 @@ msgid "Contracts to Renew"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
 msgstr "Teoretisk margin"
@@ -235,13 +223,6 @@ msgid "Invoiced Amount"
 msgstr "Fakturert beløp"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:552
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:723
-#, python-format
-msgid "You try to bypass an access rule (Document type: %s)."
-msgstr "Du forsøker å omgå en tilgangsregel (Dokumenttype: %s)."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
 msgstr "Dato for siste fakturerte kostnad"
@@ -260,13 +241,6 @@ msgstr "Virkelig margin (%)"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Virkelig margin"
-
-#. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "Feil! Valutaen må være lik valuaten til det valgte firmaet"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -366,6 +340,11 @@ msgid "Open"
 msgstr ""
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts that are not assigned to an account manager."
+msgstr ""
+
+#. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
@@ -392,6 +371,10 @@ msgstr ""
 
 #~ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 #~ msgstr "Beregnet med formelen: Maks. antall - totalt antall timer"
+
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "AccessError"
 
 #~ msgid "Date of the last invoice created for this analytic account."
 #~ msgstr "Dato for siste faktura for denne analytiske konto"
@@ -430,8 +413,17 @@ msgstr ""
 #~ msgid "report_account_analytic"
 #~ msgstr "report_account_analytic"
 
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "Du forsøker å omgå en tilgangsregel (Dokumenttype: %s)."
+
 #~ msgid "Invoiced Hours"
 #~ msgstr "Fakturerte timer"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "Feil! Valutaen må være lik valuaten til det valgte firmaet"
 
 #~ msgid ""
 #~ "Number of hours (from journal of type 'general') that can be invoiced if you "

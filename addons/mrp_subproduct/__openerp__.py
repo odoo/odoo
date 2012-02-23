@@ -48,7 +48,7 @@ With this module:
     'demo_xml': [],
     'test': ['test/mrp_subproduct.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0050060616733',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from base_calendar import base_calendar
+from .. import base_calendar
 from osv import fields, osv
 from tools.translate import _
 import tools

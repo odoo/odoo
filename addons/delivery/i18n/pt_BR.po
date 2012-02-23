@@ -6,20 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-03-07 17:48+0000\n"
-"Last-Translator: Alexsandro Haag <alexsandro.haag@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-16 01:26+0000\n"
+"Last-Translator: Márcio BUSTOS <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:53+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-17 04:58+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
 msgstr "Ref. da Ordem"
+
+#. module: delivery
+#: model:product.template,name:delivery.delivery_product_product_template
+msgid "Delivery by Poste"
+msgstr "Entrega por correio"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -36,12 +41,6 @@ msgstr "Peso líquido"
 #: view:stock.picking:0
 msgid "Delivery Order"
 msgstr "Ordem de Entrega"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No price available !"
-msgstr "Nenhum preço disponível!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -69,7 +68,7 @@ msgstr "Linha de Grade"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "Parceiro que está efetuando o serviço de entrega."
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -89,7 +88,7 @@ msgstr "Picking à ser faturado"
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "Preço Antecipado."
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
@@ -129,7 +128,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Quantidade"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -148,16 +147,15 @@ msgid "Delivery Method"
 msgstr "Método de Entrega"
 
 #. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No price available!"
+msgstr "Sem preço disponível!"
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr "Mov. de Estoque"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
-"Nenhuma linha corresponde a esta ordem na grade de entrega escolhida !"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
@@ -206,6 +204,8 @@ msgid ""
 "Define your delivery methods and their pricing. The delivery costs can be "
 "added on the sale order form or in the invoice, based on the delivery orders."
 msgstr ""
+"Defina o seu método de entrega e preço. Os custos de entrega podem ser "
+"adicionados no pedido de vendas ou na fatura, baseado nas ordens de entrega."
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -215,12 +215,18 @@ msgstr "Lote"
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "Transportadora"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
 msgstr "Grade de entrega"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:213
+#, python-format
+msgid "No line matched this product or order in the choosed delivery grid."
+msgstr ""
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -258,6 +264,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"Total da order para se beneficiar de entrega grátis, expresso na moeda da "
+"empresa."
 
 #. module: delivery
 #: code:addons/delivery/stock.py:89
@@ -285,10 +293,10 @@ msgid "To Zip"
 msgstr "Para o CEP"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:143
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "Default price"
-msgstr ""
+msgstr "Preço padrão"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_define_delivery_steps_wizard
@@ -298,7 +306,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr ""
+msgstr "Preço Normal"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -335,12 +343,16 @@ msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
 msgstr ""
+"Marque este checkbox se você quer gerenciar o preço de entrega que dependa "
+"do destino, do peso, do total do pedido, etc."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
+"Mantenha vazio se o preço depende de fatores avançados de preço por "
+"destinação da mercadoria."
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -348,7 +360,7 @@ msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid available !"
 msgstr "Sem grade disponível!"
@@ -359,8 +371,8 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "Order not in draft state !"
 msgstr "Ordem não está como rascunho!"
@@ -368,7 +380,7 @@ msgstr "Ordem não está como rascunho!"
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
 msgid "Choose Your Default Picking Policy"
-msgstr ""
+msgstr "Escolha a sua política padrao de separação"
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -404,7 +416,7 @@ msgstr "Preço de custo"
 #. module: delivery
 #: field:delivery.define.delivery.steps.wizard,picking_policy:0
 msgid "Picking Policy"
-msgstr ""
+msgstr "Politica de Separação"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -422,7 +434,7 @@ msgstr ""
 #. module: delivery
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "A referência deve ser única por empresa!"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -438,12 +450,12 @@ msgstr "Quantidade"
 #: view:delivery.define.delivery.steps.wizard:0
 #: model:ir.actions.act_window,name:delivery.action_define_delivery_steps
 msgid "Setup Your Picking Policy"
-msgstr ""
+msgstr "Defina a sua política padrao de separação"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form1
 msgid "Define Delivery Methods"
-msgstr ""
+msgstr "Defina o método de entrega"
 
 #. module: delivery
 #: help:delivery.carrier,free_if_more_than:0
@@ -451,6 +463,8 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
+"Se o pedido for maior que um certo valor, o cliente pode se beneficiar de "
+"uma entrega gratuíta"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
@@ -466,15 +480,15 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:131
+#: code:addons/delivery/delivery.py:130
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "Gratuíto se maior que %.2f"
 
 #. module: delivery
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "Referência de ordem deve ser única por empresa!"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -483,6 +497,9 @@ msgid ""
 "reinvoice the delivery costs when you are doing invoicing based on delivery "
 "orders"
 msgstr ""
+"Defina o método de entrega que você está usando e respectivo preço, para "
+"repassar dos custos de entrega quando você estiver fazendo a fatura baseada "
+"em ordens de entrega."
 
 #. module: delivery
 #: view:res.partner:0
@@ -502,7 +519,7 @@ msgstr "Você deve atribuir um lote de produção para este produto."
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If More Than"
-msgstr ""
+msgstr "Gratuíto se mais do que"
 
 #. module: delivery
 #: view:delivery.sale.order:0
@@ -544,7 +561,7 @@ msgid "Price"
 msgstr "Preço"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/wizard/delivery_sale_order.py:70
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "Sem grade correspondentes para esta transportadora!"
@@ -574,17 +591,17 @@ msgstr "A transportadora %s (id: %d) não possui grade de entrega!"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr ""
+msgstr "Informação do preço"
 
 #. module: delivery
 #: selection:delivery.define.delivery.steps.wizard,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Envia todos os produtos de um vez"
 
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "Preço avançado, baseado no destino"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -606,8 +623,8 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/wizard/delivery_sale_order.py:53
+#: code:addons/delivery/wizard/delivery_sale_order.py:73
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -616,7 +633,7 @@ msgstr ""
 #. module: delivery
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Erro! Você não pode criar recursiva a membros associados."
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -637,12 +654,12 @@ msgstr "Custos de Entrega"
 #. module: delivery
 #: selection:delivery.define.delivery.steps.wizard,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Entrega cada produto quando disponível"
 
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
@@ -682,11 +699,12 @@ msgstr "Tipo de Preço"
 #~ msgid "Packing to be invoiced"
 #~ msgstr "Embalagem a ser Faturada"
 
+#, python-format
+#~ msgid "No price available !"
+#~ msgstr "Nenhum preço disponível!"
+
 #~ msgid "Delivery method"
 #~ msgstr "Método de Entrega"
-
-#~ msgid "Delivery by Poste"
-#~ msgstr "Entrega por correio"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome de modelo inválido na definição da ação"
@@ -756,3 +774,8 @@ msgstr "Tipo de Preço"
 #~ "capaz de adicionar e somar a linha de frete.\n"
 #~ "\n"
 #~ "     "
+
+#, python-format
+#~ msgid "No line matched this order in the choosed delivery grids !"
+#~ msgstr ""
+#~ "Nenhuma linha corresponde a esta ordem na grade de entrega escolhida !"

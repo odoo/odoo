@@ -40,7 +40,7 @@ supplier in the routing of the assembly operation.
     'demo_xml': [],
     'test': ['test/stock_no_autopicking.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0075124168925',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

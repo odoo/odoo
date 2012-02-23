@@ -22,7 +22,7 @@
 {
     'name': 'Dashboards',
     'version': '1.0',
-    'category': 'Hidden/Dependency',
+    'category': 'Hidden',
     'complexity': "normal",
     'description': """
 Lets the user create a custom dashboard.
@@ -45,7 +45,7 @@ The user can also publish notes.
         'board_demo.xml'
     ],
     'installable': True,
-    'active': True,
+    'auto_install': True,
     'certificate': '0076912305725',
     'images': ['images/1_dashboard_definition.jpeg','images/2_publish_note.jpeg','images/3_admin_dashboard.jpeg',],
 }

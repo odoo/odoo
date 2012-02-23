@@ -26,6 +26,7 @@
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
     "category": "Project Management",
+    "sequence": 8,
     'complexity': "easy",
     "images": ["images/gantt.png", "images/project_dashboard.jpeg","images/project_task_tree.jpeg","images/project_task.jpeg","images/project.jpeg","images/task_analysis.jpeg"],
     "depends": ["base_setup", "product", "analytic", "board",  "mail", "resource"],
@@ -67,7 +68,7 @@ Dashboard for project members that includes:
         'test/task_process.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'application': True,
     'certificate': '0075116868317',
 }

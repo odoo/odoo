@@ -37,7 +37,7 @@ Example:
     "depends": ["sale"],
     "demo_xml": [],
     "update_xml": ['product_visible_discount_view.xml'],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "001144718884654279901",
     'images': ['images/pricelists_visible_discount.jpeg'],

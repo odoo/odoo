@@ -43,11 +43,7 @@ class board_board(osv.osv):
         right = []
         #start Loop
         for line in board.line_ids:
-            linestr = '<action string="%s" name="%d" colspan="4"' % (line.name, line.action_id.id)
-            if line.height:
-                linestr += (' height="%d"' % (line.height, ))
-            if line.width:
-                linestr += (' width="%d"' % (line.width, ))
+            linestr = '<action string="%s" name="%d"' % (line.name, line.action_id.id)
             linestr += '/>'
             if line.position == 'left':
                 left.append(linestr)

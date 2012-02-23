@@ -102,12 +102,16 @@
             <field name="arch" type="xml">
                 <form string="Sales Order">
                     <group col="6" colspan="4">
-                        <field name="name"/>
-                        <field name="date_order"/>
-                        <field name="invoiced"/>
-                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection"/>
-                        <field name="client_order_ref"/>
-                        <field name="shipped"/>
+                        <group col="4" colspan="4">
+                            <field name="name"/>
+                            <field name="date_order"/>
+                            <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
+                            <field name="client_order_ref"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <field name="invoiced"/>
+                            <field name="shipped"/>
+                        </group>
                     </group>
                     <notebook colspan="5">
                         <page string="Sales Order">
@@ -118,7 +122,7 @@
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="project_id" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                             <newline/>
-                            <field colspan="4" mode="tree,form,graph" name="order_line" nolabel="1" widget="one2many_list">
+                            <field colspan="4" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sales Order Lines">
                                     <notebook>
                                         <page string="Order Line">
@@ -195,18 +199,20 @@
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                                 <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
                             </group>
-                            <group col="13" colspan="4">
+                            <group col="17" colspan="4">
                                 <field name="state" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                                 <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
                                 <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
                                 <button name="ship_recreate" states="shipping_except" string="Recreate Packing" icon="gtk-ok"/>
                                 <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
                                 <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
+                                <button name="%(report_sale_order)d" string="Print Order" type="action" icon="gtk-print" states="waiting_date,manual,progress,done,shipping_except,invoice_except"/>
                                 <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
                                 <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                                 <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
+                                <button name="%(report_sale_order)d" string="Print Quotation" type="action" icon="gtk-print" states="draft"/>
                                 <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
                             </group>
                         </page>
@@ -492,7 +498,7 @@
             src_model="product.product"
             groups="base.group_sale_salesman"/>
 
-        <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5" groups="-base.group_extended"/>
+        <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5" groups="base.group_extended"/>
         <menuitem id="menu_invoicing_sales_order_lines" parent="base.menu_invoiced" action="action_order_line_tree2" sequence="2" groups="base.group_no_one"/>
 
         <!-- configartion view -->

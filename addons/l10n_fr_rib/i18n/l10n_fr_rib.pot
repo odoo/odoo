@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Project-Id-Version: OpenERP Server 6.1rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
-"PO-Revision-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-08 00:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,13 +22,24 @@ msgid "\n"
 msgstr ""
 
 #. module: l10n_fr_rib
+#: model:res.partner.bank.type,name:l10n_fr_rib.bank_rib
+msgid "RIB and optional IBAN"
+msgstr ""
+
+#. module: l10n_fr_rib
+#: field:res.partner.bank,rib_acc_number:0
+msgid "RIB account number"
+msgstr ""
+
+#. module: l10n_fr_rib
 #: field:res.partner.bank,bank_code:0
 msgid "Bank Code"
 msgstr ""
 
 #. module: l10n_fr_rib
-#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_bic_field
-msgid "bank_bic"
+#: code:addons/l10n_fr_rib/bank.py:54
+#, python-format
+msgid "The RIB key %s does not correspond to the other codes: %s %s %s."
 msgstr ""
 
 #. module: l10n_fr_rib
@@ -42,6 +53,12 @@ msgid "RIB Bank Code"
 msgstr ""
 
 #. module: l10n_fr_rib
+#: code:addons/l10n_fr_rib/bank.py:58
+#, python-format
+msgid "The IBAN %s is not valid."
+msgstr ""
+
+#. module: l10n_fr_rib
 #: model:ir.model,name:l10n_fr_rib.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr ""
@@ -52,8 +69,8 @@ msgid "Office Code"
 msgstr ""
 
 #. module: l10n_fr_rib
-#: model:res.partner.bank.type,name:l10n_fr_rib.bank_rib
-msgid "RIB Bank Details"
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_bic_field
+msgid "bank_bic"
 msgstr ""
 
 #. module: l10n_fr_rib
@@ -62,15 +79,13 @@ msgid "bank_code"
 msgstr ""
 
 #. module: l10n_fr_rib
-#: code:addons/l10n_fr_rib/bank.py:83
-#, python-format
-msgid "\n"
-"The RIB key %s does not correspond to the other codes: %s %s %s."
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_key_field
+msgid "key"
 msgstr ""
 
 #. module: l10n_fr_rib
-#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_key_field
-msgid "key"
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_rib_acc_number_field
+msgid "rib_acc_number"
 msgstr ""
 
 #. module: l10n_fr_rib
@@ -84,8 +99,20 @@ msgid "Key"
 msgstr ""
 
 #. module: l10n_fr_rib
+#: code:addons/l10n_fr_rib/bank.py:53
+#: code:addons/l10n_fr_rib/bank.py:58
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: l10n_fr_rib
 #: model:res.partner.bank.type,format_layout:l10n_fr_rib.bank_rib
-msgid "%(bank_name)s: %(acc_number)s"
+msgid "%(bank_name)s: %(bank_code)s %(office)s %(rib_acc_number)s %(key)s"
+msgstr ""
+
+#. module: l10n_fr_rib
+#: constraint:res.partner.bank:0
+msgid "The RIB and/or IBAN is not valid"
 msgstr ""
 
 #. module: l10n_fr_rib
@@ -94,7 +121,7 @@ msgid "Bank"
 msgstr ""
 
 #. module: l10n_fr_rib
-#: model:res.partner.bank.type.field,name:l10n_fr_rib.bank_acc_number_field
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_acc_number_field
 msgid "acc_number"
 msgstr ""
 

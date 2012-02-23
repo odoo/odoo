@@ -52,8 +52,9 @@ class account_bank_statement(osv.osv):
         journal_pool = self.pool.get('account.journal')
         journal_type = context.get('journal_type', False)
         journal_id = False
+        company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement',context=context)
         if journal_type:
-            ids = journal_pool.search(cr, uid, [('type', '=', journal_type)])
+            ids = journal_pool.search(cr, uid, [('type', '=', journal_type),('company_id','=',company_id)])
             if ids:
                 journal_id = ids[0]
         return journal_id
@@ -162,37 +163,38 @@ class account_bank_statement(osv.osv):
 
     _defaults = {
         'name': "/",
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
         'state': 'draft',
         'journal_id': _default_journal_id,
         'period_id': _get_period,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement',context=c),
     }
 
-    def onchange_date(self, cr, user, ids, date, context=None):
+    def _check_company_id(self, cr, uid, ids, context=None):
+        for statement in self.browse(cr, uid, ids, context=context):
+            if statement.company_id.id != statement.period_id.company_id.id:
+                return False
+        return True
+
+    _constraints = [
+        (_check_company_id, 'The journal and period chosen have to belong to the same company.', ['journal_id','period_id']),
+    ]
+
+    def onchange_date(self, cr, uid, ids, date, company_id, context=None):
         """
-        Returns a dict that contains new values and context
-        @param cr: A database cursor
-        @param user: ID of the user currently logged in
-        @param date: latest value from user input for field date
-        @param args: other arguments
-        @param context: context arguments, like lang, time zone
-        @return: Returns a dict which contains new values, and context
+            Find the correct period to use for the given date and company_id, return it and set it in the context
         """
         res = {}
         period_pool = self.pool.get('account.period')
 
         if context is None:
             context = {}
-
-        pids = period_pool.search(cr, user, [('date_start','<=',date), ('date_stop','>=',date)])
+        ctx = context.copy()
+        ctx.update({'company_id': company_id})
+        pids = period_pool.find(cr, uid, dt=date, context=ctx)
         if pids:
-            res.update({
-                'period_id':pids[0]
-            })
-            context.update({
-                'period_id':pids[0]
-            })
+            res.update({'period_id': pids[0]})
+            context.update({'period_id': pids[0]})
 
         return {
             'value':res,
@@ -385,8 +387,10 @@ class account_bank_statement(osv.osv):
                 ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
         res = cr.fetchone()
         balance_start = res and res[0] or 0.0
-        account_id = self.pool.get('account.journal').read(cr, uid, journal_id, ['default_debit_account_id'], context=context)['default_debit_account_id']
-        return {'value': {'balance_start': balance_start, 'account_id': account_id}}
+        journal_data = self.pool.get('account.journal').read(cr, uid, journal_id, ['default_debit_account_id', 'company_id'], context=context)
+        account_id = journal_data['default_debit_account_id']
+        company_id = journal_data['company_id']
+        return {'value': {'balance_start': balance_start, 'account_id': account_id, 'company_id': company_id}}
 
     def unlink(self, cr, uid, ids, context=None):
         stat = self.read(cr, uid, ids, ['state'], context=context)
@@ -480,7 +484,7 @@ class account_bank_statement_line(osv.osv):
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
-        'date': lambda self,cr,uid,context={}: context.get('date', time.strftime('%Y-%m-%d')),
+        'date': lambda self,cr,uid,context={}: context.get('date', fields.date.context_today(self,cr,uid,context=context)),
         'type': 'general',
     }
 

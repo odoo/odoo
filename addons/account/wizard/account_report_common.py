@@ -29,8 +29,14 @@ class account_common_report(osv.osv_memory):
     _name = "account.common.report"
     _description = "Account Common Report"
 
+    def onchange_chart_id(self, cr, uid, ids, chart_account_id=False, context=None):
+        if chart_account_id:
+            company_id = self.pool.get('account.account').browse(cr, uid, chart_account_id, context=context).company_id.id
+        return {'value': {'company_id': company_id}}
+
     _columns = {
         'chart_account_id': fields.many2one('account.account', 'Chart of Account', help='Select Charts of Accounts', required=True, domain = [('parent_id','=',False)]),
+        'company_id': fields.related('chart_account_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', help='Keep empty for all open fiscal year'),
         'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by", required=True),
         'period_from': fields.many2one('account.period', 'Start Period'),
@@ -43,6 +49,22 @@ class account_common_report(osv.osv_memory):
                                         ], 'Target Moves', required=True),
 
         }
+
+    def _check_company_id(self, cr, uid, ids, context=None):
+        for wiz in self.browse(cr, uid, ids, context=context):
+            company_id = wiz.company_id.id
+            if wiz.fiscalyear_id and company_id != wiz.fiscalyear_id.company_id.id:
+                return False
+            if wiz.period_from and company_id != wiz.period_from.company_id.id:
+                return False
+            if wiz.period_to and company_id != wiz.period_to.company_id.id:
+                return False
+        return True
+
+    _constraints = [
+        (_check_company_id, 'The fiscalyear, periods or chart of account chosen have to belong to the same company.', ['chart_account_id','fiscalyear_id','period_from','period_to']),
+    ]
+
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(account_common_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)

@@ -48,7 +48,7 @@ You can add the following additional dates to a sale order:
     ],
     'test': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00867497685972962845',
 }
 

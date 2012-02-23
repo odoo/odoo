@@ -21,7 +21,7 @@
 
 from osv import osv, fields
 # from tools.translate import _
-from document_ftp import ftpserver
+from .. import ftpserver
 
 class document_ftp_browse(osv.osv_memory):
     _name = 'document.ftp.browse'

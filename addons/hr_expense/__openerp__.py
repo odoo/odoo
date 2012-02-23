@@ -24,6 +24,7 @@
     'name': 'Expenses Management',
     'version': '1.0',
     'category': 'Human Resources',
+    "sequence": 30,
     'complexity': "easy",
     'description': """
 This module aims to manage employee's expenses.
@@ -67,7 +68,7 @@ re-invoice your customer's expenses if your work by project.
              'test/expense_process.yml',
              ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0062479841789',
     'application': True,
 }

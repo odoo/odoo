@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-01-18 16:47+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:55+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:07+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: event
 #: view:event.event:0
@@ -76,6 +76,11 @@ msgid "_Close"
 msgstr "_Fermer"
 
 #. module: event
+#: model:event.event,name:event.event_0
+msgid "Concert of Bon Jovi"
+msgstr "Concert de Bon Jovi"
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Invoiced Registrations only"
 msgstr ""
@@ -96,13 +101,10 @@ msgid "Quantity"
 msgstr "Quantité"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:50
-#: code:addons/event/wizard/event_make_invoice.py:54
-#: code:addons/event/wizard/event_make_invoice.py:58
-#: code:addons/event/wizard/event_make_invoice.py:62
+#: code:addons/event/wizard/event_make_invoice.py:63
 #, python-format
-msgid "Warning !"
-msgstr "Attention !"
+msgid "Registration doesn't have any partner to invoice."
+msgstr "L'inscription ne contient pas de partenaire à facturer"
 
 #. module: event
 #: field:event.event,company_id:0
@@ -198,6 +200,11 @@ msgid "Mail Auto Confirm"
 msgstr "Message de confirmation automatique"
 
 #. module: event
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "Billet d'opéra"
+
+#. module: event
 #: code:addons/event/event.py:125
 #: view:event.event:0
 #, python-format
@@ -223,10 +230,9 @@ msgid "Event Dashboard"
 msgstr "Tableau de bord des évènements"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:63
-#, python-format
-msgid "Registration doesn't have any partner to invoice."
-msgstr "L'inscription ne contient pas de partenaire à facturer"
+#: model:event.event,name:event.event_1
+msgid "Opera of Verdi"
+msgstr "Opéra de Verdi"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -279,9 +285,9 @@ msgid "Draft"
 msgstr "Brouillon"
 
 #. module: event
-#: view:report.event.registration:0
-msgid "Events States"
-msgstr ""
+#: field:event.type,name:0
+msgid "Event type"
+msgstr "Type d'évènement"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -345,6 +351,15 @@ msgstr "Créer la facture de l'évènement"
 #: help:event.registration,nb_register:0
 msgid "Number of Registrations or Tickets"
 msgstr "Nombre d'inscriptions ou de tickets"
+
+#. module: event
+#: code:addons/event/wizard/event_make_invoice.py:50
+#: code:addons/event/wizard/event_make_invoice.py:54
+#: code:addons/event/wizard/event_make_invoice.py:58
+#: code:addons/event/wizard/event_make_invoice.py:62
+#, python-format
+msgid "Warning !"
+msgstr "Attention !"
 
 #. module: event
 #: view:event.registration:0
@@ -559,9 +574,9 @@ msgid "Mailing"
 msgstr "Envoi"
 
 #. module: event
-#: field:event.type,name:0
-msgid "Event type"
-msgstr "Type d'évènement"
+#: view:report.event.registration:0
+msgid "Events States"
+msgstr ""
 
 #. module: event
 #: view:board.board:0
@@ -749,6 +764,11 @@ msgstr ""
 #: selection:report.event.registration,month:0
 msgid "June"
 msgstr "Juin"
+
+#. module: event
+#: model:product.template,name:event.event_product_0_product_template
+msgid "Ticket for Concert"
+msgstr "Ticket de concert"
 
 #. module: event
 #: field:event.registration,write_date:0
@@ -997,6 +1017,11 @@ msgid "Speaker"
 msgstr "Orateur"
 
 #. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on ERP Buisness"
+msgstr "Conférence sur le marché des ERP"
+
+#. module: event
 #: view:event.registration:0
 msgid "Reply"
 msgstr "Répondre"
@@ -1057,6 +1082,11 @@ msgstr "Inscription aux évènements"
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
 msgstr "Ce courriel sera envoyé quand quelqu'un s'inscrira à l'évènement."
+
+#. module: event
+#: model:product.template,name:event.event_product_2_product_template
+msgid "Ticket for Conference"
+msgstr "Billet de conférence"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type_association
@@ -1275,12 +1305,6 @@ msgstr ""
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "Erreur: code EAN invalide"
 
-#~ msgid "Concert of Bon Jovi"
-#~ msgstr "Concert de Bon Jovi"
-
-#~ msgid "Opera of Verdi"
-#~ msgstr "Opéra de Verdi"
-
 #~ msgid ""
 #~ "Check this box if you want to use the automatic mailing for new registration"
 #~ msgstr ""
@@ -1330,9 +1354,6 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom de l'objet invalide dans l'action défini"
 
-#~ msgid "Ticket for Opera"
-#~ msgstr "Billet d'opéra"
-
 #~ msgid ""
 #~ "This email will be sent when the event gets confimed or when someone "
 #~ "subscribes to a confirmed event. This is also the email sent to remind "
@@ -1341,15 +1362,6 @@ msgstr ""
 #~ "Cet email sera envoyé lorsque l'évènement sera confirmé ou quand quelqu'un "
 #~ "s'inscrira à un évènement confirmé. Ceci enverra également un courriel de "
 #~ "rappel à propos de l'évènement."
-
-#~ msgid "Ticket for Concert"
-#~ msgstr "Ticket de concert"
-
-#~ msgid "Ticket for Conference"
-#~ msgstr "Billet de conférence"
-
-#~ msgid "Conference on ERP Buisness"
-#~ msgstr "Conférence sur le marché des ERP"
 
 #~ msgid "Provide Maximun Number of Registrations"
 #~ msgstr "Montre le nombre maximum d'inscriptions"

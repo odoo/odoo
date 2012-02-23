@@ -24,6 +24,7 @@
     'name': 'Todo Lists',
     'version': '1.0',
     'category': 'Project Management',
+    "sequence": 20,
     'complexity': "easy",
     'description': """
 This module implements all concepts defined by the Getting Things Done methodology.
@@ -61,7 +62,7 @@ performing those tasks.
     ],
     'installable': True,
     'application': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0043525236301',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

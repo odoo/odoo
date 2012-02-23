@@ -71,7 +71,7 @@ More information on the methodology:
              'test/project_scrum_demo.yml',
              ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00736750152003010781',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

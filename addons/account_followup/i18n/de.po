@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-11-11 15:21+0000\n"
-"Last-Translator: Ferdinand-camptocamp <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-15 22:50+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:06+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-16 05:05+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -43,6 +44,7 @@ msgstr "Zahlungserinnerung"
 msgid ""
 "Check if you want to print followups without changing followups level."
 msgstr ""
+"Anhaken, wenn sie Mahnungen drucken wollen, ohne die Mahnstufe zu erhöhen"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -67,6 +69,21 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Geehrte(r) %(partner_name)s,\n"
+"\n"
+"Wir bedauern, dass Ihr Konto trotz Übersendung einer Mahnung überfällig ist\n"
+"\n"
+"Wenn Sie die unmittelbare Bezahlung verabsäumen, müssen wir Ihr Konto still "
+"legen, d.h. dass wir Sie zukünftig nicht mehr beliefern können.\n"
+"Bitte fürhen Sie die Zahlung innerhalb der nächsten 8 Tage durch.\n"
+"\n"
+"Wenn es mit der Rechnung ein uns unbekanntes Problem gibt, wenden Sie sich "
+"bitte unmittelbar an unsere Buchhaltung.\n"
+"\n"
+"Details der überfälligen Zahlungen finden Sie weiter unten.\n"
+"\n"
+"Beste Grüße,\n"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -101,7 +118,7 @@ msgstr "Legende"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow up Entries with period in current year"
-msgstr ""
+msgstr "Mahnungen mit Buchungen im laufenden Jahr"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -109,15 +126,9 @@ msgid "Ok"
 msgstr "OK"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr ""
-"Sie können keine Buchung auf einem bereits abgeschlossenen Konto vornehmen."
-
-#. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
-msgstr ""
+msgstr "Betrag"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
@@ -144,6 +155,15 @@ msgstr "Saldo > 0"
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Gesamt Soll"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -278,6 +298,16 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Guten Tag  %( partner_name)s,\n"
+"\n"
+"unter der Annahme eines Fehlers unsererseits,  bleiben die folgenden nicht "
+"bezahlten Rechnungsbeträge offen zur Zahlung. Bitte ergreifen Sie die "
+"erforderlichen Massnahmen, um das neue Mahnwesen in den nächsten 8 Tagen zu "
+"aktivieren. Sollte die Zahlung zeitlich nach diesem Emailversand erfolgen "
+"können Sie bitte diese Benachrichtigung ignorieren.\n"
+"\n"
+"Freundliche Grüsse\n"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -322,6 +352,19 @@ msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
 msgstr ""
+"Ihre Beschreibung ist ungültig. verwenden Sie %% wenn Sie ein Prozentzeichen "
+"eingeben wollen"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -336,14 +379,7 @@ msgstr "Statistik Zahlungserinnerungen"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
+msgstr "Nachricht"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -417,9 +453,8 @@ msgstr "Journal Zeilen"
 
 #. module: account_followup
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr ""
-"Das Unternehmen muss für zugehörige Konten und Perioden identisch sein."
+msgid "You can not create journal items on an account of type view."
+msgstr "You can not create journal items on an account of type view."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -429,12 +464,7 @@ msgstr "Sende EMail Bestätigung"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
+msgstr "Gesamt:"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -514,7 +544,7 @@ msgstr "Bericht Zahlungserinnerungen"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Steps"
-msgstr ""
+msgstr "Mahnstufen"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -546,7 +576,12 @@ msgstr "Max. Mahnstufe"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
-msgstr ""
+msgstr "Überarbeiten Mahnungen"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr "Company must be the same for its related account and period."
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -556,6 +591,9 @@ msgid ""
 "code to adapt the email content to the good context (good name, good date) "
 "and you can manage the multi language of messages."
 msgstr ""
+"Definieren Sie die Mahnstufen und die dazugehörigen Nachrichten und Fristen. "
+"Verwenden Sie die Variablen lt. Legende, dann können Sie die Mahnungen "
+"mehrsprachig verwalten."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -570,6 +608,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"E-Mail wurde wegen fehlender E-Mail-Adresse an folgende Partner NICHT "
+"versandt!\n"
+"%s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -585,7 +626,7 @@ msgstr "%(date)s: aktuelles Datum"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Beinhaltet Buchungen im Verfahren"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -601,7 +642,7 @@ msgstr "Beschreibung"
 #. module: account_followup
 #: constraint:account_followup.followup:0
 msgid "Only One Followup by Company."
-msgstr ""
+msgstr "Nur eine Mahnung je Unternehmen"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -637,7 +678,7 @@ msgstr "Versendete Erinnerungen"
 #. module: account_followup
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Der Name der Firma darf nur einmal vorkommen!"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -695,6 +736,26 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Sehr geehrter %(partner_name)s,\n"
+"\n"
+"trotz Zahlungserinnerung ist Ihr Konto nach wie vor nicht ausgegelichen.\n"
+"\n"
+"Sollte innerhalb der nächsten 8 Tage keine Zahlung erfolgen, werden wir die "
+"erforderlichen rechtlichen Schritte einleiten.\n"
+"\n"
+"Wir hoffen nach wie vor, dass diese Aktivität nicht nötig sein wird. Details "
+"der fälligen Postionen finden Sie unten.\n"
+"\n"
+"Für alle Rückfragen in dieser Angelegenheit, zögern Sie nicht unsere "
+"Finanzabteilung zu kontaktieren.\n"
+"\n"
+"Freundliche Grüsse\n"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr "You can not create journal items on closed account."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -719,7 +780,7 @@ msgstr "Kunden Referenz:"
 #. module: account_followup
 #: field:account.followup.print.all,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Test Druck"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -735,11 +796,6 @@ msgstr "Letzte Aktualisierung"
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
 msgstr "Zahlungserinnerung Kriterien"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Sie können keine Buchungen auf Konten des Typs Ansicht erstellen."
 
 #~ msgid "All payable entries"
 #~ msgstr "Alle offenen Posten"
@@ -1087,6 +1143,17 @@ msgstr "Sie können keine Buchungen auf Konten des Typs Ansicht erstellen."
 #~ "E-Mail konnte nicht an folgende Partner gesendet werden. Die EMail Adresse "
 #~ "ist nicht vorhanden !\n"
 #~ "\n"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr ""
+#~ "Sie können keine Buchung auf einem bereits abgeschlossenen Konto vornehmen."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr ""
+#~ "Das Unternehmen muss für zugehörige Konten und Perioden identisch sein."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Sie können keine Buchungen auf Konten des Typs Ansicht erstellen."
 
 #, python-format
 #~ msgid "Follwoup Summary"

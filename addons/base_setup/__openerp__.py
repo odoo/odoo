@@ -23,7 +23,7 @@
 {
     'name': 'Initial Setup Tools',
     'version': '1.0',
-    'category': 'Hidden/Dependency',
+    'category': 'Hidden',
     'complexity': "easy",
     'description': """
 This module helps to configure the system at the installation of a new database.
@@ -39,7 +39,7 @@ Shows you a list of applications features to install from.
     'update_xml': ['security/ir.model.access.csv', 'base_setup_views.xml' ],
     'demo_xml': [],
     'installable': True,
-    'active': True,
+    'auto_install': True,
     'certificate': '0086711085869',
     'images': ['images/base_setup1.jpeg','images/base_setup2.jpeg','images/base_setup3.jpeg','images/base_setup4.jpeg',],
 }

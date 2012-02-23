@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-11-11 15:22+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-21 01:12+0000\n"
+"Last-Translator: Cintia Sayuri Sato - http://www.tompast.com.br <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:07+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-22 04:57+0000\n"
+"X-Generator: Launchpad (build 14838)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -84,7 +84,7 @@ msgstr "Data de Faturamento"
 #. module: account_followup
 #: field:account.followup.print.all,email_subject:0
 msgid "Email Subject"
-msgstr "Assunto do e-mail"
+msgstr "Assunto do E-mail"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_followup_stat
@@ -103,7 +103,7 @@ msgstr "Legenda"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow up Entries with period in current year"
-msgstr ""
+msgstr "Acompanhe as entradas com o período no ano corrente."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -111,19 +111,14 @@ msgid "Ok"
 msgstr "Ok"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Você não pode criar linhas de movimento em uma conta fechada."
-
-#. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
-msgstr ""
+msgstr "Quantidade"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Valor de Crédito ou Débito incorreto no lançamento contábil!"
+msgstr "Valor de Crédito ou Débito Incorreto no Lançamento Contábil!"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -144,7 +139,16 @@ msgstr "Saldo > 0"
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr "Débito total"
+msgstr "Débito Total"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
+"A data do lançamento não está definida no período. Você precisa alterar a "
+"data ou remover esse lançamento do diário."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -159,7 +163,7 @@ msgstr "Acompanhamento"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "VAT:"
-msgstr ""
+msgstr "ICMS"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -182,12 +186,12 @@ msgstr "Parceiros"
 #: code:addons/account_followup/wizard/account_followup_print.py:142
 #, python-format
 msgid "Invoices Reminder"
-msgstr ""
+msgstr "Lembrete de Faturas"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow Up"
-msgstr ""
+msgstr "Acompanhamento de Contas"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -313,6 +317,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Todos os E-mails foram enviados com sucesso para os Parceiros:.\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -320,6 +327,19 @@ msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
 msgstr ""
+"Sua descrição é inválida, use a legenda direita ou%%, se você quiser usar o "
+"caractere de porcentagem."
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+"A conta selecionada utializa as entradas no diário para fornecer uma moeda "
+"secundária. Você deve remover a moeda secundária na conta ou selecione uma "
+"visão multi-moeda no diário."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -334,14 +354,7 @@ msgstr "Estatística de Acompanhamento por Parceiro"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
+msgstr "Mensagem"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -358,6 +371,11 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\n"
+"\n"
+"E-mail enviado aos Parceiros com êxito.!\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -410,8 +428,9 @@ msgstr "Itens do Diário"
 
 #. module: account_followup
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "A Empresa precisar ser a mesma para a conta relacionada e período."
+msgid "You can not create journal items on an account of type view."
+msgstr ""
+"Você não pode criar ítens de diário em uma conta tipo \"Visualizar\"."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -421,12 +440,7 @@ msgstr "Enviar e-mail de confirmação"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
+msgstr "Total:"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -541,6 +555,11 @@ msgid "Review Invoicing Follow-Ups"
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr "Empresa deve ser a mesma para a sua conta relacionada e período."
+
+#. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
 msgid ""
 "Define follow up levels and their related messages and delay. For each step, "
@@ -627,7 +646,7 @@ msgstr "Acompanhamentos Enviados"
 #. module: account_followup
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "O nome da empresa deve ser único !"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -687,6 +706,11 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr "Você não pode criar ítens de diário em uma conta fechada."
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
 msgstr ""
@@ -709,7 +733,7 @@ msgstr "Ref Cliente :"
 #. module: account_followup
 #: field:account.followup.print.all,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Teste Impressão"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -725,11 +749,6 @@ msgstr "Última Data de Acompanhamento"
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
 msgstr "Critérios de Acompanhamento"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Você não pode criar linhas de movimento em uma conta de exibição."
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Invalido XML para Arquitetura da View"
@@ -764,6 +783,9 @@ msgstr "Você não pode criar linhas de movimento em uma conta de exibição."
 #, python-format
 #~ msgid "Follwoup Summary"
 #~ msgstr "Resumo de Acompanhamento"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Você não pode criar linhas de movimento em uma conta fechada."
 
 #, python-format
 #~ msgid ""
@@ -830,6 +852,9 @@ msgstr "Você não pode criar linhas de movimento em uma conta de exibição."
 #~ msgid "Followup Lines"
 #~ msgstr "Linhas de Acompanhamento"
 
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "A Empresa precisar ser a mesma para a conta relacionada e período."
+
 #, python-format
 #~ msgid ""
 #~ "E-Mail not sent to following Partners, Email not available !\n"
@@ -837,3 +862,6 @@ msgstr "Você não pode criar linhas de movimento em uma conta de exibição."
 #~ msgstr ""
 #~ "Email não enviado para os Parceiros. Email não disponível !\n"
 #~ "\n"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Você não pode criar linhas de movimento em uma conta de exibição."

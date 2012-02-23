@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-23 09:54+0000\n"
-"PO-Revision-Date: 2010-03-09 04:16+0000\n"
-"Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"PO-Revision-Date: 2012-01-03 02:55+0000\n"
+"Last-Translator: Christopher Ormaza - (Ecuadorenlinea.net) "
+"<chris.ormaza@gmail.com>\n"
 "Language-Team: Spanish (Ecuador) <es_EC@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-24 05:54+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:43+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -23,10 +24,9 @@ msgid "Openerp user"
 msgstr "Usuario OpenERP"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,requirements:0
+#: view:hr.job:0 field:hr.job,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Requisitos"
 
 #. module: hr
 #: constraint:hr.department:0
@@ -36,7 +36,7 @@ msgstr "Error! No puede crear departamentos recursivos."
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr ""
+msgstr "Enlaza el empleado con la información"
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -51,15 +51,14 @@ msgid "Human Resources"
 msgstr "Recursos Humanos"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agroupar por ..."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.view_department_form_installer
 msgid "Create Your Departments"
-msgstr ""
+msgstr "Crear sus Departamentos"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -70,35 +69,35 @@ msgid ""
 "will be used in the recruitment process to evaluate the applicants for this "
 "job position."
 msgstr ""
+"Los puestos de trabajo se utilizan para definir los cargos y sus requisitos. "
+"Puede controlar el número de empleados que tiene por puesto y cuántos espera "
+"tener en un futuro. Asimismo, puede adjuntar una encuesta a una posición "
+"laboral que será utilizada en el proceso de selección para evaluar a los "
+"candidatos a este puesto."
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
-#: view:res.users:0
+#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
+#: field:hr.job,department_id:0 view:res.users:0
 msgid "Department"
 msgstr "Departamento"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Mark as Old"
-msgstr ""
+msgstr "Marcar como antiguo"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Jobs"
-msgstr ""
+msgstr "Tareas"
 
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr ""
+msgstr "En selección"
 
 #. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Compañía"
@@ -106,12 +105,12 @@ msgstr "Compañía"
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr ""
+msgstr "Previsión en selección"
 
 #. module: hr
 #: model:ir.actions.todo.category,name:hr.category_hr_management_config
 msgid "HR Management"
-msgstr ""
+msgstr "Administración de RH"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -119,11 +118,13 @@ msgid ""
 "Partner that is related to the current employee. Accounting transaction will "
 "be written on this partner belongs to employee."
 msgstr ""
+"Empresa que está relacionada con el empleado actual. Las transacciones "
+"contables se escribirán en esta empresa a la cual pertenece el empleado."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr ""
+msgstr "Vincular un usuario a un empleado"
 
 #. module: hr
 #: field:hr.department,parent_id:0
@@ -131,15 +132,14 @@ msgid "Parent Department"
 msgstr "Departamento Superior"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,notes:0
+#: view:hr.employee:0 field:hr.employee,notes:0
 msgid "Notes"
 msgstr "Notas"
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Married"
-msgstr ""
+msgstr "Casado (a)"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_create_hr_employee_installer
@@ -149,6 +149,10 @@ msgid ""
 "operations on all the employees of the same category, i.e. allocating "
 "holidays."
 msgstr ""
+"Cree empleados y enlacelos a un usuario del sistema OpenERP si usted quiere "
+"que ellos tengan acceso al sistema, Las Categorías pueden ser asignadas a "
+"los empleados para poder realizar operaciones sobre las categorías, por "
+"ejemplo los días feriados"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -157,11 +161,14 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"La estructura de departamentos de su compañía se utiliza para gestionar "
+"todos los documentos relativos a los empleados por departamentos: gastos y "
+"validación de tiempos, gestión de ausencias, procesos de selección, etc."
 
 #. module: hr
 #: field:hr.employee,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Color del Indice"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_employeeuser0
@@ -169,17 +176,18 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
+"El campo usuario relacionado en el formulario del empleado permite vincular "
+"el usuario de OpenERP (y sus permisos) al empleado."
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Recruitement"
-msgstr ""
+msgstr "En selección"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "Nº identificación"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -189,12 +197,12 @@ msgstr "Mujer"
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid "Required number of employees in total for that job."
-msgstr ""
+msgstr "Número de empleados requeridos en total para este puesto"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendance"
-msgstr ""
+msgstr "Asistencia"
 
 #. module: hr
 #: view:hr.employee:0
@@ -212,11 +220,10 @@ msgid "Child Categories"
 msgstr "Categorías Inferiores"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,description:0
+#: view:hr.job:0 field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
-msgstr ""
+msgstr "Descripción del puesto de trabajo"
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -226,11 +233,10 @@ msgstr "Dirección Oficina"
 #. module: hr
 #: view:hr.employee:0
 msgid "My Departments Employee"
-msgstr ""
+msgstr "Mis Departamentos"
 
 #. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Empleado"
@@ -238,17 +244,17 @@ msgstr "Empleado"
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
-msgstr ""
+msgstr "Otra información"
 
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
-msgstr ""
+msgstr "Email de trabajo"
 
 #. module: hr
 #: field:hr.employee,birthday:0
 msgid "Date of Birth"
-msgstr ""
+msgstr "Fecha de nacimiento"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
@@ -259,14 +265,12 @@ msgstr "Informe"
 #: model:ir.actions.act_window,name:hr.open_board_hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Tablero de Recursos Humanos"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
-msgstr ""
+msgstr "Puesto de Trabajo"
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -279,15 +283,14 @@ msgid "Configuration"
 msgstr "Configuración"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,category_ids:0
+#: view:hr.employee:0 field:hr.employee,category_ids:0
 msgid "Categories"
-msgstr ""
+msgstr "Categorías"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr ""
+msgstr "Empleados previstos"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -302,7 +305,7 @@ msgstr "Categoría Superior"
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error ! You cannot create recursive Categories."
-msgstr ""
+msgstr "¡Error! No puede crear categorías recursivas."
 
 #. module: hr
 #: view:hr.department:0
@@ -320,7 +323,7 @@ msgstr "Contacto de Empleado"
 #. module: hr
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Mi tablero"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -342,7 +345,7 @@ msgstr "Categoría de empleado"
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
-msgstr ""
+msgstr "Contrato de empleado"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -352,7 +355,7 @@ msgstr "Departamento"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_create_hr_employee_installer
 msgid "Create your Employees"
-msgstr ""
+msgstr "Cree sus empleados"
 
 #. module: hr
 #: field:hr.employee.category,name:0
@@ -373,11 +376,23 @@ msgid ""
 "they will be able to enter time through the system. In the note tab, you can "
 "enter text data that should be recorded for a specific employee."
 msgstr ""
+"Aquí puede gestionar su mano de obra creando empleados y asignándoles "
+"propiedades específicas en el sistema. Mantenga toda la información "
+"relacionada con los empleados y haga un seguimiento de cualquier hecho que "
+"necesite ser registrado. La pestaña con información personal le ayudará a "
+"mantener los datos sobre su identidad. La pestaña Categorías le permite "
+"asignarles categorías de empleados en función de su puesto y actividades "
+"dentro de la compañía. Una categoría puede ser la antigüedad dentro de la "
+"compañía o departamento. La pestaña de Hoja de servicios permite asignarles "
+"una hoja de servicios específica y un diario analítico donde podrán "
+"introducir tiempo en el sistema. En la pestaña notas puede introducir "
+"información, en formato texto libre, que debe ser guardada para un empleado "
+"en concreto."
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr ""
+msgstr "Cuenta bancaria de salario del empleado."
 
 #. module: hr
 #: field:hr.department,note:0
@@ -393,6 +408,7 @@ msgstr "Árbol de Empleados"
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"La compañía seleccionada no está autorizada como compañía para este usuario"
 
 #. module: hr
 #: view:hr.employee:0
@@ -408,7 +424,12 @@ msgstr "Dirección de trabajo"
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
 msgid "HR Manager Dashboard"
-msgstr ""
+msgstr "Tablero Director Recursos Humanos"
+
+#. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr "Departamentos Inferiores"
 
 #. module: hr
 #: view:hr.employee:0
@@ -424,12 +445,12 @@ msgstr "Árbol de categorías"
 #. module: hr
 #: field:hr.employee,partner_id:0
 msgid "unknown"
-msgstr ""
+msgstr "Desconocido"
 
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees with that job."
-msgstr ""
+msgstr "Número de empleados con este trabajo"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -449,7 +470,7 @@ msgstr "¡Error! No se puede crear una jerarquía recursiva de empleados."
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Subordonate Hierarchy"
-msgstr ""
+msgstr "Organigrama Jerárquico"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -458,11 +479,14 @@ msgid ""
 "employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"La estructura de sus departamentos es usada para administrar todos los "
+"documentos relacionados a los empleados por departamento: Gastos y Hojas de "
+"Asistencia, gestión de ausencias, proceso de selección, etc."
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account Number"
-msgstr ""
+msgstr "Número de Cuenta Bancaria"
 
 #. module: hr
 #: view:hr.department:0
@@ -475,27 +499,28 @@ msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
 msgstr ""
+"En el formulario del empleado, hay diferentes tipos de información como la "
+"información de contacto."
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Tablero"
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Old"
-msgstr ""
+msgstr "Antiguo"
 
 #. module: hr
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "¡No puede tener dos usuarios con el mismo identificador de usuario!"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,state:0
+#: view:hr.job:0 field:hr.job,state:0
 msgid "State"
-msgstr ""
+msgstr "Estado/Provincia"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -505,22 +530,22 @@ msgstr "Estado civil"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "Asistente"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr ""
+msgstr "Formulario y estructura del empleado"
 
 #. module: hr
 #: field:hr.employee,photo:0
 msgid "Photo"
-msgstr ""
+msgstr "Fotografía"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "Usuarios"
 
 #. module: hr
 #: view:hr.employee:0
@@ -530,17 +555,17 @@ msgstr "Información personal"
 #. module: hr
 #: field:hr.employee,city:0
 msgid "City"
-msgstr ""
+msgstr "Ciudad"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "Nº Pasaporte"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Work Mobile"
-msgstr ""
+msgstr "Móvil del trabajo"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -555,23 +580,22 @@ msgstr "Domicilio"
 #. module: hr
 #: view:hr.job:0
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Single"
-msgstr ""
+msgstr "Soltero(a)"
 
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr ""
+msgstr "Nombre del Puesto de Trabajo"
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Position"
-msgstr ""
+msgstr "Ocupado"
 
 #. module: hr
 #: view:hr.department:0
@@ -586,17 +610,17 @@ msgstr "Nacionalidad"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Leaves"
-msgstr ""
+msgstr "Ausencias"
 
 #. module: hr
 #: view:board.board:0
 msgid "HR Manager Board"
-msgstr ""
+msgstr "Tablero de gestión de RRHH"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Recurso"
 
 #. module: hr
 #: field:hr.department,complete_name:0
@@ -610,10 +634,8 @@ msgid "Gender"
 msgstr "Sexo"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0 view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -636,17 +658,17 @@ msgstr "Nombre de departamento"
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr ""
+msgstr "Número de Seguro Social"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr ""
+msgstr "Creación de un usuario OpenERP"
 
 #. module: hr
-#: field:hr.department,child_ids:0
-msgid "Child Departments"
-msgstr "Departamentos Inferiores"
+#: field:hr.employee,login:0
+msgid "Login"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -657,32 +679,30 @@ msgstr "Información laboral"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "Puestos de trabajo"
 
 #. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other Id"
-msgstr ""
+msgstr "Otro id"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
+#: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "Entrenador"
 
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per company!"
-msgstr ""
+msgstr "¡El nombre de el puesto de trabajo, debe ser único por Compañia!"
 
 #. module: hr
 #: view:hr.job:0
 msgid "My Departments Jobs"
-msgstr ""
+msgstr "Mis departamentos de Trabajo"
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
+#: field:hr.department,manager_id:0 view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Director"
@@ -690,7 +710,7 @@ msgstr "Director"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr ""
+msgstr "Viudo(a)"
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -700,7 +720,7 @@ msgstr "Subordinados"
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "Number of Employees"
-msgstr ""
+msgstr "Número de Empleados"
 
 #~ msgid "Work Email"
 #~ msgstr "E-mail de Trabajo"

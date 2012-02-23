@@ -20,24 +20,26 @@
 ##############################################################################
 
 {
-        "name":"Multi-DB Synchronization",
-        "version":"0.1",
-        "author":"OpenERP SA",
-        "category":"Tools",
-        "description": """
+    "name": "Multi-DB Synchronization",
+    "version": "0.1",
+    "author": "OpenERP SA",
+    "category": "Tools",
+    "description": """
 Synchronization with all objects.
 =================================
 
 Configure servers and trigger synchronization with its database objects.
 """,
-        "depends":["base"],
-        "demo_xml":[],
-        "update_xml":[ "wizard/base_synchro_view.xml",
-                      "base_synchro_view.xml",
-                       "security/ir.model.access.csv",],
-        "active":False,
-        "installable":True,
-        "certificate" : "00925429283944551453",
-        'images': ['images/1_servers_synchro.jpeg','images/2_synchronize.jpeg','images/3_objects_synchro.jpeg',],
+    "depends": ["base"],
+    "demo_xml": [],
+    "update_xml": [
+        "wizard/base_synchro_view.xml",
+        "base_synchro_view.xml",
+        "security/ir.model.access.csv",
+        ],
+    "installable": True,
+    "auto_install": False,
+    "certificate": "00925429283944551453",
+    "images": ['images/1_servers_synchro.jpeg','images/2_synchronize.jpeg','images/3_objects_synchro.jpeg',],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

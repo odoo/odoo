@@ -20,7 +20,6 @@
 ##############################################################################
 
 import netsvc
-import time
 
 from osv import fields, osv
 
@@ -49,7 +48,7 @@ class make_procurement(osv.osv_memory):
     }
 
     _defaults = {
-        'date_planned': lambda *args: time.strftime('%Y-%m-%d'),
+        'date_planned': fields.date.context_today,
         'qty': lambda *args: 1.0,
     }
 

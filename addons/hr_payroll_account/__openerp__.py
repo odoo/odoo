@@ -52,7 +52,7 @@ Generic Payroll system Integrated with Accountings.
          'test/hr_payroll_account.yml',
      ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00923971112835220957',
 }
 

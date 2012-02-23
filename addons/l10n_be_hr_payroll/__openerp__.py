@@ -39,7 +39,7 @@ Belgian Payroll Rules
     * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...
     """,
 
-    'active': False,
+    'auto_install': False,
     'demo': [
      'l10n_be_hr_payroll_demo.xml',
     ],

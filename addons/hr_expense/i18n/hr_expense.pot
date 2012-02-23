@@ -1,19 +1,39 @@
+# #-#-#-#-#  hr_expense.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* hr_expense
+# 	* hr_expense
 #
+# #-#-#-#-#  hr_expense.pot.web (PROJECT VERSION)  #-#-#-#-#
+# Translations template for PROJECT.
+# Copyright (C) 2012 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1beta\n"
+"#-#-#-#-#  hr_expense.pot (OpenERP Server 6.1rc1)  #-#-#-#-#\n"
+"Project-Id-Version: OpenERP Server 6.1rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
-"PO-Revision-Date: 2011-12-22 18:43+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-08 00:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+"#-#-#-#-#  hr_expense.pot.web (PROJECT VERSION)  #-#-#-#-#\n"
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -37,9 +57,13 @@ msgid "Confirmation Date"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: view:hr.expense.report:0
+#: view:hr.expense.expense:0 view:hr.expense.report:0
 msgid "Group By..."
+msgstr ""
+
+#. module: hr_expense
+#: model:product.template,name:hr_expense.air_ticket_product_template
+msgid "Air Ticket"
 msgstr ""
 
 #. module: hr_expense
@@ -48,10 +72,8 @@ msgid "Validated By"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,department_id:0
-#: view:hr.expense.report:0
-#: field:hr.expense.report,department_id:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,department_id:0
+#: view:hr.expense.report:0 field:hr.expense.report,department_id:0
 msgid "Department"
 msgstr ""
 
@@ -71,8 +93,7 @@ msgid "# of Invoiced Lines"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,company_id:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,company_id:0 view:hr.expense.report:0
 #: field:hr.expense.report,company_id:0
 msgid "Company"
 msgstr ""
@@ -93,19 +114,20 @@ msgid "Expenses Statistics"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Approved Expenses"
+#: view:hr.expense.report:0 field:hr.expense.report,day:0
+msgid "Day"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.line,uom_id:0
-#: view:product.product:0
+#: field:hr.expense.line,uom_id:0 view:product.product:0
 msgid "UoM"
 msgstr ""
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_valid:0
-msgid "Date of the acceptation of the sheet expense. It's filled when the button Accept is pressed."
+msgid ""
+"Date of the acceptation of the sheet expense. It's filled when the button "
+"Accept is pressed."
 msgstr ""
 
 #. module: hr_expense
@@ -159,8 +181,7 @@ msgid "Accepted"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.expense,ref:0
+#: report:hr.expense:0 field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
 msgstr ""
@@ -172,12 +193,13 @@ msgstr ""
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
-msgid "Date of the confirmation of the sheet expense. It's filled when the button Confirm is pressed."
+msgid ""
+"Date of the confirmation of the sheet expense. It's filled when the button "
+"Confirm is pressed."
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,nbr:0
+#: view:hr.expense.report:0 field:hr.expense.report,nbr:0
 msgid "# of Lines"
 msgstr ""
 
@@ -224,8 +246,7 @@ msgid "Gives the sequence order when displaying a list of expense lines."
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.line,analytic_account:0
-#: view:hr.expense.report:0
+#: field:hr.expense.line,analytic_account:0 view:hr.expense.report:0
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr ""
@@ -236,8 +257,7 @@ msgid "Date "
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,state:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,state:0 view:hr.expense.report:0
 #: field:hr.expense.report,state:0
 msgid "State"
 msgstr ""
@@ -245,7 +265,9 @@ msgstr ""
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:173
 #, python-format
-msgid "Please configure Default Expense account for Product purchase, `property_account_expense_categ`"
+msgid ""
+"Please configure Default Expense account for Product purchase, "
+"`property_account_expense_categ`"
 msgstr ""
 
 #. module: hr_expense
@@ -254,16 +276,13 @@ msgid "Expenses during last month"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,employee_id:0
-#: view:hr.expense.report:0
+#: report:hr.expense:0 view:hr.expense.expense:0
+#: field:hr.expense.expense,employee_id:0 view:hr.expense.report:0
 msgid "Employee"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: selection:hr.expense.expense,state:0
+#: view:hr.expense.expense:0 selection:hr.expense.expense,state:0
 msgid "New"
 msgstr ""
 
@@ -273,14 +292,12 @@ msgid "Confirmed Expense"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.report,product_qty:0
+#: report:hr.expense:0 field:hr.expense.report,product_qty:0
 msgid "Qty"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,price_total:0
+#: view:hr.expense.report:0 field:hr.expense.report,price_total:0
 msgid "Total Price"
 msgstr ""
 
@@ -324,14 +341,12 @@ msgid "Reimburse expense"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0
-#: field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,no_of_products:0
+#: view:hr.expense.report:0 field:hr.expense.report,no_of_products:0
 msgid "# of Products"
 msgstr ""
 
@@ -356,8 +371,7 @@ msgid "    Month-1    "
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-#: field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
 msgid "Validation Date"
 msgstr ""
 
@@ -374,16 +388,14 @@ msgid "Expenses Analysis"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.line,expense_id:0
+#: view:hr.expense.expense:0 field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 #: model:process.process,name:hr_expense.process_process_expenseprocess0
 msgid "Expense"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,line_ids:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
 msgstr ""
@@ -409,8 +421,7 @@ msgid "Invoiced Expenses"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: view:hr.expense.report:0
+#: view:hr.expense.expense:0 view:hr.expense.report:0
 #: field:hr.expense.report,month:0
 msgid "Month"
 msgstr ""
@@ -432,8 +443,7 @@ msgid "Employee encode all his expenses"
 msgstr ""
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: view:hr.expense.report:0
+#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
 #: selection:hr.expense.report,state:0
 msgid "Invoiced"
 msgstr ""
@@ -444,8 +454,7 @@ msgid "Can Constitute an Expense"
 msgstr ""
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: selection:hr.expense.report,state:0
+#: selection:hr.expense.expense,state:0 selection:hr.expense.report,state:0
 msgid "Reimbursed"
 msgstr ""
 
@@ -510,8 +519,7 @@ msgid "Review Your Expenses Products"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.expense,date:0
+#: report:hr.expense:0 field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
 msgid "Date"
 msgstr ""
@@ -527,8 +535,7 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,user_id:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,user_id:0
 msgid "User"
 msgstr ""
 
@@ -556,6 +563,11 @@ msgstr ""
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "HR Expenses"
+msgstr ""
+
+#. module: hr_expense
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
 msgstr ""
 
 #. module: hr_expense
@@ -591,13 +603,11 @@ msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.report:0
-#: field:hr.expense.report,day:0
-msgid "Day"
+msgid "Approved Expenses"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
-#: field:hr.expense.line,unit_amount:0
+#: report:hr.expense:0 field:hr.expense.line,unit_amount:0
 msgid "Unit Price"
 msgstr ""
 
@@ -607,8 +617,7 @@ msgid "References"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.report,invoice_id:0
+#: view:hr.expense.expense:0 field:hr.expense.report,invoice_id:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
 msgid "Invoice"
 msgstr ""
@@ -667,12 +676,16 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.product_normal_form_view_installer
-msgid "Define one product for each expense type allowed for an employee (travel by car, hostel, restaurant, etc). If you reimburse the employees at a fixed rate, set a cost and a unit of measure on the product. If you reimburse based on real costs, set the cost at 0.00. The user will set the real price when recording his expense sheet."
+msgid ""
+"Define one product for each expense type allowed for an employee (travel by "
+"car, hostel, restaurant, etc). If you reimburse the employees at a fixed "
+"rate, set a cost and a unit of measure on the product. If you reimburse "
+"based on real costs, set the cost at 0.00. The user will set the real price "
+"when recording his expense sheet."
 msgstr ""
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-#: view:hr.expense.report:0
+#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
 #: model:process.node,name:hr_expense.process_node_approved0
 msgid "Approved"
 msgstr ""
@@ -684,8 +697,7 @@ msgid "Supplier Invoices"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.line,product_id:0
-#: view:hr.expense.report:0
+#: field:hr.expense.line,product_id:0 view:hr.expense.report:0
 #: field:hr.expense.report,product_id:0
 #: model:ir.model,name:hr_expense.model_product_product
 msgid "Product"
@@ -697,8 +709,7 @@ msgid "Expenses of My Department"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,name:0
+#: view:hr.expense.expense:0 field:hr.expense.expense,name:0
 #: field:hr.expense.line,description:0
 msgid "Description"
 msgstr ""
@@ -741,7 +752,13 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.expense_all
-msgid "The OpenERP expenses management module allows you to track the full flow. Every month, the employees record their expenses. At the end of the month, their managers validates the expenses sheets which creates costs on projects/analytic accounts. The accountant validates the proposed entries and the employee can be reimbursed. You can also reinvoice the customer at the end of the flow."
+msgid ""
+"The OpenERP expenses management module allows you to track the full flow. "
+"Every month, the employees record their expenses. At the end of the month, "
+"their managers validates the expenses sheets which creates costs on projects/"
+"analytic accounts. The accountant validates the proposed entries and the "
+"employee can be reimbursed. You can also reinvoice the customer at the end "
+"of the flow."
 msgstr ""
 
 #. module: hr_expense
@@ -750,8 +767,7 @@ msgid "This Month"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,user_valid:0
-#: view:hr.expense.report:0
+#: field:hr.expense.expense,user_valid:0 view:hr.expense.report:0
 #: field:hr.expense.report,user_id:0
 msgid "Validation User"
 msgstr ""
@@ -782,6 +798,11 @@ msgid "Creates supplier invoice."
 msgstr ""
 
 #. module: hr_expense
+#: model:product.template,name:hr_expense.hotel_rent_product_template
+msgid "Hotel Accommodation"
+msgstr ""
+
+#. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "April"
 msgstr ""
@@ -793,8 +814,10 @@ msgstr ""
 
 #. module: hr_expense
 #: help:hr.expense.expense,state:0
-msgid "When the expense request is created the state is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the state is 'Waiting Confirmation'.            \n"
+msgid ""
+"When the expense request is created the state is 'Draft'.\n"
+" It is confirmed by the user and request is sent to admin, the state is "
+"'Waiting Confirmation'.            \n"
 "If the admin accepts it, the state is 'Accepted'.\n"
 " If an invoice is made for the expense request, the state is 'Invoiced'.\n"
 " If the expense is paid to user, the state is 'Reimbursed'."
@@ -806,8 +829,7 @@ msgid "Approve"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.line:0
-#: field:hr.expense.line,total_amount:0
+#: view:hr.expense.line:0 field:hr.expense.line,total_amount:0
 msgid "Total"
 msgstr ""
 
@@ -841,8 +863,7 @@ msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-#: field:hr.expense.report,year:0
+#: view:hr.expense.report:0 field:hr.expense.report,year:0
 msgid "Year"
 msgstr ""
 
@@ -853,11 +874,12 @@ msgstr ""
 
 #. module: hr_expense
 #: help:product.product,hr_expense_ok:0
-msgid "Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."
+msgid ""
+"Determines if the product can be visible in the list of product within a "
+"selection from an HR expense sheet line."
 msgstr ""
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr ""
-

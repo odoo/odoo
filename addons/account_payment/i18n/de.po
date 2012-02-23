@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-01-13 17:14+0000\n"
-"Last-Translator: silas <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-08 08:52+0000\n"
+"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:51+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:33+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -90,7 +90,7 @@ msgstr "bevorzugtes Datum"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "Rechnungswesen / Zahlungen"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -98,6 +98,7 @@ msgid "Free"
 msgstr "Frei"
 
 #. module: account_payment
+#: view:payment.order.create:0
 #: field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "Buchungen nach Journal"
@@ -112,12 +113,6 @@ msgstr "Verwendetes Konto"
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Fälligkeitsdatum"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr ""
-"Sie können keine Buchung auf einem bereits abgeschlossenen Konto vornehmen."
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -175,13 +170,22 @@ msgstr "Die Zahlungsposition sollte eindeutig sein"
 #. module: account_payment
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "ungültige BBA Kommunikations Stuktur"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "Zahlungsaufträge"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -355,6 +359,17 @@ msgid "Amount to be paid"
 msgstr "Zu zahlender Betrag"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+
+#. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
 msgstr "Währung"
@@ -456,9 +471,8 @@ msgstr "Journaleinträge"
 
 #. module: account_payment
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr ""
-"Das Unternehmen muss für zugehörige Konten und Perioden identisch sein."
+msgid "You can not create journal items on an account of type view."
+msgstr "You can not create journal items on an account of type view."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -532,7 +546,7 @@ msgstr "Rechungsref."
 #. module: account_payment
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Die Rechnungsnummer muss je Firma eindeutig sein"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -577,13 +591,18 @@ msgstr "Abbrechen"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "Bankkonto des Empfängers"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
 msgstr "Information"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr "Company must be the same for its related account and period."
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -638,11 +657,6 @@ msgstr "Bankkonto"
 #: view:payment.order:0
 msgid "Confirm Payments"
 msgstr "Bestätige Zahlungsvorschlag"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
@@ -703,6 +717,11 @@ msgid "Order"
 msgstr "Auftrag"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr "You can not create journal items on closed account."
+
+#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Betrag gesammt"
@@ -712,13 +731,6 @@ msgstr "Betrag gesammt"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
 msgstr "Bezahlung"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
 
 #. module: account_payment
 #: field:payment.order,mode:0
@@ -734,11 +746,6 @@ msgstr "Erzeuge Zahlungsvorschlag"
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Bankkonto für diesen Zahlungsmodus"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Sie können keine Buchungen auf Konten des Typs Ansicht erstellen."
 
 #~ msgid "Execution date:"
 #~ msgstr "Ausführungsdatum:"
@@ -815,6 +822,17 @@ msgstr "Sie können keine Buchungen auf Konten des Typs Ansicht erstellen."
 
 #~ msgid "Payment Management"
 #~ msgstr "Zahlungsvorschläge"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr ""
+#~ "Sie können keine Buchung auf einem bereits abgeschlossenen Konto vornehmen."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "Sie können keine Buchungen auf Konten des Typs Ansicht erstellen."
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr ""
+#~ "Das Unternehmen muss für zugehörige Konten und Perioden identisch sein."
 
 #~ msgid ""
 #~ "\n"

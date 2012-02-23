@@ -41,7 +41,7 @@
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
                                 <field name="warn_manager"/>
                                 <field name="priority"/>
-                                <field name="active"/>
+                                <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                             </group>
                             <newline/>
                             <separator colspan="4"/>
@@ -49,7 +49,7 @@
                                 <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' select="1" readonly="1"/>
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert" groups="base.group_extended"/>
-                                <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
+                                <button name="set_open" string="Re-open project" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
                                 <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending" icon="terp-dialog-close"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
@@ -69,7 +69,7 @@
                         </page>
                         <page string="Billing" groups="account.group_account_invoice">
                             <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Invoice Address"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Contact Address"/>
                             <field name="warn_customer"/>
                             <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                             <newline/>
@@ -160,10 +160,7 @@
             <field name="model">project.project</field>
             <field name="type">gantt</field>
             <field name="arch" type="xml">
-                <gantt color="user_id" date_delay="planned_hours" date_start="date_start" string="Projects">
-                    <level object="project.project" link="id" domain="[]">
-                        <field name="complete_name"/>
-                    </level>
+                <gantt date_delay="planned_hours" date_start="date_start" string="Projects">
                 </gantt>
             </field>
         </record>
@@ -463,7 +460,7 @@
             <field name="type">gantt</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <gantt color="user_id" date_start="date_start" date_stop="date_end" string="Tasks" default_group_by="project_id,user_id">
+                <gantt date_start="date_start" date_stop="date_end" string="Tasks" default_group_by="project_id">
                 </gantt>
             </field>
         </record>
@@ -651,7 +648,7 @@
             <field name="arch" type="xml">
                 <page string="Configuration" position="inside">
                     <separator string="Project Management" colspan="4"/>
-                    <field name="project_time_mode_id"/>
+                    <field name="project_time_mode_id" domain="[('category_id','=','Working Time')]"/>
                     <newline/>
                 </page>
             </field>

@@ -47,7 +47,7 @@ that exceeds minimum amount set by configuration wizard.
     ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00436592682510544157',
 
 }

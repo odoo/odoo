@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-01-13 05:55+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-09 12:05+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:50+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-10 04:47+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -23,16 +23,26 @@ msgid ""
 "Please define BIC/Swift code on bank for bank type IBAN Account to make "
 "valid payments"
 msgstr ""
+"\n"
+"Definieer een BIC/Swift code voor banksoort IBAN rekeningen om geldige "
+"betalingen te maken"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:139
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it"
+msgstr ""
+"Deze IBAN komt niet door de validatie controle. Controleer deze a.u.b."
 
 #. module: base_iban
 #: model:res.partner.bank.type,format_layout:base_iban.bank_iban
 msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-msgstr ""
+msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
 msgid "bank_bic"
-msgstr ""
+msgstr "bank_bic"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
@@ -55,12 +65,14 @@ msgid "country_id"
 msgstr "Landcode"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:130
+#: code:addons/base_iban/base_iban.py:136
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like "
 "this %s"
 msgstr ""
+"De IBAN lijkt niet juist te zijn. U zou iets moeten ingeven in de trant van "
+"%s"
 
 #. module: base_iban
 #: field:res.partner.bank,iban:0
@@ -68,15 +80,20 @@ msgid "IBAN"
 msgstr "IBAN"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:131
+#: code:addons/base_iban/base_iban.py:140
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr ""
+msgstr "De IBAN  is ongeldig. Het zou moeten beginnen met de landcode"
 
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
 msgstr "IBAN-rekening"
+
+#. module: base_iban
+#: constraint:res.partner.bank:0
+msgid "The RIB and/or IBAN is not valid"
+msgstr "De RIB en/of IBAN is niet gelding"
 
 #~ msgid "bic"
 #~ msgstr "BIC"

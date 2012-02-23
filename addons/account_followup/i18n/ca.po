@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-11-11 15:21+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:06+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -110,11 +110,6 @@ msgid "Ok"
 msgstr "D'acord"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "No podeu crear una anotació en un compte tancat."
-
-#. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
 msgstr ""
@@ -144,6 +139,13 @@ msgstr "Balanç > 0"
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Total deure"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -326,6 +328,14 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
 msgstr "Envia emails"
@@ -338,13 +348,6 @@ msgstr "Estadístiques de seguiment per empresa"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
 msgstr ""
 
 #. module: account_followup
@@ -419,9 +422,8 @@ msgstr "Apunts comptables"
 
 #. module: account_followup
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
+msgid "You can not create journal items on an account of type view."
 msgstr ""
-"La companyia ha de ser la mateixa per al compte i període relacionats."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -431,11 +433,6 @@ msgstr "Envia correu electrònic de confirmació"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
 msgstr ""
 
 #. module: account_followup
@@ -548,6 +545,11 @@ msgstr "Nivell màxim de seguiment"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
+msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
 msgstr ""
 
 #. module: account_followup
@@ -699,6 +701,11 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
 msgstr "%(line)s: Línies incloses en el llibre major"
@@ -737,11 +744,6 @@ msgstr "Data del últim seguiment"
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
 msgstr "Criteris de seguiment"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "No podeu crear un apunt en un compte de tipus \"Vista\"."
 
 #~ msgid "All payable entries"
 #~ msgstr "Tots els assentaments comptes a pagar"
@@ -982,6 +984,10 @@ msgstr "No podeu crear un apunt en un compte de tipus \"Vista\"."
 #~ msgid "Follwoup Summary"
 #~ msgstr "Informe de seguiment"
 
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr ""
+#~ "La companyia ha de ser la mateixa per al compte i període relacionats."
+
 #~ msgid "Currency"
 #~ msgstr "Divisa"
 
@@ -1033,6 +1039,9 @@ msgstr "No podeu crear un apunt en un compte de tipus \"Vista\"."
 #~ "        Comptabilitat/Informis/Informes genèrics/Expliques "
 #~ "empreses/Recordatoris enviats\n"
 #~ "\n"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "No podeu crear una anotació en un compte tancat."
 
 #~ msgid ""
 #~ "\n"
@@ -1135,3 +1144,6 @@ msgstr "No podeu crear un apunt en un compte de tipus \"Vista\"."
 #~ "departament de comptabilitat.\n"
 #~ "\n"
 #~ "Salutacions cordials,\n"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "No podeu crear un apunt en un compte de tipus \"Vista\"."

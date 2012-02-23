@@ -89,7 +89,7 @@ class hr_expense_expense(osv.osv):
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
         'state': 'draft',
         'employee_id': _employee_get,
         'user_id': lambda cr, uid, id, c={}: id,

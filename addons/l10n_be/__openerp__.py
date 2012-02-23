@@ -40,7 +40,7 @@ Wizards provided by this module:
             Path to access : Accounting/Reporting/Legal Statements/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
-    'author': 'OpenERP SA',
+    'author': 'Noviat & OpenERP SA',
     'depends': [
         'account',
         'base_vat',
@@ -50,6 +50,7 @@ Wizards provided by this module:
     ],
     'init_xml': [],
     'update_xml': [
+        'account_financial_report.xml',
         'account_pcmn_belgium.xml',
         'account_tax_code_template.xml',
         'account_chart_template.xml',

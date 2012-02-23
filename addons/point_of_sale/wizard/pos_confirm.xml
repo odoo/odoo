@@ -3,7 +3,7 @@
     <data>
         <!--  Point of Sale Confirm -->
         <record id="view_pos_confirm" model="ir.ui.view">
-            <field name="name">Create Sale Journal Entries</field>
+            <field name="name">Post Sale Journal Entries</field>
             <field name="model">pos.confirm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -25,7 +25,7 @@
         </record>
 
         <record id="action_pos_confirm" model="ir.actions.act_window">
-            <field name="name">Create Sale Entries</field>
+            <field name="name">Post Sale Entries</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.confirm</field>
             <field name="view_type">form</field>

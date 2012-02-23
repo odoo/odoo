@@ -168,23 +168,20 @@ class StockPicking(osv.osv):
 StockPicking()
 
 
-class spilt_in_production_lot(osv.osv_memory):
+class split_in_production_lot(osv.osv_memory):
     _inherit = "stock.move.split"
-    
+
     def split(self, cr, uid, ids, move_ids, context=None):
         """ Splits move lines into given quantities.
         @param move_ids: Stock moves.
         @return: List of new moves.
-        """  
+        """
+        new_moves = super(split_in_production_lot, self).split(cr, uid, ids, move_ids, context=context)
         production_obj = self.pool.get('mrp.production')
-        move_obj = self.pool.get('stock.move')  
-        res = []
-        for move in move_obj.browse(cr, uid, move_ids, context=context):
-            new_moves = super(spilt_in_production_lot, self).split(cr, uid, ids, move_ids, context=context)
-            production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
-            for new_move in new_moves:
-                production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})                
-        return res
-    
-spilt_in_production_lot()
+        production_ids = production_obj.search(cr, uid, [('move_lines', 'in', move_ids)])
+        production_obj.write(cr, uid, production_ids, {'move_lines': [(4, m) for m in new_moves]})
+        return new_moves
+
+split_in_production_lot()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

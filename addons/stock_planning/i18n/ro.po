@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-02-11 14:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:21+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:01+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -23,6 +23,8 @@ msgstr ""
 msgid ""
 "No forecasts for selected period or no products in selected category !"
 msgstr ""
+"Nici o previziune pentru perioada selectata sau nici un produs in categoria "
+"selectata !"
 
 #. module: stock_planning
 #: help:stock.planning,stock_only:0
@@ -31,11 +33,14 @@ msgid ""
 "selected calculation is made for input, stock and output location of "
 "warehouse."
 msgstr ""
+"Bifati pentru calcularea locatiei stocului doar pentru depozitul selectat. "
+"Daca nu selectati, calculul se face pentru locatia de intrare, stoc si "
+"iesire a depozitului."
 
 #. module: stock_planning
 #: field:stock.planning,maximum_op:0
 msgid "Maximum Rule"
-msgstr ""
+msgstr "Regula maxima"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -49,13 +54,15 @@ msgid ""
 "Forecast value which will be converted to Product Quantity according to "
 "prices."
 msgstr ""
+"Valoarea previziunii care va fi transformata in Cantitatea Produsului in "
+"functie de preturi."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:626
 #: code:addons/stock_planning/stock_planning.py:670
 #, python-format
 msgid "Incoming Left must be greater than 0 !"
-msgstr ""
+msgstr "Produsele intrate ramase trebuie sa fie mai mari de 0 !"
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_before:0
@@ -63,6 +70,9 @@ msgid ""
 "Planned Out in periods before calculated. Between start date of current "
 "period and one day before start of calculated period."
 msgstr ""
+"Produsele planificate sa iasa in perioade inainte de calculare. Intre data "
+"de inceput a perioadei actuale si o zi inainte de inceputul perioadei "
+"calculate."
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,warehouse_id:0
@@ -70,11 +80,14 @@ msgid ""
 "Warehouse which forecasts will concern. If during stock planning you will "
 "need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Depozitul vizat de previziuni. Daca in timpul planificarii stocului veti "
+"avea nevoie de previziunea vanzarilor pentru toate depozitele, atunci "
+"alegeti acum orice depozit."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_left:0
 msgid "Expected Out"
-msgstr ""
+msgstr "Produse asteptate sa iasa"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -84,22 +97,23 @@ msgstr " "
 #. module: stock_planning
 #: field:stock.planning,incoming_left:0
 msgid "Incoming Left"
-msgstr ""
+msgstr "Primire produse ramase"
 
 #. module: stock_planning
 #: view:stock.sale.forecast.createlines:0
 msgid "Create Forecasts Lines"
-msgstr ""
+msgstr "Creare Linii Previziuni"
 
 #. module: stock_planning
 #: help:stock.planning,outgoing:0
 msgid "Quantity of all confirmed outgoing moves in calculated Period."
 msgstr ""
+"Cantitatea tuturor miscarilor de iesire confirmate in Perioada calculata."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Daily Periods"
-msgstr ""
+msgstr "Creare Perioade Zilnice"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -109,7 +123,7 @@ msgstr ""
 #: field:stock.sale.forecast,company_id:0
 #: field:stock.sale.forecast.createlines,company_id:0
 msgid "Company"
-msgstr "Firmă"
+msgstr "Companie"
 
 #. module: stock_planning
 #: help:stock.planning,warehouse_forecast:0
@@ -117,37 +131,40 @@ msgid ""
 "All sales forecasts for selected Warehouse of selected Product during "
 "selected Period."
 msgstr ""
+"Toate previziunile vanzarilor pentru Depozitul selectat si Produsul selectat "
+"in timpul Perioadei selectate."
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Minimum Stock Rule Indicators"
-msgstr ""
+msgstr "Indicatorii regulii stocului minim"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,period_id:0
 msgid "Period which forecasts will concern."
-msgstr ""
+msgstr "Perioada vizata de previziune."
 
 #. module: stock_planning
 #: field:stock.planning,stock_only:0
 msgid "Stock Location Only"
-msgstr ""
+msgstr "Doar locatia stocului"
 
 #. module: stock_planning
 #: help:stock.planning,already_out:0
 msgid ""
 "Quantity which is already dispatched out of this warehouse in current period."
 msgstr ""
+"Cantitatea care este deja expediata din acest depozit in perioada curenta."
 
 #. module: stock_planning
 #: field:stock.planning,incoming:0
 msgid "Confirmed In"
-msgstr ""
+msgstr "Produse confirmate pentru intrare"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Current Period Situation"
-msgstr ""
+msgstr "Situatia perioadei curente"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_stock_period_createlines_form
@@ -165,17 +182,17 @@ msgstr "Creare perioade lunare"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period_createlines
 msgid "stock.period.createlines"
-msgstr ""
+msgstr "stock.period.createlines (stoc.perioada.creeaza_linii)"
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_before:0
 msgid "Planned Out Before"
-msgstr ""
+msgstr "Produse planificate pentru iesire inainte de"
 
 #. module: stock_planning
 #: field:stock.planning.createlines,forecasted_products:0
 msgid "All Products with Forecast"
-msgstr ""
+msgstr "Toate produsele cu Previziune"
 
 #. module: stock_planning
 #: help:stock.planning,maximum_op:0
@@ -185,7 +202,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Periods :"
-msgstr ""
+msgstr "Perioade :"
 
 #. module: stock_planning
 #: help:stock.planning,procure_to_stock:0
@@ -199,37 +216,38 @@ msgstr ""
 msgid ""
 "Quantity which is already picked up to this warehouse in current period."
 msgstr ""
+"Cantitatea care este deja ridicata din acest depozit in perioada curenta."
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
 #, python-format
 msgid "No products in selected category !"
-msgstr ""
+msgstr "Nici un produs in categoria aleasa !"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Stock and Sales Forecast"
-msgstr ""
+msgstr "Stoc si Previziune vanzari"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast
 msgid "stock.sale.forecast"
-msgstr ""
+msgstr "stock.sale.forecast (stoc.vanzare.previziune)"
 
 #. module: stock_planning
 #: field:stock.planning,to_procure:0
 msgid "Planned In"
-msgstr ""
+msgstr "Produse planificate sa intre"
 
 #. module: stock_planning
 #: field:stock.planning,stock_simulation:0
 msgid "Stock Simulation"
-msgstr ""
+msgstr "Simulare stoc"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning_createlines
 msgid "stock.planning.createlines"
-msgstr ""
+msgstr "stoc.planificare.crearelinii"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_before:0
@@ -238,21 +256,26 @@ msgid ""
 "Between start date of current period and one day before start of calculated "
 "period."
 msgstr ""
+"Primire produse confirmata in perioadele dinainte de calculare (inclusiv "
+"primite deja). Intre data de inceput a perioadei actuale cu o zi inaintea "
+"inceperii perioadei calculate."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Search  Sales Forecast"
-msgstr ""
+msgstr "Cauta Previziune a vanzarilor"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_user:0
 msgid "This User Period5"
-msgstr ""
+msgstr "Perioada5 a acestui utilizator"
 
 #. module: stock_planning
 #: help:stock.planning,history:0
 msgid "History of procurement or internal supply of this planning line."
 msgstr ""
+"Istoricul aprovizionarii sau aprovizionarea interna a acestei linii de "
+"planificare."
 
 #. module: stock_planning
 #: help:stock.planning,company_forecast:0
@@ -260,37 +283,39 @@ msgid ""
 "All sales forecasts for whole company (for all Warehouses) of selected "
 "Product during selected Period."
 msgstr ""
+"Toate estimarile vanzarilor pentru intreaga companie (pentru toate "
+"Depozitele) a Produsului selectat in timpul Perioadei selectate."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_user:0
 msgid "This User Period1"
-msgstr ""
+msgstr "Perioada1 a acestui utilizator"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_user:0
 msgid "This User Period3"
-msgstr ""
+msgstr "Perioada3 a acestui utilizator"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Stock Planning"
-msgstr ""
+msgstr "Planificare stoc"
 
 #. module: stock_planning
 #: field:stock.planning,minimum_op:0
 msgid "Minimum Rule"
-msgstr ""
+msgstr "Regula minima"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Procure Incoming Left"
-msgstr ""
+msgstr "Asigurarea primirii produselor ramase"
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Create"
-msgstr ""
+msgstr "Creati"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_planning_form
@@ -298,12 +323,12 @@ msgstr ""
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning_manual
 #: view:stock.planning:0
 msgid "Master Procurement Schedule"
-msgstr ""
+msgstr "Program principal de aprovizionare"
 
 #. module: stock_planning
 #: field:stock.planning,line_time:0
 msgid "Past/Future"
-msgstr ""
+msgstr "Trecut/Viitor"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -311,22 +336,23 @@ msgstr ""
 #: field:stock.planning,state:0
 #: field:stock.sale.forecast,state:0
 msgid "State"
-msgstr ""
+msgstr "Stare"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category of products which created forecasts will concern."
 msgstr ""
+"Categoria produsului cu produsele care sunt vizate de previziunile create."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period
 msgid "stock period"
-msgstr ""
+msgstr "perioada stoc"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast_createlines
 msgid "stock.sale.forecast.createlines"
-msgstr ""
+msgstr "stoc.vanzare.estimare.crearelinii"
 
 #. module: stock_planning
 #: field:stock.planning,warehouse_id:0
@@ -334,7 +360,7 @@ msgstr ""
 #: field:stock.sale.forecast,warehouse_id:0
 #: field:stock.sale.forecast.createlines,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Depozit"
 
 #. module: stock_planning
 #: help:stock.planning,stock_simulation:0
@@ -346,21 +372,29 @@ msgid ""
 "Initial Stock - Planned Out Before + Incoming Before - Planned Out + Planned "
 "In."
 msgstr ""
+"Simularea stocului la sfarsitul Perioadei selectate.\n"
+"Pentru perioada curenta este: \n"
+"Stoc initial - Produse iesite deja + Produse primite deja - Produse "
+"asteptate sa iasa + Primire produse ramase.\n"
+"Pentru perioada viitoare este: \n"
+"Stoc initial - Produse planificate sa iasa inainte de + Primire produse "
+"inainte de - Produse planificate sa iasa + Produse planificate sa intre."
 
 #. module: stock_planning
 #: help:stock.sale.forecast,analyze_company:0
 msgid "Check this box to see the sales for whole company."
 msgstr ""
+"Bifati aceasta casuta pentru a vedea vanzarile pentru intreaga companie."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per Department :"
-msgstr ""
+msgstr "Per departament :"
 
 #. module: stock_planning
 #: field:stock.planning,incoming_before:0
 msgid "Incoming Before"
-msgstr ""
+msgstr "Primire produse inainte de"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:641
@@ -392,38 +426,38 @@ msgstr ""
 #: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Eroare !"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_user_id:0
 msgid "This User"
-msgstr ""
+msgstr "Utilizatorul acesta"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecasts"
-msgstr ""
+msgstr "Previziuni"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Supply from Another Warehouse"
-msgstr ""
+msgstr "Aprovizionare dintr-un alt depozit"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Calculate Planning"
-msgstr ""
+msgstr "Calcul planificare"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:146
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Actiune invalida !"
 
 #. module: stock_planning
 #: help:stock.planning,stock_start:0
 msgid "Stock quantity one day before current period."
-msgstr ""
+msgstr "Cantitatea stocului cu o zi inainte de perioada curenta."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -440,7 +474,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Weekly Periods"
-msgstr ""
+msgstr "Creare Perioade saptamanale"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_stock_period_form
@@ -453,27 +487,27 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Calculated Period Simulation"
-msgstr ""
+msgstr "Simulare Perioada calculata"
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Cancel"
-msgstr ""
+msgstr "Anuleaza"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_user:0
 msgid "This User Period4"
-msgstr ""
+msgstr "Perioada4 a acestui utilizator"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Stock and Sales Period"
-msgstr ""
+msgstr "Stocul si Perioada de vanzare"
 
 #. module: stock_planning
 #: field:stock.planning,company_forecast:0
 msgid "Company Forecast"
-msgstr ""
+msgstr "Previziune Companie"
 
 #. module: stock_planning
 #: help:stock.planning,minimum_op:0
@@ -483,22 +517,22 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per User :"
-msgstr ""
+msgstr "Per Utilizator :"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,warehouse_id:0
 msgid "Warehouse which planning will concern."
-msgstr ""
+msgstr "Depozitul care va fi vizat de planificare."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,user_id:0
 msgid "Created/Validated by"
-msgstr ""
+msgstr "Creat/Validat de"
 
 #. module: stock_planning
 #: field:stock.planning,warehouse_forecast:0
 msgid "Warehouse Forecast"
-msgstr ""
+msgstr "Estimare depozit"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:674
@@ -507,6 +541,8 @@ msgid ""
 "You must specify a Source Warehouse different than calculated (destination) "
 "Warehouse !"
 msgstr ""
+"Trebuie sa specificati un Depozit Sursa diferit de Depozitul calculat "
+"(destinatie) !"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:146
@@ -517,12 +553,12 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
 msgid "This Company Period5"
-msgstr ""
+msgstr "Perioada5 a acestei companii"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uom:0
 msgid "Product UoM"
-msgstr ""
+msgstr "UdeM (Unitatea de masura) a produsului"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_company:0
@@ -532,28 +568,28 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_company:0
 msgid "This Company Period2"
-msgstr ""
+msgstr "Perioada2 a acestei companii"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_company:0
 msgid "This Company Period3"
-msgstr ""
+msgstr "Perioada3 a acestei companii"
 
 #. module: stock_planning
 #: field:stock.period,date_start:0
 #: field:stock.period.createlines,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Data de inceput"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_user:0
 msgid "This User Period2"
-msgstr ""
+msgstr "Perioada2 a acestui utilizator"
 
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
 msgid "Validated Forecasts"
-msgstr ""
+msgstr "Estimari validate"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,product_categ_id:0
@@ -561,11 +597,14 @@ msgid ""
 "Planning will be created for products from Product Category selected by this "
 "field. This field is ignored when you check \"All Forecasted Product\" box."
 msgstr ""
+"Planificarea va fi creata pentru produsele din Categoria Produsului "
+"selectate in acest camp. Acest camp este ignorat atunci cand bifati casuta "
+"\"Toate Produsele Prognozate\"."
 
 #. module: stock_planning
 #: field:stock.planning,planned_outgoing:0
 msgid "Planned Out"
-msgstr ""
+msgstr "Produse planificate sa iasa"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_qty:0
@@ -575,25 +614,25 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecast"
-msgstr ""
+msgstr "Estimare"
 
 #. module: stock_planning
 #: selection:stock.period,state:0
 #: selection:stock.planning,state:0
 #: selection:stock.sale.forecast,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Ciorna"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Closed"
-msgstr ""
+msgstr "Inchis"
 
 #. module: stock_planning
 #: view:stock.planning:0
 #: view:stock.sale.forecast:0
 msgid "Warehouse "
-msgstr ""
+msgstr "Depozit "
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_uom:0
@@ -605,7 +644,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Planning and Situation for Calculated Period"
-msgstr ""
+msgstr "Planificarea si Situatia pentru Perioada calculata"
 
 #. module: stock_planning
 #: help:stock.planning,planned_outgoing:0
@@ -614,6 +653,10 @@ msgid ""
 "Period of selected Product. To plan this value look at Confirmed Out or "
 "Sales Forecasts. This value should be equal or greater than Confirmed Out."
 msgstr ""
+"Introduceti cantitatea planificata pentru iesire din Depozitul selectat in "
+"timpul Perioadei selectate a Produsului selectat. Pentru a planifica aceasta "
+"valoare uitati-va in Iesire confirmata sau in Estimarile vanzarilor. Aceasta "
+"valoare ar trebui sa fie egala cusau mai mare decat cea a Iesirii confirmate."
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -623,45 +666,45 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Internal Supply"
-msgstr ""
+msgstr "Aprovizionare interna"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:724
 #, python-format
 msgid "%s Pick List %s (%s,  %s) %s %s \n"
-msgstr ""
+msgstr "%s Lista de prelare %s (%s,    %s) %s %s \n"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_sale_forecast_createlines_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_createlines
 msgid "Create Sales Forecasts"
-msgstr ""
+msgstr "Creare Previziuni ale vanzarilor"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_id:0
 msgid "Period4"
-msgstr ""
+msgstr "Perioada4"
 
 #. module: stock_planning
 #: field:stock.period,name:0
 #: field:stock.period.createlines,name:0
 msgid "Period Name"
-msgstr ""
+msgstr "Denumire perioada"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_id:0
 msgid "Period2"
-msgstr ""
+msgstr "Perioada2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_id:0
 msgid "Period3"
-msgstr ""
+msgstr "Perioada3"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_id:0
 msgid "Period1"
-msgstr ""
+msgstr "Perioada1"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_stock_planning_createlines_form
@@ -674,39 +717,39 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
 msgid "Confirmed Out"
-msgstr ""
+msgstr "Confirmare iesire produse"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_planning_createlines_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning_createlines
 #: view:stock.planning.createlines:0
 msgid "Create Stock Planning Lines"
-msgstr ""
+msgstr "Creare linii de planificare stoc"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "General Info"
-msgstr ""
+msgstr "Informatii generale"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_sale_forecast_form
 msgid "Sales Forecast"
-msgstr ""
+msgstr "Previziune a vanzarilor"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_warehouse:0
 msgid "This Warehouse Period1"
-msgstr ""
+msgstr "Perioada1 a acestui depozit"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Sales history"
-msgstr ""
+msgstr "Istoric vanzari"
 
 #. module: stock_planning
 #: field:stock.planning,supply_warehouse_id:0
 msgid "Source Warehouse"
-msgstr ""
+msgstr "Depozitul Sursa"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_qty:0
@@ -716,12 +759,12 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
 msgid "Stock Supply Location"
-msgstr ""
+msgstr "Locatia aprovizionarii stocului"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_stop:0
 msgid "Ending date for planning period."
-msgstr ""
+msgstr "Data de sfarsit pentru perioada planificata."
 
 #. module: stock_planning
 #: help:stock.planning.createlines,forecasted_products:0
@@ -729,6 +772,9 @@ msgid ""
 "Check this box to create planning for all products having any forecast for "
 "selected Warehouse and Period. Product Category field will be ignored."
 msgstr ""
+"Bifati aceasta casuta pentru a crea planificarea tuturor produselor care au "
+"vreo estimare pentru Depozitul si Perioada selectat(a). Campul Categoria "
+"produsului va fi ignorat."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:632
@@ -736,19 +782,19 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:702
 #, python-format
 msgid "MPS(%s) %s"
-msgstr ""
+msgstr "PAP(%s) %s"
 
 #. module: stock_planning
 #: field:stock.planning,already_in:0
 msgid "Already In"
-msgstr ""
+msgstr "Produse primite deja"
 
 #. module: stock_planning
 #: field:stock.planning,product_uom_categ:0
 #: field:stock.planning,product_uos_categ:0
 #: field:stock.sale.forecast,product_uom_categ:0
 msgid "Product UoM Category"
-msgstr ""
+msgstr "Categoria UdeM a produsului"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_view_stock_sale_forecast_form
@@ -791,6 +837,19 @@ msgid ""
 " Expected Out: %s   Incoming Left: %s                                     \n"
 " Stock Simulation: %s   Minimum stock: %s "
 msgstr ""
+"Preluarea creata din PAP de catre utilizator: %s \tData crearii: %s \t\n"
+"Pentru perioada: %s \tin functie de stare: \t\n"
+"Estimare depozit: %s \t\t\t\n"
+"Stoc initial: %s \t\t\t\n"
+"Produse planificate pentru iesire: %s \t\tProduse planificate pentru "
+"intrare: %s \t\t\n"
+"Produse iesite deja: %s \t\t\t\tProduse intrate deja: %s \t\t\t\n"
+"Confirmare iesire produse: %s\t\tConfirmare intrare produse: %s \t\t\t\n"
+"Produse planificate pentru iesire inainte de: %s\t\t\tProduse confirmate "
+"pentru intrare inainte de: %s\t\t\t\n"
+"\t\t \n"
+"Produse asteptate sa iasa: %s \t\t\tPrimire produse ramase: %s \t\t\t\n"
+"Simulare stoc: %s \t\t\tStoc minim: %s "
 
 #. module: stock_planning
 #: field:stock.planning,period_id:0
@@ -798,43 +857,43 @@ msgstr ""
 #: field:stock.sale.forecast,period_id:0
 #: field:stock.sale.forecast.createlines,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Perioada"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uos_categ:0
 msgid "Product UoS Category"
-msgstr ""
+msgstr "Categoria UdeS a produsului"
 
 #. module: stock_planning
 #: field:stock.planning,active_uom:0
 #: field:stock.sale.forecast,active_uom:0
 msgid "Active UoM"
-msgstr ""
+msgstr "UdeM activa"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Search Stock Planning"
-msgstr ""
+msgstr "Cautare Planificare stoc"
 
 #. module: stock_planning
 #: field:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy Last Forecast"
-msgstr ""
+msgstr "Copiaza ultima estimare"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_id:0
 msgid "Shows which product this forecast concerns."
-msgstr ""
+msgstr "Arata care este produsul vizat de aceasta estimare."
 
 #. module: stock_planning
 #: selection:stock.planning,state:0
 msgid "Done"
-msgstr ""
+msgstr "Efectuat"
 
 #. module: stock_planning
 #: field:stock.period.createlines,period_ids:0
 msgid "Periods"
-msgstr ""
+msgstr "Perioade"
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_period_creatlines
@@ -847,59 +906,59 @@ msgstr ""
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Close"
-msgstr ""
+msgstr "Inchide"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 #: selection:stock.sale.forecast,state:0
 msgid "Validated"
-msgstr ""
+msgstr "Validat"
 
 #. module: stock_planning
 #: view:stock.period:0
 #: selection:stock.period,state:0
 msgid "Open"
-msgstr ""
+msgstr "Deschide"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy quantities from last Stock and Sale Forecast."
-msgstr ""
+msgstr "Copiaza cantitatile din ultima Estimare a stocului si a vanzarii."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_dept:0
 msgid "This Dept Period1"
-msgstr ""
+msgstr "Perioada1 a acestui departament"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_dept:0
 msgid "This Dept Period3"
-msgstr ""
+msgstr "Perioada3 a acestui departament"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_dept:0
 msgid "This Dept Period2"
-msgstr ""
+msgstr "Perioada2 a acestui departament"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_dept:0
 msgid "This Dept Period5"
-msgstr ""
+msgstr "Perioada5 a acestui departament"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_dept:0
 msgid "This Dept Period4"
-msgstr ""
+msgstr "Perioada4 a acestui departament"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_warehouse:0
 msgid "This Warehouse Period2"
-msgstr ""
+msgstr "Perioada2 a acestui depozit"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_warehouse:0
 msgid "This Warehouse Period3"
-msgstr ""
+msgstr "Perioada3 a acestui depozit"
 
 #. module: stock_planning
 #: help:stock.planning,stock_supply_location:0
@@ -912,27 +971,27 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
 msgid "Responsible"
-msgstr ""
+msgstr "Responsabil"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Default UOM"
-msgstr ""
+msgstr "UdeM predefinita"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_warehouse:0
 msgid "This Warehouse Period4"
-msgstr ""
+msgstr "Perioada4 a acestui depozit"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_warehouse:0
 msgid "This Warehouse Period5"
-msgstr ""
+msgstr "Perioada5 a acestui depozit"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Current"
-msgstr ""
+msgstr "Curent"
 
 #. module: stock_planning
 #: help:stock.planning,supply_warehouse_id:0
@@ -944,7 +1003,7 @@ msgstr ""
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
 msgid "stock.planning"
-msgstr ""
+msgstr "stoc.planificare"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,warehouse_id:0
@@ -952,6 +1011,9 @@ msgid ""
 "Shows which warehouse this forecast concerns. If during stock planning you "
 "will need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Arata care este depozitul vizat de aceasta estimare. Daca in timpul "
+"planificarii stocului veti avea nevoie de estimarile vanzarilor pentru toate "
+"depozitele, alegeti orice depozit acum."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:661
@@ -962,7 +1024,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,analyze_company:0
 msgid "Per Company"
-msgstr ""
+msgstr "Per Companie"
 
 #. module: stock_planning
 #: help:stock.planning,to_procure:0
@@ -971,41 +1033,45 @@ msgid ""
 "observe Stock simulation. This value should be equal or greater than "
 "Confirmed In."
 msgstr ""
+"Introduceti cantitatea care ar trebui sa apara (conform planului "
+"dumneavoastra). Schimbati aceasta valoare si observati Simularea stocului. "
+"Aceasta valoare ar trebui sa fie egala sau mai mare decat cea a Confirmarii "
+"primirii produselor."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_company:0
 msgid "This Company Period4"
-msgstr ""
+msgstr "Perioada4 a acestei compan"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,period_id:0
 msgid "Period which planning will concern."
-msgstr ""
+msgstr "Perioada care este vizata de planificare."
 
 #. module: stock_planning
 #: field:stock.planning,already_out:0
 msgid "Already Out"
-msgstr ""
+msgstr "Produse iesite deja"
 
 #. module: stock_planning
 #: help:stock.planning,product_id:0
 msgid "Product which this planning is created for."
-msgstr ""
+msgstr "Produsul pentru care este creata aceasta planificare."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per Warehouse :"
-msgstr ""
+msgstr "Per Depozit :"
 
 #. module: stock_planning
 #: field:stock.planning,history:0
 msgid "Procurement History"
-msgstr ""
+msgstr "Istoric aprovizionare"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_start:0
 msgid "Starting date for planning period."
-msgstr ""
+msgstr "Data de inceput pentru perioada planificata."
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_createlines_form
@@ -1020,38 +1086,39 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Stock"
-msgstr ""
+msgstr "Stoc"
 
 #. module: stock_planning
 #: help:stock.planning,incoming:0
 msgid "Quantity of all confirmed incoming moves in calculated Period."
 msgstr ""
+"Cantitatea tuturor miscarilor de primire confirmate in Perioada calculata."
 
 #. module: stock_planning
 #: field:stock.period,date_stop:0
 #: field:stock.period.createlines,date_stop:0
 msgid "End Date"
-msgstr ""
+msgstr "Data de sfarsit"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "No Requisition"
-msgstr ""
+msgstr "Nici o solicitare"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,period_id:0
 msgid "Shows which period this forecast concerns."
-msgstr ""
+msgstr "Arata perioada vizata de aceasta estimare."
 
 #. module: stock_planning
 #: field:stock.planning,product_uom:0
 msgid "UoM"
-msgstr ""
+msgstr "UdeM"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -1064,36 +1131,36 @@ msgstr ""
 #: view:stock.sale.forecast:0
 #: field:stock.sale.forecast,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produs"
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
 #: view:stock.sale.forecast:0
 msgid "Sales Forecasts"
-msgstr ""
+msgstr "Previziuni ale vanzarilor"
 
 #. module: stock_planning
 #: field:stock.planning.createlines,product_categ_id:0
 #: field:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Categorie produs"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:672
 #, python-format
 msgid "You must specify a Source Warehouse !"
-msgstr ""
+msgstr "Trebuie sa specificati un Depozit Sursa !"
 
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
 msgid "Procure To Stock Location"
-msgstr ""
+msgstr "Achizitionare in Locatia stocului"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Approve"
-msgstr ""
+msgstr "Aprobare"
 
 #. module: stock_planning
 #: help:stock.planning,period_id:0
@@ -1101,6 +1168,8 @@ msgid ""
 "Period for this planning. Requisition will be created for beginning of the "
 "period."
 msgstr ""
+"Perioada pentru aceasta planificare. Solicitarea va fi creata pentru "
+"inceputul perioadei."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:631
@@ -1111,12 +1180,12 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,stock_start:0
 msgid "Initial Stock"
-msgstr ""
+msgstr "Stocul initial"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_amt:0
 msgid "Product Amount"
-msgstr ""
+msgstr "Suma produs"
 
 #. module: stock_planning
 #: help:stock.planning,confirmed_forecasts_only:0
@@ -1124,21 +1193,23 @@ msgid ""
 "Check to take validated forecasts only. If not checked system takes "
 "validated and draft forecasts."
 msgstr ""
+"Bifati pentru a primi doar estimarile validate. Daca nu bifati, sistemul ia "
+"in considerare si estimarile validate si pe cele ciorna."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_id:0
 msgid "Period5"
-msgstr ""
+msgstr "Perioada5"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_warehouse_id:0
 msgid "This Warehouse"
-msgstr ""
+msgstr "Depozitul acesta"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,user_id:0
 msgid "Shows who created this forecast, or who validated."
-msgstr ""
+msgstr "Arata cine a creat aceasta estimare sau cine a validat-o."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_team_id:0
@@ -1152,6 +1223,10 @@ msgid ""
 "between Planned In and Confirmed In. For current period Already In is also "
 "calculated. This value is used to create procurement for lacking quantity."
 msgstr ""
+"Cantitatea ramasa si cantitatea planificata sa intre. Aceasta este diferenta "
+"calculata intre Planificare intrare produse si Confirmare intrare produse. "
+"Pentru perioada curenta se calculeaza si Produsele primite deja. Aceasta "
+"valoare este folosita pentru a crea acizitionarea cantitatii lipsa."
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_left:0
@@ -1164,7 +1239,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Calculate Sales History"
-msgstr ""
+msgstr "Istoric calcul vanzari"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_stock_sale_forecast_createlines_form
@@ -1173,3 +1248,713 @@ msgid ""
 "you only have to fill in the forecast quantities. The wizard doesn't "
 "duplicate the line when another one exist for the same selection."
 msgstr ""
+
+#~ msgid "This Copmany Period1"
+#~ msgstr "Perioada1 pentru aceasta companie"
+
+#~ msgid "Requisition history"
+#~ msgstr "Istoric solicitari"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Initial Stock: "
+#~ msgstr ""
+#~ "\n"
+#~ " Stoc initial: "
+
+#~ msgid "Create Stock and Sales Periods"
+#~ msgstr "Creare Stoc si Perioade de vanzare"
+
+#~ msgid ""
+#~ "Chect to make procurement to stock location of selected warehouse. If not "
+#~ "selected procurement will be made into input location of warehouse."
+#~ msgstr ""
+#~ "Bifati pentru a face aprovizionarea in locatia stocului a depozitului "
+#~ "selectat. Daca nu selectati, aprovizionarea se va face in locatia de intrare "
+#~ "a depozitului."
+
+#~ msgid ""
+#~ "Warehouse used as source in supply pick move created by 'Supply from Another "
+#~ "Warhouse'."
+#~ msgstr ""
+#~ "Depozit folosit ca sursa in miscarea de preluare a aprovizionarii creata de "
+#~ "'Aprovizionare dintr-un alt depozit'."
+
+#, python-format
+#~ msgid "    Confirmed In Before: "
+#~ msgstr "    Produse confirmate pentru primire inainte de: "
+
+#~ msgid "This Department"
+#~ msgstr "Departamentul acesta"
+
+#, python-format
+#~ msgid "    Incoming Left: "
+#~ msgstr "    Primire produse ramase: "
+
+#, python-format
+#~ msgid "  Creation Date: "
+#~ msgstr "  Data crearii: "
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Confirmed Out: "
+#~ msgstr ""
+#~ "\n"
+#~ " Produse confirmate pentru iesire: "
+
+#~ msgid "Maximum quantity set in Minimum Stock Rules for this Warhouse"
+#~ msgstr ""
+#~ "Cantitatea maxima setata in Regulile Stocului Minim pentru acest Depozit"
+
+#~ msgid "Creates planning lines for selected period and warehouse."
+#~ msgstr "Creeaza linii de planificare pentru perioada si depozitul selectate."
+
+#~ msgid "Note: Doesn't duplicate existing lines created by you."
+#~ msgstr "Nota: Nu copiaza linii existente create de dumneavoastra."
+
+#~ msgid ""
+#~ "Unit of Measure used to show the quanities of stock calculation.You can use "
+#~ "units form default category or from second category (UoS category)."
+#~ msgstr ""
+#~ "Unitatea de Masura folosita pentru a arata cantitatile in calculul stocului. "
+#~ "Puteti folosi unitatile din categoria default sau din a doua categorie "
+#~ "(categoria UoS)."
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Already Out: "
+#~ msgstr ""
+#~ "\n"
+#~ " Produse iesite deja: "
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Expected Out: "
+#~ msgstr ""
+#~ "\n"
+#~ " Produse asteptate sa iasa: "
+
+#~ msgid "Create periods for Stock and Sales Planning"
+#~ msgstr "Creare perioade pentru Planificarea Stocului si a Vanzarilor"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module is based on original OpenERP SA module stock_planning version "
+#~ "1.0 of the same name Master Procurement Schedule.\n"
+#~ "\n"
+#~ "Purpose of MPS is to allow create a manual procurement (requisition) apart "
+#~ "of MRP scheduler (which works automatically on minimum stock rules).\n"
+#~ "\n"
+#~ "Terms used in the module:\n"
+#~ "- Stock and Sales Period - is the time (between Start Date and End Date) for "
+#~ "which you plan Stock and Sales Forecast and make Procurement Planning. \n"
+#~ "- Stock and Sales Forecast - is the quantity of products you plan to sell in "
+#~ "the Period.\n"
+#~ "- Stock Planning - is the quantity of products you plan to purchase or "
+#~ "produce for the Period.\n"
+#~ "\n"
+#~ "Because we have another module sale_forecast which uses terms \"Sales "
+#~ "Forecast\" and \"Planning\" as amount values we will use terms \"Stock and "
+#~ "Sales Forecast\" and \"Stock Planning\" to emphasize that we use quantity "
+#~ "values. \n"
+#~ "\n"
+#~ "Activity with this module is divided to three steps:\n"
+#~ "- Creating Periods. Mandatory step.\n"
+#~ "- Creating Sale Forecasts and entering quantities to them. Optional step but "
+#~ "useful for further planning.\n"
+#~ "- Creating Planning lines, entering quantities to them and making "
+#~ "Procurement. Making procurement is the final step for the Period.\n"
+#~ "\n"
+#~ "Periods\n"
+#~ "=======\n"
+#~ "You have two menu items for Periods in \"Sales Management - Configuration\". "
+#~ "There are:\n"
+#~ "- \"Create Sales Periods\" - Which automates creating daily, weekly or "
+#~ "monthly periods.\n"
+#~ "- \"Stock and sales Periods\" - Which allows to create any type of periods, "
+#~ "change the dates and change the State of period.\n"
+#~ "\n"
+#~ "Creating periods is the first step you have to do to use modules features. "
+#~ "You can create custom periods using \"New\" button in \"Stock and Sales "
+#~ "Periods\" form or view but it is recommended to use automating tool.\n"
+#~ "\n"
+#~ "Remarks:\n"
+#~ "- These periods (officially Stock and Sales Periods) are separated of "
+#~ "Financial or other periods in the system.\n"
+#~ "- Periods are not assigned to companies (when you use multicompany feature "
+#~ "at all). Module suppose that you use the same periods across companies. If "
+#~ "you wish to use different periods for different companies define them as you "
+#~ "wish (they can overlap). Later on in this text will be indications how to "
+#~ "use such periods.\n"
+#~ "- When periods are created automatically their start and finish dates are "
+#~ "with start hour 00:00:00 and end hour 23:59:00. Fe. when you create daily "
+#~ "periods they will have start date 31.01.2010 00:00:00 and end date "
+#~ "31.01.2010 23:59:00. It works only in automatic creation of periods. When "
+#~ "you create periods manually you have to take care about hours because you "
+#~ "can have incorrect values form sales or stock. \n"
+#~ "- If you use overlapping periods for the same product, warehouse and company "
+#~ "results can be unpredictable.\n"
+#~ "- If current date doesn't belong to any period or you have holes between "
+#~ "periods results can be unpredictable.\n"
+#~ "\n"
+#~ "Sales Forecasts\n"
+#~ "===============\n"
+#~ "You have few menus for Sales forecast in \"Sales Management - Sales "
+#~ "Forecasts\".\n"
+#~ "- \"Create Sales Forecasts for Sales Periods\" - which automates creating "
+#~ "forecasts lines according to some parameters.\n"
+#~ "- \"Sales Forecasts\" - few menus for working with forecasts lists and "
+#~ "forms.\n"
+#~ "\n"
+#~ "Menu \"Create Sales Forecasts for Sales Periods\" creates Forecasts for "
+#~ "products from selected Category, for selected Period and for selected "
+#~ "Warehouse. It is an option \"Copy Last Forecast\" to copy forecast and other "
+#~ "settings of period before this one to created one.\n"
+#~ "\n"
+#~ "Remarks:\n"
+#~ "- This tool doesn't create lines, if relevant lines (for the same Product, "
+#~ "Period, Warehouse and validated or created by you) already exists. If you "
+#~ "wish to create another forecast, if relevant lines exists you have to do it "
+#~ "manually using menus described bellow.\n"
+#~ "- When created lines are validated by someone else you can use this tool to "
+#~ "create another lines for the same Period, Product and Warehouse. \n"
+#~ "- When you choose \"Copy Last Forecast\" created line takes quantity and "
+#~ "some settings from your (validated by you or created by you if not validated "
+#~ "yet) forecast which is for last period before period of created forecast. If "
+#~ "there are few your forecasts for period before this one (it is possible) "
+#~ "system takes one of them (no rule which of them).\n"
+#~ "\n"
+#~ "\n"
+#~ "Menus \"Sales Forecasts\"\n"
+#~ "On \"Sales Forecast\" form mainly you have to enter a forecast quantity in "
+#~ "\"Product Quantity\". Further calculation can work for draft forecasts. But "
+#~ "validation can save your data against any accidental changes. You can click "
+#~ "\"Validate\" button but it is not mandatory.\n"
+#~ "\n"
+#~ "Instead of forecast quantity you can enter amount of forecast sales in field "
+#~ "\"Product Amount\". System will count quantity from amount according to Sale "
+#~ "price of the Product.\n"
+#~ "\n"
+#~ "All values on the form are expressed in unit of measure selected on form. "
+#~ "You can select one of unit of measure from default category or from second "
+#~ "category. When you change unit of measure the quanities will be recalculated "
+#~ "according to new UoM: editable values (blue fields) immediately, non edited "
+#~ "fields after clicking of \"Calculate Planning\" button.\n"
+#~ "\n"
+#~ "To find proper value for Sale Forecast you can use \"Sales History\" table "
+#~ "for this product. You have to enter parameters to the top and left of this "
+#~ "table and system will count sale quantities according to these parameters. "
+#~ "So you can select fe. your department (at the top) then (to the left): last "
+#~ "period, period before last and period year ago.\n"
+#~ "\n"
+#~ "Remarks:\n"
+#~ "\n"
+#~ "\n"
+#~ "Procurement Planning\n"
+#~ "====================\n"
+#~ "Menu for Planning you can find in \"Warehouse - Stock Planning\".\n"
+#~ "- \"Create Stock Planning Lines\" - allows you to automate creating planning "
+#~ "lines according to some parameters.\n"
+#~ "- \"Master Procurement Scheduler\" - is the most important menu of the "
+#~ "module which allows to create procurement.\n"
+#~ "\n"
+#~ "As Sales forecast is phase of planning sales. The Procurement Planning "
+#~ "(Planning) is the phase of scheduling Purchasing or Producing. You can "
+#~ "create Procurement Planning quickly using tool from menu \"Create Stock "
+#~ "Planning Lines\", then you can review created planning and make procurement "
+#~ "using menu \"Master Procurement Schedule\".\n"
+#~ "\n"
+#~ "Menu \"Create Stock Planning Lines\" allows you to create quickly Planning "
+#~ "lines for products from selected Category, for selected Period, and for "
+#~ "selected Warehouse. When you check option \"All Products with Forecast\" "
+#~ "system creates lines for all products having forecast for selected Period "
+#~ "and Warehouse. Selected Category will be ignored in this case.\n"
+#~ "\n"
+#~ "Under menu \"Master Procurement Scheduler\" you can generally change the "
+#~ "values \"Planned Out\" and \"Planned In\" to observe the field \"Stock "
+#~ "Simulation\" and decide if this value would be accurate for end of the "
+#~ "Period. \n"
+#~ "\"Planned Out\" can be based on \"Warehouse Forecast\" which is the sum of "
+#~ "all forecasts for Period and Warehouse. But your planning can be based on "
+#~ "any other information you have. It is not necessary to have any forecast. \n"
+#~ "\"Planned In\" quantity is used to calculate field \"Incoming Left\" which "
+#~ "is the quantity to be procured to make stock as indicated in \"Stock "
+#~ "Simulation\" at the end of Period. You can compare \"Stock Simulation\" "
+#~ "quantity to minimum stock rules visible on the form. But you can plan "
+#~ "different quantity than in Minimum Stock Rules. Calculation is made for "
+#~ "whole Warehouse by default. But if you want to see values for Stock location "
+#~ "of calculated warehouse you can use check box \"Stock Location Only\".\n"
+#~ "\n"
+#~ "If after few tries you decide that you found correct quantities for "
+#~ "\"Planned Out\" and \"Planned In\" and you are satisfied with end of period "
+#~ "stock calculated in \"Stock Simulation\" you can click \"Procure Incoming "
+#~ "Left\" button to procure quantity of field \"Incoming Left\" into the "
+#~ "Warehouse. System creates appropriate Procurement Order. You can decide if "
+#~ "procurement will be made to Stock or Input location of calculated Warehouse. "
+#~ "\n"
+#~ "\n"
+#~ "If you don't want to Produce or Buy the product but just pick calculated "
+#~ "quantity from another warehouse you can click \"Supply from Another "
+#~ "Warehouse\" (instead of \"Procure Incoming Left\"). System creates pick list "
+#~ "with move from selected source Warehouse to calculated Warehouse (as "
+#~ "destination). You can also decide if this pick should be done from Stock or "
+#~ "Output location of source warehouse. Destination location (Stock or Input) "
+#~ "of destination warehouse will be used as set for \"Procure Incoming Left\". "
+#~ "\n"
+#~ "\n"
+#~ "To see proper quantities in fields \"Confirmed In\", \"Confirmed Out\", "
+#~ "\"Confirmed In Before\", \"Planned Out Before\" and \"Stock Simulation\" you "
+#~ "have to click button \"Calculate Planning\".\n"
+#~ "\n"
+#~ "All values on the form are expressed in unit of measure selected on form. "
+#~ "You can select one of unit of measure from default category or from second "
+#~ "category. When you change unit of measure the quanities will be recalculated "
+#~ "according to new UoM: editable values (blue fields) immediately, non edited "
+#~ "fields after clicking of \"Calculate Planning\" button.\n"
+#~ "\n"
+#~ "How Stock Simulation field is calculated:\n"
+#~ "Generally Stock Simulation shows the stock for end of the calculated period "
+#~ "according to some planned or confirmed stock moves. Calculation always "
+#~ "starts with quantity of real stock of beginning of current period. Then "
+#~ "calculation adds or subtracts quantities of calculated period or periods "
+#~ "before calculated.\n"
+#~ "When you are in the same period (current period is the same as calculated) "
+#~ "Stock Simulation is calculated as follows:\n"
+#~ "Stock Simulation = \n"
+#~ "\tStock of beginning of current Period\n"
+#~ "\t- Planned Out \n"
+#~ "\t+ Planned In\n"
+#~ "\n"
+#~ "When you calculate period next to current:\n"
+#~ "Stock Simulation = \n"
+#~ "\tStock of beginning of current Period\n"
+#~ "\t- Planned Out of current Period \n"
+#~ "\t+ Confirmed In of current Period  (incl. Already In)\n"
+#~ "\t- Planned Out of calculated Period \n"
+#~ "\t+ Planned In of calculated Period .\n"
+#~ "\n"
+#~ "As you see calculated Period is taken the same way like in case above. But "
+#~ "calculation of current Period are made a little bit different. First you "
+#~ "should note that system takes for current Period only Confirmed In moves. It "
+#~ "means that you have to make planning and procurement for current Period "
+#~ "before this calculation (for Period next to current). \n"
+#~ "\n"
+#~ "When you calculate Period ahead:\n"
+#~ "Stock Simulation = \n"
+#~ "\tStock of beginning of current Period \n"
+#~ "\t- Sum of Planned Out of Periods before calculated \n"
+#~ "\t+ Sum of Confirmed In of Periods before calculated (incl. Already In) \n"
+#~ "\t- Planned Out of calculated Period \n"
+#~ "\t+ Planned In of calculated Period.\n"
+#~ "\n"
+#~ "Periods before calculated means periods starting from current till period "
+#~ "before calculated.\n"
+#~ "\n"
+#~ "Remarks:\n"
+#~ "- Remember to make planning for all periods before calculated because "
+#~ "omitting these quantities and procurements can cause wrong suggestions for "
+#~ "procurements few periods ahead.\n"
+#~ "- If you made planning few periods ahead and you find that real Confirmed "
+#~ "Out is bigger than Planned Out in some periods before you can repeat "
+#~ "Planning and make another procurement. You should do it in the same planning "
+#~ "line. If you create another planning line the suggestions can be wrong.\n"
+#~ "- When you wish to work with different periods for some part of products "
+#~ "define two kinds of periods (fe. Weekly and Monthly) and use them for "
+#~ "different products. Example: If you use always Weekly periods for Products "
+#~ "A, and Monthly periods for Products B your all calculations will work "
+#~ "correctly. You can also use different kind of periods for the same products "
+#~ "from different warehouse or companies. But you cannot use overlapping "
+#~ "periods for the same product, warehouse and company because results can be "
+#~ "unpredictable. The same apply to Forecasts lines.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Acest modul se bazeaza pe modulul original OpenERP stock_planning "
+#~ "(planificarea_stocului) versiunea 1.0 cu acelasi nume ca si Programarea "
+#~ "Aprovizionarii Principale.\n"
+#~ "\n"
+#~ "Scopul PAP este de a permite crearea unei aprovizionari manuale (solicitare) "
+#~ "in afara de programarea MRP (care functioneaza automat pe baza regulilor "
+#~ "stocului minim).\n"
+#~ "\n"
+#~ "Termeni folositi in modul:\n"
+#~ "- Stocul si Perioada vanzarii – este perioada (intre Data de inceput si Data "
+#~ "de sfarsit) pentru care planificati Stocul si Estimarea Vanzarii si faceti "
+#~ "Planificarea Aprovizionarii.\n"
+#~ "- Stocul si Estimarea Vanzarii – este cantitatea de produse pe care planuiti "
+#~ "sa le vindeti in Perioada respectiva.\n"
+#~ "- Planificarea Stocului – este cantitatea de produse pe care planuiti sa le "
+#~ "cumparati sau sa le produceti pentru Perioada respectiva.\n"
+#~ "\n"
+#~ "Pentru ca avem un alt modul sale_forecast (estimare_vanzari) care foloseste "
+#~ "termenii \"Estimarea vanzarii\" si \"Planificare\" drept valori sumative, "
+#~ "noi vom folosi termenii \"Stocul si Estimarea Vanzarii\" si \"Planificarea "
+#~ "stocului\" pentru a sublinia faptul ca folosim valori cantitative.\n"
+#~ "\n"
+#~ "Activitatea in acest modul este impartita in trei pasi:\n"
+#~ "- Crearea Perioadelor. Pas obligatoriu.\n"
+#~ "- Crearea Estimarilor vanzarilor si introducerea cantitatilor. Pas optional, "
+#~ "dar folositor pentru planificarea ulterioara.\n"
+#~ "- Crearea liniilor Planificarii, introducerea cantitatilor si efectuarea "
+#~ "Achizitionarii. Efectuarea Achizitionarii este pasul final pentru Perioada "
+#~ "respectiva.\n"
+#~ "\n"
+#~ "Perioade\n"
+#~ "==========\n"
+#~ "Aveti doua elemente ale meniului pentru Perioade in \"Managementul vanzarii "
+#~ "– Configurare\". Ele sunt:\n"
+#~ "-\"Creare Perioade vanzari\" – care creeaza automat perioade zilnice, "
+#~ "saptamanale sau lunare.\n"
+#~ "-\"Stoc si Perioade vanzari\" – care permite crearea oricarui tip de "
+#~ "perioade, schimbarea datelor si schimbarea Starii perioadei.\n"
+#~ "\n"
+#~ "Crearea perioadelor este primul pas pe care trebuie sa il faceti pentru a "
+#~ "folosi caracteristicile modulelor. Puteti crea perioade personalizate "
+#~ "folosind butonul \"Nou\" din formularul \"Stocul si Perioadele vanzarii\" "
+#~ "sau sa le vizualizati, dar este recomandat sa folositi unealta automata.\n"
+#~ "\n"
+#~ "Comentarii:\n"
+#~ "- Aceste perioade (official Stocul si Perioadele vanzarilor) sunt separate "
+#~ "de Financiar sau alte perioade din system.\n"
+#~ "- Perioadele nu sunt atribuite companiilor (atunci cand folositi "
+#~ "caracteristica multicompanie). Modulul presupune folosirea acelorasi "
+#~ "perioade intre companii. Daca doriti sa folositi perioade diferite pentru "
+#~ "companii diferite, definiti-le asa cum doriti (ele se pot suprapune). "
+#~ "Ulterior vi se vor da indicatii despre cum sa folositi asemenea perioade.\n"
+#~ "- Atunci cand perioadele sunt create automat, datele lor de inceput si de "
+#~ "sfarsit au ora de inceput 00:00:00 si ora de sfarsit 23:59:00. Atunci cand "
+#~ "creati perioade zilnice ele vor avea data de inceput 31.01.2010 00:00:00 si "
+#~ "data de sfarsit 31.01.2010 23:59:00. Acest lucru functioneaza doar la "
+#~ "crearea automata a perioadelor. Atunci cand creati perioade manual, trebuie "
+#~ "sa aveti grija la ore pentru ca puteti avea valori incorecte din vanzari sau "
+#~ "stoc. \n"
+#~ "- Daca folositi perioade care se suprapun pentru acelasi/aceeasi produs, "
+#~ "depozit si companie, rezultatele pot fi imprevizibile.\n"
+#~ "- Daca data curenta nu apartine nici unei perioade sau daca aveti goluri "
+#~ "intre perioade, rezultatele pot fi imprevizibile.\n"
+#~ "\n"
+#~ "Estimari vanzari\n"
+#~ "=================\n"
+#~ "Aveti cateva meniuri pentru Estimarea vanzarilor in \"Managementul Vanzarii "
+#~ "– Estimare Vanzari\".\n"
+#~ "- \"Creare Estimare vanzari pentru Perioadele de vanzari\" – ceea ce "
+#~ "automatizeaza crearea liniilor estimarilor in functie de anumiti "
+#~ "parametric.\n"
+#~ "- \"Estimari vanzari\" – cateva meniuri pentru a lucra cu listele "
+#~ "estimarilor si forme.\n"
+#~ "\n"
+#~ "Meniul \"Creare Estimari vanzari pentru Perioadele de vanzari\" creeaza "
+#~ "Estimari pentru produse din categoria selectata, pentru Perioada selectata "
+#~ "si pentru Depozitul selectat. Este o optiune \"Copiaza ultima estimare\" "
+#~ "pentru a copia estimarea si alte setari ale perioadei in cea create.\n"
+#~ "\n"
+#~ "Comentarii:\n"
+#~ "- Aceasta unealta nu creeaza linii, daca deja exista liniile relevante "
+#~ "(pentru acelasi/aceeasi Produs, Perioada, Depozit si validate sau create de "
+#~ "dumneavoastra). Daca doriti sa creati o alta estimare, daca liniile "
+#~ "pertinente exista deja, trebuie sa faceti acest lucru manual folosind "
+#~ "meniurile descrise mai jos.\n"
+#~ "- Atunci cand liniile create sunt validate de altcineva, puteti folosi "
+#~ "aceasta unealta pentru a crea alte linii pentru aceeasi/acelasi Perioada, "
+#~ "Produs si Depozit.\n"
+#~ "- Cand alegeti \"Copiaza Ultima Estimare\", pozitiile create iau cantitatea "
+#~ "si unele setari de la estimarea dumneavoastra (validata de dumneavoastra sau "
+#~ "creata de dumneavoastra daca inca nu a fost validata) care este pentru "
+#~ "ultima perioada inaintea perioadei pentru care a fost facuta estimarea. Daca "
+#~ "exista cateva estimari pentru perioada de dinaintea acesteia (este posibil) "
+#~ "sistemul va lua una din ele (nu exista vreo regula cu privire la care dintre "
+#~ "ele).\n"
+#~ "\n"
+#~ "\n"
+#~ "Meniurile \"Estimarile vanzarilor\" \n"
+#~ "In formularul \"Estimarea vanzarilor\" trebuie sa introduceti o cantitate "
+#~ "estimata in \"Cantitatea Produsului\". Calculele ulterioare pot functiona "
+#~ "pentru estimarile ciorna. Dar validarea poate salva datele ca sa nu apara "
+#~ "modificari accidentale. Puteti face click pe butonul \"Validare\", dar nu "
+#~ "este obligatoriu.\n"
+#~ "\n"
+#~ "In locul cantitatii estimate, puteti introduce suma vanzarilor estimate in "
+#~ "campul \"Suma Produs\". Sistemul va socoti cantitatea din suma in functie de "
+#~ "Pretul de vanzare al Produsului.\n"
+#~ "\n"
+#~ "Toate valorile din formular sunt exprimate in unitatea de masura selectata "
+#~ "in formular.Puteti selecta o unitate de masura din categoria predefinita sau "
+#~ "din a doua categorie. Atunci cand schimbati unitatea de masura cantitatile "
+#~ "vor fi recalculate conform noii UdeM: valori care pot fi scrise (campuri "
+#~ "albastre) imediat, campuri care nu pot fi editate dup ace faceti click pe "
+#~ "butonul \"Calculare Planificare\".\n"
+#~ "\n"
+#~ "Pentru a gasi valoarea adecvata pentru Estimarea vanzarii puteti folosi "
+#~ "tabelul \"Istoric vanzari\" pentru acest produs. Trebuie sa introduceti "
+#~ "parametrii in partea de sus si in partea stanga a acestui table, iar "
+#~ "sistemul va calcula cantitatile de vanzare in functie de acesti "
+#~ "parametri.Astfel, puteti selecta departamentul dumneavoastra (in partea de "
+#~ "sus), apoi (in partea stanga): ultima perioada, perioada dinaintea ultimei "
+#~ "perioade si perioada cu un an in urma. \n"
+#~ "\n"
+#~ "Comentarii:\n"
+#~ "\n"
+#~ "\n"
+#~ "Planificare achizitie\n"
+#~ "====================\n"
+#~ "Puteti gasi meniul pentru Planificare in \"Depozit – Planificare Stoc\".\n"
+#~ "- \"Creare Linii Planificare Stoc\" – va permite sa automatizati crearea "
+#~ "liniilor conform unor parametric.\n"
+#~ "- \"Programare Achizitionare Principala\" – este cel mai important meniu al "
+#~ "modulului care permite crearea aprovizionarii.\n"
+#~ "\n"
+#~ "Ca Estimarea vanzarii este etapa planificarii vanzarii. Planificarea "
+#~ "Aprovizionarii (Planificare) este etapa programarii Cumpararii sau "
+#~ "Productiei. Puteti crea Planificarea Aprovizionarii repede folosind "
+#~ "instrumentul din meniul \"Creare Linii pentru Planificarea Stocului\", apoi "
+#~ "puteti revedea planificarea create si sa faceti achizitionarea folosind "
+#~ "meniul \"Programare Achizitionare Principala\".\n"
+#~ "\n"
+#~ "Meniul \"Creare Linii pentru Planificarea Stocului\" va permite sa create "
+#~ "rapid linii ale Planificarii pentru produsele din Categoria selectata, "
+#~ "pentru Perioada selectata, si pentru Depozitul selectat. Atunci cand bifati "
+#~ "optiunea \"Toate Produsele cu Estimare\", sistemul creeaza linii pentru "
+#~ "toate produsele care au o estimare pentru Perioada si Depozitul selectat(a). "
+#~ "Categoria selectata va fi ignorata in acest caz.\n"
+#~ "\n"
+#~ "In meniul \"Programare Achizitionare Principala\" puteti schimba valorile "
+#~ "\"Produse planificate pentru iesire\" si \"Produse planificate pentru "
+#~ "primire\" pentru a respecta campul \"Simulare Stoc\" si a decide daca "
+#~ "aceasta valoare va fi exacta la sfarsitul Perioadei.\n"
+#~ "\"Produse planificate pentru iesire\" se poate baza pe \"Estimarea "
+#~ "Depozitului\" care este suma tuturor estimarilor pentru Perioada si Depozit. "
+#~ "Dar planificarea dumneavoastra se poate baza pe orice alte informatii pe "
+#~ "care le aveti. Nu este necesar sa aveti vreo estimare.\n"
+#~ "Cantitatea din \"Produse planificate pentru primire\" este folosita pentru a "
+#~ "calcula campul \"Primire produse ramase\" care este cantitatea ce trebuie "
+#~ "achizitionata pentru a face stocul asa cum este indicat in \"Simulare Stoc\" "
+#~ "la sfarsitul Perioadei. Puteti compara cantitatea din \"Simularea stocului\" "
+#~ "cu regulile stocului minim vizibile in formular. Dar puteti planifica o "
+#~ "cantitate diferita decat cea din Regulile Stocului Minim. Calculul este "
+#~ "efectuat pentru intregul Depozit prin default. Dar daca doriti sa vedeti "
+#~ "valorile pentru Locatia stocului a depozitului calculate puteti bifa casuta "
+#~ "\"Doar Locatia Stocului\".\n"
+#~ "\n"
+#~ "\n"
+#~ "Daca dupa cateva incercari decideti ca ati gasit cantitatile corecte pentru "
+#~ "\"Produse planificate pentru iesire\" si \"Produse planificate pentru "
+#~ "primire\" si sunteti multumit de stocul calculat pentru sfarsitul perioadei "
+#~ "in \"Simulare Stoc\" puteti face click pe butonul \"Achizitionare Primire\" "
+#~ "Produse Ramase pentru a achizitiona cantitatea din campul \"Primire produse "
+#~ "ramase\" in Depozit. Sistemul creeaza Comanda adecvata de achizitionare. "
+#~ "Dumneavoastra puteti decide daca achizitionarea va fi facuta in Locatia "
+#~ "Stocului sau in locatia de intrare a Depozitului calculat.\n"
+#~ "\n"
+#~ "Daca nu doriti sa Achizitionati sau sa Cumparati produsul, ci doar sa "
+#~ "ridicati cantitatea calculata din alt depozit, puteti face click pe "
+#~ "\"Aprovizionare din alt Depozit\" (in loc de  \"Achizitionare Produse "
+#~ "ramase\"). Sistemul creeaza lista de preluare prin miscarea din Depozitul "
+#~ "sursa selectat in Depozitul calculat (ca destinatie). De asemenea, puteti "
+#~ "decide daca aceasta miscare ar trebui facuta din locatia Stocului sau "
+#~ "Locatia de Iesire a depozitului sursa. Locatia destinatie (Stoc sau Intrare) "
+#~ "a depozitului destinatie va fi folosita pentru \"Achizitionare Produse "
+#~ "ramase\". \n"
+#~ "\n"
+#~ "Pentru a vedea cantitatile adecvate in campurile \"CProduse confirmate "
+#~ "pentru primire\", \"Produse confirmate pentru iesire\", \"Produse confirmate "
+#~ "pentru primire inainte de\", \"Produse planificate pentru iesire inainte "
+#~ "de\" si \"Simulare Stoc\" trebuie sa faceti click pe butonul \"Calculeaza "
+#~ "Planificarea\".\n"
+#~ "\n"
+#~ "Toate valorile din formular sunt exprimate in unitatea de masura selectata "
+#~ "in formular. Puteti selecta o unitate de masura din categoria predefinita "
+#~ "sau din a doua categorie. Atunci cand schimbati unitatea de masura, "
+#~ "cantitatile vor fi recalculate conform noii UdeM: valori care pot fi editate "
+#~ "(campurile albastre) imediat, campuri care nu pot fi editate dup ace faceti "
+#~ "click pe butonul \"Calculeaza Planificarea\".\n"
+#~ "\n"
+#~ "Cum este calculat campul Simularea Stocului:\n"
+#~ "Simularea Stocului arata in general stocul pentru sfarsitul perioadei "
+#~ "calculate in functie de niste miscari planificate sau confirmate ale "
+#~ "stocului. Calculul incepe intotdeauna cu cantitatea stocului real la "
+#~ "inceputul perioadei curente. Apoi calculul aduna sau scade cantitati pentru "
+#~ "perioada calculata sau perioadele inainte de calculare.\n"
+#~ "Atunci cand va aflati in aceeasi perioada (perioada curenta este aceeasi cu "
+#~ "cea calculata), Simularea Stocului este calculata dupa cum urmeaza:\n"
+#~ "Simularea Stocului=\n"
+#~ "\tStocul la inceputul Perioadei curente\n"
+#~ "t- Produse planificate pentru iesire \n"
+#~ "t+ Produse planificate pentru intrare \n"
+#~ "\n"
+#~ "Atunci cand calculati perioada urmatoare celei actuale: \n"
+#~ "Simulare Stoc = \n"
+#~ "\tStocul la inceputul Perioadei curente\n"
+#~ "\t- Produse planificate pentru iesire in Perioada curenta \n"
+#~ "\t+ Produse confirmate pentru primire in Perioada curenta (inclusive "
+#~ "Produsele primite deja)\n"
+#~ "\t- Produse planificate pentru iesire in Perioada calculata \n"
+#~ "\t+ Produse planificate pentru intrare in Perioada calculata.\n"
+#~ "\n"
+#~ "Dupa cum vedeti, Perioada calculata este ca si in cazul de mai sus. Dar "
+#~ "calcularea Perioadei curente este putin diferita. Mai intai, trebuie sa "
+#~ "observati ca sistemul ia in considerare pentru Perioada curenta doar "
+#~ "miscarile Confirmarii primire produse. Aceasta inseamna ca trebuie sa faceti "
+#~ "planificarea si achizitionarea pentru Perioada curenta inainte de a face "
+#~ "aceste calcule (pentru Perioada urmatoare celei curente). \n"
+#~ "\n"
+#~ "Atunci cand calculati Perioada urmatoare:\n"
+#~ "Simulare stoc = \n"
+#~ "\tStocul la inceputul Perioadei curente \n"
+#~ "\t- Suma Produselor planificate pentru iesire in Perioadele inainte de "
+#~ "calculare \n"
+#~ "\t+ Suma Produselor confirmate pentru intrare in Perioadele inainte de "
+#~ "calculare (inclusive cele primite deja) \n"
+#~ "\t- Produsele planificate pentru iesire in Perioada calculata \n"
+#~ "\t+ Produsele planificate pentru intrare in Perioada calculata. \n"
+#~ "\n"
+#~ "Perioadele inainte de calculare inseamna perioadele incepand cu perioada "
+#~ "curenta pana in momentul dinaintea calcularii.\n"
+#~ "\n"
+#~ "Comentarii:\n"
+#~ "Amintiti-va sa faceti planificarea pentru toate perioadele dinaintea "
+#~ "calcularii pentru ca omiterea acestor cantitati si achizitii poate cauza "
+#~ "sugestii gresite pentru achzitionarile din perioadele viitoare.\n"
+#~ "- Daca ati planificat cu cateva perioade inainte si descoperiti ca Produsele "
+#~ "confirmate pentru iesire reale sunt mai mari decat Produsele planificate "
+#~ "pentru iesire in unele perioade puteti repeta Planificarea si sa faceti o "
+#~ "alta achizitionare. Ar trebui sa respectati aceeasi planificare. Daca create "
+#~ "o alta linie a planificarii, sugestiile pot fi gresite. \n"
+#~ "- Cand doriti sa lucrati cu perioade diferite pentru o parte dintre produse, "
+#~ "definiti doua tipuri de perioade (Saptamanale si Lunare) si folositi-le "
+#~ "pentru produse diferite. De exemplu: Daca folositi introtdeauna Perioadele "
+#~ "saptamanale pentru Produsele A, si perioadele lunare pentru Produsele B, "
+#~ "toate calculele dumneavoastră vor fi corecte. De asemenea, puteţi folosi "
+#~ "tipuri diferite de perioade pentru aceleaşi produse de la depozite sau "
+#~ "companii diferite. Dar nu puteţi folosi perioade care se suprapun pentru "
+#~ "acelaşi produs, depozit sau companie deoarece rezultatele pot fi "
+#~ "imprevizibile. Acelaşi lucru se aplica liniilor Estimarilor.\n"
+
+#, python-format
+#~ msgid "Cannot delete Validated Sale Forecasts !"
+#~ msgstr "Nu se pot sterge Previziunile vanzarilor validate !"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Planned Out: "
+#~ msgstr ""
+#~ "\n"
+#~ " Produse planificate pentru iesire: "
+
+#~ msgid "Creates forecast lines for selected warehouse and period."
+#~ msgstr ""
+#~ "Creeaza linii ale estimarii pentru depozitul si perioada selectat(a)."
+
+#, python-format
+#~ msgid "Requisition ("
+#~ msgstr "Solicitare ("
+
+#~ msgid ""
+#~ "Quantity expected to go out in selected period. As a difference between "
+#~ "Planned Out and Confirmed Out. For current period Already Out is also "
+#~ "calculated"
+#~ msgstr ""
+#~ "Cantitatea asteptata sa iasa in perioada selectata. Ca o diferenta intre "
+#~ "Produse planificate pentru iesire si Produse confirmate pentru iesire. "
+#~ "Pentru perioada curenta se calculeaza si produsele care au iesit deja"
+
+#, python-format
+#~ msgid "    Already In: "
+#~ msgstr "    Produse deja intrate: "
+
+#, python-format
+#~ msgid "    Minimum stock: "
+#~ msgstr "    Stoc minim: "
+
+#, python-format
+#~ msgid "    Confirmed In: "
+#~ msgstr "    Produse confirmate pentru primire: "
+
+#~ msgid "Forecasted quantity."
+#~ msgstr "Cantitatea estimata."
+
+#~ msgid "Product Quantity"
+#~ msgstr "Cantitatea produsului"
+
+#, python-format
+#~ msgid " according to state:"
+#~ msgstr " in functie de stare:"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Stock Simulation: "
+#~ msgstr ""
+#~ "\n"
+#~ " Simulare stoc: "
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Warehouse Forecast: "
+#~ msgstr ""
+#~ "\n"
+#~ " Estimare Depozit: "
+
+#, python-format
+#~ msgid "    Planned In: "
+#~ msgstr "    Planificare intrare produse: "
+
+#~ msgid ""
+#~ "Check to supply from Stock location of Supply Warehouse. If not checked "
+#~ "supply will be made from Output location of Supply Warehouse. Used in "
+#~ "'Supply from Another Warhouse' with Supply Warehouse."
+#~ msgstr ""
+#~ "Bifati pentru a face aprovizionarea din Locatia stocului Depozitului de "
+#~ "aprovizionare. Daca nu bifati, aprovizionarea se va face din Locatia de "
+#~ "iesire a Depozitului de aprovizionare. Folosit in 'Aprovizionare dintr-un "
+#~ "alt depozit' cu Depozitul de aprovizionare'."
+
+#~ msgid "Minimum quantity set in Minimum Stock Rules for this Warhouse"
+#~ msgstr ""
+#~ "Cantitatea minima setata in Regulile Stocului Minim pentru acest Depozit"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "For period: "
+#~ msgstr ""
+#~ "\n"
+#~ "Pentru perioada: "
+
+#, python-format
+#~ msgid "MPS("
+#~ msgstr "PAP("
+
+#~ msgid "Stock and Sales Planning Periods"
+#~ msgstr "Stoc si Perioadele de planificare a vanzarilor"
+
+#~ msgid "Stock and Sales Periods"
+#~ msgstr "Stoc si Perioadele de vanzare"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ " Planned Out Before: "
+#~ msgstr ""
+#~ "\n"
+#~ " Produse planificate pentru iesire inainte de: "
+
+#, python-format
+#~ msgid "Pick List "
+#~ msgstr "Ristă de ridicare "
+
+#, python-format
+#~ msgid "Manual planning for "
+#~ msgstr "Planificare manuală pentru "
+
+#, python-format
+#~ msgid "Procurement created in MPS by user: "
+#~ msgstr "Aprovizionare creată in MPS de către utilizator: "
+
+#, python-format
+#~ msgid "Pick created from MPS by user: "
+#~ msgstr "Ridicare creată din MPS de către utilizator: "

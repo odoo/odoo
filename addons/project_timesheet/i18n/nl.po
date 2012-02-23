@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2010-10-30 13:13+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-02-13 07:57+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:02+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-14 05:45+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
@@ -24,6 +24,10 @@ msgid ""
 "pricelist and the field 'Invoice Task Work' on the tab 'Billing' of\n"
 "the project form."
 msgstr ""
+"U vindt hier alle arbeid op taken die gefactureerd kunnen worden.\n"
+"Om de bestede tijd aan een project te factureren, moet u een \n"
+"prijslijst en het veld 'Factuur Taken' op het tabblad 'Facturering'  van \n"
+"het project definiëren."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:55
@@ -51,12 +55,12 @@ msgstr "Urenstaat taak"
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group by year of date"
-msgstr ""
+msgstr "Groepeer per jaar of datum"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Task Hours in current month"
-msgstr ""
+msgstr "Taakuren in huidige maand"
 
 #. module: project_timesheet
 #: constraint:project.task:0
@@ -85,6 +89,8 @@ msgid ""
 "You cannot delete a partner which is assigned to project, we suggest you to "
 "uncheck the active box!"
 msgstr ""
+"Het is niet mogelijk een relatie te verwijderen welke is gekoppeld aan een "
+"project. We adviseren om de 'actief' optie uit te vinken."
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -94,7 +100,7 @@ msgstr "Groepeer op..."
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_triggerinvoice0
 msgid "Trigger invoices from sale order lines"
-msgstr ""
+msgstr "Trigger facturatie van verkooporder regels"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -103,14 +109,13 @@ msgstr "Oktober"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
-msgid "Year"
-msgstr "Jaar"
+msgid "Timesheet/Task hours Report Per Month"
+msgstr "Urenstaat/Taak uren rapport per maand"
 
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Billable"
-msgstr ""
+msgstr "Factureerbaar"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
@@ -118,6 +123,8 @@ msgid ""
 "You will find here the contracts related to your customer projects in order "
 "to track the invoicing progress."
 msgstr ""
+"Hier vind u de contracten, gerelateerd aan uw klantprojecten, zodat u het "
+"factureerproces kunt volgen."
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
@@ -130,6 +137,12 @@ msgid "Task Hours"
 msgstr "Uren taak"
 
 #. module: project_timesheet
+#: view:report.timesheet.task.user:0
+#: field:report.timesheet.task.user,year:0
+msgid "Year"
+msgstr "Jaar"
+
+#. module: project_timesheet
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
 msgstr "Fout! Project startdatum moet liggen voor project einddatum."
@@ -137,7 +150,7 @@ msgstr "Fout! Project startdatum moet liggen voor project einddatum."
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
 msgid "Customer Projects"
-msgstr ""
+msgstr "Klant projecten"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_account_analytic_line
@@ -172,7 +185,7 @@ msgstr "Fout! U kunt geen recursieve taken aanmaken."
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_working_hours
 msgid "Timesheet Lines"
-msgstr ""
+msgstr "Urenstaat regels"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:231
@@ -183,12 +196,12 @@ msgstr "Ongeldige actie !"
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Billable Project"
-msgstr ""
+msgstr "Factureerbaar project"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
 msgid "Contracts to Renew"
-msgstr ""
+msgstr "Te vernieuwen contracten"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
@@ -198,7 +211,7 @@ msgstr "Klok in / Klok uit per project"
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group by month of date"
-msgstr ""
+msgstr "Groepeer op maand of datum"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task
@@ -239,7 +252,7 @@ msgstr "Maak uw urenstaat compleet."
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Task Hours in current year"
-msgstr ""
+msgstr "Taakuren huidige jaar"
 
 #. module: project_timesheet
 #: view:project.project:0
@@ -294,17 +307,12 @@ msgstr "November"
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Task hours of last month"
-msgstr ""
+msgstr "Taakuren van de laatste maand"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:59
-#, python-format
-msgid ""
-"No product defined on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-"Geen product gedefinieerd voor de gerelateerde werknemer.\n"
-"Vul het formulier voor de werknemer onder het 'urenstaat' tabblad in."
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "Maart"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
@@ -332,14 +340,20 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "Maart"
+#: code:addons/project_timesheet/project_timesheet.py:247
+#, python-format
+msgid "Invalid Analytic Account !"
+msgstr "Ongeldige kostenplaats!"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Urenstaat/Taak uren rapport per maand"
+#: code:addons/project_timesheet/project_timesheet.py:59
+#, python-format
+msgid ""
+"No product defined on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
+"Geen product gedefinieerd voor de gerelateerde werknemer.\n"
+"Vul het formulier voor de werknemer onder het 'urenstaat' tabblad in."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:54
@@ -359,6 +373,16 @@ msgstr "Facturatie"
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
 msgstr ""
+"Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:247
+#, python-format
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state"
+msgstr ""
+"Het is niet ogelijk een kostenplaats te selecteren welke gesloten of reeds "
+"geannuleerd is"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -373,12 +397,12 @@ msgstr "September"
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_taskinvoice0
 msgid "After task is completed, Create its invoice."
-msgstr ""
+msgstr "Wanneer taak voltooid is, wordt een factuur gecreeërd"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -394,22 +418,24 @@ msgstr "report.timesheet.task.user"
 #: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,month:0
 msgid "Month"
-msgstr ""
+msgstr "Maand"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_act_project_management_timesheet_sheet_form
 msgid "My Timesheet"
-msgstr ""
+msgstr "Mijn urenstaat"
 
 #. module: project_timesheet
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
 msgstr ""
+"Het is niet mogelijk een kostenplaats te maken op een rekening van het type "
+"'aanzicht'"
 
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Invoice Task Work"
-msgstr ""
+msgstr "Factureer gewerkte taken"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:70
@@ -425,7 +451,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
 #: view:report.timesheet.task.user:0
 msgid "Task Hours Per Month"
-msgstr ""
+msgstr "Taak uren per maand"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
@@ -472,3 +498,6 @@ msgstr "Urenstaat invullen"
 #~ "die regels\n"
 #~ "\n"
 #~ "    "
+
+#~ msgid " Month "
+#~ msgstr " Maand "

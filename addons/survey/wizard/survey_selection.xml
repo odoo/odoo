@@ -15,8 +15,7 @@
 					<separator colspan="4" string="Select Survey" />
 					<newline />
 					<field name="survey_id" colspan="4"
-						on_change="on_change_survey(survey_id)" width="250"
-                        domain="[('state','=','open')]"/>
+						on_change="on_change_survey(survey_id)" width="250"/>
 					<group col="1" colspan="4"
 						attrs="{'readonly': [('survey_id','=',False)]}">
 						<separator colspan="4" string="Survey Details" />

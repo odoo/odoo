@@ -197,7 +197,7 @@ Remarks:
         "wizard/stock_planning_createlines_view.xml",
     ],
     "test": ["test/stock_planning.yml"],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "00872589676639788061",
 }

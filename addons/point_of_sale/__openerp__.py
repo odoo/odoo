@@ -24,6 +24,7 @@
     'name': 'Point Of Sale',
     'version': '1.0.1',
     'category': 'Point Of Sale',
+    "sequence": 6,
     'description': """
 This module provides a quick and easy sale process.
 ===================================================

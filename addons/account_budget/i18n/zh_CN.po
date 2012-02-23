@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-02-03 07:38+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-08 03:50+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:48+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -31,12 +31,6 @@ msgstr "已确认"
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
 msgstr "预算状况"
-
-#. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "The General Budget '%s' has no Accounts!"
-msgstr "总预算“%s”没设定项！"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -135,9 +129,10 @@ msgstr ""
 "且最接近你的财务目标。预算的方式是细化每个辅助核算项目的预期收入，并跟踪在那个期间这些收入是否实现了。"
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr "此向导用于打印预算概览"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "The Budget '%s' has no accounts!"
+msgstr "预算 '%s'  没有指定科目！"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -258,7 +253,7 @@ msgstr "预算"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "To Approve Budgets"
-msgstr ""
+msgstr "待审核的预算"
 
 #. module: account_budget
 #: code:addons/account_budget/account_budget.py:119
@@ -291,11 +286,9 @@ msgid "Budgets"
 msgstr "预算"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "错误！此币别必须是选定公司的默认币别。"
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "此向导用于打印预算概览"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -422,7 +415,7 @@ msgstr "辅助核算从"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Draft Budgets"
-msgstr ""
+msgstr "预算草稿"
 
 #~ msgid "Amount"
 #~ msgstr "金额"
@@ -601,3 +594,12 @@ msgstr ""
 #~ "2.第二个报表挂在预算列表上，作为第一个报表的汇总。列出此预算上的辅助核算项金额（跨主预算）。\n"
 #~ "3.第三个报表挂在辅助核算项树上。此报表列出此辅助核算项在每个预算上的主预算金额。\n"
 #~ "\n"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "错误！此币别必须是选定公司的默认币别。"
+
+#, python-format
+#~ msgid "The General Budget '%s' has no Accounts!"
+#~ msgstr "总预算“%s”没设定项！"

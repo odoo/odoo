@@ -47,12 +47,14 @@
           </xpath>
           <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
             <field name="globalisation_id" string="Glob. Id"/>
+            <field name="state" invisible="1"/>
           </xpath>
           <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='date']" position="after">
             <field name="val_date"/>
           </xpath>
           <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='amount']" position="after">
             <field name="globalisation_id"/>
+            <field name="state" invisible="1"/>
           </xpath>
         </data>
       </field>
@@ -81,8 +83,6 @@
           <field name="globalisation_id" string="Glob. Id"/>
           <field name="globalisation_amount" string="Glob. Am."/>
           <field name="state"/>
-          <field name="write_date"/>
-          <field name="write_uid"/>
         </tree>
       </field>
     </record>
@@ -106,8 +106,6 @@
           <field name="amount"/>
           <field name="globalisation_id"/>
           <field name="sequence" readonly="0"/>
-          <field name="write_date"/>
-          <field name="write_uid"/>
           <field name="state"/>
           <separator colspan="4" string="Notes"/>
           <field colspan="4" name="note" nolabel="1"/>
@@ -140,8 +138,6 @@
           <group string="Extended Filters..." expand="0">
             <field name="account_id"/>
             <field name="partner_id"/>
-            <field name="write_date"/>
-            <field name="write_uid"/>
             <field name="ref"/>
             <field name="note"/>
           </group>

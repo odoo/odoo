@@ -110,4 +110,3 @@ class stock_inventory_split_lines(osv.osv_memory):
         'wizard_exist_id': fields.many2one('stock.inventory.line.split', 'Parent Wizard'),
     }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

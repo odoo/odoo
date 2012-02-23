@@ -1,7 +1,7 @@
 /*############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP SA (<http://openerp.com>).
+#    Copyright (C) 2011-2012 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,7 +22,7 @@ var __lc_buttons = [];
 
 openerp.web_livechat = function (openerp) {
 
-openerp.web_livechat.Livechat = openerp.web.Widget.extend({
+openerp.web_livechat.Livechat = openerp.web.OldWidget.extend({
     template: 'Header-LiveChat',
 
     start: function() {
@@ -31,30 +31,22 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
             return;
         var self = this;
         var pwc = new openerp.web.Model("publisher_warranty.contract");
-        pwc.get_func('get_default_livechat_text')().then(function(text) {
+        return pwc.get_func('get_default_livechat_text')().then(function(text) {
             self.$element.html(text);
-            console.log('receiving text', text);
-            self.do_update();
             pwc.get_func('is_livechat_enable')().then(function(res) {
-                console.log('result', res);
                 if(res) {
                     self.$element.click(self.do_load_livechat);
                 } else {
-                    self.do_action({type: 'ir.act.url', url: 'http://www.openerp.com/support-or-publisher-warranty-contract'});
+                    self.$element.click(self.do_open_url);
                 }
             })
         });
-
-        openerp.webclient.header.do_update.add_last(this.do_update);
     },
 
-    do_update: function() {
-        var self = this;
-        if (!this.session) {
-            self.$element.remove();
-            return;
-        }
-     },
+    do_open_url: function(evt) {
+        evt.preventDefault();    
+        openerp.webclient.action_manager.do_action({type: 'ir.actions.act.url', url: 'http://www.openerp.com/support-or-publisher-warranty-contract', target: 'new'});
+    },
 
     do_load_livechat: function(evt) {
         evt.preventDefault();    
@@ -70,15 +62,16 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
         pwc.get_func('is_livechat_enable')().then(function(res) {
             console.log('res', res);
             if(!res) {
-                //return;
+                return;
             }
-        // connect to LiveChat
-        __lc_load();
+
+            // connect to LiveChat
+            __lc_load();
 
             __lc_buttons.push({
                 elementId: lc_id, //'livechat_status',
                 language: 'en',
-                skill: '0',
+                skill: '2',
                 type: 'text',
                 labels: {
                     online: '<img src="/web_livechat/static/src/img/available.png"/>Support',
@@ -88,6 +81,24 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
         });
     }
 });
+
+
+openerp.web.Header.include({
+    do_update: function() {
+        var self = this;
+        this._super();
+        this.update_promise.then(function() {
+            if (self.livechat) {
+                self.livechat.destroy();
+            }
+            self.livechat = new openerp.web_livechat.Livechat(self);
+            self.livechat.prependTo(self.$element.find('div.header_corner'));
+        });
+    }
+});
+
+
+
 
 if (openerp.webclient) {
     // tracking code from LiveChat
@@ -117,10 +128,6 @@ if (openerp.webclient) {
           }
         } else __lc_load(Math.ceil(Math.random()*5));
     }
-
-    // and add widget to webclient
-    openerp.webclient.livechat = new openerp.web_livechat.Livechat(openerp.webclient);
-    openerp.webclient.livechat.prependTo('div.header_corner');
 }
 
 };

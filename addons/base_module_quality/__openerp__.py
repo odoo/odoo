@@ -45,7 +45,7 @@ using it, otherwise it may crash.
     'update_xml': ['wizard/module_quality_check_view.xml', 'wizard/quality_save_report_view.xml', 'base_module_quality_view.xml', 'security/ir.model.access.csv'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0175119475677',
     'images': ['images/base_module_quality1.jpeg','images/base_module_quality2.jpeg','images/base_module_quality3.jpeg']
 }

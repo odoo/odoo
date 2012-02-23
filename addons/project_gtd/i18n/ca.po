@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2010-10-30 15:34+0000\n"
 "Last-Translator: Raimon Esteve (www.zikzakmedia.com) "
 "<resteve@zikzakmedia.com>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:59+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:39+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -59,10 +59,9 @@ msgid "Pending Tasks"
 msgstr ""
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr "No existeix període de temps fill d'aquest!"
+#: view:project.task:0
+msgid "Next"
+msgstr "Següent"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -96,10 +95,8 @@ msgid "Pending"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0
-#: field:project.gtd.timebox,name:0
-#: view:project.task:0
-#: field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
+#: view:project.task:0 field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "Període de temps"
 
@@ -185,6 +182,11 @@ msgid "Contexts"
 msgstr "Contextes"
 
 #. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_car
+msgid "Car"
+msgstr "Cotxe"
+
+#. module: project_gtd
 #: view:project.task:0
 msgid "Show Context"
 msgstr ""
@@ -214,16 +216,16 @@ msgstr ""
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0
-#: field:project.gtd.context,name:0
+#: view:project.gtd.context:0 field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr "Context"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
-msgstr "Següent"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
+msgstr "No existeix període de temps fill d'aquest!"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
@@ -236,8 +238,7 @@ msgid "Office"
 msgstr "Oficina"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0
-#: field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "Seqüència"
 
@@ -281,6 +282,11 @@ msgstr "Obtindre des de període de temps"
 #: help:project.task,context_id:0
 msgid "The context place where user has to treat task"
 msgstr "El lloc de context on l'usuari ha de realitzar la tasca."
+
+#. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_home
+msgid "Home"
+msgstr "Inici"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
@@ -445,9 +451,6 @@ msgstr "Previ"
 #~ msgid "GTD"
 #~ msgstr "GTD"
 
-#~ msgid "Car"
-#~ msgstr "Cotxe"
-
 #~ msgid ""
 #~ "\n"
 #~ "This module implements all concepts defined by the Getting Things Done\n"
@@ -484,6 +487,3 @@ msgstr "Previ"
 
 #~ msgid "This Month"
 #~ msgstr "Aquest mes"
-
-#~ msgid "Home"
-#~ msgstr "Inici"

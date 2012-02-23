@@ -87,7 +87,7 @@
         'account_coda_wizard.xml',
         'account_coda_view.xml',
     ],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "license": 'AGPL-3',
     "certificate" : "001237207321716002029",

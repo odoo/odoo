@@ -7,22 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2011-01-19 16:21+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-02-17 11:18+0000\n"
+"Last-Translator: ccdos <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:27+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
-
-#. module: project_planning
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "错误！货币必须是所选公司的本位币"
+"X-Launchpad-Export-Date: 2012-02-18 04:59+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,tasks:0
@@ -164,9 +157,9 @@ msgid "Extra Info"
 msgstr "附加信息"
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "To :"
-msgstr "至"
+#: field:report_account_analytic.planning,total_planned:0
+msgid "Total Planned"
+msgstr "总计划"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,timesheet:0
@@ -247,9 +240,9 @@ msgid "Planning"
 msgstr "计划"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,total_planned:0
-msgid "Total Planned"
-msgstr "总计划"
+#: report:report_account_analytic.planning.print:0
+msgid "To :"
+msgstr "至"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -274,11 +267,9 @@ msgid "Delegate"
 msgstr "委派"
 
 #. module: project_planning
-#: help:report_account_analytic.planning.user,free:0
-msgid ""
-"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
-"without Tasks + Holiday Leaves)"
-msgstr "计算公式： 正常工作天数 - （已分配给任务的时间 + 未分配给任务的时间 + 休假）"
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr "计划分析"
 
 #. module: project_planning
 #: help:report_account_analytic.planning,business_days:0
@@ -337,9 +328,11 @@ msgid ""
 msgstr "这个值是已分配给任务的时间总计，单位是天"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
-msgstr "计划分析"
+#: help:report_account_analytic.planning.user,free:0
+msgid ""
+"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
+"without Tasks + Holiday Leaves)"
+msgstr "计算公式： 正常工作天数 - （已分配给任务的时间 + 未分配给任务的时间 + 休假）"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
@@ -525,7 +518,7 @@ msgstr "结束日期"
 #. module: project_planning
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "公司名称必须唯一！"
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -568,6 +561,11 @@ msgid ""
 "This value is given by the sum of time allocation with task(s) linked, "
 "expressed in days."
 msgstr "这个值是已分配给任务的时间合计，单位是天"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "错误！货币必须是所选公司的本位币"
 
 #~ msgid "Planning Management Module"
 #~ msgstr "项目计划模块"

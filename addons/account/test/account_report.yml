@@ -102,7 +102,7 @@
     journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
     ctx={}
     ctx.update({'model': 'account.journal.period','active_ids':journal_ids})
-    data_dict = {'chart_account_id':ref('account.chart0')}
+    data_dict = {'chart_account_id':ref('account.chart0'), 'period_from':ref('period_1'), 'period_to':ref('period_12')}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_print_journal',wiz_data=data_dict, context=ctx, our_module='account')
 -

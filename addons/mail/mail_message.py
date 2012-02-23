@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import ast
 import base64
 import dateutil.parser
 import email
@@ -32,7 +33,6 @@ import tools
 from osv import osv
 from osv import fields
 from tools.translate import _
-from tools.safe_eval import literal_eval
 
 _logger = logging.getLogger('mail')
 
@@ -417,7 +417,8 @@ class mail_message(osv.osv):
             if 'text/html' in msg.get('content-type', ''):
                 msg['body_html'] =  body
                 msg['subtype'] = 'html'
-                body = tools.html2plaintext(body)
+                if body:
+                    body = tools.html2plaintext(body)
             msg['body_text'] = tools.ustr(body, encoding)
 
         attachments = []
@@ -508,7 +509,7 @@ class mail_message(osv.osv):
                     object_id=message.res_id and ('%s-%s' % (message.res_id,message.model)),
                     subtype=message.subtype,
                     subtype_alternative=subtype_alternative,
-                    headers=message.headers and literal_eval(message.headers))
+                    headers=message.headers and ast.literal_eval(message.headers))
                 res = ir_mail_server.send_email(cr, uid, msg,
                                                 mail_server_id=message.mail_server_id.id,
                                                 context=context)

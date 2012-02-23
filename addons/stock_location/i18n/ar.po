@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2009-02-03 06:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:48+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -30,7 +30,7 @@ msgstr ""
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
-msgstr ""
+msgstr "نقل"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
@@ -45,7 +45,7 @@ msgstr ""
 #. module: stock_location
 #: view:product.product:0
 msgid "Parameters"
-msgstr ""
+msgstr "المحددات"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
@@ -67,7 +67,7 @@ msgstr ""
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "يجب تعيين دفعة إنتاج لهذا المنتج"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
@@ -78,7 +78,7 @@ msgstr ""
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Internal"
-msgstr ""
+msgstr "داخلي"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:98
@@ -91,7 +91,7 @@ msgstr ""
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
 msgid "Location"
-msgstr ""
+msgstr "المكان"
 
 #. module: stock_location
 #: field:product.pulled.flow,invoice_state:0
@@ -113,18 +113,27 @@ msgstr ""
 #. module: stock_location
 #: view:product.product:0
 msgid "Conditions"
+msgstr "الشروط"
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_pack_zone
+msgid "Pack Zone"
 msgstr ""
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_product_product
-#: field:product.pulled.flow,product_id:0
-msgid "Product"
+#: model:stock.location,name:stock_location.location_gate_b
+msgid "Gate B"
+msgstr ""
+
+#. module: stock_location
+#: model:stock.location,name:stock_location.location_gate_a
+msgid "Gate A"
 msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Buy"
-msgstr ""
+msgstr "شراء"
 
 #. module: stock_location
 #: view:product.product:0
@@ -132,9 +141,14 @@ msgid "Pushed flows"
 msgstr ""
 
 #. module: stock_location
+#: model:stock.location,name:stock_location.location_dispatch_zone
+msgid "Dispatch Zone"
+msgstr ""
+
+#. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "حركة مخزن"
 
 #. module: stock_location
 #: view:product.product:0
@@ -142,10 +156,10 @@ msgid "Pulled flows"
 msgstr ""
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr ""
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "شركة"
 
 #. module: stock_location
 #: view:product.product:0
@@ -175,7 +189,7 @@ msgstr ""
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
 msgid "Partner Address"
-msgstr ""
+msgstr "عنوان الشريك"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
@@ -206,7 +220,7 @@ msgstr ""
 #. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
-msgstr ""
+msgstr "الاسم"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -215,14 +229,25 @@ msgid ""
 msgstr ""
 
 #. module: stock_location
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr ""
+
+#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr ""
 
 #. module: stock_location
+#: model:ir.model,name:stock_location.model_product_product
+#: field:product.pulled.flow,product_id:0
+msgid "Product"
+msgstr "المنتج"
+
+#. module: stock_location
 #: field:product.pulled.flow,procure_method:0
 msgid "Procure Method"
-msgstr ""
+msgstr "أسلوب الشراء"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
@@ -246,7 +271,7 @@ msgstr ""
 #. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
-msgstr ""
+msgstr "المنتجات"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:118
@@ -255,10 +280,15 @@ msgid "Pulled from another location via procurement %d"
 msgstr ""
 
 #. module: stock_location
+#: model:stock.location,name:stock_location.stock_location_qualitytest0
+msgid "Quality Control"
+msgstr ""
+
+#. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "غير ممكن"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
@@ -294,7 +324,7 @@ msgstr ""
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "المشتريات"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_id:0
@@ -317,7 +347,7 @@ msgstr ""
 #. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
-msgstr ""
+msgstr "نوع الإجراء"
 
 #. module: stock_location
 #: constraint:product.product:0
@@ -333,14 +363,14 @@ msgid ""
 msgstr ""
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
+#: model:stock.location,name:stock_location.location_order
+msgid "Order Processing"
 msgstr ""
 
 #. module: stock_location
 #: field:stock.location.path,name:0
 msgid "Operation"
-msgstr ""
+msgstr "العملية"
 
 #. module: stock_location
 #: view:stock.location.path:0
@@ -348,10 +378,10 @@ msgid "Location Paths"
 msgstr ""
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr ""
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "يومية"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
@@ -363,4 +393,4 @@ msgstr ""
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "مفوتر"

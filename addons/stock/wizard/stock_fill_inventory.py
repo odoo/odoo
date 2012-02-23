@@ -81,7 +81,7 @@ class stock_fill_inventory(osv.osv_memory):
 
         if fill_inventory.recursive:
             location_ids = location_obj.search(cr, uid, [('location_id',
-                             'child_of', [fill_inventory.location_id.id])], order="id", 
+                             'child_of', [fill_inventory.location_id.id])], order="id",
                              context=context)
         else:
             location_ids = [fill_inventory.location_id.id]

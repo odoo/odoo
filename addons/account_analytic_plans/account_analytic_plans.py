@@ -380,7 +380,7 @@ class account_invoice(osv.osv):
         res['analytics_id'] = x.get('analytics_id', False)
         return res
 
-    def _get_analytic_lines(self, cr, uid, id):
+    def _get_analytic_lines(self, cr, uid, id, context=None):
         inv = self.browse(cr, uid, [id])[0]
         cur_obj = self.pool.get('res.currency')
         invoice_line_obj = self.pool.get('account.invoice.line')
@@ -391,7 +391,7 @@ class account_invoice(osv.osv):
         else:
             sign = -1
 
-        iml = invoice_line_obj.move_line_get(cr, uid, inv.id)
+        iml = invoice_line_obj.move_line_get(cr, uid, inv.id, context=context)
 
         for il in iml:
             if il.get('analytics_id', False):
@@ -400,8 +400,10 @@ class account_invoice(osv.osv):
                     ref = inv.reference
                 else:
                     ref = self._convert_ref(cr, uid, inv.number)
-                obj_move_line = acct_ins_obj.browse(cr, uid, il['analytics_id'])
-                amount_calc = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, il['price'], context={'date': inv.date_invoice}) * sign
+                obj_move_line = acct_ins_obj.browse(cr, uid, il['analytics_id'], context=context)
+                ctx = context.copy()
+                ctx.update({'date': inv.date_invoice})
+                amount_calc = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, il['price'], context=ctx) * sign
                 qty = il['quantity']
                 il['analytic_lines'] = []
                 for line2 in obj_move_line.account_ids:

@@ -1,0 +1,79 @@
+@charset "UTF-8";
+.wiky_preview_area {
+	font-family: "Helvetica Neue", Arial, Helvetica, 'Liberation Sans', FreeSans, sans-serif;
+	font-size: 13px;
+	line-height: 1.5em;
+	color: #666;
+	font-weight:350;
+	width:600px;
+	display:block;
+}
+.wiky_preview_area h2{
+	font-size:24px;
+	color:#333;
+	font-weight:400;
+	
+	text-shadow:0 1px 0 rgba(000, 000, 000, .4);
+}
+.wiky_preview_area h3{
+	font-size:18px;
+	color:#555;
+	font-weight:400;
+	
+	text-shadow:0 1px 0 rgba(000, 000, 000, .4);
+}
+.wiky_preview_area img{
+	background-repeat: repeat;
+	width: 400px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow:0 1px  3px rgba(0, 0, 0, .8);
+	-moz-box-shadow:0 1px  3px rgba(0, 0, 0, .8);
+	box-shadow:0 1px  3px rgba(0, 0, 0, .8);
+}
+.wiky_preview_area a{
+	padding:5px;
+	font-weight:400;
+	
+	background: #999; /* for non-css3 browsers */
+
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#000000'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#000)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #ccc,  #000); /* for firefox 3.6+ */ 
+	
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+	box-shadow:none;
+
+	text-shadow:0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.wiky_preview_area a:hover{
+	color:#333;
+	padding:5px;
+	font-weight:400;
+	text-decoration:none;
+	
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+
+	-webkit-box-shadow:0 1px  3px rgba(0, 0, 0, .3);
+	-moz-box-shadow:0 1px  3px rgba(0, 0, 0, .3);
+	box-shadow:0 1px  3px rgba(0, 0, 0, .3);
+
+	text-shadow:0 1px 0 rgba(255, 255, 255, 1);
+}
+
+
+.wiky_preview_area > ol, 
+.wiky_preview_area > ul, 
+.wiky_preview_area > ul > li,
+.wiky_preview_area > ol > li {
+	list-style: disc inside none;
+}

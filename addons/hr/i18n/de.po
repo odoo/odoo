@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-23 09:54+0000\n"
-"PO-Revision-Date: 2011-01-13 04:49+0000\n"
-"Last-Translator: silas <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"PO-Revision-Date: 2012-02-22 23:51+0000\n"
+"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-24 05:53+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-23 04:39+0000\n"
+"X-Generator: Launchpad (build 14855)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -22,8 +22,7 @@ msgid "Openerp user"
 msgstr "Benutzer"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,requirements:0
+#: view:hr.job:0 field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "Anforderungen"
 
@@ -50,15 +49,14 @@ msgid "Human Resources"
 msgstr "Personal"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
 msgstr "Gruppierung..."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.view_department_form_installer
 msgid "Create Your Departments"
-msgstr ""
+msgstr "Erzeuge Sie Ihre Abteilungen"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -79,11 +77,8 @@ msgstr ""
 "Mitarbeiterbeurteilung nutzen."
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
-#: view:res.users:0
+#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
+#: field:hr.job,department_id:0 view:res.users:0
 msgid "Department"
 msgstr "Abteilung"
 
@@ -103,9 +98,7 @@ msgid "In Recruitment"
 msgstr "Stelle besetzen"
 
 #. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Firma"
@@ -118,7 +111,7 @@ msgstr "Freie Stellen"
 #. module: hr
 #: model:ir.actions.todo.category,name:hr.category_hr_management_config
 msgid "HR Management"
-msgstr ""
+msgstr "Personal Manangement"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -140,8 +133,7 @@ msgid "Parent Department"
 msgstr "Hauptabteilung"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,notes:0
+#: view:hr.employee:0 field:hr.employee,notes:0
 msgid "Notes"
 msgstr "Bemerkungen"
 
@@ -158,6 +150,10 @@ msgid ""
 "operations on all the employees of the same category, i.e. allocating "
 "holidays."
 msgstr ""
+"Erzeuge Mitarbeiter und verlinke diese ggf mit OpenERP Benutzern wenn diese "
+"OpenERP verwenden sollen.\r\n"
+"Mitarbeiterkategorien können definiert werden, zB um allen Mitarbeitern "
+"deren Urlaubsanspruch zuzuteilen"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -174,7 +170,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Farb Index"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_employeeuser0
@@ -186,8 +182,7 @@ msgstr ""
 "Verlinkung des Benutzers mit dem Mitarbeiter."
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Recruitement"
 msgstr "Stelle besetzen"
 
@@ -204,12 +199,12 @@ msgstr "Weiblich"
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid "Required number of employees in total for that job."
-msgstr ""
+msgstr "Notwendige Anzahl von Mitarbeiter um diesen Job zu erledigen."
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendance"
-msgstr ""
+msgstr "Anwesenheit"
 
 #. module: hr
 #: view:hr.employee:0
@@ -227,8 +222,7 @@ msgid "Child Categories"
 msgstr "Unterkategorien"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,description:0
+#: view:hr.job:0 field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "Stellenbeschreibung"
@@ -244,8 +238,7 @@ msgid "My Departments Employee"
 msgstr "Meine Abteilungen"
 
 #. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Mitarbeiter"
@@ -277,9 +270,7 @@ msgid "Human Resources Dashboard"
 msgstr "Pinnwand Personalwesen"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
 msgstr "Arbeitsstelle"
 
@@ -294,8 +285,7 @@ msgid "Configuration"
 msgstr "Konfiguration"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,category_ids:0
+#: view:hr.employee:0 field:hr.employee,category_ids:0
 msgid "Categories"
 msgstr "Kategorien"
 
@@ -367,7 +357,7 @@ msgstr "hr.department"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_create_hr_employee_installer
 msgid "Create your Employees"
-msgstr ""
+msgstr "Legen Sie Ihre Mitarbeiter an"
 
 #. module: hr
 #: field:hr.employee.category,name:0
@@ -439,6 +429,11 @@ msgid "HR Manager Dashboard"
 msgstr "Pinnwand Personalleitung"
 
 #. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr "untergeordnete Abteilungen"
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Status"
 msgstr "Status"
@@ -457,7 +452,7 @@ msgstr "unbekannt"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees with that job."
-msgstr ""
+msgstr "Anzahl der Mitarbeiter mit diesem Job"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -478,7 +473,7 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Subordonate Hierarchy"
-msgstr ""
+msgstr "Untergeordnete Hierarchie"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -487,6 +482,12 @@ msgid ""
 "employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"Ihre Abteilungsstruktur wird verwendet um alle Dokumente der zugeteilten "
+"Mitarbeiter zu verwalten:\r\n"
+"Ausgaben\r\n"
+"Zeitaufzeichnungen\r\n"
+"Abwesenheiten\r\n"
+"Personalaufnahme"
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
@@ -510,7 +511,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Anzeigetafel"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -523,8 +524,7 @@ msgid "You can not have two users with the same login !"
 msgstr "Sie können nicht zwei gleichzeitige Benutzeranmeldungen haben!"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,state:0
+#: view:hr.job:0 field:hr.job,state:0
 msgid "State"
 msgstr "Status"
 
@@ -561,7 +561,7 @@ msgstr "Persönliche Info"
 #. module: hr
 #: field:hr.employee,city:0
 msgid "City"
-msgstr ""
+msgstr "Ort"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -571,7 +571,7 @@ msgstr "Ausweis Nr."
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Work Mobile"
-msgstr ""
+msgstr "Handy (geschäftlich)"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -599,8 +599,7 @@ msgid "Job Name"
 msgstr "Stellenbezeichnung"
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Position"
 msgstr "Stelle ist besetzt"
 
@@ -617,7 +616,7 @@ msgstr "Nationalität"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Leaves"
-msgstr ""
+msgstr "Abwesenheit"
 
 #. module: hr
 #: view:board.board:0
@@ -641,10 +640,8 @@ msgid "Gender"
 msgstr "Geschlecht"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0 view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -675,9 +672,9 @@ msgid "Creation of a OpenERP user"
 msgstr "Erstellen eines Benutzers"
 
 #. module: hr
-#: field:hr.department,child_ids:0
-msgid "Child Departments"
-msgstr "untergeordnete Abteilungen"
+#: field:hr.employee,login:0
+msgid "Login"
+msgstr "Login"
 
 #. module: hr
 #: view:hr.employee:0
@@ -693,27 +690,25 @@ msgstr "Arbeitsstellen"
 #. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other Id"
-msgstr ""
+msgstr "Andere ID"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
+#: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
 msgstr "Mentor"
 
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per company!"
-msgstr ""
+msgstr "Der Name der Jobbezeichnung muss je Unternehmen eindeutig sein"
 
 #. module: hr
 #: view:hr.job:0
 msgid "My Departments Jobs"
-msgstr ""
+msgstr "Meine Abteilung Jobs"
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
+#: field:hr.department,manager_id:0 view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Manager"
@@ -731,7 +726,7 @@ msgstr "Unterstellte Mitarbeiter"
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "Number of Employees"
-msgstr ""
+msgstr "Anzahl der Mitarbeiter"
 
 #~ msgid "Working Time Categories"
 #~ msgstr "Arbeitszeiten Kategorien"

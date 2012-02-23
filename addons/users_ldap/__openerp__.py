@@ -122,7 +122,7 @@ will disable LDAP authentication if installed at the same time.
         "user_ldap_installer.xml",
         "security/ir.model.access.csv",
     ],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "001141446349334700221",
     "external_dependencies" : {

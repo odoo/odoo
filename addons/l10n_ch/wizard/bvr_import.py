@@ -71,6 +71,9 @@ def _import(self, cursor, user, data, context=None):
     statement_obj = self.pool.get('account.bank.statement')
     property_obj = self.pool.get('ir.property')
     file = data['form']['file']
+    if not file: 
+        raise osv.except_osv(_('UserError'),
+                             _('Please select a file first!'))
     statement_id = data['id']
     records = []
     total_amount = 0
@@ -239,7 +242,7 @@ def _import(self, cursor, user, data, context=None):
 class bvr_import_wizard(osv.osv_memory):
     _name = 'bvr.import.wizard'
     _columns = {
-        'file':fields.binary('BVR File', readonly=True)
+        'file':fields.binary('BVR File')
     }
 
     def import_bvr(self, cr, uid, ids, context=None):

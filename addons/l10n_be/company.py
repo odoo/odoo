@@ -25,7 +25,7 @@ class res_company(osv.osv):
     _description = 'Company'
 
     def _get_default_ad(self, addresses):
-        city = post_code = address = country_code = ""
+        name = email = phone = city = post_code = address = country_code = ""
         for ads in addresses:
             if ads.type == 'default':
                 city = ads.city or ""
@@ -36,7 +36,10 @@ class res_company(osv.osv):
                     address += " " + ads.street2
                 if ads.country_id:
                     country_code = ads.country_id and ads.country_id.code or ""
-        return city, post_code, address, country_code
+                name = ads.name or ""
+                email = ads.email or ""
+                phone = ads.phone or ""
+        return name, email, phone, city, post_code, address, country_code
 res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

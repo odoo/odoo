@@ -10,7 +10,7 @@
     address_invoice_id: base.res_partner_address_8invoice
     company_id: 1
     account_id: account.a_pay
-    date_invoice: '2011-06-22'
+    date_invoice: !eval "'%s' % (time.strftime('%Y-%m-%d'))"
     name: selling product
     type: 'out_invoice'
     invoice_line:
@@ -48,12 +48,13 @@
   Then I import a sample EDI document of another customer invoice
 -
   !python {model: account.invoice}: |
+    import time
     edi_document = {
         "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.random_invoice_763jsms", 
         "__module": "account", 
         "__model": "account.invoice", 
         "__version": [6,1,0], 
-        "internal_number": "SAJ/2011/002", 
+        "internal_number": time.strftime("SAJ/%Y/002"), 
         "company_address": {
                 "__id": "base:b22acf7a-ddcd-11e0-a4db-701a04e25543.main_address",
                 "__module": "base",
@@ -86,7 +87,7 @@
                 "zip": "1367", 
                 "country_id": ["base:5af1272e-dd26-11e0-b65e-701a04e25543.be", "Belgium"], 
         },
-        "date_invoice": "2011-06-22", 
+        "date_invoice": time.strftime('%Y-%m-%d'), 
         "name": "sample invoice", 
         "tax_line": [{
                 "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.account_invoice_tax-4g4EutbiEMVl", 
@@ -128,7 +129,7 @@
     assert bank_info.acc_number == "Sample bank: 123465789-156113", 'Expected "Sample bank: 123465789-156113", got %s' % bank_info.acc_number
 
     assert invoice_new.partner_id.supplier, 'Imported Partner is not marked as supplier'
-    assert invoice_new.reference == "SAJ/2011/002", "internal number is not stored in reference"
+    assert invoice_new.reference == time.strftime("SAJ/%Y/002"), "internal number is not stored in reference"
     assert invoice_new.reference_type == 'none', "reference type is not set to 'none'"
     assert invoice_new.internal_number == False, "internal number is not reset"
     assert invoice_new.journal_id.id, "journal id is not selected"

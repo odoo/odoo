@@ -45,7 +45,7 @@ It also has been merged with the earlier CRM & SRM segmentation tool because the
         #'test/process/profiling.yml', #TODO:It's not debuging because problem to write data for open.questionnaire from partner section.
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0033984979005',
     'images': ['images/profiling_questionnaires.jpeg','images/profiling_questions.jpeg'],
 }

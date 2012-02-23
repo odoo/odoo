@@ -38,7 +38,7 @@ for Wiki FAQ.
     'update_xml': ['wiki_faq.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00475023941677743389',
     'images': ['images/wiki_groups_internal_faq.jpeg','images/wiki_pages_internal_faq.jpeg'],
 }

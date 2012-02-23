@@ -100,8 +100,8 @@ hr_analytic_timesheet()
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
-    def _get_analytic_lines(self, cr, uid, id):
-        iml = super(account_invoice, self)._get_analytic_lines(cr, uid, id)
+    def _get_analytic_lines(self, cr, uid, id, context=None):
+        iml = super(account_invoice, self)._get_analytic_lines(cr, uid, id, context=context)
         for il in iml:
             if il['account_analytic_id'] and il.get('analytic_lines', False):
 
@@ -109,10 +109,10 @@ class account_invoice(osv.osv):
                 journal_id = il['analytic_lines'][0][2]['journal_id']
                 account_id = il['analytic_lines'][0][2]['account_id']
                 if journal_id and account_id:
-                    temp = self.pool.get('analytic_journal_rate_grid').search(cr, uid, [('journal_id', '=', journal_id),('account_id', '=', account_id) ])
+                    temp = self.pool.get('analytic_journal_rate_grid').search(cr, uid, [('journal_id', '=', journal_id),('account_id', '=', account_id)], context=context)
 
                     if temp:
-                        r = self.pool.get('analytic_journal_rate_grid').browse(cr, uid, temp)[0]
+                        r = self.pool.get('analytic_journal_rate_grid').browse(cr, uid, temp, context=context)[0]
                         il['analytic_lines'][0][2]['to_invoice'] = r.rate_id.id
         return iml
 

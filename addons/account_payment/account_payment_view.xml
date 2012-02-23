@@ -110,7 +110,7 @@
                       <button colspan="2" name="%(action_create_payment_order)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
                       <field name="company_id" widget='selection' groups="base.group_multi_company"/>
                     </group>
-                    <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1" default_get="{'order_id': active_id or False}" >
+                    <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1" context="{'order_id': active_id or False}" >
                         <form string="Payment Line">
                             <notebook>
                                 <page string="Payment">

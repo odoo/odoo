@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-02-07 18:31+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
 "<openerp@novotrade.hu>\n"
@@ -14,16 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:26+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
-
-#. module: project_planning
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
-"Hiba! A pénznemnek meg kell egyeznie a kiválasztott vállalat pénznemével."
+"X-Launchpad-Export-Date: 2012-02-09 07:07+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,tasks:0
@@ -171,9 +163,9 @@ msgid "Extra Info"
 msgstr "Extra információ"
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "To :"
-msgstr "Záró dátum:"
+#: field:report_account_analytic.planning,total_planned:0
+msgid "Total Planned"
+msgstr "Összes tervezett"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,timesheet:0
@@ -258,9 +250,9 @@ msgid "Planning"
 msgstr "Tervezés"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,total_planned:0
-msgid "Total Planned"
-msgstr "Összes tervezett"
+#: report:report_account_analytic.planning.print:0
+msgid "To :"
+msgstr "Záró dátum:"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -285,13 +277,9 @@ msgid "Delegate"
 msgstr "Megbízott"
 
 #. module: project_planning
-#: help:report_account_analytic.planning.user,free:0
-msgid ""
-"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
-"without Tasks + Holiday Leaves)"
-msgstr ""
-"A Munkanapok - (Feladatok időkiosztása + Időkiosztás feladatok nélkül + "
-"Szabadság) képlet alapján kerül kiszámításra"
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr "Tervezéselemzés"
 
 #. module: project_planning
 #: help:report_account_analytic.planning,business_days:0
@@ -353,9 +341,13 @@ msgstr ""
 "van jelölve."
 
 #. module: project_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
-msgstr "Tervezéselemzés"
+#: help:report_account_analytic.planning.user,free:0
+msgid ""
+"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
+"without Tasks + Holiday Leaves)"
+msgstr ""
+"A Munkanapok - (Feladatok időkiosztása + Időkiosztás feladatok nélkül + "
+"Szabadság) képlet alapján kerül kiszámításra"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
@@ -586,6 +578,12 @@ msgid ""
 "This value is given by the sum of time allocation with task(s) linked, "
 "expressed in days."
 msgstr "Feladatokkal kapcsolatos időkiosztás összege, napokban kifejezve."
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr ""
+#~ "Hiba! A pénznemnek meg kell egyeznie a kiválasztott vállalat pénznemével."
 
 #~ msgid "Planning Management Module"
 #~ msgstr "Tervezéskezelés modul"

@@ -40,7 +40,7 @@ The wizard to launch the report has several options to help you get the data you
     'test':['test/product_margin.yml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0064392591773',
     'images': ['images/open_margins.jpeg','images/product_margins_form.jpeg', 'images/product_margins_list.jpeg'],
 }

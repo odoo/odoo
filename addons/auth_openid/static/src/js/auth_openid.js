@@ -2,12 +2,13 @@
 openerp.auth_openid = function(instance) {
 
 var QWeb = instance.web.qweb;
-QWeb.add_template('/auth_openid/static/src/xml/auth_openid.xml');
 
 instance.web.Login = instance.web.Login.extend({
     start: function() {
         this._super.apply(this, arguments);
         var self = this;
+
+        this._default_error_message = this.$element.find('.login_error_message').text();
 
         this.$openid_selected_button = $();
         this.$openid_selected_input = $();
@@ -39,6 +40,8 @@ instance.web.Login = instance.web.Login.extend({
             }
         });
 
+        this._check_fragment();
+
     },
 
 
@@ -48,7 +51,7 @@ instance.web.Login = instance.web.Login.extend({
             self.$openid_selected_button.add(self.$openid_selected_input).removeClass('selected');
             self.$openid_selected_button = self.$element.find(button).addClass('selected');
 
-            var input = _(provider.split(',')).map(function(p) { return 'tr[data-provider="'+p+'"]'; }).join(',');
+            var input = _(provider.split(',')).map(function(p) { return 'li[data-provider="'+p+'"]'; }).join(',');
             self.$openid_selected_input = self.$element.find(input).addClass('selected');
 
             self.$openid_selected_input.find('input:first').focus();
@@ -64,20 +67,20 @@ instance.web.Login = instance.web.Login.extend({
 
     },
 
-    on_login_invalid: function() {
+    _check_fragment: function() {
         var self = this;
         var fragment = jQuery.deparam.fragment();
-        if (fragment.loginerror != undefined) {
+        console.log(fragment);
+        if (fragment.loginerror !== undefined) {
             this.rpc('/auth_openid/login/status', {}, function(result) {
                 if (_.contains(['success', 'failure'], result.status) && result.message) {
-                    self.notification.warn('Invalid OpenID Login', result.message);
+                    self.do_warn('Invalid OpenID Login', result.message);
                 }
                 if (result.status === 'setup_needed' && result.message) {
                     window.location.replace(result.message);
                 }
             });
         }
-        return this._super();
     },
 
     on_submit: function(ev) {
@@ -86,6 +89,7 @@ instance.web.Login = instance.web.Login.extend({
 
         if(!dataurl) {
             // login-password submitted
+            this.reset_error_message();
             this._super(ev);
         } else {
             ev.preventDefault();
@@ -107,13 +111,11 @@ instance.web.Login = instance.web.Login.extend({
         var self = this;
         this.rpc('/auth_openid/login/verify', {'db': db, 'url': openid_url}, function(result) {
             if (result.error) {
-                self.notification.warn(result.title, result.error);
-                self.on_login_invalid();
+                self.do_warn(result.title, result.error);
                 return;
             }
             if (result.session_id) {
-                self.session.session_id = result.session_id;
-                self.session.session_save();
+                self.session.set_cookie('session_id', result.session_id);
             }
             if (result.action === 'post') {
                 document.open();
@@ -128,6 +130,14 @@ instance.web.Login = instance.web.Login.extend({
         });
     },
 
+    do_warn: function(title, msg) {
+        //console.warn(title, msg);
+        this.$element.find('.login_error_message').text(msg).show();
+    },
+
+    reset_error_message: function() {
+        this.$element.find('.login_error_message').text(this._default_error_message);
+    }
 
 });
 

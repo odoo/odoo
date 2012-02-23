@@ -23,6 +23,7 @@
     'name': 'Sales Management',
     'version': '1.0',
     'category': 'Sales Management',
+    "sequence": 14,
     'complexity': "easy",
     'description': """
 The base module to manage quotations and sales orders.
@@ -76,10 +77,10 @@ Dashboard for Sales Manager that includes:
         'company_view.xml',
         'sale_workflow.xml',
         'sale_sequence.xml',
+        'sale_report.xml',
         'sale_data.xml',
         'sale_view.xml',
         'report/sale_report_view.xml',
-        'sale_report.xml',
         'stock_view.xml',
         'process/sale_process.xml',
         'board_sale_view.xml',
@@ -97,7 +98,7 @@ Dashboard for Sales Manager that includes:
         'test/edi_sale_order.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'application': True,
     'certificate': '0058103601429',
 }

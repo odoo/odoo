@@ -21,6 +21,7 @@
 
 from osv import osv
 
+#TODO:REMOVE this wizard is not used 
 class account_payment_make_payment(osv.osv_memory):
     _name = "account.payment.make.payment"
     _description = "Account make payment"

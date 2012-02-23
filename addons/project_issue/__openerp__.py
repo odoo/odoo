@@ -24,6 +24,7 @@
     'name': 'Issues Tracker',
     'version': '1.0',
     'category': 'Project Management',
+    "sequence": 22,
     'complexity': "easy",
     'description': """
 This module provides Issues/Bugs Management in Project.
@@ -60,7 +61,7 @@ and decide on their status as they evolve.
       'test/issue_demo.yml'
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'application': True,
     'certificate' : '001236490750848623845',
 }

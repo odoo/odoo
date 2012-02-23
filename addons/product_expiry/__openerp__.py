@@ -38,7 +38,7 @@ Following dates can be tracked:
 
 Used, for example, in food industries.''',
     "update_xml" : ["product_expiry_view.xml"],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate": "00421222123914960109",
     'images': ['images/production_lots_dates.jpeg','images/products_dates.jpeg'],

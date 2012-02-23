@@ -56,7 +56,7 @@ class report_cash_register(osv.osv):
                     to_char(s.create_date, 'YYYY') as year,
                     to_char(s.create_date, 'MM') as month,
                     to_char(s.create_date, 'YYYY-MM-DD') as day
-                from account_bank_statement as s where s.user_id=1
+                from account_bank_statement as s
                 group by
                         s.user_id,s.journal_id, s.balance_start, s.balance_end_real,s.state,to_char(s.create_date, 'dd-MM-YYYY'),
                         to_char(s.create_date, 'YYYY'),

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-10-10 19:42+0000\n"
 "Last-Translator: Aare Vesi <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:51+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:33+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -94,6 +94,7 @@ msgid "Free"
 msgstr "Vaba"
 
 #. module: account_payment
+#: view:payment.order.create:0
 #: field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "Kirjed"
@@ -108,11 +109,6 @@ msgstr ""
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Tähtaeg"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr ""
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -177,6 +173,13 @@ msgstr ""
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "Maksekorraldused"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -349,6 +352,14 @@ msgid "Amount to be paid"
 msgstr "Makstav summa"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+
+#. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
 msgstr "Valuuta"
@@ -450,7 +461,7 @@ msgstr ""
 
 #. module: account_payment
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
+msgid "You can not create journal items on an account of type view."
 msgstr ""
 
 #. module: account_payment
@@ -578,6 +589,11 @@ msgid "Information"
 msgstr "Info"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
 msgid ""
 "A payment order is a payment request from your company to pay a supplier "
@@ -626,11 +642,6 @@ msgstr "Pangakonto"
 #: view:payment.order:0
 msgid "Confirm Payments"
 msgstr "Kinnita maksed"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
@@ -689,6 +700,11 @@ msgid "Order"
 msgstr "Korraldus"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr ""
+
+#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Kokku"
@@ -697,13 +713,6 @@ msgstr "Kokku"
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
 msgstr ""
 
 #. module: account_payment
@@ -720,11 +729,6 @@ msgstr ""
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Pangakonto makseviisile"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Vigane XML vaate arhitektuurile!"

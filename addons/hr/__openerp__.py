@@ -24,6 +24,7 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Human Resources",
+    "sequence": 12,
     'complexity': "easy",
     "website": "http://www.openerp.com",
     "description": """
@@ -59,7 +60,7 @@ You can manage:
              ],
     'installable': True,
     'application': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0086710558965',
     "css": [ 'static/src/css/hr.css' ],
 }

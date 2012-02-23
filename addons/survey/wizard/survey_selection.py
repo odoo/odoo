@@ -22,12 +22,13 @@
 from osv import osv
 from osv import fields
 from tools.translate import _
+from lxml import etree
 
 class survey_name_wiz(osv.osv_memory):
     _name = 'survey.name.wiz'
 
     _columns = {
-        'survey_id': fields.many2one('survey', 'Survey', required=True, ondelete='cascade'),
+        'survey_id': fields.many2one('survey', 'Survey', required=True, ondelete='cascade', domain= [('state', '=', 'open')]),
         'page_no': fields.integer('Page Number'),
         'note': fields.text("Description"),
         'page': fields.char('Page Position',size = 12),
@@ -43,6 +44,19 @@ class survey_name_wiz(osv.osv_memory):
         'survey_id': lambda self,cr,uid,context:context.get('survey_id',False),
         'store_ans': '{}' #Setting the default pattern as '{}' as the field is of type text. The field always gets the value in dict format
     }
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(survey_name_wiz, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
+        if uid != 1:
+            survey_obj = self.pool.get('survey')
+            line_ids = survey_obj.search(cr, uid, [('invited_user_ids','in',uid)], context=context)
+            domain = str([('id', 'in', line_ids)])
+            doc = etree.XML(res['arch'])
+            nodes = doc.xpath("//field[@name='survey_id']")
+            for node in nodes:
+                node.set('domain', domain)
+            res['arch'] = etree.tostring(doc)
+        return res
 
     def action_next(self, cr, uid, ids, context=None):
         """
@@ -63,7 +77,7 @@ class survey_name_wiz(osv.osv_memory):
         res = cr.fetchone()[0]
         sur_rec = survey_obj.browse(cr,uid,survey_id,context=context)
         if sur_rec.response_user and res >= sur_rec.response_user:
-            raise osv.except_osv(_('Warning !'),_("You can not give response for this survey more than %s times") % (user_limit))
+            raise osv.except_osv(_('Warning !'),_("You can not give response for this survey more than %s times") % (sur_rec.response_user))
 
         if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey:
             raise osv.except_osv(_('Warning !'),_("You can not give more response. Please contact the author of this survey for further assistance."))
