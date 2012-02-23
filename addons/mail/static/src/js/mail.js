@@ -28,6 +28,19 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             /* bind buttons */
             this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
+            /* delegate links */
+            self.$element.find('div.oe_mail_thread_display').delegate('a', 'click', function (event) {
+                //console.log(event);
+                var res_model = event.srcElement.dataset.resModel;
+                var res_id = event.srcElement.dataset.resId;
+                self.do_action({
+                    type: 'ir.actions.act_window',
+                    res_model: res_model,
+                    res_id: parseInt(res_id),
+                    //context: context,
+                    views: [[false, 'form']]
+                });
+            });
             /* display user, fetch comments */
             this.display_current_user();
             this.fetch_comments();
@@ -70,13 +83,26 @@ openerp.mail = function(session) {
         
         do_replace_internal_links: function (string) {
             var self = this;
-            var regex = new RegExp(/(^|\s)@(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\d+)/g);
-            var regex_res = regex.exec(string);
+            /* internal links: @sale.order,32 */
+            var regex_intlink = new RegExp(/(^|\s)@(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\d+)/g);
+            var regex_res = regex_intlink.exec(string);
             while (regex_res != null) {
-                var class_name = regex_res[2] + '_' + regex_res[3] + '_' + regex_res[4];
-                string = string.replace(regex_res[0], '' + regex_res[1] + '<a href="#" class="oe_mail_link_' + class_name + '">' + class_name  + '</a>');
-                regex_res = regex.exec(string);
+                var res_model = regex_res[2] + '.' + regex_res[3];
+                var res_id = regex_res[4];
+                string = string.replace(regex_res[0], '' + regex_res[1] + '<a href="#" data-res-model = ' + res_model + ' data-res-id = ' + res_id + '>'
+                    + res_model + '(' + res_id + ')</a>');
+                regex_res = regex_intlink.exec(string);
             }
+            /* shortcut to user: @login */
+            //var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*)/g);
+            //var regex_res = regex_login.exec(string);
+            //while (regex_res != null) {
+                //var res_model = regex_res[2] + '.' + regex_res[3];
+                //var res_id = regex_res[4];
+                //string = string.replace(regex_res[0], '' + regex_res[1] + '<a href="#" data-res-model = ' + res_model + ' data-res-id = ' + res_id + '>'
+                    //+ res_model + '(' + res_id + ')</a>');
+                //regex_res = regex_intlink.exec(string);
+            //}
             return string;
         },
         
