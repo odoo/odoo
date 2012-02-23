@@ -4382,13 +4382,11 @@ class BaseModel(object):
         domain = domain[:]
         # if the object has a field named 'active', filter out all inactive
         # records unless they were explicitely asked for
-        if 'active' in self._columns and (active_test and context.get('active_test', True)):
+        if 'active' in self._all_columns and (active_test and context.get('active_test', True)):
             if domain:
-                active_in_args = False
-                for a in domain:
-                    if a[0] == 'active':
-                        active_in_args = True
-                if not active_in_args:
+                # the item[0] trick below works for domain items and '&'/'|'/'!'
+                # operators too
+                if not any(item[0] == 'active' for item in domain):
                     domain.insert(0, ('active', '=', 1))
             else:
                 domain = [('active', '=', 1)]
