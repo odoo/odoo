@@ -2690,7 +2690,7 @@ class BaseModel(object):
         elif val in dict(self._columns[field].selection(self, cr, uid, context=context)):
             return
         raise except_orm(_('ValidateError'),
-			_('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
+            _('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
 
     def _check_removed_columns(self, cr, log=False):
         # iterate on the database columns to drop the NOT NULL constraints
