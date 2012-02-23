@@ -248,20 +248,47 @@ niv = (function() {
     };
     lib.EventDispatcherMixin = _.extend({}, lib.ParentedMixin, {
         __eventDispatcherMixin: true,
-        bind: function(eventName, object, func) {
+        bind: function(events, object, func) {
+            var self = this;
             checkEventDispatcher(this);
-            this.__events.on(eventName, func, object);
-            if (object && object.__eventDispatcherMixin) {
-                checkEventDispatcher(object);
-                object.__registeredEvents.push({name: eventName, func: func, source: this});
-            }
+            events = events.split(/\s+/);
+            _.each(events, function(eventName) {
+                self.__events.on(eventName, func, object);
+                if (object && object.__eventDispatcherMixin) {
+                    checkEventDispatcher(object);
+                    object.__registeredEvents.push({name: eventName, func: func, source: self});
+                }
+            });
+            return this;
+        },
+        unbind: function(events, object, func) {
+            var self = this;
+            checkEventDispatcher(this);
+            events = events.split(/\s+/);
+            _.each(events, function(eventName) {
+                self.__events.off(eventName, func, object);
+                if (object && object.__eventDispatcherMixin) {
+                    checkEventDispatcher(object);
+                    object.__registeredEvents = _.filter(object.__registeredEvents, function(el) {
+                        return !(el.name === eventName && el.func === func && el.source === self);
+                    });
+                }
+            });
+            return this;
+        },
+        trigger: function(events) {
+            checkEventDispatcher(this);
+            this.__events.trigger.apply(this.__events, arguments);
+            return this;
         },
         destroy: function() {
+            var self = this;
             checkEventDispatcher(this);
-            _.each(this.__registeredEvents, _.bind(function(event) {
-                event.source.__events.off(event.name, event.func, this);
-            }, this));
-            this.__events.off(); // to ease garbage collector's duty
+            _.each(this.__registeredEvents, function(event) {
+                event.source.__events.off(event.name, event.func, self);
+            });
+            this.__registeredEvents = [];
+            this.__events.off();
             lib.ParentedMixin.destroy.call(this);
         }
     });

@@ -1,12 +1,9 @@
 
 module("Class");
 
-test("Class exists", function() {
-	ok(!!niv.Class, "Class does not exist");
-	ok(!!niv.Class.extend, "extend does not exist");
-});
-
-test("Inheritance works", function() {
+test("base", function() {
+    ok(!!niv.Class, "Class does not exist");
+    ok(!!niv.Class.extend, "extend does not exist");
     var Claz = niv.Class.extend({
         test: function() {
             return "ok";
@@ -17,7 +14,7 @@ test("Inheritance works", function() {
 
 module("DestroyableMixin");
 
-test("DestroyableMixin works", function() {
+test("base", function() {
     var Claz = niv.Class.extend(_.extend({}, niv.DestroyableMixin, {}));
     var x = new Claz();
     equal(false, !!x.isDestroyed());
@@ -27,7 +24,7 @@ test("DestroyableMixin works", function() {
 
 module("ParentedMixin");
 
-test("ParentedMixin works", function() {
+test("base", function() {
     var Claz = niv.Class.extend(_.extend({}, niv.ParentedMixin, {}));
     var x = new Claz();
     var y = new Claz();
@@ -40,7 +37,7 @@ test("ParentedMixin works", function() {
 
 module("Events");
 
-test("Events works", function() {
+test("base", function() {
     var x = new niv.internal.Events();
     var tmp = 0;
     var fct = function() {tmp = 1;};
@@ -50,6 +47,29 @@ test("Events works", function() {
     equal(1, tmp);
     tmp = 0;
     x.off("test", fct);
+    x.trigger("test");
+    equal(0, tmp);
+});
+
+module("EventDispatcherMixin");
+
+test("base", function() {
+    var Claz = niv.Class.extend(_.extend({}, niv.EventDispatcherMixin, {}));
+    var x = new Claz();
+    var y = new Claz();
+    var tmp = 0;
+    var fct = function() {tmp = 1;};
+    x.bind("test", y, fct);
+    equal(0, tmp);
+    x.trigger("test");
+    equal(1, tmp);
+    tmp = 0;
+    x.unbind("test", y, fct);
+    x.trigger("test");
+    equal(0, tmp);
+    tmp = 0;
+    x.bind("test", y, fct);
+    y.destroy();
     x.trigger("test");
     equal(0, tmp);
 });
