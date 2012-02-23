@@ -126,7 +126,7 @@ class res_partner(osv.osv):
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title','Title'),
         'parent_id': fields.many2one('res.partner','Parent Partner'),
-        'child_ids': fields.one2many('res.partner', 'parent_id', 'Partner Ref.'),
+        'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language', help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
         'user_id': fields.many2one('res.users', 'Salesman', help='The internal user that is in charge of communicating with this partner if any.'),
@@ -138,12 +138,12 @@ class res_partner(osv.osv):
         'events': fields.one2many('res.partner.event', 'partner_id', 'Events'),
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
+        'active': fields.boolean('Active'),
         'customer': fields.boolean('Customer', help="Check this box if the partner is a customer."),
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
-        'color': fields.integer('Color Index'),
-        'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'function': fields.char('Function', size=128),
+        'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'street': fields.char('Street', size=128),
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
@@ -155,13 +155,11 @@ class res_partner(osv.osv):
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
-        'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
-#        'company_id': fields.related('partner_id','company_id',type='many2one',relation='res.company',string='Company', store=True),
-        'company_id': fields.many2one('res.company', 'Company',select=1),
-        'is_company': fields.boolean('Company', help="Check the field to create company otherwise it is personal contacts"),
-        'color': fields.integer('Color Index'),
+        'is_company': fields.boolean('Company', help="Check if the partner is a company, uncheck it for a person"),
+        'is_company_address': fields.boolean('Use Parent Address', help="Check to use the parent partner's address"),
         'photo': fields.binary('Photo'),
-        'is_company_address': fields.boolean('Company Address', help="Check the field to use the company address"),
+        'company_id': fields.many2one('res.company', 'Company', select=1),
+        'color': fields.integer('Color Index'),
     }
     def _default_category(self, cr, uid, context=None):
         if context is None:
@@ -171,12 +169,12 @@ class res_partner(osv.osv):
         return []
 
     _defaults = {
-        'active': lambda *a: 1,
-        'customer': lambda *a: 1,
+        'active': True,
+        'customer': True,
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
         'color': 0,
-        'is_company': lambda *a: 0,
+        'is_company': False,
         'type': 'default',
     }
 
@@ -191,12 +189,24 @@ class res_partner(osv.osv):
         return True
     
     def onchange_address(self, cr, uid, ids, is_company_address, parent_id, context=None):
-        if is_company_address != False  and parent_id:
-            data = self.read(cr, uid, parent_id, ['street', 'street2', 'zip', 'city', 'email', 'phone', 'fax', 'mobile', 'country_id', 'state_id', 'website', 'ref', 'lang'], context=context)
-        else:
-            data = self.read(cr, uid, ids[0], ['street', 'street2', 'zip', 'city', 'email', 'phone', 'fax', 'mobile', 'country_id', 'state_id', 'website', 'ref', 'lang'], context=context)
-
-        return {'value': {'street': data['street'], 'street2':data['street2'], 'zip':data['zip'], 'city':data['city'], 'email':data['email'], 'phone':data['phone'], 'fax':data['fax'], 'mobile':data['mobile'], 'country_id':data['country_id'], 'state_id':data['state_id'], 'website':data['website'], 'ref':data['ref'], 'lang':data['lang']}}
+        if is_company_address and parent_id:
+            parent = self.browse(cr, uid, parent_id, context=context)
+            return {'value': {
+                'street': parent.street,
+                'street2': parent.street2,
+                'zip': parent.zip,
+                'city': parent.city,
+                'state_id': parent.state_id.id,
+                'country_id': parent.country_id.id,
+                'email': parent.email,
+                'phone': parent.phone,
+                'fax': parent.fax,
+                'mobile': parent.mobile,
+                'website': parent.website,
+                'ref': parent.ref,
+                'lang': parent.lang,
+            }}
+        return {}
 
     def _check_ean_key(self, cr, uid, ids, context=None):
         for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
@@ -309,8 +319,8 @@ class res_partner(osv.osv):
             model_data.search(cr, uid, [('module','=','base'),
                                         ('name','=','main_partner')])[0],
             ).res_id
+
 res_partner()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
