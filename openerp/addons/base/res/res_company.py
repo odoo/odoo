@@ -109,7 +109,7 @@ class res_company(osv.osv):
             if address:
                 part_obj.write(cr, uid, [address], {name: value or False})
             else:
-                part_obj.create(cr, uid, {name: value or False, 'partner_id': company.partner_id.id}, context=context)
+                part_obj.create(cr, uid, {name: value or False, 'parent_id': company.partner_id.id}, context=context)
         return True
 
 
@@ -294,12 +294,12 @@ class res_company(osv.osv):
 
 
             <drawString x="1.3cm" y="%s">[[ company.partner_id.name ]]</drawString>
-            <drawString x="1.3cm" y="%s">[[ company.partner_id.address and company.partner_id.address[0].street or  '' ]]</drawString>
-            <drawString x="1.3cm" y="%s">[[ company.partner_id.address and company.partner_id.address[0].zip or '' ]] [[ company.partner_id.address and company.partner_id.address[0].city or '' ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name  or '']]</drawString>
+            <drawString x="1.3cm" y="%s">[[ company.partner_id and company.partner_id.street or  '' ]]</drawString>
+            <drawString x="1.3cm" y="%s">[[ company.partner_id and company.partner_id.city or '' ]] - [[ company.partner_id and company.partner_id.country_id and company.partner_id.country_id.name  or '']]</drawString>
             <drawString x="1.3cm" y="%s">Phone:</drawString>
-            <drawRightString x="7cm" y="%s">[[ company.partner_id.address and company.partner_id.address[0].phone or '' ]]</drawRightString>
+            <drawRightString x="7cm" y="%s">[[ company.partner_id and company.partner_id.phone or '' ]]</drawRightString>
             <drawString x="1.3cm" y="%s">Mail:</drawString>
-            <drawRightString x="7cm" y="%s">[[ company.partner_id.address and company.partner_id.address[0].email or '' ]]</drawRightString>
+            <drawRightString x="7cm" y="%s">[[ company.partner_id and company.partner_id.email or '' ]]</drawRightString>
             <lines>1.3cm %s 7cm %s</lines>
 
             <!--page bottom-->
