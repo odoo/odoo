@@ -51,18 +51,12 @@ class event_moodle(osv.osv):
         create the good url with the information of the configuration
         @return url for moodle connexion
         """
-        req_sql="select id from event_moodle"
-        cr.execute(req_sql)
-        sql_res = cr.dictfetchall()
-        new_ids=[]
-        if sql_res == []:
+        reg_ids = self.pool.get('event.moodle').search(cr, uid, [], context=context)
+        if reg_ids == []:
             raise osv.except_osv(('Error!'),("Configure moodle connexion before"))
-        for id_moodle in sql_res:
-             new_ids.append(id_moodle['id'])
-
         #change this code and take directly the good ids
         url=""
-        config_moodle = self.browse(cr, uid, [new_ids[-1]], context=context)
+        config_moodle = self.browse(cr, uid, [reg_ids[-1]], context=context)
         if config_moodle[0].moodle_username and config_moodle[0].moodle_password:
             url='http://'+config_moodle[0].serveur_moodle+'/moodle/webservice/xmlrpc/simpleserver.php?wsusername='+config_moodle[0].moodle_username+'&wspassword='+config_moodle[0].moodle_password
             #connexion with password and username
