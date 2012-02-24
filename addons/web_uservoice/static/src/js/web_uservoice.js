@@ -71,7 +71,7 @@ instance.web.Header.include({
         this._super();
         this.update_promise.then(function() {
             if (self.uservoice) {
-                self.uservoice.stop();
+                self.uservoice.destroy();
             }
             self.uservoice = new instance.web_uservoice.UserVoice(self);
             self.uservoice.prependTo(self.$element.find('div.header_corner'));
