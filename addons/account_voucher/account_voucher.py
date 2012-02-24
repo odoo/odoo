@@ -592,7 +592,14 @@ class account_voucher(osv.osv):
         ids.reverse()
         account_move_lines = move_line_pool.browse(cr, uid, ids, context=context)
 
+        #compute the total debit/credit and look for a matching open amount or invoice
         for line in account_move_lines:
+            #if the line is partially reconciled, then we must pay attention to display it only once and in the good o2m
+            if line.debit and line.reconcile_partial_id and ttype == 'receipt':
+                continue
+            if line.credit and line.reconcile_partial_id and ttype == 'payment':
+                continue
+
             if invoice_id:
                 if line.invoice.id == invoice_id:
                     #if the invoice linked to the voucher line is equal to the invoice_id in context
@@ -618,6 +625,12 @@ class account_voucher(osv.osv):
 
         #voucher line creation
         for line in account_move_lines:
+            #if the line is partially reconciled, then we must pay attention to display it only once and in the good o2m
+            if line.debit and line.reconcile_partial_id and ttype == 'receipt':
+                continue
+            if line.credit and line.reconcile_partial_id and ttype == 'payment':
+                continue
+
             if line.currency_id and currency_id==line.currency_id.id:
                 amount_original = abs(line.amount_currency)
                 amount_unreconciled = abs(line.amount_residual_currency)
