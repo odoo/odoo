@@ -67,7 +67,7 @@ class google_docs(osv.osv):
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'model': fields.many2one('ir.model', 'Model'),
-        'gdocs_res_id': fields.char('Google resource ID', size=64, translate=False)
+        'gdocs_res_id': fields.char('Google resource ID', size=64, translate=False),
         'name_template': fields.char('GDoc name template', size=64, translate=False)
     }
 
@@ -96,7 +96,7 @@ class google_docs(osv.osv):
             'salt' : salt,
             'name' : '',
         }
-        name_template = 'Sales order %s %s'
+        name_template = 'Sales order %s'
 
         # check template for the current model
         model_obj = self.pool.get(model)
@@ -118,7 +118,7 @@ class google_docs(osv.osv):
         client.http_client.debug = False
         client.ClientLogin(user.gmail_user, user.gmail_password, client.source, service='writely')
         resource = client.get_resource_by_id(gdoc.gdocs_res_id)
-        copied_resource = client.copy_resource(entry=resource, title= self.name_template % (, model))
+        copied_resource = client.copy_resource(entry=resource, title= self.name_template % (model, ))
 
         return self.edit_url_template % (copied_resource.resource_id.text,)
 
