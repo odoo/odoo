@@ -1357,35 +1357,38 @@ class sale_configuration(osv.osv_memory):
             ('global_on_order', 'Global On Order'),
             ('on_order_line', 'On Order Lines'),
         ], 'Taxes'),
-        'sale_margin' : fields.boolean("Display Margin For Users"),
-        'sale_journal' : fields.boolean("Invoice_journal?"),
+        'sale_margin': fields.boolean("Display Margin For Users"),
+        'sale_journal': fields.boolean("Invoice journal?"),
     }
 
-    def default_module_get(self, cr, uid, ids, selectable=[], context=None):
-        #TODO: Need to be implemented
-        selectable = ['project_timesheet','project_mrp','account_analytic_analysis','delivery','sale_margin','sale_journal']
-        res = super(sale_configuration, self).default_module_get(cr, uid, ids, selectable=selectable, context=context)
-        for k in res.keys():
+    def default_get(self, cr, uid, fields_list, context=None):
+        ir_values_obj = self.pool.get('ir.values')
+        res = super(sale_configuration, self).default_get(
+            cr, uid, fields_list, context=context)
+        defaults = {}
+        module_list = ['project_timesheet','project_mrp','account_analytic_analysis','delivery',
+                       'sale_margin', 'sale_journal']
+        defaults.update(self.get_installed_modules(cr, uid, module_list, context=context))
+        for val in ir_values_obj.get(cr, uid, 'default', False, ['sale.order']):
+            defaults.update({val[1]: val[2]})
+        for k in defaults.keys():
             if k in ['project_timesheet','project_mrp','account_analytic_analysis']:
-                res.update({'task_work': True})
+                defaults.update({'task_work': True})
             if k in ['account_analytic_analysis']:
-                res.update({'timesheet': True})
+                defaults.update({'timesheet': True})
             if k == 'delivery':
-                res.update({'sale_orders': True, 'deli_orders': True})
+                defaults.update({'sale_orders': True, 'deli_orders': True, 'charge_delivery': True})
+            if k == 'picking_policy' and defaults[k]=='one':
+                defaults.update({'picking_policy': True})
             else:
                 res.update({k: False})
+        res.update(defaults)
         return res
 
     _defaults = {
         'order_policy': 'manual',
         'tax_policy': 'no_tax',
         'time_unit': lambda self, cr, uid, c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c) and self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c)[0] or False,
-        'task_work': default_module_get,
-        'timesheet': default_module_get,
-        'sale_orders': default_module_get,
-        'deli_orders': default_module_get,
-        'sale_margin' : default_module_get,
-        'sale_journal': default_module_get,
     }
 
     def onchange_order(self, cr, uid, ids, sale, deli, context=None):
@@ -1396,16 +1399,14 @@ class sale_configuration(osv.osv_memory):
             res.update({'order_policy': 'picking'})
         return {'value':res}
 
-    def write(self, cr, uid, ids, vals, context=None):
-        self.execute(cr, uid, ids, context=context)
-        return super(sale_configuration, self).write(cr, uid, ids, vals, context=context)
-
     def execute(self, cr, uid, ids, context=None):
+        #TODO: TO BE IMPLEMENTED
         ir_values_obj = self.pool.get('ir.values')
         data_obj = self.pool.get('ir.model.data')
         menu_obj = self.pool.get('ir.ui.menu')
         module_obj = self.pool.get('ir.module.module')
-        module_upgrade_obj = self.pool.get('base.module.upgrade')
+        
+        super(sale_configuration, self).execute(cr, uid, ids, context=context)
         module_name = []
 
         group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
@@ -1431,8 +1432,10 @@ class sale_configuration(osv.osv_memory):
         if wizard.charge_delivery:
             module_name.append('delivery')
 
+        if wizard.picking_policy:
+            ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], 'one')
+        
         if len(module_name):
-            module_ids = []
             need_install = False
             module_ids = []
             for module in module_name:
