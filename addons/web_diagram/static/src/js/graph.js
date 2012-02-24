@@ -16,6 +16,7 @@
         var visible = false;
         var conn_circle = graph.r.circle(node.get_pos().x + pos_x, node.get_pos().y + pos_y,4);
         conn_circle.attr({'opacity':0, 'fill':graph.style.outline,'stroke':'none'});
+        conn_circle.transform(graph.get_transform());
         var self = this;
 
         this.update_pos = function(){
@@ -59,7 +60,7 @@
             if(!visible){ return; }
             graph.creating_edge = false;
             self.edge_tmp.remove();
-            if(graph.target_node && graph.target_node != node){
+            if(graph.target_node){  
                 edge_prop = GraphEdge.creation_callback(node,graph.target_node);
                 if(edge_prop){
                     new GraphEdge(graph,edge_prop.label, node,graph.target_node);
@@ -80,22 +81,65 @@
                 visible = false;
             }
         }
-
         this.show = show;
         this.hide = hide;
     }
     
     function Graph(r,style){
+        var self = this;
         var nodes = [];  // list of all nodes in the graph
         var edges = [];  // list of all edges in the graph
         var graph = {};  // graph[n1.uid][n2.uid] -> list of all edges from n1 to n2
         var links = {}   // links[n.uid] -> list of all edges from or to n
         var uid = 1;     // all nodes and edges have an uid used to order their display when they are curved
         
-        this.creating_edge = false; // true if we are dragging a new edge onto a node
-        this.target_node = null;    // this holds the target node when creating an edge and hovering a connector
-        this.r = r;                 // the raphael instance
-        this.style  = style;        // definition of the colors, spacing, fonts, ... used by the elements
+        self.creating_edge = false; // true if we are dragging a new edge onto a node
+        self.target_node = null;    // this holds the target node when creating an edge and hovering a connector
+        self.r = r;                 // the raphael instance
+        self.style  = style;        // definition of the colors, spacing, fonts, ... used by the elements
+        var tr_x = 0, tr_y = 0;         // global translation coordinate
+        var scale = 1;              // global scale
+
+        var background = r.rect(0,0,'100%','100%').attr({'fill':'white', 'stroke':'none', 'opacity':0});
+        
+        // return the global transform of the scene
+        this.get_transform = function(){
+            return "T"+tr_x+","+tr_y
+        }
+        
+        // translate every element of the graph except the background. 
+        // elements inserted in the graph after a translate_all() must manually apply transformation 
+        // via get_transform() 
+        var translate_all = function(dx,dy){
+            tr_x += dx;
+            tr_y += dy;
+            tstr = self.get_transform();
+            
+            r.forEach(function(el){
+                if(el != background){
+                    el.transform(tstr);
+                }
+            });
+        }
+
+        // Graph translation when background is dragged
+        var bg_drag_down = function(){
+            px = py = 0;
+        }
+        var bg_drag_move = function(x,y){
+            var dx = x - px;
+            var dy = y - py;
+            px = x;
+            py = y;
+            translate_all(dx,dy);
+        }
+        var bg_drag_up   = function(){}
+        background.drag( bg_drag_move, bg_drag_down, bg_drag_up);
+
+        $(background.node).bind('mousewheel',function(event,delta){
+            translate_all(0,delta*20);
+        });
+
 
         //adds a node to the graph and sets its uid.
         this.add_node = function (n){
@@ -121,6 +165,15 @@
                 links[n2.uid].push(e);
             }
         };
+        //removes an edge from the graph
+        this.remove_edge = function(edge){
+            edges = _.without(edges,edge);
+            var n1 = edge.get_start();
+            var n2 = edge.get_end();
+            links[n1.uid] = _.without(links[n1.uid],edge);
+            links[n2.uid] = _.without(links[n2.uid],edge);
+            graph[n1.uid][n2.uid] = _without(graph[n1.uid][n2.uid],edge);
+        }
         //return the list of edges from n1 to n2
         this.get_edge_list = function(n1,n2){
             var list = [];
@@ -212,14 +265,12 @@
 
     // creates a new Graph Node on Raphael document r, centered on [pos_x,pos_y], with label 'label', 
     // and of type 'circle' or 'rect', and of color 'color'
-    // TODO pass graph in constructor
     function GraphNode(graph,pos_x, pos_y,label,type,color){
+        var self = this;
         var r  = graph.r;
         var sy = graph.style.node_size_y;
         var sx = graph.style.node_size_x;
         var node_fig = null;
-        //var node_shadow = null;
-        var self = this;
         var selected = false;
         this.update_time = 0;
         this.connectors = [];
@@ -233,9 +284,14 @@
             node_fig = r.rect(pos_x-sx/2,pos_y-sy/2,sx,sy);
         }
         node_fig.attr({'fill':color, 'stroke':graph.style.outline,'stroke-width':1,'cursor':'pointer'});
+        node_fig.transform(graph.get_transform());
+
+        $(node_fig.node).addClass('foobar');
 
         var node_label = r.text(pos_x,pos_y,label);
         node_label.attr({'fill':graph.style.text,'cursor':'pointer'});
+        node_label.transform(graph.get_transform());
+        $(node_label.node).css('text-shadow',"1px 2px 3px rgba(0,0,0,0.3)");
 
         
         // sets the center position of the node
@@ -388,7 +444,7 @@
     }
 
     // creates a new edge with label 'label' from start to end. start and end must implement get_pos_*, 
-    // if tmp is true, the edge is not added to the graph, used for drag edges. TODO pass graph in constructor,
+    // if tmp is true, the edge is not added to the graph, used for drag edges. 
     // replace tmp == false by graph == null 
     function GraphEdge(graph,label,start,end,tmp){
         var self = this;
@@ -470,7 +526,6 @@
                     edge_path = make_line();
                 }
             }else{ // start == end
-                console.log("loop!");
                 var rad = graph.style.edge_loop_radius || 100;
                 s = start.get_pos();
                 e = end.get_pos();
@@ -499,6 +554,10 @@
         var edge = r.path(edge_path).attr({'stroke':graph.style.edge, 'stroke-width':2, 'arrow-end':'block-wide-long', 'cursor':'pointer'}).insertBefore(graph.get_node_list()[0].get_fig());       
         var labelpos = get_label_pos(edge);
         var edge_label = r.text(labelpos.x, labelpos.y - elfs, label).attr({'fill':graph.style.edge_label, 'cursor':'pointer', 'font-size':elfs});
+
+        edge.transform(graph.get_transform());
+        edge_label.transform(graph.get_transform());
+        $(edge_label.node).css('text-shadow',"1px 2px 3px rgba(0,0,0,0.3)");
         
 
         //since we create an edge we need to recompute the edges that have the same start and end positions as this one
@@ -539,6 +598,9 @@
         function remove(){
             edge.remove();
             edge_label.remove();
+            if(!tmp){
+                graph.remove_edge(self);
+            }
         }
 
         function double_click(){

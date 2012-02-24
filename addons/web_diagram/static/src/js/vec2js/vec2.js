@@ -1,6 +1,4 @@
 
-
- 
 (function(window){
     
     // A Javascript 2D vector library

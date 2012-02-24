@@ -123,25 +123,27 @@ openerp.web.DiagramView = openerp.web.View.extend({
         var style = {   "edge"          : "#A0A0A0",
                         "edge_label"    : "#555",
                         "text"          : "#333",
-                        "outline"       : "#000",
+                        "outline"       : "#333",
                         "selected"      : "#0097BE",
                         "gray"          : "#DCDCDC",
                         "white"         : "#FFF",
-                        "node_size_x"   : 90,
-                        "node_size_y"   : 60,
+                        "node_size_x"   : 100,
+                        "node_size_y"   : 70,
                         "edge_spacing"  : 100,                 
                         "edge_label_font_size" : 10              };
 
         $('#dia-canvas *').remove();    // remove previous diagram
 
-        var r  = new Raphael(document.getElementById("dia-canvas"), '100%','500px');
+        var r  = new Raphael(document.getElementById("dia-canvas"), '100%','100%');
+        $(r.node).css("border","none");
+        $(r.node).css("padding",0);
         var graph  = new CuteGraph(r,style);
 
         _.each(res_nodes, function(node) {
             var n = new CuteNode(     graph,
-                                      node.x,
-                                      node.y,
-                                      CuteGraph.wordwrap(node.name, 17),
+                                      node.x + 50,
+                                      node.y + 50,
+                                      CuteGraph.wordwrap(node.name, 16),
                                       node.shape === 'rectangle' ? 'rect' : 'circle',
                                       node.color === 'white' ? style.white : style.gray    );
             n.id = node.id;
@@ -168,7 +170,9 @@ openerp.web.DiagramView = openerp.web.View.extend({
             console.log("creating edge from:",node_start," to:",node_end);
             self.add_edit_node(null, self.connector, {
                 act_from: node_start.id,
-                act_to: node_end.id
+                act_to: node_end.id,
+                activity_from_id: node_start.id,
+                activity_to_id: node_end.id,
             });
             return {label:""};  // TODO destroy edge on cancel
         }
@@ -200,6 +204,10 @@ openerp.web.DiagramView = openerp.web.View.extend({
             pop.on_select_elements.add_last(function(element_ids) {
                 self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
             });
+            pop.$element.bind("dialogbeforeclose",function(){
+                console.log("HAHHAAH");
+                console.log(self.connectors.attrs);
+            });
         } else {
             pop = new openerp.web.form.FormOpenPopup(this);
             pop.show_element(
@@ -213,6 +221,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
             pop.on_write.add(function() {
                 self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
             });
+ 
         }
 
         var form_controller = pop.view_form;
