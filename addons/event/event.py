@@ -143,7 +143,6 @@ class event_event(osv.osv):
             res[event.id]['register_attended'] = len(reg_draft_ids)
 
         return res
-    
 
     _columns = {
         'name': fields.char('Event Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
@@ -180,7 +179,7 @@ class event_event(osv.osv):
 
     _defaults = {
         'state': 'draft',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=context),
         'user_id': lambda obj, cr, uid, context: uid,
     }
 
