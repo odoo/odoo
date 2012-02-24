@@ -27,19 +27,20 @@ class google_docs(osv.osv):
            @param context: a standard dictionary for contextual values.
            @return the url of the copy itself.
            @return -1 if the template hasn't been assigned yet.
-           @return -2 if the google_base_account hasn't been configured yet.'''
+           @return -2 if the google_base_account hasn't been configured yet.
+        '''
 
         if context==None:
             context={}
 
-      template_vars = {
+        template_vars = {
             'db' : cr.dbname,
             'model' : model,
             'id' : id,
             'salt' : salt,
             'name' : '',
         }
-            name_template = 'Sales order %s %s'
+        name_template = 'Sales order %s %s'
 
         # check template for the current model
         model_obj = self.pool.get(model)
@@ -71,7 +72,8 @@ class google_docs(osv.osv):
            @param uid: the current user ID, for security checks.
            @param context: a standard dictionary for contextual values.
            @return a list with information about the documents in form of tuples (document_name, document_resource_id).
-           @return -2 if the google_base_account hasn't been configured yet.'''
+           @return -2 if the google_base_account hasn't been configured yet.
+        '''
 
         if context == None:
             context = {}
