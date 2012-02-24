@@ -2060,14 +2060,13 @@ class orm_memory(orm_template):
             return self.datas.keys()
 
         res = []
-        counter = 0
+        counter = 1
         #Find the value of dict
         f = False
         if result:
             for id, data in self.datas.items():
-                counter = counter + 1
                 data['id'] = id
-                if limit and (counter > int(limit)):
+                if limit and (counter > int(limit) + int(offset)):
                     break
                 f = True
                 for arg in result:
@@ -2077,11 +2076,11 @@ class orm_memory(orm_template):
                         val = eval('data[arg[0]]'+arg[1] +' arg[2]', locals())
                     elif arg[1] in ['ilike']:
                         val = (str(data[arg[0]]).find(str(arg[2]))!=-1)
-
                     f = f and val
-
                 if f:
-                    res.append(id)
+                    if counter > offset:
+                        res.append(id)
+                    counter += 1
         if count:
             return len(res)
         return res or []
