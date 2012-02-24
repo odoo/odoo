@@ -115,6 +115,10 @@ test("base", function() {
     equal($el.length, 1);
     equal($el.parents()[0], $("body")[0]);
     equal($el.html(), "test");
+    
+    var y = new Claz(x);
+    equal(y.getParent(), x);
+    
     x.destroy();
     $el = $("#testdiv");
     equal($el.length, 0);

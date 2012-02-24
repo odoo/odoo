@@ -999,7 +999,7 @@ openerp.web.Widget = niv.Widget.extend(_.extend({}, openerp.web.CallbackEnabledM
      */
     init: function(parent) {
         openerp.web.CallbackEnabledMixin.init.call(this);
-        this._super();
+        this._super(parent);
         this.session = openerp.connection;
     },
     /**
