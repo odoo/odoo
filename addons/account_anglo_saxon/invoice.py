@@ -69,7 +69,7 @@ class account_invoice_line(osv.osv):
                             'account_id':dacc,
                             'product_id':i_line.product_id.id,
                             'uos_id':i_line.uos_id.id,
-                            'account_analytic_id':i_line.account_analytic_id.id,
+                            'account_analytic_id': False,
                             'taxes':i_line.invoice_line_tax_id,
                             })
 
@@ -82,7 +82,7 @@ class account_invoice_line(osv.osv):
                             'account_id':cacc,
                             'product_id':i_line.product_id.id,
                             'uos_id':i_line.uos_id.id,
-                            'account_analytic_id':i_line.account_analytic_id.id,
+                            'account_analytic_id': False,
                             'taxes':i_line.invoice_line_tax_id,
                             })
         elif inv.type in ('in_invoice','in_refund'):

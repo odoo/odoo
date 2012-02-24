@@ -3,7 +3,7 @@
     <div style="height:100%;"></div>
 </t>
 <t t-name="EdiImport">
-    <t t-call="Interface"/>
+    <t t-call="WebClient"/>
 </t>
 <t t-name="EdiView">
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" id="oe_app" class="oe-application oe_forms">
@@ -61,7 +61,7 @@
                             <br/>
                             To get started immediately, <a href="#" id="oe_edi_download_show_code">see is all it takes to use this EDI document in Python</a>.
                         </p>
-                        <div class="python oe_edi_nested_block_import oe_edi_small" id="oe_edi_download_code">
+                        <div class="python oe_edi_nested_block_import oe_edi_small" id="oe_edi_download_code" t-translation="off">
                         <ol><li class="li1"><div class="de1"><span class="kw1">import</span> <span class="kw3">urllib2</span><span class="sy0">,</span> simplejson</div></li>
                         <li class="li1"><div class="de1">edi_document <span class="sy0">=</span> <span class="kw3">urllib2</span>.<span class="me1">urlopen</span><span class="br0">(</span><span class="st0">'<t t-esc="widget.get_download_url()"/>'</span><span class="br0">)</span>.<span class="me1">read</span><span class="br0">(</span><span class="br0">)</span></div></li>
                         <li class="li2"><div class="de2">document_data <span class="sy0">=</span> simplejson.<span class="me1">loads</span><span class="br0">(</span>edi_document<span class="br0">)</span><span class="br0">[</span><span class="nu0">0</span><span class="br0">]</span></div></li>

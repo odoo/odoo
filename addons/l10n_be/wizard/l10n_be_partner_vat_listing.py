@@ -23,216 +23,316 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 import base64
 from tools.translate import _
 from osv import fields, osv
+from report import report_sxw
 
-class partner_vat_13(osv.osv_memory):
+class vat_listing_clients(osv.osv_memory):
+    _name = 'vat.listing.clients'
+    _columns = {
+        'name': fields.char('Client Name', size=32),
+        'vat': fields.char('VAT', size=64),
+        'turnover': fields.float('Base Amount'),
+        'vat_amount': fields.float('VAT Amount'),
+    }
+
+vat_listing_clients()
+
+class partner_vat(osv.osv_memory):
     """ Vat Listing """
-    _name = "partner.vat_13"
+    _name = "partner.vat"
 
-    def get_partner(self, cursor, user, ids, context=None):
+    def get_partner(self, cr, uid, ids, context=None):
         obj_period = self.pool.get('account.period')
         obj_partner = self.pool.get('res.partner')
         obj_vat_lclient = self.pool.get('vat.listing.clients')
         obj_model_data = self.pool.get('ir.model.data')
-        data  = self.read(cursor, user, ids)[0]
-        #period = obj_period.search(cursor, user, [('fiscalyear_id', '=', data['fyear'])], context=context)
+        obj_module = self.pool.get('ir.module.module')
+        data  = self.read(cr, uid, ids)[0]
         year = data['year']
         date_start = year + '-01-01'
         date_stop = year + '-12-31'
-        period = obj_period.search(cursor, user, [('date_start' ,'>=', date_start), ('date_stop','<=',date_stop)])
-        if not period:
+        if context.get('company_id', False):
+            company_id = context['company_id']
+        else:
+            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        period_ids = obj_period.search(cr, uid, [('date_start' ,'>=', date_start), ('date_stop','<=',date_stop), ('company_id','=',company_id)])
+        if not period_ids:
              raise osv.except_osv(_('Data Insufficient!'), _('No data for the selected Year.'))
-        #logger.notifyChannel('addons.'+self._name, netsvc.LOG_WARNING, 'period =  %s' %period ) 
-        
-        p_id_list = obj_partner.search(cursor, user, [('vat_subjected', '!=', False)], context=context)
-        if not p_id_list:
-             raise osv.except_osv(_('Data Insufficient!'), _('No partner has a VAT Number asociated with him.'))
+
         partners = []
-        records = []
-        for obj_partner in obj_partner.browse(cursor, user, p_id_list, context=context):
-            record = {} # this holds record per partner
-
-            #This listing is only for customers located in belgium, that's the
-            #reason why we skip all the partners that haven't their
-            #(or one of their) default address(es) located in Belgium.
-            go_ahead = False
-            for ads in obj_partner.address:
-                if ads.type == 'default' and (ads.country_id and ads.country_id.code == 'BE') and (obj_partner.vat or '').startswith('BE'):
-                    go_ahead = True
-                    break
-            if not go_ahead:
-                continue
-            cursor.execute('select b.code, sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code IN %s and l.partner_id=%s and l.period_id IN %s group by b.code',(('income','produit','tax_out'),obj_partner.id,tuple(period),))
-            line_info = cursor.fetchall()
-            if not line_info:
-                continue
-
-            record['vat'] = obj_partner.vat.replace(' ','').upper()
-
-            #it seems that this listing is only for belgian customers
-            record['country'] = 'BE'
-
-            record['amount'] = 0
-            record['turnover'] = 0
-            record['name'] = obj_partner.name
-            for item in line_info:
-                if item[0] in ('income','produit'):
-                    record['turnover'] += item[1]
-                else:
-                    record['amount'] += item[1]
-            id_client = obj_vat_lclient.create(cursor, user, record, context=context)
-            partners.append(id_client)
-            records.append(record)
+        partner_ids = obj_partner.search(cr, uid, [('vat_subjected', '!=', False), ('vat','ilike','BE%')], context=context)
+        cr.execute("""SELECT sub1.partner_id, sub1.name, sub1.vat, sub1.turnover, sub2.vat_amount
+                FROM (SELECT l.partner_id, p.name, p.vat, SUM(CASE WHEN c.code ='49' THEN -l.tax_amount ELSE l.tax_amount END) as turnover
+                      FROM account_move_line l
+                      LEFT JOIN res_partner p ON l.partner_id = p.id
+                      LEFT JOIN account_tax_code c ON l.tax_code_id = c.id
+                      WHERE c.code IN ('01','02','03','45','49')
+                      AND l.partner_id IN %s
+                      AND l.period_id IN %s
+                      GROUP BY l.partner_id, p.name, p.vat) AS sub1
+                LEFT JOIN (SELECT l2.partner_id, SUM(CASE WHEN c2.code ='64' THEN -l2.tax_amount ELSE l2.tax_amount END) as vat_amount
+                      FROM account_move_line l2
+                      LEFT JOIN account_tax_code c2 ON l2.tax_code_id = c2.id
+                      WHERE c2.code IN ('54','64')
+                      AND l2.partner_id IN %s 
+                      AND l2.period_id IN %s
+                      GROUP BY l2.partner_id) AS sub2 ON sub1.partner_id = sub2.partner_id
+                    """,(tuple(partner_ids),tuple(period_ids),tuple(partner_ids),tuple(period_ids)))
+        for record in cr.dictfetchall():
+            record['vat'] = record['vat'].replace(' ','').upper()
+            if record['turnover'] >= data['limit_amount']:
+                id_client = obj_vat_lclient.create(cr, uid, record, context=context)
+                partners.append(id_client)
         context.update({'partner_ids': partners, 'year': data['year'], 'limit_amount': data['limit_amount']})
-        model_data_ids = obj_model_data.search(cursor, user, [('model','=','ir.ui.view'), ('name','=','view_vat_listing_13')])
-        resource_id = obj_model_data.read(cursor, user, model_data_ids, fields=['res_id'])[0]['res_id']
+        model_data_ids = obj_model_data.search(cr, uid, [('model','=','ir.ui.view'), ('name','=','view_vat_listing')])
+        resource_id = obj_model_data.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
         return {
-            'name': 'Vat Listing',
+            'name': _('Vat Listing'),
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'partner.vat.list_13',
+            'res_model': 'partner.vat.list',
             'views': [(resource_id,'form')],
             'context': context,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            }
+        }
 
     _columns = {
         'year': fields.char('Year', size=4, required=True),
         'limit_amount': fields.integer('Limit Amount', required=True),
-        }
-    
+    }
+
     _defaults={
         'year': lambda *a: str(int(time.strftime('%Y'))-1),
         'limit_amount': 250,
-            }
-    
-partner_vat_13()
+    }
 
-class partner_vat_list_13(osv.osv_memory):
+partner_vat()
 
+class partner_vat_list(osv.osv_memory):
     """ Partner Vat Listing """
-    _name = "partner.vat.list_13"
+    _name = "partner.vat.list"
     _columns = {
-        # TODO the referenced model has been deleted at revno 4672.1.2.
-        #'partner_ids': fields.many2many('vat.listing.clients', 'vat_partner_rel', 'vat_id', 'partner_id', 'Clients', required=False, help='You can remove clients/partners which you do not want to show in xml file'),
+        'partner_ids': fields.many2many('vat.listing.clients', 'vat_partner_rel', 'vat_id', 'partner_id', 'Clients', help='You can remove clients/partners which you do not want to show in xml file'),
         'name': fields.char('File Name', size=32),
-        'msg': fields.text('File created', size=64, readonly=True),
         'file_save' : fields.binary('Save File', readonly=True),
-        }
+        'comments': fields.text('Comments'),
+    }
 
-    def _get_partners(self, cursor, user, context=None):
+    def _get_partners(self, cr, uid, context=None):
         return context.get('partner_ids', [])
 
     _defaults={
-        # TODO the referenced model has been deleted at revno 4672.1.2.
-        # 'partner_ids': _get_partners
-            }
+        'partner_ids': _get_partners,
+    }
 
-    def create_xml(self, cursor, user, ids, context=None):
+    def _get_datas(self, cr, uid, ids, context=None):
+        obj_vat_lclient = self.pool.get('vat.listing.clients')
         datas = []
+        data = self.read(cr, uid, ids)[0]
+        for partner in data['partner_ids']:
+            if isinstance(partner, list) and partner:
+                datas.append(partner[2])
+            else:
+                client_data = obj_vat_lclient.read(cr, uid, partner, context=context)
+                datas.append(client_data)
+        client_datas = []
+        seq = 0
+        sum_tax = 0.00
+        sum_turnover = 0.00
+        amount_data = {}
+        for line in datas:
+            if not line:
+                continue
+            seq += 1
+            sum_tax += line['vat_amount']
+            sum_turnover += line['turnover']
+            vat = line['vat'].replace(' ','').upper()
+            amount_data ={
+                'seq': str(seq),
+                'vat': vat,
+                'only_vat': vat[2:],
+                'turnover': '%.2f' %line['turnover'],
+                'vat_amount': '%.2f' %line['vat_amount'],
+                'sum_tax': '%.2f' %sum_tax,
+                'sum_turnover': '%.2f' %sum_turnover,
+                'partner_name': line['name'],
+            }
+            client_datas += [amount_data]
+        return client_datas
+
+    def create_xml(self, cr, uid, ids, context=None):
+
         obj_sequence = self.pool.get('ir.sequence')
         obj_users = self.pool.get('res.users')
         obj_partner = self.pool.get('res.partner')
-        obj_fyear = self.pool.get('account.fiscalyear')
         obj_addr = self.pool.get('res.partner.address')
-        obj_vat_lclient = self.pool.get('vat.listing.clients')
-
-        seq_controlref = obj_sequence.get(cursor, user, 'controlref')
-        seq_declarantnum = obj_sequence.get(cursor, user, 'declarantnum')
-        obj_cmpny = obj_users.browse(cursor, user, user, context=context).company_id
+        obj_model_data = self.pool.get('ir.model.data')
+        seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
+        obj_cmpny = obj_users.browse(cr, uid, uid, context=context).company_id
         company_vat = obj_cmpny.partner_id.vat
-        
+
         if not company_vat:
             raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
 
         company_vat = company_vat.replace(' ','').upper()
         SenderId = company_vat[2:]
-        cref = SenderId + seq_controlref
-        dnum = cref + seq_declarantnum
-        #obj_year= obj_fyear.browse(cursor, user, context['fyear'], context=context)
-        street = zip_city = country = ''
-        addr = obj_partner.address_get(cursor, user, [obj_cmpny.partner_id.id], ['invoice'])
+        issued_by = company_vat[:2]
+        seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
+        dnum = company_vat[2:] + seq_declarantnum[-4:]
+        street = city = country = ''
+        addr = obj_partner.address_get(cr, uid, [obj_cmpny.partner_id.id], ['invoice'])
         if addr.get('invoice',False):
-            ads = obj_addr.browse(cursor, user, [addr['invoice']], context=context)[0]
-
-            zip_city = obj_addr.get_city(cursor, user, ads.id)
-            if not zip_city:
-                zip_city = ''
+            ads = obj_addr.browse(cr, uid, [addr['invoice']], context=context)[0]
+            phone = ads.phone.replace(' ','') or ''
+            email = ads.email or ''
+            name = ads.name or ''
+            city = obj_addr.get_city(cr, uid, ads.id)
+            zip = obj_addr.browse(cr, uid, ads.id, context=context).zip or ''
+            if not city:
+                city = ''
             if ads.street:
                 street = ads.street
             if ads.street2:
-                street += ads.street2
+                street += ' ' + ads.street2
             if ads.country_id:
                 country = ads.country_id.code
 
+        data = self.read(cr, uid, ids)[0]
         sender_date = time.strftime('%Y-%m-%d')
         comp_name = obj_cmpny.name
-        data_file = '<?xml version="1.0"?>\n<VatList xmlns="http://www.minfin.fgov.be/VatList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" RecipientId="VAT-ADMIN" SenderId="'+ SenderId + '"'
-        data_file +=' ControlRef="'+ cref + '" MandataireId="'+ cref + '" SenderDate="'+ str(sender_date)+ '"'
-        data_file += ' VersionTech="1.3">'
-        data_file += '\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+ comp_name +'</Name>\n\t\t<Street>'+ street +'</Street>\n\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>'
-        data_file += '\n\t\t<Country>'+ country +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
-        data_comp = '\n<CompanyInfo>\n\t<VATNum>'+SenderId+'</VATNum>\n\t<Name>'+ comp_name +'</Name>\n\t<Street>'+ street +'</Street>\n\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>\n\t<Country>'+ country +'</Country>\n</CompanyInfo>'
-        data_period = '\n<Period>' + context['year'] +'</Period>'
-        error_message = []
-        data = self.read(cursor, user, ids)[0]
-        for partner in data['partner_ids']:
-            if isinstance(partner, list) and partner:
-                datas.append(partner[2])
-            else:
-                client_data = obj_vat_lclient.read(cursor, user, partner, context=context)
-                datas.append(client_data)
-        seq = 0
-        data_clientinfo = ''
-        sum_tax = 0.00
-        sum_turnover = 0.00
-        if len(error_message):
-            return 'Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
-        for line in datas:
-            if not line:
-                continue
-            if line['turnover'] < context['limit_amount']:
-                continue
-            seq += 1
-            sum_tax += line['amount']
-            sum_turnover += line['turnover']
-            data_clientinfo += '\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line['vat'].replace(' ','').upper()[2:] +'</VATNum>\n\t\t<Country>' + line['country'] +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(round(line['amount'] * 100))) +'</Amount>\n\t<TurnOver>'+str(int(round(line['turnover'] * 100))) +'</TurnOver>\n</ClientList>'
 
-        data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(round(sum_turnover * 100))) +'" TaxSum="'+ str(int(round(sum_tax * 100))) +'">'
-        data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n</DeclarantList>\n</VatList>'
-        msg = 'Save the File with '".xml"' extension.'
+        if not email:
+            raise osv.except_osv(_('Data Insufficient!'),_('No email address associated with the company.'))
+        if not phone:
+            raise osv.except_osv(_('Data Insufficient!'),_('No phone associated with the company.'))
+        annual_listing_data = {
+            'issued_by': issued_by,
+            'company_vat': company_vat,
+            'comp_name': comp_name,
+            'street': street,
+            'zip': zip,
+            'city': city,
+            'country': country,
+            'email': email,
+            'phone': phone,
+            'SenderId': SenderId,
+            'period': context['year'],
+            'comments': data['comments'] or ''
+        }
+
+        data_file = """<?xml version="1.0" encoding="ISO-8859-1"?>
+<ns2:ClientListingConsignment xmlns="http://www.minfin.fgov.be/InputCommon" xmlns:ns2="http://www.minfin.fgov.be/ClientListingConsignment" ClientListingsNbr="1">
+    <ns2:Representative>
+        <RepresentativeID identificationType="NVAT" issuedBy="%(issued_by)s">%(SenderId)s</RepresentativeID>
+        <Name>%(comp_name)s</Name>
+        <Street>%(street)s</Street>
+        <PostCode>%(zip)s</PostCode>
+        <City>%(city)s</City>"""
+        if annual_listing_data['country']:
+            data_file +="\n\t\t<CountryCode>%(country)s</CountryCode>"
+        data_file += """
+        <EmailAddress>%(email)s</EmailAddress>
+        <Phone>%(phone)s</Phone>
+    </ns2:Representative>"""
+        data_file = data_file % annual_listing_data
+
+        data_comp = """
+        <ns2:Declarant>
+            <VATNumber>%(SenderId)s</VATNumber>
+            <Name>%(comp_name)s</Name>
+            <Street>%(street)s</Street>
+            <PostCode>%(zip)s</PostCode> 
+            <City>%(city)s</City> 
+            <CountryCode>%(country)s</CountryCode> 
+            <EmailAddress>%(email)s</EmailAddress> 
+            <Phone>%(phone)s</Phone> 
+        </ns2:Declarant>
+        <ns2:Period>%(period)s</ns2:Period>
+        """ % annual_listing_data
+
+        # Turnover and Farmer tags are not included
+        client_datas = self._get_datas(cr, uid, ids, context=context)
+        data_client_info = ''
+        for amount_data in client_datas:
+            data_client_info += """
+        <ns2:Client SequenceNumber="%(seq)s">
+            <ns2:CompanyVATNumber issuedBy="BE">%(only_vat)s</ns2:CompanyVATNumber>
+            <ns2:TurnOver>%(turnover)s</ns2:TurnOver>
+            <ns2:VATAmount>%(vat_amount)s</ns2:VATAmount>
+        </ns2:Client>""" % amount_data
+
+        amount_data_begin = client_datas[-1]
+        amount_data_begin.update({'dnum':dnum})
+        data_begin = """
+    <ns2:ClientListing SequenceNumber="1" ClientsNbr="%(seq)s" DeclarantReference="%(dnum)s"
+        TurnOverSum="%(sum_turnover)s" VATAmountSum="%(sum_tax)s">
+""" % amount_data_begin
+
+        data_end = """
+
+        <ns2:Comment>%(comments)s</ns2:Comment>
+    </ns2:ClientListing>
+</ns2:ClientListingConsignment>
+""" % annual_listing_data
+
+        data_file += data_begin + data_comp + data_client_info + data_end
         file_save = base64.encodestring(data_file.encode('utf8'))
-        self.write(cursor, user, ids, {'file_save':file_save, 'msg':msg, 'name':'vat_list.xml'}, context=context)
-        return True
-    
-    def print_vatlist(self, cursor, user, ids, context=None):
+        self.write(cr, uid, ids, {'file_save':file_save, 'name':'vat_list.xml'}, context=context)
+        model_data_ids = obj_model_data.search(cr, uid, [('model','=','ir.ui.view'), ('name','=','view_vat_listing_result')])
+        resource_id = obj_model_data.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
+
+        return {
+            'name': _('XML File has been Created'),
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'partner.vat.list',
+            'views': [(resource_id,'form')],
+            'context': context,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
+
+    def print_vatlist(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         obj_vat_lclient = self.pool.get('vat.listing.clients')
-        client_datas = []
-        data = self.read(cursor, user, ids)[0]
-        for partner in data['partner_ids']:
-            if isinstance(partner, list) and partner:
-                client_datas.append(partner[2])
-            else:
-                client_data = obj_vat_lclient.read(cursor, user, partner, context=context)
-                client_datas.append(client_data)
-                
         datas = {'ids': []}
         datas['model'] = 'res.company'
         datas['year'] = context['year']
         datas['limit_amount'] = context['limit_amount']
-        datas['client_datas'] = client_datas
+        datas['client_datas'] = self._get_datas(cr, uid, ids, context=context)
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'partner.vat.listing.print',
             'datas': datas,
         }
 
-partner_vat_list_13()
+partner_vat_list()
+
+class partner_vat_listing_print(report_sxw.rml_parse):
+
+    def __init__(self, cr, uid, name, context):
+        super(partner_vat_listing_print, self).__init__(cr, uid, name, context=context)
+        self.localcontext.update( {
+            'time': time,
+        })
+
+    def set_context(self, objects, data, ids, report_type=None):
+        client_datas = data['client_datas']
+        self.localcontext.update( {
+            'year': data['year'],
+            'sum_turnover': client_datas[-1]['sum_turnover'],
+            'sum_tax': client_datas[-1]['sum_tax'],
+            'client_list': client_datas,
+        })
+        super(partner_vat_listing_print, self).set_context(objects, data, ids)
+
+report_sxw.report_sxw('report.partner.vat.listing.print', 'res.partner', 'addons/l10n_be/wizard/l10n_be_partner_vat_listing.rml', parser=partner_vat_listing_print,header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

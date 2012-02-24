@@ -33,6 +33,13 @@ class account_account_template(osv.osv):
     }
 account_account_template()
 
+class account_account(osv.osv):
+    _inherit = 'account.account'
+    _columns = {
+        'name': fields.char('Name', size=128, required=True, select=True, translate=True),
+    }
+account_account()
+
 class account_tax(osv.osv):
     _inherit = 'account.tax'
     _columns = {

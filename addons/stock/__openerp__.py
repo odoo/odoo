@@ -89,7 +89,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
     ],
     'installable': True,
     'application': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0055421559965',
     "css": [ 'static/src/css/stock.css' ],
 }

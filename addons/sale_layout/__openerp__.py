@@ -44,7 +44,7 @@ It gives you the possibility to
         "sale_layout_report.xml",
     ],
     "test" : ['test/sale_layout_report.yml'],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "00982333536005187677",
 }

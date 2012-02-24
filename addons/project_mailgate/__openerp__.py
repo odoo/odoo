@@ -51,7 +51,7 @@ There are two common alternatives to configure the mailbox integration:
     'demo_xml': [
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '001075048780413258261',
 }
 

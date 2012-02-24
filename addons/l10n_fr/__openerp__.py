@@ -54,7 +54,7 @@ Credits: Sistheo Zeekom CrysaLEAD
     "test": ['test/l10n_fr_report.yml'],
     "demo_xml" : [],
     "certificate" : "00435321693876313629",
-    "active": False,
+    "auto_install": False,
     "installable": True,
     'images': ['images/config_chart_l10n_fr.jpeg','images/l10n_fr_chart.jpeg'],
 }

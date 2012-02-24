@@ -68,7 +68,7 @@ Dashboard for project members that includes:
         'test/task_process.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'application': True,
     'certificate': '0075116868317',
 }

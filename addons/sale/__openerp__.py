@@ -98,7 +98,7 @@ Dashboard for Sales Manager that includes:
         'test/edi_sale_order.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'application': True,
     'certificate': '0058103601429',
 }

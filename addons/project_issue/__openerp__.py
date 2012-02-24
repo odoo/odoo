@@ -61,7 +61,7 @@ and decide on their status as they evolve.
       'test/issue_demo.yml'
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'application': True,
     'certificate' : '001236490750848623845',
 }

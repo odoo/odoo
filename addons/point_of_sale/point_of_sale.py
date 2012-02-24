@@ -23,6 +23,7 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import logging
+from PIL import Image
 
 import netsvc
 from osv import fields, osv
@@ -54,9 +55,22 @@ class pos_order(osv.osv):
         #_logger.info("orders: %r", orders)
         list = []
         for order in orders:
-            list.append(self.create(cr, uid, order, context))
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'pos.order', list[-1], 'paid', cr)
+            # order :: {'name': 'Order 1329148448062', 'amount_paid': 9.42, 'lines': [[0, 0, {'discount': 0, 'price_unit': 1.46, 'product_id': 124, 'qty': 5}], [0, 0, {'discount': 0, 'price_unit': 0.53, 'product_id': 62, 'qty': 4}]], 'statement_ids': [[0, 0, {'journal_id': 7, 'amount': 9.42, 'name': '2012-02-13 15:54:12', 'account_id': 12, 'statement_id': 21}]], 'amount_tax': 0, 'amount_return': 0, 'amount_total': 9.42}
+            order_obj = self.pool.get('pos.order')
+            # get statements out of order because they will be generated with add_payment to ensure
+            # the module behavior is the same when using the front-end or the back-end
+            statement_ids = order.pop('statement_ids')
+            order_id = self.create(cr, uid, order, context)
+            list.append(order_id)
+            # call add_payment; refer to wizard/pos_payment for data structure
+            # add_payment launches the 'paid' signal to advance the workflow to the 'paid' state
+            data = {
+                'journal': statement_ids[0][2]['journal_id'],
+                'amount': order['amount_paid'],
+                'payment_name': order['name'],
+                'payment_date': statement_ids[0][2]['name'],
+            }
+            order_obj.add_payment(cr, uid, order_id, data, context=context)
         return list
 
     def unlink(self, cr, uid, ids, context=None):
@@ -608,7 +622,6 @@ account_bank_statement()
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
     _columns= {
-        'journal_id': fields.related('statement_id','journal_id','name', store=True, string='Journal', type='char', size=64),
         'pos_statement_id': fields.many2one('pos.order', ondelete='cascade'),
     }
 account_bank_statement_line()
@@ -739,13 +752,34 @@ class pos_category(osv.osv):
     }
 pos_category()
 
+import io, StringIO
+
 class product_product(osv.osv):
     _inherit = 'product.product'
+    def _get_small_image(self, cr, uid, ids, prop, unknow_none, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            if not obj.product_image:
+                result[obj.id] = False
+                continue
+
+            image_stream = io.BytesIO(obj.product_image.decode('base64'))
+            img = Image.open(image_stream)
+            img.thumbnail((120, 100), Image.ANTIALIAS)
+            img_stream = StringIO.StringIO()
+            img.save(img_stream, "JPEG")
+            result[obj.id] = img_stream.getvalue().encode('base64')
+        return result
+
     _columns = {
         'income_pdt': fields.boolean('PoS Cash Input', help="This is a product you can use to put cash into a statement for the point of sale backend."),
         'expense_pdt': fields.boolean('PoS Cash Output', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
         'pos_categ_id': fields.many2one('pos.category','PoS Category',
-            help="If you want to sell this product through the point of sale, select the category it belongs to.")
+            help="If you want to sell this product through the point of sale, select the category it belongs to."),
+        'product_image_small': fields.function(_get_small_image, string='Small Image', type="binary",
+            store = {
+                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['product_image'], 10),
+            })
     }
 product_product()
 

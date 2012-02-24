@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2011-11-25 12:33+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: Czech <openerp-i18n-czech@lists.launchpad.net >\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:56+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:08+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: membership
@@ -110,9 +110,19 @@ msgid "Non Member"
 msgstr "Nečlen"
 
 #. module: membership
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "Základní členství"
+
+#. module: membership
 #: view:res.partner:0
 msgid "All Members"
 msgstr "Všichni členové"
+
+#. module: membership
+#: field:res.partner,membership_stop:0
+msgid "Stop membership date"
+msgstr "Datum pozastavení členství"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -153,6 +163,11 @@ msgstr "Přidruženého partnera"
 #: view:res.partner:0
 msgid "Supplier Partners"
 msgstr ""
+
+#. module: membership
+#: field:report.membership,num_invoiced:0
+msgid "# Invoiced"
+msgstr "# Fakturováno"
 
 #. module: membership
 #: constraint:account.invoice:0
@@ -325,9 +340,9 @@ msgid "July"
 msgstr "Červenec"
 
 #. module: membership
-#: field:report.membership,num_invoiced:0
-msgid "# Invoiced"
-msgstr "# Fakturováno"
+#: model:product.template,name:membership.membership_0_product_template
+msgid "Golden Membership"
+msgstr "Zlaté členství"
 
 #. module: membership
 #: help:res.partner,associate_member:0
@@ -787,9 +802,9 @@ msgid "May"
 msgstr "Květen"
 
 #. module: membership
-#: field:res.partner,membership_stop:0
-msgid "Stop membership date"
-msgstr "Datum pozastavení členství"
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr "Stříbrné členství"
 
 #. module: membership
 #: view:product.product:0
@@ -889,9 +904,6 @@ msgstr "Příjem proveden"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Neplatné jméno modelu v definici akce."
 
-#~ msgid "Golden Membership"
-#~ msgstr "Zlaté členství"
-
 #~ msgid ""
 #~ "\n"
 #~ "This module allows you to manage all operations for managing memberships.\n"
@@ -925,14 +937,8 @@ msgstr "Příjem proveden"
 #~ msgid "Extended Filters..."
 #~ msgstr "Rozšířené filtry..."
 
-#~ msgid "Basic Membership"
-#~ msgstr "Základní členství"
-
 #~ msgid "Last 365 Days"
 #~ msgstr "Posledních 365 dní"
 
 #~ msgid "Last 30 Days"
 #~ msgstr "Posledních 30 dní"
-
-#~ msgid "Silver Membership"
-#~ msgstr "Stříbrné členství"

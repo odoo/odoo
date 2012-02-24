@@ -11,6 +11,7 @@
                 <xpath expr="//field[@name='target_move']" position="after">
                     <field name="account_report_id" domain="[('parent_id','=',False)]"/>
                     <field name="enable_filter"/>
+                    <field name="debit_credit" attrs="{'invisible': [('enable_filter','=',True)]}"/>
                 </xpath>
                 <xpath expr="//notebook/page[@string='Filters']" position="after">
                     <page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
@@ -33,7 +34,7 @@
         <menuitem parent="account.menu_finance_legal_statement" id="final_accounting_reports" name="Accounting Reports"/>
 
         <record id="action_account_report_bs" model="ir.actions.act_window">
-             <field name="name">Financial Reports</field>
+             <field name="name">Balance Sheet</field>
              <field name="res_model">accounting.report</field>
              <field name="type">ir.actions.act_window</field>
              <field name="view_type">form</field>
@@ -45,7 +46,7 @@
         <menuitem icon="STOCK_PRINT" name="Balance Sheet" action="action_account_report_bs" id="menu_account_report_bs" parent="final_accounting_reports"/>
 
         <record id="action_account_report_pl" model="ir.actions.act_window">
-             <field name="name">Financial Reports</field>
+             <field name="name">Profit and Loss</field>
              <field name="res_model">accounting.report</field>
              <field name="type">ir.actions.act_window</field>
              <field name="view_type">form</field>

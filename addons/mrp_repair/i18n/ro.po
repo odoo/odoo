@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2009-02-03 06:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:12+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:50+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Fees Line"
-msgstr ""
+msgstr "Linie tarife"
 
 #. module: mrp_repair
 #: help:mrp.repair,state:0
@@ -35,11 +35,24 @@ msgid ""
 "* The 'Done' state is set when repairing is completed.            \n"
 "* The 'Cancelled' state is used when user cancel repair order."
 msgstr ""
+" * Starea 'Ciornă' este folosită atunci cand un utilizator codează o comandă "
+"de reparatii nouă si neconfirmată.             \n"
+"* Starea 'Confirmat' este folosită atunci cand un utilizator confirmă "
+"comanda de reparatii.             \n"
+"* Starea 'Gata pentru Reparatii' este folosită pentru a incepe reparatia, "
+"utilizatorul putand incepe reparatia numai după ce comanda de reparatie este "
+"confirmată.             \n"
+"* Starea 'Va fi facturat' este folosită pentru a genera factura inainte sau "
+"după efectuarea reparatiei.             \n"
+"* Starea 'Efectuat' este setată atunci cand reparatia este finalizată.       "
+"      \n"
+"* Starea 'Anulat' este folosită atunci cand utilizatorul anulează comanda de "
+"reparatii."
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
 msgid "Inventory Move"
-msgstr ""
+msgstr "Miscare inventar"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
@@ -50,16 +63,22 @@ msgid ""
 "date on the production lot in order to know if whether the repair should be "
 "invoiced to the customer or not."
 msgstr ""
+"Comenzile de reparatii vă permit să organizati reparatiile produselor "
+"dumneavoastră. Intr-o comandă de reparatii, puteti detalia componentele pe "
+"care le indepărtati, adăugati sau schimbati si puteti inregistra timpul "
+"petrecut cu diferite operatiuni. Comanda de reparatii foloseste data "
+"garantiei din lotul de productie pentru a sti dacă reparatia trebuie "
+"facturată sau nu clientului."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupează după..."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Recreate Invoice"
-msgstr ""
+msgstr "Recreează factura"
 
 #. module: mrp_repair
 #: help:mrp.repair,deliver_bool:0
@@ -69,34 +88,38 @@ msgid ""
 "that you can select the locations in the Info tab, if you have the extended "
 "view."
 msgstr ""
+"Bifati această căsută dacă doriti să gestionati livrarea de indată ce "
+"produsul a fost reparat. Dacă bifati, va crea o ridicare a produsului "
+"selectat. Observati că puteti selecta locatiile din tabul Informatii, dacă "
+"vă aflati in vizualizarea extinsă."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
 #: view:mrp.repair.cancel:0
 msgid "Cancel Repair Order"
-msgstr ""
+msgstr "Anulează Comanda de reparatii"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,to_invoice:0
 #: field:mrp.repair.line,to_invoice:0
 msgid "To Invoice"
-msgstr ""
+msgstr "De facturat"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Printing Date"
-msgstr ""
+msgstr "Data tipăririi"
 
 #. module: mrp_repair
 #: field:mrp.repair.make_invoice,group:0
 msgid "Group by partner invoice address"
-msgstr ""
+msgstr "Grupează după adresa de facturare a partenerului"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:433
+#: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
-msgstr ""
+msgstr "Nici un produs definit in Tarife!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -107,46 +130,46 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Setează ca Ciornă"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Excepţie factură"
 
 #. module: mrp_repair
 #: field:mrp.repair,address_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "Adresa de livrare"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
 #: view:mrp.repair:0
 msgid "Make Invoice"
-msgstr ""
+msgstr "Creează factura"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_subtotal:0
 #: field:mrp.repair.line,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Subtotal"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Invoice address :"
-msgstr ""
+msgstr "Adresa de facturare:"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 #: field:mrp.repair,guarantee_limit:0
 msgid "Guarantee limit"
-msgstr ""
+msgstr "Limită garantie"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Notes"
-msgstr ""
+msgstr "Note"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -154,140 +177,143 @@ msgstr ""
 #: field:mrp.repair.fee,tax_id:0
 #: field:mrp.repair.line,tax_id:0
 msgid "Taxes"
-msgstr ""
+msgstr "Taxe"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Total Net:"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:433
+#: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Avertisment !"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "VAT"
-msgstr ""
+msgstr "TVA"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Operations"
-msgstr ""
+msgstr "Operaţiuni"
 
 #. module: mrp_repair
 #: field:mrp.repair,move_id:0
 msgid "Move"
-msgstr ""
+msgstr "Miscare"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:368
+#: code:addons/mrp_repair/mrp_repair.py:370
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr ""
+"Trebuie să selectati o Adresă de facturare a partenerului in formularul de "
+"reparatii !"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repair Orders"
-msgstr ""
+msgstr "Comenzi de reparatii"
 
 #. module: mrp_repair
 #: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Cotatie / Comandă"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:335
+#: code:addons/mrp_repair/mrp_repair.py:337
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Atenționare"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Extra Info"
-msgstr ""
+msgstr "Informaţii suplimentare"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,repair_id:0
 #: field:mrp.repair.line,repair_id:0
 msgid "Repair Order Reference"
-msgstr ""
+msgstr "Referintă Comandă de reparatii"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Ciornă"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:382
+#: code:addons/mrp_repair/mrp_repair.py:384
 #, python-format
 msgid "No account defined for partner \"%s\"."
-msgstr ""
+msgstr "Nici un cont nu este definit pentru partenerul \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 #: selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Confirmat(ă)"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Repairs order"
-msgstr ""
+msgstr "Comandă reparatii"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Repair Order N° :"
-msgstr ""
+msgstr "Nr comenzii de reparatii"
 
 #. module: mrp_repair
 #: field:mrp.repair,prodlot_id:0
 #: field:mrp.repair.line,prodlot_id:0
 #: report:repair.order:0
 msgid "Lot Number"
-msgstr ""
+msgstr "Număr lot"
 
 #. module: mrp_repair
 #: field:mrp.repair,fees_lines:0
 msgid "Fees Lines"
-msgstr ""
+msgstr "Linii tarife"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Fees Line(s)"
-msgstr ""
+msgstr "Linie(i) Tarife"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
-msgstr ""
+msgstr "Va fi facturat(a)"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Shipping address :"
-msgstr ""
+msgstr "Adresă de livrare:"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:382
-#: code:addons/mrp_repair/mrp_repair.py:411
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:334
+#: code:addons/mrp_repair/mrp_repair.py:384
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Eroare !"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr ""
+msgstr "Cantitate (UdM)"
 
 #. module: mrp_repair
 #: help:mrp.repair.line,state:0
@@ -300,11 +326,19 @@ msgid ""
 "                  \n"
 "* The 'Cancelled' state is set automatically when user cancel repair order."
 msgstr ""
+" *Starea 'Ciornă' este setată automat atunci cand comanda de reparatii este "
+"in starea ciornă.                         \n"
+"* Starea 'Confirmat' este setată automat atunci cand comanda de reparatii "
+"este in starea confirmat.                         \n"
+"* Starea 'Efectuat' este setată automat atunci cand comanda de reparatii "
+"este finalizată.\n"
+"* Starea 'Anulat' este setată automat atunci cand utilizatorul anulează "
+"comanda de reparatii."
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Total :"
-msgstr ""
+msgstr "Total :"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0
@@ -312,253 +346,263 @@ msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
 msgstr ""
+"Această operatiune va anula Procesul de reparatie, dar nu va anula Factura "
+"acestuia. Doriti sa continuati?"
 
 #. module: mrp_repair
 #: field:mrp.repair,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Listă de prețuri"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 #: field:mrp.repair,quotation_notes:0
 msgid "Quotation Notes"
-msgstr ""
+msgstr "Note cotatie"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Avertizare!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Search Reair Orders"
-msgstr ""
+msgstr "Caută Comenzile de reparatii"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Add)"
-msgstr ""
+msgstr "(Adaugă)"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_line
 #: view:mrp.repair:0
 msgid "Repair Line"
-msgstr ""
+msgstr "Linie reparatie"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 #: field:mrp.repair,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partener"
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_method:0
 msgid "Invoice Method"
-msgstr ""
+msgstr "Metoda de facturare"
 
 #. module: mrp_repair
 #: field:mrp.repair,repaired:0
 msgid "Repaired"
-msgstr ""
+msgstr "Reparat"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
 #: field:mrp.repair.line,invoice_line_id:0
 msgid "Invoice Line"
-msgstr ""
+msgstr "Linie factură"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Anulat(ă)"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:335
+#: code:addons/mrp_repair/mrp_repair.py:337
 #, python-format
 msgid "Production lot is required for opration line with product '%s'"
 msgstr ""
+"Lotul de productie este obligatoriu pentru linia operatiunii cu produsul "
+"'%s'."
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "Before Repair"
-msgstr ""
+msgstr "Inainte de reparatie"
 
 #. module: mrp_repair
 #: field:mrp.repair,location_id:0
 msgid "Current Location"
-msgstr ""
+msgstr "Locaţia curentă"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0
 msgid "Yes"
-msgstr ""
+msgstr "Da"
 
 #. module: mrp_repair
 #: field:mrp.repair,invoiced:0
 #: field:mrp.repair.fee,invoiced:0
 #: field:mrp.repair.line,invoiced:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Facturat"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0
 msgid "No"
-msgstr ""
+msgstr "Nu"
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
 msgid "Create invoices"
-msgstr ""
+msgstr "Creează facturi"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Remove)"
-msgstr ""
+msgstr "(Sterge)"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
 msgid "Add"
-msgstr ""
+msgstr "Adaugă"
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
 msgid "Do you really want to create the invoice(s) ?"
-msgstr ""
+msgstr "Chiar doriti să creaţi factura(ile)?"
 
 #. module: mrp_repair
 #: field:mrp.repair,name:0
 msgid "Repair Reference"
-msgstr ""
+msgstr "Referintă reparatie"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
 msgid "Repair Order"
-msgstr ""
+msgstr "Comanda de reparatie"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Under Repair"
-msgstr ""
+msgstr "In reparatie"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Ready To Repair"
-msgstr ""
+msgstr "Pregătit de reparat"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Sumă neimpozitată"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Guarantee Limit"
-msgstr ""
+msgstr "Linită garantie"
 
 #. module: mrp_repair
 #: field:mrp.repair,default_address_id:0
 msgid "unknown"
-msgstr ""
+msgstr "necunoscut(ă)"
 
 #. module: mrp_repair
 #: field:mrp.repair,product_id:0
 #: report:repair.order:0
 msgid "Product to Repair"
-msgstr ""
+msgstr "Produsul care trebuie reparat"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "N° :"
-msgstr ""
+msgstr "Nr :"
 
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
 msgid "The pricelist comes from the selected partner, by default."
-msgstr ""
+msgstr "Lista de preturi provine de la partenerul selectat, implicit."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Date"
-msgstr ""
+msgstr "Dată"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
+msgstr "Linie Tarife reparatii"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:334
+#, python-format
+msgid "You cannot confirm a repair order which has no line."
 msgstr ""
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Quotation"
-msgstr ""
+msgstr "Cotație"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Compute"
-msgstr ""
+msgstr "Calculează"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Confirm Repair"
-msgstr ""
+msgstr "Confirmă reparatia"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Repair Quotation"
-msgstr ""
+msgstr "Cotatie reparatie"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "End Repair"
-msgstr ""
+msgstr "Finalizează reparatia"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:411
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "Nici un cont definit pentru produsul \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Quotations"
-msgstr ""
+msgstr "Cotaţii"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,product_uom_qty:0
 #: report:repair.order:0
 msgid "Quantity"
-msgstr ""
+msgstr "Cantitate"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Start Repair"
-msgstr ""
+msgstr "Incepe reparatia"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 #: field:mrp.repair,state:0
 #: field:mrp.repair.line,state:0
 msgid "State"
-msgstr ""
+msgstr "Stare"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Qty"
-msgstr ""
+msgstr "Cantitate"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0
 #: field:mrp.repair.line,price_unit:0
 #: report:repair.order:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Preţ unitar"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Done"
-msgstr ""
+msgstr "Efectuat"
 
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
@@ -568,42 +612,47 @@ msgid ""
 "operation and fee you will add will be set as 'not to invoiced' by default. "
 "Note that you can change manually afterwards."
 msgstr ""
+"Limita garantiei este calculată astfel: data ultimei miscări + garantia "
+"definită pentru produsul selectat. Dacă data curentă este sub limita "
+"garantiei, fiecare operatiune si tarif pe care le veti adăuga vor fi setate "
+"implicit drept 'nu va fi facturat'. Observati că puteti modifica manual "
+"ulterior."
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Factură"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Fees"
-msgstr ""
+msgstr "Tarife"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 #: view:mrp.repair.make_invoice:0
 msgid "Cancel"
-msgstr ""
+msgstr "Anulează"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
 msgid "Dest. Location"
-msgstr ""
+msgstr "Locaţia destinatie"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Operation Line(s)"
-msgstr ""
+msgstr "Linie(i) operatiune"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "History"
-msgstr ""
+msgstr "Istoric"
 
 #. module: mrp_repair
 #: field:mrp.repair,location_dest_id:0
 msgid "Delivery Location"
-msgstr ""
+msgstr "Locatia de livrare"
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
@@ -612,159 +661,187 @@ msgid ""
 "selected is different from 'No Invoice', it also allow you to select the "
 "pricelist and invoicing address."
 msgstr ""
+"Acest camp vă permite să schimbati fluxul de lucru al comenzii de reparatie. "
+"Dacă valoarea selectată este diferită de 'Nu facturati', vă permite de "
+"asemenea să selectati listele de preturi si adresa de facturare."
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
 msgid "Create Invoice"
-msgstr ""
+msgstr "Creează factura"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0
 #: field:mrp.repair.line,name:0
 #: report:repair.order:0
 msgid "Description"
-msgstr ""
+msgstr "Descriere"
 
 #. module: mrp_repair
 #: field:mrp.repair,operations:0
 msgid "Operation Lines"
-msgstr ""
+msgstr "Linii operatiune"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "invoiced"
-msgstr ""
+msgstr "facturat"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 #: field:mrp.repair.fee,product_id:0
 #: field:mrp.repair.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produs"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Invoice Corrected"
-msgstr ""
+msgstr "Factură corectată"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Price"
-msgstr ""
+msgstr "Preț"
 
 #. module: mrp_repair
 #: field:mrp.repair,deliver_bool:0
 msgid "Deliver"
-msgstr ""
+msgstr "Livrare"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 #: field:mrp.repair,internal_notes:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Note Interne"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Taxes:"
-msgstr ""
+msgstr "Taxe:"
 
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
 msgid "Picking"
-msgstr ""
+msgstr "Ridicare"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Untaxed amount"
-msgstr ""
+msgstr "Sumă neimpozitată"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID is not Found"
-msgstr ""
+msgstr "ID-ul activ nu a fost găsit"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr ""
+msgstr "Comanda de reparatie nu este facturată."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Total amount"
-msgstr ""
+msgstr "Suma totală"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "UoM"
-msgstr ""
+msgstr "UdeM (Unitatea de masura)"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
 msgid "Remove"
-msgstr ""
+msgstr "Elimină"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,product_uom:0
 #: field:mrp.repair.line,product_uom:0
 msgid "Product UoM"
-msgstr ""
+msgstr "UdeM (Unitate de masură) produs"
 
 #. module: mrp_repair
 #: field:mrp.repair,partner_invoice_id:0
 msgid "Invoicing Address"
-msgstr ""
+msgstr "Adresa de facturare"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "After Repair"
-msgstr ""
+msgstr "După reparatie"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturare"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_id:0
 msgid "Source Location"
-msgstr ""
+msgstr "Locaţia Sursă"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
 #: view:mrp.repair:0
 msgid "Cancel Repair"
-msgstr ""
+msgstr "Anulează reparatia"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "No Invoice"
-msgstr ""
+msgstr "Nici o factură"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "States"
-msgstr ""
+msgstr "Stări"
 
 #. module: mrp_repair
 #: help:mrp.repair,partner_id:0
 msgid ""
 "This field allow you to choose the parner that will be invoiced and delivered"
 msgstr ""
+"Acest camp vă permite să alegeti partenerul care va primi factura sau livrare"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
-msgstr ""
+msgstr "Pregătit de reparatie"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:368
+#: code:addons/mrp_repair/mrp_repair.py:370
 #, python-format
 msgid "No partner !"
-msgstr ""
+msgstr "Nici un partener !"
+
+#~ msgid ""
+#~ "\n"
+#~ "           The aim is to have a complete module to manage all products "
+#~ "repairs. The following topics should be covered by this module:\n"
+#~ "           * Add/remove products in the reparation\n"
+#~ "           * Impact for stocks\n"
+#~ "           * Invoicing (products and/or services)\n"
+#~ "           * Warranty concept\n"
+#~ "           * Repair quotation report\n"
+#~ "           * Notes for the technician and for the final customer\n"
+#~ msgstr ""
+#~ "\n"
+#~ "           Scopul este de a avea un modul complet pentru gestionarea tuturor "
+#~ "reparatiilor produselor. Acest modul acoperă următoarele subiecte:\n"
+#~ "           * Adaugă/sterge produse in/din reparatie\n"
+#~ "           * Impact pentru stocuri\n"
+#~ "           * Facturare (produse si.sau servicii)\n"
+#~ "           * Conceptul de garantie\n"
+#~ "           * Raport cotatie reparatii\n"
+#~ "           * Note pentru tehnician si pentru clientul final\n"
+
+#~ msgid "Products Repairs Module - Manage All products Repairs"
+#~ msgstr "Modulul Reparatii Produse - Gestionează toate Reparatiile produselor"

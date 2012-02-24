@@ -21,7 +21,7 @@
 
 from osv import osv
 from base_calendar import base_calendar
-from caldav import calendar
+from openerp.addons.caldav import calendar
 from datetime import datetime
 import re
 

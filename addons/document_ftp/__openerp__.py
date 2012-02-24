@@ -48,7 +48,7 @@ FTP client.
         'test/document_ftp_test4.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '00934787762705016005',
     'images': ['images/1_configure_ftp.jpeg','images/2_document_browse.jpeg','images/3_document_ftp.jpeg'],
     'post_load': 'post_load',

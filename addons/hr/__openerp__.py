@@ -60,7 +60,7 @@ You can manage:
              ],
     'installable': True,
     'application': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0086710558965',
     "css": [ 'static/src/css/hr.css' ],
 }

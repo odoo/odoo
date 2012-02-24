@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2010-08-03 03:11+0000\n"
-"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-09 15:27+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:59+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-10 04:49+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
@@ -176,7 +176,7 @@ msgstr "第三方银行金额"
 #. module: auction
 #: view:auction.lots:0
 msgid "Buy object"
-msgstr ""
+msgstr "买东西"
 
 #. module: auction
 #: field:auction.lots,lot_num:0
@@ -268,6 +268,7 @@ msgid "Items"
 msgstr "项目"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax5
 #: field:auction.dates,seller_costs:0
 msgid "Seller Costs"
 msgstr "卖家费用"
@@ -322,7 +323,7 @@ msgstr "نىڭ رۇخسەت ئادېرىسى يوق \"%s\" ساتقۇچى تەر
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_object_categories
 msgid "Auction object Categories"
-msgstr ""
+msgstr "拍品分类"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit_cost
@@ -397,7 +398,7 @@ msgstr "此日期没有拍品"
 #. module: auction
 #: view:auction.lots:0
 msgid "New Object"
-msgstr ""
+msgstr "新拍品"
 
 #. module: auction
 #: selection:report.auction,month:0
@@ -475,7 +476,12 @@ msgstr "买家"
 #: view:auction.lots:0
 #: view:report.auction:0
 msgid "Object Category"
-msgstr ""
+msgstr "拍品分类"
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id4
+msgid "VAT 12%"
+msgstr "VAT 12%"
 
 #. module: auction
 #: view:auction.dates:0
@@ -641,6 +647,11 @@ msgid "March"
 msgstr "三月"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax4
+msgid "Seller Costs1"
+msgstr "卖家成本1"
+
+#. module: auction
 #: field:auction.deposit,create_uid:0
 #: field:auction.lots,create_uid:0
 msgid "Created by"
@@ -689,7 +700,7 @@ msgstr "草稿"
 #. module: auction
 #: view:auction.dates:0
 msgid "Invoiced Auction"
-msgstr ""
+msgstr "开发票"
 
 #. module: auction
 #: view:auction.catalog.flagey:0
@@ -784,6 +795,11 @@ msgid "Auction Name"
 msgstr "拍卖名"
 
 #. module: auction
+#: model:account.tax,name:auction.tax_seller
+msgid "Seller Costs (12%)"
+msgstr "卖家税（12%）"
+
+#. module: auction
 #: field:aie.category,parent_id:0
 msgid "Parent aie Category"
 msgstr "父类别"
@@ -839,6 +855,11 @@ msgid "Account tax for author commission"
 msgstr "版权税"
 
 #. module: auction
+#: model:product.template,name:auction.monproduit_product_template
+msgid "Oeuvres a 21%"
+msgstr "全部 21%"
+
+#. module: auction
 #: field:report.object.encoded,adj:0
 msgid "Adj."
 msgstr "最终结果"
@@ -890,9 +911,9 @@ msgid "To pay ("
 msgstr "应付款 （"
 
 #. module: auction
-#: model:ir.model,name:auction.model_auction_lots
-msgid "Auction Object"
-msgstr "拍品"
+#: model:account.tax,name:auction.tax_buyer
+msgid "Buyer Costs (20%)"
+msgstr "买家税（20%）"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction
@@ -1111,7 +1132,7 @@ msgstr "买家没有发票地址"
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_auction_adjudication_tree
 msgid "Auction Adjudication Report"
-msgstr ""
+msgstr "拍卖结果报表"
 
 #. module: auction
 #: field:auction.lots.sms.send,user:0
@@ -1138,6 +1159,11 @@ msgstr "物品类别"
 #: view:auction.taken:0
 msgid "Mark Lots"
 msgstr "建立批"
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_lots
+msgid "Auction Object"
+msgstr "拍品"
 
 #. module: auction
 #: field:auction.lots,obj_num:0
@@ -1191,7 +1217,7 @@ msgstr "分组..."
 #. module: auction
 #: view:report.auction:0
 msgid "Auction during last month."
-msgstr ""
+msgstr "上个月的拍卖"
 
 #. module: auction
 #: help:auction.dates,journal_id:0
@@ -1225,7 +1251,7 @@ msgstr "卖家"
 #. module: auction
 #: view:auction.dates:0
 msgid "Draft Auction"
-msgstr ""
+msgstr "拍卖草稿"
 
 #. module: auction
 #: help:auction.lots,lot_est2:0
@@ -1408,6 +1434,11 @@ msgid "Beginning of the auction"
 msgstr "开始拍卖"
 
 #. module: auction
+#: help:auction.pay.buy,statement_id3:0
+msgid "Third Bank Statement For Buyer"
+msgstr "买家第三笔付款"
+
+#. module: auction
 #: view:report.auction:0
 #: field:report.auction,month:0
 #: field:report.auction.object.date,month:0
@@ -1451,6 +1482,11 @@ msgid "Create invoices"
 msgstr "创建发票"
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id5
+msgid "VAT 5%"
+msgstr "VAT 5%"
+
+#. module: auction
 #: model:ir.model,name:auction.model_auction_lots_buyer_map
 msgid "Map Buyer"
 msgstr "买家地图"
@@ -1463,7 +1499,7 @@ msgstr "批号"
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_auction_object_date_tree
 msgid "Auction Object Date"
-msgstr ""
+msgstr "拍品日期"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_artists
@@ -1508,6 +1544,11 @@ msgid "Exposition Dates"
 msgstr "报名日期"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax1
+msgid "TVA"
+msgstr "TVA"
+
+#. module: auction
 #: field:auction.lots,important:0
 msgid "To be Emphatized"
 msgstr "加强"
@@ -1516,6 +1557,11 @@ msgstr "加强"
 #: report:buyer.list:0
 msgid "Total:"
 msgstr "合计:"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax2
+msgid "TVA1"
+msgstr "增值税1"
 
 #. module: auction
 #: view:report.auction.object.date:0
@@ -1734,12 +1780,17 @@ msgstr "批"
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_artist
 msgid "Auction Artists"
-msgstr ""
+msgstr "拍品作者"
 
 #. module: auction
 #: field:auction.lots,seller_price:0
 msgid "Seller price"
 msgstr "卖家价格"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax20
+msgid "Frais de vente0"
+msgstr "拍品税"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.buy_id_list
@@ -1765,9 +1816,19 @@ msgid "Seller Price"
 msgstr "买家价格"
 
 #. module: auction
-#: help:auction.pay.buy,statement_id3:0
-msgid "Third Bank Statement For Buyer"
-msgstr "买家第三笔付款"
+#: model:account.tax,name:auction.auction_tax6
+msgid "Frais de vente"
+msgstr "Frais de vente"
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id1
+msgid "VAT 1%"
+msgstr "VAT 1%"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax
+msgid "Droit d'auteur"
+msgstr "Droit d'auteur"
 
 #. module: auction
 #: field:auction.dates,expo1:0
@@ -1808,6 +1869,11 @@ msgstr "最近押金"
 #: report:auction.total.rml:0
 msgid "# of items:"
 msgstr "# 项"
+
+#. module: auction
+#: model:account.tax,name:auction.tax_buyer_author
+msgid "Author rights (4%)"
+msgstr "版权税（4%）"
 
 #. module: auction
 #: field:report.object.encoded,estimation:0
@@ -1914,7 +1980,7 @@ msgstr "设置"
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_auction_object_date_tree_my
 msgid "My Auction Object Date"
-msgstr ""
+msgstr "我的拍品日期"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_pay_buy.py:80
@@ -1949,6 +2015,11 @@ msgid "Lots able"
 msgstr "可以出售的拍品"
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id3
+msgid "VAT 10%"
+msgstr "VAT 10%"
+
+#. module: auction
 #: field:auction.artists,name:0
 msgid "Artist/Author Name"
 msgstr "艺术家/ 作者姓名"
@@ -1959,6 +2030,7 @@ msgid "December"
 msgstr "十二月"
 
 #. module: auction
+#: view:auction.deposit:0
 #: field:auction.lots,image:0
 msgid "Image"
 msgstr "图像"
@@ -1973,6 +2045,11 @@ msgstr "买家出价"
 #: model:ir.model,name:auction.model_auction_lot_category
 msgid "Auction Lots Category"
 msgstr "拍品类别"
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id2
+msgid "VAT 20%"
+msgstr "VAT 20%"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_payer_sel
@@ -2083,6 +2160,7 @@ msgid "Not sold"
 msgstr "未售出"
 
 #. module: auction
+#: model:account.tax,name:auction.auction_tax3
 #: field:auction.dates,buyer_costs:0
 msgid "Buyer Costs"
 msgstr "买家费用"
@@ -2245,7 +2323,7 @@ msgstr "费用"
 #. module: auction
 #: view:report.auction:0
 msgid "Auction during current month."
-msgstr ""
+msgstr "本月拍卖"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_payer
@@ -2255,7 +2333,7 @@ msgstr "拍卖付款人"
 #. module: auction
 #: view:report.auction:0
 msgid "Auction during current year."
-msgstr ""
+msgstr "本年拍卖"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -2474,9 +2552,6 @@ msgstr "拍卖日志"
 #~ msgid "Mark as paid for seller"
 #~ msgstr "标记为卖家支付"
 
-#~ msgid "Seller Costs1"
-#~ msgstr "卖家成本1"
-
 #~ msgid "Close + Create all invoices"
 #~ msgstr "费用 + 创建所有发票"
 
@@ -2533,9 +2608,6 @@ msgstr "拍卖日志"
 
 #~ msgid "Auctions results"
 #~ msgstr "拍卖结果"
-
-#~ msgid "Oeuvres a 21%"
-#~ msgstr "全部 21%"
 
 #~ msgid "New Auction Dates"
 #~ msgstr "新拍卖日期"
@@ -2666,9 +2738,6 @@ msgstr "拍卖日志"
 #~ msgid ""
 #~ "Error: The default UOM and the purchase UOM must be in the same category."
 #~ msgstr "错误:默认的计量单位和采购的计量单位必须是同一类型."
-
-#~ msgid "TVA1"
-#~ msgstr "增值税1"
 
 #~ msgid "Antique/Lightings"
 #~ msgstr "古董/ 灯饰"
@@ -2845,33 +2914,6 @@ msgstr "拍卖日志"
 #~ msgid "Antique/Posters"
 #~ msgstr "古董/ 海报"
 
-#~ msgid "VAT 12%"
-#~ msgstr "VAT 12%"
-
-#~ msgid "Seller Costs (12%)"
-#~ msgstr "卖家税（12%）"
-
-#~ msgid "Buyer Costs (20%)"
-#~ msgstr "买家税（20%）"
-
-#~ msgid "TVA"
-#~ msgstr "TVA"
-
-#~ msgid "VAT 5%"
-#~ msgstr "VAT 5%"
-
-#~ msgid "Droit d'auteur"
-#~ msgstr "Droit d'auteur"
-
-#~ msgid "Frais de vente"
-#~ msgstr "Frais de vente"
-
-#~ msgid "VAT 1%"
-#~ msgstr "VAT 1%"
-
-#~ msgid "Author rights (4%)"
-#~ msgstr "版权税（4%）"
-
 #~ msgid ""
 #~ "\n"
 #~ "     This module manages the records of the artists,\n"
@@ -2899,9 +2941,3 @@ msgstr "拍卖日志"
 #~ "拍品分析\n"
 #~ "每日拍品\n"
 #~ "    "
-
-#~ msgid "VAT 10%"
-#~ msgstr "VAT 10%"
-
-#~ msgid "VAT 20%"
-#~ msgstr "VAT 20%"

@@ -18,7 +18,7 @@
     <record model="workflow.activity" id="act_paid">
       <field name="wkf_id" ref="wkf_pos"/>
       <field name="name">paid</field>
-      <field name="action">write({'state':'paid'})</field>
+      <field name="action">action_paid()</field>
       <field name="kind">function</field>
     </record>
 

@@ -49,7 +49,7 @@ You can customize the following attributes of the sequence:
     ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '00475376442024623469',
 }
 

@@ -21,9 +21,9 @@
 
 
 {
-    'name'      : 'Multiple Analytic Plans',
-    'version'   : '1.0',
-    'category'  : 'Accounting & Finance',
+    'name': 'Multiple Analytic Plans',
+    'version': '1.0',
+    'category': 'Accounting & Finance',
     'complexity': "normal",
     'description': """
 This module allows to use several analytic plans, according to the general journal.
@@ -59,11 +59,11 @@ for one account entry.
 The analytic plan validates the minimum and maximum percentage at the time of creation
 of distribution models.
         """,
-    'author'    : 'OpenERP SA',
-    'website'   : 'http://www.openerp.com',
-    'images'   : ['images/analytic_plan.jpeg'],
-    'depends'   : ['account', 'account_analytic_default'],
-    'init_xml'  : [],
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'images': ['images/analytic_plan.jpeg'],
+    'depends': ['account', 'account_analytic_default'],
+    'init_xml': [],
     'update_xml': [
         'security/account_analytic_plan_security.xml',
         'security/ir.model.access.csv',
@@ -73,10 +73,10 @@ of distribution models.
         'wizard/account_crossovered_analytic_view.xml',
         'account_analytic_plans_installer_view.xml'
     ],
-    'demo_xml'  : [],
-    'test' : ['test/acount_analytic_plans_report.yml'],
+    'demo_xml': [],
+    'test': ['test/acount_analytic_plans_report.yml'],
     'installable': True,
-    'active'    : False,
+    'auto_install': False,
     'certificate': '0036417675373',
 }
 

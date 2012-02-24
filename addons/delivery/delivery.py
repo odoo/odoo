@@ -98,11 +98,16 @@ class delivery_carrier(osv.osv):
         return False
 
     def create_grid_lines(self, cr, uid, ids, vals, context=None):
-        if context == None:
+        if context is None:
             context = {}
         grid_line_pool = self.pool.get('delivery.grid.line')
         grid_pool = self.pool.get('delivery.grid')
         for record in self.browse(cr, uid, ids, context=context):
+            # if using advanced pricing per destination: do not change
+            if record.use_detailed_pricelist:
+                continue
+			
+            # not using advanced pricing per destination: override grid
             grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
 
             if grid_id and not (record.normal_price or record.free_if_more_than):
@@ -124,7 +129,6 @@ class delivery_carrier(osv.osv):
                 grid_line_pool.unlink(cr, uid, lines, context=context)
 
             #create the grid lines
-            line_data = None
             if record.free_if_more_than:
                 line_data = {
                     'grid_id': grid_id and grid_id[0],
@@ -135,6 +139,7 @@ class delivery_carrier(osv.osv):
                     'standard_price': 0.0,
                     'list_price': 0.0,
                 }
+                grid_line_pool.create(cr, uid, line_data, context=context)
             if record.normal_price:
                 line_data = {
                     'grid_id': grid_id and grid_id[0],
@@ -145,14 +150,15 @@ class delivery_carrier(osv.osv):
                     'standard_price': record.normal_price,
                     'list_price': record.normal_price,
                 }
-            if line_data:
                 grid_line_pool.create(cr, uid, line_data, context=context)
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
-        res_id = super(delivery_carrier, self).write(cr, uid, ids, vals, context=context)
+        if isinstance(ids, (int,long)):
+            ids = [ids]
+        res = super(delivery_carrier, self).write(cr, uid, ids, vals, context=context)
         self.create_grid_lines(cr, uid, ids, vals, context=context)
-        return res_id
+        return res
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(delivery_carrier, self).create(cr, uid, vals, context=context)
@@ -222,7 +228,7 @@ class delivery_grid_line(osv.osv):
     _name = "delivery.grid.line"
     _description = "Delivery Grid Line"
     _columns = {
-        'name': fields.char('Name', size=32, required=True),
+        'name': fields.char('Name', size=64, required=True),
         'grid_id': fields.many2one('delivery.grid', 'Grid',required=True, ondelete='cascade'),
         'type': fields.selection([('weight','Weight'),('volume','Volume'),\
                                   ('wv','Weight * Volume'), ('price','Price')],\

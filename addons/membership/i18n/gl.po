@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
 "PO-Revision-Date: 2010-12-11 16:21+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:56+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:08+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -110,9 +110,19 @@ msgid "Non Member"
 msgstr "Non Socio"
 
 #. module: membership
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "Socio básico"
+
+#. module: membership
 #: view:res.partner:0
 msgid "All Members"
 msgstr "Tódolos socios"
+
+#. module: membership
+#: field:res.partner,membership_stop:0
+msgid "Stop membership date"
+msgstr "Parar data filiación"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -153,6 +163,11 @@ msgstr "Empresa asociada"
 #: view:res.partner:0
 msgid "Supplier Partners"
 msgstr ""
+
+#. module: membership
+#: field:report.membership,num_invoiced:0
+msgid "# Invoiced"
+msgstr "Nº facturado"
 
 #. module: membership
 #: constraint:account.invoice:0
@@ -322,9 +337,9 @@ msgid "July"
 msgstr "Xullo"
 
 #. module: membership
-#: field:report.membership,num_invoiced:0
-msgid "# Invoiced"
-msgstr "Nº facturado"
+#: model:product.template,name:membership.membership_0_product_template
+msgid "Golden Membership"
+msgstr "Socio ouro"
 
 #. module: membership
 #: help:res.partner,associate_member:0
@@ -780,9 +795,9 @@ msgid "May"
 msgstr "Maio"
 
 #. module: membership
-#: field:res.partner,membership_stop:0
-msgid "Stop membership date"
-msgstr "Parar data filiación"
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr "Socio prata"
 
 #. module: membership
 #: view:product.product:0
@@ -992,9 +1007,6 @@ msgstr "Ingreso realizado"
 #~ "¡O nome do obxecto debe comenzar con x_ e non pode conter ningún carácter "
 #~ "especial !"
 
-#~ msgid "Golden Membership"
-#~ msgstr "Socio ouro"
-
 #~ msgid ""
 #~ "\n"
 #~ "This module allows you to manage all operations for managing memberships.\n"
@@ -1024,14 +1036,8 @@ msgstr "Ingreso realizado"
 #~ msgid "Extended Filters..."
 #~ msgstr "Filtros extendidos..."
 
-#~ msgid "Basic Membership"
-#~ msgstr "Socio básico"
-
 #~ msgid "Last 365 Days"
 #~ msgstr "Últimos 365 días"
 
 #~ msgid "Last 30 Days"
 #~ msgstr "Últimos 30 días"
-
-#~ msgid "Silver Membership"
-#~ msgstr "Socio prata"

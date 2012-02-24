@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-23 09:54+0000\n"
-"PO-Revision-Date: 2011-01-14 11:19+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"PO-Revision-Date: 2012-02-18 10:21+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-24 05:53+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-19 05:43+0000\n"
+"X-Generator: Launchpad (build 14814)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -22,8 +22,7 @@ msgid "Openerp user"
 msgstr "OpenERP gebruiker"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,requirements:0
+#: view:hr.job:0 field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "Functie-eisen"
 
@@ -50,15 +49,14 @@ msgid "Human Resources"
 msgstr "Personeel"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.job:0
 msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.view_department_form_installer
 msgid "Create Your Departments"
-msgstr ""
+msgstr "Maak uw afdelingen aan"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -75,11 +73,8 @@ msgstr ""
 "wervingsproces wordt gebruikt om de kandidaten voor deze baan te evalueren."
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,department_id:0
-#: view:hr.job:0
-#: field:hr.job,department_id:0
-#: view:res.users:0
+#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
+#: field:hr.job,department_id:0 view:res.users:0
 msgid "Department"
 msgstr "Afdeling"
 
@@ -99,9 +94,7 @@ msgid "In Recruitment"
 msgstr "Wordt geworven"
 
 #. module: hr
-#: field:hr.department,company_id:0
-#: view:hr.employee:0
-#: view:hr.job:0
+#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Bedrijf"
@@ -114,7 +107,7 @@ msgstr "Werving verwacht"
 #. module: hr
 #: model:ir.actions.todo.category,name:hr.category_hr_management_config
 msgid "HR Management"
-msgstr ""
+msgstr "Personeelsbeheer"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -136,8 +129,7 @@ msgid "Parent Department"
 msgstr "Hoofdafdeling"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,notes:0
+#: view:hr.employee:0 field:hr.employee,notes:0
 msgid "Notes"
 msgstr "Opmerkingen"
 
@@ -154,6 +146,10 @@ msgid ""
 "operations on all the employees of the same category, i.e. allocating "
 "holidays."
 msgstr ""
+"Het werknemer scherm waar je werknemers kan koppelen aan OpenERP gebruikers, "
+"als u wilt dat ze OpenERP kunnen gebruiken.  Werknemers kunnen worden "
+"ingedeeld in categorieën om snel bewerkingen te doen op meerdere werknemers "
+"tegelijk. Bijvoorbeeld het toewijzen van vakanties."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -169,7 +165,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Kleur index"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_employeeuser0
@@ -181,8 +177,7 @@ msgstr ""
 "gebruiker (en haar rechten) koppelen met de medewerker."
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Recruitement"
 msgstr "Wordt geworven"
 
@@ -199,12 +194,12 @@ msgstr "Vrouw"
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid "Required number of employees in total for that job."
-msgstr ""
+msgstr "Benodigd totaal aantal werknemers voor de functie."
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendance"
-msgstr ""
+msgstr "Aanwezigheid"
 
 #. module: hr
 #: view:hr.employee:0
@@ -222,8 +217,7 @@ msgid "Child Categories"
 msgstr "Subcategorieën"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,description:0
+#: view:hr.job:0 field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "Functieomschrijving"
@@ -239,8 +233,7 @@ msgid "My Departments Employee"
 msgstr "Mijn afdeling medewerkers"
 
 #. module: hr
-#: view:hr.employee:0
-#: model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Medewerker"
@@ -272,9 +265,7 @@ msgid "Human Resources Dashboard"
 msgstr "Personeel dashboard"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,job_id:0
-#: view:hr.job:0
+#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
 msgid "Job"
 msgstr "Functie"
 
@@ -289,8 +280,7 @@ msgid "Configuration"
 msgstr "Instellingen"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,category_ids:0
+#: view:hr.employee:0 field:hr.employee,category_ids:0
 msgid "Categories"
 msgstr "Categorieën"
 
@@ -362,7 +352,7 @@ msgstr "hr.department"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_create_hr_employee_installer
 msgid "Create your Employees"
-msgstr ""
+msgstr "Maak uw werknemers aan"
 
 #. module: hr
 #: field:hr.employee.category,name:0
@@ -432,6 +422,11 @@ msgid "HR Manager Dashboard"
 msgstr "HR manager dashboard"
 
 #. module: hr
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr "Sub-afdelingen"
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Status"
 msgstr "Status"
@@ -450,7 +445,7 @@ msgstr "onbekend"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees with that job."
-msgstr ""
+msgstr "Aantal werknemers met die functie"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -470,7 +465,7 @@ msgstr "Fout ! U kunt geen recursieve hiërarchie van medewerkers maken."
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Subordonate Hierarchy"
-msgstr ""
+msgstr "Hiërarchische ondergeschikte"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -479,6 +474,9 @@ msgid ""
 "employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"de afdelingsstructuur wordt gebruikt voor het beheren van alle documenten "
+"van de werknemers per afdeling, maar ook uitgaves en urenstaat validatie, "
+"verlofbeheer, werkingen, etc."
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
@@ -502,7 +500,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashboard"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -515,8 +513,7 @@ msgid "You can not have two users with the same login !"
 msgstr "U kunt niet twee gebruikers hebben met dezelfde gebruikersnaam !"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,state:0
+#: view:hr.job:0 field:hr.job,state:0
 msgid "State"
 msgstr "Status"
 
@@ -553,7 +550,7 @@ msgstr "Persoonlijke gegevens"
 #. module: hr
 #: field:hr.employee,city:0
 msgid "City"
-msgstr ""
+msgstr "Plaats"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -563,7 +560,7 @@ msgstr "Paspoort nr"
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Work Mobile"
-msgstr ""
+msgstr "Mobiel nummer werk"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -591,8 +588,7 @@ msgid "Job Name"
 msgstr "Functienaam"
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
+#: view:hr.job:0 selection:hr.job,state:0
 msgid "In Position"
 msgstr "Is vervuld"
 
@@ -609,7 +605,7 @@ msgstr "Nationaliteit"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Leaves"
-msgstr ""
+msgstr "Verlof"
 
 #. module: hr
 #: view:board.board:0
@@ -633,10 +629,8 @@ msgid "Gender"
 msgstr "Sexe"
 
 #. module: hr
-#: view:hr.employee:0
-#: view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0
-#: view:hr.job:0
+#: view:hr.employee:0 view:hr.employee.category:0
+#: field:hr.employee.category,employee_ids:0 view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
@@ -667,9 +661,9 @@ msgid "Creation of a OpenERP user"
 msgstr "OpenERP gebruiker aanmaken"
 
 #. module: hr
-#: field:hr.department,child_ids:0
-msgid "Child Departments"
-msgstr "Sub-afdelingen"
+#: field:hr.employee,login:0
+msgid "Login"
+msgstr "Login"
 
 #. module: hr
 #: view:hr.employee:0
@@ -680,32 +674,30 @@ msgstr "Functieomschrijving"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr "Vacatures"
+msgstr "Functies"
 
 #. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other Id"
-msgstr ""
+msgstr "Andere ID"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,coach_id:0
+#: view:hr.employee:0 field:hr.employee,coach_id:0
 msgid "Coach"
 msgstr "Coach"
 
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per company!"
-msgstr ""
+msgstr "De naam van de functie  moet uniek zijn per bedrijf!"
 
 #. module: hr
 #: view:hr.job:0
 msgid "My Departments Jobs"
-msgstr ""
+msgstr "Functies van mij afdeling"
 
 #. module: hr
-#: field:hr.department,manager_id:0
-#: view:hr.employee:0
+#: field:hr.department,manager_id:0 view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Manager"
@@ -723,7 +715,7 @@ msgstr "Ondergeschikten"
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "Number of Employees"
-msgstr ""
+msgstr "Aantal werknemers"
 
 #~ msgid "Sunday"
 #~ msgstr "Zondag"

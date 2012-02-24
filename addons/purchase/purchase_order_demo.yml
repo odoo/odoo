@@ -74,3 +74,12 @@
       - product_id: product.product_product_1
         product_qty: 15
 
+-
+  !record {model: product.product, id: stock.product_icecream}:
+    uom_id: product.product_uom_gram
+-
+  !record {model: purchase.order, id: order_purchase_icecream}:
+    partner_id: base.res_partner_asus
+    order_line:
+      - product_id: stock.product_icecream
+

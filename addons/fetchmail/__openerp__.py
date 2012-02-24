@@ -70,7 +70,7 @@ mail.
 
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00692978332890137453',
     'images': ['images/1_email_servers.jpeg'],
 }

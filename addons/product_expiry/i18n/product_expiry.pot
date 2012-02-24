@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Project-Id-Version: OpenERP Server 6.1rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-02-08 00:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,24 +16,85 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: product_expiry
-#: field:stock.production.lot,alert_date:0
-msgid "Alert Date"
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Production lot"
+msgstr ""
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr ""
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr ""
+
+#. module: product_expiry
+#: field:product.product,life_time:0
+msgid "Product Life Time"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid "The date on which the lot starts deteriorating without becoming dangerous."
+msgstr ""
+
+#. module: product_expiry
+#: field:product.product,use_time:0
+msgid "Product Use Time"
+msgstr ""
+
+#. module: product_expiry
+#: sql_constraint:stock.production.lot:0
+msgid "The combination of serial number and internal reference must be unique !"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,removal_date:0
+msgid "The date on which the lot should be removed."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr ""
+
+#. module: product_expiry
+#: help:product.product,alert_time:0
+msgid "The number of days after which an alert should be notified about the production lot."
+msgstr ""
+
+#. module: product_expiry
+#: field:product.product,removal_time:0
+msgid "Product Removal Time"
+msgstr ""
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+msgid "Removal Date"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,life_date:0
+msgid "The date on which the lot may become dangerous and should not be consumed."
+msgstr ""
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_pain_product_template
+msgid "Bread"
+msgstr ""
+
+#. module: product_expiry
+#: model:product.uom,name:product_expiry.product_uom_ltr
+#: model:product.uom.categ,name:product_expiry.product_uom_categ_vol
+msgid "LTR"
 msgstr ""
 
 #. module: product_expiry
 #: view:product.product:0
 #: view:stock.production.lot:0
 msgid "Dates"
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_production_lot
-msgid "Production lot"
-msgstr ""
-
-#. module: product_expiry
-#: help:product.product,use_time:0
-msgid "The number of days before a production lot starts deteriorating without becoming dangerous."
 msgstr ""
 
 #. module: product_expiry
@@ -47,33 +108,8 @@ msgid "Best before Date"
 msgstr ""
 
 #. module: product_expiry
-#: help:product.product,life_time:0
-msgid "The number of days before a production lot may become dangerous and should not be consumed."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_product_product
-msgid "Product"
-msgstr ""
-
-#. module: product_expiry
-#: help:stock.production.lot,use_date:0
-msgid "The date on which the lot starts deteriorating without becoming dangerous."
-msgstr ""
-
-#. module: product_expiry
-#: field:product.product,life_time:0
-msgid "Product Life Time"
-msgstr ""
-
-#. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product Removal Time"
-msgstr ""
-
-#. module: product_expiry
-#: help:product.product,alert_time:0
-msgid "The number of days after which an alert should be notified about the production lot."
+#: model:product.template,name:product_expiry.product_product_jambon_product_template
+msgid "French cheese Camenbert"
 msgstr ""
 
 #. module: product_expiry
@@ -82,28 +118,23 @@ msgid "The number of days before a production lot should be removed."
 msgstr ""
 
 #. module: product_expiry
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr ""
+
+#. module: product_expiry
+#: help:product.product,use_time:0
+msgid "The number of days before a production lot starts deteriorating without becoming dangerous."
+msgstr ""
+
+#. module: product_expiry
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: product_expiry
-#: help:stock.production.lot,life_date:0
-msgid "The date on which the lot may become dangerous and should not be consumed."
-msgstr ""
-
-#. module: product_expiry
-#: field:product.product,use_time:0
-msgid "Product Use Time"
-msgstr ""
-
-#. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-msgid "Removal Date"
-msgstr ""
-
-#. module: product_expiry
-#: sql_constraint:stock.production.lot:0
-msgid "The combination of serial number and internal reference must be unique !"
+#: help:product.product,life_time:0
+msgid "The number of days before a production lot may become dangerous and should not be consumed."
 msgstr ""
 
 #. module: product_expiry
@@ -114,10 +145,5 @@ msgstr ""
 #. module: product_expiry
 #: field:product.product,alert_time:0
 msgid "Product Alert Time"
-msgstr ""
-
-#. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid "The date on which the lot should be removed."
 msgstr ""
 

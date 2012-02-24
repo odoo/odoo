@@ -50,9 +50,10 @@ class account_bank_statement(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         super(account_bank_statement, self).button_cancel(cr, uid, ids, context=context)
         for st in self.browse(cr, uid, ids, context=context):
-            cr.execute("UPDATE account_bank_statement_line  \
-                SET state='draft' WHERE id in %s ",
-                (tuple([x.id for x in st.line_ids]),))
+            if st.line_ids:
+                cr.execute("UPDATE account_bank_statement_line  \
+                    SET state='draft' WHERE id in %s ",
+                    (tuple([x.id for x in st.line_ids]),))
         return True
 
 account_bank_statement()
@@ -111,7 +112,6 @@ class account_bank_statement_line(osv.osv):
             help="Code to identify transactions belonging to the same globalisation level within a batch payment"),
         'globalisation_amount': fields.related('globalisation_id', 'amount', type='float',
             relation='account.bank.statement.line.global', string='Glob. Amount', readonly=True),
-        'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed')],
             'State', required=True, readonly=True),    
         'counterparty_name': fields.char('Counterparty Name', size=35),

@@ -22,7 +22,7 @@ var __lc_buttons = [];
 
 openerp.web_livechat = function (openerp) {
 
-openerp.web_livechat.Livechat = openerp.web.Widget.extend({
+openerp.web_livechat.Livechat = openerp.web.OldWidget.extend({
     template: 'Header-LiveChat',
 
     start: function() {
@@ -71,7 +71,7 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
             __lc_buttons.push({
                 elementId: lc_id, //'livechat_status',
                 language: 'en',
-                skill: '0',
+                skill: '2',
                 type: 'text',
                 labels: {
                     online: '<img src="/web_livechat/static/src/img/available.png"/>Support',
@@ -89,7 +89,7 @@ openerp.web.Header.include({
         this._super();
         this.update_promise.then(function() {
             if (self.livechat) {
-                self.livechat.stop();
+                self.livechat.destroy();
             }
             self.livechat = new openerp.web_livechat.Livechat(self);
             self.livechat.prependTo(self.$element.find('div.header_corner'));

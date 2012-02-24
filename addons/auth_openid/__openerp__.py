@@ -28,7 +28,7 @@
     'author': 'OpenERP s.a.',
     'maintainer': 'OpenERP s.a.',
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
+    'depends': ['base', 'web'],
     'data': [
         'res_users.xml',
     ],
@@ -45,6 +45,6 @@
         'python' : ['openid'],
     },
     'installable': True,
-    'active': False,
+    'auto_install': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

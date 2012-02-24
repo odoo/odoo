@@ -34,7 +34,7 @@ Invite OpenERP user feedback, powered by uservoice.
     'depends': ['base'],
     'data': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0040452504963885',
 
     'js': ['static/src/js/web_uservoice.js'],

@@ -55,7 +55,7 @@ servers supporting it, by enabling the TLS option in the LDAP
 configuration.
 
 For further options configuring the LDAP settings, refer to the
-ldap.conf manpage :manpage:`ldap.conf(5)`.
+ldap.conf manpage: manpage:`ldap.conf(5)`.
 
 Security Considerations
 +++++++++++++++++++++++
@@ -122,7 +122,7 @@ will disable LDAP authentication if installed at the same time.
         "user_ldap_installer.xml",
         "security/ir.model.access.csv",
     ],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "001141446349334700221",
     "external_dependencies" : {

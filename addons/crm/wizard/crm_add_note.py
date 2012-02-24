@@ -1,4 +1,4 @@
-from crm import crm
+from .. import crm
 from osv import fields, osv
 from tools.translate import _
 from mail.mail_message import truncate_text

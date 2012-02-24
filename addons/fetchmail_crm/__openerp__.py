@@ -24,7 +24,7 @@
     "version" : "1.0",
     "depends" : ["fetchmail", "crm"],
     "author" : "OpenERP SA",
-    "category": 'Hidden/Links',
+    "category": 'Hidden',
     "description": """
     """,
     'website': 'http://www.openerp.com',
@@ -35,7 +35,7 @@
     'demo_xml': [
     ],
     'installable': True,
-    'active': False,
+    'auto_install': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

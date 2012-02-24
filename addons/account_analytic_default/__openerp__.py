@@ -46,7 +46,7 @@ Allows to automatically select analytic accounts based on criterions:
     ],
     'demo_xml'  : [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0074229833581',
 }
 

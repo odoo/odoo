@@ -29,7 +29,7 @@
     'complexity': "easy",
     "description": """
 Installer for extra Hidden like lunch, survey, idea, share, etc.
-===============================================================
+================================================================
 
 Makes the Extra Hidden Configuration available from where you can install
 modules like share, lunch, pad, idea, survey and subscription.
@@ -40,7 +40,7 @@ modules like share, lunch, pad, idea, survey and subscription.
     ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00557100228403879621',
     'images': ['images/config_extra_Hidden.jpeg'],
 }

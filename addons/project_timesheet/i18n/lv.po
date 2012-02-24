@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-01-01 13:07+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:02+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:41+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
@@ -102,9 +102,8 @@ msgstr "Oktobris"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
-msgid "Year"
-msgstr "Gads"
+msgid "Timesheet/Task hours Report Per Month"
+msgstr ""
 
 #. module: project_timesheet
 #: view:project.project:0
@@ -127,6 +126,12 @@ msgstr ""
 #: field:report.timesheet.task.user,task_hrs:0
 msgid "Task Hours"
 msgstr "Uzdevuma stundas"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:0
+#: field:report.timesheet.task.user,year:0
+msgid "Year"
+msgstr "Gads"
 
 #. module: project_timesheet
 #: constraint:project.project:0
@@ -296,14 +301,9 @@ msgid "Task hours of last month"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:59
-#, python-format
-msgid ""
-"No product defined on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-"Nav definēts produkts attiecīgajam darbiniekam.\n"
-"Aizpildīt darbinieka Darba laika uzskaites Tabeles formā."
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "Marts"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
@@ -331,14 +331,20 @@ msgid "Partner"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "Marts"
+#: code:addons/project_timesheet/project_timesheet.py:247
+#, python-format
+msgid "Invalid Analytic Account !"
+msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
+#: code:addons/project_timesheet/project_timesheet.py:59
+#, python-format
+msgid ""
+"No product defined on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
 msgstr ""
+"Nav definēts produkts attiecīgajam darbiniekam.\n"
+"Aizpildīt darbinieka Darba laika uzskaites Tabeles formā."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:54
@@ -357,6 +363,13 @@ msgstr "Rēķinu izrakstīšana"
 #. module: project_timesheet
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:247
+#, python-format
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state"
 msgstr ""
 
 #. module: project_timesheet

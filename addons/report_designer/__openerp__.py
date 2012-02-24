@@ -29,7 +29,7 @@
     "category": "Tools",
     "description": """
 Installer for reporting Hidden.
-==============================
+===============================
 
 Makes the Reporting Hidden Configuration available from where you can install
 modules like base_report_designer and base_report_creator.
@@ -41,7 +41,7 @@ modules like base_report_designer and base_report_creator.
     ],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00764037194670093149',
     'images': ['images/config_reporting_Hidden.jpeg'],
 }

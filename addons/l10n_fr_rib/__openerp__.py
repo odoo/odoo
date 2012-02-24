@@ -38,12 +38,12 @@ The module base_iban can be a useful addition to this module, because French ban
 The RIB and IBAN codes for a single account can be entered by recording two Bank Accounts in OpenERP: the first with the type "RIB", the second with the type "IBAN". 
 ''',
     'author' : u'Numérigraphe SARL',
-    'depends': ['base', 'account'],
+    'depends': ['account', 'base_iban'],
     'init_xml': ['bank_data.xml', ],
     'update_xml': ['bank_view.xml', ],
     'installable': True,
     'certificate': '003407950790',
-    'active': False,
+    'auto_install': False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

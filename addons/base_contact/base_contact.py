@@ -44,7 +44,7 @@ class res_partner_contact(osv.osv):
         'lang_id': fields.many2one('res.lang', 'Language'),
         'job_ids': fields.one2many('res.partner.address', 'contact_id', 'Functions and Addresses'),
         'country_id': fields.many2one('res.country','Nationality'),
-        'birthdate': fields.date('Birth Date'),
+        'birthdate': fields.char('Birthdate', size=64),
         'active': fields.boolean('Active', help="If the active field is set to False,\
                  it will allow you to hide the partner contact without removing it."),
         'partner_id': fields.related('job_ids', 'partner_id', type='many2one',\
@@ -99,9 +99,9 @@ class res_partner_contact(osv.osv):
             cr.execute("""
                 INSERT INTO
                     res_partner_contact
-                    (id,name,last_name,title,active)
+                    (id,name,last_name,title,active,email,mobile,birthdate)
                 SELECT
-                    id,COALESCE(name, '/'),COALESCE(name, '/'),title,true
+                    id,COALESCE(name, '/'),COALESCE(name, '/'),title,true,email,mobile,birthdate
                 FROM
                     res_partner_address""")
             cr.execute("alter table res_partner_address add contact_id int references res_partner_contact")
@@ -120,7 +120,6 @@ class res_partner_location(osv.osv):
         'city': fields.char('City', size=128),
         'state_id': fields.many2one("res.country.state", 'Fed. State', domain="[('country_id','=',country_id)]"),
         'country_id': fields.many2one('res.country', 'Country'),
-        'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'company_id': fields.many2one('res.company', 'Company',select=1),
         'job_ids': fields.one2many('res.partner.address', 'location_id', 'Contacts'),
         'partner_id': fields.related('job_ids', 'partner_id', type='many2one',\

@@ -29,7 +29,7 @@
     'complexity': "easy",
     "description": """
 Installer for knowledge-based Hidden.
-====================================
+=====================================
 
 Makes the Knowledge Application Configuration available from where you can install
 document and Wiki based Hidden.
@@ -43,7 +43,7 @@ document and Wiki based Hidden.
     ],
     'demo_xml': ['knowledge_demo.xml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '001278773815843749581',
     'images': ['images/1_config_knowledge.jpeg'],
 }

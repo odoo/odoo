@@ -27,6 +27,20 @@ from osv import osv, fields
 import decimal_precision as dp
 from tools.translate import _
 
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'income_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Income Currency Rate",
+            domain="[('type', '=', 'other')]",),
+        'expense_currency_exchange_account_id': fields.many2one(
+            'account.account',
+            string="Expense Currency Rate",
+            domain="[('type', '=', 'other')]",),
+    }
+
+res_company()
 
 class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
@@ -51,10 +65,14 @@ class account_voucher(osv.osv):
         periods = self.pool.get('account.period').find(cr, uid)
         return periods and periods[0] or False
 
+    def _make_journal_search(self, cr, uid, ttype, context=None):
+        journal_pool = self.pool.get('account.journal')
+        return journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
+
     def _get_journal(self, cr, uid, context=None):
         if context is None: context = {}
-        journal_pool = self.pool.get('account.journal')
         invoice_pool = self.pool.get('account.invoice')
+        journal_pool = self.pool.get('account.journal')
         if context.get('invoice_id', False):
             currency_id = invoice_pool.browse(cr, uid, context['invoice_id'], context=context).currency_id.id
             journal_id = journal_pool.search(cr, uid, [('currency', '=', currency_id)], limit=1)
@@ -67,7 +85,7 @@ class account_voucher(osv.osv):
         ttype = context.get('type', 'bank')
         if ttype in ('payment', 'receipt'):
             ttype = 'bank'
-        res = journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
+        res = self._make_journal_search(cr, uid, ttype, context=context)
         return res and res[0] or False
 
     def _get_tax(self, cr, uid, context=None):
@@ -1300,8 +1318,8 @@ class account_voucher_line(osv.osv):
         'move_line_id': fields.many2one('account.move.line', 'Journal Item'),
         'date_original': fields.related('move_line_id','date', type='date', relation='account.move.line', string='Date', readonly=1),
         'date_due': fields.related('move_line_id','date_maturity', type='date', relation='account.move.line', string='Due Date', readonly=1),
-        'amount_original': fields.function(_compute_balance, multi='dc', type='float', string='Original Amount', store=True),
-        'amount_unreconciled': fields.function(_compute_balance, multi='dc', type='float', string='Open Balance', store=True),
+        'amount_original': fields.function(_compute_balance, multi='dc', type='float', string='Original Amount', store=True, digits_compute=dp.get_precision('Account')),
+        'amount_unreconciled': fields.function(_compute_balance, multi='dc', type='float', string='Open Balance', store=True, digits_compute=dp.get_precision('Account')),
         'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True, readonly=True),
         'currency_id': fields.function(_currency_id, string='Currency', type='many2one', relation='res.currency', readonly=True),
     }
@@ -1487,19 +1505,5 @@ def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
             results.append(result)
     return results
 
-class res_company(osv.osv):
-    _inherit = "res.company"
-    _columns = {
-        'income_currency_exchange_account_id': fields.many2one(
-            'account.account',
-            string="Income Currency Rate",
-            domain="[('type', '=', 'other')]",),
-        'expense_currency_exchange_account_id': fields.many2one(
-            'account.account',
-            string="Expense Currency Rate",
-            domain="[('type', '=', 'other')]",),
-    }
-
-res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

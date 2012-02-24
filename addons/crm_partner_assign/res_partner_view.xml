@@ -1,6 +1,40 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
+    <!--Partner Activation -->
+
+        <record model="ir.ui.view" id="res_partner_activation_form">
+            <field name="name">openerp_custom.res.partner.activation.form</field>
+            <field name="model">res.partner.activation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Activation">
+                    <field name="name" />
+                    <field name="sequence" />
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="res_partner_activation_tree">
+            <field name="name">openerp_custom.res.partner.activation.tree</field>
+            <field name="model">res.partner.activation</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Activation">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="res_partner_activation_act">
+            <field name="name">Partner Activations</field>
+            <field name="res_model">res.partner.activation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="res_partner_activation_config_mi" parent="base.menu_config_address_book" action="res_partner_activation_act"/>
+
     <!--Partner Grade -->
 
 
@@ -47,6 +81,7 @@
         <field name="arch" type="xml">
             <field name="user_id" position="after">
                 <field name="grade_id"/>
+                <field name="activation"/>
             </field>
         </field>
     </record>
@@ -71,19 +106,31 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook[last()]" position="inside">
                 <page string="Geo Localization">
-                    <field name="grade_id" widget="selection"/>
+                    <group colspan="2" col="2">
+                        <separator string="Partner Activation" colspan="2"/>
+                        <field name="grade_id" widget="selection"/>
+                        <field name="activation" widget="selection"/>
+                        <field name="partner_weight"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Partner Review" colspan="2"/>
+                        <field name="date_review"/>
+                        <field name="date_review_next"/>
+                        <field name="date_partnership"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Geo Localization" colspan="2"/>
+                        <button
+                            string="Geo Localize"
+                            name="geo_localize"
+                            colspan="2"
+                            icon="gtk-apply"
+                            type="object"/>
+                        <field name="partner_latitude"/>
+                        <field name="partner_longitude"/>
+                        <field name="date_localization"/>
+                    </group>
                     <newline/>
-                    <field name="partner_weight"/>
-                    <label string="" colspan="1"/>
-                    <button
-                        string="Geo Localize"
-                        name="geo_localize"
-                        icon="gtk-apply"
-                        type="object"/>
-                    <newline/>
-                    <field name="partner_latitude"/>
-                    <field name="partner_longitude"/>
-                    <field name="date_localization"/>
 
                     <field name="opportunity_assigned_ids" colspan="4" nolabel="1">
                          <tree string="Assigned Opportunities"  colors="blue:state=='pending';gray:state=='cancel'">
@@ -122,5 +169,18 @@
             </xpath>
         </field>
     </record>
+
+      <record id="view_res_partner_filter_group_activation" model="ir.ui.view">
+            <field name="name">res.partner.geo.inherit.search</field>
+            <field name="model">res.partner</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <filter string="Salesman" position="after">
+                    <filter string="Activation" context="{'group_by' : 'activation'}" domain="[]" icon="terp-personal" />
+                </filter>
+            </field>
+        </record>
+
     </data>
 </openerp>

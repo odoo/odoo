@@ -43,7 +43,7 @@ Add "Support" button in header from where you can access OpenERP Support.
         "static/src/xml/*.xml",
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0013762192410413',
     'images': ['static/src/img/web_livechat_support.jpeg'],
 }

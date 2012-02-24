@@ -6,25 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
-"PO-Revision-Date: 2011-01-12 11:23+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"PO-Revision-Date: 2012-02-14 10:09+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:00+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-15 05:27+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "In Progress"
-msgstr ""
+msgstr "进行中"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show only tasks having a deadline"
-msgstr ""
+msgstr "只显示有截止日期的项目"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -54,13 +54,12 @@ msgstr "清空时间箱成功"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Pending Tasks"
-msgstr ""
+msgstr "暂停的任务"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr "没有子时间箱"
+#: view:project.task:0
+msgid "Next"
+msgstr "下一项"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -88,13 +87,11 @@ msgstr "清空时间箱"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Pending"
-msgstr ""
+msgstr "暂停"
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0
-#: field:project.gtd.timebox,name:0
-#: view:project.task:0
-#: field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
+#: view:project.task:0 field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "时间箱"
 
@@ -114,7 +111,7 @@ msgstr "错误！"
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_timebox_tree
 #: view:project.task:0
 msgid "My Tasks"
-msgstr ""
+msgstr "我的任务"
 
 #. module: project_gtd
 #: constraint:project.task:0
@@ -140,7 +137,7 @@ msgstr "空时间箱"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Tasks having no timebox assigned yet"
-msgstr ""
+msgstr "还没有指定时间箱的任务"
 
 #. module: project_gtd
 #: constraint:project.task:0
@@ -179,9 +176,14 @@ msgid "Contexts"
 msgstr "上下文"
 
 #. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_car
+msgid "Car"
+msgstr "汽车"
+
+#. module: project_gtd
 #: view:project.task:0
 msgid "Show Context"
-msgstr ""
+msgstr "显示情境"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
@@ -204,20 +206,20 @@ msgstr "时间箱"
 #. module: project_gtd
 #: view:project.task:0
 msgid "In Progress and draft tasks"
-msgstr ""
+msgstr "正在进行或草稿状态的任务"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0
-#: field:project.gtd.context,name:0
+#: view:project.gtd.context:0 field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr "上下文"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
-msgstr "下一项"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
+msgstr "没有子时间箱"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
@@ -230,15 +232,14 @@ msgid "Office"
 msgstr "办公"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0
-#: field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "序列"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show the context field"
-msgstr ""
+msgstr "显示情境字段"
 
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
@@ -248,7 +249,7 @@ msgstr "输入序号用于情境列表的排序"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show Deadlines"
-msgstr ""
+msgstr "显示截止日期"
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
@@ -276,6 +277,11 @@ msgid "The context place where user has to treat task"
 msgstr "用户要执行任务的地点"
 
 #. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_home
+msgid "Home"
+msgstr "首页"
+
+#. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
 msgid ""
 "Contexts are defined in the \"Getting Things Done\" methodology. It allows "
@@ -286,7 +292,7 @@ msgstr "情境是GTD方法中的概念。它使你能够按照执行的地点对
 #. module: project_gtd
 #: view:project.task:0
 msgid "For reopening the tasks"
-msgstr ""
+msgstr "为重启任务"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -426,9 +432,6 @@ msgstr "上一个"
 #~ msgid "GTD"
 #~ msgstr "GTD"
 
-#~ msgid "Car"
-#~ msgstr "汽车"
-
 #~ msgid "This Month"
 #~ msgstr "本月"
 
@@ -458,6 +461,3 @@ msgstr "上一个"
 #~ "GTD基于一个原则：个人应该把任务从脑子里移除到外部的记录系统上。这样，\n"
 #~ "大脑就不需要再记忆所有该做的事情，只需要关注正在做的事。\n"
 #~ "    "
-
-#~ msgid "Home"
-#~ msgstr "首页"

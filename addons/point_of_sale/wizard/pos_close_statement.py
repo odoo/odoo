@@ -59,14 +59,14 @@ class pos_close_statement(osv.osv_memory):
         tree_id = tree_res and tree_res[1] or False
         form_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_form2')
         form_id = form_res and form_res[1] or False
-        search_id = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_pos_confirm_cash_statement_filter')
+        search_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_bank_statement_filter')
 
         return {
-            'domain': "[('id', 'in', " + str(ids) + ")]",
+            'domain': str([('id', 'in', ids)]),
             'name': _('Close Cash Registers'),
             'view_type': 'form',
-            'view_mode': 'tree, form',
-            'search_view_id': search_id and search_id[1] or False,
+            'view_mode': 'tree,form',
+            'search_view_id': search_res and search_res[1] or False,
             'res_model': 'account.bank.statement',
             'views': [(tree_id, 'tree'), (form_id, 'form')],
             'type': 'ir.actions.act_window'

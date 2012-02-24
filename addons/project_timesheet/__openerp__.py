@@ -43,7 +43,7 @@ the Timesheet line entries for particular date and particular user  with the eff
         'test/work_timesheet.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0075123647453',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

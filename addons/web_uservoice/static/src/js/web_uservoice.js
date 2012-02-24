@@ -1,7 +1,7 @@
 
 openerp.web_uservoice = function(instance) {
 
-instance.web_uservoice.UserVoice = instance.web.Widget.extend({
+instance.web_uservoice.UserVoice = instance.web.OldWidget.extend({
     template: 'Header-UserVoice',
     default_forum: '77459',
 
@@ -71,7 +71,7 @@ instance.web.Header.include({
         this._super();
         this.update_promise.then(function() {
             if (self.uservoice) {
-                self.uservoice.stop();
+                self.uservoice.destroy();
             }
             self.uservoice = new instance.web_uservoice.UserVoice(self);
             self.uservoice.prependTo(self.$element.find('div.header_corner'));

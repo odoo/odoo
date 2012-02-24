@@ -1426,7 +1426,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             context = {}
         fields2 = fields and fields[:] or None
 
-        EXTRAFIELDS = ('class','user_id','date','duration')
+        EXTRAFIELDS = ('class','user_id','duration')
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
                 fields2.append(f)

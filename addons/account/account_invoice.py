@@ -58,10 +58,12 @@ class account_invoice(osv.osv):
         return res and res[0] or False
 
     def _get_currency(self, cr, uid, context=None):
-        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid], context=context)[0]
-        if user.company_id:
-            return user.company_id.currency_id.id
-        return pooler.get_pool(cr.dbname).get('res.currency').search(cr, uid, [('rate','=', 1.0)])[0]
+        res = False
+        journal_id = self._get_journal(cr, uid, context=context)
+        if journal_id:
+            journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+            res = journal.currency and journal.currency.id or journal.company_id.currency_id.id
+        return res
 
     def _get_journal_analytic(self, cr, uid, type_inv, context=None):
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
@@ -287,7 +289,7 @@ class account_invoice(osv.osv):
         'user_id': lambda s, cr, u, c: u,
     }
     _sql_constraints = [
-        ('number_uniq', 'unique(number, company_id)', 'Invoice Number must be unique per Company!'),
+        ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
@@ -316,6 +318,15 @@ class account_invoice(osv.osv):
                 res['fields'][field]['selection'] = journal_select
 
         doc = etree.XML(res['arch'])
+        
+        if context.get('type', False):
+            for node in doc.xpath("//field[@name='partner_bank_id']"):
+                if context['type'] == 'in_refund':
+                    node.set('domain', "[('partner_id.ref_companies', 'in', [company_id])]")
+                elif context['type'] == 'out_refund':
+                    node.set('domain', "[('partner_id', '=', partner_id)]")
+            res['arch'] = etree.tostring(doc)
+                
         if view_type == 'search':
             if context.get('type', 'in_invoice') in ('out_invoice', 'out_refund'):
                 for node in doc.xpath("//group[@name='extended filter']"):
@@ -338,7 +349,7 @@ class account_invoice(osv.osv):
             context = {}
         res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'invoice_form')
         view_id = res and res[1] or False
-        context.update({'view_id': view_id})
+        context['view_id'] = view_id
         return context
 
     def create(self, cr, uid, vals, context=None):
@@ -455,10 +466,10 @@ class account_invoice(osv.osv):
             result['value'].update(to_update['value'])
         return result
 
-    def onchange_journal_id(self, cr, uid, ids, journal_id=False):
+    def onchange_journal_id(self, cr, uid, ids, journal_id=False, context=None):
         result = {}
         if journal_id:
-            journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
+            journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
             currency_id = journal.currency and journal.currency.id or journal.company_id.currency_id.id
             result = {'value': {
                     'currency_id': currency_id,
@@ -563,18 +574,6 @@ class account_invoice(osv.osv):
         else:
             journal_ids = obj_journal.search(cr, uid, [])
 
-        if currency_id and company_id:
-            currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
-            if currency.company_id and currency.company_id.id != company_id:
-                val['currency_id'] = False
-            else:
-                val['currency_id'] = currency.id
-        if company_id:
-            company = self.pool.get('res.company').browse(cr, uid, company_id)
-            if company.currency_id.company_id and company.currency_id.company_id.id != company_id:
-                val['currency_id'] = False
-            else:
-                val['currency_id'] = company.currency_id.id
         return {'value': val, 'domain': dom}
 
     # go from canceled state to draft state
@@ -815,7 +814,7 @@ class account_invoice(osv.osv):
             ctx = context.copy()
             ctx.update({'lang': inv.partner_id.lang})
             if not inv.date_invoice:
-                self.write(cr, uid, [inv.id], {'date_invoice':time.strftime('%Y-%m-%d')}, context=ctx)
+                self.write(cr, uid, [inv.id], {'date_invoice': fields.date.context_today(self,cr,uid,context=context)}, context=ctx)
             company_currency = inv.company_id.currency_id.id
             # create the analytical lines
             # one move line per invoice line
@@ -1363,17 +1362,6 @@ class account_invoice_line(osv.osv):
             taxes = res.supplier_taxes_id and res.supplier_taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
         tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
 
-        if type in ('in_invoice','in_refund') and tax_id and price_unit:
-            tax_pool = self.pool.get('account.tax')
-            tax_browse = tax_pool.browse(cr, uid, tax_id)
-            if not isinstance(tax_browse, list):
-                tax_browse = [tax_browse]
-            taxes = tax_pool.compute_inv(cr, uid, tax_browse, price_unit, 1)
-            tax_amount = reduce(lambda total, tax_dict: total + tax_dict.get('amount', 0.0), taxes, 0.0)
-            price_unit = price_unit - tax_amount
-            if qty != 0:
-                price_unit = price_unit / float(qty)
-
         if type in ('in_invoice', 'in_refund'):
             result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
         else:
@@ -1489,13 +1477,19 @@ class account_invoice_line(osv.osv):
     #
     # Set the tax field according to the account and the fiscal position
     #
-    def onchange_account_id(self, cr, uid, ids, fposition_id, account_id):
+    def onchange_account_id(self, cr, uid, ids, product_id, partner_id, inv_type, fposition_id, account_id):
         if not account_id:
             return {}
         taxes = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
         fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
-        res = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
-        return {'value':{'invoice_line_tax_id': res}}
+        tax_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
+
+        product_change_result = self.product_id_change(cr, uid, ids, product_id, False, type=inv_type,
+                                                       partner_id=partner_id, fposition_id=fposition_id)
+        unique_tax_ids = set(tax_ids)
+        if product_change_result and 'value' in product_change_result and 'invoice_line_tax_id' in product_change_result['value']:
+            unique_tax_ids |= set(product_change_result['value']['invoice_line_tax_id'])
+        return {'value':{'invoice_line_tax_id': list(unique_tax_ids)}}
 
 account_invoice_line()
 

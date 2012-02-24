@@ -91,7 +91,7 @@
                             <table>
                                 <tr>
                                     <td class="paymentline-type">Total:</td>
-                                    <td class="paymentline-amount pos-rigth-align">
+                                    <td class="paymentline-amount pos-right-align">
                                         <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
                                         <span id="payment-due-total"></span>
                                         <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
@@ -103,7 +103,7 @@
                             <table>
                                 <tr>
                                     <td class="paymentline-type">Paid:</td>
-                                    <td class="paymentline-amount pos-rigth-align">
+                                    <td class="paymentline-amount pos-right-align">
                                         <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
                                         <span id="payment-paid-total"></span>
                                         <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
@@ -111,7 +111,7 @@
                                 </tr>
                                 <tr>
                                     <td class="paymentline-type">Change:</td>
-                                    <td class="paymentline-amount pos-rigth-align">
+                                    <td class="paymentline-amount pos-right-align">
                                         <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
                                         <span id="payment-remaining"></span>
                                         <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
@@ -181,7 +181,7 @@
     <t t-name="pos-product-template">
         <a href="#">
             <div class="product-img">
-                <img t-att-src="'data:image/gif;base64,'+ product_image" />
+                <img t-att-src="'data:image/gif;base64,'+ product_image_small" />
                 <span class="price-tag">
                     <t t-esc="format_amount(list_price)"/>
                 </span>
@@ -212,7 +212,7 @@
         <td class="paymentline-type">
             <t t-esc="name"/>
         </td>
-        <td class="paymentline-amount pos-rigth-align">
+        <td class="paymentline-amount pos-right-align">
             <input type="text" t-att-value="amount.toFixed(2)" />
             <a href='javascript:void(0)' class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></a>
         </td>
@@ -242,7 +242,7 @@
     </t>
     <t t-name="pos-ticket">
         <div class="pos-sale-ticket">
-            <div class="pos-rigth-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
+            <div class="pos-right-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
                 Date.CultureInfo.formatPatterns.longTime)"/></div>
             <br />
             <t t-esc="widget.company.name"/><br />
@@ -255,20 +255,20 @@
                     <td>
                         <t t-esc="order.get('name')"/>
                     </td>
-                    <td class="pos-rigth-align">
+                    <td class="pos-right-align">
                         <t t-esc="order.get('quantity').toFixed(0)"/>
                     </td>
-                    <td class="pos-rigth-align">
+                    <td class="pos-right-align">
                         <t t-esc="format_amount((order.get('list_price') * (1 - order.get('discount')/100) * order.get('quantity')).toFixed(2))"/>
                     </td>
                 </tr>
             </table>
             <br />
             <table>
-                <tr><td>Tax:</td><td class="pos-rigth-align">
+                <tr><td>Tax:</td><td class="pos-right-align">
                     <t t-esc="format_amount(widget.currentOrder.getTax().toFixed(2))"/>
                     </td></tr>
-                <tr><td>Total:</td><td class="pos-rigth-align">
+                <tr><td>Total:</td><td class="pos-right-align">
                     <t t-esc="format_amount(widget.currentOrder.getTotal().toFixed(2))"/>
                     </td></tr>
             </table>
@@ -278,14 +278,14 @@
                     <td>
                         <t t-esc="pline.get('journal_id')[1]"/>
                     </td>
-                    <td class="pos-rigth-align">
+                    <td class="pos-right-align">
                         <t t-esc="format_amount((pline.getAmount()).toFixed(2))"/>
                     </td>
                 </tr>
             </table>
             <br />
             <table>
-                <tr><td>Change:</td><td class="pos-rigth-align">
+                <tr><td>Change:</td><td class="pos-right-align">
                     <t t-esc="format_amount((widget.currentOrder.getPaidTotal() - widget.currentOrder.getTotal()).toFixed(2))"/>
                     </td></tr>
             </table>

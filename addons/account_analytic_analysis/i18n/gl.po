@@ -8,20 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: account-analytic-analysis-es\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
 "PO-Revision-Date: 2011-02-02 10:26+0000\n"
 "Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
 "Language-Team: Galego <g11n@mancomun.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:50+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "No Account Manager"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -51,11 +46,11 @@ msgid "Pending contracts to renew with your customer"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:551
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:722
-#, python-format
-msgid "AccessError"
-msgstr "Erro de Acceso"
+#: help:account.analytic.account,hours_qtt_non_invoiced:0
+msgid ""
+"Number of time (hours/days) (from journal of type 'general') that can be "
+"invoiced if you invoice based on analytic account."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -167,13 +162,6 @@ msgid "Contracts to Renew"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,hours_qtt_non_invoiced:0
-msgid ""
-"Number of time (hours/days) (from journal of type 'general') that can be "
-"invoiced if you invoice based on analytic account."
-msgstr ""
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
 msgstr "Marxe Teórica"
@@ -236,13 +224,6 @@ msgid "Invoiced Amount"
 msgstr "Importe facturado"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:552
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:723
-#, python-format
-msgid "You try to bypass an access rule (Document type: %s)."
-msgstr "Tentou saltarse unha regra de acceso (tipo de documento: %s)."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
 msgstr "Data do último custe facturado"
@@ -261,13 +242,6 @@ msgstr "Taxa de marxe real (%)"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Marxe real"
-
-#. module: account_analytic_analysis
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr "¡Erro! A divisa ten que se-la mesma ca da compañía seleccionada"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -364,6 +338,11 @@ msgstr ""
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Open"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts that are not assigned to an account manager."
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -467,6 +446,10 @@ msgstr ""
 #~ msgid "Revenue per Hours (real)"
 #~ msgstr "Ingresos por horas (real)"
 
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "Tentou saltarse unha regra de acceso (tipo de documento: %s)."
+
 #~ msgid "Overpassed Accounts"
 #~ msgstr "Contas caducadas"
 
@@ -485,8 +468,17 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome do modelo incorrecto na definición da acción."
 
+#, python-format
+#~ msgid "AccessError"
+#~ msgstr "Erro de Acceso"
+
 #~ msgid "Billing"
 #~ msgstr "Facturación"
+
+#~ msgid ""
+#~ "Error! The currency has to be the same as the currency of the selected "
+#~ "company"
+#~ msgstr "¡Erro! A divisa ten que se-la mesma ca da compañía seleccionada"
 
 #~ msgid ""
 #~ "\n"

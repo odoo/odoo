@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2012-01-15 09:14+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-02-08 10:20+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-01-16 05:19+0000\n"
-"X-Generator: Launchpad (build 14664)\n"
+"X-Launchpad-Export-Date: 2012-02-09 07:00+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -81,10 +81,9 @@ msgid "Compute Stock Minimum Rules Only"
 msgstr "Berechne nur die Meldebestandregel"
 
 #. module: procurement
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
-"Sie dürfen keine Sicht als Quelle oder Ziel einer Lagerbewegung angeben"
+#: view:procurement.order:0
+msgid "Temporary Procurement Exceptions"
+msgstr "Temporäre Fehlerliste"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -203,7 +202,7 @@ msgid "Automatic orderpoint"
 msgstr "Automatischer Bestellpunkt"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:122
+#: code:addons/procurement/schedulers.py:123
 #, python-format
 msgid ""
 "Here is the procurement scheduling report.\n"
@@ -217,11 +216,16 @@ msgid ""
 "\n"
 "        Exceptions:\n"
 msgstr ""
-
-#. module: procurement
-#: field:mrp.property,composition:0
-msgid "Properties composition"
-msgstr "Konfiguration Eigenschaften"
+"Das ist der Beschaffungsplanungs Report.\n"
+"\n"
+"        Startzeit: %s \n"
+"        Endzeit: %s \n"
+"        Anzahl der verabeiteten Beschaffungsvorschlge: %d \n"
+"        Beschaffungsvorschläge mit Ausnahmen: %d \n"
+"        Übersprungene Beschaffungsvorschläge (außerhalb des "
+"Planungszeitraumes) %d \n"
+"\n"
+"        Ausnahmen:\n"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -240,6 +244,8 @@ msgid ""
 "procurement to bring the virtual stock to the Quantity specified as Max "
 "Quantity."
 msgstr ""
+"Wenn die verfügbare Menge unter den Mindestbestand sinkt, generiert OpenERP "
+"einen Beschaffungs der den Bestand auf den Maximalbestand auffüllt."
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -313,10 +319,10 @@ msgid "Best price (not yet active!)"
 msgstr "Günstigster Preis (noch nicht aktiviert!)"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:110
+#: code:addons/procurement/schedulers.py:111
 #, python-format
 msgid "PROC %d: from stock - %3.2f %-5s - %s"
-msgstr ""
+msgstr "PROC %d: vom lager - %3.2f %-5s - %s"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -390,14 +396,25 @@ msgid "References"
 msgstr "Referenzen"
 
 #. module: procurement
+#: view:product.product:0
+#: field:product.product,orderpoint_ids:0
+msgid "Minimum Stock Rule"
+msgstr "Mindestbestandsregel"
+
+#. module: procurement
 #: view:res.company:0
 msgid "Configuration"
 msgstr "Konfiguration"
 
 #. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
-msgstr "Multiple Menge"
+#: code:addons/procurement/procurement.py:328
+#, python-format
+msgid ""
+"Please check the quantity in procurement order(s), it should not be 0 or "
+"less!"
+msgstr ""
+"Bitte überprüfen Sie die Mnegen im Beschaffungsauftrag, diese sollten "
+"positive Werte sein."
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -468,6 +485,9 @@ msgid ""
 "OpenERP generates a procurement to bring the virtual stock to the Max "
 "Quantity."
 msgstr ""
+"Wenn die verfügbare Menge unter den Mindestbestand in diesem Feld sinkt, "
+"generiert OpenERP einen Beschaffungs der den Bestand auf den Maximalbestand "
+"auffüllt."
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -503,14 +523,10 @@ msgid "plus"
 msgstr "plus"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:328
-#, python-format
-msgid ""
-"Please check the Quantity in Procurement Order(s), it should not be less "
-"than 1!"
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
 msgstr ""
-"Bitte prüfen Sie die Bestellmenge der Beschaffungsaufträge, sie sollte nicht "
-"geringer als 1 sein!"
+"Sie dürfen keine Sicht als Quelle oder Ziel einer Lagerbewegung angeben"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -617,7 +633,7 @@ msgid "No minimum orderpoint rule defined."
 msgstr "Keine Mindestbestellmengenregel definiert"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:183
+#: code:addons/procurement/schedulers.py:151
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "Automatische Beschaffungsregel: %s"
@@ -683,10 +699,9 @@ msgid "Date Closed"
 msgstr "Datum Ende"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s State!"
-msgstr "Beschaffungsauftrag im Zustand %s kann nicht gelöschet werden!"
+#: field:mrp.property,composition:0
+msgid "Properties composition"
+msgstr "Konfiguration Eigenschaften"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:327
@@ -792,6 +807,7 @@ msgstr "Fehler Beschaffung"
 #: model:ir.actions.act_window,name:procurement.act_stock_warehouse_2_stock_warehouse_orderpoint
 #: model:ir.actions.act_window,name:procurement.action_orderpoint_form
 #: model:ir.ui.menu,name:procurement.menu_stock_order_points
+#: view:product.product:0
 #: view:stock.warehouse.orderpoint:0
 msgid "Minimum Stock Rules"
 msgstr "Meldebestand Regeln"
@@ -802,11 +818,17 @@ msgid "Close Move at end"
 msgstr "Abschluss Warenfluss"
 
 #. module: procurement
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
+msgstr "Multiple Menge"
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Scheduled Date"
 msgstr "Geplantes Datum"
 
 #. module: procurement
+#: model:ir.model,name:procurement.model_product_product
 #: field:make.procurement,product_id:0
 #: view:procurement.order:0
 #: field:procurement.order,product_id:0
@@ -906,9 +928,10 @@ msgid "MRP & Logistics Scheduler"
 msgstr "Beschaffungsdisposition"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Temporary Procurement Exceptions"
-msgstr "Temporäre Fehlerliste"
+#: code:addons/procurement/procurement.py:138
+#, python-format
+msgid "Cannot delete Procurement Order(s) which are in %s state!"
+msgstr "Beschaffungsaufträge mit Status %s können icht gelöscht werden."
 
 #. module: procurement
 #: sql_constraint:res.company:0
@@ -1014,16 +1037,29 @@ msgid "Procurement started late"
 msgstr "Die Beschaffung begann zu spät"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:184
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Fehler: Falscher EAN code"
+
+#. module: procurement
+#: code:addons/procurement/schedulers.py:152
 #, python-format
 msgid "SCHEDULER"
 msgstr "DISPOSITION"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:87
+#: code:addons/procurement/schedulers.py:88
 #, python-format
 msgid "PROC %d: on order - %3.2f %-5s - %s"
-msgstr ""
+msgstr "PROC %d: für Aufrag - %3.2f %-5s - %s"
+
+#, python-format
+#~ msgid ""
+#~ "Please check the Quantity in Procurement Order(s), it should not be less "
+#~ "than 1!"
+#~ msgstr ""
+#~ "Bitte prüfen Sie die Bestellmenge der Beschaffungsaufträge, sie sollte nicht "
+#~ "geringer als 1 sein!"
 
 #~ msgid "The procurement quantity will by rounded up to this multiple."
 #~ msgstr "Die Beschaffungsmenge wird auf dieses Vielfache gerundet"
@@ -1039,6 +1075,10 @@ msgstr ""
 #~ "\n"
 #~ "    Dieses Modul errechnet automatische Beschaffungsvorschläge.\n"
 #~ "    "
+
+#, python-format
+#~ msgid "Cannot delete Procurement Order(s) which are in %s State!"
+#~ msgstr "Beschaffungsauftrag im Zustand %s kann nicht gelöschet werden!"
 
 #~ msgid ""
 #~ "When the virtual stock goes belong the Min Quantity, OpenERP generates a "

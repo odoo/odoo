@@ -54,7 +54,7 @@ technical OpenERP documentation at http://doc.openerp.com
         "static/src/xml/*.xml",
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '002046536359186',
 }
 

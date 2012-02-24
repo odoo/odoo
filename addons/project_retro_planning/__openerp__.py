@@ -39,7 +39,7 @@ If end date of project is changed then the deadline date and start date for all 
               'test/deadline_change.yml'
               ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0057235475485',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

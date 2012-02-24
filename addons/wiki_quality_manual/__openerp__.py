@@ -38,7 +38,7 @@ for Wiki Quality Manual.
     'update_xml': ['wiki_quality_manual.xml'],
     'demo_xml': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate' : '00705749856097740509',
     'images': ['images/wiki_pages_quality_manual.jpeg'],
 }

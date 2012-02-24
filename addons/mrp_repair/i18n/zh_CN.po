@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
-"PO-Revision-Date: 2010-03-20 08:36+0000\n"
-"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-02-14 09:40+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:12+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-15 05:27+0000\n"
+"X-Generator: Launchpad (build 14781)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -101,7 +101,7 @@ msgid "Group by partner invoice address"
 msgstr "业务伙伴发票地址组"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:433
+#: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "没有定义费用产品"
@@ -110,7 +110,7 @@ msgstr "没有定义费用产品"
 #: view:mrp.repair:0
 #: field:mrp.repair,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "公司"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -170,7 +170,7 @@ msgid "Net Total :"
 msgstr "净合计:"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:433
+#: code:addons/mrp_repair/mrp_repair.py:435
 #, python-format
 msgid "Warning !"
 msgstr "警告！"
@@ -191,7 +191,7 @@ msgid "Move"
 msgstr "调拨"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:368
+#: code:addons/mrp_repair/mrp_repair.py:370
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr "必须在维修单上输入业务伙伴的发票地址"
@@ -208,7 +208,7 @@ msgid "Quotation / Order"
 msgstr "报价单/订单"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:335
+#: code:addons/mrp_repair/mrp_repair.py:337
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -230,7 +230,7 @@ msgid "Draft"
 msgstr "草稿"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:382
+#: code:addons/mrp_repair/mrp_repair.py:384
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "业务伙伴 \"%s\" 没有指定应收账款科目"
@@ -285,9 +285,10 @@ msgid "Shipping address :"
 msgstr "运输地址:"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:382
-#: code:addons/mrp_repair/mrp_repair.py:411
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:334
+#: code:addons/mrp_repair/mrp_repair.py:384
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "Error !"
 msgstr "错误！"
@@ -382,7 +383,7 @@ msgid "Canceled"
 msgstr "取消"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:335
+#: code:addons/mrp_repair/mrp_repair.py:337
 #, python-format
 msgid "Production lot is required for opration line with product '%s'"
 msgstr "有产品 '%s' 的维修单行必须输入产品批号"
@@ -496,6 +497,12 @@ msgid "Repair Fees Line"
 msgstr "维修费行"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:334
+#, python-format
+msgid "You cannot confirm a repair order which has no line."
+msgstr "你不能确认一张没有行项目的维修单。"
+
+#. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Quotation"
 msgstr "报价单"
@@ -521,8 +528,8 @@ msgid "End Repair"
 msgstr "结束修理"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:411
-#: code:addons/mrp_repair/mrp_repair.py:440
+#: code:addons/mrp_repair/mrp_repair.py:413
+#: code:addons/mrp_repair/mrp_repair.py:442
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "产品 \"%s\" 没有指定科目"
@@ -773,7 +780,7 @@ msgid "Ready to Repair"
 msgstr "准备修理"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:368
+#: code:addons/mrp_repair/mrp_repair.py:370
 #, python-format
 msgid "No partner !"
 msgstr "没有输入业务伙伴"

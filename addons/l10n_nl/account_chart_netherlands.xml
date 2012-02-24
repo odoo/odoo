@@ -3,55 +3,17 @@
     <data noupdate="True">
     
 	<!-- account.account.type -->
-	<record model="account.account.type" id="user_type_receivable" >
-		<field name="name">Vorderingen</field>
-		<field name="code">receivable</field>
-		<field name="close_method">unreconciled</field>
-	</record>
-	<record model="account.account.type" id="user_type_payable" >
-	    <field name="name">Schulden</field>
-	    <field name="code">payable</field>
-	    <field name="close_method">unreconciled</field>
-	</record>
-        <record model="account.account.type" id="user_type_view">
-	    <field name="name">View</field>
-	    <field name="code">view</field>
-	    <field name="close_method">none</field>
-	</record>
-	<record model="account.account.type" id="user_type_income" >
-	    <field name="name">Inkomsten</field>
-	    <field name="code">income</field>
-	    <field name="close_method">none</field>
-	</record>
-        <record model="account.account.type" id="user_type_expense">
-	    <field name="name">Uitgaven</field>
-	    <field name="code">expense</field>
-	    <field name="close_method">none</field>
-	</record>
 	<record model="account.account.type" id="user_type_tax">
 	    <field name="name">BTW</field>
 	    <field name="code">tax</field>
 	    <field name="close_method">balance</field>
-	</record>
-        <record model="account.account.type" id="user_type_cash">
-	    <field name="name">Vlottende Activa</field>
-	    <field name="code">cash</field>
-	    <field name="close_method">balance</field>
-	</record>
-        <record model="account.account.type" id="user_type_asset">
-	    <field name="name">Vaste Activa</field>
-	    <field name="code">asset</field>
-	    <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
 	</record>
 	<record model="account.account.type" id="user_type_equity">
 	    <field name="name">Eigen Vermogen</field>
 	    <field name="code">equity</field>
 	    <field name="close_method">balance</field>
-	</record>
-	<record model="account.account.type" id="user_type_liability">
-	    <field name="name">Vreemd Vermogen</field>
-	    <field name="code">liability</field>
-	    <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
 	</record>
 
         <!-- Chart template of l10n_nl -->
@@ -60,7 +22,7 @@
 	    <field name="name">NEDERLANDS STANDAARD GROOTBOEKSCHEMA</field>
 	    <field name="code">0</field>
 	    <field name="type">view</field>
-	    <field name="user_type" ref="user_type_view"/>
+	    <field name="user_type" ref="account.data_account_type_view"/>
 	</record>
 
 <!-- RUBRIEK 0 -->
@@ -68,7 +30,7 @@
             <field name="name">VASTE ACTIVA, EIGEN VERMOGEN, LANGLOPEND VREEMD VERMOGEN EN VOORZIENINGEN</field>
             <field name="code">RUBRIEK 0</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
 <!-- SUB RUBRIEK 00-->		
@@ -76,14 +38,14 @@
 				<field name="name">IMMATERIELE ACTIVA</field>
 				<field name="code">00</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_0" name="parent_id"/>
 			</record>
 				<record id="a_0001" model="account.account.template">
 					<field name="name">Aanschafwaarde Goodwill</field>
 					<field name="code">0001</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -91,7 +53,7 @@
 					<field name="name">Aanschafwaarde Octrooien</field>
 					<field name="code">0002</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -99,7 +61,7 @@
 					<field name="name">Aanschafwaarde Licenties</field>
 					<field name="code">0003</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -107,7 +69,7 @@
 					<field name="name">Aanschafwaarde Auteursrechten</field>
 					<field name="code">0004</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -115,7 +77,7 @@
 					<field name="name">Aanschafwaarde Vergunningen</field>
 					<field name="code">0005</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -123,7 +85,7 @@
 					<field name="name">Aanschafwaarde Tonnagevergunningen</field>
 					<field name="code">0006</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -131,7 +93,7 @@
 					<field name="name">Aanschafwaarde Drankvergunningen</field>
 					<field name="code">0007</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -139,7 +101,7 @@
 					<field name="name">Aanschafwaarde Ontwikkelingskosten</field>
 					<field name="code">0010</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -147,7 +109,7 @@
 					<field name="name">Aanschafwaarde Aanloopkosten</field>
 					<field name="code">0020</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -155,7 +117,7 @@
 					<field name="name">Afschrijving Goodwill</field>
 					<field name="code">0051</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -163,7 +125,7 @@
 					<field name="name">Afschrijving Octrooien</field>
 					<field name="code">0052</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -171,7 +133,7 @@
 					<field name="name">Afschrijving Licenties</field>
 					<field name="code">0003</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -179,7 +141,7 @@
 					<field name="name">Afschrijving Auteursrechten</field>
 					<field name="code">0054</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -187,7 +149,7 @@
 					<field name="name">Afschrijving Vergunningen</field>
 					<field name="code">0055</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -195,7 +157,7 @@
 					<field name="name">Afschrijving Tonnagevergunningen</field>
 					<field name="code">0056</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -203,7 +165,7 @@
 					<field name="name">Afschrijving Drankvergunningen</field>
 					<field name="code">0057</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -211,7 +173,7 @@
 					<field name="name">Afschrijving Ontwikkelingskosten</field>
 					<field name="code">0060</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -219,7 +181,7 @@
 					<field name="name">Afschrijving Aanloopkosten</field>
 					<field name="code">0070</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_00" name="parent_id"/>
 				</record>
@@ -228,14 +190,14 @@
 				<field name="name">ONROERENDE GOEDEREN</field>
 				<field name="code">01</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_0" name="parent_id"/>
 			</record>
 				<record id="a_0100" model="account.account.template">
 					<field name="name">Aanschafwaarde Landerijen</field>
 					<field name="code">0100</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -243,7 +205,7 @@
 					<field name="name">Aanschafwaarde Ondergrond gebouwen</field>
 					<field name="code">0101</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -251,7 +213,7 @@
 					<field name="name">Aanschafwaarde Gebouwen</field>
 					<field name="code">0102</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -259,7 +221,7 @@
 					<field name="name">Aanschafwaarde Bedrijfsgebouwen</field>
 					<field name="code">0104</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -267,7 +229,7 @@
 					<field name="name">Aanschafwaarde Woon-winkelhuis</field>
 					<field name="code">0107</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -275,7 +237,7 @@
 					<field name="name">Aanschafwaarde Winkels</field>
 					<field name="code">0108</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -283,7 +245,7 @@
 					<field name="name">Aanschafwaarde Verbouwingen</field>
 					<field name="code">0130</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -291,7 +253,7 @@
 					<field name="name">Aanschafwaarde Grondverbetering</field>
 					<field name="code">0131</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -299,7 +261,7 @@
 					<field name="name">Aanschafwaarde Parkeerplaats</field>
 					<field name="code">0132</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -307,7 +269,7 @@
 					<field name="name">Aanschafwaarde Aanloopkosten</field>
 					<field name="code">0135</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -315,7 +277,7 @@
 					<field name="name">Aanschafwaarde Pachtersinvesteringen</field>
 					<field name="code">0138</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>	
@@ -323,7 +285,7 @@
 					<field name="name">Afschrijving Gebouwen</field>
 					<field name="code">0152</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -331,7 +293,7 @@
 					<field name="name">Afschrijving Bedrijfsgebouwen</field>
 					<field name="code">0154</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -339,7 +301,7 @@
 					<field name="name">Afschrijving Woon-winkelhuis</field>
 					<field name="code">0157</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -347,7 +309,7 @@
 					<field name="name">Afschrijving Winkels</field>
 					<field name="code">0158</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -355,7 +317,7 @@
 					<field name="name">Afschrijving Verbouwingen</field>
 					<field name="code">0180</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -363,7 +325,7 @@
 					<field name="name">Afschrijving Grondverbetering</field>
 					<field name="code">0181</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -371,7 +333,7 @@
 					<field name="name">Afschrijving Parkeerplaats</field>
 					<field name="code">0182</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -379,7 +341,7 @@
 					<field name="name">Afschrijving Aanloopkosten</field>
 					<field name="code">0185</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -387,7 +349,7 @@
 					<field name="name">Afschrijving Pachtersinvesteringen</field>
 					<field name="code">0188</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_01" name="parent_id"/>
 				</record>
@@ -396,21 +358,21 @@
 				<field name="name">MACHINES EN INVENTARIS</field>
 				<field name="code">02</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_0" name="parent_id"/>
 			</record>
 			<record id="a_020" model="account.account.template">
 				<field name="name">MACHINES</field>
 				<field name="code">020</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_02" name="parent_id"/>
 			</record>
 				<record id="a_0210" model="account.account.template">
 					<field name="name">Aanschafwaarde Machines 1</field>
 					<field name="code">0210</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_020" name="parent_id"/>
 				</record>
@@ -418,7 +380,7 @@
 					<field name="name">Aanschafwaarde Machines 2</field>
 					<field name="code">0211</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_020" name="parent_id"/>
 				</record>
@@ -426,7 +388,7 @@
 					<field name="name">Aanschafwaarde Machines 3</field>
 					<field name="code">0212</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_020" name="parent_id"/>
 				</record>
@@ -434,7 +396,7 @@
 					<field name="name">Aanschafwaarde Machines 4</field>
 					<field name="code">0213</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_020" name="parent_id"/>
 				</record>
@@ -442,7 +404,7 @@
 					<field name="name">Aanschafwaarde Machines 5</field>
 					<field name="code">0214</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_020" name="parent_id"/>
 				</record>
@@ -450,7 +412,7 @@
 					<field name="name">Afschrijving Machines 1</field>
 					<field name="code">0220</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_020" name="parent_id"/>
 				</record>
@@ -458,7 +420,7 @@
 					<field name="name">Afschrijving Machines 2</field>
 					<field name="code">0221</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_020" name="parent_id"/>
 				</record>
@@ -466,7 +428,7 @@
 					<field name="name">Afschrijving Machines 3</field>
 					<field name="code">0222</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_020" name="parent_id"/>
 				</record>
@@ -474,7 +436,7 @@
 					<field name="name">Afschrijving Machines 4</field>
 					<field name="code">0223</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_020" name="parent_id"/>
 				</record>
@@ -482,7 +444,7 @@
 					<field name="name">Afschrijving Machines 5</field>
 					<field name="code">0224</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_020" name="parent_id"/>
 				</record>
@@ -490,14 +452,14 @@
 				<field name="name">INVENTARIS</field>
 				<field name="code">025</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_02" name="parent_id"/>
 			</record>
 				<record id="a_0250" model="account.account.template">
 					<field name="name">Aanschafwaarde Bedrijfsinventaris</field>
 					<field name="code">0250</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -505,7 +467,7 @@
 					<field name="name">Aanschafwaarde Magazijninventaris</field>
 					<field name="code">0251</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -513,7 +475,7 @@
 					<field name="name">Aanschafwaarde Fabrieksinventaris</field>
 					<field name="code">0252</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -521,7 +483,7 @@
 					<field name="name">Aanschafwaarde Gereedschappen</field>
 					<field name="code">0253</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -529,7 +491,7 @@
 					<field name="name">Aanschafwaarde Kantoorinventaris</field>
 					<field name="code">0260</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -537,7 +499,7 @@
 					<field name="name">Aanschafwaarde Kantoormachines</field>
 					<field name="code">0261</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -545,7 +507,7 @@
 					<field name="name">Aanschafwaarde Kantine-inventaris</field>
 					<field name="code">0265</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -553,7 +515,7 @@
 					<field name="name">Afschrijving Bedrijfsinventaris</field>
 					<field name="code">0275</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -561,7 +523,7 @@
 					<field name="name">Afschrijving Magazijninventaris</field>
 					<field name="code">0276</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -569,7 +531,7 @@
 					<field name="name">Afschrijving Fabrieksinventaris</field>
 					<field name="code">0277</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -577,7 +539,7 @@
 					<field name="name">Afschrijving Gereedschappen</field>
 					<field name="code">0278</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -585,7 +547,7 @@
 					<field name="name">Afschrijving Kantoorinventaris</field>
 					<field name="code">0285</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -593,7 +555,7 @@
 					<field name="name">Afschrijving Kantoormachines</field>
 					<field name="code">0286</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -601,7 +563,7 @@
 					<field name="name">Afschrijving Kantine-inventaris</field>
 					<field name="code">0290</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_025" name="parent_id"/>
 				</record>
@@ -610,14 +572,14 @@
 				<field name="name">VERVOERMIDDELEN</field>
 				<field name="code">03</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_0" name="parent_id"/>
 			</record>
 				<record id="a_0300" model="account.account.template">
 					<field name="name">Aanschafwaarde Vrachtauto's</field>
 					<field name="code">0300</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_03" name="parent_id"/>
 				</record>
@@ -625,7 +587,7 @@
 					<field name="name">Aanschafwaarde Personenauto's</field>
 					<field name="code">0310</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_03" name="parent_id"/>
 				</record>
@@ -633,7 +595,7 @@
 					<field name="name">Aanschafwaarde Aanhangwagens</field>
 					<field name="code">0320</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_03" name="parent_id"/>
 				</record>
@@ -641,7 +603,7 @@
 					<field name="name">Aanschafwaarde Heftrucks</field>
 					<field name="code">0321</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_03" name="parent_id"/>
 				</record>
@@ -649,7 +611,7 @@
 					<field name="name">Aanschafwaarde Rijwielen en bromfietsen</field>
 					<field name="code">0340</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_03" name="parent_id"/>
 				</record>
@@ -657,7 +619,7 @@
 					<field name="name">Afschrijving Vrachtauto's</field>
 					<field name="code">0350</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_03" name="parent_id"/>
 				</record>
@@ -665,7 +627,7 @@
 					<field name="name">Afschrijving Personenauto's</field>
 					<field name="code">0360</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_03" name="parent_id"/>
 				</record>
@@ -673,7 +635,7 @@
 					<field name="name">Afschrijving Aanhangwagens</field>
 					<field name="code">0370</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_03" name="parent_id"/>
 				</record>
@@ -681,7 +643,7 @@
 					<field name="name">Afschrijving Heftrucks</field>
 					<field name="code">0371</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_03" name="parent_id"/>
 				</record>
@@ -689,7 +651,7 @@
 					<field name="name">Afschrijving Rijwielen en bromfietsen</field>
 					<field name="code">0390</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_03" name="parent_id"/>
 				</record>
@@ -698,21 +660,21 @@
 				<field name="name">FINANCIELE VASTE ACTIVA EN LANGLOPENDE VORDERINGEN</field>
 				<field name="code">05</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_0" name="parent_id"/>
 			</record>
 			<record id="a_050" model="account.account.template">
 				<field name="name">FINANCIELE VASTE ACTIVA</field>
 				<field name="code">050</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_05" name="parent_id"/>
 			</record>
 				<record id="a_0500" model="account.account.template">
 					<field name="name">Meerderheidsdeelnemingen</field>
 					<field name="code">0500</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_050" name="parent_id"/>
 				</record>
@@ -720,7 +682,7 @@
 					<field name="name">Minderheidsdeelnemingen</field>
 					<field name="code">0510</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_050" name="parent_id"/>
 				</record>
@@ -728,7 +690,7 @@
 					<field name="name">Aandeel inkoopcombinatie</field>
 					<field name="code">0520</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_050" name="parent_id"/>
 				</record>
@@ -736,14 +698,14 @@
 				<field name="name">LANGLOPENDE VORDERINGEN</field>
 				<field name="code">055</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_05" name="parent_id"/>
 			</record>
 				<record id="a_0550" model="account.account.template">
 					<field name="name">Vorderingen op deelnemingen</field>
 					<field name="code">0550</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_055" name="parent_id"/>
 				</record>
@@ -751,7 +713,7 @@
 					<field name="name">Hypotheken u/g 1</field>
 					<field name="code">0560</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_055" name="parent_id"/>
 				</record>
@@ -759,7 +721,7 @@
 					<field name="name">Hypotheken u/g 2</field>
 					<field name="code">0561</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_055" name="parent_id"/>
 				</record>
@@ -767,7 +729,7 @@
 					<field name="name">Hypotheken u/g 3</field>
 					<field name="code">0562</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_055" name="parent_id"/>
 				</record>
@@ -775,7 +737,7 @@
 					<field name="name">Leningen u/g 1</field>
 					<field name="code">0565</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_055" name="parent_id"/>
 				</record>
@@ -783,7 +745,7 @@
 					<field name="name">Leningen u/g 2</field>
 					<field name="code">0566</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_055" name="parent_id"/>
 				</record>
@@ -791,7 +753,7 @@
 					<field name="name">Leningen u/g 3</field>
 					<field name="code">0567</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_055" name="parent_id"/>
 				</record>
@@ -799,7 +761,7 @@
 					<field name="name">Leningen u/g 4</field>
 					<field name="code">0568</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_055" name="parent_id"/>
 				</record>
@@ -807,7 +769,7 @@
 					<field name="name">Leningen u/g 5</field>
 					<field name="code">0569</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_055" name="parent_id"/>
 				</record>
@@ -815,7 +777,7 @@
 					<field name="name">Waarborgsommen</field>
 					<field name="code">0570</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_055" name="parent_id"/>
 				</record>
@@ -823,7 +785,7 @@
 					<field name="name">Financieringskosten</field>
 					<field name="code">0580</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_055" name="parent_id"/>
 				</record>
@@ -831,7 +793,7 @@
 					<field name="name">Financieringskosten huurkoop</field>
 					<field name="code">0581</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_055" name="parent_id"/>
 				</record>
@@ -840,7 +802,7 @@
 				<field name="name">EIGEN VERMOGEN</field>
 				<field name="code">06</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_0" name="parent_id"/>
 			</record>
 				<record id="a_0600" model="account.account.template">
@@ -993,7 +955,7 @@
 				<field name="name">VOORZIENINGEN</field>
 				<field name="code">07</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_0" name="parent_id"/>
 			</record>
 				<record id="a_0700" model="account.account.template">
@@ -1090,21 +1052,21 @@
 				<field name="name">LANGLOPENDE SCHULDEN EN AFLOSSINGEN</field>
 				<field name="code">08</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_0" name="parent_id"/>
 			</record>
 			<record id="a_080" model="account.account.template">
 				<field name="name">LANGLOPENDE SCHULDEN</field>
 				<field name="code">080</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_08" name="parent_id"/>
 			</record>
 				<record id="a_0810" model="account.account.template">
 					<field name="name">Hypotheken o/g 1</field>
 					<field name="code">0810</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1112,7 +1074,7 @@
 					<field name="name">Hypotheken o/g 2</field>
 					<field name="code">0811</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1120,7 +1082,7 @@
 					<field name="name">Hypotheken o/g 3</field>
 					<field name="code">0812</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1128,7 +1090,7 @@
 					<field name="name">Hypotheken o/g 4</field>
 					<field name="code">0813</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1136,7 +1098,7 @@
 					<field name="name">Hypotheken o/g 5</field>
 					<field name="code">0814</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1144,7 +1106,7 @@
 					<field name="name">Leningen o/g 1</field>
 					<field name="code">0820</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1152,7 +1114,7 @@
 					<field name="name">Leningen o/g 2</field>
 					<field name="code">0821</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1160,7 +1122,7 @@
 					<field name="name">Leningen o/g 3</field>
 					<field name="code">0822</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1168,7 +1130,7 @@
 					<field name="name">Leningen o/g 4</field>
 					<field name="code">0823</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1176,7 +1138,7 @@
 					<field name="name">Leningen o/g 5</field>
 					<field name="code">0824</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1184,7 +1146,7 @@
 					<field name="name">Huurkoopverplichtingen</field>
 					<field name="code">0830</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1192,7 +1154,7 @@
 					<field name="name">Lease-verplichtingen</field>
 					<field name="code">0840</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1200,7 +1162,7 @@
 					<field name="name">Rekening-courant directie</field>
 					<field name="code">0850</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_080" name="parent_id"/>
 				</record>
@@ -1208,14 +1170,14 @@
 				<field name="name">AFLOSSINGEN</field>
 				<field name="code">086</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_08" name="parent_id"/>
 			</record>
 				<record id="a_0861" model="account.account.template">
 					<field name="name">Hypotheek o/g 1</field>
 					<field name="code">0861</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_086" name="parent_id"/>
 				</record>
@@ -1223,7 +1185,7 @@
 					<field name="name">Hypotheek o/g 2</field>
 					<field name="code">0862</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_086" name="parent_id"/>
 				</record>
@@ -1231,7 +1193,7 @@
 					<field name="name">Hypotheek o/g 3</field>
 					<field name="code">0863</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_086" name="parent_id"/>
 				</record>
@@ -1239,7 +1201,7 @@
 					<field name="name">Hypotheek o/g 4</field>
 					<field name="code">0864</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_086" name="parent_id"/>
 				</record>
@@ -1247,7 +1209,7 @@
 					<field name="name">Hypotheek o/g 5</field>
 					<field name="code">0865</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_086" name="parent_id"/>
 				</record>
@@ -1255,7 +1217,7 @@
 					<field name="name">Lease-verplichtingen</field>
 					<field name="code">0880</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_086" name="parent_id"/>
 				</record>
@@ -1263,7 +1225,7 @@
 					<field name="name">Huurkoopverplichtingen</field>
 					<field name="code">0881</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_086" name="parent_id"/>
 				</record>
@@ -1273,7 +1235,7 @@
             <field name="name">FINANCIELE REKENINGEN, KORTLOPENDE VORDERINGEN EN SCHULDEN</field>
             <field name="code">RUBRIEK 1</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
 
@@ -1282,14 +1244,14 @@
 				<field name="name">LIQUIDE MIDDELEN</field>
 				<field name="code">10</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_1" name="parent_id"/>
 			</record>
 				<record id="a_1000" model="account.account.template">
 					<field name="name">Kas</field>
 					<field name="code">1000</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_cash"/>
+					<field name="user_type" ref="account.data_account_type_cash"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_10" name="parent_id"/>
 				</record>
@@ -1297,7 +1259,7 @@
 					<field name="name">Kleine kas</field>
 					<field name="code">1010</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_cash"/>
+					<field name="user_type" ref="account.data_account_type_cash"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_10" name="parent_id"/>
 				</record>
@@ -1305,7 +1267,7 @@
 					<field name="name">Kas  valuta</field>
 					<field name="code">1020</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_cash"/>
+					<field name="user_type" ref="account.data_account_type_cash"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_10" name="parent_id"/>
 				</record>
@@ -1313,7 +1275,7 @@
 					<field name="name">ABN-AMRO bank</field>
 					<field name="code">1100</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_cash"/>
+					<field name="user_type" ref="account.data_account_type_cash"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_10" name="parent_id"/>
 				</record>
@@ -1321,7 +1283,7 @@
 					<field name="name">RABO bank</field>
 					<field name="code">1110</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_cash"/>
+					<field name="user_type" ref="account.data_account_type_cash"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_10" name="parent_id"/>
 				</record>
@@ -1329,7 +1291,7 @@
 					<field name="name">BIZNER bank</field>
 					<field name="code">1120</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_cash"/>
+					<field name="user_type" ref="account.data_account_type_cash"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_10" name="parent_id"/>
 				</record>
@@ -1337,7 +1299,7 @@
 					<field name="name">Postbank</field>
 					<field name="code">1200</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_cash"/>
+					<field name="user_type" ref="account.data_account_type_cash"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_10" name="parent_id"/>
 				</record>
@@ -1345,7 +1307,7 @@
 					<field name="name">Girobetaalkaarten</field>
 					<field name="code">1220</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_10" name="parent_id"/>
 				</record>
@@ -1353,7 +1315,7 @@
 					<field name="name">Bankbetaalkaarten</field>
 					<field name="code">1225</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_10" name="parent_id"/>
 				</record>
@@ -1361,7 +1323,7 @@
 					<field name="name">Effecten</field>
 					<field name="code">1250</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_10" name="parent_id"/>
 				</record>
@@ -1369,7 +1331,7 @@
 					<field name="name">Kruisposten</field>
 					<field name="code">1298</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_10" name="parent_id"/>
 				</record>
@@ -1378,14 +1340,14 @@
 				<field name="name">VORDERINGEN</field>
 				<field name="code">13</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_1" name="parent_id"/>
 			</record>
 				<record id="a_recv" model="account.account.template">
 					<field name="name">Debiteuren</field>
 					<field name="code">1300</field>
 					<field name="type">receivable</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_receivable"/>
 					<field name="reconcile" eval="True"/>
 					<field ref="a_13" name="parent_id"/>
 				</record>
@@ -1393,7 +1355,7 @@
 					<field name="name">Dubieuze debiteuren</field>
 					<field name="code">1350</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_13" name="parent_id"/>
 				</record>
@@ -1401,7 +1363,7 @@
 					<field name="name">Voorziening dubieuze debiteuren</field>
 					<field name="code">1360</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_13" name="parent_id"/>
 				</record>
@@ -1409,7 +1371,7 @@
 					<field name="name">Voorschotten personeel</field>
 					<field name="code">1410</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_13" name="parent_id"/>
 				</record>
@@ -1417,7 +1379,7 @@
 					<field name="name">Rekening-courant directie</field>
 					<field name="code">1420</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_13" name="parent_id"/>
 				</record>
@@ -1425,7 +1387,7 @@
 					<field name="name">Vooruitbetaalde kosten</field>
 					<field name="code">1450</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_13" name="parent_id"/>
 				</record>
@@ -1433,7 +1395,7 @@
 					<field name="name">Te ontvangen ziekengeld</field>
 					<field name="code">1455</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_13" name="parent_id"/>
 				</record>
@@ -1441,7 +1403,7 @@
 					<field name="name">Overige vorderingen</field>
 					<field name="code">1490</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_asset"/>
+					<field name="user_type" ref="account.data_account_type_asset"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_13" name="parent_id"/>
 				</record>
@@ -1451,14 +1413,14 @@
 				<field name="name">KORTLOPENDE SCHULDEN</field>
 				<field name="code">15</field>
 				<field name="type">view</field>
-				<field name="user_type" ref="user_type_view"/>
+				<field name="user_type" ref="account.data_account_type_view"/>
 				<field ref="a_1" name="parent_id"/>
 			</record>
 				<record id="a_pay" model="account.account.template">
 					<field name="name">Crediteuren</field>
 					<field name="code">1500</field>
 					<field name="type">payable</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_payable"/>
 					<field name="reconcile" eval="True"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1546,7 +1508,7 @@
 					<field name="name">Loonheffing</field>
 					<field name="code">1660</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1554,7 +1516,7 @@
 					<field name="name">Afdracht loonheffing</field>
 					<field name="code">1665</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1562,7 +1524,7 @@
 					<field name="name">Vennootschapsbelasting</field>
 					<field name="code">1670</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1570,7 +1532,7 @@
 					<field name="name">Dividendbelasting</field>
 					<field name="code">1675</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1578,7 +1540,7 @@
 					<field name="name">Investeringsaftrek</field>
 					<field name="code">1677</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1586,7 +1548,7 @@
 					<field name="name">Premie WIR</field>
 					<field name="code">1678</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1594,7 +1556,7 @@
 					<field name="name">Termijnen onderh. werk</field>
 					<field name="code">1685</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1602,7 +1564,7 @@
 					<field name="name">Telefoon/telefax</field>
 					<field name="code">1686</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1610,7 +1572,7 @@
 					<field name="name">Accountantskosten</field>
 					<field name="code">1687</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1618,7 +1580,7 @@
 					<field name="name">Energiekosten</field>
 					<field name="code">1688</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1626,7 +1588,7 @@
 					<field name="name">Sociale lasten</field>
 					<field name="code">1690</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1634,7 +1596,7 @@
 					<field name="name">Pensioenpremies</field>
 					<field name="code">1691</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1642,7 +1604,7 @@
 					<field name="name">Vakantiegeld</field>
 					<field name="code">1692</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1650,7 +1612,7 @@
 					<field name="name">Vakantiedagen</field>
 					<field name="code">1693</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1658,7 +1620,7 @@
 					<field name="name">Vakantiezegels</field>
 					<field name="code">1694</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1666,7 +1628,7 @@
 					<field name="name">Tantièmes</field>
 					<field name="code">1695</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1674,7 +1636,7 @@
 					<field name="name">Rente</field>
 					<field name="code">1696</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1682,7 +1644,7 @@
 					<field name="name">Dividend</field>
 					<field name="code">1697</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1690,7 +1652,7 @@
 					<field name="name">Vooruit ontvangen bedr.</field>
 					<field name="code">1701</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1698,7 +1660,7 @@
 					<field name="name">Overige te betalen posten</field>
 					<field name="code">1702</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1706,7 +1668,7 @@
 					<field name="name">Rekening-courant inkoopvereniging</field>
 					<field name="code">1800</field>
 					<field name="type">other</field>
-					<field name="user_type" ref="user_type_liability"/>
+					<field name="user_type" ref="account.data_account_type_liability"/>
 					<field name="reconcile" eval="False"/>
 					<field ref="a_15" name="parent_id"/>
 				</record>
@@ -1716,14 +1678,14 @@
             <field name="name">TUSSENREKENINGEN</field>
             <field name="code">RUBRIEK 2</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
 			<record id="a_2000" model="account.account.template">
 				<field name="name">Netto lonen</field>
 				<field name="code">2000</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1731,7 +1693,7 @@
 				<field name="name">Tussenrekening balans</field>
 				<field name="code">2100</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1739,7 +1701,7 @@
 				<field name="name">Tussenrek. autom. betalingen</field>
 				<field name="code">2110</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1747,7 +1709,7 @@
 				<field name="name">Tussenrek. autom. loonbetalingen</field>
 				<field name="code">2120</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1755,14 +1717,14 @@
 				<field name="name">Betaalwijze contant</field>
 				<field name="code">2200</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record><record id="a_2210" model="account.account.template">
 				<field name="name">Betaalwijze pin</field>
 				<field name="code">2210</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1770,7 +1732,7 @@
 				<field name="name">Tussenrekening pin</field>
 				<field name="code">2211</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1778,7 +1740,7 @@
 				<field name="name">Betaalwijze chipknip</field>
 				<field name="code">2220</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1786,7 +1748,7 @@
 				<field name="name">Tussenrekening chipknip</field>
 				<field name="code">2221</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1794,7 +1756,7 @@
 				<field name="name">Betaalwijze cadeaubonnen</field>
 				<field name="code">2230</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1802,7 +1764,7 @@
 				<field name="name">Tussenrek. cadeaubonbetalingen</field>
 				<field name="code">2231</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1810,7 +1772,7 @@
 				<field name="name">Tussenrekening correcties</field>
 				<field name="code">2240</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1818,7 +1780,7 @@
 				<field name="name">Kassa 1</field>
 				<field name="code">2250</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1826,7 +1788,7 @@
 				<field name="name">Kassa 2</field>
 				<field name="code">2251</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1834,7 +1796,7 @@
 				<field name="name">Vraagposten</field>
 				<field name="code">2500</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1842,7 +1804,7 @@
 				<field name="name">Inkopen Nederland laag</field>
 				<field name="code">2600</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1850,7 +1812,7 @@
 				<field name="name">Inkopen Nederland hoog</field>
 				<field name="code">2601</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1858,7 +1820,7 @@
 				<field name="name">Inkopen Nederland overig</field>
 				<field name="code">2602</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1866,7 +1828,7 @@
 				<field name="name">Inkopen Nederland onbelast</field>
 				<field name="code">2603</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1874,7 +1836,7 @@
 				<field name="name">Inkopen Nederland verlegd</field>
 				<field name="code">2604</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1882,7 +1844,7 @@
 				<field name="name">Inkopen binnen EU laag</field>
 				<field name="code">2620</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1890,7 +1852,7 @@
 				<field name="name">Inkopen binnen EU hoog</field>
 				<field name="code">2621</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1898,7 +1860,7 @@
 				<field name="name">Inkopen binnen EU overig</field>
 				<field name="code">2622</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1906,7 +1868,7 @@
 				<field name="name">Inkopen buiten EU laag</field>
 				<field name="code">2630</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1914,7 +1876,7 @@
 				<field name="name">Inkopen buiten EU hoog</field>
 				<field name="code">2631</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1922,7 +1884,7 @@
 				<field name="name">Inkopen buiten EU overig</field>
 				<field name="code">2632</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1930,7 +1892,7 @@
 				<field name="name">Tegenrekening Inkopen</field>
 				<field name="code">2800</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_2" name="parent_id"/>
 			</record>
@@ -1940,14 +1902,14 @@
             <field name="name">VOORRAAD GRONDSTOFFEN, HULPMATERIALEN EN HANDELSGOEDEREN</field>
             <field name="code">RUBRIEK 3</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
         	<record id="a_3000" model="account.account.template">
 				<field name="name">Goederen 1</field>
 				<field name="code">3000</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -1955,7 +1917,7 @@
 				<field name="name">Goederen 2</field>
 				<field name="code">3001</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -1963,7 +1925,7 @@
 				<field name="name">Grondstoffen 1</field>
 				<field name="code">3050</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -1971,7 +1933,7 @@
 				<field name="name">Grondstoffen 2</field>
 				<field name="code">3051</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -1979,7 +1941,7 @@
 				<field name="name">Hulpstoffen 1</field>
 				<field name="code">3100</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -1987,7 +1949,7 @@
 				<field name="name">Hulpstoffen 2</field>
 				<field name="code">3101</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -1995,7 +1957,7 @@
 				<field name="name">Halffabrikaten 1</field>
 				<field name="code">3150</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -2003,7 +1965,7 @@
 				<field name="name">Halffabrikaten 2</field>
 				<field name="code">3151</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -2011,7 +1973,7 @@
 				<field name="name">Onderhanden werk</field>
 				<field name="code">3200</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -2019,7 +1981,7 @@
 				<field name="name">Gereed product 1</field>
 				<field name="code">3500</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -2027,7 +1989,7 @@
 				<field name="name">Gereed product 2</field>
 				<field name="code">3501</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -2035,7 +1997,7 @@
 				<field name="name">Goederen in consignatie</field>
 				<field name="code">3600</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -2043,7 +2005,7 @@
 				<field name="name">Verpakkingsmateriaal</field>
 				<field name="code">3650</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -2051,7 +2013,7 @@
 				<field name="name">Emballage</field>
 				<field name="code">3700</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -2059,7 +2021,7 @@
 				<field name="name">Kantoorbenodigdheden</field>
 				<field name="code">3750</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -2067,7 +2029,7 @@
 				<field name="name">Zegels</field>
 				<field name="code">3800</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -2075,7 +2037,7 @@
 				<field name="name">Goederen onderweg</field>
 				<field name="code">3898</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_3" name="parent_id"/>
 			</record>
@@ -2085,7 +2047,7 @@
             <field name="name">KOSTENREKENINGEN</field>
             <field name="code">RUBRIEK 4</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
 <!-- RUBRIEK 4 SUB 0-->
@@ -2093,14 +2055,14 @@
             <field name="name">PERSONEELSKOSTEN</field>
             <field name="code">40</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_4" name="parent_id"/>
         </record>
 			<record id="a_4000" model="account.account.template">
 				<field name="name">Lonen en salarissen</field>
 				<field name="code">4000</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2108,7 +2070,7 @@
 				<field name="name">Overhevelingstoeslag</field>
 				<field name="code">4001</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2116,7 +2078,7 @@
 				<field name="name">Vakantiegeld</field>
 				<field name="code">4005</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2124,7 +2086,7 @@
 				<field name="name">Vakantiebonnen</field>
 				<field name="code">4006</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2132,7 +2094,7 @@
 				<field name="name">Gratificaties</field>
 				<field name="code">4010</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2140,7 +2102,7 @@
 				<field name="name">Tantièmes</field>
 				<field name="code">4011</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2148,7 +2110,7 @@
 				<field name="name">Provisie</field>
 				<field name="code">4012</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2156,7 +2118,7 @@
 				<field name="name">Bijzondere beloningen</field>
 				<field name="code">4013</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2164,7 +2126,7 @@
 				<field name="name">Uitkering ziekengeld</field>
 				<field name="code">4020</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2172,7 +2134,7 @@
 				<field name="name">Overige uitkeringen</field>
 				<field name="code">4021</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2180,7 +2142,7 @@
 				<field name="name">Sociale lasten</field>
 				<field name="code">4030</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2188,7 +2150,7 @@
 				<field name="name">Inhouding sociale lasten</field>
 				<field name="code">4031</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2196,7 +2158,7 @@
 				<field name="name">Pensioenpremies</field>
 				<field name="code">4032</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2204,7 +2166,7 @@
 				<field name="name">Inhouding pensioenpremies</field>
 				<field name="code">4033</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2212,7 +2174,7 @@
 				<field name="name">Toev. Backservice pens.verpl.</field>
 				<field name="code">4034</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2220,7 +2182,7 @@
 				<field name="name">Toevoeging pensioenverpl.</field>
 				<field name="code">4035</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2228,7 +2190,7 @@
 				<field name="name">Oprenting stamrechtverpl.</field>
 				<field name="code">4036</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2236,7 +2198,7 @@
 				<field name="name">Thuiswerkers</field>
 				<field name="code">4040</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2244,7 +2206,7 @@
 				<field name="name">Uitzendkrachten</field>
 				<field name="code">4041</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2252,7 +2214,7 @@
 				<field name="name">Loonwerk</field>
 				<field name="code">4042</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2260,7 +2222,7 @@
 				<field name="name">Managementvergoedingen</field>
 				<field name="code">4045</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2268,7 +2230,7 @@
 				<field name="name">Kantinekosten</field>
 				<field name="code">4050</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2276,7 +2238,7 @@
 				<field name="name">Bedrijfskleding</field>
 				<field name="code">4051</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2284,7 +2246,7 @@
 				<field name="name">Rijwielvergoeding</field>
 				<field name="code">4052</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2292,7 +2254,7 @@
 				<field name="name">Gereedschapsgeld</field>
 				<field name="code">4053</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2300,7 +2262,7 @@
 				<field name="name">Autokostenvergoeding</field>
 				<field name="code">4054</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2308,7 +2270,7 @@
 				<field name="name">Reiskosten</field>
 				<field name="code">4055</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2316,7 +2278,7 @@
 				<field name="name">Congressen, seminars en symposia</field>
 				<field name="code">4056</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2324,7 +2286,7 @@
 				<field name="name">Overige kostenverg.</field>
 				<field name="code">4057</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2332,7 +2294,7 @@
 				<field name="name">Belastingvrije uitkeringen</field>
 				<field name="code">4058</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2340,7 +2302,7 @@
 				<field name="name">Wervingskosten personeel</field>
 				<field name="code">4060</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2348,7 +2310,7 @@
 				<field name="name">Opleidingskosten</field>
 				<field name="code">4061</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2356,7 +2318,7 @@
 				<field name="name">Vergoeding studiekosten</field>
 				<field name="code">4062</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2364,7 +2326,7 @@
 				<field name="name">Bedrijfskleding</field>
 				<field name="code">4063</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2372,7 +2334,7 @@
 				<field name="name">Geschenken personeel</field>
 				<field name="code">4080</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2380,7 +2342,7 @@
 				<field name="name">Overige personeelskosten</field>
 				<field name="code">4090</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_40" name="parent_id"/>
 			</record>
@@ -2390,14 +2352,14 @@
             <field name="name">HUISVESTINGSKOSTEN</field>
             <field name="code">41</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_4" name="parent_id"/>
         </record>
 			<record id="a_4100" model="account.account.template">
 				<field name="name">Huur</field>
 				<field name="code">4100</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_41" name="parent_id"/>
 			</record>
@@ -2405,7 +2367,7 @@
 				<field name="name">Pacht</field>
 				<field name="code">4101</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_41" name="parent_id"/>
 			</record>
@@ -2413,7 +2375,7 @@
 				<field name="name">Groot onderhoud onr. Goed</field>
 				<field name="code">4108</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_41" name="parent_id"/>
 			</record>
@@ -2421,7 +2383,7 @@
 				<field name="name">Onderhoud onroerend goed</field>
 				<field name="code">4110</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_41" name="parent_id"/>
 			</record>
@@ -2429,7 +2391,7 @@
 				<field name="name">Toevoeging egalisatieres. Groot onderhoud</field>
 				<field name="code">4111</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_41" name="parent_id"/>
 			</record>
@@ -2437,7 +2399,7 @@
 				<field name="name">Belastingen onr. Goed</field>
 				<field name="code">4115</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_41" name="parent_id"/>
 			</record>
@@ -2445,7 +2407,7 @@
 				<field name="name">Energiekosten</field>
 				<field name="code">4120</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_41" name="parent_id"/>
 			</record>
@@ -2453,7 +2415,7 @@
 				<field name="name">Schoonmaakkosten</field>
 				<field name="code">4125</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_41" name="parent_id"/>
 			</record>
@@ -2461,7 +2423,7 @@
 				<field name="name">Assurantie onroerend goed</field>
 				<field name="code">4130</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_41" name="parent_id"/>
 			</record>
@@ -2469,7 +2431,7 @@
 				<field name="name">Huurwaarde woongedeelte</field>
 				<field name="code">4180</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_41" name="parent_id"/>
 			</record>
@@ -2477,7 +2439,7 @@
 				<field name="name">Ontvangen huren</field>
 				<field name="code">4185</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_41" name="parent_id"/>
 			</record>
@@ -2485,7 +2447,7 @@
 				<field name="name">Overige huisvestingskosten</field>
 				<field name="code">4190</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_41" name="parent_id"/>
 			</record>
@@ -2494,14 +2456,14 @@
             <field name="name">BEDRIJFSKOSTEN</field>
             <field name="code">42</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_4" name="parent_id"/>
         </record>
 			<record id="a_4200" model="account.account.template">
 				<field name="name">Huur machines</field>
 				<field name="code">4200</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_42" name="parent_id"/>
 			</record>
@@ -2509,7 +2471,7 @@
 				<field name="name">Leasing mach. operational</field>
 				<field name="code">4201</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_42" name="parent_id"/>
 			</record>
@@ -2517,7 +2479,7 @@
 				<field name="name">Huur inventaris</field>
 				<field name="code">4205</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_42" name="parent_id"/>
 			</record>
@@ -2525,7 +2487,7 @@
 				<field name="name">Leasing invent.operational</field>
 				<field name="code">4206</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_42" name="parent_id"/>
 			</record>
@@ -2533,7 +2495,7 @@
 				<field name="name">Onderhoud machines</field>
 				<field name="code">4210</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_42" name="parent_id"/>
 			</record>
@@ -2541,7 +2503,7 @@
 				<field name="name">Onderhoud inventaris</field>
 				<field name="code">4211</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_42" name="parent_id"/>
 			</record>
@@ -2549,7 +2511,7 @@
 				<field name="name">Gereedschappen</field>
 				<field name="code">4215</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_42" name="parent_id"/>
 			</record>
@@ -2557,7 +2519,7 @@
 				<field name="name">Hulpmaterialen</field>
 				<field name="code">4216</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_42" name="parent_id"/>
 			</record>
@@ -2565,7 +2527,7 @@
 				<field name="name">Energie (krachtstroom)</field>
 				<field name="code">4220</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_42" name="parent_id"/>
 			</record>
@@ -2573,7 +2535,7 @@
 				<field name="name">Assuranties</field>
 				<field name="code">4225</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_42" name="parent_id"/>
 			</record>
@@ -2581,7 +2543,7 @@
 				<field name="name">Ophalen/vervoer afval</field>
 				<field name="code">4228</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_42" name="parent_id"/>
 			</record>
@@ -2589,7 +2551,7 @@
 				<field name="name">Overige bedrijfskosten</field>
 				<field name="code">4290</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_42" name="parent_id"/>
 			</record>
@@ -2598,14 +2560,14 @@
             <field name="name">KANTOORKOSTEN</field>
             <field name="code">43</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_4" name="parent_id"/>
         </record>
 			<record id="a_4300" model="account.account.template">
 				<field name="name">Contributies/abonnementen</field>
 				<field name="code">4300</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_43" name="parent_id"/>
 			</record>
@@ -2613,7 +2575,7 @@
 				<field name="name">Kantoorbenodigdh./drukw.</field>
 				<field name="code">4305</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_43" name="parent_id"/>
 			</record>
@@ -2621,7 +2583,7 @@
 				<field name="name">Onderhoud kantoorinvent.</field>
 				<field name="code">4310</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_43" name="parent_id"/>
 			</record>
@@ -2629,7 +2591,7 @@
 				<field name="name">Huur kantoorapparatuur</field>
 				<field name="code">4311</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_43" name="parent_id"/>
 			</record>
@@ -2637,7 +2599,7 @@
 				<field name="name">Telefoon/telefax</field>
 				<field name="code">4315</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_43" name="parent_id"/>
 			</record>
@@ -2645,7 +2607,7 @@
 				<field name="name">Internetaansluiting</field>
 				<field name="code">4317</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_43" name="parent_id"/>
 			</record>
@@ -2653,7 +2615,7 @@
 				<field name="name">Porti</field>
 				<field name="code">4320</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_43" name="parent_id"/>
 			</record>
@@ -2661,7 +2623,7 @@
 				<field name="name">Administratiekosten</field>
 				<field name="code">4325</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_43" name="parent_id"/>
 			</record>
@@ -2669,7 +2631,7 @@
 				<field name="name">Overige kantoorkosten</field>
 				<field name="code">4390</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_43" name="parent_id"/>
 			</record>
@@ -2678,14 +2640,14 @@
             <field name="name">VERVOERSKOSTEN</field>
             <field name="code">44</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_4" name="parent_id"/>
         </record>
 			<record id="a_4400" model="account.account.template">
 				<field name="name">Brandstoffen</field>
 				<field name="code">4400</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_44" name="parent_id"/>
 			</record>
@@ -2693,7 +2655,7 @@
 				<field name="name">Onderhoud vrachtauto's</field>
 				<field name="code">4405</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_44" name="parent_id"/>
 			</record>
@@ -2701,7 +2663,7 @@
 				<field name="name">Onderhoud personenauto's</field>
 				<field name="code">4410</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_44" name="parent_id"/>
 			</record>
@@ -2709,7 +2671,7 @@
 				<field name="name">Assuranties auto's</field>
 				<field name="code">4415</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_44" name="parent_id"/>
 			</record>
@@ -2717,7 +2679,7 @@
 				<field name="name">Wegenbelasting</field>
 				<field name="code">4420</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_44" name="parent_id"/>
 			</record>
@@ -2725,7 +2687,7 @@
 				<field name="name">Leasing auto's</field>
 				<field name="code">4450</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_44" name="parent_id"/>
 			</record>
@@ -2733,7 +2695,7 @@
 				<field name="name">Privé-gebruik auto's</field>
 				<field name="code">4480</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_44" name="parent_id"/>
 			</record>
@@ -2741,7 +2703,7 @@
 				<field name="name">Overige vervoerskosten</field>
 				<field name="code">4490</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_44" name="parent_id"/>
 			</record>
@@ -2750,14 +2712,14 @@
             <field name="name">VERKOOPKOSTEN</field>
             <field name="code">45</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_4" name="parent_id"/>
         </record>
 			<record id="a_4500" model="account.account.template">
 				<field name="name">Uitgaande vrachten</field>
 				<field name="code">4500</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2765,7 +2727,7 @@
 				<field name="name">Kascorrecties</field>
 				<field name="code">4501</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2773,7 +2735,7 @@
 				<field name="name">Exportkosten</field>
 				<field name="code">4505</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2781,7 +2743,7 @@
 				<field name="name">Verpakkingsmateriaal</field>
 				<field name="code">4510</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2789,7 +2751,7 @@
 				<field name="name">Afschrijving dubieuze deb.</field>
 				<field name="code">4515</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2797,7 +2759,7 @@
 				<field name="name">Relatiegeschenken</field>
 				<field name="code">4517</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2805,7 +2767,7 @@
 				<field name="name">Reis en verblijfkosten</field>
 				<field name="code">4520</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2813,7 +2775,7 @@
 				<field name="name">Representatiekosten</field>
 				<field name="code">4525</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2821,7 +2783,7 @@
 				<field name="name">Reclame</field>
 				<field name="code">4530</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2829,7 +2791,7 @@
 				<field name="name">Advertenties</field>
 				<field name="code">4535</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2837,7 +2799,7 @@
 				<field name="name">Beurskosten</field>
 				<field name="code">4540</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2845,7 +2807,7 @@
 				<field name="name">Etalagekosten</field>
 				<field name="code">4545</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2853,7 +2815,7 @@
 				<field name="name">Veilingkosten</field>
 				<field name="code">4550</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2861,7 +2823,7 @@
 				<field name="name">Provisie</field>
 				<field name="code">4555</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2869,7 +2831,7 @@
 				<field name="name">Websitekosten</field>
 				<field name="code">4560</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2877,7 +2839,7 @@
 				<field name="name">Overige verkoopkosten</field>
 				<field name="code">4590</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_45" name="parent_id"/>
 			</record>
@@ -2886,14 +2848,14 @@
             <field name="name">ALGEMENE KOSTEN</field>
             <field name="code">46</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_4" name="parent_id"/>
         </record>
 			<record id="a_4600" model="account.account.template">
 				<field name="name">Accountantskosten</field>
 				<field name="code">4600</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_46" name="parent_id"/>
 			</record>
@@ -2901,7 +2863,7 @@
 				<field name="name">Advieskosten</field>
 				<field name="code">4605</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_46" name="parent_id"/>
 			</record>
@@ -2909,7 +2871,7 @@
 				<field name="name">Juridische kosten</field>
 				<field name="code">4610</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_46" name="parent_id"/>
 			</record>
@@ -2917,7 +2879,7 @@
 				<field name="name">Assuranties</field>
 				<field name="code">4620</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_46" name="parent_id"/>
 			</record>
@@ -2925,7 +2887,7 @@
 				<field name="name">Toev. Ass. eigen risico</field>
 				<field name="code">4621</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_46" name="parent_id"/>
 			</record>
@@ -2933,7 +2895,7 @@
 				<field name="name">Bankkosten</field>
 				<field name="code">4630</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_46" name="parent_id"/>
 			</record>
@@ -2941,7 +2903,7 @@
 				<field name="name">Overige algemene kosten</field>
 				<field name="code">4690</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_46" name="parent_id"/>
 			</record>
@@ -2950,14 +2912,14 @@
             <field name="name">FINANCIERINGSKOSTEN</field>
             <field name="code">47</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_4" name="parent_id"/>
         </record>
 			<record id="a_4700" model="account.account.template">
 				<field name="name">Rente hypotheek</field>
 				<field name="code">4700</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_47" name="parent_id"/>
 			</record>
@@ -2965,7 +2927,7 @@
 				<field name="name">Rente bankkrediet</field>
 				<field name="code">4710</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_47" name="parent_id"/>
 			</record>
@@ -2973,7 +2935,7 @@
 				<field name="name">Rente leasecontracten</field>
 				<field name="code">4720</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_47" name="parent_id"/>
 			</record>
@@ -2981,7 +2943,7 @@
 				<field name="name">Rente huurkoopcontracten</field>
 				<field name="code">4730</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_47" name="parent_id"/>
 			</record>
@@ -2989,7 +2951,7 @@
 				<field name="name">Rente lening u/g</field>
 				<field name="code">4750</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_47" name="parent_id"/>
 			</record>
@@ -2997,7 +2959,7 @@
 				<field name="name">Rente lening o/g</field>
 				<field name="code">4755</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_47" name="parent_id"/>
 			</record>
@@ -3005,7 +2967,7 @@
 				<field name="name">Overige rentelasten</field>
 				<field name="code">4790</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_47" name="parent_id"/>
 			</record>
@@ -3013,7 +2975,7 @@
 				<field name="name">Overige rentebaten</field>
 				<field name="code">4795</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_47" name="parent_id"/>
 			</record>
@@ -3022,14 +2984,14 @@
             <field name="name">AFSCHRIJVINGEN</field>
             <field name="code">48</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_4" name="parent_id"/>
         </record>
 			<record id="a_4801" model="account.account.template">
 				<field name="name">Goodwill</field>
 				<field name="code">4801</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3037,7 +2999,7 @@
 				<field name="name">Octrooien</field>
 				<field name="code">4802</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3045,7 +3007,7 @@
 				<field name="name">Licenties</field>
 				<field name="code">4803</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3053,7 +3015,7 @@
 				<field name="name">Auteursrechten</field>
 				<field name="code">4804</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3061,7 +3023,7 @@
 				<field name="name">Vergunningen</field>
 				<field name="code">4805</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3069,7 +3031,7 @@
 				<field name="name">Tonnagevergunningen</field>
 				<field name="code">4806</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3077,7 +3039,7 @@
 				<field name="name">Drankvergunningen</field>
 				<field name="code">4807</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3085,7 +3047,7 @@
 				<field name="name">Ontwikkelingskosten</field>
 				<field name="code">4810</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3093,7 +3055,7 @@
 				<field name="name">Aanloopkosten</field>
 				<field name="code">4811</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3101,7 +3063,7 @@
 				<field name="name">Gebouwen</field>
 				<field name="code">4820</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3109,7 +3071,7 @@
 				<field name="name">Bedrijfsgebouwen</field>
 				<field name="code">4822</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3117,7 +3079,7 @@
 				<field name="name">Woon-winkelhuis</field>
 				<field name="code">4825</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3125,7 +3087,7 @@
 				<field name="name">Winkels</field>
 				<field name="code">4826</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3133,7 +3095,7 @@
 				<field name="name">Verbouwingen</field>
 				<field name="code">4830</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3141,7 +3103,7 @@
 				<field name="name">Grondverbetering</field>
 				<field name="code">4831</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3149,7 +3111,7 @@
 				<field name="name">Parkeerplaats</field>
 				<field name="code">4832</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3157,7 +3119,7 @@
 				<field name="name">Aankoopkosten</field>
 				<field name="code">4833</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3165,7 +3127,7 @@
 				<field name="name">Pachtersinvestering</field>
 				<field name="code">4835</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3173,7 +3135,7 @@
 				<field name="name">Machines</field>
 				<field name="code">4855</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3181,7 +3143,7 @@
 				<field name="name">Bedrijfsinventaris</field>
 				<field name="code">4860</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3189,7 +3151,7 @@
 				<field name="name">Magazijninventaris</field>
 				<field name="code">4861</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3197,7 +3159,7 @@
 				<field name="name">Fabrieksinventaris</field>
 				<field name="code">4862</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3205,7 +3167,7 @@
 				<field name="name">Gereedschappen</field>
 				<field name="code">4863</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3213,7 +3175,7 @@
 				<field name="name">Kantoorinventaris</field>
 				<field name="code">4864</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3221,7 +3183,7 @@
 				<field name="name">Kantoormachines</field>
 				<field name="code">4865</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3229,7 +3191,7 @@
 				<field name="name">Kantine-inventaris</field>
 				<field name="code">4866</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3237,7 +3199,7 @@
 				<field name="name">Voorraadverschillen</field>
 				<field name="code">4870</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3245,7 +3207,7 @@
 				<field name="name">Vrachtauto's</field>
 				<field name="code">4880</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3253,7 +3215,7 @@
 				<field name="name">Personenauto's</field>
 				<field name="code">4885</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3261,7 +3223,7 @@
 				<field name="name">Aanhangwagens</field>
 				<field name="code">4890</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3269,7 +3231,7 @@
 				<field name="name">Heftrucks</field>
 				<field name="code">4891</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3277,7 +3239,7 @@
 				<field name="name">Rijwielen en bromfietsen</field>
 				<field name="code">4893</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_48" name="parent_id"/>
 			</record>
@@ -3286,14 +3248,14 @@
             <field name="name">OVERIGE BATEN EN LASTEN</field>
             <field name="code">49</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_4" name="parent_id"/>
         </record>
 			<record id="a_4900" model="account.account.template">
 				<field name="name">Boekwinst van vaste activa</field>
 				<field name="code">4900</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3301,7 +3263,7 @@
 				<field name="name">K.O. regeling OB</field>
 				<field name="code">4905</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3309,7 +3271,7 @@
 				<field name="name">Ontvangen schadevergoed.</field>
 				<field name="code">4910</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3317,7 +3279,7 @@
 				<field name="name">Voordelige koersverschil.</field>
 				<field name="code">4915</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3325,7 +3287,7 @@
 				<field name="name">Overige baten</field>
 				<field name="code">4948</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3333,7 +3295,7 @@
 				<field name="name">Boekverlies vaste activa</field>
 				<field name="code">4950</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3341,7 +3303,7 @@
 				<field name="name">Kosten omzetbelasting</field>
 				<field name="code">4955</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3349,7 +3311,7 @@
 				<field name="name">Kosten loonbelasting</field>
 				<field name="code">4960</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3357,7 +3319,7 @@
 				<field name="name">Naheffing bedrijfsver.</field>
 				<field name="code">4965</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3365,7 +3327,7 @@
 				<field name="name">Betaalde schadevergoed.</field>
 				<field name="code">4970</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3373,7 +3335,7 @@
 				<field name="name">Nadelige koersverschillen</field>
 				<field name="code">4975</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3381,7 +3343,7 @@
 				<field name="name">Kasverschillen</field>
 				<field name="code">4980</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3389,7 +3351,7 @@
 				<field name="name">Overige lasten</field>
 				<field name="code">4998</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_49" name="parent_id"/>
 			</record>
@@ -3399,7 +3361,7 @@
             <field name="name">INDIRECTE KOSTEN</field>
             <field name="code">RUBRIEK 5</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
 		
@@ -3408,7 +3370,7 @@
             <field name="name">FABRIKAGEREKENINGEN</field>
             <field name="code">RUBRIEK 6</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
 			
@@ -3417,14 +3379,14 @@
             <field name="name">VOORRAAD GEREED PRODUCT EN ONDERHANDEN WERK</field>
             <field name="code">RUBRIEK 7</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
 			<record id="a_7000" model="account.account.template">
 				<field name="name">Inkopen nul</field>
 				<field name="code">7000</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3432,7 +3394,7 @@
 				<field name="name">Inkopen laag</field>
 				<field name="code">7001</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3440,7 +3402,7 @@
 				<field name="name">Inkopen hoog</field>
 				<field name="code">7002</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3448,7 +3410,7 @@
 				<field name="name">Inkopen overig</field>
 				<field name="code">7003</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3456,7 +3418,7 @@
 				<field name="name">Inkopen BTW verlegd</field>
 				<field name="code">7010</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3464,7 +3426,7 @@
 				<field name="name">Inkopen EU laag tarief</field>
 				<field name="code">7014</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3472,7 +3434,7 @@
 				<field name="name">Inkopen EU hoog tarief</field>
 				<field name="code">7015</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3480,7 +3442,7 @@
 				<field name="name">Inkopen EU overig</field>
 				<field name="code">7016</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3488,7 +3450,7 @@
 				<field name="name">Inkoop import buiten EU laag</field>
 				<field name="code">7017</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3496,7 +3458,7 @@
 				<field name="name">Inkoop import buiten EU hoog</field>
 				<field name="code">7018</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3504,7 +3466,7 @@
 				<field name="name">Inkoop import buiten EU overig</field>
 				<field name="code">7019</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3512,7 +3474,7 @@
 				<field name="name">Kostprijs omzet grondstoffen</field>
 				<field name="code">7020</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3520,7 +3482,7 @@
 				<field name="name">Voorz. Incourourant grondst.</field>
 				<field name="code">7021</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3528,7 +3490,7 @@
 				<field name="name">Toev. Voorz. incour. grondst.</field>
 				<field name="code">7022</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3536,7 +3498,7 @@
 				<field name="name">Kostprijs omzet handelsgoederen</field>
 				<field name="code">7030</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3544,7 +3506,7 @@
 				<field name="name">Voorz.incour. handelsgoed.</field>
 				<field name="code">7031</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3552,7 +3514,7 @@
 				<field name="name">Toevoeging voorz. incour. handelsgoed.</field>
 				<field name="code">7032</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3560,7 +3522,7 @@
 				<field name="name">Hulpmaterialen</field>
 				<field name="code">7040</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3568,7 +3530,7 @@
 				<field name="name">Uitbesteed werk</field>
 				<field name="code">7045</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3576,7 +3538,7 @@
 				<field name="name">Inkoopkosten</field>
 				<field name="code">7050</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3584,7 +3546,7 @@
 				<field name="name">Kosten inkoopvereniging</field>
 				<field name="code">7055</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3592,7 +3554,7 @@
 				<field name="name">Inkoopprovisie</field>
 				<field name="code">7060</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3600,7 +3562,7 @@
 				<field name="name">Inkomende vrachten</field>
 				<field name="code">7065</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3608,7 +3570,7 @@
 				<field name="name">Invoerkosten</field>
 				<field name="code">7070</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3616,7 +3578,7 @@
 				<field name="name">Garantiekosten</field>
 				<field name="code">7080</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3624,7 +3586,7 @@
 				<field name="name">Onttrekking uitgev.garantie</field>
 				<field name="code">7081</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3632,7 +3594,7 @@
 				<field name="name">Toevoeging garantieverpl.</field>
 				<field name="code">7082</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3640,7 +3602,7 @@
 				<field name="name">Inkoopbonussen</field>
 				<field name="code">7090</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3648,7 +3610,7 @@
 				<field name="name">Betalingskort. crediteuren</field>
 				<field name="code">7095</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3656,7 +3618,7 @@
 				<field name="name">Privé-gebruik goederen</field>
 				<field name="code">7096</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3664,7 +3626,7 @@
 				<field name="name">Tegenrekening inkoop</field>
 				<field name="code">7100</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_7" name="parent_id"/>
 			</record>
@@ -3674,14 +3636,14 @@
             <field name="name">VERKOOPRESULTATEN</field>
             <field name="code">RUBRIEK 8</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
 			<record id="a_8000" model="account.account.template">
 				<field name="name">Verkopen fabric. 0 % EU</field>
 				<field name="code">8000</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3689,7 +3651,7 @@
 				<field name="name">Verkopen fabricage laag</field>
 				<field name="code">8001</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3697,7 +3659,7 @@
 				<field name="name">Verkopen fabricage hoog</field>
 				<field name="code">8002</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3705,7 +3667,7 @@
 				<field name="name">Verkopen fabricage overig</field>
 				<field name="code">8003</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3713,7 +3675,7 @@
 				<field name="name">Verkopen handel 0% EU</field>
 				<field name="code">8010</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3721,7 +3683,7 @@
 				<field name="name">Verkopen handel laag</field>
 				<field name="code">8011</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3729,7 +3691,7 @@
 				<field name="name">Verkopen handel hoog</field>
 				<field name="code">8012</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3737,7 +3699,7 @@
 				<field name="name">Verkopen handel overig</field>
 				<field name="code">8013</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3745,7 +3707,7 @@
 				<field name="name">Verkopen Fabric. 0% niet-EU</field>
 				<field name="code">8020</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3753,7 +3715,7 @@
 				<field name="name">Verkopen Handel 0% niet-EU</field>
 				<field name="code">8021</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3761,7 +3723,7 @@
 				<field name="name">Diensten fabricage 0% EU</field>
 				<field name="code">8040</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3769,7 +3731,7 @@
 				<field name="name">Diensten fabricage laag</field>
 				<field name="code">8041</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3777,7 +3739,7 @@
 				<field name="name">Diensten fabricage hoog</field>
 				<field name="code">8042</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3785,7 +3747,7 @@
 				<field name="name">Diensten fabricage overig</field>
 				<field name="code">8043</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3793,7 +3755,7 @@
 				<field name="name">Diensten handel 0% EU</field>
 				<field name="code">8050</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3801,7 +3763,7 @@
 				<field name="name">Diensten handel laag tarief</field>
 				<field name="code">8051</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3809,7 +3771,7 @@
 				<field name="name">Diensten handel hoog tarief</field>
 				<field name="code">8052</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3817,7 +3779,7 @@
 				<field name="name">Diensten fabric. 0% niet-EU</field>
 				<field name="code">8060</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3825,7 +3787,7 @@
 				<field name="name">Diensten handel 0% niet-EU</field>
 				<field name="code">8061</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3833,7 +3795,7 @@
 				<field name="name">Verleende Kredietbep. fabricage</field>
 				<field name="code">8095</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3841,7 +3803,7 @@
 				<field name="name">Verleende Kredietbep. handel</field>
 				<field name="code">8096</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_8" name="parent_id"/>
 			</record>
@@ -3851,14 +3813,14 @@
             <field name="name">OVERIGE RESULTATEN</field>
             <field name="code">RUBRIEK 9</field>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
             <field ref="a_root" name="parent_id"/>
         </record>
         	<record id="a_9000" model="account.account.template">
 				<field name="name">Opbrengsten deelnemingen</field>
 				<field name="code">9000</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_9" name="parent_id"/>
 			</record>
@@ -3866,7 +3828,7 @@
 				<field name="name">Winst bij verkoop deelnem.</field>
 				<field name="code">9010</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_9" name="parent_id"/>
 			</record>
@@ -3874,7 +3836,7 @@
 				<field name="name">Voorz. Verlies deelnem.</field>
 				<field name="code">9100</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_9" name="parent_id"/>
 			</record>
@@ -3882,7 +3844,7 @@
 				<field name="name">Verlies verkoop deelnem.</field>
 				<field name="code">9110</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_9" name="parent_id"/>
 			</record>
@@ -3890,7 +3852,7 @@
 				<field name="name">Reorganisatiekosten</field>
 				<field name="code">9150</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_expense"/>
+				<field name="user_type" ref="account.data_account_type_expense"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_9" name="parent_id"/>
 			</record>
@@ -3898,7 +3860,7 @@
 				<field name="name">Vpb normaal resultaat</field>
 				<field name="code">9900</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_9" name="parent_id"/>
 			</record>
@@ -3906,7 +3868,7 @@
 				<field name="name">Vpb bijzonder resultaat</field>
 				<field name="code">9950</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_9" name="parent_id"/>
 			</record>
@@ -3914,7 +3876,7 @@
 				<field name="name">Memoriaal</field>
 				<field name="code">9990</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_cash"/>
+				<field name="user_type" ref="account.data_account_type_cash"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_9" name="parent_id"/>
 			</record>
@@ -3922,7 +3884,7 @@
 				<field name="name">Winst</field>
 				<field name="code">9999</field>
 				<field name="type">other</field>
-				<field name="user_type" ref="user_type_income"/>
+				<field name="user_type" ref="account.data_account_type_income"/>
 				<field name="reconcile" eval="False"/>
 				<field ref="a_9" name="parent_id"/>
 			</record>
@@ -4352,7 +4314,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
         <record id="btw_I_6" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Inkopen import binnen EU laag</field>
-	    <field name="description">BTW import binnen EU</field>
+	    <field name="description">6% BTW import binnen EU</field>
             <field eval="0.06" name="amount"/>
             <field name="type">percent</field>
             <field eval="True" name="child_depend"/>
@@ -4387,7 +4349,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
         <record id="btw_I_19" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">Inkopen import binnen EU hoog</field>
-	    <field name="description">0% BTW import binnen EU</field>
+	    <field name="description">19% BTW import binnen EU</field>
             <field eval="0.19" name="amount"/>
             <field name="type">percent</field>
             <field eval="True" name="child_depend"/>
@@ -4421,9 +4383,9 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				        </record>
         <record id="btw_I_overig" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Inkopen import binnen EU hoog</field>
+            <field name="name">Inkopen import binnen EU overig</field>
 	    <field name="description">0% BTW import binnen EU</field>
-            <field eval="0.19" name="amount"/>
+            <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="True" name="child_depend"/>
             <field eval="omz_code_4b" name="base_code_id"/>
@@ -4432,7 +4394,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
         </record>
 				        <record id="btw_I_overig_1" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
-				            <field name="name">Inkopen import binnen EU hoog(1)</field>
+				            <field name="name">Inkopen import binnen EU overig(1)</field>
 				            <field eval="1.00" name="amount"/>
 				            <field name="type">percent</field>
 				            <field name="parent_id" ref="btw_I_overig"/>
@@ -4444,7 +4406,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
 				        </record>
 				        <record id="btw_I_overig_2" model="account.tax.template">
 				            <field name="chart_template_id" ref="l10nnl_chart_template"/>
-				            <field name="name">Inkopen import binnen EU hoog(2)</field>
+				            <field name="name">Inkopen import binnen EU overig(2)</field>
 				            <field eval="-1.00" name="amount"/>
 				            <field name="type">percent</field>
 				            <field name="parent_id" ref="btw_I_overig"/>

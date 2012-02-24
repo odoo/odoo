@@ -40,7 +40,7 @@ You can now define the following for a product:
         "security/ir.model.access.csv",
         "product_manufacturer_view.xml"
     ],
-    "active": False,
+    "auto_install": False,
     "installable": True,
     "certificate" : "00720153953662760781",
     'images': ['images/products_manufacturer.jpeg'],

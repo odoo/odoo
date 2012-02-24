@@ -4,21 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Project-Id-Version: OpenERP Server 6.1rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-23 11:17+0000\n"
-"PO-Revision-Date: 2011-12-23 11:17+0000\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-08 00:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line.global,type:0
-msgid "Type"
-msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -60,6 +55,11 @@ msgid "Cancel selected statement lines"
 msgstr ""
 
 #. module: account_bank_statement_extensions
+#: constraint:res.partner.bank:0
+msgid "The RIB and/or IBAN is not valid"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Group By..."
 msgstr ""
@@ -82,7 +82,9 @@ msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
-msgid "Are you sure you want to confirm the selected Bank Statement lines ?"
+#: model:ir.actions.act_window,name:account_bank_statement_extensions.action_confirm_statement_line
+#: model:ir.model,name:account_bank_statement_extensions.model_confirm_statement_line
+msgid "Confirm selected statement lines"
 msgstr ""
 
 #. module: account_bank_statement_extensions
@@ -103,36 +105,19 @@ msgid "Batch Payment Info"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
-
-#. module: account_bank_statement_extensions
-#: view:confirm.statement.line:0
-#: model:ir.actions.act_window,name:account_bank_statement_extensions.action_confirm_statement_line
-#: model:ir.model,name:account_bank_statement_extensions.model_confirm_statement_line
-msgid "Confirm selected statement lines"
-msgstr ""
-
-#. module: account_bank_statement_extensions
-#: selection:account.bank.statement.line.global,type:0
-msgid "ISO 20022"
-msgstr ""
-
-#. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "Confirm Lines"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:134
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
 #, python-format
 msgid "Delete operation not allowed !             Please go to the associated bank statement in order to delete and/or modify this bank statement line"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: selection:account.bank.statement.line.global,type:0
-msgid "Manual"
+#: field:account.bank.statement.line.global,type:0
+msgid "Type"
 msgstr ""
 
 #. module: account_bank_statement_extensions
@@ -168,8 +153,9 @@ msgid "Transactions"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,update_by:0
-msgid "Updated by"
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: account_bank_statement_extensions
@@ -230,8 +216,8 @@ msgid "Name"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
+#: selection:account.bank.statement.line.global,type:0
+msgid "ISO 20022"
 msgstr ""
 
 #. module: account_bank_statement_extensions
@@ -240,8 +226,8 @@ msgid "Notes"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: model:ir.model,name:account_bank_statement_extensions.model_res_company
-msgid "Companies"
+#: selection:account.bank.statement.line.global,type:0
+msgid "Manual"
 msgstr ""
 
 #. module: account_bank_statement_extensions
@@ -275,8 +261,8 @@ msgid "Child Codes"
 msgstr ""
 
 #. module: account_bank_statement_extensions
-#: view:res.company:0
-msgid "Company Banks"
+#: view:confirm.statement.line:0
+msgid "Are you sure you want to confirm the selected Bank Statement lines ?"
 msgstr ""
 
 #. module: account_bank_statement_extensions
@@ -325,6 +311,11 @@ msgid "Bank Accounts"
 msgstr ""
 
 #. module: account_bank_statement_extensions
+#: constraint:account.bank.statement:0
+msgid "The journal and period chosen have to belong to the same company."
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement
 msgid "Bank Statement"
 msgstr ""
@@ -344,11 +335,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_bank_statement_extensions.action_bank_statement_line
 #: model:ir.ui.menu,name:account_bank_statement_extensions.bank_statement_line
 msgid "Bank Statement Lines"
-msgstr ""
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,update_date:0
-msgid "Update Date"
 msgstr ""
 
 #. module: account_bank_statement_extensions

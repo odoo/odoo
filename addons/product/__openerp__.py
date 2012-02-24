@@ -67,7 +67,7 @@ Print product labels with barcode.
         'test/product_pricelist.yml',
     ],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0068861431437',
     'images': ['images/product_uom.jpeg','images/product_pricelists.jpeg','images/products_categories.jpeg', 'images/products_form.jpeg'],
 }

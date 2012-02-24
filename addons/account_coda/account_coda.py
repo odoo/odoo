@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-import time
 from osv import osv, fields
 import decimal_precision as dp
 import netsvc
@@ -81,7 +80,7 @@ class coda_bank_account(osv.osv):
     _defaults = {
         'currency': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
         'state': 'normal',
-        'coda_st_naming': lambda *a: '%(code)s/%(y)s/%(coda)s',
+        'coda_st_naming': '%(code)s/%(y)s/%(coda)s',
         'active': True,   
         'find_bbacom': True,                         
         'find_partner': True,                         
@@ -137,7 +136,7 @@ class account_coda(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True)
     }
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
         'user_id': lambda self,cr,uid,context: uid,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.coda', context=c),
     }        

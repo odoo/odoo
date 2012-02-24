@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2010-10-30 14:52+0000\n"
-"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-02-10 15:03+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:52+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-11 05:09+0000\n"
+"X-Generator: Launchpad (build 14771)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -89,7 +89,7 @@ msgstr "优先日期"
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
-msgstr ""
+msgstr "财务 / 付款人"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -97,6 +97,7 @@ msgid "Free"
 msgstr "自由"
 
 #. module: account_payment
+#: view:payment.order.create:0
 #: field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "凭证"
@@ -111,11 +112,6 @@ msgstr "使用的帐号"
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "到期日期"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "您不能在关闭的科目上建立分录。"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -142,7 +138,7 @@ msgstr "金额"
 #. module: account_payment
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "错误的分录"
+msgstr "会计分录中包含无效的借贷值！"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -173,13 +169,20 @@ msgstr "付款明细名称必须是唯一的！"
 #. module: account_payment
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "BBA传输结构有误！"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
 msgstr "付款单"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr "凭证日期不在所选期间内！可以修改凭证日期或在凭证簿上去掉这个检查项。"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -349,6 +352,14 @@ msgid "Amount to be paid"
 msgstr "应支付金额"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr "凭证上的科目要求输入一个外币。你可以在科目设置中去掉这个外币或在凭证簿设置上选择一个支持多币种的输入界面。"
+
+#. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
 msgstr "币别"
@@ -449,8 +460,8 @@ msgstr "账簿项"
 
 #. module: account_payment
 #: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "公司帐户和会计期限必须相同。"
+msgid "You can not create journal items on an account of type view."
+msgstr "凭证上不能使用视图类型的科目"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -523,7 +534,7 @@ msgstr "发票单号"
 #. module: account_payment
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "发票号必须在公司范围内唯一"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -568,13 +579,18 @@ msgstr "取消"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "收款方银行账号"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
 msgstr "信息"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be the same for its related account and period."
+msgstr "科目和期间必须属于同一个公司"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -625,11 +641,6 @@ msgstr "银行账号"
 #: view:payment.order:0
 msgid "Confirm Payments"
 msgstr "确认付款"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
@@ -688,6 +699,11 @@ msgid "Order"
 msgstr "付款单"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create journal items on closed account."
+msgstr "凭证上不能使用已关闭的科目"
+
+#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "合计"
@@ -697,13 +713,6 @@ msgstr "合计"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
 msgstr "建立付款"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
 
 #. module: account_payment
 #: field:payment.order,mode:0
@@ -719,11 +728,6 @@ msgstr "填写付款单"
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "这付款方式的银行账号"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "不能针对内部类型是视图的科目记账"
 
 #~ msgid "_Cancel"
 #~ msgstr "取消(_C)"
@@ -795,6 +799,9 @@ msgstr "不能针对内部类型是视图的科目记账"
 #~ msgid "Cash Journal for the Payment Mode"
 #~ msgstr "现金付款方式的业务类型"
 
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "您不能在关闭的科目上建立分录。"
+
 #~ msgid ""
 #~ "\n"
 #~ "This module provides :\n"
@@ -807,3 +814,9 @@ msgstr "不能针对内部类型是视图的科目记账"
 #~ "- 更高效地管理发票的付款\n"
 #~ "- 基本的机制用于简单地管理各种自动付款\n"
 #~ "    "
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "公司帐户和会计期限必须相同。"
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr "不能针对内部类型是视图的科目记账"

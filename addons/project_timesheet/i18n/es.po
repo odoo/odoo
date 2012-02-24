@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
 "PO-Revision-Date: 2011-01-18 09:18+0000\n"
 "Last-Translator: Borja López Soilán (NeoPolus) <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:02+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-02-09 06:41+0000\n"
+"X-Generator: Launchpad (build 14763)\n"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
@@ -103,9 +103,8 @@ msgstr "Octubre"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
-msgid "Year"
-msgstr "Año"
+msgid "Timesheet/Task hours Report Per Month"
+msgstr "Reporte por mes de horas de tareas/hojas de asistencia"
 
 #. module: project_timesheet
 #: view:project.project:0
@@ -128,6 +127,12 @@ msgstr "Proyecto/Cuenta analítica"
 #: field:report.timesheet.task.user,task_hrs:0
 msgid "Task Hours"
 msgstr "Horas tarea"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:0
+#: field:report.timesheet.task.user,year:0
+msgid "Year"
+msgstr "Año"
 
 #. module: project_timesheet
 #: constraint:project.project:0
@@ -299,14 +304,9 @@ msgid "Task hours of last month"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:59
-#, python-format
-msgid ""
-"No product defined on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-"No se ha definido ningún producto para el empleado relacionado.\n"
-"Rellene la pestaña parte de horas del formulario del empleado."
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "Marzo"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
@@ -334,14 +334,20 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "Marzo"
+#: code:addons/project_timesheet/project_timesheet.py:247
+#, python-format
+msgid "Invalid Analytic Account !"
+msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Reporte por mes de horas de tareas/hojas de asistencia"
+#: code:addons/project_timesheet/project_timesheet.py:59
+#, python-format
+msgid ""
+"No product defined on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
+"No se ha definido ningún producto para el empleado relacionado.\n"
+"Rellene la pestaña parte de horas del formulario del empleado."
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:54
@@ -360,6 +366,13 @@ msgstr "Facturación"
 #. module: project_timesheet
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:247
+#, python-format
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state"
 msgstr ""
 
 #. module: project_timesheet

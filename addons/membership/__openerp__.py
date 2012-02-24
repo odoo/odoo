@@ -50,7 +50,7 @@ invoice and send propositions for membership renewal.
     'demo_xml': ['membership_demo.xml'],
     'test': ['test/test_membership.yml'],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'certificate': '0042907796381',
     'images': ['images/members.jpeg','images/membership_list.jpeg', 'images/membership_products.jpeg'],
 }

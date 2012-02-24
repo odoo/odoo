@@ -30,6 +30,7 @@ class account_vat_declaration(osv.osv_memory):
                                       ('payments', 'Payments'),],
                                       'Based on', required=True),
         'chart_tax_id': fields.many2one('account.tax.code', 'Chart of Tax', help='Select Charts of Taxes', required=True, domain = [('parent_id','=', False)]),
+        'display_detail': fields.boolean('Display Detail'),
     }
 
     def _get_tax(self, cr, uid, context=None):
