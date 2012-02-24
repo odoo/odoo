@@ -1090,7 +1090,7 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
                 self.$element.toggleClass('clark-gable');
             });
         }
-        this.session.bind().then(function() {
+        this.session.bind_session().then(function() {
             if (!self.session.session_is_valid()) {
                 self.show_login();
             }
@@ -1258,7 +1258,7 @@ openerp.web.embed = function (origin, dbname, login, key, action, options) {
         var sc = document.getElementsByTagName('script');
         currentScript = sc[sc.length-1];
     }
-    openerp.connection.bind(origin).then(function () {
+    openerp.connection.bind_session(origin).then(function () {
         openerp.connection.session_authenticate(dbname, login, key, true).then(function () {
             var client = new openerp.web.EmbeddedClient(action, options);
             client.insertAfter(currentScript);

@@ -322,7 +322,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.name = openerp._session_id;
         this.qweb_mutex = new $.Mutex();
     },
-    bind: function(origin) {
+    bind_session: function(origin) {
         var window_origin = location.protocol+"//"+location.host, self=this;
         this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
         this.prefix = this.origin;
