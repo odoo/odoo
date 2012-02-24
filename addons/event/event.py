@@ -248,7 +248,7 @@ class event_registration(osv.osv):
         'state': 'draft',
         'user_id': lambda self, cr, uid, ctx: uid,
     }
-    _order = 'create_date desc'
+    _order = 'name, create_date desc'
 
 
     def do_draft(self, cr, uid, ids, context=None):
