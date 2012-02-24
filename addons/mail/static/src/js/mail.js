@@ -19,6 +19,7 @@ openerp.mail = function(session) {
             this.res_id = params['res_id'];
             this.uid = params['uid'];
             this.records = params['records'] || false;
+            this.map_hash = {'res.users': []};
             /* DataSets */
             this.ds = new session.web.DataSet(this, this.res_model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
@@ -67,6 +68,11 @@ openerp.mail = function(session) {
         display_comments: function (records) {
             this.$element.find('div.oe_mail_thread_display').empty();
             var self = this;
+            /* WIP: map matched regexp -> records to browse with name */
+            _(records).each(function (record) {
+                self.check_internal_links(record.body_text);
+            });
+            //console.log(this.map_hash);
             _(records).each(function (record) {
                 record.mini_url = self.thread_get_avatar_mini('res.users', 'avatar_mini', record.user_id[0]);
                 record.body_text = self.do_replace_internal_links(record.body_text);
@@ -81,6 +87,28 @@ openerp.mail = function(session) {
             var body_text = this.$element.find('textarea').val();
             return this.ds.call('message_append_note', [[this.res_id], 'Reply comment', body_text, type='comment']).then(
                 this.proxy('fetch_comments'));
+        },
+        
+        /* check for internal links, and map them to limitate number of queries -- WIP, probably not useful */
+        check_internal_links: function(string) {
+            /* shortcut to user: @login */
+            var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*\s)/g);
+            var regex_res = regex_login.exec(string);
+            while (regex_res != null) {
+                var login = regex_res[2];
+                this.map_hash['res.users'].push(login);
+                regex_res = regex_login.exec(string);
+            }
+            /* internal links: @res.model,name */
+            var regex_intlink = new RegExp(/(^|\s)@(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
+            regex_res = regex_intlink.exec(string);
+            while (regex_res != null) {
+                var res_model = regex_res[2] + '.' + regex_res[3];
+                var res_name = regex_res[4];
+                if (! (res_model in this.map_hash)) { this.map_hash[res_model] = []; }
+                this.map_hash[res_model].push(res_name);
+                regex_res = regex_intlink.exec(string);
+            }
         },
         
         do_replace_internal_links: function (string) {
