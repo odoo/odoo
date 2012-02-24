@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-08 06:47+0000\n"
-"X-Generator: Launchpad (build 14747)\n"
+"X-Launchpad-Export-Date: 2012-02-22 05:12+0000\n"
+"X-Generator: Launchpad (build 14838)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -39,7 +39,7 @@ msgstr ""
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "Rapprochement de pièces comptables"
+msgstr "Lettrage des écritures comptables"
 
 #. module: account
 #: field:account.installer.modules,account_voucher:0
@@ -102,7 +102,7 @@ msgstr ""
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
 msgid "Import from invoice or payment"
-msgstr "Importer depuis une facture ou un paiement"
+msgstr "Importer depuis une facture ou un règlement"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -120,9 +120,8 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disabled"
 msgstr ""
-"Si vous annulez le rapprochement de ces transactions, vous devez également "
-"vérifier toutes les actions liées à ces opérations car elles ne seront pas "
-"désactivées"
+"Si vous annulez le lettrage de ces écritures, vous devez également vérifier "
+"toutes les actions liées car elles ne seront pas désactivées"
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -148,7 +147,7 @@ msgstr "Origine"
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Reconcile"
-msgstr "Rapprocher"
+msgstr "Lettrer"
 
 #. module: account
 #: field:account.bank.statement.line,ref:0
@@ -194,7 +193,7 @@ msgstr "Toutes les écritures analytiques"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
 msgid "Invoices Created Within Past 15 Days"
-msgstr "Factures créées depuis 15 jours"
+msgstr "Factures créées au cours des 15 derniers jours"
 
 #. module: account
 #: selection:account.account.type,sign:0
@@ -242,7 +241,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
 msgid "Move line reconcile select"
-msgstr "Sélection des lignes d'écritures à rapprocher"
+msgstr "Sélection des écritures à lettrer"
 
 #. module: account
 #: help:account.model.line,sequence:0
@@ -359,7 +358,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "Annuler le rapprochement"
+msgstr "Annuler le lettrage"
 
 #. module: account
 #: view:product.product:0
@@ -388,10 +387,10 @@ msgid ""
 "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
 "Cash Registers, or Customer/Supplier payments."
 msgstr ""
-"Cette écran est utilisé par les comptables pour saisir des écritures en "
-"masse. Des écritures sont créées par OpenERP, si vous utilisez les "
-"fonctionnalités de relevés bancaires, gestion d'espèces et de paiements des "
-"clients ou des fournisseurs."
+"Cet écran est utilisé par les comptables pour saisir des écritures en masse. "
+"Des écritures sont créées par OpenERP, si vous utilisez les fonctionnalités "
+"de relevés bancaires, gestion d'espèces et de règlements des clients ou des "
+"fournisseurs."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -576,7 +575,7 @@ msgstr "Lit."
 #. module: account
 #: field:account.automatic.reconcile,unreconciled:0
 msgid "Not reconciled transactions"
-msgstr "Écritures non rapprochées"
+msgstr "Écritures non lettrées"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:348
@@ -699,7 +698,7 @@ msgstr "Période de journal"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
-"Pour rapprocher les écritures, la société doit être la même pour toutes les "
+"Pour lettrer les écritures, la société doit être la même pour toutes les "
 "écritures."
 
 #. module: account
@@ -712,7 +711,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_aged_receivable
 #, python-format
 msgid "Receivable Accounts"
-msgstr "Comptes recevables"
+msgstr "Comptes clients"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -737,7 +736,7 @@ msgstr "Chèque"
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
-msgstr "Partenaires rapprochés aujourd'hui"
+msgstr "Partenaires lettrés aujourd'hui"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:306
@@ -810,7 +809,7 @@ msgstr "Journal analytique"
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_reconcile
 msgid "Automatic Reconcile"
-msgstr "Rapprochement automatique"
+msgstr "Lettrage automatique"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -851,9 +850,8 @@ msgid ""
 "Can not %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only Refund this invoice"
 msgstr ""
-"Ne peut %s la facture, qui est déjà rapprochée, le rapprochement de la "
-"facture devrait être annulé d'abord. Vous ne pouvez que rembourser cette "
-"facture"
+"Ne peut %s la facture, qui est déjà lettrée, le lettrage de la facture "
+"devrait être annulé d'abord. Vous ne pouvez que rembourser cette facture"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -1436,7 +1434,7 @@ msgstr "Une table temporaire utilisée dans la vue Tableau de Bord"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr "Avoirs fournisseur"
+msgstr "Avoirs fournisseurs"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -1559,12 +1557,12 @@ msgid ""
 "the Payment column of a line, you can press F1 to open the reconciliation "
 "form."
 msgstr ""
-"Un relevé bancaire est un résumé de toutes les transactions financières "
-"effectuées durant une certaine période de temps sur un compte de dépôt, une "
-"carte de crédit ou tout type de compte financier. Le solde initial sera "
-"proposé automatiquement et le solde final est celui indiqué sur le relevé. "
-"Quand vous êtes dans la colonne paiement d'une ligne, vous pouvez ouvrir le "
-"formulaire de rapprochement en cliquant sur F1."
+"Un relevé bancaire comporte  les transactions financières enregistrées "
+"durant une certaine période sur un compte de dépôt ou tout type de compte "
+"financier. Le solde initial sera proposé automatiquement. Le solde final est "
+"celui indiqué sur le relevé fourni par votre banque. Quand vous êtes dans la "
+"colonne règlement d'une ligne, vous pouvez ouvrir le formulaire de "
+"rapprochement en cliquant sur F1 ou Shift+F1 dans votre navigateur."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -1630,8 +1628,8 @@ msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
 "cancel the current invoice."
 msgstr ""
-"Annuler la facture : crée, valide et rapproche un avoir pour annuler la "
-"facture actuelle."
+"Annuler la facture : créé, valide et associe un avoir pour \"annuler\" la "
+"présente facture."
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -1707,7 +1705,7 @@ msgstr "La quantité optionelle des entrées"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_all
 msgid "Receivables & Payables"
-msgstr "Créditeurs & Débiteurs"
+msgstr "Compte de tiers"
 
 #. module: account
 #: code:addons/account/account_move_line.py:815
@@ -2005,7 +2003,7 @@ msgstr "Écritures Ouvertes"
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
 msgid "Accounts to Reconcile"
-msgstr "Comptes à rapprocher"
+msgstr "Comptes à lettrer"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
@@ -2253,7 +2251,7 @@ msgstr "Séquence principale"
 #: model:ir.model,name:account.model_account_payment_term
 #: field:res.partner,property_payment_term:0
 msgid "Payment Term"
-msgstr "Condition de paiement"
+msgstr "Condition de règlement"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
@@ -2303,7 +2301,7 @@ msgstr ""
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Partner Reconciliation"
-msgstr "Rapprochement par partenaire"
+msgstr "Lettrage par partenaire"
 
 #. module: account
 #: field:account.tax,tax_code_id:0
@@ -2356,7 +2354,7 @@ msgid ""
 "the start and end of the month or quarter."
 msgstr ""
 "Ce menu permet d'imprimer une déclaration de TVA fondée sur des factures ou "
-"des paiements. Sélectionnez une ou plusieurs périodes de l'exercice "
+"des règlements. Sélectionnez une ou plusieurs périodes de l'exercice "
 "comptable. Les informations requises par une déclaration fiscale sont "
 "générées automatiquement par OpenERP à partir des factures (ou des "
 "paiements, dans certains pays). Ces données sont actualisées en temps réel. "
@@ -2560,7 +2558,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
 msgid "Automatic Reconciliation"
-msgstr "Rapprochement automatique"
+msgstr "Lettrage automatique"
 
 #. module: account
 #: field:account.invoice,reconciled:0
@@ -2713,7 +2711,7 @@ msgstr "Le solde affiché (%.2f) est différent du solde calculé. (%.2f)"
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
 msgid "Payment entries are the second input of the reconciliation."
-msgstr "Les écritures de règlement sont la deuxième partie du rapprochement."
+msgstr "Les écritures de règlement sont la deuxième partie du lettrage."
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
@@ -2767,8 +2765,7 @@ msgstr ""
 msgid ""
 "used in statement reconciliation domain, but shouldn't be used elswhere."
 msgstr ""
-"utilisé pour établir la réconciliation, mais ne devrait pas être utilisé "
-"ailleurs"
+"utilisé pour établir le délettrage, mais ne devrait pas être utilisé ailleurs"
 
 #. module: account
 #: field:account.invoice.tax,base_amount:0
@@ -3060,9 +3057,9 @@ msgstr ""
 "\"Rien\" signifie que rien ne sera fait.\n"
 "\"Balance\" est généralement utilisé pour les comptes de trésorerie.\n"
 "\"Détaillé\" recopie chaque écriture comptable de l'année précédente, même "
-"ceux qui ont été réconciliés.\n"
-"\"Non réconcilié\" recopie uniquement les éléments non réconciliés sur le "
-"premier jour du nouvel exercice."
+"ceux qui ont été lettrés.\n"
+"\"Non lettré\" recopie uniquement les éléments non lettrés sur le premier "
+"jour du nouvel exercice."
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
@@ -3399,7 +3396,7 @@ msgstr "Centralisation"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
 msgid "Reconcilation Process partner by partner"
-msgstr "Procédure de rapprochement partenaire par partenaire"
+msgstr "Procédure de lettrage partenaire par partenaire"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -3485,7 +3482,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:837
 #, python-format
 msgid "Some entries are already reconciled !"
-msgstr "Certaines écritures sont déjà rapprochées !"
+msgstr "Certaines écritures sont déjà lettrées !"
 
 #. module: account
 #: code:addons/account/account.py:1204
@@ -3596,8 +3593,8 @@ msgstr "Ordre de Paiement"
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
 msgstr ""
-"Cocher cette option si vous souhaitez que l'utilisateur rapproche les "
-"écritures dans ce compte."
+"Cocher cette option si vous souhaitez que l'utilisateur lettre les écritures "
+"dans ce compte."
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_account_balance_landscape
@@ -3733,10 +3730,10 @@ msgid ""
 "debit/credit accounts, of type 'situation' and with a centralized "
 "counterpart."
 msgstr ""
-"Les règles de l'art exigent qu'on utilise un journal dédié aux écritures "
-"d'ouverture de tous les exercices comptables. Notez que celui-ci doit avoir "
-"des comptes de crédit et de débit par défaut, être de type \"Situation\", et "
-"avoir une contrepartie centralisée."
+"Les bonnes pratiques exigent qu'on utilise un journal dédié aux écritures "
+"d'ouverture. Notez que celui-ci doit avoir des comptes de crédit et de débit "
+"définis par défaut, être de type \"Situation\" et avoir une contrepartie "
+"centralisée."
 
 #. module: account
 #: view:account.installer:0
@@ -4137,7 +4134,7 @@ msgstr "Les relevés bancaires sont saisis dans le système."
 #: code:addons/account/wizard/account_reconcile.py:133
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr "Écart de rapprochement"
+msgstr "Écart de lettrage"
 
 #. module: account
 #: report:account.overdue:0
@@ -4196,7 +4193,7 @@ msgstr "res_config_contents"
 #. module: account
 #: view:account.unreconcile:0
 msgid "Unreconciliate transactions"
-msgstr "Annuler le rapprochement"
+msgstr "Annuler le lettrage"
 
 #. module: account
 #: view:account.use.model:0
@@ -4422,8 +4419,8 @@ msgstr "Modèle d'imputation des charges"
 msgid ""
 "Date on which the partner accounting entries were reconciled last time"
 msgstr ""
-"Date à laquelle les écritures comptables du partenaire ont été rapprochées "
-"pour la dernière fois"
+"Date à laquelle les écritures comptables du partenaire ont été lettrées pour "
+"la dernière fois"
 
 #. module: account
 #: field:account.fiscalyear.close,fy2_id:0
@@ -4565,9 +4562,9 @@ msgid ""
 "the invoice form."
 msgstr ""
 "Avec les avoirs fournisseurs, vous pouvez gérer les avoirs envoyés par vos "
-"fournisseurs. Un avoir est un document qui crédite une facture complètement "
-"ou partiellement. Vous pouvez facilement générer des avoirs et les "
-"rapprocher directement depuis le formulaire de facture."
+"fournisseurs. Un avoir est un document qui \"annule\" une facture "
+"complètement ou partiellement. Vous pouvez facilement générer des avoirs et "
+"les associer directement depuis le formulaire de facture."
 
 #. module: account
 #: field:account.analytic.balance,date2:0
@@ -4720,7 +4717,7 @@ msgstr "Type de période"
 #: field:account.invoice,payment_ids:0
 #: selection:account.vat.declaration,based_on:0
 msgid "Payments"
-msgstr "Paiements"
+msgstr "Règlements"
 
 #. module: account
 #: view:account.tax:0
@@ -4742,7 +4739,7 @@ msgstr "Code Python (TVA Incl)"
 #: model:ir.actions.act_window,name:account.action_payment_term_form
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
 msgid "Payment Terms"
-msgstr "Conditions de Paiement"
+msgstr "Conditions de règlement"
 
 #. module: account
 #: field:account.journal.column,name:0
@@ -4806,7 +4803,7 @@ msgstr "Commentaires dans les factures"
 #. module: account
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
-msgstr "Partenaire suivant à rapprocher"
+msgstr "Partenaire suivant à lettrer"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -5096,9 +5093,9 @@ msgid ""
 "something to reconcile or not. This figure already count the current partner "
 "as reconciled."
 msgstr ""
-"Indique les partenaires pour lesquelles vous devez vérifier s'il reste des "
-"rapprochements à faire. Ce chiffre considère le partenaire actuel comme déjà "
-"rapproché."
+"Indique le nombre de partenaires pour lesquelles vous devez vérifier s'il "
+"reste des lettrages à faire. Ce chiffre considère le partenaire actuel comme "
+"lettré."
 
 #. module: account
 #: view:account.subscription.line:0
@@ -5194,7 +5191,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_move_line
 msgid "Lines to reconcile"
-msgstr "Lignes à rapprocher"
+msgstr "Lignes à lettrer"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -5227,8 +5224,9 @@ msgid ""
 "Number of partial amounts that can be combined to find a balance point can "
 "be chosen as the power of the automatic reconciliation"
 msgstr ""
-"Le nombre de montants partiels combinables pour trouver un point d'équilibre "
-"peut être choisi commme générateur du rapprochement automatique"
+"Nombre de règlements partiels à combiner et à associer à des pièces "
+"comptables pour un montant équivalent afin de pouvoir les lettrer ensemble "
+"(puissance du lettrage automatique)"
 
 #. module: account
 #: help:account.payment.term.line,sequence:0
@@ -5237,7 +5235,7 @@ msgid ""
 "sequences to the higher ones"
 msgstr ""
 "Le champ séquence est utilisé pour classer les lignes des conditions de "
-"paiement des plus basses séquences vers les plus hautes."
+"règlement des plus basses séquences vers les plus hautes."
 
 #. module: account
 #: view:account.fiscal.position.template:0
@@ -5305,7 +5303,7 @@ msgstr "Créances agées"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
 msgid "Account Automatic Reconcile"
-msgstr "Rapprochement automatique"
+msgstr "Lettrage automatique"
 
 #. module: account
 #: view:account.move:0
@@ -5328,7 +5326,7 @@ msgstr "Générer les écritures d'ouverture"
 #: code:addons/account/account_move_line.py:759
 #, python-format
 msgid "Already Reconciled!"
-msgstr "Déjà rapprochée !"
+msgstr "Déjà lettrée !"
 
 #. module: account
 #: help:account.tax,type:0
@@ -5428,7 +5426,7 @@ msgstr "Valorisation"
 #: code:addons/account/report/account_partner_balance.py:301
 #, python-format
 msgid "Receivable and Payable Accounts"
-msgstr "Comptes débiteurs & créditeurs"
+msgstr "Comptes de tiers"
 
 #. module: account
 #: field:account.fiscal.position.account.template,position_id:0
@@ -5485,10 +5483,9 @@ msgid ""
 "Shows you the progress made today on the reconciliation process. Given by \n"
 "Partners Reconciled Today \\ (Remaining Partners + Partners Reconciled Today)"
 msgstr ""
-"Vous montre les progrès réalisés aujourd'hui sur le processus de "
-"réconciliation. Compte tenu par\n"
-"Partenaires rapprochés Aujourd'hui \\ (autres partenaires + Partenaires "
-"rapprochés Aujourd'hui)"
+"Vous montre les progrès réalisés aujourd'hui sur le processus de lettrage. \n"
+"Ratio = Partenaires lettrés aujourd'hui  \\ ( partenaires lettrés "
+"aujourd'hui + autres partenaires)"
 
 #. module: account
 #: help:account.payment.term.line,value:0
@@ -5498,7 +5495,7 @@ msgid ""
 "the whole amount will be threated."
 msgstr ""
 "Sélectionnez ici le type d'évaluation relatif à cette ligne de conditions de "
-"paiement. Notez que vous devez avoir une dernière ligne de type \"Balance\" "
+"règlement. Notez que vous devez avoir une dernière ligne de type \"Balance\" "
 "pour assurer que le montant total sera traité."
 
 #. module: account
@@ -5640,7 +5637,7 @@ msgstr "  365 jours  "
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3
 msgid "Customer Refunds"
-msgstr "Avoir client"
+msgstr "Avoirs clients"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -5704,7 +5701,7 @@ msgstr "Ecriture analytique"
 #: view:res.company:0
 #: field:res.company,overdue_msg:0
 msgid "Overdue Payments Message"
-msgstr "Message pour les paiements en retard"
+msgstr "Message pour les règlements en retard"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_all_a
@@ -5749,8 +5746,8 @@ msgid ""
 "As soon as the reconciliation is done, the invoice's state turns to “done” "
 "(i.e. paid) in the system."
 msgstr ""
-"Dès que le rapprochement est fait, la facture passe à l'état \"Terminée\" "
-"(c'est à dire payée) dans le système."
+"Dès que le lettrage est fait, la facture passe à l'état \"Terminé\" (c'est à "
+"dire payée) dans le système."
 
 #. module: account
 #: code:addons/account/invoice.py:997
@@ -5767,7 +5764,7 @@ msgstr "Compte racine"
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Reconciliation Date"
-msgstr "Date du dernier rapprochement"
+msgstr "Date du dernier lettrage"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
@@ -5855,7 +5852,7 @@ msgstr "Exercice comptable"
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Partial Reconcile Entries"
-msgstr "Rapprochement partiel d'écritures"
+msgstr "Lettrage partiel d'écritures"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -5910,7 +5907,7 @@ msgstr "Intitulé"
 #: model:account.account.type,name:account.data_account_type_receivable
 #: selection:account.entries.report,type:0
 msgid "Receivable"
-msgstr "Créditeurs"
+msgstr "Compte client"
 
 #. module: account
 #: view:account.invoice:0
@@ -6001,7 +5998,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
 msgid "Reconciliation: Go to Next Partner"
-msgstr "Rapprochement : passer au partenaire suivant"
+msgstr "Lettrage : passer au partenaire suivant"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
@@ -6193,7 +6190,7 @@ msgstr "Journal analytique"
 #. module: account
 #: view:account.entries.report:0
 msgid "Reconciled"
-msgstr "Rapprochée"
+msgstr "Lettré"
 
 #. module: account
 #: report:account.invoice:0
@@ -6220,7 +6217,7 @@ msgstr "Transactions en liquide"
 #: code:addons/account/wizard/account_state_open.py:37
 #, python-format
 msgid "Invoice is already reconciled"
-msgstr "La facture est déjà réconciliée"
+msgstr "La facture est déjà lettrée"
 
 #. module: account
 #: view:account.account:0
@@ -6321,9 +6318,7 @@ msgstr "Basé sur"
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
-"Ce compte sera utilisé à la place de celui par défaut comme compte client "
-"pour le partenaire courant."
+msgstr "Ce compte remplacera le compte de tiers par défaut pour ce client."
 
 #. module: account
 #: field:account.tax,python_applicable:0
@@ -6431,12 +6426,11 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
-"Une facture est considérée comme payée après que ses lignes auront été "
-"rapprochées de leurs contreparties (généralement des paiements). Avec la "
-"fonctionnalité de rapprochement automatique, OpenERP recherche "
-"automatiquement les écritures à rapprocher dans une série de comptes. "
-"OpenERP repère les écritures dont les montants correspondent pour chaque "
-"partenaire."
+"Une facture est considérée comme payée dès que ses lignes sont rapprochées "
+"de leurs contreparties (généralement des paiements). Avec la fonctionnalité "
+"de lettrage automatique, OpenERP recherche automatiquement les écritures à "
+"rapprocher dans une série de comptes. OpenERP repère les écritures dont les "
+"montants correspondent pour chaque partenaire."
 
 #. module: account
 #: view:account.move:0
@@ -6723,7 +6717,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
-msgstr "Écritures non rapprochées"
+msgstr "Écritures non lettrées"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_menu_Bank_process
@@ -7085,8 +7079,8 @@ msgid ""
 "it have been reconciled."
 msgstr ""
 "Ce champ vous indique le prochain partenaire qui sera automatiquement choisi "
-"par le système pour passer au travers du processus de rapprochement, en "
-"fonction du dernier jour où il a été rapproché."
+"par le système pour passer au travers du processus de lettrage, en fonction "
+"du dernier jour où il a été lettré."
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
@@ -7240,8 +7234,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
-"Ce champ est utilisé pour les écritures crédit et débit. Vous pouvez fixer "
-"la date limite pour le paiement de cette ligne."
+"Ce champ est utilisé pour les comptes de tiers. Vous pouvez fixer la date "
+"d'échéance pour le règlement."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1302
@@ -7281,7 +7275,7 @@ msgstr "Propriétés des Ventes"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
 msgid "Manual Reconciliation"
-msgstr "Rapprochement manuel"
+msgstr "Lettrage manuel"
 
 #. module: account
 #: report:account.overdue:0
@@ -7545,7 +7539,7 @@ msgstr "État de la ligne d'écriture"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
 msgid "Account move line reconcile"
-msgstr "Rapprochement de lignes d'écriture"
+msgstr "Lettrage de lignes d'écriture"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -7688,7 +7682,7 @@ msgstr "Balance analytique inversée -"
 #. module: account
 #: view:account.move.bank.reconcile:0
 msgid "Open for bank reconciliation"
-msgstr "Ouvrir la banque pour lettrage"
+msgstr "Ouvrir la banque pour rapprochement bancaire"
 
 #. module: account
 #: field:account.partner.ledger,page_split:0
@@ -7852,8 +7846,8 @@ msgid ""
 "This payment term will be used instead of the default one for the current "
 "partner"
 msgstr ""
-"Cette condition de règlement sera utilisée à la place de celle par défaut "
-"pour le partenaire courant."
+"Cette condition de règlement sera utilisée à la place de celle fixée par "
+"défaut pour le partenaire courant."
 
 #. module: account
 #: view:account.tax.template:0
@@ -7889,10 +7883,10 @@ msgid ""
 "can easily generate refunds and reconcile them directly from the invoice "
 "form."
 msgstr ""
-"Avec la fonction Avoirs Clients, vous gérez des avoirs pour vos clients. Un "
-"avoir est un document qui recrédite complètement ou partiellement une "
-"facture. Vous pouvez aisément générer des avoirs et les rapprocher "
-"directement d'une facture depuis le formulaire de la facture."
+"Avec la fonction 'avoirs clients', vous gérez des avoirs pour vos clients. "
+"Un avoir est un document qui \"annule\" complètement ou partiellement une "
+"facture. Vous pouvez aisément générer des avoirs et les associer directement "
+"à une facture depuis le formulaire de la facture."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_vat_declaration
@@ -7905,11 +7899,11 @@ msgid ""
 "the start and end of the month or quarter."
 msgstr ""
 "Ce menu permet d'imprimer une déclaration de TVA fondée sur les factures ou "
-"les paiements. Vous pouvez sélectionner une ou plusieurs périodes de "
+"les règlements. Vous pouvez sélectionner une ou plusieurs périodes de "
 "l'exercice. Les informations requises pour cette déclaration  sont générées "
 "automatiquement par OpenERP à partir des factures (ou des paiements, dans "
 "certains pays). Ces données sont actualisées en temps réel. Cela permet de "
-"connaitre à tout moment  les taxes dues en début et fin de mois ou de "
+"connaître à tout moment  les taxes dues en début et fin de mois ou de "
 "trimestre."
 
 #. module: account
@@ -7944,7 +7938,7 @@ msgstr "Plan comptable"
 #: model:process.node,name:account.process_node_paymententries0
 #: model:process.transition,name:account.process_transition_reconcilepaid0
 msgid "Payment"
-msgstr "Paiement"
+msgstr "Règlement"
 
 #. module: account
 #: help:account.bs.report,reserve_account_id:0
@@ -8035,7 +8029,7 @@ msgstr "Lettrage"
 #: view:account.chart.template:0
 #: field:account.chart.template,property_account_receivable:0
 msgid "Receivable Account"
-msgstr "Compte clients"
+msgstr "Compte client"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -8164,8 +8158,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
 msgstr ""
-"Le montant restant sur une pièce comptable de charge ou de dépense est "
-"exprimée dans la monnaie de la société."
+"Dans une écriture comptable, sur la ligne du compte de tiers, le solde dû "
+"est exprimé dans la devise de la société."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -8329,7 +8323,7 @@ msgstr ""
 #: field:report.invoice.created,currency_id:0
 #: field:res.partner.bank,currency_id:0
 msgid "Currency"
-msgstr "Devises"
+msgstr "Devise"
 
 #. module: account
 #: help:account.bank.statement.line,sequence:0
@@ -8540,7 +8534,7 @@ msgstr "Information"
 #. module: account
 #: model:process.node,note:account.process_node_bankstatement0
 msgid "Registered payment"
-msgstr "Paiement enregistré"
+msgstr "Règlement enregistré"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -8839,7 +8833,7 @@ msgstr ""
 #: model:account.account.type,name:account.data_account_type_payable
 #: selection:account.entries.report,type:0
 msgid "Payable"
-msgstr "Payable"
+msgstr "Fournisseur"
 
 #. module: account
 #: view:report.account.sales:0
@@ -8868,12 +8862,12 @@ msgid ""
 "the income account. OpenERP will propose to you automatically the Tax "
 "related to this account and the counter-part \"Account receivable\"."
 msgstr ""
-"Cette vue est utilisée par les comptables afin d'enregistrer massivement les "
-"écritures dans OpenERP. Si vous voulez enregistrer une facture client, "
-"sélectionnez le journal et la période dans la barre de recherche. Alors, "
-"commencez par l'enregistrement de la ligne de saisie du compte des revenus. "
-"OpenERP vous proposera automatiquement la taxe afférente à ce compte et la "
-"contre-partie \"Compte à recevoir\"."
+"Cette vue  est utilisée par les comptables afin faire de la saisie "
+"d'écritures dite 'au kilomètre'. Par exemple, si vous voulez enregistrer une "
+"facture client, sélectionnez le journal et la période dans la barre de "
+"recherche. Alors, commencez par saisir le compte de produit ; OpenERP vous "
+"proposera automatiquement la taxe afférente à ce compte ainsi que la contre-"
+"partie \"compte client\"."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:391
@@ -8887,7 +8881,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_reconcile.py:152
 #, python-format
 msgid "You must select accounts to reconcile"
-msgstr "Vous devez sélectionner les comptes à réconcilier"
+msgstr "Vous devez sélectionner les comptes à lettrer"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -9009,7 +9003,7 @@ msgstr ""
 #: model:process.transition,name:account.process_transition_paymentorderbank0
 #: model:process.transition,name:account.process_transition_paymentreconcile0
 msgid "Payment entries"
-msgstr "Écritures de paiement"
+msgstr "Écritures de règlement"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -9248,9 +9242,7 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr ""
-"Ce compte sera utilisé à la place de celui par défaut comme compte payable "
-"pour le partenaire courant"
+msgstr "Ce compte de tiers remplacera le compte par défaut."
 
 #. module: account
 #: field:account.period,special:0
@@ -9324,7 +9316,7 @@ msgid ""
 "Please define partner on it!"
 msgstr ""
 "La date d'échéance d'une écriture générée par la ligne '% s' du modèle "
-"s'appuie sur les termes de paiement du partenaire !\n"
+"s'appuie sur les conditions de règlement du partenaire !\n"
 "Définir un partenaire pour elle, SVP !"
 
 #. module: account
@@ -9409,7 +9401,7 @@ msgid ""
 "invoice is already reconciled"
 msgstr ""
 "Méthode de création de l'avoir. \"Modifier\" et \"Annuler\" ne sont pas "
-"utilisables sur une facture déjà rapprochée."
+"utilisables sur une facture déjà lettrée."
 
 #. module: account
 #: help:account.installer.modules,account_analytic_plans:0
@@ -9733,7 +9725,7 @@ msgstr "Relevés brouillon"
 msgid ""
 "Manual or automatic creation of payment entries according to the statements"
 msgstr ""
-"Création manuelle ou automatique des écritures de paiement selon les "
+"Création manuelle ou automatique des écritures de règlement selon les "
 "déclarations"
 
 #. module: account
@@ -9756,7 +9748,7 @@ msgstr "Fin de période"
 #: code:addons/account/wizard/account_validate_account_move.py:61
 #, python-format
 msgid "Warning"
-msgstr "Alerte !"
+msgstr "Avertissement"
 
 #. module: account
 #: help:product.category,property_account_expense_categ:0
@@ -9847,12 +9839,12 @@ msgstr "Récurrent"
 #: code:addons/account/account_move_line.py:832
 #, python-format
 msgid "Entry is already reconciled"
-msgstr "L'écriture est déjà rapprochée"
+msgstr "L'écriture est déjà lettrée"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
 msgid "Receivable accounts"
-msgstr "Comptes fournisseurs"
+msgstr "Compte client"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -10068,7 +10060,7 @@ msgstr "Comptes bancaires"
 #. module: account
 #: field:res.partner,credit:0
 msgid "Total Receivable"
-msgstr "Total à recevoir"
+msgstr "Total compte client"
 
 #. module: account
 #: view:account.account:0
@@ -10268,9 +10260,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
-"Le montant restant sur une pièce comptable de charge ou de dépense est "
-"exprimée dans la devise du journal (si elle est différente de la devise de "
-"la société)"
+"Le solde dû sur un compte de tiers est exprimée dans la devise du journal "
+"(peut être différente de la devise de la société)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
