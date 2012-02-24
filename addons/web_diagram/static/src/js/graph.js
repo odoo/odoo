@@ -63,7 +63,8 @@
             if(graph.target_node){  
                 edge_prop = GraphEdge.creation_callback(node,graph.target_node);
                 if(edge_prop){
-                    new GraphEdge(graph,edge_prop.label, node,graph.target_node);
+                    var new_edge = new GraphEdge(graph,edge_prop.label, node,graph.target_node);
+                    GraphEdge.new_edge_callback(new_edge);
                 }
             }
         }
@@ -172,7 +173,7 @@
             var n2 = edge.get_end();
             links[n1.uid] = _.without(links[n1.uid],edge);
             links[n2.uid] = _.without(links[n2.uid],edge);
-            graph[n1.uid][n2.uid] = _without(graph[n1.uid][n2.uid],edge);
+            graph[n1.uid][n2.uid] = _.without(graph[n1.uid][n2.uid],edge);
         }
         //return the list of edges from n1 to n2
         this.get_edge_list = function(n1,n2){
@@ -293,7 +294,14 @@
         node_label.transform(graph.get_transform());
         $(node_label.node).css('text-shadow',"1px 2px 3px rgba(0,0,0,0.3)");
 
-        
+        // redraws all edges linked to this node 
+        var update_linked_edges = function(){
+            var edges = graph.get_linked_edge_list(self);
+            for(var i = 0; i < edges.length; i++){
+                edges[i].update();
+            }
+        }
+
         // sets the center position of the node
         var set_pos = function(pos){
             if(type == 'circle'){
@@ -305,10 +313,7 @@
             for(var i = 0; i < self.connectors.length; i++){
                 self.connectors[i].update_pos();
             }
-            var edges = graph.get_linked_edge_list(self);
-            for(var i = 0; i < edges.length; i++){
-                edges[i].update();
-            }
+            update_linked_edges();
         }
         // returns the figure used to draw the node
         var get_fig = function(){
@@ -372,6 +377,7 @@
         this.get_fig   = get_fig;
         this.set_selected = set_selected;
         this.set_not_selected = set_not_selected
+        this.update_linked_edges = update_linked_edges;
 
        
         //select the node and play an animation when clicked
@@ -594,18 +600,26 @@
                 edge_label.attr({'x':labelpos.x, 'y':labelpos.y - 14});
             }
         }
-        //TODO remove from graph
+        // removes the edge from the scene, disconnects it from linked        
+        // nodes, destroy its drawable elements.
         function remove(){
             edge.remove();
             edge_label.remove();
             if(!tmp){
                 graph.remove_edge(self);
             }
+            if(start.update_linked_edges){
+                start.update_linked_edges();
+            }
+            if(start != end && end.update_linked_edges){
+                end.update_linked_edges();
+            }
         }
 
         function double_click(){
             GraphEdge.double_click_callback(self);
         }
+
         edge.dblclick(double_click);
         edge_label.dblclick(double_click);
 
@@ -630,7 +644,10 @@
         var edge_prop = {};
         edge_prop.label = 'new edge!';
         return edge_prop;
-    }
+    };
+    // This is is called after a new edge is created, with the new edge
+    // as parameter
+    GraphEdge.new_edge_callback = function(new_edge){};
 
     // returns a new string with the same content as str, but with lines of maximum 'width' characters.
     // lines are broken on words, or into words if a word is longer than 'width'
