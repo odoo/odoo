@@ -362,7 +362,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
     }
 });
 
-openerp.web.CallbackEnabled = openerp.web.Class.extend(/** @lends openerp.web.CallbackEnabled# */{
+openerp.web.CallbackEnabledMixin = {
     /**
      * @constructs openerp.web.CallbackEnabled
      * @extends openerp.web.Class
@@ -404,7 +404,9 @@ openerp.web.CallbackEnabled = openerp.web.Class.extend(/** @lends openerp.web.Ca
             return self[method_name].apply(self, arguments);
         }
     }
-});
+};
+
+openerp.web.CallbackEnabled = openerp.web.Class.extend(_.extend({}, openerp.web.CallbackEnabledMixin));
 
 openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.web.Connection# */{
     /**
@@ -973,7 +975,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-openerp.web.Widget = openerp.web.CallbackEnabled.extend(niv.ParentedMixin).extend(/** @lends openerp.web.Widget# */{
+openerp.web.Widget = niv.Widget.extend(_.extend({}, openerp.web.CallbackEnabledMixin, {
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -981,11 +983,6 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(niv.ParentedMixin).exten
      * @type string
      */
     template: null,
-    /**
-     * Tag name when creating a default $element.
-     * @type string
-     */
-    tag_name: 'div',
     /**
      * Constructs the widget and sets its parent if a parent is given.
      *
@@ -1001,88 +998,10 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(niv.ParentedMixin).exten
      * for new components this argument should not be provided any more.
      */
     init: function(parent) {
+        openerp.web.CallbackEnabledMixin.init.call(this);
         this._super();
         this.session = openerp.connection;
-        
-        this.$element = $(document.createElement(this.tag_name));
-
-        this.setParent(parent);
     },
-    /**
-     * Destroys the current widget, also destroys all its children before destroying itself.
-     */
-    destroy: function() {
-        _.each(this.getChildren(), function(el) {
-            el.destroy();
-        });
-        if(this.$element != null) {
-            this.$element.remove();
-        }
-        this._super();
-    },
-    /**
-     * Renders the current widget and appends it to the given jQuery object or Widget.
-     *
-     * @param target A jQuery object or a Widget instance.
-     */
-    appendTo: function(target) {
-        var self = this;
-        return this._render_and_insert(function(t) {
-            self.$element.appendTo(t);
-        }, target);
-    },
-    /**
-     * Renders the current widget and prepends it to the given jQuery object or Widget.
-     *
-     * @param target A jQuery object or a Widget instance.
-     */
-    prependTo: function(target) {
-        var self = this;
-        return this._render_and_insert(function(t) {
-            self.$element.prependTo(t);
-        }, target);
-    },
-    /**
-     * Renders the current widget and inserts it after to the given jQuery object or Widget.
-     *
-     * @param target A jQuery object or a Widget instance.
-     */
-    insertAfter: function(target) {
-        var self = this;
-        return this._render_and_insert(function(t) {
-            self.$element.insertAfter(t);
-        }, target);
-    },
-    /**
-     * Renders the current widget and inserts it before to the given jQuery object or Widget.
-     *
-     * @param target A jQuery object or a Widget instance.
-     */
-    insertBefore: function(target) {
-        var self = this;
-        return this._render_and_insert(function(t) {
-            self.$element.insertBefore(t);
-        }, target);
-    },
-    /**
-     * Renders the current widget and replaces the given jQuery object.
-     *
-     * @param target A jQuery object or a Widget instance.
-     */
-    replace: function(target) {
-        return this._render_and_insert(_.bind(function(t) {
-            this.$element.replaceAll(t);
-        }, this), target);
-    },
-    _render_and_insert: function(insertion, target) {
-        this.render_element();
-        if (target instanceof openerp.web.Widget)
-            target = target.$element;
-        insertion(target);
-        this.on_inserted(this.$element, this);
-        return this.start();
-    },
-    on_inserted: function(element, widget) {},
     /**
      * Renders the element. The default implementation renders the widget using QWeb,
      * `this.template` must be defined. The context given to QWeb contains the "widget"
@@ -1097,18 +1016,6 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(niv.ParentedMixin).exten
             this.$element.replaceWith(elem);
             this.$element = elem;
         }
-    },
-    /**
-     * Method called after rendering. Mostly used to bind actions, perform asynchronous
-     * calls, etc...
-     *
-     * By convention, the method should return a promise to inform the caller when
-     * this widget has been initialized.
-     *
-     * @returns {jQuery.Deferred}
-     */
-    start: function() {
-        return $.Deferred().done().promise();
     },
     /**
      * Informs the action manager to do an action. This supposes that
@@ -1133,7 +1040,6 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(niv.ParentedMixin).exten
         }
         return false;
     },
-
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
@@ -1146,7 +1052,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(niv.ParentedMixin).exten
         });
         return def.promise();
     }
-});
+}));
 
 /**
  * @deprecated use :class:`openerp.web.Widget`
