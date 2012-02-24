@@ -72,6 +72,39 @@ class mail_thread(osv.osv):
     #------------------------------------------------------
     # Generic message api
     #------------------------------------------------------
+    
+    def message_create(self, cr, uid, ids, vals, context=None):
+        """OpenSocial: wrapper of mail.message create method
+        - creates the mail.message
+        - automatically subscribe the message writer if not already done
+        - push the message to subscribed users"""
+        subscription_obj = self.pool.get('mail.subscription')
+        notification_obj = self.pool.get('mail.notification')
+        
+        # notifications do not come from any user, but from system
+        if vals.get('type') == 'notification': vals['user_id'] = False
+        if not 'need_action_user_id' in vals: vals['need_action_user_id'] = False
+        if not 'model' in vals: vals['model'] = False
+        if not 'res_id' in vals: vals['res_id'] = 0
+        need_action_pushed = False
+        
+        msg_id = self.pool.get('mail.message').create(cr, uid, vals, context=context)
+        
+        # automatically subscribe the writer of the message if not subscribed
+        if vals['user_id']:
+            if not self.message_is_subscriber(cr, uid, ids, context=context):
+                self.message_subscribe(cr, uid, ids, context=context)
+        
+        # push the message to suscribed users
+        users = self.message_get_subscribers(cr, uid, ids, context=context)
+        for user in users:
+            notification_obj.create(cr, uid, {'user_id': user['id'], 'message_id': msg_id}, context=context)
+            if vals['need_action_user_id'] == user['id']: need_action_pushed = True
+        # push to need_action_user_id if user does not follow the object
+        if vals['need_action_user_id'] and not need_action_pushed:
+            notification_obj.create(cr, uid, {'user_id': vals['need_action_user_id'], 'message_id': msg_id}, context=context)
+        return msg_id
+
     def message_capable_models(self, cr, uid, context=None):
         ret_dict = {}
         for model_name in self.pool.obj_list():
@@ -197,7 +230,9 @@ class mail_thread(osv.osv):
                     'reply_to': reply_to,
                     'original': original,
                 }
-            mail_message.create(cr, uid, data, context=context)
+            #mail_message.create(cr, uid, data, context=context)
+            context['mail.thread'] = True
+            self.message_create(cr, uid, [thread.id], data, context=context)
         return True
 
     def message_append_dict(self, cr, uid, ids, msg_dict, context=None):
@@ -240,21 +275,34 @@ class mail_thread(osv.osv):
                             context = context)
 
     # Message loading
-    def message_load_ids(self, cr, uid, ids, context=None):
+    def message_load_ids(self, cr, uid, ids, limit=50, offset=0, context=None):
         """ OpenSocial feature: return thread messages ids (for web compatibility)
         loading messages: search in mail.messages where res_id = ids, (res_)model = current model
         """
         msg_obj = self.pool.get('mail.message')
-        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', ids), ('model', '=', self._name)], context=context)
+        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', ids), ('model', '=', self._name)],
+            limit=limit, offset=offset, context=context)
         return msg_ids
         
-    def message_load(self, cr, uid, ids, context=None):
+    def message_load(self, cr, uid, ids, limit=5, offset=0, context=None):
         """ OpenSocial feature: return thread messages
         loading messages: search in mail.messages where res_id = ids, (res_)model = current model
         """
-        msg_ids = self.message_load_ids(cr, uid, ids, context=context)
+        msg_ids = self.message_load_ids(cr, uid, ids, limit=limit, offset=offset, context=context)
         return self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
-
+    
+    def get_pushed_messages(self, cr, uid, ids, filter_search=False, limit=5, offset=0, context=None):
+        """OpenSocial: wall: get messages to display (=pushed notifications)
+            :param filter_search: TODO
+            :return: list of mail.messages, unsorted
+        """
+        notification_obj = self.pool.get('mail.notification')
+        notification_ids = notification_obj.search(cr, uid, [('user_id', '=', uid)], limit=limit, offset=offset, context=context)
+        notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
+        msg_ids = [notification.message_id.id for notification in notifications]
+        msgs = self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
+        return msgs
+    
     #------------------------------------------------------
     # Email specific
     #------------------------------------------------------
@@ -533,23 +581,24 @@ class mail_thread(osv.osv):
     # Subscription mechanism
     #------------------------------------------------------
     
-    def message_get_subscribers_ids(self, cr, uid, ids, context=None):
+    def _message_get_subscribers_ids(self, cr, uid, ids, context=None):
         subscription_obj = self.pool.get('mail.subscription')
         sub_ids = subscription_obj.search(cr, uid, ['&', ('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         subs = subscription_obj.read(cr, uid, sub_ids, context=context)
         return [sub['user_id'][0] for sub in subs]
     
     def message_get_subscribers(self, cr, uid, ids, context=None):
-        user_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context)
-        users = self.pool.get('res.users').read(cr, uid, user_ids, context=context)
+        user_ids = self._message_get_subscribers_ids(cr, uid, ids, context=context)
+        users = self.pool.get('res.users').read(cr, uid, user_ids, fields=['id', 'name', 'avatar_mini'], context=context)
         return users
     
     def message_is_subscriber(self, cr, uid, ids, context=None):
+        # TODO: use message_get_subscribers ? as all subscriptions are in mail.subscription table, not necessary
         subscription_obj = self.pool.get('mail.subscription')
         sub_ids = subscription_obj.search(cr, uid,
                         ['&', '&',  ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', '=', uid)], context=context)
         if len(sub_ids) > 1:
-            print 'cacaprout error !'
+            pass # TODO
         return True if sub_ids else False
     
     def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):

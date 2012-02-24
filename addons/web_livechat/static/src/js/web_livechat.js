@@ -89,7 +89,7 @@ openerp.web.Header.include({
         this._super();
         this.update_promise.then(function() {
             if (self.livechat) {
-                self.livechat.stop();
+                self.livechat.destroy();
             }
             self.livechat = new openerp.web_livechat.Livechat(self);
             self.livechat.prependTo(self.$element.find('div.header_corner'));

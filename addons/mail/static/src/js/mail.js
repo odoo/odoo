@@ -2,6 +2,120 @@ openerp.mail = function(session) {
     
     var mail = session.mail = {};
 
+    /* Add ThreadDisplay widget to registry */
+    session.web.form.widgets.add(
+        'ThreadDisplay', 'openerp.mail.ThreadDisplay');
+    session.web.page.readonly.add(
+        'ThreadDisplay', 'openerp.mail.ThreadDisplay');
+
+    /* ThreadDisplay widget: display a thread of comments */
+    mail.ThreadDisplay = session.web.Widget.extend({
+        // QWeb template to use when rendering the object
+        template: 'ThreadDisplay',
+        
+        init: function(parent, params) {
+            this._super(parent);
+            this.res_model = params['res_model'];
+            this.res_id = params['res_id'];
+            this.uid = params['uid'];
+            this.records = params['records'] || false;
+            /* DataSets */
+            this.ds = new session.web.DataSet(this, this.res_model);
+            this.ds_users = new session.web.DataSet(this, 'res.users');
+        },
+        
+        start: function() {
+            var self = this;
+            this._super.apply(this, arguments);
+            /* bind buttons */
+            this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
+            /* delegate links */
+            self.$element.find('div.oe_mail_thread_display').delegate('a', 'click', function (event) {
+                //console.log(event);
+                var res_model = event.srcElement.dataset.resModel;
+                var res_id = event.srcElement.dataset.resId;
+                self.do_action({
+                    type: 'ir.actions.act_window',
+                    res_model: res_model,
+                    res_id: parseInt(res_id),
+                    //context: context,
+                    views: [[false, 'form']]
+                });
+            });
+            /* display user, fetch comments */
+            this.display_current_user();
+            if (this.records == false) this.fetch_comments();
+            else this.display_comments(this.records);
+        },
+        
+        stop: function () {
+            this._super.apply(this, arguments);
+        },
+        
+        fetch_comments: function () {
+            var load_res = this.ds.call('message_load', [[this.res_id]]).then(
+                this.proxy('display_comments'));
+            return load_res;
+        },
+        
+        display_current_user: function () {
+            $('<div>').html(
+                '<img src="' + this.thread_get_avatar_mini('res.users', 'avatar_mini', this.uid) + '"/>'
+                ).appendTo(this.$element.find('div.oe_mail_msg_image'));
+        },
+        
+        display_comments: function (records) {
+            this.$element.find('div.oe_mail_thread_display').empty();
+            var self = this;
+            _(records).each(function (record) {
+                record.mini_url = self.thread_get_avatar_mini('res.users', 'avatar_mini', record.user_id[0]);
+                record.body_text = self.do_replace_internal_links(record.body_text);
+                var render_res = session.web.qweb.render('ThreadMsg', {
+                    'record': record,
+                    });
+                $('<div class="oe_mail_thread_msg">').html(render_res).appendTo(self.$element.find('div.oe_mail_thread_display'));
+            });
+        },
+        
+        do_comment: function () {
+            var body_text = this.$element.find('textarea').val();
+            return this.ds.call('message_append_note', [[this.res_id], 'Reply comment', body_text, type='comment']).then(
+                this.proxy('fetch_comments'));
+        },
+        
+        do_replace_internal_links: function (string) {
+            var self = this;
+            /* internal links: @sale.order,32 */
+            var regex_intlink = new RegExp(/(^|\s)@(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\d+)/g);
+            var regex_res = regex_intlink.exec(string);
+            while (regex_res != null) {
+                var res_model = regex_res[2] + '.' + regex_res[3];
+                var res_id = regex_res[4];
+                string = string.replace(regex_res[0], '' + regex_res[1] + '<a href="#" data-res-model = ' + res_model + ' data-res-id = ' + res_id + '>'
+                    + res_model + '(' + res_id + ')</a>');
+                regex_res = regex_intlink.exec(string);
+            }
+            /* shortcut to user: @login */
+            //var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*)/g);
+            //var regex_res = regex_login.exec(string);
+            //while (regex_res != null) {
+                //var res_model = regex_res[2] + '.' + regex_res[3];
+                //var res_id = regex_res[4];
+                //string = string.replace(regex_res[0], '' + regex_res[1] + '<a href="#" data-res-model = ' + res_model + ' data-res-id = ' + res_id + '>'
+                    //+ res_model + '(' + res_id + ')</a>');
+                //regex_res = regex_intlink.exec(string);
+            //}
+            return string;
+        },
+        
+        thread_get_avatar_mini: function(model, field, id) {
+            id = id || '';
+            var url = this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+            return url;
+        },
+    });
+
+
     /* Add ThreadView widget to registry */
     session.web.form.widgets.add(
         'ThreadView', 'openerp.mail.ThreadView');
@@ -11,28 +125,27 @@ openerp.mail = function(session) {
     /* ThreadView widget: thread of comments */
     mail.ThreadView = session.web.form.Field.extend({
         // QWeb template to use when rendering the object
-        form_template: 'ThreadView',
-        
+        form_template: 'Thread',
+
         init: function() {
-            this.follow_state = 0;
+            this.is_sub = 0;
+            this.see_sub = 0;
             this._super.apply(this, arguments);
+            this.thread_display = null;
             /* DataSets */
             this.ds = new session.web.DataSet(this, this.view.model);
+            this.ds_users = new session.web.DataSet(this, 'res.users');
         },
-        
+
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            /* bind buttons */
-            self.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
+            /* bind and hide buttons */
             self.$element.find('button.oe_mail_button_followers').bind('click', function () { self.do_toggle_followers(); });
-            self.$element.find('button.oe_mail_button_follow').bind('click', function () { self.do_follow(); });
-            self.$element.find('button.oe_mail_button_unfollow').bind('click', function () { self.do_unfollow(); });
-            /* hide follow/unfollow buttons */
-            self.$element.find('button.oe_mail_button_follow').hide();
-            self.$element.find('button.oe_mail_button_unfollow').hide();
+            self.$element.find('button.oe_mail_button_follow').bind('click', function () { self.do_follow(); }).hide();
+            self.$element.find('button.oe_mail_button_unfollow').bind('click', function () { self.do_unfollow(); }).hide();
         },
-        
+
         stop: function () {
             this._super.apply(this, arguments);
         },
@@ -40,51 +153,37 @@ openerp.mail = function(session) {
         set_value: function() {
             var self = this;
             this._super.apply(this, arguments);
-            /* hide follow/unfollow buttons */
+            /* hide follow/unfollow/see followers buttons */
             self.$element.find('button.oe_mail_button_follow').hide();
             self.$element.find('button.oe_mail_button_unfollow').hide();
             if (! this.view.datarecord.id) { return; }
             /* find wich (un)follow buttons to show */
             var call_res = this.ds.call('message_is_subscriber', [[this.view.datarecord.id]]).then(function (records) {
-                if (records == true) { self.follow_state = 1; self.$element.find('button.oe_mail_button_unfollow').show(); }
-                else { self.follow_state = 0; self.$element.find('button.oe_mail_button_follow').show(); }
+                if (records == true) { self.is_sub = 1; self.$element.find('button.oe_mail_button_unfollow').show(); }
+                else { self.is_sub = 0; self.$element.find('button.oe_mail_button_follow').show(); }
                 });
-            /* fetch comments and subscribers */
+            /* fetch subscribers */
             this.fetch_subscribers();
-            return this.fetch_comments();
-        },
-        
-        fetch_comments: function () {
-            var load_res = this.ds.call('message_load', [[this.view.datarecord.id]]).then(
-                this.proxy('display_comments'));
-            return load_res;
+            /* create ThreadDisplay widget and render it */
+            this.$element.find('div.oe_mail_thread_left').empty();
+            this.thread_display = new mail.ThreadDisplay(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid});
+            this.thread_display.appendTo(this.$element.find('div.oe_mail_thread_left'));
         },
         
         fetch_subscribers: function () {
             var follow_res = this.ds.call('message_get_subscribers', [[this.view.datarecord.id]]).then(
-                this.proxy('display_followers'));
+                this.proxy('display_subscribers'));
+            this.$element.find('div.oe_mail_followers_display').hide();
             return follow_res;
         },
         
-        display_comments: function (records) {
-            this.$element.find('div.oe_mail_msg').empty();
+        display_subscribers: function (records) {
+            this.$element.find('div.oe_mail_followers_display').empty();
             var self = this;
             _(records).each(function (record) {
-                var template = 'ThreadMsgView';
-                var render_res = session.web.qweb.render(template, {
-                    'record': record,
-                    });
-                $('<div class="oe_mail_comment">').html(render_res).appendTo(self.$element.find('div.oe_mail_msg'));
-            });
-        },
-        
-        display_followers: function (records) {
-            this.$element.find('div.oe_mail_followers').empty();
-            var self = this;
-            _(records).each(function (record) {
-//                 <div class="oe_mail_followers_vignette" title="Raoul Grobedon"><img src="people.png"/></div>
-                //$('<div class="oe_mail_followers_vignette">').text(record.user_id[1]).appendTo(self.$element.find('div.oe_mail_followers'));
-                $('<div class="oe_mail_followers_vignette">').text(record.name).appendTo(self.$element.find('div.oe_mail_followers'));
+                $('<div class="oe_mail_followers_vignette">').html(
+                    '<img src="' + self.thread_get_avatar_mini('res.users', 'avatar_mini', record.id) + '" title="' + record.name + '" alt="' + record.name + '"/>'
+                    ).appendTo(self.$element.find('div.oe_mail_followers_display'));
             });
         },
         
@@ -98,22 +197,26 @@ openerp.mail = function(session) {
             return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).then();
         },
         
-        do_comment: function () {
-            var body_text = this.$element.find('textarea').val();
-            return this.ds.call('message_append_note', [[this.view.datarecord.id], 'Reply comment', body_text, type='comment']).then(
-                this.proxy('fetch_comments'));
-        },
-        
         do_toggle_follow: function () {
-            this.follow_state = 1 - this.follow_state;
+            this.is_sub = 1 - this.is_sub;
             this.$element.find('button.oe_mail_button_unfollow').toggle();
             this.$element.find('button.oe_mail_button_follow').toggle();
         },
         
         do_toggle_followers: function () {
-            this.$element.find('div.oe_mail_followers').toggle();
+            this.see_sub = 1 - this.see_sub;
+            if (this.see_sub == 1) { this.$element.find('button.oe_mail_button_followers').html('Hide followers'); }
+            else { this.$element.find('button.oe_mail_button_followers').html('Display followers'); }
+            this.$element.find('div.oe_mail_followers_display').toggle();
+        },
+        
+        thread_get_avatar_mini: function(model, field, id) {
+            id = id || '';
+            var url = this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+            return url;
         },
     });
+    
     
     /* Add WallView widget to registry */
     session.web.client_actions.add('mail.all_feeds', 'session.mail.WallView');
@@ -121,13 +224,14 @@ openerp.mail = function(session) {
     /* WallView widget: a wall of messages */
     mail.WallView = session.web.Widget.extend({
         // QWeb template to use when rendering the object
-        template: 'WallView',
+        template: 'Wall',
 
         init: function (parent, params) {
             this._super(parent);
             this.filter_search = params['filter_search'];
             /* DataSets */
-            this.ds_msg = new session.web.DataSet(this, 'mail.message');
+            this.ds_thread = new session.web.DataSet(this, 'mail.thread');
+            this.ds_users = new session.web.DataSet(this, 'res.users');
         },
 
         start: function() {
@@ -142,28 +246,52 @@ openerp.mail = function(session) {
         },
 
         fetch_comments: function () {
-            var load_res = this.ds_msg.call('get_pushed_messages', [[this.session.uid]]).then(
+            var load_res = this.ds_thread.call('get_pushed_messages', [[this.session.uid]]).then(
                 this.proxy('display_comments'));
             return load_res;
         },
         
         display_comments: function (records) {
-            this.$element.find('div.oe_mail_msg').empty();
+            this.$element.find('div.oe_mail_wall_threads').empty();
+            sorted_records = this.sort_comments(records);
             var self = this;
-            _(records).each(function (record) {
-                console.log(record);
-                var template = 'ThreadMsgView';
-                var render_res = session.web.qweb.render(template, {
-                    'record': record,
+            _(sorted_records).each(function (rec_models, model) { // each model
+                _(rec_models).each(function (record_id, id) { // each record
+                    var template = 'WallThreadContainer';
+                    var render_res = session.web.qweb.render(template, {
+                        'record_model': model,
+                        'record_id': id,
                     });
-                $('<div class="oe_mail_comment">').html(render_res).appendTo(self.$element.find('div.oe_mail_msg'));
+                    $('<div class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('div.oe_mail_wall_threads'));
+                    self.thread_display = new mail.ThreadDisplay(self,
+                        {'res_model': model, 'res_id': parseInt(id), 'uid': self.session.uid, 'records': record_id}
+                        );
+                    self.thread_display.appendTo(self.$element.find('div.oe_mail_wall_thread_content:last'));
+                });
             });
+        },
+
+        sort_comments: function (records) {
+            sorted_comments = {};
+            _(records).each(function (record) {
+                if (! (record.model in sorted_comments)) { sorted_comments[record.model] = {}; }
+                if (! (record.res_id in sorted_comments[record.model])) {
+                    sorted_comments[record.model][record.res_id] = []; }
+                sorted_comments[record.model][record.res_id].push(record);
+            });
+            return sorted_comments;
         },
 
         do_comment: function () {
             var body_text = this.$element.find('textarea').val();
-            return this.ds_msg.call('create', [{'subject': 'Status tweet', 'model': 'res.users', 'body_text': body_text, 'type': 'comment'}]).then(
+            return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, type='comment']).then(
                 this.proxy('fetch_comments'));
+        },
+
+        thread_get_mini: function(model, field, id) {
+            id = id || '';
+            var url = this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+            return url;
         },
     });
 };
