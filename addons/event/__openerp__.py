@@ -39,9 +39,10 @@ Note that:
         Association / Configuration / Types of Events
 """,
     'author': 'OpenERP SA',
-    'depends': ['crm','marketing','product','email_template'],
+    'depends': ['email_template'],
     'init_xml': [],
     'update_xml': [
+        'security/event_security.xml',
         'security/ir.model.access.csv',
         'wizard/event_confirm_view.xml',
         'event_view.xml',

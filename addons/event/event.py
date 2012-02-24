@@ -243,7 +243,6 @@ class event_registration(osv.osv):
     }
     _order = 'create_date desc'
 
-
     def do_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
@@ -255,7 +254,7 @@ class event_registration(osv.osv):
         self.message_append(cr, uid, ids, _('Open'))
         return res
 
-    def case_close(self, cr, uid, ids, context=None):
+    def button_reg_close(self, cr, uid, ids, context=None):
         """ Close Registration
         """
         if context is None:
@@ -266,32 +265,11 @@ class event_registration(osv.osv):
         self.message_append(cr, uid, ids, msg)
         return res
 
-    # event uses add_note wizard from crm, which expects case_* methods
-    def case_open(self, cr, uid, ids, context):
-        return self.registration_open(cr, uid, ids, context)
-
-    # event uses add_note wizard from crm, which expects case_* methods
-    def case_cancel(self, cr, uid, ids, context=None):
+    def button_reg_cancel(self, cr, uid, ids, context=None, *args):
         """ Cancel Registration
         """
         self.message_append(cr, uid, ids, _('Cancel'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
-
-    # event uses add_note wizard from crm, which expects case_* methods
-    def case_reset(self, cr, uid, ids, context=None):
-        pass
-
-    # event uses add_note wizard from crm, which expects case_* methods
-    def case_pending(self, cr, uid, ids, context=None):
-        pass
-
-    def button_reg_close(self, cr, uid, ids, context=None):
-        """This Function Close Event Registration.
-        """
-        return self.case_close(cr, uid, ids)
-
-    def button_reg_cancel(self, cr, uid, ids, context=None, *args):
-        return self.case_cancel(cr, uid, ids)
 
     def mail_user(self, cr, uid, ids, confirm=False, context=None):
         """

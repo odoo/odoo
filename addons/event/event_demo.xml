@@ -2,37 +2,8 @@
 <openerp>
     <data>
     <record id="base.user_demo" model="res.users">
-             <field name="groups_id" eval="[(4, ref('marketing.group_marketing_user')),(4, ref('base.group_sale_salesman'))]"/>
+             <field name="groups_id" eval="[(4, ref('event.group_event_user'))]"/>
      </record>
-
-
-<!-- Demo Data for Product -->
-    <record id="event_product_0" model="product.product">
-        <field name="list_price">68.00</field>
-        <field name="standard_price">15.00</field>
-        <field name="uom_id" ref="product.product_uom_unit"/>
-        <field name="uom_po_id" ref="product.product_uom_unit"/>
-        <field name="name">Ticket for Concert</field>
-        <field name="categ_id" model="product.category" search="[]"/>
-    </record>
-
-    <record id="event_product_1" model="product.product">
-        <field name="list_price">24.00</field>
-        <field name="standard_price">15.00</field>
-        <field name="uom_id" ref="product.product_uom_unit"/>
-        <field name="uom_po_id" ref="product.product_uom_unit"/>
-        <field name="name">Ticket for Opera</field>
-        <field name="categ_id" model="product.category" search="[]"/>
-    </record>
-
-    <record id="event_product_2" model="product.product">
-        <field name="list_price">15.50</field>
-        <field name="standard_price">5.00</field>
-        <field name="uom_id" ref="product.product_uom_unit"/>
-        <field name="uom_po_id" ref="product.product_uom_unit"/>
-        <field name="name">Ticket for Conference</field>
-        <field name="categ_id" model="product.category" search="[]"/>
-    </record>
 
 
 <!-- Demo Data for Event Type -->
@@ -61,7 +32,6 @@
         <field name="name">Concert of Bon Jovi</field>
         <field eval="time.strftime('%Y-%m-01 19:05:15')" name="date_begin"/>
         <field eval="time.strftime('%Y-%m-01 23:05:15')" name="date_end"/>
-        <field name="product_id" ref="event_product_0"/>
         <field name="unit_price">68.00</field>
         <field name="mail_auto_registr">True</field>
         <field name="mail_auto_confirm">True</field>
@@ -74,7 +44,6 @@
         <field name="name">Opera of Verdi</field>
         <field eval="time.strftime('%Y-%m-05 18:00:00')" name="date_begin"/>
         <field eval="time.strftime('%Y-%m-05 21:00:00')" name="date_end"/>
-        <field name="product_id" ref="event_product_1"/>
         <field name="unit_price">24.00</field>
         <field name="type" ref="event_type_1"/>
         <field name="user_id" ref="base.user_root"/>
@@ -85,7 +54,6 @@
         <field name="name">Conference on ERP Buisness</field>
         <field eval="time.strftime('%Y-%m-05 14:00:00')" name="date_begin"/>
         <field eval="time.strftime('%Y-%m-05 16:30:00')" name="date_end"/>
-        <field name="product_id" ref="event_product_2"/>
         <field name="unit_price">15.50</field>
         <field name="type" ref="event_type_2"/>
         <field name="register_max">200</field>
@@ -103,14 +71,12 @@
         <field name="event_id" ref="event_1"/>
         <field name="partner_id_address" ref="base.res_partner_asus"/>
         <field name="nb_register">5</field>
-        <field name="event_product">Ticket for Opera</field>
     </record>
 
     <record id="reg_1_2" model="event.registration">
         <field name="event_id" ref="event_1"/>
         <field name="partner_id_address" ref="base.res_partner_agrolait"/>
         <field name="nb_register">10</field>
-        <field name="event_product">Ticket for Opera</field>
     </record>
 
 
@@ -118,7 +84,6 @@
         <field name="event_id" ref="event_0"/>
         <field name="partner_id_address" ref="base.res_partner_c2c"/>
         <field name="nb_register">6</field>
-        <field name="event_product">Ticket for Concert</field>
     </record>
 
 
@@ -127,7 +92,6 @@
         <field name="event_id" ref="event_2"/>
         <field name="partner_id" ref="base.res_partner_c2c"/>
         <field name="nb_register">5</field>
-        <field name="event_product">Ticket for Conference</field>
     </record>
 
     </data>

@@ -25,7 +25,7 @@
    I confirm the registration1
 -
    !python {model: event.registration}: |
-     self.case_open(cr, uid, [ref("event_registration1")],context=context)
+     self.registration_open(cr, uid, [ref("event_registration1")],context=context)
 -
    I check that registration is "confirmed"
 -
