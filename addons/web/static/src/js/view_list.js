@@ -540,19 +540,17 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Array} records selected record values
      */
     do_select: function (ids, records) {
-        this.$element.find('.oe-list-delete')
-            .attr('disabled', !ids.length);
-        if (this.sidebar) {
-            if (ids.length) {
-                this.sidebar.do_unfold();
-            } else {
-                this.sidebar.do_fold();
-            }
-        }
-        if (!records.length) {
+        this.$element.find('.oe-list-delete').attr('disabled', !ids.length);
+        if (!ids.length) {
+            this.dataset.index = 0;
+            if (this.sidebar) { this.sidebar.do_fold(); }
             this.compute_aggregates();
             return;
         }
+
+        this.dataset.index = _(this.dataset.ids).indexOf(ids[0]);
+        if (this.sidebar) { this.sidebar.do_unfold(); }
+
         this.compute_aggregates(_(records).map(function (record) {
             return {count: 1, values: record};
         }));
