@@ -2,8 +2,8 @@
 <openerp>
     <data>
 
-       <menuitem  name="Events" id="base.main_menu"/>
-        <menuitem name="Events Organisation" id="base.menu_event_main" parent="base.main_menu" />
+       <menuitem  name="Events" id="event_main_menu"/>
+        <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu" />
 
     <!-- EVENTS  -->
 
@@ -40,7 +40,7 @@
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.main_menu" sequence="30"/>
+        <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="event_main_menu" sequence="30"/>
         <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root"/>
 
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
@@ -416,6 +416,6 @@
             action="action_registration"/>
 
 
-        <menuitem name="Reporting" id="base.menu_report_association" parent="base.main_menu" sequence="20"/>
+        <menuitem name="Reporting" id="base.menu_report_association" parent="event_main_menu" sequence="20"/>
     </data>
 </openerp>
