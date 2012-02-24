@@ -3,7 +3,7 @@
 
         <record id="view_config_picking_policy" model="ir.ui.view">
             <field name="name">Sales Application</field>
-            <field name="model">sale.config.picking_policy</field>
+            <field name="model">sale.configuration</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sale Configuration">
@@ -79,9 +79,9 @@
         </record>
 
         <record id="action_config_picking_policy" model="ir.actions.act_window">
-            <field name="name">Configure different Sales Applications</field>
+            <field name="name">Configure Sales Application</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.config.picking_policy</field>
+            <field name="res_model">sale.configuration</field>
             <field name="view_id" ref="view_config_picking_policy"/>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>

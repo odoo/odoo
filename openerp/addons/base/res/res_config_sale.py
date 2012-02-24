@@ -19,18 +19,10 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-import time
-import pooler
 from osv import fields, osv
-from tools.translate import _
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
-import decimal_precision as dp
-import netsvc
 
-class sale_config_picking_policy(osv.osv_memory):
-    _name = 'sale.config.picking_policy'
+class sale_configuration(osv.osv_memory):
+    _name = 'sale.configuration'
     _inherit = 'res.config'
 
     _columns = {
@@ -38,7 +30,7 @@ class sale_config_picking_policy(osv.osv_memory):
         'analytic_journal_billing_rate' : fields.boolean("Manage Different billing rates on contract/analytic accounts"),
         'import_sugarcrm' : fields.boolean("Import data from sugarCRM?"),
         'import_google' : fields.boolean("Import Contacts & Meetings from Google"),
-        'crm_caldav' : fields.boolean("Use caldev to synchronize Meetings"),
+        'crm_caldav' : fields.boolean("Use caldav to synchronize Meetings"),
         'wiki_sale_faq' : fields.boolean("Install a sales FAQ?"),
         'crm_partner_assign' : fields.boolean("Manage a several address per customer"),
         'google_map' : fields.boolean("Google maps on customer"),
@@ -58,15 +50,34 @@ class sale_config_picking_policy(osv.osv_memory):
 
     }
 
-    def default_module_get(self, cr, uid, ids, context=None):
-        #TODO: Need to be implemented
-        print "Not Implemented!"
-        return {}
+    def default_module_get(self, cr, uid, ids, selectable=[], context=None):
+        #TODO: TO BE IMPLEMENTED
+        modules = self.pool.get('ir.module.module')
+        mods = ['analytic_user_function', 'analytic_journal_billing_rate', 'import_sugarcrm', 'import_google', 'crm_caldav', 'wiki_sale_faq', 'crm_partner_assign', 'plugin_thunderbird', 'plugin_outlook', 'google_map']
+        res = dict([(m,False) for m in mods])
+        for mod in mods:
+            if mod not in selectable:
+                selectable.append(mod)
+        module_ids = modules.search(cr, uid,
+                           [('name','in',selectable),
+                            ('state','in',['to install', 'installed', 'to upgrade'])],
+                           context=context)
+        
+        installed_modules = dict([(mod.name,True) for mod in modules.browse(cr, uid, module_ids, context=context)])
+        res.update(installed_modules)
+        return res
 
     _defaults = {
         'type': 'pop',
         'google_map': default_module_get,
         'crm_caldav': default_module_get,
+        'analytic_user_function': default_module_get,
+        'analytic_journal_billing_rate': default_module_get,
+        'import_sugarcrm': default_module_get,
+        'import_google': default_module_get,
+        'wiki_sale_faq': default_module_get,
+        'plugin_thunderbird': default_module_get,
+        'plugin_outlook': default_module_get,
     }
     
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
@@ -81,97 +92,11 @@ class sale_config_picking_policy(osv.osv_memory):
         values['port'] = port
         return {'value':values}
 
-#    def onchange_order(self, cr, uid, ids, sale, deli, context=None):
-#        res = {}
-#        if sale:
-#            res.update({'order_policy': 'manual'})
-#        elif deli:
-#            res.update({'order_policy': 'picking'})
-#        return {'value':res}
-
     def execute(self, cr, uid, ids, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        data_obj = self.pool.get('ir.model.data')
-        menu_obj = self.pool.get('ir.ui.menu')
-        module_obj = self.pool.get('ir.module.module')
-        module_upgrade_obj = self.pool.get('base.module.upgrade')
-        module_name = []
+        #TODO: TO BE IMPLEMENTED
+        return {}
 
-        group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
+sale_configuration()
 
-        wizard = self.browse(cr, uid, ids)[0]
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
-        if wizard.sale_orders:
-            menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_invoicing_sales_order_lines').id
-            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]})
-
-        if wizard.deli_orders:
-            menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_action_picking_list_to_invoice').id
-            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]})
-
-        if wizard.task_work:
-            module_name.append('project_timesheet')
-            module_name.append('project_mrp')
-            module_name.append('account_analytic_analysis')
-
-        if wizard.timesheet:
-            module_name.append('account_analytic_analysis')
-
-        if wizard.charge_delivery:
-            module_name.append('delivery')
-
-        if len(module_name):
-            module_ids = []
-            need_install = False
-            module_ids = []
-            for module in module_name:
-                data_id = module_obj.name_search(cr, uid , module, [], '=')
-                module_ids.append(data_id[0][0])
-
-            for module in module_obj.browse(cr, uid, module_ids):
-                if module.state == 'uninstalled':
-                    module_obj.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
-                    need_install = True
-                    cr.commit()
-            if need_install:
-                pooler.restart_pool(cr.dbname, update_module=True)[1]
-
-#        if wizard.time_unit:
-#            prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
-#            product_obj = self.pool.get('product.product')
-#            product_obj.write(cr, uid, prod_id, {'uom_id':wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
-
-        ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], wizard.order_policy)
-        if wizard.task_work and wizard.time_unit:
-            company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-            self.pool.get('res.company').write(cr, uid, [company_id], {
-                'project_time_mode_id': wizard.time_unit.id
-            }, context=context)
-
-    def apply_cb(self, cr, uid, ids, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        wizard = self.browse(cr, uid, ids, context=context)[0]
-        ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], wizard.picking_policy)
-        return {'type' : 'ir.actions.act_window_close'}
-
-sale_config_picking_policy()
-
-
-
-#class define_delivery_steps(osv.osv_memory):
-#    _name = 'delivery.define.delivery.steps.wizard'
-#
-#    _columns = {
-#        'picking_policy' : fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')], 'Picking Policy'),
-#    }
-#    _defaults = {
-#        'picking_policy': lambda s,c,u,ctx: s.pool.get('sale.order').default_get(c,u,['picking_policy'],context=ctx)['picking_policy']
-#    }
-#
-#    def apply_cb(self, cr, uid, ids, context=None):
-#        ir_values_obj = self.pool.get('ir.values')
-#        wizard = self.browse(cr, uid, ids, context=context)[0]
-#        ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], wizard.picking_policy)
-#        return {'type' : 'ir.actions.act_window_close'}
-#
-#define_delivery_steps()
