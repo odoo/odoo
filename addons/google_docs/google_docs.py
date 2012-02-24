@@ -88,7 +88,7 @@ class google_docs(osv.osv):
            @param context: a standard dictionary for contextual values.
            @return 0 on successful execution.
            @return -2 if the google_base_account hasn't been configured yet.
-           @retrurn -3 if the given resource_id doesn't exist in the user's google docs account.
+           @return -3 if the given resource_id doesn't exist in the user's google docs account.
         '''
 
         if context == None:
