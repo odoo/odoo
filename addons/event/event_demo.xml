@@ -32,9 +32,6 @@
         <field name="name">Concert of Bon Jovi</field>
         <field eval="time.strftime('%Y-%m-01 19:05:15')" name="date_begin"/>
         <field eval="time.strftime('%Y-%m-01 23:05:15')" name="date_end"/>
-        <field name="unit_price">68.00</field>
-        <field name="mail_auto_registr">True</field>
-        <field name="mail_auto_confirm">True</field>
         <field name="user_id" ref="base.user_root"/>
         <field name="register_max">500</field>
         <field name="type" ref="event_type_1"/>
@@ -44,7 +41,6 @@
         <field name="name">Opera of Verdi</field>
         <field eval="time.strftime('%Y-%m-05 18:00:00')" name="date_begin"/>
         <field eval="time.strftime('%Y-%m-05 21:00:00')" name="date_end"/>
-        <field name="unit_price">24.00</field>
         <field name="type" ref="event_type_1"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="register_min">50</field>
@@ -54,14 +50,9 @@
         <field name="name">Conference on ERP Buisness</field>
         <field eval="time.strftime('%Y-%m-05 14:00:00')" name="date_begin"/>
         <field eval="time.strftime('%Y-%m-05 16:30:00')" name="date_end"/>
-        <field name="unit_price">15.50</field>
         <field name="type" ref="event_type_2"/>
         <field name="register_max">200</field>
         <field name="user_id" ref="base.user_root"/>
-        <field name="mail_auto_registr">True</field>
-        <field name="mail_auto_confirm">True</field>
-        <field name="mail_registr">Thanks for registration. We will keep you informed of the modalities.</field>
-        <field name="mail_confirm">Thanks for registration. The conference will begin at 2 PM and will be given by Mr. Pinckaers.</field>
     </record>
     <function model="event.event" name="button_confirm" eval="[ref('event_2')]"/>
     <function model="event.event" name="button_confirm" eval="[ref('event_2')]"/>
@@ -69,20 +60,17 @@
 <!-- Demo data for Event Registration-->
     <record id="reg_1_1" model="event.registration">
         <field name="event_id" ref="event_1"/>
-        <field name="partner_id_address" ref="base.res_partner_asus"/>
         <field name="nb_register">5</field>
     </record>
 
     <record id="reg_1_2" model="event.registration">
         <field name="event_id" ref="event_1"/>
-        <field name="partner_id_address" ref="base.res_partner_agrolait"/>
         <field name="nb_register">10</field>
     </record>
 
 
     <record id="reg_0_1" model="event.registration">
         <field name="event_id" ref="event_0"/>
-        <field name="partner_id_address" ref="base.res_partner_c2c"/>
         <field name="nb_register">6</field>
     </record>
 

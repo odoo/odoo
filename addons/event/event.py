@@ -92,6 +92,13 @@ class event_event(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
+        registration = self.pool.get('event.registration')
+        reg_ids = registration.search(cr, uid, [('event_id','in',ids)], context=context)
+        for event_reg in registration.browse(cr,uid,reg_ids,context=context):
+            if event_reg.state == 'done':
+                raise osv.except_osv(_('Error!'),_("You have already done a registration please reset to draft if you want to cancel this event") )
+                return
+        registration.write(cr, uid, reg_ids, {'state': 'cancel'}, context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
     def button_done(self, cr, uid, ids, context=None):
@@ -243,6 +250,7 @@ class event_registration(osv.osv):
     }
     _order = 'create_date desc'
 
+
     def do_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
@@ -251,25 +259,37 @@ class event_registration(osv.osv):
         """
         res = self.write(cr, uid, ids, {'state': 'open'}, context=context)
         self.mail_user(cr, uid, ids)
-        self.message_append(cr, uid, ids, _('Open'))
+        self.message_append(cr, uid, ids,_('Statut'),body_text= _('Open'))
         return res
 
-    def button_reg_close(self, cr, uid, ids, context=None):
+    def case_close(self, cr, uid, ids, context=None):
         """ Close Registration
         """
         if context is None:
             context = {}
         values = {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
-        msg = _('Done')
         res = self.write(cr, uid, ids, values)
-        self.message_append(cr, uid, ids, msg)
+        self.message_append(cr, uid, ids,_('Statut'),body_text= _('Done'))
         return res
 
-    def button_reg_cancel(self, cr, uid, ids, context=None, *args):
+    # event uses add_note wizard from crm, which expects case_* methods
+    def case_open(self, cr, uid, ids, context):
+        return self.registration_open(cr, uid, ids, context)
+
+    # event uses add_note wizard from crm, which expects case_* methods
+    def case_cancel(self, cr, uid, ids, context=None):
         """ Cancel Registration
         """
-        self.message_append(cr, uid, ids, _('Cancel'))
+        self.message_append(cr, uid, ids,_('Statut'),body_text= _('Cancel'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
+
+    def button_reg_close(self, cr, uid, ids, context=None):
+        """This Function Close Event Registration.
+        """
+        return self.case_close(cr, uid, ids)
+
+    def button_reg_cancel(self, cr, uid, ids, context=None, *args):
+        return self.case_cancel(cr, uid, ids)
 
     def mail_user(self, cr, uid, ids, confirm=False, context=None):
         """
