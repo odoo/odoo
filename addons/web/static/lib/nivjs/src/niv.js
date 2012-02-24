@@ -25,6 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 niv = (function() {
     var lib = {};
+    lib.internal = {};
 
     /*
      * Unmodified John Resig's inheritance
@@ -90,7 +91,7 @@ niv = (function() {
 
             // And make this class extendable
             Class.extend = arguments.callee;
-
+            
             return Class;
         };
     }).call(lib);
@@ -137,8 +138,6 @@ niv = (function() {
             lib.DestroyableMixin.destroy.call(this);
         }
     });
-    
-    lib.internal = {};
 
     /*
      * Yes, we steal Backbone's events :)
@@ -242,36 +241,36 @@ niv = (function() {
     });
     // end of Backbone's events class
     
-    var checkEventDispatcher = function(ev) {
-        if (!ev.__events) {
-            ev.__events = new lib.internal.Events();
-            ev.__registeredEvents = [];
+    var checkEventDispatcher = function(obj) {
+        if (!obj.__events) {
+            obj.__events = new lib.internal.Events();
+            obj.__registeredEvents = [];
         }
     };
     lib.EventDispatcherMixin = _.extend({}, lib.ParentedMixin, {
         __eventDispatcherMixin: true,
-        bind: function(events, object, func) {
+        bind: function(events, dest, func) {
             var self = this;
             checkEventDispatcher(this);
             events = events.split(/\s+/);
             _.each(events, function(eventName) {
-                self.__events.on(eventName, func, object);
-                if (object && object.__eventDispatcherMixin) {
-                    checkEventDispatcher(object);
-                    object.__registeredEvents.push({name: eventName, func: func, source: self});
+                self.__events.on(eventName, func, dest);
+                if (dest && dest.__eventDispatcherMixin) {
+                    checkEventDispatcher(dest);
+                    dest.__registeredEvents.push({name: eventName, func: func, source: self});
                 }
             });
             return this;
         },
-        unbind: function(events, object, func) {
+        unbind: function(events, dest, func) {
             var self = this;
             checkEventDispatcher(this);
             events = events.split(/\s+/);
             _.each(events, function(eventName) {
-                self.__events.off(eventName, func, object);
-                if (object && object.__eventDispatcherMixin) {
-                    checkEventDispatcher(object);
-                    object.__registeredEvents = _.filter(object.__registeredEvents, function(el) {
+                self.__events.off(eventName, func, dest);
+                if (dest && dest.__eventDispatcherMixin) {
+                    checkEventDispatcher(dest);
+                    dest.__registeredEvents = _.filter(dest.__registeredEvents, function(el) {
                         return !(el.name === eventName && el.func === func && el.source === self);
                     });
                 }
@@ -292,6 +291,31 @@ niv = (function() {
             this.__registeredEvents = [];
             this.__events.off();
             lib.ParentedMixin.destroy.call(this);
+        }
+    });
+    
+    var checkGetterSetter = function(obj) {
+        if (!obj.__internal_map) {
+            obj.__internal_map = {};
+        }
+    };
+    lib.GetterSetterMixin = _.extend({}, lib.EventDispatcherMixin, {
+        set: function(map) {
+            var self = this;
+            checkGetterSetter(this);
+            _.each(map, function(val, key) {
+                var tmp = self.__internal_map[key];
+                self.__internal_map[key] = val;
+                self.trigger("changed:" + key, {
+                    oldValue: tmp,
+                    newValue: val,
+                    source: self
+                });
+            });
+        },
+        get: function(key) {
+            checkGetterSetter(this);
+            return this.__internal_map[key];
         }
     });
 
