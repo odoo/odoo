@@ -229,28 +229,28 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_2">[[ repeatIn(objects,'o') ]]</para>
+      <para style="terp_default_2">[[ repeatIn(objects,'account') ]]</para>
       <blockTable colWidths="56.0,273.0,70.0,70.0,70.0" style="Table_Account_Detail">
         <tr>
           <td>
-            <para style="terp_default_Bold_9">[[ o.code ]]</para>
+            <para style="terp_default_Bold_9">[[ account.code ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_9">[[ o.complete_name ]]</para>
+            <para style="terp_default_Bold_9">[[ account.complete_name ]]</para>
           </td>
           <td>
-            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_debit(o.id,data['form']['date1'],data['form']['date2'])) ]] </para>
+            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_debit(account,data['form']['date1'],data['form']['date2'])) ]] </para>
           </td>
           <td>
-            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_credit(o.id,data['form']['date1'],data['form']['date2'])) ]] </para>
+            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_credit(account,data['form']['date1'],data['form']['date2'])) ]] </para>
           </td>
           <td>
-            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_balance(o.id,data['form']['date1'],data['form']['date2']))]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_balance(account,data['form']['date1'],data['form']['date2']))]] [[ company.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>
       <section>
-        <para style="terp_default_2">[[ repeatIn(lines_g(o.id,data['form']['date1'],data['form']['date2']),'move_g') ]]</para>
+        <para style="terp_default_2">[[ repeatIn(lines_g(account,data['form']['date1'],data['form']['date2']),'move_g') ]]</para>
         <blockTable colWidths="56.0,273.0,70.0,70.0,70.0" style="Table_Move_Line_Detail">
           <tr>
             <td>
@@ -271,7 +271,7 @@
           </tr>
         </blockTable>
         <section>
-          <para style="terp_default_2">[[ repeatIn(lines_a(move_g['id'],o.id,data['form']['date1'],data['form']['date2']),'move_a') ]]</para>
+          <para style="terp_default_2">[[ repeatIn(lines_a(move_g,account,data['form']['date1'],data['form']['date2']),'move_a') ]]</para>
           <blockTable colWidths="56.0,56.0,217.0,70.0,70.0,70.0" style="Table_Move_Line_Content">
             <tr>
               <td>
