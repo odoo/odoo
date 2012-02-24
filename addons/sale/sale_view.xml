@@ -117,9 +117,9 @@
                         <page string="Sales Order">
                             <field name="partner_id" options='{"quick_create": false}' on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id" on_change="onchange_partner_order_id(partner_order_id, partner_invoice_id, partner_shipping_id)" options='{"quick_create": false}'/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended" options='{"quick_create": false}'/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended" options='{"quick_create": false}'/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_sale_delivery_address" options='{"quick_create": false}'/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_sale_delivery_address" options='{"quick_create": false}'/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_sale_pricelist_per_customer" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="project_id" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" widget="one2many_list">
@@ -139,7 +139,7 @@
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
                                             <field name="product_uom"
                                                 on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"
-                                                nolabel="1"/>
+                                                nolabel="1" groups="base.group_sale_uom_per_product"/>
                                             <field name="price_unit"/>
 
                                             <field groups="product.group_uos" name="product_uos_qty"/>
@@ -149,9 +149,9 @@
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}" on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)"
                                                 domain="[('product_id','=',product_id)]" groups="base.group_extended"
                                                 colspan="3"/>
-                                            <field name="discount"/>
-                                            <separator colspan="5" string="Notes"/>
-                                            <field colspan="5" name="notes" nolabel="1"/>
+                                            <field name="discount" groups="base.group_sale_disc_per_sale_order_line"/>
+                                            <separator colspan="5" string="Notes" groups="base.group_sale_notes_subtotal"/>
+                                            <field colspan="5" name="notes" nolabel="1" groups="base.group_sale_notes_subtotal"/>
                                             <separator colspan="5" string="Taxes"/>
                                             <field colspan="5" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <group colspan="5" col="5" groups="base.group_extended">
@@ -183,12 +183,12 @@
                                 <tree string="Sales Order Lines">
                                     <field colspan="4" name="name"/>
                                     <field name="product_uom_qty" string="Qty(UoM)"/>
-                                    <field name="product_uom" string="UoM"/>
+                                    <field name="product_uom" string="UoM" groups="base.group_sale_uom_per_product"/>
                                     <field groups="product.group_uos" name="product_uos_qty" string="Qty(UoS)"/>
                                     <field groups="product.group_uos" name="product_uos" string="UoS"/>
-                                    <field name="discount"/>
+                                    <field name="discount" groups="base.group_sale_disc_per_sale_order_line"/>
                                     <field name="price_unit"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                                 </tree>
                             </field>
                             <newline/>
@@ -240,8 +240,8 @@
                                 <field name="create_date"/>
                                 <field name="date_confirm"/>
                             </group>
-                            <separator colspan="4" string="Notes"/>
-                            <field colspan="4" name="note" nolabel="1"/>
+                            <separator colspan="4" string="Notes" groups="base.group_sale_notes_subtotal"/>
+                            <field colspan="4" name="note" nolabel="1" groups="base.group_sale_notes_subtotal"/>
                         </page>
                         <page string="History" groups="base.group_extended">
                             <separator colspan="4" string="Invoices"/>
@@ -361,9 +361,9 @@
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
-                    <field name="product_uom" string="UoM"/>
+                    <field name="product_uom" string="UoM" groups="base.group_sale_uom_per_product"/>
                     <field name="salesman_id"/>
-                    <field name="price_subtotal" sum="Total"/>
+                    <field name="price_subtotal" sum="Total" groups="base.group_sale_notes_subtotal"/>
                     <field name="state"/>
                     <field name="invoiced"/>
                 </tree>
@@ -382,7 +382,7 @@
 
                         <field name="product_id" readonly="1"/>
                         <field name="product_uom_qty" readonly="1"/>
-                        <field name="product_uom"/>
+                        <field name="product_uom" groups="base.group_sale_uom_per_product"/>
 
                         <field colspan="4" name="name" groups="base.group_extended"/>
                         <field name="company_id" groups="base.group_multi_company" readonly="1"/>
@@ -390,11 +390,11 @@
                     <separator colspan="4" string="Price"/>
                     <group colspan="4" col="6">
                         <field name="price_unit"/>
-                        <field name="discount"/>
-                        <field name="price_subtotal"/>
+                        <field name="discount" groups="base.group_sale_disc_per_sale_order_line"/>
+                        <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                     </group>
-                    <separator colspan="4" string="Notes"/>
-                    <field colspan="4" name="notes" nolabel="1"/>
+                    <separator colspan="4" string="Notes" groups="base.group_sale_notes_subtotal"/>
+                    <field colspan="4" name="notes" nolabel="1" groups="base.group_sale_notes_subtotal"/>
                     <separator colspan="4"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     <group col="3" colspan="2">
@@ -533,7 +533,7 @@
                             <field name="time_unit" attrs="{'invisible':[('task_work','=',False),('timesheet','=',False)]}"/>
                         </group>
                     </group>
-                    
+
                     <separator string="Sale Order" colspan="4"/>
                     <group  colspan="4" col="8">
                         <group  colspan="4" col="4">

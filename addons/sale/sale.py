@@ -1350,7 +1350,7 @@ class sale_configuration(osv.osv_memory):
         'group_sale_delivery_address':fields.boolean(" Allow delivery address different from invoice address"),
         'group_sale_disc_per_sale_order_line':fields.boolean("Allow to apply discounts per sale order lines "),
         'group_sale_notes_subtotal':fields.boolean("Allow notes and subtotals"),
-        'group_sale_alerts_per_customer_products':fields.boolean("Allow to define alerts by products or customers"),
+        'warning':fields.boolean("Allow to define alerts by products or customers"),
         'tax_value' : fields.float('Value'),
         'tax_policy': fields.selection([
             ('no_tax', 'No Tax'),
@@ -1375,7 +1375,7 @@ class sale_configuration(osv.osv_memory):
             else:
                 res.update({k: False})
         return res
-    
+
     _defaults = {
         'order_policy': 'manual',
         'tax_policy': 'no_tax',
@@ -1395,7 +1395,7 @@ class sale_configuration(osv.osv_memory):
         elif deli:
             res.update({'order_policy': 'picking'})
         return {'value':res}
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         self.execute(cr, uid, ids, context=context)
         return super(sale_configuration, self).write(cr, uid, ids, vals, context=context)
