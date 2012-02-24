@@ -4,6 +4,62 @@ import gdata.docs.client
 from gdata.client import RequestError
 from gdata.docs.service import DOCUMENT_LABEL
 
+#    _columns = {
+#        'id': fields.integer('ID', readonly=True),
+#        'model': fields.many2one('ir.model', 'Model'),
+#        'multiple': fields.boolean('Multiple'),
+#        'gdocs_res_id': fields.char('Google resource ID', size=64, translate=False)
+#
+#    }
+#
+##    edit_url_template = 'https://docs.google.com/Edit?docid=%s'
+##    prefix_gdoc_id_res = 'document:'
+#
+#    def google_docs_get(self, cr, uid, model, id):
+#        attachment = self.search(cr, uid, [('res_model', '=', model), ('res_id', '=', id), ('type', '=', 'url'), ('url', 'like', 'https://docs.oogle.com')])
+#        if attachment:
+#            return self.read(cr, uid, attachment)[0]['url']
+#        else:
+#            url = self.pad_generate_url(cr, uid, model, id)
+#            self.create(cr, uid, {
+#                'res_model' : model,
+#                'res_id' : id,
+#                'type' : 'url',
+#                'name' : 'Pad',
+#                'url' : url,
+#            })
+#            return url
+#
+#    def generate_name(self, cr, uid, model, id):
+#        template_vars = {
+#            'db' : cr.dbname,
+#            'model' : model,
+#            'id' : id,
+#            'salt' : salt,
+#            'name' : self.pool.get(model).name_get(cr,uid,[id])[0],
+#        }
+#        return pad_url_template % template_vars
+#        
+#
+#    def button_add_google_docs_google_docs_add_doc(self, cr, uid, model, id):
+#        #pad_url_template = self.pool.get('res.users').browse(cr,uid,[uid])[0].company_id.pad_url_template
+#        #s = string.ascii_uppercase + string.digits
+#        #salt = ''.join([s[random.randint(0, len(s) - 1)] for i in range(8)])
+#
+#        # i lookup in the table google_docs.templates to check the policy
+#
+#        # if multiple: 1
+#
+#            # if i find a template i will duplicate the template
+#
+#            # else empty 'word' text
+#
+#        # else
+#            # if no document exists do like 1 -^
+#            # else 
+#                # jumpt to the existing document
+#
+
 class google_docs(osv.osv):
     _name = 'google.docs'
 
