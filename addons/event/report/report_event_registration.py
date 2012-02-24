@@ -42,7 +42,7 @@ class report_event_registration(osv.osv):
         'event_type': fields.many2one('event.type', 'Event Type'),
         'registration_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
         'event_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
-        'user_id': fields.many2one('res.users', 'Responsible', readonly=True),
+        'user_id': fields.many2one('res.users', 'Event Responsible', readonly=True),
         'user_id_registration': fields.many2one('res.users', 'Register', readonly=True),
         'name_registration': fields.char('Register',size=45, readonly=True),
         'speaker_id': fields.many2one('res.partner', 'Speaker', readonly=True),

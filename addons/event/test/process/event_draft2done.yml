@@ -30,9 +30,9 @@
    I check that registration is "confirmed"
 -
    !assert {model: event.registration, id: event_registration1}:
-     - state == 'open', "event should be confirmed."
+     - state == 'open', "registration should be confirmed."
 -
-   I closed the registration
+   I close the registration
 -
    !python {model: event.registration}: |
      self.button_reg_close(cr, uid, [ref("event_registration1")],context=context)
@@ -50,7 +50,7 @@
     I Check that registration is cancelled
 -
   !assert {model: event.registration, id: event_registration2}:
-    - state == 'cancel', "event should be closed."
+    - state == 'cancel', "registration should be cancelled."
 -
     I confirm the event
 -
@@ -85,5 +85,5 @@
     I check if the event is cancelled
 -
   !assert {model: event.event, id: event_event}:
-     - state == 'cancel', "Event should be Closed."
+     - state == 'cancel', "Event should be cancelled."
 
