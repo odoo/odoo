@@ -318,6 +318,122 @@ niv = (function() {
             return this.__internal_map[key];
         }
     });
+    
+    lib.Widget = lib.Class.extend(_.extend({}, lib.GetterSetterMixin, {
+        /**
+         * Tag name when creating a default $element.
+         * @type string
+         */
+        tag_name: 'div',
+        /**
+         * Constructs the widget and sets its parent if a parent is given.
+         *
+         * @constructs openerp.web.Widget
+         * @extends openerp.web.CallbackEnabled
+         *
+         * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
+         * When that widget is destroyed by calling destroy(), the current instance will be
+         * destroyed too. Can be null.
+         * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
+         * to bind the current Widget to an already existing part of the DOM, which is not compatible
+         * with the DOM insertion methods provided by the current implementation of Widget. So
+         * for new components this argument should not be provided any more.
+         */
+        init: function(parent) {
+            this._super();
+            
+            this.$element = $(document.createElement(this.tag_name));
+    
+            this.setParent(parent);
+        },
+        /**
+         * Destroys the current widget, also destroys all its children before destroying itself.
+         */
+        destroy: function() {
+            _.each(this.getChildren(), function(el) {
+                el.destroy();
+            });
+            if(this.$element != null) {
+                this.$element.remove();
+            }
+            this._super();
+        },
+        /**
+         * Renders the current widget and appends it to the given jQuery object or Widget.
+         *
+         * @param target A jQuery object or a Widget instance.
+         */
+        appendTo: function(target) {
+            var self = this;
+            return this._render_and_insert(function(t) {
+                self.$element.appendTo(t);
+            }, target);
+        },
+        /**
+         * Renders the current widget and prepends it to the given jQuery object or Widget.
+         *
+         * @param target A jQuery object or a Widget instance.
+         */
+        prependTo: function(target) {
+            var self = this;
+            return this._render_and_insert(function(t) {
+                self.$element.prependTo(t);
+            }, target);
+        },
+        /**
+         * Renders the current widget and inserts it after to the given jQuery object or Widget.
+         *
+         * @param target A jQuery object or a Widget instance.
+         */
+        insertAfter: function(target) {
+            var self = this;
+            return this._render_and_insert(function(t) {
+                self.$element.insertAfter(t);
+            }, target);
+        },
+        /**
+         * Renders the current widget and inserts it before to the given jQuery object or Widget.
+         *
+         * @param target A jQuery object or a Widget instance.
+         */
+        insertBefore: function(target) {
+            var self = this;
+            return this._render_and_insert(function(t) {
+                self.$element.insertBefore(t);
+            }, target);
+        },
+        /**
+         * Renders the current widget and replaces the given jQuery object.
+         *
+         * @param target A jQuery object or a Widget instance.
+         */
+        replace: function(target) {
+            return this._render_and_insert(_.bind(function(t) {
+                this.$element.replaceAll(t);
+            }, this), target);
+        },
+        _render_and_insert: function(insertion, target) {
+            this.render_element();
+            if (target instanceof openerp.web.Widget)
+                target = target.$element;
+            insertion(target);
+            return this.start();
+        },
+        /**
+         * This is the method to implement to render the Widget.
+         */
+        render_element: function() {},
+        /**
+         * Method called after rendering. Mostly used to bind actions, perform asynchronous
+         * calls, etc...
+         *
+         * By convention, the method should return a promise to inform the caller when
+         * this widget has been initialized.
+         *
+         * @returns {jQuery.Deferred}
+         */
+        start: function() {}
+    }));
 
     return lib;
 })();
