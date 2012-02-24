@@ -229,7 +229,9 @@ openerp.mail = function(session) {
         init: function (parent, params) {
             this._super(parent);
             this.filter_search = params['filter_search'];
+            this.search = {}
             /* DataSets */
+            this.ds_msg = new session.web.DataSet(this, 'mail.message');
             this.ds_thread = new session.web.DataSet(this, 'mail.thread');
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
@@ -237,17 +239,44 @@ openerp.mail = function(session) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            self.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
-            return this.fetch_comments();
+            this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });   
+            /* load mail.message search view */
+            var search_view_loaded = this.load_search_view();
+            var search_view_ready = $.when(search_view_loaded).then(function () {
+                self.searchview.on_search.add(self.do_searchview_search);
+            });
+            /* fetch comments */
+            var comments_ready = this.fetch_comments();
+            return (search_view_ready && comments_ready);
         },
         
         stop: function () {
-            this._super();
+            this._super.apply(this, arguments);
         },
-
-        fetch_comments: function () {
-            var load_res = this.ds_thread.call('get_pushed_messages', [[this.session.uid]]).then(
-                this.proxy('display_comments'));
+        
+        load_search_view: function (view_id, defaults, hidden) {
+            this.searchview = new session.web.SearchView(this, this.ds_msg, view_id || false, defaults || {}, hidden || false);
+            return this.searchview.appendTo(this.$element.find('div.oe_mail_wall_search'));
+        },
+        
+        do_searchview_search: function(domains, contexts, groupbys) {
+            var self = this;
+            this.rpc('/web/session/eval_domain_and_context', {
+                domains: domains || [],
+                contexts: contexts || [],
+                group_by_seq: groupbys || []
+            }, function (results) {
+                self.search['context'] = results.context;
+                self.search['domain'] = results.domain;
+                self.search['groupby'] = results.group_by;
+                self.fetch_comments(self.search['domain'], self.search['context']);
+            });
+        },
+        
+        fetch_comments: function (domain, context, offset, limit) {
+            var load_res = this.ds_thread.call('get_pushed_messages',
+                [[this.session.uid], limit = (limit || 100), offset = (offset || 0), domain = (domain || null), context = (context || null) ]).then(
+                    this.proxy('display_comments'));
             return load_res;
         },
         
