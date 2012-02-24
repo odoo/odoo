@@ -11,7 +11,7 @@
             <field name="context">{'search_default_to_invoice': 1}</field>
             <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>
         </record>
-        <menuitem action="action_hr_tree_invoiced_all" id="menu_action_hr_tree_invoiced_all" parent="base.menu_invoiced"/>
+        <menuitem action="action_hr_tree_invoiced_all" id="menu_action_hr_tree_invoiced_all" parent="base.menu_invoiced" sequence="5"/>
 
         <record id="view_account_analytic_account_overdue_search" model="ir.ui.view">
             <field name="name">account.analytic.account.search</field>
