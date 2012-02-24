@@ -70,8 +70,8 @@
                                 <field name="phone"/>
                                 <field name="nb_register" />
                                 <field name="state"/>
-                                <button name="button_reg_close" string="participated" states="open" type="object" icon="gtk-apply"/>
                                 <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                <button name="button_reg_close" string="Attented the Event" states="open" type="object" icon="gtk-jump-to"/>
                                 <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                             </tree>
                             <form string="Registration">
@@ -90,8 +90,8 @@
                                         <separator string="" colspan="4"/>
                                         <newline/>
                                         <field name="state" select="1" colspan="2"/>
-                                        <button name="button_reg_close" string="participated" states="open" type="object" icon="gtk-apply"/>
                                         <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                        <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
                                         <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                     </group>
                             </form>
@@ -115,9 +115,9 @@
                             <separator string="Registrations" colspan="2"/>
                             <field name="register_min"/>
                             <field name="register_max"/>
+                            <field name="register_prospect"/>
                             <field name="register_current"/>
                             <field name="register_attended"/>
-                            <field name="register_prospect"/>
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Emails" colspan="2"/>
@@ -150,8 +150,8 @@
                     <field name="user_id"/>
                     <field name="state"/>
                     <button string="Confirm Event" help="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
-                    <button string="Cancel Event" help="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
                     <button string="Event Done" help="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
+                    <button string="Cancel Event" help="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
                     <button string="Set To Draft" help="Set To Draft" name="button_draft" states="cancel,done" type="object" icon="gtk-convert"/>
                 </tree>
             </field>
@@ -215,7 +215,7 @@
                         <filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Beginning Date" icon="terp-go-month"
+                        <filter string="Starting Date" icon="terp-go-month"
                             domain="[]" context="{'group_by':'date_begin'}"/>
                     </group>
                 </search>
