@@ -6,8 +6,8 @@
     "depends" : ["web"],
     "js": [
         'static/lib/js/raphael-min.js',
-        'static/src/js/jquery.mousewheel.js',
-        'static/src/js/vec2js/vec2.js',
+        'static/lib/js/jquery.mousewheel.js',
+        'static/src/js/vec2.js',
         'static/src/js/graph.js',
         'static/src/js/diagram.js',
     ],
