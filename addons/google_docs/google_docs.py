@@ -12,9 +12,9 @@ class google_docs(osv.osv):
         'id': fields.integer('ID', readonly=True),
         'model': fields.many2one('ir.model', 'Model'),
         'gdocs_res_id': fields.char('Google resource ID', size=64, translate=False)
+        'name_template': fields.char('Google resource ID', size=64, translate=False)
     }
 
-    name_template = 'Sales order %s %s'
     edit_url_template = 'https://docs.google.com/Edit?docid=%s'
     prefix_gdoc_id_res = DOCUMENT_LABEL + ':'
 
@@ -31,6 +31,15 @@ class google_docs(osv.osv):
 
         if context==None:
             context={}
+
+      template_vars = {
+            'db' : cr.dbname,
+            'model' : model,
+            'id' : id,
+            'salt' : salt,
+            'name' : '',
+        }
+            name_template = 'Sales order %s %s'
 
         # check template for the current model
         model_obj = self.pool.get(model)
