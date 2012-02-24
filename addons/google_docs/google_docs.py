@@ -88,7 +88,7 @@ class google_docs(osv.osv):
         client.http_client.debug = False
         client.ClientLogin(user.gmail_user, user.gmail_password, client.source, service='writely')
 
-        return map(lambda doc: (doc.title.text, doc.resource_id.text[len(prefix_gdoc_id_res):]), filter(lambda r: r.resource_id.text.startswith('document:'), client.get_all_resources()))
+        return map(lambda doc: (doc.title.text, doc.resource_id.text[len(prefix_gdoc_id_res):]), filter(lambda r: r.resource_id.text.startswith(prefix_gdoc_id_res), client.get_all_resources()))
 
 
     def set_model_document_template(self, cr, uid, model, resource_id, context=None):
