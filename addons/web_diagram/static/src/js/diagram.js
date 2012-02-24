@@ -115,7 +115,6 @@ openerp.web.DiagramView = openerp.web.View.extend({
     // Set-up the drawing elements of the diagram
     draw_diagram: function(result) {
         var self = this;
-        console.log(result);
         var res_nodes  = result['nodes'];
         var res_edges  = result['conn'];
         this.parent_field = result.parent_field;
