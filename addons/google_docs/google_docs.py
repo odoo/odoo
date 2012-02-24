@@ -12,7 +12,7 @@ class google_docs(osv.osv):
         'id': fields.integer('ID', readonly=True),
         'model': fields.many2one('ir.model', 'Model'),
         'gdocs_res_id': fields.char('Google resource ID', size=64, translate=False)
-        'name_template': fields.char('Google resource ID', size=64, translate=False)
+        'name_template': fields.char('GDoc name template', size=64, translate=False)
     }
 
     edit_url_template = 'https://docs.google.com/Edit?docid=%s'
