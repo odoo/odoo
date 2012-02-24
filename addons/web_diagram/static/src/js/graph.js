@@ -17,6 +17,8 @@
         var conn_circle = graph.r.circle(node.get_pos().x + pos_x, node.get_pos().y + pos_y,4);
         conn_circle.attr({'opacity':0, 'fill':graph.style.outline,'stroke':'none'});
         conn_circle.transform(graph.get_transform());
+        graph.set_scrolling(conn_circle);
+
         var self = this;
 
         this.update_pos = function(){
@@ -107,6 +109,7 @@
         this.get_transform = function(){
             return "T"+tr_x+","+tr_y
         }
+
         
         // translate every element of the graph except the background. 
         // elements inserted in the graph after a translate_all() must manually apply transformation 
@@ -123,6 +126,13 @@
             });
         }
 
+        //Adds a mousewheel event callback to raph_element that scrolls the viewport
+        this.set_scrolling = function(raph_element){
+            $(raph_element.node).bind('mousewheel',function(event,delta){
+                translate_all(0,delta*20);
+            });
+        }
+
         // Graph translation when background is dragged
         var bg_drag_down = function(){
             px = py = 0;
@@ -136,11 +146,8 @@
         }
         var bg_drag_up   = function(){}
         background.drag( bg_drag_move, bg_drag_down, bg_drag_up);
-
-        $(background.node).bind('mousewheel',function(event,delta){
-            translate_all(0,delta*20);
-        });
-
+        
+        this.set_scrolling(background);
 
         //adds a node to the graph and sets its uid.
         this.add_node = function (n){
@@ -286,12 +293,14 @@
         }
         node_fig.attr({'fill':color, 'stroke':graph.style.outline,'stroke-width':1,'cursor':'pointer'});
         node_fig.transform(graph.get_transform());
+        graph.set_scrolling(node_fig);
 
         $(node_fig.node).addClass('foobar');
 
         var node_label = r.text(pos_x,pos_y,label);
         node_label.attr({'fill':graph.style.text,'cursor':'pointer'});
         node_label.transform(graph.get_transform());
+        graph.set_scrolling(node_label);
         $(node_label.node).css('text-shadow',"1px 2px 3px rgba(0,0,0,0.3)");
 
         // redraws all edges linked to this node 
@@ -562,7 +571,10 @@
         var edge_label = r.text(labelpos.x, labelpos.y - elfs, label).attr({'fill':graph.style.edge_label, 'cursor':'pointer', 'font-size':elfs});
 
         edge.transform(graph.get_transform());
+        graph.set_scrolling(edge);
+
         edge_label.transform(graph.get_transform());
+        graph.set_scrolling(edge_label);
         $(edge_label.node).css('text-shadow',"1px 2px 3px rgba(0,0,0,0.3)");
         
 

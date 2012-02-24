@@ -231,7 +231,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
         
         var form_controller = pop.view_form;
         var form_fields = [this.parent_field];
-        
+
         form_controller.on_record_loaded.add_last(function() {
                 _.each(form_fields, function(fld) {
                     if (!(fld in form_controller.fields)) { return; }
