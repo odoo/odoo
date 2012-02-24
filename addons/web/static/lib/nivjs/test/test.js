@@ -2,14 +2,20 @@
 module("Class");
 
 test("base", function() {
-    ok(!!niv.Class, "Class does not exist");
-    ok(!!niv.Class.extend, "extend does not exist");
+    ok(!!niv.Class, "Class does exist");
+    ok(!!niv.Class.extend, "extend does exist");
     var Claz = niv.Class.extend({
         test: function() {
             return "ok";
         }
-    })
+    });
     equal(new Claz().test(), "ok");
+    var Claz2 = Claz.extend({
+        test: function() {
+            return this._super() + "2";
+        }
+    });
+    equal(new Claz2().test(), "ok2");
 });
 
 module("DestroyableMixin");
@@ -93,3 +99,24 @@ test("base", function() {
     x.set({test: 2});
     equal(tmp, 1);
 });
+
+module("Widget");
+
+test("base", function() {
+    var Claz = niv.Widget.extend({
+        render_element: function() {
+            this.$element.attr("id", "testdiv");
+            this.$element.html("test");
+        }
+    });
+    var x = new Claz();
+    x.appendTo($("body"));
+    var $el = $("#testdiv");
+    equal($el.length, 1);
+    equal($el.parents()[0], $("body")[0]);
+    equal($el.html(), "test");
+    x.destroy();
+    $el = $("#testdiv");
+    equal($el.length, 0);
+});
+

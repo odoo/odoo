@@ -340,8 +340,6 @@ niv = (function() {
          * for new components this argument should not be provided any more.
          */
         init: function(parent) {
-            this._super();
-            
             this.$element = $(document.createElement(this.tag_name));
     
             this.setParent(parent);
@@ -356,7 +354,7 @@ niv = (function() {
             if(this.$element != null) {
                 this.$element.remove();
             }
-            this._super();
+            lib.GetterSetterMixin.destroy.call(this);
         },
         /**
          * Renders the current widget and appends it to the given jQuery object or Widget.
@@ -414,8 +412,6 @@ niv = (function() {
         },
         _render_and_insert: function(insertion, target) {
             this.render_element();
-            if (target instanceof openerp.web.Widget)
-                target = target.$element;
             insertion(target);
             return this.start();
         },
