@@ -547,6 +547,21 @@ class account_voucher(osv.osv):
 
         @return: Returns a dict which contains new values, and context
         """
+        def _remove_noise_in_o2m():
+            """if the line is partially reconciled, then we must pay attention to display it only once and 
+                in the good o2m.
+                This function returns True if the line is considered as noise and should not be displayed
+            """
+            if line.reconcile_partial_id:
+                sign = 1 if ttype == 'receipt' else -1
+                if currency_id == line.currency_id.id:
+                    if line.amount_residual_currency * sign <= 0:
+                        return True
+                else:
+                    if line.amount_residual * sign <= 0:
+                        return True
+            return False
+
         if context is None:
             context = {}
         context_multi_currency = context.copy()
@@ -612,10 +627,7 @@ class account_voucher(osv.osv):
 
         #compute the total debit/credit and look for a matching open amount or invoice
         for line in account_move_lines:
-            #if the line is partially reconciled, then we must pay attention to display it only once and in the good o2m
-            if line.debit and line.reconcile_partial_id and ttype == 'receipt':
-                continue
-            if line.credit and line.reconcile_partial_id and ttype == 'payment':
+            if _remove_noise_in_o2m():
                 continue
 
             if invoice_id:
@@ -643,10 +655,7 @@ class account_voucher(osv.osv):
 
         #voucher line creation
         for line in account_move_lines:
-            #if the line is partially reconciled, then we must pay attention to display it only once and in the good o2m
-            if line.debit and line.reconcile_partial_id and ttype == 'receipt':
-                continue
-            if line.credit and line.reconcile_partial_id and ttype == 'payment':
+            if _remove_noise_in_o2m():
                 continue
 
             if line.currency_id and currency_id==line.currency_id.id:
