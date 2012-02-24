@@ -137,7 +137,44 @@ $(document).ready(function () {
             strictEqual(r.args[5], 42);
         });
     });
-    // TODO: SearchDataSet#read_slice?
+
+    t.test('DataSetSearch#read_slice', function (openerp) {
+        var ds = new openerp.web.DataSetSearch({session: openerp.connection}, 'mod');
+        t.expect(ds.read_slice(['foo', 'bar'], {
+            domain: [['foo', '>', 42], ['qux', '=', 'grault']],
+            context: {peewee: 'herman'},
+            offset: 160,
+            limit: 80
+        }), function (r) {
+            strictEqual(r.method, 'search');
+
+            strictEqual(r.args.length, 5);
+            deepEqual(r.args[0], [['foo', '>', 42], ['qux', '=', 'grault']]);
+            strictEqual(r.args[1], 160);
+            strictEqual(r.args[2], 80);
+            strictEqual(r.args[3], false);
+            strictEqual(r.args[4].peewee, 'herman');
+
+            ok(_.isEmpty(r.kwargs));
+        });
+    });
+    t.test('DataSetSearch#read_slice sorted', function (openerp) {
+        var ds = new openerp.web.DataSetSearch({session: openerp.connection}, 'mod');
+        ds.sort('foo');
+        ds.sort('foo');
+        ds.sort('bar');
+        t.expect(ds.read_slice(['foo', 'bar'], { }), function (r) {
+            strictEqual(r.method, 'search');
+
+            strictEqual(r.args.length, 5);
+            deepEqual(r.args[0], []);
+            strictEqual(r.args[1], 0);
+            strictEqual(r.args[2], false);
+            strictEqual(r.args[3], 'bar ASC, foo DESC');
+
+            ok(_.isEmpty(r.kwargs));
+        });
+    });
     // TODO: non-literal domains and contexts basics
     // TODO: call_and_eval
     // TODO: name_search, non-literal domains
