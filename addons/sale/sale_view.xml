@@ -504,8 +504,8 @@
         <!-- Configartion View -->
 
         <record id="view_config_picking_policy_sales" model="ir.ui.view">
-            <field name="name">Configure Sales Applications</field>
-            <field name="model">sale.config.picking_policy</field>
+            <field name="name">Configure Sales Application</field>
+            <field name="model">sale.configuration</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_config_picking_policy"/>
             <field name="arch" type="xml">
@@ -524,13 +524,13 @@
                         </group>
                         <group colspan="4" col="4">
                             <newline/>
-                            <field name="order_policy" attrs="{'invisible':['|',('sale_orders','!=',True),('deli_orders','!=',True)]}"/>
+                            <field name="order_policy" attrs="{'invisible':['|',('sale_orders','=',False),('deli_orders','=',False)]}"/>
                             <newline/>
-                            <field name="charge_delivery" attrs="{'invisible':[('sale_orders','!=',True), ('deli_orders','!=',True)]}"/>
+                            <field name="charge_delivery" attrs="{'invisible':[('sale_orders','=',False), ('deli_orders','=',False)]}"/>
                             <newline/>
-                            <field name="picking_policy" attrs="{'invisible':[('deli_orders','!=',True)]}"/>
+                            <field name="picking_policy" attrs="{'invisible':[('deli_orders','=',False)]}"/>
                             <newline/>
-                            <field name="time_unit" attrs="{'invisible':[('task_work','!=',True),('timesheet','!=',True)]}"/>
+                            <field name="time_unit" attrs="{'invisible':[('task_work','=',False),('timesheet','=',False)]}"/>
                         </group>
                     </group>
                     

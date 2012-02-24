@@ -1330,8 +1330,8 @@ class sale_order_line(osv.osv):
 
 sale_order_line()
 
-class sale_config_picking_policy(osv.osv_memory):
-    _inherit = 'sale.config.picking_policy'
+class sale_configuration(osv.osv_memory):
+    _inherit = 'sale.configuration'
 
     _columns = {
         'sale_orders': fields.boolean('Based on Sales Orders',),
@@ -1360,10 +1360,21 @@ class sale_config_picking_policy(osv.osv_memory):
         'sale_margin' : fields.boolean("Display Margin For Users"),
         'sale_journal' : fields.boolean("Invoice_journal?"),
     }
-    
-    def default_module_get(self, cr, uid, ids, context=None):
+
+    def default_module_get(self, cr, uid, ids, selectable=[], context=None):
         #TODO: Need to be implemented
-        return {}
+        selectable = ['project_timesheet','project_mrp','account_analytic_analysis','delivery','sale_margin','sale_journal']
+        res = super(sale_configuration, self).default_module_get(cr, uid, ids, selectable=selectable, context=context)
+        for k in res.keys():
+            if k in ['project_timesheet','project_mrp','account_analytic_analysis']:
+                res.update({'task_work': True})
+            if k in ['account_analytic_analysis']:
+                res.update({'timesheet': True})
+            if k == 'delivery':
+                res.update({'sale_orders': True, 'deli_orders': True})
+            else:
+                res.update({k: False})
+        return res
     
     _defaults = {
         'order_policy': 'manual',
@@ -1371,6 +1382,10 @@ class sale_config_picking_policy(osv.osv_memory):
         'time_unit': lambda self, cr, uid, c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c) and self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c)[0] or False,
         'task_work': default_module_get,
         'timesheet': default_module_get,
+        'sale_orders': default_module_get,
+        'deli_orders': default_module_get,
+        'sale_margin' : default_module_get,
+        'sale_journal': default_module_get,
     }
 
     def onchange_order(self, cr, uid, ids, sale, deli, context=None):
@@ -1383,7 +1398,7 @@ class sale_config_picking_policy(osv.osv_memory):
     
     def write(self, cr, uid, ids, vals, context=None):
         self.execute(cr, uid, ids, context=context)
-        return super(sale_config_picking_policy, self).write(cr, uid, ids, vals, context=context)
+        return super(sale_configuration, self).write(cr, uid, ids, vals, context=context)
 
     def execute(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
@@ -1444,6 +1459,6 @@ class sale_config_picking_policy(osv.osv_memory):
                 'project_time_mode_id': wizard.time_unit.id
             }, context=context)
 
-sale_config_picking_policy()
+sale_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
