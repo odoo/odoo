@@ -261,21 +261,25 @@ class module(osv.osv):
                 msg = _('Unable to process module "%s" because an external dependency is not met: %s')
             raise orm.except_orm(_('Error'), msg % (module_name, e.args[0]))
 
-    def state_update(self, cr, uid, ids, newstate, states_to_update, context=None, level=100):
+    def state_update(self, cr, uid, ids, newstate, states_to_update, context=None, level=100, res=None):
+        if not res:
+            res = []
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
         demo = False
         for module in self.browse(cr, uid, ids):
             mdemo = False
             for dep in module.dependencies_id:
-                if dep.state == 'unknown':
-                    raise orm.except_orm(_('Error'), _("You try to install module '%s' that depends on module '%s'.\nBut the latter module is not available in your system.") % (module.name, dep.name,))
-                ids2 = self.search(cr, uid, [('name','=',dep.name)])
-                if dep.state != newstate:
-                    mdemo = self.state_update(cr, uid, ids2, newstate, states_to_update, context, level-1,) or mdemo
-                else:
-                    od = self.browse(cr, uid, ids2)[0]
-                    mdemo = od.demo or mdemo
+                if dep.name not in res:
+                    res.append(dep.name)
+                    if dep.state == 'unknown':
+                        raise orm.except_orm(_('Error'), _("You try to install module '%s' that depends on module '%s'.\nBut the latter module is not available in your system.") % (module.name, dep.name,))
+                    ids2 = self.search(cr, uid, [('name','=',dep.name)])
+                    if dep.state != newstate:
+                        mdemo = self.state_update(cr, uid, ids2, newstate, states_to_update, context, level-1, res=res) or mdemo
+                    else:
+                        od = self.browse(cr, uid, ids2)[0]
+                        mdemo = od.demo or mdemo
 
             self.check_external_dependencies(module.name, newstate)
             if not module.dependencies_id:
