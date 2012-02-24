@@ -6,9 +6,6 @@
     "depends" : ["web"],
     "js": [
         'static/lib/js/raphael-min.js',
-        'static/lib/js/dracula_graffle.js',
-        'static/lib/js/dracula_graph.js',
-        'static/lib/js/dracula_algorithms.js',
         'static/src/js/jquery.mousewheel.js',
         'static/src/js/vec2js/vec2.js',
         'static/src/js/graph.js',
