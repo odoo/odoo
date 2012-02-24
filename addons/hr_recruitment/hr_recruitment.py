@@ -391,28 +391,30 @@ class hr_applicant(crm.crm_case, osv.osv):
         self.message_append_dict(cr, uid, ids, msg, context=context)
         return res
 
-    def case_open(self, cr, uid, ids, *args):
+    def _case_open_notification(self, case, context=None):
+        message = _("The job request '<em>%s</em>' has been set 'in progress'.") % case.name
+        case.message_append_note('' ,message, need_action_user_id=case.id)
+
+    def _case_close_notification(self, case, context=None):
+        message = _("Applicant '<em>%s</em>' is being hired.") % case.name
+        case.message_append_note('' ,message, need_action_user_id=case.id)
+
+    def _case_reset_notification(self, case, context=None):
+        message = _("The job request <em>%s</em> has been Reset as 'New'.") % case.name
+        case.message_append_note('' ,message, need_action_user_id=case.id)
+
+    def case_open(self, cr, uid, ids, context=None):
         """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        @param *args: Give Tuple Value
+            open Request of the applicant for the hr_recruitment
         """
-        res = super(hr_applicant, self).case_open(cr, uid, ids, *args)
+        res = super(hr_applicant, self).case_open(cr, uid, ids, context)
         date = self.read(cr, uid, ids, ['date_open'])[0]
         if not date['date_open']:
             self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),})
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The job request '%s' has been set 'in progress'.") % name
-            self.log(cr, uid, id, message)
         return res
 
     def case_close(self, cr, uid, ids, *args):
         res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("Applicant '%s' is being hired.") % name
-            self.log(cr, uid, id, message)
         return res
 
     def case_close_with_emp(self, cr, uid, ids, *args):
@@ -434,6 +436,7 @@ class hr_applicant(crm.crm_case, osv.osv):
                 self.case_close(cr, uid, [applicant.id], *args)
             else:
                 raise osv.except_osv(_('Warning!'),_('You must define Applied Job for this applicant.'))
+            self._case_reset_notification(applicant, context=context)
 
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
         dict_act_window = act_window.read(cr, uid, action_id, [])
