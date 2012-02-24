@@ -259,6 +259,9 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                         help="Appraisal that overpassed the deadline" domain="[('date','&lt;=',(datetime.date.today()).strftime('%%Y-%%m-%%d'))]" />
+                    <filter icon="terp-go-month" name="next_month" string=" Month+1" 
+                         domain="[('date','&lt;=', (datetime.date.today() + relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() + relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d')),('state','=','draft')]"
+                         help="Appraisal during next month"/>
                     <separator orientation="vertical"/>
                     <field name="employee_id" />
                     <field name="plan_id" widget="selection" />
@@ -282,6 +285,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="hr_evaluation.evaluation_search"/>
+             <field name="context">{"search_default_next_month":1}</field>
             <field name="help">Each employee may be assigned an Appraisal Plan. Such a plan defines the frequency and the way you manage your periodic personnel evaluation. You will be able to define steps and attach interviews to each step. OpenERP manages all kind of evaluations: bottom-up, top-down, self-evaluation and final evaluation by the manager.</field>
         </record>
 
