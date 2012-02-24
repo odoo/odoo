@@ -155,7 +155,7 @@ class res_partner(osv.osv):
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
-        'is_company': fields.boolean('Company', help="Check if the partner is a company, uncheck it for a person"),
+        'is_company': fields.selection( [ ('contact','Person'),('partner','Company') ],'Partner Type', help="Select if the partner is a company or person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Check to use the company's address"),
         'photo': fields.binary('Photo'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
@@ -187,6 +187,14 @@ class res_partner(osv.osv):
 
     def do_share(self, cr, uid, ids, *args):
         return True
+    
+    def onchange_type(self, cr, uid, ids, is_company, title, context=None):
+        if is_company == 'contact':
+            return {'value': {'is_company': is_company, 'title': ''}}
+        elif is_company == 'partner':
+            return {'value': {'is_company': is_company, 'title': ''}}
+        return {'value': {'is_comapny': '', 'title': ''}}
+        
     
     def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
         if use_parent_address and parent_id:

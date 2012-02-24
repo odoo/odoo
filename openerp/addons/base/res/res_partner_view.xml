@@ -327,12 +327,11 @@
                     <group col="8" colspan="4">
                         <group col="2">
                             <field name="name"/>
-                            <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', True)]}"/>
-                            <field name="function" attrs="{'invisible': [('is_company','=', True)]}"/>
+                            <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', 'partner')]}"/>
                         </group>
                         <group col="2">
-                            <field name="title" size="0" groups="base.group_extended"/>
-                            <field name="is_company"/>
+                            <field name="title" size="0" groups="base.group_extended" domain="[('domain', '=', is_company)]"/>
+                            <field name="is_company" on_change="onchange_type(is_company, title)"/>
                         </group>
                         <group col="2">
                             <field name="customer"/>
@@ -366,8 +365,9 @@
                                 <field name="email" widget="email" colspan="4"/>
                                 <field name="website" widget="url" colspan="4"/>
                                 <field name="ref" groups="base.group_extended" colspan="4"/>
+                                <field name="function" attrs="{'invisible': [('is_company','=', 'partner')]}" colspan="4"/>
                             </group>
-                            <group colspan="4" attrs="{'invisible': [('is_company','=', False)]}">
+                            <group colspan="4" attrs="{'invisible': [('is_company','!=', 'partner')]}">
                                 <field name="child_ids" nolabel="1"/>
                             </group>
                         </page>
