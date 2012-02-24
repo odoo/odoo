@@ -115,25 +115,34 @@ openerp.web.DiagramView = openerp.web.View.extend({
     // Set-up the drawing elements of the diagram
     draw_diagram: function(result) {
         var self = this;
-        console.log(result);
         var res_nodes  = result['nodes'];
         var res_edges  = result['conn'];
         this.parent_field = result.parent_field;
 
-        var id_to_node = {}
+        var id_to_node = {};
 
 
-        var style = {   "edge"          : "#A0A0A0",
-                        "edge_label"    : "#555",
-                        "text"          : "#333",
-                        "outline"       : "#333",
-                        "selected"      : "#0097BE",
-                        "gray"          : "#DCDCDC",
-                        "white"         : "#FFF",
-                        "node_size_x"   : 100,
-                        "node_size_y"   : 70,
-                        "edge_spacing"  : 100,                 
-                        "edge_label_font_size" : 10              };
+        var style = {   "edge_color"                    : "#A0A0A0",
+                        "edge_label_color"              : "#555",
+                        "edge_label_font_size"          : 10,
+                        "edge_width"                    : 2,
+                        "edge_spacing"                  : 100,    
+                        "edge_loop_radius"              : 100,
+
+                        "node_label_color"              : "#333",
+                        "node_label_font_size"          : 12,
+                        "node_outline_color"            : "#333",
+                        "node_outline_width"            : 1,
+                        "node_selected_color"           : "#0097BE",
+                        "node_selected_width"           : 2,
+                        "node_size_x"                   : 110,
+                        "node_size_y"                   : 80,
+                        "connector_active_color"        : "#FFF",
+                        "connector_radius"              : 4,
+
+                        "gray"                          : "#DCDCDC",
+                        "white"                         : "#FFF",
+                        };
 
         $('#dia-canvas').empty();    // remove previous diagram
 
@@ -145,7 +154,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
             var n = new CuteNode(     graph,
                                       node.x + 50,  //FIXME the +50 should be in the layout algorithm
                                       node.y + 50,
-                                      CuteGraph.wordwrap(node.name, 16),
+                                      CuteGraph.wordwrap(node.name, 14),
                                       node.shape === 'rectangle' ? 'rect' : 'circle',
                                       node.color === 'white' ? style.white : style.gray    );
             n.id = node.id;
@@ -238,7 +247,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
                 _.each(form_fields, function(fld) {
                     if (!(fld in form_controller.fields)) { return; }
                     var field = form_controller.fields[fld];
-                    field.set_value([self.id,self.active_model]);
+                    field.set_value(self.id);
                     field.dirty = true;
                 });
             });
