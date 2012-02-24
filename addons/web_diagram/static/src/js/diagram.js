@@ -118,6 +118,8 @@ openerp.web.DiagramView = openerp.web.View.extend({
         console.log(result);
         var res_nodes  = result['nodes'];
         var res_edges  = result['conn'];
+        this.parent_field = result.parent_field;
+
         var id_to_node = {}
 
 
@@ -133,7 +135,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
                         "edge_spacing"  : 100,                 
                         "edge_label_font_size" : 10              };
 
-        $('#dia-canvas *').remove();    // remove previous diagram
+        $('#dia-canvas').empty();    // remove previous diagram
 
         var r  = new Raphael(document.getElementById("dia-canvas"), '100%','100%');
 
@@ -167,7 +169,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
         };
 
         CuteEdge.creation_callback = function(node_start, node_end){
-            return {label:_t("new transition")};  
+            return {label:_t("")};  
         };
         CuteEdge.new_edge_callback = function(cuteedge){
             self.add_connector( cuteedge.get_start().id, 
