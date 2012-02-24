@@ -155,7 +155,7 @@ class res_partner(osv.osv):
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
-        'is_company': fields.selection( [ ('contact','Person'),('partner','Company') ],'Partner Type', help="Select if the partner is a company or person"),
+        'is_company': fields.selection( [ ('contact','Person'),('partner','Company') ],'Contact Type', help="Select if the partner is a company or person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Check to use the company's address"),
         'photo': fields.binary('Photo'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
@@ -174,7 +174,7 @@ class res_partner(osv.osv):
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
         'color': 0,
-        'is_company': False,
+        'is_company': 'contact',
         'type': 'default',
     }
 

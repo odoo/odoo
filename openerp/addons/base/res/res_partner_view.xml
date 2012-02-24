@@ -345,9 +345,12 @@
                         <page string="General">
                             <group colspan="2">
                                 <separator string="Address" colspan="4"/>
-                                <field name="type" string="Type"/>
-                                <field name="use_parent_address" attrs="{'invisible': [('parent_id', '=', False)]}"
-                                    on_change="onchange_address(use_parent_address, parent_id)"/>
+                                <group colspan="2">
+                                <field name="type" string="Type" attrs="{'invisible': [('is_company','=', 'partner')]}"/>
+                                </group>
+                                <group colspan="2">
+                                <field name="use_parent_address" attrs="{'invisible': [('parent_id', '=', False)]}" on_change="onchange_address(use_parent_address, parent_id)"/>
+                                </group>
                                 <newline/>
                                 <field name="street" colspan="4" attrs="{'readonly': [('use_parent_address','=', True)]}"/>
                                 <field name="street2" colspan="4" attrs="{'readonly': [('use_parent_address','=', True)]}"/>
