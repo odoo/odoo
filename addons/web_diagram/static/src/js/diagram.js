@@ -238,7 +238,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
                 _.each(form_fields, function(fld) {
                     if (!(fld in form_controller.fields)) { return; }
                     var field = form_controller.fields[fld];
-                    field.set_value([self.id,self.active_model]);
+                    field.set_value(self.id);
                     field.dirty = true;
                 });
             });
