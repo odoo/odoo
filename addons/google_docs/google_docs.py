@@ -2,6 +2,7 @@ from osv import osv, fields
 import gdata.docs.data
 import gdata.docs.client
 from gdata.client import RequestError
+from gdata.docs.service import DOCUMENT_LABEL
 
 class google_docs(osv.osv):
     _name = 'google.docs'
@@ -13,14 +14,16 @@ class google_docs(osv.osv):
         'gdocs_res_id': fields.char('Google resource ID', size=64, translate=False)
     }
 
+    name_template = 'Sales order %s %s'
     edit_url_template = 'https://docs.google.com/Edit?docid=%s'
-    prefix_gdoc_id_res = 'document:'
+    prefix_gdoc_id_res = DOCUMENT_LABEL + ':'
 
-    def copy_gdoc(self, cr, uid, model, context=None):
+    def copy_gdoc(self, cr, uid, model, folder=None, context=None):
         '''Associate a copy of the gdoc identified by 'gdocs_res_id' to the current entity.
            @param cr: the current row from the database cursor.
            @param uid: the current user ID, for security checks.
            @param model: the current model name.
+           @param folder: folder in which to store the copy.
            @param context: a standard dictionary for contextual values.
            @return the url of the copy itself.
            @return -1 if the template hasn't been assigned yet.
@@ -49,7 +52,7 @@ class google_docs(osv.osv):
         client.http_client.debug = False
         client.ClientLogin(user.gmail_user, user.gmail_password, client.source, service='writely')
         resource = client.get_resource_by_id(gdoc.gdocs_res_id)
-        copied_resource = client.copy_resource(entry=resource, title=resource.title.text + ' (generated from OpenERP)')
+        copied_resource = client.copy_resource(entry=resource, title= self.name_template % (, model))
 
         return self.edit_url_template % (copied_resource.resource_id.text,)
 
@@ -117,3 +120,10 @@ class google_docs(osv.osv):
             })
 
         return 0
+
+
+class google_docs_folder(osv.osv):
+    _name = 'google.docs.folder'
+    _columns = {
+        'res_id': fields.char('GDocs resource id', size=64, translate=False),
+    }
