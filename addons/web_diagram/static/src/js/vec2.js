@@ -216,7 +216,7 @@
         this.hx = rx;       // half of the ellipse width on the x axis
         this.hy = ry;       // half of the ellipse width on the y axis
         this.cx = cx;       // x coordinate of the ellipse center
-        this.cy = cy;       // y coordinqte of the ellipse center
+        this.cy = cy;       // y coordinate of the ellipse center
         this.mx = cx + rx;  // maximum x coordinate contained in the ellipse
         this.my = cy + ry;  // maximum x coordinate contained in the ellipse
     }
@@ -226,7 +226,7 @@
     // boundary and a line segment defined by the start and end vectors a,b
     BEllipse.prototype.collide_segment = function(a,b){
         // http://paulbourke.net/geometry/sphereline/
-        collisions = []
+        var collisions = [];
 
         if(a.equals(b)){  //we do not compute the intersection in this case. TODO ?     
             return collisions;
@@ -318,7 +318,7 @@
     // boundary and a line segment defined by the start and end vectors a,b
 
     BRect.prototype.collide_segment = function(a,b){
-        var collisions = []
+        var collisions = [];
         var corners = [ new Vec2(this.x,this.y), new Vec2(this.x,this.my), 
                         new Vec2(this.mx,this.my), new Vec2(this.mx,this.y) ];
         var pos = line_intersect(a,b,corners[0],corners[1]);

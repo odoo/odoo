@@ -120,7 +120,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
         var res_edges  = result['conn'];
         this.parent_field = result.parent_field;
 
-        var id_to_node = {}
+        var id_to_node = {};
 
 
         var style = {   "edge"          : "#A0A0A0",

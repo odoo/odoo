@@ -23,10 +23,10 @@
 
         this.update_pos = function(){
             conn_circle.attr({'cx':node.get_pos().x + pos_x, 'cy':node.get_pos().y + pos_y});
-        }
+        };
         this.get_pos = function(){
             return new node.get_pos().add_xy(pos_x,pos_y);
-        }
+        };
         function hover_in(){
             if(!visible){ return;}
             conn_circle.animate({'r':8},300,'elastic');
@@ -51,25 +51,25 @@
             self.edge_end = new EdgeEnd(self.ox, self.oy);
             self.edge_tmp = new GraphEdge(graph,'',self.edge_start,self.edge_end,true);
             graph.creating_edge = true;
-        }
+        };
         var drag_move = function(dx,dy){
             if(!visible){ return; }
             self.edge_end.x = self.ox + dx;
             self.edge_end.y = self.oy + dy;
             self.edge_tmp.update();
-        }
+        };
         var drag_up = function(){
             if(!visible){ return; }
             graph.creating_edge = false;
             self.edge_tmp.remove();
             if(graph.target_node){  
-                edge_prop = GraphEdge.creation_callback(node,graph.target_node);
+                var edge_prop = GraphEdge.creation_callback(node,graph.target_node);
                 if(edge_prop){
                     var new_edge = new GraphEdge(graph,edge_prop.label, node,graph.target_node);
                     GraphEdge.new_edge_callback(new_edge);
                 }
             }
-        }
+        };
         conn_circle.drag(drag_move,drag_down,drag_up);
 
         function show(){
@@ -93,7 +93,7 @@
         var nodes = [];  // list of all nodes in the graph
         var edges = [];  // list of all edges in the graph
         var graph = {};  // graph[n1.uid][n2.uid] -> list of all edges from n1 to n2
-        var links = {}   // links[n.uid] -> list of all edges from or to n
+        var links = {};  // links[n.uid] -> list of all edges from or to n
         var uid = 1;     // all nodes and edges have an uid used to order their display when they are curved
         
         self.creating_edge = false; // true if we are dragging a new edge onto a node
@@ -101,14 +101,13 @@
         self.r = r;                 // the raphael instance
         self.style  = style;        // definition of the colors, spacing, fonts, ... used by the elements
         var tr_x = 0, tr_y = 0;         // global translation coordinate
-        var scale = 1;              // global scale
 
         var background = r.rect(0,0,'100%','100%').attr({'fill':'white', 'stroke':'none', 'opacity':0});
         
         // return the global transform of the scene
         this.get_transform = function(){
             return "T"+tr_x+","+tr_y
-        }
+        };
 
         
         // translate every element of the graph except the background. 
@@ -117,34 +116,35 @@
         var translate_all = function(dx,dy){
             tr_x += dx;
             tr_y += dy;
-            tstr = self.get_transform();
+            var tstr = self.get_transform();
             
             r.forEach(function(el){
                 if(el != background){
                     el.transform(tstr);
                 }
             });
-        }
+        };
 
         //Adds a mousewheel event callback to raph_element that scrolls the viewport
         this.set_scrolling = function(raph_element){
             $(raph_element.node).bind('mousewheel',function(event,delta){
                 translate_all(0,delta*20);
             });
-        }
+        };
 
+        var px, py;
         // Graph translation when background is dragged
         var bg_drag_down = function(){
             px = py = 0;
-        }
+        };
         var bg_drag_move = function(x,y){
             var dx = x - px;
             var dy = y - py;
             px = x;
             py = y;
             translate_all(dx,dy);
-        }
-        var bg_drag_up   = function(){}
+        };
+        var bg_drag_up   = function(){};
         background.drag( bg_drag_move, bg_drag_down, bg_drag_up);
         
         this.set_scrolling(background);
@@ -181,7 +181,7 @@
             links[n1.uid] = _.without(links[n1.uid],edge);
             links[n2.uid] = _.without(links[n2.uid],edge);
             graph[n1.uid][n2.uid] = _.without(graph[n1.uid][n2.uid],edge);
-        }
+        };
         //return the list of edges from n1 to n2
         this.get_edge_list = function(n1,n2){
             var list = [];
@@ -193,7 +193,7 @@
         this.get_linked_edge_list = function(n){
             if(!links[n.uid]) return [];
             return links[n.uid];
-        }
+        };
         //return a curvature index so that all edges connecting n1,n2 have different curvatures
         this.get_edge_curvature = function(n1,n2,e){
             var el_12 = this.get_edge_list(n1,n2);
@@ -219,7 +219,6 @@
         // Returns the angle in degrees of the edge loop. We do not support more than 8 loops on one node
         this.get_loop_angle = function(n,e){
             var loop_list = this.get_edge_list(n,n);
-            var lc = loop_list.length;
 
             var slots = []; // the 8 angles where we can put the loops 
             for(var angle = 0; angle < 360; angle += 45){
@@ -265,7 +264,7 @@
                     index++;
                 }
             }
-            index = index % slots.length;
+            index %= slots.length;
             
             return slots[index].angle_deg();
         }
@@ -280,7 +279,6 @@
         var sx = graph.style.node_size_x;
         var node_fig = null;
         var selected = false;
-        this.update_time = 0;
         this.connectors = [];
         this.uid = 0;
         
@@ -309,7 +307,7 @@
             for(var i = 0; i < edges.length; i++){
                 edges[i].update();
             }
-        }
+        };
 
         // sets the center position of the node
         var set_pos = function(pos){
@@ -323,11 +321,11 @@
                 self.connectors[i].update_pos();
             }
             update_linked_edges();
-        }
+        };
         // returns the figure used to draw the node
         var get_fig = function(){
             return node_fig;
-        }
+        };
         // returns the center coordinates
         var get_pos = function(){
             if(type == 'circle'){ 
@@ -335,22 +333,22 @@
             }else{ 
                 return new Vec2(node_fig.attr('x') + sx/2, node_fig.attr('y') + sy/2); 
             }
-        }
+        };
         // return the label string
         var get_label = function(){
             return node_label.attr("text");
-        }
+        };
         // sets the label string
         var set_label = function(text){
             node_label.attr({'text':text});
-        }
+        };
         var get_bound = function(){
             if(type == 'circle'){
                 return new BEllipse(get_pos().x,get_pos().y,sx/2,sy/2);
             }else{
                 return BRect.new_centered(get_pos().x,get_pos().y,sx,sy);
             }
-        }
+        };
         // selects this node and deselects all other nodes
         var set_selected = function(){
             if(!selected){
@@ -366,7 +364,7 @@
                     self.connectors[i].show();
                 }
             }
-        }
+        };
         // deselect this node
         var set_not_selected = function(){
             if(selected){
@@ -376,7 +374,7 @@
             for(var i = 0; i < self.connectors.length; i++){
                 self.connectors[i].hide();
             }
-        }
+        };
 
         this.set_pos = set_pos;
         this.get_pos = get_pos;
@@ -385,7 +383,7 @@
         this.get_bound = get_bound;
         this.get_fig   = get_fig;
         this.set_selected = set_selected;
-        this.set_not_selected = set_not_selected
+        this.set_not_selected = set_not_selected;
         this.update_linked_edges = update_linked_edges;
 
        
@@ -401,14 +399,14 @@
                 node_fig.animate({'x':cx - sx/2, 'y':cy - sy/2, 'ẃidth':sx, 'height':sy},500,'elastic');
             }
             set_selected();
-        }
+        };
         node_fig.click(click_action);
         node_label.click(click_action);
 
         //move the node when dragged
         var drag_down = function(){
             this.opos = get_pos();
-        }
+        };
         var drag_move = function(dx,dy){
             // we disable labels when moving for performance reasons, 
             // updating the label position is quite expensive
@@ -418,7 +416,7 @@
                 edges[i].label_disable();
             }
             set_pos(this.opos.add_xy(dx,dy));
-        }
+        };
         var drag_up = function(){
             //we re-enable the 
             var edges = graph.get_linked_edge_list(self);
@@ -426,7 +424,7 @@
                 edges[i].label_enable();
             }
             
-        }
+        };
         node_fig.drag(drag_move,drag_down,drag_up);
         node_label.drag(drag_move,drag_down,drag_up);
 
@@ -456,7 +454,7 @@
 
     GraphNode.double_click_callback = function(node){
         console.log("double click from node:",node);
-    }
+    };
 
     // creates a new edge with label 'label' from start to end. start and end must implement get_pos_*, 
     // if tmp is true, the edge is not added to the graph, used for drag edges. 
@@ -464,7 +462,6 @@
     function GraphEdge(graph,label,start,end,tmp){
         var self = this;
         var r = graph.r;
-        var update_time = -1;
         var curvature = 0;  // 0 = straight, != 0 curved
         var s,e;            // positions of the start and end point of the line between start and end
         var mc;             // position of the middle of the curve (bezier control point) 
@@ -547,7 +544,7 @@
 
                 var r = Vec2.new_polar_deg(rad,graph.get_loop_angle(start,self));
                 mc = s.add(r);
-                p = r.rotate_deg(90);
+                var p = r.rotate_deg(90);
                 mc1 = mc.add(p.set_len(rad*0.5));
                 mc2 = mc.add(p.set_len(-rad*0.5));
                 
@@ -647,7 +644,7 @@
 
     GraphEdge.double_click_callback = function(edge){
         console.log("double click from edge:",edge);
-    }
+    };
 
     // this is the default edge creation callback. It is called before an edge is created
     // It returns an object containing the properties of the edge.
@@ -670,7 +667,7 @@
         var brk = '\n';
         if (!str) { return str; }
         var regex = '.{1,' +width+ '}(\\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\\S+?(\\s|$)');
-        return str.match( RegExp(regex, 'g') ).join( brk );                             
+        return str.match(new RegExp(regex, 'g') ).join( brk );
     }
 
     window.CuteGraph   = Graph;
