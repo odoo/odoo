@@ -99,11 +99,6 @@ class sale_configuration(osv.osv_memory):
             for val in ir_values_obj.get(cr, uid, 'default', False, ['fetchmail.server']):
                 result.update({val[1]: val[2]})
 
-        group_list =['group_sale_pricelist_per_customer','group_sale_uom_per_product','group_sale_delivery_address',
-                     'group_sale_disc_per_sale_order_line','group_sale_notes_subtotal']
-
-        applied_groups = self.get_applied_groups(cr, uid, group_list, context=context)
-        result.update(applied_groups)
         return result
 
     _defaults = {
