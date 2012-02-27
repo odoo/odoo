@@ -282,9 +282,11 @@ class res_partner(osv.osv):
             adr_pref = ['default']
         # retrieve addresses from the partner itself and its children
         res = []
-        for p in self.browse(cr, uid, ids, context):
-            res.append((p.type, p.id))
-            res.extend((c.type, c.id) for c in p.child_ids)
+        # need to fix the ids ,It get  False value in list like ids[False]
+        if ids and ids[0]!=False:
+            for p in self.browse(cr, uid, ids):
+                res.append((p.type, p.id))
+                res.extend((c.type, c.id) for c in p.child_ids)
         addr = dict(reversed(res))
         # get the id of the (first) default address if there is one,
         # otherwise get the id of the first address in the list
