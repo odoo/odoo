@@ -176,6 +176,7 @@ class res_partner(osv.osv):
         'color': 0,
         'is_company': 'contact',
         'type': 'default',
+        'use_parent_address':True
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
