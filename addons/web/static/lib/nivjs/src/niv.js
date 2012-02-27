@@ -132,6 +132,9 @@ niv = (function() {
     // end of John Resig's code
 
     lib.DestroyableMixin = {
+        init: function() {
+            this.__destroyableDestroyed = false;
+        },
         isDestroyed : function() {
             return this.__destroyableDestroyed;
         },
@@ -142,18 +145,20 @@ niv = (function() {
 
     lib.ParentedMixin = _.extend({}, lib.DestroyableMixin, {
         __parentedMixin : true,
+        init: function() {
+            lib.DestroyableMixin.init.call(this);
+            this.__parentedChildren = [];
+            this.__parentedParent = null;
+        },
         setParent : function(parent) {
             if (this.getParent()) {
                 if (this.getParent().__parentedMixin) {
                     this.getParent().__parentedChildren = _.without(this
                             .getParent().getChildren(), this);
                 }
-                this.__parentedParent = undefined;
             }
             this.__parentedParent = parent;
             if (parent && parent.__parentedMixin) {
-                if (!parent.__parentedChildren)
-                    parent.__parentedChildren = [];
                 parent.__parentedChildren.push(this);
             }
         },
@@ -161,8 +166,7 @@ niv = (function() {
             return this.__parentedParent;
         },
         getChildren : function() {
-            return this.__parentedChildren ? _.clone(this.__parentedChildren)
-                    : [];
+            return _.clone(this.__parentedChildren);
         },
         destroy : function() {
             _.each(this.getChildren(), function(el) {
@@ -275,22 +279,19 @@ niv = (function() {
     });
     // end of Backbone's events class
     
-    var checkEventDispatcher = function(obj) {
-        if (!obj.__events) {
-            obj.__events = new lib.internal.Events();
-            obj.__registeredEvents = [];
-        }
-    };
     lib.EventDispatcherMixin = _.extend({}, lib.ParentedMixin, {
         __eventDispatcherMixin: true,
+        init: function() {
+            lib.ParentedMixin.init.call(this);
+            this.__events = new lib.internal.Events();
+            this.__registeredEvents = [];
+        },
         bind: function(events, dest, func) {
             var self = this;
-            checkEventDispatcher(this);
             events = events.split(/\s+/);
             _.each(events, function(eventName) {
                 self.__events.on(eventName, func, dest);
                 if (dest && dest.__eventDispatcherMixin) {
-                    checkEventDispatcher(dest);
                     dest.__registeredEvents.push({name: eventName, func: func, source: self});
                 }
             });
@@ -298,12 +299,10 @@ niv = (function() {
         },
         unbind: function(events, dest, func) {
             var self = this;
-            checkEventDispatcher(this);
             events = events.split(/\s+/);
             _.each(events, function(eventName) {
                 self.__events.off(eventName, func, dest);
                 if (dest && dest.__eventDispatcherMixin) {
-                    checkEventDispatcher(dest);
                     dest.__registeredEvents = _.filter(dest.__registeredEvents, function(el) {
                         return !(el.name === eventName && el.func === func && el.source === self);
                     });
@@ -312,13 +311,11 @@ niv = (function() {
             return this;
         },
         trigger: function(events) {
-            checkEventDispatcher(this);
             this.__events.trigger.apply(this.__events, arguments);
             return this;
         },
         destroy: function() {
             var self = this;
-            checkEventDispatcher(this);
             _.each(this.__registeredEvents, function(event) {
                 event.source.__events.off(event.name, event.func, self);
             });
@@ -328,15 +325,13 @@ niv = (function() {
         }
     });
     
-    var checkGetterSetter = function(obj) {
-        if (!obj.__internal_map) {
-            obj.__internal_map = {};
-        }
-    };
     lib.GetterSetterMixin = _.extend({}, lib.EventDispatcherMixin, {
+        init: function() {
+            lib.EventDispatcherMixin.init.call(this);
+            this.__internal_map = {};
+        },
         set: function(map) {
             var self = this;
-            checkGetterSetter(this);
             _.each(map, function(val, key) {
                 var tmp = self.__internal_map[key];
                 self.__internal_map[key] = val;
@@ -348,7 +343,6 @@ niv = (function() {
             });
         },
         get: function(key) {
-            checkGetterSetter(this);
             return this.__internal_map[key];
         }
     });
@@ -374,6 +368,7 @@ niv = (function() {
          * for new components this argument should not be provided any more.
          */
         init: function(parent) {
+            lib.GetterSetterMixin.init.call(this);
             this.$element = $(document.createElement(this.tag_name));
     
             this.setParent(parent);

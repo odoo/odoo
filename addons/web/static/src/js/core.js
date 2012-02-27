@@ -261,10 +261,6 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
 });
 
 openerp.web.CallbackEnabledMixin = {
-    /**
-     * @constructs openerp.web.CallbackEnabled
-     * @extends openerp.web.Class
-     */
     init: function() {
         // Transform on_* method into openerp.web.callbacks
         for (var name in this) {
@@ -304,7 +300,12 @@ openerp.web.CallbackEnabledMixin = {
     }
 };
 
-openerp.web.CallbackEnabled = openerp.web.Class.extend(_.extend({}, openerp.web.CallbackEnabledMixin));
+openerp.web.CallbackEnabled = openerp.web.Class.extend(_.extend({}, niv.GetterSetterMixin, openerp.web.CallbackEnabledMixin, {
+    init: function() {
+        niv.GetterSetterMixin.init.call(this);
+        openerp.web.CallbackEnabledMixin.init.call(this);
+    }
+}));
 
 openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.web.Connection# */{
     /**
