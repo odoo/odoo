@@ -66,22 +66,16 @@ class sale_configuration(osv.osv_memory):
                                     help="Install plugin_outlook module: This module provides the Outlook Plug-in."),
     }
 
-    def get_applied_groups(self, cr, uid, groups, context=None):
+    def get_applied_groups(self, cr, uid, context=None):
         applied_groups = {}
         user_obj = self.pool.get('res.users')
         dataobj = self.pool.get('ir.model.data')
-        group_obj = self.pool.get('res.groups')
-        group_ids = []
-        groups=[]
 
-        for grp in groups:
-            dummy,group_id = dataobj.get_object_reference(cr, 1, 'base', grp);
-            group_ids.append(group_id);
-
+        groups = []
         user_group_ids = user_obj.browse(cr, uid, uid, context=context).groups_id
 
         for group_id in user_group_ids:
-            groups.append(group_id.id);
+            groups.append(group_id.id)
 
         for id in groups:
             key_id = dataobj.search(cr, uid,[('res_id','=',id),('model','=','res.groups')],context=context)
