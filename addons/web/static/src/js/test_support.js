@@ -24,15 +24,26 @@ openerp.test_support = {
         });
         return connection.session_reload();
     },
-    module: function (title, tested_core, fn) {
+    module: function (title, tested_core, nonliterals) {
         var conf = QUnit.config.openerp = {};
         QUnit.module(title, {
             setup: function () {
                 QUnit.stop();
                 var oe = conf.openerp = window.openerp.init();
                 window.openerp.web[tested_core](oe);
-                openerp.test_support.setup_connection(oe.connection)
-                    .always(QUnit.start)
+                var done = openerp.test_support.setup_connection(oe.connection);
+                if (nonliterals) {
+                    done = done.pipe(function () {
+                        return oe.connection.rpc('/tests/add_nonliterals', {
+                            domains: nonliterals.domains || [],
+                            contexts: nonliterals.contexts || []
+                        }).then(function (r) {
+                            oe.domains = r.domains;
+                            oe.contexts = r.contexts;
+                        });
+                    });
+                }
+                done.always(QUnit.start)
                     .then(function () {
                         conf.openerp = oe;
                     }, function (e) {
@@ -57,6 +68,10 @@ openerp.test_support = {
                .fail(function (e) {
             if (e.code !== 200) {
                 QUnit.equal(e.code, 200, 'Testing connector should raise RPC faults');
+                if (typeof console !== 'undefined' && console.error) {
+                    console.error(e.data.debug);
+                }
+                return;
             }
             fn(e.data.fault_code);
         })

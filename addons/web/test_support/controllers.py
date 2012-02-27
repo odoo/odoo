@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ..common.http import Controller, jsonrequest
+from ..common import http, nonliterals
 from ..controllers.main import Session
 
 UID = 87539319
@@ -13,6 +13,18 @@ def bind(session):
     session.bind(DB, UID, LOGIN, PASSWORD)
     session.context = CONTEXT
     session.build_connection().set_login_info(DB, LOGIN, PASSWORD, UID)
+
+class TestController(http.Controller):
+    _cp_path = '/tests'
+
+    @http.jsonrequest
+    def add_nonliterals(self, req, domains, contexts):
+        return {
+            'domains': [nonliterals.Domain(req.session, domain)
+                        for domain in domains],
+            'contexts': [nonliterals.Context(req.session, context)
+                         for context in contexts]
+        }
 
 class TestSession(Session):
     _cp_path = '/web/session'

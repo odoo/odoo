@@ -1,5 +1,8 @@
 $(document).ready(function () {
     var t = window.openerp.test_support;
+    function context_(c) {
+        return _.extend({ lang: 'en_US', tz: 'UTC', uid: 87539319 }, c);
+    }
 
     t.module('Dataset shortcuts', 'data');
     t.test('read_index', function (openerp) {
@@ -14,6 +17,7 @@ $(document).ready(function () {
             strictEqual(result.args.length, 3);
             deepEqual(result.args[0], [30]);
             deepEqual(result.args[1], ['a', 'b', 'c']);
+            deepEqual(result.args[2], context_());
 
             ok(_.isEmpty(result.kwargs));
         });
@@ -27,8 +31,9 @@ $(document).ready(function () {
 
             strictEqual(result.args.length, 2);
             deepEqual(result.args[0], ['a', 'b', 'c']);
-            // FIXME: args[1] is context w/ user context, where to get? Hardcode?
-            strictEqual(result.args[1].foo, 'bar');
+            console.log(result.args[1]);
+            console.log(context_({foo: 'bar'}));
+            deepEqual(result.args[1], context_({foo: 'bar'}));
 
             ok(_.isEmpty(result.kwargs));
         });
@@ -40,6 +45,7 @@ $(document).ready(function () {
 
             strictEqual(r.args.length, 2);
             deepEqual(r.args[0], {foo: 1, bar: 2});
+            deepEqual(r.args[1], context_());
 
             ok(_.isEmpty(r.kwargs));
         });
@@ -52,6 +58,7 @@ $(document).ready(function () {
             strictEqual(r.args.length, 3);
             deepEqual(r.args[0], [42]);
             deepEqual(r.args[1], {foo: 1});
+            deepEqual(r.args[2], context_());
 
             ok(_.isEmpty(r.kwargs));
         });
@@ -68,6 +75,7 @@ $(document).ready(function () {
 
             strictEqual(r.args.length, 2);
             deepEqual(r.args[0], [42]);
+            deepEqual(r.args[1], context_());
 
             ok(_.isEmpty(r.kwargs));
         });
@@ -90,6 +98,7 @@ $(document).ready(function () {
 
             strictEqual(r.args.length, 2);
             deepEqual(r.args[0], [1, 2]);
+            deepEqual(r.args[1], context_());
 
             ok(_.isEmpty(r.kwargs));
         });
@@ -104,6 +113,7 @@ $(document).ready(function () {
             // domain
             deepEqual(r.args[1], []);
             strictEqual(r.args[2], 'ilike');
+            deepEqual(r.args[3], context_());
             strictEqual(r.args[4], 0);
 
             ok(_.isEmpty(r.kwargs));
@@ -119,6 +129,7 @@ $(document).ready(function () {
             // domain
             deepEqual(r.args[1], [['foo', '=', 3]]);
             strictEqual(r.args[2], 'someop');
+            deepEqual(r.args[3], context_());
             // limit
             strictEqual(r.args[4], 0);
 
@@ -171,6 +182,32 @@ $(document).ready(function () {
             strictEqual(r.args[1], 0);
             strictEqual(r.args[2], false);
             strictEqual(r.args[3], 'bar ASC, foo DESC');
+            deepEqual(r.args[4], context_());
+
+            ok(_.isEmpty(r.kwargs));
+        });
+    });
+
+    t.module('Nonliterals', 'data', {
+        domains: ['mary had a little lamb', 'bob the builder'],
+        contexts: ['{a: b > c}']
+    });
+    t.test('Dataset', function (openerp) {
+        var ds = new openerp.web.DataSetSearch(
+            {session: openerp.connection}, 'mod');
+        var c = new openerp.web.CompoundContext(
+            {a: 'foo', b: 3, c: 5}, openerp.contexts[0]);
+        t.expect(ds.read_slice(['foo', 'bar'], {
+            context: c
+        }), function (r) {
+            strictEqual(r.method, 'search');
+
+            deepEqual(r.args[4], context_({
+                foo: false,
+                a: 'foo',
+                b: 3,
+                c: 5
+            }));
 
             ok(_.isEmpty(r.kwargs));
         });
