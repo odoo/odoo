@@ -138,13 +138,19 @@ class sale_configuration(osv.osv_memory):
         fetchmail_obj = self.pool.get('fetchmail.server')
         ir_values_obj = self.pool.get('ir.values')
         for k, v in vals.items():
-            if k in MODULE_LIST and v == True:
+            if k in MODULE_LIST:
                 installed = self.get_installed_modules(cr, uid, [k], context)
-                if not installed:
+                if v == True and not installed:
                     module_id = module_obj.search(cr, uid, [('name','=',k)])[0]
                     module_obj.state_update(cr, uid, [module_id], 'to install', ['uninstalled'], context)
                     cr.commit()
                     pooler.restart_pool(cr.dbname, update_module=True)[1]
+                elif v == False and installed.get(k):
+                    module_id = module_obj.search(cr, uid, [('name','=',k)])[0]
+                    module_obj.state_update(cr, uid, [module_id], 'to remove', ['installed'], context)
+                    cr.commit()
+                    pooler.restart_pool(cr.dbname, update_module=True)[1]
+                    
         if vals.get('fetchmail_crm'):
             object_id = model_obj.search(cr, uid, [('model','=','crm.lead')])[0]
             fetchmail_vals = {
