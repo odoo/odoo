@@ -283,16 +283,16 @@ nova = (function() {
         __eventDispatcherMixin: true,
         init: function() {
             lib.ParentedMixin.init.call(this);
-            this.__events = new lib.internal.Events();
-            this.__registeredEvents = [];
+            this.__edispatcherEvents = new lib.internal.Events();
+            this.__edispatcherRegisteredEvents = [];
         },
         bind: function(events, dest, func) {
             var self = this;
             events = events.split(/\s+/);
             _.each(events, function(eventName) {
-                self.__events.on(eventName, func, dest);
+                self.__edispatcherEvents.on(eventName, func, dest);
                 if (dest && dest.__eventDispatcherMixin) {
-                    dest.__registeredEvents.push({name: eventName, func: func, source: self});
+                    dest.__edispatcherRegisteredEvents.push({name: eventName, func: func, source: self});
                 }
             });
             return this;
@@ -301,9 +301,9 @@ nova = (function() {
             var self = this;
             events = events.split(/\s+/);
             _.each(events, function(eventName) {
-                self.__events.off(eventName, func, dest);
+                self.__edispatcherEvents.off(eventName, func, dest);
                 if (dest && dest.__eventDispatcherMixin) {
-                    dest.__registeredEvents = _.filter(dest.__registeredEvents, function(el) {
+                    dest.__edispatcherRegisteredEvents = _.filter(dest.__edispatcherRegisteredEvents, function(el) {
                         return !(el.name === eventName && el.func === func && el.source === self);
                     });
                 }
@@ -311,16 +311,16 @@ nova = (function() {
             return this;
         },
         trigger: function(events) {
-            this.__events.trigger.apply(this.__events, arguments);
+            this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
             return this;
         },
         destroy: function() {
             var self = this;
-            _.each(this.__registeredEvents, function(event) {
-                event.source.__events.off(event.name, event.func, self);
+            _.each(this.__edispatcherRegisteredEvents, function(event) {
+                event.source.__edispatcherEvents.off(event.name, event.func, self);
             });
-            this.__registeredEvents = [];
-            this.__events.off();
+            this.__edispatcherRegisteredEvents = [];
+            this.__edispatcherEvents.off();
             lib.ParentedMixin.destroy.call(this);
         }
     });
@@ -328,13 +328,13 @@ nova = (function() {
     lib.GetterSetterMixin = _.extend({}, lib.EventDispatcherMixin, {
         init: function() {
             lib.EventDispatcherMixin.init.call(this);
-            this.__internal_map = {};
+            this.__getterSetterInternalMap = {};
         },
         set: function(map) {
             var self = this;
             _.each(map, function(val, key) {
-                var tmp = self.__internal_map[key];
-                self.__internal_map[key] = val;
+                var tmp = self.__getterSetterInternalMap[key];
+                self.__getterSetterInternalMap[key] = val;
                 self.trigger("changed:" + key, {
                     oldValue: tmp,
                     newValue: val,
@@ -343,7 +343,7 @@ nova = (function() {
             });
         },
         get: function(key) {
-            return this.__internal_map[key];
+            return this.__getterSetterInternalMap[key];
         }
     });
     
@@ -392,7 +392,7 @@ nova = (function() {
          */
         appendTo: function(target) {
             var self = this;
-            return this._render_and_insert(function(t) {
+            return this.__renderAndInsert(function(t) {
                 self.$element.appendTo(t);
             }, target);
         },
@@ -403,7 +403,7 @@ nova = (function() {
          */
         prependTo: function(target) {
             var self = this;
-            return this._render_and_insert(function(t) {
+            return this.__renderAndInsert(function(t) {
                 self.$element.prependTo(t);
             }, target);
         },
@@ -414,7 +414,7 @@ nova = (function() {
          */
         insertAfter: function(target) {
             var self = this;
-            return this._render_and_insert(function(t) {
+            return this.__renderAndInsert(function(t) {
                 self.$element.insertAfter(t);
             }, target);
         },
@@ -425,7 +425,7 @@ nova = (function() {
          */
         insertBefore: function(target) {
             var self = this;
-            return this._render_and_insert(function(t) {
+            return this.__renderAndInsert(function(t) {
                 self.$element.insertBefore(t);
             }, target);
         },
@@ -435,11 +435,11 @@ nova = (function() {
          * @param target A jQuery object or a Widget instance.
          */
         replace: function(target) {
-            return this._render_and_insert(_.bind(function(t) {
+            return this.__renderAndInsert(_.bind(function(t) {
                 this.$element.replaceAll(t);
             }, this), target);
         },
-        _render_and_insert: function(insertion, target) {
+        __renderAndInsert: function(insertion, target) {
             this.render_element();
             insertion(target);
             return this.start();
