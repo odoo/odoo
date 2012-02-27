@@ -326,13 +326,14 @@
                 <form string="Partners">
                     <group col="8" colspan="4">
                         <group col="2">
-                            <field name="name"/>
-                            <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', 'partner')]}"/>
+                            <field name="is_company" on_change="onchange_type(is_company, title)"/>
+                            <field name="function" attrs="{'invisible': [('is_company','=', 'partner')]}" colspan="2"/>
                         </group>
                         <group col="2">
-                            <field name="title" size="0" groups="base.group_extended" domain="[('domain', '=', is_company)]"/>
-                            <field name="is_company" on_change="onchange_type(is_company, title)"/>
+                            <field name="name"/>
+                            <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', 'partner')]}" domain="[('is_company', '=', 'partner')]" context="{'default_is_company': 'partner'}" on_change="onchange_address(use_parent_address, parent_id)"/>
                         </group>
+                        <field name="title" size="0" groups="base.group_extended" domain="[('domain', '=', is_company)]"/>
                         <group col="2">
                             <field name="customer"/>
                             <field name="supplier"/>
@@ -352,12 +353,12 @@
                                 <field name="use_parent_address" attrs="{'invisible': [('parent_id', '=', False)]}" on_change="onchange_address(use_parent_address, parent_id)"/>
                                 </group>
                                 <newline/>
-                                <field name="street" colspan="4" attrs="{'readonly': [('use_parent_address','=', True)]}"/>
-                                <field name="street2" colspan="4" attrs="{'readonly': [('use_parent_address','=', True)]}"/>
-                                <field name="zip" attrs="{'readonly': [('use_parent_address','=', True)]}"/>
-                                <field name="city" attrs="{'readonly': [('use_parent_address','=', True)]}"/>
-                                <field name="country_id" completion="1" attrs="{'readonly': [('use_parent_address','=', True)]}"/>
-                                <field name="state_id" attrs="{'readonly': [('use_parent_address','=', True)]}"/>
+                                <field name="street" colspan="4"/>
+                                <field name="street2" colspan="4"/>
+                                <field name="zip"/>
+                                <field name="city"/>
+                                <field name="country_id"/>
+                                <field name="state_id"/>
                             </group>
                             <group colspan="2">
                                 <separator string="Communication" colspan="4"/>
@@ -368,7 +369,6 @@
                                 <field name="email" widget="email" colspan="4"/>
                                 <field name="website" widget="url" colspan="4"/>
                                 <field name="ref" groups="base.group_extended" colspan="4"/>
-                                <field name="function" attrs="{'invisible': [('is_company','=', 'partner')]}" colspan="4"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('is_company','!=', 'partner')]}">
                                 <field name="child_ids" nolabel="1"/>

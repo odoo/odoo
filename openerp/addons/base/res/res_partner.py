@@ -17,7 +17,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################
+########################################################################onchange_address######
 
 import math
 
@@ -197,6 +197,7 @@ class res_partner(osv.osv):
         
     
     def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+        print "\n =-=-=-=-=->>", parent_id, use_parent_address
         if use_parent_address and parent_id:
             parent = self.browse(cr, uid, parent_id, context=context)
             return {'value': {
