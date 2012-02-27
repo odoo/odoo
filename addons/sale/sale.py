@@ -1452,12 +1452,20 @@ class sale_configuration(osv.osv_memory):
             vals['project_timesheet'] = True
             vals['project_mrp'] = True
             vals['account_analytic_analysis'] = True
+        else:
+            vals['project_timesheet'] = False
+            vals['project_mrp'] = False
+            vals['account_analytic_analysis'] = False
 
         if wizard.timesheet:
             vals['account_analytic_analysis'] = True
+        else:
+            vals['account_analytic_analysis'] = False
 
         if wizard.charge_delivery:
             vals['delivery'] = True
+        else:
+            vals['delivery'] = False
 
         if wizard.picking_policy:
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], 'one')
