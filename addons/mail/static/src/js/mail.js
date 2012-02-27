@@ -10,7 +10,6 @@ openerp.mail = function(session) {
 
     /* ThreadDisplay widget: display a thread of comments */
     mail.ThreadDisplay = session.web.Widget.extend({
-        // QWeb template to use when rendering the object
         template: 'ThreadDisplay',
 
         /**
@@ -27,7 +26,6 @@ openerp.mail = function(session) {
          */
         init: function(parent, params) {
             this._super(parent);
-            console.log(parent);
             this.params = params;
             this.params.limit = this.params.limit || 10;
             this.params.offset = this.params.offset || 0;
@@ -139,7 +137,7 @@ openerp.mail = function(session) {
             while (regex_res != null) {
                 var login = regex_res[2];
                 var res_id = 1;
-                string = string.replace(regex_res[0], '<a href="#" data-res-model="res.users" data-res-id = ' + res_id + '>@' + login + '</a>');
+                string = string.replace(regex_res[0], '<a href="#" class="intlink" data-res-model="res.users" data-res-id = ' + res_id + '>@' + login + '</a>');
                 regex_res = regex_login.exec(string);
             }
             return string;
