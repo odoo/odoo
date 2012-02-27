@@ -95,16 +95,17 @@ openerp.mail = function(session) {
                 record.tr_body_text = self.truncate_string(record.body_text, self.params.char_show_more);
                 record.body_text = self.do_replace_internal_links(record.body_text);
                 if (record.tr_body_text) record.tr_body_text = self.do_replace_internal_links(record.tr_body_text);
+                // render
                 $(session.web.qweb.render('ThreadMsg', {'record': record})).appendTo(self.$element.find('div.oe_mail_thread_display'));
                 // truncated: hide full-text, show summary, add buttons
                 if (record.tr_body_text) {
-                    var node = self.$element.find('span.oe_mail_msg_body:last').append('<a href="#">Show less</a>');
+                    var node = self.$element.find('span.oe_mail_msg_body:last').append(' <a href="#" class="reduce">[ ... Show less]</a>');
+                    self.$element.find('p.oe_mail_msg_p:last').append($('<span class="oe_mail_msg_body_short">' + record.tr_body_text + ' <a href="#" class="expand">[ ... Show more]</a></span>'));
+                    var new_node = self.$element.find('span.oe_mail_msg_body_short:last');
                     node.hide();
                     node.find('a:last').click(function() {
                         node.hide(); new_node.show(); return false;
                     });
-                    self.$element.find('p.oe_mail_msg_p:last').append($('<span class="oe_mail_msg_body_short">' + record.tr_body_text + '<a href="#">Show more</a></span>'));
-                    var new_node = self.$element.find('span.oe_mail_msg_body_short:last');
                     new_node.find('a:last').click(function() {
                         new_node.hide(); node.show(); return false;
                     });
