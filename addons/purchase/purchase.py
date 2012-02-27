@@ -142,10 +142,11 @@ class purchase_order(osv.osv):
         return res
 
     STATE_SELECTION = [
-        ('draft', 'Request for Quotation'),
+        ('draft', 'Draft PO'),
         ('wait', 'Waiting'),
+        ('send', 'RFQ Sent'),
         ('confirmed', 'Waiting Approval'),
-        ('approved', 'Approved'),
+        ('approved', 'Purchase Order'),
         ('except_picking', 'Shipping Exception'),
         ('except_invoice', 'Invoice Exception'),
         ('done', 'Done'),
@@ -277,6 +278,24 @@ class purchase_order(osv.osv):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
 
+    def wkf_send_rfq(self, cr, uid, ids, context=None):
+        
+        mod_obj = self.pool.get('ir.model.data')
+        template_id = self.pool.get('email.template').search(cr, uid, [('model_id', '=', 'purchase.order')])
+        model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','email_compose_message_wizard_form')])
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
+        self.write(cr, uid, ids, {'state' : 'send'})
+
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(resource_id,'form')],
+            'view_id': resource_id,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'active_model': 'purchase.order', 'mail.compose.message.mode':'mass_mail', 'mail.compose.template_id' :template_id},
+        }
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         todo = []
