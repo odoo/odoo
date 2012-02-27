@@ -1237,7 +1237,7 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
         if (translation_bundle.lang_parameters) {
             this.parameters = translation_bundle.lang_parameters;
             this.parameters.grouping = py.eval(
-                    this.parameters.grouping).toJSON();
+                    this.parameters.grouping);
         }
     },
     add_module_translation: function(mod) {
