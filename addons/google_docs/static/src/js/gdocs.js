@@ -5,7 +5,7 @@ console.log('nw')
 instance.web.form.SidebarAttachments = instance.web.form.SidebarAttachments.extend({
     init: function() {
         this._super.apply(this, arguments);
-        this.$element.delegate('.oe_google_docs_button', 'click', self.on_add_gdoc);
+        this.$element.delegate('.oe_google_docs_button', 'click', this.on_add_gdoc);
     },
     on_add_gdoc: function() {
         var self = this;
