@@ -791,7 +791,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             if ($clicked_menu.is('.submenu')) {
                 $sub_menu.find('.submenu.opened').each(function() {
                     if (!$(this).next().has($clicked_menu).length && !$(this).is($clicked_menu)) {
-                        $(this).removeClass('opened').next().hide();
+                        $(this).removeClass('opened');
                     }
                 });
                 $clicked_menu.toggleClass('opened').next().toggle();
