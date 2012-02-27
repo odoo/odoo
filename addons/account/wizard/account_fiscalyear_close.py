@@ -75,6 +75,7 @@ class account_fiscalyear_close(osv.osv_memory):
 
         new_journal = data[0]['journal_id']
         new_journal = obj_acc_journal.browse(cr, uid, new_journal, context=context)
+        company_id = new_journal.company_id.id
 
         if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
             raise osv.except_osv(_('UserError'),
@@ -113,7 +114,8 @@ class account_fiscalyear_close(osv.osv_memory):
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
             WHERE a.active 
               AND a.type != 'view'
-              AND t.close_method = %s''', ('unreconciled', ))
+              AND a.company_id = %s
+              AND t.close_method = %s''', (company_id, 'unreconciled', ))
         account_ids = map(lambda x: x[0], cr.fetchall())
 
         if account_ids:
@@ -132,7 +134,6 @@ class account_fiscalyear_close(osv.osv_memory):
                    WHERE account_id IN %s 
                      AND ''' + query_line + ''' 
                      AND reconcile_id IS NULL)''', (new_journal.id, period.id, move_id, tuple(account_ids),))
-
             #We have also to consider all move_lines that were reconciled
             #on another fiscal year, and report them too
             cr.execute('''
@@ -163,7 +164,8 @@ class account_fiscalyear_close(osv.osv_memory):
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
             WHERE a.active
               AND a.type != 'view'
-              AND t.close_method = %s''', ('detail', ))
+              AND a.company_id = %s
+              AND t.close_method = %s''', (company_id, 'detail', ))
         account_ids = map(lambda x: x[0], cr.fetchall())
 
         if account_ids:
@@ -191,7 +193,8 @@ class account_fiscalyear_close(osv.osv_memory):
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
             WHERE a.active
               AND a.type != 'view'
-              AND t.close_method = %s''', ('balance', ))
+              AND a.company_id = %s
+              AND t.close_method = %s''', (company_id, 'balance', ))
         account_ids = map(lambda x: x[0], cr.fetchall())
 
         query_1st_part = """
@@ -254,7 +257,7 @@ class account_fiscalyear_close(osv.osv_memory):
         cr.execute('UPDATE account_fiscalyear ' \
                     'SET end_journal_period_id = %s ' \
                     'WHERE id = %s', (ids[0], old_fyear.id))
-
+        
         return {'type': 'ir.actions.act_window_close'}
 
 account_fiscalyear_close()
