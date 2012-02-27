@@ -392,7 +392,7 @@ nova = (function() {
          */
         appendTo: function(target) {
             var self = this;
-            return this.__renderAndInsert(function(t) {
+            return this.__widgetRenderAndInsert(function(t) {
                 self.$element.appendTo(t);
             }, target);
         },
@@ -403,7 +403,7 @@ nova = (function() {
          */
         prependTo: function(target) {
             var self = this;
-            return this.__renderAndInsert(function(t) {
+            return this.__widgetRenderAndInsert(function(t) {
                 self.$element.prependTo(t);
             }, target);
         },
@@ -414,7 +414,7 @@ nova = (function() {
          */
         insertAfter: function(target) {
             var self = this;
-            return this.__renderAndInsert(function(t) {
+            return this.__widgetRenderAndInsert(function(t) {
                 self.$element.insertAfter(t);
             }, target);
         },
@@ -425,7 +425,7 @@ nova = (function() {
          */
         insertBefore: function(target) {
             var self = this;
-            return this.__renderAndInsert(function(t) {
+            return this.__widgetRenderAndInsert(function(t) {
                 self.$element.insertBefore(t);
             }, target);
         },
@@ -435,11 +435,11 @@ nova = (function() {
          * @param target A jQuery object or a Widget instance.
          */
         replace: function(target) {
-            return this.__renderAndInsert(_.bind(function(t) {
+            return this.__widgetRenderAndInsert(_.bind(function(t) {
                 this.$element.replaceAll(t);
             }, this), target);
         },
-        __renderAndInsert: function(insertion, target) {
+        __widgetRenderAndInsert: function(insertion, target) {
             this.render_element();
             insertion(target);
             return this.start();
