@@ -134,31 +134,23 @@ class event_event(osv.osv):
         res = {}
         for event in self.browse(cr, uid, ids, context=context):
             res[event.id] = {}
-            for field in fields:
-                res[event.id][field] = False
-            state = []
-            state_done = []
-            if 'register_current' in fields:
-                state += ['open']
-            if 'register_prospect' in fields:
-                state.append('draft')
-            reg_open=0
-            reg_done=0
-            reg_draft=0
-            reg_open_ids = register_pool.search(cr, uid, [('event_id', '=', event.id),('state', '=', 'open')], context=context)
-            reg_done_ids=  register_pool.search(cr, uid, [('event_id', '=', event.id),('state', '=', 'done')], context=context)
-            reg_draft_ids=  register_pool.search(cr, uid, [('event_id', '=', event.id),('state', '=', 'draft')], context=context)
+            reg_open = reg_done = reg_draft =0
             for registration in event.registration_ids:
-                if registration.id in reg_open_ids:
-                    reg_open=reg_open + registration.nb_register
-                if registration.id in reg_done_ids:
-                    reg_done=reg_done + registration.nb_register
-                if registration.id in reg_draft_ids:
-                    reg_draft=reg_draft + registration.nb_register
-
-            res[event.id]['register_current'] = reg_open
-            res[event.id]['register_prospect'] = reg_done
-            res[event.id]['register_attended'] = reg_draft
+                if registration.state == 'open':
+                    reg_open += registration.nb_register
+                elif registration.state == 'done':
+                    reg_done += registration.nb_register
+                elif registration.state == 'draft':
+                    reg_draft += registration.nb_register
+            for field in fields:
+                number = 0
+                if field == 'register_current':
+                    number = reg_open
+                elif field == 'register_attended':
+                    number = reg_done
+                elif field == 'register_prospect':
+                    number = reg_draft
+                res[event.id][field] = number
         return res
 
     _columns = {
@@ -167,9 +159,9 @@ class event_event(osv.osv):
         'type': fields.many2one('event.type', 'Type of Event', readonly=False, states={'done': [('readonly', True)]}),
         'register_max': fields.integer('Maximum Registrations', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
         'register_min': fields.integer('Minimum Registrations', help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
-        'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_current'),
-        'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_prospect'),
-        'register_attended': fields.function(_get_register, string='Attended Registrations', multi='register_prospect'), 
+        'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_numbers'),
+        'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_numbers'),
+        'register_attended': fields.function(_get_register, string='Attended Registrations', multi='register_numbers'), 
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
         'date_begin': fields.datetime('Starting Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('Closing Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
