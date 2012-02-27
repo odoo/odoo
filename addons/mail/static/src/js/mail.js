@@ -136,7 +136,7 @@ openerp.mail = function(session) {
         },
         
         thread_get_avatar_mini: function(model, field, id) {
-            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id || '';
+            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
     });
 
