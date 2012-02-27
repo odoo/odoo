@@ -77,8 +77,26 @@
 }
 
 .oe_mail_thread_msg, .oe_mail_thread_act {
+    width: 80%;
     white-space: normal;
     margin-bottom: 5px;
+    border-bottom: 1px solid #D2D9E7;
+}
+
+.notification {
+    background: #E0E0E0;
+}
+
+.email {
+    background: #E0E0E0;
+}
+
+.oe_mail_thread_msg_more {
+    margin-left: 20%;
+    margin-right: 40%;
+    border: 1px solid #D2D9E7;
+    background: #E0E0E0;
+    text-align: center;
 }
 
 .oe_mail_thread_msg:after, .oe_mail_thread_act:after {
@@ -99,8 +117,8 @@
 
 .oe_mail_msg_image {
     float: left;
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 40px;
     text-align: center;
     overflow: hidden;
     -moz-border-radius: 3px;
@@ -115,14 +133,13 @@
 }
 
 .oe_mail_msg_image img {
-    width: 60px;
+    width: 40px;
     height: auto;
     clip: rect(10px, 100px, 110px, 0px);
 }
 
 .oe_mail_msg_content {
-    width: 89%;
-    margin-left: 11%;
+    margin-left: 50px;
 }
 
 .oe_mail_msg_p {
@@ -130,10 +147,18 @@
     margin: 0;
 }
 
+.oe_mail_msg_p_email_header {
+    border-bottom: 1px solid #D2D9E7;
+}
+
 .oe_mail_msg_body {
 }
 
-.oe_mail_msg_author, .oe_mail_msg_author a {
+.oe_mail_msg_author {
+    color: #747474;
+}
+
+.oe_mail_msg_author a {
     color: #4E43E7;
 }
 
@@ -141,6 +166,6 @@
     color: #C03000;
 }
 
-.oe_mail_msg_date, .oe_mail_msg_date a {
-    color: #4E43E7;
+.oe_mail_msg_date {
+    color: #747474;
 }

@@ -20,6 +20,7 @@ openerp.mail = function(session) {
             this.uid = params['uid'];
             this.limit = params['limit'] || 10;
             this.offset = params['offset'] || 0;
+            this.cur_limit = this.limit;
             this.records = params['records'] || false;
             // tmp
             this.map_hash = {'res.users': []};
@@ -58,12 +59,6 @@ openerp.mail = function(session) {
             return this.ds.call('message_load', [[this.res_id]]).then(this.proxy('display_comments'));
         },
         
-        display_current_user: function () {
-            $('<div>').html(
-                '<img src="' + this.thread_get_avatar_mini('res.users', 'avatar_mini', this.uid) + '"/>'
-                ).appendTo(this.$element.find('div.oe_mail_msg_image'));
-        },
-        
         display_comments: function (records) {
             var self = this;
             this.$element.find('div.oe_mail_thread_display').empty();
@@ -73,13 +68,23 @@ openerp.mail = function(session) {
             });
             //console.log(this.map_hash);
             _(records).each(function (record) {
-                record.mini_url = self.thread_get_avatar_mini('res.users', 'avatar_mini', record.user_id[0]);
+                if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
+                else { record.mini_url = self.thread_get_avatar_mini('res.users', 'avatar_mini', record.user_id[0]); }
                 record.body_text = self.do_replace_internal_links(record.body_text);
                 var render_res = session.web.qweb.render('ThreadMsg', {
                     'record': record,
                     });
-                $('<div class="oe_mail_thread_msg">').html(render_res).appendTo(self.$element.find('div.oe_mail_thread_display'));
+                $(render_res).appendTo(self.$element.find('div.oe_mail_thread_display'));
             });
+            // add and bind "more button"
+            $(session.web.qweb.render('MoreButton', {})).appendTo(self.$element.find('div.oe_mail_thread_display'));
+            this.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); });
+        },
+        
+        display_current_user: function () {
+            $('<div>').html(
+                '<img src="' + this.thread_get_avatar_mini('res.users', 'avatar_mini', this.uid) + '"/>'
+                ).appendTo(this.$element.find('div.oe_mail_msg_image'));
         },
         
         do_comment: function () {
@@ -88,26 +93,8 @@ openerp.mail = function(session) {
                 this.proxy('fetch_comments'));
         },
         
-        /* check for internal links, and map them to limitate number of queries -- WIP, probably not useful */
-        check_internal_links: function(string) {
-            /* shortcut to user: @login */
-            var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*\s)/g);
-            var regex_res = regex_login.exec(string);
-            while (regex_res != null) {
-                var login = regex_res[2];
-                this.map_hash['res.users'].push(login);
-                regex_res = regex_login.exec(string);
-            }
-            /* internal links: @res.model,name */
-            var regex_intlink = new RegExp(/(^|\s)@(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
-            regex_res = regex_intlink.exec(string);
-            while (regex_res != null) {
-                var res_model = regex_res[2] + '.' + regex_res[3];
-                var res_name = regex_res[4];
-                if (! (res_model in this.map_hash)) { this.map_hash[res_model] = []; }
-                this.map_hash[res_model].push(res_name);
-                regex_res = regex_intlink.exec(string);
-            }
+        do_more: function () {
+            console.log('do more !');
         },
         
         do_replace_internal_links: function (string) {
@@ -133,6 +120,28 @@ openerp.mail = function(session) {
                 //regex_res = regex_intlink.exec(string);
             //}
             return string;
+        },
+        
+        /* check for internal links, and map them to limitate number of queries -- WIP, probably not useful */
+        check_internal_links: function(string) {
+            /* shortcut to user: @login */
+            var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*\s)/g);
+            var regex_res = regex_login.exec(string);
+            while (regex_res != null) {
+                var login = regex_res[2];
+                this.map_hash['res.users'].push(login);
+                regex_res = regex_login.exec(string);
+            }
+            /* internal links: @res.model,name */
+            var regex_intlink = new RegExp(/(^|\s)@(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
+            regex_res = regex_intlink.exec(string);
+            while (regex_res != null) {
+                var res_model = regex_res[2] + '.' + regex_res[3];
+                var res_name = regex_res[4];
+                if (! (res_model in this.map_hash)) { this.map_hash[res_model] = []; }
+                this.map_hash[res_model].push(res_name);
+                regex_res = regex_intlink.exec(string);
+            }
         },
         
         thread_get_avatar_mini: function(model, field, id) {

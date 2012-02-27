@@ -25,6 +25,22 @@
         </div>
     </div>
 
+    <t t-name="WallHeader">
+        <div class="tmp_oe_mail_thread_header">
+            Discussion about document <t t-raw="record_model"/> (id: <t t-raw="record_id"/>)
+        </div>
+        <div class="tmp_oe_mail_thread_content">
+        </div>
+    </t>
+    
+    <t t-name="MoreButton">
+        <div class="oe_mail_thread_msg_more">
+            <button class="oe_mail_button_more" type="button">More
+                <t t-if="msg_left"> (<t t-raw="msg_left"/> left)</t>
+            </button>
+        </div>
+    </t>
+
     <t t-name="WallThreadContainer">
         <div class="oe_mail_wall_thread_header">
             Discussion about document <t t-raw="record_model"/> (id: <t t-raw="record_id"/>)
@@ -57,45 +73,55 @@
             <div class="oe_mail_msg_image">
             </div>
             <div class="oe_mail_msg_content">
-                    <textarea class="oe_mail_action_textarea" onfocus="this.value='';">Enter your comment here...</textarea><br />
-                    <button type="button" class="oe_mail_button_comment">Post comment</button>
+                <textarea class="oe_mail_action_textarea" onfocus="this.value='';">Enter your comment here...</textarea><br />
+                <button type="button" class="oe_mail_button_comment">Post comment</button>
             </div>
         </div>
         <div class="oe_mail_thread_display">
         </div>
     </div>
 
-    <t t-name="ThreadMsg">
+    <div t-name="ThreadMsg" t-attf-class="{record.type} oe_mail_thread_msg">
         <div class="oe_mail_msg_image">
             <img t-att-src="record.mini_url"/>
         </div>
         <div class="oe_mail_msg_content">
-            <p class="oe_mail_msg_p">
-                <t t-if="record.type == 'notification'">
-                    <span class="oe_mail_msg_author">OpenERP System Notification</span>
-                </t>
-                <t t-if="record.type == 'comment'">
-                    <span class="oe_mail_msg_author"><a href="#"><t t-raw="record.user_id[1]"/></a></span>
-                </t>
-                <t t-if="record.type == 'email'">
-                    <span class="oe_mail_msg_author"><t t-raw="record.user_id[1]"/></span>
-                </t>
-                <t t-if="record.need_action_user_id != false">
-                    - <span class="oe_mail_msg_need_action">Need action by <a href="#"><t t-raw="record.need_action_user_id[1]"/></a></span>
-                </t>
-                <br />
-                <span class="oe_mail_msg_body"><t t-esc="record.body_text"/></span><br />
-                <span class="oe_mail_msg_date"><t t-raw="record.date"/></span>
-           </p>
+            <t t-if="record.type == 'email'">
+                <t t-call="EmailDisplay" />
+            </t>
+            <t t-if="record.type == 'notification' || record.type == 'comment'">
+                <t t-call="NotificationDisplay" />
+            </t>
         </div>
+    </div>
+    
+    <t t-name="NotificationDisplay">
+        <p class="oe_mail_msg_p">
+            <t t-if="record.type == 'notification'">
+                <span class="oe_mail_msg_author">OpenERP System Notification</span>
+            </t>
+            <t t-if="record.type == 'comment'">
+                <span class="oe_mail_msg_author">
+                    <a href="#" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
+                </span>
+            </t>
+            <t t-if="record.need_action_user_id != false">
+                - <span class="oe_mail_msg_need_action">Need action by <a href="#"><t t-raw="record.need_action_user_id[1]"/></a></span>
+            </t>
+            wrote on <span class="oe_mail_msg_date"><t t-raw="record.date"/></span>
+            <br />
+            <span class="oe_mail_msg_body"><t t-esc="record.body_text"/></span>
+        </p>
     </t>
-
-    <t t-name="WallHeader">
-        <div class="tmp_oe_mail_thread_header">
-            Discussion about document <t t-raw="record_model"/> (id: <t t-raw="record_id"/>)
-        </div>
-        <div class="tmp_oe_mail_thread_content">
-        </div>
+    
+    <t t-name="EmailDisplay">
+        <p class="oe_mail_msg_p oe_mail_msg_p_email_header">
+            From: <t t-esc="email_from"/> on <span class="oe_mail_msg_date"><t t-raw="record.date"/></span><br />
+            To: <t t-sec="mail_to"/><br />
+        </p>
+        <p class="oe_mail_msg_p">
+            <span class="oe_mail_msg_body"><t t-esc="record.body_text"/></span>
+        </p>
     </t>
 
 </template>
