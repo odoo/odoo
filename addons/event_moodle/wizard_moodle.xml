@@ -3,20 +3,22 @@
     <data>
         <record model="ir.ui.view" id="create_moodle_config_view">
             <field name="name">moodle.config.wizard.form</field>
-            <field name="model">event.moodle</field>
+            <field name="model">event.moodle.config.wiz</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure Moodle">
                     <group>
-                     <separator string="serveur" colspan="4"/>    
-                    <field name="serveur_moodle"/>
-                    <newline/>
-                    <separator string="Connexion with a token" colspan="4"/>  
-                    <field name="moodle_token"/>
-                    <newline/>
-                    <separator string="Connexion with password and username" colspan="4"/>  
-                    <field name="moodle_username"/>
-                    <field name="moodle_password"/>
+                     <separator string="server" colspan="4"/>
+                     <field name="server_moodle"/>
+                     <newline/>
+                     <separator string="Connexion with a token" colspan="4"/>
+                     <label string="The easiest way to connect OpenERP with a moodle server is to create a 'token' in Moodle. It will be used to authenticate OpenERP as a trustable application." colspan="4"/>
+                     <field name="moodle_token"/>
+                     <newline/>
+                     <separator string="Connexion with password and username" colspan="4"/>
+                     <label string="Another approach is to create a user for OpenERP in Moodle. If you do so, make sure that this user has enough access rights" colspan="4"/>
+                     <field name="moodle_username"/>
+                     <field name="moodle_password"/>
                     </group>
                     <newline/>
                     <button type="special" special="cancel"
@@ -29,7 +31,7 @@
 
         <record model="ir.actions.act_window" id="configure_moodle">
             <field name="name">Configure Moodle</field>
-            <field name="res_model">event.moodle</field>
+            <field name="res_model">event.moodle.config.wiz</field>
             <field name="view_id" ref="create_moodle_config_view"/>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
