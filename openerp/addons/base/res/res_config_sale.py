@@ -51,9 +51,30 @@ class sale_configuration(osv.osv_memory):
 
     }
 
-    def get_applied_groups(self, cr, uid, ids, context=None):
-        groups = {}
-        return groups 
+    def get_applied_groups(self, cr, uid, groups, context=None):
+        applied_groups = {}
+        user_obj = self.pool.get('res.users')
+        dataobj = self.pool.get('ir.model.data')
+        group_obj = self.pool.get('res.groups')
+        group_ids = []
+        groups=[]
+
+        for grp in groups:
+            dummy,group_id = dataobj.get_object_reference(cr, 1, 'base', grp);
+            group_ids.append(group_id);
+
+        user_group_ids = user_obj.browse(cr, uid, uid, context=context).groups_id
+
+        for group_id in user_group_ids:
+            if group_id.id in group_ids:
+                groups.append(group_id.id);
+
+        for id in groups:
+            key_id = dataobj.search(cr, uid,[('res_id','=',id),('model','=','res.groups')],context=context)
+            key = dataobj.browse(cr, uid, key_id[0], context=context).name
+            applied_groups.setdefault(key,[]).append('True')
+
+        return applied_groups
 
     def get_installed_modules(self, cr, uid, modules, context=None):
         module_obj = self.pool.get('ir.module.module')
@@ -67,17 +88,25 @@ class sale_configuration(osv.osv_memory):
     def default_get(self, cr, uid, fields_list, context=None):
         result = super(sale_configuration, self).default_get(
             cr, uid, fields_list, context=context)
+
         module_list = ['analytic_user_function', 'analytic_journal_billing_rate', 'import_sugarcrm',
                        'import_google', 'crm_caldav', 'wiki_sale_faq', 'crm_partner_assign',
                        'google_map', 'plugin_thunderbird', 'plugin_outlook']
+
         installed_modules = self.get_installed_modules(cr, uid, module_list, context=context)
         result.update(installed_modules)
+
+        group_list =['group_sale_pricelist_per_customer','group_sale_uom_per_product','group_sale_delivery_address',
+                     'group_sale_disc_per_sale_order_line','group_sale_notes_subtotal']
+
+        applied_groups = self.get_applied_groups(cr, uid, group_list, context=context)
+        result.update(applied_groups)
         return result
 
     _defaults = {
         'type': 'pop',
     }
-    
+
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
         port = 0
         values = {}
