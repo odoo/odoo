@@ -541,8 +541,9 @@
                            <field name="group_sale_pricelist_per_customer"/>
                            <newline/>
                            <group colspan="4" col="4">
-                                <field name="tax_policy" align="0.0"/>
-                                <field name="tax_value" nolabel="1" align="0.0"/>
+                                <separator string="Taxes" colspan="4"/>
+                                <field name="tax_policy" nolabel="1"/>
+                                <field name="tax_value" nolabel="1" attrs="{'invisible': [('tax_policy','=','no_tax')]}"/>
                            </group>
                            <newline/>
                            <field name="sale_margin"/>
