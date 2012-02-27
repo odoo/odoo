@@ -67,8 +67,8 @@ class event_moodle(osv.osv):
         def _encode_password(password):
             for i in range(len(password)):
                 x = password[i]
-                if (ord(x)<48 or  ord(x)>57)and(ord(x)<64 or  ord(x)>90)and(ord(x)<96 or  ord(x)>122):
-                    unicode_car =(hex(ord(x)))
+                if x not in string.ascii_letters + string.digits:
+                    unicode_car = (hex(ord(x)))
                     hex_car = '%'+str(unicode_car[2:])
                     password = password.replace(x,hex_car)
             return password
@@ -76,7 +76,7 @@ class event_moodle(osv.osv):
         config_moodle = self.browse(cr, uid, ids[0], context=context)
         if config_moodle.moodle_username and config_moodle.moodle_password:
             #connexion with password and username
-            password = self._encode_password(config_moodle.moodle_password)
+            password = _encode_password(config_moodle.moodle_password)
             url = config_moodle.server_moodle + '/moodle/webservice/xmlrpc/simpleserver.php?wsusername=' + config_moodle.moodle_username + '&wspassword=' + password
         if config_moodle.moodle_token:
             #connexion with token
@@ -128,6 +128,7 @@ class event_moodle(osv.osv):
         return passwd
 
     def check_email(self,email):
+    
         """
         check if email is correct
         """
