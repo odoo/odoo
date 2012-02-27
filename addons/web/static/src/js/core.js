@@ -885,7 +885,7 @@ openerp.web.Widget = nova.Widget.extend(_.extend({}, openerp.web.CallbackEnabled
         var rendered = null;
         if (this.template)
             rendered = openerp.web.qweb.render(this.template, {widget: this});
-        if (rendered) {
+        if (_.str.trim(rendered)) {
             var elem = $(rendered);
             this.$element.replaceWith(elem);
             this.$element = elem;
