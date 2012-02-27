@@ -7,15 +7,14 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-02-17 09:21+0000\n"
-"Last-Translator: Renato Lima - http://www.akretion.com "
-"<renatonlima@gmail.com>\n"
+"PO-Revision-Date: 2012-02-25 18:14+0000\n"
+"Last-Translator: Gustavo T <Unknown>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 06:00+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-02-26 05:20+0000\n"
+"X-Generator: Launchpad (build 14860)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -102,7 +101,7 @@ msgstr "Código (ex: pt__BR)"
 #: field:workflow.transition,wkf_id:0
 #: field:workflow.workitem,wkf_id:0
 msgid "Workflow"
-msgstr "Fluxo de Trabalho"
+msgstr "Fluxo de trabalho"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -372,6 +371,12 @@ msgid ""
 "  - tree_but_open\n"
 "For defaults, an optional condition"
 msgstr ""
+"Para ações, uma das possíveis ações abaixo: \n"
+"  - client_action_multi\n"
+"  - client_print_multi\n"
+"  - client_action_relate\n"
+"  - tree_but_open\n"
+"Por padrão, uma condição opcional"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -526,6 +531,10 @@ msgid ""
 "and reference view. The result is returned as an ordered list of pairs "
 "(view_id,view_mode)."
 msgstr ""
+"Esta função de campo calcula uma lista ordenada das views que devem estar "
+"habilitadas quando mostrando o resultado de uma ação, modo federado de "
+"visão, visões e visões de referência. O resultado é retornado como uma lista "
+"ordenada de pares (view_id, view_mode)."
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -652,6 +661,32 @@ msgid ""
 "    Accounting/Reporting/Generic Reporting/Partners/Follow-ups Sent\n"
 "\n"
 msgstr ""
+"\n"
+"Modulo para automatizar emissão de cartas para faturas não conciliadas, com "
+"rechamadas de nível múltipo.\n"
+"============================================================================="
+"==========\n"
+"\n"
+"Você pode definir seus níveis múltiplos de carta de cobrança através do "
+"menu:\n"
+"Contabilidade / Configuração / Diversos / Acompanhamento\n"
+"\n"
+"Quando isto é definido, você pode imprimir automaticamente e diariamente "
+"a(s) carta(s)-lembrete através de um simples clique no menu:\n"
+"Contabilidade / Processamentos periódicos / Faturamento / Enviar "
+"acompanhamento\n"
+"\n"
+"Isso irá gerar um PDF com todas as cartas de acordo com os diferentes níveis "
+"de lembrete definido.\n"
+"Você pode definir diferentes políticas para diferentes empresas. Você também "
+"pode enviar correspondência\n"
+"para os clientes.\n"
+"\n"
+"Lembre-se de que se você quiser verificar o nível de acompanhamento para um "
+"dado parceiro / entrada de conta, você pode fazê-lo do menu :\n"
+"Contabilidade / Relatórios / Relatórios genéricos / Parceiros / Envio de "
+"acompanhamento\n"
+"\n"
 
 #. module: base
 #: field:res.country,name:0
@@ -947,6 +982,16 @@ msgid ""
 "delete on objects and can check logs.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo permite aos administradores a traçabilidate de cada operação dos "
+"usuários em todos os objetos do sistema.\n"
+"============================================================================="
+"=======================\n"
+"\n"
+"O Administrador pode atribuir regras para leitura, escrita e deleção nos "
+"objetos\n"
+"e pode também verificar os logs.\n"
+"    "
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
@@ -1806,6 +1851,20 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo adiciona um botão de compartilhamento que está disponível no "
+"client WEB para compartilhar qualquer tipo de dados OpenERP com colegas, "
+"clientes, amigos, etc.\n"
+"\n"
+"O sistema ira criar novos usuários, e grupos automaticamente, e pela "
+"combinação apropriada de direitors de acessos e regras poderá assegurar que "
+"os novos usuários apenas tenham acesso aos dados que tenham sido "
+"compartilhados com eles.\n"
+"\n"
+"Isto é extremamente útil para um trabalho colaborativo, compartilhamento de "
+"conhecimento, sincronização com outras empresas, etc.\n"
+"\n"
+"    "
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -1922,6 +1981,20 @@ msgid ""
 "The managers can obtain an easy view of best ideas from all the users.\n"
 "Once installed, check the menu 'Ideas' in the 'Tools' main menu."
 msgstr ""
+"\n"
+"Este modulo permite a seu usuário fácil e eficientemente de participar do "
+"processo de inovação da empresa.\n"
+"============================================================================="
+"==============\n"
+"\n"
+"Ele permite a qualquer pessoa expressar idéias sobre diferentes assuntos.\n"
+"Então, outros usuários poderão comentar sobre as idéias postadas e votar em "
+"idéias postadas.\n"
+"Cada idéia tem sua pontuação baseada nas diferentes votações.\n"
+"Os gerentes podem obter uma visão fácil das melhores idéias de todas essas "
+"pessoas.\n"
+"Uma vez instalado, verifique o menu \"Idéias\" do menu principal "
+"\"Utilitários\"."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_rule
@@ -2149,6 +2222,47 @@ msgid ""
 "today don't come with any additional paid permission for online use of "
 "'private modules'."
 msgstr ""
+"\n"
+"Módulo base para a localização Brasileira\n"
+"================================\n"
+"\n"
+"Este módulo consiste em de :\n"
+"\n"
+" - Plano de contas brasileiro genérico\n"
+" - Impostos brasileiros, tais como :\n"
+"\n"
+"        - IPI\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - ISS\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"\n"
+" - Código de situação tributária (CST) necessário para a nota fiscal "
+"eletrônica (NFe)\n"
+"\n"
+"O campo tax_discount foi também adicionado nos objetos  account.tax.template "
+"e account.tax para permitir o melhor cálculo de alguns impostos brasileiros "
+"tais como ICMS. O assistente de criação do plano de contas foi estendido "
+"para propagar estas novas propriedades de dados.\n"
+"\n"
+"É importante notar, entretanto, que este modulo ainda precisa de várias "
+"implementações para se usar o OpenERP regularmente no Brasil. Estas "
+"implementações (tais como a Nota Fiscal Eletrônica, que já está operacional) "
+"foram incorporadas por mais de 15 módulos adicionais de projetos da "
+"Launchpad da localização brasileira https://launchpad.net/openerp.pt-br-"
+"localiz e suas dependências no branch de addons extra. O objetivo desses "
+"módulos é manter a remarcável modularidade do OpenERP, e é por isso que são "
+"muitos, mas pequenos. Uma das razões para a manutenção desses módulos "
+"separadamente é que os líderes da localização Brasileira precisam ter "
+"agilidade para a confirmação das mudanças para completar a localização como "
+"as empresas que financiam os requerimentos legais faltantes (tais como em "
+"breve a contabilidade fiscal, contabilidade SPED, SPED fiscal e PAF ECF que "
+"ainda estão faltando desde Setembro de 2011). Esses módulos também são "
+"estritamente licenciados sob AGPL V3 e atualmente não vem com permissão paga "
+"adicional para uso online dos 'modulos privados'."
 
 #. module: base
 #: view:res.request:0
@@ -3640,7 +3754,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_webkit
 msgid "Webkit Report Engine"
-msgstr ""
+msgstr "Motor de Relatório Webkit"
 
 #. module: base
 #: selection:publisher_warranty.contract,state:0
@@ -4071,6 +4185,8 @@ msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
 "%s: %s"
 msgstr ""
+"Entrega de email falhou servidor SMTP '%s'.\n"
+"%s:%s"
 
 #. module: base
 #: view:ir.cron:0
@@ -6575,7 +6691,7 @@ msgstr "OHADA - contabilidade"
 #. module: base
 #: help:res.bank,bic:0
 msgid "Sometimes called BIC or Swift."
-msgstr ""
+msgstr "As vezes chamado de BIC ou Swift."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
@@ -7326,7 +7442,7 @@ msgstr "Ativo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma
 msgid "Maroc - Accounting"
-msgstr ""
+msgstr "Plano de contas Marroquino"
 
 #. module: base
 #: model:res.country,name:base.mn
