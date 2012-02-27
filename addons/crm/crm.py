@@ -258,7 +258,23 @@ class crm_base(object):
             data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value': data}
 
+    def _case_open_notification(self, case, context=None):
+        return True
 
+    def _case_close_notification(self, case, context=None):
+        return True
+
+    def _case_cancel_notification(self, case, context=None):
+        return True
+
+    def _case_pending_notification(self, case, context=None):
+        return True
+
+    def _case_escalate_notification(self, case, context=None):
+        return True
+
+    def _case_phonecall_notification(self, case, action, context=None):
+        return True
 
     def case_open(self, cr, uid, ids, context=None):
         """Opens Case
@@ -391,21 +407,6 @@ class crm_case(crm_base):
             if self._columns.get('date_open'):
                 default.update({ 'date_open': False })
         return super(crm_case, self).copy(cr, uid, id, default, context=context)
-
-    def _case_open_notification(self, case, context=None):
-        return True
-
-    def _case_close_notification(self, case, context=None):
-        return True
-
-    def _case_cancel_notification(self, case, context=None):
-        return True
-
-    def _case_pending_notification(self, case, context=None):
-        return True
-
-    def _case_escalate_notification(self, case, context=None):
-        return True
 
     def case_open(self, cr, uid, ids, context=None):
         """Opens Case"""

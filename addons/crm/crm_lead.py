@@ -307,6 +307,14 @@ class crm_lead(crm_case, osv.osv):
         message = _("The lead <em>%s</em> is <b>escalated</b>.") % (case.name,)
         case.message_append_note('' ,message)
 
+    def _case_phonecall_notification(self, case, action, context=None):
+        message = _("<b>%s a call</b> for the opportunity <em>%s</em>.") % (action,case.name)
+        case.message_append_note('', message, need_action_user_id=case.user_id.id)
+
+    def _case_opportunity_meeting_notification(self, case, context=None):
+        message = _("The opportunity <em>%s</em> is scheduled for <b>meeting</b>.") % (case.name)
+        case.message_append_note('', message, need_action_user_id=case.user_id.id)
+
     def case_open(self, cr, uid, ids, context=None):
         res = super(crm_lead, self).case_open(cr, uid, ids, context)
         for lead in self.browse(cr, uid, ids, context=context):
@@ -727,6 +735,7 @@ class crm_lead(crm_case, osv.osv):
             if action == 'log':
                 phonecall.case_close(cr, uid, [new_id])
             phonecall_dict[lead.id] = new_id
+            self._case_phonecall_notification(lead,action,context=context)
         return phonecall_dict
 
 
@@ -844,6 +853,7 @@ class crm_lead(crm_case, osv.osv):
                 'search_view_id': search_view and search_view[1] or False,
                 'nodestroy': True
             }
+            self._case_opportunity_meeting_notification(opp,context=context)
         return value
 
 
