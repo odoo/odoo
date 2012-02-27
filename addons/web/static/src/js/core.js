@@ -73,31 +73,6 @@ openerp.web.callback = function(obj, method) {
 };
 
 /**
- * Generates an inherited class that replaces all the methods by null methods (methods
- * that does nothing and always return undefined).
- *
- * @param {Class} claz
- * @param {Object} add Additional functions to override.
- * @return {Class}
- */
-openerp.web.generate_null_object_class = function(claz, add) {
-    var newer = {};
-    var copy_proto = function(prototype) {
-        for (var name in prototype) {
-            if(typeof prototype[name] == "function") {
-                newer[name] = function() {};
-            }
-        }
-        if (prototype.prototype)
-            copy_proto(prototype.prototype);
-    };
-    copy_proto(claz.prototype);
-    newer.init = openerp.web.Widget.prototype.init;
-    var tmpclass = claz.extend(newer);
-    return tmpclass.extend(add || {});
-};
-
-/**
  * web error for lookup failure
  *
  * @class
