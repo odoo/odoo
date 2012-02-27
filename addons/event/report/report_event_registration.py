@@ -29,7 +29,7 @@ class report_event_registration(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'event_date': fields.date('Event Start Date', readonly=True),
+        'event_date': fields.char('Event Start Date', size=64, readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
@@ -40,14 +40,13 @@ class report_event_registration(osv.osv):
         'register_max': fields.integer('Maximum Registrations'),
         'nbevent': fields.integer('Number Of Events'),
         'event_type': fields.many2one('event.type', 'Event Type'),
-        'registration_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
-        'event_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, required=True),
+        'registration_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Attended'), ('cancel', 'Cancelled')], 'Registration State', readonly=True, required=True),
+        'event_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Event State', readonly=True, required=True),
         'user_id': fields.many2one('res.users', 'Event Responsible', readonly=True),
         'user_id_registration': fields.many2one('res.users', 'Register', readonly=True),
-        'name_registration': fields.char('Register',size=45, readonly=True),
+        'name_registration': fields.char('Participant / Contact Name',size=45, readonly=True),
         'speaker_id': fields.many2one('res.partner', 'Speaker', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'total': fields.float('Total'),
     }
     _order = 'event_date desc'
     def init(self, cr):
@@ -61,12 +60,12 @@ class report_event_registration(osv.osv):
                 SELECT
                 event_id,
                 r.id,
-                e.date_begin AS event_date,
                 e.user_id AS user_id,
                 r.user_id AS user_id_registration,
                 r.name AS name_registration,
                 e.company_id AS company_id,
                 e.main_speaker_id AS speaker_id,
+                to_char(e.date_begin, 'YYYY-MM-DD') AS event_date,
                 to_char(e.date_begin, 'YYYY') AS year,
                 to_char(e.date_begin, 'MM') AS month,
                 count(e.id) AS nbevent,
