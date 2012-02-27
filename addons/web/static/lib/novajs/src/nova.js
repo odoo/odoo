@@ -28,7 +28,7 @@ nova = (function() {
     lib.internal = {};
 
     /*
-     * Unmodified John Resig's inheritance
+     * (Almost) unmodified John Resig's inheritance
      */
     /*
      * Simple JavaScript Inheritance By John Resig http://ejohn.org/ MIT
