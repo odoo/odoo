@@ -86,7 +86,7 @@ class sale_configuration(osv.osv_memory):
         for id in groups:
             key_id = dataobj.search(cr, uid,[('res_id','=',id),('model','=','res.groups')],context=context)
             key = dataobj.browse(cr, uid, key_id[0], context=context).name
-            applied_groups.setdefault(key,[]).append('True')
+            applied_groups[key] = True
 
         return applied_groups
 
