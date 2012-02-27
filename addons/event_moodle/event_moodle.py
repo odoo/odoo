@@ -25,6 +25,7 @@ import string
 import time
 import random
 from random import sample
+from tools.translate import _
 
 class event_moodle(osv.osv):
     _name = 'event.moodle.config.wiz'
@@ -75,7 +76,7 @@ class event_moodle(osv.osv):
         config_moodle = self.browse(cr, uid, ids[0], context=context)
         if config_moodle.moodle_username and config_moodle.moodle_password:
             #connexion with password and username
-            password = self.encode_password(config_moodle.moodle_password)
+            password = self._encode_password(config_moodle.moodle_password)
             url = config_moodle.server_moodle + '/moodle/webservice/xmlrpc/simpleserver.php?wsusername=' + config_moodle.moodle_username + '&wspassword=' + password
         if config_moodle.moodle_token:
             #connexion with token
@@ -162,6 +163,7 @@ class event_event(osv.osv):
         create moodle courses ,users and match them when an event is confirmed
         if the event_registration is not confirmed then it doesn t nothing
         """
+        res =super(event_event, self).button_confirm(cr, uid, ids, context)
         moodle_pool = self.pool.get('event.moodle.config.wiz')
         moodle_config_wiz_id = moodle_pool.find(cr, uid, context=context)
         list_users=[]
@@ -200,7 +202,7 @@ class event_event(osv.osv):
                             'email': registration.email
                         }
                         #create the user in moodle
-                        response_user = moodle_pool.create_moodle_user(cr, uid, moodle_config_wiz_id, dic_users, context=context)
+                        response_user = moodle_pool.create_moodle_user(cr, uid, moodle_config_wiz_id, [dic_users], context=context)
                         for user in response_user:
                             self.pool.get('event.registration').write(cr,uid,[registration.id],{'moodle_uid': user['id'], 'moodle_user_password': passwd, 'moodle_username': name_user})
                             moodle_uids.append(user['id'])
@@ -216,7 +218,7 @@ class event_event(osv.osv):
                 'courseid' :response_courses[0]['id']
                 })
             moodle_pool.moodle_enrolled(cr, uid, moodle_config_wiz_id, enrolled, context=context)
-        return super(event_event, self).button_confirm(cr, uid, ids, context)
+        return res
 
 event_event()
 
@@ -234,6 +236,7 @@ class event_registration(osv.osv):
         """
         create a user and match to a course if the event is already confirmed
         """
+        res = super(event_registration, self).registration_open(cr, uid, ids, context=context)
         moodle_pool = self.pool.get('event.moodle.config.wiz')
         moodle_config_wiz_id = moodle_pool.find(cr, uid, context=context)
         for register in self.browse(cr, uid, ids, context=context):
@@ -241,6 +244,7 @@ class event_registration(osv.osv):
                 if not register.moodle_uid:
                     #create the user in moodle
                     name_user = moodle_pool.make_username(register.name, register.event_id.moodle_id)
+                    moodle_pool.check_email(register.email)
                     passwd = moodle_pool.create_password()
                     dic_users = [{
                         'username': name_user,
@@ -250,7 +254,7 @@ class event_registration(osv.osv):
                         'lastname': '', #we could make a split of the register.name on ' ' but it would be inaccurate, so it seems better to let it empty as it's not really useful
                         'email': register.email,
                     }]
-                    response_user = moodle_pool.create_moodle_user(cr, uid, ids, dic_users, context=context)
+                    response_user = moodle_pool.create_moodle_user(cr, uid, moodle_config_wiz_id, dic_users, context=context)
                     #write in database the password and the username
                     moodle_user_id = response_user[0]['id']
                     self.pool.get('event.registration').write(cr, uid, ids, {'moodle_uid': moodle_user_id, 'moodle_user_password': passwd, 'moodle_username': name_user})
@@ -262,7 +266,7 @@ class event_registration(osv.osv):
                     'courseid': register.event_id.moodle_id
                 }]
                 moodle_pool.moodle_enrolled(cr, uid, moodle_config_wiz_id, enrolled, context=context)
-        return super(event_registration, self).registration_open(cr, uid, ids, context=context)
+        return res
 
     def onchange_moodle_name(self, cr, uid, ids, moodle_username, context=None):
         """
