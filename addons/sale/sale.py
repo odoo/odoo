@@ -28,6 +28,7 @@ from tools.translate import _
 from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
 import decimal_precision as dp
 import netsvc
+from openerp.addons.base.res import res_config_sale as sale_config
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -1330,6 +1331,11 @@ class sale_order_line(osv.osv):
 
 sale_order_line()
 
+sale_config.MODULE_LIST += [
+                'project_timesheet', 'account_analytic_analysis', 'project_mrp', 'delivery',
+                'sale_margin', 'sale_journal'
+]
+
 class sale_configuration(osv.osv_memory):
     _inherit = 'sale.configuration'
 
@@ -1350,7 +1356,7 @@ class sale_configuration(osv.osv_memory):
         'group_sale_delivery_address':fields.boolean(" Allow delivery address different from invoice address"),
         'group_sale_disc_per_sale_order_line':fields.boolean("Allow to apply discounts per sale order lines "),
         'group_sale_notes_subtotal':fields.boolean("Allow notes and subtotals"),
-        'warning':fields.boolean("Allow to define alerts by products or customers"),
+        'warning': fields.boolean("Allow to define alerts by products or customers"),
         'tax_value' : fields.float('Value'),
         'tax_policy': fields.selection([
             ('no_tax', 'No Tax'),
@@ -1366,13 +1372,12 @@ class sale_configuration(osv.osv_memory):
         res = super(sale_configuration, self).default_get(
             cr, uid, fields_list, context=context)
         defaults = {}
-        module_list = ['project_timesheet','project_mrp','account_analytic_analysis','delivery',
-                       'sale_margin', 'sale_journal']
+        module_list = sale_config.MODULE_LIST
         defaults.update(self.get_installed_modules(cr, uid, module_list, context=context))
         for val in ir_values_obj.get(cr, uid, 'default', False, ['sale.order']):
             defaults.update({val[1]: val[2]})
         for k in defaults.keys():
-            if k in ['project_timesheet','project_mrp','account_analytic_analysis']:
+            if k in ['project_timesheet','project_mrp']:
                 defaults.update({'task_work': True})
             if k in ['account_analytic_analysis']:
                 defaults.update({'timesheet': True})
@@ -1380,6 +1385,8 @@ class sale_configuration(osv.osv_memory):
                 defaults.update({'sale_orders': True, 'deli_orders': True, 'charge_delivery': True})
             if k == 'picking_policy' and defaults[k]=='one':
                 defaults.update({'picking_policy': True})
+            if k == 'order_policy':
+                defaults.update({'order_policy': defaults.get('order_policy')})
             else:
                 res.update({k: False})
         res.update(defaults)
@@ -1398,15 +1405,15 @@ class sale_configuration(osv.osv_memory):
         elif deli:
             res.update({'order_policy': 'picking'})
         return {'value':res}
-
-    def execute(self, cr, uid, ids, context=None):
+    
+    def execute(self, cr, uid, ids, vals, context=None):
         #TODO: TO BE IMPLEMENTED
         ir_values_obj = self.pool.get('ir.values')
         data_obj = self.pool.get('ir.model.data')
         menu_obj = self.pool.get('ir.ui.menu')
         module_obj = self.pool.get('ir.module.module')
+        users_obj = self.pool.get('res.users')
         
-        super(sale_configuration, self).execute(cr, uid, ids, context=context)
         module_name = []
 
         group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
@@ -1421,39 +1428,44 @@ class sale_configuration(osv.osv_memory):
             menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_action_picking_list_to_invoice').id
             menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]})
 
+        if wizard.group_sale_pricelist_per_customer:
+            dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_sale_pricelist_per_customer')
+            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+        
+        if wizard.group_sale_uom_per_product:
+            dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_sale_uom_per_product')
+            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+        
+        if wizard.group_sale_delivery_address:
+            dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_sale_delivery_address')
+            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+            
+        if wizard.group_sale_disc_per_sale_order_line:
+            dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_sale_disc_per_sale_order_line')
+            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+        
+        if wizard.group_sale_notes_subtotal:
+            dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_sale_notes_subtotal')
+            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+        
         if wizard.task_work:
-            module_name.append('project_timesheet')
-            module_name.append('project_mrp')
-            module_name.append('account_analytic_analysis')
+            vals['project_timesheet'] = True
+            vals['project_mrp'] = True
+            vals['account_analytic_analysis'] = True
 
         if wizard.timesheet:
-            module_name.append('account_analytic_analysis')
+            vals['account_analytic_analysis'] = True
 
         if wizard.charge_delivery:
-            module_name.append('delivery')
+            vals['delivery'] = True
 
         if wizard.picking_policy:
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], 'one')
-        
-        if len(module_name):
-            need_install = False
-            module_ids = []
-            for module in module_name:
-                data_id = module_obj.name_search(cr, uid , module, [], '=')
-                module_ids.append(data_id[0][0])
-
-            for module in module_obj.browse(cr, uid, module_ids):
-                if module.state == 'uninstalled':
-                    module_obj.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
-                    need_install = True
-                    cr.commit()
-            if need_install:
-                pooler.restart_pool(cr.dbname, update_module=True)[1]
 
         if wizard.time_unit:
             prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
             product_obj = self.pool.get('product.product')
-            product_obj.write(cr, uid, prod_id, {'uom_id':wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
+            product_obj.write(cr, uid, prod_id, {'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 
         ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], wizard.order_policy)
         if wizard.task_work and wizard.time_unit:
@@ -1461,6 +1473,8 @@ class sale_configuration(osv.osv_memory):
             self.pool.get('res.company').write(cr, uid, [company_id], {
                 'project_time_mode_id': wizard.time_unit.id
             }, context=context)
+        
+        super(sale_configuration, self).execute(cr, uid, ids, vals, context=context)
 
 sale_configuration()
 

@@ -54,11 +54,17 @@
       <field name="view_mode">form</field>
       <field name="target">new</field>
     </record>
-    <record id="thunderbird_installer_todo" model="ir.actions.todo">
-        <field name="action_id" ref="action_thunderbird_installer"/>
-        <field name="category_id" ref="base.category_sales_management_config"/>
-        <field name="sequence">3</field>
-        <field name="type">automatic</field>
+    
+    <record id="view_config_thunderbird_installer" model="ir.ui.view">
+        <field name="name">Sales Application</field>
+        <field name="model">sale.configuration</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_config_picking_policy"/>
+        <field name="arch" type="xml">
+            <field name="plugin_thunderbird" position="after">
+                <button name="%(action_thunderbird_installer)d" type="action" string="Configure Thunderbird Plug-In" icon="gtk-execute" colspan="2"/>
+            </field>
+        </field>
     </record>
 
     <menuitem id="base.menu_base_config_plugins" name="Plugins" parent="base.menu_base_config" sequence="10"/>
