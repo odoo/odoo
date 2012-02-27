@@ -46,6 +46,15 @@ class event_moodle(osv.osv):
         return {'type': 'ir.actions.act_window_close'}
         #use to quit the wizard
 
+    def encode_password(self,cr,uid,ids,password,context=None):
+        for i in range(len(password)):
+            x = password[i]
+            if ord(x)<46:
+                unicode_car =(hex(ord(x)))
+                hex_car = '%'+str(unicode_car[2:])
+                password = password.replace(x,hex_car)
+        return password
+
     def make_url(self,cr,uid,ids,context=None):
         """
         create the good url with the information of the configuration
@@ -58,7 +67,7 @@ class event_moodle(osv.osv):
         url=""
         config_moodle = self.browse(cr, uid, [reg_ids[-1]], context=context)
         if config_moodle[0].moodle_username and config_moodle[0].moodle_password:
-            url='http://'+config_moodle[0].serveur_moodle+'/moodle/webservice/xmlrpc/simpleserver.php?wsusername='+config_moodle[0].moodle_username+'&wspassword='+config_moodle[0].moodle_password
+            url='http://'+config_moodle[0].serveur_moodle+'/moodle/webservice/xmlrpc/simpleserver.php?wsusername='+config_moodle[0].moodle_username+'&wspassword='+self.encode_password(cr,uid,ids,config_moodle[0].moodle_password,context=context)
             #connexion with password and username
             #to do warning on special char
         if config_moodle[0].moodle_token:
