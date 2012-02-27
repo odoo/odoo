@@ -2,7 +2,6 @@ openerp.gdocs = function(instance) {
 
 instance.web.form.SidebarAttachments = instance.web.form.SidebarAttachments.extend({
     on_attachments_loaded: function(attachments) {
-        alert('gdocs.js.on_attachments_loaded()');
         this._super(attachments);
         var self = this;
         var $gdocbtn = self.$element.find('button.gdocs');
@@ -17,7 +16,7 @@ instance.web.form.SidebarAttachments = instance.web.form.SidebarAttachments.exte
     },
     on_add_gdoc: function() {
         var self = this;
-        var $gdocbtn = this.$element.find('button.gdocs');alert($gdocbtn);
+        var $gdocbtn = this.$element.find('button.gdocs');
         $gdocbtn.attr('disabled', 'true').find('img, span').toggle();
         this.view.dataset.call_button('copy_gdoc', [[this.view.datarecord.id], this.view.dataset.get_context()], function(r) {
             $gdocbtn.hide();
@@ -28,3 +27,10 @@ instance.web.form.SidebarAttachments = instance.web.form.SidebarAttachments.exte
 });
 
 };
+
+$(function() {
+    console.log($('#gd-button'));
+    $('#gd-button').click(function(){alert('click');});
+    alert('binded');
+}
+);
