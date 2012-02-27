@@ -19,22 +19,23 @@
 #
 ##############################################################################
 
-
 from osv import fields, osv
+from tools.translate import _
+
 class product(osv.osv):
-    _inherit='product.product'
-    _columns={
-    'event_ok':fields.boolean('Event',help='Match a product with an event'),
-    'event_type_id':fields.many2one('event.type','Type of Event'),
+    _inherit = 'product.product'
+    _columns = {
+        'event_ok': fields.boolean('Event', help='Match a product with an event'),
+        'event_type_id': fields.many2one('event.type', 'Type of Event'),
     }
 product()
 
 class sale_order_line(osv.osv):
-    _inherit='sale.order.line'
-    _columns={
-        'event':fields.many2one('event.event','Event',help="Choose an event and it will authomaticaly create a registration for this event"),
-        'event_type_id':fields.related('event_type_id',type='many2one', relation="event.type", string="Event Type"),
-        'event_ok':fields.related('event_ok',string='event_ok' ,type='boolean'),
+    _inherit = 'sale.order.line'
+    _columns = {
+        'event': fields.many2one('event.event', 'Event', help="Choose an event and it will authomaticaly create a registration for this event"),
+        'event_type_id': fields.related('event_type_id', type='many2one', relation="event.type", string="Event Type"),
+        'event_ok': fields.related('event_ok', string='event_ok', type='boolean'),
     }
 
     def product_id_change(self, cr, uid, ids,
@@ -52,36 +53,38 @@ class sale_order_line(osv.osv):
                           fiscal_position=False,
                           flag=False, context=None):
         """
-        check product if event type 
+        check product if event type
         """
-        res = super(sale_order_line,self).product_id_change(cr,uid,ids,pricelist, product, qty,uom, qty_uos, uos, name, partner_id,lang, update_tax, date_order, packaging, fiscal_position, flag,context)
+        res = super(sale_order_line,self).product_id_change(cr, uid, ids, pricelist, product, qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id, lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
         if product:
-            product_res = self.pool.get('product.product').browse(cr, uid, product,context=context)
+            product_res = self.pool.get('product.product').browse(cr, uid, product, context=context)
             if product_res.event_type_id:
-                res['value'].update({'event_type_id':product_res.event_type_id.id,'event_ok':product_res.event_ok})
+                res['value'].update({'event_type_id': product_res.event_type_id.id, 'event_ok':product_res.event_ok})
         return res
 
-    def button_confirm(self,cr,uid,ids,context=None):
+    def button_confirm(self, cr, uid, ids, context=None):
         '''
         create registration with sale order
 
         '''
-        for registration in self.browse(cr,uid,ids,context=context):
-            if registration.event.id:
+        registration_obj = self.pool.get('event.registration')
+        sale_obj = self.pool.get('sale.order')
+        for order_line in self.browse(cr, uid, ids, context=context):
+            if order_line.event.id:
                 dic = {
-                'name':registration.order_id.partner_invoice_id.name,
-                'partner_id':registration.order_id.partner_id.id,
-                'contact_id':registration.order_id.partner_invoice_id.id,
-                'nb_register':int(registration.product_uom_qty),
-                'email':registration.order_id.partner_id.email,
-                'phone':registration.order_id.partner_id.phone,
-                'street':registration.order_id.partner_invoice_id.street,
-                'city':registration.order_id.partner_invoice_id.city,
-                'origin':registration.order_id.name,
-                'event_id':registration.event.id,
+                    'name': order_line.order_id.partner_invoice_id.name,
+                    'partner_id': order_line.order_id.partner_id.id,
+                    'contact_id': order_line.order_id.partner_invoice_id.id,
+                    'nb_register': int(order_line.product_uom_qty),
+                    'email': order_line.order_id.partner_id.email,
+                    'phone': order_line.order_id.partner_id.phone,
+                    'street': order_line.order_id.partner_invoice_id.street,
+                    'city': order_line.order_id.partner_invoice_id.city,
+                    'origin': order_line.order_id.name,
+                    'event_id': order_line.event.id,
                 }
-                self.pool.get('event.registration').create(cr,uid,dic,context=context)
-                message = ("A registration is create from the %s sale order.") % (registration.order_id.name,)
-                self.pool.get('event.registration').log(cr, uid, registration.event.id, message)
-        return super(sale_order_line, self).button_confirm(cr, uid, ids, context)
+                registration_id = registration_obj.create(cr, uid, dic, context=context)
+                message = _("The registration %s has been created from the Sale Order %s.") % (registration_id, order_line.order_id.name)
+                registration_obj.log(cr, uid, registration_id, message)
+        return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
 

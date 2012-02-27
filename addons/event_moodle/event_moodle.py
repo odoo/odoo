@@ -48,8 +48,6 @@ class event_moodle(osv.osv):
         self.write(cr, uid, ids, {'url': url})
         return {'type': 'ir.actions.act_window_close'}
 
-
-
     def find(self, cr, uid, context=None):
         """
         Find the config wizard containing the configuration and raise and error if none is available.
