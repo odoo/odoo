@@ -97,6 +97,8 @@
             height: 24px
             margin: -2px 2px 0 0
             @include radius(4px)
+        .oe_topbar_avatar
+            vertical-align: top
     // }}}
 
     // Menu {{{
@@ -161,7 +163,6 @@
             right: -1px
             border: 0
             z-index: 900
-            width: 160px
             margin-left: 0
             margin-right: 0
             padding: 6px 0
@@ -191,10 +192,6 @@
 
 .openerp
     // Transitional overrides for old styles {{{
-    .oe-shortcuts
-        position: static
-    #oe_header
-        clear: both
     // }}}
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"

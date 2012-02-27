@@ -666,186 +666,6 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
     }
 });
 
-openerp.web.Header =  openerp.web.OldWidget.extend(/** @lends openerp.web.Header# */{
-    template: "Header",
-    /**
-     * @constructs openerp.web.Header
-     * @extends openerp.web.OldWidget
-     *
-     * @param parent
-     */
-    init: function(parent) {
-        this._super(parent);
-        this.qs = "?" + jQuery.param.querystring();
-        this.$content = $();
-        this.update_promise = $.Deferred().resolve();
-    },
-    start: function() {
-        this._super();
-    },
-    do_update: function () {
-        var self = this;
-        var fct = function() {
-            self.$content.remove();
-            if (!self.session.uid)
-                return;
-            var func = new openerp.web.Model("res.users").get_func("read");
-            return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
-                self.$content = $(QWeb.render("Header-content", {widget: self, user: res}));
-                self.$content.appendTo(self.$element);
-                self.$element.find(".logout").click(self.on_logout);
-                self.$element.find("a.preferences").click(self.on_preferences);
-                self.$element.find(".about").click(self.on_about);
-                return self.shortcut_load();
-            });
-        };
-        this.update_promise = this.update_promise.pipe(fct, fct);
-    },
-    on_about: function() {
-        var self = this;
-        self.rpc("/web/webclient/version_info", {}).then(function(res) {
-            var $help = $(QWeb.render("About-Page", {version_info: res}));
-            $help.find('a.oe_activate_debug_mode').click(function (e) {
-                e.preventDefault();
-                window.location = $.param.querystring(
-                        window.location.href, 'debug');
-            });
-            openerp.web.dialog($help, {autoOpen: true,
-                modal: true, width: 960, title: _t("About")});
-        });
-    },
-    shortcut_load :function(){
-        var self = this,
-            sc = self.session.shortcuts,
-            shortcuts_ds = new openerp.web.DataSet(this, 'ir.ui.view_sc');
-        // TODO: better way to communicate between sections.
-        // sc.bindings, because jquery does not bind/trigger on arrays...
-        if (!sc.binding) {
-            sc.binding = {};
-            $(sc.binding).bind({
-                'add': function (e, attrs) {
-                    shortcuts_ds.create(attrs, function (out) {
-                        $('<li>', {
-                            'data-shortcut-id':out.result,
-                            'data-id': attrs.res_id
-                        }).text(attrs.name)
-                          .appendTo(self.$element.find('.oe-shortcuts ul'));
-                        attrs.id = out.result;
-                        sc.push(attrs);
-                    });
-                },
-                'remove-current': function () {
-                    var menu_id = self.session.active_id;
-                    var $shortcut = self.$element
-                        .find('.oe-shortcuts li[data-id=' + menu_id + ']');
-                    var shortcut_id = $shortcut.data('shortcut-id');
-                    $shortcut.remove();
-                    shortcuts_ds.unlink([shortcut_id]);
-                    var sc_new = _.reject(sc, function(shortcut){ return shortcut_id === shortcut.id});
-                    sc.splice(0, sc.length);
-                    sc.push.apply(sc, sc_new);
-                    }
-            });
-        }
-        return this.rpc('/web/session/sc_list', {}, function(shortcuts) {
-            sc.splice(0, sc.length);
-            sc.push.apply(sc, shortcuts);
-
-            self.$element.find('.oe-shortcuts')
-                .html(QWeb.render('Shortcuts', {'shortcuts': shortcuts}))
-                .undelegate('li', 'click')
-
-                .delegate('li', 'click', function(e) {
-                    e.stopPropagation();
-                    var id = $(this).data('id');
-                    self.session.active_id = id;
-                    self.rpc('/web/menu/action', {'menu_id':id}, function(ir_menu_data) {
-                        if (ir_menu_data.action.length){
-                            self.on_action(ir_menu_data.action[0][2]);
-                        }
-                    });
-                });
-        });
-    },
-
-    on_action: function(action) {
-    },
-    on_preferences: function(){
-        var self = this;
-        var action_manager = new openerp.web.ActionManager(this);
-        var dataset = new openerp.web.DataSet (this,'res.users',this.context);
-        dataset.call ('action_get','',function (result){
-            self.rpc('/web/action/load', {action_id:result}, function(result){
-                action_manager.do_action(_.extend(result['result'], {
-                    res_id: self.session.uid,
-                    res_model: 'res.users',
-                    flags: {
-                        action_buttons: false,
-                        search_view: false,
-                        sidebar: false,
-                        views_switcher: false,
-                        pager: false
-                    }
-                }));
-            });
-        });
-        this.dialog = new openerp.web.Dialog(this,{
-            title: _t("Preferences"),
-            width: '700px',
-            buttons: [
-                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
-                {text: _t("Change password"), click: function(){ self.change_password(); }},
-                {text: _t("Save"), click: function(){
-                        var inner_viewmanager = action_manager.inner_viewmanager;
-                        inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
-                        .then(function() {
-                            self.dialog.destroy();
-                            // needs to refresh interface in case language changed
-                            window.location.reload();
-                        });
-                    }
-                }
-            ]
-        }).open();
-       action_manager.appendTo(this.dialog);
-       action_manager.render(this.dialog);
-    },
-
-    change_password :function() {
-        var self = this;
-        this.dialog = new openerp.web.Dialog(this, {
-            title: _t("Change Password"),
-            width : 'auto'
-        }).open();
-        this.dialog.$element.html(QWeb.render("Change_Pwd", self));
-        this.dialog.$element.find("form[name=change_password_form]").validate({
-            submitHandler: function (form) {
-                self.rpc("/web/session/change_password",{
-                    'fields': $(form).serializeArray()
-                }, function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    } else {
-                        openerp.webclient.on_logout();
-                    }
-                });
-            }
-        });
-    },
-    display_error: function (error) {
-        return openerp.web.dialog($('<div>'), {
-            modal: true,
-            title: error.title,
-            buttons: [
-                {text: _("Ok"), click: function() { $(this).dialog("close"); }}
-            ]
-        }).html(error.error);
-    },
-    on_logout: function() {
-    }
-});
-
 openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     /**
      * @constructs openerp.web.Menu
@@ -1008,16 +828,17 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     }
 });
 
-openerp.web.DropDownMenu =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
+openerp.web.DropDownMenu =  openerp.web.Widget.extend(/** @lends openerp.web.DropDownMenu# */{
     template: "DropDownMenu",
     /**
      * @constructs openerp.web.DropDownMenu
-     * @extends openerp.web.OldWidget
+     * @extends openerp.web.Widget
      *
      * @param parent
      */
     init: function(parent) {
         this._super(parent);
+        this.update_promise = $.Deferred().resolve();
     },
     start: function() {
         var self = this;
@@ -1029,11 +850,106 @@ openerp.web.DropDownMenu =  openerp.web.Widget.extend(/** @lends openerp.web.Hea
             self.$element.find('.oe_dropdown_options').toggle();
             return false;
         });
-        this.$element.find('.oe_dropdown_options li a').click(function() {
+        this.$element.on('click', '.oe_dropdown_options li a[data-menu]', function() {
             var f = self['on_menu_' + $(this).data('menu')];
-            f && f();
+            f && f($(this));
             self.$element.find('.oe_dropdown_options').hide();
             return false;
+        });
+    },
+    change_password :function() {
+        var self = this;
+        this.dialog = new openerp.web.Dialog(this, {
+            title: _t("Change Password"),
+            width : 'auto'
+        }).open();
+        this.dialog.$element.html(QWeb.render("Change_Pwd", self));
+        this.dialog.$element.find("form[name=change_password_form]").validate({
+            submitHandler: function (form) {
+                self.rpc("/web/session/change_password",{
+                    'fields': $(form).serializeArray()
+                }, function(result) {
+                    if (result.error) {
+                        self.display_error(result);
+                        return;
+                    } else {
+                        openerp.webclient.on_logout();
+                    }
+                });
+            }
+        });
+    },
+    display_error: function (error) {
+        return openerp.web.dialog($('<div>'), {
+            modal: true,
+            title: error.title,
+            buttons: [
+                {text: _("Ok"), click: function() { $(this).dialog("close"); }}
+            ]
+        }).html(error.error);
+    },
+    do_update: function () {
+        var self = this;
+        var fct = function() {
+            var $avatar = self.$element.find('.oe_topbar_avatar');
+            $avatar.attr('src', $avatar.data('default-src'));
+            if (!self.session.uid)
+                return;
+            var func = new openerp.web.Model("res.users").get_func("read");
+            return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
+                // TODO: Only show company if multicompany in use
+                self.$element.find('.oe_topbar_name').text(res.name + '/' + res.company_id[1]);
+                return self.shortcut_load();
+            });
+        };
+        this.update_promise = this.update_promise.pipe(fct, fct);
+    },
+    on_action: function() {
+    },
+    shortcut_load :function(){
+        var self = this,
+            sc = self.session.shortcuts,
+            shortcuts_ds = new openerp.web.DataSet(this, 'ir.ui.view_sc');
+        self.$element.find('.oe_dropdown_options a[data-menu=shortcut]').each(function() {
+            $(this).parent().remove();
+        });
+        // TODO: better way to communicate between sections.
+        // sc.bindings, because jquery does not bind/trigger on arrays...
+        if (!sc.binding) {
+            sc.binding = {};
+            $(sc.binding).bind({
+                'add': function (e, attrs) {
+                    shortcuts_ds.create(attrs, function (out) {
+                        var shortcut = QWeb.render('DropDownMenu.shortcut', {
+                            shortcuts : [{
+                                name : attrs.name,
+                                id : out.result,
+                                res_id : attrs.res_id
+                            }]
+                        });
+                        $(shortcut).appendTo(self.$element.find('.oe_dropdown_options'));
+                        attrs.id = out.result;
+                        sc.push(attrs);
+                    });
+                },
+                'remove-current': function () {
+                    var menu_id = self.session.active_id;
+                    var $shortcut = self.$element.find('.oe_dropdown_options li a[data-id=' + menu_id + ']');
+                    var shortcut_id = $shortcut.data('shortcut-id');
+                    $shortcut.remove();
+                    shortcuts_ds.unlink([shortcut_id]);
+                    var sc_new = _.reject(sc, function(shortcut){ return shortcut_id === shortcut.id});
+                    sc.splice(0, sc.length);
+                    sc.push.apply(sc, sc_new);
+                }
+            });
+        }
+        return this.rpc('/web/session/sc_list', {}, function(shortcuts) {
+            sc.splice(0, sc.length);
+            sc.push.apply(sc, shortcuts);
+
+            $(QWeb.render('DropDownMenu.shortcut', {'shortcuts': shortcuts}))
+                .appendTo(self.$element.find('.oe_dropdown_options'));
         });
     },
     on_menu_logout: function() {
@@ -1077,6 +993,29 @@ openerp.web.DropDownMenu =  openerp.web.Widget.extend(/** @lends openerp.web.Hea
         }).open();
        action_manager.appendTo(this.dialog);
        action_manager.render(this.dialog);
+    },
+    on_menu_about: function() {
+        var self = this;
+        self.rpc("/web/webclient/version_info", {}).then(function(res) {
+            var $help = $(QWeb.render("About-Page", {version_info: res}));
+            $help.find('a.oe_activate_debug_mode').click(function (e) {
+                e.preventDefault();
+                window.location = $.param.querystring(
+                        window.location.href, 'debug');
+            });
+            openerp.web.dialog($help, {autoOpen: true,
+                modal: true, width: 960, title: _t("About")});
+        });
+    },
+    on_menu_shortcut: function($link) {
+        var self = this,
+            id = $link.data('id');
+        self.session.active_id = id;
+        self.rpc('/web/menu/action', {'menu_id': id}, function(ir_menu_data) {
+            if (ir_menu_data.action.length){
+                self.on_action(ir_menu_data.action[0][2]);
+            }
+        });
     }
 });
 
@@ -1089,7 +1028,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         var self = this;
         this._super(parent);
         openerp.webclient = this;
-
+        this.querystring = '?' + jQuery.param.querystring();
         this._current_state = null;
     },
     start: function() {
@@ -1108,8 +1047,8 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         });
         this.session.on_session_valid.add(function() {
             self.show_application();
-            
-            self.header.do_update();
+
+            self.dropdown_menu.do_update();
             self.menu.do_reload();
             if(self.action_manager)
                 self.action_manager.destroy();
@@ -1136,16 +1075,13 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.show_common();
         self.$table = $(QWeb.render("WebClient", {}));
         self.$element.append(self.$table);
-        self.header = new openerp.web.Header(self);
-        self.header.on_logout.add(this.proxy('on_logout'));
-        self.header.on_action.add(this.proxy('on_menu_action'));
-        self.header.appendTo($("#oe_header"));
         self.menu = new openerp.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
         self.menu.on_action.add(this.proxy('on_menu_action'));
         self.dropdown_menu = new openerp.web.DropDownMenu(self);
         self.dropdown_menu.replace(this.$element.find('.oe_dropdown_menu_placeholder'));
         self.dropdown_menu.on_menu_logout.add(this.proxy('on_logout'));
+        self.dropdown_menu.on_action.add(this.proxy('on_menu_action'));
     },
     show_common: function() {
         var self = this;

@@ -23,7 +23,6 @@
             <div class="oe_menu_placeholder"/>
             <div class="oe_dropdown_menu_placeholder"/>
         </div>
-        <div id="oe_header" class="header" style="display: none"></div>
         <div class="oe_leftbar">
             <!--
             <a href="#" class="oe_logo"><img src="img/logo.png"/></a>
@@ -339,43 +338,6 @@
         <div id="oe_db_options" class="oe_db_options"></div>
     </div>
 </t>
-<t t-name="Header">
-    <div>
-        <a t-att-href="'/' + widget.qs" class="company_logo_link">
-            <div class="company_logo" />
-        </a>
-    </div>
-</t>
-<t t-name="Header-content">
-    <h1 class="header_title">
-        <t t-esc="user.company_id[1]"/> (<t t-esc="widget.session.db"/>)<br/>
-        <small class="username"><t t-esc="user.name"/></small>
-    </h1>
-    <div class="header_corner">
-        <ul class="block">
-            <li>
-                <a t-att-href="'/' + widget.qs" title="Home" class="home"><img t-att-src='_s + "/web/static/src/img/header-home.png"' width="16" height="16" border="0"/></a>
-            </li>
-            <li class="preferences">
-                <a href="javascript:void(0)" title="Preferences" class="preferences"><img t-att-src='_s + "/web/static/src/img/header-preferences.png"' width="16" height="16" border="0"/></a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" title="About" class="about"><img t-att-src='_s + "/web/static/src/img/header-about.png"' width="16" height="16" border="0"/></a>
-            </li>
-        </ul>
-        <div class="block">
-            <a href="javascript:void(0)" class="logout">LOGOUT</a>
-        </div>
-
-    </div>
-    <div class="oe-shortcuts"> </div>
-</t>
-<ul t-name="Shortcuts">
-    <li t-foreach="shortcuts" t-as="shortcut"
-            t-att-data-id="shortcut.res_id"
-            t-att-data-shortcut-id="shortcut.id"
-        ><t t-esc="shortcut.name"/></li>
-</ul>
 
 <t t-name="Menu">
     <ul class="oe_menu" t-if="widget.data">
@@ -414,16 +376,26 @@
     <ul class="oe_dropdown_menu oe_topbar_item">
         <li class="oe_dropdown">
             <a href="#" class="oe_dropdown_toggle">
-                <img class="oe_topbar_avatar" src="http://www.amigrave.com/ClarkGableSmall.jpg"/>
-                Clark Gable
+                <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/topbar-avatar.png'"/>
+                <span class="oe_topbar_name"/>
             </a>
             <ul class="oe_dropdown_options">
                 <!--<li><a href="#" data-menu="profile">Profile</a></li>-->
                 <li><a href="#" data-menu="settings">Settings</a></li>
                 <li><a href="#" data-menu="logout">Log out</a></li>
+                <li><hr/></li>
+                <li><a href="#" data-menu="about">About OpenERP</a></li>
+                <li><hr/></li>
             </ul>
         </li>
     </ul>
+</t>
+<t t-name="DropDownMenu.shortcut">
+    <li t-foreach="shortcuts" t-as="shortcut">
+        <a href="#" data-menu="shortcut" t-att-data-id="shortcut.res_id" t-att-data-shortcut-id="shortcut.id">
+            <t t-esc="shortcut.name"/>
+        </a>
+    </li>
 </t>
 
 <t t-name="ViewManager">
