@@ -515,9 +515,9 @@
                     <separator string="Picking and Invoice Policy" colspan="4"/>
                     <group  colspan="4" col="8">
                         <group  colspan="4" col="4">
-                           <field name="sale_orders" on_change="onchange_order(sale_orders,deli_orders)"/>
+                           <field name="sale_orders"/>
                            <newline/>
-                           <field name="deli_orders" on_change="onchange_order(sale_orders,deli_orders)"/>
+                           <field name="deli_orders"/>
                            <newline/>
                            <field name="task_work"/>
                            <newline/>
@@ -543,7 +543,8 @@
                            <group colspan="4" col="4">
                                 <separator string="Taxes" colspan="4"/>
                                 <field name="tax_policy" nolabel="1"/>
-                                <field name="tax_value" nolabel="1" attrs="{'invisible': [('tax_policy','=','no_tax')]}"/>
+                                <field name="tax_value" nolabel="1" attrs="{'invisible': [('tax_policy','in',['no_tax','global_on_order'])]}"/>
+                                <field name="tax_value_id" nolabel="1" attrs="{'invisible': [('tax_policy','in',['no_tax','on_order_line'])]}"/>
                            </group>
                            <newline/>
                            <field name="sale_margin"/>

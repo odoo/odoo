@@ -1359,6 +1359,7 @@ class sale_configuration(osv.osv_memory):
         'warning': fields.boolean("Alerts by products or customers",
                                   help="Install warning module: Module to trigger warnings in OpenERP objects."),
         'tax_value' : fields.float('Value'),
+        'tax_value_id': fields.many2one('account.tax.template'),
         'tax_policy': fields.selection([
             ('no_tax', 'No Tax'),
             ('global_on_order', 'Global On Order'),
@@ -1372,6 +1373,7 @@ class sale_configuration(osv.osv_memory):
 
     def default_get(self, cr, uid, fields_list, context=None):
         ir_values_obj = self.pool.get('ir.values')
+        obj_tax_temp = self.pool.get('account.tax.template')
         res = super(sale_configuration, self).default_get(
             cr, uid, fields_list, context=context)
         defaults = {}
@@ -1392,6 +1394,9 @@ class sale_configuration(osv.osv_memory):
                 defaults.update({'picking_policy': True})
             if k == 'order_policy':
                 defaults.update({'order_policy': defaults.get('order_policy')})
+            if k == 'tax_policy' and defaults[k] == ['global_on_order','on_order_line']:
+                ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('sale','all'))], context=context, order="sequence, id desc", limit=1)
+                res.update({'tax_value_id': ref_tax_ids and ref_tax_ids[0] or False})
             else:
                 res.update({k: False})
         res.update(defaults)
@@ -1403,13 +1408,14 @@ class sale_configuration(osv.osv_memory):
         'time_unit': lambda self, cr, uid, c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c) and self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c)[0] or False,
     }
 
-    def onchange_order(self, cr, uid, ids, sale, deli, context=None):
-        res = {}
-        if sale:
-            res.update({'order_policy': 'manual'})
-        elif deli:
-            res.update({'order_policy': 'picking'})
-        return {'value':res}
+    #TODO: Need to check
+#    def onchange_order(self, cr, uid, ids, sale, deli, context=None):
+#        res = {}
+#        if sale:
+#            res.update({'order_policy': 'manual'})
+#        elif deli:
+#            res.update({'order_policy': 'picking'})
+#        return {'value':res}
     
     def apply_groups(self, cr, uid, ids, group_name, apply=True, context=None):
         data_obj = self.pool.get('ir.model.data')
