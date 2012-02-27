@@ -1,0 +1,201 @@
+// Mixins {{{
+@mixin vertical-gradient($startColor: #555, $endColor: #333)
+    background: $startColor
+    background: -moz-linear-gradient($startColor, $endColor)
+    background: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor))
+    background: -webkit-linear-gradient($startColor, $endColor)
+
+@mixin radial-gradient($gradient)
+    background-position: center center
+    background-image: radial-gradient($gradient)
+    background-image: -moz-radial-gradient($gradient)
+    background-image: -webkit-radial-gradient(circle, $gradient)
+
+@mixin radius($radius: 5px)
+    -moz-border-radius: $radius
+    -webkit-border-radius: $radius
+    border-radius: $radius
+
+@mixin box-shadow($bsval: 0px 1px 4px #777)
+    -moz-box-shadow: $bsval
+    -webkit-box-shadow: $bsval
+    -box-shadow: $bsval
+
+@mixin transition($transval: (border linear 0.2s, box-shadow linear 0.2s))
+    -webkit-transition: $transval
+    -moz-transition: $transval
+    -ms-transition: $transval
+    -o-transition: $transval
+    transition: $transval
+
+@mixin opacity($opacity: .5)
+    filter: alpha(opacity=$opacity * 100)
+    -khtml-opacity: $opacity
+    -moz-opacity: $opacity
+    opacity: $opacity
+
+@mixin background-clip($clip: padding-box)
+    -webkit-background-clip: $clip
+    -moz-background-clip: $clip
+    background-clip: $clip
+// }}}
+
+.openerp2
+    // Common styles {{{
+    padding: 0
+    margin: 0
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    color: #4c4c4c
+    font-size: 13px
+    background: white
+    position: relative
+
+    a
+        text-decoration: none
+    // }}}
+
+    // WebClient {{{
+    .oe_webclient
+        position: absolute
+        top: 0
+        bottom: 0
+        left: 0
+        right: 0
+    // }}}
+
+    // Topbar {{{
+    .oe_topbar
+        width: 100%
+        height: 31px
+        border-top: solid 1px #d3d3d3
+        border-bottom: solid 1px black
+        @include vertical-gradient(#646060, #262626)
+
+        .oe_topbar_item
+            li
+                float: left
+                a
+                    display: block
+                    padding: 5px 10px 7px
+                    line-height: 20px
+                    height: 20px
+                    color: #eee
+                    vertical-align: top
+                    text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+                    &:hover
+                        background: #303030
+                        color: white
+                        @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+            .oe_active
+                background: #303030
+                font-weight: bold
+                color: white
+                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+
+        .oe_topbar_avatar
+            width: 24px
+            height: 24px
+            margin: -2px 2px 0 0
+            @include radius(4px)
+    // }}}
+
+    // Menu {{{
+    .oe_menu
+        float: left
+        padding: 0
+        margin: 0
+        li
+            list-style-type: none
+            float: left
+        a
+            display: block
+            padding: 5px 10px 7px
+            line-height: 20px
+            height: 20px
+            color: #eee
+            vertical-align: top
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+            &:hover
+                background: #303030
+                color: white
+                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+        .oe_active
+            background: #303030
+            font-weight: bold
+            color: white
+            @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+    // }}}
+
+    // DropDown Menu {{{
+    .oe_dropdown_menu
+        float: right
+        padding: 0
+        margin: 0
+        li
+            list-style-type: none
+            float: left
+        .oe_dropdown
+            position: relative
+
+        .dropdown-toggle:after
+            width: 0
+            height: 0
+            display: inline-block
+            content: "&darr"
+            text-indent: -99999px
+            vertical-align: top
+            margin-top: 8px
+            margin-left: 4px
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid white
+            @include opacity(0.5)
+
+        .oe_dropdown_options
+            float: left
+            background: #333
+            background: rgba(37,37,37,0.9)
+            display: none
+            position: absolute
+            top: 32px
+            right: -1px
+            border: 0
+            z-index: 900
+            width: 160px
+            margin-left: 0
+            margin-right: 0
+            padding: 6px 0
+            zoom: 1
+            border-color: #999
+            border-color: rgba(0, 0, 0, 0.2)
+            border-style: solid
+            border-width: 0 1px 1px
+            @include radius(0 0 6px 6px)
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+            @include background-clip()
+            li
+                float: none
+                display: block
+                background-color: none
+                a
+                    display: block
+                    padding: 4px 15px
+                    clear: both
+                    font-weight: normal
+                    line-height: 18px
+                    color: #eee
+                    &:hover
+                        @include vertical-gradient(#292929, #191919)
+                        @include box-shadow(none)
+    // }}}
+
+.openerp
+    // Transitional overrides for old styles {{{
+    .oe-shortcuts
+        position: static
+    #oe_header
+        clear: both
+    // }}}
+
+// au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
+// vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

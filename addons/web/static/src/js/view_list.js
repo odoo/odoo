@@ -158,7 +158,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             var pair = this.colors[i],
                 color = pair[0],
                 expression = pair[1];
-            if (py.evaluate(expression, _.extend({bool: py.bool}, context))) {
+            if (py.evaluate(expression, context).toJSON()) {
                 return 'color: ' + color + ';';
             }
             // TODO: handle evaluation errors

@@ -846,29 +846,14 @@ openerp.web.Header =  openerp.web.OldWidget.extend(/** @lends openerp.web.Header
     }
 });
 
-openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */{
+openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     /**
      * @constructs openerp.web.Menu
-     * @extends openerp.web.OldWidget
+     * @extends openerp.web.Widget
      *
      * @param parent
-     * @param element_id
-     * @param secondary_menu_id
      */
-    init: function(parent, element_id, secondary_menu_id) {
-        this._super(parent, element_id);
-        this.secondary_menu_id = secondary_menu_id;
-        this.$secondary_menu = $("#" + secondary_menu_id);
-        this.menu = false;
-        this.folded = false;
-        if (window.localStorage) {
-            this.folded = localStorage.getItem('oe_menu_folded') === 'true';
-        }
-        this.float_timeout = 700;
-    },
-    start: function() {
-        this.$secondary_menu.addClass(this.folded ? 'oe_folded' : 'oe_unfolded');
-    },
+    template: 'Menu',
     do_reload: function() {
         var self = this;
         return this.rpc("/web/menu/load", {}, this.on_loaded).then(function () {
@@ -879,22 +864,13 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
     },
     on_loaded: function(data) {
         this.data = data;
-        this.$element.html(QWeb.render("Menu", { widget : this }));
+        this.render_element();
+        if (!this.$secondary_menu && this.getParent()) {
+            // TODO: create Widget openerp.web.SubMenu
+            this.$secondary_menu = this.getParent().$element.find('.oe_secondary_menu');
+        }
         this.$secondary_menu.html(QWeb.render("Menu.secondary", { widget : this }));
         this.$element.add(this.$secondary_menu).find("a").click(this.on_menu_click);
-        this.$secondary_menu.find('.oe_toggle_secondary_menu').click(this.on_toggle_fold);
-    },
-    on_toggle_fold: function() {
-        this.$secondary_menu.toggleClass('oe_folded').toggleClass('oe_unfolded');
-        if (this.folded) {
-            this.$secondary_menu.find('.oe_secondary_menu.active').show();
-        } else {
-            this.$secondary_menu.find('.oe_secondary_menu').hide();
-        }
-        this.folded = !this.folded;
-        if (window.localStorage) {
-            localStorage.setItem('oe_menu_folded', this.folded.toString());
-        }
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
@@ -903,8 +879,8 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
      * @param {Number} menu_id database id of the terminal menu to select
      */
     open_menu: function (menu_id) {
-        this.$element.add(this.$secondary_menu).find('.active')
-                .removeClass('active');
+        this.$element.add(this.$secondary_menu).find('.oe_active')
+                .removeClass('oe_active');
         this.$secondary_menu.find('> .oe_secondary_menu').hide();
 
         var $primary_menu;
@@ -913,7 +889,7 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
         if ($secondary_submenu.length) {
             for(;;) {
                 if ($secondary_submenu.hasClass('leaf')) {
-                    $secondary_submenu.addClass('active');
+                    $secondary_submenu.addClass('oe_active');
                 } else if ($secondary_submenu.hasClass('submenu')) {
                     $secondary_submenu.addClass('opened')
                 }
@@ -932,9 +908,9 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
         if (!$primary_menu.length) {
             return;
         }
-        $primary_menu.addClass('active');
+        $primary_menu.addClass('oe_active');
         this.$secondary_menu.find(
-            'div[data-menu-parent=' + $primary_menu.data('menu') + ']').addClass('active').toggle(!this.folded);
+            'div[data-menu-parent=' + $primary_menu.data('menu') + ']').addClass('oe_active');
     },
     on_menu_click: function(ev, id) {
         id = id || 0;
@@ -964,7 +940,7 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
     },
     do_menu_click: function($clicked_menu, manual) {
         var $sub_menu, $main_menu,
-            active = $clicked_menu.is('.active'),
+            active = $clicked_menu.is('.oe_active'),
             sub_menu_visible = false,
             has_submenu_items = false;
 
@@ -980,11 +956,11 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
         has_submenu_items = !!$sub_menu.children().length;
         this.$secondary_menu.find('.oe_secondary_menu').hide();
 
-        $('.active', this.$element.add(this.$secondary_menu)).removeClass('active');
-        $main_menu.add($clicked_menu).add($sub_menu).addClass('active');
+        $('.oe_active', this.$element.add(this.$secondary_menu)).removeClass('oe_active');
+        $main_menu.add($clicked_menu).add($sub_menu).addClass('oe_active');
 
         if (has_submenu_items) {
-            if (!(this.folded && manual)) {
+            if (!manual) {
                 this.do_show_secondary($sub_menu, $main_menu);
             } else {
                 this.do_show_secondary();
@@ -1000,54 +976,21 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
                 });
                 $clicked_menu.toggleClass('opened').next().toggle();
             } else if ($clicked_menu.is('.leaf')) {
-                $sub_menu.toggle(!this.folded);
                 return true;
             }
-        } else if (this.folded) {
-            if ((active && sub_menu_visible) || !has_submenu_items) {
-                $sub_menu.hide();
-                return true;
-            }
-            return manual;
         } else {
             return true;
         }
         return false;
     },
     do_hide_secondary: function() {
-        this.$secondary_menu.hide();
+        //this.$secondary_menu.hide();
     },
     do_show_secondary: function($sub_menu, $main_menu) {
         var self = this;
         this.$secondary_menu.show();
         if (!arguments.length) {
             return;
-        }
-        if (this.folded) {
-            var css = $main_menu.position(),
-                fold_width = this.$secondary_menu.width() + 2,
-                window_width = $(window).width();
-            css.top += 33;
-            css.left -= Math.round(($sub_menu.width() - $main_menu.width()) / 2);
-            css.left = css.left < fold_width ? fold_width : css.left;
-            if ((css.left + $sub_menu.width()) > window_width) {
-                delete(css.left);
-                css.right = 1;
-            }
-            $sub_menu.css(css);
-            $sub_menu.mouseenter(function() {
-                clearTimeout($sub_menu.data('timeoutId'));
-                $sub_menu.data('timeoutId', null);
-                return false;
-            }).mouseleave(function(evt) {
-                var timeoutId = setTimeout(function() {
-                    if (self.folded && $sub_menu.data('timeoutId')) {
-                        $sub_menu.hide().unbind('mouseenter').unbind('mouseleave');
-                    }
-                }, self.float_timeout);
-                $sub_menu.data('timeoutId', timeoutId);
-                return false;
-            });
         }
         $sub_menu.show();
     },
@@ -1065,12 +1008,82 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
     }
 });
 
-openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebClient */{
+openerp.web.DropDownMenu =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
+    template: "DropDownMenu",
     /**
-     * @constructs openerp.web.WebClient
+     * @constructs openerp.web.DropDownMenu
      * @extends openerp.web.OldWidget
      *
-     * @param element_id
+     * @param parent
+     */
+    init: function(parent) {
+        this._super(parent);
+    },
+    start: function() {
+        var self = this;
+        this._super.apply(this, arguments);
+        $('html').bind('click', function() {
+            self.$element.find('.oe_dropdown_options').hide();
+        });
+        this.$element.find('.oe_dropdown_toggle').click(function() {
+            self.$element.find('.oe_dropdown_options').toggle();
+            return false;
+        });
+        this.$element.find('.oe_dropdown_options li a').click(function() {
+            var f = self['on_menu_' + $(this).data('menu')];
+            f && f();
+            self.$element.find('.oe_dropdown_options').hide();
+            return false;
+        });
+    },
+    on_menu_logout: function() {
+    },
+    on_menu_settings: function() {
+        var self = this;
+        var action_manager = new openerp.web.ActionManager(this);
+        var dataset = new openerp.web.DataSet (this,'res.users',this.context);
+        dataset.call ('action_get','',function (result){
+            self.rpc('/web/action/load', {action_id:result}, function(result){
+                action_manager.do_action(_.extend(result['result'], {
+                    res_id: self.session.uid,
+                    res_model: 'res.users',
+                    flags: {
+                        action_buttons: false,
+                        search_view: false,
+                        sidebar: false,
+                        views_switcher: false,
+                        pager: false
+                    }
+                }));
+            });
+        });
+        this.dialog = new openerp.web.Dialog(this,{
+            title: _t("Preferences"),
+            width: '700px',
+            buttons: [
+                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
+                {text: _t("Change password"), click: function(){ self.change_password(); }},
+                {text: _t("Save"), click: function(){
+                        var inner_viewmanager = action_manager.inner_viewmanager;
+                        inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
+                        .then(function() {
+                            self.dialog.destroy();
+                            // needs to refresh interface in case language changed
+                            window.location.reload();
+                        });
+                    }
+                }
+            ]
+        }).open();
+       action_manager.appendTo(this.dialog);
+       action_manager.render(this.dialog);
+    }
+});
+
+openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClient */{
+    /**
+     * @constructs openerp.web.WebClient
+     * @extends openerp.web.Widget
      */
     init: function(parent) {
         var self = this;
@@ -1079,11 +1092,9 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
 
         this._current_state = null;
     },
-    render_element: function() {
-    	this.$element.addClass("openerp");
-    },
     start: function() {
         var self = this;
+        this.$element.addClass("openerp openerp2");
         if (jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
             this.$element.delegate('img.oe-record-edit-link-img', 'hover', function(e) {
@@ -1123,15 +1134,18 @@ openerp.web.WebClient = openerp.web.OldWidget.extend(/** @lends openerp.web.WebC
         var self = this;
         this.destroy_content();
         this.show_common();
-        self.$table = $(QWeb.render("Interface", {}));
+        self.$table = $(QWeb.render("WebClient", {}));
         self.$element.append(self.$table);
         self.header = new openerp.web.Header(self);
         self.header.on_logout.add(this.proxy('on_logout'));
         self.header.on_action.add(this.proxy('on_menu_action'));
         self.header.appendTo($("#oe_header"));
-        self.menu = new openerp.web.Menu(self, "oe_menu", "oe_secondary_menu");
+        self.menu = new openerp.web.Menu(self);
+        self.menu.replace(this.$element.find('.oe_menu_placeholder'));
         self.menu.on_action.add(this.proxy('on_menu_action'));
-        self.menu.start();
+        self.dropdown_menu = new openerp.web.DropDownMenu(self);
+        self.dropdown_menu.replace(this.$element.find('.oe_dropdown_menu_placeholder'));
+        self.dropdown_menu.on_menu_logout.add(this.proxy('on_logout'));
     },
     show_common: function() {
         var self = this;
