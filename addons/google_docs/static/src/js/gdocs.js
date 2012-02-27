@@ -2,6 +2,7 @@ openerp.gdocs = function(instance) {
 
 instance.web.form.SidebarAttachments = instance.web.form.SidebarAttachments.extend({
     on_attachments_loaded: function(attachments) {
+        alert('gdocs.js.on_attachments_loaded()');
         this._super(attachments);
         var self = this;
         var $gdocbtn = self.$element.find('button.gdocs');

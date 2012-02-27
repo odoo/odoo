@@ -70,7 +70,15 @@ class google_docs(osv.osv):
         'gdocs_res_id': fields.char('Google resource ID', size=64, translate=False),
         'name_template': fields.char('GDoc name template', size=64, translate=False)
     }
+    print '''
 
+#########################################
+
+GOOGLE DOCS
+
+#########################################
+
+'''
     edit_url_template = 'https://docs.google.com/Edit?docid=%s'
     prefix_gdoc_id_res = DOCUMENT_LABEL + ':'
 
@@ -84,6 +92,15 @@ class google_docs(osv.osv):
            @return -1 if the template hasn't been assigned yet.
            @return -2 if the google_base_account hasn't been configured yet.
         '''
+        print '''
+
+#########################################
+
+google_docs.copy_gdoc()
+
+#########################################
+
+'''
 
         if context==None:
             context={}
@@ -121,14 +138,15 @@ class google_docs(osv.osv):
 
         return self.edit_url_template % (copied_resource.resource_id.text,)
 
+'''
     def get_documents_list(self, cr, uid, context=None):
-        '''Return the list of google documents available at the user's account.
+        ' ''Return the list of google documents available at the user's account.
            @param cr: the current row from the database cursor.
            @param uid: the current user ID, for security checks.
            @param context: a standard dictionary for contextual values.
            @return a list with information about the documents in form of tuples (document_name, document_resource_id).
            @return -2 if the google_base_account hasn't been configured yet.
-        '''
+        '' '
 
         if context == None:
             context = {}
@@ -146,10 +164,11 @@ class google_docs(osv.osv):
         client.ClientLogin(user.gmail_user, user.gmail_password, client.source, service='writely')
 
         return map(lambda doc: (doc.title.text, doc.resource_id.text[len(prefix_gdoc_id_res):]), filter(lambda r: r.resource_id.text.startswith(prefix_gdoc_id_res), client.get_all_resources()))
+'''
 
-
+'''
     def set_model_document_template(self, cr, uid, model, resource_id, context=None):
-        '''Set the default document template for the specified model. This template doesn't have to be a google documents template itself, but just a document.
+        '' 'Set the default document template for the specified model. This template doesn't have to be a google documents template itself, but just a document.
            @param cr: current row for the database cursor.
            @param uid: the current user ID, for security checks.
            @param model: the current model name.
@@ -158,7 +177,7 @@ class google_docs(osv.osv):
            @return 0 on successful execution.
            @return -2 if the google_base_account hasn't been configured yet.
            @return -3 if the given resource_id doesn't exist in the user's google docs account.
-        '''
+        ' ''
 
         if context == None:
             context = {}
@@ -186,7 +205,7 @@ class google_docs(osv.osv):
             })
 
         return 0
-
+'''
 
 class google_docs_folder(osv.osv):
     _name = 'google.docs.folder'
