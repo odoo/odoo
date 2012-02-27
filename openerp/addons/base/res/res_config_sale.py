@@ -71,8 +71,7 @@ class sale_configuration(osv.osv_memory):
         user_group_ids = user_obj.browse(cr, uid, uid, context=context).groups_id
 
         for group_id in user_group_ids:
-            if group_id.id in group_ids:
-                groups.append(group_id.id);
+            groups.append(group_id.id);
 
         for id in groups:
             key_id = dataobj.search(cr, uid,[('res_id','=',id),('model','=','res.groups')],context=context)
