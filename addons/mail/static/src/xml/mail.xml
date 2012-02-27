@@ -32,14 +32,6 @@
         <div class="tmp_oe_mail_thread_content">
         </div>
     </t>
-    
-    <t t-name="MoreButton">
-        <div class="oe_mail_thread_msg_more">
-            <button class="oe_mail_button_more" type="button">More
-                <t t-if="msg_left"> (<t t-raw="msg_left"/> left)</t>
-            </button>
-        </div>
-    </t>
 
     <t t-name="WallThreadContainer">
         <div class="oe_mail_wall_thread_header">
@@ -79,6 +71,11 @@
         </div>
         <div class="oe_mail_thread_display">
         </div>
+        <div class="oe_mail_thread_more">
+            <div class="oe_mail_thread_msg">
+                <t t-call="MoreButton"/>
+            </div>
+        </div>
     </div>
 
     <div t-name="ThreadMsg" t-attf-class="{record.type} oe_mail_thread_msg">
@@ -110,7 +107,7 @@
             </t>
             wrote on <span class="oe_mail_msg_date"><t t-raw="record.date"/></span>
             <br />
-            <span class="oe_mail_msg_body"><t t-esc="record.body_text"/></span>
+            <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
         </p>
     </t>
     
@@ -120,8 +117,16 @@
             To: <t t-sec="mail_to"/><br />
         </p>
         <p class="oe_mail_msg_p">
-            <span class="oe_mail_msg_body"><t t-esc="record.body_text"/></span>
+            <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
         </p>
+    </t>
+    
+    <t t-name="MoreButton">
+        <div class="oe_mail_thread_msg_more">
+            <button class="oe_mail_button_more" type="button">More
+                <t t-if="msg_left"> (<t t-raw="msg_left"/> left)</t>
+            </button>
+        </div>
     </t>
 
 </template>

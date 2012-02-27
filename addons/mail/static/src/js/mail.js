@@ -12,20 +12,31 @@ openerp.mail = function(session) {
     mail.ThreadDisplay = session.web.Widget.extend({
         // QWeb template to use when rendering the object
         template: 'ThreadDisplay',
-        
+
+        /**
+         *
+         * @params {Object} parent parent
+         * @params {Object} [params]
+         * @param {String} [params.res_model] res_model of mail.thread object
+         * @param {Number} [params.res_id] res_id of record
+         * @param {Number} [params.uid] user id
+         * @param {Number} [params.char_show_more=100] number of character to display before adding a "show more"
+         * @param {Number} [params.limit=10] maximum number of messages to fetch
+         * @param {Number} [params.offset=0] offset for fetchign messages
+         * @param {Number} [params.records=null] records to show instead of fetching messages
+         */
         init: function(parent, params) {
             this._super(parent);
-            this.res_model = params['res_model'];
-            this.res_id = params['res_id'];
-            this.uid = params['uid'];
-            this.limit = params['limit'] || 10;
-            this.offset = params['offset'] || 0;
-            this.cur_limit = this.limit;
-            this.records = params['records'] || false;
+            console.log(parent);
+            this.params = params;
+            this.params.limit = this.params.limit || 10;
+            this.params.offset = this.params.offset || 0;
+            this.params.records = this.params.records || null;
+            this.params.char_show_more = this.params.char_show_more || 100;
             // tmp
             this.map_hash = {'res.users': []};
             /* DataSets */
-            this.ds = new session.web.DataSet(this, this.res_model);
+            this.ds = new session.web.DataSet(this, this.params.res_model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
         
@@ -35,7 +46,7 @@ openerp.mail = function(session) {
             /* bind buttons */
             this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
             /* delegate links */
-            self.$element.find('div.oe_mail_thread_display').delegate('a', 'click', function (event) {
+            self.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
                 var res_model = event.srcElement.dataset.resModel;
                 var res_id = event.srcElement.dataset.resId;
                 self.do_action({
@@ -47,38 +58,60 @@ openerp.mail = function(session) {
             });
             /* display user, fetch comments */
             this.display_current_user();
-            if (this.records == false) return this.fetch_comments();
-            else return this.display_comments(this.records);
+            if (this.records) return this.display_comments(this.records);
+            else return this.init_comments();
         },
         
         stop: function () {
             this._super.apply(this, arguments);
         },
         
-        fetch_comments: function () {
-            return this.ds.call('message_load', [[this.res_id]]).then(this.proxy('display_comments'));
+        init_comments: function() {
+            var self = this;
+            this.params.offset = 0;
+            this.$element.find('div.oe_mail_thread_display').empty();
+            return this.fetch_comments().then(function () {
+                self.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); });
+            });
+        },
+        
+        fetch_comments: function (limit, offset) {
+            return this.ds.call('message_load', [[this.params.res_id], limit=(limit||this.params.limit), offset=(offset||this.params.offset)]).then(
+                this.proxy('display_comments'));
         },
         
         display_comments: function (records) {
             var self = this;
-            this.$element.find('div.oe_mail_thread_display').empty();
             /* WIP: map matched regexp -> records to browse with name */
             _(records).each(function (record) {
-                self.check_internal_links(record.body_text);
+                //self.check_internal_links(record.body_text);
             });
             //console.log(this.map_hash);
             _(records).each(function (record) {
                 if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
                 else { record.mini_url = self.thread_get_avatar_mini('res.users', 'avatar_mini', record.user_id[0]); }
+                // body text manipulation
+                record.body_text = self.do_clean_text(record.body_text);
+                record.tr_body_text = self.truncate_string(record.body_text, self.params.char_show_more);
                 record.body_text = self.do_replace_internal_links(record.body_text);
-                var render_res = session.web.qweb.render('ThreadMsg', {
-                    'record': record,
+                if (record.tr_body_text) record.tr_body_text = self.do_replace_internal_links(record.tr_body_text);
+                $(session.web.qweb.render('ThreadMsg', {'record': record})).appendTo(self.$element.find('div.oe_mail_thread_display'));
+                // truncated: hide full-text, show summary, add buttons
+                if (record.tr_body_text) {
+                    var node = self.$element.find('span.oe_mail_msg_body:last').append('<a href="#">Show less</a>');
+                    node.hide();
+                    node.find('a:last').click(function() {
+                        node.hide(); new_node.show(); return false;
                     });
-                $(render_res).appendTo(self.$element.find('div.oe_mail_thread_display'));
+                    self.$element.find('p.oe_mail_msg_p:last').append($('<span class="oe_mail_msg_body_short">' + record.tr_body_text + '<a href="#">Show more</a></span>'));
+                    var new_node = self.$element.find('span.oe_mail_msg_body_short:last');
+                    new_node.find('a:last').click(function() {
+                        new_node.hide(); node.show(); return false;
+                    });
+                }
             });
-            // add and bind "more button"
-            $(session.web.qweb.render('MoreButton', {})).appendTo(self.$element.find('div.oe_mail_thread_display'));
-            this.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); });
+            // update offset for "More" buttons
+            this.params.offset += records.length;
         },
         
         display_current_user: function () {
@@ -89,64 +122,67 @@ openerp.mail = function(session) {
         
         do_comment: function () {
             var body_text = this.$element.find('textarea').val();
-            return this.ds.call('message_append_note', [[this.res_id], 'Reply comment', body_text, type='comment']).then(
-                this.proxy('fetch_comments'));
+            return this.ds.call('message_append_note', [[this.params.res_id], 'Reply comment', body_text, type='comment']).then(
+                this.proxy('init_comments'));
         },
         
         do_more: function () {
-            console.log('do more !');
+            return this.fetch_comments(this.limit, this.offset);
         },
         
         do_replace_internal_links: function (string) {
             var self = this;
-            /* internal links: @sale.order,32 */
-            var regex_intlink = new RegExp(/(^|\s)@(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\d+)/g);
-            var regex_res = regex_intlink.exec(string);
-            while (regex_res != null) {
-                var res_model = regex_res[2] + '.' + regex_res[3];
-                var res_id = regex_res[4];
-                string = string.replace(regex_res[0], '' + regex_res[1] + '<a href="#" data-res-model = ' + res_model + ' data-res-id = ' + res_id + '>'
-                    + res_model + '(' + res_id + ')</a>');
-                regex_res = regex_intlink.exec(string);
-            }
             /* shortcut to user: @login */
-            //var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*)/g);
-            //var regex_res = regex_login.exec(string);
-            //while (regex_res != null) {
-                //var res_model = regex_res[2] + '.' + regex_res[3];
-                //var res_id = regex_res[4];
-                //string = string.replace(regex_res[0], '' + regex_res[1] + '<a href="#" data-res-model = ' + res_model + ' data-res-id = ' + res_id + '>'
-                    //+ res_model + '(' + res_id + ')</a>');
-                //regex_res = regex_intlink.exec(string);
-            //}
-            return string;
-        },
-        
-        /* check for internal links, and map them to limitate number of queries -- WIP, probably not useful */
-        check_internal_links: function(string) {
-            /* shortcut to user: @login */
-            var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*\s)/g);
+            var regex_login = new RegExp(/(^|\s)@(\w*)/g);
             var regex_res = regex_login.exec(string);
             while (regex_res != null) {
                 var login = regex_res[2];
-                this.map_hash['res.users'].push(login);
+                var res_id = 1;
+                string = string.replace(regex_res[0], '<a href="#" data-res-model="res.users" data-res-id = ' + res_id + '>@' + login + '</a>');
                 regex_res = regex_login.exec(string);
             }
-            /* internal links: @res.model,name */
-            var regex_intlink = new RegExp(/(^|\s)@(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
-            regex_res = regex_intlink.exec(string);
-            while (regex_res != null) {
-                var res_model = regex_res[2] + '.' + regex_res[3];
-                var res_name = regex_res[4];
-                if (! (res_model in this.map_hash)) { this.map_hash[res_model] = []; }
-                this.map_hash[res_model].push(res_name);
-                regex_res = regex_intlink.exec(string);
-            }
+            return string;
         },
+        
+        ///* check for internal links, and map them to limitate number of queries -- WIP, probably not useful */
+        //check_internal_links: function(string) {
+            ///* shortcut to user: @login */
+            ////var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*\s)/g);
+            //var regex_login = new RegExp(/(^|\s)@(\w*)/g);
+            //var regex_res = regex_login.exec(string);
+            //while (regex_res != null) {
+                //var login = regex_res[2];
+                //this.map_hash['res.users'].push(login);
+                //regex_res = regex_login.exec(string);
+            //}
+            ///* internal links: #res.model,name */
+            //var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
+            //regex_res = regex_intlink.exec(string);
+            //while (regex_res != null) {
+                //var res_model = regex_res[2] + '.' + regex_res[3];
+                //var res_name = regex_res[4];
+                //if (! (res_model in this.map_hash)) { this.map_hash[res_model] = []; }
+                //this.map_hash[res_model].push(res_name);
+                //regex_res = regex_intlink.exec(string);
+            //}
+        //},
         
         thread_get_avatar_mini: function(model, field, id) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
+
+        truncate_string: function(string, max_length) {
+            var string_len = string.length; // TODO: check for whitespaces ?
+            if (string_len <= max_length) return false;
+            var new_string = string.slice(0, max_length);
+            return new_string;
+        },
+        
+        do_clean_text: function (string) {
+            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?b\\s*&gt;', 'gi'), '<$1b>');
+            return html;
+        },
+
     });
 
 
