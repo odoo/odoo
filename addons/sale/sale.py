@@ -1377,13 +1377,7 @@ class sale_configuration(osv.osv_memory):
         defaults = {}
         module_list = sale_config.MODULE_LIST
         defaults.update(self.get_installed_modules(cr, uid, module_list, context=context))
-        
-        group_list =['group_sale_pricelist_per_customer','group_sale_uom_per_product','group_sale_delivery_address',
-                     'group_sale_disc_per_sale_order_line','group_sale_notes_subtotal']
-
-        applied_groups = self.get_applied_groups(cr, uid, group_list, context=context)
-        defaults.update(applied_groups)
-        print "---defaults---",defaults
+        defaults.update(self.get_applied_groups(cr, uid, context=context))
 
         for val in ir_values_obj.get(cr, uid, 'default', False, ['sale.order']):
             defaults.update({val[1]: val[2]})
@@ -1417,6 +1411,19 @@ class sale_configuration(osv.osv_memory):
             res.update({'order_policy': 'picking'})
         return {'value':res}
     
+    def apply_groups(self, cr, uid, ids, group_name, apply=True, context=None):
+        data_obj = self.pool.get('ir.model.data')
+        users_obj = self.pool.get('res.users')
+        groups_obj = self.pool.get('res.groups')
+        dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', group_name)
+        dummy,user_group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_user')
+        if apply:
+            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(4,group_id)]})
+            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+        else:
+            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
+            users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
+
     def execute(self, cr, uid, ids, vals, context=None):
         #TODO: TO BE IMPLEMENTED
         ir_values_obj = self.pool.get('ir.values')
@@ -1440,46 +1447,30 @@ class sale_configuration(osv.osv_memory):
             menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_action_picking_list_to_invoice').id
             menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]})
 
-        dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_sale_pricelist_per_customer')
-        dummy,user_group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_user')
         if wizard.group_sale_pricelist_per_customer:
-            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(4,group_id)]})
-            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+            self.apply_groups(cr, uid, ids, 'group_sale_pricelist_per_customer', context=context)
         else:
-            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
-            users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
+            self.apply_groups(cr, uid, ids, 'group_sale_pricelist_per_customer', False, context=context)
         
-        dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_sale_uom_per_product')
         if wizard.group_sale_uom_per_product:
-            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(4,group_id)]})
-            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+            self.apply_groups(cr, uid, ids, 'group_sale_uom_per_product', context=context)
         else:
-            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
-            users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
+            self.apply_groups(cr, uid, ids, 'group_sale_uom_per_product', False, context=context)
         
-        dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_sale_delivery_address')
         if wizard.group_sale_delivery_address:
-            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(4,group_id)]})
-            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+            self.apply_groups(cr, uid, ids, 'group_sale_delivery_address', context=context)
         else:
-            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
-            users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
+            self.apply_groups(cr, uid, ids, 'group_sale_delivery_address', False, context=context)
             
-        dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_sale_disc_per_sale_order_line')
         if wizard.group_sale_disc_per_sale_order_line:
-            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(4,group_id)]})
-            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+            self.apply_groups(cr, uid, ids, 'group_sale_disc_per_sale_order_line', context=context)
         else:
-            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
-            users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
+            self.apply_groups(cr, uid, ids, 'group_sale_disc_per_sale_order_line', False, context=context)
         
-        dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_sale_notes_subtotal')
         if wizard.group_sale_notes_subtotal:
-            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(4,group_id)]})
-            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+            self.apply_groups(cr, uid, ids, 'group_sale_notes_subtotal', context=context)
         else:
-            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
-            users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
+            self.apply_groups(cr, uid, ids, 'group_sale_notes_subtotal', False, context=context)
         
         if wizard.task_work:
             vals['project_timesheet'] = True
