@@ -4,22 +4,22 @@ instance.web.form.SidebarAttachments = instance.web.form.SidebarAttachments.exte
     on_attachments_loaded: function(attachments) {
         this._super(attachments);
         var self = this;
-        var $padbtn = self.$element.find('button.gdocs');
-        var is_pad = function(a) {
+        var $gdocbtn = self.$element.find('button.gdocs');
+        var is_gdoc = function(a) {
             return a.type == 'url' && a.name == 'GDocs';
         };
-        if (_.any(attachments, is_pad)) {
-            $padbtn.hide();
+        if (_.any(attachments, is_gdoc)) {
+            $gdocbtn.hide();
         } else {
-            $padbtn.show().click(self.on_add_pad);
+            $gdocbtn.show().click(self.on_add_gdoc);
         }
     },
-    on_add_pad: function() {
+    on_add_gdoc: function() {
         var self = this;
-        var $padbtn = this.$element.find('button.gdocs');
-        $padbtn.attr('disabled', 'true').find('img, span').toggle();
-        this.view.dataset.call_button('pad_get', [[this.view.datarecord.id], this.view.dataset.get_context()], function(r) {
-            $padbtn.hide();
+        var $gdocbtn = this.$element.find('button.gdocs');alert($gdocbtn);
+        $gdocbtn.attr('disabled', 'true').find('img, span').toggle();
+        this.view.dataset.call_button('copy_gdoc', [[this.view.datarecord.id], this.view.dataset.get_context()], function(r) {
+            $gdocbtn.hide();
             self.do_update();
             self.do_action(r.result);
         });

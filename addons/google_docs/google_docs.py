@@ -74,12 +74,11 @@ class google_docs(osv.osv):
     edit_url_template = 'https://docs.google.com/Edit?docid=%s'
     prefix_gdoc_id_res = DOCUMENT_LABEL + ':'
 
-    def copy_gdoc(self, cr, uid, model, folder=None, context=None):
+    def copy_gdoc(self, cr, uid, model, context=None):
         '''Associate a copy of the gdoc identified by 'gdocs_res_id' to the current entity.
            @param cr: the current row from the database cursor.
            @param uid: the current user ID, for security checks.
            @param model: the current model name.
-           @param folder: folder in which to store the copy.
            @param context: a standard dictionary for contextual values.
            @return the url of the copy itself.
            @return -1 if the template hasn't been assigned yet.
