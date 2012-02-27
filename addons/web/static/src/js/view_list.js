@@ -1257,9 +1257,11 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     if (column.meta) {
                         // do not do anything
                     } else if (column.id in group.aggregates) {
-                        var value = group.aggregates[column.id];
+                        var r = {};
+                        r[column.id] = {value: group.aggregates[column.id]};
                         $('<td class="oe-number">')
-                            .html(openerp.web.format_value(value, column))
+                            .html(openerp.web.format_cell(
+                                r, column, {process_modifiers: false}))
                             .appendTo($row);
                     } else {
                         $row.append('<td>');
