@@ -820,11 +820,6 @@ class DataSet(openerpweb.Controller):
     _cp_path = "/web/dataset"
 
     @openerpweb.jsonrequest
-    def fields(self, req, model):
-        return {'fields': req.session.model(model).fields_get(False,
-                                                              req.session.eval_context(req.context))}
-
-    @openerpweb.jsonrequest
     def search_read(self, req, model, fields=False, offset=0, limit=False, domain=None, sort=None):
         return self.do_search_read(req, model, fields, offset, limit, domain, sort)
     def do_search_read(self, req, model, fields=False, offset=0, limit=False, domain=None
@@ -859,7 +854,6 @@ class DataSet(openerpweb.Controller):
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
             return {
-                'ids': ids,
                 'length': length,
                 'records': [{'id': id} for id in ids]
             }
@@ -867,45 +861,9 @@ class DataSet(openerpweb.Controller):
         records = Model.read(ids, fields or False, context)
         records.sort(key=lambda obj: ids.index(obj['id']))
         return {
-            'ids': ids,
             'length': length,
             'records': records
         }
-
-
-    @openerpweb.jsonrequest
-    def read(self, req, model, ids, fields=False):
-        return self.do_search_read(req, model, ids, fields)
-
-    @openerpweb.jsonrequest
-    def get(self, req, model, ids, fields=False):
-        return self.do_get(req, model, ids, fields)
-
-    def do_get(self, req, model, ids, fields=False):
-        """ Fetches and returns the records of the model ``model`` whose ids
-        are in ``ids``.
-
-        The results are in the same order as the inputs, but elements may be
-        missing (if there is no record left for the id)
-
-        :param req: the JSON-RPC2 request object
-        :type req: openerpweb.JsonRequest
-        :param model: the model to read from
-        :type model: str
-        :param ids: a list of identifiers
-        :type ids: list
-        :param fields: a list of fields to fetch, ``False`` or empty to fetch
-                       all fields in the model
-        :type fields: list | False
-        :returns: a list of records, in the same order as the list of ids
-        :rtype: list
-        """
-        Model = req.session.model(model)
-        records = Model.read(ids, fields, req.session.eval_context(req.context))
-
-        record_map = dict((record['id'], record) for record in records)
-
-        return [record_map[id] for id in ids if record_map.get(id)]
 
     @openerpweb.jsonrequest
     def load(self, req, model, id, fields):
@@ -915,23 +873,6 @@ class DataSet(openerpweb.Controller):
         if r:
             value = r[0]
         return {'value': value}
-
-    @openerpweb.jsonrequest
-    def create(self, req, model, data):
-        m = req.session.model(model)
-        r = m.create(data, req.session.eval_context(req.context))
-        return {'result': r}
-
-    @openerpweb.jsonrequest
-    def save(self, req, model, id, data):
-        m = req.session.model(model)
-        r = m.write([id], data, req.session.eval_context(req.context))
-        return {'result': r}
-
-    @openerpweb.jsonrequest
-    def unlink(self, req, model, ids=()):
-        Model = req.session.model(model)
-        return Model.unlink(ids, req.session.eval_context(req.context))
 
     def call_common(self, req, model, method, args, domain_id=None, context_id=None):
         has_domain = domain_id is not None and domain_id < len(args)
@@ -1008,19 +949,7 @@ class DataSet(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):
-        r = req.session.exec_workflow(model, id, signal)
-        return {'result': r}
-
-    @openerpweb.jsonrequest
-    def default_get(self, req, model, fields):
-        Model = req.session.model(model)
-        return Model.default_get(fields, req.session.eval_context(req.context))
-
-    @openerpweb.jsonrequest
-    def name_search(self, req, model, search_str, domain=[], context={}):
-        m = req.session.model(model)
-        r = m.name_search(search_str+'%', domain, '=ilike', context)
-        return {'result': r}
+        return req.session.exec_workflow(model, id, signal)
 
 class DataGroup(openerpweb.Controller):
     _cp_path = "/web/group"

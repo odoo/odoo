@@ -452,7 +452,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
      * setting the correct session id and session context in the parameter
      * objects
      *
-     * @param {String} url RPC endpoint
+     * @param {Object} url RPC endpoint
      * @param {Object} params call parameters
      * @param {Function} success_callback function to execute on RPC call success
      * @param {Function} error_callback function to execute on RPC call failure

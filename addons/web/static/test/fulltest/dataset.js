@@ -11,13 +11,15 @@ $(document).ready(function () {
         ds.ids = [10, 20, 30, 40, 50];
         ds.index = 2;
         t.expect(ds.read_index(['a', 'b', 'c']), function (result) {
-            strictEqual(result.method, 'read');
+            strictEqual(result.method, 'search');
             strictEqual(result.model, 'some.model');
 
-            strictEqual(result.args.length, 3);
-            deepEqual(result.args[0], [30]);
-            deepEqual(result.args[1], ['a', 'b', 'c']);
-            deepEqual(result.args[2], context_());
+            strictEqual(result.args.length, 5);
+            deepEqual(result.args[0], []);
+            strictEqual(result.args[1], 2);
+            strictEqual(result.args[2], 1);
+            strictEqual(result.args[3], false);
+            deepEqual(result.args[4], context_());
 
             ok(_.isEmpty(result.kwargs));
         });
@@ -29,13 +31,12 @@ $(document).ready(function () {
             strictEqual(result.method, 'default_get');
             strictEqual(result.model, 'some.model');
 
-            strictEqual(result.args.length, 2);
+            strictEqual(result.args.length, 1);
             deepEqual(result.args[0], ['a', 'b', 'c']);
-            console.log(result.args[1]);
-            console.log(context_({foo: 'bar'}));
-            deepEqual(result.args[1], context_({foo: 'bar'}));
 
-            ok(_.isEmpty(result.kwargs));
+            deepEqual(result.kwargs, {
+                context: context_({foo: 'bar'})
+            });
         });
     });
     t.test('create', function (openerp) {
@@ -43,11 +44,12 @@ $(document).ready(function () {
         t.expect(ds.create({foo: 1, bar: 2}), function (r) {
             strictEqual(r.method, 'create');
 
-            strictEqual(r.args.length, 2);
+            strictEqual(r.args.length, 1);
             deepEqual(r.args[0], {foo: 1, bar: 2});
-            deepEqual(r.args[1], context_());
 
-            ok(_.isEmpty(r.kwargs));
+            deepEqual(r.kwargs, {
+                context: context_()
+            });
         });
     });
     t.test('write', function (openerp) {
@@ -55,12 +57,12 @@ $(document).ready(function () {
         t.expect(ds.write(42, {foo: 1}), function (r) {
             strictEqual(r.method, 'write');
 
-            strictEqual(r.args.length, 3);
+            strictEqual(r.args.length, 2);
             deepEqual(r.args[0], [42]);
             deepEqual(r.args[1], {foo: 1});
-            deepEqual(r.args[2], context_());
-
-            ok(_.isEmpty(r.kwargs));
+            deepEqual(r.kwargs, {
+                context: context_()
+            });
         });
         // FIXME: can't run multiple sessions in the same test(), fucks everything up
 //        t.expect(ds.write(42, {foo: 1}, { context: {lang: 'bob'} }), function (r) {
@@ -73,11 +75,11 @@ $(document).ready(function () {
         t.expect(ds.unlink([42]), function (r) {
             strictEqual(r.method, 'unlink');
 
-            strictEqual(r.args.length, 2);
+            strictEqual(r.args.length, 1);
             deepEqual(r.args[0], [42]);
-            deepEqual(r.args[1], context_());
-
-            ok(_.isEmpty(r.kwargs));
+            deepEqual(r.kwargs, {
+                context: context_()
+            });
         });
     });
     t.test('call', function (openerp) {
@@ -96,11 +98,11 @@ $(document).ready(function () {
         t.expect(ds.name_get([1, 2], null), function (r) {
             strictEqual(r.method, 'name_get');
 
-            strictEqual(r.args.length, 2);
+            strictEqual(r.args.length, 1);
             deepEqual(r.args[0], [1, 2]);
-            deepEqual(r.args[1], context_());
-
-            ok(_.isEmpty(r.kwargs));
+            deepEqual(r.kwargs, {
+                context: context_()
+            });
         });
     });
     t.test('name_search, name', function (openerp) {
@@ -108,15 +110,14 @@ $(document).ready(function () {
         t.expect(ds.name_search('bob'), function (r) {
             strictEqual(r.method, 'name_search');
 
-            strictEqual(r.args.length, 5);
-            strictEqual(r.args[0], 'bob');
-            // domain
-            deepEqual(r.args[1], []);
-            strictEqual(r.args[2], 'ilike');
-            deepEqual(r.args[3], context_());
-            strictEqual(r.args[4], 0);
-
-            ok(_.isEmpty(r.kwargs));
+            strictEqual(r.args.length, 0);
+            deepEqual(r.kwargs, {
+                name: 'bob',
+                args: false,
+                operator: 'ilike',
+                context: context_(),
+                limit: 0
+            });
         });
     });
     t.test('name_search, domain & operator', function (openerp) {
@@ -124,16 +125,14 @@ $(document).ready(function () {
         t.expect(ds.name_search(0, [['foo', '=', 3]], 'someop'), function (r) {
             strictEqual(r.method, 'name_search');
 
-            strictEqual(r.args.length, 5);
-            strictEqual(r.args[0], '');
-            // domain
-            deepEqual(r.args[1], [['foo', '=', 3]]);
-            strictEqual(r.args[2], 'someop');
-            deepEqual(r.args[3], context_());
-            // limit
-            strictEqual(r.args[4], 0);
-
-            ok(_.isEmpty(r.kwargs));
+            strictEqual(r.args.length, 0);
+            deepEqual(r.kwargs, {
+                name: '',
+                args: [['foo', '=', 3]],
+                operator: 'someop',
+                context: context_(),
+                limit: 0
+            });
         });
     });
     t.test('exec_workflow', function (openerp) {
@@ -231,14 +230,14 @@ $(document).ready(function () {
         t.expect(ds.name_search('foo', domain, 'ilike', 0), function (r) {
             strictEqual(r.method, 'name_search');
 
-            strictEqual(r.args.length, 5);
-            strictEqual(r.args[0], 'foo');
-            deepEqual(r.args[1], [['model_id', '=', 'qux']]);
-            strictEqual(r.args[2], 'ilike');
-            deepEqual(r.args[3], context_());
-            strictEqual(r.args[4], 0);
-
-            ok(_.isEmpty(r.kwargs));
+            strictEqual(r.args.length, 0);
+            deepEqual(r.kwargs, {
+                name: 'foo',
+                args: [['model_id', '=', 'qux']],
+                operator: 'ilike',
+                context: context_(),
+                limit: 0
+            });
         });
     });
 });
