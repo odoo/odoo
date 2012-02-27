@@ -96,8 +96,7 @@ class event_event(osv.osv):
         reg_ids = registration.search(cr, uid, [('event_id','in',ids)], context=context)
         for event_reg in registration.browse(cr,uid,reg_ids,context=context):
             if event_reg.state == 'done':
-                raise osv.except_osv(_('Error!'),_("You have already done a registration please reset to draft if you want to cancel this event") )
-                return
+                raise osv.except_osv(_('Error!'),_("You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event.") )
         registration.write(cr, uid, reg_ids, {'state': 'cancel'}, context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
@@ -261,7 +260,7 @@ class event_registration(osv.osv):
         """
         res = self.write(cr, uid, ids, {'state': 'open'}, context=context)
         self.mail_user(cr, uid, ids)
-        self.message_append(cr, uid, ids,_('Statut'),body_text= _('Open'))
+        self.message_append(cr, uid, ids,_('State set to...'),body_text= _('Open'))
         return res
 
     def case_close(self, cr, uid, ids, context=None):
@@ -271,7 +270,7 @@ class event_registration(osv.osv):
             context = {}
         values = {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
         res = self.write(cr, uid, ids, values)
-        self.message_append(cr, uid, ids,_('Statut'),body_text= _('Done'))
+        self.message_append(cr, uid, ids,_('State set to...'),body_text= _('Done'))
         return res
 
     # event uses add_note wizard from crm, which expects case_* methods
@@ -282,7 +281,7 @@ class event_registration(osv.osv):
     def case_cancel(self, cr, uid, ids, context=None):
         """ Cancel Registration
         """
-        self.message_append(cr, uid, ids,_('Statut'),body_text= _('Cancel'))
+        self.message_append(cr, uid, ids,_('State set to...'),body_text= _('Cancel'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def button_reg_close(self, cr, uid, ids, context=None):
