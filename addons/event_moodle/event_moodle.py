@@ -49,7 +49,7 @@ class event_moodle(osv.osv):
     def encode_password(self,cr,uid,ids,password,context=None):
         for i in range(len(password)):
             x = password[i]
-            if ord(x)<46:
+                if (ord(x)<48 or  ord(x)>57)and(ord(x)<64 or  ord(x)>90)and(ord(x)<96 or  ord(x)>122):
                 unicode_car =(hex(ord(x)))
                 hex_car = '%'+str(unicode_car[2:])
                 password = password.replace(x,hex_car)
