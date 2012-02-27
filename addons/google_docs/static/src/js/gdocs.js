@@ -1,22 +1,16 @@
-openerp.gdocs = function(instance) {
+console.log('fegegegwnw')
+openerp.google_docs = function(instance) {
 
+console.log('nw')
 instance.web.form.SidebarAttachments = instance.web.form.SidebarAttachments.extend({
-    on_attachments_loaded: function(attachments) {
-        this._super(attachments);
-        var self = this;
-        var $gdocbtn = self.$element.find('button.gdocs');
-        var is_gdoc = function(a) {
-            return a.type == 'url' && a.name == 'GDocs';
-        };
-        if (_.any(attachments, is_gdoc)) {
-            $gdocbtn.hide();
-        } else {
-            $gdocbtn.show().click(self.on_add_gdoc);
-        }
+    init: function() {
+        this._super.apply(this, arguments);
+        this.$element.delegate('.oe_google_docs_button', 'click', self.on_add_gdoc);
     },
     on_add_gdoc: function() {
         var self = this;
-        var $gdocbtn = this.$element.find('button.gdocs');
+console.log('--------');
+        var $gdocbtn = this.$element.find('.oe_google_docs_button');
         $gdocbtn.attr('disabled', 'true').find('img, span').toggle();
         this.view.dataset.call_button('copy_gdoc', [[this.view.datarecord.id], this.view.dataset.get_context()], function(r) {
             $gdocbtn.hide();
@@ -28,9 +22,3 @@ instance.web.form.SidebarAttachments = instance.web.form.SidebarAttachments.exte
 
 };
 
-$(function() {
-    console.log($('#gd-button'));
-    $('#gd-button').click(function(){alert('click');});
-    alert('binded');
-}
-);
