@@ -19,6 +19,7 @@ openerp.mail = function(session) {
             this.res_id = params['res_id'];
             this.uid = params['uid'];
             this.records = params['records'] || false;
+            this.map_hash = {'res.users': []};
             /* DataSets */
             this.ds = new session.web.DataSet(this, this.res_model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
@@ -67,6 +68,11 @@ openerp.mail = function(session) {
         display_comments: function (records) {
             this.$element.find('div.oe_mail_thread_display').empty();
             var self = this;
+            /* WIP: map matched regexp -> records to browse with name */
+            _(records).each(function (record) {
+                self.check_internal_links(record.body_text);
+            });
+            //console.log(this.map_hash);
             _(records).each(function (record) {
                 record.mini_url = self.thread_get_avatar_mini('res.users', 'avatar_mini', record.user_id[0]);
                 record.body_text = self.do_replace_internal_links(record.body_text);
@@ -81,6 +87,28 @@ openerp.mail = function(session) {
             var body_text = this.$element.find('textarea').val();
             return this.ds.call('message_append_note', [[this.res_id], 'Reply comment', body_text, type='comment']).then(
                 this.proxy('fetch_comments'));
+        },
+        
+        /* check for internal links, and map them to limitate number of queries -- WIP, probably not useful */
+        check_internal_links: function(string) {
+            /* shortcut to user: @login */
+            var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*\s)/g);
+            var regex_res = regex_login.exec(string);
+            while (regex_res != null) {
+                var login = regex_res[2];
+                this.map_hash['res.users'].push(login);
+                regex_res = regex_login.exec(string);
+            }
+            /* internal links: @res.model,name */
+            var regex_intlink = new RegExp(/(^|\s)@(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
+            regex_res = regex_intlink.exec(string);
+            while (regex_res != null) {
+                var res_model = regex_res[2] + '.' + regex_res[3];
+                var res_name = regex_res[4];
+                if (! (res_model in this.map_hash)) { this.map_hash[res_model] = []; }
+                this.map_hash[res_model].push(res_name);
+                regex_res = regex_intlink.exec(string);
+            }
         },
         
         do_replace_internal_links: function (string) {
@@ -229,7 +257,9 @@ openerp.mail = function(session) {
         init: function (parent, params) {
             this._super(parent);
             this.filter_search = params['filter_search'];
+            this.search = {}
             /* DataSets */
+            this.ds_msg = new session.web.DataSet(this, 'mail.message');
             this.ds_thread = new session.web.DataSet(this, 'mail.thread');
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
@@ -237,17 +267,44 @@ openerp.mail = function(session) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            self.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
-            return this.fetch_comments();
+            this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });   
+            /* load mail.message search view */
+            var search_view_loaded = this.load_search_view();
+            var search_view_ready = $.when(search_view_loaded).then(function () {
+                self.searchview.on_search.add(self.do_searchview_search);
+            });
+            /* fetch comments */
+            var comments_ready = this.fetch_comments();
+            return (search_view_ready && comments_ready);
         },
         
         stop: function () {
-            this._super();
+            this._super.apply(this, arguments);
         },
-
-        fetch_comments: function () {
-            var load_res = this.ds_thread.call('get_pushed_messages', [[this.session.uid]]).then(
-                this.proxy('display_comments'));
+        
+        load_search_view: function (view_id, defaults, hidden) {
+            this.searchview = new session.web.SearchView(this, this.ds_msg, view_id || false, defaults || {}, hidden || false);
+            return this.searchview.appendTo(this.$element.find('div.oe_mail_wall_search'));
+        },
+        
+        do_searchview_search: function(domains, contexts, groupbys) {
+            var self = this;
+            this.rpc('/web/session/eval_domain_and_context', {
+                domains: domains || [],
+                contexts: contexts || [],
+                group_by_seq: groupbys || []
+            }, function (results) {
+                self.search['context'] = results.context;
+                self.search['domain'] = results.domain;
+                self.search['groupby'] = results.group_by;
+                self.fetch_comments(self.search['domain'], self.search['context']);
+            });
+        },
+        
+        fetch_comments: function (domain, context, offset, limit) {
+            var load_res = this.ds_thread.call('get_pushed_messages',
+                [[this.session.uid], limit = (limit || 100), offset = (offset || 0), domain = (domain || null), context = (context || null) ]).then(
+                    this.proxy('display_comments'));
             return load_res;
         },
         

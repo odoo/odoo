@@ -2,6 +2,8 @@
 <template>
 
     <div t-name="Wall" class="oe_mail_wall">
+        <div class="oe_mail_wall_search">
+        </div>
         <div class="oe_mail_wall_left">
             <div class="oe_mail_wall_act">
                 <div class="oe_mail_wall_tweet">
@@ -82,7 +84,7 @@
                     - <span class="oe_mail_msg_need_action">Need action by <a href="#"><t t-raw="record.need_action_user_id[1]"/></a></span>
                 </t>
                 <br />
-                <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span><br />
+                <span class="oe_mail_msg_body"><t t-esc="record.body_text"/></span><br />
                 <span class="oe_mail_msg_date"><t t-raw="record.date"/></span>
            </p>
         </div>
