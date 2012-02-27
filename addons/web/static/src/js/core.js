@@ -11,7 +11,7 @@ if (!console.debug) {
 
 openerp.web.core = function(openerp) {
 
-openerp.web.Class = niv.Class;
+openerp.web.Class = nova.Class;
 
 openerp.web.callback = function(obj, method) {
     var callback = function() {
@@ -300,9 +300,9 @@ openerp.web.CallbackEnabledMixin = {
     }
 };
 
-openerp.web.CallbackEnabled = openerp.web.Class.extend(_.extend({}, niv.GetterSetterMixin, openerp.web.CallbackEnabledMixin, {
+openerp.web.CallbackEnabled = openerp.web.Class.extend(_.extend({}, nova.GetterSetterMixin, openerp.web.CallbackEnabledMixin, {
     init: function() {
-        niv.GetterSetterMixin.init.call(this);
+        nova.GetterSetterMixin.init.call(this);
         openerp.web.CallbackEnabledMixin.init.call(this);
     }
 }));
@@ -874,7 +874,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-openerp.web.Widget = niv.Widget.extend(_.extend({}, openerp.web.CallbackEnabledMixin, {
+openerp.web.Widget = nova.Widget.extend(_.extend({}, openerp.web.CallbackEnabledMixin, {
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -897,8 +897,8 @@ openerp.web.Widget = niv.Widget.extend(_.extend({}, openerp.web.CallbackEnabledM
      * for new components this argument should not be provided any more.
      */
     init: function(parent) {
-        openerp.web.CallbackEnabledMixin.init.call(this);
         this._super(parent);
+        openerp.web.CallbackEnabledMixin.init.call(this);
         this.session = openerp.connection;
     },
     /**

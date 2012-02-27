@@ -2,9 +2,9 @@
 module("Class");
 
 test("base", function() {
-    ok(!!niv.Class, "Class does exist");
-    ok(!!niv.Class.extend, "extend does exist");
-    var Claz = niv.Class.extend({
+    ok(!!nova.Class, "Class does exist");
+    ok(!!nova.Class.extend, "extend does exist");
+    var Claz = nova.Class.extend({
         test: function() {
             return "ok";
         }
@@ -21,7 +21,7 @@ test("base", function() {
 module("DestroyableMixin");
 
 test("base", function() {
-    var Claz = niv.Class.extend(_.extend({}, niv.DestroyableMixin, {}));
+    var Claz = nova.Class.extend(_.extend({}, nova.DestroyableMixin, {}));
     var x = new Claz();
     equal(!!x.isDestroyed(), false);
     x.destroy();
@@ -31,7 +31,7 @@ test("base", function() {
 module("ParentedMixin");
 
 test("base", function() {
-    var Claz = niv.Class.extend(_.extend({}, niv.ParentedMixin, {}));
+    var Claz = nova.Class.extend(_.extend({}, nova.ParentedMixin, {}));
     var x = new Claz();
     var y = new Claz();
     y.setParent(x);
@@ -44,7 +44,7 @@ test("base", function() {
 module("Events");
 
 test("base", function() {
-    var x = new niv.internal.Events();
+    var x = new nova.internal.Events();
     var tmp = 0;
     var fct = function() {tmp = 1;};
     x.on("test", fct);
@@ -60,7 +60,7 @@ test("base", function() {
 module("EventDispatcherMixin");
 
 test("base", function() {
-    var Claz = niv.Class.extend(_.extend({}, niv.EventDispatcherMixin, {}));
+    var Claz = nova.Class.extend(_.extend({}, nova.EventDispatcherMixin, {}));
     var x = new Claz();
     var y = new Claz();
     var tmp = 0;
@@ -83,7 +83,7 @@ test("base", function() {
 module("GetterSetterMixin");
 
 test("base", function() {
-    var Claz = niv.Class.extend(_.extend({}, niv.GetterSetterMixin, {}));
+    var Claz = nova.Class.extend(_.extend({}, nova.GetterSetterMixin, {}));
     var x = new Claz();
     var y = new Claz();
     x.set({test: 1});
@@ -103,7 +103,7 @@ test("base", function() {
 module("Widget");
 
 test("base", function() {
-    var Claz = niv.Widget.extend({
+    var Claz = nova.Widget.extend({
         render_element: function() {
             this.$element.attr("id", "testdiv");
             this.$element.html("test");
