@@ -189,7 +189,10 @@ $(document).ready(function () {
     });
 
     t.module('Nonliterals', 'data', {
-        domains: ['mary had a little lamb', 'bob the builder'],
+        domains: [
+            "[('model_id', '=', parent.model)]",
+            "[('product_id','=',product_id)]"
+        ],
         contexts: ['{a: b > c}']
     });
     t.test('Dataset', function (openerp) {
@@ -208,6 +211,32 @@ $(document).ready(function () {
                 b: 3,
                 c: 5
             }));
+
+            ok(_.isEmpty(r.kwargs));
+        });
+    });
+    t.test('name_search', function (openerp) {
+        var eval_context = {
+            active_id: 42,
+            active_ids: [42],
+            active_model: 'mod',
+            parent: {model: 'qux'}
+        };
+        var ds = new openerp.web.DataSet(
+            {session: openerp.connection}, 'mod',
+             new openerp.web.CompoundContext({})
+                 .set_eval_context(eval_context));
+        var domain = new openerp.web.CompoundDomain(openerp.domains[0])
+                .set_eval_context(eval_context);
+        t.expect(ds.name_search('foo', domain, 'ilike', 0), function (r) {
+            strictEqual(r.method, 'name_search');
+
+            strictEqual(r.args.length, 5);
+            strictEqual(r.args[0], 'foo');
+            deepEqual(r.args[1], [['model_id', '=', 'qux']]);
+            strictEqual(r.args[2], 'ilike');
+            deepEqual(r.args[3], context_());
+            strictEqual(r.args[4], 0);
 
             ok(_.isEmpty(r.kwargs));
         });
