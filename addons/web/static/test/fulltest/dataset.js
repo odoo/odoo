@@ -241,8 +241,4 @@ $(document).ready(function () {
             ok(_.isEmpty(r.kwargs));
         });
     });
-    // TODO: non-literal domains and contexts basics
-    // TODO: call_and_eval
-    // TODO: name_search, non-literal domains
-
 });
