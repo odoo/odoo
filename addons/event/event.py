@@ -142,13 +142,23 @@ class event_event(osv.osv):
                 state += ['open']
             if 'register_prospect' in fields:
                 state.append('draft')
+            reg_open=0
+            reg_done=0
+            reg_draft=0
             reg_open_ids = register_pool.search(cr, uid, [('event_id', '=', event.id),('state', '=', 'open')], context=context)
             reg_done_ids=  register_pool.search(cr, uid, [('event_id', '=', event.id),('state', '=', 'done')], context=context)
             reg_draft_ids=  register_pool.search(cr, uid, [('event_id', '=', event.id),('state', '=', 'draft')], context=context)
-            res[event.id]['register_current'] = len(reg_open_ids)
-            res[event.id]['register_prospect'] = len(reg_done_ids)
-            res[event.id]['register_attended'] = len(reg_draft_ids)
+            for registration in event.registration_ids:
+                if registration.id in reg_open_ids:
+                    reg_open=reg_open + registration.nb_register
+                if registration.id in reg_done_ids:
+                    reg_done=reg_done + registration.nb_register
+                if registration.id in reg_draft_ids:
+                    reg_draft=reg_draft + registration.nb_register
 
+            res[event.id]['register_current'] = reg_open
+            res[event.id]['register_prospect'] = reg_done
+            res[event.id]['register_attended'] = reg_draft
         return res
 
     _columns = {
