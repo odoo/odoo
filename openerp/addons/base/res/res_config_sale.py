@@ -33,14 +33,22 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'res.config'
 
     _columns = {
-        'analytic_user_function' : fields.boolean("Use specific User function on Contract/analytic accounts"),
-        'analytic_journal_billing_rate' : fields.boolean("Manage Different billing rates on contract/analytic accounts"),
-        'import_sugarcrm' : fields.boolean("Import data from sugarCRM?"),
-        'import_google' : fields.boolean("Import Contacts & Meetings from Google"),
-        'crm_caldav' : fields.boolean("Use caldav to synchronize Meetings"),
-        'wiki_sale_faq' : fields.boolean("Install a sales FAQ?"),
-        'base_contact' : fields.boolean("Manage a several address per customer"),
-        'google_map' : fields.boolean("Google maps on customer"),
+        'analytic_user_function' : fields.boolean("Use specific User function on Contract/analytic accounts",
+                                    help="Install analytic_user_function module:This module allows you to define what is the default function of a specific user on a given account"),
+        'analytic_journal_billing_rate' : fields.boolean("Manage Different billing rates on contract/analytic accounts",
+                                    help="Install analytic_journal_billing_rate module: This module allows you to define what is the default invoicing rate for a specific journal on a given account."),
+        'import_sugarcrm' : fields.boolean("Import data from sugarCRM?",
+                                    help="Install import_sugarcrm module: This Module Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Employees, Meetings, Phonecalls, Emails, and Project, Project Tasks Data into OpenERP Module."),
+        'import_google' : fields.boolean("Import Contacts & Meetings from Google",
+                                    help="Install import_google module: The module adds google contact in partner address and add google calendar events details in Meeting"),
+        'crm_caldav' : fields.boolean("Use caldav to synchronize Meetings",
+                                    help="Install crm_caldav module: Caldav features in Meeting"),
+        'wiki_sale_faq' : fields.boolean("Install a sales FAQ?",
+                                    help="Install wiki_sale_faq module: This module provides a Wiki Sales FAQ Template."),
+        'base_contact' : fields.boolean("Manage a several address per customer",
+                                    help="Install crm_partner_assign module: This is the module used by OpenERP SA to redirect customers to its partners, based on geolocalization."),
+        'google_map' : fields.boolean("Google maps on customer",
+                                    help="Install google_map module: The module adds Google Map field in partner address."),
         'fetchmail_crm': fields.boolean("Create Leads from an Email Account"),
         'server' : fields.char('Server Name', size=256),
         'port' : fields.integer('Port'),
@@ -52,8 +60,10 @@ class sale_configuration(osv.osv_memory):
         'is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
         'user' : fields.char('Username', size=256),
         'password' : fields.char('Password', size=1024),
-        'plugin_thunderbird': fields.boolean('Push your email from Thunderbird to an OpenERP document'),
-        'plugin_outlook': fields.boolean('Push your email from Outlook to an OpenERP document'),
+        'plugin_thunderbird': fields.boolean('Push your email from Thunderbird to an OpenERP document',
+                                    help="Install plugin_thunderbird module: This module is required for the Thuderbird Plug-in to work properly."),
+        'plugin_outlook': fields.boolean('Push your email from Outlook to an OpenERP document',
+                                    help="Install plugin_outlook module: This module provides the Outlook Plug-in."),
     }
 
     def get_applied_groups(self, cr, uid, groups, context=None):
