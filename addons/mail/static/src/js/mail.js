@@ -31,9 +31,8 @@ openerp.mail = function(session) {
             this.params.offset = this.params.offset || 0;
             this.params.records = this.params.records || null;
             this.params.char_show_more = this.params.char_show_more || 100;
-            // tmp
-            this.map_hash = {'res.users': []};
-            /* DataSets */
+            this.map_hash = {'res.users': {'login': [] }};
+            /* define DataSets */
             this.ds = new session.web.DataSet(this, this.params.res_model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
@@ -45,12 +44,10 @@ openerp.mail = function(session) {
             this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
             /* delegate links */
             self.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
-                var res_model = event.srcElement.dataset.resModel;
-                var res_id = event.srcElement.dataset.resId;
                 self.do_action({
                     type: 'ir.actions.act_window',
-                    res_model: res_model,
-                    res_id: parseInt(res_id),
+                    res_model: event.srcElement.dataset.resModel,
+                    res_id: parseInt(event.srcElement.dataset.resId),
                     views: [[false, 'form']]
                 });
             });
@@ -81,32 +78,30 @@ openerp.mail = function(session) {
         display_comments: function (records) {
             var self = this;
             /* WIP: map matched regexp -> records to browse with name */
-            _(records).each(function (record) {
-                //self.check_internal_links(record.body_text);
-            });
-            //console.log(this.map_hash);
+            //_(records).each(function (record) {
+                //self.do_check_internal_links(record.body_text);
+            //});
             _(records).each(function (record) {
                 if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
                 else { record.mini_url = self.thread_get_avatar_mini('res.users', 'avatar_mini', record.user_id[0]); }
+                
                 // body text manipulation
                 record.body_text = self.do_clean_text(record.body_text);
-                record.tr_body_text = self.truncate_string(record.body_text, self.params.char_show_more);
+                record.tr_body_text = self.do_truncate_string(record.body_text, self.params.char_show_more);
                 record.body_text = self.do_replace_internal_links(record.body_text);
                 if (record.tr_body_text) record.tr_body_text = self.do_replace_internal_links(record.tr_body_text);
+                
                 // render
                 $(session.web.qweb.render('ThreadMsg', {'record': record})).appendTo(self.$element.find('div.oe_mail_thread_display'));
+                
                 // truncated: hide full-text, show summary, add buttons
                 if (record.tr_body_text) {
                     var node = self.$element.find('span.oe_mail_msg_body:last').append(' <a href="#" class="reduce">[ ... Show less]</a>');
                     self.$element.find('p.oe_mail_msg_p:last').append($('<span class="oe_mail_msg_body_short">' + record.tr_body_text + ' <a href="#" class="expand">[ ... Show more]</a></span>'));
                     var new_node = self.$element.find('span.oe_mail_msg_body_short:last');
                     node.hide();
-                    node.find('a:last').click(function() {
-                        node.hide(); new_node.show(); return false;
-                    });
-                    new_node.find('a:last').click(function() {
-                        new_node.hide(); node.show(); return false;
-                    });
+                    node.find('a:last').click(function() { node.hide(); new_node.show(); return false; });
+                    new_node.find('a:last').click(function() { new_node.hide(); node.show(); return false; });
                 }
             });
             // update offset for "More" buttons
@@ -115,7 +110,7 @@ openerp.mail = function(session) {
         
         display_current_user: function () {
             $('<div>').html(
-                '<img src="' + this.thread_get_avatar_mini('res.users', 'avatar_mini', this.uid) + '"/>'
+                '<img src="' + this.thread_get_avatar_mini('res.users', 'avatar_mini', this.params.uid) + '"/>'
                 ).appendTo(this.$element.find('div.oe_mail_msg_image'));
         },
         
@@ -137,49 +132,56 @@ openerp.mail = function(session) {
             while (regex_res != null) {
                 var login = regex_res[2];
                 var res_id = 1;
-                string = string.replace(regex_res[0], '<a href="#" class="intlink" data-res-model="res.users" data-res-id = ' + res_id + '>@' + login + '</a>');
+                //var user_loaded = this.ds_users.call('search', [[['login', 'in', [login]]]]).then(function (records) {
+                    //console.log(records);
+                    //if (records) string = string.replace(regex_res[0], '<a href="#" class="intlink" data-res-model="res.users" data-res-id = ' + records[0] + '>@' + login + '</a>');
+                //});
+                //$.when(user_loaded).then(function() {
+                //});
                 regex_res = regex_login.exec(string);
             }
             return string;
         },
         
-        ///* check for internal links, and map them to limitate number of queries -- WIP, probably not useful */
-        //check_internal_links: function(string) {
-            ///* shortcut to user: @login */
-            ////var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*\s)/g);
-            //var regex_login = new RegExp(/(^|\s)@(\w*)/g);
-            //var regex_res = regex_login.exec(string);
-            //while (regex_res != null) {
-                //var login = regex_res[2];
-                //this.map_hash['res.users'].push(login);
-                //regex_res = regex_login.exec(string);
-            //}
-            ///* internal links: #res.model,name */
-            //var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
-            //regex_res = regex_intlink.exec(string);
-            //while (regex_res != null) {
-                //var res_model = regex_res[2] + '.' + regex_res[3];
-                //var res_name = regex_res[4];
-                //if (! (res_model in this.map_hash)) { this.map_hash[res_model] = []; }
-                //this.map_hash[res_model].push(res_name);
-                //regex_res = regex_intlink.exec(string);
-            //}
-        //},
-        
         thread_get_avatar_mini: function(model, field, id) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
-
-        truncate_string: function(string, max_length) {
-            var string_len = string.length; // TODO: check for whitespaces ?
-            if (string_len <= max_length) return false;
-            var new_string = string.slice(0, max_length);
-            return new_string;
+        
+        do_truncate_string: function(string, max_length) {
+            if (string.length <= max_length) return false;
+            else return string.slice(0, max_length);
         },
         
         do_clean_text: function (string) {
             var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?b\\s*&gt;', 'gi'), '<$1b>');
             return html;
+        },
+        
+        /**
+         *
+         * var regex_login = new RegExp(/(^|\s)@(\w*[a-zA-Z_.]+\w*\s)/g);
+         * var regex_login = new RegExp(/(^|\s)@(\w*)/g);
+         * var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
+         */
+        do_check_internal_links: function(string) {
+            /* shortcut to user: @login */
+            var regex_login = new RegExp(/(^|\s)@(\w*)/g);
+            var regex_res = regex_login.exec(string);
+            while (regex_res != null) {
+                var login = regex_res[2];
+                this.map_hash['res.users']['login'].push(login);
+                regex_res = regex_login.exec(string);
+            }
+            /* internal links: #res.model,name */
+            var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
+            regex_res = regex_intlink.exec(string);
+            while (regex_res != null) {
+                var res_model = regex_res[2] + '.' + regex_res[3];
+                var res_name = regex_res[4];
+                if (! (res_model in this.map_hash)) { this.map_hash[res_model]['name'] = []; }
+                this.map_hash[res_model]['name'].push(res_name);
+                regex_res = regex_intlink.exec(string);
+            }
         },
 
     });
