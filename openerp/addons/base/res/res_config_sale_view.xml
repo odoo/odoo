@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Sale Configuration">
                     <separator string="Contracts" colspan="4"/>
-                    <group  colspan="4" col="8">
+                    <group  colspan="4" col="4">
                         <group  colspan="4" col="4">
                            <field name="analytic_user_function"/>
                            <newline/>
@@ -17,60 +17,53 @@
                         </group>
                     </group>
                     
-                    <separator string="Emails" colspan="8"/>
-                    <group col="8" colspan="4">
-                        <field name="create_leads" colspan="4"/>
-                        <group col="4" colspan="4" attrs="{'invisible': [('create_leads','=',False)]}">
-                            <group col="8" colspan="4">
-                                <field name="server"/>
-                                <field name="type" nolabel="1" on_change="onchange_server_type(type, is_ssl)"/>
-                                <field name="port"/>
-                                <field name="is_ssl" on_change="onchange_server_type(type, is_ssl)"/>
-                            </group>
+                    <group col="4" colspan="4">
+                        <group col="2" colspan="2">
+                            <separator string="Plugins" colspan="2"/>
+                            <field name="plugin_thunderbird" colspan="2"/>
                             <newline/>
-                            <group col="4" colspan="2">
-                                <field name="user"/>
-                                <field name="password"/>
-                            </group>
+                            <field name="plugin_outlook" colspan="2"/>
                         </group>
-                        <group col="4" colspan="4">
-                            <field name="plugin_thunderbird"/>
+                        <group col="2" colspan="2">
+                            <separator string="Emails" colspan="4"/>
+                            <field name="fetchmail_crm" colspan="2"/>
                             <newline/>
-                            <field name="plugin_outlook"/>
+                            <group col="4" colspan="4" 
+                                attrs="{'invisible': [('fetchmail_crm','=',False)]}">
+                                    <field name="server" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                                    <field name="type" nolabel="1" on_change="onchange_server_type(type, is_ssl)" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                                    <field name="port" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                                    <field name="is_ssl" on_change="onchange_server_type(type, is_ssl)"/>
+                                    <newline/>
+                                    <field name="user" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                                    <field name="password" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                                
+                            </group>
                         </group>
                     </group>
 
-                    <separator string="Import and Synchronize data from an other application" colspan="4"/>
-                    <group  colspan="4" col="8">
-                        <group  colspan="4" col="4">
+                    <group  colspan="4" col="4">
+                        <separator string="Import and Synchronize data from an other application" colspan="4"/>
+                        <group  colspan="2" col="2">
                            <field name="import_sugarcrm"/>
                            <newline/>
                            <field name="import_google"/>
-                           <newline/>
                         </group>
-                        <group  colspan="4" col="4">
-                           <newline/>
+                        <group colspan="2" col="2">
                            <field name="crm_caldav"/>
-                           <newline/>
                         </group>
                     </group>
 
-                    <separator string="Documents and Wiki" colspan="4"/>
-                    <group  colspan="4" col="8">
-                        <group  colspan="4" col="4">
-                           <newline/>
+                    <group  colspan="4" col="4">
+                        <group  colspan="2" col="2">
+                           <separator string="Documents and Wiki" colspan="2"/>
                            <field name="wiki_sale_faq" />
-                           <newline/>
                         </group>
-                    </group>
-
-                    <separator string="Customer Form" colspan="4"/>
-                    <group colspan="4" col="8">
-                        <group  colspan="4" col="4">
-                           <field name="crm_partner_assign"/>
+                        <group  colspan="2" col="2">
+                           <separator string="Customer Form" colspan="2"/>
+                           <field name="base_contact"/>
                            <newline/>
                            <field name="google_map"/>
-                           <newline/>
                         </group>
                     </group>
 

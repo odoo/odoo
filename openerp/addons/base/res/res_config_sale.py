@@ -22,6 +22,12 @@
 from osv import fields, osv
 import pooler
 
+MODULE_LIST = [
+               'analytic_user_function', 'analytic_journal_billing_rate', 'import_sugarcrm',
+               'import_google', 'crm_caldav', 'wiki_sale_faq', 'base_contact',
+               'google_map', 'fetchmail_crm', 'plugin_thunderbird', 'plugin_outlook'
+]
+
 class sale_configuration(osv.osv_memory):
     _name = 'sale.configuration'
     _inherit = 'res.config'
@@ -33,22 +39,21 @@ class sale_configuration(osv.osv_memory):
         'import_google' : fields.boolean("Import Contacts & Meetings from Google"),
         'crm_caldav' : fields.boolean("Use caldav to synchronize Meetings"),
         'wiki_sale_faq' : fields.boolean("Install a sales FAQ?"),
-        'crm_partner_assign' : fields.boolean("Manage a several address per customer"),
+        'base_contact' : fields.boolean("Manage a several address per customer"),
         'google_map' : fields.boolean("Google maps on customer"),
-        'create_leads': fields.boolean("Create Leads from an Email Account"),
-        'server' : fields.char('Server Name', size=256, required=True),
-        'port' : fields.integer('Port', required=True),
+        'fetchmail_crm': fields.boolean("Create Leads from an Email Account"),
+        'server' : fields.char('Server Name', size=256),
+        'port' : fields.integer('Port'),
         'type':fields.selection([
                    ('pop', 'POP Server'),
                    ('imap', 'IMAP Server'),
                    ('local', 'Local Server'),
-               ], 'Server Type', required=True),
+               ], 'Server Type'),
         'is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
-        'user' : fields.char('Username', size=256, required=True),
-        'password' : fields.char('Password', size=1024, required=True),
+        'user' : fields.char('Username', size=256),
+        'password' : fields.char('Password', size=1024),
         'plugin_thunderbird': fields.boolean('Push your email from Thunderbird to an OpenERP document'),
         'plugin_outlook': fields.boolean('Push your email from Outlook to an OpenERP document'),
-
     }
 
     def get_applied_groups(self, cr, uid, groups, context=None):
@@ -88,13 +93,12 @@ class sale_configuration(osv.osv_memory):
     def default_get(self, cr, uid, fields_list, context=None):
         result = super(sale_configuration, self).default_get(
             cr, uid, fields_list, context=context)
-
-        module_list = ['analytic_user_function', 'analytic_journal_billing_rate', 'import_sugarcrm',
-                       'import_google', 'crm_caldav', 'wiki_sale_faq', 'crm_partner_assign',
-                       'google_map', 'plugin_thunderbird', 'plugin_outlook']
-
-        installed_modules = self.get_installed_modules(cr, uid, module_list, context=context)
+        installed_modules = self.get_installed_modules(cr, uid, MODULE_LIST, context=context)
         result.update(installed_modules)
+
+        if 'fetchmail_crm' in installed_modules.keys():
+            for val in ir_values_obj.get(cr, uid, 'default', False, ['fetchmail.server']):
+                result.update({val[1]: val[2]})
 
         group_list =['group_sale_pricelist_per_customer','group_sale_uom_per_product','group_sale_delivery_address',
                      'group_sale_disc_per_sale_order_line','group_sale_notes_subtotal']
@@ -119,26 +123,52 @@ class sale_configuration(osv.osv_memory):
         values['port'] = port
         return {'value': values}
     
+    def create(self, cr, uid, vals, context=None):
+        ids = super(sale_configuration, self).create(cr, uid, vals, context=context)
+        self.execute(cr, uid, [ids], vals, context=context)
+        return ids 
+    
     def write(self, cr, uid, ids, vals, context=None):
-        self.execute(cr, uid, ids, context=context)
+        self.execute(cr, uid, ids, vals, context=context)
         return super(sale_configuration, self).write(cr, uid, ids, vals, context=context)
 
-    def execute(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, vals, context=None):
         #TODO: TO BE IMPLEMENTED
         module_obj = self.pool.get('ir.module.module')
-        wizard = self.read(cr, uid, ids)[0]
-        module_list = ['analytic_user_function', 'analytic_journal_billing_rate', 'import_sugarcrm',
-                       'import_google', 'crm_caldav', 'wiki_sale_faq', 'crm_partner_assign',
-                       'google_map', 'plugin_thunderbird', 'plugin_outlook']
-        for k, v in wizard.items():
-            if k in module_list and v == True:
+        model_obj = self.pool.get('ir.model')
+        fetchmail_obj = self.pool.get('fetchmail.server')
+        ir_values_obj = self.pool.get('ir.values')
+        for k, v in vals.items():
+            if k in MODULE_LIST and v == True:
                 installed = self.get_installed_modules(cr, uid, [k], context)
                 if not installed:
                     module_id = module_obj.search(cr, uid, [('name','=',k)])[0]
                     module_obj.state_update(cr, uid, [module_id], 'to install', ['uninstalled'], context)
                     cr.commit()
                     pooler.restart_pool(cr.dbname, update_module=True)[1]
-        
+        if vals.get('fetchmail_crm'):
+            object_id = model_obj.search(cr, uid, [('model','=','crm.lead')])[0]
+            fetchmail_vals = {
+                    'name': 'Incoming Leads',
+                    'object_id': object_id,
+                    'server': vals.get('server'),
+                    'port': vals.get('port'),
+                    'is_ssl': vals.get('is_ssl'),
+                    'type': vals.get('type'),
+                    'user': vals.get('user'),
+                    'password': vals.get('password')
+            }
+            if not self.get_installed_modules(cr, uid, ['fetchmail_crm'], context):
+                fetchmail_obj.create(cr, uid, fetchmail_vals, context=context)
+            else:
+                fetchmail_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads')], context=context)
+                fetchmail_obj.write(cr, uid, fetchmail_ids, fetchmail_vals, context=context)
+            ir_values_obj.set(cr, uid, 'default', False, 'server', ['fetchmail.server'], fetchmail_vals.get('server'))
+            ir_values_obj.set(cr, uid, 'default', False, 'port', ['fetchmail.server'], fetchmail_vals.get('port'))
+            ir_values_obj.set(cr, uid, 'default', False, 'is_ssl', ['fetchmail.server'], fetchmail_vals.get('is_ssl'))
+            ir_values_obj.set(cr, uid, 'default', False, 'type', ['fetchmail.server'], fetchmail_vals.get('type'))
+            ir_values_obj.set(cr, uid, 'default', False, 'user', ['fetchmail.server'], fetchmail_vals.get('user'))
+            ir_values_obj.set(cr, uid, 'default', False, 'password', ['fetchmail.server'], fetchmail_vals.get('password'))
 
 sale_configuration()
 
