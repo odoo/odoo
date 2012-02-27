@@ -1987,6 +1987,10 @@ class stock_move(osv.osv):
         @return: True
         """
         self.write(cr, uid, ids, {'state': 'assigned'})
+        wf_service = netsvc.LocalService('workflow')
+        for move in self.browse(cr, uid, ids, context):
+            if move.picking_id:
+                wf_service.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
         return True
 
     def cancel_assign(self, cr, uid, ids, context=None):
