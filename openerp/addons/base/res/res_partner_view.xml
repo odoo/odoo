@@ -348,9 +348,7 @@
                                 <separator string="Address" colspan="4"/>
                                 <group colspan="2">
                                 <field name="type" string="Type" attrs="{'invisible': [('is_company','=', 'partner')]}"/>
-                                </group>
-                                <group colspan="2">
-                                <field name="use_parent_address" attrs="{'invisible': [('parent_id', '=', False)]}" on_change="onchange_address(use_parent_address, parent_id)"/>
+                                <field name="use_parent_address" attrs="{'invisible': ['|', ('is_company','=', 'partner'), ('parent_id', '=', False)]}" on_change="onchange_address(use_parent_address, parent_id)"/>
                                 </group>
                                 <newline/>
                                 <field name="street" colspan="4"/>
