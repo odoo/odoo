@@ -18,7 +18,10 @@ openerp.mail = function(session) {
             this.res_model = params['res_model'];
             this.res_id = params['res_id'];
             this.uid = params['uid'];
+            this.limit = params['limit'] || 10;
+            this.offset = params['offset'] || 0;
             this.records = params['records'] || false;
+            // tmp
             this.map_hash = {'res.users': []};
             /* DataSets */
             this.ds = new session.web.DataSet(this, this.res_model);
@@ -32,21 +35,19 @@ openerp.mail = function(session) {
             this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
             /* delegate links */
             self.$element.find('div.oe_mail_thread_display').delegate('a', 'click', function (event) {
-                //console.log(event);
                 var res_model = event.srcElement.dataset.resModel;
                 var res_id = event.srcElement.dataset.resId;
                 self.do_action({
                     type: 'ir.actions.act_window',
                     res_model: res_model,
                     res_id: parseInt(res_id),
-                    //context: context,
                     views: [[false, 'form']]
                 });
             });
             /* display user, fetch comments */
             this.display_current_user();
-            if (this.records == false) this.fetch_comments();
-            else this.display_comments(this.records);
+            if (this.records == false) return this.fetch_comments();
+            else return this.display_comments(this.records);
         },
         
         stop: function () {
@@ -54,9 +55,7 @@ openerp.mail = function(session) {
         },
         
         fetch_comments: function () {
-            var load_res = this.ds.call('message_load', [[this.res_id]]).then(
-                this.proxy('display_comments'));
-            return load_res;
+            return this.ds.call('message_load', [[this.res_id]]).then(this.proxy('display_comments'));
         },
         
         display_current_user: function () {
@@ -66,8 +65,8 @@ openerp.mail = function(session) {
         },
         
         display_comments: function (records) {
-            this.$element.find('div.oe_mail_thread_display').empty();
             var self = this;
+            this.$element.find('div.oe_mail_thread_display').empty();
             /* WIP: map matched regexp -> records to browse with name */
             _(records).each(function (record) {
                 self.check_internal_links(record.body_text);
@@ -137,9 +136,7 @@ openerp.mail = function(session) {
         },
         
         thread_get_avatar_mini: function(model, field, id) {
-            id = id || '';
-            var url = this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
-            return url;
+            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id || '';
         },
     });
 
