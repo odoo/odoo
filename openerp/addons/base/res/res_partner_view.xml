@@ -326,12 +326,12 @@
                 <form string="Partners">
                     <group col="8" colspan="4">
                         <group col="2">
-                            <field name="is_company" on_change="onchange_type(is_company, title)"/>
+                            <field name="is_company" on_change="onchange_type(is_company, title)" attrs="{'requierd': True}"/>
                             <field name="function" attrs="{'invisible': [('is_company','=', 'partner')]}" colspan="2"/>
                             <field name="title" size="0" groups="base.group_extended" domain="[('domain', '=', is_company)]"/>
                         </group>
                         <group col="2">
-                            <field name="name"/>
+                            <field name="name" attrs="{'requierd': True}"/>
                             <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', 'partner')]}" domain="[('is_company', '=', 'partner')]" context="{'default_is_company': 'partner'}" on_change="onchange_address(use_parent_address, parent_id)"/>
                         </group>
                         <group col="2">

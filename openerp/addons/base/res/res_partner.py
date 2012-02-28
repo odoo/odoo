@@ -122,7 +122,7 @@ class res_partner(osv.osv):
     _name = "res.partner"
     _order = "name"
     _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True),
+        'name': fields.char('Name', size=128, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title','Title'),
         'parent_id': fields.many2one('res.partner','Parent Partner'),
@@ -155,7 +155,7 @@ class res_partner(osv.osv):
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
-        'is_company': fields.selection( [ ('contact','Person'),('partner','Company') ],'Contact Type', help="Select if the partner is a company or person",required=True),
+        'is_company': fields.selection( [ ('contact','Person'),('partner','Company') ],'Contact Type', help="Select if the partner is a company or person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Check to use the company's address"),
         'photo': fields.binary('Photo'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
