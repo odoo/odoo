@@ -49,22 +49,14 @@ google_docs.copy_gdoc()
         if context==None:
             context={}
 
-        template_vars = {
+        '''template_vars = {
             'db' : cr.dbname,
             'model' : model,
             'id' : id,
             'salt' : salt,
             'name' : '',
-        }
+        }'''
         name_template = 'Sales order %s'
-
-        # check template for the current model
-        model_obj = self.pool.get(model)
-        res_gdocs_obj = self.pool.get('google.docs')
-        domain = [('model' , '=', model_obj)]
-        gdoc = res_gdocs_obj.search(cr,uid,domain,context=context)
-        if not gdoc: 
-            return -1
 
         # check google_base_account
         users_obj = self.pool.get('res.users')
@@ -72,15 +64,25 @@ google_docs.copy_gdoc()
         if not user.gmail_user or not user.gmail_password: 
             return -2
 
+        # check template for the current model
+        # TODO check module logic
+        '''model_obj = self.pool.get(model[0])
+        res_gdocs_obj = self.pool.get('google.docs')
+        domain = [('model' , '=', model_obj)]
+        gdoc = res_gdocs_obj.search(cr,uid,domain,context=context)
+        if not gdoc:
+            
+            return -1
+'''
         # copy the document
         client = gdata.docs.client.DocsClient(source='openerp.com')
         client.ssl = True
         client.http_client.debug = False
         client.ClientLogin(user.gmail_user, user.gmail_password, client.source, service='writely')
-        resource = client.get_resource_by_id(gdoc.gdocs_res_id)
-        copied_resource = client.copy_resource(entry=resource, title= self.name_template % (model, ))
+        resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL)
+        new_resource = client.post(entry=resource, uri='https://docs.google.com/feeds/default/private/full/')
 
-        return self.edit_url_template % (copied_resource.resource_id.text,)
+        return self.edit_url_template % (new_resource.resource_id.text,)
 
 '''
     def get_documents_list(self, cr, uid, context=None):
