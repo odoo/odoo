@@ -1492,6 +1492,11 @@ class sale_configuration(osv.osv_memory):
         else:
             vals['delivery'] = False
 
+        if wizard.warning:
+            vals['warning'] = True
+        else:
+            vals['warning'] = False
+
         if wizard.sale_layout:
             vals['sale_layout'] = True
         else:
