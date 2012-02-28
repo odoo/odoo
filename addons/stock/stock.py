@@ -1764,6 +1764,7 @@ class stock_move(osv.osv):
           }
 
         if (not product_id) or (product_qty <=0.0):
+            result['product_qty'] = 0.0
             return {'value': result}
 
         product_obj = self.pool.get('product.product')
@@ -1790,6 +1791,7 @@ class stock_move(osv.osv):
           }
 
         if (not product_id) or (product_uos_qty <=0.0):
+            result['product_uos_qty'] = 0.0
             return {'value': result}
 
         product_obj = self.pool.get('product.product')
