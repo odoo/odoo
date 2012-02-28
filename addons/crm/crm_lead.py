@@ -275,52 +275,57 @@ class crm_lead(crm_case, osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
             self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Lead %s is Created.") % (obj.name), type='notification', need_action_user_id=obj.user_id.id, context=context)
+                        _("Lead is <b>created</b>."), type='notification', need_action_user_id=obj.user_id.id, context=context)
         return True
 
     def _case_open_notification(self, lead, context=None):
         if lead.state != 'draft' and lead.state != 'pending':
             return False
         if lead.type == 'lead':
-            message = _("The lead %s has been opened.") % (lead.name)
+            message = _("The lead has been <b>opened</b>.")
         elif lead.type == 'opportunity':
-            message = _("The opportunity %s has been opened.") % lead.name
+            message = _("The opportunity has been <b>opened</b>.")
         else:
-            message = _("The case %s has been opened.") % lead.name
+            message = _("The case has been <b>opened</b>.")
         lead.message_append_note('' ,message, need_action_user_id=lead.user_id.id)
 
     def _case_close_notification(self, lead, context=None):
         lead[0].message_mark_done(context)
         if lead[0].type == 'lead':
-            message = _("The lead %s has been closed.") % lead[0].name
+            message = _("The lead has been <b>closed</b>.")
+        elif lead[0].type == 'opportunity':
+            message = _("The opportunity has been <b>closed</b>.")
         else:
-            message = _("The case %s has been closed.") % lead[0].name
+            message = _("The case has been <b>closed</b>.")
         lead[0].message_append_note('' ,message)
 
     def _case_mark_lost_notification(self, lead, context=None):
         lead.message_mark_done(context)
-        message = _("The opportunity %s has been marked as lost.") % lead.name
+        message = _("The opportunity has been <b>marked as lost</b>.")
         lead.message_append_note('' ,message)
 
     def _case_mark_won_notification(self, lead, context=None):
         lead.message_mark_done(context)
-        message = _("The opportunity %s has been been won.") % lead.name
+        message = _("The opportunity has been <b>won</b>.")
         lead.message_append_note('' ,message)
 
     def _case_cancel_notification(self, lead, context=None):
         lead[0].message_mark_done(context)
-        message = _("The lead %s has been cancelled.") % (lead[0].name)
+        if lead[0].type == 'lead':
+            message = _("The lead has been <b>cancelled</b>.")
+        elif lead[0].type == 'opportunity':
+            message = _("The opportunity has been <b>cancelled</b>.")
         lead[0].message_append_note('' ,message)
 
     def _case_pending_notification(self, case, context=None):
         if case[0].type == 'lead':
-            message = _("The lead %s is pending.") % (case[0].name,)
+            message = _("The lead is <b>pending</b>.")
         elif case[0].type == 'opportunity':
-            message = _("The opportunity %s is pending.") % (case[0].name,)
-        case[0].message_append_note('' ,message, need_action_user_id=case[0].user_id.id)
+            message = _("The opportunity is <b>pending</b>.")
+        case[0].message_append_note('' ,message)
 
     def _case_escalate_notification(self, case, context=None):
-        message = _("The lead %s is escalated.") % (case.name,)
+        message = _("The lead is <b>escalated</b>.")
         case.message_append_note('' ,message)
 
     def _case_phonecall_notification(self, case, action, context=None):
@@ -597,7 +602,7 @@ class crm_lead(crm_case, osv.osv):
         }
 
     def _convert_opportunity_notification(self, cr, uid, lead, context=None):
-        success_message = _("Lead %s has been converted to an opportunity.") % lead.name
+        success_message = _("Lead is <b>converted to an opportunity</b>.")
         lead.message_append_note(success_message ,success_message, need_action_user_id=lead.user_id.id)
         return True
 
