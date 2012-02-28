@@ -122,8 +122,8 @@
                         <group col="2" colspan="2">
                             <separator string="Emails" colspan="2"/>
                             <field name="reply_to"/>
-                            <field name="email_registration_id" domain="[('model_id','=',ref('event.event_registration'))]" groups="base.group_extended"/>
-                            <field name="email_confirmation_id" domain="[('model_id','=',ref('event.event_event'))]" groups="base.group_extended"/>
+                            <field name="email_registration_id" domain="[('model_id.model','=','event.registration')]" groups="base.group_extended"/>
+                            <field name="email_confirmation_id" domain="[('model_id.model','=','event.registration')]" groups="base.group_extended"/>
                         </group>
                     </page>
                     </notebook>
