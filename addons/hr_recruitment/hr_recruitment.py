@@ -399,10 +399,10 @@ class hr_applicant(crm.crm_case, osv.osv):
     def _case_close_notification(self, case, context=None):
         case[0].message_mark_done(context)
         if case[0].emp_id:
-            message = _("Applicant is being <b>Hired</b> with employee.")
+            message = _("Applicant is being <b>Hired</b> as an employee.")
             case[0].message_append_note('' ,message, type='notification')
         else:
-            message = _("Applicant is being <b>Hired</b> without employee.")
+            message = _("Applicant is being <b>Hired</b>.")
             case[0].message_append_note('' ,message, type='notification')
         return True
 
