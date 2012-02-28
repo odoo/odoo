@@ -191,7 +191,7 @@ class res_partner(osv.osv):
     
     def onchange_type(self, cr, uid, ids, is_company, title, context=None):
         if is_company == 'contact':
-            return {'value': {'is_company': is_company, 'title': ''}}
+            return {'value': {'is_company': is_company, 'title': '','child_ids':''}}
         elif is_company == 'partner':
             return {'value': {'is_company': is_company, 'title': ''}}
         return {'value': {'is_comapny': '', 'title': ''}}
