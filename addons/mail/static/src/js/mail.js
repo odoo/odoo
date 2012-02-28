@@ -294,13 +294,21 @@ openerp.mail = function(session) {
     
     /* WallView widget: a wall of messages */
     mail.WallView = session.web.Widget.extend({
-        // QWeb template to use when rendering the object
         template: 'Wall',
 
+        /**
+         *
+         * @param {Object} parent parent
+         * @param {Object} [params]
+         * @param {Number} [params.limit=20] number of messages to show and fetch
+         * @var {Array} sorted_comments records sorted by res_model and res_id
+         *                  records.res_model = {res_ids}
+         *                  records.res_model.res_id = [records]
+         */
         init: function (parent, params) {
             this._super(parent);
-            this.filter_search = params['filter_search'];
-            this.search = {}
+            this.params.limit = params.limit || 20;
+            this.sorted_comments = {};
             /* DataSets */
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
             this.ds_thread = new session.web.DataSet(this, 'mail.thread');
@@ -324,7 +332,13 @@ openerp.mail = function(session) {
         stop: function () {
             this._super.apply(this, arguments);
         },
-        
+
+        /**
+         *
+         * @param {Number} view_id id of the search view to load
+         * @param {??} defaults ??
+         * @param {Boolean} hidden ??
+         */
         load_search_view: function (view_id, defaults, hidden) {
             this.searchview = new session.web.SearchView(this, this.ds_msg, view_id || false, defaults || {}, hidden || false);
             return this.searchview.appendTo(this.$element.find('div.oe_mail_wall_search'));
@@ -350,12 +364,16 @@ openerp.mail = function(session) {
                     this.proxy('display_comments'));
             return load_res;
         },
-        
+
+        /**
+         *
+         * @param {Array} records records to show in threads
+         */
         display_comments: function (records) {
             this.$element.find('div.oe_mail_wall_threads').empty();
-            sorted_records = this.sort_comments(records);
+            this.sort_comments(records, this.sorted_comments);
             var self = this;
-            _(sorted_records).each(function (rec_models, model) { // each model
+            _(this.sorted_comments).each(function (rec_models, model) { // each model
                 _(rec_models).each(function (record_id, id) { // each record
                     var template = 'WallThreadContainer';
                     var render_res = session.web.qweb.render(template, {
@@ -371,8 +389,15 @@ openerp.mail = function(session) {
             });
         },
 
-        sort_comments: function (records) {
-            sorted_comments = {};
+        /**
+         * Add records to sorted_comments array
+         * @param {Array} records records from mail.message
+         * @param {Array} sorted_comments already sorted comments that will be updated
+         * @returns {Array} sorted_comments
+         *                  sorted_comments.res_model = {res_ids}
+         *                  sorted_comments.res_model.res_id = [records]
+         */
+        sort_comments: function (records, sorted_comments) {
             _(records).each(function (record) {
                 if (! (record.model in sorted_comments)) { sorted_comments[record.model] = {}; }
                 if (! (record.res_id in sorted_comments[record.model])) {
@@ -382,12 +407,21 @@ openerp.mail = function(session) {
             return sorted_comments;
         },
 
+        /**
+         * Create a domain to fetch new comments according to
+         * comment already present in sorted_comments
+         * @returns {Array} fetch_domain (OpenERP domain style)
+         */
+        get_fetch_domain: function (sorted_comments) {
+            
+        },
+
         do_comment: function () {
             var body_text = this.$element.find('textarea').val();
             return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, type='comment']).then(
                 this.proxy('fetch_comments'));
         },
-
+        
         thread_get_mini: function(model, field, id) {
             id = id || '';
             var url = this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
