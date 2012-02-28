@@ -45,7 +45,8 @@ activate webservice
     'init_xml': [],
     'data': [
             'wizard_moodle.xml',
-            'event_view.xml'
+            'event_view.xml',
+            'security/ir.model.access.csv'
             ],
     'demo_xml': [],
     'test': [],
