@@ -149,7 +149,7 @@ class purchase_order(osv.osv):
         ('approved', 'Purchase Order'),
         ('except_picking', 'Shipping Exception'),
         ('except_invoice', 'Invoice Exception'),
-        ('done', 'Done'),
+        ('done', 'Paid'),
         ('cancel', 'Cancelled')
     ]
 
@@ -274,28 +274,77 @@ class purchase_order(osv.osv):
         fiscal_position = supplier.property_account_position and supplier.property_account_position.id or False
         return {'value':{'partner_address_id': supplier_address['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
 
+    def view_invoice(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        inv_ids = []
+        for po in self.browse(cr, uid, ids, context=context):
+            if po.invoice_method == 'manual':
+                if not po.invoice_ids:
+                    raise osv.except_osv(_('Warring !'),
+                                         _('You have configure Invoice Control is: "%s", You must first Create all invoices related to this purchase order: "%s"') % (self._columns['invoice_method'].selection[0][1], po.name))
+            inv_ids+= [invoice.id for invoice in po.invoice_ids]
+
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
+        res_id = res and res[1] or False
+
+        return {
+            'name': _('Supplier Invoices'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': [res_id],
+            'res_model': 'account.invoice',
+            'context': "{'type':'in_invoice', 'journal_type': 'purchase'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id': inv_ids and inv_ids[0] or False,
+        }
+
+    def view_picking(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        pick_ids = []
+        for po in self.browse(cr, uid, ids, context=context):
+            pick_ids += [picking.id for picking in po.picking_ids]
+
+        res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
+        res_id = res and res[1] or False
+
+        return {
+            'name': _('Receptions'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': [res_id],
+            'res_model': 'stock.picking',
+            'context': "{'contact_display': 'partner'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id': pick_ids and pick_ids[0] or False,
+        }
+
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
 
     def wkf_send_rfq(self, cr, uid, ids, context=None):
-        
         mod_obj = self.pool.get('ir.model.data')
         template_id = self.pool.get('email.template').search(cr, uid, [('model_id', '=', 'purchase.order')])
-        model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','email_compose_message_wizard_form')])
-        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
         self.write(cr, uid, ids, {'state' : 'send'})
+
+        res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
+        res_id = res and res[1] or False
 
         return {
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
-            'views': [(resource_id,'form')],
-            'view_id': resource_id,
+            'views': [(res_id,'form')],
+            'view_id': res_id,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'active_model': 'purchase.order', 'mail.compose.message.mode':'mass_mail', 'mail.compose.template_id' :template_id},
+            'context': {'active_model': 'purchase.order','mail.compose.template_id' :template_id},
         }
+
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         todo = []
