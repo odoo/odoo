@@ -71,6 +71,11 @@ openerp.web.Query = openerp.web.Class.extend({
             return results.records;
         }, null);
     },
+    /**
+     * Fetches the first record matching the query, or null
+     *
+     * @returns {jQuery.Deferred<Object|null>}
+     */
     first: function () {
         var self = this;
         return this.clone({limit: 1})._execute().pipe(function (records) {
@@ -79,43 +84,95 @@ openerp.web.Query = openerp.web.Class.extend({
             return null;
         });
     },
+    /**
+     * Fetches all records matching the query
+     *
+     * @returns {jQuery.Deferred<Array<>>}
+     */
     all: function () {
         return this._execute();
     },
-    context: function (context) {
-        if (!context) { return this; }
-        return this.clone({context: context});
-    },
+    /**
+     * Fetches the number of records matching the query in the database
+     *
+     * @returns {jQuery.Deferred<Number>}
+     */
     count: function () {
         if (this._count) { return $.when(this._count); }
         return this._model.call(
             'search_count', [this._filter], {
                 context: this._model.context(this._context)});
     },
+    /**
+     * Creates a new query with the union of the current query's context and
+     * the new context.
+     *
+     * @param context context data to add to the query
+     * @returns {openerp.web.Query}
+     */
+    context: function (context) {
+        if (!context) { return this; }
+        return this.clone({context: context});
+    },
+    /**
+     * Creates a new query with the union of the current query's filter and
+     * the new domain.
+     *
+     * @param domain domain data to AND with the current query filter
+     * @returns {openerp.web.Query}
+     */
     filter: function (domain) {
         if (!domain) { return this; }
         return this.clone({filter: domain});
     },
+    /**
+     * Creates a new query with the provided limit replacing the current
+     * query's own limit
+     *
+     * @param {Number} limit maximum number of records the query should retrieve
+     * @returns {openerp.web.Query}
+     */
     limit: function (limit) {
         return this.clone({limit: limit});
     },
+    /**
+     * Creates a new query with the provided offset replacing the current
+     * query's own offset
+     *
+     * @param {Number} offset number of records the query should skip before starting its retrieval
+     * @returns {openerp.web.Query}
+     */
     offset: function (offset) {
         return this.clone({offset: offset});
     },
+    /**
+     * Creates a new query with the provided ordering parameters replacing
+     * those of the current query
+     *
+     * @param {String...} fields ordering clauses
+     * @returns {openerp.web.Query}
+     */
     order_by: function () {
         if (arguments.length === 0) { return this; }
         return this.clone({order_by: _.toArray(arguments)});
     }
 });
 
-openerp.web.Model = openerp.web.CallbackEnabled.extend({
+openerp.web.Model = openerp.web.Class.extend(/** @lends openerp.web.Model# */{
+    /**
+     * @constructs openerp.web.Model
+     * @extends openerp.web.Class
+     *
+     * @param {String} model_name name of the OpenERP model this object is bound to
+     * @param {Object} [context]
+     * @param {Array} [domain]
+     */
     init: function (model_name, context, domain) {
-        this._super();
         this.name = model_name;
         this._context = context || {};
         this._domain = domain || [];
     },
-    /*
+    /**
      * @deprecated does not allow to specify kwargs, directly use call() instead
      */
     get_func: function (method_name) {
@@ -124,6 +181,14 @@ openerp.web.Model = openerp.web.CallbackEnabled.extend({
             return self.call(method_name, _.toArray(arguments));
         };
     },
+    /**
+     * Call a method (over RPC) on the bound OpenERP model.
+     *
+     * @param {String} method name of the method to call
+     * @param {Array} [args] positional arguments
+     * @param {Object} [kwargs] keyword arguments
+     * @returns {jQuery.Deferred<>} call result
+     */
     call: function (method, args, kwargs) {
         args = args || [];
         kwargs = kwargs || {};
@@ -134,6 +199,21 @@ openerp.web.Model = openerp.web.CallbackEnabled.extend({
             kwargs: kwargs
         });
     },
+    /**
+     * Fetches a Query instance bound to this model, for searching
+     *
+     * @param {Array<String>} [fields] fields to ultimately fetch during the search
+     * @returns {openerp.web.Query}
+     */
+    query: function (fields) {
+        return new openerp.web.Query(this, fields);
+    },
+    /**
+     * Executes a signal on the designated workflow, on the bound OpenERP model
+     *
+     * @param {Number} id workflow identifier
+     * @param {String} signal signal to trigger on the workflow
+     */
     exec_workflow: function (id, signal) {
         return openerp.connection.rpc('/web/dataset/exec_workflow', {
             model: this.name,
@@ -141,13 +221,24 @@ openerp.web.Model = openerp.web.CallbackEnabled.extend({
             signal: signal
         });
     },
-    query: function (fields) {
-        return new openerp.web.Query(this, fields);
-    },
+    /**
+     * Fetches the model's domain, combined with the provided domain if any
+     *
+     * @param {Array} [domain] to combine with the model's internal domain
+     * @returns The model's internal domain, or the AND-ed union of the model's internal domain and the provided domain
+     */
     domain: function (domain) {
+        if (!domain) { return this._domain; }
         return new openerp.web.CompoundDomain(
-            this._domain, domain || []);
+            this._domain, domain);
     },
+    /**
+     * Fetches the combination of the user's context and the domain context,
+     * combined with the provided context if any
+     *
+     * @param {Object} [context] to combine with the model's internal context
+     * @returns The union of the user's context and the model's internal context, as well as the provided context if any. In that order.
+     */
     context: function (context) {
         return new openerp.web.CompoundContext(
             openerp.connection.user_context, this._context, context || {});
