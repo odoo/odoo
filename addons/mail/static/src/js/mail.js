@@ -464,7 +464,8 @@ openerp.mail = function(session) {
         do_comment: function () {
             var body_text = this.$element.find('textarea').val();
             return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, type='comment']).then(
-                this.proxy('fetch_comments'));
+                //this.proxy('fetch_comments'));
+                this.init_comments());
         },
 
         /**
