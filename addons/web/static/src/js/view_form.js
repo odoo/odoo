@@ -1911,9 +1911,13 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 $cmenu.append(QWeb.render("FieldMany2One.context_menu", {widget: self}));
                 var bindings = {};
                 bindings[self.cm_id + "_search"] = function() {
+                    if (self.readonly)
+                        return;
                     self._search_create_popup("search");
                 };
                 bindings[self.cm_id + "_create"] = function() {
+                    if (self.readonly)
+                        return;
                     self._search_create_popup("form");
                 };
                 bindings[self.cm_id + "_open"] = function() {
