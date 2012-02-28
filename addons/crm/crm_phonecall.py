@@ -32,6 +32,7 @@ class crm_phonecall(crm_base, osv.osv):
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
+    _inherit = ['mail.thread']
     _columns = {
         # From crm.case
         'id': fields.integer('ID', readonly=True),
@@ -71,11 +72,15 @@ class crm_phonecall(crm_base, osv.osv):
                                  type="char", string="Contact", size=128),
         'partner_mobile': fields.char('Mobile', size=32),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'date_closed': fields.datetime('Closed', readonly=True), 
-        'date': fields.datetime('Date'), 
-        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'), 
+        'date_closed': fields.datetime('Closed', readonly=True),
+        'date': fields.datetime('Date'),
+        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'),
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_phonecall, self).create(cr, uid, vals, context=context)
+        return obj_id
 
     def _get_default_state(self, cr, uid, context=None):
         if context and context.get('default_state', False):

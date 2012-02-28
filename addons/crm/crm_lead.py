@@ -274,8 +274,12 @@ class crm_lead(crm_case, osv.osv):
     def _case_create_notification(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
+            if obj.type=="opportunity" and obj.state=="draft":
+                message = _("Opportunity is <b>created</b>.")
+            elif obj.type=="lead" :
+                message = _("Lead is <b>created</b>.")
             self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Lead is <b>created</b>."), type='notification', need_action_user_id=obj.user_id.id, context=context)
+                        message, type='notification', need_action_user_id=obj.user_id.id, context=context)
         return True
 
     def _case_open_notification(self, lead, context=None):
@@ -328,13 +332,13 @@ class crm_lead(crm_case, osv.osv):
         message = _("The lead is <b>escalated</b>.")
         case.message_append_note('' ,message)
 
-    def _case_phonecall_notification(self, case, action, context=None):
-        message = _("%s a call for the opportunity %s.") % (action,case.name)
-        case.message_append_note('', message, need_action_user_id=case.user_id.id)
-
-    def _case_opportunity_meeting_notification(self, case, context=None):
-        message = _("The opportunity %s is scheduled for meeting.") % (case.name)
-        case.message_append_note('', message, need_action_user_id=case.user_id.id)
+    def _case_phonecall_notification(self, cr, uid, ids, case, phonecall, action, context=None):
+        for obj in phonecall.browse(cr, uid, ids, context=context):
+            if action == "schedule" :
+                message = _("<b>%s a call</b> for the %s.") % (action, obj.date)
+            else :
+                message = _("<b>%s a call</b>.") % (action)
+            case.message_append_note('', message)
 
     def case_open(self, cr, uid, ids, context=None):
         res = super(crm_lead, self).case_open(cr, uid, ids, context)
@@ -755,7 +759,7 @@ class crm_lead(crm_case, osv.osv):
             if action == 'log':
                 phonecall.case_close(cr, uid, [new_id])
             phonecall_dict[lead.id] = new_id
-            self._case_phonecall_notification(lead,action,context=context)
+            self._case_phonecall_notification(cr, uid, [new_id], lead, phonecall, action, context=context)
         return phonecall_dict
 
 
@@ -873,7 +877,6 @@ class crm_lead(crm_case, osv.osv):
                 'search_view_id': search_view and search_view[1] or False,
                 'nodestroy': True
             }
-            self._case_opportunity_meeting_notification(opp,context=context)
         return value
 
 
@@ -902,10 +905,10 @@ class crm_lead(crm_case, osv.osv):
 
             for case in self.browse(cr, uid, ids, context=context):
                 if case.type == 'lead' or context.get('stage_type') == 'lead':
-                    message = _("The stage of lead %s has been changed to %s.") % (case.name, stage.name)
+                    message = _("The stage of lead has been changed to <b>%s</b>.") % (stage.name)
                     case.message_append_note(text, message)
                 elif case.type == 'opportunity':
-                    message = _("The stage of opportunity %s has been changed to %s.") % (case.name, stage.name)
+                    message = _("The stage of opportunity has been changed to <b>%s</b>.") % (stage.name)
                     case.message_append_note(text, message)
 
         return super(crm_lead,self).write(cr, uid, ids, vals, context)

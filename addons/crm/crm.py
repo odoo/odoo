@@ -258,6 +258,9 @@ class crm_base(object):
             data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value': data}
 
+    def _case_opportunity_meeting_notification(self, cr, uid, ids, context=None):
+        return True
+
     def _case_open_notification(self, case, context=None):
         return True
 
