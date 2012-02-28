@@ -397,7 +397,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         return True
 
     def _case_close_notification(self, case, context=None):
-        print "\n ::: case close notification :: hr rec:::"
         case[0].message_mark_done(context)
         if case[0].emp_id:
             message = _("Applicant is being <b>Hired</b> with employee.")
