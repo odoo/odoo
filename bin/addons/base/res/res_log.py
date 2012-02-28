@@ -27,7 +27,7 @@ class res_log(osv.osv):
         'name': fields.char('Message', size=250, help='The logging message.', required=True, select=1),
         'user_id': fields.many2one('res.users','User'),
         'res_model': fields.char('Object', size=128, select=1),
-        'context': fields.text('Context'),
+        'context': fields.char('Context', size=250),
         'res_id': fields.integer('Object ID'),
         'secondary': fields.boolean('Secondary Log', help='Do not display this log if it belongs to the same object the user is working on'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=1),
