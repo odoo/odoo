@@ -314,6 +314,8 @@
                     <field name="function"/>
                     <field name="phone"/>
                     <field name="email"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="is_company" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -369,7 +371,7 @@
                                 <field name="ref" groups="base.group_extended" colspan="4"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('is_company','!=', 'partner')]}">
-                                <field name="child_ids"  domain="[('id','!=',parent_id.id)]"   nolabel="1"/>
+                                <field name="child_ids"  domain="[('id','!=',parent_id.id)]"   nolabel="1" context="{'default_parent_id': id}"/>
                             </group>
                         </page>
                         <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
@@ -414,7 +416,7 @@
                    <newline />
                    <group expand="0" string="Group By...">
                        <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
-                       <filter string="Parent" context="{'group_by': 'parent_id'}"/>
+                       <filter string="Contact Type" context="{'group_by': 'is_company'}"/>
                    </group>
                </search>
             </field>
