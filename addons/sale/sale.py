@@ -1364,7 +1364,7 @@ class sale_configuration(osv.osv_memory):
             ('no_tax', 'No Tax'),
             ('global_on_order', 'Global On Order'),
             ('on_order_line', 'On Order Lines'),
-        ], 'Taxes'),
+        ], 'Taxes', required=True),
         'sale_margin': fields.boolean("Display Margin For Users",
                         help="Install sale_margin module: This module adds the 'Margin' on sales order."),
         'sale_journal': fields.boolean("Invoice journal?",
@@ -1404,7 +1404,7 @@ class sale_configuration(osv.osv_memory):
 
     _defaults = {
         'order_policy': 'manual',
-        'tax_policy': 'no_tax',
+        'tax_policy': 'global_on_order',
         'time_unit': lambda self, cr, uid, c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c) and self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c)[0] or False,
     }
 
