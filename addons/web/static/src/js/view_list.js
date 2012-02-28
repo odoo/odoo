@@ -291,6 +291,10 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      */
     configure_pager: function (dataset) {
         this.dataset.ids = dataset.ids;
+        // Not exactly clean
+        if (dataset._length) {
+            this.dataset._length = dataset._length;
+        }
 
         var limit = this.limit(),
             total = dataset.size(),
