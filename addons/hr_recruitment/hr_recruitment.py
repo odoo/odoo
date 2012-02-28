@@ -171,7 +171,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         'partner_mobile': fields.char('Mobile', size=32),
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id': fields.many2one('hr.department', 'Department'),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response': fields.integer("Response"),
         'reference': fields.char('Refered By', size=128),
@@ -181,6 +180,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
+        'emp_id': fields.many2one('hr.employee', 'employee'),
         'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
     }
 
@@ -392,16 +392,50 @@ class hr_applicant(crm.crm_case, osv.osv):
         return res
 
     def _case_open_notification(self, case, context=None):
-        message = _("The job request '<em>%s</em>' has been set 'in progress'.") % case.name
-        case.message_append_note('' ,message, need_action_user_id=case.id)
+        message = _("Changed Status to <b>In Progress<b>.")
+        case.message_append_note('' ,message, type='notification', need_action_user_id=case.user_id.id)
+        return True
 
     def _case_close_notification(self, case, context=None):
-        message = _("Applicant '<em>%s</em>' is being hired.") % case.name
-        case.message_append_note('' ,message, need_action_user_id=case.id)
+        print "\n ::: case close notification :: hr rec:::"
+        case[0].message_mark_done(context)
+        if case[0].emp_id:
+            message = _("Applicant is being <b>Hired</b> with employee.")
+            case[0].message_append_note('' ,message, type='notification')
+        else:
+            message = _("Applicant is being <b>Hired</b> without employee.")
+            case[0].message_append_note('' ,message, type='notification')
+        return True
 
-    def _case_reset_notification(self, case, context=None):
-        message = _("The job request <em>%s</em> has been Reset as 'New'.") % case.name
-        case.message_append_note('' ,message, need_action_user_id=case.id)
+    def _case_cancel_notification(self, case, context=None):
+        case[0].message_mark_done(context=context)
+        message = _("Applicant Subject <em>'%s'</em> has been <b>Cancelled<b>.") % (case[0].name)
+        case[0].message_append_note('' ,message, type="notification")
+        return True
+
+    def _case_pending_notification(self, case, context=None):
+        message = _("Changed Status to <b>Pending<b>.")
+        case[0].message_append_note('' ,message, type='notification', need_action_user_id=case[0].user_id.id)
+        return True
+
+    def _case_reset_notification(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_append_note(cr, uid, ids, _('System notification'),
+                        _("Changed Status to <b>New<b>."), type='notification', need_action_user_id=obj.user_id.id, context=context)
+        return True
+
+    def create_notificate(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
+            self.message_append_note(cr, uid, ids, _('System notification'),
+                        _("Applicant <b>Created</b>."), type='notification', need_action_user_id=obj.user_id.id, context=context)
+        return True
+
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
+        self.create_notificate(cr, uid, [obj_id], context=context)
+        return obj_id
 
     def case_open(self, cr, uid, ids, context=None):
         """
@@ -413,11 +447,11 @@ class hr_applicant(crm.crm_case, osv.osv):
             self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),})
         return res
 
-    def case_close(self, cr, uid, ids, *args):
-        res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
+    def case_close(self, cr, uid, ids, context=None):
+        res = super(hr_applicant, self).case_close(cr, uid, ids, context)
         return res
 
-    def case_close_with_emp(self, cr, uid, ids, *args):
+    def case_close_with_emp(self, cr, uid, ids, context=None):
         hr_employee = self.pool.get('hr.employee')
         model_data = self.pool.get('ir.model.data')
         act_window = self.pool.get('ir.actions.act_window')
@@ -433,10 +467,10 @@ class hr_applicant(crm.crm_case, osv.osv):
                                                      'address_home_id': address_id,
                                                      'department_id': applicant.department_id.id
                                                      })
-                self.case_close(cr, uid, [applicant.id], *args)
+                self.write(cr, uid, [applicant.id], {'emp_id': emp_id})
+                self.case_close(cr, uid, [applicant.id], context)
             else:
                 raise osv.except_osv(_('Warning!'),_('You must define Applied Job for this applicant.'))
-            self._case_reset_notification(applicant, context=context)
 
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
         dict_act_window = act_window.read(cr, uid, action_id, [])
@@ -445,17 +479,25 @@ class hr_applicant(crm.crm_case, osv.osv):
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
 
-    def case_reset(self, cr, uid, ids, *args):
-        """Resets case as draft
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
+    def case_cancel(self, cr, uid, ids, context=None):
+        """Overrides cancel for crm_case for setting probability
         """
+        res = super(hr_applicant, self).case_cancel(cr, uid, ids, context)
+        self.write(cr, uid, ids, {'probability' : 0.0})
+        return res
 
-        res = super(hr_applicant, self).case_reset(cr, uid, ids, *args)
+    def case_pending(self, cr, uid, ids, context=None):
+        """Marks case as pending"""
+        res = super(hr_applicant, self).case_pending(cr, uid, ids, context)
+        self.write(cr, uid, ids, {'probability' : 0.0})
+        return res
+
+    def case_reset(self, cr, uid, ids, context=None):
+        """Resets case as draft
+        """
+        res = super(hr_applicant, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
+        self._case_reset_notification(cr, uid, ids, context)
         return res
 
     def set_priority(self, cr, uid, ids, priority, *args):
@@ -476,7 +518,7 @@ class hr_applicant(crm.crm_case, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if 'stage_id' in vals and vals['stage_id']:
             stage = self.pool.get('hr.recruitment.stage').browse(cr, uid, vals['stage_id'], context=context)
-            text = _("Changed Stage to: %s") % stage.name
+            text = _("Changed Stage to <b>%s</b>") % stage.name
             self.message_append(cr, uid, ids, text, body_text=text, context=context)
         return super(hr_applicant,self).write(cr, uid, ids, vals, context=context)
 
