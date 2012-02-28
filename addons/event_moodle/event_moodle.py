@@ -256,7 +256,7 @@ class event_registration(osv.osv):
                     moodle_user_id = response_user[0]['id']
                     self.pool.get('event.registration').write(cr, uid, ids, {'moodle_uid': moodle_user_id, 'moodle_user_password': passwd, 'moodle_username': name_user})
                 else:
-                    moodle_user_id = register_moodle_uid
+                    moodle_user_id = register.moodle_uid
                 enrolled=[{
                     'roleid': '5', #mark as student
                     'userid': moodle_user_id,
