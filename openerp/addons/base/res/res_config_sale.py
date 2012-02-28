@@ -24,7 +24,7 @@ import pooler
 
 MODULE_LIST = [
                'analytic_user_function', 'analytic_journal_billing_rate', 'import_sugarcrm',
-               'import_google', 'crm_caldav', 'wiki_sale_faq', 'base_contact',
+               'import_google', 'crm_caldav', 'wiki_sale_faq', 'base_contact','sale_layout'
                'google_map', 'fetchmail_crm', 'plugin_thunderbird', 'plugin_outlook','account_analytic_analysis'
 ]
 
@@ -33,9 +33,9 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'res.config'
 
     _columns = {
-        'analytic_user_function' : fields.boolean("Use specific User function on Contract/analytic accounts",
+        'analytic_user_function' : fields.boolean("User function by contracts",
                                     help="Install analytic_user_function module:This module allows you to define what is the default function of a specific user on a given account"),
-        'analytic_journal_billing_rate' : fields.boolean("Manage Different billing rates on contract/analytic accounts",
+        'analytic_journal_billing_rate' : fields.boolean("Billing rates by contracts",
                                     help="Install analytic_journal_billing_rate module: This module allows you to define what is the default invoicing rate for a specific journal on a given account."),
         'import_sugarcrm' : fields.boolean("Import data from sugarCRM?",
                                     help="Install import_sugarcrm module: This Module Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Employees, Meetings, Phonecalls, Emails, and Project, Project Tasks Data into OpenERP Module."),
@@ -49,7 +49,7 @@ class sale_configuration(osv.osv_memory):
                                     help="Install crm_partner_assign module: This is the module used by OpenERP SA to redirect customers to its partners, based on geolocalization."),
         'google_map' : fields.boolean("Google maps on customer",
                                     help="Install google_map module: The module adds Google Map field in partner address."),
-        'fetchmail_crm': fields.boolean("Create Leads from an Email Account"),
+        'fetchmail_crm': fields.boolean("Lead/Opportunity mail gateway"),
         'server' : fields.char('Server Name', size=256),
         'port' : fields.integer('Port'),
         'type':fields.selection([
@@ -60,9 +60,9 @@ class sale_configuration(osv.osv_memory):
         'is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
         'user' : fields.char('Username', size=256),
         'password' : fields.char('Password', size=1024),
-        'plugin_thunderbird': fields.boolean('Push your email from Thunderbird to an OpenERP document',
+        'plugin_thunderbird': fields.boolean('Thunderbird plugin',
                                     help="Install plugin_thunderbird module: This module is required for the Thuderbird Plug-in to work properly."),
-        'plugin_outlook': fields.boolean('Push your email from Outlook to an OpenERP document',
+        'plugin_outlook': fields.boolean('Outlook plugin',
                                     help="Install plugin_outlook module: This module provides the Outlook Plug-in."),
         'account_analytic_analysis': fields.boolean('Contracts',
                                     help="Install account_analytic_analysis module: This module is for modifying account analytic view to show important data to project manager of services companies."),
