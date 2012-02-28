@@ -55,7 +55,7 @@
                         <field name="name"/>
                         <field name="date_begin"/>
                         <field name="date_end"/>
-                        <field name="type" on_change="onchange_evnet_type(type,context)"/>
+                        <field name="type" on_change="onchange_event_type(type,context)"/>
                         <field name="user_id"/>
                         <field name="address_id" />
                     </group>
@@ -345,7 +345,7 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="event_id" date_start="date" date_stop="date_closed" string="Event Registration">
+                <calendar color="event_id" date_start="event_begin_date" date_stop="event_end_date" string="Event Registration">
                     <field name="event_id"/>
                     <field name="name"/>
                 </calendar>

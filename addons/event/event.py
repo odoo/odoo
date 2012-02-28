@@ -201,18 +201,17 @@ class event_event(osv.osv):
         (_check_closing_date, 'Error ! Closing Date cannot be set before Beginning Date.', ['date_end']),
     ]
 
-    def onchange_evnet_type(self, cr, uid, ids, type_event, context=None):
+    def onchange_event_type(self, cr, uid, ids, type_event, context=None):
         if type_event:
             type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context)
             dic ={
-              'reply_to':type_info.default_reply_to,
-              'email_registration_id':type_info.default_email_registration.id,
-              'email_confirmation_id':type_info.default_email_event.id,
-              'register_min':type_info.default_registration_min,
-              'register_max':type_info.default_registration_max,
+              'reply_to': type_info.default_reply_to,
+              'email_registration_id': type_info.default_email_registration.id,
+              'email_confirmation_id': type_info.default_email_event.id,
+              'register_min': type_info.default_registration_min,
+              'register_max': type_info.default_registration_max,
             }
-            res = {'value':dic}
-            return res
+            return {'value': dic}
 event_event()
 
 class event_registration(osv.osv):
