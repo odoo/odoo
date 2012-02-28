@@ -109,7 +109,7 @@
         self.style  = style;        // definition of the colors, spacing, fonts, ... used by the elements
         var tr_x = 0, tr_y = 0;         // global translation coordinate
 
-        var background = r.rect(0,0,'100%','100%').attr({'fill':'white', 'stroke':'none', 'opacity':0});
+        var background = r.rect(0,0,'100%','100%').attr({'fill':'white', 'stroke':'none', 'opacity':0, 'cursor':'move'});
         
         // return the global transform of the scene
         this.get_transform = function(){
