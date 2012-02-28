@@ -711,6 +711,7 @@ class stock_picking(osv.osv):
         return {}
 
     def action_explode(self, cr, uid, moves, context=None):
+        """Hook to allow other modules to split the moves of a picking."""
         return moves
 
     def action_confirm(self, cr, uid, ids, context=None):
