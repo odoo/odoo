@@ -612,18 +612,21 @@ class mail_thread(osv.osv):
         users = self.pool.get('res.users').read(cr, uid, user_ids, fields=['id', 'name', 'avatar_mini'], context=context)
         return users
     
-    def message_is_subscriber(self, cr, uid, ids, context=None):
+    def message_is_subscriber(self, cr, uid, ids, user_id = None, context=None):
         users = self.message_get_subscribers(cr, uid, ids, context=context)
-        if uid in [user['id'] for user in users]:
+        sub_user_id = uid if user_id is None else user_id
+        if sub_user_id in [user['id'] for user in users]:
             return True
         return False
     
     def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
         subscription_obj = self.pool.get('mail.subscription')
         sub_user_ids = [uid] if user_ids is None else user_ids
+        create_ids = []
         for id in ids:
-            create_ids = [subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context)
-                            for user_id in sub_user_ids]
+            for user_id in sub_user_ids:
+                if self.message_is_subscriber(cr, uid, [id], user_id=user_id, context=context): continue
+                create_ids.append(subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context))
         return create_ids
 
     def message_unsubscribe(self, cr, uid, ids, context=None):
