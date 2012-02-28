@@ -99,9 +99,6 @@
                     <a href="#" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
                 </span>
             </t>
-            <t t-if="record.need_action_user_id != false">
-                - <span class="oe_mail_msg_need_action">Need action by <a href="#"><t t-raw="record.need_action_user_id[1]"/></a></span>
-            </t>
             wrote on <span class="oe_mail_msg_date"><t t-raw="record.date"/></span>
             <br />
             <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
