@@ -297,7 +297,6 @@ openerp.mail = function(session) {
         template: 'Wall',
 
         /**
-         *
          * @param {Object} parent parent
          * @param {Object} [params]
          * @param {Number} [params.limit=20] number of messages to show and fetch
@@ -334,7 +333,7 @@ openerp.mail = function(session) {
         },
 
         /**
-         *
+         * Loads the mail.message search view
          * @param {Number} view_id id of the search view to load
          * @param {??} defaults ??
          * @param {Boolean} hidden ??
@@ -343,7 +342,15 @@ openerp.mail = function(session) {
             this.searchview = new session.web.SearchView(this, this.ds_msg, view_id || false, defaults || {}, hidden || false);
             return this.searchview.appendTo(this.$element.find('div.oe_mail_wall_search'));
         },
-        
+
+        /**
+         * Aggregate the domains, contexts and groupbys in parameter
+         * with those from search form, and then calls fetch_comments
+         * to actually fetch comments
+         * @param {Array} domains
+         * @param {Array} contexts
+         * @param {Array} groupbys
+         */
         do_searchview_search: function(domains, contexts, groupbys) {
             var self = this;
             this.rpc('/web/session/eval_domain_and_context', {
@@ -357,7 +364,14 @@ openerp.mail = function(session) {
                 self.fetch_comments(self.search['domain'], self.search['context']);
             });
         },
-        
+
+        /**
+         * Fetches Wall comments (mail.thread.get_pushed_messages)
+         * @param {Array} domains
+         * @param {Array} contexts
+         * @param {Array} groupbys
+         * @param {Number} limit number of messages to fetch
+         */
         fetch_comments: function (domain, context, offset, limit) {
             var load_res = this.ds_thread.call('get_pushed_messages',
                 [[this.session.uid], limit = (limit || 100), offset = (offset || 0), domain = (domain || null), context = (context || null) ]).then(
@@ -366,7 +380,6 @@ openerp.mail = function(session) {
         },
 
         /**
-         *
          * @param {Array} records records to show in threads
          */
         display_comments: function (records) {
