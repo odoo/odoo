@@ -31,7 +31,40 @@ class mail_needaction(osv.osv):
     _name = 'mail.needaction'
     _description = 'Need action Engine'
     
+    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = False
+        return result
+    
+    #def set_needaction_user_id(self, cr, uid, id, name, value, arg, context=None):
+        #"""
+        #@param name: Name of field
+        #@param value: Value of field
+        #@param arg: User defined argument
+        #"""
+        #if context is None:
+            #context = {}
+        #return self.write(cr, uid, [id], {name: value}, context=context)
+
+    def get_needaction_user_id_wrapper(self, cr, uid, ids, name, arg, context=None):
+        return self.get_needaction_user_id(cr, uid, ids, name, arg, context=context)
+    
+    def set_needaction_user_id_wrapper(self, cr, uid, id, name, value, arg, context=None):
+        return self.set_needaction_user_id(cr, uid, id, name, value, arg, context=context)
+
     _columns = {
+        'need_action': fields.boolean('Need action'),
+        'need_action_user_id': fields.function(get_needaction_user_id_wrapper,
+                        #fnct_inv=set_needaction_user_id_wrapper,
+                        type='many2one', relation='res.users', store=True, string='User'),
+                        
+    }
+    
+    _defaults = {
+        'need_action': False,
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
