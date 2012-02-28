@@ -40,11 +40,6 @@
         <field name="category_id" ref="base.module_category_usability"/>
     </record>
 
-    <record id="base.group_sale_notes_subtotal" model="res.groups">
-        <field name="name">Notes and Subtotals</field>
-        <field name="category_id" ref="base.module_category_usability"/>
-    </record>
-
     <record id="base.group_sale_taxes_global_or_online" model="res.groups">
         <field name="name">Sales Taxes Global/on line</field>
         <field name="category_id" ref="base.module_category_usability"/>
@@ -56,7 +51,7 @@
         ref('base.group_sale_delivery_address'),
         ref('base.group_sale_disc_per_sale_order_line'),
         ref('base.group_sale_taxes_global_or_online'),
-        ref('base.group_sale_notes_subtotal')])]"/>
+        ])]"/>
     </record>
 
     <record model="res.users" id="base.user_admin">

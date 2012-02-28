@@ -1355,7 +1355,7 @@ class sale_configuration(osv.osv_memory):
         'group_sale_uom_per_product':fields.boolean("UOM per product",help="Group to Allow different unit of measure per product"),
         'group_sale_delivery_address':fields.boolean("Multiple Address",help="Group To Allow delivery address different from invoice address"),
         'group_sale_disc_per_sale_order_line':fields.boolean("Discounts per sale order lines ",help="Group to apply discounts per sale order lines"),
-        'group_sale_notes_subtotal':fields.boolean("Notes and subtotals",help="Group to allow notes and subtotals"),
+        'sale_layout':fields.boolean("Notes and subtotals",help="Install sale_layout module: This module provides features to improve the layout of the Sales Order.."),
         'warning': fields.boolean("Alerts by products or customers",
                                   help="Install warning module: Module to trigger warnings in OpenERP objects."),
         'tax_value' : fields.float('Value'),
@@ -1416,7 +1416,7 @@ class sale_configuration(osv.osv_memory):
 #        elif deli:
 #            res.update({'order_policy': 'picking'})
 #        return {'value':res}
-    
+
     def apply_groups(self, cr, uid, ids, group_name, apply=True, context=None):
         data_obj = self.pool.get('ir.model.data')
         users_obj = self.pool.get('res.users')
@@ -1438,7 +1438,7 @@ class sale_configuration(osv.osv_memory):
         module_obj = self.pool.get('ir.module.module')
         users_obj = self.pool.get('res.users')
         groups_obj = self.pool.get('res.groups')
-        
+
         module_name = []
 
         group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
@@ -1457,27 +1457,22 @@ class sale_configuration(osv.osv_memory):
             self.apply_groups(cr, uid, ids, 'group_sale_pricelist_per_customer', context=context)
         else:
             self.apply_groups(cr, uid, ids, 'group_sale_pricelist_per_customer', False, context=context)
-        
+
         if wizard.group_sale_uom_per_product:
             self.apply_groups(cr, uid, ids, 'group_sale_uom_per_product', context=context)
         else:
             self.apply_groups(cr, uid, ids, 'group_sale_uom_per_product', False, context=context)
-        
+
         if wizard.group_sale_delivery_address:
             self.apply_groups(cr, uid, ids, 'group_sale_delivery_address', context=context)
         else:
             self.apply_groups(cr, uid, ids, 'group_sale_delivery_address', False, context=context)
-            
+
         if wizard.group_sale_disc_per_sale_order_line:
             self.apply_groups(cr, uid, ids, 'group_sale_disc_per_sale_order_line', context=context)
         else:
             self.apply_groups(cr, uid, ids, 'group_sale_disc_per_sale_order_line', False, context=context)
-        
-        if wizard.group_sale_notes_subtotal:
-            self.apply_groups(cr, uid, ids, 'group_sale_notes_subtotal', context=context)
-        else:
-            self.apply_groups(cr, uid, ids, 'group_sale_notes_subtotal', False, context=context)
-        
+
         if wizard.task_work:
             vals['project_timesheet'] = True
             vals['project_mrp'] = True
@@ -1497,6 +1492,12 @@ class sale_configuration(osv.osv_memory):
         else:
             vals['delivery'] = False
 
+        if wizard.sale_layout:
+            vals['sale_layout'] = True
+        else:
+            vals['sale_layout'] = False
+
+
         if wizard.picking_policy:
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], 'one')
 
@@ -1511,7 +1512,7 @@ class sale_configuration(osv.osv_memory):
             self.pool.get('res.company').write(cr, uid, [company_id], {
                 'project_time_mode_id': wizard.time_unit.id
             }, context=context)
-        
+
         super(sale_configuration, self).execute(cr, uid, ids, vals, context=context)
 
 sale_configuration()
