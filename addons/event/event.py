@@ -103,14 +103,14 @@ class event_event(osv.osv):
     def button_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
-    def confirmation_event(self,cr,uid,ids,context=None):
+    def check_registration_limits(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
         for self.event in self.browse(cr, uid, ids, context=context):
             total_confirmed = self.event.register_current
             if total_confirmed < self.event.register_min or total_confirmed > self.event.register_max and self.event.register_max!=0:
                 raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. You should maybe reconsider those limits before going further") % (self.event.name))
 
-    def confirmation_email(self,cr,uid,ids,context=None):
+    def confirm_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
         if self.event.email_confirmation_id:
         #send reminder that will confirm the event for all the people that were already confirmed
@@ -123,12 +123,11 @@ class event_event(osv.osv):
     def button_confirm(self, cr, uid, ids, context=None):
         """ Confirm Event and send confirmation email to all register peoples
         """
-        #renforcing method : create a list of ids
         if isinstance(ids, (int, long)):
             ids = [ids]
-        self.confirmation_event(cr,uid,ids,context=context)
-        self.confirmation_email(cr,uid,ids,context=context)
-        return True
+        self.check_registration_limits(cr, uid, ids, context=context)
+        return self.confirm_event(cr, uid, ids, context=context)
+
     def _get_register(self, cr, uid, ids, fields, args, context=None):
         """Get Confirm or uncofirm register value.
         @param ids: List of Event registration type's id
@@ -261,20 +260,17 @@ class event_registration(osv.osv):
     def do_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
-    def confirmation_registration(self, cr, uid, ids, context=None):
-        res = self.write(cr, uid, ids, {'state': 'open'}, context=context)
+    def confirm_registration(self, cr, uid, ids, context=None):
         self.message_append(cr, uid, ids,_('State set to...'),body_text= _('Open'))
-        return res
+        return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
-    def email_registration(self, cr, uid, ids, context=None):
-        self.mail_user(cr, uid, ids)
 
     def registration_open(self, cr, uid, ids, context=None):
         """ Open Registration
         """
-        self.confirmation_registration(cr, uid, ids, context=context)
-        self.email_registration(cr, uid, ids, context=context)
-        return True
+        res = self.confirm_registration(cr, uid, ids, context=context)
+        self.mail_user(cr, uid, ids)
+        return res
 
     def button_reg_close(self, cr, uid, ids, context=None):
         """ Close Registration
