@@ -392,6 +392,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         return res
 
     def _case_open_notification(self, case, context=None):
+        case.message_mark_done(context)
         message = _("Changed Status to <b>In Progress<b>.")
         case.message_append_note('' ,message, type='notification', need_action_user_id=case.user_id.id)
         return True
@@ -399,22 +400,22 @@ class hr_applicant(crm.crm_case, osv.osv):
     def _case_close_notification(self, case, context=None):
         case[0].message_mark_done(context)
         if case[0].emp_id:
-            message = _("Applicant is being <b>Hired</b> as an employee.")
+            message = _("Applicant is <b>Hired</b> and employee created.")
             case[0].message_append_note('' ,message, type='notification')
         else:
-            message = _("Applicant is being <b>Hired</b>.")
+            message = _("Applicant is <b>Hired</b>.")
             case[0].message_append_note('' ,message, type='notification')
         return True
 
     def _case_cancel_notification(self, case, context=None):
         case[0].message_mark_done(context=context)
-        message = _("Applicant Subject <em>'%s'</em> has been <b>Cancelled<b>.") % (case[0].name)
+        message = _("Applicant is <b>Cancelled<b>.")
         case[0].message_append_note('' ,message, type="notification")
         return True
 
     def _case_pending_notification(self, case, context=None):
         message = _("Changed Status to <b>Pending<b>.")
-        case[0].message_append_note('' ,message, type='notification', need_action_user_id=case[0].user_id.id)
+        case[0].message_append_note('' ,message, type='notification')
         return True
 
     def _case_reset_notification(self, cr, uid, ids, context=None):
@@ -427,7 +428,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
             self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Applicant <b>Created</b>."), type='notification', need_action_user_id=obj.user_id.id, context=context)
+                        _("Applicant is <b>Created</b>."), type='notification', need_action_user_id=obj.user_id.id, context=context)
         return True
 
 
@@ -517,7 +518,7 @@ class hr_applicant(crm.crm_case, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if 'stage_id' in vals and vals['stage_id']:
             stage = self.pool.get('hr.recruitment.stage').browse(cr, uid, vals['stage_id'], context=context)
-            text = _("Changed Stage to <b>%s</b>") % stage.name
+            text = _("Changed Stage to <b>%s</b>.") % stage.name
             self.message_append(cr, uid, ids, text, body_text=text, context=context)
         return super(hr_applicant,self).write(cr, uid, ids, vals, context=context)
 
