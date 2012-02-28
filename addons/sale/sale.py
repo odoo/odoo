@@ -1373,6 +1373,7 @@ class sale_configuration(osv.osv_memory):
 
     def default_get(self, cr, uid, fields_list, context=None):
         ir_values_obj = self.pool.get('ir.values')
+        data_obj = self.pool.get('ir.model.data')
         obj_tax_temp = self.pool.get('account.tax.template')
         res = super(sale_configuration, self).default_get(
             cr, uid, fields_list, context=context)
@@ -1386,8 +1387,14 @@ class sale_configuration(osv.osv_memory):
         for k in defaults.keys():
             if k in ['project_timesheet','project_mrp']:
                 defaults.update({'task_work': True})
+                prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
+                uom_id = self.pool.get('product.product').browse(cr, uid, prod_id).uom_id.id
+                defaults.update({'time_unit': uom_id})
             if k in ['account_analytic_analysis']:
                 defaults.update({'timesheet': True})
+                prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
+                uom_id = self.pool.get('product.product').browse(cr, uid, prod_id).uom_id.id
+                defaults.update({'time_unit': uom_id})
             if k == 'delivery':
                 defaults.update({'sale_orders': True, 'deli_orders': True, 'charge_delivery': True})
             if k == 'picking_policy' and defaults[k]=='one':
