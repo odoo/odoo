@@ -25,7 +25,7 @@ import pooler
 MODULE_LIST = [
                'analytic_user_function', 'analytic_journal_billing_rate', 'import_sugarcrm',
                'import_google', 'crm_caldav', 'wiki_sale_faq', 'base_contact',
-               'google_map', 'fetchmail_crm', 'plugin_thunderbird', 'plugin_outlook',
+               'google_map', 'fetchmail_crm', 'plugin_thunderbird', 'plugin_outlook','account_analytic_analysis'
 ]
 
 class sale_configuration(osv.osv_memory):
@@ -64,6 +64,8 @@ class sale_configuration(osv.osv_memory):
                                     help="Install plugin_thunderbird module: This module is required for the Thuderbird Plug-in to work properly."),
         'plugin_outlook': fields.boolean('Push your email from Outlook to an OpenERP document',
                                     help="Install plugin_outlook module: This module provides the Outlook Plug-in."),
+        'account_analytic_analysis': fields.boolean('Contracts',
+                                    help="Install account_analytic_analysis module: This module is for modifying account analytic view to show important data to project manager of services companies."),
     }
 
     def get_applied_groups(self, cr, uid, context=None):
