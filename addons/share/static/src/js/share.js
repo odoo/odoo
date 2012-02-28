@@ -2,7 +2,7 @@
 openerp.share = function(session) {
 
 function launch_wizard(self, view, user_type) {
-        var action = view.widget_parent.action;
+        var action = view.getParent().action;
         var Share = new session.web.DataSet(self, 'share.wizard', view.dataset.get_context());
         var domain = new session.web.CompoundDomain(view.dataset.domain);
         if (view.fields_view.type == 'form') {
@@ -57,7 +57,7 @@ session.web.Sidebar = session.web.Sidebar.extend({
         });
     },
     on_sidebar_click_share: function(item) {
-        var view = this.widget_parent
+        var view = this.getParent()
         launch_wizard(this, view);
     },
 });

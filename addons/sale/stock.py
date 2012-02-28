@@ -176,7 +176,7 @@ class stock_picking(osv.osv):
                             account_id = sale_line.product_id.categ_id.\
                                     property_account_expense_categ.id
 
-                    vals = order_line_obj._prepare_order_line_invoice_line(cursor, user, ids, sale_line, account_id, context)
+                    vals = order_line_obj._prepare_order_line_invoice_line(cursor, user, sale_line, account_id, context)
                     if vals: #note: in some cases we may not want to include all service lines as invoice lines
                         vals['name'] = name
                         vals['account_analytic_id'] = self._get_account_analytic_invoice(cursor, user, picking, sale_line)

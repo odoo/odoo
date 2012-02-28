@@ -161,4 +161,15 @@ class sale_order(osv.osv):
 
 sale_order()
 
+class stock_picking(osv.osv):
+    _inherit = "stock.picking"
+
+    def _prepare_invoice_line(self, cr, uid, group, picking, move_line, invoice_id, invoice_vals, context=None):
+        vals = super(stock_picking, self)._prepare_invoice_line(cr, uid, group, picking, move_line, invoice_id, invoice_vals, context=context)
+
+        if move_line.sale_line_id:
+            vals['sequence'] = move_line.sale_line_id.sequence
+
+        return vals
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

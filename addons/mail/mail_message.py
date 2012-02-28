@@ -417,7 +417,8 @@ class mail_message(osv.osv):
             if 'text/html' in msg.get('content-type', ''):
                 msg['body_html'] =  body
                 msg['subtype'] = 'html'
-                body = tools.html2plaintext(body)
+                if body:
+                    body = tools.html2plaintext(body)
             msg['body_text'] = tools.ustr(body, encoding)
 
         attachments = []

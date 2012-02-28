@@ -28,7 +28,7 @@
     'author': 'OpenERP s.a.',
     'maintainer': 'OpenERP s.a.',
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
+    'depends': ['base', 'web'],
     'data': [
         'res_users.xml',
     ],

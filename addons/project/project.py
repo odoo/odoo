@@ -251,6 +251,19 @@ class project(osv.osv):
             message = _("The project '%s' has been opened.") % name
             self.log(cr, uid, id, message)
         return res
+    
+    def map_tasks(self, cr, uid, old_project_id, new_project_id, context=None):
+        """ copy and map tasks from old to new project """
+        if context is None:
+            context = {}
+        map_task_id = {}
+        task_obj = self.pool.get('project.task')
+        proj = self.browse(cr, uid, old_project_id, context=context)
+        for task in proj.tasks:
+            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {}, context=context)
+        self.write(cr, uid, new_project_id, {'tasks':[(6,0, map_task_id.values())]})
+        task_obj.duplicate_task(cr, uid, map_task_id, context=context)
+        return True
 
     def copy(self, cr, uid, id, default={}, context=None):
         if context is None:
@@ -259,29 +272,13 @@ class project(osv.osv):
         default = default or {}
         context['active_test'] = False
         default['state'] = 'open'
+        default['tasks'] = []
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
             default['name'] = proj.name + _(' (copy)')
 
         res = super(project, self).copy(cr, uid, id, default, context)
-        return res
-
-
-    def template_copy(self, cr, uid, id, default={}, context=None):
-        task_obj = self.pool.get('project.task')
-        proj = self.browse(cr, uid, id, context=context)
-
-        default['tasks'] = [] #avoid to copy all the task automaticly
-        res = self.copy(cr, uid, id, default=default, context=context)
-
-        #copy all the task manually
-        map_task_id = {}
-        for task in proj.tasks:
-            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {}, context=context)
-
-        self.write(cr, uid, res, {'tasks':[(6,0, map_task_id.values())]})
-        task_obj.duplicate_task(cr, uid, map_task_id, context=context)
-
+        self.map_tasks(cr,uid,id,res,context)
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
@@ -299,7 +296,7 @@ class project(osv.osv):
                 end_date = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
                 new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
             context.update({'copy':True})
-            new_id = self.template_copy(cr, uid, proj.id, default = {
+            new_id = self.copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
                                     'date_start':new_date_start,
