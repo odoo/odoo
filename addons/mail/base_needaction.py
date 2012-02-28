@@ -25,10 +25,10 @@ import logging
 from osv import osv, fields
 from tools.translate import _
 
-class base_needaction(osv.osv):
+class mail_needaction(osv.osv):
     '''TODO
     '''
-    _name = 'base.needaction'
+    _name = 'mail.needaction'
     _description = 'Need action Engine'
     
     _columns = {
