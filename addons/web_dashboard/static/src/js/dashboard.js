@@ -406,7 +406,6 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.OldWidget.extend({
     },
     start: function() {
         var self = this;
-        openerp.webclient.menu.do_hide_secondary();
         var domain = [['application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
         var ds = new openerp.web.DataSetSearch(this, 'ir.module.module',{},domain);
         ds.read_slice(['id']).then(function(result) {

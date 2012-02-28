@@ -1,3 +1,8 @@
+// Variables {{{
+$colour4: #8a89ba
+//$colour4: #d14836
+// }}}
+
 // Mixins {{{
 @mixin vertical-gradient($startColor: #555, $endColor: #333)
     background: $startColor
@@ -61,6 +66,13 @@
         bottom: 0
         left: 0
         right: 0
+
+        .oe_application
+            position: absolute
+            top: 32px
+            bottom: 0
+            left: 206px
+            right: 0
     // }}}
 
     // Topbar {{{
@@ -101,6 +113,22 @@
             vertical-align: top
     // }}}
 
+    // Leftbar {{{
+    .oe_leftbar
+        width: 205px
+        height: 100%
+        background: #f0eeee
+        border-right: 1px solid #afafb6
+        overflow: auto
+        text-shadow: 0 1px 1px white
+
+        .oe_footer
+            position: absolute
+            width: 205px
+            text-align: center
+            bottom: 8px
+    // }}}
+
     // Menu {{{
     .oe_menu
         float: left
@@ -126,6 +154,70 @@
             font-weight: bold
             color: white
             @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+    .oe_secondary_menu_section
+        font-weight: bold
+        margin-left: 8px
+        color: $colour4
+    .oe_secondary_submenu
+        padding: 2px 0 8px 0
+        margin: 0
+        width: 100%
+        display: inline-block
+        li
+            position: relative
+            padding: 1px 0 1px 16px
+            list-style-type: none
+            a
+                display: block
+                color: #4c4c4c
+                padding: 2px 4px 2px 0
+            .oe_menu_label
+                position: absolute
+                top: 1px
+                right: 1px
+                font-size: 10px
+                background: $colour4
+                color: white
+                padding: 2px 4px
+                margin: 1px 6px 0 0
+                border: 1px solid lightGray
+                text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+                @include radius(4px)
+                @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
+        .oe_active
+            background: $colour4
+            border-top: 1px solid lightGray
+            border-bottom: 1px solid lightGray
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+            @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
+            a
+                color: white
+            .oe_menu_label
+                background: #eee
+                color: $colour4
+                text-shadow: 0 1px 1px white
+                @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.2))
+        .oe_menu_toggler:before
+            width: 0
+            height: 0
+            display: inline-block
+            content: "&darr"
+            text-indent: -99999px
+            vertical-align: top
+            margin-left: -8px
+            margin-top: 4px
+            margin-right: 4px
+            border-top: 4px solid transparent
+            border-bottom: 4px solid transparent
+            border-left: 4px solid #4c4c4c
+            @include opacity(0.5)
+        .oe_menu_opened:before
+            margin-top: 6px
+            margin-left: -12px
+            margin-right: 4px
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid #4c4c4c
     // }}}
 
     // DropDown Menu {{{

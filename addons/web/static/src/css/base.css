@@ -17,6 +17,13 @@
   left: 0;
   right: 0;
 }
+.openerp2 .oe_webclient .oe_application {
+  position: absolute;
+  top: 32px;
+  bottom: 0;
+  left: 206px;
+  right: 0;
+}
 .openerp2 .oe_topbar {
   width: 100%;
   height: 31px;
@@ -65,6 +72,20 @@
 .openerp2 .oe_topbar .oe_topbar_avatar {
   vertical-align: top;
 }
+.openerp2 .oe_leftbar {
+  width: 205px;
+  height: 100%;
+  background: #f0eeee;
+  border-right: 1px solid #afafb6;
+  overflow: auto;
+  text-shadow: 0 1px 1px white;
+}
+.openerp2 .oe_leftbar .oe_footer {
+  position: absolute;
+  width: 205px;
+  text-align: center;
+  bottom: 8px;
+}
 .openerp2 .oe_menu {
   float: left;
   padding: 0;
@@ -97,6 +118,91 @@
   -moz-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
   -webkit-box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
   -box-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) inset;
+}
+.openerp2 .oe_secondary_menu_section {
+  font-weight: bold;
+  margin-left: 8px;
+  color: #8a89ba;
+}
+.openerp2 .oe_secondary_submenu {
+  padding: 2px 0 8px 0;
+  margin: 0;
+  width: 100%;
+  display: inline-block;
+}
+.openerp2 .oe_secondary_submenu li {
+  position: relative;
+  padding: 1px 0 1px 16px;
+  list-style-type: none;
+}
+.openerp2 .oe_secondary_submenu li a {
+  display: block;
+  color: #4c4c4c;
+  padding: 2px 4px 2px 0;
+}
+.openerp2 .oe_secondary_submenu li .oe_menu_label {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  font-size: 10px;
+  background: #8a89ba;
+  color: white;
+  padding: 2px 4px;
+  margin: 1px 6px 0 0;
+  border: 1px solid lightGray;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+  -box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+.openerp2 .oe_secondary_submenu .oe_active {
+  background: #8a89ba;
+  border-top: 1px solid lightGray;
+  border-bottom: 1px solid lightGray;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+  -box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+.openerp2 .oe_secondary_submenu .oe_active a {
+  color: white;
+}
+.openerp2 .oe_secondary_submenu .oe_active .oe_menu_label {
+  background: #eeeeee;
+  color: #8a89ba;
+  text-shadow: 0 1px 1px white;
+  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  -box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+.openerp2 .oe_secondary_submenu .oe_menu_toggler:before {
+  width: 0;
+  height: 0;
+  display: inline-block;
+  content: "&darr";
+  text-indent: -99999px;
+  vertical-align: top;
+  margin-left: -8px;
+  margin-top: 4px;
+  margin-right: 4px;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 4px solid #4c4c4c;
+  filter: alpha(opacity=50);
+  -khtml-opacity: 0.5;
+  -moz-opacity: 0.5;
+  opacity: 0.5;
+}
+.openerp2 .oe_secondary_submenu .oe_menu_opened:before {
+  margin-top: 6px;
+  margin-left: -12px;
+  margin-right: 4px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #4c4c4c;
 }
 .openerp2 .oe_dropdown_menu {
   float: right;
