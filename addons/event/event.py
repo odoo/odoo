@@ -259,7 +259,7 @@ class event_registration(osv.osv):
 
     def do_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
-    
+
     def confirmation_registration(self, cr, uid, ids, context=None):
         res = self.write(cr, uid, ids, {'state': 'open'}, context=context)
         self.message_append(cr, uid, ids,_('State set to...'),body_text= _('Open'))
