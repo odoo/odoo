@@ -178,7 +178,7 @@ class res_partner(osv.osv):
         'type': 'default',
         'use_parent_address':True
     }
-
+    
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -193,7 +193,7 @@ class res_partner(osv.osv):
         if is_company == 'contact':
             return {'value': {'is_company': is_company, 'title': '','child_ids':''}}
         elif is_company == 'partner':
-            return {'value': {'is_company': is_company, 'title': ''}}
+            return {'value': {'is_company': is_company, 'title': '','parent_id':''}}
         return {'value': {'is_comapny': '', 'title': ''}}
         
     
