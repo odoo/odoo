@@ -50,7 +50,19 @@ class res_log(osv.osv):
                        self._index_name)
 
     def create(self, cr, uid, vals, context=None):
+
+        def filter_context_value(c):
+            """filter unrequired value from context"""
+            # We remove user context and web client related value as those
+            # values will be re-set when accessing res.log item, depending
+            # on user or client settings
+            if isinstance(c, dict):
+                FILTER_OUT_KEYS = ['tz', 'lang', 'client', 'bin_size', '_terp_view_name']
+                for context_key in FILTER_OUT_KEYS:
+                    c.pop(context_key, None)
+            return c
         create_context = context and dict(context) or {}
+        create_context = filter_context_value(create_context)
         if 'res_log_read' in create_context:
             vals['read'] = create_context.pop('res_log_read')
         if create_context and not vals.get('context'):
