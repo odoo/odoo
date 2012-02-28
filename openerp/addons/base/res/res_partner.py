@@ -232,7 +232,39 @@ class res_partner(osv.osv):
                 if math.ceil(sum/10.0)*10-sum!=int(thisean[12]):
                     return False
         return True
-
+    
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        # Update the all child and parent_id record ,Need to fixit
+        update_ids=False
+        if ids and isinstance(ids, (tuple, list)):
+            ids=ids[0]
+        is_company=ids and self.browse(cr,uid,ids).is_company
+        if is_company == 'contact':
+            parent_id=self.browse(cr,uid,ids[0]).parent_id.id
+            if parent_id:
+                update_ids= self.search(cr, uid, [('parent_id', '=', parent_id),('use_parent_address','=',True)], context=context)
+            if parent_id and  parent_id not in update_ids:
+                update_ids.append(parent_id)
+        elif is_company == 'partner':
+             update_ids= self.search(cr, uid, [('parent_id', 'in', ids),('use_parent_address','=',True)], context=context)
+        if update_ids:
+                self.udpate_address(cr,uid,update_ids,vals,context)
+        return super(res_partner,self).write(cr, uid, ids, vals, context=context)  
+   
+    
+    def udpate_address(self,cr,uid,update_ids,vals, context=None):
+        for id in update_ids:
+            for key, data in vals.iteritems():
+                if data:
+                    sql = "update res_partner set %(field)s = %%(value)s where id = %%(id)s" % {
+                        'field': key,
+                    }
+                    cr.execute(sql, {
+                        'value': data,
+                        'id':id
+                    })
+        return True   
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
     def name_get(self, cr, uid, ids, context=None):
