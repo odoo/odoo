@@ -189,9 +189,9 @@ class res_partner(osv.osv):
     def do_share(self, cr, uid, ids, *args):
         return True
     
-    def onchange_type(self, cr, uid, ids, is_company, title, context=None):
+    def onchange_type(self, cr, uid, ids, is_company, title, child_ids,context=None):
         if is_company == 'contact':
-            return {'value': {'is_company': is_company, 'title': '','child_ids':''}}
+            return {'value': {'is_company': is_company, 'title': '','child_ids':[(5,)]}}
         elif is_company == 'partner':
             return {'value': {'is_company': is_company, 'title': '','parent_id':''}}
         return {'value': {'is_comapny': '', 'title': ''}}
@@ -254,16 +254,17 @@ class res_partner(osv.osv):
    
     
     def udpate_address(self,cr,uid,update_ids,vals, context=None):
+        # Remove this after all testing
         for id in update_ids:
             for key, data in vals.iteritems():
-                if data:
+                if key in ('street','street2','zip','city','state_id','country_id','email','phone','fax','mobile','website','ref','lang'):  
                     sql = "update res_partner set %(field)s = %%(value)s where id = %%(id)s" % {
-                        'field': key,
-                    }
+                            'field': key,
+                        }
                     cr.execute(sql, {
-                        'value': data,
-                        'id':id
-                    })
+                            'value': data,
+                            'id':id
+                        })
         return True   
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
