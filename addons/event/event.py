@@ -111,6 +111,7 @@ class event_event(osv.osv):
                 raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. You should maybe reconsider those limits before going further") % (self.event.name))
 
     def confirmation_email(self,cr,uid,ids,context=None):
+        register_pool = self.pool.get('event.registration')
         if self.event.email_confirmation_id:
         #send reminder that will confirm the event for all the people that were already confirmed
             reg_ids = register_pool.search(cr, uid, [
@@ -273,6 +274,7 @@ class event_registration(osv.osv):
         """
         self.confirmation_registration(cr, uid, ids, context=context)
         self.email_registration(cr, uid, ids, context=context)
+        return True
 
     def button_reg_close(self, cr, uid, ids, context=None):
         """ Close Registration
