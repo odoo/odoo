@@ -78,6 +78,8 @@ class res_currency(osv.osv):
     _constraints = [(_check_rounding, "The rounding factor cannot be 0 !", ['rounding'])]
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+        if not isinstance(ids, list):
+            ids = [ids]
         res=super(osv.osv, self).read(cr, user, ids, fields, context, load)
         for r in res:
             if r.__contains__('rate_ids'):
