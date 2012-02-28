@@ -371,75 +371,7 @@
                                 <field name="ref" groups="base.group_extended" colspan="4"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('is_company','!=', 'partner')]}">
-                                <field name="child_ids"  domain="[('id','!=',parent_id.id)]"   nolabel="1" context="{'default_parent_id': id}">
-                                <form string="Partners">
-                                    <group col="8" colspan="4">
-                                        <group col="2">
-                                            <field name="is_company" on_change="onchange_type(is_company, title,child_ids)" attrs="{'required': True}"/>
-                                            <field name="function" attrs="{'invisible': [('is_company','=', 'partner')]}" colspan="2"/>
-                                            <field name="title" size="0" groups="base.group_extended" domain="[('domain', '=', is_company)]"/>
-                                        </group>
-                                    <group col="2">
-                                        <field name="name" attrs="{'required': True}"/>
-                                        <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', 'partner')]}" domain="[('is_company', '=', 'partner')]" context="{'default_is_company': 'partner'}" on_change="onchange_address(use_parent_address, parent_id)" invisible="1"/>
-                                    </group>
-                                    <group col="2">
-                                        <field name="customer"/>
-                                        <field name="supplier"/>
-                                    </group>
-                                    <group col="2">
-                                        <field name="photo" widget='image' nolabel="1"/>
-                                    </group>
-                                </group>
-                                <notebook colspan="4">
-                                <page string="General">
-                                    <group colspan="2">
-                                        <separator string="Address" colspan="4"/>
-                                        <group colspan="2">
-                                            <field name="type" string="Type" attrs="{'invisible': [('is_company','=', 'partner')]}"/>
-                                            <field name="use_parent_address" attrs="{'invisible': [('is_company','=', 'partner')]}" on_change="onchange_address(use_parent_address, parent_id)"/>
-                                        </group>
-                                        <newline/>
-                                            <field name="street" colspan="4"/>
-                                            <field name="street2" colspan="4"/>
-                                            <field name="zip"/>
-                                            <field name="city"/>
-                                            <field name="country_id"/>
-                                            <field name="state_id"/>
-                                        </group>
-                                        <group colspan="2">
-                                            <separator string="Communication" colspan="4"/>
-                                            <field name="lang" colspan="4"/>
-                                            <field name="phone" colspan="4"/>
-                                            <field name="mobile" colspan="4"/>
-                                            <field name="fax" colspan="4"/>
-                                            <field name="email" widget="email" colspan="4"/>
-                                            <field name="website" widget="url" colspan="4"/>
-                                            <field name="ref" groups="base.group_extended" colspan="4"/>
-                                        </group>
-                                        <group colspan="4" attrs="{'invisible': [('is_company','!=', 'partner')]}">
-                                            <field name="child_ids"  domain="[('id','!=',parent_id.id)]"   nolabel="1"/>
-                                        </group>
-                                    </page>
-                                    <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
-                                        <separator string="General Information" colspan="4"/>
-                                            <field name="user_id"/>
-                                            <field name="active" groups="base.group_extended"/>
-                                            <field name="date"/>
-                                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                        <newline/>
-                                    </page>
-                                    <page string="History" groups="base.group_extended" invisible="True">
-                                    </page>
-                                    <page string="Categories" groups="base.group_extended">
-                                        <field name="category_id" colspan="4" nolabel="1"/>
-                                    </page>
-                                    <page string="Notes">
-                                        <field name="comment" colspan="4" nolabel="1"/>
-                                    </page>
-                                </notebook>
-                            </form>
-                            </field>
+                                <field name="child_ids" nolabel="1" context="{'default_parent_id': id}"/>
                             </group>
                         </page>
                         <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
