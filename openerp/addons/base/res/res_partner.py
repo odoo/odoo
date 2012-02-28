@@ -244,7 +244,8 @@ class res_partner(osv.osv):
             parent_id=partner_id.parent_id.id
             if is_company == 'contact' and  parent_id:
                 update_ids= self.search(cr, uid, [('parent_id', '=', parent_id),('use_parent_address','=',True)], context=context)
-                if parent_id not in update_ids: update_ids.append(parent_id)
+                if parent_id not in update_ids: 
+                    update_ids.append(parent_id)
             elif is_company == 'partner':
                  update_ids= self.search(cr, uid, [('parent_id', '=', partner_id.id),('use_parent_address','=',True)], context=context)
             if update_ids:
