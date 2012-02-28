@@ -96,6 +96,7 @@ class sale_configuration(osv.osv_memory):
         return installed_modules
 
     def default_get(self, cr, uid, fields_list, context=None):
+        ir_values_obj = self.pool.get('ir.values')
         result = super(sale_configuration, self).default_get(
             cr, uid, fields_list, context=context)
         installed_modules = self.get_installed_modules(cr, uid, MODULE_LIST, context=context)
