@@ -103,25 +103,31 @@ class event_event(osv.osv):
     def button_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
+    def confirmation_event(self,cr,uid,ids,context=None):
+        register_pool = self.pool.get('event.registration')
+        for self.event in self.browse(cr, uid, ids, context=context):
+            total_confirmed = self.event.register_current
+            if total_confirmed < self.event.register_min or total_confirmed > self.event.register_max and self.event.register_max!=0:
+                raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. You should maybe reconsider those limits before going further") % (self.event.name))
+
+    def confirmation_email(self,cr,uid,ids,context=None):
+        if self.event.email_confirmation_id:
+        #send reminder that will confirm the event for all the people that were already confirmed
+            reg_ids = register_pool.search(cr, uid, [
+                               ('event_id', '=', self.event.id),
+                               ('state', 'not in', ['draft', 'cancel'])], context=context)
+            register_pool.mail_user_confirm(cr, uid, reg_ids)
+        return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
+
     def button_confirm(self, cr, uid, ids, context=None):
         """ Confirm Event and send confirmation email to all register peoples
         """
+        #renforcing method : create a list of ids
         if isinstance(ids, (int, long)):
             ids = [ids]
-        #renforcing method : create a list of ids
-        register_pool = self.pool.get('event.registration')
-        for event in self.browse(cr, uid, ids, context=context):
-            total_confirmed = event.register_current
-            if total_confirmed < event.register_min or total_confirmed > event.register_max and event.register_max!=0:
-                raise osv.except_osv(_('Error!'),_("The total of confirmed registration for the event '%s' does not meet the expected minimum/maximum. You should maybe reconsider those limits before going further") % (event.name))
-            if event.email_confirmation_id:
-                #send reminder that will confirm the event for all the people that were already confirmed
-                reg_ids = register_pool.search(cr, uid, [
-                               ('event_id', '=', event.id),
-                               ('state', 'not in', ['draft', 'cancel'])], context=context)
-                register_pool.mail_user_confirm(cr, uid, reg_ids)
-        return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
-
+        self.confirmation_event(cr,uid,ids,context=context)
+        self.confirmation_email(cr,uid,ids,context=context)
+        return True
     def _get_register(self, cr, uid, ids, fields, args, context=None):
         """Get Confirm or uncofirm register value.
         @param ids: List of Event registration type's id
@@ -253,14 +259,20 @@ class event_registration(osv.osv):
 
     def do_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+    
+    def confirmation_registration(self, cr, uid, ids, context=None):
+        res = self.write(cr, uid, ids, {'state': 'open'}, context=context)
+        self.message_append(cr, uid, ids,_('State set to...'),body_text= _('Open'))
+        return res
+
+    def email_registration(self, cr, uid, ids, context=None):
+        self.mail_user(cr, uid, ids)
 
     def registration_open(self, cr, uid, ids, context=None):
         """ Open Registration
         """
-        res = self.write(cr, uid, ids, {'state': 'open'}, context=context)
-        self.mail_user(cr, uid, ids)
-        self.message_append(cr, uid, ids,_('State set to...'),body_text= _('Open'))
-        return res
+        self.confirmation_registration(cr, uid, ids, context=context)
+        self.email_registration(cr, uid, ids, context=context)
 
     def button_reg_close(self, cr, uid, ids, context=None):
         """ Close Registration

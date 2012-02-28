@@ -157,12 +157,11 @@ class event_event(osv.osv):
         'moodle_id': fields.integer('Moodle ID', help='The identifier of this event in Moodle'),
     }
 
-    def button_confirm(self, cr, uid, ids, context=None):
+    def confirmation_event(self, cr, uid, ids, context=None):
         """
         create moodle courses ,users and match them when an event is confirmed
         if the event_registration is not confirmed then it doesn t nothing
         """
-        res =super(event_event, self).button_confirm(cr, uid, ids, context)
         moodle_pool = self.pool.get('event.moodle.config.wiz')
         moodle_config_wiz_id = moodle_pool.find(cr, uid, context=context)
         list_users=[]
@@ -217,7 +216,7 @@ class event_event(osv.osv):
                 'courseid' :response_courses[0]['id']
                 })
             moodle_pool.moodle_enrolled(cr, uid, moodle_config_wiz_id, enrolled, context=context)
-        return res
+        return super(event_event, self).confirmation_event(cr, uid, ids, context)
 
 event_event()
 
@@ -231,11 +230,10 @@ class event_registration(osv.osv):
         'moodle_uid': fields.integer('Moodle User ID'),
     }
 
-    def registration_open(self, cr, uid, ids, context=None):
+    def confirmation_registration(self, cr, uid, ids, context=None):
         """
         create a user and match to a course if the event is already confirmed
         """
-        res = super(event_registration, self).registration_open(cr, uid, ids, context=context)
         moodle_pool = self.pool.get('event.moodle.config.wiz')
         moodle_config_wiz_id = moodle_pool.find(cr, uid, context=context)
         for register in self.browse(cr, uid, ids, context=context):
@@ -265,7 +263,7 @@ class event_registration(osv.osv):
                     'courseid': register.event_id.moodle_id
                 }]
                 moodle_pool.moodle_enrolled(cr, uid, moodle_config_wiz_id, enrolled, context=context)
-        return res
+        return super(event_registration, self).confirmation_registration(cr, uid, ids, context=context)
 
     def onchange_moodle_name(self, cr, uid, ids, moodle_username, context=None):
         """
