@@ -25,9 +25,13 @@ from tools.translate import _
 class product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'event_ok': fields.boolean('Event', help='Match a product with an event'),
-        'event_type_id': fields.many2one('event.type', 'Type of Event'),
+        'event_ok': fields.boolean('Event Subscription', help='Determine if a product needs to create automatically an event registration at the confirmation of a sale order line.'),
+        'event_type_id': fields.many2one('event.type', 'Type of Event', help='Filter the list of event on this category only, in the sale order lines'),
     }
+
+    def onchange_event_ok(self, cr, uid, ids, event_ok, context=None):
+        return {'value': {'type': event_ok and 'service' or False}}
+
 product()
 
 class sale_order_line(osv.osv):
