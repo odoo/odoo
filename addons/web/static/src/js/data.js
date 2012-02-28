@@ -88,7 +88,7 @@ openerp.web.Query = openerp.web.Class.extend({
     },
     count: function () {
         if (this._count) { return $.when(this._count); }
-        return this.model.call(
+        return this._model.call(
             'search_count', [this._filter], {
                 context: this._model.context(this._context)});
     },
@@ -449,6 +449,7 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
      * @returns {$.Deferred}
      */
     read_ids: function (ids, fields, options) {
+        options = options || {};
         // TODO: reorder results to match ids list
         return this._model.call('read',
             [ids, fields || false],
@@ -485,6 +486,7 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
         options = options || {};
         // not very good
         return this._model.query(fields)
+            .context(options.context)
             .offset(this.index).first().pipe(function (record) {
                 if (!record) { return $.Deferred().reject().promise(); }
                 return record;
@@ -738,9 +740,10 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
             .offset(options.offset || 0)
             .limit(options.limit || false);
         q = q.order_by.apply(q, this._sort);
+
         return q.all().then(function (records) {
             // FIXME: not sure about that one, *could* have discarded count
-            q.count().then(function (count) { this._length = count; });
+            q.count().then(function (count) { self._length = count; });
             self.ids = _(records).pluck('id');
         });
     },
