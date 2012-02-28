@@ -235,21 +235,20 @@ class res_partner(osv.osv):
     
     
     def write(self, cr, uid, ids, vals, context=None):
-        # Update the all child and parent_id record ,Need to fixit
+        # Update the all child and parent_id record 
         update_ids=False
-        if ids and isinstance(ids, (tuple, list)):
-            ids=ids[0]
-        is_company=ids and self.browse(cr,uid,ids).is_company
-        if is_company == 'contact':
-            parent_id=self.browse(cr,uid,ids[0]).parent_id.id
-            if parent_id:
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for partner_id in self.browse(cr, uid, ids, context=context):
+            is_company=partner_id.is_company
+            parent_id=partner_id.parent_id.id
+            if is_company == 'contact' and  parent_id:
                 update_ids= self.search(cr, uid, [('parent_id', '=', parent_id),('use_parent_address','=',True)], context=context)
-            if parent_id and  parent_id not in update_ids:
-                update_ids.append(parent_id)
-        elif is_company == 'partner':
-             update_ids= self.search(cr, uid, [('parent_id', 'in', ids),('use_parent_address','=',True)], context=context)
-        if update_ids:
-                self.udpate_address(cr,uid,update_ids,vals,context)
+                if parent_id not in update_ids: update_ids.append(parent_id)
+            elif is_company == 'partner':
+                 update_ids= self.search(cr, uid, [('parent_id', '=', partner_id.id),('use_parent_address','=',True)], context=context)
+            if update_ids:
+                    self.udpate_address(cr,uid,update_ids,vals,context)
         return super(res_partner,self).write(cr, uid, ids, vals, context=context)  
    
     
