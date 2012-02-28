@@ -16,8 +16,8 @@
                 <form string="Event Type">
                     <field name="name" select="1"/>
                     <field name="default_reply_to"/>
-                    <field name="default_email_event"/>
-                    <field name="default_email_registration"/>
+                    <field name="default_email_event" domain="[('model_id.model','=','event.registration')]"/>
+                    <field name="default_email_registration" domain="[('model_id.model','=','event.registration')]"/>
                     <field name="default_registration_min"/>
                     <field name="default_registration_max"/>
                 </form>

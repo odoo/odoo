@@ -168,8 +168,8 @@ class event_event(osv.osv):
         'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_numbers'),
         'register_attended': fields.function(_get_register, string='Attended Registrations', multi='register_numbers'), 
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
-        'date_begin': fields.datetime('Starting Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'date_end': fields.datetime('Closing Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'date_begin': fields.datetime('Start Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Confirmed'),
@@ -177,7 +177,7 @@ class event_event(osv.osv):
             ('cancel', 'Cancelled')],
             'State', readonly=True, required=True,
             help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
-        'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email'),
+        'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email', help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.'),
         'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
         'full_name' : fields.function(_name_get_fnc, type="char", string='Name'),
         'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
@@ -269,7 +269,7 @@ class event_registration(osv.osv):
         """ Open Registration
         """
         res = self.confirm_registration(cr, uid, ids, context=context)
-        self.mail_user(cr, uid, ids)
+        self.mail_user(cr, uid, ids, context=context)
         return res
 
     def button_reg_close(self, cr, uid, ids, context=None):
@@ -286,19 +286,22 @@ class event_registration(osv.osv):
         self.message_append(cr, uid, ids,_('State set to...'),body_text= _('Cancel'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
-    def mail_user(self, cr, uid, ids, confirm=False, context=None):
+    def mail_user(self, cr, uid, ids, context=None):
         """
         Send email to user with email_template when registration is done
         """
         for registration in self.browse(cr, uid, ids, context=context):
-            template_id = registration.event_id.email_registration_id.id
-            if template_id:
-                mail_message = self.pool.get('email.template').send_mail(cr,uid,template_id,registration.id)
+            if registration.event_id.state == 'confirm' and registration.event_id.email_confirmation_id.id:
+                self.mail_user_confirm(cr, uid, ids, context=context)
+            else:
+                template_id = registration.event_id.email_registration_id.id
+                if template_id:
+                    mail_message = self.pool.get('email.template').send_mail(cr,uid,template_id,registration.id)
         return True
 
     def mail_user_confirm(self, cr, uid, ids, context=None):
         """
-        Send email to user when the event is done
+        Send email to user when the event is confirmed
         """
         for registration in self.browse(cr, uid, ids, context=context):
             template_id = registration.event_id.email_confirmation_id.id
