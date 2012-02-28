@@ -13,6 +13,11 @@
             </div>
             <div class="oe_mail_wall_threads">
             </div>
+            <div class="oe_mail_wall_more">
+                <button class="oe_mail_wall_button_more" type="button">See more discussions
+                    <t t-if="msg_left"> (<t t-raw="msg_left"/> left)</t>
+                </button>
+            </div>
         </div>
         <div class="oe_mail_wall_right">
             <div class="oe_mail_followers">
@@ -24,14 +29,6 @@
             </div>
         </div>
     </div>
-
-    <t t-name="WallHeader">
-        <div class="tmp_oe_mail_thread_header">
-            Discussion about document <t t-raw="record_model"/> (id: <t t-raw="record_id"/>)
-        </div>
-        <div class="tmp_oe_mail_thread_content">
-        </div>
-    </t>
 
     <t t-name="WallThreadContainer">
         <div class="oe_mail_wall_thread_header">
