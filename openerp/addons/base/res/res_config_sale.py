@@ -25,7 +25,8 @@ import pooler
 MODULE_LIST = [
                'analytic_user_function', 'analytic_journal_billing_rate', 'import_sugarcrm',
                'import_google', 'crm_caldav', 'wiki_sale_faq', 'base_contact',
-               'google_map', 'fetchmail_crm', 'plugin_thunderbird', 'plugin_outlook'
+               'google_map', 'fetchmail_crm', 'plugin_thunderbird', 'plugin_outlook',
+               'project_timesheet','project_mrp','account_analytic_analysis','delivery',
 ]
 
 class sale_configuration(osv.osv_memory):
