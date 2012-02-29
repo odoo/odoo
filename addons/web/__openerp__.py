@@ -37,6 +37,7 @@
         "static/lib/underscore/underscore.string.js",
         "static/lib/labjs/LAB.src.js",
         "static/lib/py.js/lib/py.js",
+        "static/lib/novajs/src/nova.js",
         "static/src/js/boot.js",
         "static/src/js/core.js",
         "static/src/js/dates.js",
