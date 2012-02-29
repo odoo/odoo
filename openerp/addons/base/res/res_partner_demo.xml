@@ -237,7 +237,7 @@
         <record id="res_partner_duboissprl0" model="res.partner">
             <field eval="'Sprl Dubois would like to sell our bookshelves but they have no storage location, so it would be exclusively on order'" name="comment"/>
             <field name="name">Dubois sprl</field>
-            <field name="address" eval="[]"/>
+            <field name="is_compnay">partner</field>
             <field name="website">http://www.dubois.be/</field>
         </record>
 
@@ -253,7 +253,10 @@
 
         <record id="res_partner_lucievonck0" model="res.partner">
             <field name="name">Lucie Vonck</field>
-            <field name="address" eval="[]"/>
+            <field eval="'Grand-Rosière'" name="city"/>
+            <field eval="'1367'" name="zip"/>
+            <field name="country_id" ref="base.be"/>
+            <field eval="'Chaussée de Namur'" name="street"/>
         </record>
 
         <!--record id="res_partner_notsotinysarl0" model="res.partner">
@@ -697,13 +700,13 @@
         </record-->
 
 
-        <record id="res_partner_address_4" model="res.partner">
+        <!--record id="res_partner_address_4" model="res.partner">
             <field eval="'Grand-Rosière'" name="city"/>
             <field eval="'1367'" name="zip"/>
             <field name="parent_id" ref="res_partner_lucievonck0"/>
             <field name="country_id" ref="base.be"/>
             <field eval="'Chaussée de Namur'" name="street"/>
-        </record>
+        </record-->
 
 
         <!--
