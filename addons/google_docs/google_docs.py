@@ -64,11 +64,8 @@ class google_docs(osv.osv):
             return google_docs_ref.edit_url_template % (gdocs_resource_id, )
         else:
             gdocs_resource = google_docs_ref.copy_gdoc(cr, uid, model, context)
-            print gdocs_resource
             if gdocs_resource == -2:
                 return gdocs_resource
-
-            print gdocs_resource
 
             # save the reference
             gdocs_resource_id = gdocs_resource.resource_id.text[len(google_docs_ref.prefix_gdoc_id_res):]
@@ -77,6 +74,5 @@ class google_docs(osv.osv):
                 'google_resource_id': gdocs_resource_id,
                 'name': gdocs_resource_title.text,
             })
-            print gdocs_resource.resource_id.text
-            print gdocs_resource_id
+
             return google_docs_ref.edit_url_template % (gdocs_resource_id,)
