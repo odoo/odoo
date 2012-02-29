@@ -31,7 +31,7 @@ API simplification
     than shortcuts, or are there due to domain and context evaluation
     issues in 6.1.
 
-    The shortcuts really add little value, and OpenERP Web embeds a
-    restricted Python evaluator (in javascript) meaning most of the
+    The shortcuts really add little value, and OpenERP Web 6.2 embeds
+    a restricted Python evaluator (in javascript) meaning most of the
     context and domain parsing & evaluation can be moved to the
     javascript code and does not require cooperative RPC bridging.

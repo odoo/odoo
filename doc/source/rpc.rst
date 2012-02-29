@@ -27,18 +27,52 @@ class maps ontwo the OpenERP server objects via two primary methods,
 :js:func:`~openerp.web.Model.query`.
 
 :js:func:`~openerp.web.Model.call` is a direct mapping to the
-corresponding method of the OpenERP server object.
+corresponding method of the OpenERP server object. Its usage is
+similar to that of the OpenERP Model API, with three differences:
+
+* The interface is :doc:`asynchronous </async>`, so instead of
+  returning results directly RPC method calls will return
+  :js:class:`Deferred` instances, which will themselves resolve to the
+  result of the matching RPC call.
+
+* Because ECMAScript 3/Javascript 1.5 doesnt feature any equivalent to
+  ``__getattr__`` or ``method_missing``, there needs to be an explicit
+  method to dispatch RPC methods.
+
+* No notion of pooler, the model proxy is instantiated where needed,
+  not fetched from an other (somewhat global) object
+
+.. code-block:: javascript
+
+    var Users = new Model('res.users');
+
+    Users.call('change_password', ['oldpassword', 'newpassword'],
+                      {context: some_context}).then(function (result) {
+        // do something with change_password result
+    });
 
 :js:func:`~openerp.web.Model.query` is a shortcut for a builder-style
 iterface to searches (``search`` + ``read`` in OpenERP RPC terms). It
 returns a :js:class:`~openerp.web.Query` object which is immutable but
 allows building new :js:class:`~openerp.web.Query` instances from the
-first one, adding new properties or modifiying the parent object's.
+first one, adding new properties or modifiying the parent object's:
+
+.. code-block:: javascript
+
+    Users.query(['name', 'login', 'user_email', 'signature'])
+         .filter([['active', '=', true], ['company_id', '=', main_company]])
+         .limit(15)
+         .all().then(function (users) {
+        // do work with users records
+    });
 
 The query is only actually performed when calling one of the query
 serialization methods, :js:func:`~openerp.web.Query.all` and
 :js:func:`~openerp.web.Query.first`. These methods will perform a new
 RPC query every time they are called.
+
+For that reason, it's actually possible to keep "intermediate" queries
+around and use them differently/add new specifications on them.
 
 .. js:class:: openerp.web.Model(name)
 
