@@ -95,19 +95,21 @@ class mail_compose_message(osv.osv_memory):
                     for fname, fcontent in attachment.iteritems():
                         data_attach = {
                             'name': fname,
-                            'datas': base64.b64encode(fcontent),
+                            'datas': fcontent,
                             'datas_fname': fname,
                             'description': fname,
                             'res_model' : self._name,
                             'res_id' : ids[0] if ids else False
                         }
                         att_ids.append(attachment_obj.create(cr, uid, data_attach))
+                    values['subtype'] = 'html'
                     values['attachment_ids'] = att_ids
         else:
             # restore defaults
             values = self.default_get(cr, uid, self.fields_get_keys(cr, uid), context)
             values.update(use_template=use_template, template_id=template_id)
 
+        values['subtype'] = 'html'    
         return {'value': values}
 
 

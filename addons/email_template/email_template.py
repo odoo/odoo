@@ -56,6 +56,8 @@ class email_template(osv.osv):
            :param str model: model name of the document record this mail is related to.
            :param int res_id: id of the document record this mail is related to.
         """
+        if context is None:
+            context = {}
         if not template: return u""
         try:
             template = tools.ustr(template)

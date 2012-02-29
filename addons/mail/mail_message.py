@@ -517,7 +517,9 @@ class mail_message(osv.osv):
                     message.write({'state':'sent', 'message_id': res})
                 else:
                     message.write({'state':'exception'})
-
+                model_pool = self.pool.get(message.model)
+                if hasattr(model_pool, '_hook_message_sent'):
+                    model_pool._hook_message_sent(cr, uid, message.res_id, context=context)
                 # if auto_delete=True then delete that sent messages as well as attachments
                 message.refresh()
                 if message.state == 'sent' and message.auto_delete:
