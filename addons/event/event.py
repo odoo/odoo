@@ -29,7 +29,6 @@ from crm import wizard
 import time
 
 
-wizard.mail_compose_message.SUPPORTED_MODELS.append('event.registration')
 
 class event_type(osv.osv):
     """ Event Type """
@@ -261,7 +260,7 @@ class event_registration(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def confirm_registration(self, cr, uid, ids, context=None):
-        self.message_append(cr, uid, ids,_('State set to...'),body_text= _('Open'))
+        self.message_append(cr, uid, ids,_('State set to open'),body_text= _('Open'))
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
 
@@ -279,11 +278,11 @@ class event_registration(osv.osv):
             context = {}
         values = {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
         res = self.write(cr, uid, ids, values)
-        self.message_append(cr, uid, ids,_('State set to...'),body_text= _('Done'))
+        self.message_append(cr, uid, ids,_('State set to Done'),body_text= _('Done'))
         return res
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
-        self.message_append(cr, uid, ids,_('State set to...'),body_text= _('Cancel'))
+        self.message_append(cr, uid, ids,_('State set to Cancel'),body_text= _('Cancel'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def mail_user(self, cr, uid, ids, context=None):
