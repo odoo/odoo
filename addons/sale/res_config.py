@@ -106,7 +106,18 @@ class sale_configuration(osv.osv_memory):
     
     def get_default_sale_configs(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
+        data_obj = self.pool.get('ir.model.data')
+        menu_obj = self.pool.get('ir.ui.menu')
         result = {}
+        invoicing_groups_id = [gid.id for gid in data_obj.get_object(cr, uid, 'sale', 'menu_invoicing_sales_order_lines').groups_id]
+        picking_groups_id = [gid.id for gid in data_obj.get_object(cr, uid, 'sale', 'menu_action_picking_list_to_invoice').groups_id]
+        group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
+        for menu in ir_values_obj.get(cr, uid, 'default', False, ['ir.ui.menu']):
+            if menu[1] == 'groups_id' and group_id in menu[2][0]:
+                if group_id in invoicing_groups_id:
+                    result['sale_orders'] = True
+                if group_id in picking_groups_id:
+                    result['deli_orders'] = True
         for res in ir_values_obj.get(cr, uid, 'default', False, ['sale.order']):
             result[res[1]] = res[2]
         return result
