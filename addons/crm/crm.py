@@ -289,6 +289,7 @@ class crm_base(object):
             if not case.user_id:
                 data['user_id'] = uid
             self.write(cr, uid, [case.id], data)
+            self._case_open_notification(case, context=context)
         self._action(cr, uid, cases, 'open')
 
         return True
@@ -301,6 +302,7 @@ class crm_base(object):
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), })
         # We use the cache of cases to keep the old case state
+        self._case_close_notification(cases, context=context)
         self._action(cr, uid, cases, 'done')
         return True
 
@@ -312,6 +314,7 @@ class crm_base(object):
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': 'cancel', 'active': True})
         # We use the cache of cases to keep the old case state
+        self._case_cancel_notification(cases, context=context)
         self._action(cr, uid, cases, 'cancel')
         return True
 
@@ -322,6 +325,7 @@ class crm_base(object):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': 'pending', 'active': True})
+        self._case_pending_notification(cases, context=context)
         self._action(cr, uid, cases, 'pending')
         return True
 
