@@ -25,6 +25,7 @@ from osv import fields,osv
 import tools
 import pooler
 from tools.translate import _
+import logging
 
 class res_payterm(osv.osv):
     _description = 'Payment term'
@@ -423,6 +424,12 @@ class res_partner_address(osv.osv):
         'company_id': fields.many2one('res.company', 'Company',select=1),
         'color': fields.integer('Color Index'),
     }
+    def write(self, cr, uid, ids, vals, context=None):
+        logging.getLogger('res.partner').warning("Deprecated, use of res.partner.address and used res.partner")
+        return super(res_partner_address,self).write(cr, uid, ids, vals, context=context)   
+    def create(self, cr, uid, vals, context=None):
+        logging.getLogger('res.partner').warning("Deprecated, use of res.partner.address and used res.partner")
+        return super(res_partner_address,self).create(cr, uid, vals, context=context) 
 res_partner_address()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
