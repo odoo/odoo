@@ -267,7 +267,7 @@ nova = (function() {
             this.__edispatcherEvents = new lib.internal.Events();
             this.__edispatcherRegisteredEvents = [];
         },
-        bind: function(events, dest, func) {
+        on: function(events, dest, func) {
             var self = this;
             events = events.split(/\s+/);
             _.each(events, function(eventName) {
@@ -278,7 +278,7 @@ nova = (function() {
             });
             return this;
         },
-        unbind: function(events, dest, func) {
+        off: function(events, dest, func) {
             var self = this;
             events = events.split(/\s+/);
             _.each(events, function(eventName) {

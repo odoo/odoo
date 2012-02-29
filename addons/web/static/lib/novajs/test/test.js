@@ -65,16 +65,16 @@ test("base", function() {
     var y = new Claz();
     var tmp = 0;
     var fct = function() {tmp = 1;};
-    x.bind("test", y, fct);
+    x.on("test", y, fct);
     equal(tmp, 0);
     x.trigger("test");
     equal(tmp, 1);
     tmp = 0;
-    x.unbind("test", y, fct);
+    x.off("test", y, fct);
     x.trigger("test");
     equal(tmp, 0);
     tmp = 0;
-    x.bind("test", y, fct);
+    x.on("test", y, fct);
     y.destroy();
     x.trigger("test");
     equal(tmp, 0);
@@ -89,7 +89,7 @@ test("base", function() {
     x.set({test: 1});
     equal(x.get("test"), 1);
     var tmp = 0;
-    x.bind("change:test", y, function(model, options) {
+    x.on("change:test", y, function(model, options) {
         tmp = 1;
         equal(options.oldValue, 1);
         equal(options.newValue, 2);
