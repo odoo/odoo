@@ -216,7 +216,7 @@ class sale_order(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesman', states={'draft': [('readonly', False)]}, select=True),
         'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)]}, required=True, change_default=True, select=True),
         'partner_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Invoice address for current sales order."),
-        'partner_order_id': fields.many2one('res.partner.address', 'Ordering Contact', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="The name and address of the contact who requested the order or quotation."),
+#        'partner_order_id': fields.many2one('res.partner.address', 'Ordering Contact', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="The name and address of the contact who requested the order or quotation."),
         'partner_shipping_id': fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Shipping address for current sales order."),
 
         'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="Incoterm which stands for 'International Commercial terms' implies its a series of sales terms which are used in the commercial transaction."),
@@ -279,7 +279,7 @@ class sale_order(osv.osv):
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
         'invoice_quantity': 'order',
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
-        'partner_order_id': lambda self, cr, uid, context: context.get('partner_id', False) and  self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['contact'])['contact'],
+#        'partner_order_id': lambda self, cr, uid, context: context.get('partner_id', False) and  self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['contact'])['contact'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
     }
     _sql_constraints = [
@@ -347,7 +347,7 @@ class sale_order(osv.osv):
 
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
-            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'partner_order_id': False, 'payment_term': False, 'fiscal_position': False}}
+            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'payment_term': False, 'fiscal_position': False}}
 
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery', 'invoice', 'contact'])
         part = self.pool.get('res.partner').browse(cr, uid, part)
@@ -357,7 +357,7 @@ class sale_order(osv.osv):
         dedicated_salesman = part.user_id and part.user_id.id or uid
         val = {
             'partner_invoice_id': addr['invoice'],
-            'partner_order_id': addr['contact'],
+#            'partner_order_id': addr['contact'],
             'partner_shipping_id': addr['delivery'],
             'payment_term': payment_term,
             'fiscal_position': fiscal_position,
@@ -430,7 +430,7 @@ class sale_order(osv.osv):
             'partner_id': order.partner_id.id,
             'journal_id': journal_ids[0],
             'address_invoice_id': order.partner_invoice_id.id,
-            'address_contact_id': order.partner_order_id.id,
+#            'address_contact_id': order.partner_order_id.id,
             'invoice_line': [(6, 0, lines)],
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
