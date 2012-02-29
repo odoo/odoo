@@ -63,9 +63,13 @@ class account_configuration(osv.osv_memory):
     def set_tax_value(self, cr, uid, ids, vals, context=None):
         chart_account_obj = self.pool.get('wizard.multi.charts.accounts')
         acc_installer_obj = self.pool.get('account.installer')
-        chart_template_ids = self.pool.get('account.chart.template').search(cr, uid, [('visible', '=', True)], context=context)
+        chart_template_obj = self.pool.get('account.chart.template')
+        tax_template_obj = self.pool.get('account.tax.template')
+        chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
+        if chart_template_ids:
+            taxes = tax_template_obj.search(cr, uid, [('chart_template_id', '=', chart_template_ids[0])], context=context)
         result = {}
-        if not self._check_default_tax(cr, uid, context):
+        if not self._check_default_tax(cr, uid, context) and not taxes:
             installer_id = acc_installer_obj.create(cr, uid, {}, context=context)
             acc_installer_obj.execute(cr, uid, [installer_id], context=context)
             if chart_template_ids:
