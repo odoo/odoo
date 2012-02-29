@@ -143,17 +143,17 @@ class sale_configuration(osv.osv_memory):
     def execute(self, cr, uid, ids, vals, context=None):
         #TODO: TO BE IMPLEMENTED
         for method in dir(self):
-            if method.startswith('_set'):
+            if method.startswith('set_'):
+                vals['modules'] = MODULE_LIST
                 getattr(self, method)(cr, uid, ids, vals, context)
         return True
 
-    def _set_modules(self, cr, uid, ids, vals, context=None):
+    def set_modules(self, cr, uid, ids, vals, context=None):
         module_obj = self.pool.get('ir.module.module')
+        MODULE_LIST = vals.get('modules')
         for k, v in vals.items():
             if k == 'task_work':
                 MODULE_LIST += ['project_timesheet','project_mrp']
-            if k == 'timesheet':
-                MODULE_LIST += ['account_analytic_analysis']
             if k in MODULE_LIST:
                 installed = self.get_default_installed_modules(cr, uid, [k], context)
                 if v == True and not installed.get(k):
@@ -164,7 +164,7 @@ class sale_configuration(osv.osv_memory):
                     module_obj.button_uninstall(self, cr, uid, [module_id], context=None)
                     module_obj.button_upgrade(self, cr, uid, [module_id], context=None)
 
-    def _set_sale_defaults(self, cr, uid, ids, vals, context=None):
+    def set_sale_defaults(self, cr, uid, ids, vals, context=None):
         ir_values_obj = self.pool.get('ir.values')
         data_obj = self.pool.get('ir.model.data')
         menu_obj = self.pool.get('ir.ui.menu')
@@ -198,7 +198,7 @@ class sale_configuration(osv.osv_memory):
             
         return res
     
-    def _set_groups(self, cr, uid, ids, vals, context=None):
+    def set_groups(self, cr, uid, ids, vals, context=None):
         data_obj = self.pool.get('ir.model.data')
         users_obj = self.pool.get('res.users')
         groups_obj = self.pool.get('res.groups')
