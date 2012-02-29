@@ -66,7 +66,7 @@ Openlabs was kept
         'security/ir.model.access.csv'
     ],
     "demo": [
-        'res_partner_demo.yml',
+       # 'res_partner_demo.yml',
     ],
     "installable": True,
     "auto_install": False,

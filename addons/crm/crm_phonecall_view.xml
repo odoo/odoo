@@ -91,8 +91,6 @@
                         attrs="{'invisible':[('partner_id','!=',False)]}" 
                         groups="base.group_partner_manager"/>
                     <newline/>
-                    <field name="partner_address_id"
-                        on_change="onchange_partner_address_id(partner_address_id)" />
                     <newline/>
                     <field name="partner_mobile" />
                 </group>
@@ -140,9 +138,7 @@
                 <field name="partner_id"
                     on_change="onchange_partner_id(partner_id)"
                     string="Partner" />
-                <field name="partner_address_id"
-                        on_change="onchange_partner_address_id(partner_address_id)"
-                        invisible="1"/>
+        
                 <field name="partner_phone"
                     invisible="1"/>
                 <field name="user_id" groups="base.group_extended"/>
