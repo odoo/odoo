@@ -371,7 +371,7 @@
                                 <field name="ref" groups="base.group_extended" colspan="4"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('is_company','!=', 'partner')]}">
-                                <field name="child_ids" nolabel="1"/>
+                                <field name="child_ids" context="{'default_parent_id': active_id}" nolabel="1"/>
                             </group>
                         </page>
                         <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
