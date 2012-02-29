@@ -1,22 +1,3 @@
-.. _api:
-
-OpenERP API Reference
-=====================
-
-.. image:: _static/openerp.png
-   :alt: OpenERP framework logo
-   :class: floatingflask
-
-Welcome to OpenERP API reference.
-
-.. _openerp library:
-
-Server-side library
--------------------
-
-.. automodule:: openerp
-   :members:
-   :undoc-members:
 
 Start-up script
 ---------------
@@ -37,9 +18,3 @@ into one of the WSGI entry points of the server.
 
 .. versionadded:: 6.1
 
-ORM and models
---------------
-
-.. automodule:: openerp.osv.orm
-   :members:
-   :undoc-members:

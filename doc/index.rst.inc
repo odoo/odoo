@@ -8,5 +8,7 @@ functions, classes, and method.
 .. toctree::
    :maxdepth: 2
 
-   api
+   api/core
+   api/startup
+   api/models
 
