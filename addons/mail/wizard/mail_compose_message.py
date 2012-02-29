@@ -147,13 +147,13 @@ class mail_compose_message(osv.osv_memory):
             # as it is easier to quote than the HTML version.
             # XXX TODO: make it possible to switch to HTML on the fly
             current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
-            body = message_data.body_text or current_user.signature 
+            body = message_data.body_text or current_user.signature or ''
             if context.get('mail.compose.message.mode') == 'reply':
                 sent_date = _('On %(date)s, ') % {'date': message_data.date} if message_data.date else ''
                 sender = _('%(sender_name)s wrote:') % {'sender_name': tools.ustr(message_data.email_from or _('You'))}
                 quoted_body = '> %s' % tools.ustr(body.replace('\n', "\n> ") or '')
                 body = '\n'.join(["\n", (sent_date + sender), quoted_body])
-                body += "\n" + current_user.signature
+                body += "\n" + (current_user.signature or '')
                 re_prefix = _("Re:")
                 if not (subject.startswith('Re:') or subject.startswith(re_prefix)):
                     subject = "%s %s" % (re_prefix, subject)

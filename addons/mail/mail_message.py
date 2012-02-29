@@ -157,7 +157,7 @@ class mail_message(osv.osv):
                     msg_txt += truncate_text(message.body_text)
             else:
                 msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
-                msg_txt += message.subject
+                msg_txt += (message.subject or '')
             result[message.id] = msg_txt
         return result
 
