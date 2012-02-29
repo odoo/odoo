@@ -339,7 +339,9 @@ openerp.mail = function(session) {
             var self = this;
             this._super.apply(this, arguments);
             /* events and buttons */
-            this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });   
+            this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
+            this.$element.find('button.oe_mail_wall_button_more').bind('click', function () { self.do_more(); });
+            this.$element.find('div.oe_mail_wall_nomore').hide();
             /* load mail.message search view */
             var search_view_loaded = this.load_search_view(this.params.search_view_id, {}, false);
             var search_view_ready = $.when(search_view_loaded).then(function () {
@@ -357,7 +359,7 @@ openerp.mail = function(session) {
         /**
          * Loads the mail.message search view
          * @param {Number} view_id id of the search view to load
-         * @param {??} defaults ??
+         * @param {Object} defaults ??
          * @param {Boolean} hidden ??
          */
         load_search_view: function (view_id, defaults, hidden) {
@@ -399,9 +401,7 @@ openerp.mail = function(session) {
             this.params.domain = [];
             this.sorted_comments = {};
             this.$element.find('div.oe_mail_wall_threads').empty();
-            return this.fetch_comments(domain, context, offset, limit).then(function () {
-                self.$element.find('button.oe_mail_wall_button_more').bind('click', function () { self.do_more(); });
-            });
+            return this.fetch_comments(domain, context, offset, limit);
         },
 
         /**
