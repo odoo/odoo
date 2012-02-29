@@ -170,10 +170,10 @@
             var width = viewport.offsetWidth; 
             var height = viewport.offsetHeight;
             
-            if( b.maxy + dy < margin   ||
-                b.miny + dy > height - margin ||
-                b.maxx + dx < margin ||
-                b.minx + dx > width - margin ){
+            if( ( dy < 0 && b.maxy + dy < margin )   ||
+                ( dy > 0 && b.miny + dy > height - margin ) ||
+                ( dx < 0 && b.maxx + dx < margin ) ||
+                ( dx > 0 && b.minx + dx > width - margin ) ){
                 return false;
             }
 
