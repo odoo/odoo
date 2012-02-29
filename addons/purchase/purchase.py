@@ -361,8 +361,8 @@ class purchase_order(osv.osv):
         #EDI EXport data
         id = ids[0]
         order = self.browse(cr, uid, id, context)
-        if not order.partner_id.opt_out: 
-            order.edi_export_and_email(template_ext_id='purchase.email_template_edi_purchase', context=context)
+        #if not order.partner_id.opt_out: 
+            #order.edi_export_and_email(template_ext_id='purchase.email_template_edi_purchase', context=context)
         ctx = context.copy()
         ctx.update({'active_model': 'purchase.order', 'active_id': id, 'mail.compose.template_id': template_id})
         return {
