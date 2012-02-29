@@ -83,6 +83,7 @@ Main features :
     'certificate' : '001156338024966477869',
     # Web client
     'js': ['static/lib/backbone/backbone-0.5.3.js', 'static/src/js/pos.js'],
-    'css': ['static/src/css/pos.css']
+    'css': ['static/src/css/pos.css'],
+    'qweb': ['static/src/xml/pos.xml'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

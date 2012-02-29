@@ -31,7 +31,7 @@ class base_synchro_server(osv.osv):
         'server_port': fields.integer('Server Port', size=64,required=True),
         'server_db': fields.char('Server Database', size=64,required=True),
         'login': fields.char('User Name',size=50,required=True),
-        'password': fields.char('Password',size=64,invisible=True,required=True),
+        'password': fields.char('Password',size=64,required=True),
         'obj_ids' : fields.one2many('base.synchro.obj','server_id','Models',ondelete='cascade')
     }
     _defaults = {
