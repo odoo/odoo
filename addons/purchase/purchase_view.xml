@@ -203,8 +203,8 @@
                                 <button name="purchase_confirm" states="draft,send" string="Confirm Order" icon="gtk-go-forward"/>
                                 <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" icon="gtk-ok"/>
                                 <button name="purchase_approve" states="confirmed" string="Approve Order" icon="gtk-go-forward"/>
-                                <button name="view_invoice" string="Receive Invoice" icon="gtk-go-forward" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'),('state','!=', 'approved') ]}" />
-                                <button name="view_picking" states="approved" string="Receive Product" icon="gtk-go-forward" type="object"/>
+                                <button name="view_invoice" string="Receive Invoice" icon="gtk-go-forward" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}"/>
+                                <button name="view_picking" string="Receive Product" icon="gtk-go-forward" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}"/>
                                 <button name="action_cancel_draft" states="cancel,send,confirmed" string="Set to Draft" type="object" icon="gtk-convert"/>
                                 <button name="purchase_cancel" states="draft,confirmed,wait_auth,send" string="Cancel" icon="gtk-cancel"/>
                             </group>

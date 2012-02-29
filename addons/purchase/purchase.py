@@ -280,8 +280,8 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if po.invoice_method == 'manual':
                 if not po.invoice_ids:
-                    raise osv.except_osv(_('Warring !'),
-                                         _('You have configure Invoice Control is: "%s", You must first Create all invoices related to this purchase order: "%s"') % (self._columns['invoice_method'].selection[0][1], po.name))
+                    raise osv.except_osv(_('warning !'),
+                                         _('Your Invoicing Control is based on order lines, so please create invoice from Purchase order lines.'))
             inv_ids+= [invoice.id for invoice in po.invoice_ids]
 
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
