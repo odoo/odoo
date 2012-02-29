@@ -100,11 +100,11 @@
     Vec2.prototype.add_xy = function(x,y){
         return new Vec2(this.x+x,this.y+y);
     };
-    // returns (this - v) as a new vector where v is a vector and - is the vector substraction
+    // returns (this - v) as a new vector where v is a vector and - is the vector subtraction
     Vec2.prototype.sub = function(v){
         return new Vec2(this.x-v.x,this.y-v.y);
     };
-    // returns (this - (x,y)) as a new vector where - is vector substraction
+    // returns (this - (x,y)) as a new vector where - is vector subtraction
     Vec2.prototype.sub_xy = function(x,y){
         return new Vec2(this.x-x,this.y-y);
     };
@@ -175,7 +175,7 @@
     // returns the angle between this vector and the vector (1,0) in radians
     Vec2.prototype.angle = function(){
         return Math.atan2(this.y,this.x);
-    }
+    };
     // returns the angle between this vector and the vector (1,0) in degrees
     Vec2.prototype.angle_deg = function(){
         return Math.atan2(this.y,this.x) * rad2deg;
