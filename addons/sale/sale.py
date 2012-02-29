@@ -28,6 +28,7 @@ from tools.translate import _
 from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
 import decimal_precision as dp
 import netsvc
+from openerp.addons.base.res import res_config_sale as sale_config
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -789,7 +790,7 @@ class sale_order(osv.osv):
         return True
 
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
-        date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=line.delay or 0.0)    
+        date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=line.delay or 0.0)
         date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return date_planned
 
@@ -1330,12 +1331,15 @@ class sale_order_line(osv.osv):
 
 sale_order_line()
 
-class sale_config_picking_policy(osv.osv_memory):
-    _name = 'sale.config.picking_policy'
-    _inherit = 'res.config'
+sale_config.MODULE_LIST += [
+                'project_timesheet', 'account_analytic_analysis', 'project_mrp', 'delivery',
+                'sale_margin', 'sale_journal'
+]
+
+class sale_configuration(osv.osv_memory):
+    _inherit = 'sale.configuration'
 
     _columns = {
-        'name': fields.char('Name', size=64),
         'sale_orders': fields.boolean('Based on Sales Orders',),
         'deli_orders': fields.boolean('Based on Delivery Orders'),
         'task_work': fields.boolean('Based on Tasks\' Work'),
@@ -1345,27 +1349,103 @@ class sale_config_picking_policy(osv.osv_memory):
             ('picking', 'Invoice Based on Deliveries'),
         ], 'Main Method Based On', required=True, help="You can generate invoices based on sales orders or based on shippings."),
         'charge_delivery': fields.boolean('Do you charge the delivery?'),
-        'time_unit': fields.many2one('product.uom','Main Working Time Unit')
+        'time_unit': fields.many2one('product.uom','Working Time Unit'),
+        'picking_policy' : fields.boolean("Deliver all products at once?"),
+        'group_sale_pricelist_per_customer':fields.boolean("Pricelist per customer ",help="Group to Activate pricelist to manage prices per customer"),
+        'group_sale_uom_per_product':fields.boolean("UOM per product",help="Group to Allow different unit of measure per product"),
+        'group_sale_delivery_address':fields.boolean("Multiple Address",help="Group To Allow delivery address different from invoice address"),
+        'group_sale_disc_per_sale_order_line':fields.boolean("Discounts per sale order lines ",help="Group to apply discounts per sale order lines"),
+        'sale_layout':fields.boolean("Notes & subtotals per line",help="Install sale_layout module: This module provides features to improve the layout of the Sales Order.."),
+        'warning': fields.boolean("Alerts by products or customers",
+                                  help="Install warning module: Module to trigger warnings in OpenERP objects."),
+        'tax_value' : fields.float('Value'),
+        'tax_value_id': fields.many2one('account.tax.template'),
+        'tax_policy': fields.selection([
+            ('no_tax', 'No Tax'),
+            ('global_on_order', 'Global On Order'),
+            ('on_order_line', 'On Order Lines'),
+        ], 'Taxes', required=True),
+        'sale_margin': fields.boolean("Display Margin For Users",
+                        help="Install sale_margin module: This module adds the 'Margin' on sales order."),
+        'sale_journal': fields.boolean("Invoice journal?",
+                        help="Install sale_journal module: The sales journal modules allows you to categorise your sales and deliveries (picking lists) between different journals."),
     }
+
+    def default_get(self, cr, uid, fields_list, context=None):
+        ir_values_obj = self.pool.get('ir.values')
+        data_obj = self.pool.get('ir.model.data')
+        obj_tax_temp = self.pool.get('account.tax.template')
+        res = super(sale_configuration, self).default_get(
+            cr, uid, fields_list, context=context)
+        defaults = {}
+        module_list = sale_config.MODULE_LIST
+        defaults.update(self.get_installed_modules(cr, uid, module_list, context=context))
+        defaults.update(self.get_applied_groups(cr, uid, context=context))
+
+        for val in ir_values_obj.get(cr, uid, 'default', False, ['sale.order']):
+            defaults.update({val[1]: val[2]})
+        for k in defaults.keys():
+            if k in ['project_timesheet','project_mrp']:
+                defaults.update({'task_work': True})
+                prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
+                uom_id = self.pool.get('product.product').browse(cr, uid, prod_id).uom_id.id
+                defaults.update({'time_unit': uom_id})
+            if k in ['account_analytic_analysis']:
+                defaults.update({'timesheet': True})
+                prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
+                uom_id = self.pool.get('product.product').browse(cr, uid, prod_id).uom_id.id
+                defaults.update({'time_unit': uom_id})
+            if k == 'delivery':
+                defaults.update({'sale_orders': True, 'deli_orders': True, 'charge_delivery': True})
+            if k == 'picking_policy' and defaults[k]=='one':
+                defaults.update({'picking_policy': True})
+            if k == 'order_policy':
+                defaults.update({'order_policy': defaults.get('order_policy')})
+            if k == 'tax_policy' and defaults[k] == ['global_on_order','on_order_line']:
+                ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('sale','all'))], context=context, order="sequence, id desc", limit=1)
+                res.update({'tax_value_id': ref_tax_ids and ref_tax_ids[0] or False})
+            else:
+                res.update({k: False})
+        res.update(defaults)
+        return res
+
     _defaults = {
         'order_policy': 'manual',
+        'tax_policy': 'global_on_order',
         'time_unit': lambda self, cr, uid, c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c) and self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c)[0] or False,
     }
 
-    def onchange_order(self, cr, uid, ids, sale, deli, context=None):
-        res = {}
-        if sale:
-            res.update({'order_policy': 'manual'})
-        elif deli:
-            res.update({'order_policy': 'picking'})
-        return {'value':res}
+    #TODO: Need to check
+#    def onchange_order(self, cr, uid, ids, sale, deli, context=None):
+#        res = {}
+#        if sale:
+#            res.update({'order_policy': 'manual'})
+#        elif deli:
+#            res.update({'order_policy': 'picking'})
+#        return {'value':res}
 
-    def execute(self, cr, uid, ids, context=None):
+    def apply_groups(self, cr, uid, ids, group_name, apply=True, context=None):
+        data_obj = self.pool.get('ir.model.data')
+        users_obj = self.pool.get('res.users')
+        groups_obj = self.pool.get('res.groups')
+        dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', group_name)
+        dummy,user_group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_user')
+        if apply:
+            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(4,group_id)]})
+            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+        else:
+            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
+            users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
+
+    def execute(self, cr, uid, ids, vals, context=None):
+        #TODO: TO BE IMPLEMENTED
         ir_values_obj = self.pool.get('ir.values')
         data_obj = self.pool.get('ir.model.data')
         menu_obj = self.pool.get('ir.ui.menu')
         module_obj = self.pool.get('ir.module.module')
-        module_upgrade_obj = self.pool.get('base.module.upgrade')
+        users_obj = self.pool.get('res.users')
+        groups_obj = self.pool.get('res.groups')
+
         module_name = []
 
         group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
@@ -1380,37 +1460,63 @@ class sale_config_picking_policy(osv.osv_memory):
             menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_action_picking_list_to_invoice').id
             menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]})
 
+        if wizard.group_sale_pricelist_per_customer:
+            self.apply_groups(cr, uid, ids, 'group_sale_pricelist_per_customer', context=context)
+        else:
+            self.apply_groups(cr, uid, ids, 'group_sale_pricelist_per_customer', False, context=context)
+
+        if wizard.group_sale_uom_per_product:
+            self.apply_groups(cr, uid, ids, 'group_sale_uom_per_product', context=context)
+        else:
+            self.apply_groups(cr, uid, ids, 'group_sale_uom_per_product', False, context=context)
+
+        if wizard.group_sale_delivery_address:
+            self.apply_groups(cr, uid, ids, 'group_sale_delivery_address', context=context)
+        else:
+            self.apply_groups(cr, uid, ids, 'group_sale_delivery_address', False, context=context)
+
+        if wizard.group_sale_disc_per_sale_order_line:
+            self.apply_groups(cr, uid, ids, 'group_sale_disc_per_sale_order_line', context=context)
+        else:
+            self.apply_groups(cr, uid, ids, 'group_sale_disc_per_sale_order_line', False, context=context)
+
         if wizard.task_work:
-            module_name.append('project_timesheet')
-            module_name.append('project_mrp')
-            module_name.append('account_analytic_analysis')
+            vals['project_timesheet'] = True
+            vals['project_mrp'] = True
+            vals['account_analytic_analysis'] = True
+        else:
+            vals['project_timesheet'] = False
+            vals['project_mrp'] = False
+            vals['account_analytic_analysis'] = False
 
         if wizard.timesheet:
-            module_name.append('account_analytic_analysis')
+            vals['account_analytic_analysis'] = True
+        else:
+            vals['account_analytic_analysis'] = False
 
         if wizard.charge_delivery:
-            module_name.append('delivery')
+            vals['delivery'] = True
+        else:
+            vals['delivery'] = False
 
-        if len(module_name):
-            module_ids = []
-            need_install = False
-            module_ids = []
-            for module in module_name:
-                data_id = module_obj.name_search(cr, uid , module, [], '=')
-                module_ids.append(data_id[0][0])
+        if wizard.warning:
+            vals['warning'] = True
+        else:
+            vals['warning'] = False
 
-            for module in module_obj.browse(cr, uid, module_ids):
-                if module.state == 'uninstalled':
-                    module_obj.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
-                    need_install = True
-                    cr.commit()
-            if need_install:
-                pooler.restart_pool(cr.dbname, update_module=True)[1]
+        if wizard.sale_layout:
+            vals['sale_layout'] = True
+        else:
+            vals['sale_layout'] = False
+
+
+        if wizard.picking_policy:
+            ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], 'one')
 
         if wizard.time_unit:
             prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
             product_obj = self.pool.get('product.product')
-            product_obj.write(cr, uid, prod_id, {'uom_id':wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
+            product_obj.write(cr, uid, prod_id, {'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 
         ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], wizard.order_policy)
         if wizard.task_work and wizard.time_unit:
@@ -1419,6 +1525,8 @@ class sale_config_picking_policy(osv.osv_memory):
                 'project_time_mode_id': wizard.time_unit.id
             }, context=context)
 
-sale_config_picking_policy()
+        super(sale_configuration, self).execute(cr, uid, ids, vals, context=context)
+
+sale_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

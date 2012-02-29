@@ -106,7 +106,7 @@ class delivery_carrier(osv.osv):
             # if using advanced pricing per destination: do not change
             if record.use_detailed_pricelist:
                 continue
-			
+
             # not using advanced pricing per destination: override grid
             grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
 
@@ -250,23 +250,23 @@ class delivery_grid_line(osv.osv):
 
 delivery_grid_line()
 
-class define_delivery_steps(osv.osv_memory):
-    _name = 'delivery.define.delivery.steps.wizard'
-
-    _columns = {
-        'picking_policy' : fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')], 'Picking Policy'),
-    }
-    _defaults = {
-        'picking_policy': lambda s,c,u,ctx: s.pool.get('sale.order').default_get(c,u,['picking_policy'],context=ctx)['picking_policy']
-    }
-
-    def apply_cb(self, cr, uid, ids, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        wizard = self.browse(cr, uid, ids, context=context)[0]
-        ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], wizard.picking_policy)
-        return {'type' : 'ir.actions.act_window_close'}
-
-define_delivery_steps()
+#class define_delivery_steps(osv.osv_memory):
+#    _name = 'delivery.define.delivery.steps.wizard'
+#
+#    _columns = {
+#        'picking_policy' : fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')], 'Picking Policy'),
+#    }
+#    _defaults = {
+#        'picking_policy': lambda s,c,u,ctx: s.pool.get('sale.order').default_get(c,u,['picking_policy'],context=ctx)['picking_policy']
+#    }
+#
+#    def apply_cb(self, cr, uid, ids, context=None):
+#        ir_values_obj = self.pool.get('ir.values')
+#        wizard = self.browse(cr, uid, ids, context=context)[0]
+#        ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], wizard.picking_policy)
+#        return {'type' : 'ir.actions.act_window_close'}
+#
+#define_delivery_steps()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

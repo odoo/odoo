@@ -8,6 +8,8 @@
             parent="base.menu_base_partner" sequence="1"
             />
 
+        <menuitem groups="base.group_sale_pricelist_per_customer" id="product.menu_product_pricelist_main" name="Pricelists" parent="base.menu_base_config"/>
+
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
 
         <record id="view_shop_form" model="ir.ui.view">
@@ -21,7 +23,7 @@
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <separator colspan="4" string="Accounting"/>
                     <field name="payment_default_id"/>
-                    <field domain="[('type','=','sale')]" name="pricelist_id" select="1"/>
+                    <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_sale_pricelist_per_customer" select="1"/>
                     <field name="project_id" select="1" groups="analytic.group_analytic_accounting"/>
                 </form>
             </field>
@@ -34,7 +36,7 @@
                 <tree string="Sales Shop">
                     <field name="name"/>
                     <field name="warehouse_id"/>
-                    <field name="pricelist_id"/>
+                    <field name="pricelist_id" groups="base.group_sale_pricelist_per_customer"/>
                     <field name="project_id" groups="analytic.group_analytic_accounting"/>
                 </tree>
             </field>
@@ -117,9 +119,9 @@
                         <page string="Sales Order">
                             <field name="partner_id" options='{"quick_create": false}' on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id" on_change="onchange_partner_order_id(partner_order_id, partner_invoice_id, partner_shipping_id)" options='{"quick_create": false}'/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended" options='{"quick_create": false}'/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended" options='{"quick_create": false}'/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_sale_delivery_address" options='{"quick_create": false}'/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_sale_delivery_address" options='{"quick_create": false}'/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_sale_pricelist_per_customer" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="project_id" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" widget="one2many_list">
@@ -139,7 +141,7 @@
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
                                             <field name="product_uom"
                                                 on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"
-                                                nolabel="1"/>
+                                                nolabel="1" groups="base.group_sale_uom_per_product"/>
                                             <field name="price_unit"/>
 
                                             <field groups="product.group_uos" name="product_uos_qty"/>
@@ -149,9 +151,9 @@
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}" on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)"
                                                 domain="[('product_id','=',product_id)]" groups="base.group_extended"
                                                 colspan="3"/>
-                                            <field name="discount"/>
-                                            <separator colspan="5" string="Notes"/>
-                                            <field colspan="5" name="notes" nolabel="1"/>
+                                            <field name="discount" groups="base.group_sale_disc_per_sale_order_line"/>
+                                            <separator colspan="5" string="Notes" groups="base.group_sale_notes_subtotal"/>
+                                            <field colspan="5" name="notes" nolabel="1" groups="base.group_sale_notes_subtotal"/>
                                             <separator colspan="5" string="Taxes"/>
                                             <field colspan="5" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <group colspan="5" col="5" groups="base.group_extended">
@@ -183,12 +185,12 @@
                                 <tree string="Sales Order Lines">
                                     <field colspan="4" name="name"/>
                                     <field name="product_uom_qty" string="Qty(UoM)"/>
-                                    <field name="product_uom" string="UoM"/>
+                                    <field name="product_uom" string="UoM" groups="base.group_sale_uom_per_product"/>
                                     <field groups="product.group_uos" name="product_uos_qty" string="Qty(UoS)"/>
                                     <field groups="product.group_uos" name="product_uos" string="UoS"/>
-                                    <field name="discount"/>
+                                    <field name="discount" groups="base.group_sale_disc_per_sale_order_line"/>
                                     <field name="price_unit"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                                 </tree>
                             </field>
                             <newline/>
@@ -240,8 +242,8 @@
                                 <field name="create_date"/>
                                 <field name="date_confirm"/>
                             </group>
-                            <separator colspan="4" string="Notes"/>
-                            <field colspan="4" name="note" nolabel="1"/>
+                            <separator colspan="4" string="Notes" groups="base.group_sale_notes_subtotal"/>
+                            <field colspan="4" name="note" nolabel="1" groups="base.group_sale_notes_subtotal"/>
                         </page>
                         <page string="History" groups="base.group_extended">
                             <separator colspan="4" string="Invoices"/>
@@ -361,9 +363,9 @@
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
-                    <field name="product_uom" string="UoM"/>
+                    <field name="product_uom" string="UoM" groups="base.group_sale_uom_per_product"/>
                     <field name="salesman_id"/>
-                    <field name="price_subtotal" sum="Total"/>
+                    <field name="price_subtotal" sum="Total" groups="base.group_sale_notes_subtotal"/>
                     <field name="state"/>
                     <field name="invoiced"/>
                 </tree>
@@ -382,7 +384,7 @@
 
                         <field name="product_id" readonly="1"/>
                         <field name="product_uom_qty" readonly="1"/>
-                        <field name="product_uom"/>
+                        <field name="product_uom" groups="base.group_sale_uom_per_product"/>
 
                         <field colspan="4" name="name" groups="base.group_extended"/>
                         <field name="company_id" groups="base.group_multi_company" readonly="1"/>
@@ -390,11 +392,11 @@
                     <separator colspan="4" string="Price"/>
                     <group colspan="4" col="6">
                         <field name="price_unit"/>
-                        <field name="discount"/>
-                        <field name="price_subtotal"/>
+                        <field name="discount" groups="base.group_sale_disc_per_sale_order_line"/>
+                        <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                     </group>
-                    <separator colspan="4" string="Notes"/>
-                    <field colspan="4" name="notes" nolabel="1"/>
+                    <separator colspan="4" string="Notes" groups="base.group_sale_notes_subtotal"/>
+                    <field colspan="4" name="notes" nolabel="1" groups="base.group_sale_notes_subtotal"/>
                     <separator colspan="4"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                     <group col="3" colspan="2">
@@ -501,66 +503,70 @@
         <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5" groups="base.group_extended"/>
         <menuitem id="menu_invoicing_sales_order_lines" parent="base.menu_invoiced" action="action_order_line_tree2" sequence="2" groups="base.group_no_one"/>
 
-        <!-- configartion view -->
+        <!-- Configartion View -->
 
-        <record id="view_config_picking_policy" model="ir.ui.view">
-            <field name="name">Setup Your Invoicing Method</field>
-            <field name="model">sale.config.picking_policy</field>
+        <record id="view_config_picking_policy_sales" model="ir.ui.view">
+            <field name="name">Configure Sales Application</field>
+            <field name="model">sale.configuration</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_view_base"/>
+            <field name="inherit_id" ref="base.view_config_picking_policy"/>
             <field name="arch" type="xml">
-              <data>
-                <form position="attributes">
-                  <attribute name="string">Setup your Invoicing Method</attribute>
-                </form>
-
-                <xpath expr="//separator[@string=&quot;title&quot;]" position="attributes">
-                    <attribute name="string">Setup your Invoicing Method</attribute>
-                </xpath>
-                <xpath expr="//label[@string='description']" position="attributes">
-                    <attribute name="string">This tool will help you to install the right module and configure the system according to the method you use to invoice your customers.</attribute>
-                </xpath>
-                <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-                    <attribute name="string"/>
-                    <attribute name="rowspan">12</attribute>
-                </xpath>
-                <group string="res_config_contents" position="replace">
-                    <group colspan="4" col="4">
-                       <field name="sale_orders" on_change="onchange_order(sale_orders,deli_orders)"/>
-                       <newline/>
-                       <field name="deli_orders" on_change="onchange_order(sale_orders,deli_orders)"/>
-                       <newline/>
-                       <field name="task_work"/>
-                       <newline/>
-                       <field name="timesheet"/>
-                       <newline/>
-                       <separator string="Options" colspan="4"/>
-                       <field name="order_policy" attrs="{'invisible':['|',('sale_orders','!=',True),('deli_orders','!=',True)]}"/>
-                       <newline/>
-                       <field name="charge_delivery" attrs="{'invisible':[('sale_orders','!=',True), ('deli_orders','!=',True)]}"/>
-                       <newline/>
-                       <field name="time_unit" widget="selection" domain="[('category_id','=',%(product.uom_categ_wtime)s)]" attrs="{'invisible':[('task_work','=',False),('timesheet','=',False)]}"/>
+                <xpath expr="//form/separator[@string='Contracts']" position="before">
+                    <separator string="Picking and Invoice Policy" colspan="4"/>
+                    <group  colspan="4" col="8">
+                        <group  colspan="4" col="4">
+                           <field name="sale_orders"/>
+                           <newline/>
+                           <field name="deli_orders"/>
+                           <newline/>
+                           <field name="task_work"/>
+                           <newline/>
+                           <field name="timesheet"/>
+                           <newline/>
+                        </group>
+                        <group colspan="4" col="4">
+                            <field name="order_policy" attrs="{'invisible':['|',('sale_orders','=',False),('deli_orders','=',False)]}"/>
+                            <newline/>
+                            <field name="charge_delivery" attrs="{'invisible':[('sale_orders','=',False), ('deli_orders','=',False)]}"/>
+                            <newline/>
+                            <field name="picking_policy" attrs="{'invisible':[('deli_orders','=',False)]}"/>
+                            <newline/>
+                            <field name="time_unit" domain="[('category_id.name','=','Working Time')]" attrs="{'invisible':[('task_work','=',False),('timesheet','=',False)],'required': [('timesheet','=',True)]}"/>
+                        </group>
                     </group>
-                 </group>
-              </data>
+
+                    <separator string="Sale Order" colspan="4"/>
+                    <group  colspan="4" col="8">
+                        <group  colspan="4" col="4">
+                           <field name="group_sale_pricelist_per_customer"/>
+                           <newline/>
+                           <group colspan="4" col="4">
+                                <field name="tax_policy" />
+                                <field name="tax_value" nolabel="1" attrs="{'invisible': [('tax_policy','in',['no_tax','global_on_order'])]}"/>
+                                <field name="tax_value_id" nolabel="1" attrs="{'invisible': [('tax_policy','in',['no_tax','on_order_line'])]}"/>
+                           </group>
+                           <newline/>
+                           <field name="sale_margin"/>
+                           <newline/>
+                           <field name="warning"/>
+                           <newline/>
+                        </group>
+                        <group colspan="4" col="4">
+                            <newline/>
+                            <field name="group_sale_uom_per_product"/>
+                            <newline/>
+                            <field name="group_sale_delivery_address"/>
+                            <newline/>
+                            <field name="group_sale_disc_per_sale_order_line"/>
+                            <newline/>
+                            <field name="sale_layout"/>
+                            <newline/>
+                            <field name="sale_journal"/>
+                            <newline/>
+                        </group>
+                    </group>
+                </xpath>
             </field>
-        </record>
-
-        <record id="action_config_picking_policy" model="ir.actions.act_window">
-            <field name="name">Setup your Invoicing Method</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.config.picking_policy</field>
-            <field name="view_id" ref="view_config_picking_policy"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <!-- register configuration wizard -->
-        <record id="config_wizard_step_sale_picking_policy" model="ir.actions.todo">
-            <field name="action_id" ref="action_config_picking_policy"/>
-            <field name="category_id" ref="base.category_sales_management_config"/>
-            <field name="type">once</field>
         </record>
 
     </data>
