@@ -937,7 +937,7 @@ openerp.web.OldWidget = openerp.web.Widget.extend({
         this.element_id = element_id;
         this.element_id = this.element_id || _.uniqueId('widget-');
         var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : $(document.createElement(this.tag_name));
+        this.$element = tmp ? $(tmp) : $(document.createElement(this.tagName));
     },
     render_element: function() {
         var rendered = this.render();

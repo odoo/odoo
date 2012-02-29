@@ -333,7 +333,7 @@ nova = (function() {
          * Tag name when creating a default $element.
          * @type string
          */
-        tag_name: 'div',
+        tagName: 'div',
         /**
          * Constructs the widget and sets its parent if a parent is given.
          *
@@ -350,7 +350,7 @@ nova = (function() {
          */
         init: function(parent) {
             lib.GetterSetterMixin.init.call(this);
-            this.$element = $(document.createElement(this.tag_name));
+            this.$element = $(document.createElement(this.tagName));
     
             this.setParent(parent);
         },
