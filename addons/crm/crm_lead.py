@@ -341,6 +341,8 @@ class crm_lead(crm_case, osv.osv):
             else :
                 message = _("<b>%s a call</b>.") % (action)
             case.message_append_note('', message)
+            if action == "schedule" :
+                phonecall.message_append_note(cr, uid, ids, '', message, need_action_user_id=obj.user_id.id)
 
     def case_open(self, cr, uid, ids, context=None):
         res = super(crm_lead, self).case_open(cr, uid, ids, context)
