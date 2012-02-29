@@ -371,7 +371,7 @@
                                 <field name="ref" groups="base.group_extended" colspan="4"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('is_company','!=', 'partner')]}">
-                                <field name="child_ids" nolabel="1" context="{'default_parent_id': id}"/>
+                                <field name="child_ids" nolabel="1"/>
                             </group>
                         </page>
                         <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
@@ -437,50 +437,37 @@
                     <field name="is_company"/>
                     <field name="function"/>
                     <field name="phone"/>
+                    <field name="street"/>
+                    <field name="street2"/>
+                    <field name="photo"/>
+                    <field name="zip"/>
+                    <field name="city"/>
+                    <field name="country_id"/>
+                    <field name="mobile"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
                             <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                                 <div class="oe_kanban_box oe_kanban_color_border">
                                     <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                        <table class="oe_kanban_table">
-                                            <tr>
-                                                <td class="oe_kanban_title1" align="left" valign="middle">
-                                                    <field name="name"/>
-                                                    <t t-if="record.name.raw_value and record.title.raw_value">,</t>
-                                                    <field name="title"/>
-                                                </td>
-                                                <td valign="top" width="22">
-                                                    <img t-att-src="kanban_gravatar(record.email.value, 22)" class="oe_kanban_gravatar"/>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
                                         <table class="oe_kanban_table">
                                             <tr>
                                                 <td valign="top" width="64" align="left">
                                                     <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" width="64" height="64"/>
                                                 </td>
-                                                <td valign="top" align="left">
-                                                    <div class="oe_kanban_title2">
-                                                        <t t-if="record.parent_id.raw_value">
-                                                            <field name="parent_id"/>
-                                                        </t>
-                                                        <t t-if="record.is_company.raw_value">
-                                                            <field name="country_id"/>
-                                                        </t>
-                                                    </div>
-                                                    <div class="oe_kanban_title3">
-                                                        <t t-if="record.function.raw_value">
-                                                            <field name="function"/>
-                                                        </t>
-                                                    </div>
-                                                    <div class="oe_kanban_title3">
-                                                        <i><field name="email"/>
-                                                        <t t-if="record.phone.raw_value and record.email.raw_value">,</t>
-                                                        <field name="phone"/></i>
-                                                    </div>
+                                                <td class="oe_kanban_title1" align="left" valign="middle">
+                                                    <h4><a type="edit"><field name="name"/></a></h4>
+                                                        <field name="street"/>
+                                                        <field name="street2"/><br/>
+                                                        <field name="city"/>
+                                                        <field name="zip"/><br/>
+                                                        <field name="country_id"/><br/>
+                                                        <field name="email"/><br/>
+                                                        <field name="mobile"/><br/>
+                                                </td>
+                                                <td t-if="record.is_company.raw_value == 'contact'" valign="top" align="right">
+                                                    <img t-att-src="kanban_gravatar(record.photo.value, 22)" class="oe_kanban_gravatar"/>
                                                 </td>
                                             </tr>
                                         </table>
@@ -494,6 +481,7 @@
                                             </a>
                                         </div>
                                         <br class="oe_kanban_clear"/>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
