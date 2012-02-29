@@ -202,7 +202,8 @@ class account_invoice(osv.osv):
             ('draft','Draft'),
             ('proforma','Pro-forma'),
             ('proforma2','Pro-forma'),
-            ('open','Validate'),
+            ('open','Validated'),
+            ('sent','Sent'),
             ('paid','Paid'),
             ('cancel','Cancelled')
             ],'State', select=True, readonly=True,
@@ -370,6 +371,56 @@ class account_invoice(osv.osv):
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
                 raise orm.except_orm(_('Unknown Error'), str(e))
+            
+    def _hook_message_sent(self, cr, uid, invoice_id, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'account.invoice', invoice_id, 'invoice_sent', cr)
+        return True
+
+    def invoice_print(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService('workflow')
+        for id in ids:
+            wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_sent', cr)
+        datas = {
+             'ids': ids,
+             'model': 'account.invoice',
+             'form': self.read(cr, uid, ids, context=context)[0]
+        }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'account.invoice',
+            'datas': datas,
+            'nodestroy' : True
+        }
+
+    def action_invoice_sent(self, cr, uid, ids, context=None):
+        email_template_obj = self.pool.get('email.template')
+        mod_obj = self.pool.get('ir.model.data')
+
+        template_id = email_template_obj.search(cr, uid, [('model_id', '=', 'account.invoice')], context=context)[0]
+        template = email_template_obj.browse(cr, uid, template_id)
+        model_data_id = mod_obj._get_id(cr, uid, 'mail', 'email_compose_message_wizard_form')
+        res_id = mod_obj.browse(cr, uid, model_data_id, context=context).res_id
+
+        #EDI EXport data
+        id = ids[0]
+        invoice = self.browse(cr, uid, id, context)
+        if not invoice.partner_id.opt_out:
+            invoice.edi_export_and_email(template_ext_id='account.email_template_edi_invoice', context=context)
+        ctx = context.copy()
+        ctx.update({'active_model': 'account.invoice', 'active_id': invoice.id, 'mail.compose.template_id': template.id})
+
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(res_id, 'form')],
+            'view_id': res_id,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': ctx,
+            'nodestroy': True,
+        }
 
     def confirm_paid(self, cr, uid, ids, context=None):
         if context is None:
