@@ -36,28 +36,42 @@ class account_configuration(osv.osv_memory):
     _defaults = {
         'tax_policy': 'global_on_order',
     }
+    
+    def _check_default_tax(self, cr, uid, context=None):
+        ir_values_obj = self.pool.get('ir.values')
+        for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.product']):
+            if tax[1] == 'taxes_id':
+                return tax[2]
+        return False
+    
     def default_get(self, cr, uid, fields_list, context=None):
         ir_values_obj = self.pool.get('ir.values')
         res = super(account_configuration, self).default_get(cr, uid, fields_list, context=context)
         res.update({'tax_value': 15.0})
-        for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.product']):
-            if tax[1] == 'taxes_id':
-                res.update({'tax_value': tax[2] and tax[2][0]})
+        tax_id = self._check_default_tax(cr, uid, context)
+        if tax_id:
+                res.update({'tax_value': tax_id and tax_id[0]})
         return res
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         ir_values_obj = self.pool.get('ir.values')
         res = super(account_configuration, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
-        for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.product']):
-            if tax[1] == 'taxes_id':
-                if res['fields'].get('tax_value'):
-                    res['fields']['tax_value'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Value'}
+        if self._check_default_tax(cr, uid, context) and res['fields'].get('tax_value'):
+            res['fields']['tax_value'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Value'}
         return res
 
-    def set_tax_value(self, cr, uid, ids, context=None):
-        result = {}
+    def set_tax_value(self, cr, uid, ids, vals, context=None):
         chart_account_obj = self.pool.get('wizard.multi.charts.accounts')
-        chart_account_obj.execute(cr, uid, ids, context=context)
+        acc_installer_obj = self.pool.get('account.installer')
+        chart_template_ids = self.pool.get('account.chart.template').search(cr, uid, [('visible', '=', True)], context=context)
+        result = {}
+        if not self._check_default_tax(cr, uid, context):
+            installer_id = acc_installer_obj.create(cr, uid, {}, context=context)
+            acc_installer_obj.execute(cr, uid, [installer_id], context=context)
+            if chart_template_ids:
+                code_digits = chart_account_obj.onchange_chart_template_id(cr, uid, [], chart_template_ids[0], context=context)['value']['code_digits']
+                object_id = chart_account_obj.create(cr, uid, {'code_digits': code_digits}, context=context)
+                chart_account_obj.execute(cr, uid, [object_id], context=context)
         return result
     
 account_configuration()
