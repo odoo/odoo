@@ -148,9 +148,9 @@ openerp.web.DiagramView = openerp.web.View.extend({
             viewport_margin: 50
         };
 
-        $('#dia-canvas').empty();    // remove previous diagram
-
-        var canvas = document.getElementById("dia-canvas");
+        // remove previous diagram
+        var canvas = self.$element.find('div.oe_diagram_diagram')
+                             .empty().get(0);
 
         var r  = new Raphael(canvas, '100%','100%');
 
