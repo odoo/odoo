@@ -31,7 +31,9 @@ form = """<?xml version="1.0"?>
 <form string="Select Fiscal Year">
     <label string="This wizard will create an XML file for Vat details and total invoiced amounts per partner."  colspan="4"/>
     <newline/>
-    <field name="fyear" />
+    <field name="date_start" default_focus="1"/>
+    <newline/>
+    <field name="date_stop"/>
     <newline/>
     <field name="mand_id" help="Should be provided when subscription of INTERVAT service is done"/>
     <newline/>
@@ -41,7 +43,8 @@ form = """<?xml version="1.0"?>
 </form>"""
 
 fields = {
-    'fyear': {'string': 'Fiscal Year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True,},
+    'date_start': {'string':"Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
+    'date_stop': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-12-01')},
     'mand_id':{'string':'MandataireId','type':'char','size':'30','required': True,},
     'limit_amount':{'string':'Limit Amount','type':'integer','required': True, },
     'test_xml': {'string':'Test XML file', 'type':'boolean', },
@@ -78,8 +81,11 @@ class wizard_vat(wizard.interface):
 
         if not p_id_list:
              raise wizard.except_wizard(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
-        obj_year=pooler.get_pool(cr.dbname).get('account.fiscalyear').browse(cr,uid,data['form']['fyear'])
-        period_ids = pooler.get_pool(cr.dbname).get('account.period').search(cr, uid, [('fiscalyear_id', '=', data['form']['fyear'])])
+        domains = [('date_start','>=',data['form']['date_start']),('date_stop','<=',data['form']['date_stop'])]
+        date_stop = data['form']['date_stop']
+        period_ids = pooler.get_pool(cr.dbname).get('account.period').search(cr, uid, domains)
+        if not period_ids:
+            raise osv.except_osv(_('Warning !'), _('Please select the proper Start date and End Date'))
         period = "("+','.join(map(lambda x: str(x), period_ids)) +")"
 
         street = zip_city = country = ''
@@ -107,7 +113,7 @@ class wizard_vat(wizard.interface):
         data_file += '\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+ comp_name +'</Name>\n\t\t<Street>'+ street +'</Street>\n\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>'
         data_file += '\n\t\t<Country>'+ country +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
         data_comp = '\n<CompanyInfo>\n\t<VATNum>'+str(company_vat)+'</VATNum>\n\t<Name>'+ comp_name +'</Name>\n\t<Street>'+ street +'</Street>\n\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>\n\t<Country>'+ country +'</Country>\n</CompanyInfo>'
-        data_period = '\n<Period>'+ obj_year.date_stop[:4] +'</Period>'
+        data_period = '\n<Period>'+ date_stop[:4] +'</Period>'
         error_message = []
 
         for p_id in p_id_list:
