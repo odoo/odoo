@@ -55,9 +55,9 @@
       <field name="target">new</field>
     </record>
     
-    <record id="view_config_thunderbird_installer" model="ir.ui.view">
+    <!--record id="view_config_thunderbird_installer" model="ir.ui.view">
         <field name="name">Sales Application</field>
-        <field name="model">sale.configuration</field>
+        <field name="model">res.config</field>
         <field name="type">form</field>
         <field name="inherit_id" ref="base.view_config_picking_policy"/>
         <field name="arch" type="xml">
@@ -65,7 +65,7 @@
                 <button name="%(action_thunderbird_installer)d" type="action" string="Configure Thunderbird Plug-In" icon="gtk-execute" colspan="2"/>
             </field>
         </field>
-    </record>
+    </record-->
 
     <menuitem id="base.menu_base_config_plugins" name="Plugins" parent="base.menu_base_config" sequence="10"/>
     <menuitem id="menu_base_config_plugins_thunderbird" action="action_thunderbird_installer" parent="base.menu_base_config_plugins" sequence="10"/>

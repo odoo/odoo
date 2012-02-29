@@ -1,0 +1,36 @@
+<openerp>
+    <data>
+
+        <record id="view_sales_config_crm" model="ir.ui.view">
+            <field name="name">Sales Application</field>
+            <field name="model">res.config</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.res_config_view_base"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/group[@name='emails']" position="inside">
+                    <group col="2" colspan="2">
+                        <separator string="Emails" colspan="4"/>
+                        <field name="fetchmail_crm" colspan="2"/>
+                        <newline/>
+                        <group col="4" colspan="4" 
+                            attrs="{'invisible': [('fetchmail_crm','=',False)]}">
+                                <field name="server" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                                <field name="type" nolabel="1" on_change="onchange_server_type(type, is_ssl)" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                                <field name="port" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                                <field name="is_ssl" on_change="onchange_server_type(type, is_ssl)"/>
+                                <newline/>
+                                <field name="user" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                                <field name="password" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//form/group[@name='synchronization']" position="inside">
+                    <group colspan="2" col="2">
+                       <field name="crm_caldav"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
