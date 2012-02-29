@@ -323,9 +323,11 @@ class purchase_order(osv.osv):
         }
 
     def view_report(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
         if context is None:
             context = {}
-        self.write(cr, uid, ids, {'state' : 'send'})
+        for id in ids:
+            wf_service.trg_validate(uid, 'purchase.order', id, 'send_rfq', cr)
         
         data = self.read(cr, uid, ids, [], context=context)[0]
         datas = {
