@@ -81,8 +81,9 @@ class crm_configuration(osv.osv_memory):
                     'user': vals.get('user'),
                     'password': vals.get('password')
             }
-            if not self.get_installed_modules(cr, uid, ['fetchmail_crm'], context):
-                fetchmail_obj.create(cr, uid, fetchmail_vals, context=context)
+            server_ids = fetchmail_obj.search(cr, uid, [])
+            if not self.get_default_installed_modules(cr, uid, ['fetchmail_crm'], context) or not server_ids:
+                tt = fetchmail_obj.create(cr, uid, fetchmail_vals, context=context)
             else:
                 fetchmail_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads')], context=context)
                 fetchmail_obj.write(cr, uid, fetchmail_ids, fetchmail_vals, context=context)
