@@ -758,6 +758,8 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             id = $clicked_menu.data('menu');
         }
 
+        this.trigger('menuClicked', id, $clicked_menu);
+
         if (id) {
             this.open_menu(id);
             this.current_menu = id;
