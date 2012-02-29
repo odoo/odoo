@@ -150,16 +150,13 @@ class sale_configuration(osv.osv_memory):
         for k, v in vals.items():
             if k in MODULE_LIST:
                 installed = self.get_default_installed_modules(cr, uid, [k], context)
-                if v == True and not installed:
+                if v == True and not installed.get(k):
                     module_id = module_obj.search(cr, uid, [('name','=',k)])[0]
-                    module_obj.state_update(cr, uid, [module_id], 'to install', ['uninstalled'], context)
-                    cr.commit()
-                    pooler.restart_pool(cr.dbname, update_module=True)[1]
+                    module_obj.button_immediate_install(cr, uid, [module_id], context)
                 elif v == False and installed.get(k):
                     module_id = module_obj.search(cr, uid, [('name','=',k)])[0]
-                    module_obj.state_update(cr, uid, [module_id], 'to remove', ['installed'], context)
-                    cr.commit()
-                    pooler.restart_pool(cr.dbname, update_module=True)[1]
+                    module_obj.button_uninstall(self, cr, uid, [module_id], context=None)
+                    module_obj.button_upgrade(self, cr, uid, [module_id], context=None)
 
     def set_sale_defaults(self, cr, uid, ids, vals, context=None):
         ir_values_obj = self.pool.get('ir.values')
