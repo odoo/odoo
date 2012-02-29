@@ -384,6 +384,7 @@ var py = {};
             base = py.object;
         }
         proto = constructor.prototype = create(base.prototype);
+        proto.constructor = constructor;
         if (dict) {
             for(var k in dict) {
                 if (!dict.hasOwnProperty(k)) { continue; }
@@ -420,6 +421,10 @@ var py = {};
                 return py.True;
             }
         },
+        __lt__: function () { return py.NotImplemented; },
+        __le__: function () { return py.NotImplemented; },
+        __ge__: function () { return py.NotImplemented; },
+        __gt__: function () { return py.NotImplemented; },
         __str__: function () {
             return this.__unicode__();
         },
@@ -462,11 +467,13 @@ var py = {};
             throw new Error(this.constructor.name + ' can not be converted to JSON');
         }
     });
-    NoneType = py.type(function () {}, py.object, {
+    NoneType = py.type(function NoneType() {}, py.object, {
         __nonzero__: function () { return py.False; },
         toJSON: function () { return null; }
     });
     py.None = new NoneType();
+    NotImplementedType = py.type(function NotImplementedType(){});
+    py.NotImplemented = new NotImplementedType();
     var booleans_initialized = false;
     py.bool = py.type(function bool(value) {
         // The only actual instance of py.bool should be py.True
@@ -492,15 +499,19 @@ var py = {};
             return this._value === other._value ? py.True : py.False;
         },
         __lt__: function (other) {
+            if (!(other instanceof py.float)) { return py.NotImplemented; }
             return this._value < other._value ? py.True : py.False;
         },
         __le__: function (other) {
+            if (!(other instanceof py.float)) { return py.NotImplemented; }
             return this._value <= other._value ? py.True : py.False;
         },
         __gt__: function (other) {
+            if (!(other instanceof py.float)) { return py.NotImplemented; }
             return this._value > other._value ? py.True : py.False;
         },
         __ge__: function (other) {
+            if (!(other instanceof py.float)) { return py.NotImplemented; }
             return this._value >= other._value ? py.True : py.False;
         },
         __neg__: function () {
@@ -523,15 +534,19 @@ var py = {};
             return py.False;
         },
         __lt__: function (other) {
+            if (!(other instanceof py.str)) { return py.NotImplemented; }
             return this._value < other._value ? py.True : py.False;
         },
         __le__: function (other) {
+            if (!(other instanceof py.str)) { return py.NotImplemented; }
             return this._value <= other._value ? py.True : py.False;
         },
         __gt__: function (other) {
+            if (!(other instanceof py.str)) { return py.NotImplemented; }
             return this._value > other._value ? py.True : py.False;
         },
         __ge__: function (other) {
+            if (!(other instanceof py.str)) { return py.NotImplemented; }
             return this._value >= other._value ? py.True : py.False;
         },
         __nonzero__: function () {
@@ -608,6 +623,7 @@ var py = {};
         None: py.None,
         True: py.True,
         False: py.False,
+        NotImplemented: py.NotImplemented,
 
         object: py.object,
         bool: py.bool,
@@ -630,10 +646,22 @@ var py = {};
         case 'is': return a === b ? py.True : py.False;
         case '!=': return a.__ne__(b)
         case 'is not': return a !== b ? py.True : py.False;
-        case '<': return a.__lt__(b);
-        case '<=': return a.__le__(b);
-        case '>': return a.__gt__(b);
-        case '>=': return a.__ge__(b);
+        case '<':
+            var v = a.__lt__(b);
+            if (v !== py.NotImplemented) { return v; }
+            return PY_ensurepy(a.constructor.name < b.constructor.name);
+        case '<=':
+            var v = a.__le__(b);
+            if (v !== py.NotImplemented) { return v; }
+            return PY_ensurepy(a.constructor.name <= b.constructor.name);
+        case '>':
+            var v = a.__gt__(b);
+            if (v !== py.NotImplemented) { return v; }
+            return PY_ensurepy(a.constructor.name > b.constructor.name);
+        case '>=':
+            var v = a.__ge__(b);
+            if (v !== py.NotImplemented) { return v; }
+            return PY_ensurepy(a.constructor.name >= b.constructor.name);
         case 'in':
             return b.__contains__(a);
         case 'not in':
