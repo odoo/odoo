@@ -72,6 +72,7 @@ The main features are:
         'images/customer_history.jpeg',
         'images/messages_form.jpeg',
         'images/messages_list.jpeg',
+        'static/src/img/email_icong.png',
     ],
     'css': [
         'static/src/css/mail.css',

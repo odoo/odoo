@@ -358,12 +358,16 @@ class hr_holidays(osv.osv):
     # OpenChatter and notifications
     # -----------------------------
     
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self._message_get_subscribers_ids(cr, uid, ids, context=context);
+        # add the employee and its manager if specified to the subscribed users
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.employee_id.parent_id:
+                sub_ids.append(obj.employee_id.parent_id.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+        
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            # add the employee and its manager if specified to the subscribed users
-            self.message_subscribe(cr, uid, ids, [obj.employee_id.user_id.id], context=context)
-            if obj.employee_id.parent_id:
-                self.message_subscribe(cr, uid, ids, [obj.employee_id.parent_id.user_id.id], context=context)
             self.message_append_note(cr, uid, ids, _('System notification'),
                         _("The %s request '%s' has been created and is waiting confirmation")
                         % ('leave' if obj.type == 'remove' else 'allocation', obj.name), type='notification', context=context)

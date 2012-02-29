@@ -55,7 +55,7 @@ servers supporting it, by enabling the TLS option in the LDAP
 configuration.
 
 For further options configuring the LDAP settings, refer to the
-ldap.conf manpage :manpage:`ldap.conf(5)`.
+ldap.conf manpage: manpage:`ldap.conf(5)`.
 
 Security Considerations
 +++++++++++++++++++++++
