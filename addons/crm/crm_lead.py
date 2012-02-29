@@ -905,15 +905,13 @@ class crm_lead(crm_case, osv.osv):
             # change probability of lead(s) if required by stage
             if not vals.get('probability') and stage.on_change:
                 vals['probability'] = stage.probability
-            text = _("Changed Stage to: %s") % stage.name
-
             for case in self.browse(cr, uid, ids, context=context):
                 if case.type == 'lead' or context.get('stage_type') == 'lead':
                     message = _("The stage of lead has been changed to <b>%s</b>.") % (stage.name)
-                    case.message_append_note(text, message)
+                    case.message_append_note('', message)
                 elif case.type == 'opportunity':
                     message = _("The stage of opportunity has been changed to <b>%s</b>.") % (stage.name)
-                    case.message_append_note(text, message)
+                    case.message_append_note('', message)
 
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
 
