@@ -392,9 +392,8 @@ class hr_applicant(crm.crm_case, osv.osv):
         return res
 
     def _case_open_notification(self, case, context=None):
-        case.message_mark_done(context)
         message = _("Changed Status to <b>In Progress<b>.")
-        case.message_append_note('' ,message, type='notification', need_action_user_id=case.user_id.id)
+        case.message_append_note('' ,message, type='notification')
         return True
 
     def _case_close_notification(self, case, context=None):
