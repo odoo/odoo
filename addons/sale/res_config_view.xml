@@ -24,7 +24,7 @@
                             <group colspan="4" col="4">
                                 <field name="order_policy" attrs="{'invisible':['|',('sale_orders','=',False),('deli_orders','=',False)]}"/>
                                 <newline/>
-                                <field name="charge_delivery" attrs="{'invisible':[('sale_orders','=',False), ('deli_orders','=',False)]}"/>
+                                <field name="delivery" attrs="{'invisible':[('sale_orders','=',False), ('deli_orders','=',False)]}"/>
                                 <newline/>
                                 <field name="picking_policy" attrs="{'invisible':[('deli_orders','=',False)]}"/>
                                 <newline/>
