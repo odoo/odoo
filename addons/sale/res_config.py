@@ -170,6 +170,7 @@ class sale_configuration(osv.osv_memory):
         menu_obj = self.pool.get('ir.ui.menu')
         res = {}
         wizard = self.browse(cr, uid, ids)[0]
+        group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
 
         if wizard.sale_orders:
             menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_invoicing_sales_order_lines').id
