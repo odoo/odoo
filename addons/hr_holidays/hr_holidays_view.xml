@@ -65,9 +65,9 @@
                 <form string="Leave Request">
                     <group col="8" colspan="4">
                     <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-                    <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" string="Mode" groups="base.group_hr_manager"/>
+                    <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft'), ('state','!=','confirm')]}" width="130" string="Mode" groups="base.group_hr_manager"/>
                     <group attrs="{'invisible':[('holiday_type','=','employee')]}">
-                        <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft')]}"/>
+                        <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft'), ('state','!=','confirm')]}"/>
                         </group>
                         <group attrs="{'invisible':[('holiday_type','=','category')]}">
                         <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')]}"/>
@@ -89,11 +89,11 @@
                             <newline/>
                             <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}' colspan="2"/>
                             <group colspan="2" col="6">
-                                <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user,base.group_hr_manager"/>
-                                <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
+                                <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                                 <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                                 <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                                <button string="Set to Draft" name="set_to_draft" states="refuse,validate" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
+                                <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user,base.group_hr_manager"/>
+                                <button string="Reset to New" name="set_to_draft" states="refuse,validate" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
                             </group>
                         </page>
                     </notebook>
@@ -132,11 +132,11 @@
                         <newline/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}' colspan="2"/>
                         <group colspan="2" col="6">
-                            <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
-                            <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
+                            <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                             <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                             <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                            <button string="Set to Draft" name="set_to_draft" states="cancel,validate,refuse" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
+                            <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
+                            <button string="Reset to New" name="set_to_draft" states="cancel,validate,refuse" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
                         </group>
                     </page>
                 </notebook>
@@ -187,10 +187,10 @@
                             <newline/>
                             <field name="state" colspan="2"/>
                             <group colspan="2">
-                                <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
+                                <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                                 <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply"/>
                                 <button string="Refuse" name="refuse" states="confirm,validate,draft" type="workflow" icon="gtk-no"/>
-                                <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert"/>
+                                <button string="Reset to New" name="set_to_draft" states="cancel" type="object" icon="gtk-convert"/>
                             </group>
                         </page>
                     </notebook>
@@ -217,7 +217,7 @@
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="state"/>
-                    <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
+                    <button string="Submit to Manager" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                     <button string="Refuse" name="refuse" states="confirm" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
                 </tree>
