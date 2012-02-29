@@ -54,6 +54,7 @@ Note that:
     'demo_xml': ['event_demo.xml'],
     'test': ['test/process/event_draft2done.yml'],
     'installable': True,
+    'application': True,
     'auto_install': False,
     'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg'],
 }
