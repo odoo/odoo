@@ -676,11 +676,10 @@ class sale_order(osv.osv):
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','email_compose_message_wizard_form')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         #EDI EXport data
-        id = ids[0]
 #        if not self.browse(cr, uid, id, context).partner_id.opt_out: 
 #            order.edi_export_and_email(template_ext_id='sale.email_template_edi_sale', context=context)
         ctx = context.copy()
-        ctx.update({'active_model': 'sale.order', 'active_id': id, 'mail.compose.template_id': template_id})
+        ctx.update({'active_model': 'sale.order', 'active_id': id[0], 'mail.compose.template_id': template_id})
         return {
             'view_type': 'form',
             'view_mode': 'form',
