@@ -1332,7 +1332,7 @@ class sale_order_line(osv.osv):
 sale_order_line()
 
 sale_config.MODULE_LIST += [
-                'project_timesheet', 'account_analytic_analysis', 'project_mrp', 'delivery',
+                'account_analytic_analysis','project_timesheet', 'project_mrp', 'delivery',
                 'sale_margin', 'sale_journal'
 ]
 
@@ -1480,19 +1480,17 @@ class sale_configuration(osv.osv_memory):
         else:
             self.apply_groups(cr, uid, ids, 'group_sale_disc_per_sale_order_line', False, context=context)
 
-        if wizard.task_work:
-            vals['project_timesheet'] = True
-            vals['project_mrp'] = True
-            vals['account_analytic_analysis'] = True
-        else:
-            vals['project_timesheet'] = False
-            vals['project_mrp'] = False
-            vals['account_analytic_analysis'] = False
-
         if wizard.timesheet:
             vals['account_analytic_analysis'] = True
         else:
             vals['account_analytic_analysis'] = False
+
+        if wizard.task_work:
+            vals['project_timesheet'] = True
+            vals['project_mrp'] = True
+        else:
+            vals['project_timesheet'] = False
+            vals['project_mrp'] = False
 
         if wizard.charge_delivery:
             vals['delivery'] = True
