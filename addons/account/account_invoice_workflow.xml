@@ -34,7 +34,7 @@ write({'state':'open'})</field>
         <record id="act_sent" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">sent</field>
-            <field name="action">invoice_sent()</field>
+            <field name="action">write({'state':'sent'})</field>
             <field name="kind">function</field>
         </record>
 
