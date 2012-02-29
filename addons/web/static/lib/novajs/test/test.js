@@ -89,12 +89,12 @@ test("base", function() {
     x.set({test: 1});
     equal(x.get("test"), 1);
     var tmp = 0;
-    x.bind("changed:test", y, function(arg) {
+    x.bind("change:test", y, function(model, options) {
         tmp = 1;
-        equal(arg.oldValue, 1);
-        equal(arg.newValue, 2);
+        equal(options.oldValue, 1);
+        equal(options.newValue, 2);
         equal(x.get("test"), 2);
-        equal(arg.source, x);
+        equal(model, x);
     });
     x.set({test: 2});
     equal(tmp, 1);
