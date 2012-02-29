@@ -33,11 +33,11 @@ This module will create courses and students automatically in your moodle platef
 Now you have a simple way to create training or courses with OpenERP and moodle
 
 
-CONFIGURATION
---------------
+STEPS TO CONFIGURE
+------------------
 
-activate web service in moodle
--------------------------------
+1. activate web service in moodle
+----------------------------------
 >site administration >plugins>web sevices >manage protocols 
 activate the xmlrpc web service 
 
@@ -49,15 +49,15 @@ create a token
 >site administration >plugins>web sevices >overview
 activate webservice
 
-Create confirmation email with login and password
--------------------------------------------------
-we strongly suggest you to add those following lines at the bottom of your event confirmation email to communicate the login/password of moodle to your subscribers.
 
+2. Create confirmation email with login and password
+----------------------------------------------------
+we strongly suggest you to add those following lines at the bottom of your event confirmation email to communicate the login/password of moodle to your subscribers.
 
 
 ........your configuration text.......
 
-URL: your moodle link for exemple: openerp.moodle.com
+URL: your moodle link for exemple: http://openerp.moodle.com
 LOGIN: ${object.moodle_username}
 PASSWORD: ${object.moodle_user_password}
 """,
@@ -72,7 +72,7 @@ PASSWORD: ${object.moodle_user_password}
     'demo_xml': [],
     'test': [],
     'installable': True,
-    'active': False,
+    'auto_install': False,
     'images': ['images/token.png','images/enable_webservice.png','images/active_xmlrpc.png'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
