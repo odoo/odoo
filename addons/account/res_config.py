@@ -19,16 +19,29 @@
 #
 ##############################################################################
 
-#----------------------------------------------------------
-# Init Sales
-#----------------------------------------------------------
+from osv import fields, osv
 
-import sale
-import stock
-import wizard
-import report
-import company
-import edi
-import res_config
+class account_configuration(osv.osv_memory):
+    _inherit = 'res.config'
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _columns = {
+            'tax_policy': fields.selection([
+                ('no_tax', 'No Tax'),
+                ('global_on_order', 'Global On Order'),
+                ('on_order_line', 'On Order Lines'),
+            ], 'Taxes', required=True),
+            'tax_value': fields.float('Value'),
+    }
+    
+    _defaults = {
+        'tax_policy': 'global_on_order',
+        'tax_value': 15.0,
+    }
+    
+    def get_tax_value(self, cr, uid, ids, context=None):
+        result = {}
+        chart_account_obj = self.pool.get('wizard.multi.charts.accounts')
+        chart_account_obj.execute(cr, uid, ids, context=context)
+        return result
+    
+account_configuration()

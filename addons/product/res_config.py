@@ -19,16 +19,14 @@
 #
 ##############################################################################
 
-#----------------------------------------------------------
-# Init Sales
-#----------------------------------------------------------
+from osv import fields, osv
 
-import sale
-import stock
-import wizard
-import report
-import company
-import edi
-import res_config
+class product_groups_configuration(osv.osv_memory):
+    _inherit = 'res.config'
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _columns = {
+        'group_sale_pricelist_per_customer':fields.boolean("Pricelist per customer ",help="Group to Activate pricelist to manage prices per customer"),
+        'group_sale_uom_per_product':fields.boolean("UOM per product",help="Group to Allow different unit of measure per product"),
+}
+    
+product_groups_configuration()

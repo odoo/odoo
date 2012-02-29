@@ -20,16 +20,6 @@
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
-    <record id="base.group_sale_pricelist_per_customer" model="res.groups">
-        <field name="name">Sales Pricelists</field>
-        <field name="category_id" ref="base.module_category_usability"/>
-    </record>
-
-    <record id="base.group_sale_uom_per_product" model="res.groups">
-        <field name="name">Product UOM</field>
-        <field name="category_id" ref="base.module_category_usability"/>
-    </record>
-
     <record id="base.group_sale_delivery_address" model="res.groups">
         <field name="name">Addresses in Sale Orders</field>
         <field name="category_id" ref="base.module_category_usability"/>
@@ -40,17 +30,22 @@
         <field name="category_id" ref="base.module_category_usability"/>
     </record>
 
-    <record id="base.group_sale_taxes_global_or_online" model="res.groups">
-        <field name="name">Sales Taxes Global/on line</field>
+    <record id="base.group_sale_taxes_global_on_order" model="res.groups">
+        <field name="name">Sales Taxes Global on Order</field>
+        <field name="category_id" ref="base.module_category_usability"/>
+    </record>
+    
+    <record id="base.group_sale_taxes_on_order_line" model="res.groups">
+        <field name="name">Sales Taxes on Order Lines</field>
         <field name="category_id" ref="base.module_category_usability"/>
     </record>
 
     <record id="base.group_user" model="res.groups">
-        <field name="implied_ids" eval="[(6,0,[ref('base.group_sale_pricelist_per_customer'),
-        ref('base.group_sale_uom_per_product'),
+        <field name="implied_ids" eval="[(6,0,[
         ref('base.group_sale_delivery_address'),
         ref('base.group_sale_disc_per_sale_order_line'),
-        ref('base.group_sale_taxes_global_or_online'),
+        ref('base.group_sale_taxes_global_on_order'),
+        ref('base.group_sale_taxes_on_order_line'),
         ])]"/>
     </record>
 
