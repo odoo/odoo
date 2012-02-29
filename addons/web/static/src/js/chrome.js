@@ -674,6 +674,10 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
      * @param parent
      */
     template: 'Menu',
+    init: function() {
+        this._super.apply(this, arguments);
+        this.has_been_loaded = $.Deferred();
+    },
     do_reload: function() {
         var self = this;
         return this.rpc("/web/menu/load", {}, this.on_loaded).then(function () {
@@ -693,12 +697,13 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
+        this.has_been_loaded.resolve();
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
      * except does not trigger any event on the way
      *
-     * @param {Number} menu_id database id of the terminal menu to select
+     * @param {Number} id database id of the terminal menu to select
      */
     open_menu: function (id) {
         var $clicked_menu, $sub_menu, $main_menu;
@@ -731,6 +736,12 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             }
         }
     },
+    open_action: function (id) {
+        var menu_id, $menu = this.$element.add(this.$secondary_menus).find('a[data-action-id=' + id + ']');
+        if (menu_id = $menu.data('menu')) {
+            this.open_menu(menu_id);
+        }
+    },
     on_menu_click: function(ev, id) {
         id = id || 0;
         var $clicked_menu, manual = false;
@@ -751,7 +762,10 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             this.open_menu(id);
             this.current_menu = id;
             this.session.active_id = id;
-            this.rpc('/web/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
+            var action_id = $clicked_menu.data('action-id');
+            if (action_id) {
+                this.on_action(action_id);
+            }
         }
         if (ev) {
             ev.stopPropagation();
@@ -765,16 +779,6 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             return;
         }
         $sub_menu.show();
-    },
-    on_menu_action_loaded: function(data) {
-        var self = this;
-        if (data.action.length) {
-            var action = data.action[0][2];
-            action.from_menu = true;
-            self.on_action(action);
-        } else {
-            self.on_action({type: 'null_action'});
-        }
     },
     on_action: function(action) {
     }

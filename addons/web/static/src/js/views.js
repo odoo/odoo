@@ -65,6 +65,9 @@ session.web.ActionManager = session.web.OldWidget.extend({
             if (run_action) {
                 this.null_action();
                 action_loaded = this.do_action(state.action_id);
+                session.webclient.menu.has_been_loaded.then(function() {
+                    session.webclient.menu.open_action(state.action_id);
+                });
             }
         } else if (state.model && state.id) {
             // TODO handle context & domain ?

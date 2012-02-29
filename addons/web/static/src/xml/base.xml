@@ -327,9 +327,7 @@
 <t t-name="Menu">
     <ul class="oe_menu" t-if="widget.data">
         <li t-foreach="widget.data.data.children" t-as="menu">
-            <a href="#" t-att-data-menu="menu.id">
-                <t t-esc="menu.name"/>
-            </a>
+            <t t-call="Menu.secondary.link"/>
         </li>
     </ul>
 </t>
@@ -359,7 +357,9 @@
 <t t-name="Menu.secondary.link">
     <a href="#"
         t-att-class="menu.children.length ? 'oe_menu_toggler' : 'oe_menu_leaf'"
-        t-att-data-menu="menu.id">
+        t-att-data-menu="menu.id"
+        t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
+        t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
         <t t-esc="menu.name"/>
     </a>
 </t>
