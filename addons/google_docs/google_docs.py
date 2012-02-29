@@ -70,9 +70,8 @@ class google_docs(osv.osv):
 
             print gdocs_resource
 
-            import pdb; pdb.set_trace()
             # save the reference
-            gdocs_resource_id = gdocs_resource.resource_id.text[gdocs_resource.prefix_gdoc_id_res+1:]
+            gdocs_resource_id = gdocs_resource.resource_id.text[len(google_docs_ref.prefix_gdoc_id_res):]
             google_docs_ref.create(cr, uid, {
                 'model': model,
                 'google_resource_id': gdocs_resource_id,
