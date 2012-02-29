@@ -194,7 +194,7 @@ class res_partner(osv.osv):
         if is_company == 'contact':
             return {'value': {'is_company': is_company, 'title': '','child_ids':[(5,)]}}
         elif is_company == 'partner':
-            return {'value': {'is_company': is_company, 'title': '','parent_id':''}}
+            return {'value': {'is_company': is_company, 'title': '','parent_id':False}}
         return {'value': {'is_comapny': '', 'title': ''}}
         
     
@@ -242,30 +242,40 @@ class res_partner(osv.osv):
             ids = [ids]
         for partner_id in self.browse(cr, uid, ids, context=context):
             is_company=partner_id.is_company
-            parent_id=partner_id.parent_id.id
+            parent_id=partner_id.parent_id.id 
             if is_company == 'contact' and  parent_id:
                 update_ids= self.search(cr, uid, [('parent_id', '=', parent_id),('use_parent_address','=',True)], context=context)
                 if parent_id not in update_ids: 
-                    update_ids.append(parent_id)
+                   update_ids.append(parent_id)
             elif is_company == 'partner':
-                 update_ids= self.search(cr, uid, [('parent_id', '=', partner_id.id),('use_parent_address','=',True)], context=context)
+                 update_ids= self.search(cr, uid, [('parent_id', '=', partner_id.id),('use_parent_address','=',True)], context=context)# 
             if update_ids:
-                    self.udpate_address(cr,uid,update_ids,vals,context)
-        return super(res_partner,self).write(cr, uid, ids, vals, context=context)  
+                self.udpate_address(cr,uid,update_ids,False,vals,context)
+        return super(res_partner,self).write(cr, uid, ids, vals, context=context)   
+    
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('parent_id'):
+             update_ids= self.search(cr, uid, [('parent_id', '=', vals.get('parent_id')),('use_parent_address','=',True)], context=context)
+             update_ids.append(vals.get('parent_id'))
+             self.udpate_address(cr,uid,False,update_ids,vals)
+        return super(res_partner,self).create(cr, uid, vals, context=context)     
    
     
-    def udpate_address(self,cr,uid,update_ids,vals, context=None):
-        # Remove this after all testing
-        for id in update_ids:
-            for key, data in vals.iteritems():
-                if key in ('street','street2','zip','city','state_id','country_id','email','phone','fax','mobile','website','ref','lang'):  
-                    sql = "update res_partner set %(field)s = %%(value)s where id = %%(id)s" % {
+    def udpate_address(self,cr,uid,update_ids,parent_id,vals, context=None):
+        # Remove this method after testing all case
+#        if update_ids:
+#            osv.osv.write(self, cr, uid,update_ids, vals,context=context) 
+        for key, data in vals.iteritems():
+            if key in ('street','street2','zip','city','state_id','country_id','email','phone','fax','mobile','website','ref','lang') and  data :  
+                update_list=update_ids or parent_id
+                if update_list :
+                    sql = "update res_partner set %(field)s = %%(value)s where id in %%(id)s" % {
                             'field': key,
                         }
                     cr.execute(sql, {
-                            'value': data,
-                            'id':id
-                        })
+                            'value': data or '',
+                            'id':tuple(update_list)
+                    })
         return True   
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
