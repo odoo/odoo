@@ -278,6 +278,8 @@ class crm_lead(crm_case, osv.osv):
                 message = _("Opportunity is <b>created</b>.")
             elif obj.type=="lead" :
                 message = _("Lead is <b>created</b>.")
+            else:
+                message = _("The case has been <b>created</b>.")
             self.message_append_note(cr, uid, ids, _('System notification'),
                         message, type='notification', need_action_user_id=obj.user_id.id, context=context)
         return True
