@@ -288,8 +288,7 @@ class crm_base(object):
             data = {'state': 'open', 'active': True}
             if not case.user_id:
                 data['user_id'] = uid
-            self.write(cr, uid, case.id, data)
-            self._case_open_notification(case, context=context)
+            self.write(cr, uid, [case.id], data)
         self._action(cr, uid, cases, 'open')
 
         return True
@@ -418,7 +417,7 @@ class crm_case(crm_base):
             data = {'state': 'open', 'active': True }
             if not case.user_id:
                 data['user_id'] = uid
-            self.write(cr, uid, case.id, data)
+            self.write(cr, uid, [case.id], data)
             self._case_open_notification(case, context=context)
         self._action(cr, uid, cases, 'open')
         return True

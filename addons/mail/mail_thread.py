@@ -68,6 +68,21 @@ class mail_thread(osv.osv):
                         ),
                         #widget='mail.ThreadView'),
     }
+
+    #------------------------------------------------------
+    # Automatic subscription when creating/reading
+    #------------------------------------------------------
+    
+    def create(self, cr, uid, vals, context=None):
+        thread_id = super(mail_thread, self).create(cr, uid, vals, context=context);
+        self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
+        return thread_id;
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        write_res = super(mail_thread, self).write(cr, uid, ids, vals, context=context);
+        if write_res:
+            self.message_subscribe(cr, uid, ids, [uid], context=context)
+        return write_res;
     
     #------------------------------------------------------
     # Generic message api
@@ -597,21 +612,21 @@ class mail_thread(osv.osv):
         users = self.pool.get('res.users').read(cr, uid, user_ids, fields=['id', 'name', 'avatar_mini'], context=context)
         return users
     
-    def message_is_subscriber(self, cr, uid, ids, context=None):
-        # TODO: use message_get_subscribers ? as all subscriptions are in mail.subscription table, not necessary
-        subscription_obj = self.pool.get('mail.subscription')
-        sub_ids = subscription_obj.search(cr, uid,
-                        ['&', '&',  ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', '=', uid)], context=context)
-        if len(sub_ids) > 1:
-            pass # TODO
-        return True if sub_ids else False
+    def message_is_subscriber(self, cr, uid, ids, user_id = None, context=None):
+        users = self.message_get_subscribers(cr, uid, ids, context=context)
+        sub_user_id = uid if user_id is None else user_id
+        if sub_user_id in [user['id'] for user in users]:
+            return True
+        return False
     
     def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
         subscription_obj = self.pool.get('mail.subscription')
         sub_user_ids = [uid] if user_ids is None else user_ids
+        create_ids = []
         for id in ids:
-            create_ids = [subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context)
-                            for user_id in sub_user_ids]
+            for user_id in sub_user_ids:
+                if self.message_is_subscriber(cr, uid, [id], user_id=user_id, context=context): continue
+                create_ids.append(subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context))
         return create_ids
 
     def message_unsubscribe(self, cr, uid, ids, context=None):
