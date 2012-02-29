@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <menuitem id="base.menu_aftersale" name="After-Sale Services"
-            parent="base.menu_base_partner" sequence="2" />
+        <menuitem
+            icon="terp-project" id="base.menu_main_pm"
+            name="Project" sequence="10"
+            web_icon="images/project.png"
+            web_icon_hover="images/project-hover.png"/>
+
+        <menuitem id="base.menu_aftersale" name="After-Sale Services" sequence="2" parent="base.menu_main_pm" />
 
 <!-- Help Desk (menu) -->
 
