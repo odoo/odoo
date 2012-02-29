@@ -21,7 +21,7 @@
     <div class="oe_webclient">
         <div class="oe_topbar">
             <div class="oe_menu_placeholder"/>
-            <div class="oe_dropdown_menu_placeholder"/>
+            <div class="oe_user_menu_placeholder"/>
         </div>
         <div class="oe_leftbar">
             <a href="#" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
@@ -364,8 +364,8 @@
     </a>
 </t>
 
-<t t-name="DropDownMenu">
-    <ul class="oe_dropdown_menu oe_topbar_item">
+<t t-name="UserMenu">
+    <ul class="oe_user_menu oe_topbar_item">
         <li class="oe_dropdown">
             <a href="#" class="oe_dropdown_toggle">
                 <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/topbar-avatar.png'"/>
@@ -382,7 +382,7 @@
         </li>
     </ul>
 </t>
-<t t-name="DropDownMenu.shortcut">
+<t t-name="UserMenu.shortcut">
     <li t-foreach="shortcuts" t-as="shortcut">
         <a href="#" data-menu="shortcut" t-att-data-id="shortcut.res_id" t-att-data-shortcut-id="shortcut.id">
             <t t-esc="shortcut.name"/>
