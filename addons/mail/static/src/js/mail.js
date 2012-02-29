@@ -31,7 +31,7 @@ openerp.mail = function(session) {
             this.params.offset = this.params.offset || 0;
             this.params.records = this.params.records || null;
             this.params.char_show_more = this.params.char_show_more || 100;
-            this.map_hash = {'res.users': {'login': [] }};
+            this.map_hash = {};
             this.params.show_more = true;
             /* define DataSets */
             this.ds = new session.web.DataSet(this, this.params.res_model);
@@ -46,11 +46,20 @@ openerp.mail = function(session) {
             this.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); });
             this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
                 // lazy implementation: fetch data and try to redirect
-                self.do_action({
-                    type: 'ir.actions.act_window',
-                    res_model: event.srcElement.dataset.resModel,
-                    res_id: parseInt(event.srcElement.dataset.resId),
-                    views: [[false, 'form']]
+                if (! event.srcElement.dataset.resModel) return false;
+                else var res_model = event.srcElement.dataset.resModel;
+                if (! event.srcElement.dataset.resLogin) return false;
+                else var res_login = event.srcElement.dataset.resLogin;
+                var ds = new session.web.DataSet(self, res_model);
+                var defer = ds.call('search', [[['login', '=', res_login]]]).then(function (records) {
+                    if (records[0]) {
+                        self.do_action({
+                            type: 'ir.actions.act_window',
+                            res_model: res_model,
+                            res_id: parseInt(records[0]),
+                            views: [[false, 'form']]
+                        });
+                    }
                 });
             });
             this.$element.find('div.oe_mail_thread_nomore').hide();
@@ -175,6 +184,7 @@ openerp.mail = function(session) {
             var regex_res = regex_login.exec(string);
             while (regex_res != null) {
                 var login = regex_res[2];
+                if (! ('res.users' in this.map_hash)) { this.map_hash['res.users']['name'] = []; }
                 this.map_hash['res.users']['login'].push(login);
                 regex_res = regex_login.exec(string);
             }
