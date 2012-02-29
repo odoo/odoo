@@ -35,10 +35,26 @@ class account_configuration(osv.osv_memory):
     
     _defaults = {
         'tax_policy': 'global_on_order',
-        'tax_value': 15.0,
     }
+    def default_get(self, cr, uid, fields_list, context=None):
+        ir_values_obj = self.pool.get('ir.values')
+        res = super(account_configuration, self).default_get(cr, uid, fields_list, context=context)
+        res.update({'tax_value': 15.0})
+        for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.product']):
+            if tax[1] == 'taxes_id':
+                res.update({'tax_value': tax[2] and tax[2][0]})
+        return res
     
-    def get_tax_value(self, cr, uid, ids, context=None):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        ir_values_obj = self.pool.get('ir.values')
+        res = super(account_configuration, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.product']):
+            if tax[1] == 'taxes_id':
+                if res['fields'].get('tax_value'):
+                    res['fields']['tax_value'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Value'}
+        return res
+
+    def set_tax_value(self, cr, uid, ids, context=None):
         result = {}
         chart_account_obj = self.pool.get('wizard.multi.charts.accounts')
         chart_account_obj.execute(cr, uid, ids, context=context)
