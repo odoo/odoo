@@ -80,6 +80,21 @@ class crm_meeting(crm_base, osv.osv):
         'user_id': lambda self, cr, uid, ctx: uid,
     }
 
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
+        self._case_opportunity_meeting_notification(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def _case_opportunity_meeting_notification(self, cr, uid, ids, context=None):
+        lead_obj = self.pool.get('crm.lead')
+
+        for obj in self.browse(cr, uid, ids, context=context):
+            if(obj.opportunity_id.id):
+                newid = obj.opportunity_id.id
+                message = _("<b>scheduled for meeting</b> %s.") % (obj.date)
+                for lead in lead_obj.browse(cr, uid, [newid], context=context):
+                    lead.message_append_note('', message)
+
     def case_open(self, cr, uid, ids, *args):
         """Confirms meeting
         @param self: The object pointer

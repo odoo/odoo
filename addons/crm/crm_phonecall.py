@@ -32,6 +32,7 @@ class crm_phonecall(crm_base, osv.osv):
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
+    _inherit = ['mail.thread']
     _columns = {
         # From crm.case
         'id': fields.integer('ID', readonly=True),
@@ -49,12 +50,12 @@ class crm_phonecall(crm_base, osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.selection([
-                                    ('draft', 'Draft'), 
-                                    ('open', 'Todo'), 
-                                    ('cancel', 'Cancelled'), 
-                                    ('done', 'Held'), 
+                                    ('draft', 'Draft'),
+                                    ('open', 'Todo'),
+                                    ('cancel', 'Cancelled'),
+                                    ('done', 'Held'),
                                     ('pending', 'Not Held'),
-                                ], 'State', size=16, readonly=True, 
+                                ], 'State', size=16, readonly=True,
                                   help='The state is set to \'Todo\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the call is over, the state is set to \'Held\'.\
@@ -71,11 +72,15 @@ class crm_phonecall(crm_base, osv.osv):
                                  type="char", string="Contact", size=128),
         'partner_mobile': fields.char('Mobile', size=32),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'date_closed': fields.datetime('Closed', readonly=True), 
-        'date': fields.datetime('Date'), 
-        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'), 
+        'date_closed': fields.datetime('Closed', readonly=True),
+        'date': fields.datetime('Date'),
+        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'),
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_phonecall, self).create(cr, uid, vals, context=context)
+        return obj_id
 
     def _get_default_state(self, cr, uid, context=None):
         if context and context.get('default_state', False):
@@ -84,8 +89,8 @@ class crm_phonecall(crm_base, osv.osv):
 
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'priority': crm.AVAILABLE_PRIORITIES[2][0], 
-        'state':  _get_default_state, 
+        'priority': crm.AVAILABLE_PRIORITIES[2][0],
+        'state':  _get_default_state,
         'user_id': lambda self,cr,uid,ctx: uid,
         'active': 1,
     }
@@ -117,7 +122,7 @@ class crm_phonecall(crm_base, osv.osv):
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as Todo
         """
-        res = super(crm_phonecall, self).case_reset(cr, uid, ids, args, 'crm.phonecall')
+        res = super(crm_phonecall, self).case_reset(cr, uid, ids, args)
         self.write(cr, uid, ids, {'duration': 0.0, 'state':'open'})
         return res
 
@@ -158,7 +163,7 @@ class crm_phonecall(crm_base, osv.osv):
                     'partner_mobile' : call.partner_mobile,
                     'priority': call.priority,
             }
-            
+
             new_id = self.create(cr, uid, vals, context=context)
             self.case_open(cr, uid, [new_id])
             if action == 'log':
@@ -243,13 +248,13 @@ class crm_phonecall(crm_base, osv.osv):
                             'planned_revenue': planned_revenue,
                             'probability': probability,
                             'partner_id': partner_id or False,
-                            'partner_address_id': default_contact and default_contact.id, 
+                            'partner_address_id': default_contact and default_contact.id,
                             'phone': default_contact and default_contact.phone,
                             'mobile': default_contact and default_contact.mobile,
                             'section_id': call.section_id and call.section_id.id or False,
                             'description': call.description or False,
                             'priority': call.priority,
-                            'type': 'opportunity', 
+                            'type': 'opportunity',
                             'phone': call.partner_phone or False,
                             'email_from': default_contact and default_contact.email,
                         })
@@ -261,7 +266,7 @@ class crm_phonecall(crm_base, osv.osv):
             self.case_close(cr, uid, [call.id])
             opportunity.case_open(cr, uid, [opportunity_id])
             opportunity_dict[call.id] = opportunity_id
-        return opportunity_dict   
+        return opportunity_dict
 
     def action_make_meeting(self, cr, uid, ids, context=None):
         """

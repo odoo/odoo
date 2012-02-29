@@ -258,7 +258,26 @@ class crm_base(object):
             data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value': data}
 
+    def _case_opportunity_meeting_notification(self, cr, uid, ids, context=None):
+        return True
 
+    def _case_open_notification(self, case, context=None):
+        return True
+
+    def _case_close_notification(self, case, context=None):
+        return True
+
+    def _case_cancel_notification(self, case, context=None):
+        return True
+
+    def _case_pending_notification(self, case, context=None):
+        return True
+
+    def _case_escalate_notification(self, case, context=None):
+        return True
+
+    def _case_phonecall_notification(self, case, action, context=None):
+        return True
 
     def case_open(self, cr, uid, ids, context=None):
         """Opens Case
@@ -269,7 +288,7 @@ class crm_base(object):
             data = {'state': 'open', 'active': True}
             if not case.user_id:
                 data['user_id'] = uid
-            self.write(cr, uid, case.id, data)
+            self.write(cr, uid, [case.id], data)
             self._case_open_notification(case, context=context)
         self._action(cr, uid, cases, 'open')
 
@@ -283,6 +302,7 @@ class crm_base(object):
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), })
         # We use the cache of cases to keep the old case state
+        self._case_close_notification(cases, context=context)
         self._action(cr, uid, cases, 'done')
         return True
 
@@ -294,6 +314,7 @@ class crm_base(object):
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': 'cancel', 'active': True})
         # We use the cache of cases to keep the old case state
+        self._case_cancel_notification(cases, context=context)
         self._action(cr, uid, cases, 'cancel')
         return True
 
@@ -304,6 +325,7 @@ class crm_base(object):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': 'pending', 'active': True})
+        self._case_pending_notification(cases, context=context)
         self._action(cr, uid, cases, 'pending')
         return True
 
@@ -392,21 +414,6 @@ class crm_case(crm_base):
                 default.update({ 'date_open': False })
         return super(crm_case, self).copy(cr, uid, id, default, context=context)
 
-    def _case_open_notification(self, case, context=None):
-        return True
-
-    def _case_close_notification(self, case, context=None):
-        return True
-
-    def _case_cancel_notification(self, case, context=None):
-        return True
-
-    def _case_pending_notification(self, case, context=None):
-        return True
-
-    def _case_escalate_notification(self, case, context=None):
-        return True
-
     def case_open(self, cr, uid, ids, context=None):
         """Opens Case"""
         cases = self.browse(cr, uid, ids)
@@ -414,7 +421,7 @@ class crm_case(crm_base):
             data = {'state': 'open', 'active': True }
             if not case.user_id:
                 data['user_id'] = uid
-            self.write(cr, uid, case.id, data)
+            self.write(cr, uid, [case.id], data)
             self._case_open_notification(case, context=context)
         self._action(cr, uid, cases, 'open')
         return True
