@@ -113,8 +113,8 @@
 
         <record id="view_contract_installation" model="ir.ui.view">
             <field name="name">Sales Application</field>
-            <field name="model">sale.configuration</field>
-            <field name="inherit_id" ref="base.view_config_picking_policy"/>
+            <field name="model">res.config</field>
+            <field name="inherit_id" ref="sale.view_sales_config"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="account_analytic_analysis" position="after">
