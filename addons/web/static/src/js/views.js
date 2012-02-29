@@ -183,7 +183,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
         this.content_stop();
         this.dialog_stop();
         var ClientWidget = session.web.client_actions.get_object(action.tag);
-        (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
+        (this.client_widget = new ClientWidget(this, action.params)).appendTo(this.$element);
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
