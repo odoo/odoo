@@ -518,8 +518,8 @@ class hr_applicant(crm.crm_case, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if 'stage_id' in vals and vals['stage_id']:
             stage = self.pool.get('hr.recruitment.stage').browse(cr, uid, vals['stage_id'], context=context)
-            text = _("Changed Stage to <b>%s</b>.") % stage.name
-            self.message_append(cr, uid, ids, text, body_text=text, context=context)
+            self.message_append_note(cr, uid, ids, _('System notification'),
+                        _("Changed Stage to <b>%s</b>.") % stage.name, type='notification')
         return super(hr_applicant,self).write(cr, uid, ids, vals, context=context)
 
 hr_applicant()
