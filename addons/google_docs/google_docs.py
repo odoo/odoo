@@ -4,162 +4,80 @@ import gdata.docs.client
 from gdata.client import RequestError
 from gdata.docs.service import DOCUMENT_LABEL
 
-class google_docs(osv.osv):
-    _name = 'google.docs'
+class google_docs_config(osv.osv):
+    _name = 'google.docs.config'
+    _inherit = 'ir.attachment'
 
-    _table = 'google_docs_templates'
     _columns = {
-        'id': fields.integer('ID', readonly=True),
         'model': fields.many2one('ir.model', 'Model'),
-        'gdocs_res_id': fields.char('Google resource ID', size=64, translate=False),
-        'name_template': fields.char('GDoc name template', size=64, translate=False)
+        'gdocs_resource_id': fields.char('Google resource ID', size=64),
+        'name_template': fields.char('GDoc name template', size=64)
     }
-    print '''
 
-#########################################
+    _defaults = {
+        'name_template': 'Google Document'
+    }
 
-GOOGLE DOCS
-
-#########################################
-
-'''
     edit_url_template = 'https://docs.google.com/document/d/%s/edit'
     prefix_gdoc_id_res = DOCUMENT_LABEL + ':'
 
     def copy_gdoc(self, cr, uid, model, context=None):
+        #import pdb; pdb.set_trace()
         '''Associate a copy of the gdoc identified by 'gdocs_res_id' to the current entity.
            @param cr: the current row from the database cursor.
            @param uid: the current user ID, for security checks.
            @param model: the current model name.
            @param context: a standard dictionary for contextual values.
            @return the url of the copy itself.
-           @return -1 if the template hasn't been assigned yet.
            @return -2 if the google_base_account hasn't been configured yet.
         '''
-        print '''
-
-#########################################
-
-google_docs.copy_gdoc()
-
-#########################################
-
-'''
 
         if context==None:
             context={}
 
-        '''template_vars = {
-            'db' : cr.dbname,
-            'model' : model,
-            'id' : id,
-            'salt' : salt,
-            'name' : '',
-        }'''
         name_template = 'Sales order %s'
 
         # check google_base_account
         users_obj = self.pool.get('res.users')
         user = users_obj.browse(cr, uid, [uid])[0]
-        print '%s' % user.__dict__
-        print '%s' % user.gmail_user
-        print '%s' % user.gmail_password
         if not user.gmail_user or not user.gmail_password: 
             return -2
 
-        # check template for the current model
-        # TODO check module logic
-        '''model_obj = self.pool.get(model[0])
-        res_gdocs_obj = self.pool.get('google.docs')
-        domain = [('model' , '=', model_obj)]
-        gdoc = res_gdocs_obj.search(cr,uid,domain,context=context)
-        if not gdoc:
-            
-            return -1
-'''
-        # copy the document
+        # create the document
         client = gdata.docs.client.DocsClient(source='openerp.com')
         client.ssl = True
         client.http_client.debug = False
         client.ClientLogin(user.gmail_user, user.gmail_password, client.source, service='writely')
         resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL)
-        new_resource = client.post(entry=resource, uri='https://docs.google.com/feeds/default/private/full/')
-        print new_resource.__dict__
-        print new_resource.resource_id.text
-        print new_resource.resource_id
-        return self.edit_url_template % (new_resource.resource_id.text,)
+        gdocs_resource = client.post(entry=resource, uri='https://docs.google.com/feeds/default/private/full/')
+        return gdocs_resource
 
-'''
-    def get_documents_list(self, cr, uid, context=None):
-        ' ''Return the list of google documents available at the user's account.
-           @param cr: the current row from the database cursor.
-           @param uid: the current user ID, for security checks.
-           @param context: a standard dictionary for contextual values.
-           @return a list with information about the documents in form of tuples (document_name, document_resource_id).
-           @return -2 if the google_base_account hasn't been configured yet.
-        '' '
+class google_docs(osv.osv):
+    _name = 'google.docs'
 
-        if context == None:
-            context = {}
 
-        # check google_base_account
-        users_obj = self.pool.get('res.users')
-        user = users_obj.browse(cr, uid, [uid])[0]
-        if not user.gmail_user or not user.gmail_password: 
-            return -2
+    def doc_get(self, cr, uid, model, id, context=None):
+        google_docs_ref = self.pool.get('google.docs.config')
+        gdocs_resource_id = google_docs_ref.search(cr, uid, [('model', '=', model)])
 
-        # get the documents list
-        client = gdata.docs.client.DocsClient(source='openerp.com')
-        client.ssl = True
-        client.http_client.debug = False
-        client.ClientLogin(user.gmail_user, user.gmail_password, client.source, service='writely')
+        if gdocs_resource_id:
+            return google_docs_ref.edit_url_template % (gdocs_resource_id, )
+        else:
+            gdocs_resource = google_docs_ref.copy_gdoc(cr, uid, model, context)
+            print gdocs_resource
+            if gdocs_resource == -2:
+                return gdocs_resource
 
-        return map(lambda doc: (doc.title.text, doc.resource_id.text[len(prefix_gdoc_id_res):]), filter(lambda r: r.resource_id.text.startswith(prefix_gdoc_id_res), client.get_all_resources()))
-'''
+            print gdocs_resource
 
-'''
-    def set_model_document_template(self, cr, uid, model, resource_id, context=None):
-        '' 'Set the default document template for the specified model. This template doesn't have to be a google documents template itself, but just a document.
-           @param cr: current row for the database cursor.
-           @param uid: the current user ID, for security checks.
-           @param model: the current model name.
-           @param resource_id: resource_id associated to the chosen document.
-           @param context: a standard dictionary for contextual values.
-           @return 0 on successful execution.
-           @return -2 if the google_base_account hasn't been configured yet.
-           @return -3 if the given resource_id doesn't exist in the user's google docs account.
-        ' ''
-
-        if context == None:
-            context = {}
-
-        # check google_base_account
-        users_obj = self.pool.get('res.users')
-        user = users_obj.browse(cr, uid, [uid])[0]
-        if not user.gmail_user or not user.gmail_password:
-            return -2
-
-        # check resource_id
-        client = gdata.docs.client.DocsClient(source='openerp.com')
-        client.ssl = True
-        client.http_client.debug = False
-        client.ClientLogin(user.gmail_user, user.gmail_password, client.source, service='writely')
-        try:
-            client.get_resource_by_id(resource_id)
-        except RequestError:
-            return -3
-
-        # set the model document template
-        model_template_id = self.create(cr, uid,
-            { 'model': self.pool.get(model),
-              'gdocs_res_id': resource_id
+            import pdb; pdb.set_trace()
+            # save the reference
+            gdocs_resource_id = gdocs_resource.resource_id.text[gdocs_resource.prefix_gdoc_id_res+1:]
+            google_docs_ref.create(cr, uid, {
+                'model': model,
+                'google_resource_id': gdocs_resource_id,
+                'name': gdocs_resource_title.text,
             })
-
-        return 0
-'''
-
-class google_docs_folder(osv.osv):
-    _name = 'google.docs.folder'
-    _columns = {
-        'res_id': fields.char('GDocs resource id', size=64, translate=False),
-    }
+            print gdocs_resource.resource_id.text
+            print gdocs_resource_id
+            return google_docs_ref.edit_url_template % (gdocs_resource_id,)
