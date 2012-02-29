@@ -118,6 +118,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
         var res_nodes  = result['nodes'];
         var res_edges  = result['conn'];
         this.parent_field = result.parent_field;
+        this.$element.find('h3.oe_diagram_title').text(result.name);
 
         var id_to_node = {};
 
