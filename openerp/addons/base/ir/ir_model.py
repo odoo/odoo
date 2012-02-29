@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+
+ # -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -134,11 +135,18 @@ class ir_model(osv.osv):
                              super(ir_model, self).search(cr, uid, domain, limit=limit, context=context),
                              context=context)
 
+    def _drop_table(self, cr, uid, ids, context=None):
+        for model in self.browse(cr, uid, ids, context):
+            model_pool = self.pool.get(model.model)
+            if getattr(model_pool, '_auto', True) and not model.osv_memory:
+                cr.execute("DROP table %s cascade" % model_pool._table)
+        return True
 
     def unlink(self, cr, user, ids, context=None):
-        for model in self.browse(cr, user, ids, context):
-            if model.state != 'manual':
-                raise except_orm(_('Error'), _("You can not remove the model '%s' !") %(model.name,))
+#        for model in self.browse(cr, user, ids, context):
+#            if model.state != 'manual':
+#                raise except_orm(_('Error'), _("You can not remove the model '%s' !") %(model.name,))
+       # self._drop_table(cr, user, ids, context)
         res = super(ir_model, self).unlink(cr, user, ids, context)
         pooler.restart_pool(cr.dbname)
         return res
@@ -263,17 +271,19 @@ class ir_model_fields(osv.osv):
     _sql_constraints = [
         ('size_gt_zero', 'CHECK (size>0)',_size_gt_zero_msg ),
     ]
+    
+    def _drop_column(self, cr, uid, ids, context=None):
+        for field in self.browse(cr, uid, ids, context):
+            model = self.pool.get(field.model)
+            if not field.model.osv_memory and getattr(model, '_auto', True):
+                cr.execute("ALTER table %s DROP column %s" % (model._table, field.name))
+            model._columns.pop(field.name, None)
+        return True
 
     def unlink(self, cr, user, ids, context=None):
-        for field in self.browse(cr, user, ids, context):
-            if field.state <> 'manual':
-                raise except_orm(_('Error'), _("You cannot remove the field '%s' !") %(field.name,))
-        #
-        # MAY BE ADD A ALTER TABLE DROP ?
-        #
-            #Removing _columns entry for that table
-            self.pool.get(field.model)._columns.pop(field.name,None)
-        return super(ir_model_fields, self).unlink(cr, user, ids, context)
+        self._drop_column(cr, user, ids, context)
+        res = super(ir_model_fields, self).unlink(cr, user, ids, context)
+        return res
 
     def create(self, cr, user, vals, context=None):
         if 'model_id' in vals:
@@ -624,6 +634,7 @@ class ir_model_data(osv.osv):
         # also stored in pool to avoid being discarded along with this osv instance
         if getattr(pool, 'model_data_reference_ids', None) is None:
             self.pool.model_data_reference_ids = {}
+            
         self.loads = self.pool.model_data_reference_ids
 
     def _auto_init(self, cr, context=None):
@@ -667,9 +678,11 @@ class ir_model_data(osv.osv):
         except:
             id = False
         return id
+    
 
     def unlink(self, cr, uid, ids, context=None):
         """ Regular unlink method, but make sure to clear the caches. """
+        self._pre_process_unlink(cr, uid, ids, context)        
         self._get_id.clear_cache(self)
         self.get_object_reference.clear_cache(self)
         return super(ir_model_data,self).unlink(cr, uid, ids, context=context)
@@ -688,7 +701,6 @@ class ir_model_data(osv.osv):
         if (not xml_id) and (not self.doinit):
             return False
         action_id = False
-
         if xml_id:
             cr.execute('''SELECT imd.id, imd.res_id, md.id, imd.model
                           FROM ir_model_data imd LEFT JOIN %s md ON (imd.res_id = md.id)
@@ -791,53 +803,78 @@ class ir_model_data(osv.osv):
         elif xml_id:
             cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
         return True
+    
+    def _pre_process_unlink(self, cr, uid, ids, context=None):
+        wkf_todo = []
+        to_unlink = []
+        for data in self.browse(cr, uid, ids, context):
+            model = data.model
+            res_id = data.res_id
+            model_obj = self.pool.get(model)
+            if str(data.name).startswith('constraint_'):
+                cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table,data.name[11:]),)
+                _logger.info('Drop CONSTRAINT %s@%s', data.name[11:], model)
+                continue
+            to_unlink.append((model,res_id))
+            if model=='workflow.activity':
+                cr.execute('select res_type,res_id from wkf_instance where id IN (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
+                wkf_todo.extend(cr.fetchall())
+                cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
+                cr.execute("delete from wkf_transition where act_to=%s", (res_id,))
+        
+        for model,res_id in wkf_todo:
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_write(uid, model, res_id, cr)
+
+        #cr.commit()
+        if not config.get('import_partial'):
+            for (model, res_id) in to_unlink:
+                if self.pool.get(model):
+                    _logger.info('Deleting %s@%s', res_id, model)
+                    res_ids = self.pool.get(model).search(cr, uid, [('id', '=', res_id)])
+                    if res_ids:
+                        self.pool.get(model).unlink(cr, uid, [res_id])
+                    cr.commit()
+#                    except Exception:
+#                        cr.rollback()
+#                        _logger.warning(
+#                            'Could not delete obsolete record with id: %d of model %s\n'
+##                            'There should be some relation that points to this resource\n'
+#                            'You should manually fix this and restart with --update=module',
+#                            res_id, model)
 
     def _process_end(self, cr, uid, modules):
         """ Clear records removed from updated module data.
-
         This method is called at the end of the module loading process.
         It is meant to removed records that are no longer present in the
         updated data. Such records are recognised as the one with an xml id
         and a module in ir_model_data and noupdate set to false, but not
         present in self.loads.
-
         """
+        
+        
         if not modules:
             return True
         modules = list(modules)
+        data_ids = self.search(cr, uid, [('module','in',modules)])
         module_in = ",".join(["%s"] * len(modules))
-        cr.execute('select id,name,model,res_id,module from ir_model_data where module IN (' + module_in + ') and noupdate=%s', modules + [False])
-        wkf_todo = []
+        process_query = 'select id,name,model,res_id,module from ir_model_data where module IN (' + module_in + ')'
+        process_query+= ' and noupdate=%s'
         to_unlink = []
+        cr.execute( process_query, modules + [False])
         for (id, name, model, res_id,module) in cr.fetchall():
             if (module,name) not in self.loads:
                 to_unlink.append((model,res_id))
-                if model=='workflow.activity':
-                    cr.execute('select res_type,res_id from wkf_instance where id IN (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
-                    wkf_todo.extend(cr.fetchall())
-                    cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
-                    cr.execute("delete from wkf_transition where act_to=%s", (res_id,))
-
-        for model,id in wkf_todo:
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_write(uid, model, id, cr)
-
-        cr.commit()
+                self.pool.get(model).unlink(cr, uid, [res_id])
         if not config.get('import_partial'):
             for (model, res_id) in to_unlink:
                 if self.pool.get(model):
                     _logger.info('Deleting %s@%s', res_id, model)
-                    try:
-                        self.pool.get(model).unlink(cr, uid, [res_id])
-                        cr.commit()
-                    except Exception:
-                        cr.rollback()
-                        _logger.warning(
-                            'Could not delete obsolete record with id: %d of model %s\n'
-                            'There should be some relation that points to this resource\n'
-                            'You should manually fix this and restart with --update=module',
-                            res_id, model)
-        return True
+                    self.pool.get(model).unlink(cr, uid, [res_id])
+                    
+                  #  cr.commit()          
+
+    
 ir_model_data()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

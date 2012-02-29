@@ -377,19 +377,22 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if update_module:
             # Remove records referenced from ir_model_data for modules to be
             # removed (and removed the references from ir_model_data).
-            cr.execute("select id,name from ir_module_module where state=%s", ('to remove',))
-            for mod_id, mod_name in cr.fetchall():
-                cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
-                for rmod, rid in cr.fetchall():
-                    uid = 1
-                    rmod_module= pool.get(rmod)
-                    if rmod_module:
-                        # TODO group by module so that we can delete multiple ids in a call
-                        rmod_module.unlink(cr, uid, [rid])
-                    else:
-                        _logger.error('Could not locate %s to remove res=%d' % (rmod,rid))
-                cr.execute('delete from ir_model_data where noupdate=%s and module=%s', (False, mod_name,))
-                cr.commit()
+            #cr.execute("select id,name from ir_module_module where state=%s", ('to remove',))
+            #remove_modules = map(lambda x: x['name'], cr.dictfetchall())
+            # Cleanup orphan records
+            #print "pooler", pool.get('mrp.bom')
+            #pool.get('ir.model.data')._process_end(cr, 1, remove_modules, noupdate=None)
+#            for mod_id, mod_name in cr.fetchall():
+#                cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
+#                for rmod, rid in cr.fetchall():
+#                    uid = 1
+#                    rmod_module= pool.get(rmod)
+#                    if rmod_module:
+#                        rmod_module.unlink(cr, uid, [rid])
+#                    else:
+#                        _logger.error('Could not locate %s to remove res=%d' % (rmod,rid))
+#                cr.execute('delete from ir_model_data where  module=%s', (mod_name,))
+#                cr.commit()
 
             # Remove menu items that are not referenced by any of other
             # (child) menu item, ir_values, or ir_model_data.
@@ -411,8 +414,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     _logger.info('removed %d unused menus', cr.rowcount)
 
             # Pretend that modules to be removed are actually uninstalled.
-            cr.execute("update ir_module_module set state=%s where state=%s", ('uninstalled', 'to remove',))
-            cr.commit()
+            #cr.execute("update ir_module_module set state=%s where state=%s", ('uninstalled', 'to remove',))
+            #cr.commit()
 
         _logger.info('Modules loaded.')
     finally:

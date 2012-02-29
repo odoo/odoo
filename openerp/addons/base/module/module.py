@@ -375,10 +375,18 @@ class module(osv.osv):
     def button_install_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
         return True
-
+    
+    def module_uninstall(self, cr, uid, ids, context=None):
+        model_data = self.pool.get('ir.model.data')
+        remove_modules = map(lambda x: x.name, self.browse(cr, uid, ids, context))
+        data_ids = model_data.search(cr, uid, [('module', 'in', remove_modules)])
+        model_data.unlink(cr, uid, data_ids, context)
+        self.write(cr, uid, ids, {'state': 'uninstalled'})
+        return True
+    
     def button_uninstall(self, cr, uid, ids, context=None):
         for module in self.browse(cr, uid, ids):
-            cr.execute('''select m.state,m.name
+            cr.execute('''select m.id
                 from
                     ir_module_module_dependency d
                 join
@@ -387,8 +395,11 @@ class module(osv.osv):
                     d.name=%s and
                     m.state not in ('uninstalled','uninstallable','to remove')''', (module.name,))
             res = cr.fetchall()
-            if res:
-                raise orm.except_orm(_('Error'), _('Some installed modules depend on the module you plan to Uninstall :\n %s') % '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
+            for i in range(0,len(res)):
+               ids.append(res[i][0])            
+#            if res:
+#                self.write(cr, uid, ids, {'state': 'to remove'})
+##                raise orm.except_orm(_('Error'), _('Some installed modules depend on the module you plan to Uninstall :\n %s') % '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
         self.write(cr, uid, ids, {'state': 'to remove'})
         return dict(ACTION_DICT, name=_('Uninstall'))
 

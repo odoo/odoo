@@ -3018,7 +3018,7 @@ class BaseModel(object):
 
         cr.commit()     # start a new transaction
 
-        self._add_sql_constraints(cr)
+        self._add_sql_constraints(cr, context["module"])
 
         if create:
             self._execute_sql(cr)
@@ -3145,7 +3145,7 @@ class BaseModel(object):
             _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
 
 
-    def _add_sql_constraints(self, cr):
+    def _add_sql_constraints(self, cr, module):
         """
 
         Modify this model's database table constraints so they match the one in
@@ -3196,6 +3196,13 @@ class BaseModel(object):
                     cr.execute(sql_action['query'])
                     cr.commit()
                     _schema.debug(sql_action['msg_ok'])
+                    name_id = 'constraint_'+ conname
+                    cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, module))
+                    if not cr.rowcount:
+                        cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module, model) VALUES (%s, now(), now(), %s, %s)", \
+                            (name_id, module, self._name)
+                        )
+#                    
                 except:
                     _schema.warning(sql_action['msg_err'])
                     cr.rollback()
@@ -3710,7 +3717,7 @@ class BaseModel(object):
         wf_service = netsvc.LocalService("workflow")
         for oid in ids:
             wf_service.trg_delete(uid, self._name, oid, cr)
-
+            
 
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         pool_model_data = self.pool.get('ir.model.data')
