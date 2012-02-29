@@ -202,7 +202,8 @@ class account_invoice(osv.osv):
             ('draft','Draft'),
             ('proforma','Pro-forma'),
             ('proforma2','Pro-forma'),
-            ('open','Open'),
+            ('open','Validated'),
+            ('sent','Sent'),
             ('paid','Paid'),
             ('cancel','Cancelled')
             ],'State', select=True, readonly=True,
@@ -370,6 +371,27 @@ class account_invoice(osv.osv):
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
                 raise orm.except_orm(_('Unknown Error'), str(e))
+            
+    def invoice_sent(self, cr, uid, ids, *args):
+        email_template_obj = self.pool.get('email.template')
+        mod_obj = self.pool.get('ir.model.data')
+
+        template_id = email_template_obj.search(cr, uid, [('name', '=', 'Automated Invoice Notification Mail')])[0]
+        template = email_template_obj.browse(cr, uid, template_id)
+        model_data_id = mod_obj._get_id(cr, uid, 'mail', 'email_compose_message_wizard_form')
+        res_id = mod_obj.browse(cr, uid, model_data_id).res_id
+
+        self.write(cr, uid, ids, {'state' : 'sent'})
+
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(res_id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context':{'active_model':'account.invoice', 'mail.compose.template_id': template.id},
+        }
 
     def confirm_paid(self, cr, uid, ids, context=None):
         if context is None:
