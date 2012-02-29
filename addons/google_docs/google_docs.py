@@ -23,7 +23,7 @@ GOOGLE DOCS
 #########################################
 
 '''
-    edit_url_template = 'https://docs.google.com/Edit?docid=%s'
+    edit_url_template = 'https://docs.google.com/document/d/%s/edit'
     prefix_gdoc_id_res = DOCUMENT_LABEL + ':'
 
     def copy_gdoc(self, cr, uid, model, context=None):
@@ -61,6 +61,9 @@ google_docs.copy_gdoc()
         # check google_base_account
         users_obj = self.pool.get('res.users')
         user = users_obj.browse(cr, uid, [uid])[0]
+        print '%s' % user.__dict__
+        print '%s' % user.gmail_user
+        print '%s' % user.gmail_password
         if not user.gmail_user or not user.gmail_password: 
             return -2
 
@@ -81,7 +84,9 @@ google_docs.copy_gdoc()
         client.ClientLogin(user.gmail_user, user.gmail_password, client.source, service='writely')
         resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL)
         new_resource = client.post(entry=resource, uri='https://docs.google.com/feeds/default/private/full/')
-
+        print new_resource.__dict__
+        print new_resource.resource_id.text
+        print new_resource.resource_id
         return self.edit_url_template % (new_resource.resource_id.text,)
 
 '''
