@@ -137,6 +137,36 @@ describe('Comparisons', function () {
 
         });
     });
+    describe('missing eq/neq', function () {
+        it('should fall back on identity', function () {
+            var typ = new py.type(function MyType() {});
+            expect(py.eval('MyType() == MyType()', {MyType: typ})).to.be(false);
+        });
+    });
+    describe('un-comparable types', function () {
+        it('should default to type-name ordering', function () {
+            var t1 = new py.type(function Type1() {});
+            var t2 = new py.type(function Type2() {});
+            expect(py.eval('T1() < T2()', {T1: t1, T2: t2})).to.be(true);
+            expect(py.eval('T1() > T2()', {T1: t1, T2: t2})).to.be(false);
+        });
+        it('should handle native stuff', function () {
+            expect(py.eval('None < 42')).to.be(true);
+            expect(py.eval('42 > None')).to.be(true);
+            expect(py.eval('None > 42')).to.be(false);
+
+            expect(py.eval('None < False')).to.be(true);
+            expect(py.eval('None < True')).to.be(true);
+            expect(py.eval('False > None')).to.be(true);
+            expect(py.eval('True > None')).to.be(true);
+            expect(py.eval('None > False')).to.be(false);
+            expect(py.eval('None > True')).to.be(false);
+
+            expect(py.eval('False < ""')).to.be(true);
+            expect(py.eval('"" > False')).to.be(true);
+            expect(py.eval('False > ""')).to.be(false);
+        });
+    });
 });
 describe('Boolean operators', function () {
     it('should work', function () {

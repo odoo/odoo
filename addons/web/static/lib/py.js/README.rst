@@ -10,6 +10,106 @@ specification document is the `Python 2.7 Expressions spec
 <http://docs.python.org/reference/expressions.html>`_ (along with the
 lexical analysis part).
 
+Builtins
+--------
+
+``py.js`` currently implements the following builtins:
+
+``type``
+    Restricted to creating new types, can't be used to get an object's
+    type (yet)
+
+``None``
+
+``True``
+
+``False``
+
+``NotImplemented``
+    Returned from rich comparison methods when the comparison is not
+    implemented for this combination of operands. In ``py.js``, this
+    is also the default implementation for all rich comparison methods.
+
+``issubclass``
+
+``object``
+
+``bool``
+    Does not inherit from ``int``, since ``int`` is not currently
+    implemented.
+
+``float``
+
+``str``
+
+``tuple``
+    Constructor/coercer is not implemented, only handles literals
+
+``list``
+    Same as tuple (``list`` is currently an alias for ``tuple``)
+
+``dict``
+    Implements just about nothing
+
+Note that most methods are probably missing from all of these.
+
+Data model protocols
+--------------------
+
+``py.js`` currently implements the following protocols (or
+sub-protocols) of the `Python 2.7 data model
+<http://docs.python.org/reference/datamodel.html>`_:
+
+Rich comparisons
+    Roughly complete implementation but for two limits: ``__eq__`` and
+    ``__ne__`` can't return ``NotImplemented`` (well they can but it's
+    not going to work right), and the behavior is undefined if a
+    rich-comparison operation does not return a ``py.bool``.
+
+    Also, a ``NotImplemented`` result does not try the reverse
+    operation, not sure if it's supposed to. It directly falls back to
+    comparing type names.
+
+Boolean conversion
+    Implementing ``__nonzero__`` should work.
+
+Customizing attribute access
+    Protocols for getting and setting attributes (including new-style
+    extension) fully implemented but for ``__delattr__`` (since
+    ``del`` is a statement)
+
+Descriptor protocol
+    As with attributes, ``__delete__`` is not implemented.
+
+Callable objects
+
+Collections Abstract Base Classes
+    Container is the only implemented ABC protocol (ABCs themselves
+    are not currently implemented) (well technically Callable and
+    Hashable are kind-of implemented as well)
+
+Numeric type emulation
+    Basically not implemented, the only part of it which is
+    implemented is the unary ``-`` (because it's used to create
+    negative floats, they're parsed as a negated positive number)
+
+Utilities
+---------
+
+``py.js`` also provides (and exposes) a few utilities for "userland"
+implementation:
+
+``def``
+    Wraps a native javascript function into a ``py.js`` function, so
+    that it can be called from native expressions.
+
+    Does not ensure the return types are type-compatible with
+    ``py.js`` types.
+
+    When accessing instance methods, ``py.js`` automatically wraps
+    these in a variant of ``py.def`` automatically, to behave as
+    Python's (bound) methods.
+
 Why
 ===
 

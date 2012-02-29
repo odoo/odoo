@@ -1,3 +1,7 @@
+/*
+    Fork of some unlicensed library found somewhere, don't hesitate to
+    patch it directly.
+*/
 (function($) {
     var menu,shadow,trigger,content,hash,currentTarget;
     var defaults= {
@@ -30,7 +34,7 @@
     };
     $.fn.contextMenu= function(id,options) {
         if(!menu) {
-            menu=$('<div id="jqContextMenu"></div>').hide().css({
+            menu=$('<div id="jqContextMenu" class="openerp"></div>').hide().css({
                 position:'absolute',
                 zIndex:'2000'
             }).appendTo('body').bind('click', function(e) {

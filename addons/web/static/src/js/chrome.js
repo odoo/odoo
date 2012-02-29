@@ -666,151 +666,149 @@ openerp.web.Login =  openerp.web.OldWidget.extend(/** @lends openerp.web.Login# 
     }
 });
 
-openerp.web.Header =  openerp.web.OldWidget.extend(/** @lends openerp.web.Header# */{
-    template: "Header",
+openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     /**
-     * @constructs openerp.web.Header
-     * @extends openerp.web.OldWidget
+     * @constructs openerp.web.Menu
+     * @extends openerp.web.Widget
+     *
+     * @param parent
+     */
+    template: 'Menu',
+    do_reload: function() {
+        var self = this;
+        return this.rpc("/web/menu/load", {}, this.on_loaded).then(function () {
+            if (self.current_menu) {
+                self.open_menu(self.current_menu);
+            }
+        });
+    },
+    on_loaded: function(data) {
+        this.data = data;
+        this.renderElement();
+        if (!this.$secondary_menus && this.getParent()) {
+            // TODO: create Widget openerp.web.SubMenu
+            this.$secondary_menus = this.getParent().$element.find('.oe_secondary_menus_container');
+            this.$element.add(this.$secondary_menus).on('click', 'a[data-menu]', this.on_menu_click);
+        }
+        this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
+        // Hide second level submenus
+        this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
+    },
+    /**
+     * Opens a given menu by id, as if a user had browsed to that menu by hand
+     * except does not trigger any event on the way
+     *
+     * @param {Number} menu_id database id of the terminal menu to select
+     */
+    open_menu: function (id) {
+        var $clicked_menu, $sub_menu, $main_menu;
+        $clicked_menu = this.$element.add(this.$secondary_menus).find('a[data-menu=' + id + ']');
+
+        if (this.$secondary_menus.has($clicked_menu).length) {
+            $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
+            $main_menu = this.$element.find('a[data-menu=' + $sub_menu.data('menu-parent') + ']');
+        } else {
+            $sub_menu = this.$secondary_menus.find('.oe_secondary_menu[data-menu-parent=' + $clicked_menu.attr('data-menu') + ']');
+            $main_menu = $clicked_menu;
+        }
+
+        // Activate current main menu
+        this.$element.find('.oe_active').removeClass('oe_active');
+        $main_menu.addClass('oe_active');
+
+        // Show current sub menu
+        this.$secondary_menus.find('.oe_secondary_menu').hide();
+        $sub_menu.show();
+
+        // Activate current menu item and show parents
+        this.$secondary_menus.find('.oe_active').removeClass('oe_active');
+        if ($main_menu !== $clicked_menu) {
+            $clicked_menu.parents().show();
+            if ($clicked_menu.is('.oe_menu_toggler')) {
+                $clicked_menu.toggleClass('oe_menu_opened').siblings('.oe_secondary_submenu:first').toggle();
+            } else {
+                $clicked_menu.parent().addClass('oe_active');
+            }
+        }
+    },
+    on_menu_click: function(ev, id) {
+        id = id || 0;
+        var $clicked_menu, manual = false;
+
+        if (id) {
+            // We can manually activate a menu with it's id (for hash url mapping)
+            manual = true;
+            $clicked_menu = this.$element.find('a[data-menu=' + id + ']');
+            if (!$clicked_menu.length) {
+                $clicked_menu = this.$secondary_menus.find('a[data-menu=' + id + ']');
+            }
+        } else {
+            $clicked_menu = $(ev.currentTarget);
+            id = $clicked_menu.data('menu');
+        }
+
+        if (id) {
+            this.open_menu(id);
+            this.current_menu = id;
+            this.session.active_id = id;
+            this.rpc('/web/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
+        }
+        if (ev) {
+            ev.stopPropagation();
+        }
+        return false;
+    },
+    do_show_secondary: function($sub_menu, $main_menu) {
+        var self = this;
+        this.$secondary_menus.show();
+        if (!arguments.length) {
+            return;
+        }
+        $sub_menu.show();
+    },
+    on_menu_action_loaded: function(data) {
+        var self = this;
+        if (data.action.length) {
+            var action = data.action[0][2];
+            action.from_menu = true;
+            self.on_action(action);
+        } else {
+            self.on_action({type: 'null_action'});
+        }
+    },
+    on_action: function(action) {
+    }
+});
+
+openerp.web.DropDownMenu =  openerp.web.Widget.extend(/** @lends openerp.web.DropDownMenu# */{
+    template: "DropDownMenu",
+    /**
+     * @constructs openerp.web.DropDownMenu
+     * @extends openerp.web.Widget
      *
      * @param parent
      */
     init: function(parent) {
         this._super(parent);
-        this.qs = "?" + jQuery.param.querystring();
-        this.$content = $();
         this.update_promise = $.Deferred().resolve();
     },
     start: function() {
-        this._super();
-    },
-    do_update: function () {
         var self = this;
-        var fct = function() {
-            self.$content.remove();
-            if (!self.session.uid)
-                return;
-            var func = new openerp.web.Model("res.users").get_func("read");
-            return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
-                self.$content = $(QWeb.render("Header-content", {widget: self, user: res}));
-                self.$content.appendTo(self.$element);
-                self.$element.find(".logout").click(self.on_logout);
-                self.$element.find("a.preferences").click(self.on_preferences);
-                self.$element.find(".about").click(self.on_about);
-                return self.shortcut_load();
-            });
-        };
-        this.update_promise = this.update_promise.pipe(fct, fct);
-    },
-    on_about: function() {
-        var self = this;
-        self.rpc("/web/webclient/version_info", {}).then(function(res) {
-            var $help = $(QWeb.render("About-Page", {version_info: res}));
-            $help.find('a.oe_activate_debug_mode').click(function (e) {
-                e.preventDefault();
-                window.location = $.param.querystring(
-                        window.location.href, 'debug');
-            });
-            openerp.web.dialog($help, {autoOpen: true,
-                modal: true, width: 960, title: _t("About")});
+        this._super.apply(this, arguments);
+        $('html').bind('click', function() {
+            self.$element.find('.oe_dropdown_options').hide();
+        });
+        this.$element.find('.oe_dropdown_toggle').click(function() {
+            self.$element.find('.oe_dropdown_options').toggle();
+            return false;
+        });
+        this.$element.on('click', '.oe_dropdown_options li a[data-menu]', function() {
+            var f = self['on_menu_' + $(this).data('menu')];
+            f && f($(this));
+            self.$element.find('.oe_dropdown_options').hide();
+            return false;
         });
     },
-    shortcut_load :function(){
-        var self = this,
-            sc = self.session.shortcuts,
-            shortcuts_ds = new openerp.web.DataSet(this, 'ir.ui.view_sc');
-        // TODO: better way to communicate between sections.
-        // sc.bindings, because jquery does not bind/trigger on arrays...
-        if (!sc.binding) {
-            sc.binding = {};
-            $(sc.binding).bind({
-                'add': function (e, attrs) {
-                    shortcuts_ds.create(attrs, function (out) {
-                        $('<li>', {
-                            'data-shortcut-id':out.result,
-                            'data-id': attrs.res_id
-                        }).text(attrs.name)
-                          .appendTo(self.$element.find('.oe-shortcuts ul'));
-                        attrs.id = out.result;
-                        sc.push(attrs);
-                    });
-                },
-                'remove-current': function () {
-                    var menu_id = self.session.active_id;
-                    var $shortcut = self.$element
-                        .find('.oe-shortcuts li[data-id=' + menu_id + ']');
-                    var shortcut_id = $shortcut.data('shortcut-id');
-                    $shortcut.remove();
-                    shortcuts_ds.unlink([shortcut_id]);
-                    var sc_new = _.reject(sc, function(shortcut){ return shortcut_id === shortcut.id});
-                    sc.splice(0, sc.length);
-                    sc.push.apply(sc, sc_new);
-                    }
-            });
-        }
-        return this.rpc('/web/session/sc_list', {}, function(shortcuts) {
-            sc.splice(0, sc.length);
-            sc.push.apply(sc, shortcuts);
-
-            self.$element.find('.oe-shortcuts')
-                .html(QWeb.render('Shortcuts', {'shortcuts': shortcuts}))
-                .undelegate('li', 'click')
-
-                .delegate('li', 'click', function(e) {
-                    e.stopPropagation();
-                    var id = $(this).data('id');
-                    self.session.active_id = id;
-                    self.rpc('/web/menu/action', {'menu_id':id}, function(ir_menu_data) {
-                        if (ir_menu_data.action.length){
-                            self.on_action(ir_menu_data.action[0][2]);
-                        }
-                    });
-                });
-        });
-    },
-
-    on_action: function(action) {
-    },
-    on_preferences: function(){
-        var self = this;
-        var action_manager = new openerp.web.ActionManager(this);
-        var dataset = new openerp.web.DataSet (this,'res.users',this.context);
-        dataset.call ('action_get','',function (result){
-            self.rpc('/web/action/load', {action_id:result}, function(result){
-                action_manager.do_action(_.extend(result['result'], {
-                    res_id: self.session.uid,
-                    res_model: 'res.users',
-                    flags: {
-                        action_buttons: false,
-                        search_view: false,
-                        sidebar: false,
-                        views_switcher: false,
-                        pager: false
-                    }
-                }));
-            });
-        });
-        this.dialog = new openerp.web.Dialog(this,{
-            title: _t("Preferences"),
-            width: '700px',
-            buttons: [
-                {text: _t("Cancel"), click: function(){ $(this).dialog('destroy'); }},
-                {text: _t("Change password"), click: function(){ self.change_password(); }},
-                {text: _t("Save"), click: function(){
-                        var inner_viewmanager = action_manager.inner_viewmanager;
-                        inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
-                        .then(function() {
-                            self.dialog.destroy();
-                            // needs to refresh interface in case language changed
-                            window.location.reload();
-                        });
-                    }
-                }
-            ]
-        }).open();
-       action_manager.appendTo(this.dialog);
-       action_manager.render(this.dialog);
-    },
-
     change_password :function() {
         var self = this;
         this.dialog = new openerp.web.Dialog(this, {
@@ -842,198 +840,68 @@ openerp.web.Header =  openerp.web.OldWidget.extend(/** @lends openerp.web.Header
             ]
         }).html(error.error);
     },
-    on_logout: function() {
-    }
-});
-
-openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
-    /**
-     * @constructs openerp.web.Menu
-     * @extends openerp.web.Widget
-     *
-     * @param parent
-     */
-    template: 'Menu',
-    do_reload: function() {
+    do_update: function () {
         var self = this;
-        return this.rpc("/web/menu/load", {}, this.on_loaded).then(function () {
-            if (self.current_menu) {
-                self.open_menu(self.current_menu);
-            }
+        var fct = function() {
+            var $avatar = self.$element.find('.oe_topbar_avatar');
+            $avatar.attr('src', $avatar.data('default-src'));
+            if (!self.session.uid)
+                return;
+            var func = new openerp.web.Model("res.users").get_func("read");
+            return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
+                // TODO: Only show company if multicompany in use
+                self.$element.find('.oe_topbar_name').text(res.name + '/' + res.company_id[1]);
+                return self.shortcut_load();
+            });
+        };
+        this.update_promise = this.update_promise.pipe(fct, fct);
+    },
+    on_action: function() {
+    },
+    shortcut_load :function(){
+        var self = this,
+            sc = self.session.shortcuts,
+            shortcuts_ds = new openerp.web.DataSet(this, 'ir.ui.view_sc');
+        self.$element.find('.oe_dropdown_options a[data-menu=shortcut]').each(function() {
+            $(this).parent().remove();
         });
-    },
-    on_loaded: function(data) {
-        this.data = data;
-        this.renderElement();
-        if (!this.$secondary_menu && this.getParent()) {
-            // TODO: create Widget openerp.web.SubMenu
-            this.$secondary_menu = this.getParent().$element.find('.oe_secondary_menu');
-        }
-        this.$secondary_menu.html(QWeb.render("Menu.secondary", { widget : this }));
-        this.$element.add(this.$secondary_menu).find("a").click(this.on_menu_click);
-    },
-    /**
-     * Opens a given menu by id, as if a user had browsed to that menu by hand
-     * except does not trigger any event on the way
-     *
-     * @param {Number} menu_id database id of the terminal menu to select
-     */
-    open_menu: function (menu_id) {
-        this.$element.add(this.$secondary_menu).find('.oe_active')
-                .removeClass('oe_active');
-        this.$secondary_menu.find('> .oe_secondary_menu').hide();
-
-        var $primary_menu;
-        var $secondary_submenu = this.$secondary_menu.find(
-                'a[data-menu=' + menu_id +']');
-        if ($secondary_submenu.length) {
-            for(;;) {
-                if ($secondary_submenu.hasClass('leaf')) {
-                    $secondary_submenu.addClass('oe_active');
-                } else if ($secondary_submenu.hasClass('submenu')) {
-                    $secondary_submenu.addClass('opened')
+        // TODO: better way to communicate between sections.
+        // sc.bindings, because jquery does not bind/trigger on arrays...
+        if (!sc.binding) {
+            sc.binding = {};
+            $(sc.binding).bind({
+                'add': function (e, attrs) {
+                    shortcuts_ds.create(attrs, function (out) {
+                        var shortcut = QWeb.render('DropDownMenu.shortcut', {
+                            shortcuts : [{
+                                name : attrs.name,
+                                id : out.result,
+                                res_id : attrs.res_id
+                            }]
+                        });
+                        $(shortcut).appendTo(self.$element.find('.oe_dropdown_options'));
+                        attrs.id = out.result;
+                        sc.push(attrs);
+                    });
+                },
+                'remove-current': function () {
+                    var menu_id = self.session.active_id;
+                    var $shortcut = self.$element.find('.oe_dropdown_options li a[data-id=' + menu_id + ']');
+                    var shortcut_id = $shortcut.data('shortcut-id');
+                    $shortcut.remove();
+                    shortcuts_ds.unlink([shortcut_id]);
+                    var sc_new = _.reject(sc, function(shortcut){ return shortcut_id === shortcut.id});
+                    sc.splice(0, sc.length);
+                    sc.push.apply(sc, sc_new);
                 }
-                var $parent = $secondary_submenu.parent().show();
-                if ($parent.hasClass('oe_secondary_menu')) {
-                    var primary_id = $parent.data('menu-parent');
-                    $primary_menu = this.$element.find(
-                            'a[data-menu=' + primary_id + ']');
-                    break;
-                }
-                $secondary_submenu = $parent.prev();
-            }
-        } else {
-            $primary_menu = this.$element.find('a[data-menu=' + menu_id + ']');
+            });
         }
-        if (!$primary_menu.length) {
-            return;
-        }
-        $primary_menu.addClass('oe_active');
-        this.$secondary_menu.find(
-            'div[data-menu-parent=' + $primary_menu.data('menu') + ']').addClass('oe_active');
-    },
-    on_menu_click: function(ev, id) {
-        id = id || 0;
-        var $clicked_menu, manual = false;
+        return this.rpc('/web/session/sc_list', {}, function(shortcuts) {
+            sc.splice(0, sc.length);
+            sc.push.apply(sc, shortcuts);
 
-        if (id) {
-            // We can manually activate a menu with it's id (for hash url mapping)
-            manual = true;
-            $clicked_menu = this.$element.find('a[data-menu=' + id + ']');
-            if (!$clicked_menu.length) {
-                $clicked_menu = this.$secondary_menu.find('a[data-menu=' + id + ']');
-            }
-        } else {
-            $clicked_menu = $(ev.currentTarget);
-            id = $clicked_menu.data('menu');
-        }
-
-        if (this.do_menu_click($clicked_menu, manual) && id) {
-            this.current_menu = id;
-            this.session.active_id = id;
-            this.rpc('/web/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
-        }
-        if (ev) {
-            ev.stopPropagation();
-        }
-        return false;
-    },
-    do_menu_click: function($clicked_menu, manual) {
-        var $sub_menu, $main_menu,
-            active = $clicked_menu.is('.oe_active'),
-            sub_menu_visible = false,
-            has_submenu_items = false;
-
-        if (this.$secondary_menu.has($clicked_menu).length) {
-            $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
-            $main_menu = this.$element.find('a[data-menu=' + $sub_menu.data('menu-parent') + ']');
-        } else {
-            $sub_menu = this.$secondary_menu.find('.oe_secondary_menu[data-menu-parent=' + $clicked_menu.attr('data-menu') + ']');
-            $main_menu = $clicked_menu;
-        }
-
-        sub_menu_visible = $sub_menu.is(':visible');
-        has_submenu_items = !!$sub_menu.children().length;
-        this.$secondary_menu.find('.oe_secondary_menu').hide();
-
-        $('.oe_active', this.$element.add(this.$secondary_menu)).removeClass('oe_active');
-        $main_menu.add($clicked_menu).add($sub_menu).addClass('oe_active');
-
-        if (has_submenu_items) {
-            if (!manual) {
-                this.do_show_secondary($sub_menu, $main_menu);
-            } else {
-                this.do_show_secondary();
-            }
-        }
-
-        if ($main_menu != $clicked_menu) {
-            if ($clicked_menu.is('.submenu')) {
-                $sub_menu.find('.submenu.opened').each(function() {
-                    if (!$(this).next().has($clicked_menu).length && !$(this).is($clicked_menu)) {
-                        $(this).removeClass('opened').next().hide();
-                    }
-                });
-                $clicked_menu.toggleClass('opened').next().toggle();
-            } else if ($clicked_menu.is('.leaf')) {
-                return true;
-            }
-        } else {
-            return true;
-        }
-        return false;
-    },
-    do_hide_secondary: function() {
-        //this.$secondary_menu.hide();
-    },
-    do_show_secondary: function($sub_menu, $main_menu) {
-        var self = this;
-        this.$secondary_menu.show();
-        if (!arguments.length) {
-            return;
-        }
-        $sub_menu.show();
-    },
-    on_menu_action_loaded: function(data) {
-        var self = this;
-        if (data.action.length) {
-            var action = data.action[0][2];
-            action.from_menu = true;
-            self.on_action(action);
-        } else {
-            self.on_action({type: 'null_action'});
-        }
-    },
-    on_action: function(action) {
-    }
-});
-
-openerp.web.DropDownMenu =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
-    template: "DropDownMenu",
-    /**
-     * @constructs openerp.web.DropDownMenu
-     * @extends openerp.web.OldWidget
-     *
-     * @param parent
-     */
-    init: function(parent) {
-        this._super(parent);
-    },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
-        $('html').bind('click', function() {
-            self.$element.find('.oe_dropdown_options').hide();
-        });
-        this.$element.find('.oe_dropdown_toggle').click(function() {
-            self.$element.find('.oe_dropdown_options').toggle();
-            return false;
-        });
-        this.$element.find('.oe_dropdown_options li a').click(function() {
-            var f = self['on_menu_' + $(this).data('menu')];
-            f && f();
-            self.$element.find('.oe_dropdown_options').hide();
-            return false;
+            $(QWeb.render('DropDownMenu.shortcut', {'shortcuts': shortcuts}))
+                .appendTo(self.$element.find('.oe_dropdown_options'));
         });
     },
     on_menu_logout: function() {
@@ -1077,6 +945,29 @@ openerp.web.DropDownMenu =  openerp.web.Widget.extend(/** @lends openerp.web.Hea
         }).open();
        action_manager.appendTo(this.dialog);
        action_manager.render(this.dialog);
+    },
+    on_menu_about: function() {
+        var self = this;
+        self.rpc("/web/webclient/version_info", {}).then(function(res) {
+            var $help = $(QWeb.render("About-Page", {version_info: res}));
+            $help.find('a.oe_activate_debug_mode').click(function (e) {
+                e.preventDefault();
+                window.location = $.param.querystring(
+                        window.location.href, 'debug');
+            });
+            openerp.web.dialog($help, {autoOpen: true,
+                modal: true, width: 960, title: _t("About")});
+        });
+    },
+    on_menu_shortcut: function($link) {
+        var self = this,
+            id = $link.data('id');
+        self.session.active_id = id;
+        self.rpc('/web/menu/action', {'menu_id': id}, function(ir_menu_data) {
+            if (ir_menu_data.action.length){
+                self.on_action(ir_menu_data.action[0][2]);
+            }
+        });
     }
 });
 
@@ -1089,7 +980,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         var self = this;
         this._super(parent);
         openerp.webclient = this;
-
+        this.querystring = '?' + jQuery.param.querystring();
         this._current_state = null;
     },
     start: function() {
@@ -1108,13 +999,13 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         });
         this.session.on_session_valid.add(function() {
             self.show_application();
-            
-            self.header.do_update();
+
+            self.dropdown_menu.do_update();
             self.menu.do_reload();
             if(self.action_manager)
                 self.action_manager.destroy();
             self.action_manager = new openerp.web.ActionManager(self);
-            self.action_manager.appendTo($("#oe_app"));
+            self.action_manager.appendTo(self.$element.find('.oe_application'));
             self.bind_hashchange();
             var version_label = _t("OpenERP - Unsupported/Community Version");
             if (!self.session.openerp_entreprise) {
@@ -1136,16 +1027,13 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.show_common();
         self.$table = $(QWeb.render("WebClient", {}));
         self.$element.append(self.$table);
-        self.header = new openerp.web.Header(self);
-        self.header.on_logout.add(this.proxy('on_logout'));
-        self.header.on_action.add(this.proxy('on_menu_action'));
-        self.header.appendTo($("#oe_header"));
         self.menu = new openerp.web.Menu(self);
         self.menu.replace(this.$element.find('.oe_menu_placeholder'));
         self.menu.on_action.add(this.proxy('on_menu_action'));
         self.dropdown_menu = new openerp.web.DropDownMenu(self);
         self.dropdown_menu.replace(this.$element.find('.oe_dropdown_menu_placeholder'));
         self.dropdown_menu.on_menu_logout.add(this.proxy('on_logout'));
+        self.dropdown_menu.on_action.add(this.proxy('on_menu_action'));
     },
     show_common: function() {
         var self = this;

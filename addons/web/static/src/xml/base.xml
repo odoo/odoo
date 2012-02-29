@@ -23,32 +23,16 @@
             <div class="oe_menu_placeholder"/>
             <div class="oe_dropdown_menu_placeholder"/>
         </div>
-        <div id="oe_header" class="header" style="display: none"></div>
         <div class="oe_leftbar">
-            <!--
-            <a href="#" class="oe_logo"><img src="img/logo.png"/></a>
+            <a href="#" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
 
-            <div class="oe_secondary_menu"/>
+            <div class="oe_secondary_menus_container"/>
 
             <div class="oe_footer">
-                Powered by <a href="http://www.openerp.com" class="openerp"><span class="red">Open</span>ERP</a>
+                Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
             </div>
-            -->
         </div>
-        <div class="oe_application">
-            <!-- This table will be removed as soon as we decide what will happen to the sidebar -->
-            <table cellspacing="0" cellpadding="0" border="0" height="100%" width="100%">
-            <tr>
-                <td valign="top" class="secondary_menu">
-                    <div class="oe_secondary_menu"/>
-                </td>
-                <td valign="top" class="oe-application-container">
-                    <div id="oe_app" class="oe-application">
-                    </div>
-                </td>
-            </tr>
-            </table>
-        </div>
+        <div class="oe_application"/>
     </div>
 </t>
 <t t-name="Loading">
@@ -339,43 +323,6 @@
         <div id="oe_db_options" class="oe_db_options"></div>
     </div>
 </t>
-<t t-name="Header">
-    <div>
-        <a t-att-href="'/' + widget.qs" class="company_logo_link">
-            <div class="company_logo" />
-        </a>
-    </div>
-</t>
-<t t-name="Header-content">
-    <h1 class="header_title">
-        <t t-esc="user.company_id[1]"/> (<t t-esc="widget.session.db"/>)<br/>
-        <small class="username"><t t-esc="user.name"/></small>
-    </h1>
-    <div class="header_corner">
-        <ul class="block">
-            <li>
-                <a t-att-href="'/' + widget.qs" title="Home" class="home"><img t-att-src='_s + "/web/static/src/img/header-home.png"' width="16" height="16" border="0"/></a>
-            </li>
-            <li class="preferences">
-                <a href="javascript:void(0)" title="Preferences" class="preferences"><img t-att-src='_s + "/web/static/src/img/header-preferences.png"' width="16" height="16" border="0"/></a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" title="About" class="about"><img t-att-src='_s + "/web/static/src/img/header-about.png"' width="16" height="16" border="0"/></a>
-            </li>
-        </ul>
-        <div class="block">
-            <a href="javascript:void(0)" class="logout">LOGOUT</a>
-        </div>
-
-    </div>
-    <div class="oe-shortcuts"> </div>
-</t>
-<ul t-name="Shortcuts">
-    <li t-foreach="shortcuts" t-as="shortcut"
-            t-att-data-id="shortcut.res_id"
-            t-att-data-shortcut-id="shortcut.id"
-        ><t t-esc="shortcut.name"/></li>
-</ul>
 
 <t t-name="Menu">
     <ul class="oe_menu" t-if="widget.data">
@@ -389,41 +336,58 @@
 <t t-name="Menu.secondary">
     <div t-foreach="widget.data.data.children" t-as="menu" style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu.id">
         <t t-foreach="menu.children" t-as="menu">
-            <t t-set="classname" t-translation="off">oe_secondary_menu_item</t>
-            <t t-set="level" t-value="0"/>
-            <t t-call="Menu.secondary.children"/>
+            <div class="oe_secondary_menu_section">
+                <t t-esc="menu.name"/>
+                <!--
+                    Shall the section be still clickable ?
+                    <t t-call="Menu.secondary.link"/>
+                -->
+            </div>
+            <t t-call="Menu.secondary.submenu"/>
         </t>
     </div>
 </t>
-<t t-name="Menu.secondary.children">
-    <t t-set="level" t-value="level + 1"/>
-    <a href="#" t-att-id="menu.children.length ? 'menu_' + menu.id : undefined"
-        t-att-class="classname + (menu.children.length ? ' submenu' : ' leaf') + (menu_first and level == 1 ? ' opened' : '')"
-        t-att-data-menu="menu.children.length ? undefined : menu.id">
-        <span t-attf-style="padding-left: #{(level - 2) * 20}px"> <t t-esc="menu.name"/></span>
+<t t-name="Menu.secondary.submenu">
+    <ul t-if="menu.children.length" class="oe_secondary_submenu">
+        <li t-foreach="menu.children" t-as="menu">
+            <t t-call="Menu.secondary.link"/>
+            <!--<span class="oe_menu_label">8</span>-->
+            <t t-call="Menu.secondary.submenu"/>
+        </li>
+    </ul>
+</t>
+<t t-name="Menu.secondary.link">
+    <a href="#"
+        t-att-class="menu.children.length ? 'oe_menu_toggler' : 'oe_menu_leaf'"
+        t-att-data-menu="menu.id">
+        <t t-esc="menu.name"/>
     </a>
-    <div t-attf-class="oe_secondary_submenu" t-if="menu.children.length" t-att-style="menu_first and level == 1 ? undefined : 'display: none'">
-        <t t-foreach="menu.children" t-as="menu">
-            <t t-set="classname" t-translation="off">oe_secondary_submenu_item</t>
-            <t t-call="Menu.secondary.children"/>
-        </t>
-    </div>
 </t>
 
 <t t-name="DropDownMenu">
     <ul class="oe_dropdown_menu oe_topbar_item">
         <li class="oe_dropdown">
             <a href="#" class="oe_dropdown_toggle">
-                <img class="oe_topbar_avatar" src="http://www.amigrave.com/ClarkGableSmall.jpg"/>
-                Clark Gable
+                <img class="oe_topbar_avatar" t-att-data-default-src="_s + '/web/static/src/img/topbar-avatar.png'"/>
+                <span class="oe_topbar_name"/>
             </a>
             <ul class="oe_dropdown_options">
                 <!--<li><a href="#" data-menu="profile">Profile</a></li>-->
                 <li><a href="#" data-menu="settings">Settings</a></li>
                 <li><a href="#" data-menu="logout">Log out</a></li>
+                <li><hr/></li>
+                <li><a href="#" data-menu="about">About OpenERP</a></li>
+                <li><hr/></li>
             </ul>
         </li>
     </ul>
+</t>
+<t t-name="DropDownMenu.shortcut">
+    <li t-foreach="shortcuts" t-as="shortcut">
+        <a href="#" data-menu="shortcut" t-att-data-id="shortcut.res_id" t-att-data-shortcut-id="shortcut.id">
+            <t t-esc="shortcut.name"/>
+        </a>
+    </li>
 </t>
 
 <t t-name="ViewManager">
