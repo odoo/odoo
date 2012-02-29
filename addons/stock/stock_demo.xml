@@ -187,9 +187,9 @@
             <field eval="&quot;&quot;&quot;Shop 1&quot;&quot;&quot;" name="name"/>
             <field name="address" eval="[]"/>
         </record>
-        <record id="res_partner_address_fabien0" model="res.partner.address">
+        <record id="res_partner_address_fabien0" model="res.partner">
             <field eval="&quot;&quot;&quot;Fabien&quot;&quot;&quot;" name="name"/>
-            <field name="partner_id" ref="res_partner_tinyshop0"/>
+            <field name="parent_id" ref="res_partner_tinyshop0"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_company_shop0" model="res.company">
@@ -205,9 +205,9 @@
             <field eval="&quot;&quot;&quot;Shop 2&quot;&quot;&quot;" name="name"/>
             <field name="address" eval="[]"/>
         </record>
-        <record id="res_partner_address_eric0" model="res.partner.address">
+        <record id="res_partner_address_eric0" model="res.partner">
             <field eval="&quot;&quot;&quot;Eric&quot;&quot;&quot;" name="name"/>
-            <field name="partner_id" ref="res_partner_tinyshop1"/>
+            <field name="parent_id" ref="res_partner_tinyshop1"/>
             <field eval="1" name="active"/>
         </record>
         <record id="res_company_tinyshop0" model="res.company">
@@ -217,7 +217,7 @@
             <field eval="&quot;&quot;&quot;Shop 2&quot;&quot;&quot;" name="name"/>
         </record>
         <record id="stock_location_shop0" model="stock.location">
-            <field model="res.partner.address" name="address_id" search="[('name','=','Fabien')]"/>
+            <field model="res.partner" name="address_id" search="[('name','=','Fabien')]"/>
             <field name="location_id" ref="stock.stock_location_locations"/>
             <field name="company_id" ref="res_company_shop0"/>
             <field eval="&quot;&quot;&quot;internal&quot;&quot;&quot;" name="usage"/>
@@ -227,7 +227,7 @@
             <field eval="&quot;&quot;&quot;manual&quot;&quot;&quot;" name="chained_auto_packing"/>
         </record>
         <record id="stock_location_shop1" model="stock.location">
-            <field model="res.partner.address" name="address_id" search="[('name','=','Eric')]"/>
+            <field model="res.partner" name="address_id" search="[('name','=','Eric')]"/>
             <field name="company_id" ref="res_company_tinyshop0"/>
             <field name="location_id" ref="stock.stock_location_locations"/>
             <field eval="&quot;&quot;&quot;internal&quot;&quot;&quot;" name="usage"/>
