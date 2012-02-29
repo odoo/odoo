@@ -346,14 +346,25 @@ class purchase_order(osv.osv):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
 
+    def _hook_message_sent(self, cr, uid, purchase_id, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'purchase.order', purchase_id, 'send_rfq', cr)
+        return True
+
     def wkf_send_rfq(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         template_id = self.pool.get('email.template').search(cr, uid, [('model_id', '=', 'purchase.order')])
-        self.write(cr, uid, ids, {'state' : 'send'})
 
         res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
         res_id = res and res[1] or False
 
+        #EDI EXport data
+        id = ids[0]
+        order = self.browse(cr, uid, id, context)
+        if not order.partner_id.opt_out: 
+            order.edi_export_and_email(template_ext_id='purchase.email_template_edi_purchase', context=context)
+        ctx = context.copy()
+        ctx.update({'active_model': 'purchase.order', 'active_id': id, 'mail.compose.template_id': template_id})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -362,7 +373,8 @@ class purchase_order(osv.osv):
             'view_id': res_id,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'active_model': 'purchase.order','mail.compose.template_id' :template_id},
+            'context': ctx,
+            'nodestroy': True,
         }
 
     #TODO: implement messages system

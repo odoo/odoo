@@ -17,7 +17,7 @@
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">send</field>
             <field name="kind">function</field>
-            <field name="action">wkf_send_rfq()</field>
+            <field name="action">write({'state':'send'})</field>
         </record>
         <record id="act_confirmed" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
