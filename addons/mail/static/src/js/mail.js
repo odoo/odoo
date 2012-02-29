@@ -316,6 +316,7 @@ openerp.mail = function(session) {
          * @param {Object} parent parent
          * @param {Object} [params]
          * @param {Number} [params.limit=20] number of messages to show and fetch
+         * @param {Number} [params.search_view_id=false] search view id for messages
          * @var {Array} sorted_comments records sorted by res_model and res_id
          *                  records.res_model = {res_ids}
          *                  records.res_model.res_id = [records]
@@ -324,6 +325,7 @@ openerp.mail = function(session) {
             this._super(parent);
             this.params = params || {};
             this.params.limit = params.limit || 20;
+            this.params.search_view_id = params.search_view_id || false;
             this.params.search = {};
             this.params.domain = [];
             this.sorted_comments = {};
@@ -336,9 +338,10 @@ openerp.mail = function(session) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
+            /* events and buttons */
             this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });   
             /* load mail.message search view */
-            var search_view_loaded = this.load_search_view();
+            var search_view_loaded = this.load_search_view(this.params.search_view_id, {}, false);
             var search_view_ready = $.when(search_view_loaded).then(function () {
                 self.searchview.on_search.add(self.do_searchview_search);
             });
