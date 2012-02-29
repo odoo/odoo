@@ -43,6 +43,7 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             /* events */
             this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
+            this.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); });
             this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
                 // lazy implementation: fetch data and try to redirect
                 self.do_action({
@@ -52,6 +53,7 @@ openerp.mail = function(session) {
                     views: [[false, 'form']]
                 });
             });
+            this.$element.find('div.oe_mail_thread_nomore').hide();
             /* display user, fetch comments */
             this.display_current_user();
             if (this.params.records) return this.display_comments(this.params.records);
@@ -66,8 +68,7 @@ openerp.mail = function(session) {
             var self = this;
             this.params.offset = 0;
             this.$element.find('div.oe_mail_thread_display').empty();
-            return this.fetch_comments().then(function() {
-                self.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); }); });
+            return this.fetch_comments().then();
         },
         
         fetch_comments: function (limit, offset) {
