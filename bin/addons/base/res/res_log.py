@@ -62,11 +62,17 @@ class res_log(osv.osv):
                     c.pop(context_key, None)
             return c
         create_context = context and dict(context) or {}
-        create_context = filter_context_value(create_context)
         if 'res_log_read' in create_context:
             vals['read'] = create_context.pop('res_log_read')
         if create_context and not vals.get('context'):
             vals['context'] = create_context
+        log_context = filter_context_value(vals.get('context',{}))
+        if len(str(log_context)) > 250:
+            # if context is still bigger that field size, better lose the
+            # context completly instead of breaking later when user access
+            # res.log item
+            log_context = "{}"
+        vals['context'] = log_context
         return super(res_log, self).create(cr, uid, vals, context=context)
 
     # TODO: do not return secondary log if same object than in the model (but unlink it)
