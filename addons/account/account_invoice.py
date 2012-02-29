@@ -405,8 +405,8 @@ class account_invoice(osv.osv):
         #EDI EXport data
         id = ids[0]
         invoice = self.browse(cr, uid, id, context)
-        if not invoice.partner_id.opt_out:
-            invoice.edi_export_and_email(template_ext_id='account.email_template_edi_invoice', context=context)
+#        if not invoice.partner_id.opt_out:
+#            invoice.edi_export_and_email(template_ext_id='account.email_template_edi_invoice', context=context)
         ctx = context.copy()
         ctx.update({'active_model': 'account.invoice', 'active_id': invoice.id, 'mail.compose.template_id': template.id})
 

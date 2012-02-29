@@ -303,7 +303,7 @@
                                 <field name="residual"/>
                                 <group col="8" colspan="4" groups="base.group_user">
                                     <button name="action_invoice_sent" type="object" string="Send By Email" icon="terp-mail-message-new" states="open"/>
-                                    <button name="invoice_print" string="Print Invoice" type="object" icon="gtk-print" states="open,proforma,sale,proforma2"/>
+                                    <button name="invoice_print" string="Print Invoice" type="object" icon="gtk-print" states="open"/>
                                     <button name="invoice_open" states="draft,proforma2" string="Validate" icon="gtk-go-forward"/>
                                     <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="terp-gtk-media-pause" groups="account.group_account_user"/>
                                     <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' states='sent,paid' icon="gtk-execute"/>
