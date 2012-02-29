@@ -123,29 +123,30 @@ openerp.web.DiagramView = openerp.web.View.extend({
         var id_to_node = {};
 
 
-        var style = {   "edge_color"                    : "#A0A0A0",
-                        "edge_label_color"              : "#555",
-                        "edge_label_font_size"          : 10,
-                        "edge_width"                    : 2,
-                        "edge_spacing"                  : 100,    
-                        "edge_loop_radius"              : 100,
+        var style = {
+            edge_color: "#A0A0A0",
+            edge_label_color: "#555",
+            edge_label_font_size: 10,
+            edge_width: 2,
+            edge_spacing: 100,
+            edge_loop_radius: 100,
 
-                        "node_label_color"              : "#333",
-                        "node_label_font_size"          : 12,
-                        "node_outline_color"            : "#333",
-                        "node_outline_width"            : 1,
-                        "node_selected_color"           : "#0097BE",
-                        "node_selected_width"           : 2,
-                        "node_size_x"                   : 110,
-                        "node_size_y"                   : 80,
-                        "connector_active_color"        : "#FFF",
-                        "connector_radius"              : 4,
+            node_label_color: "#333",
+            node_label_font_size: 12,
+            node_outline_color: "#333",
+            node_outline_width: 1,
+            node_selected_color: "#0097BE",
+            node_selected_width: 2,
+            node_size_x: 110,
+            node_size_y: 80,
+            connector_active_color: "#FFF",
+            connector_radius: 4,
 
-                        "gray"                          : "#DCDCDC",
-                        "white"                         : "#FFF",
-
-                        "viewport_margin"               : 50,
-                        };
+            gray: "#DCDCDC",
+            white: "#FFF",
+            
+            viewport_margin: 50
+        };
 
         $('#dia-canvas').empty();    // remove previous diagram
 
@@ -156,21 +157,24 @@ openerp.web.DiagramView = openerp.web.View.extend({
         var graph  = new CuteGraph(r,style,canvas.parentNode);
 
         _.each(res_nodes, function(node) {
-            var n = new CuteNode(     graph,
-                                      node.x + 50,  //FIXME the +50 should be in the layout algorithm
-                                      node.y + 50,
-                                      CuteGraph.wordwrap(node.name, 14),
-                                      node.shape === 'rectangle' ? 'rect' : 'circle',
-                                      node.color === 'white' ? style.white : style.gray    );
+            var n = new CuteNode(
+                graph,
+                node.x + 50,  //FIXME the +50 should be in the layout algorithm
+                node.y + 50,
+                CuteGraph.wordwrap(node.name, 14),
+                node.shape === 'rectangle' ? 'rect' : 'circle',
+                node.color === 'white' ? style.white : style.gray);
+
             n.id = node.id;
             id_to_node[node.id] = n;
         });
 
         _.each(res_edges, function(edge) {
-            var e =  new CuteEdge(          graph,
-                                            CuteGraph.wordwrap(edge.signal, 32),
-                                            id_to_node[edge.s_id],
-                                            id_to_node[edge.d_id] || id_to_node[edge.s_id]  );  //WORKAROUND
+            var e =  new CuteEdge(
+                graph,
+                CuteGraph.wordwrap(edge.signal, 32),
+                id_to_node[edge.s_id],
+                id_to_node[edge.d_id] || id_to_node[edge.s_id]  );  //WORKAROUND
             e.id = edge.id;
         });
 
@@ -183,14 +187,14 @@ openerp.web.DiagramView = openerp.web.View.extend({
         };
 
         CuteEdge.creation_callback = function(node_start, node_end){
-            return {label:_t("")};  
+            return {label:_t("")};
         };
         CuteEdge.new_edge_callback = function(cuteedge){
-            self.add_connector( cuteedge.get_start().id, 
-                                cuteedge.get_end().id,
-                                cuteedge);
+            self.add_connector(cuteedge.get_start().id,
+                               cuteedge.get_end().id,
+                               cuteedge);
         };
-            
+
     },
 
     // Creates a popup to edit the content of the node with id node_id
@@ -211,19 +215,19 @@ openerp.web.DiagramView = openerp.web.View.extend({
         pop.on_write.add(function() {
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
             });
-        
+
         var form_fields = [self.parent_field];
         var form_controller = pop.view_form;
 
         form_controller.on_record_loaded.add_first(function() {
             _.each(form_fields, function(fld) {
-                    if (!(fld in form_controller.fields)) { return; }
-                    var field = form_controller.fields[fld];
-                    field.$input.prop('disabled', true);
-                    field.$drop_down.unbind();
-                    field.$menu_btn.unbind();
-                });
+                if (!(fld in form_controller.fields)) { return; }
+                var field = form_controller.fields[fld];
+                field.$input.prop('disabled', true);
+                field.$drop_down.unbind();
+                field.$menu_btn.unbind();
             });
+        });
     },
 
     // Creates a popup to add a node to the diagram
@@ -244,18 +248,18 @@ openerp.web.DiagramView = openerp.web.View.extend({
         pop.on_select_elements.add_last(function(element_ids) {
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
         });
-        
+
         var form_controller = pop.view_form;
         var form_fields = [this.parent_field];
 
         form_controller.on_record_loaded.add_last(function() {
-                _.each(form_fields, function(fld) {
-                    if (!(fld in form_controller.fields)) { return; }
-                    var field = form_controller.fields[fld];
-                    field.set_value(self.id);
-                    field.dirty = true;
-                });
+            _.each(form_fields, function(fld) {
+                if (!(fld in form_controller.fields)) { return; }
+                var field = form_controller.fields[fld];
+                field.set_value(self.id);
+                field.dirty = true;
             });
+        });
     },
 
     // Creates a popup to edit the connector of id connector_id
@@ -276,7 +280,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
         });
     },
 
-    // Creates a popup to add a connector from node_source_id to node_dest_id. 
+    // Creates a popup to add a connector from node_source_id to node_dest_id.
     // dummy_cuteedge if not null, will be removed form the graph after the popup is closed.
     add_connector: function(node_source_id, node_dest_id, dummy_cuteedge){
         var self = this;
@@ -298,7 +302,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
         });
         // We want to destroy the dummy edge after a creation cancel. This destroys it even if we save the changes.
-        // This is not a problem since the diagram is completely redrawn on saved changes. 
+        // This is not a problem since the diagram is completely redrawn on saved changes.
         pop.$element.bind("dialogbeforeclose",function(){
             if(dummy_cuteedge){
                 dummy_cuteedge.remove();
