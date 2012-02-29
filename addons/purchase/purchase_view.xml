@@ -197,6 +197,7 @@
                             <group col="16" colspan="4">
                                 <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue","wait":"blue"}' readonly="1"/>
                                 <button name="send_rfq" states="draft" string="Send" icon="terp-mail-message-new"/>
+                                <button name="view_report" string="Print" states="draft" type="object" icon="gtk-print"/>
                                 <button name="action_cancel" states="except_picking,except_invoice,wait" string="Cancel" type="object" icon="gtk-cancel"/>
                                 <button name="picking_ok" states="except_picking" string="Manually Corrected" icon="gtk-convert"/>
                                 <button name="invoice_ok" states="except_invoice" string="Manually Corrected" icon="gtk-convert"/>

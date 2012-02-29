@@ -322,6 +322,24 @@ class purchase_order(osv.osv):
             'res_id': pick_ids and pick_ids[0] or False,
         }
 
+    def view_report(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        self.write(cr, uid, ids, {'state' : 'send'})
+        
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        datas = {
+             'ids': [],
+             'model': 'purchase.order',
+             'form': data
+        }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'purchase.quotation',
+            'nodestroy': True,
+            'datas': datas,
+        }
+
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
