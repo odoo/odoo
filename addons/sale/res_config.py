@@ -43,7 +43,7 @@ class sale_configuration(osv.osv_memory):
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
         ], 'Main Method Based On', required=True, help="You can generate invoices based on sales orders or based on shippings."),
-        'charge_delivery': fields.boolean('Do you charge the delivery?'),
+        'delivery': fields.boolean('Do you charge the delivery?'),
         'time_unit': fields.many2one('product.uom','Working Time Unit'),
         'picking_policy' : fields.boolean("Deliver all products at once?"),
         'group_sale_delivery_address':fields.boolean("Multiple Address",help="Group To Allow delivery address different from invoice address"),
@@ -107,13 +107,15 @@ class sale_configuration(osv.osv_memory):
     def get_default_sale_configs(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
         result = {}
-        defaults = ir_values_obj.get(cr, uid, 'default', False, ['sale.order'])
+        for res in ir_values_obj.get(cr, uid, 'default', False, ['sale.order']):
+            result[res[1]] = res[2]
         return result
     
     def get_default_groups(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
         result = {}
-        defaults = ir_values_obj.get(cr, uid, 'default', False, ['res.users'])
+        for res in ir_values_obj.get(cr, uid, 'default', False, ['res.users']):
+            result[res[1]] = res[2]
         return result
     
     def default_get(self, cr, uid, fields_list, context=None):
@@ -141,13 +143,17 @@ class sale_configuration(osv.osv_memory):
     def execute(self, cr, uid, ids, vals, context=None):
         #TODO: TO BE IMPLEMENTED
         for method in dir(self):
-            if method.startswith('set_'):
+            if method.startswith('_set'):
                 getattr(self, method)(cr, uid, ids, vals, context)
         return True
 
-    def set_modules(self, cr, uid, ids, vals, context=None):
+    def _set_modules(self, cr, uid, ids, vals, context=None):
         module_obj = self.pool.get('ir.module.module')
         for k, v in vals.items():
+            if k == 'task_work':
+                MODULE_LIST += ['project_timesheet','project_mrp']
+            if k == 'timesheet':
+                MODULE_LIST += ['account_analytic_analysis']
             if k in MODULE_LIST:
                 installed = self.get_default_installed_modules(cr, uid, [k], context)
                 if v == True and not installed.get(k):
@@ -158,7 +164,7 @@ class sale_configuration(osv.osv_memory):
                     module_obj.button_uninstall(self, cr, uid, [module_id], context=None)
                     module_obj.button_upgrade(self, cr, uid, [module_id], context=None)
 
-    def set_sale_defaults(self, cr, uid, ids, vals, context=None):
+    def _set_sale_defaults(self, cr, uid, ids, vals, context=None):
         ir_values_obj = self.pool.get('ir.values')
         data_obj = self.pool.get('ir.model.data')
         menu_obj = self.pool.get('ir.ui.menu')
@@ -192,7 +198,7 @@ class sale_configuration(osv.osv_memory):
             
         return res
     
-    def set_groups(self, cr, uid, ids, vals, context=None):
+    def _set_groups(self, cr, uid, ids, vals, context=None):
         data_obj = self.pool.get('ir.model.data')
         users_obj = self.pool.get('res.users')
         groups_obj = self.pool.get('res.groups')
