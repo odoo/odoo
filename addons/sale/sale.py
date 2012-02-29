@@ -201,10 +201,11 @@ class sale_order(osv.osv):
         'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this sales order request."),
         'client_order_ref': fields.char('Customer Reference', size=64),
         'state': fields.selection([
-            ('draft', 'Quotation'),
+            ('draft', 'Draft Quotation'),
+            ('sent', 'Quotation Sent'),
             ('waiting_date', 'Waiting Schedule'),
-            ('manual', 'To Invoice'),
-            ('progress', 'In Progress'),
+            ('manual', 'Sale to Invoice'),
+            ('progress', 'Sale in Progress'),
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
@@ -470,6 +471,17 @@ class sale_order(osv.osv):
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
 
+    def print_quotation(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        for id in ids:
+            wf_service.trg_validate(uid, 'sale.order', id, 'quotation_sent', cr)        
+        datas = {
+                 'model': 'sale.order',
+                 'ids': ids,
+                 'form': self.read(cr, uid, ids, context=context)[0],
+                 }
+        return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}    
+    
     def manual_invoice(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
@@ -658,6 +670,34 @@ class sale_order(osv.osv):
             self.log(cr, uid, o.id, message)
         return True
 
+    def action_quotation_sent(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        template_id = self.pool.get('email.template').search(cr, uid, [('model_id', '=', 'sale.order')], context=context)
+        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','email_compose_message_wizard_form')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        #EDI EXport data
+        id = ids[0]
+        if not self.browse(cr, uid, id, context).partner_id.opt_out: 
+            order.edi_export_and_email(template_ext_id='sale.email_template_edi_sale', context=context)
+        ctx = context.copy()
+        ctx.update({'active_model': 'sale.order', 'active_id': id, 'mail.compose.template_id': template_id})
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(resource_id,'form')],
+            'view_id': resource_id,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': ctx,
+            'nodestroy': True,
+        }
+
+    def _hook_message_sent(self, cr, uid, sale_id, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'sale.order', sale_id, 'quotation_sent', cr) 
+        return True
+      
     def procurement_lines_get(self, cr, uid, ids, *args):
         res = []
         for order in self.browse(cr, uid, ids, context={}):
