@@ -32,6 +32,7 @@ openerp.mail = function(session) {
             this.params.records = this.params.records || null;
             this.params.char_show_more = this.params.char_show_more || 100;
             this.map_hash = {'res.users': {'login': [] }};
+            this.params.show_more = true;
             /* define DataSets */
             this.ds = new session.web.DataSet(this, this.params.res_model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
@@ -40,10 +41,10 @@ openerp.mail = function(session) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            /* bind buttons */
+            /* events */
             this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
-            /* delegate links */
-            self.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
+            this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
+                // lazy implementation: fetch data and try to redirect
                 self.do_action({
                     type: 'ir.actions.act_window',
                     res_model: event.srcElement.dataset.resModel,
@@ -65,14 +66,24 @@ openerp.mail = function(session) {
             var self = this;
             this.params.offset = 0;
             this.$element.find('div.oe_mail_thread_display').empty();
-            return this.fetch_comments().then(function () {
-                self.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); });
-            });
+            return this.fetch_comments().then(function() {
+                self.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); }); });
         },
         
         fetch_comments: function (limit, offset) {
-            return this.ds.call('message_load', [[this.params.res_id], limit=(limit||this.params.limit), offset=(offset||this.params.offset)]).then(
-                this.proxy('display_comments'));
+            var self = this;
+            var defer = this.ds.call('message_load', [[this.params.res_id], limit=(limit||this.params.limit), offset=(offset||this.params.offset)]);
+            $.when(defer).then(function (records) {
+                if (records.length < self.params.limit) self.params.show_more = false;
+                self.display_comments(records);
+                if (self.params.show_more == true) {
+                    self.$element.find('div.oe_mail_thread_more').show();
+                    self.$element.find('div.oe_mail_thread_nomore').hide(); }
+                else {
+                    self.$element.find('div.oe_mail_thread_more').hide();
+                    self.$element.find('div.oe_mail_thread_nomore').show(); }
+                });
+            return defer;
         },
         
         display_comments: function (records) {
@@ -131,13 +142,7 @@ openerp.mail = function(session) {
             var regex_res = regex_login.exec(string);
             while (regex_res != null) {
                 var login = regex_res[2];
-                var res_id = 1;
-                //var user_loaded = this.ds_users.call('search', [[['login', 'in', [login]]]]).then(function (records) {
-                    //console.log(records);
-                    //if (records) string = string.replace(regex_res[0], '<a href="#" class="intlink" data-res-model="res.users" data-res-id = ' + records[0] + '>@' + login + '</a>');
-                //});
-                //$.when(user_loaded).then(function() {
-                //});
+                string = string.replace(regex_res[0], '<a href="#" class="intlink" data-res-model="res.users" data-res-login = ' + login + '>@' + login + '</a>');
                 regex_res = regex_login.exec(string);
             }
             return string;

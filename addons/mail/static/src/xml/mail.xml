@@ -15,7 +15,6 @@
             </div>
             <div class="oe_mail_wall_more">
                 <button class="oe_mail_wall_button_more" type="button">See more discussions
-                    <t t-if="msg_left"> (<t t-raw="msg_left"/> left)</t>
                 </button>
             </div>
         </div>
@@ -69,9 +68,10 @@
         <div class="oe_mail_thread_display">
         </div>
         <div class="oe_mail_thread_more">
-            <div class="oe_mail_thread_msg">
-                <t t-call="MoreButton"/>
-            </div>
+            <button class="oe_mail_button_more" type="button">More</button>
+        </div>
+        <div class="oe_mail_thread_nomore">
+            You have loaded all messages in this thread.
         </div>
     </div>
 
@@ -116,14 +116,6 @@
         <p class="oe_mail_msg_p">
             <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
         </p>
-    </t>
-    
-    <t t-name="MoreButton">
-        <div class="oe_mail_thread_msg_more">
-            <button class="oe_mail_button_more" type="button">More
-                <t t-if="msg_left"> (<t t-raw="msg_left"/> left)</t>
-            </button>
-        </div>
     </t>
 
 </template>
