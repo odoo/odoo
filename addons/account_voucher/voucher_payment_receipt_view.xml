@@ -251,10 +251,10 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
-                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel" invisible="context.get('line_type', False)"/>
-                        <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
-                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)"/>
                         <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward" invisible="context.get('line_type', False)"/>
+                        <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
+                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel" invisible="context.get('line_type', False)"/>
+                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)"/>
                     </group>
                 </form>
             </field>

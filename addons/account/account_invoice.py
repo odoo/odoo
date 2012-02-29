@@ -202,7 +202,7 @@ class account_invoice(osv.osv):
             ('draft','Draft'),
             ('proforma','Pro-forma'),
             ('proforma2','Pro-forma'),
-            ('open','Open'),
+            ('open','Validate'),
             ('paid','Paid'),
             ('cancel','Cancelled')
             ],'State', select=True, readonly=True,
