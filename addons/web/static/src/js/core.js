@@ -881,7 +881,7 @@ openerp.web.Widget = nova.Widget.extend(_.extend({}, openerp.web.CallbackEnabled
      * `this.template` must be defined. The context given to QWeb contains the "widget"
      * key that references `this`.
      */
-    render_element: function() {
+    renderElement: function() {
         var rendered = null;
         if (this.template)
             rendered = openerp.web.qweb.render(this.template, {widget: this});
@@ -939,7 +939,7 @@ openerp.web.OldWidget = openerp.web.Widget.extend({
         var tmp = document.getElementById(this.element_id);
         this.$element = tmp ? $(tmp) : $(document.createElement(this.tagName));
     },
-    render_element: function() {
+    renderElement: function() {
         var rendered = this.render();
         if (rendered) {
             var elem = $(rendered);

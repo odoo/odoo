@@ -864,7 +864,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     },
     on_loaded: function(data) {
         this.data = data;
-        this.render_element();
+        this.renderElement();
         if (!this.$secondary_menu && this.getParent()) {
             // TODO: create Widget openerp.web.SubMenu
             this.$secondary_menu = this.getParent().$element.find('.oe_secondary_menu');

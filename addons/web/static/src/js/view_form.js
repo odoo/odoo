@@ -936,7 +936,7 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
     update_dom: function() {
         this.$element.toggle(!this.invisible);
     },
-    render_element: function() {
+    renderElement: function() {
     	this.$element.html(QWeb.render(this.form_template, { "widget": this }));
     },
     do_attach_tooltip: function(widget, trigger, options) {
@@ -1030,13 +1030,13 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
         }
         this.set_row_cells_with(this.table[this.table.length - 1]);
     },
-    render_element: function() {
+    renderElement: function() {
     	this._super();
     	var self = this;
 	    _.each(this.table, function(row) {
 	        _.each(row, function(td) {
 	        	td.$element = self.$element.find('.' + td.element_class);
-	        	td.render_element();
+	        	td.renderElement();
 	        });
 	    });
     },
@@ -1140,12 +1140,12 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
             }
         }
     },
-    render_element: function() {
+    renderElement: function() {
     	this._super();
     	var self = this;
 	    _.each(this.pages, function(page) {
         	page.$element = self.$element.find('.' + page.element_class);
-        	page.render_element();
+        	page.renderElement();
 	    });
     },
     start: function() {
@@ -1335,7 +1335,7 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
             this.nowrap = true;
         }
     },
-    render_element: function() {
+    renderElement: function() {
     	var rendered;
         if (this['for'] && this.type !== 'label') {
             rendered = QWeb.render(this.form_template, {widget: this['for']});
@@ -2819,7 +2819,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         }, read_function: null});
         this.initial_ids = this.options.initial_ids;
         this.created_elements = [];
-        this.render_element();
+        this.renderElement();
         openerp.web.form.dialog(this.$element, {
             close: function() {
                 self.check_exit();
@@ -3028,7 +3028,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         this.row_id = row_id;
         this.context = context || {};
         this.options = _.defaults(options || {}, {"auto_write": true});
-        this.render_element();
+        this.renderElement();
         openerp.web.dialog(this.$element, {
             title: options.title || '',
             modal: true,
@@ -3150,10 +3150,10 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
     start: function() {
         this._super();
         this.selection.$element = $(".oe_form_view_reference_selection", this.$element);
-        this.selection.render_element();
+        this.selection.renderElement();
         this.selection.start();
         this.m2o.$element = $(".oe_form_view_reference_m2o", this.$element);
-        this.m2o.render_element();
+        this.m2o.renderElement();
         this.m2o.start();
     },
     is_valid: function() {
@@ -3400,7 +3400,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.WidgetHtml = openerp.web.form.Widget.extend({
-    render_element: function () {
+    renderElement: function () {
         var $root = $('<div class="oe_form_html_view">');
         this.render_children(this, $root);
         var rendered = $root.html();

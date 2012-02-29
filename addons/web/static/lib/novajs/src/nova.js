@@ -421,14 +421,14 @@ nova = (function() {
             }, this), target);
         },
         __widgetRenderAndInsert: function(insertion, target) {
-            this.render_element();
+            this.renderElement();
             insertion(target);
             return this.start();
         },
         /**
          * This is the method to implement to render the Widget.
          */
-        render_element: function() {},
+        renderElement: function() {},
         /**
          * Method called after rendering. Mostly used to bind actions, perform asynchronous
          * calls, etc...

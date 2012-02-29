@@ -225,7 +225,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             });
         }
     },
-    render_element: function() {
+    renderElement: function() {
         // We should start with three columns available
         for (var i = this.node.children.length; i < 3; i++) {
             this.node.children.push({
@@ -245,7 +245,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
     }
 });
 openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
-    render_element: function() {
+    renderElement: function() {
         if (this.node.tag == 'hpaned') {
             this.node.attrs.style = '2-1';
         } else if (this.node.tag == 'vpaned') {
