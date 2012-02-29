@@ -55,11 +55,12 @@ class google_docs_config(osv.osv):
 class google_docs(osv.osv):
     _name = 'google.docs'
 
-
-    def doc_get(self, cr, uid, model, id, context=None):
+    def doc_get(self, cr, uid, model, ids, context=None):
         google_docs_ref = self.pool.get('google.docs.config')
-        gdocs_resource_id = google_docs_ref.search(cr, uid, [('model', '=', model)])
-
+        gdocs_resource_id = google_docs_ref.search(cr, uid, [('model', '=', model), ('id', 'in', ids)])
+        #print gdocs_resource_id
+        #print google_docs_ref.edit_url_template % (gdocs_resource_id, )
+        #import pdb; pdb.set_trace()
         if gdocs_resource_id:
             return google_docs_ref.edit_url_template % (gdocs_resource_id, )
         else:

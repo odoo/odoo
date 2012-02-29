@@ -9,8 +9,8 @@ instance.web.form.SidebarAttachments = instance.web.form.SidebarAttachments.exte
         var self = this;
         var $gdocbtn = this.$element.find('.oe_google_docs_button');
         $gdocbtn.attr('disabled', 'true').find('img, span').toggle();
-        new openerp.sessions.session0.web.DataSet(this, 'google.docs').call('doc_get', [this.view.datarecord.id, this.view.dataset.get_context()], function(r) {
-            console.log(r);
+        var ds = new instance.web.DataSet(this, 'google.docs', this.view.dataset.get_context());
+            ds.call('doc_get', [this.view.dataset.model, [this.view.datarecord.id]], function(r) {
             self.do_update();
         });
     }
