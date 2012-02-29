@@ -142,13 +142,17 @@ openerp.web.DiagramView = openerp.web.View.extend({
 
                         "gray"                          : "#DCDCDC",
                         "white"                         : "#FFF",
+
+                        "viewport_margin"               : 50,
                         };
 
         $('#dia-canvas').empty();    // remove previous diagram
 
-        var r  = new Raphael(document.getElementById("dia-canvas"), '100%','100%');
+        var canvas = document.getElementById("dia-canvas");
 
-        var graph  = new CuteGraph(r,style);
+        var r  = new Raphael(canvas, '100%','100%');
+
+        var graph  = new CuteGraph(r,style,canvas.parentNode);
 
         _.each(res_nodes, function(node) {
             var n = new CuteNode(     graph,

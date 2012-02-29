@@ -95,7 +95,12 @@
         this.hide = hide;
     }
     
-    function Graph(r,style){
+    //Creates a new graph on raphael document r.
+    //style is a dictionary containing the style definitions
+    //viewport (optional) is the dom element representing the viewport of the graph. It is used
+    //to prevent scrolling to scroll the graph outside the viewport.
+
+    function Graph(r,style,viewport){
         var self = this;
         var nodes = [];  // list of all nodes in the graph
         var edges = [];  // list of all edges in the graph
@@ -131,11 +136,56 @@
                 }
             });
         };
+        //returns {minx, miny, maxx, maxy}, the translated bounds containing all nodes
+        var get_bounds = function(){
+            var minx = Number.MAX_VALUE;
+            var miny = Number.MAX_VALUE;
+            var maxx = Number.MIN_VALUE;
+            var maxy = Number.MIN_VALUE;
+            
+            for(var i = 0; i < nodes.length; i++){
+                var pos = nodes[i].get_pos();
+                minx = Math.min(minx,pos.x);
+                miny = Math.min(miny,pos.y);
+                maxx = Math.max(maxx,pos.x);
+                maxy = Math.max(maxy,pos.y);
+            }
 
+            minx = minx - style.node_size_x / 2 + tr_x;
+            miny = miny - style.node_size_y / 2 + tr_y;
+            maxx = maxx + style.node_size_x / 2 + tr_x;
+            maxy = maxy + style.node_size_y / 2 + tr_y;
+
+            return { minx:minx, miny:miny, maxx:maxx, maxy:maxy };
+        
+        };
+        // returns false if the translation dx,dy of the viewport 
+        // hides the graph (with optional margin)
+        var translation_respects_viewport = function(dx,dy,margin){
+            if(!viewport){
+                return true;
+            }
+            margin = margin || 0;
+            var b = get_bounds();
+            var width = viewport.offsetWidth; 
+            var height = viewport.offsetHeight;
+            
+            if( b.maxy + dy < margin   ||
+                b.miny + dy > height - margin ||
+                b.maxx + dx < margin ||
+                b.minx + dx > width - margin ){
+                return false;
+            }
+
+            return true;
+        }
         //Adds a mousewheel event callback to raph_element that scrolls the viewport
         this.set_scrolling = function(raph_element){
             $(raph_element.node).bind('mousewheel',function(event,delta){
-                translate_all(0,delta*20);
+                var dy = delta * 20;
+                if( translation_respects_viewport(0,dy, style.viewport_margin) ){
+                    translate_all(0,dy);
+                }
             });
         };
 
@@ -149,7 +199,9 @@
             var dy = y - py;
             px = x;
             py = y;
-            translate_all(dx,dy);
+            if( translation_respects_viewport(dx,dy, style.viewport_margin) ){
+                translate_all(dx,dy);
+            }
         };
         var bg_drag_up   = function(){};
         background.drag( bg_drag_move, bg_drag_down, bg_drag_up);
