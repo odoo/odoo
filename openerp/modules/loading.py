@@ -32,6 +32,7 @@ import os
 import re
 import sys
 import threading
+import types
 import zipfile
 import zipimport
 
@@ -61,6 +62,91 @@ from openerp.modules.module import \
     load_openerp_module, init_module_models
 
 _logger = logging.getLogger(__name__)
+
+def get_test_modules(module, submodule, explode):
+    """
+    Return a list of submodules containing tests.
+    `submodule` can be:
+      - None
+      - the name of a submodule
+      - '__fast_suite__'
+      - '__sanity_checks__'
+    """
+    # Turn command-line module, submodule into importable names.
+    if module is None:
+        pass
+    elif module == 'openerp':
+        module = 'openerp.tests'
+    else:
+        module = 'openerp.addons.' + module + '.tests'
+
+    # Try to import the module
+    try:
+        __import__(module)
+    except Exception, e:
+        if explode:
+            print 'Can not `import %s`.' % module
+            import logging
+            logging.exception('')
+            sys.exit(1)
+        else:
+            if str(e) == 'No module named tests':
+                # It seems the module has no `tests` sub-module, no problem.
+                pass
+            else:
+                print 'Can not `import %s`.' % module
+            return []
+
+    # Discover available test sub-modules.
+    m = sys.modules[module]
+    submodule_names =  sorted([x for x in dir(m) \
+        if x.startswith('test_') and \
+        isinstance(getattr(m, x), types.ModuleType)])
+    submodules = [getattr(m, x) for x in submodule_names]
+
+    def show_submodules_and_exit():
+        if submodule_names:
+            print 'Available submodules are:'
+            for x in submodule_names:
+                print ' ', x
+        sys.exit(1)
+
+    if submodule is None:
+        # Use auto-discovered sub-modules.
+        ms = submodules
+    elif submodule == '__fast_suite__':
+        # Obtain the explicit test sub-modules list.
+        ms = getattr(sys.modules[module], 'fast_suite', None)
+        # `suite` was used before the 6.1 release instead of `fast_suite`.
+        ms = ms if ms else getattr(sys.modules[module], 'suite', None)
+        if ms is None:
+            if explode:
+                print 'The module `%s` has no defined test suite.' % (module,)
+                show_submodules_and_exit()
+            else:
+                ms = []
+    elif submodule == '__sanity_checks__':
+        ms = getattr(sys.modules[module], 'checks', None)
+        if ms is None:
+            if explode:
+                print 'The module `%s` has no defined sanity checks.' % (module,)
+                show_submodules_and_exit()
+            else:
+                ms = []
+    else:
+        # Pick the command-line-specified test sub-module.
+        m = getattr(sys.modules[module], submodule, None)
+        ms = [m]
+
+        if m is None:
+            if explode:
+                print 'The module `%s` has no submodule named `%s`.' % \
+                    (module, submodule)
+                show_submodules_and_exit()
+            else:
+                ms = []
+
+    return ms
 
 def open_openerp_namespace():
     # See comment for open_openerp_namespace.
@@ -202,6 +288,28 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 # 'data' section, but should probably not alter the data,
                 # as there is no rollback.
                 load_test(module_name, idref, mode)
+
+                # Run the `fast_suite` and `checks` tests.
+                import unittest2
+                ms = get_test_modules(package.name, '__fast_suite__', explode=False)
+                ms.extend(get_test_modules(package.name, '__sanity_checks__', explode=False))
+                suite = unittest2.TestSuite()
+                for m in ms:
+                    suite.addTests(unittest2.TestLoader().loadTestsFromModule(m))
+                if ms:
+                    _logger.info('module %s: executing %s `fast_suite` and/or `checks` sub-modules' % (package.name, len(ms)))
+                    class C(object):
+                        def flush(self):
+                            pass
+                        def write(self, s):
+                            import re
+                            r = re.compile(r'^-*$')
+                            if r.match(s):
+                                return
+                            for c in s.split('\n'):
+                                _logger.log(logging.TEST, c)
+                    stream = C()
+                    unittest2.TextTestRunner(verbosity=2, stream=stream).run(suite)
 
             processed_modules.append(package.name)
 
