@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-    <menuitem id="base.menu_project_long_term" name="Planning" parent="base.menu_main_pm" sequence="1"/>
+    <menuitem id="base.menu_project_long_term" name="Long Term Planning" parent="base.menu_main_pm" sequence="3"/>
 
     # ------------------------------------------------------
     # Project User Allocation
@@ -124,7 +124,7 @@
                                   </tree>
                                   <form string="Project Users">
                                     <field name="user_id"/>
-                                    <field name="date_start" /> 
+                                    <field name="date_start" />
                                     <field name="date_end"/>
                                   </form>
                              </field>
@@ -334,7 +334,7 @@
         res_model="project.phase"
         src_model="project.project"
         view_mode="tree,form"
-        view_type="form" 
+        view_type="form"
         />
 
     # ------------------------------------------------------
