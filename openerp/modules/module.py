@@ -20,9 +20,12 @@
 #
 ##############################################################################
 
-import os, sys, imp
-from os.path import join as opj
+import imp
 import itertools
+import os
+from os.path import join as opj
+import sys
+import types
 import zipimport
 
 import openerp
@@ -460,5 +463,114 @@ def get_modules_with_version():
             continue
     return res
 
+def get_test_modules(module, submodule, explode):
+    """
+    Return a list of submodules containing tests.
+    `submodule` can be:
+      - None
+      - the name of a submodule
+      - '__fast_suite__'
+      - '__sanity_checks__'
+    """
+    # Turn command-line module, submodule into importable names.
+    if module is None:
+        pass
+    elif module == 'openerp':
+        module = 'openerp.tests'
+    else:
+        module = 'openerp.addons.' + module + '.tests'
+
+    # Try to import the module
+    try:
+        __import__(module)
+    except Exception, e:
+        if explode:
+            print 'Can not `import %s`.' % module
+            import logging
+            logging.exception('')
+            sys.exit(1)
+        else:
+            if str(e) == 'No module named tests':
+                # It seems the module has no `tests` sub-module, no problem.
+                pass
+            else:
+                print 'Can not `import %s`.' % module
+            return []
+
+    # Discover available test sub-modules.
+    m = sys.modules[module]
+    submodule_names =  sorted([x for x in dir(m) \
+        if x.startswith('test_') and \
+        isinstance(getattr(m, x), types.ModuleType)])
+    submodules = [getattr(m, x) for x in submodule_names]
+
+    def show_submodules_and_exit():
+        if submodule_names:
+            print 'Available submodules are:'
+            for x in submodule_names:
+                print ' ', x
+        sys.exit(1)
+
+    if submodule is None:
+        # Use auto-discovered sub-modules.
+        ms = submodules
+    elif submodule == '__fast_suite__':
+        # Obtain the explicit test sub-modules list.
+        ms = getattr(sys.modules[module], 'fast_suite', None)
+        # `suite` was used before the 6.1 release instead of `fast_suite`.
+        ms = ms if ms else getattr(sys.modules[module], 'suite', None)
+        if ms is None:
+            if explode:
+                print 'The module `%s` has no defined test suite.' % (module,)
+                show_submodules_and_exit()
+            else:
+                ms = []
+    elif submodule == '__sanity_checks__':
+        ms = getattr(sys.modules[module], 'checks', None)
+        if ms is None:
+            if explode:
+                print 'The module `%s` has no defined sanity checks.' % (module,)
+                show_submodules_and_exit()
+            else:
+                ms = []
+    else:
+        # Pick the command-line-specified test sub-module.
+        m = getattr(sys.modules[module], submodule, None)
+        ms = [m]
+
+        if m is None:
+            if explode:
+                print 'The module `%s` has no submodule named `%s`.' % \
+                    (module, submodule)
+                show_submodules_and_exit()
+            else:
+                ms = []
+
+    return ms
+
+def run_unit_tests(module_name):
+    import unittest2
+    ms = get_test_modules(module_name, '__fast_suite__', explode=False)
+    ms.extend(get_test_modules(module_name, '__sanity_checks__', explode=False))
+    suite = unittest2.TestSuite()
+    for m in ms:
+        suite.addTests(unittest2.TestLoader().loadTestsFromModule(m))
+    if ms:
+        _logger.info('module %s: executing %s `fast_suite` and/or `checks` sub-modules' % (module_name, len(ms)))
+        # Use a custom stream object to log the test executions.
+        class MyStream(object):
+            def flush(self):
+                pass
+            def write(self, s):
+                r = re.compile(r'^-*$|^ *... *$|^ok$')
+                if r.match(s):
+                    return
+                first = True
+                for c in s.split('\n'):
+                    if not first:
+                        c = '` ' + c
+                    first = False
+                    _logger.log(logging.TEST, c)
+        unittest2.TextTestRunner(verbosity=2, stream=MyStream()).run(suite)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
