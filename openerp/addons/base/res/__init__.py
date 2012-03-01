@@ -35,7 +35,6 @@ import res_lang
 import res_log
 import res_widget
 import ir_property
-import res_config_sale
 
 import wizard
 import report

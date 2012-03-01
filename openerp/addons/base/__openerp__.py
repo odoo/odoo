@@ -78,7 +78,6 @@
         'res/res_widget_view.xml',
         'res/res_widget_data.xml',
         'publisher_warranty/publisher_warranty_data.xml',
-        'res/res_config_sale_view.xml',
     ],
     'demo_xml': [
         'base_demo.xml',
