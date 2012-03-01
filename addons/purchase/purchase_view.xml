@@ -82,11 +82,12 @@
         </record>
 
      <!--supplier menu-->
-      <menuitem id="base.menu_procurement_management_supplier" name="Address Book"
-            parent="base.menu_purchase_root" sequence="3"/>
-      <menuitem id="base.menu_procurement_management_supplier_name" name="Suppliers"
-            parent="base.menu_procurement_management_supplier"
-            action="base.action_partner_supplier_form" sequence="1"/>
+    <menuitem id="base.menu_procurement_management_supplier_name" name="Suppliers"
+            parent="menu_procurement_management"
+            action="base.action_partner_supplier_form" sequence="15"/>
+    <menuitem id="base.menu_procurement_management_supplier_contacts_name" name="Contacts"
+            parent="menu_procurement_management"
+            action="action_supplier_address_form" sequence="20"/>
 
           <!--Inventory control-->
       <menuitem id="menu_procurement_management_inventory" name="Receive Products"
@@ -304,7 +305,7 @@
               </search>
             </field>
         </record>
-        
+
         <record id="purchase_order_tree" model="ir.ui.view">
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
