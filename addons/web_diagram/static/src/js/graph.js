@@ -11,6 +11,121 @@
         }
     }
 
+    // A close button, 
+    // if entity_type == "node":
+    //      GraphNode.destruction_callback(entity) is called where entity is a node.
+    //      If it returns true the node and all connected edges are destroyed.
+    // if entity_type == "edge":
+    //      GraphEdge.destruction_callback(entity) is called where entity is an edge
+    //      If it returns true the edge is destroyed
+    // pos_x,pos_y is the relative position of the close button to the entity position (entity.get_pos())
+
+    function CloseButton(graph, entity, entity_type, pos_x,pos_y){
+        var self = this;
+        var visible = false;
+        var close_button_radius = graph.style.close_button_radius || 8;
+        var close_circle = graph.r.circle(  entity.get_pos().x + pos_x, 
+                                            entity.get_pos().y + pos_y, 
+                                            close_button_radius           );
+        //the outer gray circle
+        close_circle.attr({ 'opacity':  0,
+                            'fill':     graph.style.close_button_color || "black",
+                            'cursor':   'pointer',
+                            'stroke':   'none'  });
+        close_circle.transform(graph.get_transform());
+        graph.set_scrolling(close_circle);
+        
+        //the 'x' inside the circle
+        var close_label = graph.r.text( entity.get_pos().x + pos_x, entity.get_pos().y + pos_y,"x");
+        close_label.attr({  'fill':         graph.style.close_button_x_color || "white",
+                            'font-size':    close_button_radius,
+                            'cursor':       'pointer'   });
+        
+        close_label.transform(graph.get_transform());
+        graph.set_scrolling(close_label);
+        
+        // the dummy_circle is used to catch events, and avoid hover in/out madness 
+        // between the 'x' and the button
+        var dummy_circle = graph.r.circle(  entity.get_pos().x + pos_x,
+                                            entity.get_pos().y + pos_y,
+                                            close_button_radius           );
+        dummy_circle.attr({'opacity':1, 'fill': 'transparent', 'stroke':'none', 'cursor':'pointer'});
+        dummy_circle.transform(graph.get_transform());
+        graph.set_scrolling(dummy_circle);
+
+        this.get_pos = function(){
+            return entity.get_pos().add_xy(pos_x,pos_y);
+        };
+
+        this.update_pos = function(){
+            var pos = self.get_pos(); 
+            close_circle.attr({'cx':pos.x, 'cy':pos.y});
+            dummy_circle.attr({'cx':pos.x, 'cy':pos.y});
+            close_label.attr({'x':pos.x, 'y':pos.y});
+        };
+        
+        function hover_in(){
+            if(!visible){ return; }
+            close_circle.animate({'r': close_button_radius * 1.5}, 300, 'elastic');
+            dummy_circle.animate({'r': close_button_radius * 1.5}, 300, 'elastic');
+        }
+        function hover_out(){
+            if(!visible){ return; }
+            close_circle.animate({'r': close_button_radius},400,'linear');
+            dummy_circle.animate({'r': close_button_radius},400,'linear');
+        }
+        dummy_circle.hover(hover_in,hover_out);
+
+        function click_action(){
+            if(!visible){ return; }
+
+            close_circle.attr({'r': close_button_radius * 2 });
+            dummy_circle.attr({'r': close_button_radius * 2 });
+            close_circle.animate({'r': close_button_radius }, 400, 'linear');
+            dummy_circle.animate({'r': close_button_radius }, 400, 'linear');
+
+            if(entity_type == "node"){
+                if(GraphNode.destruction_callback(entity)){
+                    //console.log("remove node",entity);
+                    entity.remove();
+                }
+            }else if(entity_type == "edge"){
+                if(GraphEdge.destruction_callback(entity)){
+                    //console.log("remove edge",entity);
+                    entity.remove();
+                }
+            }
+        }
+        dummy_circle.click(click_action);
+
+        this.show = function(){
+            if(!visible){
+                close_circle.animate({'opacity':1}, 100, 'linear');
+                close_label.animate({'opacity':1}, 100, 'linear');
+                visible = true;
+            }
+        }
+        this.hide = function(){
+            if(visible){
+                close_circle.animate({'opacity':0}, 100, 'linear');
+                close_label.animate({'opacity':0}, 100, 'linear');
+                visible = false;
+            }
+        }
+        //destroy this object and remove it from the graph
+        this.remove = function(){
+            if(visible){
+                visible = false;
+                close_circle.animate({'opacity':0}, 100, 'linear');
+                close_label.animate({'opacity':0}, 100, 'linear',self.remove);
+            }else{
+                close_circle.remove();
+                close_label.remove();
+                dummy_circle.remove();
+            }
+        }
+    }
+
     // connectors are start and end point of edge creation drags.
     function Connector(graph,node,pos_x,pos_y){
         var visible = false;
@@ -29,6 +144,9 @@
         this.get_pos = function(){
             return new node.get_pos().add_xy(pos_x,pos_y);
         };
+        this.remove = function(){
+            conn_circle.remove();
+        }
         function hover_in(){
             if(!visible){ return;}
             conn_circle.animate({'r':8},300,'elastic');
@@ -107,6 +225,7 @@
         var graph = {};  // graph[n1.uid][n2.uid] -> list of all edges from n1 to n2
         var links = {};  // links[n.uid] -> list of all edges from or to n
         var uid = 1;     // all nodes and edges have an uid used to order their display when they are curved
+        var selected_entity = null; //the selected entity (node or edge) 
         
         self.creating_edge = false; // true if we are dragging a new edge onto a node
         self.target_node = null;    // this holds the target node when creating an edge and hovering a connector
@@ -243,7 +362,24 @@
             links[n1.uid] = _.without(links[n1.uid],edge);
             links[n2.uid] = _.without(links[n2.uid],edge);
             graph[n1.uid][n2.uid] = _.without(graph[n1.uid][n2.uid],edge);
+            if ( selected_entity == edge ){
+                selected_entity = null;
+            }
         };
+        //removes a node and all connected edges from the graph
+        this.remove_node = function(node){
+            var linked_edges = self.get_linked_edge_list(node);
+            for(var i = 0; i < linked_edges.length; i++){
+                linked_edges[i].remove();
+            }
+            nodes = _.without(nodes,node);
+
+            if ( selected_entity == node ){
+                selected_entity = null;
+            }
+        }
+
+
         //return the list of edges from n1 to n2
         this.get_edge_list = function(n1,n2){
             var list = [];
@@ -278,6 +414,7 @@
                 }
             }
         };
+        
 
         // Returns the angle in degrees of the edge loop. We do not support more than 8 loops on one node
         this.get_loop_angle = function(n,e){
@@ -331,6 +468,24 @@
             
             return slots[index].angle_deg();
         }
+
+        //selects a node or an edge and deselects everything else
+        this.select = function(entity){
+            if(selected_entity){
+                if(selected_entity == entity){
+                    return;
+                }else{
+                    if(selected_entity.set_not_selected){
+                        selected_entity.set_not_selected();
+                    }
+                    selected_entity = null;
+                }
+            }
+            selected_entity = entity;
+            if(entity && entity.set_selected){
+                entity.set_selected();
+            }
+        };
     }
 
     // creates a new Graph Node on Raphael document r, centered on [pos_x,pos_y], with label 'label', 
@@ -343,6 +498,7 @@
         var node_fig = null;
         var selected = false;
         this.connectors = [];
+        this.close_button = null;
         this.uid = 0;
         
         graph.add_node(this);
@@ -358,8 +514,6 @@
                         'cursor':'pointer'  });
         node_fig.transform(graph.get_transform());
         graph.set_scrolling(node_fig);
-
-        $(node_fig.node).addClass('foobar');
 
         var node_label = r.text(pos_x,pos_y,label);
         node_label.attr({   'fill':         graph.style.node_label_color,
@@ -386,6 +540,9 @@
             node_label.attr({'x':pos.x,'y':pos.y});
             for(var i = 0; i < self.connectors.length; i++){
                 self.connectors[i].update_pos();
+            }
+            if(self.close_button){
+                self.close_button.update_pos();
             }
             update_linked_edges();
         };
@@ -419,14 +576,12 @@
         // selects this node and deselects all other nodes
         var set_selected = function(){
             if(!selected){
+                selected = true;
                 node_fig.attr({ 'stroke':       graph.style.node_selected_color, 
                                 'stroke-width': graph.style.node_selected_width });
-                selected = true;
-                var nodes = graph.get_node_list();
-                for(var i = 0; i < nodes.length; i++){
-                    if(nodes[i] != self){
-                        nodes[i].set_not_selected();
-                    }
+                if(!self.close_button){
+                    self.close_button = new CloseButton(graph,self, "node" ,sx/2 , - sy/2);
+                    self.close_button.show();
                 }
                 for(var i = 0; i < self.connectors.length; i++){
                     self.connectors[i].show();
@@ -439,12 +594,28 @@
                 node_fig.animate({  'stroke':       graph.style.node_outline_color,
                                     'stroke-width': graph.style.node_outline_width },
                                     100,'linear');
+                if(self.close_button){
+                    self.close_button.remove();
+                    self.close_button = null;
+                }
                 selected = false;
             }
             for(var i = 0; i < self.connectors.length; i++){
                 self.connectors[i].hide();
             }
         };
+        var remove = function(){
+            if(self.close_button){
+                self.close_button.remove();
+            }
+            for(var i = 0; i < self.connectors.length; i++){
+                self.connectors[i].remove();
+            }
+            graph.remove_node(self);
+            node_fig.remove();
+            node_label.remove();
+        }
+
 
         this.set_pos = set_pos;
         this.get_pos = get_pos;
@@ -455,6 +626,7 @@
         this.set_selected = set_selected;
         this.set_not_selected = set_not_selected;
         this.update_linked_edges = update_linked_edges;
+        this.remove = remove;
 
        
         //select the node and play an animation when clicked
@@ -468,7 +640,7 @@
                 node_fig.attr({'x':cx - (sx/2) - 3, 'y':cy - (sy/2) - 3, 'ẃidth':sx+6, 'height':sy+6});
                 node_fig.animate({'x':cx - sx/2, 'y':cy - sy/2, 'ẃidth':sx, 'height':sy},500,'elastic');
             }
-            set_selected();
+            graph.select(self);
         };
         node_fig.click(click_action);
         node_label.click(click_action);
@@ -485,6 +657,9 @@
             for(var i = 0; i < edges.length; i++){
                 edges[i].label_disable();
             }
+            if(self.close_button){
+                self.close_button.hide();
+            }
             set_pos(this.opos.add_xy(dx,dy));
         };
         var drag_up = function(){
@@ -493,7 +668,9 @@
             for(var i = 0; i < edges.length; i++){
                 edges[i].label_enable();
             }
-            
+            if(self.close_button){
+                self.close_button.show();
+            }
         };
         node_fig.drag(drag_move,drag_down,drag_up);
         node_label.drag(drag_move,drag_down,drag_up);
@@ -520,11 +697,17 @@
         this.connectors.push(new Connector(graph,this,sx/2,0));
         this.connectors.push(new Connector(graph,this,0,-sy/2));
         this.connectors.push(new Connector(graph,this,0,sy/2));
+
+        this.close_button = new CloseButton(graph,this,"node",sx/2 , - sy/2 );
     }
 
     GraphNode.double_click_callback = function(node){
         console.log("double click from node:",node);
     };
+
+    // this is the default node destruction callback. It is called before the node is removed from the graph
+    // and before the connected edges are destroyed 
+    GraphNode.destruction_callback = function(node){ return true; };
 
     // creates a new edge with label 'label' from start to end. start and end must implement get_pos_*, 
     // if tmp is true, the edge is not added to the graph, used for drag edges. 
@@ -540,6 +723,7 @@
         var label_enabled = true;
         this.uid = 0;       // unique id used to order the curved edges
         var edge_path = ""; // svg definition of the edge vector path
+        var selected = false;
 
         if(!tmp){
             graph.add_edge(start,end,this);
@@ -555,6 +739,18 @@
 
             var lpos = path.getPointAtLength(cpos + mod * verticality);
             return new Vec2(lpos.x,lpos.y - elfs *(1-verticality));
+        }
+        
+        //used by close_button
+        this.get_pos = function(){
+            if(!edge){
+                return start.get_pos().lerp(end.get_pos(),0.5);
+            }
+            if(!edge_label){
+                return get_label_pos(edge);
+            }
+            var bbox = edge_label.getBBox();
+            return new Vec2(bbox.x + bbox.width, bbox.y);
         }
 
         //Straight line from s to e
@@ -661,11 +857,13 @@
                 }
             }
         }
-
         function label_enable(){
             if(!label_enabled){
                 label_enabled = true;
                 edge_label.animate({'opacity':1},100,'linear');
+                if(self.close_button){
+                    self.close_button.show();
+                }
                 self.update();
             }
         }
@@ -673,6 +871,9 @@
             if(label_enabled){
                 label_enabled = false;
                 edge_label.animate({'opacity':0},100,'linear');
+                if(self.close_button){
+                    self.close_button.hide();
+                }
             }
         }
         //update the positions 
@@ -698,14 +899,48 @@
             if(start != end && end.update_linked_edges){
                 end.update_linked_edges();
             }
+            if(self.close_button){
+                self.close_button.remove();
+            }
         }
 
-        function double_click(){
+        this.set_selected = function(){
+            if(!selected){
+                selected = true;
+                edge.attr({ 'stroke': graph.style.node_selected_color, 
+                            'stroke-width': graph.style.node_selected_width });
+                edge_label.attr({ 'fill': graph.style.node_selected_color });
+                if(!self.close_button){
+                    self.close_button = new CloseButton(graph,self,"edge",6,-6);
+                    self.close_button.show();
+                }
+            }
+        };
+
+        this.set_not_selected = function(){
+            if(selected){
+                selected = false;
+                edge.animate({  'stroke':       graph.style.edge_color,
+                                'stroke-width': graph.style.edge_width }, 100,'linear');
+                edge_label.animate({ 'fill':    graph.style.edge_label_color}, 100, 'linear');
+                if(self.close_button){
+                    self.close_button.remove();
+                    self.close_button = null;
+                }
+            }
+        };
+        function click_action(){
+            graph.select(self);
+        }
+        edge.click(click_action);
+        edge_label.click(click_action);
+
+        function double_click_action(){
             GraphEdge.double_click_callback(self);
         }
 
-        edge.dblclick(double_click);
-        edge_label.dblclick(double_click);
+        edge.dblclick(double_click_action);
+        edge_label.dblclick(double_click_action);
 
 
         this.label_enable  = label_enable;
@@ -732,6 +967,12 @@
     // This is is called after a new edge is created, with the new edge
     // as parameter
     GraphEdge.new_edge_callback = function(new_edge){};
+
+    // this is the default edge destruction callback. It is called before 
+    // an edge is removed from the graph.
+    GraphEdge.destruction_callback = function(edge){ return true; };
+
+    
 
     // returns a new string with the same content as str, but with lines of maximum 'width' characters.
     // lines are broken on words, or into words if a word is longer than 'width'

@@ -5,7 +5,7 @@
     "version" : "2.0",
     "depends" : ["web"],
     "js": [
-        'static/lib/js/raphael-min.js',
+        'static/lib/js/raphael.js',
         'static/lib/js/jquery.mousewheel.js',
         'static/src/js/vec2.js',
         'static/src/js/graph.js',

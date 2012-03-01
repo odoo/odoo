@@ -141,6 +141,10 @@ openerp.web.DiagramView = openerp.web.View.extend({
             node_size_y: 80,
             connector_active_color: "#FFF",
             connector_radius: 4,
+            
+            close_button_radius: 8,
+            close_button_color: "#333",
+            close_button_x_color: "#FFF",
 
             gray: "#DCDCDC",
             white: "#FFF",
@@ -155,6 +159,11 @@ openerp.web.DiagramView = openerp.web.View.extend({
         var r  = new Raphael(canvas, '100%','100%');
 
         var graph  = new CuteGraph(r,style,canvas.parentNode);
+        
+        var confirm_dialog = $('#dialog').dialog({ 
+            autoOpen: false,
+            title: _t("Are you sure?") });
+        
 
         _.each(res_nodes, function(node) {
             var n = new CuteNode(
@@ -181,7 +190,14 @@ openerp.web.DiagramView = openerp.web.View.extend({
         CuteNode.double_click_callback = function(cutenode){
             self.edit_node(cutenode.id);
         };
-
+        var i = 0;
+        CuteNode.destruction_callback = function(cutenode){
+            if(!confirm(_t("Deleting this node cannot be undone.\nIt will also delete all connected transitions.\n\nAre you sure ?"))){
+                return false; 
+            }
+            new openerp.web.DataSet(self,self.node).unlink([cutenode.id]);
+            return true;
+        };
         CuteEdge.double_click_callback = function(cuteedge){
             self.edit_connector(cuteedge.id);
         };
@@ -193,6 +209,13 @@ openerp.web.DiagramView = openerp.web.View.extend({
             self.add_connector(cuteedge.get_start().id,
                                cuteedge.get_end().id,
                                cuteedge);
+        };
+        CuteEdge.destruction_callback = function(cuteedge){
+            if(!confirm(_t("Deleting this transition cannot be undone.\n\nAre you sure ?"))){
+                return false; 
+            }
+            new openerp.web.DataSet(self,self.connector).unlink([cuteedge.id]);
+            return true;
         };
 
     },
