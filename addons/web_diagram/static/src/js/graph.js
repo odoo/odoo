@@ -746,11 +746,10 @@
             if(!edge){
                 return start.get_pos().lerp(end.get_pos(),0.5);
             }
-            if(!edge_label){
-                return get_label_pos(edge);
-            }
-            var bbox = edge_label.getBBox();
-            return new Vec2(bbox.x + bbox.width, bbox.y);
+            return get_label_pos(edge);
+            /*  
+            var bbox = edge_label.getBBox(); Does not work... :(
+            return new Vec2(bbox.x + bbox.width, bbox.y);*/
         }
 
         //Straight line from s to e
@@ -911,7 +910,7 @@
                             'stroke-width': graph.style.node_selected_width });
                 edge_label.attr({ 'fill': graph.style.node_selected_color });
                 if(!self.close_button){
-                    self.close_button = new CloseButton(graph,self,"edge",6,-6);
+                    self.close_button = new CloseButton(graph,self,"edge",0,30);
                     self.close_button.show();
                 }
             }
