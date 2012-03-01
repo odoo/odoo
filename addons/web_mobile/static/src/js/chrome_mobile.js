@@ -23,7 +23,7 @@ openerp.web_mobile.MobileWebClient = openerp.web.OldWidget.extend({
     start: function() {
         this._super.apply(this, arguments);
         var self = this;
-        this.session.bind().then(function() {
+        this.session.bind_session().then(function() {
             openerp.web.qweb.add_template("xml/web_mobile.xml");
             self.$element.html(self.render());
             self.login.start();
