@@ -77,31 +77,8 @@ class sale_configuration(osv.osv_memory):
                                     help="Install account_analytic_analysis module: This module is for modifying account analytic view to show important data to project manager of services companies."),
     }
 
-    def get_default_applied_groups(self, cr, uid, ids, context=None):
-        applied_groups = {}
-        user_obj = self.pool.get('res.users')
-        dataobj = self.pool.get('ir.model.data')
-
-        groups = []
-        user_group_ids = user_obj.browse(cr, uid, uid, context=context).groups_id
-
-        for group_id in user_group_ids:
-            groups.append(group_id.id)
-
-        for id in groups:
-            key_id = dataobj.search(cr, uid,[('res_id','=',id),('model','=','res.groups')],context=context)
-            key = dataobj.browse(cr, uid, key_id[0], context=context).name
-            applied_groups[key] = True
-
-        return applied_groups
-
     def get_default_installed_modules(self, cr, uid, ids, context=None):
-        module_obj = self.pool.get('ir.module.module')
-        module_ids = module_obj.search(cr, uid,
-                           [('name','in',MODULE_LIST),
-                            ('state','in',['to install', 'installed', 'to upgrade'])],
-                           context=context)
-        installed_modules = dict([(mod.name,True) for mod in module_obj.browse(cr, uid, module_ids, context=context)])
+        installed_modules = {}
         if installed_modules.get('project_mrp') and installed_modules.get('project_timesheet'):
             installed_modules['task_work'] = True
         if installed_modules.get('account_analytic_analysis'):
@@ -123,13 +100,6 @@ class sale_configuration(osv.osv_memory):
                 if group_id in picking_groups_id:
                     result['deli_orders'] = True
         for res in ir_values_obj.get(cr, uid, 'default', False, ['sale.order']):
-            result[res[1]] = res[2]
-        return result
-    
-    def get_default_groups(self, cr, uid, ids, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        result = {}
-        for res in ir_values_obj.get(cr, uid, 'default', False, ['res.users']):
             result[res[1]] = res[2]
         return result
     
@@ -163,23 +133,13 @@ class sale_configuration(osv.osv_memory):
                 getattr(self, method)(cr, uid, ids, vals, context)
         return True
 
-    def set_modules(self, cr, uid, ids, vals, context=None):
-        module_obj = self.pool.get('ir.module.module')
-        MODULE_LIST = vals.get('modules')
-        if vals.get('task_work'):
-            vals.update({'project_timesheet': True,'project_mrp': True})
-        if vals.get('timesheet'):
-            vals.update({'account_analytic_analysis': True})
-        for k, v in vals.items():
-            if k in MODULE_LIST:
-                installed = self.get_default_installed_modules(cr, uid, [k], context)
-                if v == True and not installed.get(k):
-                    module_id = module_obj.search(cr, uid, [('name','=',k)])
-                    module_obj.button_immediate_install(cr, uid, module_id, context)
-                elif v == False and installed.get(k):
-                    module_id = module_obj.search(cr, uid, [('name','=',k)])
-                    module_obj.button_uninstall(self, cr, uid, module_id, context=None)
-                    module_obj.button_upgrade(self, cr, uid, module_id, context=None)
+#    def set_installed_modules(self, cr, uid, ids, vals, context=None):
+#        module_obj = self.pool.get('ir.module.module')
+#        MODULE_LIST = vals.get('modules')
+#        if vals.get('task_work'):
+#            vals.update({'project_timesheet': True,'project_mrp': True})
+#        if vals.get('timesheet'):
+#            vals.update({'account_analytic_analysis': True})
 
     def set_sale_defaults(self, cr, uid, ids, vals, context=None):
         ir_values_obj = self.pool.get('ir.values')
@@ -216,30 +176,9 @@ class sale_configuration(osv.osv_memory):
             
         return res
 
-    def set_groups(self, cr, uid, ids, vals, context=None):
-        data_obj = self.pool.get('ir.model.data')
-        users_obj = self.pool.get('res.users')
-        groups_obj = self.pool.get('res.groups')
-        ir_values_obj = self.pool.get('ir.values')
-        dummy,user_group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_user')
-        for group in vals.keys():
-            if group.startswith('group_'):
-                dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', group)
-                if vals[group]:
-                    groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(4,group_id)]})
-                    users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
-                    ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(4,group_id)])
-                else:
-                    groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
-                    users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
-                    ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(3,group_id)])
-
-    def onchange_tax_policy(self, cr, uid, ids, tax_policy, tax_value, context=None):
-        res = {'value': {}}
-        if isinstance(tax_value, (int)):
-            self.set_default_taxes(cr, uid, ids, {'tax_value': [tax_value]}, context=context)
+    def onchange_tax_policy(self, cr, uid, ids, tax_policy, context=None):
         self.set_tax_policy(cr, uid, ids, {'tax_policy': tax_policy}, context=context)
-        return res
+        return {'value': {}}
     
     def set_default_taxes(self, cr, uid, ids, vals, context=None):
         ir_values_obj = self.pool.get('ir.values')
