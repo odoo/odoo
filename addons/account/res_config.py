@@ -98,7 +98,7 @@ class account_configuration(osv.osv_memory):
             users_obj.write(cr, uid, [uid], {'groups_id': [(3,remove_group_id)]})
             ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(3,remove_group_id)])
         else:
-            groups += [order_group_id, remove_group_id]
+            groups = [order_group_id, remove_group_id]
             for group_id in groups:
                 groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
                 users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
