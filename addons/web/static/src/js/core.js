@@ -321,6 +321,108 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.active_id = null;
         return this.session_init();
     },
+    test_eval: function (source, expected) {
+        try {
+            var ctx = this.test_eval_contexts(source.contexts);
+            if (!_.isEqual(ctx, expected.context)) {
+                console.group('Local context does not match remote');
+                console.warn('source', source.contexts);
+                console.warn('local', ctx);
+                console.warn('remote', expected.context);
+                console.groupEnd();
+            }
+        } catch (e) {
+            console.error(
+                'Failed to evaluate contexts', source.contexts, ':', e);
+        }
+
+        try {
+            var dom = this.test_eval_domains(source.domains);
+            if (!_.isEqual(dom, expected.domain)) {
+                console.group('Local domain does not match remote');
+                console.warn('source', source.domains);
+                console.warn('local', dom);
+                console.warn('remote', expected.domain);
+                console.groupEnd();
+            }
+        } catch (e) {
+            console.error(
+                'Failed to evaluate domains', source.domains, ':', e);
+        }
+
+        try {
+            var groups = this.test_eval_groupby(source.group_by_seq);
+            if (!_.isEqual(groups, expected.group_by)) {
+                console.group('Local groupby does not match remote');
+                console.warn('source', source.group_by_seq);
+                console.warn('local', groups);
+                console.warn('remote', expected.group_by);
+                console.groupEnd();
+            }
+        } catch (e) {}
+    },
+    test_eval_contexts: function (contexts) {
+        var result_context = _.extend({}, this.user_context),
+            self = this;
+        _(contexts).each(function (ctx) {
+            switch(ctx.__ref) {
+            case 'context':
+                _.extend(py.eval(ctx.__debug));
+                break;
+            case 'compound_context':
+                _.extend(self.test_eval_contexts(ctx.__contexts));
+                break;
+            default:
+                _.extend(result_context, ctx);
+            }
+        });
+        return result_context;
+    },
+    test_eval_domains: function (domains) {
+        var result_domain = [], self = this;
+        _(domains).each(function (dom) {
+            switch(dom.__ref) {
+            case 'domain':
+                result_domain.push.apply(
+                    result_domain, py.eval(dom.__debug));
+                break;
+            case 'compound_domain':
+                result_domain.push.apply(
+                    result_domain, self.test_eval_contexts(dom.__contexts));
+                break;
+            default:
+                result_domain.push.apply(
+                    result_domain, dom);
+            }
+        });
+        return result_domain;
+    },
+    test_eval_groupby: function (contexts) {
+        var result_group = [], self = this;
+        _(contexts).each(function (ctx) {
+            var group;
+            switch(ctx.__ref) {
+            case 'context':
+                group = py.eval(ctx.__debug).group_by;
+                break;
+            case 'compound_context':
+                group = self.test_eval_contexts(ctx.__contexts).group_by;
+                break;
+            default:
+                group = ctx.group_by
+            }
+            if (!group) { return; }
+            if (typeof group === 'string') {
+                result_group.push(group);
+            } else if (group instanceof Array) {
+                result_group.push.apply(result_group, group);
+            } else {
+                throw new Error('Got invalid groupby {{'
+                        + JSON.stringify(group) + '}}');
+            }
+        });
+        return result_group;
+    },
     /**
      * Executes an RPC call, registering the provided callbacks.
      *
@@ -358,6 +460,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             function (response, textStatus, jqXHR) {
                 self.on_rpc_response();
                 if (!response.error) {
+                    if (url.url === '/web/session/eval_domain_and_context') {
+                        self.test_eval(params, response.result);
+                    }
                     deferred.resolve(response["result"], textStatus, jqXHR);
                 } else if (response.error.data.type === "session_invalid") {
                     self.uid = false;
