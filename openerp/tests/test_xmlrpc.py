@@ -13,12 +13,15 @@ import xmlrpclib
 import openerp
 import common
 
-DB = common.DB
+DB = None
 ADMIN_USER = common.ADMIN_USER
 ADMIN_USER_ID = common.ADMIN_USER_ID
 ADMIN_PASSWORD = common.ADMIN_PASSWORD
 
-setUpModule = common.start_openerp
+def setUpModule():
+    common.start_openerp()
+    global DB
+    DB = common.RpcCase.generate_database_name()
 
 tearDownModule = common.stop_openerp
 
@@ -29,8 +32,8 @@ class test_xmlrpc(common.RpcCase):
         Simulate a OpenERP client requesting the creation of a database and
         polling the server until the creation is complete.
         """
-        progress_id = self.proxy.db_60.create(ADMIN_PASSWORD, DB, True,
-            False, ADMIN_PASSWORD)
+        progress_id = self.proxy.db_60.create(ADMIN_PASSWORD,DB, True, False,
+            ADMIN_PASSWORD)
         while True:
             time.sleep(1)
             progress, users = self.proxy.db_60.get_progress(ADMIN_PASSWORD,
@@ -55,11 +58,18 @@ class test_xmlrpc(common.RpcCase):
     def test_xmlrpc_61_ir_model_search(self):
         """ Try a search on the object service. """
 
-        proxy = xmlrpclib.ServerProxy(self.proxy.url_61 + 'model/' + DB + '/ir.model')
+        proxy = xmlrpclib.ServerProxy(self.proxy.url_61 + 'model/' + DB +
+            '/ir.model')
         ids = proxy.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'search', [])
         assert ids
         ids = proxy.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'search', [], {})
         assert ids
+
+    def test_zz_xmlrpc_drop_database(self):
+        """
+        Simulate a OpenERP client requesting the deletion of a database.
+        """
+        assert self.proxy.db_60.drop(ADMIN_PASSWORD, DB) is True
 
 if __name__ == '__main__':
     unittest2.main()

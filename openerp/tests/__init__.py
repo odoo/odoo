@@ -10,15 +10,13 @@ See the :ref:`test-framework` section in the :ref:`features` list.
 
 import test_orm
 import test_ir_sequence
-import test_xmlrpc
 
 fast_suite = [
-    test_xmlrpc, # Creates a database
-    test_ir_sequence, # Assume an existing database
+    test_ir_sequence,
     ]
 
 checks = [
-    test_orm, # Assume an existing database
+    test_orm,
     ]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

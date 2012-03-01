@@ -74,4 +74,12 @@ class RpcCase(unittest2.TestCase):
         self.proxy.db_61 = xmlrpclib.ServerProxy(url_61 + 'db')
         self.proxy.model_61 = xmlrpclib.ServerProxy(url_61 + 'model/' + DB)
 
+    @classmethod
+    def generate_database_name(cls):
+        if hasattr(cls, '_database_id'):
+            cls._database_id += 1
+        else:
+            cls._database_id = 0
+        return '_fresh_name_' + str(cls._database_id) + '_'
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
