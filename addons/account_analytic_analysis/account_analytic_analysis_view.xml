@@ -117,10 +117,10 @@
             <field name="inherit_id" ref="sale.view_sales_config"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="account_analytic_analysis" position="after">
+                <field name="module_account_analytic_analysis" position="after">
                     <newline/>
-                    <field name="analytic_user_function" attrs="{'invisible': [('account_analytic_analysis','=',False)]}"/>
-                    <field name="analytic_journal_billing_rate" attrs="{'invisible': [('account_analytic_analysis','=',False)]}"/>
+                    <field name="module_analytic_user_function" attrs="{'invisible': [('account_analytic_analysis','=',False)]}"/>
+                    <field name="module_analytic_journal_billing_rate" attrs="{'invisible': [('account_analytic_analysis','=',False)]}"/>
                 </field>
             </field>
         </record>

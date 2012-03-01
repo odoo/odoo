@@ -25,7 +25,7 @@ class crm_configuration(osv.osv_memory):
     _inherit = 'res.config'
 
     _columns = {
-        'crm_caldav' : fields.boolean("Use caldav to synchronize Meetings",
+        'module_crm_caldav' : fields.boolean("Use caldav to synchronize Meetings",
                                     help="Install crm_caldav module: Caldav features in Meeting"),
         'fetchmail_crm': fields.boolean("Lead/Opportunity mail gateway"),
         'server' : fields.char('Server Name', size=256),
@@ -38,21 +38,21 @@ class crm_configuration(osv.osv_memory):
         'is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
         'user' : fields.char('Username', size=256),
         'password' : fields.char('Password', size=1024),
-        'import_sugarcrm' : fields.boolean("Import data from sugarCRM?",
+        'module_import_sugarcrm' : fields.boolean("Import data from sugarCRM?",
                                     help="""Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Employees, Meetings, Phonecalls, Emails, and Project, Project Tasks Data into OpenERP Module.
                                     It installs import_sugarcrm module.
                                     """),
-        'import_google' : fields.boolean("Import Contacts & Meetings from Google",
+        'module_import_google' : fields.boolean("Import Contacts & Meetings from Google",
                                     help="""
                                     Import google contact in partner address and add google calendar events details in Meeting
                                     It installs import_google module.
                                     """),
-        'wiki_sale_faq' : fields.boolean("Install a sales FAQ?",
+        'module_wiki_sale_faq' : fields.boolean("Install a sales FAQ?",
                                     help="""
                                     It provides demo data, thereby creating a Wiki Group and a Wiki Page for Wiki Sale FAQ.
                                     It installs wiki_sale_faq module.
                                     """),
-        'base_contact' : fields.boolean("Manage a several address per customer",
+        'module_base_contact' : fields.boolean("Manage a several address per customer",
                                     help="""
                                     It lets you define:
                                         * contacts unrelated to a partner,
@@ -60,12 +60,12 @@ class crm_configuration(osv.osv_memory):
                                         * contacts with possibly different functions for each of its job's addresses
                                     It installs base_contact module.
                                     """),
-        'google_map' : fields.boolean("Google maps on customer",
+        'module_google_map' : fields.boolean("Google maps on customer",
                                     help="""
                                     This allows yopu to locate customer on Google Map
                                     It installs google_map module.
                                     """),
-        'plugin_thunderbird': fields.boolean('Thunderbird plugin',
+        'module_plugin_thunderbird': fields.boolean('Thunderbird plugin',
                                     help="""
                                     The plugin allows you archive email and its attachments to the selected
                                     OpenERP objects. You can select a partner, a task, a project, an analytical
@@ -74,7 +74,7 @@ class crm_configuration(osv.osv_memory):
                                     HR Applicant and Project Issue from selected mails.
                                     It installs plugin_thunderbird module.
                                     """),
-        'plugin_outlook': fields.boolean('Outlook plugin',
+        'module_plugin_outlook': fields.boolean('Outlook plugin',
                                     help="""
                                     Outlook plug-in allows you to select an object that you would like to add
                                     to your email and its attachments from MS Outlook. You can select a partner, a task,
