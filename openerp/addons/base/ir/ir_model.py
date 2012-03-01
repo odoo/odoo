@@ -861,11 +861,10 @@ class ir_model_data(osv.osv):
         process_query = 'select id,name,model,res_id,module from ir_model_data where module IN (' + module_in + ')'
         process_query+= ' and noupdate=%s'
         to_unlink = []
-        cr.execute( process_query, modules + [False])
+        cr.execute(process_query, modules + [False])
         for (id, name, model, res_id,module) in cr.fetchall():
             if (module,name) not in self.loads:
                 to_unlink.append((model,res_id))
-                self.pool.get(model).unlink(cr, uid, [res_id])
         if not config.get('import_partial'):
             for (model, res_id) in to_unlink:
                 if self.pool.get(model):
