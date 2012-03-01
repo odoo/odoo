@@ -94,19 +94,18 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
     def load_test(module_name, idref, mode):
         cr.commit()
-        if not tools.config.options['test_disable']:
-            try:
-                threading.currentThread().testing = True
-                _load_data(cr, module_name, idref, mode, 'test')
-            except Exception, e:
-                _logger.exception(
-                    'Tests failed to execute in module %s', module_name)
-            finally:
-                threading.currentThread().testing = False
-                if tools.config.options['test_commit']:
-                    cr.commit()
-                else:
-                    cr.rollback()
+        try:
+            threading.currentThread().testing = True
+            _load_data(cr, module_name, idref, mode, 'test')
+        except Exception, e:
+            _logger.exception(
+                'Tests failed to execute in module %s', module_name)
+        finally:
+            threading.currentThread().testing = False
+            if tools.config.options['test_commit']:
+                cr.commit()
+            else:
+                cr.rollback()
 
     def _load_data(cr, module_name, idref, mode, kind):
         """
@@ -201,13 +200,14 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 # on demo data. Other tests can be added into the regular
                 # 'data' section, but should probably not alter the data,
                 # as there is no rollback.
-                load_test(module_name, idref, mode)
+                if tools.config.options['test_enable']:
+                    load_test(module_name, idref, mode)
 
-                # Run the `fast_suite` and `checks` tests given by the module.
-                if module_name == 'base':
-                    # Also run the core tests after the dabase is created.
-                    openerp.modules.module.run_unit_tests('openerp')
-                openerp.modules.module.run_unit_tests(module_name)
+                    # Run the `fast_suite` and `checks` tests given by the module.
+                    if module_name == 'base':
+                        # Also run the core tests after the dabase is created.
+                        openerp.modules.module.run_unit_tests('openerp')
+                    openerp.modules.module.run_unit_tests(module_name)
 
             processed_modules.append(package.name)
 

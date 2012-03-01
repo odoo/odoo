@@ -168,8 +168,8 @@ class configmanager(object):
                          help="Launch a YML test file.")
         group.add_option("--test-report-directory", dest="test_report_directory", my_default=False,
                          help="If set, will save sample of all reports in this directory.")
-        group.add_option("--test-disable", action="store_true", dest="test_disable",
-                         my_default=False, help="Disable loading test files.")
+        group.add_option("--test-enable", action="store_true", dest="test_enable",
+                         my_default=False, help="Enable YAML and unit tests.")
         group.add_option("--test-commit", action="store_true", dest="test_commit",
                          my_default=False, help="Commit database changes performed by tests.")
         group.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
@@ -395,7 +395,7 @@ class configmanager(object):
             'debug_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs', 'proxy_mode',
-            'test_file', 'test_disable', 'test_commit', 'test_report_directory',
+            'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads',
             'virtual_memory_limit', 'virtual_memory_reset', 'cpu_time_limit', 'unaccent',
         ]

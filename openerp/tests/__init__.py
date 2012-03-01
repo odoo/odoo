@@ -8,14 +8,16 @@ Tests can be explicitely added to the `fast_suite` or `checks` lists or not.
 See the :ref:`test-framework` section in the :ref:`features` list.
 """
 
-import test_orm
+import test_expression
 import test_ir_sequence
+import test_orm
 
 fast_suite = [
     test_ir_sequence,
     ]
 
 checks = [
+    test_expression,
     test_orm,
     ]
 

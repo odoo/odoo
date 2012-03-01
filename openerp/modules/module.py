@@ -556,14 +556,15 @@ def run_unit_tests(module_name):
     for m in ms:
         suite.addTests(unittest2.TestLoader().loadTestsFromModule(m))
     if ms:
-        _logger.info('module %s: executing %s `fast_suite` and/or `checks` sub-modules' % (module_name, len(ms)))
+        _logger.info('module %s: executing %s `fast_suite` and/or `checks` sub-modules', module_name, len(ms))
         # Use a custom stream object to log the test executions.
         class MyStream(object):
+            def __init__(self):
+                self.r = re.compile(r'^-*$|^ *... *$|^ok$')
             def flush(self):
                 pass
             def write(self, s):
-                r = re.compile(r'^-*$|^ *... *$|^ok$')
-                if r.match(s):
+                if self.r.match(s):
                     return
                 first = True
                 for c in s.split('\n'):
@@ -571,6 +572,8 @@ def run_unit_tests(module_name):
                         c = '` ' + c
                     first = False
                     _logger.log(logging.TEST, c)
-        unittest2.TextTestRunner(verbosity=2, stream=MyStream()).run(suite)
+        result = unittest2.TextTestRunner(verbosity=2, stream=MyStream()).run(suite)
+        if not result.wasSuccessful():
+            _logger.error('module %s: at least one error occured in a test', module_name)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

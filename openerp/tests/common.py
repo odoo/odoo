@@ -38,17 +38,16 @@ class TransactionCase(unittest2.TestCase):
     the tests.
     """
 
-    def __init__(self, name):
-        super(TransactionCase, self).__init__(name)
-        self.registry = lambda model: \
-            openerp.modules.registry.RegistryManager.get(DB)[model]
-
     def setUp(self):
         self.cr = openerp.modules.registry.RegistryManager.get(DB).db.cursor()
+        self.uid = openerp.SUPERUSER_ID
 
     def tearDown(self):
         self.cr.rollback()
         self.cr.close()
+
+    def registry(self, model):
+        return openerp.modules.registry.RegistryManager.get(DB)[model]
 
 class RpcCase(unittest2.TestCase):
     """

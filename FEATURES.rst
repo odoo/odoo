@@ -49,8 +49,9 @@ suite. If it really needs that the module it belongs to is freshly installed,
 add it to `fast_suite`. Finally, if it can not be run in an acceptable time
 frame, don't add it to any explicit list.
 
-The tests must developed under `<addons-name>.tests` (or `openerp.tests` for the core).
-For instance, with respect to the tests, a module `foo` should be organized as follow::
+The tests must be developed under `<addons-name>.tests` (or `openerp.tests` for
+the core).  For instance, with respect to the tests, a module `foo` should be
+organized as follow::
 
   foo/
     __init__.py # does not import .tests
