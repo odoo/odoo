@@ -147,6 +147,69 @@ class res_config_configurable(osv.osv_memory):
         next = self.cancel(cr, uid, ids, context=context)
         if next: return next
         return self.next(cr, uid, ids, context=context)
+    
+    def get_default_applied_groups(self, cr, uid, ids, context=None):
+        applied_groups = {}
+        user_obj = self.pool.get('res.users')
+        dataobj = self.pool.get('ir.model.data')
+
+        groups = []
+        user_group_ids = user_obj.browse(cr, uid, uid, context=context).groups_id
+
+        for group_id in user_group_ids:
+            groups.append(group_id.id)
+
+        for id in groups:
+            key_id = dataobj.search(cr, uid,[('res_id','=',id),('model','=','res.groups')],context=context)
+            key = dataobj.browse(cr, uid, key_id[0], context=context).name
+            applied_groups[key] = True
+
+        return applied_groups
+
+    def get_default_installed_modules(self, cr, uid, ids, context=None):
+        module_obj = self.pool.get('ir.module.module')
+        module_names = []
+        module_ids = module_obj.search(cr, uid,
+                           [('state','in',['to install', 'installed', 'to upgrade'])],
+                           context=context)
+        modules_list = [mod.name for mod in module_obj.browse(cr, uid, module_ids, context=context)]
+        for column in self._columns.keys():
+            if module.startswith('module_'):
+                module_names.append(module.strip('module_'))
+        installed_modules = dict([(name, True) for name in list(set(modules_list) & set(module_names))])
+        return installed_modules
+
+    def set_installed_modules(self, cr, uid, ids, vals, context=None):
+        module_obj = self.pool.get('ir.module.module')
+        for module, value in vals.items():
+            if module.startswith('module_'):
+                mod_name = module.strip('module_')
+                installed = self.get_default_installed_modules(cr, uid, ids, context=context)
+                if value == True and not installed.get(mod_name):
+                    module_id = module_obj.search(cr, uid, [('name','=',mod_name)])
+                    module_obj.button_immediate_install(cr, uid, module_id, context=context)
+                elif value == False and installed.get(mod_name):
+                    module_id = module_obj.search(cr, uid, [('name','=',mod_name)])
+                    module_obj.button_uninstall(self, cr, uid, module_id, context=context)
+                    module_obj.button_upgrade(self, cr, uid, module_id, context=context)
+
+    def set_groups(self, cr, uid, ids, vals, context=None):
+        data_obj = self.pool.get('ir.model.data')
+        users_obj = self.pool.get('res.users')
+        groups_obj = self.pool.get('res.groups')
+        ir_values_obj = self.pool.get('ir.values')
+        dummy,user_group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_user')
+        for group in vals.keys():
+            if group.startswith('group_'):
+                dummy,group_id = data_obj.get_object_reference(cr, uid, 'base', group)
+                if vals[group]:
+                    groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(4,group_id)]})
+                    users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+                    ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(4,group_id)])
+                else:
+                    groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
+                    users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
+                    ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(3,group_id)])
 
 res_config_configurable()
 
