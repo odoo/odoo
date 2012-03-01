@@ -43,7 +43,7 @@ class sale_configuration(osv.osv_memory):
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
         ], 'Main Method Based On', required=True, help="You can generate invoices based on sales orders or based on shippings."),
-        'delivery': fields.boolean('Do you charge the delivery?',
+        'module_delivery': fields.boolean('Do you charge the delivery?',
                                    help ="""
                                    Allows you to add delivery methods in sale orders and picking,
                                    You can define your own carrier and delivery grids for prices.
@@ -53,27 +53,27 @@ class sale_configuration(osv.osv_memory):
         'picking_policy' : fields.boolean("Deliver all products at once?", help = ""),
         'group_sale_delivery_address':fields.boolean("Multiple Address",help="Group To Allow delivery address different from invoice address"),
         'group_sale_disc_per_sale_order_line':fields.boolean("Discounts per sale order lines ",help="Group to apply discounts per sale order lines"),
-        'sale_layout':fields.boolean("Notes & subtotals per line",help="Allows to format sale order lines using notes, separators, titles and subtotals. It installs the sale_layout module."),
-        'warning': fields.boolean("Alerts by products or customers",
+        'module_sale_layout':fields.boolean("Notes & subtotals per line",help="Allows to format sale order lines using notes, separators, titles and subtotals. It installs the sale_layout module."),
+        'module_warning': fields.boolean("Alerts by products or customers",
                                   help="""To trigger warnings in OpenERP objects.
                                   Warning messages can be displayed for objects like sale order, purchase order, picking and invoice. The message is triggered by the form's onchange event.
                                   It installs the warning module."""),
-        'sale_margin': fields.boolean("Display Margin For Users",
+        'module_sale_margin': fields.boolean("Display Margin For Users",
                         help="""This adds the 'Margin' on sales order,
                         This gives the profitability by calculating the difference between the Unit Price and Cost Price.
                         .It installs the sale_margin module."""),
-        'sale_journal': fields.boolean("Invoice journal?",
+        'module_sale_journal': fields.boolean("Invoice journal?",
                         help="""This allows you to categorise your sales and deliveries (picking lists) between different journals.
                         It installs the sale_journal module."""),
-        'analytic_user_function' : fields.boolean("User function by contracts",
+        'module_analytic_user_function' : fields.boolean("User function by contracts",
                                     help="""This allows you to define what is the default function of a specific user on a given account
                                     This is mostly used when a user encodes his timesheet: the values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.
                                     It Installs analytic_user_function module"""),
-        'analytic_journal_billing_rate' : fields.boolean("Billing rates by contracts",
+        'module_analytic_journal_billing_rate' : fields.boolean("Billing rates by contracts",
                                     help=""" This allows you to define what is the default invoicing rate for a specific journal on a given account.
                                     It installs analytic_journal_billing_rate module.
                                     """),
-        'account_analytic_analysis': fields.boolean('Contracts',
+        'module_account_analytic_analysis': fields.boolean('Contracts',
                                     help = """
                                     For modifying account analytic view to show important data to project manager of services companies,
                                     You can also view the report of account analytic summary user-wise as well as month wise
@@ -122,8 +122,8 @@ class sale_configuration(osv.osv_memory):
     def create(self, cr, uid, vals, context=None):
         ids = super(sale_configuration, self).create(cr, uid, vals, context=context)
         self.execute(cr, uid, [ids], vals, context=context)
-        return ids 
-    
+        return ids
+
     def write(self, cr, uid, ids, vals, context=None):
         self.execute(cr, uid, ids, vals, context=context)
         return super(sale_configuration, self).write(cr, uid, ids, vals, context=context)
