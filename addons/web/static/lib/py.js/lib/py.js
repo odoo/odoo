@@ -1,9 +1,5 @@
 var py = {};
 (function (py) {
-    var NUMBER = /^\d$/,
-        NAME_FIRST = /^[a-zA-Z_]$/,
-        NAME = /^[a-zA-Z0-9_]$/;
-
     var create = function (o, props) {
         function F() {}
         F.prototype = o;
@@ -256,7 +252,7 @@ var py = {};
 
         var Name = '[a-zA-Z_]\\w*';
 
-        var DecNumber = '\\d+'
+        var DecNumber = '\\d+';
         var IntNumber = DecNumber;
         var PointFloat = group('\\d+\\.\\d*', '\\.\\d+');
         var FloatNumber = PointFloat;
@@ -266,7 +262,7 @@ var py = {};
                              "//=?", "[+\\-*/%&|^=<>]=?", "~");
         var Bracket = '[\\[\\]\\(\\)\\{\\}]';
         var Special = '[:;.,`@]';
-        var Funny = group(Operator, Bracket, Special)
+        var Funny = group(Operator, Bracket, Special);
 
         var ContStr = group("'[^']*'", '"[^"]*"');
 
@@ -280,8 +276,12 @@ var py = {};
             while(pseudoprog.lastIndex < max) {
                 var pseudomatch = pseudoprog.exec(s);
                 if (!pseudomatch) {
-                    throw new Error('Failed to tokenize ' + s
-                                    + ' at index ' + (end || 0)
+                    // if match failed on trailing whitespace, end tokenizing
+                    if (/^\s+$/.test(s.slice(end))) {
+                        break;
+                    }
+                    throw new Error('Failed to tokenize <<' + s
+                                    + '>> at index ' + (end || 0)
                                     + '; parsed so far: ' + tokens);
                 }
 
@@ -325,7 +325,7 @@ var py = {};
             tokens.push(create(symbols['(end)']));
             return tokens;
         }
-    })()
+    })();
 
     var token, next;
     function expression(rbp) {
@@ -398,9 +398,9 @@ var py = {};
             var res = constructor.apply(instance, arguments);
             // return result of constructor if any, otherwise instance
             return res || instance;
-        }
+        };
         return constructor;
-    }
+    };
 
     var hash_counter = 0;
     py.object = py.type(function object() {}, {}, {
@@ -467,12 +467,12 @@ var py = {};
             throw new Error(this.constructor.name + ' can not be converted to JSON');
         }
     });
-    NoneType = py.type(function NoneType() {}, py.object, {
+    var NoneType = py.type(function NoneType() {}, py.object, {
         __nonzero__: function () { return py.False; },
         toJSON: function () { return null; }
     });
     py.None = new NoneType();
-    NotImplementedType = py.type(function NotImplementedType(){});
+    var NotImplementedType = py.type(function NotImplementedType(){});
     py.NotImplemented = new NotImplementedType();
     var booleans_initialized = false;
     py.bool = py.type(function bool(value) {
@@ -641,25 +641,26 @@ var py = {};
         return expression();
     };
     var evaluate_operator = function (operator, a, b) {
+        var v;
         switch (operator) {
-        case '==': return a.__eq__(b)
+        case '==': return a.__eq__(b);
         case 'is': return a === b ? py.True : py.False;
-        case '!=': return a.__ne__(b)
+        case '!=': return a.__ne__(b);
         case 'is not': return a !== b ? py.True : py.False;
         case '<':
-            var v = a.__lt__(b);
+            v = a.__lt__(b);
             if (v !== py.NotImplemented) { return v; }
             return PY_ensurepy(a.constructor.name < b.constructor.name);
         case '<=':
-            var v = a.__le__(b);
+            v = a.__le__(b);
             if (v !== py.NotImplemented) { return v; }
             return PY_ensurepy(a.constructor.name <= b.constructor.name);
         case '>':
-            var v = a.__gt__(b);
+            v = a.__gt__(b);
             if (v !== py.NotImplemented) { return v; }
             return PY_ensurepy(a.constructor.name > b.constructor.name);
         case '>=':
-            var v = a.__ge__(b);
+            v = a.__ge__(b);
             if (v !== py.NotImplemented) { return v; }
             return PY_ensurepy(a.constructor.name >= b.constructor.name);
         case 'in':

@@ -84,6 +84,11 @@ describe('Tokenizer', function () {
             expect(toks).to.have.tokens(1);
             expect(toks[0]).to.be.constant('False');
         });
+        it('does not fuck up on trailing spaces', function () {
+            var toks = py.tokenize('None ');
+            expect(toks).to.have.tokens(1);
+            expect(toks[0]).to.be.constant('None');
+        });
     });
     describe('collections', function () {
         it('tokenizes opening and closing symbols', function () {

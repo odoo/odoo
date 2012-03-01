@@ -134,7 +134,10 @@ describe('Comparisons', function () {
             expect(py.eval('date >= current',
                            {date: '2010-06-08', current: '2010-06-05'}))
                 .to.be(true);
-
+            expect(py.eval('state == "cancel"', {state: 'cancel'}))
+                .to.be(true);
+            expect(py.eval('state == "cancel"', {state: 'open'}))
+                .to.be(false);
         });
     });
     describe('missing eq/neq', function () {
