@@ -65,8 +65,8 @@ class account_invoice_report(osv.osv):
             ('cancel','Cancelled')
             ], 'Invoice State', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
-        'address_contact_id': fields.many2one('res.partner.address', 'Contact Address Name', readonly=True),
-        'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address Name', readonly=True),
+        'address_contact_id': fields.many2one('res.partner', 'Contact Address Name', readonly=True),
+        'address_invoice_id': fields.many2one('res.partner', 'Invoice Address Name', readonly=True),
         'account_id': fields.many2one('account.account', 'Account',readonly=True),
         'account_line_id': fields.many2one('account.account', 'Account Line',readonly=True),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
