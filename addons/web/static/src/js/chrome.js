@@ -1019,6 +1019,9 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
                 document.title = version_label;
             }
         });
+        this.$element.on('mouseenter', '.oe_systray > div:not([data-tipsy=true])', function() {
+            $(this).attr('data-tipsy', 'true').tipsy().trigger('mouseenter');
+        });
     },
     show_login: function() {
         var self = this;
