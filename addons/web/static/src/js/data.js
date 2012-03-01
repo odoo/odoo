@@ -261,6 +261,85 @@ openerp.web.Model = openerp.web.Class.extend(/** @lends openerp.web.Model# */{
     },
 });
 
+openerp.web.Traverser = openerp.web.Class.extend(/** @lends openerp.web.Traverser# */{
+    /**
+     * @constructs openerp.web.Traverser
+     * @extends openerp.web.Class
+     *
+     * @param {openerp.web.Model} model instance this traverser is bound to
+     */
+    init: function (model) {
+        this._model = model;
+        this._index = 0;
+    },
+
+    /**
+     * Gets and sets the current index
+     *
+     * @param {Number} [idx]
+     * @returns {Number} current index
+     */
+    index: function (idx) {
+        if (idx) { this._index = idx; }
+        return this._index;
+    },
+    /**
+     * Returns the model this traverser is currently bound to
+     *
+     * @returns {openerp.web.Model}
+     */
+    model: function () {
+        return this._model;
+    },
+    /**
+     * Fetches the size of the backing model's match
+     *
+     * @returns {Deferred<Number>} deferred count
+     */
+    size: function () {
+        return this._model.query().count();
+    },
+
+    /**
+     * Record at the current index for the collection, fails if there is no
+     * record at the current index.
+     *
+     * @returns {Deferred<>}
+     */
+    current: function (fields) {
+        return this._model.query(fields).first().pipe(function (record) {
+            if (record == null) {
+                return $.Deferred()
+                    .reject('No record at index' + this._index)
+                    .promise();
+            }
+            return record;
+        });
+    },
+    next: function (fields) {
+        var self = this;
+        this._index++;
+        return this.size().pipe(function (s) {
+            if (self._index >= s) {
+                self._index = 0;
+            }
+            return self.current(fields);
+        });
+    },
+    previous: function (fields) {
+        var self = this;
+        this._index--;
+        if (this._index < 0) {
+            return this.size().pipe(function (s) {
+                self._index = s-1;
+                return self.current(fields);
+            });
+        }
+        return this.current(fields);
+    }
+
+});
+
 openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.DataGroup# */{
     /**
      * Management interface between views and grouped collections of OpenERP
