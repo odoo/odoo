@@ -1190,6 +1190,46 @@ openerp.web.CompoundDomain = openerp.web.Class.extend({
         return this.__eval_context;
     }
 });
+
+openerp.web.DropMisordered = openerp.web.Class.extend(/** @lends openerp.web.DropMisordered# */{
+    /**
+     * @constructs openerp.web.DropMisordered
+     * @extends openerp.web.Class
+     *
+     * @param {Boolean} [failMisordered=false] whether mis-ordered responses should be failed or just ignored
+     */
+    init: function (failMisordered) {
+        // local sequence number, for requests sent
+        this.lsn = 0;
+        // remote sequence number, seqnum of last received request
+        this.rsn = -1;
+        this.failMisordered = failMisordered || false;
+    },
+    /**
+     * Adds a deferred (usually an async request) to the sequencer
+     *
+     * @param {$.Deferred} deferred to ensure add
+     * @returns {$.Deferred}
+     */
+    add: function (deferred) {
+        var res = $.Deferred();
+
+        var self = this, seq = this.lsn++;
+        deferred.then(function () {
+            if (seq > self.rsn) {
+                self.rsn = seq;
+                res.resolve.apply(res, arguments);
+            } else if (self.failMisordered) {
+                res.reject();
+            }
+        }, function () {
+            res.reject.apply(res, arguments);
+        });
+
+        return res.promise();
+    }
+});
+
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
