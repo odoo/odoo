@@ -37,44 +37,55 @@ class sale_configuration(osv.osv_memory):
     _columns = {
         'sale_orders': fields.boolean('Based on Sales Orders',),
         'deli_orders': fields.boolean('Based on Delivery Orders'),
-        'task_work': fields.boolean('Based on Tasks\' Work'),
-        'timesheet': fields.boolean('Based on Timesheet'),
+        'task_work': fields.boolean('Based on Tasks\' Work',
+                                    help="""
+                                    It installs the project_timesheet and project_mrp module
+                                    project_timesheet :lets you transfer the entries under tasks defined for Project Management to
+                                    the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways.
+                                    project_mrp : Automatically creates project tasks from procurement lines"""),
+        'timesheet': fields.boolean('Based on Timesheet',
+                                    help = """for modifying account analytic view to show important data to project manager of services companies,
+                                    You can also view the report of account analytic summary user-wise as well as month wise
+                                    ,It installs the account_analytic_analysis module."""),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
         ], 'Main Method Based On', required=True, help="You can generate invoices based on sales orders or based on shippings."),
-        'delivery': fields.boolean('Do you charge the delivery?'),
+        'delivery': fields.boolean('Do you charge the delivery?',
+                                   help ="""
+                                   Allows you to add delivery methods in sale orders and picking,
+                                   You can define your own carrier and delivery grids for prices.
+                                   It installs the delivery module.
+                                   """),
         'time_unit': fields.many2one('product.uom','Working Time Unit'),
-        'picking_policy' : fields.boolean("Deliver all products at once?"),
+        'picking_policy' : fields.boolean("Deliver all products at once?", help = ""),
         'group_sale_delivery_address':fields.boolean("Multiple Address",help="Group To Allow delivery address different from invoice address"),
         'group_sale_disc_per_sale_order_line':fields.boolean("Discounts per sale order lines ",help="Group to apply discounts per sale order lines"),
-        'sale_layout':fields.boolean("Notes & subtotals per line",help="Install sale_layout module: This module provides features to improve the layout of the Sales Order.."),
+        'sale_layout':fields.boolean("Notes & subtotals per line",help="Allows to format sale order lines using notes, separators, titles and subtotals. It installs the sale_layout module."),
         'warning': fields.boolean("Alerts by products or customers",
-                                  help="Install warning module: Module to trigger warnings in OpenERP objects."),
+                                  help="""To trigger warnings in OpenERP objects.
+                                  Warning messages can be displayed for objects like sale order, purchase order, picking and invoice. The message is triggered by the form's onchange event.
+                                  It installs the warning module."""),
         'sale_margin': fields.boolean("Display Margin For Users",
-                        help="Install sale_margin module: This module adds the 'Margin' on sales order."),
+                        help="""This adds the 'Margin' on sales order,
+                        This gives the profitability by calculating the difference between the Unit Price and Cost Price.
+                        .It installs the sale_margin module."""),
         'sale_journal': fields.boolean("Invoice journal?",
-                        help="Install sale_journal module: The sales journal modules allows you to categorise your sales and deliveries (picking lists) between different journals."),
+                        help="""This allows you to categorise your sales and deliveries (picking lists) between different journals.
+                        It installs the sale_journal module."""),
         'analytic_user_function' : fields.boolean("User function by contracts",
-                                    help="Install analytic_user_function module:This module allows you to define what is the default function of a specific user on a given account"),
+                                    help="""This allows you to define what is the default function of a specific user on a given account
+                                    This is mostly used when a user encodes his timesheet: the values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.
+                                    It Installs analytic_user_function module"""),
         'analytic_journal_billing_rate' : fields.boolean("Billing rates by contracts",
-                                    help="Install analytic_journal_billing_rate module: This module allows you to define what is the default invoicing rate for a specific journal on a given account."),
-        'import_sugarcrm' : fields.boolean("Import data from sugarCRM?",
-                                    help="Install import_sugarcrm module: This Module Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Employees, Meetings, Phonecalls, Emails, and Project, Project Tasks Data into OpenERP Module."),
-        'import_google' : fields.boolean("Import Contacts & Meetings from Google",
-                                    help="Install import_google module: The module adds google contact in partner address and add google calendar events details in Meeting"),
-        'wiki_sale_faq' : fields.boolean("Install a sales FAQ?",
-                                    help="Install wiki_sale_faq module: This module provides a Wiki Sales FAQ Template."),
-        'base_contact' : fields.boolean("Manage a several address per customer",
-                                    help="Install crm_partner_assign module: This is the module used by OpenERP SA to redirect customers to its partners, based on geolocalization."),
-        'google_map' : fields.boolean("Google maps on customer",
-                                    help="Install google_map module: The module adds Google Map field in partner address."),
-        'plugin_thunderbird': fields.boolean('Thunderbird plugin',
-                                    help="Install plugin_thunderbird module: This module is required for the Thuderbird Plug-in to work properly."),
-        'plugin_outlook': fields.boolean('Outlook plugin',
-                                    help="Install plugin_outlook module: This module provides the Outlook Plug-in."),
+                                    help=""" This allows you to define what is the default invoicing rate for a specific journal on a given account.
+                                    It installs analytic_journal_billing_rate module.
+                                    """),
         'account_analytic_analysis': fields.boolean('Contracts',
-                                    help="Install account_analytic_analysis module: This module is for modifying account analytic view to show important data to project manager of services companies."),
+                                    help = """
+                                    For modifying account analytic view to show important data to project manager of services companies,
+                                    You can also view the report of account analytic summary user-wise as well as month wise
+                                    ,It installs the account_analytic_analysis module."""),
     }
 
     def get_default_installed_modules(self, cr, uid, ids, context=None):
