@@ -452,6 +452,7 @@ class module(osv.osv):
             'sequence': terp.get('sequence', 100),
             'application': terp.get('application', False),
             'auto_install': terp.get('auto_install', False),
+            'icon': terp.get('icon', False),
         }
 
     # update the list of available packages
