@@ -168,7 +168,7 @@ openerp.web.page = function (openerp) {
                      });
             };
             if (value && !(value instanceof Array)) {
-                new openerp.web.DataSetStatic(
+                new openerp.web.DataSet(
                         this, this.field.relation, self.build_context())
                     .name_get([value], function(data) {
                         real_set_value(data[0]);

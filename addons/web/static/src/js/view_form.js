@@ -1901,7 +1901,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
 
         // context menu
         var init_context_menu_def = $.Deferred().then(function(e) {
-            var rdataset = new openerp.web.DataSetStatic(self, "ir.values", self.build_context());
+            var rdataset = new openerp.web.DataSet(self, "ir.values", self.build_context());
             rdataset.call("get", ['action', 'client_action_relate',
                 [[self.field.relation, false]], false, rdataset.get_context()], false, 0)
                 .then(function(result) {
@@ -2036,7 +2036,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             this.abort_last();
             delete this.abort_last;
         }
-        var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
+        var dataset = new openerp.web.DataSet(this, this.field.relation, self.build_context());
 
         dataset.name_search(search_val, self.build_domain(), 'ilike',
                 this.limit + 1, function(data) {
@@ -2089,13 +2089,13 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             self._search_create_popup("form", undefined, {"default_name": name});
         };
         if (self.get_definition_options().quick_create === undefined || self.get_definition_options().quick_create) {
-            var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
-            dataset.name_create(name, function(data) {
-                self._change_int_ext_value(data);
-            }).fail(function(error, event) {
-                event.preventDefault();
-                slow_create();
-            });
+            new openerp.web.DataSet(this, this.field.relation, self.build_context())
+                .name_create(name, function(data) {
+                    self._change_int_ext_value(data);
+                }).fail(function(error, event) {
+                    event.preventDefault();
+                    slow_create();
+                });
         } else
             slow_create();
     },
@@ -2115,10 +2115,10 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             new openerp.web.CompoundContext(self.build_context(), context || {})
         );
         pop.on_select_elements.add(function(element_ids) {
-            var dataset = new openerp.web.DataSetStatic(self, self.field.relation, self.build_context());
-            dataset.name_get([element_ids[0]], function(data) {
-                self._change_int_ext_value(data[0]);
-            });
+            new openerp.web.DataSet(self, self.field.relation, self.build_context())
+                .name_get([element_ids[0]], function(data) {
+                    self._change_int_ext_value(data[0]);
+                });
         });
     },
     _change_int_ext_value: function(value) {
@@ -2154,10 +2154,10 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         };
         if (value && !(value instanceof Array)) {
             // name_get in a m2o does not use the context of the field
-            var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
-            dataset.name_get([value], function(data) {
-                real_set_value(data[0]);
-            }).fail(function() {self.tmp_value = undefined;});
+            new openerp.web.DataSet(this, this.field.relation, self.view.dataset.get_context())
+                .name_get([value], function(data) {
+                    real_set_value(data[0]);
+                }).fail(function() {self.tmp_value = undefined;});
         } else {
             $.async_when().then(function() {real_set_value(value);});
         }

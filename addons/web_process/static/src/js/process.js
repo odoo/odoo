@@ -107,7 +107,7 @@ openerp.web_process = function (openerp) {
             if(this.process_id)
                 return def.resolve().promise();
 
-            this.process_dataset = new openerp.web.DataSetStatic(this, "process.process", this.session.context);
+            this.process_dataset = new openerp.web.DataSet(this, "process.process", this.session.context);
             this.process_dataset
             .call("search_by_model", [self.process_model,self.session.context])
             .done(function(res) {
@@ -237,7 +237,7 @@ openerp.web_process = function (openerp) {
         },
         jump_to_view: function(model, id) {
             var self = this;
-            var dataset = new openerp.web.DataSetStatic(this, 'ir.values', this.session.context);
+            var dataset = new openerp.web.DataSet(this, 'ir.values', this.session.context);
             dataset.call('get',
                 ['action', 'tree_but_open',[['ir.ui.menu', id]], dataset.context],
                 function(res) {
