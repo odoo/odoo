@@ -102,6 +102,10 @@ class sale_configuration(osv.osv_memory):
                             ('state','in',['to install', 'installed', 'to upgrade'])],
                            context=context)
         installed_modules = dict([(mod.name,True) for mod in module_obj.browse(cr, uid, module_ids, context=context)])
+        if installed_modules.get('project_mrp') and installed_modules.get('project_timesheet'):
+            installed_modules['task_work'] = True
+        if installed_modules.get('account_analytic_analysis'):
+            installed_modules['timesheet'] = True
         return installed_modules
     
     def get_default_sale_configs(self, cr, uid, ids, context=None):
@@ -162,11 +166,11 @@ class sale_configuration(osv.osv_memory):
     def set_modules(self, cr, uid, ids, vals, context=None):
         module_obj = self.pool.get('ir.module.module')
         MODULE_LIST = vals.get('modules')
+        if vals.get('task_work'):
+            vals.update({'project_timesheet': True,'project_mrp': True})
+        if vals.get('timesheet'):
+            vals.update({'account_analytic_analysis': True})
         for k, v in vals.items():
-            if k == 'task_work':
-                MODULE_LIST += ['project_timesheet','project_mrp']
-            if k == 'timesheet':
-                MODULE_LIST += ['account_analytic_analysis']
             if k in MODULE_LIST:
                 installed = self.get_default_installed_modules(cr, uid, [k], context)
                 if v == True and not installed.get(k):

@@ -119,10 +119,8 @@
             <field name="arch" type="xml">
                 <field name="account_analytic_analysis" position="after">
                     <newline/>
-                    <field name="analytic_user_function"/>
-                    <newline/>
-                    <field name="analytic_journal_billing_rate"/>
-                    <newline/>
+                    <field name="analytic_user_function" attrs="{'invisible': [('account_analytic_analysis','=',False)]}"/>
+                    <field name="analytic_journal_billing_rate" attrs="{'invisible': [('account_analytic_analysis','=',False)]}"/>
                 </field>
             </field>
         </record>

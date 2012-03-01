@@ -20,7 +20,7 @@
                                 <field name="is_ssl" on_change="onchange_server_type(type, is_ssl)"/>
                                 <newline/>
                                 <field name="user" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-                                <field name="password" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                                <field name="password" password="True" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
                         </group>
                     </group>
                 </xpath>
