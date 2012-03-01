@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class account_configuration(osv.osv_memory):
     _inherit = 'res.config'
@@ -36,6 +37,16 @@ class account_configuration(osv.osv_memory):
     _defaults = {
         'tax_policy': 'global_on_order',
     }
+    
+    def get_default_tax_policy(self, cr, uid, ids, context=None):
+        applied_groups = self.get_default_applied_groups(cr, uid, ids, context=context)
+        if applied_groups.get('group_sale_taxes_global_on_order'):
+            applied_groups.update({'tax_policy': 'global_on_order'})
+        elif applied_groups.get('group_sale_taxes_on_order_line'):
+            applied_groups.update({'tax_policy': 'on_order_line'})
+        else:
+            applied_groups.update({'tax_policy': 'no_tax'})
+        return applied_groups
     
     def _check_default_tax(self, cr, uid, context=None):
         ir_values_obj = self.pool.get('ir.values')
@@ -59,24 +70,58 @@ class account_configuration(osv.osv_memory):
         if self._check_default_tax(cr, uid, context) and res['fields'].get('tax_value'):
             res['fields']['tax_value'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Value'}
         return res
+    
+    def set_tax_policy(self, cr, uid, ids, vals, context=None):
+        data_obj = self.pool.get('ir.model.data')
+        users_obj = self.pool.get('res.users')
+        groups_obj = self.pool.get('res.groups')
+        ir_values_obj = self.pool.get('ir.values')
+        dummy,user_group_id = data_obj.get_object_reference(cr, uid, 'base', 'group_user')
+        tax_policy = vals.get('tax_policy')
+        order_group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_taxes_global_on_order').id
+        order_line_group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_taxes_on_order_line').id
+        group_id = False
+        remove_group_id = False
+
+        if tax_policy == 'global_on_order':
+            group_id = order_group_id
+            remove_group_id = order_line_group_id
+        elif tax_policy == 'on_order_line':
+            group_id = order_line_group_id
+            remove_group_id = order_group_id
+
+        if group_id:
+            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(4,group_id)]})
+            users_obj.write(cr, uid, [uid], {'groups_id': [(4,group_id)]})
+            ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(4,group_id)])
+            groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,remove_group_id)]})
+            users_obj.write(cr, uid, [uid], {'groups_id': [(3,remove_group_id)]})
+            ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(3,remove_group_id)])
+        else:
+            groups += [order_group_id, remove_group_id]
+            for group_id in groups:
+                groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
+                users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
+                ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(3,group_id)])
 
     def set_tax_value(self, cr, uid, ids, vals, context=None):
         chart_account_obj = self.pool.get('wizard.multi.charts.accounts')
         acc_installer_obj = self.pool.get('account.installer')
         chart_template_obj = self.pool.get('account.chart.template')
-        tax_template_obj = self.pool.get('account.tax.template')
+        tax_obj = self.pool.get('account.tax')
         chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
         taxes = []
         if chart_template_ids:
-            taxes = tax_template_obj.search(cr, uid, [('chart_template_id', '=', chart_template_ids[0])], context=context)
-        result = {}
-        if not self._check_default_tax(cr, uid, context) and not taxes:
+            name = _('Tax %.2f%%') % vals.get('tax_value')
+            taxes = tax_obj.search(cr, uid, [('name', '=', name)], context=context)
+        check_default_taxes = self._check_default_tax(cr, uid, context)
+        if not check_default_taxes and not taxes:
             installer_id = acc_installer_obj.create(cr, uid, {}, context=context)
             acc_installer_obj.execute(cr, uid, [installer_id], context=context)
             if chart_template_ids:
                 code_digits = chart_account_obj.onchange_chart_template_id(cr, uid, [], chart_template_ids[0], context=context)['value']['code_digits']
                 object_id = chart_account_obj.create(cr, uid, {'code_digits': code_digits}, context=context)
                 chart_account_obj.execute(cr, uid, [object_id], context=context)
-        return result
+        return check_default_taxes
     
 account_configuration()

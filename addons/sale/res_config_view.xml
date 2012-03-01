@@ -31,15 +31,16 @@
                                 <field name="time_unit" domain="[('category_id.name','=','Working Time')]" attrs="{'invisible':[('task_work','=',False),('timesheet','=',False)],'required': [('timesheet','=',True)]}"/>
                             </group>
                         </group>
-    
+
                         <separator string="Sale Order" colspan="4"/>
                         <group  colspan="4" col="8">
                             <group  colspan="4" col="4">
                                <field name="group_sale_pricelist_per_customer"/>
                                <newline/>
                                <group colspan="4" col="4">
-                                    <field name="tax_policy" />
-                                    <field name="tax_value" nolabel="1" attrs="{'invisible':[('tax_policy','=','no_tax')]}"/>
+                                    <field name="tax_policy" on_change="onchange_tax_policy(tax_policy,tax_value)"/>
+                                    <field name="tax_value" nolabel="1" attrs="{'invisible':[('tax_policy','=','no_tax')]}"
+                                                            on_change="onchange_tax_policy(tax_policy,tax_value)"/>
                                </group>
                                <newline/>
                                <field name="sale_margin"/>
@@ -89,7 +90,7 @@
                                <field name="import_google"/>
                             </group>
                         </group>
-    
+
                         <group  colspan="4" col="4">
                             <group  colspan="2" col="2">
                                <separator string="Documents and Wiki" colspan="2"/>
@@ -120,4 +121,3 @@
 
     </data>
 </openerp>
-    
