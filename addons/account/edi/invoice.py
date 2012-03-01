@@ -75,7 +75,7 @@ class account_invoice(osv.osv, EDIMixin):
         """Exports a supplier or customer invoice"""
         edi_struct = dict(edi_struct or INVOICE_EDI_STRUCT)
         res_company = self.pool.get('res.company')
-        res_partner_address = self.pool.get('res.partner.address')
+        res_partner_address = self.pool.get('res.partner')
         edi_doc_list = []
         for invoice in records:
             # generate the main report
@@ -125,7 +125,6 @@ class account_invoice(osv.osv, EDIMixin):
         #       the desired company among the user's allowed companies
 
         self._edi_requires_attributes(('company_id','company_address','type'), edi_document)
-        res_partner_address = self.pool.get('res.partner.address')
         res_partner = self.pool.get('res.partner')
 
         # imported company = new partner
@@ -144,10 +143,10 @@ class account_invoice(osv.osv, EDIMixin):
         address_info = edi_document.pop('company_address')
         address_info['partner_id'] = (src_company_id, src_company_name)
         address_info['type'] = 'invoice'
-        address_id = res_partner_address.edi_import(cr, uid, address_info, context=context)
+        address_id = res_partner.edi_import(cr, uid, address_info, context=context)
 
         # modify edi_document to refer to new partner
-        partner_address = res_partner_address.browse(cr, uid, address_id, context=context)
+        partner_address = res_partner.browse(cr, uid, address_id, context=context)
         edi_document['partner_id'] = (src_company_id, src_company_name)
         edi_document.pop('partner_address', False) # ignored
         edi_document['address_invoice_id'] = self.edi_m2o(cr, uid, partner_address, context=context)
