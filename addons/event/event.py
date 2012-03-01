@@ -20,15 +20,9 @@
 ##############################################################################
 
 import time
-
-from crm import crm
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
-from crm import wizard
-import time
-
-
 
 class event_type(osv.osv):
     """ Event Type """
@@ -276,16 +270,16 @@ class event_registration(osv.osv):
         """
         if context is None:
             context = {}
-        for test in self.browse(cr,uid,ids,context=context):
-            print test.event_id.date_begin
-            today = time.strftime('%Y-%m-%d %H:%M:%S')
-            if today >= test.event_id.date_begin:
-                values = {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
-                res = self.write(cr, uid, ids, values)
-                self.message_append(cr, uid, ids,_('State set to Done'),body_text= _('Done'))
-                return res
+        today = fields.datetime.now()
+        for registration in self.browse(cr, uid, ids, context=context):
+            if today >= registration.event_id.date_begin:
+                values = {'state': 'done', 'date_closed': today}
+                self.write(cr, uid, ids, values)
+                self.message_append(cr, uid, ids, _('State set to Done'), body_text=_('Done'))
             else:
-                raise osv.except_osv(_('Error!'),_("You must wait the starting event day to do this action.") )
+                raise osv.except_osv(_('Error!'),_("You must wait the event starting day to do this action.") )
+        return True
+
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
         self.message_append(cr, uid, ids,_('State set to Cancel'),body_text= _('Cancel'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
