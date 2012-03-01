@@ -8,11 +8,11 @@
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
                 <xpath expr="//form/group[@name='emails']" position="inside">
-                    <group col="2" colspan="2">
+                    <group col="4" colspan="2">
                         <separator string="Emails" colspan="4"/>
-                        <field name="fetchmail_crm" colspan="2"/>
+                        <field name="fetchmail_crm" />
                         <newline/>
-                        <group col="4" colspan="4" 
+                        <group col="4" colspan="2"
                             attrs="{'invisible': [('fetchmail_crm','=',False)]}">
                                 <field name="server" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
                                 <field name="type" nolabel="1" on_change="onchange_server_type(type, is_ssl)" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
