@@ -242,3 +242,31 @@ asynchronously (and using indexes).
 Low-level API: RPC calls to Python side
 ---------------------------------------
 
+While the previous section is great for calling core OpenERP code
+(models code), it does not work if you want to call the Python side of
+openerp-web.
+
+For this. a lower-level API is available on
+:js:class:`openerp.web.Connection` objects (usually available through
+``openerp.connection``): the ``rpc`` method.
+
+This method simply takes an absolute path (which is the combination of
+the Python controller's ``_cp_path`` attribute and the name of the
+method yo want to call) and a mapping of attributes to values (applied
+as keyword arguments on the Python method [#]_). This function fetches
+the return value of the Python methods, converted to JSON.
+
+For instance, to call the ``eval_domain_and_context`` of the
+:class:`~web.controllers.main.Session` controller:
+
+.. code-block:: javascript
+
+    openerp.connection.rpc('/web/session/eval_domain_and_context', {
+        domains: ds,
+        contexts: cs
+    }).then(function (result) {
+        // handle result
+    });
+
+.. [#] except for ``context``, which is extracted and stored in the
+       request object itself.
