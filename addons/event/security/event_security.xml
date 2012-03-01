@@ -29,7 +29,6 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-<!-- TODO: to complete if needed -->
     <record model="ir.rule" id="report_event_registration_comp_rule">
         <field name="name">Report Event Registration multi-company</field>
         <field name="model_id" ref="model_report_event_registration"/>
