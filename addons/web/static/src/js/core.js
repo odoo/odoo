@@ -321,6 +321,47 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.active_id = null;
         return this.session_init();
     },
+    test_eval_get_context: function () {
+        var datetime = new py.object();
+        var date = datetime.date = new py.type(function date(y, m, d) {
+            this._year = y;
+            this._month = m;
+            this._day = d;
+        }, py.object, {
+            strftime: function (format) {
+                var f = format.toJSON(), self = this;
+                return new py.str(f.replace(/%([A-Za-z])/g, function (m, c) {
+                    switch (c) {
+                    case 'Y': return self._year;
+                    case 'm': return _.str.sprintf('%02d', self._month);
+                    case 'd': return _.str.sprintf('%02d', self._day);
+                    }
+                    throw new Error('ValueError: No known conversion for ' + m);
+                }));
+            }
+        });
+        date.__getattribute__ = function (name) {
+            if (name === 'today') {
+                return date.today;
+            }
+            throw new Error("AttributeError: object 'date' has no attribute '" + name +"'");
+        };
+        date.today = new py.def(function () {
+            var d = new Date();
+            return new date(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+        });
+
+        var time = new py.object();
+        time.strftime = new py.def(function (format) {
+            return date.today.__call__().strftime(format);
+        });
+
+        return {
+            uid: new py.float(this.uid),
+            datetime: datetime,
+            time: time
+        };
+    },
     test_eval: function (source, expected) {
         try {
             var ctx = this.test_eval_contexts(source.contexts);
@@ -337,7 +378,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         }
 
         try {
-            var dom = this.test_eval_domains(source.domains);
+            var dom = this.test_eval_domains(source.domains, this.test_eval_get_context());
             if (!_.isEqual(dom, expected.domain)) {
                 console.group('Local domain does not match remote');
                 console.warn('source', source.domains);
@@ -378,17 +419,18 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         });
         return result_context;
     },
-    test_eval_domains: function (domains) {
+    test_eval_domains: function (domains, eval_context) {
         var result_domain = [], self = this;
         _(domains).each(function (dom) {
             switch(dom.__ref) {
             case 'domain':
                 result_domain.push.apply(
-                    result_domain, py.eval(dom.__debug));
+                    result_domain, py.eval(dom.__debug, eval_context));
                 break;
             case 'compound_domain':
                 result_domain.push.apply(
-                    result_domain, self.test_eval_contexts(dom.__contexts));
+                    result_domain, self.test_eval_domains(
+                            dom.__domains, eval_context));
                 break;
             default:
                 result_domain.push.apply(
