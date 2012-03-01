@@ -66,10 +66,10 @@
       <field name="view_type">form</field>
       <field name="view_mode">form</field>
       <field name="target">new</field>
-      <field name="context">{'menu':True}</field> 
+      <field name="context">{'menu':True}</field>
     </record>
 
-    <menuitem parent="base.reporting_menu" name="Report Designer" action="action_report_designer_wizard" id="menu_action_report_designer_wizard" sequence="70"/>
+    <menuitem parent="base.menu_reporting_config" name="Report Designer" action="action_report_designer_wizard" id="menu_action_report_designer_wizard" sequence="1"/>
 
   </data>
 </openerp>

@@ -144,7 +144,8 @@
             <field name="act_window_id" ref="action_report_event_registration"/>
        </record>
 
-        <menuitem parent="base.menu_report_association" action="action_report_event_registration" id="menu_report_event_registration" sequence="3" groups="marketing.group_marketing_manager"/>
+        <menuitem name="Marketing" id="base.menu_report_marketing" parent="base.menu_reporting" sequence="45"/>
+        <menuitem parent="base.menu_report_marketing" action="action_report_event_registration" id="menu_report_event_registration" sequence="3" groups="marketing.group_marketing_manager"/>
 
     </data>
 </openerp>
