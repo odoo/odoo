@@ -81,50 +81,6 @@ class sale_configuration(osv.osv_memory):
                                     help=""" This allows you to define what is the default invoicing rate for a specific journal on a given account.
                                     It installs analytic_journal_billing_rate module.
                                     """),
-        'import_sugarcrm' : fields.boolean("Import data from sugarCRM?",
-                                    help="""Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Employees, Meetings, Phonecalls, Emails, and Project, Project Tasks Data into OpenERP Module.
-                                    It installs import_sugarcrm module.
-                                    """),
-        'import_google' : fields.boolean("Import Contacts & Meetings from Google",
-                                    help="""
-                                    Import google contact in partner address and add google calendar events details in Meeting
-                                    It installs import_google module.
-                                    """),
-        'wiki_sale_faq' : fields.boolean("Install a sales FAQ?",
-                                    help="""
-                                    It provides demo data, thereby creating a Wiki Group and a Wiki Page for Wiki Sale FAQ.
-                                    It installs wiki_sale_faq module.
-                                    """),
-        'base_contact' : fields.boolean("Manage a several address per customer",
-                                    help="""
-                                    It lets you define:
-                                        * contacts unrelated to a partner,
-                                        * contacts working at several addresses (possibly for different partners),
-                                        * contacts with possibly different functions for each of its job's addresses
-                                    It installs base_contact module.
-                                    """),
-        'google_map' : fields.boolean("Google maps on customer",
-                                    help="""
-                                    This allows yopu to locate customer on Google Map
-                                    It installs google_map module.
-                                    """),
-        'plugin_thunderbird': fields.boolean('Thunderbird plugin',
-                                    help="""
-                                    The plugin allows you archive email and its attachments to the selected
-                                    OpenERP objects. You can select a partner, a task, a project, an analytical
-                                    account, or any other object and attach the selected mail as a .eml file in
-                                    the attachment of a selected record. You can create documents for CRM Lead,
-                                    HR Applicant and Project Issue from selected mails.
-                                    It installs plugin_thunderbird module.
-                                    """),
-        'plugin_outlook': fields.boolean('Outlook plugin',
-                                    help="""
-                                    Outlook plug-in allows you to select an object that you would like to add
-                                    to your email and its attachments from MS Outlook. You can select a partner, a task,
-                                    a project, an analytical account, or any other object and archive selected
-                                    mail into mail.message with attachments.
-                                    It installs plugin_outlook module.
-                                    """),
         'account_analytic_analysis': fields.boolean('Contracts',
                                     help = """
                                     For modifying account analytic view to show important data to project manager of services companies,
