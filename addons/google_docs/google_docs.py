@@ -107,7 +107,7 @@ class google_docs(osv.osv):
         google_docs_config = google_docs_config_ref.search(cr, uid, [('model_id', '=', model)])
 
         if not google_docs_config:
-            google_document = ir_attachment_ref.create_empty_google_doc(cr, uid, model, ids, type_doc)
+            google_document = ir_attachment_ref.create_empty_google_doc(cr, uid, model, id, type_doc)
         else:
             google_document = ir_attachment_ref.copy_gdoc(cr, uid, model, id)
 
