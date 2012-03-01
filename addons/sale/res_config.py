@@ -23,14 +23,6 @@ from osv import fields, osv
 import pooler
 from tools.translate import _
 
-MODULE_LIST = [
-               'analytic_user_function', 'analytic_journal_billing_rate', 'import_sugarcrm',
-               'import_google', 'crm_caldav', 'wiki_sale_faq', 'base_contact','sale_layout','warning',
-               'google_map', 'fetchmail_crm', 'plugin_thunderbird', 'plugin_outlook','account_analytic_analysis',
-               'project_timesheet', 'account_analytic_analysis', 'project_mrp', 'delivery',
-               'sale_margin', 'sale_journal'
-]
-
 class sale_configuration(osv.osv_memory):
     _inherit = 'res.config'
 
@@ -89,7 +81,7 @@ class sale_configuration(osv.osv_memory):
     }
 
     def get_default_installed_modules(self, cr, uid, ids, context=None):
-        installed_modules = {}
+        installed_modules = super(sale_configuration, self).get_default_installed_modules(cr, uid, ids, context=context)
         if installed_modules.get('project_mrp') and installed_modules.get('project_timesheet'):
             installed_modules['task_work'] = True
         if installed_modules.get('account_analytic_analysis'):
@@ -140,17 +132,21 @@ class sale_configuration(osv.osv_memory):
         #TODO: TO BE IMPLEMENTED
         for method in dir(self):
             if method.startswith('set_'):
-                vals['modules'] = MODULE_LIST
                 getattr(self, method)(cr, uid, ids, vals, context)
         return True
 
-#    def set_installed_modules(self, cr, uid, ids, vals, context=None):
-#        module_obj = self.pool.get('ir.module.module')
-#        MODULE_LIST = vals.get('modules')
-#        if vals.get('task_work'):
-#            vals.update({'project_timesheet': True,'project_mrp': True})
-#        if vals.get('timesheet'):
-#            vals.update({'account_analytic_analysis': True})
+    def set_installed_modules(self, cr, uid, ids, vals, context=None):
+        if vals.get('timesheet'):
+            vals.update({'module_account_analytic_analysis': True})
+        else:
+            vals.update({'module_account_analytic_analysis': False})
+
+        if vals.get('task_work'):
+            vals.update({'module_project_timesheet': True, 'module_project_mrp': True})
+        else:
+            vals.update({'module_project_timesheet': False, 'module_project_mrp': False})
+
+        super(sale_configuration, self).set_installed_modules(cr, uid, ids, vals, context=context)
 
     def set_sale_defaults(self, cr, uid, ids, vals, context=None):
         ir_values_obj = self.pool.get('ir.values')
