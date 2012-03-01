@@ -448,39 +448,39 @@
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
                             <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
-                                <div class="oe_kanban_box oe_kanban_color_border">
-                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                        <table class="oe_kanban_table">
-                                            <tr>
-                                                <td valign="top" width="64" align="left">
-                                                    <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" width="64" height="64"/>
-                                                </td>
-                                                <td class="oe_kanban_title1" align="left" valign="middle">
-                                                    <h4><a type="edit"><field name="name"/></a></h4>
-                                                        <field name="street"/>
-                                                        <field name="street2"/><br/>
-                                                        <field name="city"/>
-                                                        <field name="zip"/><br/>
-                                                        <field name="country_id"/><br/>
-                                                        <field name="email"/><br/>
-                                                        <field name="mobile"/><br/>
-                                                </td>
-                                                <td t-if="record.is_company.raw_value == 'contact'" valign="top" align="right">
-                                                    <img t-att-src="kanban_gravatar(record.photo.value, 22)" class="oe_kanban_gravatar"/>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                        <div class="oe_kanban_left">
-                                            <a string="Edit" icon="gtk-edit" type="edit"/>
-                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                            <a title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
-                                                <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
-                                            </a>
+                                <div class="oe_module_vignette">
+                                <a type="edit"> 
+                                    <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" width="64" height="64" class="oe_module_icon"/>
+                                </a>
+                                    <div class="oe_module_desc">
+                                        <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                            <table class="oe_kanban_table">
+                                                <tr>
+                                                    <td class="oe_kanban_title1" align="left" valign="middle">
+                                                        <h4><a type="edit"><field name="name"/></a></h4>
+                                                            <field name="street"/>
+                                                            <field name="street2"/><br/>
+                                                            <field name="city"/>
+                                                            <field name="zip"/><br/>
+                                                            <field name="country_id"/><br/>
+                                                            <field name="email"/><br/>
+                                                            <field name="mobile"/><br/>
+                                                    </td>
+                                                    <td t-if="record.is_company.raw_value == 'contact'" valign="top" align="right">
+                                                        <img t-att-src="kanban_gravatar(record.photo.value, 22)" class="oe_kanban_gravatar"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </div>
-                                        <br class="oe_kanban_clear"/>
+                                        <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                            <div class="oe_kanban_left">
+                                                <a string="Edit" icon="gtk-edit" type="edit"/>
+                                                <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                                <a title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
+                                                    <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
+                                                </a>
+                                            </div>
+                                            <br class="oe_kanban_clear"/>
                                     </div>
                                     </div>
                                 </div>
@@ -496,15 +496,15 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban</field>
+            <field name="view_mode">tree</field>
             <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_filter"/>
             <field name="help">A customer is an entity you do business with, like a company or an organization. A customer can have several contacts or addresses which are the people working for this company. You can use the history tab, to follow all transactions related to a customer: sales order, emails, opportunities, claims, etc. If you use the email gateway, the Outlook or the Thunderbird plugin, don't forget to register emails to each contact so that the gateway will automatically attach incoming emails to the right partner.</field>
         </record>
         <record id="action_partner_form_view1" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_partner_tree"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="res_partner_kanban_view"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
         <record id="action_partner_form_view2" model="ir.actions.act_window.view">
