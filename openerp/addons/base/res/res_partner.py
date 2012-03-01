@@ -274,7 +274,7 @@ class res_partner(osv.osv):
 #        if update_ids:
 #            osv.osv.write(self, cr, uid,update_ids, vals,context=context) 
         for key, data in vals.iteritems():
-            if key in ('street','street2','zip','city','state_id','country_id','email','phone','fax','mobile','website','ref','lang') and  data :  
+            if key in ('street','street2','zip','city','state_id','country_id','email','phone','fax','mobile','website','ref','lang')  and  data :  
                 update_list=update_ids or parent_id
                 if update_list :
                     sql = "update res_partner set %(field)s = %%(value)s where id in %%(id)s" % {
