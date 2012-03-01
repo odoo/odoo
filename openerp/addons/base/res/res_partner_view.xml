@@ -328,7 +328,7 @@
                 <form string="Partners">
                     <group col="8" colspan="4">
                         <group col="2">
-                            <field name="is_company" on_change="onchange_type(is_company, title,child_ids)" required="1"/>
+                            <field name="is_company" on_change="onchange_type(is_company, title,child_ids,photo)" required="1"/>
                             <field name="function" attrs="{'invisible': [('is_company','=', 'partner')]}" colspan="2"/>
                             <field name="title" size="0" groups="base.group_extended" domain="[('domain', '=', is_company)]"/>
                         </group>
@@ -467,7 +467,7 @@
                                                             <field name="mobile"/><br/>
                                                     </td>
                                                     <td t-if="record.is_company.raw_value == 'contact'" valign="top" align="right">
-                                                        <img t-att-src="kanban_gravatar(record.photo.value, 22)" class="oe_kanban_gravatar"/>
+                                                        <!--img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_kanban_gravatar"/-->
                                                     </td>
                                                 </tr>
                                             </table>
@@ -496,23 +496,30 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_filter"/>
             <field name="help">A customer is an entity you do business with, like a company or an organization. A customer can have several contacts or addresses which are the people working for this company. You can use the history tab, to follow all transactions related to a customer: sales order, emails, opportunities, claims, etc. If you use the email gateway, the Outlook or the Thunderbird plugin, don't forget to register emails to each contact so that the gateway will automatically attach incoming emails to the right partner.</field>
         </record>
         <record id="action_partner_form_view1" model="ir.actions.act_window.view">
-            <field eval="10" name="sequence"/>
+            <field eval="0" name="sequence"/>
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="res_partner_kanban_view"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
         <record id="action_partner_form_view2" model="ir.actions.act_window.view">
-            <field eval="20" name="sequence"/>
+            <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_partner_form"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
+
+        <record id="action_partner_tree_view1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_partner_tree"/>
+            <field name="act_window_id" ref="action_partner_form"/>
+        </record>        
         <menuitem
             action="action_partner_form"
             id="menu_partner_form"

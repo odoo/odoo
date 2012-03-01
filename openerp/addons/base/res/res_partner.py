@@ -26,6 +26,7 @@ import tools
 import pooler
 from tools.translate import _
 import logging
+import os
 
 class res_payterm(osv.osv):
     _description = 'Payment term'
@@ -180,6 +181,12 @@ class res_partner(osv.osv):
         'use_parent_address':True
     }
     
+    def _get_photo(self, cr, uid, is_company, context=None):
+        if is_company == 'contact':
+            return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'photo.png'), 'rb') .read().encode('base64')
+        else:
+            return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')    
+    
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -190,12 +197,13 @@ class res_partner(osv.osv):
     def do_share(self, cr, uid, ids, *args):
         return True
     
-    def onchange_type(self, cr, uid, ids, is_company, title, child_ids,context=None):
+    def onchange_type(self, cr, uid, ids, is_company, title, child_ids, photo,context=None):
+        photo=False
         if is_company == 'contact':
-            return {'value': {'is_company': is_company, 'title': '','child_ids':[(5,)]}}
+            return {'value': {'is_company': is_company, 'title': '','child_ids':[(5,)], 'photo': self._get_photo(cr, uid, is_company, context)}}
         elif is_company == 'partner':
-            return {'value': {'is_company': is_company, 'title': '','parent_id':False}}
-        return {'value': {'is_comapny': '', 'title': ''}}
+            return {'value': {'is_company': is_company, 'title': '','parent_id':False, 'photo': self._get_photo(cr, uid, is_company, context)}}
+        return {'value': {'is_comapny': '', 'title': '','photo':''}}
         
     
     def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
