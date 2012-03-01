@@ -38,8 +38,9 @@
                                <field name="group_sale_pricelist_per_customer"/>
                                <newline/>
                                <group colspan="4" col="4">
-                                    <field name="tax_policy" />
-                                    <field name="tax_value" nolabel="1" attrs="{'invisible':[('tax_policy','=','no_tax')]}"/>
+                                    <field name="tax_policy" on_change="onchange_tax_policy(tax_policy,tax_value)"/>
+                                    <field name="tax_value" nolabel="1" attrs="{'invisible':[('tax_policy','=','no_tax')]}"
+                                                            on_change="onchange_tax_policy(tax_policy,tax_value)"/>
                                </group>
                                <newline/>
                                <field name="sale_margin"/>

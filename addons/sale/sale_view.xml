@@ -195,9 +195,9 @@
                             </field>
                             <newline/>
                             <group col="13" colspan="10">
+                                <field name="tax_id" groups="base.group_sale_taxes_global_on_order"/>
                                 <field name="amount_untaxed" sum="Untaxed amount" groups="base.group_sale_taxes_on_order_line,base.group_sale_taxes_global_on_order"/>
                                 <field name="amount_tax" groups="base.group_sale_taxes_on_order_line,base.group_sale_taxes_global_on_order"/>
-                                <field name="tax_id" groups="base.group_sale_taxes_global_on_order"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                                 <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>

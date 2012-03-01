@@ -215,7 +215,7 @@ class sale_configuration(osv.osv_memory):
             }, context=context)
             
         return res
-    
+
     def set_groups(self, cr, uid, ids, vals, context=None):
         data_obj = self.pool.get('ir.model.data')
         users_obj = self.pool.get('res.users')
@@ -233,6 +233,23 @@ class sale_configuration(osv.osv_memory):
                     groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
                     users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
                     ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(3,group_id)])
+
+    def onchange_tax_policy(self, cr, uid, ids, tax_policy, tax_value, context=None):
+        res = {'value': {}}
+        if isinstance(tax_value, (int)):
+            self.set_default_taxes(cr, uid, ids, {'tax_value': [tax_value]}, context=context)
+        self.set_tax_policy(cr, uid, ids, {'tax_policy': tax_policy}, context=context)
+        return res
+    
+    def set_default_taxes(self, cr, uid, ids, vals, context=None):
+        ir_values_obj = self.pool.get('ir.values')
+        taxes = self._check_default_tax(cr, uid, context=context)
+        if isinstance(vals.get('tax_value'), list):
+            taxes = vals.get('tax_value')
+        if taxes:
+            ir_values_obj.set(cr, uid, 'default', False, 'tax_id', ['sale.order'], taxes[0])
+            ir_values_obj.set(cr, uid, 'default', False, 'tax_id', ['sale.order.line'], taxes)
+            ir_values_obj.set(cr, uid, 'default', False, 'taxes_id', ['product.product'], taxes)
 
 sale_configuration()
 
