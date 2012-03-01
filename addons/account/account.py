@@ -315,8 +315,8 @@ class account_account(osv.osv):
             self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
                                       'Status: %s'%cr.statusmessage)
 
-            for res in cr.dictfetchall():
-                accounts[res['id']] = res
+            for row in cr.dictfetchall():
+                accounts[row['id']] = row
 
             # consolidate accounts with direct children
             children_and_consolidated.reverse()
