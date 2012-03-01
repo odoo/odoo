@@ -276,11 +276,16 @@ class event_registration(osv.osv):
         """
         if context is None:
             context = {}
-        values = {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
-        res = self.write(cr, uid, ids, values)
-        self.message_append(cr, uid, ids,_('State set to Done'),body_text= _('Done'))
-        return res
-
+        for test in self.browse(cr,uid,ids,context=context):
+            print test.event_id.date_begin
+            today = time.strftime('%Y-%m-%d %H:%M:%S')
+            if today >= test.event_id.date_begin:
+                values = {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
+                res = self.write(cr, uid, ids, values)
+                self.message_append(cr, uid, ids,_('State set to Done'),body_text= _('Done'))
+                return res
+            else:
+                raise osv.except_osv(_('Error!'),_("You must wait the starting event day to do this action.") )
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
         self.message_append(cr, uid, ids,_('State set to Cancel'),body_text= _('Cancel'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
@@ -350,4 +355,5 @@ class event_registration(osv.osv):
         return {'value': data}
 
 event_registration()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
