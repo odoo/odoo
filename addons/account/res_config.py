@@ -50,7 +50,7 @@ class account_configuration(osv.osv_memory):
         res.update({'tax_value': 15.0})
         tax_id = self._check_default_tax(cr, uid, context)
         if tax_id:
-                res.update({'tax_value': tax_id and tax_id[0]})
+            res.update({'tax_value': tax_id and tax_id[0]})
         return res
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -66,6 +66,7 @@ class account_configuration(osv.osv_memory):
         chart_template_obj = self.pool.get('account.chart.template')
         tax_template_obj = self.pool.get('account.tax.template')
         chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
+        taxes = []
         if chart_template_ids:
             taxes = tax_template_obj.search(cr, uid, [('chart_template_id', '=', chart_template_ids[0])], context=context)
         result = {}

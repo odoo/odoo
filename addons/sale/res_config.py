@@ -102,11 +102,26 @@ class sale_configuration(osv.osv_memory):
                             ('state','in',['to install', 'installed', 'to upgrade'])],
                            context=context)
         installed_modules = dict([(mod.name,True) for mod in module_obj.browse(cr, uid, module_ids, context=context)])
+        if installed_modules.get('project_mrp') and installed_modules.get('project_timesheet'):
+            installed_modules['task_work'] = True
+        if installed_modules.get('account_analytic_analysis'):
+            installed_modules['timesheet'] = True
         return installed_modules
     
     def get_default_sale_configs(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
+        data_obj = self.pool.get('ir.model.data')
+        menu_obj = self.pool.get('ir.ui.menu')
         result = {}
+        invoicing_groups_id = [gid.id for gid in data_obj.get_object(cr, uid, 'sale', 'menu_invoicing_sales_order_lines').groups_id]
+        picking_groups_id = [gid.id for gid in data_obj.get_object(cr, uid, 'sale', 'menu_action_picking_list_to_invoice').groups_id]
+        group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
+        for menu in ir_values_obj.get(cr, uid, 'default', False, ['ir.ui.menu']):
+            if menu[1] == 'groups_id' and group_id in menu[2][0]:
+                if group_id in invoicing_groups_id:
+                    result['sale_orders'] = True
+                if group_id in picking_groups_id:
+                    result['deli_orders'] = True
         for res in ir_values_obj.get(cr, uid, 'default', False, ['sale.order']):
             result[res[1]] = res[2]
         return result
@@ -151,11 +166,11 @@ class sale_configuration(osv.osv_memory):
     def set_modules(self, cr, uid, ids, vals, context=None):
         module_obj = self.pool.get('ir.module.module')
         MODULE_LIST = vals.get('modules')
+        if vals.get('task_work'):
+            vals.update({'project_timesheet': True,'project_mrp': True})
+        if vals.get('timesheet'):
+            vals.update({'account_analytic_analysis': True})
         for k, v in vals.items():
-            if k == 'task_work':
-                MODULE_LIST += ['project_timesheet','project_mrp']
-            if k == 'timesheet':
-                MODULE_LIST += ['account_analytic_analysis']
             if k in MODULE_LIST:
                 installed = self.get_default_installed_modules(cr, uid, [k], context)
                 if v == True and not installed.get(k):
