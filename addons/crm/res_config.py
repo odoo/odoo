@@ -41,13 +41,13 @@ class crm_configuration(osv.osv_memory):
         'is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
         'user' : fields.char('Username', size=256),
         'password' : fields.char('Password', size=1024),
-        'module_import_sugarcrm' : fields.boolean("Import data from sugarCRM?",
+        'module_import_sugarcrm' : fields.boolean("SugarCRM Import",
                                     help="""Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Employees, Meetings, Phonecalls, Emails, and Project, Project Tasks Data into OpenERP Module.
                                     It installs import_sugarcrm module.
                                     """),
-        'module_import_google' : fields.boolean("Import Contacts & Meetings from Google",
+        'module_import_google' : fields.boolean("Google Import",
                                     help="""
-                                    Import google contact in partner address and add google calendar events details in Meeting
+                                    Import google contact in partner address and add google calendar events details in Meeting.
                                     It installs import_google module.
                                     """),
         'module_wiki_sale_faq' : fields.boolean("Install a sales FAQ?",
@@ -65,7 +65,7 @@ class crm_configuration(osv.osv_memory):
                                     """),
         'module_google_map' : fields.boolean("Google maps on customer",
                                     help="""
-                                    This allows yopu to locate customer on Google Map
+                                    This allows yopu to locate customer on Google Map.
                                     It installs google_map module.
                                     """),
         'module_plugin_thunderbird': fields.boolean('Thunderbird plugin',

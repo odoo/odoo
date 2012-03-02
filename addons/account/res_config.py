@@ -37,7 +37,7 @@ class account_configuration(osv.osv_memory):
             """),
             'tax_value': fields.float('Value'),
     }
-    
+
     _defaults = {
             'tax_policy': 'global_on_order',
     }

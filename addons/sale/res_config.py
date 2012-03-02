@@ -69,19 +69,22 @@ class sale_configuration(osv.osv_memory):
         'module_analytic_user_function' : fields.boolean("User function by contracts",
                                     help="""This allows you to define what is the default function of a specific user on a given account
                                     This is mostly used when a user encodes his timesheet: the values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.
-                                    It Installs analytic_user_function module"""),
+                                    It Installs analytic_user_function module."""),
         'module_analytic_journal_billing_rate' : fields.boolean("Billing rates by contracts",
                                     help=""" This allows you to define what is the default invoicing rate for a specific journal on a given account.
                                     It installs analytic_journal_billing_rate module.
-                                    """),
+                                    """)
     }
     
     def get_default_installed_modules(self, cr, uid, ids, context=None):
         installed_modules = super(sale_configuration, self).get_default_installed_modules(cr, uid, ids, context=context)
         if installed_modules.get('module_project_mrp') and installed_modules.get('module_project_timesheet'):
             installed_modules['task_work'] = True
+            prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
+            uom_id = self.pool.get('product.product').browse(cr, uid, prod_id).uom_id.id
+            defaults.update({'time_unit': uom_id})
         return installed_modules
-    
+
     def get_default_sale_configs(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
         data_obj = self.pool.get('ir.model.data')

@@ -35,5 +35,5 @@ class product_groups_configuration(osv.osv_memory):
                                                     It assigns the "UOM per product" group to all employees.
                                                     """),
 }
-    
+
 product_groups_configuration()
