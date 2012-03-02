@@ -1,9 +1,15 @@
-/* Wall */
+/* ------------------------------ */
+/* Wall                           */
+/* ------------------------------ */
 
 .oe_mail_wall {
     overflow: auto;
     padding: 5px 5px 5px 5px;
     color: #4C4C4C;
+}
+
+.oe_mail_wall_search {
+    width: 55%;
 }
 
 /* 2 columns view */
@@ -27,9 +33,11 @@
     padding: 2px;
 }
 
-/* Thread */
+/* ------------------------------ */
+/* RecordThread                   */
+/* ------------------------------ */
 
-.oe_mail_thread_main {
+.oe_mail_recthread {
     overflow: auto;
     padding: 5px 5px 5px 5px;
 }
@@ -46,15 +54,15 @@
 .oe_mail_followers_action, .oe_mail_followers_display {
 }
 
-/* Thread: 2 columns view */
-.oe_mail_thread_left {
+/* RecordThread: 2 columns view */
+.oe_mail_recthread_left {
     float: left;
-    width: 65%;
+    width: 55%;
 }
 
-.oe_mail_thread_right {
+.oe_mail_recthread_right {
     float: right;
-    width: 34%;
+    width: 35%;
 }
 
 .oe_mail_button_follow, .oe_mail_button_unfollow, .oe_mail_button_followers {
@@ -71,30 +79,28 @@
     width: 80%;
 }
 
-.oe_mail_thread_more, .oe_mail_thread_nomore {
-    margin-left: 20%;
-    margin-right: 40%;
-    border: 1px solid #D2D9E7;
-    background: #E0E0E0;
-    text-align: center;
-}
-
-/* ThreadDisplay */
+/* ------------------------------ */
+/* ThreadDisplay                  */
+/* ------------------------------ */
 
 .oe_mail_thread {
 }
 
-.oe_mail_thread_act {
-}
-
-.oe_mail_thread_display {
-}
-
-.oe_mail_thread_msg, .oe_mail_thread_act {
-    width: 80%;
+.oe_mail_thread_display, .oe_mail_thread_act {
     white-space: normal;
     margin-bottom: 5px;
     border-bottom: 1px solid #D2D9E7;
+}
+
+.oe_mail_thread_subthread {
+    padding-left: 25%;
+}
+
+.oe_mail_thread_more {
+    margin-left: 20%;
+    margin-right: 40%;
+    border: 1px solid #D2D9E7;
+    text-align: center;
 }
 
 .notification {
@@ -116,7 +122,6 @@
 }
 
 .oe_mail_action_textarea {
-    width: 80%;
     height: 50px;
     padding: 5px;
 }

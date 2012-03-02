@@ -97,7 +97,6 @@ class mail_thread(osv.osv):
         notification_obj = self.pool.get('mail.notification')
         
         # notifications do not come from any user, but from system
-        if vals.get('type') == 'notification': vals['user_id'] = False
         if not 'need_action_user_id' in vals: vals['need_action_user_id'] = False
         if not 'model' in vals: vals['model'] = False
         if not 'res_id' in vals: vals['res_id'] = 0
@@ -118,8 +117,19 @@ class mail_thread(osv.osv):
         # push to need_action_user_id if user does not follow the object
         if vals['need_action_user_id'] and not need_action_pushed:
             notification_obj.create(cr, uid, {'user_id': vals['need_action_user_id'], 'message_id': msg_id}, context=context)
+        
+        # parse message to get requested users
+        user_ids = self.message_parse_users(cr, uid, [msg_id], 'body_text', context=context)
+        for user_id in user_ids:
+            notification_obj.create(cr, uid, {'user_id': user_id, 'message_id': msg_id}, context=context)
+        
         return msg_id
-
+    
+    def message_parse_users(self, cr, uid, ids, field_name='body_text', context=None):
+        '''Parse message content; if find @login: returns the related id'''
+        user_ids = []
+        return user_ids
+    
     def message_capable_models(self, cr, uid, context=None):
         ret_dict = {}
         for model_name in self.pool.obj_list():
@@ -128,7 +138,7 @@ class mail_thread(osv.osv):
                 ret_dict[model_name] = model._description        
         return ret_dict
 
-    def message_append(self, cr, uid, threads, subject, body_text=None,
+    def message_append(self, cr, uid, threads, subject, parent_id=False, body_text=None,
                         type='email', need_action_user_id=False,
                         email_to=False, email_from=False, email_cc=None, email_bcc=None,
                         reply_to=None, email_date=None, message_id=False, references=None,
@@ -270,6 +280,7 @@ class mail_thread(osv.osv):
         if not 'type' in msg_dict: msg_dict['type'] = 'email'
         return self.message_append(cr, uid, ids,
                             subject = msg_dict.get('subject'),
+                            parent_id = msg_dict.get('parent_id', False),
                             body_text = msg_dict.get('body_text'),
                             type = msg_dict.get('type'),
                             need_action_user_id = msg_dict.get('need_action_user_id'),
@@ -290,23 +301,23 @@ class mail_thread(osv.osv):
                             context = context)
 
     # Message loading
-    def message_load_ids(self, cr, uid, ids, limit=100, offset=0, context=None):
+    def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], context=None):
         """ OpenSocial feature: return thread messages ids (for web compatibility)
         loading messages: search in mail.messages where res_id = ids, (res_)model = current model
         """
         msg_obj = self.pool.get('mail.message')
-        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', ids), ('model', '=', self._name)],
+        msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', ids), ('model', '=', self._name)] + domain,
             limit=limit, offset=offset, context=context)
         return msg_ids
         
-    def message_load(self, cr, uid, ids, limit=100, offset=0, context=None):
+    def message_load(self, cr, uid, ids, limit=100, offset=0, domain=[], context=None):
         """ OpenSocial feature: return thread messages
         loading messages: search in mail.messages where res_id = ids, (res_)model = current model
         """
-        msg_ids = self.message_load_ids(cr, uid, ids, limit=limit, offset=offset, context=context)
+        msg_ids = self.message_load_ids(cr, uid, ids, limit=limit, offset=offset, domain=domain, context=context)
         return self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
     
-    def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, domain = None, context=None):
+    def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, domain=[], context=None):
         """OpenSocial: wall: get messages to display (=pushed notifications)
             :param filter_search: TODO
             :return: list of mail.messages, unsorted
@@ -318,9 +329,21 @@ class mail_thread(osv.osv):
         notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
         msg_ids = [notification.message_id.id for notification in notifications]
         # search messages: ids in notifications, add domain coming from wall search view
-        search_domain = [('id', 'in', msg_ids)]  if domain == None else [('id', 'in', msg_ids)] + domain
+        search_domain = [('id', 'in', msg_ids)] + domain
         msg_ids = message_obj.search(cr, uid, search_domain, limit=limit, offset=offset, context=context)
         msgs = message_obj.read(cr, uid, msg_ids, context=context)
+        # fetch parent message to always have a correctly formated thread
+        msgs_tmp = msgs[:]
+        cur_iter = 0; max_iter = 10; modif = True
+        while (modif and cur_iter <= max_iter):
+            cur_iter += 1; modif = False
+            msg_ids_tmp = []
+            new_msg_ids = [msg['parent_id'][0] for msg in msgs_tmp if msg['parent_id'] != False and msg['parent_id'][0] not in msg_ids]
+            msg_ids += new_msg_ids
+            msgs_tmp = message_obj.read(cr, uid, new_msg_ids, context=context)
+            msgs += msgs_tmp
+        # sort by id
+        msgs.sort(lambda a, b: b['id'].__cmp__(a['id']))
         return msgs
     
     #------------------------------------------------------
@@ -570,8 +593,8 @@ class mail_thread(osv.osv):
     # Note specific
     #------------------------------------------------------
     
-    def message_append_note(self, cr, uid, ids, subject, body, type='notification', need_action_user_id=False, context=None):
-        return self.message_append(cr, uid, ids, subject, body_text=body, type=type, need_action_user_id=need_action_user_id, context=context)
+    def message_append_note(self, cr, uid, ids, subject, body, parent_id=False, type='notification', need_action_user_id=False, context=None):
+        return self.message_append(cr, uid, ids, subject, body_text=body, parent_id=False, type=type, need_action_user_id=need_action_user_id, context=context)
     
     # old log overrided method: now calls message_append_note
     def log(self, cr, uid, id, message, secondary=False, context=None):

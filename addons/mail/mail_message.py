@@ -184,6 +184,7 @@ class mail_message(osv.osv):
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
                         ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
+        'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message if message belongs to a thread"),
         'need_action_user_id': fields.many2one('res.users', 'Action by user', help="User requested to perform an action"),
     }
         

@@ -14,11 +14,8 @@
             <div class="oe_mail_wall_threads">
             </div>
             <div class="oe_mail_wall_more">
-                <button class="oe_mail_wall_button_more" type="button">See more discussions
-                </button>
-            </div>
-            <div class="oe_mail_wall_nomore">
-                You have loaded all discussions.
+                <button class="oe_mail_wall_button_more" type="button">See more discussions</button>
+                <p class="oe_mail_wall_nomore">You have loaded all discussions.</p>
             </div>
         </div>
         <div class="oe_mail_wall_right">
@@ -33,11 +30,11 @@
         </div>
     </t>
 
-    <div t-name="Thread" class="oe_mail_thread_main">
+    <div t-name="RecordThread" class="oe_mail_recthread">
         <div class="separator horizontal">OpenSocial</div>
-        <div class="oe_mail_thread_left">
+        <div class="oe_mail_recthread_left">
         </div>
-        <div class="oe_mail_thread_right">
+        <div class="oe_mail_recthread_right">
             <div class="oe_mail_actions">
                 <button type="button" class="oe_mail_button_follow">Follow</button>
                 <button type="button" class="oe_mail_button_unfollow">Unfollow</button>
@@ -52,22 +49,18 @@
         </div>
     </div>
 
-    <div t-name="ThreadDisplay" class="oe_mail_thread">
+    <div t-name="Thread" class="oe_mail_thread">
         <div class="oe_mail_thread_act">
-            <div class="oe_mail_msg_image">
-            </div>
+            <div class="oe_mail_msg_image">User_image</div>
             <div class="oe_mail_msg_content">
                 <textarea class="oe_mail_action_textarea" onfocus="this.value='';">Enter your comment here...</textarea><br />
                 <button type="button" class="oe_mail_button_comment">Post comment</button>
             </div>
         </div>
-        <div class="oe_mail_thread_display">
-        </div>
+        <div class="oe_mail_thread_display"></div>
         <div class="oe_mail_thread_more">
-            <button class="oe_mail_button_more" type="button">More</button>
-        </div>
-        <div class="oe_mail_thread_nomore">
-            You have loaded all messages in this thread.
+            <button class="oe_mail_button_more" type="button">Load more messages</button>
+            <p class="oe_mail_p_nomore">You have loaded all messages in this thread.</p>
         </div>
     </div>
 
@@ -76,31 +69,25 @@
             <img t-att-src="record.mini_url"/>
         </div>
         <div class="oe_mail_msg_content">
-            <t t-if="record.type == 'email'">
-                <t t-call="EmailDisplay" />
-            </t>
-            <t t-if="record.type == 'notification' || record.type == 'comment'">
-                <t t-call="NotificationDisplay" />
-            </t>
+            <t t-if="record.type == 'email'"><t t-call="EmailDisplay" /></t>
+            <t t-if="record.type == 'notification' || record.type == 'comment'"><t t-call="NoteDisplay" /></t>
         </div>
+        <t t-if="record.type == 'tmp'"><t t-call="ThreadDisplay" /></t>
     </div>
     
-    <t t-name="NotificationDisplay">
+    <t t-name="NoteDisplay">
         <p class="oe_mail_msg_p">
-            <t t-if="record.type == 'notification'">
-                <span class="oe_mail_msg_author">OpenERP System Notification</span>
-            </t>
-            <t t-if="record.type == 'comment'">
-                <span class="oe_mail_msg_author">
-                    <a href="#" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
-                </span>
-            </t>
+            <span class="oe_mail_msg_author">
+                <a href="#" class="intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
+                <t t-if="record.type == 'notification'">via OpenERP System Notification</t>
+            </span>
             <t t-if="record.need_action_user_id != false">
                 - <span class="oe_mail_msg_need_action">Need action by <a href="#"><t t-raw="record.need_action_user_id[1]"/></a></span>
             </t>
             wrote on <span class="oe_mail_msg_date"><t t-raw="record.date"/></span>
             <br />
             <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
+            <t t-if="record.tr_body_text"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body_text"/></span></t>
         </p>
     </t>
     
