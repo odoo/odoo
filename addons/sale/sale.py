@@ -270,7 +270,7 @@ class sale_order(osv.osv):
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True,readonly=True),
-        'tax_id': fields.many2one('account.tax','Global Tax'),
+        'tax_id': fields.many2one('account.tax', 'Tax'),
     }
     _defaults = {
         'picking_policy': 'direct',
@@ -310,6 +310,14 @@ class sale_order(osv.osv):
             if shop.pricelist_id.id:
                 v['pricelist_id'] = shop.pricelist_id.id
         return {'value': v}
+    
+    def onchange_taxes(self, cr, uid, ids, tax_id, context=None):
+        sol_obj = self.pool.get('sale.order.line')
+        res = {'value': {}}
+        for order in self.browse(cr, uid, ids, context=context):
+            for line in order.order_line:
+                sol_obj.write(cr, uid, line.id, {'tax_id': [(4,tax_id)]})
+        return res
 
     def action_cancel_draft(self, cr, uid, ids, *args):
         if not len(ids):

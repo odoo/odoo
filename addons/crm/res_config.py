@@ -25,16 +25,12 @@ class crm_configuration(osv.osv_memory):
     _inherit = 'res.config'
 
     _columns = {
-        'module_crm_caldav' : fields.boolean("Caldav synchronization",
-                                    help="""
-                                    This allows you Caldav features in Meeting, Share meeting with other calendar clients like sunbird.
-                                    It installs crm_caldav module.
-                                    """),
-        'module_fetchmail_crm': fields.boolean("Lead/Opportunity mail gateway",
-                                               help = """
-                                               this allows you to configure your incoming mail server.
-                                               It installs fetchmail_crm module.
-                                               """),
+        'module_crm_caldav' : fields.boolean("Use caldav to synchronize Meetings",
+                                    help="""This allows you Caldav features in Meeting, Share meeting with other calendar clients like sunbird.
+                                    It installs crm_caldav module."""),
+        'module_fetchmail_crm': fields.boolean("Lead/Opportunity mail gateway", help="""
+                                                This allows you to configure your incoming mail server,
+                                               It installs fetchmail_crm module."""),
         'server' : fields.char('Server Name', size=256),
         'port' : fields.integer('Port'),
         'type': fields.selection([
@@ -99,7 +95,7 @@ class crm_configuration(osv.osv_memory):
         ir_values_obj = self.pool.get('ir.values')
         result = {}
         installed_modules = self.get_default_installed_modules(cr, uid, ids, context=context)
-        if 'fetchmail_crm' in installed_modules.keys():
+        if 'module_fetchmail_crm' in installed_modules.keys():
             for val in ir_values_obj.get(cr, uid, 'default', False, ['fetchmail.server']):
                 result.update({val[1]: val[2]})
         return result
@@ -120,11 +116,11 @@ class crm_configuration(osv.osv_memory):
         model_obj = self.pool.get('ir.model')
         fetchmail_obj = self.pool.get('fetchmail.server')
         ir_values_obj = self.pool.get('ir.values')
-        if vals.get('fetchmail_crm'):
-            object_id = model_obj.search(cr, uid, [('model','=','crm.lead')])[0]
+        object_id = model_obj.search(cr, uid, [('model','=','crm.lead')])
+        if vals.get('module_fetchmail_crm') and object_id:
             fetchmail_vals = {
                     'name': 'Incoming Leads',
-                    'object_id': object_id,
+                    'object_id': object_id[0],
                     'server': vals.get('server'),
                     'port': vals.get('port'),
                     'is_ssl': vals.get('is_ssl'),
@@ -133,7 +129,7 @@ class crm_configuration(osv.osv_memory):
                     'password': vals.get('password')
             }
             server_ids = fetchmail_obj.search(cr, uid, [])
-            if not self.get_default_installed_modules(cr, uid, ['fetchmail_crm'], context) or not server_ids:
+            if not self.get_default_installed_modules(cr, uid, ids, context) or not server_ids:
                 tt = fetchmail_obj.create(cr, uid, fetchmail_vals, context=context)
             else:
                 fetchmail_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads')], context=context)
