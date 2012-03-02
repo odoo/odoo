@@ -101,7 +101,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             return True
         except Exception, e:
             _logger.error(
-                'module %s: an exception occured in a test', module_name)
+                'module %s: an exception occurred in a test', module_name)
             return False
         finally:
             threading.currentThread().testing = False

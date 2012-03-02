@@ -580,7 +580,7 @@ def run_unit_tests(module_name):
         if result.wasSuccessful():
             return True
         else:
-            _logger.error('module %s: at least one error occured in a test', module_name)
+            _logger.error('module %s: at least one error occurred in a test', module_name)
             return False
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

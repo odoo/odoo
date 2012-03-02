@@ -685,7 +685,6 @@ form: module.record_id""" % (xml_id,)
         rec_src = rec.get("search",'').encode('utf8')
         rec_src_count = rec.get("count")
 
-        severity = rec.get("severity",'').encode('ascii') or loglevels.LOG_ERROR
         rec_string = rec.get("string",'').encode('utf8') or 'unknown'
 
         ids = None
@@ -706,11 +705,7 @@ form: module.record_id""" % (xml_id,)
                           ' expected count: %d\n'       \
                           ' obtained count: %d\n'       \
                           % (rec_string, count, len(ids))
-                    sevval = getattr(logging, severity.upper())
-                    _logger.log(sevval, msg)
-                    if sevval >= config['assert_exit_level']:
-                        # TODO: define a dedicated exception
-                        raise Exception('Severe assertion failure')
+                    _logger.error(msg)
                     return
 
         assert ids is not None,\
@@ -738,11 +733,7 @@ form: module.record_id""" % (xml_id,)
                           ' expected value: %r\n'       \
                           ' obtained value: %r\n'       \
                           % (rec_string, etree.tostring(test), expected_value, expression_value)
-                    sevval = getattr(logging, severity.upper())
-                    _logger.log(sevval, msg)
-                    if sevval >= config['assert_exit_level']:
-                        # TODO: define a dedicated exception
-                        raise Exception('Severe assertion failure')
+                    _logger.error(msg)
                     return
         else: # all tests were successful for this assertion tag (no break)
             self.assertion_report.record_success()
