@@ -18,17 +18,15 @@
         <field name="name">Product Variant</field>
         <field name="category_id" ref="base.module_category_usability"/>
     </record>
-    
+
     <record id="base.group_sale_pricelist_per_customer" model="res.groups">
         <field name="name">Sales Pricelists</field>
-        <field name="category_id" ref="base.module_category_usability"/>
     </record>
 
     <record id="base.group_sale_uom_per_product" model="res.groups">
         <field name="name">Product UOM</field>
-        <field name="category_id" ref="base.module_category_usability"/>
     </record>
-    
+
     <record id="base.group_user" model="res.groups">
         <field name="implied_ids" eval="[(6,0,[ref('base.group_sale_pricelist_per_customer'),
         ref('base.group_sale_uom_per_product')])]"/>

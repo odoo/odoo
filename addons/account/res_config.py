@@ -30,14 +30,19 @@ class account_configuration(osv.osv_memory):
                 ('no_tax', 'No Tax'),
                 ('global_on_order', 'Global On Order'),
                 ('on_order_line', 'On Order Lines'),
-            ], 'Taxes', required=True),
+            ], 'Taxes', required=True,
+            help = """
+            This allows you to set tax policy to sale order.
+            if you want to set global tax on sale order then select Global On Order it will add 'Global On Order' group to employees.
+            if you want to set tax On Order Lines then select On Order Lines it will add 'On Order Lines' group to employees.
+            """),
             'tax_value': fields.float('Value'),
     }
-    
+
     _defaults = {
         'tax_policy': 'global_on_order',
     }
-    
+
     def get_default_tax_policy(self, cr, uid, ids, context=None):
         applied_groups = self.get_default_applied_groups(cr, uid, ids, context=context)
         if applied_groups.get('group_sale_taxes_global_on_order'):

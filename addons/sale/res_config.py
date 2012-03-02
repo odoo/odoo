@@ -39,12 +39,13 @@ class sale_configuration(osv.osv_memory):
         'deli_orders': fields.boolean('Based on Delivery Orders'),
         'task_work': fields.boolean('Based on Tasks\' Work',
                                     help="""
-                                    It installs the project_timesheet and project_mrp module
-                                    project_timesheet :lets you transfer the entries under tasks defined for Project Management to
+                                    This allows to you transfer the entries under tasks defined for Project Management to
                                     the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways.
-                                    project_mrp : Automatically creates project tasks from procurement lines"""),
+                                    Automatically creates project tasks from procurement lines.
+                                    It installs the project_timesheet and project_mrp module.
+                                    """),
         'timesheet': fields.boolean('Based on Timesheet',
-                                    help = """for modifying account analytic view to show important data to project manager of services companies,
+                                    help = """For modifying account analytic view to show important data to project manager of services companies,
                                     You can also view the report of account analytic summary user-wise as well as month wise
                                     ,It installs the account_analytic_analysis module."""),
         'order_policy': fields.selection([
@@ -58,9 +59,9 @@ class sale_configuration(osv.osv_memory):
                                    It installs the delivery module.
                                    """),
         'time_unit': fields.many2one('product.uom','Working Time Unit'),
-        'picking_policy' : fields.boolean("Deliver all products at once?", help = ""),
-        'group_sale_delivery_address':fields.boolean("Multiple Address",help="Group To Allow delivery address different from invoice address"),
-        'group_sale_disc_per_sale_order_line':fields.boolean("Discounts per sale order lines ",help="Group to apply discounts per sale order lines"),
+        'picking_policy' : fields.boolean("Deliver all products at once?", help = "You can set picking policy from sale order that will allow you to deliver all products at one."),
+        'group_sale_delivery_address':fields.boolean("Multiple Address",help="This allows you to set different delivery address and picking address.It assigns Multiple Address group to employee."),
+        'group_sale_disc_per_sale_order_line':fields.boolean("Discounts per sale order lines ",help="This allows you to apply discounts per sale order lines. It assigns Discounts per sale order lines group to employee."),
         'module_sale_layout':fields.boolean("Notes & subtotals per line",help="Allows to format sale order lines using notes, separators, titles and subtotals. It installs the sale_layout module."),
         'module_warning': fields.boolean("Alerts by products or customers",
                                   help="""To trigger warnings in OpenERP objects.
@@ -76,7 +77,7 @@ class sale_configuration(osv.osv_memory):
         'module_analytic_user_function' : fields.boolean("User function by contracts",
                                     help="""This allows you to define what is the default function of a specific user on a given account
                                     This is mostly used when a user encodes his timesheet: the values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.
-                                    It Installs analytic_user_function module"""),
+                                    It Installs analytic_user_function module."""),
         'module_analytic_journal_billing_rate' : fields.boolean("Billing rates by contracts",
                                     help=""" This allows you to define what is the default invoicing rate for a specific journal on a given account.
                                     It installs analytic_journal_billing_rate module.
@@ -84,8 +85,8 @@ class sale_configuration(osv.osv_memory):
         'module_account_analytic_analysis': fields.boolean('Contracts',
                                     help = """
                                     For modifying account analytic view to show important data to project manager of services companies,
-                                    You can also view the report of account analytic summary user-wise as well as month wise
-                                    ,It installs the account_analytic_analysis module."""),
+                                    You can also view the report of account analytic summary user-wise as well as month wise.
+                                    It installs the account_analytic_analysis module."""),
     }
 
     def get_default_applied_groups(self, cr, uid, ids, context=None):
@@ -108,6 +109,7 @@ class sale_configuration(osv.osv_memory):
 
     def get_default_installed_modules(self, cr, uid, ids, context=None):
         module_obj = self.pool.get('ir.module.module')
+        data_obj = self.pool.get('ir.model.data')
         module_ids = module_obj.search(cr, uid,
                            [('name','in',MODULE_LIST),
                             ('state','in',['to install', 'installed', 'to upgrade'])],
@@ -115,10 +117,16 @@ class sale_configuration(osv.osv_memory):
         installed_modules = dict([(mod.name,True) for mod in module_obj.browse(cr, uid, module_ids, context=context)])
         if installed_modules.get('project_mrp') and installed_modules.get('project_timesheet'):
             installed_modules['task_work'] = True
+            prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
+            uom_id = self.pool.get('product.product').browse(cr, uid, prod_id).uom_id.id
+            defaults.update({'time_unit': uom_id})
         if installed_modules.get('account_analytic_analysis'):
             installed_modules['timesheet'] = True
+            prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
+            uom_id = self.pool.get('product.product').browse(cr, uid, prod_id).uom_id.id
+            defaults.update({'time_unit': uom_id})
         return installed_modules
-    
+
     def get_default_sale_configs(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
         data_obj = self.pool.get('ir.model.data')

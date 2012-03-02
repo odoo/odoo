@@ -20,17 +20,17 @@
 
 	                  <group col="4" colspan="2">
 	                  <separator string="Emails" colspan="4"/>
-	                  <field name="fetchmail_crm" />
+	                  <field name="module_fetchmail_crm" />
 	                  <newline/>
 	                  <group col="4" colspan="2"
-	                      attrs="{'invisible': [('fetchmail_crm','=',False)]}">
-	                          <field name="server" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-	                          <field name="type" nolabel="1" on_change="onchange_server_type(type, is_ssl)" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-	                          <field name="port" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+	                      attrs="{'invisible': [('module_fetchmail_crm','=',False)]}">
+	                          <field name="server" attrs="{'required': [('module_fetchmail_crm','=',True)]}"/>
+	                          <field name="type" nolabel="1" on_change="onchange_server_type(type, is_ssl)" attrs="{'required': [('module_fetchmail_crm','=',True)]}"/>
+	                          <field name="port" attrs="{'required': [('module_fetchmail_crm','=',True)]}"/>
 	                          <field name="is_ssl" on_change="onchange_server_type(type, is_ssl)"/>
 	                          <newline/>
-	                          <field name="user" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-	                          <field name="password" password="True" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+	                          <field name="user" attrs="{'required': [('module_fetchmail_crm','=',True)]}"/>
+	                          <field name="password" password="True" attrs="{'required': [('module_fetchmail_crm','=',True)]}"/>
 	                  </group>
 	                   </group>
 	                </group>
