@@ -95,6 +95,7 @@ class res_config_configurable(osv.osv_memory):
         """
         raise NotImplementedError(
             'Configuration items need to implement execute')
+    
     def cancel(self, cr, uid, ids, context=None):
         """ Method called when the user click on the ``Skip`` button.
 
@@ -108,7 +109,7 @@ class res_config_configurable(osv.osv_memory):
         ``action_cancel``.
         """
         pass
-
+    
     def action_next(self, cr, uid, ids, context=None):
         """ Action handler for the ``next`` event.
 
@@ -147,6 +148,14 @@ class res_config_configurable(osv.osv_memory):
         next = self.cancel(cr, uid, ids, context=context)
         if next: return next
         return self.next(cr, uid, ids, context=context)
+
+    def default_get(self, cr, uid, fields_list, context=None):
+        result = super(res_config_configurable, self).default_get(
+            cr, uid, fields_list, context=context)
+        for method in dir(self):
+            if method.startswith('get_default_'):
+                result.update(getattr(self, method)(cr, uid, [], context))
+        return result
     
     def get_default_applied_groups(self, cr, uid, ids, context=None):
         applied_groups = {}
@@ -207,14 +216,6 @@ class res_config_configurable(osv.osv_memory):
                     groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
                     users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
                     ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(3,group_id)])
-
-    def default_get(self, cr, uid, fields_list, context=None):
-        result = super(res_config_configurable, self).default_get(
-            cr, uid, fields_list, context=context)
-        for method in dir(self):
-            if method.startswith('get_default_'):
-                result.update(getattr(self, method)(cr, uid, [], context))
-        return result
 
 res_config_configurable()
 
