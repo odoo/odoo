@@ -136,6 +136,7 @@ class res_partner(osv.osv):
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website',size=64, help="Website of Partner."),
         'comment': fields.text('Notes'),
+        'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'), # it should remove in vesion 7 but for now it use for backward compatibility
         'category_id': fields.many2many('res.partner.category', 'res_partner_category_rel', 'partner_id', 'category_id', 'Categories'),
         'events': fields.one2many('res.partner.event', 'partner_id', 'Events'),
         'credit_limit': fields.float(string='Credit Limit'),
