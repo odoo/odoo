@@ -555,7 +555,7 @@ openerp.mail = function(session) {
                     $('<div class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('div.oe_mail_wall_threads'));
                     var thread = new mail.Thread(self, {
                         'res_model': model_name, 'res_id': parseInt(id), 'uid': self.session.uid, 'records': records,
-                        'parent_id': false, 'thread_level': 1}
+                        'parent_id': false, 'thread_level': 2}
                         );
                     thread.appendTo(self.$element.find('div.oe_mail_wall_thread_content:last'));
                 });
@@ -565,40 +565,41 @@ openerp.mail = function(session) {
 
         /**
          * Add records to sorted_comments array
-         * @param {Array} records records from mail.message
-         * @returns {Object} sorted_comments: dict
-         *                      sorted_comments.res_model = {res_ids}
-         *                      sorted_comments.res_model.res_id = [records]
-         * sorted = [{'hr_holidays': [{3: 'A'}, {2: 'B'}]}, {'crm': [{3: 'A'}, {2: 'B'}]}]
+         * @param {Array} records records from mail.message sorted by date desc
+         * @returns {Object} sc sorted_comments: dict
+         *                      sc.model_list = [record.model names]
+         *                      sc.models.model = {
+         *                          'id_list': list or root_ids
+         *                          'id_to_anc': {'record_id': [ancestor_ids]}, still sorted by date desc
+         *                          'ids': {'root_id': [records]}, still sorted by date desc
+         *                          }, for each model
          */
         sort_comments: function (records) {
             sc = {'model_list': [], 'models': {}}
             var cur_iter = 0; var max_iter = 10; var modif = true;
             /* step1: get roots */
             while ( modif && (cur_iter++) < max_iter) {
+                console.log(cur_iter);
                 modif = false;
                 _(records).each(function (record) {
                     if ($.inArray(record.model, sc['model_list']) == -1) {
                         sc['model_list'].push(record.model);
-                        sc['models'][record.model] = {'id_list': [], 'id_to_root': {}, 'ids': {}};
+                        sc['models'][record.model] = {'id_list': [], 'id_to_anc': {}, 'ids': {}};
+                    }
+                    var rmod = sc['models'][record.model];
+                    if (record.parent_id == false && (_.indexOf(rmod['id_list'], record.id) == -1)) {
+                        rmod['id_list'].push(record.id);
+                        rmod['ids'][record.id] = [];
                         modif = true;
-                    }
-                    var sort_id = (record.parent_id) ? record.parent_id[0]: record.id;
-                    if (record.parent_id == false) {
-                        if (_.indexOf(sc['models'][record.model]['id_list'], sort_id) == -1) {
-                            sc['models'][record.model]['id_list'].push(sort_id);
-                            sc['models'][record.model]['ids'][sort_id] = [];
-                            modif = true;
-                        }
-                    }
+                    } 
                     else {
-                        var test = sc['models'][record.model]['id_to_root'][sort_id];
-                        if (_.indexOf(sc['models'][record.model]['id_list'], sort_id) != -1) {
-                             sc['models'][record.model]['id_to_root'][record.id] = sort_id;
+                        var test = rmod['id_to_anc'][record.parent_id[0]];
+                        if (_.indexOf(rmod['id_list'], record.parent_id[0]) != -1) {
+                             rmod['id_to_anc'][record.id] = record.parent_id[0];
                              modif = true;
                         }
                         else if ( test ) {
-                             sc['models'][record.model]['id_to_root'][record.id] = test;
+                             rmod['id_to_anc'][record.id] = test;
                              modif = true;
                         }
                     }
@@ -606,7 +607,7 @@ openerp.mail = function(session) {
             }
             /* step2: add records */
             _(records).each(function (record) {
-                var root_id = sc['models'][record.model]['id_to_root'][record.id];
+                var root_id = sc['models'][record.model]['id_to_anc'][record.id];
                 if (! root_id) root_id = record.id;
                 sc['models'][record.model]['ids'][root_id].push(record);
             });
@@ -655,9 +656,7 @@ openerp.mail = function(session) {
          * Tools: get avatar mini (TODO: should be moved in some tools ?)
          */
         thread_get_mini: function(model, field, id) {
-            id = id || '';
-            var url = this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
-            return url;
+            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
     });
 };
