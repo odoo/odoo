@@ -55,7 +55,8 @@
       <field name="target">new</field>
     </record>
     
-    <record id="view_config_thunderbird_installer" model="ir.ui.view">
+    <!-- NEED TO BE IMPROVED -->
+    <!--record id="view_config_thunderbird_installer" model="ir.ui.view">
         <field name="name">Sales Application</field>
         <field name="model">res.config</field>
         <field name="type">form</field>
@@ -65,7 +66,7 @@
                 <button name="%(action_thunderbird_installer)d" type="action" string="Configure" icon="gtk-execute"/>
             </field>
         </field>
-    </record>
+    </record-->
 
     <menuitem id="base.menu_base_config_plugins" name="Plugins" parent="base.menu_base_config" sequence="10"/>
     <menuitem id="menu_base_config_plugins_thunderbird" action="action_thunderbird_installer" parent="base.menu_base_config_plugins" sequence="10"/>
