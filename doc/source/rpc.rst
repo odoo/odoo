@@ -128,6 +128,17 @@ around and use them differently/add new specifications on them.
 
        :rtype: Deferred<Number>
 
+    .. js:function:: openerp.web.Query.group_by(grouping...)
+
+       Fetches the groups for the query, using the first specified
+       grouping parameter
+
+       :param Array<String> grouping: Lists the levels of grouping
+                                      asked of the server. Grouping
+                                      can actually be an array or
+                                      varargs.
+       :rtype: Deferred<Array<openerp.web.Group>> | null
+
     The second set of methods is the "mutator" methods, they create a
     **new** :js:class:`~openerp.web.Query` object with the relevant
     (internal) attribute either augmented or replaced.
@@ -169,6 +180,65 @@ around and use them differently/add new specifications on them.
        Divergences from Django's sorting include a lack of random sort
        (``?`` field) and the inability to "drill down" into relations
        for sorting.
+
+Aggregation (grouping)
+~~~~~~~~~~~~~~~~~~~~~~
+
+OpenERP has powerful grouping capacities, but they are kind-of strange
+in that they're recursive, and level n+1 relies on data provided
+directly by the grouping at level n. As a result, while ``read_group``
+works it's not a very intuitive API.
+
+OpenERP Web 6.2 eschews direct calls to ``read_group`` in favor of
+calling a method of :js:class:`~openerp.web.Query`, `much in the way
+it is one in SQLAlchemy
+<http://docs.sqlalchemy.org/en/latest/orm/query.html#sqlalchemy.orm.query.Query.group_by>`_ [#]_:
+
+.. code-block:: javascript
+
+    some_query.group_by(['field1', 'field2']).then(function (groups) {
+        // do things with the fetched groups
+    });
+
+This method is asynchronous when provided with 1..n fields (to group
+on) as argument, but it can also be called without any field (empty
+fields collection or nothing at all). In this case, instead of
+returning a Deferred object it will return ``null``.
+
+When grouping criterion come from a third-party and may or may not
+list fields (e.g. could be an empty list), this provides two ways to
+test the presence of actual subgroups (versus the need to perform a
+regular query for records):
+
+* A check on ``group_by``'s result and two completely separate code
+  paths
+
+  .. code-block:: javascript
+
+      var groups;
+      if (groups = some_query.group_by(gby)) {
+          groups.then(function (gs) {
+              // groups
+          });
+      }
+      // no groups
+
+* Or a more coherent code path using :js:func:`when`'s ability to
+  coerce values into deferreds:
+
+  .. code-block:: javascript
+
+      $.when(some_query.group_by(gby)).then(function (groups) {
+          if (!groups) {
+              // No grouping
+          } else {
+              // grouping, even if there are no groups (groups
+              // itself could be an empty array)
+          }
+      });
+
+The result of a (successful) :js:func:`~openerp.web.Query.group_by` is
+an array of :js:class:`~openerp.web.data.Group`.
 
 Synchronizing views (provisional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -267,6 +337,9 @@ For instance, to call the ``eval_domain_and_context`` of the
     }).then(function (result) {
         // handle result
     });
+
+.. [#] with a small twist: SQLAlchemy's ``orm.query.Query.group_by``
+       is not terminal, it returns a query which can still be altered.
 
 .. [#] except for ``context``, which is extracted and stored in the
        request object itself.

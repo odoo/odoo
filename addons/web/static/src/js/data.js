@@ -9,13 +9,13 @@ openerp.web.data = function(openerp) {
  * @returns {String} SQL-like sorting string (``ORDER BY``) clause
  */
 openerp.web.serialize_sort = function (criterion) {
-   return _.map(criterion,
-       function (criteria) {
-           if (criteria[0] === '-') {
-               return criteria.slice(1) + ' DESC';
-           }
-           return criteria + ' ASC';
-       }).join(', ');
+    return _.map(criterion,
+        function (criteria) {
+            if (criteria[0] === '-') {
+                return criteria.slice(1) + ' DESC';
+            }
+            return criteria + ' ASC';
+        }).join(', ');
 };
 
 openerp.web.Query = openerp.web.Class.extend({
@@ -104,6 +104,38 @@ openerp.web.Query = openerp.web.Class.extend({
                 context: this._model.context(this._context)});
     },
     /**
+     * Performs a groups read according to the provided grouping criterion
+     *
+     * @param {String|Array<String>} grouping
+     * @returns {jQuery.Deferred<Array<openerp.web.data.Group>> | null}
+     */
+    group_by: function (grouping) {
+        if (grouping === undefined) {
+            return null;
+        }
+
+        if (!(grouping instanceof Array)) {
+            grouping = _.toArray(arguments);
+        }
+        if (_.isEmpty(grouping)) { return null; }
+
+        var self = this;
+        return this._model.call('read_group', {
+            groupby: grouping,
+            fields: _.uniq(grouping.concat(this._fields || [])),
+            domain: this._model.domain(this._filter),
+            context: this._model.context(this._context),
+            offset: this._offset,
+            limit: this._limit,
+            orderby: openerp.web.serialize_sort(this._order_by) || false
+        }).pipe(function (results) {
+            return _(results).map(function (result) {
+                return new openerp.web.data.Group(
+                    self._model.name, grouping[0], result);
+            });
+        });
+    },
+    /**
      * Creates a new query with the union of the current query's context and
      * the new context.
      *
@@ -152,9 +184,12 @@ openerp.web.Query = openerp.web.Class.extend({
      * @param {String...} fields ordering clauses
      * @returns {openerp.web.Query}
      */
-    order_by: function () {
-        if (arguments.length === 0) { return this; }
-        return this.clone({order_by: _.toArray(arguments)});
+    order_by: function (fields) {
+        if (!fields instanceof Array) {
+            fields = _.toArray(arguments);
+        }
+        if (_.isEmpty(fields)) { return this; }
+        return this.clone({order_by: fields});
     }
 });
 
@@ -345,6 +380,64 @@ openerp.web.Traverser = openerp.web.Class.extend(/** @lends openerp.web.Traverse
 
 });
 
+/**
+ * Utility objects, should never need to be instantiated from outside of this
+ * module
+ *
+ * @namespace
+ */
+openerp.web.data = {
+    Group: openerp.web.Class.extend(/** @lends openerp.web.data.Group# */{
+        /**
+         * @constructs openerp.web.data.Group
+         * @extends openerp.web.Class
+         */
+        init: function (model, grouping_field, read_group_group) {
+            // In cases where group_by_no_leaf and no group_by, the result of
+            // read_group has aggregate fields but no __context or __domain.
+            // Create default (empty) values for those so that things don't break
+            var fixed_group = _.extend(
+                {__context: {group_by: []}, __domain: []},
+                read_group_group);
+
+            var aggregates = {};
+            _(fixed_group).each(function (value, key) {
+                if (key.indexOf('__') === 0
+                        || key === grouping_field
+                        || key === grouping_field + '_count') {
+                    return;
+                }
+                aggregates[key] = value || 0;
+            });
+
+            this.model = new openerp.web.Model(
+                model, fixed_group.__context, fixed_group.__domain);
+
+            var group_size = fixed_group[grouping_field + '_count'] || fixed_group.__count || 0;
+            var leaf_group = fixed_group.__context.group_by.length === 0;
+            this.attributes = {
+                grouped_on: grouping_field,
+                // if terminal group (or no group) and group_by_no_leaf => use group.__count
+                length: group_size,
+                value: fixed_group[grouping_field],
+                // A group is open-able if it's not a leaf in group_by_no_leaf mode
+                has_children: !(leaf_group && fixed_group.__context['group_by_no_leaf']),
+
+                aggregates: aggregates
+            };
+        },
+        get: function (key) {
+            return this.attributes[key];
+        },
+        subgroups: function () {
+            return this.model.query().group_by(this.model.context().group_by);
+        },
+        query: function () {
+            return this.model.query.apply(this.model, arguments);
+        }
+    })
+};
+
 openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.DataGroup# */{
     /**
      * Management interface between views and grouped collections of OpenERP
@@ -368,181 +461,51 @@ openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.Da
      */
     init: function(parent, model, domain, context, group_by, level) {
         this._super(parent, null);
-        if (group_by) {
-            if (group_by.length || context['group_by_no_leaf']) {
-                return new openerp.web.ContainerDataGroup( this, model, domain, context, group_by, level);
-            } else {
-                return new openerp.web.GrouplessDataGroup( this, model, domain, context, level);
-            }
-        }
-
-        this.model = model;
+        this.model = new openerp.web.Model(model, context, domain);
+        this.group_by = group_by;
         this.context = context;
         this.domain = domain;
 
         this.level = level || 0;
     },
-    cls: 'DataGroup'
-});
-openerp.web.ContainerDataGroup = openerp.web.DataGroup.extend( /** @lends openerp.web.ContainerDataGroup# */ {
-    /**
-     *
-     * @constructs openerp.web.ContainerDataGroup
-     * @extends openerp.web.DataGroup
-     *
-     * @param session
-     * @param model
-     * @param domain
-     * @param context
-     * @param group_by
-     * @param level
-     */
-    init: function (parent, model, domain, context, group_by, level) {
-        this._super(parent, model, domain, context, null, level);
-
-        this.group_by = group_by;
-    },
-    /**
-     * The format returned by ``read_group`` is absolutely dreadful:
-     *
-     * * A ``__context`` key provides future grouping levels
-     * * A ``__domain`` key provides the domain for the next search
-     * * The current grouping value is provided through the name of the
-     *   current grouping name e.g. if currently grouping on ``user_id``, then
-     *   the ``user_id`` value for this group will be provided through the
-     *   ``user_id`` key.
-     * * Similarly, the number of items in the group (not necessarily direct)
-     *   is provided via ``${current_field}_count``
-     * * Other aggregate fields are just dumped there
-     *
-     * This function slightly improves the grouping records by:
-     *
-     * * Adding a ``grouped_on`` property providing the current grouping field
-     * * Adding a ``value`` and a ``length`` properties which replace the
-     *   ``$current_field`` and ``${current_field}_count`` ones
-     * * Moving aggregate values into an ``aggregates`` property object
-     *
-     * Context and domain keys remain as-is, they should not be used externally
-     * but in case they're needed...
-     *
-     * @param {Object} group ``read_group`` record
-     */
-    transform_group: function (group) {
-        var field_name = this.group_by[0];
-        // In cases where group_by_no_leaf and no group_by, the result of
-        // read_group has aggregate fields but no __context or __domain.
-        // Create default (empty) values for those so that things don't break
-        var fixed_group = _.extend(
-                {__context: {group_by: []}, __domain: []},
-                group);
-
-        var aggregates = {};
-        _(fixed_group).each(function (value, key) {
-            if (key.indexOf('__') === 0
-                    || key === field_name
-                    || key === field_name + '_count') {
-                return;
-            }
-            aggregates[key] = value || 0;
-        });
-
-        var group_size = fixed_group[field_name + '_count'] || fixed_group.__count || 0;
-        var leaf_group = fixed_group.__context.group_by.length === 0;
-        return {
-            __context: fixed_group.__context,
-            __domain: fixed_group.__domain,
-
-            grouped_on: field_name,
-            // if terminal group (or no group) and group_by_no_leaf => use group.__count
-            length: group_size,
-            value: fixed_group[field_name],
-            // A group is openable if it's not a leaf in group_by_no_leaf mode
-            openable: !(leaf_group && this.context['group_by_no_leaf']),
-
-            aggregates: aggregates
-        };
-    },
-    fetch: function (fields) {
-        // internal method
-        var d = new $.Deferred();
-        var self = this;
-
-        this.rpc('/web/group/read', {
-            model: this.model,
-            context: this.context,
-            domain: this.domain,
-            fields: _.uniq(this.group_by.concat(fields)),
-            group_by_fields: this.group_by,
-            sort: openerp.web.serialize_sort(this.sort)
-        }, function () { }).then(function (response) {
-            var data_groups = _(response).map(
-                    _.bind(self.transform_group, self));
-            self.groups = data_groups;
-            d.resolveWith(self, [data_groups]);
-        }, function () {
-            d.rejectWith.apply(d, [self, arguments]);
-        });
-        return d.promise();
-    },
-    /**
-     * The items of a list have the following properties:
-     *
-     * ``length``
-     *     the number of records contained in the group (and all of its
-     *     sub-groups). This does *not* provide the size of the "next level"
-     *     of the group, unless the group is terminal (no more groups within
-     *     it).
-     * ``grouped_on``
-     *     the name of the field this level was grouped on, this is mostly
-     *     used for display purposes, in order to know the name of the current
-     *     level of grouping. The ``grouped_on`` should be the same for all
-     *     objects of the list.
-     * ``value``
-     *     the value which led to this group (this is the value all contained
-     *     records have for the current ``grouped_on`` field name).
-     * ``aggregates``
-     *     a mapping of other aggregation fields provided by ``read_group``
-     *
-     * @param {Array} fields the list of fields to aggregate in each group, can be empty
-     * @param {Function} ifGroups function executed if any group is found (DataGroup.group_by is non-null and non-empty), called with a (potentially empty) list of groups as parameters.
-     * @param {Function} ifRecords function executed if there is no grouping left to perform, called with a DataSet instance as parameter
-     */
     list: function (fields, ifGroups, ifRecords) {
         var self = this;
-        this.fetch(fields).then(function (group_records) {
-            ifGroups(_(group_records).map(function (group) {
-                var child_context = _.extend({}, self.context, group.__context);
+        $.when(this.model.query(fields)
+                    .order_by(this.sort)
+                    .group_by(this.group_by)).then(function (groups) {
+            if (!groups) {
+                console.log(self.domain);
+                console.log(self.model.domain());
+                ifRecords(_.extend(
+                    new openerp.web.DataSetSearch(self, self.model.name),
+                    {domain: self.model.domain(), context: self.model.context(),
+                     _sort: self.sort}));
+                return;
+            }
+            ifGroups(_(groups).map(function (group) {
+                var child_context = _.extend(
+                    {}, self.model.context(), group.model.context());
                 return _.extend(
                     new openerp.web.DataGroup(
-                        self, self.model, group.__domain,
+                        self, self.model.name, group.model.domain(),
                         child_context, child_context.group_by,
                         self.level + 1),
-                    group, {sort: self.sort});
+                    {
+                        __context: child_context,
+                        __domain: group.model.domain(),
+                        grouped_on: group.get('grouped_on'),
+                        length: group.get('length'),
+                        value: group.get('value'),
+                        openable: group.get('has_children'),
+                        aggregates: group.get('aggregates')
+                    }, {sort: self.sort});
             }));
         });
     }
 });
-openerp.web.GrouplessDataGroup = openerp.web.DataGroup.extend( /** @lends openerp.web.GrouplessDataGroup# */ {
-    /**
-     *
-     * @constructs openerp.web.GrouplessDataGroup
-     * @extends openerp.web.DataGroup
-     *
-     * @param session
-     * @param model
-     * @param domain
-     * @param context
-     * @param level
-     */
-    init: function (parent, model, domain, context, level) {
-        this._super(parent, model, domain, context, null, level);
-    },
-    list: function (fields, ifGroups, ifRecords) {
-        ifRecords(_.extend(
-            new openerp.web.DataSetSearch(this, this.model),
-            {domain: this.domain, context: this.context, _sort: this.sort}));
-    }
-});
+openerp.web.ContainerDataGroup = openerp.web.DataGroup.extend({ });
+openerp.web.GrouplessDataGroup = openerp.web.DataGroup.extend({ });
+
 openerp.web.StaticDataGroup = openerp.web.GrouplessDataGroup.extend( /** @lends openerp.web.StaticDataGroup# */ {
     /**
      * A specialization of groupless data groups, relying on a single static
