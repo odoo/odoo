@@ -396,4 +396,135 @@ class ir_actions_configuration_wizard(osv.osv_memory):
 
 ir_actions_configuration_wizard()
 
+
+
+class res_config_settings(osv.osv_memory):
+    """ Base configuration wizard for application settings.  It provides support for setting
+        default values, assigning groups to employee users, and installing modules.
+        To make such a 'settings' wizard, define a model like::
+
+            class my_config_wizard(osv.osv_memory):
+                _name = 'sale.config.prefs'
+                _inherit = 'res.config.settings'
+                _columns = {
+                    'default_foo': fields.type(..., default_model='model'),
+                    'group_bar': fields.boolean(..., group='xml_id'),
+                    'module_baz': fields.boolean(...),
+                    'other_field': fields.type(...),
+                }
+
+        The method ``execute`` provides some support based on a naming convention:
+
+        *   For a field like 'default_XXX', ``execute`` sets the (global) default value of
+            the field 'XXX' in the model named by ``default_model`` to the field's value.
+
+        *   For a boolean field like 'group_XXX', ``execute`` adds or removes the group given
+            by its XML id to the implied groups of Employee, depending on the field's value.
+
+        *   For a boolean field like 'module_XXX', ``execute`` triggers the immediate
+            installation of the module named 'XXX' if the field has value ``True``.
+
+        *   For other fields, the method ``execute`` only record their value for future
+            invocations of the wizard.  Override the method to define their effect.
+    """
+    _name = 'res.config.settings'
+    _inherit = 'res.config'
+
+    def _get_classified_fields(self, cr, uid, context=None):
+        """ return a dictionary with the fields classified by category::
+
+                {   'default': [('default_foo', 'model', 'foo'), ...],
+                    'group':   [('group_bar', browse_group), ...],
+                    'module':  [('module_baz', browse_module), ...],
+                    'other':   ['other_field', ...],
+                }
+        """
+        ir_model_data = self.pool.get('ir.model.data')
+        ir_module = self.pool.get('ir.module.module')
+
+        defaults, groups, modules, others = [], [], [], []
+        for name, field in self._columns.items():
+            if name.startswith('default_') and hasattr(field, 'default_model'):
+                defaults.append((name, field.default_model, name[8:]))
+            elif name.startswith('group_') and isinstance(field, fields.boolean) and hasattr(field, 'group'):
+                mod, xml = field.group.split('.', 1)
+                groups.append((name, ir_model_data.get_object(cr, uid, mod, xml, context)))
+            elif name.startswith('module_') and isinstance(field, fields.boolean):
+                mod_ids = ir_module.search(cr, uid, [('name', '=', name[7:])])
+                modules.append((name, ir_module.browse(cr, uid, mod_ids[0], context)))
+            else:
+                others.append(name)
+
+        return {'default': defaults, 'group': groups, 'module': modules, 'other': others}
+
+    def default_get(self, cr, uid, fields, context=None):
+        ir_values = self.pool.get('ir.values')
+        ir_model_data = self.pool.get('ir.model.data')
+        classified = self._get_classified_fields(cr, uid, context)
+
+        res = super(res_config_settings, self).default_get(cr, uid, fields, context)
+
+        # defaults: take the corresponding default value they set
+        for name, model, field in classified['default']:
+            value = ir_values.get_default(cr, uid, model, field)
+            if value is not None:
+                res[name] = value
+
+        # groups: which groups are implied by the group Employee
+        group_employee = ir_model_data.get_object(cr, uid, 'base', 'group_user', context)
+        for name, group in classified['group']:
+            res[name] = group in group_employee.implied_ids
+
+        # modules: which modules are installed/to install
+        for name, module in classified['module']:
+            res[name] = module.state in ('installed', 'to install', 'to upgrade')
+
+        return res
+
+    def fields_get(self, cr, uid, allfields=None, context=None, write_access=True):
+        # overridden to make fields of installed modules readonly
+        res = super(res_config_settings, self).fields_get(cr, uid, allfields, context, write_access)
+        classified = self._get_classified_fields(cr, uid, context)
+        for name, module in classified['module']:
+            if module.state in ('installed', 'to install', 'to upgrade'):
+                res[name]['readonly'] = True
+        return res
+
+    def execute(self, cr, uid, ids, context=None):
+        ir_values = self.pool.get('ir.values')
+        ir_model_data = self.pool.get('ir.model.data')
+        ir_module = self.pool.get('ir.module.module')
+        res_groups = self.pool.get('res.groups')
+        classified = self._get_classified_fields(cr, uid, context)
+
+        config = self.browse(cr, uid, ids[0], context)
+
+        # other fields: simply record their current value as default values
+        for name in classified['other']:
+            ir_values.set_default(cr, uid, self._name, name, config[name])
+
+        # default values fields
+        for name, model, field in classified['default']:
+            ir_values.set_default(cr, uid, model, field, config[name])
+
+        # group fields: modify group employee, and remove employees from deselected groups
+        if classified['group']:
+            yes, nos = [], []
+            for name, group in classified['group']:
+                (yes if config[name] else nos).append(group.id)
+            group_employee = ir_model_data.get_object(cr, uid, 'base', 'group_user', context)
+            group_employee.write({'implied_ids': [(3, id) for id in nos] + [(4, id) for id in yes]})
+            res_groups.write(cr, uid, nos, {'users': [(3, u.id) for u in group_employee.users]})
+
+        # module fields: install immediately the selected modules
+        to_install = []
+        for name, module in classified['module']:
+            if config[name] and module.state == 'uninstalled':
+                to_install.append(module.id)
+        if to_install:
+            return ir_module.button_immediate_install(cr, uid, to_install, context)
+        return {}
+
+res_config_settings()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
