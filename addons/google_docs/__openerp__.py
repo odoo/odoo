@@ -1,8 +1,9 @@
 {
     'name': 'Google Docs',
-    'version': '0.1',
+    'version': '0.2',
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
+    'category': 'Tools',
     'data': [
         'google_docs.xml'
     ],

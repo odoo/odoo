@@ -1,8 +1,31 @@
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2012 OpenERP SA (<http://www.openerp.com>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 from osv import osv, fields
-import gdata.docs.data
-import gdata.docs.client
-from gdata.client import RequestError
-from gdata.docs.service import DOCUMENT_LABEL
+try:
+    import gdata.docs.data
+    import gdata.docs.client
+    from gdata.client import RequestError
+    from gdata.docs.service import DOCUMENT_LABEL
+except ImportError:
+    raise osv.except_osv(_('Google Docs Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
 class google_docs_ir_attachment(osv.osv):
     _inherit = 'ir.attachment'
@@ -12,7 +35,7 @@ class google_docs_ir_attachment(osv.osv):
         users_obj = self.pool.get('res.users')
         user = users_obj.browse(cr, uid, [uid])[0]
         if not user.gmail_user or not user.gmail_password: 
-            return -2
+            return False
 
         # login
         client = gdata.docs.client.DocsClient(source='openerp.com')
@@ -29,13 +52,13 @@ class google_docs_ir_attachment(osv.osv):
            @param model: the current model name.
            @param type_doc: text, spreadsheet or slide.
            @return the document object.
-           @return -2 if the google_base_account hasn't been configured yet.
+           @return False if the google_base_account hasn't been configured yet.
         '''
 
         # authenticate
         client = self._auth(cr, uid)
-        if client == -2:
-            return -2
+        if client == False:
+            return False
 
         # create the document in google docs
         if type_doc=='slide':
@@ -62,8 +85,8 @@ class google_docs_ir_attachment(osv.osv):
             context={}
 
         client = self._auth(cr, uid)
-        if client == -2:
-            return -2
+        if client == False:
+            return False
 
         # fetch and copy the original document
         original_resource = client.get_resource_by_id(gdocs_resource_id)
