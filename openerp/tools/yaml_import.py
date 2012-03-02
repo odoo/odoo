@@ -187,7 +187,7 @@ class YamlInterpreter(object):
     def process_comment(self, node):
         return node
 
-    def _log_assert_failure(msg, *args):
+    def _log_assert_failure(self, msg, *args):
         self.assertion_report.record_failure()
         _logger.error(msg, *args)
 
