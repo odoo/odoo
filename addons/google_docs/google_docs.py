@@ -23,7 +23,6 @@ class google_docs_ir_attachment(osv.osv):
         return client
 
     def create_empty_google_doc(self, cr, uid, model, ids, type_doc):
-        import pdb; pdb.set_trace()
         '''Associate a copy of the gdoc identified by 'gdocs_res_id' to the current entity.
            @param cr: the current row from the database cursor.
            @param uid: the current user ID, for security checks.
@@ -52,7 +51,7 @@ class google_docs_ir_attachment(osv.osv):
             'res_model': model,
             'res_id': ids[0],
             'type': 'url',
-            'name': 'new_foo', # TODO pending from the working config
+            'name': 'new_foo %s' % (type_doc,) , # TODO pending from the working config
             'url': gdocs_resource.get_alternate_link().href
         })
 
@@ -75,7 +74,7 @@ class google_docs_ir_attachment(osv.osv):
             'res_model': model,
             'res_id': ids[0],
             'type': 'url',
-            'name': 'copy_foo', # TODO pending from the working config
+            'name': 'copy_foo %s' (type_doc,) , # TODO pending from the working config
             'url': copy_resource.get_alternate_link().href
         })
 
