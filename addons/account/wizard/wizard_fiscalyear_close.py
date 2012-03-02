@@ -207,7 +207,7 @@ def _data_save(self, cr, uid, data, context=None):
     query_1st_part = """
             INSERT INTO account_move_line (
                  debit, credit, name, date, move_id, journal_id, period_id,
-                 account_id, currency_id, amount_currency) VALUES 
+                 account_id, currency_id, amount_currency, state) VALUES 
     """
     query_2nd_part = ""
     query_2nd_part_args = []
@@ -226,7 +226,7 @@ def _data_save(self, cr, uid, data, context=None):
             if not currency_obj.is_zero(cr, uid, company_currency_id, abs(account.balance)):
                 if query_2nd_part:
                     query_2nd_part += ','
-                query_2nd_part += "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                query_2nd_part += "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 query_2nd_part_args += (account.balance > 0 and account.balance or 0.0,
                        account.balance < 0 and -account.balance or 0.0,
                        data['form']['report_name'],
@@ -236,7 +236,8 @@ def _data_save(self, cr, uid, data, context=None):
                        period.id,
                        account.id,
                        account.currency_id and account.currency_id.id or None,
-                       balance_in_currency)
+                       balance_in_currency,
+                       'draft')
     if query_2nd_part:
         cr.execute(query_1st_part + query_2nd_part, tuple(query_2nd_part_args))
 
