@@ -1005,8 +1005,9 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
         this.got_name = $.Deferred().then(function () {
             self.$element.val(self.name);
         });
-        this.dataset = new openerp.web.DataSet(
-                this.view, this.attrs['relation']);
+        this.model = new openerp.web.Model(this.attrs['relation']);
+
+        this.orderer = new openerp.web.DropMisordered();
     },
     start: function () {
         this._super();
@@ -1020,23 +1021,21 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
         var self = this;
         this.$element.autocomplete({
             source: function (req, resp) {
-                if (self.abort_last) {
-                    self.abort_last();
-                    delete self.abort_last;
-                }
-                self.dataset.name_search(
-                    req.term, self.attrs.domain, 'ilike', 8, function (data) {
-                        resp(_.map(data, function (result) {
-                            return {id: result[0], label: result[1]}
-                        }));
+                self.orderer.add(self.model.call('name_search', null, {
+                    name: req.term,
+                    args: self.attrs.domain,
+                    limit: 8
+                })).then(function (data) {
+                    resp(_.map(data, function (result) {
+                        return {id: result[0], label: result[1]}
+                    }));
                 });
-                self.abort_last = self.dataset.abort_last;
             },
             select: function (event, ui) {
                 self.id = ui.item.id;
                 self.name = ui.item.label;
             },
-            delay: 0
+            delay: 100
         })
     },
     on_name_get: function (name_get) {
@@ -1055,7 +1054,8 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
                 this.id = this.id[0];
             // TODO: maybe this should not be completely removed
             delete defaults[this.attrs.name];
-            this.dataset.name_get([this.id], $.proxy(this, 'on_name_get'));
+            this.model.call('name_get', [[this.id]]).then(
+                this.proxy('name_get'));
         } else {
             this.got_name.reject();
         }

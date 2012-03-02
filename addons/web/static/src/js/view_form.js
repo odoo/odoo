@@ -1891,6 +1891,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         this.cm_id = _.uniqueId('m2o_cm_');
         this.last_search = [];
         this.tmp_value = undefined;
+        this.orderer = new openerp.web.DropMisordered();
     },
     start: function() {
         this._super();
@@ -2032,14 +2033,10 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         var search_val = request.term;
         var self = this;
 
-        if (this.abort_last) {
-            this.abort_last();
-            delete this.abort_last;
-        }
         var dataset = new openerp.web.DataSet(this, this.field.relation, self.build_context());
 
-        dataset.name_search(search_val, self.build_domain(), 'ilike',
-                this.limit + 1, function(data) {
+        this.orderer.add(dataset.name_search(
+                search_val, self.build_domain(), 'ilike', this.limit + 1)).then(function(data) {
             self.last_search = data;
             // possible selections for the m2o
             var values = _.map(data, function(x) {
@@ -2080,7 +2077,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
 
             response(values);
         });
-        this.abort_last = dataset.abort_last;
     },
     _quick_create: function(name) {
         var self = this;

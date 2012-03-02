@@ -745,9 +745,7 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
             method: method,
             domain_id: domain_index == undefined ? null : domain_index,
             context_id: context_index == undefined ? null : context_index,
-            args: args || [],
-            // FIXME: API which does not suck for aborting requests in-flight
-            aborter: this
+            args: args || []
         }, callback, error_callback);
     },
     /**
