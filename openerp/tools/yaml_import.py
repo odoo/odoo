@@ -19,6 +19,8 @@ from lxml import etree
 unsafe_eval = eval
 from safe_eval import safe_eval as eval
 
+import assertion_report
+
 _logger = logging.getLogger(__name__)
 
 class YamlImportException(Exception):
@@ -85,33 +87,6 @@ def is_ir_set(node):
 def is_string(node):
     return isinstance(node, basestring)
 
-class TestReport(object):
-    def __init__(self):
-        self._report = {}
-
-    def record(self, success, severity):
-        """
-        Records the result of an assertion for the failed/success count.
-        Returns success.
-        """
-        if severity in self._report:
-            self._report[severity][success] += 1
-        else:
-            self._report[severity] = {success: 1, not success: 0}
-        return success
-
-    def __str__(self):
-        res = []
-        res.append('\nAssertions report:\nLevel\tsuccess\tfailure')
-        success = failure = 0
-        for severity in self._report:
-            res.append("%s\t%s\t%s" % (severity, self._report[severity][True], self._report[severity][False]))
-            success += self._report[severity][True]
-            failure += self._report[severity][False]
-        res.append("total\t%s\t%s" % (success, failure))
-        res.append("end of report (%s assertion(s) checked)" % (success + failure))
-        return "\n".join(res)
-
 class RecordDictWrapper(dict):
     """
     Used to pass a record as locals in eval:
@@ -125,13 +100,15 @@ class RecordDictWrapper(dict):
         return dict.__getitem__(self, key)
 
 class YamlInterpreter(object):
-    def __init__(self, cr, module, id_map, mode, filename, noupdate=False):
+    def __init__(self, cr, module, id_map, mode, filename, report=None, noupdate=False):
         self.cr = cr
         self.module = module
         self.id_map = id_map
         self.mode = mode
         self.filename = filename
-        self.assert_report = TestReport()
+        if report is None:
+            report = assertion_report.assertion_report()
+        self.assertion_report = report
         self.noupdate = noupdate
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
@@ -217,7 +194,7 @@ class YamlInterpreter(object):
         else:
             level = severity
             levelname = logging.getLevelName(level)
-        self.assert_report.record(False, levelname)
+        self.assertion_report.record_failure()
         _logger.log(level, msg, *args)
         if level >= config['assert_exit_level']:
             raise YamlImportAbortion('Severe assertion failure (%s), aborting.' % levelname)
@@ -286,7 +263,7 @@ class YamlInterpreter(object):
                         self._log_assert_failure(assertion.severity, msg, *args)
                         return
             else: # all tests were successful for this assertion tag (no break)
-                self.assert_report.record(True, assertion.severity)
+                self.assertion_report.record_success()
 
     def _coerce_bool(self, value, default=False):
         if isinstance(value, types.BooleanType):
@@ -534,7 +511,7 @@ class YamlInterpreter(object):
             _logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)
             raise
         else:
-            self.assert_report.record(True, python.severity)
+            self.assertion_report.record_success()
 
     def process_workflow(self, node):
         workflow, values = node.items()[0]
@@ -900,11 +877,11 @@ class YamlInterpreter(object):
             is_preceded_by_comment = False
         return is_preceded_by_comment
 
-def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False):
+def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False, report=None):
     if idref is None:
         idref = {}
     yaml_string = yamlfile.read()
-    yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, noupdate=noupdate)
+    yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, report=report, noupdate=noupdate)
     yaml_interpreter.process(yaml_string)
 
 # keeps convention of convert.py

@@ -549,6 +549,10 @@ def get_test_modules(module, submodule, explode):
     return ms
 
 def run_unit_tests(module_name):
+    """
+    Return True or False if some tests were found and succeeded or failed.
+    Return None if no test was found.
+    """
     import unittest2
     ms = get_test_modules(module_name, '__fast_suite__', explode=False)
     ms.extend(get_test_modules(module_name, '__sanity_checks__', explode=False))
@@ -573,7 +577,10 @@ def run_unit_tests(module_name):
                     first = False
                     _logger.log(logging.TEST, c)
         result = unittest2.TextTestRunner(verbosity=2, stream=MyStream()).run(suite)
-        if not result.wasSuccessful():
+        if result.wasSuccessful():
+            return True
+        else:
             _logger.error('module %s: at least one error occured in a test', module_name)
+            return False
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
