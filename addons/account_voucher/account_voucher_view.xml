@@ -97,7 +97,7 @@
                                    <field name="state"/>
                                    <field name="reconcile_id"/>
                                </tree>
-                            </field> 
+                            </field>
                         </page>
                     </notebook>
                     <group col="10" colspan="4">
@@ -189,7 +189,7 @@
         <act_window
             id="act_journal_voucher_open"
             name="Voucher Entries"
-            context="{'search_default_journal_id': active_id, 'type':type}"
+            context="{'search_default_journal_id': active_id, 'type':type, 'default_journal_id': active_id}"
             res_model="account.voucher"
             src_model="account.journal"/>
 
