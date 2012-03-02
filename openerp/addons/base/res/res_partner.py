@@ -300,8 +300,13 @@ class res_partner(osv.osv):
             rec_name = 'ref'
         else:
             rec_name = 'name'
-
-        res = [(r['id'], r[rec_name]) for r in self.read(cr, uid, ids, [rec_name], context)]
+        reads = self.read(cr, uid, ids, [rec_name,'parent_id'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name =name + '(' + record['parent_id'][1] +')'
+            res.append((record['id'], name))
         return res
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
