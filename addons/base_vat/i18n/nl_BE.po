@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-03-01 17:27+0000\n"
+"Last-Translator: Els Van Vossel (Agaplan) <Unknown>\n"
 "Language-Team: Dutch (Belgium) <nl_BE@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:34+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-03-02 04:56+0000\n"
+"X-Generator: Launchpad (build 14886)\n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:87
@@ -24,6 +24,7 @@ msgid ""
 "The Vat does not seems to be correct. You should have entered something like "
 "this %s"
 msgstr ""
+"Het btw-nummer lijkt niet correct te zijn. Het moet er als volgt uitzien %s"
 
 #. module: base_vat
 #: model:ir.module.module,description:base_vat.module_meta_information
@@ -38,22 +39,30 @@ msgid ""
 "countries.\n"
 "    "
 msgstr ""
+"\n"
+"    Voegt het btw-nummer toe aan de relatie en controleert de geldigheid "
+"ervan.\n"
+"\n"
+"    Deze module volgt de methode zoals beschreven op http://sima-"
+"pc.com/nif.php voor\n"
+"    controle van de geldigheid van btw-nummers binnen de Europese landen.\n"
+"    "
 
 #. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
-msgstr ""
+msgstr "Base VAT - geldigheid van btw-nummer controleren"
 
 #. module: base_vat
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "U kunt niet dezelfde leden maken."
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:88
 #, python-format
 msgid "The VAT is invalid, It should begin with the country code"
-msgstr ""
+msgstr "Het btw-nummer is ongeldig; het moet beginnen met de landcode"
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -61,13 +70,15 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
+"Schakel dit vakje in als de relatie btw-plichtig is. Het wordt gebruikt voor "
+"de btw-aangifte."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Relatie"
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
-msgstr ""
+msgstr "Btw-plichtig"

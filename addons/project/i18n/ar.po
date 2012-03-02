@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2012-02-18 19:55+0000\n"
+"PO-Revision-Date: 2012-03-01 18:06+0000\n"
 "Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:07+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-03-02 04:56+0000\n"
+"X-Generator: Launchpad (build 14886)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -39,6 +39,9 @@ msgid ""
 "If you use the timesheet linked to projects (project_timesheet module), "
 "don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"ستعين هذه وحدة القياس المستخدمة في المشروعات والمهام.\n"
+"اذا استخدمت سجل الدوام المتصل بالمشاريع(وحدة سجل الدوام_للمشروع), لا تنسى "
+"بضبط الوحدة الصحيحة للقياس في الموظفين الخاصين بك."
 
 #. module: project
 #: constraint:res.users:0
@@ -554,6 +557,9 @@ msgid ""
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
 msgstr ""
+"تم حساب هذا الحلق تلقائيًا وله نفس السلوك عن منطقية الحقل ‘الفعال‘: اذا تم "
+"ربط المهمة للقالب اوللمشروع الغير مفعل, سيتم اخفائها الا اذا طلبت على وجه "
+"التحديد."
 
 #. module: project
 #: help:project.project,progress_rate:0
@@ -718,6 +724,8 @@ msgid ""
 "task, up to the closing of the task or issue. You will use these stages in "
 "order to track the progress in solving a task or an issue."
 msgstr ""
+"حدد الخطوات التي ستستخدم في المشروع من انشاء المهمة, صعودا الى غلق المهمة او "
+"المسالة. ستسخدم هذه المراحل بالترتيب لتعقب الاجراء في حل المهمة او المسألة."
 
 #. module: project
 #: code:addons/project/project.py:903
@@ -872,6 +880,13 @@ msgid ""
 "configuration. With the project_mrp module, sales orders can create tasks "
 "automatically when they are confirmed."
 msgstr ""
+"تمثل المهمة العمل الذي يتعين القيام به. كل مستخدم يعمل في قائمة خاصة به من "
+"مهام، حيث يمكن أن تسجل عمله مهمة في ساعات. انه يمكن العمل وإغلاق المهمة "
+"نفسها أو تفويض ذلك إلى مستخدم آخر. إذا قمت بتفويض المهمة لمستخدم آخر، ستحصل "
+"على مهمة جديدة في حالة معلقة، والتي سيتم فتحه عندما يكون لديك لمراجعة العمل "
+"المنجز. إذا قمت بتثبيت وحدة سجل الدوام_للمشروع، يمكن عمل فاتورة لعمل المهمة "
+"بناء على ضبط المشروع. مع وحدة project_mrp، يمكن أن ينشا اوامر البيع  المهام "
+"تلقائيا عندما يتم تأكيدها."
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -902,6 +917,10 @@ msgid ""
 "         \n"
 " If the task is over, the states is set to 'Done'."
 msgstr ""
+"اذا تم انشاء المهمة ستكونالحالة ‘مشروع‘.\n"
+"اذا بدأت المهمة, ستصبح الحالة ‘في التقدم‘.\n"
+"اذا احتاجت المراجعة الى المهمة ستكون الحالة ‘معلق‘.\n"
+"اذا كانت المهمة زائدة, ستعيين الحالات الى ‘تم‘."
 
 #. module: project
 #: help:project.task,progress:0
@@ -1294,6 +1313,12 @@ msgid ""
 "    * Members list of project\n"
 "    "
 msgstr ""
+"تتعقب وحدة ادارة المشروع المشاريع المتعددة المستوى,المهام,العمل المتمم على "
+"المهام, هكدذ. وهي قادرة على تقدير التخطيط, مهام الامر, هكذا.\n"
+"لوحة القيادة لاعضاء المشروع تتضمن:\n"
+"*قائمة من الماه الخاصة بي المفتوحة\n"
+"*قائمة اعضاء المشروع\n"
+"    "
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_work_month
@@ -1322,6 +1347,9 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
+"يسمح لك هذا التقرير بتحليل اداء المشاريع الخاصة بك والمستخدمين. يمكنك تحليل "
+"كميات المهام, الساعات المقضية مقارنة بالساعات المخطط اليها, عدد الايام "
+"المتوسط لفتح او غلق المهمة, هكذا."
 
 #. module: project
 #: code:addons/project/project.py:862
@@ -1341,6 +1369,9 @@ msgid ""
 "projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
 msgstr ""
+"اربط هذا المشروع بالحساب التحليلي اذا كنت تحتاج الى ادارة مالية على "
+"المشاريع. وهي تمكنك بالاتصال بالمشاريع مع الميزانيات, والتخطيط, والتكلفة "
+"وتحليل العائد, سجلات الدوام على المشروع, وهكذا."
 
 #. module: project
 #: view:project.project:0 view:project.task:0 selection:project.task,state:0
@@ -1435,6 +1466,8 @@ msgid ""
 "GTD is a methodology to efficiently organise yourself and your tasks. This "
 "module fully integrates GTD principle with OpenERP's project management."
 msgstr ""
+"GTD هي منهجية لتنظيمك وتنظيم مهامك بكفاءة. وتنتج هذه الوحدة بشكل كامل مبدأ "
+"GTD مع ادارة مشروع OpenERP."
 
 #. module: project
 #: model:ir.model,name:project.model_project_vs_hours
@@ -1767,6 +1800,13 @@ msgid ""
 "to invoice the time spent on a project task, you can find project tasks to "
 "be invoiced in the billing section."
 msgstr ""
+"يحتوي المشروع على مجموعة من المهام أو القضايا التي سوف يتم تنفيذها من قبل "
+"الموارد الخاصة بك المسندة إليها. يمكن أن يكون المشروع بتنظيم هرمي، وهو جزء "
+"من المشروع الرئيسي. هذا يسمح لك لتصميم الهياكل للمشروع الكبير مع مختلف مراحل "
+"موزعة على المشروع المشروع خلال الدورة. يمكن لكل مستخدم ضبط مشروعه الافتراضي "
+"في تفضيلاته الخاصة لتصفية تلقائيا المهام أو القضايا التي عادة ما يعمل عليها. "
+"إذا اخترت فاتورة للوقت الذي يقضيه في مهمة المشروع، يمكنك العثور على مهام "
+"المشروع لعمل الفاتورة في قسم الفواتير."
 
 #. module: project
 #: field:project.project,total_hours:0

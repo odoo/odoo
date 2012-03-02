@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2012-02-12 20:13+0000\n"
+"PO-Revision-Date: 2012-02-28 22:09+0000\n"
 "Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:41+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-02-29 04:58+0000\n"
+"X-Generator: Launchpad (build 14874)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -121,6 +121,9 @@ msgid ""
 "can define several price lists for one delivery method, per country or a "
 "zone in a specific country defined by a postal code range."
 msgstr ""
+"تسمح لك قائمة أسعار التسليم  لحساب التكلفة وسعر البيع للتسليم وفقا لوزن "
+"المنتجات وغيرها من المعايير. يمكنك تحديد عدة قوائم للأسعار لطريقة تسليم "
+"واحدة، في كل بلد أو منطقة في بلد معين محدد من قبل مجموعة اكواد بريدية."
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -166,6 +169,9 @@ msgid ""
 "Each delivery method can be assigned to a price list which computes the "
 "price of the delivery according to the products sold or delivered."
 msgstr ""
+"قم بإنشاء وإدارة وسائل التسليم التي تحتاجها لأنشطة المبيعات الخاصة بك. يمكن "
+"تعيين كل طريقة تسليم إلى قائمة السعر الذي يحسب على سعر التسليم وفقا للمنتجات "
+"المباعة او المسلمة."
 
 #. module: delivery
 #: code:addons/delivery/stock.py:89
@@ -229,6 +235,11 @@ msgid ""
 "\n"
 "     "
 msgstr ""
+"يسمح لك بإضافة طرق التسليم في أوامر البيع و الاختيار.\n"
+"يمكنك تحديد الناقل الخاص وشبكات تسليم للأسعار.\n"
+"عند إنشاء الفواتير من الاختيار، OpenERP قادر على إضافة وحساب خط الشحن.\n"
+"\n"
+"     "
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -456,7 +467,7 @@ msgstr "="
 #: code:addons/delivery/stock.py:90
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "الناقل %s (id: %d( لا يوجد لديها شبكة تسليم!"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0

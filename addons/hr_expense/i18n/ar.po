@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2012-02-05 21:47+0000\n"
+"PO-Revision-Date: 2012-02-29 18:59+0000\n"
 "Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:47+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-03-01 05:13+0000\n"
+"X-Generator: Launchpad (build 14874)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -131,6 +131,19 @@ msgid ""
 "    re-invoice your customer's expenses if your work by project.\n"
 "    "
 msgstr ""
+"\n"
+"    تهدف هذه الوحدة الى ادارة المنصرف من الموظفين.\n"
+"ويتم تنفيذ سير العمل كله:\n"
+"* مشروع نفقة\n"
+"* إقرار السجل من قبل الموظف\n"
+"* التحقق من الصحة من قبل مدير أعماله\n"
+"* التحقق من الصحة من قبل المحاسب وانشاء فاتورة\n"
+"* دفع الفاتورة للموظف\n"
+"\n"
+"هذه الوحدة أيضا تستخدم المحاسبة التحليلية ومتوافقة مع\n"
+"الفاتورة على وحدة الجدول الزمني حتى يتسنى لك تلقائيا\n"
+"إعادة فاتورة عميلك تلقائيًا للمصاريف إذا كان لديك عمل مشروع.\n"
+"    "
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -362,7 +375,7 @@ msgstr "مصروف"
 #: view:hr.expense.expense:0 field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
-msgstr ""
+msgstr "خطوط المصروفات"
 
 #. module: hr_expense
 #: field:hr.expense.report,delay_confirm:0
@@ -680,7 +693,7 @@ msgstr "مرجع"
 #. module: hr_expense
 #: field:hr.expense.report,employee_id:0
 msgid "Employee's Name"
-msgstr ""
+msgstr "اسم الموظف"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.expense_all
@@ -692,6 +705,11 @@ msgid ""
 "and the employee can be reimbursed. You can also reinvoice the customer at "
 "the end of the flow."
 msgstr ""
+"تسمح لك وحدة إدارة النفقات OpenERP   لتتبع السير كاملاً. كل شهر، يسجل "
+"الموظفون نفقاتهم. في نهاية هذا الشهر، يتحقق مدرائهم من صحة سجلات المصروفات "
+"التي تنشأ التكاليف على المشاريع / الحسابات التحليلية. يتحقق المحاسب  من صحة "
+"القيود المقترحة، ويمكن تعويض الموظف. يمكنك اعادة الفاتورة أيضا للعميل في "
+"نهاية السير."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -742,7 +760,7 @@ msgstr "إبريل"
 #. module: hr_expense
 #: field:hr.expense.line,name:0
 msgid "Expense Note"
-msgstr ""
+msgstr "سجل المصروفات"
 
 #. module: hr_expense
 #: help:hr.expense.expense,state:0
@@ -754,6 +772,12 @@ msgid ""
 " If an invoice is made for the expense request, the state is 'Invoiced'.\n"
 " If the expense is paid to user, the state is 'Reimbursed'."
 msgstr ""
+"عندما تُنشأ طلب المنفق ستكون الحالة هي ‘سحب‘.\n"
+"تم تأكيدها بواسطة المستخدم وتم ارسال الطلب للمدير, تصبح الحالة ‘تأكيد "
+"الانتظار‘.\n"
+"اذا قبل المدير ذلك, ستصبح الحالة ‘مقبولة‘.\n"
+"اذا تم عمل الفاتورة من اجل طلب المنفق, الحالة تصبح ‘فاتورة‘.\n"
+"اذا تم دفع المنفق للمستخدم, ستصبح الحالة ‘تم التسديد‘."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -797,7 +821,7 @@ msgstr "سنة"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "To Approve"
-msgstr ""
+msgstr "للموافقة"
 
 #. module: hr_expense
 #: help:product.product,hr_expense_ok:0

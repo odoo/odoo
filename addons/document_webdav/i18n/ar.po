@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2012-02-01 21:01+0000\n"
+"PO-Revision-Date: 2012-02-28 23:04+0000\n"
 "Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:43+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-03-01 05:13+0000\n"
+"X-Generator: Launchpad (build 14874)\n"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,create_date:0
@@ -72,6 +72,25 @@ msgid ""
 "server,\n"
 "        which needs explicit configuration in openerp-server.conf, too.\n"
 msgstr ""
+" مع هذا النموذج، يتم تنشيط خادم WebDAV للوثائق.\n"
+"ثم يمكنك استخدام أي متصفح متوافق لرؤية عن بعد المرفقات من OpenObject.\n"
+"\n"
+"بعد التثبيت، يمكن التحكم في الخادم WebDAV بواسطة مقطع [WEBDAV] في التهيئة "
+"للملقم.\n"
+"خادم معلمة تكوين:\n"
+"[WEBDAV]\n"
+"؛ تمكين = صحيح؛ خدمة WebDAV عبر خوادم (s) HTTP\n"
+"؛ vdir = WEBDAV، والدليل الذي سوف يخدم في WEBDAV\n"
+"وهذا التقصير يعني فال أن WEBDAV سيكون\n"
+"؛ على \"http://localhost:8069/webdav/\n"
+"؛ مطول = صحيح؛ بدوره على رسائل مطول من WEBDAV\n"
+"؛ تصحيح = صحيح؛ بدوره على رسائل التصحيح من WEBDAV\n"
+"، وحيث يتم توجيه الرسائل إلى تسجيل بيثون، مع\n"
+"؛ المستويات \"التصحيح\" و \"debug_rpc\" على التوالي، يمكنك ترك\n"
+"وهذه الخيارات على\n"
+"\n"
+"كما تنفذ IETF RFC 5785 لاكتشاف الخدمات على ملقم HTTP،\n"
+"التي تحتاج إلى تكوين واضح في openerp-server.conf أيضا.\n"
 
 #. module: document_webdav
 #: model:ir.model,name:document_webdav.model_document_webdav_file_property
@@ -98,7 +117,7 @@ msgstr "خصائصDAV للوثائق"
 #: code:addons/document_webdav/webdav.py:37
 #, python-format
 msgid "PyWebDAV Import Error!"
-msgstr ""
+msgstr "خطأ استيراد PyWebDAV"
 
 #. module: document_webdav
 #: view:document.webdav.file.property:0
@@ -134,6 +153,9 @@ msgid ""
 "http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-"
 "0.9.4.tar.gz&can=2&q=/"
 msgstr ""
+"الرجاء تثبيت PyWebDAV من "
+"http://code.google.com/p/pywebdav/downloads/detail؟name=PyWebDAV-"
+"0.9.4.tar.gz&can=2&q=/"
 
 #. module: document_webdav
 #: model:ir.ui.menu,name:document_webdav.menu_dir_props

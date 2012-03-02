@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2012-02-08 19:11+0000\n"
-"Last-Translator: walid sayed <mashyuser@hotmail.com>\n"
+"PO-Revision-Date: 2012-02-29 20:51+0000\n"
+"Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:51+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-03-01 05:13+0000\n"
+"X-Generator: Launchpad (build 14874)\n"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:188
@@ -171,6 +171,11 @@ msgid ""
 "the user and can be validated by his manager. If required, as defined on the "
 "project, you can generate the invoices based on the timesheet."
 msgstr ""
+"يفتح سجل الدوام الخاص بي  سجل دوامك بحيث يمكنك حجز نشاطاتك في النظام. من نفس "
+"الشكل، يمكنك تسجيل الحضور الخاص بك (تسجيل الدخول / خارج)، ووصف ساعات العمل "
+"يتم على مشاريع مختلفة. في نهاية المدة المحددة في الشركة، ويؤكد سجل الدوام من "
+"قبل المستخدم، ويمكن التحقق من صحتها من قبل مديره. إذا لزم الأمر، كما هو محدد "
+"في هذا المشروع، يمكنك إنشاء الفواتير بناء على سجل الدوام."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:246
@@ -208,7 +213,7 @@ msgstr "حساب تحليلي"
 #. module: hr_timesheet_sheet
 #: field:timesheet.report,nbr:0
 msgid "#Nbr"
-msgstr ""
+msgstr "# عدد"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_from:0
@@ -273,6 +278,26 @@ msgid ""
 "* Maximal difference between timesheet and attendances\n"
 "    "
 msgstr ""
+"\n"
+"هذه الوحدة تساعدك على تشفير بسهولة والتحقق من صحة سجل الدوام والحضور\n"
+"ضمن وجهة النظر نفسها. الجزء العلوي من وجهة النظر هو الحضور و\n"
+"المسار (في التوقيع / تسجيل الخروج) أحداث. الجزء السفلي هو لسجل الدوام.\n"
+"\n"
+"علامات تبويب أخرى تحتوي على إحصاءات وجهات النظر التي تساعدك على تحليل الخاصة "
+"بك\n"
+"مرة أو مرة في فريقك:\n"
+"* الوقت الذي يقضيه اليوم (مع الحضور)\n"
+"* الوقت الذي يقضيه مشروع\n"
+"\n"
+"هذه الوحدة أيضا بتنفيذ التحقق من صحة سجل الدوام  الكامل العملية:\n"
+"* سجل المشروع\n"
+"* تأكيد في نهاية الفترة من قبل الموظف\n"
+"* التحقق من الصحة من قبل مدير المشروع\n"
+"\n"
+"يمكن تكوين المصادقة في الشركة:\n"
+"* حجم الفترة (يوم في الاسبوع والشهر والسنة)\n"
+"*اقصى اختلاف بين سجل الدوام والحضور\n"
+"    "
 
 #. module: hr_timesheet_sheet
 #: constraint:res.company:0
@@ -740,6 +765,11 @@ msgid ""
 "* The 'Done' state is used when users timesheet is accepted by his/her "
 "senior."
 msgstr ""
+" * واستخدم الحالة \"مشروع\" عندما يقوم المستخدم بترميز سجل دوام جديد وغير "
+"مؤكد.\n"
+"* يتم استخدام الحالة \"مؤكد\" للتأكد من سجل الدوام من قبل المستخدم.\n"
+"* يتم استخدام الحالة \"تم\" عندما يتم قبول سجل الدوام للمستخدمين من قبل "
+"المدير له / لها."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0

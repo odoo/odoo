@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2012-02-05 22:20+0000\n"
+"PO-Revision-Date: 2012-02-29 15:37+0000\n"
 "Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:46+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-03-01 05:13+0000\n"
+"X-Generator: Launchpad (build 14874)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -123,7 +123,7 @@ msgstr "حدد سبب الحضور"
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
+msgstr "خطأ! لا يمكنك تحديد الادارة التي يديرها الموظف."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/report/attendance_by_month.py:184
@@ -214,6 +214,11 @@ msgid ""
 "    actions(Sign in/Sign out) performed by them.\n"
 "       "
 msgstr ""
+"\n"
+"    يهدف هذا النموذج  إلى إدارة حضور الموظف.\n"
+"وتبقي في الاعتبار الحضور من الموظفين على أساس من\n"
+"الإجراءات (تسجيل الدخول / تسجيل الخروج) التي يؤدونها.\n"
+"       "
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
@@ -353,7 +358,7 @@ msgstr "نوفمبر"
 #. module: hr_attendance
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "خطأ ! لايمكنك انشاء تسلسل هرمي عودي  للعاملين"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -368,14 +373,14 @@ msgstr "تسجيلات حضوري"
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "January"
-msgstr ""
+msgstr "يناير"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Sign in"
-msgstr ""
+msgstr "تسجيل الدخول"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -396,7 +401,7 @@ msgstr "اخطاء الحضور"
 #: field:hr.attendance,action:0
 #: selection:hr.attendance,action:0
 msgid "Action"
-msgstr ""
+msgstr "إجراء"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out:0
@@ -406,6 +411,9 @@ msgid ""
 "tool. If each employee has been linked to a system user, then they can "
 "encode their time with this action button."
 msgstr ""
+"اذا كنت تريد موظفينك تسجيل الدخول مكان وصولهم عند العمل ويسجلون الخروج مرة "
+"اخرى عند نهاية يوم العمل, تسمح لك OpenERP بإدارتها مع الادوات. اذا اتصل كل "
+"موظف لمستخدم النظام, ثم يمكنهم ترميز وقتهم بزر العمل هذا."
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,emp_id:0
@@ -430,7 +438,7 @@ msgstr "تعريف الموظف"
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Cancel"
-msgstr ""
+msgstr "إلغاء"
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
@@ -453,18 +461,18 @@ msgstr "اطبع تقرير الحضور شهرياً"
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Sign out"
-msgstr ""
+msgstr "تسجيل الخروج"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Delay"
-msgstr ""
+msgstr "تأخير"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "الموظف"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:140
@@ -473,6 +481,8 @@ msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the administrator to correct attendances."
 msgstr ""
+"حاولت إلى %s مع تاريخ سابق لحدث آخر!\n"
+"حاول الاتصال بالمسؤول لتصحيح الحضور ."
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -490,12 +500,12 @@ msgstr "التاريخ المسجل"
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
 msgid "Attendances"
-msgstr ""
+msgstr "الحضور"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "May"
-msgstr ""
+msgstr "مايو"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -506,7 +516,7 @@ msgstr "اخر تسجيل دخول لك"
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
 msgid "Sign Out"
-msgstr ""
+msgstr "تسجيل الخروج"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
@@ -528,12 +538,12 @@ msgstr "اسم الموظف"
 #. module: hr_attendance
 #: selection:hr.employee,state:0
 msgid "Absent"
-msgstr ""
+msgstr "غائب"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "February"
-msgstr ""
+msgstr "فبراير"
 
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
@@ -553,7 +563,7 @@ msgstr "الحالة الجارية"
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "April"
-msgstr ""
+msgstr "أبريل"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -578,7 +588,7 @@ msgstr ""
 #. module: hr_attendance
 #: field:hr.attendance.month,year:0
 msgid "Year"
-msgstr ""
+msgstr "السنة"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0

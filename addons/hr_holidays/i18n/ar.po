@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2012-02-08 19:15+0000\n"
-"Last-Translator: walid sayed <mashyuser@hotmail.com>\n"
+"PO-Revision-Date: 2012-02-29 19:23+0000\n"
+"Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:48+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-03-01 05:13+0000\n"
+"X-Generator: Launchpad (build 14874)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -39,7 +39,7 @@ msgstr "الحد الاقصى للترك المسموح - اتخذ بالفعل 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Leaves Management"
-msgstr ""
+msgstr "ادارة الاجازات"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -119,6 +119,10 @@ msgid ""
 "the employee. You can define several allowance types (paid holidays, "
 "sickness, etc.) and manage allowances per type."
 msgstr ""
+"يمكن تسجيل طلبات الاجازه من قبل الموظفين والتصديق عليها من قبل مديريهم. "
+"بمجرد التحقق من صحة طلب الإجازة، تبدو تلقائيا في جدول الأعمال للموظف. يمكنك "
+"تحديد أنواع عدة بدل (الإجازات المدفوعة الأجر، والمرض، وما إلى ذلك) وإدارة "
+"البدلات لكل نوع."
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -175,6 +179,8 @@ msgid ""
 "Choose 'Allocation Request' if you want to increase the number of leaves "
 "available for someone"
 msgstr ""
+"اختر 'طلب اجازة \"اذا كان هناك من يريد أن يأخذ يوما للعطلة.\n"
+"اختر 'طلب تخصيص \"إذا كنت ترغب في زيادة عدد الاجازات المتاحة لشخص ما"
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -227,6 +233,10 @@ msgid ""
 "'Waiting Approval'.            If the admin accepts it, the state is "
 "'Approved'. If it is refused, the state is 'Refused'."
 msgstr ""
+"عند انشاء طلب الاجازة الحالة تصبح ‘سحب‘.\n"
+"تم تأكيدها بواسطة المستخدم وتم ارسال الطلب للمدير, الحالة تصبح ‘قبول "
+"الانتظار‘. اذا قبلها المدير, تصبح الحالة ‘مقبولة‘. اذا تم رفضها , الحالة "
+"تصبح‘مرفوض‘."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -292,6 +302,32 @@ msgid ""
 "            for example, you maybe will do it for the user 'admin'\n"
 "            .\n"
 msgstr ""
+"ألموارد البشرية: تعقب الاجازات و سير العمل\n"
+"هذا النموذج يسمح لك لإدارة الأوراق وطلبات الإجازات \".\n"
+"وتنفذ لوحة القيادة لإدارة الموارد البشرية التي تتضمن.\n"
+"* بلادي أوراق\n"
+"* بلادي النفقات\n"
+"ملاحظة ما يلي:\n"
+"- وتزامن مع جدول أعمال داخلي (استخدام وحدة إدارة علاقات العملاء) هو ممكن: من "
+"أجل خلق حالة تلقائيا عندما يتم قبول طلب عطلة، لديك لربط حالة العطل إلى قسم "
+"القضية. يمكنك إعداد هذه المعلومات والتفضيلات الخاصة بك في اللون\n"
+"الموارد البشرية / تكوين / العطل الحالة\n"
+"- يمكن للموظف تقديم طلب أيام خارج أكثر من خلال جعل توزيع جديد أنه سيزيد "
+"مجموع له من هذا النوع إجازة المتاحة (في حال قبول الطلب).\n"
+"- هناك طريقتان لطباعة العطل الموظف:\n"
+"* وسيكون أول تسمح لاختيار الموظفين من خلال قسم ويستخدم من خلال النقر على "
+"عنصر القائمة الموجود في\n"
+"الموارد البشرية / العطل طلب / ملخص طباعة من العطل\n"
+"* والثانية تسمح لك لاختيار تقرير العطل للموظفين محددة. يذهب على لائحة\n"
+"الموارد البشرية / الموظفين / العاملين\n"
+"ثم حدد تلك التي تريد أن تختار، انقر على أيقونة الطباعة وحدد الخيار\n"
+"\"ملخص طباعة من العطل الموظف '\n"
+"- المعالج تسمح لك لاختيار ما إذا كنت تريد طباعة إما العطلات مؤكد والمصادق "
+"عليها أو فقط تلك التحقق من صحتها. يجب أن يتم تعيين هذه الدول حتى من قبل "
+"مستخدم من \"الموارد البشرية\" للمجموعة. يمكنك تحديد هذه الخصائص في علامة "
+"التبويب أمان من بيانات المستخدم في\n"
+"إدارة / المستخدمين / المستخدمين\n"
+"على سبيل المثال، كنت ستفعل ربما ل 'مشرف' للمستخدم\n"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
@@ -749,7 +785,7 @@ msgstr "تاريخ البدء"
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
-msgstr ""
+msgstr "طلبات التوزيع"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -774,4 +810,4 @@ msgstr "للتأكيد"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "To Approve"
-msgstr ""
+msgstr "للموافقة"

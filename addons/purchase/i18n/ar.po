@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2012-02-06 20:59+0000\n"
+"PO-Revision-Date: 2012-03-01 21:10+0000\n"
 "Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 06:11+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-03-02 04:56+0000\n"
+"X-Generator: Launchpad (build 14886)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -68,6 +68,13 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"يمكنك إنشاء طلب بالاسعار عندما تريد شراء المنتجات إلى مورد ولكن لم يتم تأكيد "
+"عملية الشراء بعد. أيضا استخدام هذه القائمة لمراجعة طلبات للحصول على الاسعار "
+"إنشاؤها تلقائيا استنادا إلى قواعد لوجستية لديك ( الحد الأدنى للمخزون، MTO، "
+"الخ). يمكنك تحويل طلب للحصول على الاسعار إلى أمر شراء مرة واحدة يتم تأكيد "
+"هذا الأمر. إذا كنت تستخدم واجهة الموسعة (من تفضيلات المستخدم)، يمكنك تحديد "
+"طريقة للسيطرة على فواتير المورد الخاص: استنادا إلى النظام، استنادا إلى  "
+"الاستقبالات أو الترميز اليدوي."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -608,6 +615,12 @@ msgid ""
 "Manual: allows you to generate suppliers invoices by chosing in the "
 "uninvoiced lines of all manual purchase orders."
 msgstr ""
+"من الطلب: سيتم عمل فاتورة المشروع مسبقا  بناء على طلب الشراء. سوف يكون مجرد "
+"محاسب للتحقق من صحة هذه الفاتورة من أجل التحكم.\n"
+"من الاختيار: سيتم عمل فاتورة المشروع مسبقا  على أساس التحقق من صحة "
+"الاستقبال.\n"
+"الدليل: يسمح لك بإنشاء الفواتير للموردين بواسطة الاختيار في خطوط الغير له "
+"فاتورة لكل اوامر المشتريات اليدوية."
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -810,6 +823,10 @@ msgid ""
 "supplier invoice yet. Once you are ready to receive a supplier invoice, you "
 "can generate a draft supplier invoice based on the lines from this menu."
 msgstr ""
+"إذا قمت بتعيين مراقبة الفواتير على طلب شراء ب \"دليل\"، يمكنك تعقب هنا كل "
+"خطوط امر الشراء التي لم تكن قد تلقت فاتورة المورد حتى الآن. عندما تكون على "
+"استعداد لتلقي فاتورة المورد، ويمكنك انشاء فاتورة المورد للمشروع على أساس "
+"خطوط من هذه القائمة."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -1149,6 +1166,15 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    وحدة الشراء هي أمر شراء لشراء السلع من المورد.\n"
+"يتم إنشاء فاتورة المورد لنظام خاص يوضع\n"
+"لوحة القيادة لإدارة الشراء التي تشمل ما يلي:\n"
+"* أوامر الشراء الحالية\n"
+"* اوامر الشراء للمشروع\n"
+"* الرسم البياني لكمية وقيمة شهريا    \n"
+"\n"
+"    "
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:696
@@ -1241,6 +1267,11 @@ msgid ""
 "received, the state becomes 'Done'. If a cancel action occurs in the invoice "
 "or in the reception of goods, the state becomes in exception."
 msgstr ""
+"الحالة لامر الشراء او الحصة المطلوبة. الحصة هي امر شراء في الحالة ‘مشروع‘. "
+"ثم يتم تأكيد الامر من قبل المستخدم, تنتقل الحالة الى ‘مؤكد‘. ثم يجب على "
+"المورد تأكيد الامر لتغيير الحالة الى ‘مقبولة‘. عند دفع واستقبال امر الشراء, "
+"تصبح الحالة ‘تم‘. اذا تم الغاء الحدث في الفاتورة او في استقبال السلع, الحالة "
+"تصبح ‘استثناء‘."
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -1606,6 +1637,13 @@ msgid ""
 "\n"
 " "
 msgstr ""
+" الرجاء ملاحظة مايلي:\n"
+"سيتم دمج الامر فقط اذا:\n"
+"*اوامر المشروع في حالة مشروع\n"
+"*اانتماء اوامر الشراء الى نفس المورد\n"
+"*ستدمج الخطوط فقط اذا:\n"
+"*خطوط الامر هي بالضبط نفس الاستثناء للمنتج, الكمية, والوحدة \n"
+" "
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,name:0
@@ -1654,6 +1692,10 @@ msgid ""
 "                                      \n"
 "* The 'Cancelled' state is set automatically when user cancel purchase order."
 msgstr ""
+" *تعيين الحالة ‘مشروع‘ تلقائيًا عندما يكون امر الشراء في حالة مشروع\n"
+"*تعيين الحالة ‘مؤكد‘ تلقائيًا عند تأكيد امر الشراء\n"
+"*تعيين الحالة ‘تم‘ تلقائيًا عندما يتم تعيين حالة امر الشراء الى تم.\n"
+"*تعيين الحالة ‘ملغي‘ تلقائيًا عندما يلغي المستخدم امر الشراء."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:426

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2012-02-05 22:03+0000\n"
+"PO-Revision-Date: 2012-02-29 17:40+0000\n"
 "Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:47+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-03-01 05:13+0000\n"
+"X-Generator: Launchpad (build 14874)\n"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -140,7 +140,7 @@ msgstr "طلب المقابلة"
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
+msgstr "خطأ! لا يمكنك تحديد الادارة التي يديرها الموظف."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -253,7 +253,7 @@ msgstr "يبين عدد الشهر التأخير بين كل تقييم لتل�
 #. module: hr_evaluation
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
 msgid "Periodic Evaluations"
-msgstr ""
+msgstr "التقييمات الدورية"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.reminder:0
@@ -277,6 +277,16 @@ msgid ""
 "          in the form of.Implements a dashboard for My Current Evaluations\n"
 "         "
 msgstr ""
+"\n"
+"          القدرة على انشاء تقييم الموظفين.\n"
+"يمكن انشاء التقييم بواسطة الموظف للمرؤوسين,\n"
+"الضغار بالاضافة الى المدير. تم عمل التقييم تحت الخطة\n"
+"فيما يمكن انشاء دراسات مختلفة ويمكن ان تُحدد اي المستوى الترتيبي للموظف\n"
+"يملأ استعراض ما والنهائي والتقييم\n"
+"يمكن أن يتم ذلك عن طريق المدير. كل تقييم يُملأ بواسطة الموظف من الممكن "
+"استعراضه\n"
+"في شكل تنفيذ لوحة القيادة للتقيمات الجالة الخاصة بي.\n"
+"         "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -312,7 +322,7 @@ msgstr "موظف"
 #. module: hr_evaluation
 #: field:hr.evaluation.report,overpass_delay:0
 msgid "Overpassed Deadline"
-msgstr ""
+msgstr "تخطي الموعد النهائي"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,mail_body:0
@@ -390,6 +400,10 @@ msgid ""
 "manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
 "final evaluation by the manager."
 msgstr ""
+"قد يعين كل موظف خطة التقييم. تحدد مثل هذه الخطة التكرار و الطريقة التي تدير "
+"بها التقييم الشخصي الدوري. ستتمكن من تحديد الخطوات وارفاق المقابلات لكل "
+"خطوة. يدير OpenERP كل انواع التقييمات: من اسفل الى اعلى, من اعلى الى اسفل, "
+"التقييم الذاتي والتقييم النهائي بواسطة المدير."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -451,7 +465,7 @@ msgstr "تقييم المواررد البشرية"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Group by..."
-msgstr ""
+msgstr "تجميع حسب..."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -524,7 +538,7 @@ msgstr "تقييم"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "7 Days"
-msgstr ""
+msgstr "٧ أيام"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -586,7 +600,7 @@ msgstr "مرشحات مفصلة..."
 #. module: hr_evaluation
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "خطأ ! لايمكنك انشاء تسلسل هرمي عودي  للعاملين"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -628,7 +642,7 @@ msgstr "تاريخ"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Survey"
-msgstr "نظرة عامة - استعراض"
+msgstr "إستفتاء"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,rating:0
@@ -728,6 +742,9 @@ msgid ""
 "employee's evaluation plan. Each user receives automatic emails and requests "
 "to evaluate their colleagues periodically."
 msgstr ""
+"تُنشأ طلبات المقابلة تلقائيًا بواسطة OpenERP بناءًا على خطة التقييم "
+"للموظفين. يستقبل كل مستخدم تلقائيًا البريد الالكتروني و الطلبات لتقييم "
+"زملائهم دوريًا."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:0
@@ -872,7 +889,7 @@ msgstr "طلبات المقابلة"
 #. module: hr_evaluation
 #: field:hr.evaluation.report,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "إنشاء تاريخ"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0 field:hr.evaluation.report,year:0

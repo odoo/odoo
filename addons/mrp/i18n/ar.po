@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2012-02-19 23:13+0000\n"
+"PO-Revision-Date: 2012-03-01 15:07+0000\n"
 "Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-22 05:57+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-03-02 04:56+0000\n"
+"X-Generator: Launchpad (build 14886)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -31,6 +31,10 @@ msgid ""
 "raw materials (stock decrease) and the production of the finished products "
 "(stock increase) when the order is processed."
 msgstr ""
+"ويقترح عادة أوامر تصنيع تلقائيا بواسطة OpenERP بناء على فاتورة المواد وقواعد "
+"المشتريات، ولكن يمكنك أيضا إنشاء أوامر تصنيع يدويا. وسوف يتعاملOpenERP مع "
+"استهلاك المواد الخام (النقص الأوراق المالية)، وإنتاج المنتجات النهائية "
+"(زيادة المخزون) عند معالجة هذا الأمر."
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
@@ -1082,6 +1086,11 @@ msgid ""
 "avoids having to wait for the procurement scheduler to run or having to run "
 "the procurement scheduler manually."
 msgstr ""
+"تمكن فقط في حساب وقت أوامر الشراء.\n"
+"\n"
+"في حين انها اكثر استهلاكا للموارد من الإعداد الافتراضي، الكمبيوتر JIT يتجنب "
+"الحاجة إلى انتظار جدولة عمليات الشراء للتشغيل أو الحاجة إلى تشغيل جدولة "
+"الشراء يدويا."
 
 #. module: mrp
 #: field:mrp.product.produce,mode:0
@@ -1108,6 +1117,11 @@ msgid ""
 "materials have been defined, OpenERP is capable of automatically deciding on "
 "the manufacturing route depending on the needs of the company."
 msgstr ""
+"تصف أوامر التصنيع العمليات التي تحتاج إلى أن تنفذ واستخدام المواد الخام "
+"اللازمة لإنتاج كل مرحلة. يمكنك استخدام مواصفات (فواتير المواد ) للعمل على "
+"الاحتياجات من المواد الخام وأوامر تصنيع اللازمة للمنتجات النهائية. مرة واحدة "
+"وقد تم تحديد مشاريع القوانين من المواد، وOpenERP قادر على اتخاذ القرار "
+"تلقائيا على طريقة التصنيع اعتمادا على احتياجات الشركة."
 
 #. module: mrp
 #: constraint:mrp.production:0
@@ -1157,6 +1171,27 @@ msgid ""
 "    * List of procurement in exception\n"
 "    "
 msgstr ""
+"\n"
+"    هذه هي الوحدة الأساسية لإدارة عملية التصنيع في OpenERP.\n"
+"\n"
+"الميزات:\n"
+"* جعل لمخزون/ جعل لأجل (بواسطة الخط)\n"
+"* فواتير المواد المتعدد المستويات \\، أي حد\n"
+"* متعدد المستويات التوجيه،بدون حد\n"
+"* التوجيه ومركز أعمال متكامل مع المحاسبة التحليلية\n"
+"* جدولة الحساب دوريا / فقط في وحدة الزمن\n"
+"* الذهاب إلى نقاط البيع، ومتعددة مستودع\n"
+"* إعادة ترتيب السياسات المختلفة\n"
+"* طريقة التكلفة حسب المنتج: سعر قياسي، بلوغ السعر المتوسط\n"
+"* تحليل سهل من مشاكل أو احتياجات\n"
+"مرن جدا *\n"
+"* يسمح لتصفح فاتورة المواد في بنية كاملة\n"
+"والتي تشمل الفروع وفواتير المود الوهمية\n"
+"انها تؤيد الاندماج الكامل والتخطيط في السلع القابلة للتخزين,\n"
+"استهلاك الخدمات. تتكامل تماما مع بقية الخدمات\n"
+"من البرنامج. على سبيل المثال، يمكنك إعداد خدمة التعاقد من الباطن\n"
+"في مكتب التنظيم للشراء تلقائيا على نظام الجمعية من الإنتاج الخاص.\n"
+"    "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
@@ -1218,6 +1253,9 @@ msgid ""
 "They are attached to bills of materials that will define the required raw "
 "materials."
 msgstr ""
+"تسمح لك المسارات لإنشاء وإدارة عمليات التصنيع التي ينبغي اتباعها في مراكز "
+"العمل من أجل إنتاج المنتج. وتم ارفاقها بفواتير المواد التي من شأنها أن تحدد "
+"المواد الأولية اللازمة."
 
 #. module: mrp
 #: field:report.workcenter.load,hour:0
@@ -1367,6 +1405,11 @@ msgid ""
 "product needs. You can either create a bill of materials to define specific "
 "production steps or define a single multi-level bill of materials."
 msgstr ""
+"تسمح لك فواتير المواد لإنشاء وإدارة لائحة من المواد الخام اللازمة التي "
+"استخدمت لصنع المنتج النهائي. وسوف تستخدم هذه OpenERP فواتير المواد هذه "
+"لتقترح تلقائيا أوامر التصنيع وفقا لاحتياجاتها من المنتجات. يمكنك إما إنشاء "
+"فاتورة المواد لتحديد خطوات إنتاج معين أو تعريف فاتورة فريدة متعددة المستوى "
+"للمواد."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockrfq0
@@ -1752,6 +1795,9 @@ msgid ""
 "the quantity selected and it will finish the production order when total "
 "ordered quantities are produced."
 msgstr ""
+"ووضع \"تستهلك فقط\" تستهلك فقط للمنتجات مع كمية محددة.\n"
+"ووضع \"تستهلك وتنتج\" تستهلك كذلك إنتاج مثل هذه المنتجات مع كمية محددة وسوف "
+"تنتهي أمر الإنتاج عندما يتم إنتاج إجمالي الكميات المطلوبة."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1943,6 +1989,11 @@ msgid ""
 "product, it will be sold and shipped as a set of components, instead of "
 "being produced."
 msgstr ""
+"إذا تم استخدام منتج فرعي في العديد من المنتجات، يمكن أن يكون مفيدا لإنشاء "
+"مكتب الإدارة الخاصة به. على الرغم إذا كنت لا تريد فصل أوامر الإنتاج لهذا "
+"المنتج الفرعي، حدد مجموعة / فانتوم كنوع لفاتورة المواد. إذا تم استخدام "
+"فاتورة المواد لفانتوم للمنتج الأصلي، سيتم بيعها وشحنها على أنها مجموعة من "
+"المكونات، وبدلا من انتاجها."
 
 #. module: mrp
 #: field:mrp.bom,method:0
@@ -1960,6 +2011,12 @@ msgid ""
 " When the production gets started then the state is set to 'In Production'.\n"
 " When the production is over, the state is set to 'Done'."
 msgstr ""
+"عندما يتم إنشاء نظام الانتاج يتم تعيين الحالة إلى \"مشروع\".\n"
+"إذا تم تأكد الأمر يتم تعيين الحالة إلى \"انتظار السلع\".\n"
+"إذا أي استثناءات هناك، يتم تعيين حالة إلى \"استثناء الاختيار\".\n"
+"إذا كان المخزون متاح ثم يتم تعيين حالة إلى \"جاهز للانتاج\".\n"
+"عند بدء الحصول على الانتاج ثم يتم تعيين الحالة الى'في الإنتاج \".\n"
+"عندما يكون الإنتاج هو أكثر من ذلك، يتم تعيين الحالة الى\"تم\"."
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -2240,6 +2297,11 @@ msgid ""
 "sales person creates a sales order, he can relate it to several properties "
 "and OpenERP will automatically select the BoM to use according the the needs."
 msgstr ""
+"يتم استخدام الخصائص في OpenERP لتحديد الفاتورة الصحيحة للمواد اللازمة لتصنيع "
+"المنتجات عندما يكون لديك طرق مختلفة لبناء نفس المنتج. يمكنك تعيين العديد من "
+"الخصائص على كل فاتورة من المواد. عندما ينشأ البائع ترتيب مبيعات، يمكنه ربطها "
+"بالعديد من الخصائص و ستحدد OpenERP تلقائيا فاتورة المواد لاستخدمها طبقًا "
+"للاحتياجات."
 
 #. module: mrp
 #: field:stock.move,production_id:0
