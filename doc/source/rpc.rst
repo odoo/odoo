@@ -80,7 +80,7 @@ around and use them differently/add new specifications on them.
 
         name of the OpenERP model this object is bound to
 
-    .. js:function:: openerp.web.Model.call(method, args, kwargs)
+    .. js:function:: openerp.web.Model.call(method[, args][, kwargs])
 
          Calls the ``method`` method of the current model, with the
          provided positional and keyword arguments.

@@ -192,6 +192,11 @@ openerp.web.Model = openerp.web.Class.extend(/** @lends openerp.web.Model# */{
     call: function (method, args, kwargs) {
         args = args || [];
         kwargs = kwargs || {};
+        if (!_.isArray(args)) {
+            // call(method, kwargs)
+            kwargs = args;
+            args = [];
+        }
         return openerp.connection.rpc('/web/dataset/call_kw', {
             model: this.name,
             method: method,
@@ -783,7 +788,7 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
      * @returns {$.Deferred}
      */
     name_search: function (name, domain, operator, limit, callback) {
-        return this._model.call('name_search', [], {
+        return this._model.call('name_search', {
             name: name || '',
             args: domain || false,
             operator: operator || 'ilike',
