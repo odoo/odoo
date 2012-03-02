@@ -2070,7 +2070,7 @@ class stock_move(osv.osv):
                 context = {}
             currency_ctx = dict(context, currency_id = move.company_id.currency_id.id)
             amount_unit = move.product_id.price_get('standard_price', currency_ctx)[move.product_id.id]
-            reference_amount = amount_unit * qty or 1.0
+            reference_amount = amount_unit * qty
 
         return reference_amount, reference_currency_id
 
