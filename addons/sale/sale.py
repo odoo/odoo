@@ -223,16 +223,14 @@ class sale_order(osv.osv):
         'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
             'Picking Policy', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
         'order_policy': fields.selection([
-            ('prepaid', 'Pay before delivery'),
-            ('manual', 'Deliver & invoice on demand'),
-            ('picking', 'Invoice based on deliveries'),
-            ('postpaid', 'Invoice on order after delivery'),
-        ], 'Invoice Policy', required=True, readonly=True, states={'draft': [('readonly', False)]},
-                    help="""The Invoice Policy is used to synchronise invoice and delivery operations.
-  - The 'Pay before delivery' choice will first generate the invoice and then generate the picking order after the payment of this invoice.
-  - The 'Deliver & Invoice on demand' will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice based on the sale order or the sale order lines.
-  - The 'Invoice on order after delivery' choice will generate the draft invoice based on sales order after all picking lists have been finished.
-  - The 'Invoice based on deliveries' choice is used to create an invoice during the picking process."""),
+            ('prepaid', 'Before Delivery'),
+            ('manual', 'On Demand'),
+            ('picking', 'On Delivery Order'),
+        ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)]},
+                    help="""The Create Invoice is used to synchronise invoice and delivery operations.
+  - The 'Before Delivery' choice will first generate the invoice and then generate the picking order after the payment of this invoice.
+  - The 'On Demand' will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice based on the sale order or the sale order lines.
+  - The 'On Delivery Order' choice will generate the draft invoice based on sales order after all picking lists have been finished."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Pricelist for current sales order."),
         'project_id': fields.many2one('account.analytic.account', 'Contract/Analytic Account', readonly=True, states={'draft': [('readonly', False)]}, help="The analytic account related to a sales order."),
 
