@@ -46,6 +46,18 @@
             <field name="category_id" ref="purchase.category_purchase_config"/>
             <field name="type">once</field>
         </record>
-        
+
+        <record id="view_purchase_config" model="ir.ui.view">
+            <field name="name">board.purchase.form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="purchase.view_purchase_config"/>
+            <field name="arch" type="xml">
+                <field name="module_purchase_double_validation" position="after">
+                    <field name="purchase_limit" nolabel="1"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>

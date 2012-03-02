@@ -14,7 +14,7 @@
 
         <menuitem
             id="menu_purchase_config_pricelist" name="Pricelists"
-            parent="menu_purchase_config_purchase" sequence="50"  groups="base.group_extended"/>
+            parent="menu_purchase_config_purchase" sequence="50" groups="base.group_purchase_pricelist_per_supplier"/>
 
         <menuitem
             action="product.product_pricelist_action" id="menu_product_pricelist_action_purhase"
@@ -39,7 +39,7 @@
 
         <menuitem
             id="menu_purchase_unit_measure_purchase" name="Units of Measure"
-            parent="purchase.menu_product_in_config_purchase"  sequence="20"/>
+            parent="purchase.menu_product_in_config_purchase"  sequence="20" groups="base.group_purchase_uom_per_product"/>
 
         <menuitem
              action="product.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
@@ -174,7 +174,7 @@
                         <page string="Purchase Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}"  options='{"quick_create": false}'/>
                             <field name="partner_address_id" options='{"quick_create": false}'/>
-                            <field domain="[('type','=','purchase')]" name="pricelist_id" groups="base.group_extended"/>
+                            <field domain="[('type','=','purchase')]" name="pricelist_id" groups="base.group_purchase_pricelist_per_supplier"/>
                             <field name="origin" groups="base.group_extended"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" mode="tree,form">
@@ -182,7 +182,7 @@
                                     <field name="date_planned"/>
                                     <field name="name"/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom"/>
+                                    <field name="product_uom" groups="base.group_purchase_uom_per_product"/>
                                     <field name="price_unit"/>
                                     <field name="price_subtotal"/>
                                 </tree>
@@ -361,7 +361,7 @@
                         <page string="Order Line">
                             <field name="product_id" colspan="4" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)" required="1"/>
                             <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
-                            <field name="product_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
+                            <field name="product_uom" groups="base.group_purchase_uom_per_product" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes,context)"/>
                             <field colspan="4" name="name"/>
                             <field name="date_planned" widget="date"/>
                             <field name="price_unit"/>
@@ -403,7 +403,7 @@
                     <field name="product_id"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>
-                    <field name="product_uom"/>
+                    <field name="product_uom" groups="base.group_purchase_uom_per_product"/>
                     <field name="price_subtotal"/>
                     <field name="date_planned"  widget="date" width="135"/>
                     <field name="state" invisible="1"/>
@@ -424,7 +424,7 @@
                              <field name="order_id"/>
                             <field name="product_id" readonly="1" />
                             <field name="product_qty" readonly="1" />
-                            <field name="product_uom" readonly="1"/>
+                            <field name="product_uom" readonly="1" groups="base.group_purchase_uom_per_product"/>
                             <field colspan="4" name="name"/>
                             <field name="date_planned" widget="date"  readonly="1"/>
                             <field name="price_unit"/>
