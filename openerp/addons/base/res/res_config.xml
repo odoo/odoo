@@ -84,6 +84,29 @@
 
       </field>
     </record>
+    
+    <record id="res_config_view_for_all" model="ir.ui.view">
+        <field name="name">res.config.view.all</field>
+        <field name="model">res.config</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <group col="4" colspan="4" name="sales">
+                </group>
+                <group col="4" colspan="4" name="crm">
+                </group>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_sale_config" model="ir.actions.act_window">
+        <field name="name">Configure Sales Application</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config</field>
+        <field name="view_id" ref="res_config_view_for_all"/>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+    </record>
 
   </data>
 </openerp>

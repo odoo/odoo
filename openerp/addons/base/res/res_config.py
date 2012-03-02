@@ -173,17 +173,14 @@ class res_config_configurable(osv.osv_memory):
                            [('state','in',['to install', 'installed', 'to upgrade'])],
                            context=context)
         modules_list = [mod.name for mod in module_obj.browse(cr, uid, module_ids, context=context)]
-        for column in self._columns.keys():
-            if module.startswith('module_'):
-                module_names.append(module.strip('module_'))
-        installed_modules = dict([(name, True) for name in list(set(modules_list) & set(module_names))])
+        installed_modules = dict([('module_'+name, True) for name in modules_list])
         return installed_modules
 
     def set_installed_modules(self, cr, uid, ids, vals, context=None):
         module_obj = self.pool.get('ir.module.module')
         for module, value in vals.items():
             if module.startswith('module_'):
-                mod_name = module.strip('module_')
+                mod_name = module[len('module_'):]
                 installed = self.get_default_installed_modules(cr, uid, ids, context=context)
                 if value == True and not installed.get(mod_name):
                     module_id = module_obj.search(cr, uid, [('name','=',mod_name)])
