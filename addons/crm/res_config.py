@@ -25,11 +25,11 @@ class crm_configuration(osv.osv_memory):
     _inherit = 'res.config'
 
     _columns = {
-        'module_crm_caldav' : fields.boolean("Use caldav to synchronize Meetings",
-                                    help="""This allows you Caldav features in Meeting, Share meeting with other calendar clients like sunbird.
+        'module_crm_caldav' : fields.boolean("Caldav Synchronization",
+                                    help="""Allows Caldav features in Meeting, Share meeting with other calendar clients like sunbird.
                                     It installs crm_caldav module."""),
         'module_fetchmail_crm': fields.boolean("Lead/Opportunity mail gateway", help="""
-                                                This allows you to configure your incoming mail server,
+                                                Allows you to configure your incoming mail server. And creates leads for your mails.
                                                It installs fetchmail_crm module."""),
         'server' : fields.char('Server Name', size=256),
         'port' : fields.integer('Port'),
@@ -42,7 +42,7 @@ class crm_configuration(osv.osv_memory):
         'user' : fields.char('Username', size=256),
         'password' : fields.char('Password', size=1024),
         'module_import_sugarcrm' : fields.boolean("SugarCRM Import",
-                                    help="""Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Employees, Meetings, Phonecalls, Emails, and Project, Project Tasks Data into OpenERP Module.
+                                    help="""Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Employees, Meetings, Phonecalls, Emails, and Project, Project Tasks Data.
                                     It installs import_sugarcrm module.
                                     """),
         'module_import_google' : fields.boolean("Google Import",
@@ -60,12 +60,12 @@ class crm_configuration(osv.osv_memory):
                                     It lets you define:
                                         * contacts unrelated to a partner,
                                         * contacts working at several addresses (possibly for different partners),
-                                        * contacts with possibly different functions for each of its job's addresses
+                                        * contacts with possibly different functions for each of its job's addresses.
                                     It installs base_contact module.
                                     """),
         'module_google_map' : fields.boolean("Google maps on customer",
                                     help="""
-                                    This allows yopu to locate customer on Google Map.
+                                    Allows you to locate customer on Google Map.
                                     It installs google_map module.
                                     """),
         'module_plugin_thunderbird': fields.boolean('Thunderbird plugin',
@@ -90,6 +90,21 @@ class crm_configuration(osv.osv_memory):
     _defaults = {
         'type': 'pop',
     }
+    
+    def create(self, cr, uid, vals, context=None):
+        ids = super(crm_configuration, self).create(cr, uid, vals, context=context)
+        self.execute(cr, uid, [ids], vals, context=context)
+        return ids
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self.execute(cr, uid, ids, vals, context=context)
+        return super(crm_configuration, self).write(cr, uid, ids, vals, context=context)
+
+    def execute(self, cr, uid, ids, vals, context=None):
+        for method in dir(self):
+            if method.startswith('set_'):
+                getattr(self, method)(cr, uid, ids, vals, context)
+        return True
 
     def get_default_email_configurations(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
@@ -129,11 +144,13 @@ class crm_configuration(osv.osv_memory):
                     'password': vals.get('password')
             }
             server_ids = fetchmail_obj.search(cr, uid, [])
-            if not self.get_default_installed_modules(cr, uid, ids, context) or not server_ids:
-                tt = fetchmail_obj.create(cr, uid, fetchmail_vals, context=context)
+            installed_modules = self.get_default_installed_modules(cr, uid, ids, context=context)
+            if installed_modules.get('module_fetchmail_crm') or not server_ids:
+                server_ids = [fetchmail_obj.create(cr, uid, fetchmail_vals, context=context)]
             else:
-                fetchmail_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads')], context=context)
-                fetchmail_obj.write(cr, uid, fetchmail_ids, fetchmail_vals, context=context)
+                server_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads')], context=context)
+                fetchmail_obj.write(cr, uid, server_ids, fetchmail_vals, context=context)
+            fetchmail_obj.button_confirm_login(cr, uid, server_ids, context=None)
             ir_values_obj.set(cr, uid, 'default', False, 'server', ['fetchmail.server'], fetchmail_vals.get('server'))
             ir_values_obj.set(cr, uid, 'default', False, 'port', ['fetchmail.server'], fetchmail_vals.get('port'))
             ir_values_obj.set(cr, uid, 'default', False, 'is_ssl', ['fetchmail.server'], fetchmail_vals.get('is_ssl'))

@@ -33,11 +33,11 @@ class sale_configuration(osv.osv_memory):
                                       help="To allow your salesman to make invoices for Delivery Orders using 'Deliveries to Invoice' menu."),
         'task_work': fields.boolean('Based on Tasks\' Work',
                                     help="""Lets you transfer the entries under tasks defined for Project Management to
-                                    the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways.
+                                    the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways 
                                     and to automatically creates project tasks from procurement lines.
-                                    It installs the project_timesheet and project_mrp module"""),
+                                    It installs the project_timesheet and project_mrp modules."""),
         'module_account_analytic_analysis': fields.boolean('Based on Timesheet',
-                                    help = """For modifying account analytic view to show important data to project manager of services companies,
+                                    help = """For modifying account analytic view to show important data to project manager of services companies.
                                     You can also view the report of account analytic summary user-wise as well as month wise.
                                     It installs the account_analytic_analysis module."""),
         'order_policy': fields.selection([
@@ -46,43 +46,44 @@ class sale_configuration(osv.osv_memory):
         ], 'Main Method Based On', required=True, help="You can generate invoices based on sales orders or based on shippings."),
         'module_delivery': fields.boolean('Do you charge the delivery?',
                                    help ="""
-                                   Allows you to add delivery methods in sale orders and picking,
+                                   Allows you to add delivery methods in sale orders and delivery orders.
                                    You can define your own carrier and delivery grids for prices.
                                    It installs the delivery module.
                                    """),
         'time_unit': fields.many2one('product.uom','Working Time Unit'),
         'picking_policy' : fields.boolean("Deliver all products at once?", help = "You can set picking policy on sale order that will allow you to deliver all products at once."),
-        'group_sale_delivery_address':fields.boolean("Multiple Address",help="This allows you to set different delivery address and picking address,it assigns Multiple Address group to all employees."),
+        'group_sale_delivery_address':fields.boolean("Multiple Address",help="Allows you to set different delivery address and invoice address. It assigns Multiple Address group to all employees."),
         'group_sale_disc_per_sale_order_line':fields.boolean("Discounts per sale order lines ",help="This allows you to apply discounts per sale order lines, it assigns Discounts per sale order lines group to all employees."),
         'module_sale_layout':fields.boolean("Notes & subtotals per line",help="Allows to format sale order lines using notes, separators, titles and subtotals. It installs the sale_layout module."),
         'module_warning': fields.boolean("Alerts by products or customers",
-                                  help="""To trigger warnings in OpenERP objects.
-                                  Warning messages can be displayed for objects like sale order, purchase order, picking and invoice. The message is triggered by the form's onchange event.
+                                  help="""To raise user specific warning messages on different products used in Sales Orders, Purchase Orders, Invoices and Deliveries. 
                                   It installs the warning module."""),
         'module_sale_margin': fields.boolean("Display Margin For Users",
-                        help="""This adds the 'Margin' on sales order,
+                        help="""This adds the 'Margin' on sales order.
                         This gives the profitability by calculating the difference between the Unit Price and Cost Price.
-                        .It installs the sale_margin module."""),
-        'module_sale_journal': fields.boolean("Invoice journal?",
-                        help="""This allows you to categorise your sales and deliveries (picking lists) between different journals.
+                        It installs the sale_margin module."""),
+        'module_sale_journal': fields.boolean("Invoice Journal",
+                        help="""Allows you to categorize your sales and deliveries (picking lists) between different journals.
                         It installs the sale_journal module."""),
         'module_analytic_user_function' : fields.boolean("User function by contracts",
-                                    help="""This allows you to define what is the default function of a specific user on a given account
-                                    This is mostly used when a user encodes his timesheet: the values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.
-                                    It Installs analytic_user_function module."""),
+                                    help="""Allows you to define what is the default function of a specific user on a given account.
+                                    This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled. 
+                                    But the possibility to change these values is still available.
+                                    It installs analytic_user_function module."""),
         'module_analytic_journal_billing_rate' : fields.boolean("Billing rates by contracts",
-                                    help=""" This allows you to define what is the default invoicing rate for a specific journal on a given account.
+                                    help="""Allows you to define what is the default invoicing rate for a specific journal on a given account.
                                     It installs analytic_journal_billing_rate module.
                                     """)
     }
     
     def get_default_installed_modules(self, cr, uid, ids, context=None):
+        data_obj = self.pool.get('ir.model.data')
         installed_modules = super(sale_configuration, self).get_default_installed_modules(cr, uid, ids, context=context)
         if installed_modules.get('module_project_mrp') and installed_modules.get('module_project_timesheet'):
             installed_modules['task_work'] = True
             prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
             uom_id = self.pool.get('product.product').browse(cr, uid, prod_id).uom_id.id
-            defaults.update({'time_unit': uom_id})
+            installed_modules.update({'time_unit': uom_id})
         return installed_modules
 
     def get_default_sale_configs(self, cr, uid, ids, context=None):
@@ -103,14 +104,6 @@ class sale_configuration(osv.osv_memory):
             result[res[1]] = res[2]
         return result
     
-    def default_get(self, cr, uid, fields_list, context=None):
-        result = super(sale_configuration, self).default_get(
-            cr, uid, fields_list, context=context)
-        for method in dir(self):
-            if method.startswith('get_default_'):
-                result.update(getattr(self, method)(cr, uid, [], context))
-        return result
-    
     _defaults = {
         'order_policy': 'manual',
         'time_unit': lambda self, cr, uid, c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c) and self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c)[0] or False,
@@ -126,7 +119,6 @@ class sale_configuration(osv.osv_memory):
         return super(sale_configuration, self).write(cr, uid, ids, vals, context=context)
 
     def execute(self, cr, uid, ids, vals, context=None):
-        #TODO: TO BE IMPLEMENTED
         for method in dir(self):
             if method.startswith('set_'):
                 getattr(self, method)(cr, uid, ids, vals, context)
