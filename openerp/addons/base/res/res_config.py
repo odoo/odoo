@@ -208,6 +208,14 @@ class res_config_configurable(osv.osv_memory):
                     users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})
                     ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(3,group_id)])
 
+    def default_get(self, cr, uid, fields_list, context=None):
+        result = super(res_config_configurable, self).default_get(
+            cr, uid, fields_list, context=context)
+        for method in dir(self):
+            if method.startswith('get_default_'):
+                result.update(getattr(self, method)(cr, uid, [], context))
+        return result
+
 res_config_configurable()
 
 class res_config_installer(osv.osv_memory):
