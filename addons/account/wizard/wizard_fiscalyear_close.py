@@ -21,7 +21,6 @@
 ##############################################################################
 
 import wizard
-import osv
 import pooler
 from tools.translate import _
 
@@ -85,10 +84,10 @@ def _data_save(self, cr, uid, data, context=None):
     new_journal = obj_acc_journal.browse(cr, uid, new_journal, context=context)
 
     if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
-        raise osv.except_osv(_('UserError'),
+        raise wizard.except_wizard(_('UserError'),
                 _('The journal must have default credit and debit account'))
     if (not new_journal.centralisation) or new_journal.entry_posted:
-        raise osv.except_osv(_('UserError'),
+        raise wizard.except_wizard(_('UserError'),
                 _('The journal must have centralised counterpart without the Skipping draft state option checked!'))
 
     move_ids = obj_acc_move_line.search(cr, uid, [
