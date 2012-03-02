@@ -30,12 +30,16 @@ class account_configuration(osv.osv_memory):
                 ('no_tax', 'No Tax'),
                 ('global_on_order', 'Global On Order'),
                 ('on_order_line', 'On Order Lines'),
-            ], 'Taxes', required=True),
+            ], 'Taxes', required=True, 
+            help="""
+                If you want to apply global tax on sale order then select 'Global On Order' it will add 'Global On Order' group to employees.
+                If you want to apply different taxes for sale order lines then select 'On Order Lines' it will add 'On Order Lines' group to employees.
+            """),
             'tax_value': fields.float('Value'),
     }
     
     _defaults = {
-        'tax_policy': 'global_on_order',
+            'tax_policy': 'global_on_order',
     }
 
     def get_default_tax_policy(self, cr, uid, ids, context=None):
@@ -98,7 +102,7 @@ class account_configuration(osv.osv_memory):
             users_obj.write(cr, uid, [uid], {'groups_id': [(3,remove_group_id)]})
             ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(3,remove_group_id)])
         else:
-            groups = [order_group_id, remove_group_id]
+            groups = [order_group_id, order_line_group_id]
             for group_id in groups:
                 groups_obj.write(cr, uid, [user_group_id], {'implied_ids': [(3,group_id)]})
                 users_obj.write(cr, uid, [uid], {'groups_id': [(3,group_id)]})

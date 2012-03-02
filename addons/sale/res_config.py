@@ -27,18 +27,19 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'res.config'
 
     _columns = {
-        'sale_orders': fields.boolean('Based on Sales Orders',),
-        'deli_orders': fields.boolean('Based on Delivery Orders'),
+        'sale_orders': fields.boolean('Based on Sales Orders', 
+                                      help="To allow your salesman to make invoices for sale order lines using 'Lines to Invoice' menu."),
+        'deli_orders': fields.boolean('Based on Delivery Orders',
+                                      help="To allow your salesman to make invoices for Delivery Orders using 'Deliveries to Invoice' menu."),
         'task_work': fields.boolean('Based on Tasks\' Work',
-                                    help="""
-                                    It installs the project_timesheet and project_mrp module
-                                    project_timesheet :lets you transfer the entries under tasks defined for Project Management to
+                                    help="""Lets you transfer the entries under tasks defined for Project Management to
                                     the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways.
-                                    project_mrp : Automatically creates project tasks from procurement lines"""),
-        'timesheet': fields.boolean('Based on Timesheet',
-                                    help = """for modifying account analytic view to show important data to project manager of services companies,
-                                    You can also view the report of account analytic summary user-wise as well as month wise
-                                    ,It installs the account_analytic_analysis module."""),
+                                    and to automatically creates project tasks from procurement lines.
+                                    It installs the project_timesheet and project_mrp module"""),
+        'module_account_analytic_analysis': fields.boolean('Based on Timesheet',
+                                    help = """For modifying account analytic view to show important data to project manager of services companies,
+                                    You can also view the report of account analytic summary user-wise as well as month wise.
+                                    It installs the account_analytic_analysis module."""),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
@@ -50,9 +51,9 @@ class sale_configuration(osv.osv_memory):
                                    It installs the delivery module.
                                    """),
         'time_unit': fields.many2one('product.uom','Working Time Unit'),
-        'picking_policy' : fields.boolean("Deliver all products at once?", help = ""),
-        'group_sale_delivery_address':fields.boolean("Multiple Address",help="Group To Allow delivery address different from invoice address"),
-        'group_sale_disc_per_sale_order_line':fields.boolean("Discounts per sale order lines ",help="Group to apply discounts per sale order lines"),
+        'picking_policy' : fields.boolean("Deliver all products at once?", help = "You can set picking policy on sale order that will allow you to deliver all products at once."),
+        'group_sale_delivery_address':fields.boolean("Multiple Address",help="This allows you to set different delivery address and picking address,it assigns Multiple Address group to all employees."),
+        'group_sale_disc_per_sale_order_line':fields.boolean("Discounts per sale order lines ",help="This allows you to apply discounts per sale order lines, it assigns Discounts per sale order lines group to all employees."),
         'module_sale_layout':fields.boolean("Notes & subtotals per line",help="Allows to format sale order lines using notes, separators, titles and subtotals. It installs the sale_layout module."),
         'module_warning': fields.boolean("Alerts by products or customers",
                                   help="""To trigger warnings in OpenERP objects.
@@ -73,19 +74,12 @@ class sale_configuration(osv.osv_memory):
                                     help=""" This allows you to define what is the default invoicing rate for a specific journal on a given account.
                                     It installs analytic_journal_billing_rate module.
                                     """),
-        'module_account_analytic_analysis': fields.boolean('Contracts',
-                                    help = """
-                                    For modifying account analytic view to show important data to project manager of services companies,
-                                    You can also view the report of account analytic summary user-wise as well as month wise
-                                    ,It installs the account_analytic_analysis module."""),
     }
-
+    
     def get_default_installed_modules(self, cr, uid, ids, context=None):
         installed_modules = super(sale_configuration, self).get_default_installed_modules(cr, uid, ids, context=context)
-        if installed_modules.get('project_mrp') and installed_modules.get('project_timesheet'):
+        if installed_modules.get('module_project_mrp') and installed_modules.get('module_project_timesheet'):
             installed_modules['task_work'] = True
-        if installed_modules.get('account_analytic_analysis'):
-            installed_modules['timesheet'] = True
         return installed_modules
     
     def get_default_sale_configs(self, cr, uid, ids, context=None):
@@ -136,11 +130,6 @@ class sale_configuration(osv.osv_memory):
         return True
 
     def set_installed_modules(self, cr, uid, ids, vals, context=None):
-        if vals.get('timesheet'):
-            vals.update({'module_account_analytic_analysis': True})
-        else:
-            vals.update({'module_account_analytic_analysis': False})
-
         if vals.get('task_work'):
             vals.update({'module_project_timesheet': True, 'module_project_mrp': True})
         else:

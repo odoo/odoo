@@ -5,83 +5,65 @@
             <field name="name">Sales Application</field>
             <field name="model">res.config</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_view_base"/>
+            <field name="inherit_id" ref="base.res_config_view_for_all"/>
             <field name="arch" type="xml">
-                <form position="replace">
-                    <form string="Sale Configuration">
-                        <separator string="Picking and Invoice Policy" colspan="4"/>
-                        <group  colspan="4" col="8">
-                            <group  colspan="4" col="4">
-                               <field name="sale_orders"/>
-                               <newline/>
-                               <field name="deli_orders"/>
-                               <newline/>
-                               <field name="task_work"/>
-                               <newline/>
-                               <field name="timesheet"/>
-                               <newline/>
-                            </group>
-                            <group colspan="4" col="4">
-                                <field name="order_policy" attrs="{'invisible':['|',('sale_orders','=',False),('deli_orders','=',False)]}"/>
-                                <newline/>
-                                <field name="module_delivery" attrs="{'invisible':[('sale_orders','=',False), ('deli_orders','=',False)]}"/>
-                                <newline/>
-                                <field name="picking_policy" attrs="{'invisible':[('deli_orders','=',False)]}"/>
-                                <newline/>
-                                <field name="time_unit" domain="[('category_id.name','=','Working Time')]" attrs="{'invisible':[('task_work','=',False),('timesheet','=',False)],'required': [('timesheet','=',True)]}"/>
-                            </group>
+                <group name="sales" position="inside">
+                    <separator string="Picking and Invoice Policy" colspan="4"/>
+                    <group  colspan="4" col="8">
+                        <group  colspan="4" col="4">
+                           <field name="sale_orders"/>
+                           <newline/>
+                           <field name="deli_orders"/>
+                           <newline/>
+                           <field name="task_work"/>
+                           <newline/>
+                           <field name="module_account_analytic_analysis"/>
+                           <newline/>
                         </group>
-
-                        <separator string="Sale Order" colspan="4"/>
-                        <group  colspan="4" col="8">
-                            <group  colspan="4" col="4">
-                               <field name="group_sale_pricelist_per_customer"/>
-                               <newline/>
-                               <field name="tax_policy" on_change="onchange_tax_policy(tax_policy)"/>
-                               <newline/>
-                               <field name="module_sale_margin"/>
-                               <newline/>
-                               <field name="module_warning"/>
-                               <newline/>
-                            </group>
-                            <group colspan="4" col="4">
-                                <newline/>
-                                <field name="group_sale_uom_per_product"/>
-                                <newline/>
-                                <field name="group_sale_delivery_address"/>
-                                <newline/>
-                                <field name="group_sale_disc_per_sale_order_line"/>
-                                <newline/>
-                                <field name="module_sale_layout"/>
-                                <newline/>
-                                <field name="module_sale_journal"/>
-                                <newline/>
-                            </group>
+                        <group colspan="4" col="4">
+                            <field name="order_policy" attrs="{'invisible':['|',('sale_orders','=',False),('deli_orders','=',False)]}"/>
+                            <newline/>
+                            <field name="module_delivery" attrs="{'invisible':[('sale_orders','=',False), ('deli_orders','=',False)]}"/>
+                            <newline/>
+                            <field name="picking_policy" attrs="{'invisible':[('deli_orders','=',False)]}"/>
+                            <newline/>
+                            <field name="time_unit" domain="[('category_id.name','=','Working Time')]" attrs="{'invisible':[('task_work','=',False),('module_account_analytic_analysis','=',False)],'required': [('module_account_analytic_analysis','=',True)]}"/>
                         </group>
+                    </group>
 
-                        <separator string="Contracts" colspan="4"/>
-                        <group name="Contracts" colspan="4" col="4">
-                            <group  colspan="4" col="4">
-                               <field name="module_account_analytic_analysis"/>
-                               <newline/>
-                            </group>
+                    <separator string="Sale Order" colspan="4"/>
+                    <group colspan="4" col="8" name="sale_order">
+                        <group  colspan="4" col="4">
+                           <field name="group_sale_pricelist_per_customer"/>
+                           <newline/>
+                           <group col="2" colspan="1">
+                                <field name="tax_policy" on_change="onchange_tax_policy(tax_policy)"/>
+                           </group>
+                           <newline/>
+                           <field name="module_sale_margin"/>
+                           <newline/>
+                           <field name="module_warning"/>
+                           <newline/>
                         </group>
-
-                    </form>
-                </form>
+                        <group colspan="4" col="4">
+                            <newline/>
+                            <field name="group_sale_uom_per_product"/>
+                            <newline/>
+                            <field name="group_sale_delivery_address"/>
+                            <newline/>
+                            <field name="group_sale_disc_per_sale_order_line"/>
+                            <newline/>
+                            <field name="module_sale_layout"/>
+                            <newline/>
+                            <field name="module_sale_journal"/>
+                            <newline/>
+                        </group>
+                    </group>
+                </group>
             </field>
         </record>
 
-        <record id="action_sale_config" model="ir.actions.act_window">
-            <field name="name">Configure Sales Application</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.config</field>
-            <field name="view_id" ref="view_sales_config"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-        </record>
-
-        <menuitem id="menu_sale_config" name="Sales" parent="base.menu_config" sequence="1" action="action_sale_config"/>
+        <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config" sequence="1" action="base.action_sale_config"/>
 
     </data>
 </openerp>

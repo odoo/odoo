@@ -25,8 +25,15 @@ class product_groups_configuration(osv.osv_memory):
     _inherit = 'res.config'
 
     _columns = {
-        'group_sale_pricelist_per_customer':fields.boolean("Pricelist per customer ",help="Group to Activate pricelist to manage prices per customer"),
-        'group_sale_uom_per_product':fields.boolean("UOM per product",help="Group to Allow different unit of measure per product"),
+        'group_sale_pricelist_per_customer':fields.boolean("Pricelist per customer",
+                                                           help="""Allows to manage different prices based on rules per category of customers. 
+                                                           Example: 10% for retailers, promotion of 5 EUR on this product, etc.
+                                                           It assigns the "Pricelist" group to all employees."""),
+        'group_sale_uom_per_product':fields.boolean("UOM per product",
+                                                    help="""
+                                                    Allows you to select and maintain different unit of measures per product.
+                                                    It assigns the "UOM per product" group to all employees.
+                                                    """),
 }
     
 product_groups_configuration()

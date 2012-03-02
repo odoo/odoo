@@ -52,9 +52,9 @@
             <field name="name">Sales Application</field>
             <field name="model">res.config</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_view_base"/>
+            <field name="inherit_id" ref="base.res_config_view_for_all"/>
             <field name="arch" type="xml">
-                <field name="plugin_outlook" position="after">
+                <field name="module_plugin_outlook" position="after">
                     <button name="%(action_outlook_installer)d" type="action" string="Configure" icon="gtk-execute"/>
                 </field>
             </field>
