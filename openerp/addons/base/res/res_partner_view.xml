@@ -526,13 +526,13 @@
                                                 <tr>
                                                     <td class="oe_kanban_title1" align="left" valign="middle">
                                                         <h4><a type="edit"><field name="name"/></a></h4>
-                                                            <field name="street"/>
-                                                            <field name="street2"/><br/>
-                                                            <field name="city"/>
-                                                            <field name="zip"/><br/>
-                                                            <field name="country_id"/><br/>
-                                                            <field name="email"/><br/>
-                                                            <field name="mobile"/><br/>
+                                                            <i><div t-if="record.street.raw_value or  record.street2.raw_value"><field name="street"/>
+                                                            <field name="street2"/><br/></div>
+                                                            <div t-if="record.city.raw_value or  record.zip.raw_value"><field name="city"/>
+                                                            <field name="zip"/><br/></div><div t-if="record.country_id.raw_value">
+                                                            <field name="country_id"/><br/></div><div t-if="record.email.raw_value">
+                                                            <field name="email"/><br/></div><div t-if="record.mobile.raw_value">
+                                                            <span>+91</span><field name="mobile"/><br/></div></i>
                                                     </td>
                                                     <td t-if="record.is_company.raw_value == 'contact'" valign="top" align="right">
                                                         <!--img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_kanban_gravatar"/-->
