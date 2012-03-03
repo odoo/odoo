@@ -81,6 +81,7 @@ class sale_configuration(osv.osv_memory):
         installed_modules = super(sale_configuration, self).get_default_installed_modules(cr, uid, ids, context=context)
         if installed_modules.get('module_project_mrp') and installed_modules.get('module_project_timesheet'):
             installed_modules['task_work'] = True
+        if installed_modules.get('module_account_analytic_analysis'):
             prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
             uom_id = self.pool.get('product.product').browse(cr, uid, prod_id).uom_id.id
             installed_modules.update({'time_unit': uom_id})
@@ -111,11 +112,11 @@ class sale_configuration(osv.osv_memory):
 
     def create(self, cr, uid, vals, context=None):
         ids = super(sale_configuration, self).create(cr, uid, vals, context=context)
-        self.execute(cr, uid, [ids], vals, context=context)
+        self.execute(cr, uid, [ids], vals, context)
         return ids
 
     def write(self, cr, uid, ids, vals, context=None):
-        self.execute(cr, uid, ids, vals, context=context)
+        self.execute(cr, uid, ids, vals, context)
         return super(sale_configuration, self).write(cr, uid, ids, vals, context=context)
 
     def execute(self, cr, uid, ids, vals, context=None):
