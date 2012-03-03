@@ -1,0 +1,23 @@
+<openerp>
+    <data>
+
+        <record id="view_sales_config_plugin" model="ir.ui.view">
+            <field name="name">Sales Application</field>
+            <field name="model">res.config</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.res_config_view_for_all"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/group[@name='crm']/group[@name='plugin']" position="inside">
+                    <group col="4" colspan="2">
+                        <separator string="Plugins" colspan="4"/>
+                        <newline/>
+                        <field name="module_plugin_thunderbird"/>
+                        <newline/>
+                        <field name="module_plugin_outlook"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
