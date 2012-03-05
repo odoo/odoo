@@ -124,7 +124,7 @@ class google_docs_config(osv.osv):
         res = super(users, self).create(cr, uid, vals, context=context)
         model_obj=self.pool.get('ir.model')
         if vals.get('context_gdocs_resource_id') and vals.get('context_model_id'):
-            self.write(cr, uid, #[vals['model_id']], {'member_ids':[(4, res)]}, 
+            self.write(cr, uid, 
                 {
                     'model_id': model_obj.get(cr, uid, vals.get('context_model_id'))[0],
                     'gdocs_resource_id': vals.get('context_gdocs_resource_id'),
