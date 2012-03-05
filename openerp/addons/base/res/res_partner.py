@@ -434,8 +434,8 @@ class res_partner(osv.osv):
         
     def default_get(self, cr, uid, fields, context=None):
         res =  super(res_partner, self).default_get( cr, uid, fields, context)
-        if 'is_comapny' in res:
-            res.update({'photo': self._get_photo(self, cr, uid, res.get('is_comapny', 'contact'), context)})
+        if 'is_company' in res:
+            res.update({'photo': self._get_photo(self, cr, uid, res.get('is_company', 'contact'), context)})
         return res
 
 res_partner()
