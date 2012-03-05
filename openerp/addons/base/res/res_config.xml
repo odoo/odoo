@@ -85,9 +85,9 @@
       </field>
     </record>
     
-    <record id="res_config_view_for_all" model="ir.ui.view">
-        <field name="name">res.config.view.all</field>
-        <field name="model">res.config</field>
+    <record id="view_res_config_settings" model="ir.ui.view">
+        <field name="name">res.config.settings.sales</field>
+        <field name="model">res.config.settings</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Configure Sales Application">
@@ -104,8 +104,8 @@
     <record id="action_sale_config" model="ir.actions.act_window">
         <field name="name">Configure Sales Application</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">res.config</field>
-        <field name="view_id" ref="res_config_view_for_all"/>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="view_res_config_settings"/>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
     </record>
