@@ -438,7 +438,7 @@ class resource_calendar_leaves(osv.osv):
         (check_dates, 'Error! leave start-date must be lower then leave end-date.', ['date_from', 'date_to'])
     ]
 
-    def onchange_resource(self,cr, uid, ids, resource, context=None):
+    def onchange_resource(self, cr, uid, ids, resource, context=None):
         result = {}
         if resource:
             resource_pool = self.pool.get('resource.resource')

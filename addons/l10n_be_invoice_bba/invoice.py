@@ -179,7 +179,7 @@ class account_invoice(osv.osv):
                               '\nPlease create manually a unique BBA Structured Communication.'))                 
         return super(account_invoice, self).create(cr, uid, vals, context=context)     
 
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
         for inv in self.browse(cr, uid, ids, context):    

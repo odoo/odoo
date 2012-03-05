@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-def convert_catalog(from_file, to_file, size=220) :
+def convert_catalog(from_file, to_file, size=220):
     return __convert(from_file, to_file, size)
 
 def convert(from_file, to_file):

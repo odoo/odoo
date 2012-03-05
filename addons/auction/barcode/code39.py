@@ -114,7 +114,7 @@ def _encode39(str, cksum):
 
         
 class _Code39Base(Barcode):
-    def __init__(self, value = "", **args):
+    def __init__(self, value="", **args):
         self.xdim = inch * 0.0075
         self.lquiet = None
         self.rquiet = None

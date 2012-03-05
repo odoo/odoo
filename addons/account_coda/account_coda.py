@@ -217,7 +217,9 @@ class coda_bank_statement(osv.osv):
     _name = 'coda.bank.statement' 
     _description = 'CODA Bank Statement'    
     
-    def _default_journal_id(self, cr, uid, context={}):
+    def _default_journal_id(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if context.get('journal_id', False):
             return context['journal_id']
         return False
@@ -233,7 +235,7 @@ class coda_bank_statement(osv.osv):
             res[r] = round(res[r], 2)
         return res
 
-    def _get_period(self, cr, uid, context={}):
+    def _get_period(self, cr, uid, context=None):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]

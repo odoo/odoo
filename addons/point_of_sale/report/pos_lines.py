@@ -41,7 +41,7 @@ class pos_lines(report_sxw.rml_parse):
         self.total = tot
         return self.total
 
-    def __taxes__(self,obj):
+    def __taxes__(self, obj):
         self.cr.execute ( " Select acct.name from pos_order as po " \
                               " LEFT JOIN pos_order_line as pol ON po.id = pol.order_id " \
                               " LEFT JOIN product_taxes_rel as ptr ON pol.product_id = ptr.prod_id " \

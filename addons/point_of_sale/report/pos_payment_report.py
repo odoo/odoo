@@ -33,7 +33,7 @@ class pos_payment_report(report_sxw.rml_parse):
             'pos_payment_total':self._pos_payment_total,
         })
 
-    def _pos_payment(self,obj):
+    def _pos_payment(self, obj):
         data={}
         sql = """ select id from pos_order where id = %d"""%(obj.id)
         self.cr.execute(sql)
@@ -56,7 +56,7 @@ class pos_payment_report(report_sxw.rml_parse):
             self.total += d['price_unit'] * d['qty']
         return data
 
-    def _pos_payment_total(self,o):
+    def _pos_payment_total(self, o):
         return self.total
 
 report_sxw.report_sxw('report.pos.payment.report', 'pos.order', 'addons/point_of_sale/report/pos_payment_report.rml', parser=pos_payment_report,header='internal')

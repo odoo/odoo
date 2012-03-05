@@ -682,7 +682,7 @@ class DAVClient(object):
             assert d2 == d, "Data does not match"
         return ctype, rrange, d
 
-    def gd_put(self, path, body=None, srcpath=None, mime=None, noclobber=False, ):
+    def gd_put(self, path, body=None, srcpath=None, mime=None, noclobber=False):
         """ HTTP PUT 
             @param noclobber will prevent overwritting a resource (If-None-Match)
             @param mime will set the content-type

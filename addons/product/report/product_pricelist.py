@@ -39,7 +39,7 @@ class product_pricelist(report_sxw.rml_parse):
             'get_titles': self._get_titles,
         })
 
-    def _get_titles(self,form):
+    def _get_titles(self, form):
         lst = []
         vals = {}
         qtys = 1
@@ -51,7 +51,7 @@ class product_pricelist(report_sxw.rml_parse):
         lst.append(vals)
         return lst
 
-    def _set_quantity(self,form):
+    def _set_quantity(self, form):
         for i in range(1,6):
             q = 'qty%d'%i
             if form[q] >0 and form[q] not in self.quantity:
@@ -76,7 +76,7 @@ class product_pricelist(report_sxw.rml_parse):
         symbol = pool.get('res.currency').read(self.cr, self.uid, [pricelist['currency_id'][0]], ['symbol'], context=self.localcontext)[0]
         return symbol['symbol'] or ''
 
-    def _get_categories(self, products,form):
+    def _get_categories(self, products, form):
         cat_ids=[]
         res=[]
         self.pricelist = form['price_list']
@@ -111,7 +111,7 @@ class product_pricelist(report_sxw.rml_parse):
             res.append({'name':cat[1],'products': products})
         return res
 
-    def _get_price(self,pricelist_id, product_id,qty):
+    def _get_price(self, pricelist_id, product_id, qty):
         sale_price_digits = self.get_digits(dp='Sale Price')
         pool = pooler.get_pool(self.cr.dbname)
         price_dict = pool.get('product.pricelist').price_get(self.cr, self.uid, [pricelist_id], product_id, qty, context=self.localcontext)

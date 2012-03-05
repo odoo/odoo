@@ -44,7 +44,7 @@ class make_delivery(osv.osv_memory):
              
         return res
     
-    def view_init(self, cr , uid , fields, context=None):
+    def view_init(self, cr, uid, fields, context=None):
          if context is None:
             context = {}
          order_obj = self.pool.get('sale.order')

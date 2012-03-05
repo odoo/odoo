@@ -42,7 +42,7 @@ class pos_details_summary(report_sxw.rml_parse):
             'getcompany':self.get_company
         })
 
-    def get_company(self,objects):
+    def get_company(self, objects):
         comp=[obj.company_id.name for obj in objects]
         return '%s' % (comp[0])
 

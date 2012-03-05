@@ -53,7 +53,7 @@ class sale_order_line(osv.osv):
             seq += 1
         return invoice_line_ids
 
-    def onchange_sale_order_line_view(self, cr, uid, id, type, context={}, *args):
+    def onchange_sale_order_line_view(self, cr, uid, id, type, context=None, *args):
         temp = {}
         temp['value'] = {}
         if (not type):

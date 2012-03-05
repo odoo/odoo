@@ -26,7 +26,7 @@ class auction_invoice(report_int):
     def __init__(self, name):
         report_int.__init__(self, name)
 
-    def create(self,cr, uid, ids, datas, context):
+    def create(self, cr, uid, ids, datas, context):
         lots = self.pool.get('auction.lots').read(cr, uid, ids, ['ach_inv_id'], context=context)
 
         invoices = {}

@@ -30,7 +30,7 @@ class report_custom(report_rml):
     def __init__(self, name, table, tmpl, xsl):
         report_rml.__init__(self, name, table, tmpl, xsl)
 
-    def create_xml(self,cr, uid, ids, datas, context=None):
+    def create_xml(self, cr, uid, ids, datas, context=None):
         pool= pooler.get_pool(cr.dbname)
         lots = pool.get('auction.lots').browse(cr, uid, ids, context=context)
         auction = lots[0].auction_id

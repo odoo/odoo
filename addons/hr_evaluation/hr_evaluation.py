@@ -244,7 +244,7 @@ class hr_evaluation(osv.osv):
                 raise osv.except_osv(_('Warning !'),_("You cannot change state, because some appraisal in waiting answer or draft state"))
         return True
 
-    def button_done(self,cr, uid, ids, context=None):
+    def button_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids,{'progress': 1 * 100}, context=context)
         self.write(cr, uid, ids,{'state':'done', 'date_close': time.strftime('%Y-%m-%d')}, context=context)
         return True

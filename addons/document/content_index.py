@@ -51,7 +51,7 @@ class indexer(object):
             return mts[0]
         return None
 
-    def indexContent(self, content, filename=None, realfile = None):
+    def indexContent(self, content, filename=None, realfile=None):
         """ Use either content or the real file, to index.
             Some parsers will work better with the actual
             content, others parse a file easier. Try the
@@ -95,10 +95,10 @@ class indexer(object):
 
         raise NhException('No appropriate method to index file')
 
-    def _doIndexContent(self,content):
+    def _doIndexContent(self, content):
         raise NhException("Content not handled here")
 
-    def _doIndexFile(self,fpath):
+    def _doIndexFile(self, fpath):
         raise NhException("Content not handled here")
 
     def __repr__(self):
@@ -136,7 +136,7 @@ class contentIndex(object):
         if not f:
             raise Exception("Your indexer should at least suport a mimetype or extension")
 
-    def doIndex(self, content, filename=None, content_type=None, realfname = None, debug=False):
+    def doIndex(self, content, filename=None, content_type=None, realfname=None, debug=False):
         fobj = None
         fname = None
         mime = None

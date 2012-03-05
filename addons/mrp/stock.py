@@ -102,7 +102,7 @@ class StockMove(osv.osv):
                     wf_service.trg_validate(uid, 'procurement.order', m, 'button_wait_done', cr)
         return processed_ids
     
-    def action_consume(self, cr, uid, ids, product_qty, location_id=False, context=None): 
+    def action_consume(self, cr, uid, ids, product_qty, location_id=False, context=None):
         """ Consumed product with specific quatity from specific source location.
         @param product_qty: Consumed product quantity
         @param location_id: Source location

@@ -39,7 +39,7 @@ class Barcode(Flowable):
     """Abstract Base for barcodes. Includes implementations of
     some methods suitable for the more primitive barcode types"""
     
-    def __init__(self, value = ''):
+    def __init__(self, value=''):
         self.value = value
         
         if not hasattr(self, 'gap'):

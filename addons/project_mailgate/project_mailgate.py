@@ -47,7 +47,9 @@ class project_tasks(osv.osv):
         self.write(cr, uid, [res_id], data, context)
         return res_id
 
-    def message_update(self, cr, uid, ids, msg, data={}, default_act='pending'):
+    def message_update(self, cr, uid, ids, msg, data=None, default_act='pending'):
+        if data is None:
+            data = {}
         data.update({
             'description': msg['body_text'],
         })

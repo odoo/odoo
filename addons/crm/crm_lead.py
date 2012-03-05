@@ -239,7 +239,7 @@ class crm_lead(crm_case, osv.osv):
     def on_change_optout(self, cr, uid, ids, optout):
         return {'value':{'optout':optout,'optin':False}}
 
-    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
             return {'value':{}}
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)

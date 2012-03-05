@@ -49,7 +49,7 @@ class stock_planning_createlines(osv.osv_memory):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.planning', context=c),
     }
 
-    def create_planning(self,cr, uid, ids, context=None):
+    def create_planning(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         product_obj = self.pool.get('product.product')

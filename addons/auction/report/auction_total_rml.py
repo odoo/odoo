@@ -65,7 +65,7 @@ class auction_total_rml(report_sxw.rml_parse):
         return auct_dat
 
 
-    def sum_taxes(self,auction_id):
+    def sum_taxes(self, auction_id):
             self.cr.execute("select count(1) from auction_lots where id IN %s and auction_id=%s group by auction_id ", (tuple(self.total_obj),auction_id,))
             res = self.cr.fetchone()
             return res[0]
@@ -105,17 +105,17 @@ class auction_total_rml(report_sxw.rml_parse):
         res = self.cr.fetchone()
         return str(res[0]) or 0.0
 
-    def sum_credit(self,auction_id):
+    def sum_credit(self, auction_id):
         self.cr.execute("select sum(buyer_price) from auction_lots where id IN %s and auction_id=%s", (tuple(self.total_obj),auction_id,))
         res = self.cr.fetchone()
         return str(res[0])
 
-    def sum_debit_buyer(self,auction_id):
+    def sum_debit_buyer(self, auction_id):
         self.cr.execute("select sum(buyer_price) from auction_lots where id IN %s  and auction_id=%s", (tuple(self.total_obj),auction_id,))
         res = self.cr.fetchone()
         return str(res[0] or 0)
 
-    def sum_debit(self,object_id):
+    def sum_debit(self, object_id):
         self.cr.execute("select sum(seller_price) from auction_lots where auction_id=%s", (object_id,))
         res = self.cr.fetchone()
         return str(res[0] or 0)

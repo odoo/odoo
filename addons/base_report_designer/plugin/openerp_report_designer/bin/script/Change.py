@@ -59,7 +59,7 @@ if __name__<>"package":
     database="test"
 
 class Change( unohelper.Base, XJobExecutor ):
-    def __init__(self,ctx):
+    def __init__(self, ctx):
         self.ctx     = ctx
         self.module  = "openerp_report"
         self.version = "0.1"
@@ -107,7 +107,7 @@ class Change( unohelper.Base, XJobExecutor ):
             self.lstProtocol.addItem(i,self.lstProtocol.getItemCount() )
         self.win.doModalDialog( "lstProtocol",  protocol)
 
-    def btnNext_clicked(self,oActionEvent):
+    def btnNext_clicked(self, oActionEvent):
         global url
         aVal=''
         #aVal= Fetature used 

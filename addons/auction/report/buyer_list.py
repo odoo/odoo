@@ -62,7 +62,7 @@ class buyer_list(report_sxw.rml_parse):
             auct_dat.append(auc_dates_fields)
         return auct_dat
 
-    def lines_lots_auct_lot(self,obj):
+    def lines_lots_auct_lot(self, obj):
 
         auc_date_ids = self.pool.get('auction.dates').search(self.cr, self.uid, ([('name','like',obj['name'])]))
 

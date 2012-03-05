@@ -39,7 +39,7 @@ def log_detail(self):
     logger.setLevel(logging.INFO)
 
 class Logger(object):
-    def log_write(self,name,level,msg):
+    def log_write(self, name, level, msg):
         log = logging.getLogger(name)
         getattr(log,level)(msg)
 

@@ -115,7 +115,9 @@ class abstract_quality_check(object):
         self.log.debug('get_objects() obj_list: %s', ','.join(obj_list))
         return obj_list
 
-    def get_model_ids(self, cr, uid, models=[]):
+    def get_model_ids(self, cr, uid, models=None):
+        if models is None:
+            models = []
         # This function returns all ids of the given objects..
         if not models:
             return []
@@ -133,7 +135,12 @@ class abstract_quality_check(object):
             result_ids[obj] = ids
         return result_ids
 
-    def format_table(self, header=[], data_list={}): #This function can work forwidget="text_wiki"
+    def format_table(self, header=None, data_list=None):
+        #This function can work forwidget="text_wiki"
+        if header is None:
+            header = []
+        if data_list is None:
+            data_list = {}
         detail = ""
         detail += (header[0]) % tuple(header[1])
         frow = '\n|-'
@@ -144,7 +151,12 @@ class abstract_quality_check(object):
         detail = detail + '\n|}'
         return detail
 
-    def format_html_table(self, header=[], data_list=[]): #This function can work for widget="html_tag"
+    def format_html_table(self, header=None, data_list=None):
+        #This function can work for widget="html_tag"
+        if header is None:
+            header = []
+        if data_list is None:
+            data_list = []
         # function create html table....
         detail = ""
         detail += (header[0]) % tuple(header[1])

@@ -45,7 +45,7 @@ class procurement_order(osv.osv):
                     return (line.type_proc=='move') and (line.location_src_id)
         return False
 
-    def action_move_create(self, cr, uid, ids,context=None):
+    def action_move_create(self, cr, uid, ids, context=None):
         proc_obj = self.pool.get('procurement.order')
         move_obj = self.pool.get('stock.move')
         picking_obj=self.pool.get('stock.picking')

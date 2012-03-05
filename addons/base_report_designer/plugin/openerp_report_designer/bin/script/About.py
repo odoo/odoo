@@ -52,7 +52,7 @@ if __name__<>'package':
     from lib.gui import *
 
 class About(unohelper.Base, XJobExecutor):
-    def __init__(self,ctx):
+    def __init__(self, ctx):
         self.ctx     = ctx
         self.module  = "openerp_report"
         self.version = "0.1"

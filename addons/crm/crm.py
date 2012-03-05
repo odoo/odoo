@@ -331,7 +331,9 @@ class crm_case(crm_base):
     And object that inherit (orm inheritance) from a class the overwrite copy 
     """
 
-    def stage_find(self, cr, uid, section_id, domain=[], order='sequence'):
+    def stage_find(self, cr, uid, section_id, domain=None, order='sequence'):
+        if domain is None:
+            domain = []
         domain = list(domain)
         if section_id:
             domain.append(('section_ids', '=', section_id))

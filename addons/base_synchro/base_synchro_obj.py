@@ -65,10 +65,12 @@ class base_synchro_obj(osv.osv):
     # Return a list of changes: [ (date, id) ]
     #
 
-    def get_ids(self, cr, uid, object, dt, domain=[], context=None):
-        return self._get_ids(cr, uid, object, dt, domain, context=context)
+    def get_ids(self, cr, uid, object, dt, domain=None, context=None):
+        return self._get_ids(cr, uid, object, dt, domain=domain, context=context)
 
-    def _get_ids(self, cr, uid, object, dt, domain=[], context=None):
+    def _get_ids(self, cr, uid, object, dt, domain=None, context=None):
+        if domain is None:
+            domain = []
         result = []
         if dt:
             domain2 = domain+[('write_date','>=',dt)]

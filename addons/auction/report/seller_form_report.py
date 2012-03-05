@@ -58,7 +58,7 @@ class seller_form_report(report_sxw.rml_parse):
                 lots = partner.get('lots')
                 lots.append(object)
         return ret_dict.values()
-    def grand_seller_total(self,o):
+    def grand_seller_total(self, o):
         grand_total = 0
         for oo in o:
             grand_total =grand_total + oo['obj_price']+ self.sum_taxes(oo)

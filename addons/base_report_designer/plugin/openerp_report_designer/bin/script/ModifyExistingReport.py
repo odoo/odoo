@@ -66,7 +66,7 @@ if __name__<>'package':
 
 #
 class ModifyExistingReport(unohelper.Base, XJobExecutor):
-    def __init__(self,ctx):
+    def __init__(self, ctx):
         self.ctx     = ctx
         self.module  = "openerp_report"
         self.version = "0.1"
@@ -178,10 +178,10 @@ class ModifyExistingReport(unohelper.Base, XJobExecutor):
 
         self.win.endExecute()
 
-    def btnCancel_clicked( self, oActionEvent ):
+    def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
-    def btnDelete_clicked( self, oActionEvent ):
+    def btnDelete_clicked(self, oActionEvent):
          desktop=getDesktop()
          doc = desktop.getCurrentComponent()
          docinfo=doc.getDocumentInfo()

@@ -24,7 +24,7 @@ from report import report_sxw
 
 class pos_details(report_sxw.rml_parse):
 
-    def _get_invoice(self,inv_id):
+    def _get_invoice(self, inv_id):
         res={}
         if inv_id:
             self.cr.execute("select number from account_invoice as ac where id = %s", (inv_id,))
@@ -37,7 +37,7 @@ class pos_details(report_sxw.rml_parse):
         user_obj = self.pool.get('res.users')
         return user_obj.search(self.cr, self.uid, [])
 
-    def _pos_sales_details(self,form):
+    def _pos_sales_details(self, form):
         pos_obj = self.pool.get('pos.order')
         user_obj = self.pool.get('res.users')
         data = []
@@ -74,7 +74,7 @@ class pos_details(report_sxw.rml_parse):
     def _get_sales_total_2(self):
         return self.total
 
-    def _get_sum_invoice_2(self,form):
+    def _get_sum_invoice_2(self, form):
         pos_obj = self.pool.get('pos.order')
         user_obj = self.pool.get('res.users')
         user_ids = form['user_ids'] or self._get_all_users()

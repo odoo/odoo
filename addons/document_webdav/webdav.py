@@ -236,7 +236,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     return re
 
 
-def mk_propname_response(self,uri,propnames,doc):
+def mk_propname_response(self, uri, propnames, doc):
     """ make a new <prop> result element for a PROPNAME request
 
     This will simply format the propnames list.

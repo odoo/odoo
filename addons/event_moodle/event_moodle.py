@@ -125,7 +125,7 @@ class event_moodle(osv.osv):
         passwd = passwd + '+'
         return passwd
 
-    def check_email(self,email):
+    def check_email(self, email):
     
         """
         check if email is correct

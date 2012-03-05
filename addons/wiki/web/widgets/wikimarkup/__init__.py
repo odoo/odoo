@@ -489,7 +489,7 @@ class BaseParser(object):
 			return text.encode("utf-8")
 		return text
 
-	def strip(self, text, stripcomments=False, dontstrip=[]):
+	def strip(self, text, stripcomments=False, dontstrip=None):
 		render = True
 
 		commentState = {}
@@ -2087,7 +2087,9 @@ mTagHooks = {}
 # <quote cite="person">quote</quote>
 from cgi import escape
 
-def hook_quote(env, body, attributes={}):
+def hook_quote(env, body, attributes=None):
+	if attributes is None:
+	    attributes = {}
 	text = [u'<div class="blockquote">']
 	if 'cite' in attributes:
 		text.append(u"<strong class=\"cite\">%s wrote:</strong>\n" % escape(attributes['cite']))

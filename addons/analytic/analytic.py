@@ -219,7 +219,7 @@ class account_analytic_account(osv.osv):
         default['line_ids'] = []
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
 
-    def on_change_partner_id(self, cr, uid, id, partner_id, context={}):
+    def on_change_partner_id(self, cr, uid, id, partner_id, context=None):
         if not partner_id:
             return {'value': {'contact_id': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['invoice'])

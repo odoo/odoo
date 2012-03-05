@@ -158,7 +158,7 @@ class _html2text(sgmllib.SGMLParser):
         self.abbr_list = {} # stack of abbreviations to write later
         self.baseurl = baseurl
     
-    def outtextf(self, s): 
+    def outtextf(self, s):
         self.outtext += s
     
     def close(self):
@@ -338,7 +338,7 @@ class _html2text(sgmllib.SGMLParser):
     def pbr(self):
         if self.p_p == 0: self.p_p = 1
 
-    def p(self): self.p_p = 2
+    def p(self):
     
     def o(self, data, puredata=0, force=0):
         if self.abbr_data is not None: self.abbr_data += data
@@ -411,7 +411,8 @@ class _html2text(sgmllib.SGMLParser):
         if r'\/script>' in data: self.quiet -= 1
         self.o(data, 1)
     
-    def unknown_decl(self, data): pass
+    def unknown_decl(self, data):
+        pass
 
 def wrapwrite(text): sys.stdout.write(text.encode('utf8'))
 

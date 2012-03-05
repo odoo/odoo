@@ -29,7 +29,7 @@ class report_timesheet_task_user(osv.osv):
     _auto = False
     _order = "name"
 
-    def _get_task_hours(self, cr, uid, ids, name,args,context):
+    def _get_task_hours(self, cr, uid, ids, name, args, context):
         result = {}
         for record in self.browse(cr, uid, ids,context):
             last_date = datetime.strptime(record.name, '%Y-%m-%d') + relativedelta(months=1) - relativedelta(days=1)
@@ -42,7 +42,7 @@ class report_timesheet_task_user(osv.osv):
             result[record.id] = total
         return result
 
-    def get_hrs_timesheet(self, cr, uid, ids, name,args,context):
+    def get_hrs_timesheet(self, cr, uid, ids, name, args, context):
         result = {}
         sum = 0.0
         for record in self.browse(cr, uid, ids, context):

@@ -57,7 +57,7 @@ class document_davdir(osv.osv):
         # TODO group
         return
 
-    def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
+    def _locate_child(self, cr, uid, root_id, uri, nparent, ncontext):
         """ try to locate the node in uri,
             Return a tuple (node_dir, remaining_path)
         """

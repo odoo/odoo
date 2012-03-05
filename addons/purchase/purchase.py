@@ -395,7 +395,7 @@ class purchase_order(osv.osv):
             res = inv_id
         return res
 
-    def has_stockable_product(self,cr, uid, ids, *args):
+    def has_stockable_product(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
                 if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
@@ -498,7 +498,7 @@ class purchase_order(osv.osv):
         wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return [picking_id]
 
-    def action_picking_create(self,cr, uid, ids, context=None):
+    def action_picking_create(self, cr, uid, ids, context=None):
         picking_ids = []
         for order in self.browse(cr, uid, ids):
             picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, context=context))

@@ -157,7 +157,7 @@ class crm_claim(crm.crm_case, osv.osv):
         self.write(cr, uid, [res_id], vals, context=context)
         return res_id
 
-    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
+    def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 

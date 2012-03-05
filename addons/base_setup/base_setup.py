@@ -84,7 +84,7 @@ def _lang_get(self, cr, uid, context=None):
     res = [(r['code'], r['name']) for r in res]
     return res
 
-def _tz_get(self,cr,uid, context=None):
+def _tz_get(self, cr, uid, context=None):
     return [(x, x) for x in pytz.all_timezones]
 
 class user_preferences_config(osv.osv_memory):

@@ -77,7 +77,7 @@ class account_analytic_account(osv.osv):
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
-    def on_change_partner_id(self, cr, uid, id, partner_id, context={}):
+    def on_change_partner_id(self, cr, uid, id, partner_id, context=None):
         res = super(account_analytic_account, self).on_change_partner_id(cr, uid, id, partner_id, context)
         if (not res.get('value', False)) or not partner_id:
             return res

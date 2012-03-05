@@ -30,7 +30,7 @@ class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler
     _HTTP_OPTIONS = { 'Allow': ['OPTIONS', 'GET', 'HEAD', 'PROPFIND'] }
     redirect_paths = {}
 
-    def __init__(self,request, client_address, server):
+    def __init__(self, request, client_address, server):
         HTTPHandler.__init__(self,request,client_address,server)
 
     def send_head(self):

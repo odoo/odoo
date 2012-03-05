@@ -40,7 +40,7 @@ class procurement_order(osv.osv):
         return all(proc.product_id.type != 'service' or (proc.task_id and proc.task_id.state in ('done', 'cancelled')) \
                     for proc in self.browse(cr, uid, ids, context=context))
 
-    def check_produce_service(self, cr, uid, procurement, context=None):    
+    def check_produce_service(self, cr, uid, procurement, context=None):
         return True
 
     def _convert_qty_company_hours(self, cr, uid, procurement, context=None):

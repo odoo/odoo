@@ -2446,8 +2446,10 @@ def _stripDoctype(data):
     data = doctype_pattern.sub('', data)
     return version, data
 
-def parse(url_file_stream_or_string, etag=None, modified=None, agent=None, referrer=None, handlers=[]):
+def parse(url_file_stream_or_string, etag=None, modified=None, agent=None, referrer=None, handlers=None):
     '''Parse a feed from a URL, file, stream, or string'''
+    if handlers is None:
+        handlers = []
     result = FeedParserDict()
     result['feed'] = FeedParserDict()
     result['entries'] = []

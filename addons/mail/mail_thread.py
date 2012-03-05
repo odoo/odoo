@@ -134,7 +134,7 @@ class mail_thread(osv.osv):
         self.message_append_dict(cr, uid, [res_id], msg_dict, context=context)
         return res_id
 
-    def message_update(self, cr, uid, ids, msg_dict, vals={}, default_act=None, context=None):
+    def message_update(self, cr, uid, ids, msg_dict, vals=None, default_act=None, context=None):
         """Called by ``message_process`` when a new message is received
            for an existing thread. The default behavior is to create a
            new mail.message in the given thread (by calling

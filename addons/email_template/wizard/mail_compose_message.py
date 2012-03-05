@@ -27,7 +27,7 @@ from tools.translate import _
 import tools
 
 
-def _reopen(self,res_id,model):
+def _reopen(self, res_id, model):
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'view_type': 'form',

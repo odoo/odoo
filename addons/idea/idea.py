@@ -234,7 +234,7 @@ class idea_idea(osv.osv):
         res_id = super(idea_idea, self).create(cr, user, vals, context=context)
         return res_id
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
         """
         Create the new record in idea_idea model from existing one
         @param cr: A database cursor

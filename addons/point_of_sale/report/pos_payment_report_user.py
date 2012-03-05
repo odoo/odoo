@@ -33,7 +33,7 @@ class pos_payment_report_user(report_sxw.rml_parse):
             'pos_payment_user_total':self.__pos_payment_user__total__,
         })
 
-    def __pos_payment_user__(self,form):
+    def __pos_payment_user__(self, form):
         data={}
         ids = form['user_id']
         sql = "select pt.name,pp.default_code as code,pol.qty,pu.name as uom,pol.discount,pol.price_unit, " \

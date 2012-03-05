@@ -63,7 +63,7 @@ if __name__<>"package":
 
 class ConvertBracesToField( unohelper.Base, XJobExecutor ):
 
-    def __init__(self,ctx):
+    def __init__(self, ctx):
 
         self.ctx     = ctx
         self.module  = "openerp_report"
@@ -198,7 +198,7 @@ class ConvertBracesToField( unohelper.Base, XJobExecutor ):
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ConvertBraceToField', LOG_ERROR, info)
 
-    def getRes(self,sock,sObject,sVar):
+    def getRes(self, sock, sObject, sVar):
         desktop=getDesktop()
         doc =desktop.getCurrentComponent()
         docinfo=doc.getDocumentInfo()
@@ -215,7 +215,7 @@ class ConvertBracesToField( unohelper.Base, XJobExecutor ):
                 sObject = self.getRes(sock,res[myval]['relation'], sVar[sVar.find("/")+1:])
         return sObject
 
-    def getBraces(self,aReportSyntex=[]):
+    def getBraces(self, aReportSyntex=None):
         desktop=getDesktop()
         doc = desktop.getCurrentComponent()
         aSearchString=[]

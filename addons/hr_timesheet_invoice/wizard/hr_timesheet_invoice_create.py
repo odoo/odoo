@@ -38,7 +38,7 @@ class account_analytic_line(osv.osv):
     #   'price': boolean
     #   'product': many2one id
     # }
-    def invoice_cost_create(self, cr, uid, ids, data={}, context=None):
+    def invoice_cost_create(self, cr, uid, ids, data=None, context=None):
         analytic_account_obj = self.pool.get('account.analytic.account')
         res_partner_obj = self.pool.get('res.partner')
         account_payment_term_obj = self.pool.get('account.payment.term')

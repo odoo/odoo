@@ -533,7 +533,7 @@ class auction_lots(osv.osv):
         return self._sum_taxes_by_type_and_id(costs)
 
     # sum remise limite net and ristourne
-    def compute_seller_costs_summed(self, cr, uid, ids): #ach_pay_id
+    def compute_seller_costs_summed(self, cr, uid, ids):
 
         """This Fuction  sum Net remittance limit and refund"""
 

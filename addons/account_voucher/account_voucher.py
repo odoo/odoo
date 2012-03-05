@@ -830,7 +830,7 @@ class account_voucher(osv.osv):
             res['account_id'] = account_id
         return {'value':res}
 
-    def _sel_context(self, cr, uid, voucher_id,context=None):
+    def _sel_context(self, cr, uid, voucher_id, context=None):
         """
         Select the context to use accordingly if it needs to be multicurrency or not.
 
@@ -1251,7 +1251,9 @@ class account_voucher(osv.osv):
                     move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.writeoff_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
         return True
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default.update({
             'state': 'draft',
             'number': False,

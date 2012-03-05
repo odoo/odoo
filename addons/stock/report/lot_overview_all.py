@@ -34,7 +34,7 @@ class lot_overview_all(report_sxw.rml_parse):
             'grand_total_price':self._grand_total,
         })
 
-    def process(self,location_id):
+    def process(self, location_id):
         location_obj = pooler.get_pool(self.cr.dbname).get('stock.location')
         data = location_obj._product_get_all_report(self.cr,self.uid, [location_id])
         data['location_name'] = location_obj.read(self.cr, self.uid, [location_id],['complete_name'])[0]['complete_name']

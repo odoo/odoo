@@ -59,7 +59,7 @@ if __name__<>"package":
     database="test"
 
 class ServerParameter( unohelper.Base, XJobExecutor ):
-    def __init__(self, aVal= None, sURL=""):
+    def __init__(self, aVal=None, sURL=""):
         self.module  = "openerp_report"
         self.version = "0.1"
         desktop=getDesktop()
@@ -116,7 +116,7 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
 
         #self.win.doModalDialog("lstDatabase",docinfo.getUserFieldValue(2))
 
-    def btnOk_clicked(self,oActionEvent):
+    def btnOk_clicked(self, oActionEvent):
 
         sLogin=self.win.getEditText("txtLoginName")
         sPassword=self.win.getEditText("txtPassword")
@@ -158,10 +158,10 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
             self.win.endExecute()
 
       
-    def btnCancel_clicked( self, oActionEvent ):
+    def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
-    def btnPrevious_clicked(self,oActionEvent):
+    def btnPrevious_clicked(self, oActionEvent):
         self.win.endExecute()
         Change(None)
         self.win.endExecute()

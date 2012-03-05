@@ -139,7 +139,9 @@ class payment_order(osv.osv):
         wf_service.trg_validate(uid, 'payment.order', ids[0], 'done', cr)
         return True
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default.update({
             'state': 'draft',
             'line_ids': [],

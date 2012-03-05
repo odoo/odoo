@@ -265,7 +265,7 @@ class project(osv.osv):
         task_obj.duplicate_task(cr, uid, map_task_id, context=context)
         return True
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context = {}
 
@@ -545,12 +545,12 @@ class task(osv.osv):
         return res
 
 
-    def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned = 0.0):
+    def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned=0.0):
         if remaining and not planned:
             return {'value':{'planned_hours': remaining}}
         return {}
 
-    def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
+    def onchange_planned(self, cr, uid, ids, planned=0.0, effective=0.0):
         return {'value':{'remaining_hours': planned - effective}}
 
     def onchange_project(self, cr, uid, id, project_id):
@@ -581,7 +581,9 @@ class task(osv.osv):
             #FIXME why there is already the copy and the old one
             self.write(cr, uid, new, {'parent_ids':[(6,0,set(parent_ids))], 'child_ids':[(6,0, set(child_ids))]})
 
-    def copy_data(self, cr, uid, id, default={}, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default = default or {}
         default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
         if not default.get('remaining_hours', False):
@@ -810,7 +812,7 @@ class task(osv.osv):
            }
         return res
 
-    def do_close(self, cr, uid, ids, context={}):
+    def do_close(self, cr, uid, ids, context=None):
         """
         Close Task
         """
@@ -868,7 +870,7 @@ class task(osv.osv):
             self.write(cr, uid, [task.id], {'state': 'open'}, context=context)
         return True
 
-    def do_cancel(self, cr, uid, ids, context={}):
+    def do_cancel(self, cr, uid, ids, context=None):
         request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids, context=context)
         self._check_child_task(cr, uid, ids, context=context)
@@ -889,7 +891,7 @@ class task(osv.osv):
             self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0}, context=context)
         return True
 
-    def do_open(self, cr, uid, ids, context={}):
+    def do_open(self, cr, uid, ids, context=None):
         if not isinstance(ids,list): ids = [ids]
         tasks= self.browse(cr, uid, ids, context=context)
         for t in tasks:
@@ -901,7 +903,7 @@ class task(osv.osv):
             self.log(cr, uid, t.id, message)
         return True
 
-    def do_draft(self, cr, uid, ids, context={}):
+    def do_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         return True
 
@@ -915,10 +917,12 @@ class task(osv.osv):
         return new_attachment_ids
         
 
-    def do_delegate(self, cr, uid, ids, delegate_data={}, context=None):
+    def do_delegate(self, cr, uid, ids, delegate_data=None, context=None):
         """
         Delegate Task to another users.
         """
+        if delegate_data is None:
+            delegate_data = {}
         assert delegate_data['user_id'], _("Delegated User should be specified")
         delegated_tasks = {}
         for task in self.browse(cr, uid, ids, context=context):
@@ -950,7 +954,7 @@ class task(osv.osv):
             delegated_tasks[task.id] = delegated_task_id
         return delegated_tasks
 
-    def do_pending(self, cr, uid, ids, context={}):
+    def do_pending(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'pending'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The task '%s' is pending.") % name

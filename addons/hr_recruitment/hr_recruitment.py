@@ -213,7 +213,7 @@ class hr_applicant(crm.crm_case, osv.osv):
     }
 
 
-    def onchange_job(self,cr, uid, ids, job, context=None):
+    def onchange_job(self, cr, uid, ids, job, context=None):
         result = {}
 
         if job:

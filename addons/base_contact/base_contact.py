@@ -175,7 +175,7 @@ class res_partner_address(osv.osv):
         ids = self.pool.get('res.partner.location').search(cr, uid, [('partner_id','=',context['default_partner_id'])], context=context)
         return ids and ids[0] or False
 
-    def onchange_location_id(self,cr, uid, ids, location_id=False, context={}):
+    def onchange_location_id(self, cr, uid, ids, location_id=False, context=None):
         if not location_id:
             return {}
         location = self.pool.get('res.partner.location').browse(cr, uid, location_id, context=context)
@@ -209,7 +209,7 @@ class res_partner_address(osv.osv):
         'name' : fields.related('contact_id', 'name', type='char', size=64, string="Contact Name", store=True),
         'title' : fields.related('contact_id', 'title', type='many2one', relation='res.partner.title', string="Title", store=True),
     }
-    def create(self, cr, uid, data, context={}):
+    def create(self, cr, uid, data, context=None):
         if not data.get('location_id', False):
             loc_id = self.pool.get('res.partner.location').create(cr, uid, {
                 'street': data.get('street',''),
@@ -241,7 +241,7 @@ class res_partner_address(osv.osv):
         'location_id': _default_location_id
     }
 
-    def default_get(self, cr, uid, fields=[], context=None):
+    def default_get(self, cr, uid, fields=None, context=None):
         if context is None:
             context = {}
         if 'default_type' in context:

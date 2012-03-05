@@ -567,7 +567,8 @@ class _ValueWrapper(object):
         return result
     #@-node:_cmp
     #@+node:__getattr__
-    def __getattr__(self, name): return getattr(self._value, name)
+    def __getattr__(self, name):
+        return getattr(self._value, name)
     #@-node:__getattr__
     #@+node:__getitem__
     def __getitem__(self, slice):

@@ -26,14 +26,14 @@ from osv import osv
 
 class order(report_sxw.rml_parse):
 
-    def get_lines(self, user,objects):
+    def get_lines(self, user, objects):
         lines=[]
         for obj in objects:
             if user.id==obj.user_id.id:
                 lines.append(obj)
         return lines
 
-    def get_total(self, user,objects):
+    def get_total(self, user, objects):
         lines=[]
         for obj in objects:
             if user.id==obj.user_id.id:

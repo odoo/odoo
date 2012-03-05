@@ -33,7 +33,7 @@ class procurement_order(osv.osv):
         'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
     }
     
-    def check_produce_product(self, cr, uid, procurement, context=[]):
+    def check_produce_product(self, cr, uid, procurement, context=None):
         """ Finds the bill of material for the product from procurement order.
         @return: True or False
         """

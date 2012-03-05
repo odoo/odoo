@@ -45,7 +45,9 @@ from service import security
 
 magic_md5 = '$1$'
 
-def gen_salt( length=8, symbols=ascii_letters + digits ):
+def gen_salt( length=8, symbols=None):
+    if symbols is None:
+        symbols = ascii_letters + digits
     seed()
     return ''.join( sample( symbols, length ) )
 

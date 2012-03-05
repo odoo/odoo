@@ -52,7 +52,7 @@ class RPCGateway(object):
 
 
 class RPCSession(object):
-    def __init__(self,url):
+    def __init__(self, url):
 
         m = re.match('^(http[s]?://|socket://)([\w.\-]+):(\d{1,5})$', url or '')
 
@@ -152,7 +152,7 @@ class XMLRPCGateway(RPCGateway):
 
         return res
 
-    def execute(self, sDatabase,UID,sPassword,obj, method, *args):
+    def execute(self, sDatabase, UID, sPassword, obj, method, *args):
         global rpc_url
 
         sock = xmlrpclib.ServerProxy(rpc_url + 'object')
