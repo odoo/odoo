@@ -6,8 +6,8 @@
                   groups="group_stock_manager,group_stock_user" sequence="5"
                   web_icon="images/warehouse.png"
                   web_icon_hover="images/warehouse-hover.png"/>
-        <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1"/>
-        <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="2" groups="base.group_extended"/>
+        <menuitem id="menu_stock_warehouse_mgmt" name="Receive/Deliver By Orders" parent="menu_stock_root" sequence="1"/>
+        <menuitem id="menu_stock_products_moves" name="Receive/Deliver Products" parent="menu_stock_root" sequence="2" groups="base.group_extended"/>
         <menuitem id="menu_stock_product" name="Products" parent="menu_stock_root" sequence="6"/>
         <menuitem name="Products by Category" id="menu_product_by_category_stock_form" action="product.product_category_action"
            parent="stock.menu_stock_product" sequence="0"/>
@@ -406,7 +406,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_production_lot_tree"/>
             <field name="search_view_id" ref="search_product_lot_filter" />
-            <field name="context">{"search_default_available":1}</field>
+            <field name="context">{}</field>
             <field name="help">This is the list of all the production lots (serial numbers) you recorded. When you select a lot, you can get the upstream or downstream traceability of the products contained in lot. By default, the list is filtred on the serial numbers that are available in your warehouse but you can uncheck the 'Available' button to get all the lots you produced, received or delivered to customers.</field>
         </record>
         <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
@@ -1057,7 +1057,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_confirmed': 1, 'search_default_available': 1}</field>
+            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address'}</field>
             <field name="search_view_id" ref="view_picking_out_search"/>
             <field name="help">This is the list of all delivery orders that have to be prepared, according to your different sales orders and your logistics rules.</field>
         </record>
@@ -1520,7 +1520,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
-            <field name="context">{'search_default_ready':1}</field>
+            <field name="context">{}</field>
             <field name="help">This menu gives you the full traceability of inventory operations on a specific product. You can filter on the product to see all the past or future movements for the product.</field>
         </record>
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3"/>
@@ -1870,7 +1870,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'search_default_receive\':1,\'search_default_available\':1, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
+            <field name="context" eval="'{\'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
             <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
             <field name="help">You will find in this list all products you have to deliver to your customers. You can process the deliveries directly from this list using the buttons on the right of each line. You can filter the products to deliver by customer, products or sale order (using the Origin field).</field>
         </record>
