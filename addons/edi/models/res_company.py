@@ -52,7 +52,7 @@ class res_company(osv.osv):
         res_partner_bank = self.pool.get('res.partner.bank')
         bank_ids = res_partner_bank.search(cr, uid, [('company_id','=',company.id),('footer','=',True)], context=context)
         if bank_ids:
-            result['bank_ids'] = res_partner.edi_o2m(cr, uid,
+            result['bank_ids'] = res_partner.edi_m2m(cr, uid,
                                                              res_partner_bank.browse(cr, uid, bank_ids, context=context),
                                                              context=context)
         return result
