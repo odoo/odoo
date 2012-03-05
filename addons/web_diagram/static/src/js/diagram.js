@@ -357,8 +357,10 @@ openerp.web.DiagramView = openerp.web.View.extend({
                 this.dataset.index = this.dataset.ids.length - 1;
                 break;
         }
-        this.dataset.read_index(_.keys(this.fields_view.fields)).pipe(this.on_diagram_loaded);
+        var loaded = this.dataset.read_index(_.keys(this.fields_view.fields))
+                .pipe(this.on_diagram_loaded);
         this.do_update_pager();
+        return loaded;
     },
 
     do_update_pager: function(hide_index) {
@@ -373,7 +375,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
 
     do_show: function() {
         this.do_push_state({});
-        return this._super();
+        return $.when(this._super(), this.on_pager_action('reload'));
     }
 });
 };
