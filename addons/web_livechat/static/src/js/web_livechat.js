@@ -38,9 +38,6 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
                 self.$element.click(self.do_open_url);
             }
         });
-        this.$element.on('hover', '.oe_systray_livechat img', function() {
-            $(this).tipsy();
-        });
     },
 
     do_open_url: function(evt) {
@@ -75,8 +72,8 @@ openerp.web_livechat.Livechat = openerp.web.Widget.extend({
                 skill: '2',
                 type: 'text',
                 labels: {
-                    online: '<img src="/web_livechat/static/src/img/available.png" title="Support"/>',
-                    offline: '<img src="/web_livechat/static/src/img/away.png" title="Support"/>',
+                    online: '<img src="/web_livechat/static/src/img/available.png"/>',
+                    offline: '<img src="/web_livechat/static/src/img/away.png"/>',
                 }
             });
         });

@@ -28,7 +28,6 @@ from tools.translate import _
 from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
 import decimal_precision as dp
 import netsvc
-#from openerp.addons.base.res import res_config_sale as sale_config
 
 class sale_shop(osv.osv):
     _name = "sale.shop"

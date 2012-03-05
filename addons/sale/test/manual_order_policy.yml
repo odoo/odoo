@@ -82,8 +82,8 @@
 -
   I set order policy "Deliver & invoice on demand" as default policy.
 -
-  !record {model: res.config, id: sale_configuration_0}:
+  !record {model: res.config.settings, id: sale_configuration_0}:
     order_policy: 'manual'
 -
-  !python {model: res.config}: |
+  !python {model: res.config.settings}: |
     self.execute(cr, uid, [ref("sale_configuration_0")], {})

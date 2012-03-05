@@ -22,7 +22,7 @@
 from osv import fields, osv
 
 class product_groups_configuration(osv.osv_memory):
-    _inherit = 'res.config'
+    _inherit = 'res.config.settings'
 
     _columns = {
         'group_sale_pricelist_per_customer':fields.boolean("Pricelist per customer",
