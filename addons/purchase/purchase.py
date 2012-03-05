@@ -283,8 +283,9 @@ class purchase_order(osv.osv):
                 if not po.invoice_ids:
                     context.update({'active_ids' :  [line.id for line in po.order_line]})
                     wizard_obj.makeInvoices(cr, uid, [], context=context)
+            
+        for po in self.browse(cr, uid, ids, context=context):
             inv_ids+= [invoice.id for invoice in po.invoice_ids]
-
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
         res_id = res and res[1] or False
 
