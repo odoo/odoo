@@ -276,12 +276,13 @@ class purchase_order(osv.osv):
 
     def view_invoice(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
+        wizard_obj = self.pool.get('purchase.order.line_invoice')
         inv_ids = []
         for po in self.browse(cr, uid, ids, context=context):
             if po.invoice_method == 'manual':
                 if not po.invoice_ids:
-                    raise osv.except_osv(_('warning !'),
-                                         _('Your Invoicing Control is based on order lines, so please create invoice from Purchase order lines.'))
+                    context.update({'active_ids' :  [line.id for line in po.order_line]})
+                    wizard_obj.makeInvoices(cr, uid, [], context=context)
             inv_ids+= [invoice.id for invoice in po.invoice_ids]
 
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
