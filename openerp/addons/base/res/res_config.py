@@ -408,7 +408,7 @@ class res_config_settings(osv.osv_memory):
                 _inherit = 'res.config.settings'
                 _columns = {
                     'default_foo': fields.type(..., default_model='model'),
-                    'group_bar': fields.boolean(..., group='xml_id'),
+                    'group_bar': fields.boolean(..., group='base.group_user', implied_group='xml_id'),
                     'module_baz': fields.boolean(...),
                     'other_field': fields.type(...),
                 }
@@ -418,8 +418,9 @@ class res_config_settings(osv.osv_memory):
         *   For a field like 'default_XXX', ``execute`` sets the (global) default value of
             the field 'XXX' in the model named by ``default_model`` to the field's value.
 
-        *   For a boolean field like 'group_XXX', ``execute`` adds or removes the group given
-            by its XML id to the implied groups of Employee, depending on the field's value.
+        *   For a boolean field like 'group_XXX', ``execute`` adds/removes 'implied_group'
+            to/from the implied groups of 'group', depending on the field's value.
+            By default 'group' is the group Employee.
 
         *   For a boolean field like 'module_XXX', ``execute`` triggers the immediate
             installation of the module named 'XXX' if the field has value ``True``.
@@ -434,21 +435,24 @@ class res_config_settings(osv.osv_memory):
         """ return a dictionary with the fields classified by category::
 
                 {   'default': [('default_foo', 'model', 'foo'), ...],
-                    'group':   [('group_bar', browse_group), ...],
+                    'group':   [('group_bar', browse_group, browse_implied_group), ...],
                     'module':  [('module_baz', browse_module), ...],
                     'other':   ['other_field', ...],
                 }
         """
         ir_model_data = self.pool.get('ir.model.data')
         ir_module = self.pool.get('ir.module.module')
+        def ref(xml_id):
+            mod, xml = xml_id.split('.', 1)
+            return ir_model_data.get_object(cr, uid, mod, xml, context)
 
         defaults, groups, modules, others = [], [], [], []
         for name, field in self._columns.items():
             if name.startswith('default_') and hasattr(field, 'default_model'):
                 defaults.append((name, field.default_model, name[8:]))
-            elif name.startswith('group_') and isinstance(field, fields.boolean) and hasattr(field, 'group'):
-                mod, xml = field.group.split('.', 1)
-                groups.append((name, ir_model_data.get_object(cr, uid, mod, xml, context)))
+            elif name.startswith('group_') and isinstance(field, fields.boolean) and hasattr(field, 'implied_group'):
+                field_group = getattr(field, 'group', 'base.group_user')
+                groups.append((name, ref(field_group), ref(field.implied_group)))
             elif name.startswith('module_') and isinstance(field, fields.boolean):
                 mod_ids = ir_module.search(cr, uid, [('name', '=', name[7:])])
                 modules.append((name, ir_module.browse(cr, uid, mod_ids[0], context)))
@@ -471,13 +475,17 @@ class res_config_settings(osv.osv_memory):
                 res[name] = value
 
         # groups: which groups are implied by the group Employee
-        group_employee = ir_model_data.get_object(cr, uid, 'base', 'group_user', context)
-        for name, group in classified['group']:
-            res[name] = group in group_employee.implied_ids
+        for name, group, implied_group in classified['group']:
+            res[name] = implied_group in group.implied_ids
 
         # modules: which modules are installed/to install
         for name, module in classified['module']:
             res[name] = module.state in ('installed', 'to install', 'to upgrade')
+
+        # other fields: call all methods that start with 'get_default_'
+        for method in dir(self):
+            if method.startswith('get_default'):
+                res.update(getattr(self, method)(cr, uid, fields, context))
 
         return res
 
@@ -499,22 +507,22 @@ class res_config_settings(osv.osv_memory):
 
         config = self.browse(cr, uid, ids[0], context)
 
-        # other fields: simply record their current value as default values
-        for name in classified['other']:
-            ir_values.set_default(cr, uid, self._name, name, config[name])
-
         # default values fields
         for name, model, field in classified['default']:
             ir_values.set_default(cr, uid, model, field, config[name])
 
-        # group fields: modify group employee, and remove employees from deselected groups
-        if classified['group']:
-            yes, nos = [], []
-            for name, group in classified['group']:
-                (yes if config[name] else nos).append(group.id)
-            group_employee = ir_model_data.get_object(cr, uid, 'base', 'group_user', context)
-            group_employee.write({'implied_ids': [(3, id) for id in nos] + [(4, id) for id in yes]})
-            res_groups.write(cr, uid, nos, {'users': [(3, u.id) for u in group_employee.users]})
+        # group fields: modify group / implied groups
+        for name, group, implied_group in classified['group']:
+            if config[name]:
+                group.write({'implied_ids': [(4, implied_group.id)]})
+            else:
+                group.write({'implied_ids': [(3, implied_group.id)]})
+                implied_group.write({'users': [(3, u.id) for u in group.users]})
+
+        # other fields: execute all methods that start with 'set_'
+        for method in dir(self):
+            if method.startswith('set_'):
+                getattr(self, method)(cr, uid, ids, context)
 
         # module fields: install immediately the selected modules
         to_install = []
