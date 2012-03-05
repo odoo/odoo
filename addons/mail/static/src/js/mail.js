@@ -120,8 +120,55 @@ openerp.mail = function(session) {
                 });
             return defer;
         },
-        
+
         display_comments: function (records) {
+            console.log('deginb display');
+            console.log(records);
+            var self = this;
+            // sort comments
+            var sorted_comments = this.new_sort_comments(records);
+            this.sorted_comments = sorted_comments;
+            this.bidouille = false;
+            this.sub_com = [];        
+            
+            _(records).each(function (record) {
+                console.log('new iteration');
+                self.sub_com = [];
+                
+                if ( (record.parent_id == false || record.parent_id[0] == self.params.parent_id) && self.params.thread_level > 0 ) {
+                    var sub_list = self.sorted_comments['root_id_msg_list'][record.id];
+                    _(records).each(function (record) {
+                        if (record.parent_id == false || record.parent_id[0] == self.params.parent_id) return;
+                        if (_.indexOf(_.pluck(sub_list, 'id'), record.id) != -1) {
+                            self.sub_com.push(record);
+                        }
+                    });
+                    
+                    console.log('--found root');
+                    console.log(record);
+                    console.log(sub_list);
+                    console.log(self.sub_com);
+                    
+                    self.display_comment(record);
+                    
+                    self.thread = new mail.Thread(self, {'res_model': self.params.res_model, 'res_id': self.params.res_id, 'uid': self.params.uid,
+                                                            'records': self.sub_com, 'thread_level': (self.params.thread_level-1),
+                                                            'parent_id': record.id});
+                    self.$element.find('div.oe_mail_thread_msg:last').append('<div class="oe_mail_thread_subthread"/>');
+                    self.thread.appendTo(self.$element.find('div.oe_mail_thread_subthread:last'));
+                }
+                
+                else if (self.params.thread_level == 0) {
+                    self.display_comment(record);
+                }
+                    
+            });
+            console.log('end display');
+            // update offset for "More" buttons
+            this.params.offset += records.length;
+        },
+
+        old_display_comments: function (records) {
             var self = this;
             // sort comments
             var sorted_comments = this.sort_comments(records);
@@ -143,6 +190,8 @@ openerp.mail = function(session) {
                 var sub_comments = []
                 
                 if (record.parent_id == self.params.parent_id && self.params.thread_level > 0) {
+                    self.display_comment(record);
+                    
                     if (! self.bidouille) {
                         self.bidouille = record;
                     }
@@ -163,7 +212,9 @@ openerp.mail = function(session) {
                     return true;
                 }
                 
-                self.display_comment(record);
+                else {
+                    self.display_comment(record);
+                }
                     
             });
             console.log(self.sub_com);
@@ -185,6 +236,10 @@ openerp.mail = function(session) {
          * Display a record
          */
         display_comment: function (record) {
+            console.log('now displaying !');
+            console.log(this.params.thread_level);
+            console.log(record)
+            
             if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
             else { record.mini_url = this.thread_get_avatar_mini('res.users', 'avatar_mini', record.user_id[0]); }    
             // body text manipulation
@@ -193,7 +248,7 @@ openerp.mail = function(session) {
             record.body_text = this.do_replace_internal_links(record.body_text);
             if (record.tr_body_text) record.tr_body_text = this.do_replace_internal_links(record.tr_body_text);
             // render
-            $(session.web.qweb.render('ThreadMsg', {'record': record})).appendTo(this.$element.find('div.oe_mail_thread_display'));    
+            $(session.web.qweb.render('ThreadMsg', {'record': record})).appendTo(this.$element.children('div.oe_mail_thread_display:first'));    
             // truncated: hide full-text, show summary, add buttons
             if (record.tr_body_text) {
                 var node_body = this.$element.find('span.oe_mail_msg_body:last').append(' <a href="#" class="reduce">[ ... Show less]</a>');
@@ -202,6 +257,7 @@ openerp.mail = function(session) {
                 node_body.find('a:last').click(function() { node_body.hide(); node_body_short.show(); return false; });
                 node_body_short.find('a:last').click(function() { node_body_short.hide(); node_body.show(); return false; });
             }
+            console.log('end now displaying');
         },
         
         /**
@@ -243,6 +299,45 @@ openerp.mail = function(session) {
             
             records.reverse();
             return sorted_comments;
+        },
+        
+        new_sort_comments: function (records) {
+            var self = this;
+            console.log('nsc');
+            console.log(records);
+            console.log(self.params.parent_id);
+            console.log(self.params.thread_level);
+            sc = {'root_id_list': [], 'root_id_msg_list': {}, 'id_to_root': {}}
+            var cur_iter = 0; var max_iter = 10; var modif = true;
+            /* step1: get roots */
+            while ( modif && (cur_iter++) < max_iter) {
+                modif = false;
+                _(records).each(function (record) {
+                    if ( (record.parent_id == false || record.parent_id[0] == self.params.parent_id) && (_.indexOf(sc['root_id_list'], record.id) == -1)) {
+                        sc['root_id_list'].push(record.id);
+                        sc['root_id_msg_list'][record.id] = [];
+                        modif = true;
+                    } 
+                    else {
+                        if (_.indexOf(sc['root_id_list'], record.parent_id[0]) != -1) {
+                             sc['id_to_root'][record.id] = record.parent_id[0];
+                             modif = true;
+                        }
+                        else if ( sc['id_to_root'][record.parent_id[0]] ) {
+                             sc['id_to_root'][record.id] = sc['id_to_root'][record.parent_id[0]];
+                             modif = true;
+                        }
+                    }
+                });
+            }
+            /* step2: add records */
+            _(records).each(function (record) {
+                var root_id = sc['id_to_root'][record.id];
+                if (! root_id) return;
+                sc['root_id_msg_list'][root_id].push(record);
+            });
+            console.log(sc);
+            return sc;
         },
         
         display_current_user: function () {
