@@ -56,6 +56,7 @@ def content_index(content, filename=None, content_type=None):
         fp = os.popen('pdftotext -enc UTF-8 -nopgbrk '+file_name+' -', 'r')
         result = fp.read()
         fp.close()
+        os.unlink(file_name)
     elif ext in ('.xls','.ods','.odt','.odp'):
         s = StringIO.StringIO(content)
         o = odt2txt.OpenDocumentTextFile(s)
