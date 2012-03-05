@@ -27,11 +27,6 @@ class mrp_configuration(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'default_method' : fields.selection(
-            [('manual', 'Based on Purchase Order Lines'),
-             ('picking', 'Based on Receptions'),
-             ('order', 'Pre-Generate Draft Invoices based on Purchase Orders'),
-            ], 'Invoicing Control Method', required=True , help="You can set Invoicing Control Method."),
         'module_stock_planning': fields.boolean('Track work order planning',
                                    help ="""
                                    This allows to create a manual procurement plan apart of the normal MRP scheduling, which works automatically based on minimum stock rules.
