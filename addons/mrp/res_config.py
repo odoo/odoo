@@ -82,10 +82,6 @@ class mrp_configuration(osv.osv_memory):
                            It assigns the "Properties of Product" group to employee."""),
     }
 
-    _defaults = {
-        'default_method': lambda s,c,u,ctx: s.pool.get('purchase.order').default_get(c,u,['invoice_method'],context=ctx)['invoice_method'],
-    }
-
 mrp_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
