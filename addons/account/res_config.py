@@ -23,7 +23,7 @@ from osv import fields, osv
 from tools.translate import _
 
 class account_configuration(osv.osv_memory):
-    _inherit = 'res.config'
+    _inherit = 'res.config.settings'
 
     _columns = {
             'tax_policy': fields.selection([
@@ -109,3 +109,5 @@ class account_configuration(osv.osv_memory):
                 ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['res.users'], [(3,group_id)])
 
 account_configuration()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

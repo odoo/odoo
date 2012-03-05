@@ -22,7 +22,7 @@
 from osv import fields, osv
 
 class crm_configuration(osv.osv_memory):
-    _inherit = 'res.config'
+    _inherit = 'res.config.settings'
 
     _columns = {
         'module_crm_caldav' : fields.boolean("Caldav Synchronization",
@@ -71,21 +71,6 @@ class crm_configuration(osv.osv_memory):
     _defaults = {
         'type': 'pop',
     }
-
-    def create(self, cr, uid, vals, context=None):
-        ids = super(crm_configuration, self).create(cr, uid, vals, context=context)
-        self.execute(cr, uid, [ids], vals, context)
-        return ids
-
-    def write(self, cr, uid, ids, vals, context=None):
-        self.execute(cr, uid, ids, vals, context)
-        return super(crm_configuration, self).write(cr, uid, ids, vals, context=context)
-
-    def execute(self, cr, uid, ids, vals, context=None):
-        for method in dir(self):
-            if method.startswith('set_'):
-                getattr(self, method)(cr, uid, ids, vals, context)
-        return True
 
     def get_default_email_configurations(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')

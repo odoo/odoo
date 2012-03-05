@@ -24,7 +24,7 @@ import pooler
 from tools.translate import _
 
 class sale_configuration(osv.osv_memory):
-    _inherit = 'res.config'
+    _inherit = 'res.config.settings'
 
     _columns = {
         'sale_orders': fields.boolean('Based on Sales Orders', 
@@ -109,21 +109,6 @@ class sale_configuration(osv.osv_memory):
         'order_policy': 'manual',
         'time_unit': lambda self, cr, uid, c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c) and self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c)[0] or False,
     }
-
-    def create(self, cr, uid, vals, context=None):
-        ids = super(sale_configuration, self).create(cr, uid, vals, context=context)
-        self.execute(cr, uid, [ids], vals, context)
-        return ids
-
-    def write(self, cr, uid, ids, vals, context=None):
-        self.execute(cr, uid, ids, vals, context)
-        return super(sale_configuration, self).write(cr, uid, ids, vals, context=context)
-
-    def execute(self, cr, uid, ids, vals, context=None):
-        for method in dir(self):
-            if method.startswith('set_'):
-                getattr(self, method)(cr, uid, ids, vals, context)
-        return True
 
     def set_installed_modules(self, cr, uid, ids, vals, context=None):
         if vals.get('task_work'):

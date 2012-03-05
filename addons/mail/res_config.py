@@ -22,7 +22,7 @@
 from osv import fields, osv
 
 class plugin_configuration(osv.osv_memory):
-    _inherit = 'res.config'
+    _inherit = 'res.config.settings'
     
     _columns = {
         'module_plugin_thunderbird': fields.boolean('Thunderbird plugin',

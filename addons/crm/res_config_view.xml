@@ -3,9 +3,9 @@
 
         <record id="view_sales_config_crm" model="ir.ui.view">
             <field name="name">Sales Application</field>
-            <field name="model">res.config</field>
+            <field name="model">res.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_view_for_all"/>
+            <field name="inherit_id" ref="base.view_res_config_settings"/>
             <field name="arch" type="xml">
                 <xpath expr="//form/group[@name='crm']/group[@name='plugin']" position="inside">
                     <group col="2" colspan="2" name="emails">
