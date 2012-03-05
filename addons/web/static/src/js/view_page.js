@@ -96,6 +96,10 @@ openerp.web.page = function (openerp) {
             return value;
         },
         set_value: function (value) {
+            if (!value) {
+                this.$element.find('a').text('').attr('href', '#');
+                return;
+            }
             this.$element.find('a')
                     .attr('href', this.scheme + ':' + value)
                     .text(this.format_value(value));
@@ -106,6 +110,10 @@ openerp.web.page = function (openerp) {
     });
     openerp.web.page.FieldUrlReadonly = openerp.web.page.FieldURIReadonly.extend({
         set_value: function (value) {
+            if (!value) {
+                this.$element.find('a').text('').attr('href', '#');
+                return;
+            }
             var s = /(\w+):(.+)/.exec(value);
             if (!s) {
                 value = "http://" + value;
