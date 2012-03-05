@@ -115,8 +115,8 @@ class DiagramView(View):
             for i, fld in enumerate(visible_node_fields):
                 n['options'][node_fields_string[i]] = act[fld]
 
-        id_model = req.session.model(model).read([id],['name'], req.session.context)[0]['name']
+        _id, name = req.session.model(model).name_get([id], req.session.context)[0]
         return dict(nodes=nodes,
                     conn=connectors,
-                    id_model=id_model,
+                    name=name,
                     parent_field=graphs['node_parent_field'])

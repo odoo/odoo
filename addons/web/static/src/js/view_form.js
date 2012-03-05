@@ -2839,6 +2839,10 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             this.new_object();
         }
     },
+    stop: function () {
+        this.$element.dialog('close');
+        this._super();
+    },
     setup_search_view: function(search_defaults) {
         var self = this;
         if (this.searchview) {
