@@ -50,7 +50,7 @@ class mrp_configuration(osv.osv_memory):
                                 A + B + C -> D
                             With this module:
                                 A + B + C -> D + E.
-                            It installs the purchase_double_validation module."""),
+                            It installs the mrp_subproduct module."""),
         'module_stock_location' : fields.boolean("Allow push/pull flows by product",
                                     help="""This module supplements the Warehouse application by effectively implementing Push and Pull inventory flows.
                                     Typically this could be used to:
