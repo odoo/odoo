@@ -1,0 +1,74 @@
+<openerp>
+    <data>
+
+        <record id="view_warehouse_config" model="ir.ui.view">
+            <field name="name">Warehouse Application</field>
+            <field name="model">warehouse.configuration</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_res_config_settings"/>
+            <field name="arch" type="xml">
+            <form position ="replace">
+	            <form string ="Warehouse Application">
+		            <separator string="traceability" colspan="4"/>
+                    <group  colspan="4" col="4">
+                        <newline/>
+                        <field name=""/>
+                        <newline/>
+                        <field name=""/>
+                        <newline/>
+                        <field name=""/>
+                    </group>
+
+		            <separator string="Logistic" colspan="4"/>
+                    <group  colspan="4" col="4">
+                        <newline/>
+                        <field name=""/>
+                        <newline/>
+                        <field name=""/>
+                        <newline/>
+                    </group>
+
+                    <separator string="projects" colspan="4"/>
+                    <group colspan="4" col="8">
+                        <group  colspan="4" col="4">
+                           <field name=""/>
+                           <newline/>
+                           <field name=""/>
+                           <newline/>
+                        </group>
+                        <group colspan="4" col="4">
+                            <newline/>
+                            <field name=""/>
+                            <newline/>
+                            <field name=""/>
+                            <newline/>
+                        </group>
+                    </group>
+
+		            <separator string="Partners" colspan="4"/>
+                    <group  colspan="4" col="4">
+                        <newline/>
+	                    <field name=""/>
+	                    <newline/>
+	                    <field name=""/>
+	                    <newline/>
+                    </group>
+
+	                </form>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_warehouse_configuration" model="ir.actions.act_window">
+            <field name="name">Configure Warehouse Application</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">warehouse.configuration</field>
+            <field name="view_id" ref="view_warehouse_config"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <menuitem id="base.menu_warehouse_config" name="Warehouse" parent="base.menu_config" sequence="1" action="action_warehouse_configuration"/>
+
+    </data>
+</openerp>
