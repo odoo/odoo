@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-24 20:21+0000\n"
+"PO-Revision-Date: 2012-03-01 19:41+0000\n"
 "Last-Translator: t.o <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-25 05:52+0000\n"
-"X-Generator: Launchpad (build 14860)\n"
+"X-Launchpad-Export-Date: 2012-03-02 05:23+0000\n"
+"X-Generator: Launchpad (build 14886)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -551,7 +551,7 @@ msgstr "Rapport des Relances"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Steps"
-msgstr ""
+msgstr "Niveaux de relance"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -583,7 +583,7 @@ msgstr "Niveau de relance maximal"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
-msgstr ""
+msgstr "Définir les relances"
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -598,6 +598,11 @@ msgid ""
 "code to adapt the email content to the good context (good name, good date) "
 "and you can manage the multi language of messages."
 msgstr ""
+"Définissez les niveaux de relance, leur message et leur déclenchement. Pour "
+"chaque étape, spécifiez le message et le nombre de jours avant la relance. "
+"Utilisez la légende pour connaître le code à utiliser pour adapter "
+"dynamiquement le contenu du courriel  (nom, date). Vous pouvez aussi gérer "
+"la langue des messages en fonction des destinataires."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -612,6 +617,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Aucun courriel n'a été envoyé aux partenaires suivants. Leur adresse de "
+"courriel n'est pas renseignée !\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -781,7 +790,7 @@ msgstr "Réf. Client"
 #. module: account_followup
 #: field:account.followup.print.all,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Tester l'impression"
 
 #. module: account_followup
 #: view:account.followup.print.all:0

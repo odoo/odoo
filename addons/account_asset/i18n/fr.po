@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-24 19:50+0000\n"
-"Last-Translator: GaCriv <Unknown>\n"
+"PO-Revision-Date: 2012-03-01 19:39+0000\n"
+"Last-Translator: t.o <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-25 05:52+0000\n"
-"X-Generator: Launchpad (build 14860)\n"
+"X-Launchpad-Export-Date: 2012-03-02 05:23+0000\n"
+"X-Generator: Launchpad (build 14886)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -46,7 +46,7 @@ msgstr "Calcul des amortissements"
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Regrouper par..."
 
 #. module: account_asset
 #: field:asset.asset.report,gross_value:0
@@ -81,12 +81,12 @@ msgstr "Nom de l'historique"
 #: field:account.asset.category,company_id:0 view:asset.asset.report:0
 #: field:asset.asset.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Société"
 
 #. module: account_asset
 #: view:asset.modify:0
 msgid "Modify"
-msgstr ""
+msgstr "Modifier"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 view:asset.asset.report:0
@@ -195,7 +195,7 @@ msgstr "Ecriture de dépreciation"
 #. module: account_asset
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Valeur erronée au crédit ou au débit de la pièce comptable !"
 
 #. module: account_asset
 #: view:asset.asset.report:0 field:asset.asset.report,nbr:0
@@ -213,17 +213,17 @@ msgstr "Actifs en état brouillon"
 #: selection:account.asset.category,method_time:0
 #: selection:account.asset.history,method_time:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Date de fin"
 
 #. module: account_asset
 #: field:account.asset.asset,code:0
 msgid "Reference"
-msgstr ""
+msgstr "Référence"
 
 #. module: account_asset
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "Structure de communication BBA incorrecte !"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -328,7 +328,7 @@ msgstr "Temps en mois entre deux dépréciations"
 #. module: account_asset
 #: view:asset.asset.report:0 field:asset.asset.report,name:0
 msgid "Year"
-msgstr ""
+msgstr "Année"
 
 #. module: account_asset
 #: view:asset.modify:0
@@ -340,7 +340,7 @@ msgstr "Modifier l'immobilisation"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Other Information"
-msgstr ""
+msgstr "Autre information"
 
 #. module: account_asset
 #: field:account.asset.asset,salvage_value:0
@@ -396,7 +396,7 @@ msgstr "État"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Lignes de facture"
 
 #. module: account_asset
 #: constraint:account.move.line:0
@@ -405,11 +405,14 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Le compte sélectionné dans votre ligne d'écriture requiert une deuxième "
+"devise. Vous devez soit supprimer la deuxième devise sur le compte, soit "
+"sélectionner une vue multi-devise sur le journal."
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Month"
-msgstr ""
+msgstr "Mois"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -419,7 +422,7 @@ msgstr "Tableau des amortissements"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Écritures comptables"
 
 #. module: account_asset
 #: field:asset.asset.report,unposted_value:0
@@ -449,6 +452,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"La date de votre écriture ne correspond pas à la période définie ! Vous "
+"devez modifier la date ou supprimer la contrainte de date du journal."
 
 #. module: account_asset
 #: field:account.asset.asset,note:0 field:account.asset.category,note:0
@@ -480,6 +485,12 @@ msgid ""
 "  * Ending Date: Choose the time between 2 depreciations and the date the "
 "depreciations won't go beyond."
 msgstr ""
+"Choisissez la méthode à utiliser pour calculer les dates et le nombre de "
+"lignes d'amortissement.\n"
+"    * Nombre d'amortissements : fixer le nombre d'amortissements et le temps "
+"entre 2 amortissements.\n"
+"    * Date de fin : choisissez le temps entre 2 amortissements et la date de "
+"fin d'amortissement."
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -489,7 +500,7 @@ msgstr "Immobilisation en cours"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Closed"
-msgstr ""
+msgstr "Fermé"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -510,7 +521,7 @@ msgstr "Lignes d'amortissement comptabilisées"
 #. module: account_asset
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "La société doit être la même pour son compte et la période liée."
 
 #. module: account_asset
 #: field:account.asset.asset,child_ids:0
@@ -540,17 +551,17 @@ msgstr "Immobilisations acquises ce mois"
 #. module: account_asset
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Vous ne pouvez pas passer d'écriture sur un compte de type 'vue'"
 
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtres étendus..."
 
 #. module: account_asset
 #: view:account.asset.asset:0 view:asset.depreciation.confirmation.wizard:0
 msgid "Compute"
-msgstr ""
+msgstr "Calculer"
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -590,17 +601,17 @@ msgstr "Hstorique"
 #. module: account_asset
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Le numéro de facture doit être unique par société !"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Période"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "General"
-msgstr ""
+msgstr "Général"
 
 #. module: account_asset
 #: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
@@ -615,7 +626,7 @@ msgstr "Information comptable"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Facture"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form_normal
@@ -661,7 +672,7 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Current"
-msgstr ""
+msgstr "En cours"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
@@ -682,7 +693,7 @@ msgstr "Dates d'amortissement"
 #. module: account_asset
 #: field:account.asset.asset,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Devise"
 
 #. module: account_asset
 #: field:account.asset.category,journal_id:0
@@ -720,7 +731,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.category,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -734,7 +745,7 @@ msgstr ""
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Mettre à l'état \"Brouillon\""
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -745,7 +756,7 @@ msgstr "Linéaire"
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Month-1"
-msgstr ""
+msgstr "Mois -1"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
@@ -773,7 +784,7 @@ msgstr "Écritures d'amortissement créées"
 #. module: account_asset
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Vous ne pouvez pas passer d'écritures sur un compte clôturé."
 
 #. module: account_asset
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report

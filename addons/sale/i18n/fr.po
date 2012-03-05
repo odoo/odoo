@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
+"PO-Revision-Date: 2012-02-29 15:33+0000\n"
 "Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 07:04+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-03-01 05:19+0000\n"
+"X-Generator: Launchpad (build 14874)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -27,6 +27,8 @@ msgid ""
 "Sale Order Lines that are confirmed, done or in exception state and haven't "
 "yet been invoiced"
 msgstr ""
+"Lignes de bon de commande qui sont en état confirmé, terminé ou en exception "
+"et qui n'ont pas encore été facturé."
 
 #. module: sale
 #: view:board.board:0
@@ -46,7 +48,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "UoS"
-msgstr ""
+msgstr "UdV"
 
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
@@ -78,7 +80,7 @@ msgstr "Le devis '%s' a été transformé en bon de commande."
 #. module: sale
 #: view:sale.order:0
 msgid "Print Quotation"
-msgstr ""
+msgstr "Imprimer devis"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:42
@@ -122,6 +124,9 @@ msgid ""
 "cancel a sale order, you must first cancel related picking or delivery "
 "orders."
 msgstr ""
+"Afin de supprimer un bon de commande confirmé, vous devez d'abord l'annuler. "
+"Pour annuler un bon de commande, vous devez d'abord annuler les bons de "
+"livraison ou de préparation."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -136,7 +141,7 @@ msgstr "Partenaire"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice based on deliveries"
-msgstr ""
+msgstr "Facturation basées sur les livraisons"
 
 #. module: sale
 #: view:sale.order:0
@@ -192,7 +197,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.picking_policy,time_unit:0
 msgid "Main Working Time Unit"
-msgstr ""
+msgstr "Unité de temps de travail principale"
 
 #. module: sale
 #: view:sale.order:0 view:sale.order.line:0 field:sale.order.line,state:0
@@ -218,7 +223,7 @@ msgstr "Cochez cette case pour grouper les factures d'un même client"
 #. module: sale
 #: view:sale.order:0
 msgid "My Sale Orders"
-msgstr ""
+msgstr "Mes bons de commande"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -268,7 +273,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "Devis et ventes"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -345,7 +350,7 @@ msgstr "Commandes avec incidents"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:70
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "Erreur de configuration !"
 
 #. module: sale
 #: view:sale.order:0
@@ -407,7 +412,7 @@ msgstr "Octobre"
 #. module: sale
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "La référence doit être unique par société !"
 
 #. module: sale
 #: view:board.board:0 view:sale.order:0 view:sale.report:0
@@ -472,6 +477,8 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel a sale order line that has already been invoiced!"
 msgstr ""
+"Vous ne pouvez pas annuler une ligne d'un bon de commande qui a déjà été "
+"facturée !"
 
 #. module: sale
 #: code:addons/sale/sale.py:1079
@@ -521,7 +528,7 @@ msgstr "Notes"
 #. module: sale
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Le nom de la société doit être unique !"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -531,12 +538,12 @@ msgstr "Adresse de facturation pour le bon de commandes actuel"
 #. module: sale
 #: view:sale.report:0
 msgid "Month-1"
-msgstr ""
+msgstr "Mois -1"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered month of the sales order"
-msgstr ""
+msgstr "Mois de commande du bon de commande"
 
 #. module: sale
 #: code:addons/sale/sale.py:504
@@ -544,11 +551,13 @@ msgstr ""
 msgid ""
 "You cannot group sales having different currencies for the same partner."
 msgstr ""
+"Vous ne pouvez pas regrouper les bons de commande ayant des devises "
+"différentes pour un même partenaire."
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Livrer chaque produit dès qu'il est disponible"
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0 field:sale.order.line,invoiced:0
@@ -584,6 +593,8 @@ msgstr "Mars"
 #: constraint:stock.move:0
 msgid "You can not move products from or to a location of the type view."
 msgstr ""
+"Vous ne pouvez pas déplacer des produits depuis ou vers un emplacement de "
+"type \"vue\"."
 
 #. module: sale
 #: field:sale.config.picking_policy,sale_orders:0
@@ -608,7 +619,7 @@ msgstr "Adresse de facturation :"
 #. module: sale
 #: field:sale.order.line,sequence:0
 msgid "Line Sequence"
-msgstr ""
+msgstr "Séquence de la ligne"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
@@ -699,7 +710,7 @@ msgstr "Date de création"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sales_configuration_misc
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Divers"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
@@ -743,7 +754,7 @@ msgstr "Nb. de qté."
 #: code:addons/sale/sale.py:1327
 #, python-format
 msgid "Hour"
-msgstr ""
+msgstr "Heure"
 
 #. module: sale
 #: view:sale.order:0
@@ -784,6 +795,9 @@ msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Vous devez sélectionner une liste de prix ou un client dans le formulaire de "
+"vente !\n"
+"Sélectionnez-en un avant de choisir un produit."
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,categ_id:0
@@ -853,7 +867,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #. module: sale
 #: view:sale.report:0
@@ -941,7 +955,7 @@ msgstr "Références"
 #. module: sale
 #: view:sale.order.line:0
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "Mes lignes de bons de commande"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
@@ -955,7 +969,7 @@ msgstr "Annuler"
 #. module: sale
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "La référence de commande doit être unique par société!"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
@@ -1027,7 +1041,7 @@ msgstr "Basé sur les quantités expédiées ou commandées"
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Livraison de tous les produits en une fois"
 
 #. module: sale
 #: field:sale.order,picking_ids:0
@@ -1289,7 +1303,7 @@ msgstr "Montant anticipé"
 #. module: sale
 #: field:sale.config.picking_policy,charge_delivery:0
 msgid "Do you charge the delivery?"
-msgstr ""
+msgstr "Facturez-vous la livraison?"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -1331,7 +1345,7 @@ msgstr "Vous ne pouvez pas annuler le bon de commande !"
 #. module: sale
 #: view:sale.order:0
 msgid "Qty(UoM)"
-msgstr ""
+msgstr "Qté. (UdM)"
 
 #. module: sale
 #: view:sale.report:0
@@ -1367,13 +1381,13 @@ msgstr "Grouper les factures"
 #. module: sale
 #: field:sale.order,order_policy:0
 msgid "Invoice Policy"
-msgstr ""
+msgstr "Politique de facturation"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
 #: view:sale.config.picking_policy:0
 msgid "Setup your Invoicing Method"
-msgstr ""
+msgstr "Paramétrez votre méthode de facturation"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
@@ -1473,7 +1487,7 @@ msgstr ""
 #: code:addons/sale/sale.py:473
 #, python-format
 msgid "Customer Invoices"
-msgstr ""
+msgstr "Factures clients"
 
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
@@ -1576,7 +1590,7 @@ msgstr "sale.config.picking_policy"
 #: view:account.invoice.report:0 view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_turnover_by_month
 msgid "Monthly Turnover"
-msgstr ""
+msgstr "Chiffre d'affaires mensuel"
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -1690,12 +1704,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Pay before delivery"
-msgstr ""
+msgstr "Paiement avant livraison"
 
 #. module: sale
 #: view:board.board:0 model:ir.actions.act_window,name:sale.open_board_sales
 msgid "Sales Dashboard"
-msgstr ""
+msgstr "Tableaux de bord des ventes"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1717,7 +1731,7 @@ msgstr "Date à laquelle le bon de commande est confirmé."
 #. module: sale
 #: field:sale.order,project_id:0
 msgid "Contract/Analytic Account"
-msgstr ""
+msgstr "Contrat / compte analytique"
 
 #. module: sale
 #: field:sale.order,company_id:0 field:sale.order.line,company_id:0
@@ -1743,6 +1757,9 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"Impossible de trouver une ligne de liste de prix qui correspond à ce produit "
+"et à la quantité.\n"
+"Vous devez soit changer le produit, la quantité ou la liste de prix."
 
 #. module: sale
 #: help:sale.order,picking_ids:0
@@ -1883,7 +1900,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Print Order"
-msgstr ""
+msgstr "Imprimer la commande"
 
 #. module: sale
 #: view:sale.report:0
@@ -2031,7 +2048,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_email_templates
 #: model:ir.ui.menu,name:sale.menu_email_templates
 msgid "Email Templates"
-msgstr ""
+msgstr "Modèles de courriels"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_form
@@ -2141,7 +2158,7 @@ msgstr "Fermer"
 #: code:addons/sale/sale.py:1261
 #, python-format
 msgid "No Pricelist ! : "
-msgstr ""
+msgstr "Pas de liste de prix ! "
 
 #. module: sale
 #: field:sale.order,shipped:0
@@ -2223,7 +2240,7 @@ msgstr "Réquisition du bon de commande"
 #: code:addons/sale/sale.py:1255
 #, python-format
 msgid "Not enough stock ! : "
-msgstr ""
+msgstr "Pas assez de stock ! "
 
 #. module: sale
 #: report:sale.order:0 field:sale.order,payment_term:0
