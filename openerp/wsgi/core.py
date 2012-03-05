@@ -430,7 +430,7 @@ def serve():
         else:
             app = application
             suffix = ''
-        httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
+        httpd = werkzeug.serving.make_server(interface, port, app, threaded=True)
         _logger.info('HTTP service (werkzeug) running on %s:%s%s', interface, port, suffix)
     except ImportError:
         import wsgiref.simple_server

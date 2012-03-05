@@ -23,6 +23,7 @@ from osv import osv, fields
 import tools
 import pooler
 import cStringIO
+from tools.translate import _
 
 class base_update_translations(osv.osv_memory):
     def _get_languages(self, cr, uid, context):

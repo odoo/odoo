@@ -36,7 +36,7 @@ from types import CodeType
 import logging
 import os
 
-__all__ = ['test_expr', 'safe_eval', 'const_eval', 'ext_eval' ]
+__all__ = ['test_expr', 'safe_eval', 'const_eval']
 
 # The time module is usually already provided in the safe_eval environment
 # but some code, e.g. datetime.datetime.now() (Windows/Python 2.5.2, bug

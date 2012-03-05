@@ -33,14 +33,11 @@ import openerp.pooler as pooler
 import openerp.tools as tools
 import zipfile
 import common
-from openerp.osv.fields import float as float_class, function as function_class
+from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
 from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
-
-DT_FORMAT = '%Y-%m-%d'
-DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
-HM_FORMAT = '%H:%M:%S'
 
 rml_parents = {
     'tr':1,
@@ -69,7 +66,7 @@ rml2sxw = {
     'para': 'p',
 }
 
-def get_date_length(date_format=DT_FORMAT):
+def get_date_length(date_format=DEFAULT_SERVER_DATE_FORMAT):
     return len((datetime.now()).strftime(date_format))
 
 class _format(object):
@@ -110,7 +107,7 @@ class _date_format(str, _format):
     def __str__(self):
         if self.val:
             if getattr(self,'name', None):
-                date = datetime.strptime(self.name[:get_date_length()], DT_FORMAT)
+                date = datetime.strptime(self.name[:get_date_length()], DEFAULT_SERVER_DATE_FORMAT)
                 return date.strftime(str(self.lang_obj.date_format))
         return self.val
 
@@ -121,7 +118,7 @@ class _dttime_format(str, _format):
 
     def __str__(self):
         if self.val and getattr(self,'name', None):
-            return datetime.strptime(self.name, DHM_FORMAT)\
+            return datetime.strptime(self.name, DEFAULT_SERVER_DATETIME_FORMAT)\
                    .strftime("%s %s"%(str(self.lang_obj.date_format),
                                       str(self.lang_obj.time_format)))
         return self.val
@@ -264,7 +261,7 @@ class rml_parse(object):
             else:
                 d = res_digits(self.cr)[1]
         elif (hasattr(obj, '_field') and\
-                isinstance(obj._field, (float_class, function_class)) and\
+                isinstance(obj._field, (float_field, function_field)) and\
                 obj._field.digits):
                 d = obj._field.digits[1] or DEFAULT_DIGITS
         return d
@@ -295,16 +292,24 @@ class rml_parse(object):
                 return ''
 
             date_format = self.lang_dict['date_format']
-            parse_format = DT_FORMAT
+            parse_format = DEFAULT_SERVER_DATE_FORMAT
             if date_time:
-                value=value.split('.')[0]
+                value = value.split('.')[0]
                 date_format = date_format + " " + self.lang_dict['time_format']
-                parse_format = DHM_FORMAT
-            if not isinstance(value, time.struct_time):
-                return time.strftime(date_format, time.strptime(value[:get_date_length(parse_format)], parse_format))
-
+                parse_format = DEFAULT_SERVER_DATETIME_FORMAT
+            if isinstance(value, basestring):
+                # FIXME: the trimming is probably unreliable if format includes day/month names
+                #        and those would need to be translated anyway. 
+                date = datetime.strptime(value[:get_date_length(parse_format)], parse_format)
+            elif isinstance(value, time.struct_time):
+                date = datetime(*value[:6])
             else:
                 date = datetime(*value.timetuple()[:6])
+            if date_time:
+                # Convert datetime values to the expected client/context timezone
+                date = datetime_field.context_timestamp(self.cr, self.uid,
+                                                        timestamp=date,
+                                                        context=self.localcontext)
             return date.strftime(date_format)
 
         res = self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)

@@ -35,14 +35,12 @@
 import base64
 import datetime as DT
 import logging
+import pytz
 import re
-import string
-import sys
 import xmlrpclib
 from psycopg2 import Binary
 
 import openerp
-import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.translate import _
 from openerp.tools import float_round, float_repr
@@ -262,6 +260,7 @@ class float(_column):
 
 class date(_column):
     _type = 'date'
+
     @staticmethod
     def today(*args):
         """ Returns the current date in a format fit for being a
@@ -272,6 +271,38 @@ class date(_column):
         """
         return DT.date.today().strftime(
             tools.DEFAULT_SERVER_DATE_FORMAT)
+
+    @staticmethod
+    def context_today(model, cr, uid, context=None, timestamp=None):
+        """Returns the current date as seen in the client's timezone
+           in a format fit for date fields.
+           This method may be passed as value to initialize _defaults.
+
+           :param Model model: model (osv) for which the date value is being
+                               computed - technical field, currently ignored,
+                               automatically passed when used in _defaults.
+           :param datetime timestamp: optional datetime value to use instead of
+                                      the current date and time (must be a
+                                      datetime, regular dates can't be converted
+                                      between timezones.)
+           :param dict context: the 'tz' key in the context should give the
+                                name of the User/Client timezone (otherwise
+                                UTC is used)
+           :rtype: str 
+        """
+        today = timestamp or DT.datetime.now()
+        context_today = None
+        if context and context.get('tz'):
+            try:
+                utc = pytz.timezone('UTC')
+                context_tz = pytz.timezone(context['tz'])
+                utc_today = utc.localize(today, is_dst=False) # UTC = no DST
+                context_today = utc_today.astimezone(context_tz)
+            except Exception:
+                _logger.debug("failed to compute context/client-specific today date, "
+                              "using the UTC value for `today`",
+                              exc_info=True)
+        return (context_today or today).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
 
 class datetime(_column):
     _type = 'datetime'
@@ -285,6 +316,36 @@ class datetime(_column):
         """
         return DT.datetime.now().strftime(
             tools.DEFAULT_SERVER_DATETIME_FORMAT)
+
+    @staticmethod
+    def context_timestamp(cr, uid, timestamp, context=None):
+        """Returns the given timestamp converted to the client's timezone.
+           This method is *not* meant for use as a _defaults initializer,
+           because datetime fields are automatically converted upon
+           display on client side. For _defaults you :meth:`fields.datetime.now`
+           should be used instead.
+
+           :param datetime timestamp: naive datetime value (expressed in UTC)
+                                      to be converted to the client timezone
+           :param dict context: the 'tz' key in the context should give the
+                                name of the User/Client timezone (otherwise
+                                UTC is used)
+           :rtype: datetime
+           :return: timestamp converted to timezone-aware datetime in context
+                    timezone
+        """
+        assert isinstance(timestamp, DT.datetime), 'Datetime instance expected'
+        if context and context.get('tz'):
+            try:
+                utc = pytz.timezone('UTC')
+                context_tz = pytz.timezone(context['tz'])
+                utc_timestamp = utc.localize(timestamp, is_dst=False) # UTC = no DST
+                return utc_timestamp.astimezone(context_tz)
+            except Exception:
+                _logger.debug("failed to compute context/client-specific timestamp, "
+                              "using the UTC value",
+                              exc_info=True)
+        return timestamp
 
 class time(_column):
     _type = 'time'
@@ -303,7 +364,15 @@ class time(_column):
 class binary(_column):
     _type = 'binary'
     _symbol_c = '%s'
-    _symbol_f = lambda symb: symb and Binary(symb) or None
+
+    # Binary values may be byte strings (python 2.6 byte array), but
+    # the legacy OpenERP convention is to transfer and store binaries
+    # as base64-encoded strings. The base64 string may be provided as a
+    # unicode in some circumstances, hence the str() cast in symbol_f.
+    # This str coercion will only work for pure ASCII unicode strings,
+    # on purpose - non base64 data must be passed as a 8bit byte strings.
+    _symbol_f = lambda symb: symb and Binary(str(symb)) or None
+
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self, x: x and str(x)
 
@@ -1289,10 +1358,10 @@ class sparse(function):
                     value = value or []
                     if value:
                         # filter out deleted records as superuser
-                        relation_obj = obj.pool.get(self.relation)
+                        relation_obj = obj.pool.get(obj._columns[field_name].relation)
                         value = relation_obj.exists(cr, openerp.SUPERUSER_ID, value)
                 if type(value) in (int,long) and field_type == 'many2one':
-                    relation_obj = obj.pool.get(self.relation)
+                    relation_obj = obj.pool.get(obj._columns[field_name].relation)
                     # check for deleted record as superuser
                     if not relation_obj.exists(cr, openerp.SUPERUSER_ID, [value]):
                         value = False

@@ -259,7 +259,7 @@ class db(netsvc.ExportService):
                 tmpfile = (os.environ['TMP'] or 'C:\\') + os.tmpnam()
                 file(tmpfile, 'wb').write(buf)
                 args2=list(args2)
-                args2.append(' ' + tmpfile)
+                args2.append(tmpfile)
                 args2=tuple(args2)
             stdin, stdout = tools.exec_pg_command_pipe(*args2)
             if not os.name == "nt":

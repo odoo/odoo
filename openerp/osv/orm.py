@@ -750,7 +750,7 @@ class BaseModel(object):
             name_id = 'model_'+self._name.replace('.', '_')
             cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, context['module']))
             if not cr.rowcount:
-                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
+                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
                     (name_id, context['module'], 'ir.model', model_id)
                 )
 
@@ -816,7 +816,7 @@ class BaseModel(object):
                     cr.execute("select name from ir_model_data where name=%s", (name1,))
                     if cr.fetchone():
                         name1 = name1 + "_" + str(id)
-                    cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
+                    cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s)", \
                         (name1, context['module'], 'ir.model.fields', id)
                     )
             else:
@@ -886,6 +886,11 @@ class BaseModel(object):
                         for c in new.keys():
                             if new[c].manual:
                                 del new[c]
+                        # Duplicate float fields because they have a .digits
+                        # cache (which must be per-registry, not server-wide).
+                        for c in new.keys():
+                            if new[c]._type == 'float':
+                                new[c] = copy.copy(new[c])
                     if hasattr(new, 'update'):
                         new.update(cls.__dict__.get(s, {}))
                     elif s=='_constraints':
@@ -2686,7 +2691,7 @@ class BaseModel(object):
         elif val in dict(self._columns[field].selection(self, cr, uid, context=context)):
             return
         raise except_orm(_('ValidateError'),
-			_('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
+            _('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
 
     def _check_removed_columns(self, cr, log=False):
         # iterate on the database columns to drop the NOT NULL constraints
@@ -2728,6 +2733,50 @@ class BaseModel(object):
         self._foreign_keys.append((source_table, source_field, dest_model._table, ondelete or 'set null'))
         _schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
             source_table, source_field, dest_model._table, ondelete)
+
+    def _drop_constraint(self, cr, source_table, constraint_name):
+        cr.execute("ALTER TABLE %s DROP CONSTRAINT %s" % (source_table,constraint_name))
+
+    def _m2o_fix_foreign_key(self, cr, source_table, source_field, dest_model, ondelete):
+        # Find FK constraint(s) currently established for the m2o field,
+        # and see whether they are stale or not 
+        cr.execute("""SELECT confdeltype as ondelete_rule, conname as constraint_name,
+                             cl2.relname as foreign_table
+                      FROM pg_constraint as con, pg_class as cl1, pg_class as cl2,
+                           pg_attribute as att1, pg_attribute as att2
+                      WHERE con.conrelid = cl1.oid 
+                        AND cl1.relname = %s 
+                        AND con.confrelid = cl2.oid 
+                        AND array_lower(con.conkey, 1) = 1 
+                        AND con.conkey[1] = att1.attnum 
+                        AND att1.attrelid = cl1.oid 
+                        AND att1.attname = %s 
+                        AND array_lower(con.confkey, 1) = 1 
+                        AND con.confkey[1] = att2.attnum 
+                        AND att2.attrelid = cl2.oid 
+                        AND att2.attname = %s 
+                        AND con.contype = 'f'""", (source_table, source_field, 'id'))
+        constraints = cr.dictfetchall()
+        if constraints:
+            if len(constraints) == 1:
+                # Is it the right constraint?
+                cons, = constraints 
+                if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
+                    or cons['foreign_table'] != dest_model._table:
+                    _schema.debug("Table '%s': dropping obsolete FK constraint: '%s'",
+                                  source_table, cons['constraint_name'])
+                    self._drop_constraint(cr, source_table, cons['constraint_name'])
+                    self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
+                # else it's all good, nothing to do!
+            else:
+                # Multiple FKs found for the same field, drop them all, and re-create
+                for cons in constraints:
+                    _schema.debug("Table '%s': dropping duplicate FK constraints: '%s'",
+                                  source_table, cons['constraint_name'])
+                    self._drop_constraint(cr, source_table, cons['constraint_name'])
+                self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
+
+
 
     def _auto_init(self, cr, context=None):
         """
@@ -2928,31 +2977,8 @@ class BaseModel(object):
 
                             if isinstance(f, fields.many2one):
                                 dest_model = self.pool.get(f._obj)
-                                ref = dest_model._table
-                                if ref != 'ir_actions':
-                                    cr.execute('SELECT confdeltype, conname FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, '
-                                                'pg_attribute as att1, pg_attribute as att2 '
-                                            'WHERE con.conrelid = cl1.oid '
-                                                'AND cl1.relname = %s '
-                                                'AND con.confrelid = cl2.oid '
-                                                'AND cl2.relname = %s '
-                                                'AND array_lower(con.conkey, 1) = 1 '
-                                                'AND con.conkey[1] = att1.attnum '
-                                                'AND att1.attrelid = cl1.oid '
-                                                'AND att1.attname = %s '
-                                                'AND array_lower(con.confkey, 1) = 1 '
-                                                'AND con.confkey[1] = att2.attnum '
-                                                'AND att2.attrelid = cl2.oid '
-                                                'AND att2.attname = %s '
-                                                "AND con.contype = 'f'", (self._table, ref, k, 'id'))
-                                    res2 = cr.dictfetchall()
-                                    if res2:
-                                        if res2[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get((f.ondelete or 'set null').upper(), 'a'):
-                                            cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res2[0]['conname'] + '"')
-                                            self._m2o_add_foreign_key_checked(k, dest_model, f.ondelete)
-                                            cr.commit()
-                                            _schema.debug("Table '%s': column '%s': XXX",
-                                                self._table, k)
+                                if dest_model._table != 'ir_actions':
+                                    self._m2o_fix_foreign_key(cr, self._table, k, dest_model, f.ondelete)
 
                     # The field doesn't exist in database. Create it if necessary.
                     else:
@@ -3148,6 +3174,9 @@ class BaseModel(object):
         _sql_constraints.
 
         """
+        def unify_cons_text(txt):
+            return txt.lower().replace(', ',',').replace(' (','(')
+
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
 
@@ -3177,7 +3206,7 @@ class BaseModel(object):
                 # constraint does not exists:
                 sql_actions['add']['execute'] = True
                 sql_actions['add']['msg_err'] = sql_actions['add']['msg_err'] % (sql_actions['add']['query'], )
-            elif con.lower() not in [item['condef'].lower() for item in existing_constraints]:
+            elif unify_cons_text(con) not in [unify_cons_text(item['condef']) for item in existing_constraints]:
                 # constraint exists but its definition has changed:
                 sql_actions['drop']['execute'] = True
                 sql_actions['drop']['msg_ok'] = sql_actions['drop']['msg_ok'] % (existing_constraints[0]['condef'].lower(), )
@@ -3412,8 +3441,8 @@ class BaseModel(object):
                     return "date_trunc('second', %s) as %s" % (f_qual, f)
                 if f == self.CONCURRENCY_CHECK_FIELD:
                     if self._log_access:
-                        return "COALESCE(%s.write_date, %s.create_date, now())::timestamp AS %s" % (self._table, self._table, f,)
-                    return "now()::timestamp AS %s" % (f,)
+                        return "COALESCE(%s.write_date, %s.create_date, (now() at time zone 'UTC'))::timestamp AS %s" % (self._table, self._table, f,)
+                    return "(now() at time zone 'UTC')::timestamp AS %s" % (f,)
                 if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                     return 'length(%s) as "%s"' % (f_qual, f)
                 return f_qual
@@ -3594,7 +3623,7 @@ class BaseModel(object):
             return
         if not (context.get(self.CONCURRENCY_CHECK_FIELD) and self._log_access):
             return
-        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, now())::timestamp)"
+        check_clause = "(id = %s AND %s < COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp)"
         for sub_ids in cr.split_for_in_conditions(ids):
             ids_to_check = []
             for id in sub_ids:
@@ -3878,7 +3907,7 @@ class BaseModel(object):
 
         if self._log_access:
             upd0.append('write_uid=%s')
-            upd0.append('write_date=now()')
+            upd0.append("write_date=(now() at time zone 'UTC')")
             upd1.append(user)
 
         if len(upd0):
@@ -4145,7 +4174,7 @@ class BaseModel(object):
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
             upd0 += ',create_uid,create_date'
-            upd1 += ',%s,now()'
+            upd1 += ",%s,(now() at time zone 'UTC')"
             upd2.append(user)
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
         self.check_access_rule(cr, user, [id_new], 'create', context=context)
@@ -4378,13 +4407,11 @@ class BaseModel(object):
         domain = domain[:]
         # if the object has a field named 'active', filter out all inactive
         # records unless they were explicitely asked for
-        if 'active' in self._columns and (active_test and context.get('active_test', True)):
+        if 'active' in self._all_columns and (active_test and context.get('active_test', True)):
             if domain:
-                active_in_args = False
-                for a in domain:
-                    if a[0] == 'active':
-                        active_in_args = True
-                if not active_in_args:
+                # the item[0] trick below works for domain items and '&'/'|'/'!'
+                # operators too
+                if not any(item[0] == 'active' for item in domain):
                     domain.insert(0, ('active', '=', 1))
             else:
                 domain = [('active', '=', 1)]
@@ -4848,15 +4875,15 @@ class BaseModel(object):
     def _transient_clean_rows_older_than(self, cr, seconds):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
         cr.execute("SELECT id FROM " + self._table + " WHERE"
-            " COALESCE(write_date, create_date, now())::timestamp <"
-            " (now() - interval %s)", ("%s seconds" % seconds,))
+            " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp <"
+            " ((now() at time zone 'UTC') - interval %s)", ("%s seconds" % seconds,))
         ids = [x[0] for x in cr.fetchall()]
         self.unlink(cr, SUPERUSER_ID, ids)
 
     def _transient_clean_old_rows(self, cr, count):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
         cr.execute(
-            "SELECT id, COALESCE(write_date, create_date, now())::timestamp"
+            "SELECT id, COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
             " AS t FROM " + self._table +
             " ORDER BY t LIMIT %s", (count,))
         ids = [x[0] for x in cr.fetchall()]
