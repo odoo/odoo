@@ -411,11 +411,12 @@ openerp.mail = function(session) {
         init: function (parent, params) {
             this._super(parent);
             this.params = params || {};
-            this.params.limit = params.limit || 20;
+            this.params.limit = params.limit || 2;
             this.params.search_view_id = params.search_view_id || false;
             this.params.search = {};
             this.params.domain = [];
-            this.sorted_comments = {};
+            this.sorted_comments = {'models': {}};
+            this.display_show_more = true;
             /* DataSets */
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
             this.ds_thread = new session.web.DataSet(this, 'mail.thread');
@@ -428,14 +429,14 @@ openerp.mail = function(session) {
             /* events and buttons */
             this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
             this.$element.find('button.oe_mail_wall_button_more').bind('click', function () { self.do_more(); });
-            this.$element.find('div.oe_mail_wall_nomore').hide();
+            this.$element.find('p.oe_mail_wall_nomore').hide();
             /* load mail.message search view */
             var search_view_loaded = this.load_search_view(this.params.search_view_id, {}, false);
             var search_view_ready = $.when(search_view_loaded).then(function () {
                 self.searchview.on_search.add(self.do_searchview_search);
             });
             /* fetch comments */
-            var comments_ready = this.init_comments();
+            var comments_ready = this.init_comments(this.params.domain, {}, 0, this.params.limit);
             return (search_view_ready && comments_ready);
         },
         
@@ -486,7 +487,8 @@ openerp.mail = function(session) {
         init_comments: function(domain, context, offset, limit) {
             var self = this;
             this.params.domain = [];
-            this.sorted_comments = {};
+            this.display_show_more = true;
+            this.sorted_comments = {'models': {}};
             this.$element.find('div.oe_mail_wall_threads').empty();
             return this.fetch_comments(domain, context, offset, limit);
         },
@@ -499,9 +501,16 @@ openerp.mail = function(session) {
          * @param {Number} limit number of messages to fetch
          */
         fetch_comments: function (domain, context, offset, limit) {
+            var self = this;
             var load_res = this.ds_thread.call('get_pushed_messages',
-                [[this.session.uid], limit = (limit || 2), offset = (offset || 0), domain = (domain || []), context = (context || null) ]).then(
-                    this.proxy('display_comments'));
+                [[this.session.uid], limit = (limit || 2), offset = (offset || 0), domain = (domain || []), context = (context || null) ]).then(function (records) {
+                    if (records.length < self.params.limit) self.display_show_more = false;
+                    self.display_comments(records);
+                    if (! self.display_show_more) {
+                        self.$element.find('button.oe_mail_wall_button_more:last').hide();
+                        self.$element.find('p.oe_mail_wall_nomore:last').show();
+                    }
+                });
             return load_res;
         },
 
@@ -512,15 +521,10 @@ openerp.mail = function(session) {
             var sorted_comments = this.sort_comments(records);
             var self = this;
             _(sorted_comments.model_list).each(function (model_name) {
-                _(sorted_comments.models[model_name].id_list).each(function (id) {
-                    var records = sorted_comments.models[model_name].ids[id];
-                    console.log('records to send');
-                    console.log(records);
+                _(sorted_comments.models[model_name].root_ids).each(function (id) {
+                    var records = sorted_comments.models[model_name].msgs[id];
                     var template = 'WallThreadContainer';
-                    var render_res = session.web.qweb.render(template, {
-                        'record_model': model_name,
-                        'record_id': id,
-                    });
+                    var render_res = session.web.qweb.render(template, {});
                     $('<div class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('div.oe_mail_wall_threads'));
                     var thread = new mail.Thread(self, {
                         'res_model': model_name, 'res_id': parseInt(id), 'uid': self.session.uid, 'records': records,
@@ -529,7 +533,6 @@ openerp.mail = function(session) {
                     thread.appendTo(self.$element.find('div.oe_mail_wall_thread_content:last'));
                 });
             });
-            $.extend(true, this.sorted_comments, sorted_comments);
         },
 
         /**
@@ -537,38 +540,41 @@ openerp.mail = function(session) {
          * @param {Array} records records from mail.message sorted by date desc
          * @returns {Object} sc sorted_comments: dict
          *                      sc.model_list = [record.model names]
-         *                      sc.models.model = {
-         *                          'id_list': list or root_ids
-         *                          'id_to_anc': {'record_id': [ancestor_ids]}, still sorted by date desc
-         *                          'ids': {'root_id': [records]}, still sorted by date desc
+         *                      sc.models[model_name] = {
+         *                          'root_ids': [root record.ids],
+         *                          'id_to_root': {record.id: root.id, ..},
+         *                          'msgs': {'root_id': [records]}, still sorted by date desc
          *                          }, for each model
          */
         sort_comments: function (records) {
-            sc = {'model_list': [], 'models': {}}
+            var self = this;
+            var sc = {'model_list': [], 'models': {}}
             var cur_iter = 0; var max_iter = 10; var modif = true;
             /* step1: get roots */
             while ( modif && (cur_iter++) < max_iter) {
-                console.log(cur_iter);
                 modif = false;
                 _(records).each(function (record) {
-                    if ($.inArray(record.model, sc['model_list']) == -1) {
+                    if (_.indexOf(sc['model_list'], record.model) == -1) {
                         sc['model_list'].push(record.model);
-                        sc['models'][record.model] = {'id_list': [], 'id_to_anc': {}, 'ids': {}};
+                        sc['models'][record.model] = {'root_ids': [], 'id_to_root': {}, 'msgs': {}};
+                    }
+                    if (! self.sorted_comments['models'][record.model]) {
+                        self.sorted_comments['models'][record.model] = {'root_ids': []};
                     }
                     var rmod = sc['models'][record.model];
-                    if (record.parent_id == false && (_.indexOf(rmod['id_list'], record.id) == -1)) {
-                        rmod['id_list'].push(record.id);
-                        rmod['ids'][record.id] = [];
+                    if (record.parent_id == false && (_.indexOf(rmod['root_ids'], record.id) == -1)) {
+                        rmod['root_ids'].push(record.id);
+                        rmod['msgs'][record.id] = [];
+                        self.sorted_comments['models'][record.model]['root_ids'].push(record.id);
                         modif = true;
                     } 
                     else {
-                        var test = rmod['id_to_anc'][record.parent_id[0]];
-                        if (_.indexOf(rmod['id_list'], record.parent_id[0]) != -1) {
-                             rmod['id_to_anc'][record.id] = record.parent_id[0];
+                        if ((_.indexOf(rmod['root_ids'], record.parent_id[0]) != -1)  && (! rmod['id_to_root'][record.id])) {
+                             rmod['id_to_root'][record.id] = record.parent_id[0];
                              modif = true;
                         }
-                        else if ( test ) {
-                             rmod['id_to_anc'][record.id] = test;
+                        else if ( rmod['id_to_root'][record.parent_id[0]]  && (! rmod['id_to_root'][record.id])) {
+                             rmod['id_to_root'][record.id] = rmod['id_to_root'][record.parent_id[0]];
                              modif = true;
                         }
                     }
@@ -576,11 +582,10 @@ openerp.mail = function(session) {
             }
             /* step2: add records */
             _(records).each(function (record) {
-                var root_id = sc['models'][record.model]['id_to_anc'][record.id];
+                var root_id = sc['models'][record.model]['id_to_root'][record.id];
                 if (! root_id) root_id = record.id;
-                sc['models'][record.model]['ids'][root_id].push(record);
+                sc['models'][record.model]['msgs'][root_id].push(record);
             });
-            console.log(sc);
             return sc;
         },
 
@@ -592,27 +597,16 @@ openerp.mail = function(session) {
          */
         get_fetch_domain: function (sorted_comments) {
             var domain = [];
-            _(sorted_comments).each(function (rec_models, model) { //each model
+            _(sorted_comments.models).each(function (sc_model, model_name) { //each model
                 var ids = [];
-                _(rec_models).each(function (record_id, id) { // each record
+                _(sc_model.root_ids).each(function (id) { // each record
                     ids.push(id);
                 });
-                //domain.push('|', ['model', '!=', model], ['res_id', 'not in', ids]);
-                domain.push('|', ['model', '!=', model], '!', ['id', 'child_of', ids]);
+                domain.push('|', ['model', '!=', model_name], '!', ['id', 'child_of', ids]);
             });
             return domain;
         },
-
-        /**
-         * Action: Posts a comment
-         */
-        do_comment: function () {
-            var body_text = this.$element.find('textarea').val();
-            return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, type='comment']).then(
-                //this.proxy('fetch_comments'));
-                this.init_comments());
-        },
-
+        
         /**
          * Action: Shows more discussions
          */
@@ -620,7 +614,15 @@ openerp.mail = function(session) {
             var domain = this.get_fetch_domain(this.sorted_comments);
             return this.fetch_comments(domain);
         },
-
+        
+        /**
+         * Action: Posts a comment
+         */
+        do_comment: function () {
+            var body_text = this.$element.find('textarea:first').val();
+            return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, type='comment']).then(this.init_comments());
+        },
+        
         /**
          * Tools: get avatar mini (TODO: should be moved in some tools ?)
          */
