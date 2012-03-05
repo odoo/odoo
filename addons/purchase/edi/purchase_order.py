@@ -79,7 +79,7 @@ class purchase_order(osv.osv, EDIMixin):
                     '__import_module': 'sale',
 
                     'company_address': res_company.edi_export_address(cr, uid, order.company_id, context=context),
-                    'partner_address': res_partner_address.edi_export(cr, uid, [order.partner_address_id], context=context)[0],
+                    'partner_address': res_partner_address.edi_export(cr, uid, [order.partner_id], context=context)[0],
                     'currency': self.pool.get('res.currency').edi_export(cr, uid, [order.pricelist_id.currency_id],
                                                                          context=context)[0],
             })
@@ -115,7 +115,7 @@ class purchase_order(osv.osv, EDIMixin):
         partner_address = res_partner_address.browse(cr, uid, address_id, context=context)
         edi_document['partner_id'] = (src_company_id, src_company_name)
         edi_document.pop('partner_address', False) # ignored
-        edi_document['partner_address_id'] = self.edi_m2o(cr, uid, partner_address, context=context)
+        edi_document['partner_id'] = self.edi_m2o(cr, uid, partner_address, context=context)
 
         return partner_id
 

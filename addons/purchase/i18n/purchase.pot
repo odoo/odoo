@@ -603,7 +603,7 @@ msgid "Available"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.report,partner_address_id:0
+#: field:purchase.report,partner_id:0
 msgid "Address Contact Name"
 msgstr ""
 
@@ -1557,7 +1557,7 @@ msgid "Waiting"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,partner_address_id:0
+#: field:purchase.order,partner_id:0
 msgid "Address"
 msgstr ""
 
@@ -1770,8 +1770,8 @@ msgstr ""
 #: model:email.template,body_text:purchase.email_template_edi_purchase
 msgid ""
 "\n"
-"Hello${object.partner_address_id.name and ' ' or ''}${object."
-"partner_address_id.name or ''},\n"
+"Hello${object.partner_id.name and ' ' or ''}${object."
+"partner_id.name or ''},\n"
 "\n"
 "Here is a purchase order confirmation from ${object.company_id.name}:\n"
 "       | Order number: *${object.name}*\n"
