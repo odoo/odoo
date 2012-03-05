@@ -5,7 +5,7 @@
         """
         OpenERP Web process view.
         """,
-    "depends" : ["diagram"],
+    "depends" : ["web_diagram"],
     "js": [
         'static/lib/dracula/*.js',
         "static/src/js/process.js"
