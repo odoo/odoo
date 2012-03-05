@@ -205,7 +205,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (self.sidebar) {
                 self.sidebar.attachments.do_update();
             }
-            if (self.default_focus_field && !self.embedded_view) {
+            if (self.default_focus_field) {
                 self.default_focus_field.focus();
             }
             if (record.id) {
