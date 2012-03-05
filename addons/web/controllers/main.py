@@ -506,16 +506,31 @@ class Session(openerpweb.Controller):
         candidates = [mod for mod in loadable if mod not in loaded]
 
         # Compute active true modules that might be on the web side only
-        active = set(name for name in candidates
-                     if openerpweb.addons_manifest[name].get('active'))
+        modules = dict((name, openerpweb.addons_manifest[name].get('depends', []))
+                      for name in candidates
+                      if openerpweb.addons_manifest[name].get('active'))
 
         # Retrieve database installed modules
         Modules = req.session.model('ir.module.module')
-        installed = set(module['name'] for module in Modules.search_read(
-            [('state','=','installed'), ('name','in', candidates)], ['name']))
+        modules.update((module['name'], module.get('depends',  []))
+             for module in Modules.search_read(
+                [('state','=','installed'), ('name','in', candidates)],
+                ['name', 'depends']))
 
-        # Merge both
-        return list(active | installed)
+        ordered_mods = []
+        def insert(module):
+            # already inserted
+            if module in ordered_mods: return
+            # should be preloaded
+            if module not in modules: return
+            for name in modules[module]:
+                insert(name)
+            ordered_mods.append(module)
+
+        for name in modules:
+            insert(name)
+
+        return ordered_mods
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
