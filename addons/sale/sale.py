@@ -326,7 +326,7 @@ class sale_order(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
-    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context={}):
+    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
         if (not pricelist_id) or (not order_lines):
             return {}
         warning = {
@@ -335,7 +335,7 @@ class sale_order(osv.osv):
         }
         return {'warning': warning}
 
-    def onchange_partner_order_id(self, cr, uid, ids, order_id, invoice_id=False, shipping_id=False, context={}):
+    def onchange_partner_order_id(self, cr, uid, ids, order_id, invoice_id=False, shipping_id=False, context=None):
         if not order_id:
             return {}
         val = {}
@@ -501,7 +501,9 @@ class sale_order(osv.osv):
             'res_id': inv_ids and inv_ids[0] or False,
         }
 
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=None, date_inv=False, context=None):
+        if states is None:
+            states = ['confirmed', 'done', 'exception']
         res = False
         invoices = {}
         invoice_ids = []
