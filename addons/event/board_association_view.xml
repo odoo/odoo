@@ -62,6 +62,8 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_associations_manager_form"/>
         </record>
+        <menuitem id="menus_event_dashboard" name="Association"
+            parent="base.menu_dasboard" sequence="20"/>
         <menuitem
             name="Event Dashboard" parent="base.menu_report_association"
             action="open_board_associations_manager"
