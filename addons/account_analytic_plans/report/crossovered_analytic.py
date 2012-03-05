@@ -113,7 +113,9 @@ class crossovered_analytic(report_sxw.rml_parse):
         result.append(res)
         return result
 
-    def _lines(self, form, ids={}):
+    def _lines(self, form, ids=None):
+        if ids is None:
+            ids = {}
         if not ids:
             ids = self.ids
 
