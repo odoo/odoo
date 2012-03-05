@@ -467,10 +467,10 @@ replace ``addons`` by the directory in which your own addon lives.
 Python
 ++++++
 
-.. autoclass:: web.common.backendrpc.OpenERPSession
+.. autoclass:: web.common.session.OpenERPSession
     :members:
 
-.. autoclass:: web.common.backendrpc.OpenERPModel
+.. autoclass:: web.common.openerplib.main.Model
     :members:
 
 * Addons lifecycle (loading, execution, events, ...)

@@ -1013,9 +1013,12 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         _(_.extend({}, options.data || {},
                    {session_id: this.session_id, token: token}))
             .each(function (value, key) {
-                $('<input type="hidden" name="' + key + '">')
-                    .val(value)
-                    .appendTo($form_data);
+                var $input = $form.find('[name=' + key +']');
+                if (!$input.length) {
+                    $input = $('<input type="hidden" name="' + key + '">')
+                        .appendTo($form_data);
+                }
+                $input.val(value)
             });
 
         $form
