@@ -1963,8 +1963,8 @@ class account_tax(osv.osv):
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
-        'python_compute': '''# price_unit\n# address: res.partner.address object or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
-        'python_compute_inv': '''# price_unit\n# address: res.partner.address object or False\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
+        'python_compute': '''# price_unit\n# address: res.partner object or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
+        'python_compute_inv': '''# price_unit\n# address: res.partner object or False\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
         'applicable_type': 'true',
         'type': 'percent',
         'amount': 0,
@@ -1983,7 +1983,7 @@ class account_tax(osv.osv):
 
     def _applicable(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
         res = []
-        obj_partener_address = self.pool.get('res.partner.address')
+        obj_partener_address = self.pool.get('res.partner')
         for tax in taxes:
             if tax.applicable_type=='code':
                 localdict = {'price_unit':price_unit, 'address':obj_partener_address.browse(cr, uid, address_id), 'product':product, 'partner':partner}
@@ -1998,7 +1998,7 @@ class account_tax(osv.osv):
         taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
         res = []
         cur_price_unit=price_unit
-        obj_partener_address = self.pool.get('res.partner.address')
+        obj_partener_address = self.pool.get('res.partner')
         for tax in taxes:
             # we compute the amount for the current tax object and append it to the result
             data = {'id':tax.id,
@@ -2125,7 +2125,7 @@ class account_tax(osv.osv):
 
     def _unit_compute_inv(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
         taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
-        obj_partener_address = self.pool.get('res.partner.address')
+        obj_partener_address = self.pool.get('res.partner')
         res = []
         taxes.reverse()
         cur_price_unit = price_unit
@@ -2806,8 +2806,8 @@ class account_tax_template(osv.osv):
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
-        'python_compute': lambda *a: '''# price_unit\n# address: res.partner.address object or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
-        'python_compute_inv': lambda *a: '''# price_unit\n# address: res.partner.address object or False\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
+        'python_compute': lambda *a: '''# price_unit\n# address: res.partner object or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
+        'python_compute_inv': lambda *a: '''# price_unit\n# address: res.partner object or False\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
         'applicable_type': 'true',
         'type': 'percent',
         'amount': 0,
