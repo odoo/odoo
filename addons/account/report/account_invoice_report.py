@@ -65,7 +65,6 @@ class account_invoice_report(osv.osv):
             ('cancel','Cancelled')
             ], 'Invoice State', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
-        'address_contact_id': fields.many2one('res.partner', 'Contact Address Name', readonly=True),
         'account_id': fields.many2one('account.account', 'Account',readonly=True),
         'account_line_id': fields.many2one('account.account', 'Account Line',readonly=True),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
@@ -102,7 +101,6 @@ class account_invoice_report(osv.osv):
                     ai.state,
                     pt.categ_id,
                     ai.date_due as date_due,
-                    ai.address_contact_id as address_contact_id,
                     ai.account_id as account_id,
                     ail.account_id as account_line_id,
                     ai.partner_bank_id as partner_bank_id,
@@ -184,7 +182,6 @@ class account_invoice_report(osv.osv):
                     ai.state,
                     pt.categ_id,
                     ai.date_due,
-                    ai.address_contact_id,
                     ai.account_id,
                     ail.account_id,
                     ai.partner_bank_id,
