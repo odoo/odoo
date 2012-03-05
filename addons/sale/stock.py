@@ -67,8 +67,6 @@ class stock_picking(osv.osv):
         """
         invoice_vals = super(stock_picking, self)._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
         if picking.sale_id:
-            invoice_vals['address_contact_id'] = picking.sale_id.partner_order_id.id
-            invoice_vals['address_invoice_id'] = picking.sale_id.partner_invoice_id.id
             invoice_vals['fiscal_position'] = picking.sale_id.fiscal_position.id
             invoice_vals['payment_term'] = picking.sale_id.payment_term.id
             invoice_vals['user_id'] = picking.sale_id.user_id.id

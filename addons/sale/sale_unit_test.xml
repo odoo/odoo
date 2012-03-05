@@ -7,9 +7,8 @@
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_root"/>
             <field model="res.partner" name="partner_id" search="[]"/>
-            <field model="res.partner.address" name="partner_invoice_id" search="[]"/>
-            <field model="res.partner.address" name="partner_shipping_id" search="[]"/>
-            <field model="res.partner.address" name="partner_order_id" search="[]"/>
+            <field model="res.partner" name="partner_invoice_id" search="[]"/>
+            <field model="res.partner" name="partner_shipping_id" search="[]"/>
         </record>
         <!-- Resource: sale.order.line -->
         <record id="test_order_1_line_1" model="sale.order.line">
