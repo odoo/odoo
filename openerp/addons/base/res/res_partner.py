@@ -313,6 +313,19 @@ class res_partner(osv.osv):
         # short-circuit ref match when possible
         if name and operator in ('=', 'ilike', '=ilike', 'like'):
             ids = self.search(cr, uid, [('ref', '=', name)] + args, limit=limit, context=context)
+            if not ids:
+                names=map(lambda i : i.strip(),name.split('('))
+                for i in range(len(names)):
+                    dom=[('name', operator, names[i])]
+                    if i>0:
+                        dom+=[('id','child_of',ids)]
+                    ids = self.search(cr, uid, dom, limit=limit, context=context)     
+                contact_ids = ids
+                while contact_ids:
+                    contact_ids = self.search(cr, uid, [('parent_id', 'in', contact_ids)], limit=limit, context=context)
+                    ids += contact_ids
+                if args:
+                    ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
             if ids:
                 return self.name_get(cr, uid, ids, context)
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
