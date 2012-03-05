@@ -89,6 +89,16 @@ openerp.web.page = function (openerp) {
             return show_value;
         }
     });
+    openerp.web.page.FieldFloatReadonly = openerp.web.page.FieldCharReadonly.extend({
+        init: function (view, node) {
+            this._super(view, node);
+            if (node.attrs.digits) {
+                this.digits = py.eval(node.attrs.digits).toJSON();
+            } else {
+                this.digits = view.fields_view.fields[node.attrs.name].digits;
+            }
+        }
+    });
     openerp.web.page.FieldURIReadonly = openerp.web.page.FieldCharReadonly.extend({
         template: 'FieldURI.readonly',
         scheme: null,
@@ -269,7 +279,7 @@ openerp.web.page = function (openerp) {
         'one2many_list' : 'openerp.web.page.FieldOne2ManyReadonly',
         'reference': 'openerp.web.page.FieldReferenceReadonly',
         'boolean': 'openerp.web.page.FieldBooleanReadonly',
-        'float': 'openerp.web.page.FieldCharReadonly',
+        'float': 'openerp.web.page.FieldFloatReadonly',
         'integer': 'openerp.web.page.FieldCharReadonly',
         'float_time': 'openerp.web.page.FieldCharReadonly',
         'binary': 'openerp.web.page.FieldBinaryFileReadonly',
