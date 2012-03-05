@@ -363,7 +363,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 _(this.fields_view.arch.children).map(field_to_column));
         if (grouped) {
             this.columns.unshift({
-                id: '_group', tag: '', string: "Group", meta: true,
+                id: '_group', tag: '', string: _t("Group"), meta: true,
                 modifiers_for: function () { return {}; }
             }, {
                 id: '_count', tag: '', string: '#', meta: true,
