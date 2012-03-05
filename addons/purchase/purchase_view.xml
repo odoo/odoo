@@ -237,40 +237,6 @@
             </field>
         </record>
 
-       <record id="view_request_for_quotation_filter" model="ir.ui.view">
-            <field name="name">request.quotation.select</field>
-            <field name="model">purchase.order</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Purchase Order">
-                 <group>
-                    <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase order which are in draft state"/>
-                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]"  help="Approved purchase order"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]"  help="Purchase order which are in the exception state"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
-                    <separator orientation="vertical"/>
-                    <field name="name" string="Reference"/>
-                    <field name="partner_id"/>
-                    <field name="product_id"/>
-                    <field name="create_uid"/>
-                </group>
-                <newline/>
-                  <group expand="0" string="Group By..." groups="base.group_extended">
-                    <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                     <separator orientation="vertical"/>
-                    <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                     <separator orientation="vertical"/>
-                    <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
-                    <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
-
-                </group>
-              </search>
-            </field>
-        </record>
-
         <record id="view_purchase_order_filter" model="ir.ui.view">
             <field name="name">purchase.order.list.select</field>
             <field name="model">purchase.order</field>
@@ -279,13 +245,10 @@
                 <search string="Search Purchase Order">
                  <group>
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase orders which are in draft state"/>
-                    <filter icon="terp-gtk-jump-to-ltr" name="to_approve" string="To Approve" domain="[('state','in',('draft','wait','confirmed'))]" help="Purchase orders which are not approved yet."/>
-                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','=','approved')]"  help="Approved purchase orders"/>
-                    <filter icon="terp-accessories-archiver+" string="Done" domain="[('state','=','done')]" help="Purchase orders which are in done state."/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
+                    <filter icon="terp-check" name="approved" string="Purchase Orders" domain="[('state','not in',('draft','cancel'))]"  help="Approved purchase orders"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
+                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
                     <separator orientation="vertical"/>
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>
@@ -329,12 +292,12 @@
         </record>
 
         <record id="purchase_rfq" model="ir.actions.act_window">
-            <field name="name">Requests for Quotation</field>
+            <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="context">{'search_default_draft': 1}</field>
             <field name="view_mode">tree,form,graph,calendar</field>
-            <field name="search_view_id" ref="view_request_for_quotation_filter"/>
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help">You can create a request for quotation when you want to buy products to a supplier but the purchase is not confirmed yet. Use also this menu to review requests for quotation created automatically based on your logistic rules (minimum stock, MTO, etc). You can convert the request for quotation into a purchase order once the order is confirmed. If you use the extended interface (from user's preferences), you can select the way to control your supplier invoices: based on the order, based on the receptions or manual encoding.</field>
         </record>
         <menuitem action="purchase_rfq" id="menu_purchase_rfq"
