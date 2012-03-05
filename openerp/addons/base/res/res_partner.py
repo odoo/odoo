@@ -264,9 +264,7 @@ class res_partner(osv.osv):
     
     def create(self, cr, uid, vals, context=None):
         # temo get the defulat photo image ,it will remove
-        if 'photo' not in vals:
-            vals['photo'] =self._get_photo(cr,uid,vals.get('is_company'),context)
-        if vals.get('parent_id'):
+        if vals.get('parent_id') and vals.get('use_parent_address'):
              update_ids= self.search(cr, uid, [('parent_id', '=', vals.get('parent_id')),('use_parent_address','=',True)], context=context)
              update_ids.append(vals.get('parent_id'))
              self.udpate_address(cr,uid,False,update_ids,vals)
