@@ -193,10 +193,9 @@ openerp.web.DiagramView = openerp.web.View.extend({
         var i = 0;
         CuteNode.destruction_callback = function(cutenode){
             if(!confirm(_t("Deleting this node cannot be undone.\nIt will also delete all connected transitions.\n\nAre you sure ?"))){
-                return false; 
+                return $.Deferred().reject().promise();
             }
-            new openerp.web.DataSet(self,self.node).unlink([cutenode.id]);
-            return true;
+            return new openerp.web.DataSet(self,self.node).unlink([cutenode.id]);
         };
         CuteEdge.double_click_callback = function(cuteedge){
             self.edit_connector(cuteedge.id);
@@ -212,10 +211,9 @@ openerp.web.DiagramView = openerp.web.View.extend({
         };
         CuteEdge.destruction_callback = function(cuteedge){
             if(!confirm(_t("Deleting this transition cannot be undone.\n\nAre you sure ?"))){
-                return false; 
+                return $.Deferred().reject().promise();
             }
-            new openerp.web.DataSet(self,self.connector).unlink([cuteedge.id]);
-            return true;
+            return new openerp.web.DataSet(self,self.connector).unlink([cuteedge.id]);
         };
 
     },

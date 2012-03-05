@@ -85,15 +85,15 @@
             dummy_circle.animate({'r': close_button_radius }, 400, 'linear');
 
             if(entity_type == "node"){
-                if(GraphNode.destruction_callback(entity)){
+                $.when(GraphNode.destruction_callback(entity)).then(function () {
                     //console.log("remove node",entity);
                     entity.remove();
-                }
+                });
             }else if(entity_type == "edge"){
-                if(GraphEdge.destruction_callback(entity)){
+                $.when(GraphEdge.destruction_callback(entity)).then(function () {
                     //console.log("remove edge",entity);
                     entity.remove();
-                }
+                });
             }
         }
         dummy_circle.click(click_action);
