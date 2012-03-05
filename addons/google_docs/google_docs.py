@@ -104,7 +104,9 @@ class google_docs_ir_attachment(osv.osv):
         return copy_resource
 
 class google_docs_config(osv.osv):
-    _name = 'google.docs.config'
+    #_name = 'google.docs.config'
+    _inherit = 'res.users'
+    _description = 'User\'s gdocs config'
 
     _columns = {
         'model_id': fields.many2one('ir.model', 'Model'),
@@ -118,7 +120,19 @@ class google_docs_config(osv.osv):
         'name_template': 'Google Document'
     }
 
-
+    def create(self, cr, uid, vals, context=None):
+        res = super(users, self).create(cr, uid, vals, context=context)
+        model_obj=self.pool.get('ir.model')
+        if vals.get('context_gdocs_resource_id') and vals.get('context_model_id'):
+            self.write(cr, uid, #[vals['model_id']], {'member_ids':[(4, res)]}, 
+                {
+                    'model_id': model_obj.get(cr, uid, vals.get('context_model_id'))[0],
+                    'gdocs_resource_id': vals.get('context_gdocs_resource_id'),
+                    'name_template': vals('context_name_template'),
+                    'name': vals('context_name'),
+                },
+                context)
+        return res
 
 class google_docs(osv.osv):
     _name = 'google.docs'
