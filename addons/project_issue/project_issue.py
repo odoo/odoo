@@ -364,8 +364,8 @@ class project_issue(crm.crm_case, osv.osv):
 
     def _case_open_notification(self, case, context=None):
         if case.state:
-        message = _("Issue is <b>opened</b>.")
-        case.message_append_note('' ,message, type='notification')
+            message = _("Issue is <b>opened</b>.")
+            case.message_append_note('' ,message, type='notification')
         return True
 
     def _case_close_notification(self, case, context=None):
