@@ -64,7 +64,6 @@ class res_partner(osv.osv):
                 'planned_revenue' : planned_revenue,
                 'probability' : probability,
                 'partner_id' : partner_id,
-                'partner_address_id' : address,
                 'categ_id' : categ_ids and categ_ids[0] or '',
                 'state' :'draft',
                 'type': 'opportunity'
