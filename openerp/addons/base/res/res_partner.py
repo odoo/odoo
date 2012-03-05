@@ -17,7 +17,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-########################################################################onchange_address######
+##############################################################################
 
 import math
 
@@ -171,6 +171,11 @@ class res_partner(osv.osv):
             return [context['category_id']]
         return []
 
+    def _get_photo(self, cr, uid, is_company, context=None):
+        if is_company == 'contact':
+            return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'photo.png'), 'rb') .read().encode('base64')
+        return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
+
     _defaults = {
         'active': True,
         'customer': True,
@@ -179,15 +184,10 @@ class res_partner(osv.osv):
         'color': 0,
         'is_company': 'contact',
         'type': 'default',
-        'use_parent_address':True
+        'use_parent_address':True,
+        'photo': _get_photo,
     }
-    
-    def _get_photo(self, cr, uid, is_company, context=None):
-        if is_company == 'contact':
-            return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'photo.png'), 'rb') .read().encode('base64')
-        else:
-            return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')    
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -431,6 +431,12 @@ class res_partner(osv.osv):
             args[field] = getattr(address, field) or ''
 
         return address_format % args
+        
+    def default_get(self, cr, uid, fields, context=None):
+        res =  super(res_partner, self).default_get( cr, uid, fields, context)
+        if 'is_comapny' in res:
+            res.update({'photo': self._get_photo(self, cr, uid, res.get('is_comapny', 'contact'), context)})
+        return res
 
 res_partner()
 
