@@ -250,5 +250,7 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'http://docs.python.org/': None,
-    }
+    'python': ('http://docs.python.org/', None),
+    'openerpserver': ('http://doc.openerp.com/v6.1/developers/server', None),
+    'openerpdev': ('http://doc.openerp.com/v6.1/developers', None),
+}
