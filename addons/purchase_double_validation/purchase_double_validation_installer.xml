@@ -2,7 +2,7 @@
     <data>
         <!-- configartion view -->
 
-        <record id="view_config_purchase_limit_amount" model="ir.ui.view">
+        <!-- record id="view_config_purchase_limit_amount" model="ir.ui.view">
             <field name="name">Configure Limit Amount for Purchase</field>
             <field name="model">purchase.double.validation.installer</field>
             <field name="type">form</field>
@@ -38,23 +38,23 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-        </record>
+        </record-->
 
         <!-- register configuration wizard -->
-        <record id="config_wizard_step_purchase_limit_amount" model="ir.actions.todo">
+        <!--record id="config_wizard_step_purchase_limit_amount" model="ir.actions.todo">
             <field name="action_id" ref="action_config_purchase_limit_amount"/>
             <field name="category_id" ref="purchase.category_purchase_config"/>
             <field name="type">once</field>
-        </record>
+        </record-->
 
-        <record id="view_purchase_config" model="ir.ui.view">
-            <field name="name">board.purchase.form</field>
-            <field name="model">board.board</field>
+        <record id="view_double_purchase_config" model="ir.ui.view">
+            <field name="name">Purchase Application</field>
+            <field name="model">res.config.settings</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="purchase.view_purchase_config"/>
             <field name="arch" type="xml">
                 <field name="module_purchase_double_validation" position="after">
-                    <field name="purchase_limit" nolabel="1"/>
+                    <field name="limit_amount" nolabel="1"/>
                 </field>
             </field>
         </record>
