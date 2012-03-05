@@ -95,7 +95,7 @@ openerp.mail = function(session) {
         },
         
         stop: function () {
-            this._super.apply(this, arguments);
+            //this._super.apply(this, arguments);
         },
         
         init_comments: function() {
@@ -357,29 +357,30 @@ openerp.mail = function(session) {
         set_value: function() {
             var self = this;
             this._super.apply(this, arguments);
+            this.see_sub = 0;
             /* hide follow/unfollow/see followers buttons */
-            self.$element.find('button.oe_mail_button_follow').hide();
-            self.$element.find('button.oe_mail_button_unfollow').hide();
+            this.$element.find('button.oe_mail_button_followers').html('Display followers')
+            this.$element.find('div.oe_mail_followers_display').hide();
+            this.$element.find('button.oe_mail_button_follow').hide();
+            this.$element.find('button.oe_mail_button_unfollow').hide();
             if (! this.view.datarecord.id) { return; }
             /* find wich (un)follow buttons to show */
-            var call_res = this.ds.call('message_is_subscriber', [[this.view.datarecord.id]]).then(function (records) {
+            var fetch_fol_done = this.ds.call('message_is_subscriber', [[this.view.datarecord.id]]).then(function (records) {
                 if (records == true) { self.is_sub = 1; self.$element.find('button.oe_mail_button_unfollow').show(); }
                 else { self.is_sub = 0; self.$element.find('button.oe_mail_button_follow').show(); }
                 });
             /* fetch subscribers */
-            this.fetch_subscribers();
+            var fetch_sub_done = this.fetch_subscribers();
             /* create ThreadDisplay widget and render it */
             this.$element.find('div.oe_mail_recthread_left').empty();
             if (this.thread) this.thread.stop();
             this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid});
             this.thread.appendTo(this.$element.find('div.oe_mail_recthread_left'));
+            return fetch_fol_done && fetch_sub_done;
         },
         
         fetch_subscribers: function () {
-            var follow_res = this.ds.call('message_get_subscribers', [[this.view.datarecord.id]]).then(
-                this.proxy('display_subscribers'));
-            this.$element.find('div.oe_mail_followers_display').hide();
-            return follow_res;
+            return this.ds.call('message_get_subscribers', [[this.view.datarecord.id]]).then(this.proxy('display_subscribers'));
         },
         
         display_subscribers: function (records) {
@@ -394,12 +395,12 @@ openerp.mail = function(session) {
         
         do_follow: function () {
             this.do_toggle_follow();
-            return this.ds.call('message_subscribe', [[this.view.datarecord.id]]).then();
+            return this.ds.call('message_subscribe', [[this.view.datarecord.id]]).when();
         },
         
         do_unfollow: function () {
             this.do_toggle_follow();
-            return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).then();
+            return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).when();
         },
         
         do_toggle_follow: function () {
