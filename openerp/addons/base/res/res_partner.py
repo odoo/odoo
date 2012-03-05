@@ -424,6 +424,7 @@ class res_partner(osv.osv):
             'state_name': address.state_id and address.state_id.name or '',
             'country_code': address.country_id and address.country_id.code or '',
             'country_name': address.country_id and address.country_id.name or '',
+            'company_name': address.parent_id and address.parent_id.name or '',
         }
         address_field = ['title', 'street', 'street2', 'zip', 'city']
         for field in address_field :
