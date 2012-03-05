@@ -54,7 +54,7 @@ instance.web_uservoice.UserVoice = instance.web.Widget.extend({
             e.preventDefault();
             UserVoice.Popin.show(self.uservoiceOptions);
             return false;
-        }).tipsy();
+        });
     }
 });
 

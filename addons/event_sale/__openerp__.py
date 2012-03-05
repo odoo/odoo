@@ -21,41 +21,25 @@
 
 
 {
-    'name': 'Events Organisation',
+    'name': 'Events Sales',
     'version': '0.1',
     'category': 'Tools',
     'complexity': "easy",
     'description': """
-Organization and management of Events.
-======================================
+Creating registration with sale orders.
+=======================================
 
-This module allows you
-    * to manage your events and their registrations
-    * to use emails to automatically confirm and send acknowledgements for any registration to an event
-    * ...
+This module allows you to automatize and connect your registration creation with your main sale flow and, therefore, to enable the invoicing feature of registrations.
 
-Note that:
-    - You can define new types of events in
-        Association / Configuration / Types of Events
+It defines a new kind of service products that offers you the possibility to choose an event category associated with it. When you encode a sale order for that product, you will be able to choose an existing event of that category and when you confirm your sale order it will automatically create a registration for this event.
 """,
     'author': 'OpenERP SA',
-    'depends': ['email_template'],
-    'init_xml': [],
+    'depends': ['event','sale','sale_crm'],
     'update_xml': [
-        'security/event_security.xml',
-        'security/ir.model.access.csv',
-        'wizard/event_confirm_view.xml',
-        'event_view.xml',
-        'report/report_event_registration_view.xml',
-        'board_association_view.xml',
-        'res_partner_view.xml',
-        'email_template.xml',
+        'event_sale_view.xml',
     ],
-    'demo_xml': ['event_demo.xml'],
-    'test': ['test/process/event_draft2done.yml'],
+    'test':['test/confirm.yml'],
     'installable': True,
-    'application': True,
-    'auto_install': False,
-    'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg'],
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
