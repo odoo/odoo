@@ -103,10 +103,27 @@ class google_docs_ir_attachment(osv.osv):
 
         return copy_resource
 
-class google_docs_config(osv.osv):
-    #_name = 'google.docs.config'
+class google_docs(osv.osv):
+    _name = 'google.docs'
+
+    def doc_get(self, cr, uid, model, id, type_doc):# TODO fix logic here
+        google_docs_config_ref = self.pool.get('res.users')
+        ir_attachment_ref = self.pool.get('ir.attachment')
+        google_docs_config = google_docs_config_ref.search(cr, uid, [('model_id', '=', model)])
+
+        if not google_docs_config:
+            google_document = ir_attachment_ref.create_empty_google_doc(cr, uid, model, id, type_doc)
+        else:
+            google_document = ir_attachment_ref.copy_gdoc(cr, uid, model, id)
+
+        print google_docs_config
+
+        if not google_docs_config:
+            return -1
+
+class users(osv.osv):
     _inherit = 'res.users'
-    _description = 'User\'s gdocs config'
+    _description = "User\'s gdocs config"
 
     _columns = {
         'model_id': fields.many2one('ir.model', 'Model'),
@@ -134,21 +151,4 @@ class google_docs_config(osv.osv):
                 context)
         return res
 
-class google_docs(osv.osv):
-    _name = 'google.docs'
-
-    def doc_get(self, cr, uid, model, id, type_doc):# TODO fix logic here
-        google_docs_config_ref = self.pool.get('google.docs.config')
-        ir_attachment_ref = self.pool.get('ir.attachment')
-        google_docs_config = google_docs_config_ref.search(cr, uid, [('model_id', '=', model)])
-
-        if not google_docs_config:
-            google_document = ir_attachment_ref.create_empty_google_doc(cr, uid, model, id, type_doc)
-        else:
-            google_document = ir_attachment_ref.copy_gdoc(cr, uid, model, id)
-
-        print google_docs_config
-
-        if not google_docs_config:
-            return -1
-
+google_docs_config()

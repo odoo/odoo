@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <!-- add google docs config field in user form -->
-        <record id="view_google_docs_users_config_inherited_form" model="ir.ui.view">
-            <field name="name">res.gdocs.users.form</field>
+
+        <record model="ir.ui.view" id="view_google_docs_users_config_inherited_form">
+            <field name="name">google_docs.config.user.inherited.form</field>
             <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form" />
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <group name="default_filters" position="inside">
-                    <field name="context_model_id" string='Model ID' completion='1' readonly='0'/>
-                    <field name="context_context_gdocs_resource_id" string='Google Docs resource ID' completion='1' readonly='0'/>
+                    <field name="context_model_id" completion="1"
+                        readonly="0"/>
                 </group>
             </field>
         </record>
