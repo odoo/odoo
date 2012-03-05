@@ -68,7 +68,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['id']).company_id.name
         return super(account_balance ,self)._get_account(data)
 
-    def lines(self, form, ids=[], done=None):#, level=1):
+    def lines(self, form, ids=None, done=None):
         def _process_child(accounts, disp_acc, parent):
                 account_rec = [acct for acct in accounts if acct['id']==parent][0]
                 currency_obj = self.pool.get('res.currency')
