@@ -2,8 +2,11 @@
 <openerp>
     <data>
 
-       <menuitem  name="Events" id="event_main_menu"/>
-        <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu" />
+        <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
+        <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17"/>
+
+        <menuitem name="Events" id="base.menu_event_main" parent="base.marketing_menu" />
+        <menuitem name="Events" id="base.menu_event_association" parent="base.menu_association" />
 
     <!-- EVENTS  -->
 
@@ -229,7 +232,8 @@
            <field name="type">ir.actions.act_window</field>
            <field name="res_model">event.event</field>
            <field name="view_type">form</field>
-           <field name="view_mode">calendar,tree,form,graph</field>
+           <field name="view_mode">tree,form,calendar,graph</field>
+           <field name="context">{"search_default_section_id": section_id}</field>
            <field name="search_view_id" ref="view_event_search"/>
            <field name="help">Event is the low level object used by meeting and others documents that should be synchronized with mobile devices or calendar applications through caldav. Most of the users should work in the Calendar menu, and not in the list of events.</field>
        </record>
