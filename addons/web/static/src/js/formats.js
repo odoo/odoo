@@ -336,7 +336,7 @@ openerp.web.format_cell = function (row_data, column, options) {
     case 'progressbar':
         return _.template(
             '<progress value="<%-value%>" max="100"><%-value%>%</progress>', {
-                value: row_data[column.id].value
+                value: _.str.sprintf("%.0f", row_data[column.id].value)
             });
     }
 

@@ -263,9 +263,14 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
             var filter = this.managed_filters[val];
             this.do_clear(false).then(_.bind(function() {
                 select.val('get:' + val);
-                var groupbys = _.map(filter.context.group_by.split(","), function(el) {
-                    return {"group_by": el};
-                });
+
+                var groupbys = [];
+                var group_by = filter.context.group_by;
+                if (group_by) {
+                    groupbys = _.map(
+                        group_by instanceof Array ? group_by : group_by.split(','),
+                        function (el) { return { group_by: el }; });
+                }
                 this.on_search([filter.domain], [filter.context], groupbys);
             }, this));
         } else {

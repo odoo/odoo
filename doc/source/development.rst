@@ -391,12 +391,12 @@ Python
 These classes should be moved to other sections of the doc as needed,
 probably.
 
-.. automodule:: web.common.dispatch
+.. automodule:: web.common.http
     :members:
     :undoc-members:
 
-    See also: :class:`~web.common.backendrpc.OpenERPSession`,
-    :class:`~web.common.backendrpc.OpenERPModel`
+    See also: :class:`~web.common.session.OpenERPSession`,
+    :class:`~web.common.openerplib.main.OpenERPModel`
 
 .. automodule:: web.controllers.main
     :members:
