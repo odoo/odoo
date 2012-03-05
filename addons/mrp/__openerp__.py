@@ -86,6 +86,7 @@ Dashboard provided by this module:
         'report/mrp_report_view.xml',
         'report/mrp_production_order_view.xml',
         'board_manufacturing_view.xml',
+        'res_config_view.xml',
 
 
     ],
@@ -94,7 +95,7 @@ Dashboard provided by this module:
     ],
     'test': [
          'test/order_demo.yml',
-         'test/order_process.yml', 
+         'test/order_process.yml',
          'test/cancel_order.yml',
     ],
     'installable': True,

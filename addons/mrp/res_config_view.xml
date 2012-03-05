@@ -1,0 +1,60 @@
+<openerp>
+    <data>
+
+        <record id="view_mrp_config" model="ir.ui.view">
+            <field name="name">Manufacturing Application</field>
+            <field name="model">res.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_res_config_settings"/>
+            <field name="arch" type="xml">
+            <form position ="replace">
+	            <form string ="Manufacturing Application">
+		            <separator string="Manufacturing Order" colspan="4"/>
+		            <group colspan="4" col="8" name="Purchase_order">
+		                <group  colspan="4" col="4">
+		                   <field name="group_mrp_routings"/>
+		                   <newline/>
+		                   <field name="module_stock_planning"/>
+		                   <newline/>
+		                   <field name="module_mrp_repair"/>
+		                   <newline/>
+		                </group>
+		                <group colspan="4" col="4">
+		                    <newline/>
+		                    <field name="module_mrp_operations"/>
+		                    <newline/>
+		                    <field name="module_mrp_subproduct"/>
+		                    <newline/>
+		                </group>
+		            </group>
+
+		            <separator string="Logistic" colspan="4"/>
+                    <group  colspan="4" col="4">
+                        <field name="module_stock_location"/>
+                        <newline/>
+                        <field name="module_mrp_jit"/>
+                        <newline/>
+                    </group>
+
+		            <separator string="Bill Of Material" colspan="4"/>
+	                <group  colspan="4" col="4">
+	                    <field name="group_mrp_properties"/>
+	                </group>
+	                </form>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_mrp_configuration" model="ir.actions.act_window">
+            <field name="name">Configure Manufacturing Application</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_id" ref="view_mrp_config"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <menuitem id="base.menu_mrp_config" name="Mrp" parent="base.menu_config" sequence="1" action="mrp.action_mrp_configuration"/>
+
+    </data>
+</openerp>
