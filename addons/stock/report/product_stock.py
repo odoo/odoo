@@ -42,7 +42,9 @@ class external_pdf(render):
 
 
 class report_stock(report_int):
-    def create(self, cr, uid, ids, datas, context={}):
+    def create(self, cr, uid, ids, datas, context=None):
+        if context is None:
+            context = {}
         product_ids = ids
         if 'location_id' in context:
             location_id = context['location_id']
