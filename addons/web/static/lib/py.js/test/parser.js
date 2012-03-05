@@ -11,6 +11,14 @@ expect.Assertion.prototype.tokens = function (n) {
                 'expected ' + this.obj + ' to not have an end token');
 };
 
+expect.Assertion.prototype.named = function (value) {
+    this.assert(this.obj.id === '(name)',
+                'expected ' + this.obj + ' to be a name token',
+                'expected ' + this.obj + ' not to be a name token');
+    this.assert(this.obj.value === value,
+                'expected ' + this.obj + ' to have tokenized ' + value,
+                'expected ' + this.obj + ' not to have tokenized ' + value);
+};
 expect.Assertion.prototype.constant = function (value) {
     this.assert(this.obj.id === '(constant)',
                 'expected ' + this.obj + ' to be a constant token',
@@ -97,5 +105,28 @@ describe('Tokenizer', function () {
             expect(toks[0].id).to.be('(');
             expect(toks[1].id).to.be(')');
         });
+    });
+    describe('functions', function () {
+        it('tokenizes kwargs', function () {
+            var toks = py.tokenize('foo(bar=3, qux=4)');
+            expect(toks).to.have.tokens(10);
+        });
+    });
+});
+
+describe('Parser', function () {
+    describe('functions', function () {
+        var ast = py.parse(py.tokenize('foo(bar=3, qux=4)'));
+        expect(ast.id).to.be('(');
+        expect(ast.first).to.be.named('foo');
+
+        args = ast.second;
+        expect(args[0].id).to.be('=');
+        expect(args[0].first).to.be.named('bar');
+        expect(args[0].second).to.be.number(3);
+
+        expect(args[1].id).to.be('=');
+        expect(args[1].first).to.be.named('qux');
+        expect(args[1].second).to.be.number(4);
     });
 });

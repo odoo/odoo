@@ -10,6 +10,17 @@ specification document is the `Python 2.7 Expressions spec
 <http://docs.python.org/reference/expressions.html>`_ (along with the
 lexical analysis part).
 
+Syntax
+------
+
+* Lambdas and ternaries should be parsed but are not implemented (in
+  the evaluator)
+* Only floats are implemented, ``int`` literals are parsed as floats.
+* Octal and hexadecimal literals are not implemented
+* Srings are backed by JavaScript strings and probably behave like
+  ``unicode`` more than like ``str``
+* Slices don't work
+
 Builtins
 --------
 
@@ -89,9 +100,10 @@ Collections Abstract Base Classes
     Hashable are kind-of implemented as well)
 
 Numeric type emulation
-    Basically not implemented, the only part of it which is
-    implemented is the unary ``-`` (because it's used to create
-    negative floats, they're parsed as a negated positive number)
+    Operators are implemented (but not tested), ``abs``, ``divmod``
+    and ``pow`` builtins are not implemented yet. Neither are ``oct``
+    and ``hex`` but I'm not sure we care (I'm not sure we care about
+    ``pow`` or even ``divmod`` either, for that matter)
 
 Utilities
 ---------

@@ -104,6 +104,15 @@ var py = {};
     symbol(':'); symbol(')'); symbol(']'); symbol('}'); symbol(',');
     symbol('else');
 
+    infix('=', 10, function (left) {
+        if (left.id !== '(name)') {
+            throw new Error("Expected keyword argument name, got " + token.id);
+        }
+        this.first = left;
+        this.second = expression();
+        return this;
+    });
+
     symbol('lambda', 20).nud = function () {
         this.first = [];
         if (token.id !== ':') {
@@ -362,7 +371,7 @@ var py = {};
 
         if (val instanceof py.object
             || val === py.object
-            || py.issubclass.__call__(val, py.object) === py.True) {
+            || py.issubclass.__call__([val, py.object]) === py.True) {
             return val;
         }
 
@@ -443,7 +452,7 @@ var py = {};
                     // TODO: second argument should be class
                     return val.__get__(this);
                 }
-                if (typeof val === 'function' && !this.hasOwnProperty(val)) {
+                if (typeof val === 'function' && !this.hasOwnProperty(name)) {
                     // val is a method from the class
                     return new PY_instancemethod(val, this);
                 }
@@ -476,6 +485,7 @@ var py = {};
     py.NotImplemented = new NotImplementedType();
     var booleans_initialized = false;
     py.bool = py.type(function bool(value) {
+        value = (value instanceof Array) ? value[0] : value;
         // The only actual instance of py.bool should be py.True
         // and py.False. Return the new instance of py.bool if we
         // are initializing py.True and py.False, otherwise always
@@ -493,7 +503,26 @@ var py = {};
     py.False = new py.bool();
     booleans_initialized = true;
     py.float = py.type(function float(value) {
-        this._value = value;
+        value = (value instanceof Array) ? value[0] : value;
+        if (value === undefined) { this._value = 0; return; }
+        if (value instanceof py.float) { return value; }
+        if (typeof value === 'number' || value instanceof Number) {
+            this._value = value;
+            return;
+        }
+        if (typeof value === 'string' || value instanceof String) {
+            this._value = parseFloat(value);
+            return;
+        }
+        if (value instanceof py.object && '__float__' in value) {
+            var res = value.__float__();
+            if (res instanceof py.float) {
+                return res;
+            }
+            throw new Error('TypeError: __float__ returned non-float (type ' +
+                            res.constructor.name + ')');
+        }
+        throw new Error('TypeError: float() argument must be a string or a number');
     }, py.object, {
         __eq__: function (other) {
             return this._value === other._value ? py.True : py.False;
@@ -514,8 +543,24 @@ var py = {};
             if (!(other instanceof py.float)) { return py.NotImplemented; }
             return this._value >= other._value ? py.True : py.False;
         },
+        __add__: function (other) {
+            if (!(other instanceof py.float)) { return py.NotImplemented; }
+            return new py.float(this._value + other._value);
+        },
         __neg__: function () {
             return new py.float(-this._value);
+        },
+        __sub__: function (other) {
+            if (!(other instanceof py.float)) { return py.NotImplemented; }
+            return new py.float(this._value - other._value);
+        },
+        __mul__: function (other) {
+            if (!(other instanceof py.float)) { return py.NotImplemented; }
+            return new py.float(this._value * other._value);
+        },
+        __div__: function (other) {
+            if (!(other instanceof py.float)) { return py.NotImplemented; }
+            return new py.float(this._value / other._value);
         },
         __nonzero__: function () {
             return this._value ? py.True : py.False;
@@ -525,7 +570,17 @@ var py = {};
         }
     });
     py.str = py.type(function str(s) {
-        this._value = s;
+        s = (s instanceof Array) ? s[0] : s;
+        if (s === undefined) { this._value = ''; return; }
+        if (s instanceof py.str) { return s; }
+        if (typeof s === 'string' || s instanceof String) {
+            this._value = s;
+            return;
+        }
+        var v = s.__str__();
+        if (v instanceof py.str) { return v; }
+        throw new Error('TypeError: __str__ returned non-string (type ' +
+                        v.constructor.name + ')');
     }, py.object, {
         __eq__: function (other) {
             if (other instanceof py.str && this._value === other._value) {
@@ -548,6 +603,10 @@ var py = {};
         __ge__: function (other) {
             if (!(other instanceof py.str)) { return py.NotImplemented; }
             return this._value >= other._value ? py.True : py.False;
+        },
+        __add__: function (other) {
+            if (!(other instanceof py.str)) { return py.NotImplemented; }
+            return new py.str(this._value + other._value);
         },
         __nonzero__: function () {
             return this._value.length ? py.True : py.False;
@@ -596,9 +655,9 @@ var py = {};
         this._inst = null;
         this._func = nativefunc;
     }, py.object, {
-        __call__: function () {
+        __call__: function (args, kwargs) {
             // don't want to rewrite __call__ for instancemethod
-            return this._func.apply(this._inst, arguments);
+            return this._func.call(this._inst, args, kwargs);
         },
         toJSON: function () {
             return this._func;
@@ -610,12 +669,68 @@ var py = {};
         this._func = nativefunc;
     }, py.def, {});
 
-    py.issubclass = new py.def(function issubclass(derived, parent) {
+    py.issubclass = new py.def(function issubclass(args) {
+        var derived = args[0], parent = args[1];
         // still hurts my brain that this can work
         return derived.prototype instanceof py.object
             ? py.True
             : py.False;
     });
+
+
+    // All binary operators with fallbacks, so they can be applied generically
+    var PY_operators = {
+        '==': ['eq', 'eq', function (a, b) { return a === b; }],
+        '!=': ['ne', 'ne', function (a, b) { return a !== b; }],
+        '<': ['lt', 'gt', function (a, b) {return a.constructor.name < b.constructor.name;}],
+        '<=': ['le', 'ge', function (a, b) {return a.constructor.name <= b.constructor.name;}],
+        '>': ['gt', 'lt', function (a, b) {return a.constructor.name > b.constructor.name;}],
+        '>=': ['ge', 'le', function (a, b) {return a.constructor.name >= b.constructor.name;}],
+
+        '+': ['add', 'radd'],
+        '-': ['sub', 'rsub'],
+        '*': ['mul', 'rmul'],
+        '/': ['div', 'rdiv'],
+        '//': ['floordiv', 'rfloordiv'],
+        '%': ['mod', 'rmod'],
+        '**': ['pow', 'rpow'],
+        '<<': ['lshift', 'rlshift'],
+        '>>': ['rshift', 'rrshift'],
+        '&': ['and', 'rand'],
+        '^': ['xor', 'rxor'],
+        '|': ['or', 'ror']
+    };
+    /**
+      * Implements operator fallback/reflection.
+      *
+      * First two arguments are the objects to apply the operator on,
+      * in their actual order (ltr).
+      *
+      * Third argument is the actual operator.
+      *
+      * If the operator methods raise exceptions, those exceptions are
+      * not intercepted.
+      */
+    var PY_op = function (o1, o2, op) {
+        var r;
+        var methods = PY_operators[op];
+        var forward = '__' + methods[0] + '__', reverse = '__' + methods[1] + '__';
+        var otherwise = methods[2];
+
+        if (forward in o1 && (r = o1[forward](o2)) !== py.NotImplemented) {
+            return r;
+        }
+        if (reverse in o2 && (r = o2[reverse](o1)) !== py.NotImplemented) {
+            return r;
+        }
+        if (otherwise) {
+            return PY_ensurepy(otherwise(o1, o2));
+        }
+        throw new Error(
+            "TypeError: unsupported operand type(s) for " + op + ": '"
+                + o1.constructor.name + "' and '"
+                + o2.constructor.name + "'");
+    };
 
     var PY_builtins = {
         type: py.type,
@@ -643,30 +758,16 @@ var py = {};
     var evaluate_operator = function (operator, a, b) {
         var v;
         switch (operator) {
-        case '==': return a.__eq__(b);
         case 'is': return a === b ? py.True : py.False;
-        case '!=': return a.__ne__(b);
         case 'is not': return a !== b ? py.True : py.False;
-        case '<':
-            v = a.__lt__(b);
-            if (v !== py.NotImplemented) { return v; }
-            return PY_ensurepy(a.constructor.name < b.constructor.name);
-        case '<=':
-            v = a.__le__(b);
-            if (v !== py.NotImplemented) { return v; }
-            return PY_ensurepy(a.constructor.name <= b.constructor.name);
-        case '>':
-            v = a.__gt__(b);
-            if (v !== py.NotImplemented) { return v; }
-            return PY_ensurepy(a.constructor.name > b.constructor.name);
-        case '>=':
-            v = a.__ge__(b);
-            if (v !== py.NotImplemented) { return v; }
-            return PY_ensurepy(a.constructor.name >= b.constructor.name);
         case 'in':
             return b.__contains__(a);
         case 'not in':
             return b.__contains__(a) === py.True ? py.False : py.True;
+        case '==': case '!=':
+        case '<': case '<=':
+        case '>': case '>=':
+            return PY_op(a, b, operator);
         }
         throw new Error('SyntaxError: unknown comparator [[' + operator + ']]');
     };
@@ -700,11 +801,6 @@ var py = {};
                 if (result === py.False) { return py.False; }
             }
             return py.True;
-        case '-':
-            if (expr.second) {
-                throw new Error('SyntaxError: binary [-] not implemented yet');
-            }
-            return (py.evaluate(expr.first, context)).__neg__();
         case 'not':
             return py.evaluate(expr.first, context).__nonzero__() === py.True
                 ? py.False
@@ -723,12 +819,20 @@ var py = {};
             return py.evaluate(expr.second, context);
         case '(':
             if (expr.second) {
-                var callable = py.evaluate(expr.first, context), args=[];
+                var callable = py.evaluate(expr.first, context);
+                var args = [], kwargs = {};
                 for (var jj=0; jj<expr.second.length; ++jj) {
-                    args.push(py.evaluate(
-                        expr.second[jj], context));
+                    var arg = expr.second[jj];
+                    if (arg.id !== '=') {
+                        // arg
+                        args.push(py.evaluate(arg, context));
+                    } else {
+                        // kwarg
+                        kwargs[arg.first.value] =
+                            py.evaluate(arg.second, context);
+                    }
                 }
-                return callable.__call__.apply(callable, args);
+                return callable.__call__(args, kwargs);
             }
             var tuple_exprs = expr.first,
                 tuple_values = [];
@@ -741,7 +845,8 @@ var py = {};
             return t;
         case '[':
             if (expr.second) {
-                throw new Error('SyntaxError: indexing not implemented yet');
+                return py.evaluate(expr.first, context)
+                    .__getitem__(expr.evaluate(expr.second, context));
             }
             var list_exprs = expr.first, list_values = [];
             for (var k=0; k<list_exprs.length; ++k) {
@@ -765,6 +870,27 @@ var py = {};
             }
             return py.evaluate(expr.first, context)
                 .__getattribute__(expr.second.value);
+        // numerical operators
+        case '~':
+            return (py.evaluate(expr.first, context)).__invert__();
+        case '+':
+            if (!expr.second) {
+                return (py.evaluate(expr.first, context)).__pos__();
+            }
+        case '-':
+            if (!expr.second) {
+                return (py.evaluate(expr.first, context)).__neg__();
+            }
+        case '*': case '/': case '//':
+        case '%':
+        case '**':
+        case '<<': case '>>':
+        case '&': case '^': case '|':
+            return PY_op(
+                py.evaluate(expr.first, context),
+                py.evaluate(expr.second, context),
+                expr.id);
+
         default:
             throw new Error('SyntaxError: Unknown node [[' + expr.id + ']]');
         }

@@ -322,19 +322,34 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         return this.session_init();
     },
     test_eval_get_context: function () {
+        var asJS = function (arg) {
+            if (arg instanceof py.object) {
+                return arg.toJSON();
+            }
+            return arg;
+        };
+
         var datetime = new py.object();
+        datetime.datetime = new py.type(function datetime() {
+            throw new Error('datetime.datetime not implemented');
+        });
         var date = datetime.date = new py.type(function date(y, m, d) {
-            this._year = y;
-            this._month = m;
-            this._day = d;
+            if (y instanceof Array) {
+                d = y[2];
+                m = y[1];
+                y = y[0];
+            }
+            this.year = asJS(y);
+            this.month = asJS(m);
+            this.day = asJS(d);
         }, py.object, {
-            strftime: function (format) {
-                var f = format.toJSON(), self = this;
+            strftime: function (args) {
+                var f = asJS(args[0]), self = this;
                 return new py.str(f.replace(/%([A-Za-z])/g, function (m, c) {
                     switch (c) {
-                    case 'Y': return self._year;
-                    case 'm': return _.str.sprintf('%02d', self._month);
-                    case 'd': return _.str.sprintf('%02d', self._day);
+                    case 'Y': return self.year;
+                    case 'm': return _.str.sprintf('%02d', self.month);
+                    case 'd': return _.str.sprintf('%02d', self.day);
                     }
                     throw new Error('ValueError: No known conversion for ' + m);
                 }));
@@ -350,16 +365,107 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             var d = new Date();
             return new date(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
         });
+        datetime.time = new py.type(function time() {
+            throw new Error('datetime.time not implemented');
+        });
 
         var time = new py.object();
-        time.strftime = new py.def(function (format) {
-            return date.today.__call__().strftime(format);
+        time.strftime = new py.def(function (args) {
+            return date.today.__call__().strftime(args);
+        });
+
+        var relativedelta = new py.type(function relativedelta(args, kwargs) {
+            if (!_.isEmpty(args)) {
+                throw new Error('Extraction of relative deltas from existing datetimes not supported');
+            }
+            this.ops = kwargs;
+        }, py.object, {
+            __add__: function (other) {
+                if (!(other instanceof datetime.date)) {
+                    return py.NotImplemented;
+                }
+                // TODO: test this whole mess
+                var year = asJS(this.ops.year) || asJS(other.year);
+                if (asJS(this.ops.years)) {
+                    year += asJS(this.ops.years);
+                }
+
+                var month = asJS(this.ops.month) || asJS(other.month);
+                if (asJS(this.ops.months)) {
+                    month += asJS(this.ops.months);
+                    // FIXME: no divmod in JS?
+                    while (month < 1) {
+                        year -= 1;
+                        month += 12;
+                    }
+                    while (month > 12) {
+                        year += 1;
+                        month -= 12;
+                    }
+                }
+
+                var lastMonthDay = new Date(year, month, 0).getDate();
+                var day = asJS(this.ops.day) || asJS(other.day);
+                if (day > lastMonthDay) { day = lastMonthDay; }
+                var days_offset = ((asJS(this.ops.weeks) || 0) * 7) + (asJS(this.ops.days) || 0);
+                if (days_offset) {
+                    day = new Date(year, month-1, day + days_offset).getDate();
+                }
+                // TODO: leapdays?
+                // TODO: hours, minutes, seconds? Not used in XML domains
+                // TODO: weekday?
+                return new datetime.date(year, month, day);
+            },
+            __radd__: function (other) {
+                return this.__add__(other);
+            },
+
+            __sub__: function (other) {
+                if (!(other instanceof datetime.date)) {
+                    return py.NotImplemented;
+                }
+                // TODO: test this whole mess
+                var year = asJS(this.ops.year) || asJS(other.year);
+                if (asJS(this.ops.years)) {
+                    year -= asJS(this.ops.years);
+                }
+
+                var month = asJS(this.ops.month) || asJS(other.month);
+                if (asJS(this.ops.months)) {
+                    month -= asJS(this.ops.months);
+                    // FIXME: no divmod in JS?
+                    while (month < 1) {
+                        year -= 1;
+                        month += 12;
+                    }
+                    while (month > 12) {
+                        year += 1;
+                        month -= 12;
+                    }
+                }
+
+                var lastMonthDay = new Date(year, month, 0).getDate();
+                var day = asJS(this.ops.day) || asJS(other.day);
+                if (day > lastMonthDay) { day = lastMonthDay; }
+                var days_offset = ((asJS(this.ops.weeks) || 0) * 7) + (asJS(this.ops.days) || 0);
+                if (days_offset) {
+                    day = new Date(year, month-1, day - days_offset).getDate();
+                }
+                // TODO: leapdays?
+                // TODO: hours, minutes, seconds? Not used in XML domains
+                // TODO: weekday?
+                return new datetime.date(year, month, day);
+            },
+            __rsub__: function (other) {
+                return this.__sub__(other);
+            }
         });
 
         return {
             uid: new py.float(this.uid),
             datetime: datetime,
-            time: time
+            time: time,
+            relativedelta: relativedelta
         };
     },
     test_eval: function (source, expected) {
