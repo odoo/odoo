@@ -597,6 +597,7 @@ class crm_lead(crm_case, osv.osv):
             'country_id': lead.country_id and lead.country_id.id or False,
             'state_id': lead.state_id and lead.state_id.id or False,
             'is_company': is_company,
+            'type': 'contact'
         }
 
         partner = partner.create(cr, uid,vals, context)
