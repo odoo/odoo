@@ -291,8 +291,8 @@ openerp.web.Model = openerp.web.Class.extend(/** @lends openerp.web.Model# */{
      * FIXME: remove when evaluator integrated
      */
     call_button: function (method, args) {
-        return this.rpc('/web/dataset/call_button', {
-            model: this.model,
+        return openerp.connection.rpc('/web/dataset/call_button', {
+            model: this.name,
             method: method,
             domain_id: null,
             context_id: args.length - 1,
