@@ -50,9 +50,6 @@ class warehouse_configuration(osv.osv_memory):
                         - removal date
                         - alert date
                         It installs the product_expiry module."""),
-        'group_stock_packaging':fields.boolean("Manage packaging by products",group='base.group_user', xml_id='base.group_stock_packaging',
-                           help="""
-                           It assigns the "Packaging" group to employee."""),
         'group_stock_production_lot':fields.boolean("Track production lot",group='base.group_user', xml_id='base.group_stock_production_lot',
                            help="""
                            It assigns the "Production Lots" group to employee."""),
@@ -65,9 +62,6 @@ class warehouse_configuration(osv.osv_memory):
         'group_stock_counterpart_location':fields.boolean("Manage your stock counterpart by products",group='base.group_user', xml_id='base.group_stock_counterpart_location',
                            help="""
                            It assigns the "Counter-Part Locations" group to employee."""),
-        'group_stock_uom':fields.boolean("Manage your stock counterpart by products",group='base.group_user', xml_id='base.group_stock_uom',
-                           help="""
-                           It assigns the "UOM in warehouse" group to employee."""),
         'group_stock_inventory_properties':fields.boolean("Define stock locations",group='base.group_user', xml_id='base.group_stock_inventory_properties',
                            help=""".
                            It assigns the "" group to employee."""),

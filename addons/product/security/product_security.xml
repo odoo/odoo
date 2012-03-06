@@ -19,6 +19,16 @@
         <field name="category_id" ref="base.module_category_usability"/>
     </record>
 
+    <record id="base.group_stock_packaging" model="res.groups">
+        <field name="name">Packaging</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="base.group_stock_uom" model="res.groups">
+        <field name="name">UOM in warehouse</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
     <record model="ir.rule" id="product_pricelist_comp_rule">
         <field name="name">product pricelist company rule</field>
         <field name="model_id" ref="model_product_pricelist"/>

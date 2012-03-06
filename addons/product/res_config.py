@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,14 +15,23 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import product
-import pricelist
-import report
-import partner
-import wizard
-import res_config
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+from osv import fields, osv
+
+class product_groups_configuration(osv.osv_memory):
+    _inherit = 'res.config.settings'
+
+    _columns = {
+        'group_stock_packaging':fields.boolean("Manage packaging by products",group='base.group_user', xml_id='base.group_stock_packaging',
+                           help="""
+                           It assigns the "Packaging" group to employee."""),
+        'group_stock_uom':fields.boolean("Manage your stock counterpart by products",group='base.group_user', xml_id='base.group_stock_uom',
+                           help="""
+                           It assigns the "UOM in warehouse" group to employee."""),
+
+}
+
+product_groups_configuration()

@@ -12,11 +12,6 @@
         <field name="implied_ids" eval="[(4, ref('group_stock_user'))]"/>
     </record>
 
-    <record id="base.group_stock_packaging" model="res.groups">
-        <field name="name">Packaging</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
     <record id="base.group_stock_production_lot" model="res.groups">
         <field name="name">Production Lots</field>
         <field name="category_id" ref="base.module_category_hidden"/>
@@ -39,11 +34,6 @@
 
     <record id="base.group_stock_inventory_properties" model="res.groups">
         <field name="name">Inventory properties in partner form</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
-    <record id="base.group_stock_uom" model="res.groups">
-        <field name="name">UOM in warehouse</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
