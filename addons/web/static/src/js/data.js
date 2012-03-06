@@ -890,7 +890,10 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
     unlink: function(ids, callback, error_callback) {
         var self = this;
         return this._super(ids, function(result) {
-            self.ids = _.without.apply(_, [self.ids].concat(ids));
+            self.ids = _(self.ids).difference(ids);
+            if (self._length) {
+                self._length -= 1;
+            }
             if (this.index !== null) {
                 self.index = self.index <= self.ids.length - 1 ?
                     self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
