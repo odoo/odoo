@@ -489,7 +489,7 @@ openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.Da
                 return _.extend(
                     new openerp.web.DataGroup(
                         self, self.model.name, group.model.domain(),
-                        child_context, child_context.group_by,
+                        child_context, group.model._context.group_by,
                         self.level + 1),
                     {
                         __context: child_context,
