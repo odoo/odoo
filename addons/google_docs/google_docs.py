@@ -151,4 +151,4 @@ class users(osv.osv):
                 context)
         return res
 
-google_docs_config()
+users()

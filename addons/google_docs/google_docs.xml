@@ -1,16 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
-  <data>
-    <record id="view_company_form_with_gdocs" model="ir.ui.view">
-      <field name="name">res.company.form.gdocs</field>
-      <field name="model">google.docs</field>
-      <field name="type">form</field>
-      <field name="inherit_id" ref="base.view_company_form"/>
-      <field name="arch" type="xml">
-        <xpath expr="//page[@string='Configuration']" position="inside">
-          <separator string="GDoc" colspan="4"/>
-          <field name="gdocs_url"/>
-        </xpath>
-      </field>
-    </record>
-  </data>
+    <data>
+
+        <!-- add google docs config field in user form -->
+
+        <record model="ir.ui.view" id="view_google_docs_users_config_inherited_form">
+            <field name="name">res.user.google_docs.config.inherited</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="signature" position="after">
+                    <field name="context_model_id" completion="1"
+                        readonly="0" groups='base.view_users_form_extended'/>
+                </field>
+            </field>
+        </record>
+    </data>
 </openerp>

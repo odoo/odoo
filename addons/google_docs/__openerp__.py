@@ -1,5 +1,5 @@
 {
-    'name': 'Google Docs',
+    'name': 'Google Docs integration',
     'version': '0.2',
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
