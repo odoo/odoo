@@ -1055,7 +1055,7 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
             // TODO: maybe this should not be completely removed
             delete defaults[this.attrs.name];
             this.model.call('name_get', [[this.id]]).then(
-                this.proxy('name_get'));
+                this.proxy('on_name_get'));
         } else {
             this.got_name.reject();
         }
