@@ -580,6 +580,7 @@ class create_dta_wizard(osv.osv_memory):
         data['ids'] = active_ids
         data['id'] = active_id
         dta_file = _create_dta(self, cr, uid, data, context)
+        self.write(cr, uid, ids, {'dta_file': dta_file['dta']}, context=context)
         context.update({'dta_file':dta_file})
         return self.save_dta(cr, uid, ids, context)
 
@@ -592,6 +593,7 @@ class create_dta_wizard(osv.osv_memory):
         return {
             'view_type': 'form',
             'view_mode': 'form',
+            'res_id': ids[0],
             'res_model': 'create.dta.wizard',
             'views': [(resource_id, 'form')],
             'type': 'ir.actions.act_window',
