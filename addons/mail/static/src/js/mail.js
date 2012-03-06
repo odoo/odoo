@@ -427,7 +427,7 @@ openerp.mail = function(session) {
             var self = this;
             this._super.apply(this, arguments);
             /* events and buttons */
-            this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
+            this.$element.find('button.oe_mail_wall_button_comment').bind('click', function () { self.do_comment(); });
             this.$element.find('button.oe_mail_wall_button_more').bind('click', function () { self.do_more(); });
             this.$element.find('p.oe_mail_wall_nomore').hide();
             /* load mail.message search view */
@@ -619,7 +619,7 @@ openerp.mail = function(session) {
          * Action: Posts a comment
          */
         do_comment: function () {
-            var body_text = this.$element.find('textarea:first').val();
+            var body_text = this.$element.find('textarea.oe_mail_wall_action_textarea').val();
             return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, type='comment']).then(this.init_comments());
         },
         
