@@ -98,7 +98,7 @@ openerp.web.Query = openerp.web.Class.extend({
      * @returns {jQuery.Deferred<Number>}
      */
     count: function () {
-        if (this._count) { return $.when(this._count); }
+        if (this._count != undefined) { return $.when(this._count); }
         return this._model.call(
             'search_count', [this._filter], {
                 context: this._model.context(this._context)});
