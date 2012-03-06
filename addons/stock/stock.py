@@ -1047,6 +1047,9 @@ class stock_picking(osv.osv):
             for move_line in picking.move_lines:
                 if move_line.state == 'cancel':
                     continue
+                if move_line.scrapped:
+                    # do no invoice scrapped products
+                    continue
                 origin = move_line.picking_id.name or ''
                 if move_line.picking_id.origin:
                     origin += ':' + move_line.picking_id.origin
