@@ -156,11 +156,62 @@ class mrp_production_workcenter_line(osv.osv):
                     prod_obj.write(cr, uid, [prod.production_id.id], {'date_start':dstart}, context=context, mini=False)
         return result
 
+    def draft_notification(self, cr, uid, ids):
+        prod_obj = self.pool.get('mrp.production')
+        for workorder in self.browse(cr, uid, ids):
+            for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
+                message = _("<em>%s</em> Work Order is <b>created</b>.") % (workorder.name)
+                prod_obj.message_append_note(cr, uid, [prod.id], '', message)
+                womessage = _("Work Order is <b>created</b> for <em>%s</em> production order.") % (prod.id.name)
+        self.message_append_note(cr, uid, ids, '', womessage)
+        return True
+
+    def start_notification(self, cr, uid, ids):
+        prod_obj = self.pool.get('mrp.production')
+        for workorder in self.browse(cr, uid, ids):
+            for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
+                message = _("<em>%s</em> Work Order is <b>started</b>.") % (workorder.name)
+                prod_obj.message_append_note(cr, uid, [prod.id], '', message)
+                womessage = _("Work Order is <b>started</b> for <em>%s</em> production order.") % (prod.id.name)
+        self.message_append_note(cr, uid, ids, '', womessage)
+        return True
+
+    def done_notification(self, cr, uid, ids):
+        prod_obj = self.pool.get('mrp.production')
+        for workorder in self.browse(cr, uid, ids):
+            for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
+                message = _("<em>%s</em>Work Order is <b>finished</b>.") % (workorder.name)
+                prod_obj.message_append_note(cr, uid, [prod.id], '', message)
+                womessage = _("Work Order is <b>done</b> for <em>%s</em> production order.") % (prod.id.name)
+        self.message_append_note(cr, uid, ids, '', womessage)
+        return True
+
+    def pending_notification(self, cr, uid, ids):
+        prod_obj = self.pool.get('mrp.production')
+        for workorder in self.browse(cr, uid, ids):
+            for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
+                message = _("<em>%s</em>Work Order is <b>pending</b>.") % (workorder.name)
+                prod_obj.message_append_note(cr, uid, [prod.id], '', message)
+                womessage = _("Work Order is <b>pending</b> for <em>%s</em> production order.") % (prod.id.name)
+        self.message_append_note(cr, uid, ids, '', womessage)
+        return True
+
+    def cancel_notification(self, cr, uid, ids):
+        prod_obj = self.pool.get('mrp.production')
+        for workorder in self.browse(cr, uid, ids):
+            for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
+                message = _("<em>%s</em>Work Order is <b>cancelled</b>.") % (workorder.name)
+                prod_obj.message_append_note(cr, uid, [prod.id], '', message)
+                womessage = _("Work Order is <b>cancelled</b> for <em>%s</em> production order.") % (prod.id.name)
+        self.message_append_note(cr, uid, ids, '', womessage)
+        return True
+
     def action_draft(self, cr, uid, ids):
         """ Sets state to draft.
         @return: True
         """
         self.write(cr, uid, ids, {'state':'draft'})
+        self.draft_notification(cr, uid, ids)
         return True
 
     def action_start_working(self, cr, uid, ids):
@@ -169,6 +220,7 @@ class mrp_production_workcenter_line(osv.osv):
         """
         self.modify_production_order_state(cr, uid, ids, 'start')
         self.write(cr, uid, ids, {'state':'startworking', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.start_notification(cr, uid, ids)
         return True
 
     def action_done(self, cr, uid, ids):
@@ -185,6 +237,7 @@ class mrp_production_workcenter_line(osv.osv):
         delay += (date_finished-date_start).seconds / float(60*60)
 
         self.write(cr, uid, ids, {'state':'done', 'date_finished': date_now,'delay':delay})
+        self.done_notification(cr, uid, ids)
         self.modify_production_order_state(cr,uid,ids,'done')
         return True
 
@@ -193,6 +246,7 @@ class mrp_production_workcenter_line(osv.osv):
         @return: True
         """
         self.write(cr, uid, ids, {'state':'cancel'})
+        self.cancel_notification(cr, uid, ids)
         return True
 
     def action_pause(self, cr, uid, ids):
@@ -200,6 +254,7 @@ class mrp_production_workcenter_line(osv.osv):
         @return: True
         """
         self.write(cr, uid, ids, {'state':'pause'})
+        self.pending_notification(cr, uid, ids)
         return True
 
     def action_resume(self, cr, uid, ids):
@@ -207,6 +262,7 @@ class mrp_production_workcenter_line(osv.osv):
         @return: True
         """
         self.write(cr, uid, ids, {'state':'startworking'})
+        self.start_notification(cr, uid, ids)
         return True
 
 mrp_production_workcenter_line()
@@ -251,7 +307,7 @@ class mrp_production(osv.osv):
             if prod.workcenter_lines:
                 wf_service.trg_validate(uid, 'mrp.production.workcenter.line', prod.workcenter_lines[0].id, 'button_start_working', cr)
         return super(mrp_production,self).action_in_production(cr, uid, ids)
-    
+
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels work order if production order is canceled.
         @return: Super method

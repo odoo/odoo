@@ -130,6 +130,7 @@ class mrp_bom(osv.osv):
     """
     _name = 'mrp.bom'
     _description = 'Bill of Material'
+    _inherit = ['mail.thread']
 
     def _child_compute(self, cr, uid, ids, name, arg, context=None):
         """ Gets child bom.
@@ -312,7 +313,7 @@ class mrp_bom(osv.osv):
         phantom = False
         if bom.type == 'phantom' and not bom.bom_lines:
             newbom = self._bom_find(cr, uid, bom.product_id.id, bom.product_uom.id, properties)
-            
+
             if newbom:
                 res = self._bom_explode(cr, uid, self.browse(cr, uid, [newbom])[0], factor*bom.product_qty, properties, addthis=True, level=level+10)
                 result = result + res[0]
@@ -358,6 +359,19 @@ class mrp_bom(osv.osv):
         default.update({'name': bom_data['name'] + ' ' + _('Copy'), 'bom_id':False})
         return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
 
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(mrp_bom, self).create(cr, uid, vals, context=context)
+        self.create_notification(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def create_notification(self, cr, uid, ids, context=None):
+        prod_obj = self.pool.get('product.product')
+        for obj in self.browse(cr, uid, ids, context=context):
+            for prod in prod_obj.browse(cr, uid, [obj.product_id], context=context):
+                self.message_append_note(cr, uid, ids, _('System notification'),
+                        _("Bill of Material is <b>Created</b> for <em>%s</em> product.") % (prod.id.name_template), type='notification', context=context)
+        return True
+
 mrp_bom()
 
 class mrp_bom_revision(osv.osv):
@@ -393,6 +407,7 @@ class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Manufacturing Order'
     _date_name  = 'date_planned'
+    _inherit = ['mail.thread']
 
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context=None):
         """ Calculates total hours and total no. of cycles for a production order.
@@ -497,11 +512,53 @@ class mrp_production(osv.osv):
         (_check_qty, 'Order quantity cannot be negative or zero!', ['product_qty']),
     ]
 
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(mrp_production, self).create(cr, uid, vals, context=context)
+        self.create_notification(cr, uid, [obj_id], context=context)
+        return obj_id
+
     def unlink(self, cr, uid, ids, context=None):
         for production in self.browse(cr, uid, ids, context=context):
             if production.state not in ('draft', 'cancel'):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete a manufacturing order in state \'%s\'') % production.state)
         return super(mrp_production, self).unlink(cr, uid, ids, context=context)
+
+    def create_notification(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id.id :
+                self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
+                self.message_append_note(cr, uid, ids, _('System notification'),
+                        _("Manufacturing Order is <b>Created</b>."), type='notification', need_action_user_id=obj.user_id.id, context=context)
+            else :
+                self.message_append_note(cr, uid, ids, _('System notification'),
+                        _("Manufacturing Order is <b>Created</b>."), type='notification', context=context)
+        return True
+
+    def cancel_notification(self, cr, uid, ids, context=None):
+        message = _("Manufacturing order is <b>cancelled</b>.")
+        self.message_append_note(cr, uid, ids, '', message, context=context)
+        return True
+
+    def ready_notification(self, cr, uid, ids, context=None):
+        message = _("Manufacturing order is <b>ready to produce</b>.")
+        self.message_append_note(cr, uid, ids, '', message, context=context)
+        return True
+
+    def inproduction_notification(self, cr, uid, ids, context=None):
+        message = _("Manufacturing order is <b>in production</b>.")
+        self.message_append_note(cr, uid, ids, '', message, context=context)
+        return True
+
+    def done_notification(self, cr, uid, ids, context=None):
+        self.message_mark_done(cr, uid, ids, context)
+        message = _("Manufacturing order is <b>done</b>.")
+        self.message_append_note(cr, uid, ids, '', message, context=context)
+        return True
+
+    def waiting_notification(self, cr, uid, ids, context=None):
+        message = _("Manufacturing order is <b>waiting for goods</b>.")
+        self.message_append_note(cr, uid, ids, '', message, context=context)
+        return True
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -629,9 +686,10 @@ class mrp_production(osv.osv):
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
         self.write(cr, uid, ids, {'state': 'cancel'})
+        self.cancel_notification(cr, uid, ids, context)
         return True
 
-    def action_ready(self, cr, uid, ids):
+    def action_ready(self, cr, uid, ids, context=None):
         """ Changes the production state to Ready and location id of stock move.
         @return: True
         """
@@ -643,18 +701,18 @@ class mrp_production(osv.osv):
             if production.move_prod_id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
                         {'location_id': production.location_dest_id.id})
-
-            message = _("Manufacturing order '%s' is ready to produce.") % ( name,)
-            self.log(cr, uid, production_id, message)
+            self.ready_notification(cr, uid, [production_id], context)
         return True
 
-    def action_production_end(self, cr, uid, ids):
+    def action_production_end(self, cr, uid, ids, context=None):
         """ Changes production state to Finish and writes finished date.
         @return: True
         """
         for production in self.browse(cr, uid, ids):
             self._costs_generate(cr, uid, production)
-        return self.write(cr, uid, ids, {'state': 'done', 'date_finished': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.write(cr, uid, ids, {'state': 'done', 'date_finished': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.done_notification(cr, uid, ids, context)
+        return True
 
     def test_production_done(self, cr, uid, ids):
         """ Tests whether production is done or not.
@@ -670,9 +728,9 @@ class mrp_production(osv.osv):
         return res
 
     def _get_subproduct_factor(self, cr, uid, production_id, move_id=None, context=None):
-        """ Compute the factor to compute the qty of procucts to produce for the given production_id. By default, 
-            it's always equal to the quantity encoded in the production order or the production wizard, but if the 
-            module mrp_subproduct is installed, then we must use the move_id to identify the product to produce 
+        """ Compute the factor to compute the qty of procucts to produce for the given production_id. By default,
+            it's always equal to the quantity encoded in the production order or the production wizard, but if the
+            module mrp_subproduct is installed, then we must use the move_id to identify the product to produce
             and its quantity.
         :param production_id: ID of the mrp.order
         :param move_id: ID of the stock move that needs to be produced. Will be used in mrp_subproduct.
@@ -698,7 +756,6 @@ class mrp_production(osv.osv):
             if (produced_product.scrapped) or (produced_product.product_id.id <> production.product_id.id):
                 continue
             produced_qty += produced_product.product_qty
-
         if production_mode in ['consume','consume_produce']:
             consumed_data = {}
 
@@ -733,7 +790,7 @@ class mrp_production(osv.osv):
                         prod_name = scheduled.product_id.name_get()[0][1]
                         raise osv.except_osv(_('Warning!'), _('You are going to consume total %s quantities of "%s".\nBut you can only consume up to total %s quantities.') % (qty, prod_name, qty_avail))
                     if qty <= 0.0:
-                        # we already have more qtys consumed than we need 
+                        # we already have more qtys consumed than we need
                         continue
 
                     raw_product[0].action_consume(qty, raw_product[0].location_id.id, context=context)
@@ -819,11 +876,12 @@ class mrp_production(osv.osv):
                     } )
         return amount
 
-    def action_in_production(self, cr, uid, ids):
+    def action_in_production(self, cr, uid, ids, context=None):
         """ Changes state to In Production and writes starting date.
         @return: True
         """
         self.write(cr, uid, ids, {'state': 'in_production', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.inproduction_notification(cr, uid, ids, context)
         return True
 
     def test_if_product(self, cr, uid, ids):
@@ -890,14 +948,14 @@ class mrp_production(osv.osv):
                         'state': 'waiting',
                         'company_id': production.company_id.id,
                 })
-          
+
     def _make_production_internal_shipment(self, cr, uid, production, context=None):
         ir_sequence = self.pool.get('ir.sequence')
         stock_picking = self.pool.get('stock.picking')
         routing_loc = None
         pick_type = 'internal'
         address_id = False
-        
+
         # Take routing address as a Shipment Address.
         # If usage of routing location is a internal, make outgoing shipment otherwise internal shipment
         if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
@@ -926,7 +984,7 @@ class mrp_production(osv.osv):
         stock_move = self.pool.get('stock.move')
         source_location_id = production.product_id.product_tmpl_id.property_stock_production.id
         destination_location_id = production.location_dest_id.id
-        move_name = _('PROD: %s') + production.name 
+        move_name = _('PROD: %s') + production.name
         data = {
             'name': move_name,
             'date': production.date_planned,
@@ -983,7 +1041,7 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids, context=context):
             shipment_id = self._make_production_internal_shipment(cr, uid, production, context=context)
             produce_move_id = self._make_production_produce_line(cr, uid, production, context=context)
-            
+
             # Take routing location as a Source Location.
             source_location_id = production.location_src_id.id
             if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
@@ -994,14 +1052,14 @@ class mrp_production(osv.osv):
                 shipment_move_id = self._make_production_internal_shipment_line(cr, uid, line, shipment_id, consume_move_id,\
                                  destination_location_id=source_location_id, context=context)
                 self._make_production_line_procurement(cr, uid, line, shipment_move_id, context=context)
-                    
+
             wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
             production.write({'state':'confirmed'}, context=context)
             message = _("Manufacturing order '%s' is scheduled for the %s.") % (
                 production.name,
                 datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y'),
             )
-            self.log(cr, uid, production.id, message)
+            self.waiting_notification(cr, uid, [production.id], context);
         return shipment_id
 
     def force_production(self, cr, uid, ids, *args):
@@ -1019,6 +1077,7 @@ class mrp_production_workcenter_line(osv.osv):
     _name = 'mrp.production.workcenter.line'
     _description = 'Work Order'
     _order = 'sequence'
+    _inherit = ['mail.thread']
 
     _columns = {
         'name': fields.char('Work Order', size=64, required=True),
