@@ -1047,6 +1047,9 @@ class stock_picking(osv.osv):
             for move_line in picking.move_lines:
                 if move_line.state == 'cancel':
                     continue
+                if move_line.scrapped:
+                    # do no invoice scrapped products
+                    continue
                 origin = move_line.picking_id.name or ''
                 if move_line.picking_id.origin:
                     origin += ':' + move_line.picking_id.origin
@@ -1081,22 +1084,20 @@ class stock_picking(osv.osv):
                 account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
                 if move_line.price_unit != 0 and price_unit != move_line.price_unit:
                     price_unit = move_line.price_unit
-                
-                if not move_line.location_dest_id.scrap_location:
-                    invoice_line_id = invoice_line_obj.create(cr, uid, {
-                        'name': name,
-                        'origin': origin,
-                        'invoice_id': invoice_id,
-                        'uos_id': uos_id,
-                        'product_id': move_line.product_id.id,
-                        'account_id': account_id,
-                        'price_unit': price_unit,
-                        'discount': discount,
-                        'quantity': move_line.product_uos_qty or move_line.product_qty,
-                        'invoice_line_tax_id': [(6, 0, tax_ids)],
-                        'account_analytic_id': account_analytic_id,
-                    }, context=context)
-                    self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
+                invoice_line_id = invoice_line_obj.create(cr, uid, {
+                    'name': name,
+                    'origin': origin,
+                    'invoice_id': invoice_id,
+                    'uos_id': uos_id,
+                    'product_id': move_line.product_id.id,
+                    'account_id': account_id,
+                    'price_unit': price_unit,
+                    'discount': discount,
+                    'quantity': move_line.product_uos_qty or move_line.product_qty,
+                    'invoice_line_tax_id': [(6, 0, tax_ids)],
+                    'account_analytic_id': account_analytic_id,
+                }, context=context)
+                self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
 
             invoice_obj.button_compute(cr, uid, [invoice_id], context=context,
                     set_total=(inv_type in ('in_invoice', 'in_refund')))
