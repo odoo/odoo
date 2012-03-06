@@ -404,7 +404,6 @@ class account_invoice(osv.osv):
 
             opt.insert(0, ('id', partner_id))
             res = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['invoice'])
-            print "-=res",res
             invoice_addr_id = res['invoice']
             p = self.pool.get('res.partner').browse(cr, uid, partner_id)
             if company_id:

@@ -49,7 +49,7 @@ class purchase_order(osv.osv):
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
                val1 += line.price_subtotal
-               for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id.id, order.partner_id)['taxes']:
+               for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_id.id, line.product_id.id, order.partner_id)['taxes']:
                     val += c.get('amount', 0.0)
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
@@ -161,9 +161,7 @@ class purchase_order(osv.osv):
         'date_order':fields.date('Order Date', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, select=True, help="Date on which this document has been created."),
         'date_approve':fields.date('Date Approved', readonly=1, select=True, help="Date on which purchase order has been approved"),
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, change_default=True),
-        'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True,
-            states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},domain="[('partner_id', '=', partner_id)]"),
-        'dest_address_id':fields.many2one('res.partner.address', 'Destination Address', domain="[('partner_id', '!=', False)]",
+        'dest_address_id':fields.many2one('res.partner', 'Destination Address', domain="[('parent_id','=',partner_id)]", 
             states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
             help="Put an address if you want to deliver directly from the supplier to the customer." \
                 "In this case, it will remove the warehouse link and set the customer location."
@@ -215,7 +213,6 @@ class purchase_order(osv.osv):
         'shipped': 0,
         'invoice_method': 'order',
         'invoiced': 0,
-        'partner_address_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['default'])['default'],
         'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', context=c),
     }
@@ -249,9 +246,9 @@ class purchase_order(osv.osv):
     def onchange_dest_address_id(self, cr, uid, ids, address_id):
         if not address_id:
             return {}
-        address = self.pool.get('res.partner.address')
+        address = self.pool.get('res.partner')
         values = {'warehouse_id': False}
-        supplier = address.browse(cr, uid, address_id).partner_id
+        supplier = address.browse(cr, uid, address_id)
         if supplier:
             location_id = supplier.property_stock_customer.id
             values.update({'location_id': location_id})
@@ -266,12 +263,12 @@ class purchase_order(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, partner_id):
         partner = self.pool.get('res.partner')
         if not partner_id:
-            return {'value':{'partner_address_id': False, 'fiscal_position': False}}
+            return {'value':{'fiscal_position': False}}
         supplier_address = partner.address_get(cr, uid, [partner_id], ['default'])
         supplier = partner.browse(cr, uid, partner_id)
         pricelist = supplier.property_product_pricelist_purchase.id
         fiscal_position = supplier.property_account_position and supplier.property_account_position.id or False
-        return {'value':{'partner_address_id': supplier_address['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
+        return {'value':{'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
 
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
@@ -376,8 +373,6 @@ class purchase_order(osv.osv):
                 'type': 'in_invoice',
                 'partner_id': order.partner_id.id,
                 'currency_id': order.pricelist_id.currency_id.id,
-                'address_invoice_id': order.partner_address_id.id,
-                'address_contact_id': order.partner_address_id.id,
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
                 'invoice_line': [(6, 0, inv_lines)], 
                 'origin': order.name,
@@ -433,7 +428,7 @@ class purchase_order(osv.osv):
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
             'date': order.date_order,
             'type': 'in',
-            'address_id': order.dest_address_id.id or order.partner_address_id.id,
+            'address_id': order.dest_address_id.id or order.partner_id.id,
             'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
             'purchase_id': order.id,
             'company_id': order.company_id.id,
@@ -453,7 +448,7 @@ class purchase_order(osv.osv):
             'location_id': order.partner_id.property_stock_supplier.id,
             'location_dest_id': order.location_id.id,
             'picking_id': picking_id,
-            'address_id': order.dest_address_id.id or order.partner_address_id.id,
+            'address_id': order.dest_address_id.id or order.partner_id.id,
             'move_dest_id': order_line.move_dest_id.id,
             'state': 'draft',
             'purchase_line_id': order_line.id,
@@ -574,7 +569,7 @@ class purchase_order(osv.osv):
                     'origin': porder.origin,
                     'date_order': porder.date_order,
                     'partner_id': porder.partner_id.id,
-                    'partner_address_id': porder.partner_address_id.id,
+#                    'partner_address_id': porder.partner_id.id,
                     'dest_address_id': porder.dest_address_id.id,
                     'warehouse_id': porder.warehouse_id.id,
                     'location_id': porder.location_id.id,
@@ -925,7 +920,6 @@ class procurement_order(osv.osv):
                 'name': name,
                 'origin': procurement.origin,
                 'partner_id': partner_id,
-                'partner_address_id': address_id,
                 'location_id': procurement.location_id.id,
                 'warehouse_id': warehouse_id and warehouse_id[0] or False,
                 'pricelist_id': pricelist_id,
