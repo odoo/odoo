@@ -126,15 +126,15 @@ class users(osv.osv):
     _description = "User\'s gdocs config"
 
     _columns = {
-        'model_id': fields.many2one('ir.model', 'Model'),
-        'gdocs_resource_id': fields.char('Google resource ID', size=64),
-        'name_template': fields.char('GDoc name template ', size=64, help='This is the name which appears on google side'),
-        'name': fields.char('Name', size=64, help='This is the attachment\'s name. As well, it appears on the panel.')
+        'context_model_id': fields.many2one('ir.model', 'Model'),
+        'context_gdocs_resource_id': fields.char('Google resource ID', size=64),
+        'context_name_template': fields.char('GDoc name template ', size=64, help='This is the name which appears on google side'),
+        'context_name': fields.char('Name', size=64, help='This is the attachment\'s name. As well, it appears on the panel.')
         # 'multi': fields.boolean('Multiple documents')
     }
 
     _defaults = {
-        'name_template': 'Google Document'
+        'context_name_template': 'Google Document'
     }
 
     def create(self, cr, uid, vals, context=None):
