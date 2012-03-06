@@ -127,8 +127,9 @@ class payment_order(osv.osv):
             for line in order.line_ids:
                 if line.bank_statement_line_id:
                     raise osv.except_osv(_('Warning !'),
-                    _('Payment order line "%s" is already imported in Bank statement "%s".')\
-                    %(line.name, line.bank_statement_line_id.statement_id.name,))
+                        _("Payment order line '%s' is already imported in Bank statement '%s' (id: %s).") % (
+                            line.name, line.bank_statement_line_id.statement_id.name,
+                            line.bank_statement_line_id.statement_id.id))
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 

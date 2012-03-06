@@ -26,6 +26,7 @@ write({'state':'open'})</field>
             <field name="wkf_id" ref="wkf_payment_order"/>
             <field name="action">write({'state':'done'})</field>
             <field name="kind">function</field>
+            <field name="flow_stop" eval="False"/>
         </record>
         <record id="act_cancel" model="workflow.activity">
             <field name="name">cancel</field>
