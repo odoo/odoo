@@ -1359,7 +1359,7 @@ class SearchView(View):
                 if board and 'arch' in board:
                     xml = ElementTree.fromstring(board['arch'])
                     column = xml.find('./board/column')
-                    if column:
+                    if column is not None:
                         new_action = ElementTree.Element('action', {
                                 'name' : str(action_id),
                                 'string' : name,
