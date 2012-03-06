@@ -165,7 +165,6 @@ class account_analytic_account(osv.osv):
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
         'quantity_max': fields.float('Maximum Time', help='Sets the higher limit of time to work on the contract.'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'contact_id': fields.many2one('res.partner.address', 'Contact'),
         'user_id': fields.many2one('res.users', 'Account Manager'),
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End', select=True),
@@ -199,7 +198,6 @@ class account_analytic_account(osv.osv):
         'state': 'open',
         'user_id': lambda self, cr, uid, ctx: uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
-        'contact_id': lambda self, cr, uid, ctx: ctx.get('contact_id', False),
         'date_start': lambda *a: time.strftime('%Y-%m-%d'),
         'currency_id': _get_default_currency,
     }
@@ -221,9 +219,9 @@ class account_analytic_account(osv.osv):
 
     def on_change_partner_id(self, cr, uid, id, partner_id, context={}):
         if not partner_id:
-            return {'value': {'contact_id': False}}
+            return {'value': {'partner_id': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['invoice'])
-        return {'value': {'contact_id': addr.get('invoice', False)}}
+        return {'value': {'partner_id': addr.get('invoice', False)}}
 
     def on_change_company(self, cr, uid, id, company_id):
         if not company_id:
@@ -247,9 +245,9 @@ class account_analytic_account(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, partner, context=None):
         partner_obj = self.pool.get('res.partner')
         if not partner:
-            return {'value':{'contact_id': False}}
+            return {'value':{'partner_id': False}}
         address = partner_obj.address_get(cr, uid, [partner], ['contact'])
-        return {'value':{'contact_id': address['contact']}}
+        return {'value':{'partner_id': address['contact']}}
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
