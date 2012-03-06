@@ -334,6 +334,13 @@ class crm_lead(crm_case, osv.osv):
         message = _("The lead is <b>escalated</b>.")
         case.message_append_note('' ,message)
 
+    def _case_reset_notification(self, case, context=None):
+        if case[0].type == 'lead':
+            message = _("The lead is <b>renewed</b>.")
+        elif case[0].type == 'opportunity':
+            message = _("The opportunity is <b>renewed</b>.")
+        case[0].message_append_note('' ,message, need_action_user_id=case[0].user_id.id)
+
     def _case_phonecall_notification(self, cr, uid, ids, case, phonecall, action, context=None):
         for obj in phonecall.browse(cr, uid, ids, context=context):
             if action == "schedule" :

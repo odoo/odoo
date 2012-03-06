@@ -273,6 +273,9 @@ class crm_base(object):
     def _case_pending_notification(self, case, context=None):
         return True
 
+    def _case_reset_notification(self, case, context=None):
+        return True
+
     def _case_escalate_notification(self, case, context=None):
         return True
 
@@ -336,6 +339,7 @@ class crm_base(object):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': 'draft', 'active': True})
+        self._case_reset_notification(cases, context=context)
         self._action(cr, uid, cases, 'draft')
         return True
 
@@ -485,6 +489,7 @@ class crm_case(crm_base):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': state, 'active': True})
+        self._case_reset_notification(cases, context=context);
         self._action(cr, uid, cases, state)
         return True
 

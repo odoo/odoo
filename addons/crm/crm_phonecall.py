@@ -80,6 +80,7 @@ class crm_phonecall(crm_base, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_phonecall, self).create(cr, uid, vals, context=context)
+        self.open_notification(cr, uid, [obj_id], context)
         return obj_id
 
     def _get_default_state(self, cr, uid, context=None):
@@ -94,6 +95,29 @@ class crm_phonecall(crm_base, osv.osv):
         'user_id': lambda self,cr,uid,ctx: uid,
         'active': 1,
     }
+    def _case_cancel_notification(self, phonecall, context=None):
+        phonecall[0].message_mark_done(context)
+        message = _("The Phonecall is <b>cancelled</b>.")
+        phonecall[0].message_append_note( _('System notification'),
+                        message, type='notification', context=context)
+
+    def _case_pending_notification(self, phonecall, context=None):
+        message = _("The Phonecall is <b>pending</b>.")
+        phonecall[0].message_append_note('' ,message)
+
+    def done_notification(self, cr, uid, ids, context=None):
+        for phonecall in self.browse(cr, uid, ids):
+            phonecall.message_mark_done(context)
+            message = _("The Phonecall is <b>done</b>.")
+            self.message_append_note(cr, uid, [phonecall.id], _('System notification'),
+                        message, type='notification', context=context)
+
+    def open_notification(self, cr, uid, ids, context=None):
+        for phonecall in self.browse(cr, uid, ids):
+            self.message_subscribe(cr, uid, ids, [phonecall.user_id.id], context=context)
+            message = _("The Phonecall is <b>open</b>.")
+            self.message_append_note(cr, uid, [phonecall.id], _('System notification'),message,
+                                     type='notification', need_action_user_id=phonecall.user_id.id, context=context)
 
     # From crm.case
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
@@ -105,7 +129,7 @@ class crm_phonecall(crm_base, osv.osv):
             res['value']['partner_mobile'] = address.mobile
         return res
 
-    def case_close(self, cr, uid, ids, *args):
+    def case_close(self, cr, uid, ids, context=None):
         """Overrides close for crm_case for setting close date
         """
         res = True
@@ -115,23 +139,26 @@ class crm_phonecall(crm_base, osv.osv):
             if phone.duration <=0:
                 duration = datetime.now() - datetime.strptime(phone.date, '%Y-%m-%d %H:%M:%S')
                 data.update({'duration': duration.seconds/float(60)})
-            res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], args)
+            res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], context)
             self.write(cr, uid, [phone_id], data)
+            self.done_notification(cr, uid, [phone_id], context);
         return res
 
-    def case_reset(self, cr, uid, ids, *args):
+    def case_reset(self, cr, uid, ids, context=None):
         """Resets case as Todo
         """
-        res = super(crm_phonecall, self).case_reset(cr, uid, ids, args)
+        res = super(crm_phonecall, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'duration': 0.0, 'state':'open'})
+        self.open_notification(cr, uid, ids, context)
         return res
 
 
-    def case_open(self, cr, uid, ids, *args):
+    def case_open(self, cr, uid, ids, context=None):
         """Overrides cancel for crm_case for setting Open Date
         """
-        res = super(crm_phonecall, self).case_open(cr, uid, ids, *args)
+        res = super(crm_phonecall, self).case_open(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.open_notification(cr, uid, ids, context)
         return res
 
     def schedule_another_phonecall(self, cr, uid, ids, schedule_time, call_summary, \

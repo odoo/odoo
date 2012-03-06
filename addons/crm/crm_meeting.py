@@ -42,7 +42,7 @@ class crm_meeting(crm_base, osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = "calendar.event"
+    _inherit = ["calendar.event","mail.thread"]
     _columns = {
         # From crm.case
         'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),
@@ -87,15 +87,37 @@ class crm_meeting(crm_base, osv.osv):
 
     def _case_opportunity_meeting_notification(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
-
+        phonecall_obj = self.pool.get('crm.phonecall')
         for obj in self.browse(cr, uid, ids, context=context):
             if(obj.opportunity_id.id):
                 newid = obj.opportunity_id.id
-                message = _("<b>scheduled for meeting</b> %s.") % (obj.date)
+                message = _("<b>scheduled meeting on</b> %s for opportunity.") % (obj.date)
                 for lead in lead_obj.browse(cr, uid, [newid], context=context):
                     lead.message_append_note('', message)
+                    obj.message_append_note('', message, need_action_user_id=lead.user_id.id)
+            elif(obj.phonecall_id.id):
+                newid = obj.phonecall_id.id
+                message = _("<b>scheduled meeting on</b> %s for phonecall.") % (obj.date)
+                for phonecall in phonecall_obj.browse(cr, uid, [newid], context=context):
+                    phonecall.message_append_note('', message)
+                    obj.message_append_note('', message, need_action_user_id=phonecall.user_id.id)
 
-    def case_open(self, cr, uid, ids, *args):
+    def _case_close_notification(self, meeting, context=None):
+        meeting[0].message_mark_done(context)
+        message = _("The meeting is <b>done</b>.")
+        meeting[0].message_append_note('' ,message)
+
+    def _case_reset_notification(self, meeting, context=None):
+        message = _("The meeting is <b>unconfirmed</b>.")
+        meeting[0].message_append_note('' ,message)
+
+    def _case_open_notification(self, meeting, context=None):
+        if meeting.state != 'draft':
+            return False
+        message = _("The meeting has been <b>confirmed</b>.")
+        meeting.message_append_note('' ,message, need_action_user_id=meeting.user_id.id)
+
+    def case_open(self, cr, uid, ids, context=None):
         """Confirms meeting
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -103,11 +125,9 @@ class crm_meeting(crm_base, osv.osv):
         @param ids: List of Meeting Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(crm_meeting, self).case_open(cr, uid, ids, args)
+        res = super(crm_meeting, self).case_open(cr, uid, ids, context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The meeting '%s' has been confirmed.") % name
             id=base_calendar.base_calendar_id2real_id(id)
-            self.log(cr, uid, id, message)
         return res
 
 crm_meeting()
