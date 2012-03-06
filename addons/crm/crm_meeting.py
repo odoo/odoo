@@ -101,6 +101,9 @@ class crm_meeting(crm_base, osv.osv):
                 for phonecall in phonecall_obj.browse(cr, uid, [newid], context=context):
                     phonecall.message_append_note('', message)
                     obj.message_append_note('', message, need_action_user_id=phonecall.user_id.id)
+            else:
+                message = _("<b>scheduled meeting on</b> %s.") % (obj.date)
+                obj.message_append_note('', message, need_action_user_id=obj.user_id.id)
 
     def _case_close_notification(self, meeting, context=None):
         meeting[0].message_mark_done(context)
