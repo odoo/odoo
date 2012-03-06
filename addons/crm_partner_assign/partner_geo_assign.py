@@ -89,14 +89,11 @@ class res_partner(osv.osv):
     }
     def geo_localize(self, cr, uid, ids, context=None):
         for partner in self.browse(cr, uid, ids, context=context):
-            if not partner.address:
-                continue
-            contact = partner.address[0] #TOFIX: should be get latitude and longitude for default contact?
             addr = ', '.join(filter(None, [
-                    contact.street, 
-                    "%s %s" % (contact.zip , contact.city), 
-                    contact.state_id and contact.state_id.name, 
-                    contact.country_id and contact.country_id.name]))
+                    partner.street, 
+                    "%s %s" % (partner.zip , partner.city), 
+                    partner.state_id and partner.state_id.name, 
+                    partner.country_id and partner.country_id.name]))
             result = geo_find(tools.ustr(addr))
             if result:
                 self.write(cr, uid, [partner.id], {
@@ -192,7 +189,7 @@ class crm_lead(osv.osv):
                     ('partner_weight', '>', 0),
                     ('partner_latitude', '>', latitude - 2), ('partner_latitude', '<', latitude + 2),
                     ('partner_longitude', '>', longitude - 1.5), ('partner_longitude', '<', longitude + 1.5),
-                    ('country', '=', lead.country_id.id),
+                    ('country_id', '=', lead.country_id.id),
                 ], context=context)
 
                 # 2. second way: in the same country, big area
@@ -201,7 +198,7 @@ class crm_lead(osv.osv):
                         ('partner_weight', '>', 0),
                         ('partner_latitude', '>', latitude - 4), ('partner_latitude', '<', latitude + 4),
                         ('partner_longitude', '>', longitude - 3), ('partner_longitude', '<' , longitude + 3),
-                        ('country', '=', lead.country_id.id),
+                        ('country_id', '=', lead.country_id.id),
                     ], context=context)
 
 
@@ -210,7 +207,7 @@ class crm_lead(osv.osv):
                     # still haven't found any, let's take all partners in the country!
                     partner_ids = res_partner.search(cr, uid, [
                         ('partner_weight', '>', 0),
-                        ('country', '=', lead.country_id.id),
+                        ('country_id', '=', lead.country_id.id),
                     ], context=context)
 
                 # 6. sixth way: closest partner whatsoever, just to have at least one result
