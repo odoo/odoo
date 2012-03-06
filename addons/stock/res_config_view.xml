@@ -9,38 +9,38 @@
             <field name="arch" type="xml">
             <form position ="replace">
 	            <form string ="Warehouse Application">
-		            <separator string="traceability" colspan="4"/>
+		            <separator string="Traceability" colspan="4"/>
                     <group  colspan="4" col="4">
                         <newline/>
-                        <field name=""/>
+                        <field name="group_stock_production_lot"/>
                         <newline/>
-                        <field name=""/>
+                        <field name="group_stock_tracking_lot"/>
                         <newline/>
-                        <field name=""/>
+                        <field name="module_product_expiry"/>
                     </group>
 
 		            <separator string="Logistic" colspan="4"/>
                     <group  colspan="4" col="4">
                         <newline/>
-                        <field name=""/>
+                        <field name="module_stock_no_autopicking"/>
                         <newline/>
-                        <field name=""/>
+                        <field name="module_stock_invoice_directly"/>
                         <newline/>
                     </group>
 
-                    <separator string="projects" colspan="4"/>
+                    <separator string="Products" colspan="4"/>
                     <group colspan="4" col="8">
                         <group  colspan="4" col="4">
-                           <field name=""/>
+                           <field name="group_stock_packaging"/>
                            <newline/>
-                           <field name=""/>
+                           <field name="group_stock_uom"/>
                            <newline/>
                         </group>
                         <group colspan="4" col="4">
                             <newline/>
-                            <field name=""/>
+                            <field name="group_stock_inventory_valuation"/>
                             <newline/>
-                            <field name=""/>
+                            <field name="group_stock_counterpart_location"/>
                             <newline/>
                         </group>
                     </group>
@@ -48,9 +48,9 @@
 		            <separator string="Partners" colspan="4"/>
                     <group  colspan="4" col="4">
                         <newline/>
-	                    <field name=""/>
+	                    <field name="group_stock_inventory_properties"/>
 	                    <newline/>
-	                    <field name=""/>
+	                    <field name="module_claim_from_delivery"/>
 	                    <newline/>
                     </group>
 
