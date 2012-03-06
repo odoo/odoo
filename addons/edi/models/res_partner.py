@@ -25,27 +25,11 @@ from edi import EDIMixin
 from openerp import SUPERUSER_ID
 from tools.translate import _
 
-RES_PARTNER_ADDRESS_EDI_STRUCT = {
-    'name': True,
-    'email': True,
-    'street': True,
-    'street2': True,
-    'zip': True,
-    'city': True,
-    'country_id': True,
-    'state_id': True,
-    'phone': True,
-    'fax': True,
-    'mobile': True,
-}
-
 RES_PARTNER_EDI_STRUCT = {
     'name': True,
     'ref': True,
     'lang': True,
     'website': True,
-#    'address': RES_PARTNER_ADDRESS_EDI_STRUCT
-#    'name': True,
     'email': True,
     'street': True,
     'street2': True,
@@ -92,7 +76,7 @@ class res_partner(osv.osv, EDIMixin):
         if edi_bank_ids:
             contacts = self.browse(cr, uid, contact_id, context=context)
             import_ctx = dict((context or {}),
-                              default_partner_id=contacts.id,
+                              default_partner_id=contacts.parent_id.id,
                               default_state=self._get_bank_type(cr, uid, context))
             for ext_bank_id, bank_name in edi_bank_ids:
                 try:

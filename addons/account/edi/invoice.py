@@ -141,7 +141,7 @@ class account_invoice(osv.osv, EDIMixin):
 
         # imported company_address = new partner address
         address_info = edi_document.pop('company_address')
-        address_info['partner_id'] = (src_company_id, src_company_name)
+        address_info['parent_id'] = (src_company_id, src_company_name)
         address_info['type'] = 'invoice'
         address_id = res_partner.edi_import(cr, uid, address_info, context=context)
 
