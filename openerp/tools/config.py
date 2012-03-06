@@ -168,13 +168,10 @@ class configmanager(object):
                          help="Launch a YML test file.")
         group.add_option("--test-report-directory", dest="test_report_directory", my_default=False,
                          help="If set, will save sample of all reports in this directory.")
-        group.add_option("--test-disable", action="store_true", dest="test_disable",
-                         my_default=False, help="Disable loading test files.")
+        group.add_option("--test-enable", action="store_true", dest="test_enable",
+                         my_default=False, help="Enable YAML and unit tests.")
         group.add_option("--test-commit", action="store_true", dest="test_commit",
-                         my_default=False, help="Commit database changes performed by tests.")
-        group.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
-                         my_default='error',
-                         help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
+                         my_default=False, help="Commit database changes performed by YAML or XML tests.")
         parser.add_option_group(group)
 
         # Logging Group
@@ -395,7 +392,7 @@ class configmanager(object):
             'debug_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs', 'proxy_mode',
-            'test_file', 'test_disable', 'test_commit', 'test_report_directory',
+            'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads',
             'virtual_memory_limit', 'virtual_memory_reset', 'cpu_time_limit', 'unaccent',
         ]
@@ -407,11 +404,6 @@ class configmanager(object):
             # ... or keep, but cast, the config file value.
             elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
-
-        if opt.assert_exit_level:
-            self.options['assert_exit_level'] = self._LOGLEVELS[opt.assert_exit_level]
-        else:
-            self.options['assert_exit_level'] = self._LOGLEVELS.get(self.options['assert_exit_level']) or int(self.options['assert_exit_level'])
 
         self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.dirname(openerp.__file__))))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
@@ -582,7 +574,7 @@ class configmanager(object):
                 continue
             if opt in self.blacklist_for_save:
                 continue
-            if opt in ('log_level', 'assert_exit_level'):
+            if opt in ('log_level',):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
             else:
                 p.set('options', opt, self.options[opt])

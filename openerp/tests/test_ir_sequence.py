@@ -16,11 +16,6 @@ import common
 DB = common.DB
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
-def setUpModule():
-    common.create_xmlrpc_proxies()
-
-tearDownModule = common.tearDownModule
-
 def registry(model):
     return openerp.modules.registry.RegistryManager.get(DB)[model]
 
@@ -174,8 +169,7 @@ class test_ir_sequence_generate(unittest2.TestCase):
     def test_ir_sequence_create_no_gap(self):
         """ Try to create a sequence object. """
         cr = cursor()
-        d = dict(code='test_sequence_type_6', name='Test sequence type',
-            implementation='no_gap')
+        d = dict(code='test_sequence_type_6', name='Test sequence type')
         c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type_6', name='Test sequence')

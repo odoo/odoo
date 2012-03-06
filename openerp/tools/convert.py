@@ -30,6 +30,8 @@ import re
 import time
 import openerp.release as release
 
+import assertion_report
+
 _logger = logging.getLogger(__name__)
 
 try:
@@ -199,35 +201,6 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
 escape_re = re.compile(r'(?<!\\)/')
 def escape(x):
     return x.replace('\\/', '/')
-
-class assertion_report(object):
-    def __init__(self):
-        self._report = {}
-
-    def record_assertion(self, success, severity):
-        """
-            Records the result of an assertion for the failed/success count
-            returns success
-        """
-        if severity in self._report:
-            self._report[severity][success] += 1
-        else:
-            self._report[severity] = {success:1, not success: 0}
-        return success
-
-    def get_report(self):
-        return self._report
-
-    def __str__(self):
-        res = '\nAssertions report:\nLevel\tsuccess\tfailed\n'
-        success = failed = 0
-        for sev in self._report:
-            res += sev + '\t' + str(self._report[sev][True]) + '\t' + str(self._report[sev][False]) + '\n'
-            success += self._report[sev][True]
-            failed += self._report[sev][False]
-        res += 'total\t' + str(success) + '\t' + str(failed) + '\n'
-        res += 'end of report (' + str(success + failed) + ' assertion(s) checked)'
-        return res
 
 class xml_import(object):
     @staticmethod
@@ -712,7 +685,6 @@ form: module.record_id""" % (xml_id,)
         rec_src = rec.get("search",'').encode('utf8')
         rec_src_count = rec.get("count")
 
-        severity = rec.get("severity",'').encode('ascii') or loglevels.LOG_ERROR
         rec_string = rec.get("string",'').encode('utf8') or 'unknown'
 
         ids = None
@@ -727,17 +699,13 @@ form: module.record_id""" % (xml_id,)
             if rec_src_count:
                 count = int(rec_src_count)
                 if len(ids) != count:
-                    self.assert_report.record_assertion(False, severity)
+                    self.assertion_report.record_failure()
                     msg = 'assertion "%s" failed!\n'    \
                           ' Incorrect search count:\n'  \
                           ' expected count: %d\n'       \
                           ' obtained count: %d\n'       \
                           % (rec_string, count, len(ids))
-                    sevval = getattr(logging, severity.upper())
-                    _logger.log(sevval, msg)
-                    if sevval >= config['assert_exit_level']:
-                        # TODO: define a dedicated exception
-                        raise Exception('Severe assertion failure')
+                    _logger.error(msg)
                     return
 
         assert ids is not None,\
@@ -759,20 +727,16 @@ form: module.record_id""" % (xml_id,)
                 expected_value = _eval_xml(self, test, self.pool, cr, uid, self.idref, context=context) or True
                 expression_value = unsafe_eval(f_expr, globals_dict)
                 if expression_value != expected_value: # assertion failed
-                    self.assert_report.record_assertion(False, severity)
+                    self.assertion_report.record_failure()
                     msg = 'assertion "%s" failed!\n'    \
                           ' xmltag: %s\n'               \
                           ' expected value: %r\n'       \
                           ' obtained value: %r\n'       \
                           % (rec_string, etree.tostring(test), expected_value, expression_value)
-                    sevval = getattr(logging, severity.upper())
-                    _logger.log(sevval, msg)
-                    if sevval >= config['assert_exit_level']:
-                        # TODO: define a dedicated exception
-                        raise Exception('Severe assertion failure')
+                    _logger.error(msg)
                     return
         else: # all tests were successful for this assertion tag (no break)
-            self.assert_report.record_assertion(True, severity)
+            self.assertion_report.record_success()
 
     def _tag_record(self, cr, rec, data_node=None):
         rec_model = rec.get("model").encode('ascii')
@@ -906,8 +870,8 @@ form: module.record_id""" % (xml_id,)
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
         if report is None:
-            report = assertion_report()
-        self.assert_report = report
+            report = assertion_report.assertion_report()
+        self.assertion_report = report
         self.noupdate = noupdate
         self._tags = {
             'menuitem': self._tag_menuitem,
