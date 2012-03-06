@@ -110,9 +110,10 @@ class crm_meeting(crm_base, osv.osv):
         message = _("The meeting is <b>done</b>.")
         meeting[0].message_append_note('' ,message)
 
-    def _case_reset_notification(self, meeting, context=None):
-        message = _("The meeting is <b>unconfirmed</b>.")
-        meeting[0].message_append_note('' ,message)
+    def _case_reset_notification(self,  cr, uid, ids, context=None):
+        for meeting in self.browse(cr, uid, ids, context=context):
+            message = _("The lead is <b>renew</b>.")
+            meeting.message_append_note('' ,message, need_action_user_id=meeting.user_id.id)
 
     def _case_open_notification(self, meeting, context=None):
         if meeting.state != 'draft':

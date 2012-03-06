@@ -271,6 +271,14 @@ class crm_lead(crm_case, osv.osv):
     def stage_find_won(self, cr, uid, section_id):
         return self.stage_find_percent(cr, uid, 100.0, section_id)
 
+    def _case_reset_notification(self,  cr, uid, ids, context=None):
+        for lead in self.browse(cr, uid, ids, context=context):
+            if lead.type == 'lead':
+                message = _("The lead is <b>renewed</b>.")
+            elif lead.type == 'opportunity':
+                message = _("The opportunity is <b>renewed</b>.")
+            lead.message_append_note('' ,message, need_action_user_id=lead.user_id.id)
+
     def _case_create_notification(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
@@ -333,13 +341,6 @@ class crm_lead(crm_case, osv.osv):
     def _case_escalate_notification(self, case, context=None):
         message = _("The lead is <b>escalated</b>.")
         case.message_append_note('' ,message)
-
-    def _case_reset_notification(self, case, context=None):
-        if case[0].type == 'lead':
-            message = _("The lead is <b>renewed</b>.")
-        elif case[0].type == 'opportunity':
-            message = _("The opportunity is <b>renewed</b>.")
-        case[0].message_append_note('' ,message, need_action_user_id=case[0].user_id.id)
 
     def _case_phonecall_notification(self, cr, uid, ids, case, phonecall, action, context=None):
         for obj in phonecall.browse(cr, uid, ids, context=context):
