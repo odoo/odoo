@@ -69,10 +69,10 @@ class mrp_configuration(osv.osv_memory):
         'module_mrp_operations': fields.boolean("Track dates in work order operations",
                         help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
                         It installs the mrp_operations module."""),
-        'group_mrp_routings':fields.boolean("Manage manufacturing operations ",
+        'group_mrp_routings':fields.boolean("Manage manufacturing operations ",group='base.group_user', xml_id='base.group_mrp_routings',
                            help="""Routings allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials..
                            It assigns the "Routings" group to employee."""),
-        'group_mrp_properties':fields.boolean("Allow different properties per product in your order",
+        'group_mrp_properties':fields.boolean("Allow different properties per product in your order",group='base.group_user', xml_id='base.group_mrp_routings',
                            help="""Allows to Define specific property groups that can be assigned to the properties of your bill of materials.
                            It assigns the "Properties of Product" group to employee."""),
     }
