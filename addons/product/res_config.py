@@ -25,11 +25,11 @@ class product_groups_configuration(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'group_stock_packaging':fields.boolean("Manage packaging by products",group='base.group_user', xml_id='base.group_stock_packaging',
-                           help="""
+        'group_stock_packaging':fields.boolean("Manage packaging by products",group='base.group_user', implied_group='base.group_stock_packaging',
+                           help=""" Allows you to create and manage your packaging dimensions and types you want to be maintained in your system.
                            It assigns the "Packaging" group to employee."""),
-        'group_stock_uom':fields.boolean("Manage your stock counterpart by products",group='base.group_user', xml_id='base.group_stock_uom',
-                           help="""
+        'group_stock_uom':fields.boolean("Manage your stock counterpart by products",group='base.group_user', implied_group='base.group_stock_uom',
+                           help="""Allows you to create and manage the units of measure you want to be used in your system. You can define a conversion rate between several Units of Measure within the same category.
                            It assigns the "UOM in warehouse" group to employee."""),
 
 }

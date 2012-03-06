@@ -50,19 +50,20 @@ class warehouse_configuration(osv.osv_memory):
                         - removal date
                         - alert date
                         It installs the product_expiry module."""),
-        'group_stock_production_lot':fields.boolean("Track production lot",group='base.group_user', xml_id='base.group_stock_production_lot',
-                           help="""
+        'group_stock_production_lot':fields.boolean("Track production lot",group='base.group_user', implied_group='base.group_stock_production_lot',
+                           help="""This allows you to manage products produced by you using production lots (serial numbers).
+                            When you select a lot, you can get the upstream or downstream traceability of the products contained in lot.
                            It assigns the "Production Lots" group to employee."""),
-        'group_stock_tracking_lot':fields.boolean("Track lot of your incoming and outgoing products ",group='base.group_user', xml_id='base.group_stock_tracking_lot',
-                           help="""
+        'group_stock_tracking_lot':fields.boolean("Track lot of your incoming and outgoing products ",group='base.group_user', implied_group='base.group_stock_tracking_lot',
+                           help="""Allows you to get the upstream or downstream traceability of the products contained in lot.
                            It assigns the "Tracking lots" group to employee."""),
-        'group_stock_inventory_valuation':fields.boolean("Track inventory valuation by products ",group='base.group_user', xml_id='base.group_stock_inventory_valuation',
+        'group_stock_inventory_valuation':fields.boolean("Track inventory valuation by products ",group='base.group_user', implied_group='base.group_stock_inventory_valuation',
                            help="""
                            It assigns the "Inventory valuation" group to employee."""),
-        'group_stock_counterpart_location':fields.boolean("Manage your stock counterpart by products",group='base.group_user', xml_id='base.group_stock_counterpart_location',
+        'group_stock_counterpart_location':fields.boolean("Manage your stock counterpart by products",group='base.group_user', implied_group='base.group_stock_counterpart_location',
                            help="""
                            It assigns the "Counter-Part Locations" group to employee."""),
-        'group_stock_inventory_properties':fields.boolean("Define stock locations",group='base.group_user', xml_id='base.group_stock_inventory_properties',
+        'group_stock_inventory_properties':fields.boolean("Define stock locations",group='base.group_user', implied_group='base.group_stock_inventory_properties',
                            help=""".
                            It assigns the "" group to employee."""),
     }
