@@ -435,6 +435,50 @@ class Database(openerpweb.Controller):
                 return {'error': e.faultCode, 'title': 'Change Password'}
         return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
+def topological_sort(modules):
+    """ Return a list of module names sorted so that their dependencies of the
+    modules are listed before the module itself
+
+    modules is a dict of {module_name: dependencies}
+
+    :param modules: modules to sort
+    :type modules: dict
+    :returns: list(str)
+    """
+
+    dependencies = set(itertools.chain.from_iterable(modules.itervalues()))
+    # incoming edge: dependency on other module (if a depends on b, a has an
+    # incoming edge from b, aka there's an edge from b to a)
+    # outgoing edge: other module depending on this one
+
+    # [Tarjan 1976], http://en.wikipedia.org/wiki/Topological_sorting#Algorithms
+    #L ← Empty list that will contain the sorted nodes
+    L = []
+    #S ← Set of all nodes with no outgoing edges (modules on which no other
+    #    module depends)
+    S = set(module for module in modules if module not in dependencies)
+
+    visited = set()
+    #function visit(node n)
+    def visit(n):
+        #if n has not been visited yet then
+        if n not in visited:
+            #mark n as visited
+            visited.add(n)
+            #change: n not web module, can not be resolved, ignore
+            if n not in modules: return
+            #for each node m with an edge from m to n do (dependencies of n)
+            for m in modules[n]:
+                #visit(m)
+                visit(m)
+            #add n to L
+            L.append(n)
+    #for each node n in S do
+    for n in S:
+        #visit(n)
+        visit(n)
+    return L
+
 class Session(openerpweb.Controller):
     _cp_path = "/web/session"
 
@@ -502,35 +546,32 @@ class Session(openerpweb.Controller):
     def modules(self, req):
         # Compute available candidates module
         loadable = openerpweb.addons_manifest
-        loaded = req.config.server_wide_modules
+        loaded = set(req.config.server_wide_modules)
         candidates = [mod for mod in loadable if mod not in loaded]
 
+        # already installed modules have no dependencies
+        modules = dict.fromkeys(loaded, [])
+
         # Compute active true modules that might be on the web side only
-        modules = dict((name, openerpweb.addons_manifest[name].get('depends', []))
+        modules.update((name, openerpweb.addons_manifest[name].get('depends', []))
                       for name in candidates
                       if openerpweb.addons_manifest[name].get('active'))
 
         # Retrieve database installed modules
         Modules = req.session.model('ir.module.module')
-        modules.update((module['name'], module.get('depends',  []))
-             for module in Modules.search_read(
-                [('state','=','installed'), ('name','in', candidates)],
-                ['name', 'depends']))
+        for module in Modules.search_read(
+                        [('state','=','installed'), ('name','in', candidates)],
+                        ['name', 'dependencies_id']):
+            deps = module.get('dependencies_id')
+            if deps:
+                dependencies = map(
+                    operator.itemgetter('name'),
+                    req.session.model('ir.module.module.dependency').read(deps, ['name']))
+                modules[module['name']] = list(
+                    set(modules.get(module['name'], []) + dependencies))
 
-        ordered_mods = []
-        def insert(module):
-            # already inserted
-            if module in ordered_mods: return
-            # should be preloaded
-            if module not in modules: return
-            for name in modules[module]:
-                insert(name)
-            ordered_mods.append(module)
-
-        for name in modules:
-            insert(name)
-
-        return ordered_mods
+        sorted_modules = topological_sort(modules)
+        return [module for module in sorted_modules if module not in loaded]
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
