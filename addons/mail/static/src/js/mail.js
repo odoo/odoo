@@ -50,6 +50,7 @@ openerp.mail = function(session) {
             this.params.records = this.params.records || null;
             /* DataSets and internal vars */
             this.map_hash = {};
+            this.sorted_comments = {'root_ids': [], 'root_id_msg_list': {}};
             this.display_show_more = true;
             this.ds = new session.web.DataSet(this, this.params.res_model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
@@ -93,31 +94,30 @@ openerp.mail = function(session) {
         init_comments: function() {
             var self = this;
             this.params.offset = 0;
+            this.sorted_comments = {'root_ids': [], 'root_id_msg_list': {}};
             this.$element.find('div.oe_mail_thread_display').empty();
             return this.fetch_comments(this.params.limit, this.params.offset).then();
         },
         
-        fetch_comments: function (limit, offset) {
+        fetch_comments: function (limit, offset, domain) {
             var self = this;
-            var defer = this.ds.call('message_load', [[this.params.res_id], limit=(limit||this.params.limit), offset=(offset||this.params.offset)]);
+            var defer = this.ds.call('message_load', [[this.params.res_id], limit=(limit||this.params.limit), offset=(offset||this.params.offset), domain=(domain||[]) ]);
             $.when(defer).then(function (records) {
-                if (records.length < self.params.limit) self.params.thread_show_more = false;
+                if (records.length < self.params.limit) self.display_show_more = false;
                 self.display_comments(records);
-                if (self.params.thread_show_more == true) {
-                    self.$element.find('button.oe_mail_button_more').show();
-                    self.$element.find('p.oe_mail_p_nomore').hide(); }
-                else {
-                    self.$element.find('button.oe_mail_button_more').hide();
-                    self.$element.find('p.oe_mail_p_nomore').show(); }
+                if (self.display_show_more == false) {
+                    self.$element.find('button.oe_mail_button_more:last').hide();
+                    self.$element.find('p.oe_mail_p_nomore:last').show(); }
                 });
             return defer;
         },
 
         display_comments: function (records) {
             var self = this;
-            var sorted_comments = this.sort_comments(records);
-            this.sorted_comments = sorted_comments;
-            
+            if (this.params.thread_level > 0) {
+                this.sc = this.sort_comments(records);
+            }
+        
             /* WIP: map matched regexp -> records to browse with name */
             //_(records).each(function (record) {
                 //self.do_check_internal_links(record.body_text);
@@ -126,7 +126,7 @@ openerp.mail = function(session) {
             _(records).each(function (record) {
                 var sub_msgs = [];
                 if ((record.parent_id == false || record.parent_id[0] == self.params.parent_id) && self.params.thread_level > 0 ) {
-                    var sub_list = self.sorted_comments['root_id_msg_list'][record.id];
+                    var sub_list = self.sc['root_id_msg_list'][record.id];
                     _(records).each(function (record) {
                         if (record.parent_id == false || record.parent_id[0] == self.params.parent_id) return;
                         if (_.indexOf(_.pluck(sub_list, 'id'), record.id) != -1) {
@@ -144,7 +144,7 @@ openerp.mail = function(session) {
                 }
             });
             // update offset for "More" buttons
-            this.params.offset += records.length;
+            if (this.params.thread_level == 0) this.params.offset += records.length;
         },
 
         /**
@@ -190,6 +190,7 @@ openerp.mail = function(session) {
                     if ( (record.parent_id == false || record.parent_id[0] == self.params.parent_id) && (_.indexOf(sc['root_id_list'], record.id) == -1)) {
                         sc['root_id_list'].push(record.id);
                         sc['root_id_msg_list'][record.id] = [];
+                        self.sorted_comments['root_ids'].push(record.id);
                         modif = true;
                     } 
                     else {
@@ -209,6 +210,7 @@ openerp.mail = function(session) {
                 var root_id = sc['id_to_root'][record.id];
                 if (! root_id) return;
                 sc['root_id_msg_list'][root_id].push(record);
+                //self.sorted_comments['root_id_msg_list'][root_id].push(record.id);
             });
             return sc;
         },
@@ -226,8 +228,46 @@ openerp.mail = function(session) {
                 //this.proxy('init_comments'));
         },
         
+        /**
+         * Create a domain to fetch new comments according to
+         * comment already present in sorted_comments
+         * @param {Object} sorted_comments (see sort_comments)
+         * @returns {Array} fetch_domain (OpenERP domain style)
+         */
+        get_fetch_domain: function (sorted_comments) {
+            var domain = [];
+            var ids = [];
+            var dis2 = [];
+            if (this.params.parent_id) {
+                domain.push(['id', 'child_of', this.params.parent_id]);
+            }
+            _(sorted_comments.root_ids).each(function (id) { // each record
+                ids.push(id);
+                dis2.push(id);
+            });
+            
+            if (ids.length > 0) {
+                domain.push('&');
+                domain.push('!');
+                domain.push(['id', 'child_of', ids]);
+            }
+            if (this.params.parent_id != false) {
+                dis2.push(this.params.parent_id);
+            }
+            if (dis2.length > 0) {
+                domain.push(['id', 'not in', dis2]);
+            }
+            
+            
+            return domain;
+        },
+        
         do_more: function () {
-            return this.fetch_comments(this.params.limit, this.params.offset);
+            domain = this.get_fetch_domain(this.sorted_comments);
+            console.log(domain);
+            console.log(this.params.limit + '-' + this.params.offset + '-' + this.params.parent_id + '-' + this.params.res_id);
+            //return true;
+            return this.fetch_comments(this.params.limit, this.params.offset, domain);
         },
         
         do_replace_internal_links: function (string) {
@@ -519,6 +559,7 @@ openerp.mail = function(session) {
          */
         display_comments: function (records) {
             var sorted_comments = this.sort_comments(records);
+            console.log(sorted_comments);
             var self = this;
             _(sorted_comments.model_list).each(function (model_name) {
                 _(sorted_comments.models[model_name].root_ids).each(function (id) {
@@ -527,7 +568,7 @@ openerp.mail = function(session) {
                     var render_res = session.web.qweb.render(template, {});
                     $('<div class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('div.oe_mail_wall_threads'));
                     var thread = new mail.Thread(self, {
-                        'res_model': model_name, 'res_id': parseInt(id), 'uid': self.session.uid, 'records': records,
+                        'res_model': model_name, 'res_id': records[0]['res_id'], 'uid': self.session.uid, 'records': records,
                         'parent_id': false, 'thread_level': 2}
                         );
                     thread.appendTo(self.$element.find('div.oe_mail_wall_thread_content:last'));
