@@ -251,6 +251,21 @@ class ir_values(osv.osv):
             'company_id': company_id,
         })
 
+    def get_default(self, cr, uid, model, field_name, for_all_users=True, company_id=False, condition=False):
+        """ Return the default value defined for model, field_name, users, company and condition.
+            Return ``None`` if no such default exists.
+        """
+        search_criteria = [
+            ('key', '=', 'default'),
+            ('key2', '=', condition and condition[:200]),
+            ('model', '=', model),
+            ('name', '=', field_name),
+            ('user_id', '=', False if for_all_users else uid),
+            ('company_id','=', company_id)
+            ]
+        defaults = self.browse(cr, uid, self.search(cr, uid, search_criteria))
+        return pickle.loads(defaults[0].value.encode('utf-8')) if defaults else None
+
     def get_defaults(self, cr, uid, model, condition=False):
         """Returns any default values that are defined for the current model and user,
            (and match ``condition``, if specified), previously registered via
