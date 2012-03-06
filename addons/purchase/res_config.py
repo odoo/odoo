@@ -47,8 +47,8 @@ class purchase_configuration(osv.osv_memory):
                             * Manufacturer
                             * Manufacturer Product Name
                             * Manufacturer Product Code
-                            * Product Attributes
-                        .It installs the product_manufacturer module."""),
+                            * Product Attributes.
+                        It installs the product_manufacturer module."""),
         'module_purchase_double_validation': fields.boolean("Configure Limit amount",
                         help="""This allows you double-validation for purchases exceeding minimum amount.
                         It installs the purchase_double_validation module."""),

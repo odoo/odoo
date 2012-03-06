@@ -1,50 +1,47 @@
 <openerp>
     <data>
 
-        <record id="view_purchase_config" model="ir.ui.view">
+        <record id="view_purchase_configuration" model="ir.ui.view">
             <field name="name">Purchase Application</field>
             <field name="model">res.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_res_config_settings"/>
             <field name="arch" type="xml">
-            <form position ="replace">
-	            <form string ="Purchase Application">
-		            <separator string="Default Invoicing Control" colspan="4"/>
-		            <group  colspan="4" col="4">
-		                <field name="default_method"/>
-		            </group>
+            <form string="Purchase Application">
+	            <separator string="Default Invoicing Control" colspan="4"/>
+	            <group  colspan="4" col="4">
+	                <field name="default_method"/>
+	            </group>
 
-		            <separator string="Purchase Order" colspan="4"/>
-		            <group colspan="4" col="8" name="Purchase_order">
-		                <group  colspan="4" col="4">
-		                   <field name="group_purchase_pricelist_per_supplier"/>
-		                   <newline/>
-		                   <!--group col="2" colspan="1">
-		                        <field name="tax_policy" on_change="onchange_tax_policy(tax_policy)"/>
-		                   </group-->
-		                   <newline/>
-		                   <field name="module_warning"/>
-		                   <newline/>
-		                   <field name="module_purchase_analytic_plans"/>
-		                   <newline/>
-		                </group>
-		                <group colspan="4" col="4">
-		                    <newline/>
-		                    <field name="group_purchase_uom_per_product"/>
-		                    <newline/>
-		                    <field name="module_purchase_double_validation"/>
-		                    <newline/>
-		                    <field name="module_purchase_requisition"/>
-		                    <newline/>
-		                </group>
-		            </group>
-
-		            <separator string="Products" colspan="4"/>
+	            <separator string="Purchase Order" colspan="4"/>
+	            <group colspan="4" col="8" name="Purchase_order">
 	                <group  colspan="4" col="4">
-	                    <field name="module_product_manufacturer"/>
+	                   <field name="group_purchase_pricelist_per_supplier"/>
+	                   <newline/>
+	                   <!--group col="2" colspan="1">
+	                        <field name="tax_policy" on_change="onchange_tax_policy(tax_policy)"/>
+	                   </group-->
+	                   <newline/>
+	                   <field name="module_warning"/>
+	                   <newline/>
+	                   <field name="module_purchase_analytic_plans"/>
+	                   <newline/>
 	                </group>
-	                </form>
-                </form>
+	                <group colspan="4" col="4">
+	                    <newline/>
+	                    <field name="group_purchase_uom_per_product"/>
+	                    <newline/>
+	                    <field name="module_purchase_double_validation"/>
+	                    <newline/>
+	                    <field name="module_purchase_requisition"/>
+	                    <newline/>
+	                </group>
+	            </group>
+
+	            <separator string="Products" colspan="4"/>
+                <group  colspan="4" col="4">
+                    <field name="module_product_manufacturer"/>
+                </group>
+            </form>
             </field>
         </record>
 
@@ -52,12 +49,12 @@
             <field name="name">Configure Purchase Application</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.settings</field>
-            <field name="view_id" ref="view_purchase_config"/>
+            <field name="view_id" ref="view_purchase_configuration"/>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
         </record>
 
-        <menuitem id="base.menu_purchse_config" name="Purchase" parent="base.menu_config" sequence="1" action="purchase.action_purchase_configuration"/>
+        <menuitem id="menu_purchse_config" name="Purchase" parent="base.menu_config" sequence="1" action="action_purchase_configuration"/>
 
     </data>
 </openerp>

@@ -25,11 +25,11 @@ class product_groups_configuration(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'group_purchase_pricelist_per_supplier':fields.boolean("Pricelist per Supplier",
+        'group_purchase_pricelist_per_supplier':fields.boolean("Pricelist per Supplier",group='base.group_user', xml_id='base.group_purchase_pricelist_per_supplier',
                                                            help="""Allows to manage different prices based on rules per category of Supplier.
                                                            Example: 10% for retailers, promotion of 5 EUR on this product, etc.
                                                            It assigns the "Pricelist" group to all employees."""),
-        'group_purchase_uom_per_product':fields.boolean("UOM per purchase product",
+        'group_purchase_uom_per_product':fields.boolean("UOM per purchase product",group='base.group_user', xml_id='base.group_purchase_uom_per_product',
                                                     help="""
                                                     Allows you to select and maintain different unit of measures per product.
                                                     It assigns the "UOM per purchase product" group to all employees.
