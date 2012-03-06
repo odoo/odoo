@@ -2,25 +2,27 @@
 <openerp>
     <data>
 
-	<record model="account.account.type" id="user_type_receivable_en" >
-		<field name="name">Receivable</field>
-		<field name="code">receivable</field>
-		<field name="close_method">unreconciled</field>
-	</record>
-
-	<record model="account.account.type" id="user_type_payable_en" >
-		<field name="name">Payable</field>
-		<field name="code">payable</field>
-		<field name="close_method">unreconciled</field>
-	</record>
-
 	<record model="account.account.type" id="user_type_view_en">
 		<field name="name">View</field>
 		<field name="code">view</field>
 		<field name="close_method">none</field>
 	</record>
 
-	<record model="account.account.type" id="user_type_income_en" >
+	<record model="account.account.type" id="user_type_receivable_en">
+		<field name="name">Receivable</field>
+		<field name="code">receivable</field>
+		<field name="close_method">unreconciled</field>
+		<field name="report_type">asset</field>
+	</record>
+
+	<record model="account.account.type" id="user_type_payable_en">
+		<field name="name">Payable</field>
+		<field name="code">payable</field>
+		<field name="close_method">unreconciled</field>
+		<field name="report_type">liability</field>
+	</record>
+
+	<record model="account.account.type" id="user_type_income_en">
 		<field name="name">Income</field>
 		<field name="code">income</field>
 		<field name="close_method">none</field>
@@ -34,16 +36,18 @@
 		<field name="report_type">expense</field>
 	</record>
 
-	<record model="account.account.type" id="user_type_tax_en">
-		<field name="name">Tax</field>
-		<field name="code">tax</field>
-		<field name="close_method">unreconciled</field>
-	</record>
-
 	<record model="account.account.type" id="user_type_cash_en">
 		<field name="name">Cash</field>
 		<field name="code">cash</field>
 		<field name="close_method">balance</field>
+		<field name="report_type">asset</field>
+	</record>
+
+	<record model="account.account.type" id="user_type_bank_en">
+		<field name="name">Bank</field>
+		<field name="code">bank</field>
+		<field name="close_method">balance</field>
+		<field name="report_type">asset</field>
 	</record>
 
 	<record model="account.account.type" id="user_type_asset_en">
@@ -51,6 +55,13 @@
 		<field name="code">asset</field>
 		<field name="close_method">balance</field>
 		<field name="report_type">asset</field>
+	</record>
+
+	<record model="account.account.type" id="user_type_liability_en">
+		<field name="name">Liability</field>
+		<field name="code">liability</field>
+		<field name="report_type">liability</field>
+		<field name="close_method">balance</field>
 	</record>
 
 	<record model="account.account.type" id="user_type_equity_en">

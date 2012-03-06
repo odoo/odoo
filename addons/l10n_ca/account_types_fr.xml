@@ -8,57 +8,53 @@
 		<field name="close_method">none</field>
 	</record>
 
+	<record id="user_type_asset_fr" model="account.account.type">
+		<field name="name">Actif</field>
+		<field name="code">asset</field>
+		<field name="report_type">asset</field>
+		<field name="close_method">balance</field>
+	</record>
+
+	<record id="user_type_bank_fr" model="account.account.type">
+		<field name="name">Banque</field>
+		<field name="code">bank</field>
+		<field name="report_type">asset</field>
+		<field name="close_method">balance</field>
+	</record>
+
+	<record id="user_type_cash_fr" model="account.account.type">
+		<field name="name">Caisse</field>
+		<field name="code">cash</field>
+		<field name="report_type">asset</field>
+		<field name="close_method">balance</field>
+	</record>
+
+	<record id="user_type_liability_fr" model="account.account.type">
+		<field name="name">Passif</field>
+		<field name="code">liab</field>
+		<field name="report_type">liability</field>
+		<field name="close_method">balance</field>
+	</record>
+
 	<record id="user_type_capitaux_fr" model="account.account.type">
-		<field name="name">Capital</field>
+		<field name="name">Capitaux propres</field>
 		<field name="code">capital</field>
-		<field name="report_type">asset</field>
-		<field name="close_method">balance</field>
-	</record>
-
-	<record id="user_type_immo_fr" model="account.account.type">
-		<field name="name">Immobilisation</field>
-		<field name="code">immo</field>
-		<field name="report_type">asset</field>
-		<field name="close_method">balance</field>
-	</record>
-
-	<record id="user_type_stock_fr" model="account.account.type">
-		<field name="name">Stock et Encours</field>
-		<field name="code">stock</field>
-		<field name="report_type">asset</field>
-		<field name="close_method">balance</field>
-	</record>
-
-	<record id="user_type_tiers_fr" model="account.account.type">
-		<field name="name">Tiers</field>
-		<field name="code">tiers</field>
+		<field name="report_type">liability</field>
 		<field name="close_method">balance</field>
 	</record>
 
 	<record id="user_type_tiers_receiv_fr" model="account.account.type">
-		<field name="name">Tiers - Recevable</field>
-		<field name="code">tiers -rec</field>
+		<field name="name">Recevable</field>
+		<field name="code">receivable</field>
 		<field name="report_type">asset</field>
 		<field name="close_method">unreconciled</field>
 	</record>
 
 	<record id="user_type_tiers_payable_fr" model="account.account.type">
-		<field name="name">Tiers - Payable</field>
-		<field name="code">tiers - pay</field>
+		<field name="name">Payable</field>
+		<field name="code">payable</field>
 		<field name="report_type">liability</field>
 		<field name="close_method">unreconciled</field>
-	</record>
-
-	<record id="user_type_tax_fr" model="account.account.type">
-		<field name="name">Tax</field>
-		<field name="code">tax</field>
-		<field name="close_method">unreconciled</field>
-	</record>
-
-	<record id="user_type_financiers_fr" model="account.account.type">
-		<field name="name">Financier</field>
-		<field name="code">financier</field>
-		<field name="close_method">balance</field>
 	</record>
 
 	<record id="user_type_charge_fr" model="account.account.type">
