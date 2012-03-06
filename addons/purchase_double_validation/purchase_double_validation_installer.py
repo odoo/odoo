@@ -24,13 +24,13 @@ from osv import fields, osv
 class purchase_double_validation_installer(osv.osv_memory):
     _inherit = 'res.config.settings'
     _columns = {
-        'limit_amount': fields.integer('Maximum Purchase Amount', required=True, help="Maximum amount after which validation of purchase is required."),
+        'limit_amount': fields.integer('Maximum Purchase Amount', default_model='model.name',required=True, help="Maximum amount after which validation of purchase is required."),
     }
 
-    def get_default_installed_modules(self, cr, uid, ids, context=None):
+    def default_get(self, cr, uid, fields, context=None):
         data_obj = self.pool.get('ir.model.data')
         transition_obj = self.pool.get('workflow.transition')
-        installed_modules = super(purchase_double_validation_installer, self).get_default_installed_modules(cr, uid, ids, context=context)
+        installed_modules = super(purchase_double_validation_installer, self).default_get(cr, uid, fields, context=context)
         if installed_modules.get('module_purchase_double_validation'):
             tra_id = data_obj.get_object(cr, uid, 'purchase_double_validation', 'trans_waiting_confirmed')
             condition = transition_obj.browse(cr, uid, tra_id.id).condition
@@ -44,7 +44,7 @@ class purchase_double_validation_installer(osv.osv_memory):
 
     def execute(self, cr, uid, ids, vals, context=None):
         data = self.read(cr, uid, ids, context=context)
-        super(purchase_double_validation_installer, self).execute(cr, uid, ids, vals, context=context)
+        super(purchase_double_validation_installer, self).execute(cr, uid, ids, vals)
         if not data:
             return {}
         amt = data[0]['limit_amount']
