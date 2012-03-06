@@ -10,12 +10,15 @@
             <field name="inherit_id" ref="base.view_users_form" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <group name="default_filters" position="inside">
-                    <field name="context_model_id"/>
-                    <field name='context_gdocs_resource_id'/>
-                    <field name='context_name'/>
-                    <field name='context_name_template'/>
-                </group>
+                <field name="signature" position="after">
+                    <group colspan='4'>
+                        <separator string='Google Docs Config' colspan='4'/>
+                        <field name="context_model_id"/>
+                        <field name='context_gdocs_resource_id'/>
+                        <field name='context_name'/>
+                        <field name='context_name_template'/>
+                    </group>
+                </field>
             </field>
         </record>
     </data>
