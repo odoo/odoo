@@ -476,9 +476,11 @@ openerp.web.DataGroup =  openerp.web.OldWidget.extend( /** @lends openerp.web.Da
                     .group_by(this.group_by)).then(function (groups) {
             if (!groups) {
                 ifRecords(_.extend(
-                    new openerp.web.DataSetSearch(self, self.model.name),
-                    {domain: self.model.domain(), context: self.model.context(),
-                     _sort: self.sort}));
+                    new openerp.web.DataSetSearch(
+                            self, self.model.name,
+                            self.model.context(),
+                            self.model.domain()),
+                    {_sort: self.sort}));
                 return;
             }
             ifGroups(_(groups).map(function (group) {
