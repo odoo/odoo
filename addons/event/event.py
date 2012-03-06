@@ -148,8 +148,30 @@ class event_event(osv.osv):
                     number = reg_done
                 elif field == 'register_prospect':
                     number = reg_draft
+                elif field == 'register_avail':
+                    number = event.register_max-reg_open
                 res[event.id][field] = number
         return res
+    
+    def _subscribe_fnc(self, cr, uid, ids, fields, args, context=None):
+        """Get Confirm or uncofirm register value.
+        @param ids: List of Event registration type's id
+        @param fields: List of function fields(register_current and register_prospect).
+        @param context: A standard dictionary for contextual values
+        @return: Dictionary of function fields value.
+        """
+        register_pool = self.pool.get('event.registration')
+        res = {}
+        for event in self.browse(cr, uid, ids, context=context):
+            curr_reg_id = register_pool.search(cr,uid,[('user_id','=',uid),('event_id','=',event.id)])
+            if not curr_reg_id:res[event.id] = False
+            if curr_reg_id:
+                for reg in register_pool.browse(cr,uid,curr_reg_id,context=context):
+                    if not reg.subscribe:
+                        res[event.id]=False
+                    else:
+                        res[event.id]=True
+        return res 
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
@@ -158,6 +180,7 @@ class event_event(osv.osv):
         'register_max': fields.integer('Maximum Registrations', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
         'register_min': fields.integer('Minimum Registrations', help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
         'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_numbers'),
+        'register_avail': fields.function(_get_register, string='Available Registrations', multi='register_numbers',type='integer'),
         'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_numbers'),
         'register_attended': fields.function(_get_register, string='Attended Registrations', multi='register_numbers'), 
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
@@ -182,6 +205,7 @@ class event_event(osv.osv):
                     type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}),
         'note': fields.text('Description', readonly=False, states={'done': [('readonly', True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
+        'subscribe' : fields.function(_subscribe_fnc, type="boolean", string='Subscribe'),
     }
 
     _defaults = {
@@ -189,6 +213,33 @@ class event_event(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
     }
+    
+    def subscribe_to_event(self,cr,uid,ids,context=None):
+        register_pool = self.pool.get('event.registration')
+        curr_reg_id = register_pool.search(cr,uid,[('user_id','=',uid),('event_id','=',ids[0])])
+        if not curr_reg_id:
+            register_pool.create(cr, uid, {'state':'open',
+                                           'event_id':ids[0],
+                                           'subscribe':True,
+                                           })
+        else:
+            register_pool.write(cr, uid, curr_reg_id,{'state':'open','subscribe':True,
+                            'event_id':ids[0],
+                            })
+        
+        self.write(cr,uid,ids,{'subscribe':True})
+        return True
+    
+    def unsubscribe_to_event(self,cr,uid,ids,context=None):
+        register_pool = self.pool.get('event.registration')
+        curr_reg_id = register_pool.search(cr,uid,[('user_id','=',uid),('event_id','=',ids[0])])
+        if curr_reg_id:
+            register_pool.write(cr, uid, curr_reg_id,{'state':'draft',
+                                                      'event_id':ids[0],
+                                                      'subscribe':False
+                                                     })
+        self.write(cr,uid,ids,{'subscribe':False})
+        return True
 
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
@@ -239,7 +290,8 @@ class event_registration(osv.osv):
                                     ('open', 'Confirmed'),
                                     ('cancel', 'Cancelled'),
                                     ('done', 'Attended')], 'State',
-                                    size=16, readonly=True)
+                                    size=16, readonly=True),
+        'subscribe': fields.boolean('Subscribe'),
     }
 
     _defaults = {
