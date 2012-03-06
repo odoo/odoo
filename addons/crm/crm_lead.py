@@ -380,6 +380,7 @@ class crm_lead(crm_case, osv.osv):
         """
         res = super(crm_lead, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'stage_id': False, 'probability': 0.0})
+        self._case_reset_notification(cr, uid, ids, context=context)
         return res
 
     def case_mark_lost(self, cr, uid, ids, context=None):

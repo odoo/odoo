@@ -489,7 +489,6 @@ class crm_case(crm_base):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': state, 'active': True})
-        self._case_reset_notification(cr, uid, ids, context=context)
         self._action(cr, uid, cases, state)
         return True
 

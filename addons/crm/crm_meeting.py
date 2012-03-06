@@ -112,7 +112,7 @@ class crm_meeting(crm_base, osv.osv):
 
     def _case_reset_notification(self,  cr, uid, ids, context=None):
         for meeting in self.browse(cr, uid, ids, context=context):
-            message = _("The lead is <b>renew</b>.")
+            message = _("The meeting is <b>renewed</b>.")
             meeting.message_append_note('' ,message, need_action_user_id=meeting.user_id.id)
 
     def _case_open_notification(self, meeting, context=None):
