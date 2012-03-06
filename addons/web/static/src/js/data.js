@@ -185,6 +185,7 @@ openerp.web.Query = openerp.web.Class.extend({
      * @returns {openerp.web.Query}
      */
     order_by: function (fields) {
+        if (fields === undefined) { return this; }
         if (!(fields instanceof Array)) {
             fields = _.toArray(arguments);
         }
