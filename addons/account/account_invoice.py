@@ -394,7 +394,6 @@ class account_invoice(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,\
             date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         invoice_addr_id = False
-        contact_addr_id = False
         partner_payment_term = False
         acc_id = False
         bank_id = False
@@ -404,8 +403,7 @@ class account_invoice(osv.osv):
         if partner_id:
 
             opt.insert(0, ('id', partner_id))
-            res = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['contact', 'invoice'])
-            contact_addr_id = res['contact']
+            res = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['invoice'])
             invoice_addr_id = res['invoice']
             p = self.pool.get('res.partner').browse(cr, uid, partner_id)
             if company_id:
