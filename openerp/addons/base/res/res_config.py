@@ -432,6 +432,15 @@ class res_config_settings(osv.osv_memory):
     _name = 'res.config.settings'
     _inherit = 'res.config'
 
+    def create(self, cr, uid, vals, context=None):
+        ids = super(res_config_settings, self).create(cr, uid, vals, context=context)
+        self.execute(cr, uid, [ids], context)
+        return ids
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self.execute(cr, uid, ids, context)
+        return super(res_config_settings, self).write(cr, uid, ids, vals, context=context)
+
     def _get_classified_fields(self, cr, uid, context=None):
         """ return a dictionary with the fields classified by category::
 
