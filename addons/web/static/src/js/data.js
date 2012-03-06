@@ -185,7 +185,7 @@ openerp.web.Query = openerp.web.Class.extend({
      * @returns {openerp.web.Query}
      */
     order_by: function (fields) {
-        if (!fields instanceof Array) {
+        if (!(fields instanceof Array)) {
             fields = _.toArray(arguments);
         }
         if (_.isEmpty(fields)) { return this; }
