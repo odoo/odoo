@@ -1625,7 +1625,6 @@ class stock_move(osv.osv):
         mod_obj = self.pool.get('ir.model.data')
         picking_type = context.get('picking_type')
         location_id = False
-
         if context is None:
             context = {}
         if context.get('move_line', []):
@@ -1636,7 +1635,7 @@ class stock_move(osv.osv):
                     move_list = self.pool.get('stock.move').read(cr, uid, context['move_line'][0], ['location_dest_id'])
                     location_id = move_list and move_list['location_dest_id'][0] or False
         elif context.get('address_out_id', False):
-            property_out = self.pool.get('res.partner.address').browse(cr, uid, context['address_out_id'], context).partner_id.property_stock_customer
+            property_out = self.pool.get('res.partner').browse(cr, uid, context['address_out_id'], context).property_stock_customer
             location_id = property_out and property_out.id or False
         else:
             location_xml_id = False
@@ -1854,7 +1853,7 @@ class stock_move(osv.osv):
                 cr,
                 uid,
                 m.location_dest_id,
-                m.picking_id and m.picking_id.address_id and m.picking_id.address_id.id,
+                m.picking_id and m.picking_id.address_id and m.picking_id.address_id,
                 m.product_id,
                 context
             )
