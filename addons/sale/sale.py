@@ -513,6 +513,65 @@ class sale_order(osv.osv):
             'res_id': inv_ids and inv_ids[0] or False,
         }
 
+    def action_view_invoice(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        inv_ids = []
+        for so in self.browse(cr, uid, ids, context=context):
+            inv_ids+= [invoice.id for invoice in so.invoice_ids]
+    
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        res_id = res and res[1] or False
+    
+        return {
+            'name': _('Customer Invoices'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': [res_id],
+            'res_model': 'account.invoice',
+            'context': "{'type':'out_invoice', 'journal_type': 'sale'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id': inv_ids and inv_ids[0] or False,
+        }
+    
+    def action_view_delivery(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        pick_ids = []
+        for so in self.browse(cr, uid, ids, context=context):
+            pick_ids += [picking.id for picking in so.picking_ids]
+            
+        if len(pick_ids) > 1:
+            res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_search')
+            res_id = res and res[1] or False,
+            return {
+                'name': _('Delivery Order'),
+                'view_type': 'search',
+                'view_mode': 'search',
+                'view_id': res_id,
+                'res_model': 'stock.picking',
+                'context': "{'type':'out'}",
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'target': 'current',
+                'res_id': pick_ids or False,
+            }            
+        else:    
+            res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
+            res_id = res and res[1] or False,
+            return {
+                'name': _('Delivery Order'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': res_id,
+                'res_model': 'stock.picking',
+                'context': "{'type':'out'}",
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'target': 'current',
+                'res_id': pick_ids and pick_ids[0] or False,
+            }
+
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
         invoices = {}
@@ -675,11 +734,8 @@ class sale_order(osv.osv):
         template_id = self.pool.get('email.template').search(cr, uid, [('model_id', '=', 'sale.order')], context=context)
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','email_compose_message_wizard_form')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        #EDI EXport data
-#        if not self.browse(cr, uid, id, context).partner_id.opt_out: 
-#            order.edi_export_and_email(template_ext_id='sale.email_template_edi_sale', context=context)
         ctx = context.copy()
-        ctx.update({'active_model': 'sale.order', 'active_id': id[0], 'mail.compose.template_id': template_id})
+        ctx.update({'active_model': 'sale.order', 'active_id': ids[0], 'mail.compose.template_id': template_id})
         return {
             'view_type': 'form',
             'view_mode': 'form',
