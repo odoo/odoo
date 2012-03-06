@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP S.A (<http://www.openerp.com>)
+#    Copyright (C) 2011-2012 OpenERP S.A (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -364,7 +364,6 @@ class ir_mail_server(osv.osv):
         :param smtp_user: optional SMTP user, if mail_server_id is not passed
         :param smtp_password: optional SMTP password to use, if mail_server_id is not passed
         :param smtp_debug: optional SMTP debug flag, if mail_server_id is not passed
-        :param debug: whether to turn on the SMTP level debugging, output to DEBUG log level
         :return: the Message-ID of the message that was just sent, if successfully sent, otherwise raises
                  MailDeliveryException and logs root cause.
         """
