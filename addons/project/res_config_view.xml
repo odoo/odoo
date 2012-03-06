@@ -5,10 +5,8 @@
             <field name="name">Project Application</field>
             <field name="model">res.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_res_config_settings"/>
             <field name="arch" type="xml">
-            <form position ="replace">
-	            <form string ="Project Application">
+	        <form string ="Project Application">
 		            <separator string="Project" colspan="4"/>
 		            <group colspan="4" col="8">
 		                <group  colspan="4" col="4">
@@ -42,9 +40,7 @@
                         <field name="module_project_issue_sheet"/>
                         <newline/>
                     </group>
-
-	                </form>
-                </form>
+            </form>
             </field>
         </record>
 
@@ -57,7 +53,7 @@
             <field name="view_mode">form</field>
         </record>
 
-        <menuitem id="base.menu_project_config" name="Project" parent="base.menu_config" sequence="1" action="project.action_project_configuration"/>
+        <menuitem id="base.menu_project_config" name="Project" parent="base.menu_config" sequence="1" action="action_project_configuration"/>
 
     </data>
 </openerp>
