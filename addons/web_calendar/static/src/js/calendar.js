@@ -66,6 +66,8 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
 
         this.day_length = this.fields_view.arch.attrs.day_length || 8;
         this.color_field = this.fields_view.arch.attrs.color;
+        this.color_string = this.fields_view.fields[this.color_field] ?
+            this.fields_view.fields[this.color_field].string : _t("Filter");
 
         if (this.color_field && this.selected_filters.length === 0) {
             var default_filter;
@@ -463,8 +465,9 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
 });
 
 openerp.web_calendar.SidebarResponsible = openerp.web.OldWidget.extend({
+    // TODO: fme: in trunk, rename this class to SidebarFilter
     init: function(parent, view) {
-        var $section = parent.add_section(_t('Responsible'), 'responsible');
+        var $section = parent.add_section(view.color_string, 'responsible');
         this.$div = $('<div></div>');
         $section.append(this.$div);
         this._super(parent, $section.attr('id'));
