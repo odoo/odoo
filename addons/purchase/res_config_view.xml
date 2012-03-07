@@ -17,9 +17,11 @@
 	                <group  colspan="4" col="4">
 	                   <field name="group_purchase_pricelist_per_supplier"/>
 	                   <newline/>
-	                   <!--group col="2" colspan="1">
-	                        <field name="tax_policy" on_change="onchange_tax_policy(tax_policy)"/>
-	                   </group-->
+	                   <group col="2" colspan="1">
+                           <field name="tax_policy" on_change="onchange_tax_policy(tax_policy)"/>
+                       </group>
+                       <field name="group_sale_taxes_global_on_order" invisible="1"/>
+                       <field name="group_sale_taxes_on_order_line" invisible="1"/>
 	                   <newline/>
 	                   <field name="module_warning"/>
 	                   <newline/>

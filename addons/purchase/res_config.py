@@ -56,11 +56,53 @@ class purchase_configuration(osv.osv_memory):
                                     help="""When a purchase order is created, you now have the opportunity to save the related requisition.
                                     This new object will regroup and will allow you to easily keep track and order all your purchase orders.
                                     It Installs purchase_requisition module."""),
+        'tax_policy': fields.selection([
+                ('no_tax', 'No Tax'),
+                ('global_on_order', 'Global On Order'),
+                ('on_order_line', 'On Order Lines'),
+            ], 'Taxes', required=True,
+            help="""
+                If you want to apply global tax on sale order then select 'Global On Order' it will add 'Global On Order' group to employees.
+                If you want to apply different taxes for sale order lines then select 'On Order Lines' it will add 'On Order Lines' group to employees.
+            """),
+        'group_purchase_taxes_global_on_order':fields.boolean("Global on order", group='base.group_user', implied_group='base.group_purchase_taxes_global_on_order'),
+        'group_purchase_taxes_on_order_line':fields.boolean("On order line", group='base.group_user', implied_group='base.group_purchase_taxes_on_order_line'),
     }
 
     _defaults = {
         'default_method': lambda s,c,u,ctx: s.pool.get('purchase.order').default_get(c,u,['invoice_method'],context=ctx)['invoice_method'],
+        'tax_policy': 'global_on_order',
     }
+
+    def _check_default_tax(self, cr, uid, context=None):
+        ir_values_obj = self.pool.get('ir.values')
+        for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.product']):
+            if tax[1] == 'taxes_id':
+                return tax[2]
+        return False
+
+    def set_default_taxes(self, cr, uid, ids, context=None):
+        ir_values_obj = self.pool.get('ir.values')
+        taxes = self._check_default_tax(cr, uid, context=context)
+        if taxes:
+            ir_values_obj.set(cr, uid, 'default', False, 'tax_id', ['purchase.order'], taxes[0])
+            ir_values_obj.set(cr, uid, 'default', False, 'tax_id', ['purchase.order.line'], taxes)
+            ir_values_obj.set(cr, uid, 'default', False, 'taxes_id', ['product.product'], taxes)
+
+    def onchange_tax_policy(self, cr, uid, ids, tax_policy, context=None):
+        res = {'value': {}}
+        if ids:
+            self.set_tax_policy(cr, uid, ids, context=context)
+        if tax_policy == 'global_on_order':
+            res['value'].update({'group_purchase_taxes_global_on_order': True})
+            res['value'].update({'group_purchase_taxes_on_order_line': False})
+
+        elif tax_policy == 'on_order_line':
+            res['value'].update({'group_purchase_taxes_on_order_line': True})
+            res['value'].update({'group_purchase_taxes_global_on_order': False})
+        else:
+            res['value'].update({'group_purchase_taxes_on_order_line': False, 'group_purchase_taxes_global_on_order': False})
+        return res
 
 purchase_configuration()
 
