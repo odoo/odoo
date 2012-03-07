@@ -167,11 +167,12 @@ class res_partner(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
     }
+
     def _default_category(self, cr, uid, context=None):
         if context is None:
             context = {}
-        if 'category_id' in context and context['category_id']:
-            return [context.get('category_id')]
+        if context.get('category_id'):
+            return [context['category_id']]
         return False
 
     def _get_photo(self, cr, uid, is_company, context=None):
