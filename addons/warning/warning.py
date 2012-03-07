@@ -117,8 +117,6 @@ class account_invoice(osv.osv):
             date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         if not partner_id:
             return {'value': {
-            'address_contact_id': False ,
-            'address_invoice_id': False,
             'account_id': False,
             'payment_term': False,
             }
