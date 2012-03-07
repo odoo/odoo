@@ -148,7 +148,6 @@ class account_invoice(osv.osv, EDIMixin):
         partner_address = res_partner.browse(cr, uid, address_id, context=context)
         edi_document['partner_id'] = (src_company_id, src_company_name)
         edi_document.pop('partner_address', False) # ignored
-        #edi_document['address_contact_id'] = self.edi_m2o(cr, uid, partner_address, context=context)
 
         return partner_id
 
