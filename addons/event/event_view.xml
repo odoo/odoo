@@ -172,6 +172,7 @@
 		    <field name="subscribe"/>
                     <field name="country_id"/>
 		    <field name="date_begin"/>
+		    <field name="state"/>
 		    <field name="register_avail"/>
 		    <templates>
 			<t t-name="kanban-box">
@@ -187,14 +188,16 @@
 				<div class="oe_module_desc">
 				    <h4><a type="edit"><field name="name"/></a></h4>
 				    <p>
+				    <t t-if="record.state.raw_value">Status: <field name="state"/><br/></t>
 					<t t-if="record.country_id.raw_value">@<field name="country_id"/><br/></t>
 					<t t-if="record.user_id.raw_value">Organized by <field name="user_id"/><br/></t>
-					<t t-if="record.register_avail.raw_value lte 10"><i>Only</i></t>
+					<t t-if="record.register_avail.raw_value lte 10 and record.register_avail.raw_value gt 0"><i>Only</i></t>
+					     <t t-if="record.register_avail.raw_value == 0"><i>No ticket available.</i></t>
 					    <t t-if="record.register_avail.raw_value != 0">
 						<i><b><field name="register_avail"/></b></i>
 						<i>
-						    <t t-if="record.register_avail.raw_value > 1">seats </t>
-						    <t t-if="record.register_avail.raw_value == 1 || !record.register_avail.raw_value > 1">seat </t>available.
+						    <t t-if="record.register_avail.raw_value > 1">tickets </t>
+						    <t t-if="record.register_avail.raw_value == 1 || !record.register_avail.raw_value > 1">ticket </t>available.
 						</i>
 					    </t>
 					
