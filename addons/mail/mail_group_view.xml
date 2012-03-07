@@ -55,13 +55,45 @@
             </field>
         </record>
 
+        <!-- Group List View !-->
+        <record  model="ir.ui.view" id="view_group_tree">
+            <field name="name">mail.group.tree</field>
+            <field name="model">mail.group</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree string="Groups">
+                    <field name="name" colspan="2"/>
+                    <field name="responsible_id" colspan="2"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Group Search View !-->
+        <record  model="ir.ui.view" id="view_group_search">
+            <field name="name">mail.group.search</field>
+            <field name="model">mail.group</field>
+            <field name="type">search</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <search string="Search groups">
+                    <field name="name" colspan="2"/>
+                    <field name="responsible_id" colspan="2"/>
+                </search>
+            </field>
+        </record>
+
         <!-- group record !-->
         <record id="action_view_groups" model="ir.actions.act_window">
             <field name="name">Groups</field>
             <field name="res_model">mail.group</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_group_search"/>
         </record>
 
+        <!-- left-side menu: Groups !-->
+        <menuitem id="mail_groups" name="Groups" parent="mail_feeds_main"/>
+        <menuitem id="mail_allgroups" name="All groups" parent="mail_groups" action="action_view_groups"/>
     </data>
 </openerp>

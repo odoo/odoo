@@ -22,9 +22,6 @@
           <field name="action" ref="action_mail_all_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
         </record>
-        <!-- left-side menu: Groups !-->
-        <menuitem id="mail_groups" name="Groups"  parent="mail_feeds_main"/>
-        <menuitem id="mail_allgroups" name="All groups"  parent="mail_groups" action="action_view_groups"/>
         <!-- left-side menu: Tmp !-->
         <menuitem id="mail_debug" name="Debug/Tmp"  parent="mail_feeds_main"/>
         <menuitem id="mail_debug_msgs" name="Messages" parent="mail_debug" action="action_view_all_message"/>
