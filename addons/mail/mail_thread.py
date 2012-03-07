@@ -53,7 +53,7 @@ class mail_thread(osv.osv):
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
-    _inherit = ['mail.needaction']
+    _inherit = ['res.needaction']
     
     def _get_message_ids(self, cr, uid, ids, name, arg, context=None):
         res = {}

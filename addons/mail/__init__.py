@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import base_needaction
 import mail_message
 import mail_thread
 import mail_group
