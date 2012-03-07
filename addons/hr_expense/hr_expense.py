@@ -198,7 +198,7 @@ class hr_expense_expense(osv.osv):
                 'invoice_line': lines,
                 'currency_id': exp.currency_id.id,
                 'payment_term': payment_term_id,
-                'fiscal_position': exp.employee_id.address_home_id.partner_id.property_account_position.id
+                'fiscal_position': exp.employee_id.address_home_id.property_account_position.id
             }
             if payment_term_id:
                 to_update = invoice_obj.onchange_payment_term_date_invoice(cr, uid, [], payment_term_id, None)
