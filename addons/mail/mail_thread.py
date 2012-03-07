@@ -216,6 +216,7 @@ class mail_thread(osv.osv):
             data = {
                 'subject': subject,
                 'user_id': uid,
+                'parent_id': parent_id,
                 'model' : thread._name,
                 'partner_id': partner_id,
                 'res_id': thread.id,
@@ -606,7 +607,7 @@ class mail_thread(osv.osv):
     #------------------------------------------------------
     
     def message_append_note(self, cr, uid, ids, subject, body, parent_id=False, type='notification', need_action_user_id=False, context=None):
-        return self.message_append(cr, uid, ids, subject, body_text=body, parent_id=False, type=type, need_action_user_id=need_action_user_id, context=context)
+        return self.message_append(cr, uid, ids, subject, body_text=body, parent_id=parent_id, type=type, need_action_user_id=need_action_user_id, context=context)
     
     # old log overrided method: now calls message_append_note
     def log(self, cr, uid, id, message, secondary=False, context=None):
