@@ -89,6 +89,9 @@ class sale_configuration(osv.osv_memory):
             """),
         'group_sale_taxes_global_on_order':fields.boolean("Global on order", group='base.group_user', implied_group='base.group_sale_taxes_global_on_order'),
         'group_sale_taxes_on_order_line':fields.boolean("On order line", group='base.group_user', implied_group='base.group_sale_taxes_on_order_line'),
+        'module_project_timesheet': fields.boolean("Project Timesheet"),
+        'module_project_mrp': fields.boolean("Project mrp"),
+
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -171,6 +174,17 @@ class sale_configuration(osv.osv_memory):
             self.pool.get('res.company').write(cr, uid, [company_id], {
                 'project_time_mode_id': wizard.time_unit.id
             }, context=context)
+
+        return res
+
+    def onchange_task_work(self, cr, uid, ids, task_work, context=None):
+        res = {'value': {}}
+        if task_work:
+            res['value'].update({'module_project_timesheet': True})
+            res['value'].update({'module_project_mrp': True})
+        else:
+            res['value'].update({'module_project_timesheet': False})
+            res['value'].update({'module_project_mrp': False})
 
         return res
 

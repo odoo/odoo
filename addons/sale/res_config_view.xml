@@ -16,7 +16,9 @@
                            <newline/>
                            <field name="deli_orders"/>
                            <newline/>
-                           <field name="task_work"/>
+                           <field name="task_work" on_change="onchange_task_work(task_work)"/>
+                           <field name="module_project_timesheet" invisible="1"/>
+                           <field name="module_project_mrp" invisible="1"/>
                            <newline/>
                            <field name="module_account_analytic_analysis"/>
                            <newline/>
@@ -65,7 +67,7 @@
                 </group>
             </field>
         </record>
-        
+
         <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config" sequence="1" action="base.action_sale_config"/>
 
     </data>
