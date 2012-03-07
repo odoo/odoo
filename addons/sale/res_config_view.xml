@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
 
@@ -21,11 +22,11 @@
                            <newline/>
                         </group>
                         <group colspan="4" col="4">
-                            <field name="order_policy" attrs="{'invisible':['|',('sale_orders','=',False),('deli_orders','=',False)]}"/>
+                            <field name="default_order_policy" attrs="{'invisible':['|',('sale_orders','=',False),('deli_orders','=',False)]}"/>
                             <newline/>
                             <field name="module_delivery" attrs="{'invisible':[('sale_orders','=',False), ('deli_orders','=',False)]}"/>
                             <newline/>
-                            <field name="picking_policy" attrs="{'invisible':[('deli_orders','=',False)]}"/>
+                            <field name="default_picking_policy" attrs="{'invisible':[('deli_orders','=',False)]}"/>
                             <newline/>
                             <field name="time_unit" domain="[('category_id.name','=','Working Time')]" attrs="{'invisible':[('task_work','=',False),('module_account_analytic_analysis','=',False)],'required': [('module_account_analytic_analysis','=',True)]}"/>
                         </group>
@@ -62,7 +63,7 @@
                 </group>
             </field>
         </record>
-
+        
         <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config" sequence="1" action="base.action_sale_config"/>
 
     </data>

@@ -26,10 +26,12 @@ class product_groups_configuration(osv.osv_memory):
 
     _columns = {
         'group_sale_pricelist_per_customer':fields.boolean("Pricelist per customer",
+                                                           group='base.group_user', implied_group='base.group_sale_pricelist_per_customer',
                                                            help="""Allows to manage different prices based on rules per category of customers. 
                                                            Example: 10% for retailers, promotion of 5 EUR on this product, etc.
                                                            It assigns the "Pricelist" group to all employees."""),
         'group_sale_uom_per_product':fields.boolean("UOM per product",
+                                                    group='base.group_user', implied_group='base.group_sale_uom_per_product',
                                                     help="""
                                                     Allows you to select and maintain different unit of measures per product.
                                                     It assigns the "UOM per product" group to all employees.
