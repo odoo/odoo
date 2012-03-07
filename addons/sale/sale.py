@@ -540,14 +540,13 @@ class sale_order(osv.osv):
         pick_ids = []
         for so in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in so.picking_ids]
-            
         if len(pick_ids) > 1:
-            res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_search')
+            res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_tree')
             res_id = res and res[1] or False,
             return {
                 'name': _('Delivery Order'),
-                'view_type': 'search',
-                'view_mode': 'search',
+                'view_type': 'form',
+                'view_mode': 'tree',
                 'view_id': res_id,
                 'res_model': 'stock.picking',
                 'context': "{'type':'out'}",
