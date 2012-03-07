@@ -140,6 +140,23 @@ class Registry(object):
     def any_cache_cleared(self):
         return self._any_cache_cleared
 
+    @classmethod
+    def setup_multi_process_signaling(cls, cr):
+        if not openerp.multi_process:
+            return
+
+        # Inter-process signaling:
+        # The `base_registry_signaling` sequence indicates the whole registry
+        # must be reloaded.
+        # The `base_cache_signaling sequence` indicates all caches must be
+        # invalidated (i.e. cleared).
+        cr.execute("""SELECT sequence_name FROM information_schema.sequences WHERE sequence_name='base_registry_signaling'""")
+        if not cr.fetchall():
+            cr.execute("""CREATE SEQUENCE base_registry_signaling INCREMENT BY 1 START WITH 1""")
+            cr.execute("""SELECT nextval('base_registry_signaling')""")
+            cr.execute("""CREATE SEQUENCE base_cache_signaling INCREMENT BY 1 START WITH 1""")
+            cr.execute("""SELECT nextval('base_cache_signaling')""")
+
 class RegistryManager(object):
     """ Model registries manager.
 
@@ -189,6 +206,7 @@ class RegistryManager(object):
 
             cr = registry.db.cursor()
             try:
+                Registry.setup_multi_process_signaling(cr)
                 registry.do_parent_store(cr)
                 registry.get('ir.actions.report.xml').register_all(cr)
                 cr.commit()
