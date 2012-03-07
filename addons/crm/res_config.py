@@ -29,16 +29,16 @@ class crm_configuration(osv.osv_memory):
                                     help="""Allows Caldav features in Meeting, Share meeting with other calendar clients like sunbird.
                                     It installs crm_caldav module."""),
         'fetchmail_crm': fields.boolean("Lead/Opportunity mail gateway", help="Allows you to configure your incoming mail server. And creates leads for your mails."),
-        'server' : fields.char('Server Name', size=256),
-        'port' : fields.integer('Port'),
-        'type': fields.selection([
+        'default_server' : fields.char('Server Name', size=256),
+        'default_port' : fields.integer('Port'),
+        'default_type': fields.selection([
                    ('pop', 'POP Server'),
                    ('imap', 'IMAP Server'),
                    ('local', 'Local Server'),
                ], 'Server Type'),
-        'is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
-        'user' : fields.char('Username', size=256),
-        'password' : fields.char('Password', size=1024),
+        'default_is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
+        'default_user' : fields.char('Username', size=256),
+        'default_password' : fields.char('Password', size=1024),
         'module_import_sugarcrm' : fields.boolean("SugarCRM Import",
                                     help="""Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Employees, Meetings, Phonecalls, Emails, and Project, Project Tasks Data.
                                     It installs import_sugarcrm module.
@@ -69,7 +69,7 @@ class crm_configuration(osv.osv_memory):
     }
 
     _defaults = {
-        'type': 'pop',
+        'default_type': 'pop',
     }
 
     def get_default_email_configurations(self, cr, uid, ids, context=None):
@@ -80,7 +80,7 @@ class crm_configuration(osv.osv_memory):
         if server_ids:
             result.update({'fetchmail_crm': True})
         for val in ir_values_obj.get(cr, uid, 'default', False, ['fetchmail.server']):
-            result.update({val[1]: val[2]})
+            result.update({'default_'+val[1]: val[2]})
         return result
     
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
@@ -95,21 +95,22 @@ class crm_configuration(osv.osv_memory):
         values['port'] = port
         return {'value': values}
     
-    def set_email_configurations(self, cr, uid, ids, vals, context=None):
+    def set_email_configurations(self, cr, uid, ids, context=None):
         model_obj = self.pool.get('ir.model')
         fetchmail_obj = self.pool.get('fetchmail.server')
         ir_values_obj = self.pool.get('ir.values')
         object_id = model_obj.search(cr, uid, [('model','=','crm.lead')])
+        vals = self.read(cr, uid, ids[0], [], context=context)
         if vals.get('fetchmail_crm') and object_id:
             fetchmail_vals = {
                     'name': 'Incoming Leads',
                     'object_id': object_id[0],
-                    'server': vals.get('server'),
-                    'port': vals.get('port'),
-                    'is_ssl': vals.get('is_ssl'),
-                    'type': vals.get('type'),
-                    'user': vals.get('user'),
-                    'password': vals.get('password')
+                    'server': vals.get('default_server'),
+                    'port': vals.get('default_port'),
+                    'is_ssl': vals.get('default_is_ssl'),
+                    'type': vals.get('default_type'),
+                    'user': vals.get('default_user'),
+                    'password': vals.get('default_password')
             }
             server_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads'),('state','!=','done')])
             if not server_ids:
