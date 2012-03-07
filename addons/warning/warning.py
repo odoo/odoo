@@ -152,7 +152,7 @@ class stock_picking(osv.osv):
     def onchange_partner_in(self, cr, uid, context, partner_id=None):
         if not partner_id:
             return {}
-        partner = self.pool.get('res.partner.address').browse(cr, uid, [partner_id])[0].partner_id
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
         warning = {}
         title = False
         message = False
