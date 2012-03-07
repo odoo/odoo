@@ -350,6 +350,13 @@ class crm_lead(crm_case, osv.osv):
                 message = _("<b>%s a call</b>.") % (action)
             case.message_append_note('', message)
 
+    def _case_partner_notification(self, lead, context=None):
+        if lead.type == 'lead':
+            message = _("Partner is <b>created</b> for this lead.")
+        elif lead.type == 'opportunity':
+            message = _("Partner is <b>created</b> for this opportunity.")
+        lead.message_append_note('' ,message)
+
     def case_open(self, cr, uid, ids, context=None):
         res = super(crm_lead, self).case_open(cr, uid, ids, context)
         for lead in self.browse(cr, uid, ids, context=context):
@@ -663,7 +670,7 @@ class crm_lead(crm_case, osv.osv):
             res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id.id or False})
             contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
             res = lead.write({'partner_id' : partner_id, 'partner_address_id': contact_id}, context=context)
-
+            self._case_partner_notification(lead,context)
         return res
 
     def _lead_create_partner_address(self, cr, uid, lead, partner_id, context=None):
