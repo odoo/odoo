@@ -301,49 +301,61 @@ class mail_thread(osv.osv):
                             context = context)
 
     # Message loading
-    def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], context=None):
+    def _message_get_parent_ids(self, cr, uid, ids, child_ids, root_ids, context=None):
+        if context is None: context = {}
+        msg_obj = self.pool.get('mail.message')
+        msgs_tmp = msg_obj.read(cr, uid, child_ids, context=context)
+        parent_ids = [msg['parent_id'][0] for msg in msgs_tmp if msg['parent_id'] not in root_ids and msg['parent_id'][0] not in child_ids]
+        child_ids += parent_ids
+        cur_iter = 0; max_iter = 10;
+        while (parent_ids and (cur_iter < max_iter)):
+            cur_iter += 1
+            msgs_tmp = msg_obj.read(cr, uid, parent_ids, context=context)
+            parent_ids = [msg['parent_id'][0] for msg in msgs_tmp if msg['parent_id'] not in root_ids and msg['parent_id'][0] not in child_ids]
+            child_ids += parent_ids
+        return child_ids
+    
+    def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
         """ OpenSocial feature: return thread messages ids (for web compatibility)
         loading messages: search in mail.messages where res_id = ids, (res_)model = current model
+        see get_pushed_messages for parameters explanation
         """
+        if context is None: context = {}
         msg_obj = self.pool.get('mail.message')
         msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', ids), ('model', '=', self._name)] + domain,
             limit=limit, offset=offset, context=context)
+        if (ascent): msg_ids = self._message_get_parent_ids(cr, uid, ids, msg_ids, root_ids, context=context)
         return msg_ids
         
-    def message_load(self, cr, uid, ids, limit=100, offset=0, domain=[], context=None):
+    def message_load(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
         """ OpenSocial feature: return thread messages
         loading messages: search in mail.messages where res_id = ids, (res_)model = current model
+        see get_pushed_messages for parameters explanation
         """
-        msg_ids = self.message_load_ids(cr, uid, ids, limit=limit, offset=offset, domain=domain, context=context)
+        msg_ids = self.message_load_ids(cr, uid, ids, limit, offset, domain, ascent, root_ids, context=context)
         return self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
     
-    def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, domain=[], context=None):
+    def get_pushed_messages(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
         """OpenSocial: wall: get messages to display (=pushed notifications)
-            :param filter_search: TODO
-            :return: list of mail.messages, unsorted
+            :param domain: domain to add to the search; especially child_of is interesting when dealing with threaded display
+            :param deep: performs an ascended search; will add to fetched msgs all their parents until root_ids
+                            WARNING: must be used in combinaison with a child_of domain
+                            EXAMPLE: domain = ['id', 'child_of', [32, 33]], root_ids=[32,33]
+            :param root_ids: root_ids when performing an ascended search
+            :return: list of mail.messages sorted by date
         """
+        if context is None: context = {}
         notification_obj = self.pool.get('mail.notification')
-        message_obj = self.pool.get('mail.message')
+        msg_obj = self.pool.get('mail.message')
         # get user notifications
         notification_ids = notification_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         notifications = notification_obj.browse(cr, uid, notification_ids, context=context)
         msg_ids = [notification.message_id.id for notification in notifications]
         # search messages: ids in notifications, add domain coming from wall search view
         search_domain = [('id', 'in', msg_ids)] + domain
-        msg_ids = message_obj.search(cr, uid, search_domain, limit=limit, offset=offset, context=context)
-        msgs = message_obj.read(cr, uid, msg_ids, context=context)
-        # fetch parent message to always have a correctly formated thread
-        msgs_tmp = msgs[:]
-        cur_iter = 0; max_iter = 10; modif = True
-        while (modif and cur_iter <= max_iter):
-            cur_iter += 1; modif = False
-            msg_ids_tmp = []
-            new_msg_ids = [msg['parent_id'][0] for msg in msgs_tmp if msg['parent_id'] != False and msg['parent_id'][0] not in msg_ids]
-            msg_ids += new_msg_ids
-            msgs_tmp = message_obj.read(cr, uid, new_msg_ids, context=context)
-            msgs += msgs_tmp
-        # sort by id
-        msgs.sort(lambda a, b: b['id'].__cmp__(a['id']))
+        msg_ids = msg_obj.search(cr, uid, search_domain, limit=limit, offset=offset, context=context)
+        if (ascent): msg_ids = self._message_get_parent_ids(cr, uid, ids, msg_ids, root_ids, context=context)
+        msgs = msg_obj.read(cr, uid, msg_ids, context=context)
         return msgs
     
     #------------------------------------------------------

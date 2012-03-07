@@ -100,8 +100,9 @@ openerp.mail = function(session) {
         },
         
         fetch_comments: function (limit, offset, domain) {
+            console.log('fetch comments');
             var self = this;
-            var defer = this.ds.call('message_load', [[this.params.res_id], limit=(limit||this.params.limit), offset=(offset||this.params.offset), domain=(domain||[]) ]);
+            var defer = this.ds.call('message_load', [[this.params.res_id], (limit||this.params.limit), (offset||this.params.offset), (domain||[]), (this.params.thread_level > 0), (this.sorted_comments['root_ids'])]);
             $.when(defer).then(function (records) {
                 if (records.length < self.params.limit) self.display_show_more = false;
                 self.display_comments(records);
@@ -363,6 +364,7 @@ openerp.mail = function(session) {
         },
         
         set_value: function() {
+            console.log('set_value');
             var self = this;
             this._super.apply(this, arguments);
             this.see_sub = 0;
@@ -542,8 +544,8 @@ openerp.mail = function(session) {
          */
         fetch_comments: function (domain, context, offset, limit) {
             var self = this;
-            var load_res = this.ds_thread.call('get_pushed_messages',
-                [[this.session.uid], limit = (limit || 2), offset = (offset || 0), domain = (domain || []), context = (context || null) ]).then(function (records) {
+            var load_res = this.ds_thread.call('get_pushed_messages', 
+                [[this.session.uid], (limit || 2), (offset || 0), (domain || []), true, [false], (context || null)]).then(function (records) {
                     if (records.length < self.params.limit) self.display_show_more = false;
                     self.display_comments(records);
                     if (! self.display_show_more) {
