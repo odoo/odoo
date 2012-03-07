@@ -24,6 +24,9 @@ from osv import osv
 from osv import fields
 from tools.translate import _
 
+import io, StringIO
+from PIL import Image
+
 class mail_group(osv.osv):
     """
     A mail_group is a collection of users sharing messages in a discussion group.
@@ -48,15 +51,36 @@ class mail_group(osv.osv):
         
         return True
     
-    def action_null(self, cr, uid, ids, context={}):
+    def _get_photo_mini(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            if not obj.photo:
+                result[obj.id] = False
+                continue
+
+            image_stream = io.BytesIO(obj.photo.decode('base64'))
+            img = Image.open(image_stream)
+            img.thumbnail((120, 100), Image.ANTIALIAS)
+            img_stream = StringIO.StringIO()
+            img.save(img_stream, "JPEG")
+            result[obj.id] = img_stream.getvalue().encode('base64')
+        return result
+    
+    def _set_photo_mini(self, cr, uid, id, name, value, args, context=None):
+        self.write(cr, uid, [id], {'photo': value}, context=context)
         return True
     
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description'),
         'responsible_id': fields.many2one('res.users', string='Responsible',
-                            ondelete='set null', required=True),
-        'public': fields.boolean('Public', help='This group is visible by non members')
+                            ondelete='set null', required=True, select=1),
+        'public': fields.boolean('Public', help='This group is visible by non members'),
+        'photo': fields.binary('Photo'),
+        'photo_mini': fields.function(_get_photo_mini, fnct_inv=_set_photo_mini, string='Photo Mini', type="binary",
+            store = {
+                'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['photo'], 10),
+            }),
     }
 
     _defaults = {
