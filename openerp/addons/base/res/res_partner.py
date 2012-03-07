@@ -194,7 +194,7 @@ class res_partner(osv.osv):
         'is_company': False,
         'type': 'default',
         'use_parent_address': True,
-        'photo': lambda self, cr, uid, context: self._get_photo(cr, uid, False, context)
+        'photo': lambda self, cr, uid, context: self._get_photo(cr, uid, False, context),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -259,9 +259,11 @@ class res_partner(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('parent_id') and vals.get('use_parent_address'):
-             update_ids = [vals['parent_id']] + \
+            update_ids = [vals['parent_id']] + \
                 self.search(cr, uid, [('parent_id', '=', vals['parent_id']),('use_parent_address','=',True)], context=context)
-             self.update_address(cr, uid, update_ids, vals)
+            self.update_address(cr, uid, update_ids, vals)
+        if 'photo' not in vals:
+            vals['photo'] = self._get_photo(cr, uid, vals.get('is_company', False), context)
         return super(res_partner,self).create(cr, uid, vals, context=context)
 
     def update_address(self, cr, uid, ids, vals, context=None):
