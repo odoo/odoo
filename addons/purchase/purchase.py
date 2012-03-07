@@ -180,7 +180,7 @@ class purchase_order(osv.osv):
         'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this purchase"),
         'shipped':fields.boolean('Received', readonly=True, select=True, help="It indicates that a picking has been done"),
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
-        'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
+        'invoiced': fields.function(_invoiced, string='Invoice Received', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on receptions')], 'Invoicing Control', required=True,
             help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' from where you can selectively create an invoice.\n" \
@@ -276,14 +276,16 @@ class purchase_order(osv.osv):
 
     def view_invoice(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
+        wizard_obj = self.pool.get('purchase.order.line_invoice')
         inv_ids = []
         for po in self.browse(cr, uid, ids, context=context):
             if po.invoice_method == 'manual':
                 if not po.invoice_ids:
-                    raise osv.except_osv(_('warning !'),
-                                         _('Your Invoicing Control is based on order lines, so please create invoice from Purchase order lines.'))
+                    context.update({'active_ids' :  [line.id for line in po.order_line]})
+                    wizard_obj.makeInvoices(cr, uid, [], context=context)
+            
+        for po in self.browse(cr, uid, ids, context=context):
             inv_ids+= [invoice.id for invoice in po.invoice_ids]
-
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
         res_id = res and res[1] or False
 
@@ -320,26 +322,6 @@ class purchase_order(osv.osv):
             'nodestroy': True,
             'target': 'current',
             'res_id': pick_ids and pick_ids[0] or False,
-        }
-
-    def view_report(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService("workflow")
-        if context is None:
-            context = {}
-        for id in ids:
-            wf_service.trg_validate(uid, 'purchase.order', id, 'send_rfq', cr)
-        
-        data = self.read(cr, uid, ids, [], context=context)[0]
-        datas = {
-             'ids': [],
-             'model': 'purchase.order',
-             'form': data
-        }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'purchase.quotation',
-            'nodestroy': True,
-            'datas': datas,
         }
 
     def wkf_approve_order(self, cr, uid, ids, context=None):
