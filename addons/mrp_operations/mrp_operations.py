@@ -160,50 +160,40 @@ class mrp_production_workcenter_line(osv.osv):
         prod_obj = self.pool.get('mrp.production')
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("<em>%s</em> Work Order is <b>created</b>.") % (workorder.name)
-                prod_obj.message_append_note(cr, uid, [prod.id], '', message)
-                womessage = _("Work Order is <b>created</b> for <em>%s</em> production order.") % (prod.id.name)
-        self.message_append_note(cr, uid, ids, '', womessage)
+                message = _("Work Order is <b>created</b> for <em>%s</em> production order.") % (prod.id.name)
+        self.message_append_note(cr, uid, ids, '', message)
         return True
 
     def start_notification(self, cr, uid, ids):
         prod_obj = self.pool.get('mrp.production')
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("<em>%s</em> Work Order is <b>started</b>.") % (workorder.name)
-                prod_obj.message_append_note(cr, uid, [prod.id], '', message)
-                womessage = _("Work Order is <b>started</b> for <em>%s</em> production order.") % (prod.id.name)
-        self.message_append_note(cr, uid, ids, '', womessage)
+                message = _("Work Order is <b>started</b> for <em>%s</em> production order.") % (prod.id.name)
+        self.message_append_note(cr, uid, ids, '', message)
         return True
 
     def done_notification(self, cr, uid, ids):
         prod_obj = self.pool.get('mrp.production')
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("<em>%s</em>Work Order is <b>finished</b>.") % (workorder.name)
-                prod_obj.message_append_note(cr, uid, [prod.id], '', message)
-                womessage = _("Work Order is <b>done</b> for <em>%s</em> production order.") % (prod.id.name)
-        self.message_append_note(cr, uid, ids, '', womessage)
+                message = _("Work Order is <b>done</b> for <em>%s</em> production order.") % (prod.id.name)
+        self.message_append_note(cr, uid, ids, '', message)
         return True
 
     def pending_notification(self, cr, uid, ids):
         prod_obj = self.pool.get('mrp.production')
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("<em>%s</em>Work Order is <b>pending</b>.") % (workorder.name)
-                prod_obj.message_append_note(cr, uid, [prod.id], '', message)
-                womessage = _("Work Order is <b>pending</b> for <em>%s</em> production order.") % (prod.id.name)
-        self.message_append_note(cr, uid, ids, '', womessage)
+                message = _("Work Order is <b>pending</b> for <em>%s</em> production order.") % (prod.id.name)
+        self.message_append_note(cr, uid, ids, '', message)
         return True
 
     def cancel_notification(self, cr, uid, ids):
         prod_obj = self.pool.get('mrp.production')
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("<em>%s</em>Work Order is <b>cancelled</b>.") % (workorder.name)
-                prod_obj.message_append_note(cr, uid, [prod.id], '', message)
-                womessage = _("Work Order is <b>cancelled</b> for <em>%s</em> production order.") % (prod.id.name)
-        self.message_append_note(cr, uid, ids, '', womessage)
+                message = _("Work Order is <b>cancelled</b> for <em>%s</em> production order.") % (prod.id.name)
+        self.message_append_note(cr, uid, ids, '', message)
         return True
 
     def action_draft(self, cr, uid, ids):

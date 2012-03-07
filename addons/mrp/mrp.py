@@ -556,7 +556,7 @@ class mrp_production(osv.osv):
         return True
 
     def waiting_notification(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order is <b>waiting for goods</b>.")
+        message = _("Manufacturing order is <b>confirmed and waiting for goods</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
 
