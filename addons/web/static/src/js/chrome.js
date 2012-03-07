@@ -1130,9 +1130,9 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     set_content_full_screen: function(fullscreen) {
         if (fullscreen)
-            this.$element.addClass("oe_content_full_screen");
+            $(".oe_webclient", this.$element).addClass("oe_content_full_screen");
         else
-            this.$element.removeClass("oe_content_full_screen");
+            $(".oe_webclient", this.$element).removeClass("oe_content_full_screen");
     }
 });
 
