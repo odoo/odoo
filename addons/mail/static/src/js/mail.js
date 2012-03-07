@@ -98,7 +98,9 @@ openerp.mail = function(session) {
             this.params.offset = 0;
             this.sorted_comments = {'root_ids': [], 'root_id_msg_list': {}};
             this.$element.find('div.oe_mail_thread_display').empty();
-            return this.fetch_comments(this.params.limit, this.params.offset).then();
+            domain = this.get_fetch_domain(this.sorted_comments);
+            console.log(domain);
+            return this.fetch_comments(this.params.limit, this.params.offset, domain).then();
         },
         
         fetch_comments: function (limit, offset, domain) {
@@ -225,10 +227,9 @@ openerp.mail = function(session) {
         
         do_comment: function () {
             var body_text = this.$element.find('textarea').val();
-            console.log(body_text + '-' + this.params.parent_id);
-            return true;
-            //return this.ds.call('message_append_note', [[this.params.res_id], 'Reply comment', body_text, parent_id=this.params.parent_id, type='comment']).then(
-                //this.proxy('init_comments'));
+            //console.log(body_text + '-' + this.params.parent_id + '-' + this.params.res_id);
+            return this.ds.call('message_append_note', [[this.params.res_id], 'Reply comment', body_text, this.params.parent_id, 'comment']).then(
+                this.proxy('init_comments'));
         },
         
         /**
