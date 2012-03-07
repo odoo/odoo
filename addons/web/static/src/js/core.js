@@ -514,10 +514,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         _(contexts).each(function (ctx) {
             switch(ctx.__ref) {
             case 'context':
-                _.extend(py.eval(ctx.__debug));
+                _.extend(result_context, py.eval(ctx.__debug));
                 break;
             case 'compound_context':
-                _.extend(self.test_eval_contexts(ctx.__contexts));
+                _.extend(
+                    result_context, self.test_eval_contexts(ctx.__contexts));
                 break;
             default:
                 _.extend(result_context, ctx);
