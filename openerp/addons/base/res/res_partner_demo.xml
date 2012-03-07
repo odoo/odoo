@@ -211,14 +211,12 @@
             <field name="name">Centrale d'achats BML</field>
             <field name="ean13">3020178572427</field>
             <field eval="15000.00" name="credit_limit"/>
-            <field name="parent_id" ref="res_partner_10"/>
             <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
             <field name="is_company">partner</field>
         </record>
         <record id="res_partner_15" model="res.partner">
             <field name="name">Magazin BML 1</field>
             <field name="ean13">3020178570171</field>
-            <field name="parent_id" ref="res_partner_14"/>
             <field eval="1500.00" name="credit_limit"/>
             <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
             <field name="is_company">partner</field>
@@ -691,14 +689,15 @@
         </record>
 
 
-        <!--record id="res_partner_address_notsotinysarl1" model="res.partner.address">
+        <record id="res_partner_address_notsotinysarl1" model="res.partner">
             <field eval="'Antwerpen'" name="city"/>
+            <field eval="'NotSoTiny'" name="name"/>
             <field eval="'2000'" name="zip"/>
-            <field name="parent_id" ref="res_partner_notsotinysarl0"/>
+            <field name="parent_id" ref="res_partner_address_notsotinysarl0"/>
             <field name="country_id" ref="base.be"/>
             <field eval="'Antwerpsesteenweg 254'" name="street"/>
             <field eval="'invoice'" name="type"/>
-        </record-->
+        </record>
 
 
         <!--record id="res_partner_address_4" model="res.partner">
