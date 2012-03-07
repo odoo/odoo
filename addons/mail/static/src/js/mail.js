@@ -455,6 +455,7 @@ openerp.mail = function(session) {
             this.params = params || {};
             this.params.limit = params.limit || 2;
             this.params.search_view_id = params.search_view_id || false;
+            this.params.thread_level = params.thread_level || 1;
             this.params.search = {};
             this.params.domain = [];
             this.sorted_comments = {'models': {}};
@@ -571,7 +572,7 @@ openerp.mail = function(session) {
                     $('<div class="oe_mail_wall_thread">').html(render_res).appendTo(self.$element.find('div.oe_mail_wall_threads'));
                     var thread = new mail.Thread(self, {
                         'res_model': model_name, 'res_id': records[0]['res_id'], 'uid': self.session.uid, 'records': records,
-                        'parent_id': false, 'thread_level': 2}
+                        'parent_id': false, 'thread_level': self.params.thread_level}
                         );
                     thread.appendTo(self.$element.find('div.oe_mail_wall_thread_content:last'));
                 });
