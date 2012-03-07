@@ -326,6 +326,21 @@ class mail_thread(osv.osv):
         msgs = message_obj.read(cr, uid, msg_ids, context=context)
         return msgs
     
+    # Message tools
+    def message_get_discussions_nbr(self, cr, uid, ids, context=None):
+        count = 0
+        message_obj = self.pool.get('mail.message')
+        for obj in self.browse(cr, uid, ids, context=context):
+            count += message_obj.search(cr, uid, [('model', '=', self._name), ('res_id', '=', obj.id)], count=True) # TODO: add parent_id when merging branch
+        return count
+    
+    def message_get_messages_nbr(self, cr, uid, ids, context=None):
+        count = 0
+        message_obj = self.pool.get('mail.message')
+        for obj in self.browse(cr, uid, ids, context=context):
+            count += message_obj.search(cr, uid, [('model', '=', self._name), ('res_id', '=', obj.id)], count=True)
+        return count
+        
     #------------------------------------------------------
     # Email specific
     #------------------------------------------------------

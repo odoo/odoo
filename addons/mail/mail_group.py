@@ -68,6 +68,24 @@ class mail_group(osv.osv):
             result[id] = self.message_is_subscriber(cr, uid, [id], context=context)
         return result
     
+    def get_messages_nbr(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for id in ids:
+            result[id] = self.message_get_messages_nbr(cr, uid, [id], context=context)
+        return result
+    
+    def get_discussions_nbr(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for id in ids:
+            result[id] = self.message_get_discussions_nbr(cr, uid, [id], context=context)
+        return result
+    
+    def get_members_nbr(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for id in ids:
+            result[id] = len(self._message_get_subscribers_ids(cr, uid, [id], context=context))
+        return result
+        
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description'),
@@ -79,7 +97,10 @@ class mail_group(osv.osv):
             store = {
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['photo'], 10),
             }),
-        'joined': fields.function(is_subscriber, type='boolean'),
+        'joined': fields.function(is_subscriber, type='boolean', string='Joined'),
+        'messages_nbr': fields.function(get_messages_nbr, type='integer', string='Messages count'),
+        'discussions_nbr': fields.function(get_discussions_nbr, type='integer', string='Discussions count'),
+        'members_nbr': fields.function(get_members_nbr, type='integer', string='Members count'),
     }
 
     _defaults = {
