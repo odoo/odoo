@@ -234,7 +234,7 @@ class event_event(osv.osv):
         'unit_price': fields.related('product_id', 'list_price', type='float', string='Registration Cost', readonly=True, states={'draft':[('readonly',False)]}, help="This will be the default price used as registration cost when invoicing this event. Note that you can specify a specific amount for each registration.", digits_compute=dp.get_precision('Sale Price')),
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
         'speaker_ids': fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers', readonly=False, states={'done': [('readonly', True)]}),
-        'address_id': fields.many2one('res.partner.address','Location Address', readonly=False, states={'done': [('readonly', True)]}),
+        'address_id': fields.many2one('res.partner','Location Address', readonly=False, states={'done': [('readonly', True)]}),
         'speaker_confirmed': fields.boolean('Speaker Confirmed', readonly=False, states={'done': [('readonly', True)]}),
         'country_id': fields.related('address_id', 'country_id',
                     type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}),
@@ -303,7 +303,7 @@ class event_registration(osv.osv):
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
         "partner_invoice_id": fields.many2one('res.partner', 'Partner Invoiced', readonly=True, states={'draft': [('readonly', False)]}),
-        "contact_id": fields.many2one('res.partner.address', 'Partner Contact', readonly=False, states={'done': [('readonly', True)]}), #TODO: filter only the contacts that have a function into the selected partner_id
+        "contact_id": fields.many2one('res.partner', 'Partner Contact', readonly=False, states={'done': [('readonly', True)]}), #TODO: filter only the contacts that have a function into the selected partner_id
         "unit_price": fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Sale Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Sale Price'), store=True),
         "badge_ids": fields.one2many('event.registration.badge', 'registration_id', 'Badges', readonly=False, states={'done': [('readonly', True)]}),
@@ -382,7 +382,7 @@ class event_registration(osv.osv):
         inv_lines_pool = self.pool.get('account.invoice.line')
         inv_pool = self.pool.get('account.invoice')
         product_pool = self.pool.get('product.product')
-        contact_pool = self.pool.get('res.partner.address')
+        contact_pool = self.pool.get('res.partner')
         if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
@@ -596,7 +596,7 @@ class event_registration(osv.osv):
         data ={}
         if not contact:
             return data
-        addr_obj = self.pool.get('res.partner.address')
+        addr_obj = self.pool.get('res.partner')
         data['email_from'] = addr_obj.browse(cr, uid, contact).email
         return {'value': data}
 
@@ -706,7 +706,7 @@ class event_registration_badge(osv.osv):
         "registration_id": fields.many2one('event.registration', 'Registration', required=True),
         "title": fields.char('Title', size=128),
         "name": fields.char('Name', size=128, required=True),
-        "address_id": fields.many2one('res.partner.address', 'Address'),
+        "address_id": fields.many2one('res.partner', 'Address'),
     }
 
 event_registration_badge()

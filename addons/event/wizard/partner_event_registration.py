@@ -48,7 +48,6 @@ class partner_event_registration(osv.osv_memory):
         """
         value = {}
         res_obj = self.pool.get('res.partner')
-        addr_obj = self.pool.get('res.partner.address')
         reg_obj = self.pool.get('event.registration')
         mod_obj = self.pool.get('ir.model.data')
 
@@ -57,7 +56,7 @@ class partner_event_registration(osv.osv_memory):
         email = False
         contact_id = addr.get('default', False)
         if contact_id:
-            email = addr_obj.browse(cr, uid, contact_id, context=context).email
+            email = res_obj.browse(cr, uid, contact_id, context=context).email
 
         result = mod_obj.get_object_reference(cr, uid, 'event', 'view_registration_search')
         res = result and result[1] or False
