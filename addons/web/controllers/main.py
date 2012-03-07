@@ -1308,10 +1308,15 @@ class SearchView(View):
         filters = Model.get_filters(model)
         for filter in filters:
             try:
-                filter["context"] = req.session.eval_context(
-                    parse_context(filter["context"], req.session))
-                filter["domain"] = req.session.eval_domain(
-                    parse_domain(filter["domain"], req.session))
+                parsed_context = parse_context(filter["context"], req.session)
+                filter["context"] = (parsed_context
+                        if not isinstance(parsed_context, common.nonliterals.BaseContext)
+                        else req.session.eval_context(parsed_context))
+
+                parsed_domain = parse_domain(filter["domain"], req.session)
+                filter["domain"] = (parsed_domain
+                        if not isinstance(parsed_domain, common.nonliterals.BaseDomain)
+                        else req.session.eval_domain(parsed_domain))
             except Exception:
                 logger.exception("Failed to parse custom filter %s in %s",
                                  filter['name'], model)
