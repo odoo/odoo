@@ -468,45 +468,57 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             relativedelta: relativedelta
         };
     },
+    /**
+     * FIXME: Huge testing hack, especially the evaluation context, rewrite + test for real before switching
+     */
     test_eval: function (source, expected) {
         try {
             var ctx = this.test_eval_contexts(source.contexts);
             if (!_.isEqual(ctx, expected.context)) {
-                console.group('Local context does not match remote');
+                console.group('Local context does not match remote, nothing is broken but please report to R&D (xmo)');
                 console.warn('source', source.contexts);
                 console.warn('local', ctx);
                 console.warn('remote', expected.context);
                 console.groupEnd();
             }
         } catch (e) {
-            console.error(
-                'Failed to evaluate contexts', source.contexts, ':', e);
+            console.group('Failed to evaluate contexts, nothing is broken but please report to R&D (xmo)');
+            console.error(e);
+            console.log('source', source.contexts);
+            console.groupEnd();
         }
 
         try {
             var dom = this.test_eval_domains(source.domains, this.test_eval_get_context());
             if (!_.isEqual(dom, expected.domain)) {
-                console.group('Local domain does not match remote');
+                console.group('Local domain does not match remote, nothing is broken but please report to R&D (xmo)');
                 console.warn('source', source.domains);
                 console.warn('local', dom);
                 console.warn('remote', expected.domain);
                 console.groupEnd();
             }
         } catch (e) {
-            console.error(
-                'Failed to evaluate domains', source.domains, ':', e);
+            console.group('Failed to evaluate domains, nothing is broken but please report to R&D (xmo)');
+            console.error(e);
+            console.log('source', source.domains);
+            console.groupEnd();
         }
 
         try {
             var groups = this.test_eval_groupby(source.group_by_seq);
             if (!_.isEqual(groups, expected.group_by)) {
-                console.group('Local groupby does not match remote');
+                console.group('Local groupby does not match remote, nothing is broken but please report to R&D (xmo)');
                 console.warn('source', source.group_by_seq);
                 console.warn('local', groups);
                 console.warn('remote', expected.group_by);
                 console.groupEnd();
             }
-        } catch (e) {}
+        } catch (e) {
+            console.group('Failed to evaluate groupby, nothing is broken but please report to R&D (xmo)');
+            console.error(e);
+            console.log('source', source.group_by_seq);
+            console.groupEnd();
+        }
     },
     test_eval_contexts: function (contexts) {
         var result_context = _.extend({}, this.user_context),
