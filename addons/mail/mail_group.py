@@ -38,18 +38,10 @@ class mail_group(osv.osv):
     _inherit = ['mail.thread']
     
     def action_group_join(self, cr, uid, ids, context={}):
-        sub_obj = self.pool.get('mail.subscription')
-        menu_values = {'res_model': 'mail.group', 'user_id': uid}
-        for id in ids:
-            menu_values['res_id'] = id
-            sub_id = sub_obj.create(cr, uid, menu_values, context=context)
-        
-        for group in self.browse(cr, uid, ids, context):
-            self.write(cr, uid, group.id, {
-                'users': [(4, uid)]
-                })
-        
-        return True
+        return self.message_subscribe(cr, uid, ids, context=context);
+    
+    def action_group_leave(self, cr, uid, ids, context={}):
+        return self.message_unsubscribe(cr, uid, ids, context=context);
     
     def _get_photo_mini(self, cr, uid, ids, name, args, context=None):
         result = {}
@@ -70,6 +62,12 @@ class mail_group(osv.osv):
         self.write(cr, uid, [id], {'photo': value}, context=context)
         return True
     
+    def is_subscriber(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for id in ids:
+            result[id] = self.message_is_subscriber(cr, uid, [id], context=context)
+        return result
+    
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description'),
@@ -81,6 +79,7 @@ class mail_group(osv.osv):
             store = {
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['photo'], 10),
             }),
+        'joined': fields.function(is_subscriber, type='boolean'),
     }
 
     _defaults = {
