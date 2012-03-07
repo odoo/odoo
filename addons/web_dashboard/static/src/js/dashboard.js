@@ -145,13 +145,20 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             action = result.result,
             view_mode = action_attrs.view_mode;
 
-        if (action_attrs.context) {
-            action.context = _.extend((action.context || {}), action_attrs.context);
+        if (action_attrs.context && action_attrs.context['dashboard_merge_domains_contexts'] === false) {
+            // TODO: replace this 6.1 workaround by attribute on <action/>
+            action.context = action_attrs.context || {};
+            action.domain = action_attrs.domain || [];
+        } else {
+            if (action_attrs.context) {
+                action.context = _.extend((action.context || {}), action_attrs.context);
+            }
+            if (action_attrs.domain) {
+                action.domain = action.domain || [];
+                action.domain.unshift.apply(action.domain, action_attrs.domain);
+            }
         }
-        if (action_attrs.domain) {
-            action.domain = action.domain || [];
-            action.domain.unshift.apply(action.domain, action_attrs.domain);
-        }
+
         var action_orig = _.extend({ flags : {} }, action);
 
         if (view_mode && view_mode != action.view_mode) {

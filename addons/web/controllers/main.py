@@ -1344,6 +1344,7 @@ class SearchView(View):
         ctx = common.nonliterals.CompoundContext(context_to_save)
         ctx.session = req.session
         ctx = ctx.evaluate()
+        ctx['dashboard_merge_domains_contexts'] = False # TODO: replace this 6.1 workaround by attribute on <action/>
         domain = common.nonliterals.CompoundDomain(domain)
         domain.session = req.session
         domain = domain.evaluate()
