@@ -1,3 +1,251 @@
+2012-03-07: 6.0.4
+=================
+
+Bugfixes (server)
+-----------------
+
+* Not linked to a bug report:
+
+  * sql_db: when postgres is restarted it's not possible to connect to the db that was already connected (OPW 6168)
+  * orm: fix active_test search for object having 'active' in inherited fields
+  * orm: call to fields_get should always go with context attached
+  * orm: function fields with multi does not work on osv_memory (OPW 16988)
+  * orm: backport of trunk: groupby boolean field with 3 distinct values (True, False, NULL)
+  * osv: corrected _search() of osv_memory object which was returning wrong result with limit and offset (OPW 19972)
+  * fields: deleting a sale order created from opportunity raises Access Error on reference fields (OPW 50831)
+  * import data: When you try to import translated M2O field it crashes (OPW 16889)
+  * import data: allow the import of inactive records (OPW 50559)
+  * import data: KeyError: 'active' for object having inherited active field (OPW 51206)
+  * tools: BCC argument when sending mails was not working correctly (OPW 50997)
+  * rml2pdf: backported from trunk, _process_text escaping char for xml (OPW 50912)
+  * fix Printscreen report Title translation
+  * fix translation synchronization - set csv field max size to sys.maxint (OPW 5801)
+  * translation import: source is not relevant in case of translation of record data (model)
+  * overwrite translation terms when updating modules from command line
+
+* https://launchpad.net/bugs/726592
+  * fix problem of ir.property created if same value exists then record create
+    in ir.property object (OPW 18120)
+
+* https://launchpad.net/bugs/818189
+  * fields.many2many: delete instead of update on operation 5 (OPW 818189)
+
+* https://launchpad.net/bugs/878104
+  * orm: cannot create/modify record having fields.function field being overridden with non-functional field (OPW 18390)
+
+Improvements (server)
+---------------------
+
+* Not linked to a bug report:
+
+  * orm: improve the exist() method in orm_memory and orm_template (OPW 17622)
+  * tools: translate: be more lenient and accept standart gettext source annotations
+
+Bugfixes (addons)
+-----------------
+
+* Not linked to a bug report:
+
+  * base: correct store computation of global field of ir.rule
+  * base: 'Customers' tree view from Accounting, unable to see non customers
+  * base: corporate header: report output is not the same PDF vs. OpenOffice
+  * base: ir.model.access: check() should not return None (OPW 17601)
+  * base: applied constraint to currency rounding to avoid zero value (OPW 17993)
+  * base: Unable to save Serbian(Latin) Language on partner due to length (OPW 4374)
+  * base: res.currency data: a few missing currencies: XOF,XAF,UGX,HNL,CLP
+  * base: ir_model : bug that prevents the execution of server action from menu (OPW 51127)
+  * base: ir.values updated for the product tax while configure the different chart of account (OPW 51093)
+  * base: make sure res.log context is not bigger than field size - 250chars (OPW 56037)
+  * base: res.currency read(): correctly handle ids param passed as list/int (OPW 441976)
+  * audittrail: displayed the Resource Name in Audit Log (OPW 17798)
+  * analytic: analytic: fixed the problem of search()/name_search() on analytic account,project
+  * account: fix problem with opening accounts for new financial year with amount currency sum of 0 (OPW 57637) 
+  * account: fix error while fetching income or expense account when you select product in invoices
+  * account: backported from trunk: account of type 'equity' should be on liabilities side in balance sheet report (OPW 17808)
+  * account: invoice report sxw fixes (OPW 17936)
+  * account: raise error when posting a journal entries without movelines (OPW 18038)
+  * account: improved search method of move lines to make it available to work for period and fiscalyear domain (OPW 50786)
+  * account: fixed Nonetype error in Partner Balance report (OPW 17360)
+  * account: fix AssertionError of fields in 'groupby' must appear in the list of fields to read (OPW 16819)
+  * account: account journal create sequence with company_id
+  * account: centralization move creation speedup
+  * account: fiscalyear closure wizard speedup
+  * account: check of 'date not in the period' is not working while creating journal entries manually (OPW 35939)
+  * account: fixed issue of duplication of period while duplicating of invoice (OPW 50688)
+  * account: backport from trunk: remove duplicated ir.rule
+  * account: fix wrong indentation + search using xml_id instead of 'name'
+  * account: backport from trunk: fix account level computation
+  * account: don't erase unit price when erasing the product in invoice line (OPW 18200)
+  * account: journal report: reduce ref, move colmuns size on journal report to avoid overlap on move column (OPW 383640)
+  * account: fix bold text in balance sheet reprot (OPW 20038)
+  * account: do not request write off when generating fy opening entries (OPW 16328)
+  * account: fiscal year closing: fix default date in opening entries (OPW 382603)
+  * account: account.move.line: reconcile_partial() error msg when lines are already reconciled (OPW 51075)
+  * account_analytic_plans: fix wrong amount currency in analytic lines (OPW 17644)
+  * account_cancel: re-open invoice assigned to useability/no one
+  * account_voucher: fix partial reconcile desappearing when we cancel partial payments
+  * account_voucher: raise an error message when creating a move line for a voucher line having an amount of 0 (OPW 382100)
+  * account_voucher: account_voucher: improvement voucher cancellation (creating partial reconcilation when needed) (OPW 383510)
+  * account_voucher: fix wrong currency rounding on account voucher (OPW 18123)
+  * account_voucher: fix AttributeError in the absence of number and activated sequence in voucher's payment journal (OPW 17229)
+  * account_payment: was not allowing selection of invoices for payment
+  * account_payment: 'Select Invoices to Pay' in Payment Order doesn't call the correct view (OPW 51031)
+  * account_payment: allow setting to draft when payment is done
+  * account_payment: in bank statement 'import from payment', allow payment orders which are open or done (OPW 17491)
+  * account_payment: fix wrong argument passed for calling method onchange_partner_id() (OPW 18373)
+  * account_payment: do not lock-out user when payment.order is 'done', allow it to cancel it (OPW 18001)
+  * base_action_rule: unable to change the state of the selection field once saved (OPW 381504)
+  * base_calendar: fix saving event date from recurring event (OPW 50985)
+  * base_calendar: improved get_recurrent_ids method to set the limit (OPW 16763)
+  * base_contact: removed old contact name from partner address' name_get() (OPW 17182)
+  * base_module_record: allows XML exports of fields.selection with integer keys
+  * caldav: fix calendar invitation issues (set user_id, preserve write_date)
+  * crm: could not change stages in sale dashboard in opportunity tree view (OPW 17918)
+  * crm: when deleting a 'crm.lead', clean associated 'mailgate.message' (OPW 50893)
+  * crm_partner_assign: switch partner latitude and longitude fields description
+  * crm_action_rule: mail action doesn't send mails to user and watchers (OPW 267641)
+  * hr: removed domain on M2O search of employee Working Address (OPW 17165)
+  * hr_expense: When unit quantity or factor value is zero > get divide by zero error (OPW 383657)
+  * hr_payroll_account: remove code for adding expenses in employee payslip as expense is handeled by hr_expense itself now (OPW 52676)
+  * hr_timesheet: fix minimum time interval calculation
+  * hr_timesheet_invoice: invoice line product did not have taxes given by the wizard (OPW 51238)
+  * hr_holidays: allowed changing holidays allocation request from 'Refused' to 'Draft (OPW 17349)
+  * hr_holidays: accented characters are not printed in report: leaves by department (OPW 17108)
+  * hr_holidays: constraint: 'date from' could be equal to 'date to'
+  * hr_expense,hr_holidays: fix security rules for member of 'Human Resources / User' (OPW 17354)
+  * hr_timesheet_sheet: fixed issue of Date From in the Timesheet (OPW 50628)
+  * l10n_be: allow usage of calendar year in Partner VAT listing wizard
+  * l10n_ch: create_date wizard was not saving file inside wizard (OPW 18001)
+  * mail_gateway: received emails are not creating dulicate attachments anymore (OPW 5774)
+  * mrp: backported from trunk: Product Cost Structure report crashes on &
+  * mrp: backport from trunk: Explosion of kit with right source and destination location for all moves (OPW 17431)
+  * mrp: mrp: improved onchange_product_id for BOM to fetch the correct name (OPW 17894)
+  * mrp: AttributeError: NoneType object has no attribute id for MRP (OPW 17991)
+  * mrp_operations: added date_stop attribute on gantt view (OPW 16315).
+  * product: system does not take into account the currency of the pricelist if base price is 'Partner section in product form' (OPW 17833)
+  * product: decimal precision of product cost price changed to 'Purchase Price' instead of 'Account' (OPW 17325)
+  * product: reports: use ean13 field instead of code field for the barcode (OPW 18336)
+  * project: when try to deleting an analytic account linked to a project, raise an error message - forbidden 
+  * project: when copying the project, analytic lines of the related analytic account should not be copied (OPW 381927)
+  * purchase: no space between postal code and city in RFQ
+  * purchase: raise error when expense account not found in purchase (OPW 17546)
+  * purchase: wrong Journal assigned when creating purchase order (OPW 17663)
+  * purchase: purchase analysis report: fix standard price progress bar calculation
+  * purchase: fix the problem for invoice while delivery order (OPW 57602)
+  * purchase: use uom of supplier on PO
+  * report_webkit: fix for context passing
+  * sale: backport from trunk: fixed wrong quantities on Sales Analysis report (OPW 17658)
+  * sale: backport from trunk, to fix picked rate on SO
+  * sale,purchase: translate errors raised inside product_id_change (sale/purchase) dep. on user lang., not partner lang. (OPW 279130)
+  * sale,purchase: _get_account_analytic_invoice shouldn't take sale_line as parameter, to avoid crash when purchase and sale are both installed
+  * sale,sale_layout: when number of caracters are upper than 2200, generating report loops
+  * sale_layout: keep layout from sale order to invoice when creating invoice
+  * sale_layout: corrected sale order layout report to support partner language (OPW 17286)
+  * stock: copy note on invoice line when invoicing from pickings
+  * stock: improved params passing for creating an invoice to stop creating wrong entries (OPW 19970)
+  * stock: invoice on shipping wizard propose more journals when location type is different from supplier and customer
+  * stock: fix incorrect journal on partial stock receipt
+  * stock: inventory analysis report: report shows wrong Qty and Total value (OPW 51246)
+  * stock: Incoterm DDP - DELIVERED DUTY PAID missing in Stock Incoterms
+  * stock: solve key error 'wizard_pick_id' on 'Partial Picking' wizard (OPW 17161)
+  * stock: fix precision of average unit cost in picking processing (OPW 55403)
+  * stock: product valuation having a price of 0 should be 0, not 1 (OPW 381937)
+  * stock: on picking invoicing, do not invoice scrapped products (OPW 381524)
+  * stock: fix for the warning message which shows qty of UoM conversion (OPW 18497)
+  * stock: fix delivery report not printing the product name when product has no code
+  * stock: allow partial picking line with qty of 0 
+  * stock: delivery order message in webclient does not gives correct date format when sale order confirmed (OPW 16061) 
+  * stock: set correct type of pickings
+  * stock: write(): accept a single id (OPW 18253)
+  * survey: fix type error when creating a new question on survey (OPW 17571)
+  * thunderbird: make it compatible in with thunderbird versions up to v9 (OPW 17496)
+  * thunderbird,outlook : fix link of 'Installation Manual' (OPW 17190)
+  * thunderbird: some mail were not being pushed due to encoding issue. (OPW 16766)
+  * web_uservoice: fix the reference about the translation
+  * wiki: fix type integer[] error generated during menu creation of a wiki page (OPW 17204)
+  * crm_*,project_*,hr_recruitment,event,mail_gateway: make internal note behaving normally (OPW 16976)
+
+* https://launchpad.net/bugs/832569
+  * hr_holidays: holidays report by department shows inactive employees (OPW 17104)
+
+* https://launchpad.net/bugs/794634
+  * hr_timesheet_sheet: set the right group on workflow transition 'base.group_user' (OPW 17103)
+
+* https://launchpad.net/bugs/779815
+  * account_voucher: partially paid invoices were missing when importing invoices in bank statements (OPW 5625)
+
+* https://launchpad.net/bugs/798615
+  * account_followup: followup report was crashing + multiple mails were being sent to a partner (OPW 6306)
+
+* https://launchpad.net/bugs/853070
+  * account: product property lookup function was searching on wrong object
+
+* https://launchpad.net/bugs/857067
+  * delivery: corrected weight and net weight calculation while doing partial delivery
+
+* https://launchpad.net/bugs/862449
+  * stock,pos: replaced %d formatter by %s to over come rounding problem in error messages (OPW 17871)
+  * stock: fix picking validation digital precision rounding errors by using dp methods (OPW 17871)
+
+* https://launchpad.net/bugs/836526
+  * hr_payroll_account: removed expense_id usage from hr_payslip as now there is no more reference for expense_id
+
+* https://launchpad.net/bugs/740964
+  * purchase: fix quantity and price calculation in journal entry
+
+* https://launchpad.net/bugs/886747
+  * base_setup: the action definition to annouce the DB creation misses view_mode,view_type raising error on web client
+
+* https://launchpad.net/bugs/752876
+  * account: backport from trunk: fix domain for account_id while selecting jornal from search view
+
+* https://launchpad.net/bugs/819334
+  * report_webkit: backport of latest trunk webkit fixes, incl. bug 819334 / OPW 18482
+
+* https://launchpad.net/bugs/925572
+  * project_planning: use employee id to lookup into the user table, now use the corresponding user_id
+
+* https://launchpad.net/bugs/933537
+  * analytic: updating the module disables analytic accounting from all users except admin (OPW 383700)
+
+* https://launchpad.net/bugs/928899
+  * account: _reconciled method for account.invoice method does not take into account the invoice state 'paid' when the result is False
+
+* https://launchpad.net/bugs/919192
+  * account_budget: remove group from required field analytic_account_id
+
+* https://launchpad.net/bugs/921442
+  * base_action_rule: fix encoding error while Regex has non string character (OPW 382010)
+
+* https://launchpad.net/bugs/894624
+  * mrp: fix bom conversion on action_compute
+
+* https://launchpad.net/bugs/896604
+  * stock: internal move, search_default_available doesn't work (OPW 50804)
+
+* https://launchpad.net/bugs/903262
+  * delivery: added ondelete attribut on fields grid_id in Grid Line (OPW 51172)
+
+* https://launchpad.net/bugs/920970
+  * search_default filter not working for purchase requisition (OPW 381848)
+
+* https://launchpad.net/bugs/708467
+  * going through act_window, clicking new doesn't set default value (OPW 50627)
+
+* https://launchpad.net/bugs/903841
+  * account: on invoice 'refund', keep original salesman and fiscal position (OPW 51189)
+
+Improvements (addons)
+---------------------
+
+* Not linked to a bug report:
+
+  * base_contact: added space between name and street in the Address of a contact (OPW 17182)
+  * sale_layout : improved onchange for the type='article' + layout_type [line, break] (OPW 6342, OPW 16890)
+  * account, account_voucher: proper use of 'skip draft state' + add condition to check entry posted before calling post method (OPW 17393)
+  * purchase: improved product_id_change method for negative quantity in purchase order line (OPW 18121)
+  * account: added report action for Balance Sheet reports (OPW 18282)
+
 2011-08-18: 6.0.3
 =================
 
