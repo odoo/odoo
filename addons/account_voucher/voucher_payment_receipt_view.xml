@@ -184,10 +184,10 @@
                                     <field name="amount" sum="Payment"/>
                                 </tree>
                             </field>
-                            <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}">
+                            <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id, 'type':type}">
                                 <tree string="Credits" editable="bottom">
                                     <field name="move_line_id"/>
-                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','receivable')]"/>
+                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','payable')]"/>
                                     <field name="date_original"/>
                                     <field name="amount_original"/>
                                     <field name="amount" sum="Payment"/>
@@ -323,7 +323,7 @@
                                     <field name="amount" sum="Payment"/>
                                 </tree>
                             </field>
-                            <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount)">
+                            <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id, 'type':type}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount)">
                                 <tree string="Credits" editable="bottom">
                                     <field name="move_line_id"/>
                                     <field name="account_id"  groups="base.group_extended" domain="[('type','=','receivable')]"/>
