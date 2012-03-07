@@ -78,11 +78,6 @@ class crm_phonecall(crm_base, osv.osv):
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(crm_phonecall, self).create(cr, uid, vals, context=context)
-        self.open_notification(cr, uid, [obj_id], context)
-        return obj_id
-
     def _get_default_state(self, cr, uid, context=None):
         if context and context.get('default_state', False):
             return context.get('default_state')
@@ -97,27 +92,25 @@ class crm_phonecall(crm_base, osv.osv):
     }
     def _case_cancel_notification(self, phonecall, context=None):
         phonecall[0].message_mark_done(context)
-        message = _("The Phonecall is <b>cancelled</b>.")
+        message = _("Phonecall is <b>cancelled</b>.")
         phonecall[0].message_append_note( _('System notification'),
                         message, type='notification', context=context)
 
     def _case_pending_notification(self, phonecall, context=None):
-        message = _("The Phonecall is <b>pending</b>.")
+        message = _("Phonecall is <b>pending</b>.")
         phonecall[0].message_append_note('' ,message)
 
     def done_notification(self, cr, uid, ids, context=None):
         for phonecall in self.browse(cr, uid, ids):
             phonecall.message_mark_done(context)
-            message = _("The Phonecall is <b>done</b>.")
+            message = _("Phonecall is <b>done</b>.")
             self.message_append_note(cr, uid, [phonecall.id], _('System notification'),
                         message, type='notification', context=context)
 
-    def open_notification(self, cr, uid, ids, context=None):
-        for phonecall in self.browse(cr, uid, ids):
-            self.message_subscribe(cr, uid, ids, [phonecall.user_id.id], context=context)
-            message = _("The Phonecall is <b>open</b>.")
-            self.message_append_note(cr, uid, [phonecall.id], _('System notification'),message,
-                                     type='notification', need_action_user_id=phonecall.user_id.id, context=context)
+    def _case_open_notification(self, phonecall, context=None):
+        phonecall.message_subscribe([phonecall.user_id.id], context=context)
+        message = _("Phonecall is <b>opened</b>.")
+        phonecall.message_append_note('' ,message, need_action_user_id=phonecall.user_id.id)
 
     # From crm.case
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
@@ -149,7 +142,8 @@ class crm_phonecall(crm_base, osv.osv):
         """
         res = super(crm_phonecall, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'duration': 0.0, 'state':'open'})
-        self.open_notification(cr, uid, ids, context)
+        for phone in self.browse(cr, uid, ids):
+            self._case_open_notification(phone, context=context)
         return res
 
 
@@ -158,7 +152,6 @@ class crm_phonecall(crm_base, osv.osv):
         """
         res = super(crm_phonecall, self).case_open(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
-        self.open_notification(cr, uid, ids, context)
         return res
 
     def schedule_another_phonecall(self, cr, uid, ids, schedule_time, call_summary, \
@@ -190,7 +183,6 @@ class crm_phonecall(crm_base, osv.osv):
                     'partner_mobile' : call.partner_mobile,
                     'priority': call.priority,
             }
-
             new_id = self.create(cr, uid, vals, context=context)
             self.case_open(cr, uid, [new_id])
             if action == 'log':
