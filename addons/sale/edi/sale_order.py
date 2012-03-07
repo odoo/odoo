@@ -24,6 +24,7 @@ from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv, orm
 from edi import EDIMixin
+from edi.models import edi
 from tools import DEFAULT_SERVER_DATE_FORMAT
 
 SALE_ORDER_LINE_EDI_STRUCT = {
@@ -63,6 +64,17 @@ SALE_ORDER_EDI_STRUCT = {
 
 class sale_order(osv.osv, EDIMixin):
     _inherit = 'sale.order'
+
+    def action_quotation_sent(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        sale_objs = self.browse(cr, uid, ids, context=context) 
+        edi_token = self.pool.get('edi.document').export_edi(cr, uid, sale_objs, context = context)[0]
+        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        edi_context = dict(context, edi_web_url_view=edi.EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token))
+        ctx = context.copy()
+        ctx.update(edi_context)
+        return super(sale_order, self).action_quotation_sent(cr, uid, ids, context=ctx)
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Exports a Sale order"""
