@@ -75,7 +75,7 @@ class account_invoice(osv.osv, EDIMixin):
         """Exports a supplier or customer invoice"""
         edi_struct = dict(edi_struct or INVOICE_EDI_STRUCT)
         res_company = self.pool.get('res.company')
-        res_partner_address = self.pool.get('res.partner')
+        res_partner = self.pool.get('res.partner')
         edi_doc_list = []
         for invoice in records:
             # generate the main report
@@ -84,8 +84,7 @@ class account_invoice(osv.osv, EDIMixin):
             edi_doc.update({
                     'company_address': res_company.edi_export_address(cr, uid, invoice.company_id, context=context),
                     'company_paypal_account': invoice.company_id.paypal_account,
-                    'partner_address': res_partner_address.edi_export(cr, uid, [invoice.partner_id], context=context)[0],
-
+                    'partner_address': res_partner.edi_export(cr, uid, [invoice.partner_id], context=context)[0],
                     'currency': self.pool.get('res.currency').edi_export(cr, uid, [invoice.currency_id], context=context)[0],
                     'partner_ref': invoice.reference or False,
             })
