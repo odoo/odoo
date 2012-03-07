@@ -137,7 +137,7 @@ openerp.mail = function(session) {
                     self.display_comment(record);
                     self.thread = new mail.Thread(self, {'res_model': self.params.res_model, 'res_id': self.params.res_id, 'uid': self.params.uid,
                                                             'records': sub_msgs, 'thread_level': (self.params.thread_level-1), 'parent_id': record.id});
-                    self.$element.find('div.oe_mail_thread_msg:last').append('<div class="oe_mail_thread_subthread"/>');
+                    self.$element.find('div.oe_mail_thread_display:last').append('<div class="oe_mail_thread_subthread"/>');
                     self.thread.appendTo(self.$element.find('div.oe_mail_thread_subthread:last'));
                 }
                 else if (self.params.thread_level == 0) {
