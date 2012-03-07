@@ -358,11 +358,7 @@ class Database(openerpweb.Controller):
         return {"db_list": dbs}
 
     @openerpweb.jsonrequest
-    def progress(self, req, password, id):
-        return req.session.proxy('db').get_progress(password, id)
-
-    @openerpweb.jsonrequest
-    def create(self, req, fields):
+    def create_database(self, req, fields):
 
         params = dict(map(operator.itemgetter('name', 'value'), fields))
         create_attrs = (
@@ -374,7 +370,7 @@ class Database(openerpweb.Controller):
         )
 
         try:
-            return req.session.proxy("db").create(*create_attrs)
+            return req.session.proxy("db").create_database(*create_attrs)
         except xmlrpclib.Fault, e:
             if e.faultCode and isinstance(e.faultCode, str)\
                 and e.faultCode.split(':')[0] == 'AccessDenied':

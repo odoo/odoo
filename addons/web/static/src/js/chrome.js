@@ -345,44 +345,6 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
         return result;
     },
     /**
-     * Waits until the new database is done creating, then unblocks the UI and
-     * logs the user in as admin
-     *
-     * @param {Number} db_creation_id identifier for the db-creation operation, used to fetch the current installation progress
-     * @param {Object} info info fields for this database creation
-     * @param {String} info.db name of the database being created
-     * @param {String} info.password super-admin password for the database
-     */
-    wait_for_newdb: function (db_creation_id, info) {
-        var self = this;
-        self.rpc('/web/database/progress', {
-            id: db_creation_id,
-            password: info.password
-        }, function (result) {
-            var progress = result[0];
-            // I'd display a progress bar, but turns out the progress status
-            // the server report kind-of blows goats: it's at 0 for ~75% of
-            // the installation, then jumps to 75%, then jumps down to either
-            // 0 or ~40%, then back up to 75%, then terminates. Let's keep that
-            // mess hidden behind a not-very-useful but not overly weird
-            // message instead.
-            if (progress < 1) {
-                setTimeout(function () {
-                    self.wait_for_newdb(db_creation_id, info);
-                }, 500);
-                return;
-            }
-
-            var admin = result[1][0];
-            setTimeout(function () {
-                self.widget_parent.do_login(
-                        info.db, admin.login, admin.password);
-                self.stop();
-                self.unblockUI();
-            });
-        });
-    },
-    /**
      * Blocks UI and replaces $.unblockUI by a noop to prevent third parties
      * from unblocking the UI
      */
@@ -422,7 +384,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
             submitHandler: function (form) {
                 var fields = $(form).serializeArray();
                 self.blockUI();
-                self.rpc("/web/database/create", {'fields': fields}, function(result) {
+                self.rpc("/web/database/create_database", {'fields': fields}, function(result) {
                     if (result.error) {
                         self.unblockUI();
                         self.display_error(result);
@@ -433,11 +395,14 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
                         self.db_list.sort();
                         self.widget_parent.set_db_list(self.db_list);
                     }
+
                     var form_obj = self.to_object(fields);
-                    self.wait_for_newdb(result, {
-                        password: form_obj['super_admin_pwd'],
-                        db: form_obj['db_name']
-                    });
+                    self.widget_parent.do_login(
+                            form_obj['db_name'],
+                            'admin',
+                            form_obj['create_admin_pwd']);
+                    self.stop();
+                    self.unblockUI();
                 });
             }
         });
