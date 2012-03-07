@@ -189,7 +189,7 @@
 				    <p>
 					<t t-if="record.country_id.raw_value">@<field name="country_id"/><br/></t>
 					<t t-if="record.user_id.raw_value">Organized by <field name="user_id"/><br/></t>
-					<t t-if="record.register_avail.raw_value lte 10">
+					<t t-if="record.register_avail.raw_value lte 10"><i>Only</i></t>
 					    <t t-if="record.register_avail.raw_value != 0">
 						<i><b><field name="register_avail"/></b></i>
 						<i>
@@ -197,20 +197,19 @@
 						    <t t-if="record.register_avail.raw_value == 1 || !record.register_avail.raw_value > 1">seat </t>available.
 						</i>
 					    </t>
-					</t>
+					
 				    </p>
 				    <t t-if="record.register_avail.raw_value != 0">
 					<t t-if="!record.subscribe.raw_value">
 					    <button type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
-						<span>Subscribe</span>
-						<span class="subscribe">UnSubscribe</span>
+						<span >Subscribe</span>
 					    </button>
 					</t>
 				    </t>
 				    <t t-if="record.subscribe.raw_value">
 					<button type="object" name="unsubscribe_to_event" class="unsubscribe_button oe_event_button_unsubscribe">
-					    <span>UnSubscribe</span>
-					    <span class="unsubscribe">Subscribe</span>
+					    <span>Subscribed</span>
+					    <span class="unsubscribe">Unsubscribe</span>
 					</button>
 				    </t>
 				</div>
