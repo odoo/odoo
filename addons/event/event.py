@@ -393,7 +393,6 @@ class event_registration(osv.osv):
         for reg in self.browse(cr, uid, ids, context=context):
             val_invoice = inv_pool.onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
             val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
-            partner_address_id = val_invoice['value']['address_invoice_id']
             if not partner_address_id:
                raise osv.except_osv(_('Error !'),
                         _("Registered partner doesn't have an address to make the invoice."))
