@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-17 05:18+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-03-07 05:43+0000\n"
+"X-Generator: Launchpad (build 14907)\n"
 
 #. module: base
 #: view:ir.filters:0
@@ -156,15 +156,15 @@ msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
 "them through Python code, preferably through a custom addon!"
 msgstr ""
-"Les propriétés des champs de la base ne peuvent être modifiées de cette "
-"façon ! Veuillez les modifier dans le code Python, de préférence par un "
+"Les propriétés des champs de la base ne peuvent pas être modifiées de cette "
+"façon ! Veuillez les modifier dans le code Python, de préférence dans un "
 "module personnalisé !"
 
 #. module: base
 #: code:addons/osv.py:129
 #, python-format
 msgid "Constraint Error"
-msgstr "Erreur de contrainte"
+msgstr "Violation de contrainte"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
@@ -174,7 +174,7 @@ msgstr "ir.ui.view.custom"
 #. module: base
 #: model:res.country,name:base.sz
 msgid "Swaziland"
-msgstr "Souaziland"
+msgstr "Swaziland"
 
 #. module: base
 #: code:addons/orm.py:4206
@@ -314,7 +314,7 @@ msgstr "Objet source"
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Config Wizard Steps"
-msgstr "Étapes de la configuration de l'assistant"
+msgstr "Étapes de l'assistant de configuration"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_sc
@@ -325,7 +325,7 @@ msgstr "ir.ui.view_sc"
 #: field:res.widget.user,widget_id:0
 #: field:res.widget.wizard,widgets_list:0
 msgid "Widget"
-msgstr "Widget"
+msgstr "Composant graphique"
 
 #. module: base
 #: view:ir.model.access:0
@@ -456,7 +456,7 @@ msgid ""
 "The ISO country code in two chars.\n"
 "You can use this field for quick search."
 msgstr ""
-"Le code ISO du pays, sur deux caractères.\n"
+"Le code ISO du pays en deux caractères.\n"
 "Vous pouvez utiliser ce champ pour effectuer une recherche rapide."
 
 #. module: base
@@ -467,7 +467,7 @@ msgstr "Palau"
 #. module: base
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Ventes & Achats"
+msgstr "Achats-Ventes"
 
 #. module: base
 #: view:ir.translation:0
@@ -479,8 +479,7 @@ msgstr "Non traduit"
 msgid ""
 "Context dictionary as Python expression, empty by default (Default: {})"
 msgstr ""
-"Dictionnaire de contexte comme une expression Python, vide par défaut "
-"(Défaut: {})"
+"Dictionnaire de contexte, expression Python vide par défaut (Défaut: {})"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_wizard
@@ -514,7 +513,7 @@ msgstr "Nouvel utilisateur"
 #. module: base
 #: view:base.language.export:0
 msgid "Export done"
-msgstr "Export effectué"
+msgstr "Export terminé"
 
 #. module: base
 #: view:ir.model:0
@@ -612,7 +611,7 @@ msgstr "Vue assistant"
 #. module: base
 #: model:res.country,name:base.kh
 msgid "Cambodia, Kingdom of"
-msgstr "République du Cambodge"
+msgstr "Royaume du Cambodge"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -918,7 +917,7 @@ msgstr "Ouganda"
 #. module: base
 #: field:ir.model.access,perm_unlink:0
 msgid "Delete Access"
-msgstr "Accès en suppression"
+msgstr "Supprimer l'accès"
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -1124,8 +1123,8 @@ msgid ""
 "system. After the contract has been registered, you will be able to send "
 "issues directly to OpenERP."
 msgstr ""
-"Cette aide vous aide à enregistrer un contrat de garantie éditeur dans votre "
-"système OpenERP. Après que le contrat ait été enregistré, vous pourrez "
+"Cet assistant vous aide à enregistrer un contrat de garantie éditeur dans "
+"votre système OpenERP. Après que le contrat ait été enregistré, vous pourrez "
 "envoyer des rapports d'erreur directement à OpenERP."
 
 #. module: base
@@ -1801,7 +1800,7 @@ msgstr "Taux actuel"
 #. module: base
 #: field:ir.ui.view.custom,ref_id:0
 msgid "Original View"
-msgstr "Vue originale"
+msgstr "Vue originelle"
 
 #. module: base
 #: view:ir.values:0
@@ -1816,7 +1815,7 @@ msgstr "Cible de l'action"
 #. module: base
 #: model:res.country,name:base.ai
 msgid "Anguilla"
-msgstr "Anguille"
+msgstr "Anguilla"
 
 #. module: base
 #: field:ir.ui.view_sc,name:0
@@ -2516,8 +2515,7 @@ msgstr "Civilité"
 #: help:ir.property,res_id:0
 msgid "If not set, acts as a default value for new resources"
 msgstr ""
-"Si non positionné, il devient la valeur par défaut pour les nouvelles "
-"ressources"
+"Si non renseigné, devient la valeur par défaut pour les nouvelles ressources"
 
 #. module: base
 #: code:addons/orm.py:3988
@@ -2539,8 +2537,8 @@ msgid ""
 "for users and partners."
 msgstr ""
 "Cet assistant permet d'ajouter une nouvelle langue à OpenERP. Après le "
-"chargement d'une nouvelle langue, celle-ci devient celle par défaut pour les "
-"utilisateurs et partenaires."
+"chargement d'une nouvelle langue, celle-ci devient la langue par défaut pour "
+"les utilisateurs et partenaires."
 
 #. module: base
 #: view:ir.model:0
@@ -3454,8 +3452,8 @@ msgid ""
 "invoice, then `object.invoice_address_id.mobile` is the field which gives "
 "the correct mobile number"
 msgstr ""
-"Fournissez les champs qui seront utilisés pour récupérer le numéro du "
-"portable. Exemple: vous sélectionnez une facture, alors, "
+"Fournit les champs qui seront utilisés pour récupérer le numéro du portable. "
+"Exemple: vous sélectionnez une facture, alors, "
 "`object.invoice_address_id.mobile` est le champ qui représente le numéro du "
 "portable correct."
 
@@ -3949,7 +3947,7 @@ msgstr ""
 #. module: base
 #: view:publisher_warranty.contract.wizard:0
 msgid "Please enter the serial key provided in your contract document:"
-msgstr "Veuillez saisir le numéro de série fournit dans votre contrat :"
+msgstr "Veuillez saisir le numéro de série fourni dans votre contrat :"
 
 #. module: base
 #: view:workflow.activity:0
@@ -4516,7 +4514,7 @@ msgstr "Employée"
 #. module: base
 #: field:ir.model.access,perm_create:0
 msgid "Create Access"
-msgstr "Accès en création"
+msgstr "Créer des accès"
 
 #. module: base
 #: field:res.bank,state:0
@@ -5591,7 +5589,7 @@ msgstr "Nom du modèle de l'objet à ouvrir dans la vue à l'écran"
 #. module: base
 #: field:res.log,secondary:0
 msgid "Secondary Log"
-msgstr "Journal de bord secondaire"
+msgstr "Journal secondaire"
 
 #. module: base
 #: field:ir.model.fields,selectable:0
@@ -6908,7 +6906,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.next_id_73
 #: model:ir.ui.menu,name:base.reporting_menu
 msgid "Reporting"
-msgstr "Rapports"
+msgstr "Suivi d'activité"
 
 #. module: base
 #: model:res.country,name:base.tg
@@ -8225,9 +8223,9 @@ msgid ""
 "you can then add translations manually or perform a complete export (as a "
 "template for a new language example)."
 msgstr ""
-"Cet assistant détectera les nouveaux termes à traduire de l'application, "
-"vous pouvez donc ajouter manuellement frd traductions ou faire un export "
-"complet (à titre de modèle pour une nouvelle langue par exemple)."
+"Cet assistant détectera les nouveaux termes à traduire dans l'application "
+"pour que vous puissiez ajouter manuellement des traductions ou faire un "
+"export complet (à titre de modèle pour une nouvelle langue par exemple)."
 
 #. module: base
 #: help:multi_company.default,expression:0
@@ -8693,7 +8691,7 @@ msgstr "VOus ne pouvez pas avoir deux utilsiateurs avec le même login !"
 #. module: base
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
-msgstr "Multi société par défaut"
+msgstr "Multi-société par défaut"
 
 #. module: base
 #: view:res.request:0
@@ -9200,11 +9198,11 @@ msgid ""
 "categories have a hierarchy structure: a partner belonging to a category "
 "also belong to his parent category."
 msgstr ""
-"Gère les catégories de partenaires dans le but de ranger au mieux ces "
-"dernières, de les suivre et d'en faire des statistiques. Un partenaire peut "
-"avoir plusieurs catégories et les catégories ont une structure hiérarchique "
-"entre elles : un partenaire appartenant à une catégorie appartient de fait à "
-"sa catégorie parente."
+"Gère les catégories de partenaires dans le but de les classifier, de les "
+"suivre et d'en faire des statistiques. Un partenaire peut avoir plusieurs "
+"catégories et les catégories ont une structure hiérarchique entre elles : un "
+"partenaire appartenant à une catégorie appartient de fait à sa catégorie "
+"parente."
 
 #. module: base
 #: model:res.country,name:base.az
