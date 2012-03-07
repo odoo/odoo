@@ -6,16 +6,9 @@
             <field name="name">Sales Application</field>
             <field name="model">res.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_res_config_settings"/>
+            <field name="inherit_id" ref="mail.view_sales_config_plugin"/>
             <field name="arch" type="xml">
-                <xpath expr="//form/group[@name='crm']/group[@name='plugin']" position="inside">
-                    <group col="4" colspan="2">
-                        <separator string="Plugins" colspan="4"/>
-                        <newline/>
-                        <field name="module_plugin_thunderbird"/>
-                        <newline/>
-                        <field name="module_plugin_outlook"/>
-                    </group>
+                <xpath expr="//form/group[@name='crm']/group[@name='plugin']/group[@name='plugins']" position="after">
                     <group col="2" colspan="2" name="emails">
                         <separator string="Emails" colspan="2"/>
                         <field name="fetchmail_crm"/>
@@ -31,7 +24,7 @@
                         </group>
                     </group>
                 </xpath>
-                
+
                 <xpath expr="//form/group[@name='crm']/group[@name='plugin']" position="after">
                     <group colspan="4" col="4" name="synchronization">
                         <separator string="Import and Synchronize data from an other application" colspan="4"/>
@@ -60,7 +53,7 @@
                 </xpath>
             </field>
         </record>
-        
+
         <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config" sequence="1" action="base.action_sale_config"/>
 
     </data>

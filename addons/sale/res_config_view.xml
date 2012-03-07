@@ -16,7 +16,9 @@
                            <newline/>
                            <field name="deli_orders"/>
                            <newline/>
-                           <field name="task_work"/>
+                           <field name="task_work" on_change="onchange_task_work(task_work)"/>
+                           <field name="module_project_timesheet" invisible="1"/>
+                           <field name="module_project_mrp" invisible="1"/>
                            <newline/>
                            <field name="module_account_analytic_analysis"/>
                            <newline/>
@@ -40,6 +42,8 @@
                            <group col="2" colspan="1">
                                 <field name="tax_policy" on_change="onchange_tax_policy(tax_policy)"/>
                            </group>
+                           <field name="group_sale_taxes_global_on_order" invisible="1"/>
+                           <field name="group_sale_taxes_on_order_line" invisible="1"/>
                            <newline/>
                            <field name="module_sale_margin"/>
                            <newline/>
@@ -63,7 +67,7 @@
                 </group>
             </field>
         </record>
-        
+
         <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config" sequence="1" action="base.action_sale_config"/>
 
     </data>

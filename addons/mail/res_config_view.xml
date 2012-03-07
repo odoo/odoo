@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="base.view_res_config_settings"/>
             <field name="arch" type="xml">
                 <xpath expr="//form/group[@name='crm']/group[@name='plugin']" position="inside">
-                    <group col="4" colspan="2">
+                    <group col="4" colspan="2" name="plugins">
                         <separator string="Plugins" colspan="4"/>
                         <newline/>
                         <field name="module_plugin_thunderbird"/>
