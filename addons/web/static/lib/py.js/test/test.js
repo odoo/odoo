@@ -262,6 +262,15 @@ describe('Attribute access', function () {
         });
         expect(py.eval('foo.bar()', {foo: o})).to.be('ok');
     });
+    it('should not convert function attributes into methods', function () {
+        var o = new py.object();
+        o.bar = new py.type(function bar() {});
+        o.bar.__getattribute__ = function () {
+            return o.bar.baz;
+        }
+        o.bar.baz = py.True;
+        expect(py.eval('foo.bar.baz', {foo: o})).to.be(true);
+    });
     it('should work on instance attributes', function () {
         var typ = py.type(function MyType() {
             this.attr = new py.float(3);
@@ -296,21 +305,75 @@ describe('Callables', function () {
         });
         expect(py.eval('MyType()', {MyType: typ})).to.be(true);
     });
+    it('should accept kwargs', function () {
+        expect(py.eval('foo(ok=True)', {
+            foo: function foo() { return py.True; }
+        })).to.be(true);
+    });
+    it('should be able to get its kwargs', function () {
+        expect(py.eval('foo(ok=True)', {
+            foo: function foo(args, kwargs) { return kwargs.ok; }
+        })).to.be(true);
+    });
+    it('should be able to have both args and kwargs', function () {
+        expect(py.eval('foo(1, 2, 3, ok=True, nok=False)', {
+            foo: function (args, kwargs) {
+                expect(args).to.have.length(3);
+                expect(args[0].toJSON()).to.be(1);
+                expect(kwargs).to.only.have.keys('ok', 'nok')
+                expect(kwargs.nok.toJSON()).to.be(false);
+                return kwargs.ok;
+            }
+        })).to.be(true);
+    });
 });
 describe('issubclass', function () {
     it('should say a type is its own subclass', function () {
-        expect(py.issubclass.__call__(py.dict, py.dict).toJSON())
+        expect(py.issubclass.__call__([py.dict, py.dict]).toJSON())
             .to.be(true);
         expect(py.eval('issubclass(dict, dict)'))
             .to.be(true);
     });
     it('should work with subtypes', function () {
-        expect(py.issubclass.__call__(py.bool, py.object).toJSON())
+        expect(py.issubclass.__call__([py.bool, py.object]).toJSON())
             .to.be(true);
     });
 });
 describe('builtins', function () {
     it('should aways be available', function () {
         expect(py.eval('bool("foo")')).to.be(true);
+    });
+});
+
+describe('numerical protocols', function () {
+    describe('True numbers (float)', function () {
+        describe('Basic arithmetic', function () {
+            it('can be added', function () {
+                expect(py.eval('1 + 1')).to.be(2);
+                expect(py.eval('1.5 + 2')).to.be(3.5);
+                expect(py.eval('1 + -1')).to.be(0);
+            });
+            it('can be subtracted', function () {
+                expect(py.eval('1 - 1')).to.be(0);
+                expect(py.eval('1.5 - 2')).to.be(-0.5);
+                expect(py.eval('2 - 1.5')).to.be(0.5);
+            });
+            it('can be multiplied', function () {
+                expect(py.eval('1 * 3')).to.be(3);
+                expect(py.eval('0 * 5')).to.be(0);
+                expect(py.eval('42 * -2')).to.be(-84);
+            });
+            it('can be divided', function () {
+                expect(py.eval('1 / 2')).to.be(0.5);
+                expect(py.eval('2 / 1')).to.be(2);
+            });
+        });
+    });
+    describe('Strings', function () {
+        describe('Basic arithmetics operators', function () {
+            it('can be added (concatenation)', function () {
+                expect(py.eval('"foo" + "bar"')).to.be('foobar');
+            });
+        });
     });
 });

@@ -34,15 +34,14 @@ Base methods requirement
 ************************
 
 * ``__getattr__``
-* ? ``__getitem``
-* ``__call__``
-* ``or``
-* ``toJS`` / ``toJSON``
 * ``dict.get``
-* ``datetime.time.today``
-* ``datetime.time.strftime``
-* ``time.strftime``
-* ``__add__`` / ``__radd__``
-* ``__sub__`` / ``__rsub__``
 * ``__len__``
-* ``__nonzero__``
+
+In datamodel, not implemented in any type, untested
+***************************************************
+
+* a[b]
+
+* a + b, a - b, a * b, ...
+
+* +a, ~a

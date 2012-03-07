@@ -321,6 +321,269 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.active_id = null;
         return this.session_init();
     },
+    test_eval_get_context: function () {
+        var asJS = function (arg) {
+            if (arg instanceof py.object) {
+                return arg.toJSON();
+            }
+            return arg;
+        };
+
+        var datetime = new py.object();
+        datetime.datetime = new py.type(function datetime() {
+            throw new Error('datetime.datetime not implemented');
+        });
+        var date = datetime.date = new py.type(function date(y, m, d) {
+            if (y instanceof Array) {
+                d = y[2];
+                m = y[1];
+                y = y[0];
+            }
+            this.year = asJS(y);
+            this.month = asJS(m);
+            this.day = asJS(d);
+        }, py.object, {
+            strftime: function (args) {
+                var f = asJS(args[0]), self = this;
+                return new py.str(f.replace(/%([A-Za-z])/g, function (m, c) {
+                    switch (c) {
+                    case 'Y': return self.year;
+                    case 'm': return _.str.sprintf('%02d', self.month);
+                    case 'd': return _.str.sprintf('%02d', self.day);
+                    }
+                    throw new Error('ValueError: No known conversion for ' + m);
+                }));
+            }
+        });
+        date.__getattribute__ = function (name) {
+            if (name === 'today') {
+                return date.today;
+            }
+            throw new Error("AttributeError: object 'date' has no attribute '" + name +"'");
+        };
+        date.today = new py.def(function () {
+            var d = new Date();
+            return new date(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+        });
+        datetime.time = new py.type(function time() {
+            throw new Error('datetime.time not implemented');
+        });
+
+        var time = new py.object();
+        time.strftime = new py.def(function (args) {
+            return date.today.__call__().strftime(args);
+        });
+
+        var relativedelta = new py.type(function relativedelta(args, kwargs) {
+            if (!_.isEmpty(args)) {
+                throw new Error('Extraction of relative deltas from existing datetimes not supported');
+            }
+            this.ops = kwargs;
+        }, py.object, {
+            __add__: function (other) {
+                if (!(other instanceof datetime.date)) {
+                    return py.NotImplemented;
+                }
+                // TODO: test this whole mess
+                var year = asJS(this.ops.year) || asJS(other.year);
+                if (asJS(this.ops.years)) {
+                    year += asJS(this.ops.years);
+                }
+
+                var month = asJS(this.ops.month) || asJS(other.month);
+                if (asJS(this.ops.months)) {
+                    month += asJS(this.ops.months);
+                    // FIXME: no divmod in JS?
+                    while (month < 1) {
+                        year -= 1;
+                        month += 12;
+                    }
+                    while (month > 12) {
+                        year += 1;
+                        month -= 12;
+                    }
+                }
+
+                var lastMonthDay = new Date(year, month, 0).getDate();
+                var day = asJS(this.ops.day) || asJS(other.day);
+                if (day > lastMonthDay) { day = lastMonthDay; }
+                var days_offset = ((asJS(this.ops.weeks) || 0) * 7) + (asJS(this.ops.days) || 0);
+                if (days_offset) {
+                    day = new Date(year, month-1, day + days_offset).getDate();
+                }
+                // TODO: leapdays?
+                // TODO: hours, minutes, seconds? Not used in XML domains
+                // TODO: weekday?
+                return new datetime.date(year, month, day);
+            },
+            __radd__: function (other) {
+                return this.__add__(other);
+            },
+
+            __sub__: function (other) {
+                if (!(other instanceof datetime.date)) {
+                    return py.NotImplemented;
+                }
+                // TODO: test this whole mess
+                var year = asJS(this.ops.year) || asJS(other.year);
+                if (asJS(this.ops.years)) {
+                    year -= asJS(this.ops.years);
+                }
+
+                var month = asJS(this.ops.month) || asJS(other.month);
+                if (asJS(this.ops.months)) {
+                    month -= asJS(this.ops.months);
+                    // FIXME: no divmod in JS?
+                    while (month < 1) {
+                        year -= 1;
+                        month += 12;
+                    }
+                    while (month > 12) {
+                        year += 1;
+                        month -= 12;
+                    }
+                }
+
+                var lastMonthDay = new Date(year, month, 0).getDate();
+                var day = asJS(this.ops.day) || asJS(other.day);
+                if (day > lastMonthDay) { day = lastMonthDay; }
+                var days_offset = ((asJS(this.ops.weeks) || 0) * 7) + (asJS(this.ops.days) || 0);
+                if (days_offset) {
+                    day = new Date(year, month-1, day - days_offset).getDate();
+                }
+                // TODO: leapdays?
+                // TODO: hours, minutes, seconds? Not used in XML domains
+                // TODO: weekday?
+                return new datetime.date(year, month, day);
+            },
+            __rsub__: function (other) {
+                return this.__sub__(other);
+            }
+        });
+
+        return {
+            uid: new py.float(this.uid),
+            datetime: datetime,
+            time: time,
+            relativedelta: relativedelta
+        };
+    },
+    /**
+     * FIXME: Huge testing hack, especially the evaluation context, rewrite + test for real before switching
+     */
+    test_eval: function (source, expected) {
+        try {
+            var ctx = this.test_eval_contexts(source.contexts);
+            if (!_.isEqual(ctx, expected.context)) {
+                console.group('Local context does not match remote, nothing is broken but please report to R&D (xmo)');
+                console.warn('source', source.contexts);
+                console.warn('local', ctx);
+                console.warn('remote', expected.context);
+                console.groupEnd();
+            }
+        } catch (e) {
+            console.group('Failed to evaluate contexts, nothing is broken but please report to R&D (xmo)');
+            console.error(e);
+            console.log('source', source.contexts);
+            console.groupEnd();
+        }
+
+        try {
+            var dom = this.test_eval_domains(source.domains, this.test_eval_get_context());
+            if (!_.isEqual(dom, expected.domain)) {
+                console.group('Local domain does not match remote, nothing is broken but please report to R&D (xmo)');
+                console.warn('source', source.domains);
+                console.warn('local', dom);
+                console.warn('remote', expected.domain);
+                console.groupEnd();
+            }
+        } catch (e) {
+            console.group('Failed to evaluate domains, nothing is broken but please report to R&D (xmo)');
+            console.error(e);
+            console.log('source', source.domains);
+            console.groupEnd();
+        }
+
+        try {
+            var groups = this.test_eval_groupby(source.group_by_seq);
+            if (!_.isEqual(groups, expected.group_by)) {
+                console.group('Local groupby does not match remote, nothing is broken but please report to R&D (xmo)');
+                console.warn('source', source.group_by_seq);
+                console.warn('local', groups);
+                console.warn('remote', expected.group_by);
+                console.groupEnd();
+            }
+        } catch (e) {
+            console.group('Failed to evaluate groupby, nothing is broken but please report to R&D (xmo)');
+            console.error(e);
+            console.log('source', source.group_by_seq);
+            console.groupEnd();
+        }
+    },
+    test_eval_contexts: function (contexts) {
+        var result_context = _.extend({}, this.user_context),
+            self = this;
+        _(contexts).each(function (ctx) {
+            switch(ctx.__ref) {
+            case 'context':
+                _.extend(result_context, py.eval(ctx.__debug));
+                break;
+            case 'compound_context':
+                _.extend(
+                    result_context, self.test_eval_contexts(ctx.__contexts));
+                break;
+            default:
+                _.extend(result_context, ctx);
+            }
+        });
+        return result_context;
+    },
+    test_eval_domains: function (domains, eval_context) {
+        var result_domain = [], self = this;
+        _(domains).each(function (dom) {
+            switch(dom.__ref) {
+            case 'domain':
+                result_domain.push.apply(
+                    result_domain, py.eval(dom.__debug, eval_context));
+                break;
+            case 'compound_domain':
+                result_domain.push.apply(
+                    result_domain, self.test_eval_domains(
+                            dom.__domains, eval_context));
+                break;
+            default:
+                result_domain.push.apply(
+                    result_domain, dom);
+            }
+        });
+        return result_domain;
+    },
+    test_eval_groupby: function (contexts) {
+        var result_group = [], self = this;
+        _(contexts).each(function (ctx) {
+            var group;
+            switch(ctx.__ref) {
+            case 'context':
+                group = py.eval(ctx.__debug).group_by;
+                break;
+            case 'compound_context':
+                group = self.test_eval_contexts(ctx.__contexts).group_by;
+                break;
+            default:
+                group = ctx.group_by
+            }
+            if (!group) { return; }
+            if (typeof group === 'string') {
+                result_group.push(group);
+            } else if (group instanceof Array) {
+                result_group.push.apply(result_group, group);
+            } else {
+                throw new Error('Got invalid groupby {{'
+                        + JSON.stringify(group) + '}}');
+            }
+        });
+        return result_group;
+    },
     /**
      * Executes an RPC call, registering the provided callbacks.
      *
@@ -358,6 +621,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             function (response, textStatus, jqXHR) {
                 self.on_rpc_response();
                 if (!response.error) {
+                    if (url.url === '/web/session/eval_domain_and_context') {
+                        self.test_eval(params, response.result);
+                    }
                     deferred.resolve(response["result"], textStatus, jqXHR);
                 } else if (response.error.data.type === "session_invalid") {
                     self.uid = false;
