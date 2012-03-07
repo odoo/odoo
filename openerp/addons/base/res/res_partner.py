@@ -119,6 +119,9 @@ def _lang_get(self, cr, uid, context=None):
     return [(r['code'], r['name']) for r in res] + [('','')]
 
 
+ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id',
+                  'email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
+
 class res_partner(osv.osv):
     _description='Partner'
     _name = "res.partner"
@@ -213,23 +216,11 @@ class res_partner(osv.osv):
         return {'value': value, 'domain': domain}
 
     def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
-        vals = {'value':{}}
+        vals = {'value': {}}
         if use_parent_address and parent_id:
             parent = self.browse(cr, uid, parent_id, context=context)
-            vals['value'] = {'street': parent.street,
-                            'street2': parent.street2,
-                            'zip': parent.zip,
-                            'city': parent.city,
-                            'state_id': parent.state_id.id,
-                            'country_id': parent.country_id.id,
-                            'email': parent.email,
-                            'phone': parent.phone,
-                            'fax': parent.fax,
-                            'mobile': parent.mobile,
-                            'website': parent.website,
-                            'ref': parent.ref,
-                            'lang': parent.lang,
-                        }
+            for key in ADDRESS_FIELDS:
+                vals['value'][key] = parent[key]
         return vals
 
     def _check_ean_key(self, cr, uid, ids, context=None):
@@ -274,10 +265,7 @@ class res_partner(osv.osv):
         return super(res_partner,self).create(cr, uid, vals, context=context)
 
     def update_address(self, cr, uid, ids, vals, context=None):
-        addr_vals = {}
-        for key, data in vals.iteritems():
-            if key in ('street','street2','zip','city','state_id','country_id','email','phone','fax','mobile','website','ref','lang') and data:
-                addr_vals[key] = data
+        addr_vals = dict( [(key, vals[key]) for key in ADDRESS_FIELDS if vals.get(key)] )
         return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
 
     def name_get(self, cr, uid, ids, context=None):
