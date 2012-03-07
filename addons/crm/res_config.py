@@ -91,8 +91,8 @@ class crm_configuration(osv.osv_memory):
         elif server_type == 'imap':
             port = ssl and 993 or 143
         else:
-            values['server'] = ''
-        values['port'] = port
+            values['default_server'] = ''
+        values['default_port'] = port
         return {'value': values}
     
     def set_email_configurations(self, cr, uid, ids, context=None):

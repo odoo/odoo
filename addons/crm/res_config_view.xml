@@ -15,9 +15,9 @@
                         <newline/>
                         <group col="4" colspan="2" attrs="{'invisible': [('fetchmail_crm','=',False)]}">
                             <field name="default_server" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-                            <field name="default_type" nolabel="1" on_change="onchange_server_type(type, is_ssl)" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                            <field name="default_type" nolabel="1" on_change="onchange_server_type(default_type, default_is_ssl)" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
                             <field name="default_port" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-                            <field name="default_is_ssl" on_change="onchange_server_type(type, is_ssl)"/>
+                            <field name="default_is_ssl" on_change="onchange_server_type(default_type, default_is_ssl)"/>
                             <newline/>
                             <field name="default_user" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
                             <field name="default_password" password="True" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
