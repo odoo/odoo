@@ -678,6 +678,11 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
     },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$secondary_menus = this.getParent().$element.find('.oe_secondary_menus_container');
+        this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
+    },
     do_reload: function() {
         var self = this;
         return this.rpc("/web/menu/load", {}, this.on_loaded).then(function () {
@@ -689,11 +694,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     on_loaded: function(data) {
         this.data = data;
         this.renderElement();
-        if (!this.$secondary_menus && this.getParent()) {
-            // TODO: create Widget openerp.web.SubMenu
-            this.$secondary_menus = this.getParent().$element.find('.oe_secondary_menus_container');
-            this.$element.add(this.$secondary_menus).on('click', 'a[data-menu]', this.on_menu_click);
-        }
+        this.$element.on('click', 'a[data-menu]', this.on_menu_click);
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
