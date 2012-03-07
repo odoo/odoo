@@ -117,8 +117,8 @@ class mrp_repair(osv.osv):
         'name': fields.char('Repair Reference',size=24, required=True),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'partner_id' : fields.many2one('res.partner', 'Partner', select=True, help='This field allow you to choose the parner that will be invoiced and delivered'),
-        'address_id': fields.many2one('res.partner.address', 'Delivery Address', domain="[('partner_id','=',partner_id)]"),
-        'default_address_id': fields.function(_get_default_address, type="many2one", relation="res.partner.address"),
+        'address_id': fields.many2one('res.partner', 'Delivery Address'),
+        'default_address_id': fields.function(_get_default_address, type="many2one", relation="res.partner"),
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number', select=True, domain="[('product_id','=',product_id)]"),
         'state': fields.selection([
             ('draft','Quotation'),
@@ -142,7 +142,7 @@ class mrp_repair(osv.osv):
         'guarantee_limit': fields.date('Guarantee limit', help="The guarantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the guarantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."),
         'operations' : fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='The pricelist comes from the selected partner, by default.'),
-        'partner_invoice_id':fields.many2one('res.partner.address', 'Invoicing Address',  domain="[('partner_id','=',partner_id)]"),
+        'partner_invoice_id':fields.many2one('res.partner', 'Invoicing Address'),
         'invoice_method':fields.selection([
             ("none","No Invoice"),
             ("b4repair","Before Repair"),
@@ -230,7 +230,7 @@ class mrp_repair(osv.osv):
             data['value']['location_id'] = move.location_dest_id.id
             data['value']['location_dest_id'] = move.location_dest_id.id
             if move.address_id:
-                data['value']['partner_id'] = move.address_id.partner_id and move.address_id.partner_id.id
+                data['value']['partner_id'] = move.address_id and move.address_id.id
             else:
                 data['value']['partner_id'] = False
             data['value']['address_id'] = move.address_id and move.address_id.id
@@ -261,7 +261,7 @@ class mrp_repair(osv.osv):
         partner = part_obj.browse(cr, uid, part)
         pricelist = partner.property_product_pricelist and partner.property_product_pricelist.id or False
         return {'value': {
-                    'address_id': address_id or addr['delivery'],
+                    'address_id': addr['delivery'] or addr['default'],
                     'partner_invoice_id': addr['invoice'],
                     'pricelist_id': pricelist
                 }
