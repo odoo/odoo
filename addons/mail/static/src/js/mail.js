@@ -98,6 +98,11 @@ openerp.mail = function(session) {
         
         display_comments: function (records) {
             var self = this;
+            
+            // temporary verification of need_action_user_id (TODO: better display)
+            if (this.params.need_action_user_id) {
+                $('<div class="oe_mail_thread_msg"/>').text('Need action by ' + this.params.need_action_user_id[1]).appendTo(self.$element.find('div.oe_mail_thread_display')); }
+            
             /* WIP: map matched regexp -> records to browse with name */
             //_(records).each(function (record) {
                 //self.do_check_internal_links(record.body_text);
@@ -238,6 +243,7 @@ openerp.mail = function(session) {
         },
         
         set_value: function() {
+            console.log(this);
             var self = this;
             this._super.apply(this, arguments);
             /* hide follow/unfollow/see followers buttons */
@@ -253,7 +259,8 @@ openerp.mail = function(session) {
             this.fetch_subscribers();
             /* create ThreadDisplay widget and render it */
             this.$element.find('div.oe_mail_thread_left').empty();
-            this.thread_display = new mail.ThreadDisplay(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid});
+            this.thread_display = new mail.ThreadDisplay(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id,
+                                                                'uid': this.session.uid, 'need_action_user_id': this.view.datarecord.need_action_user_id});
             this.thread_display.appendTo(this.$element.find('div.oe_mail_thread_left'));
         },
         
