@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,30 +19,27 @@
 #
 ##############################################################################
 
-from osv import osv
-from tools import cache
 
-def _gen_cache_clear(method):
-    def func(self, cr, *args, **kwargs):
-        s = super(publisher_warranty_contract, self)
-        r = getattr(s, method)(cr, *args, **kwargs)
-        self.is_livechat_enable.clear_cache(self)
-        return r
-    return func
+{
+    'name': 'Events Sales',
+    'version': '0.1',
+    'category': 'Tools',
+    'complexity': "easy",
+    'description': """
+Creating registration with sale orders.
+=======================================
 
-class publisher_warranty_contract(osv.osv):
-    _inherit = 'publisher_warranty.contract'
+This module allows you to automatize and connect your registration creation with your main sale flow and, therefore, to enable the invoicing feature of registrations.
 
-    create = _gen_cache_clear('create')
-    write = _gen_cache_clear('write')
-    unlink = _gen_cache_clear('unlink')
-
-    @cache(skiparg=3, timeout=300)
-    def is_livechat_enable(self, cr, uid):
-        domain = [('state', '=', 'valid'), ('check_support', '=', True)]
-        return self.search_count(cr, uid, domain) != 0
-
-publisher_warranty_contract()
-
-
+It defines a new kind of service products that offers you the possibility to choose an event category associated with it. When you encode a sale order for that product, you will be able to choose an existing event of that category and when you confirm your sale order it will automatically create a registration for this event.
+""",
+    'author': 'OpenERP SA',
+    'depends': ['event','sale','sale_crm'],
+    'update_xml': [
+        'event_sale_view.xml',
+    ],
+    'test':['test/confirm.yml'],
+    'installable': True,
+    'active': False,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
