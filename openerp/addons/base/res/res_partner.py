@@ -21,8 +21,7 @@
 
 import os
 import math
-from osv import osv
-from osv import fields
+from osv import osv, fields
 import tools
 from tools.translate import _
 import logging
@@ -137,7 +136,7 @@ class res_partner(osv.osv):
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website',size=64, help="Website of Partner."),
         'comment': fields.text('Notes'),
-        'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'), # it should be remove in vesion 7 but for now it use for backward compatibility
+        'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),   # should be removed in version 7, but kept until then for backward compatibility
         'category_id': fields.many2many('res.partner.category', 'res_partner_category_rel', 'partner_id', 'category_id', 'Categories'),
         'events': fields.one2many('res.partner.event', 'partner_id', 'Events'),
         'credit_limit': fields.float(string='Credit Limit'),
@@ -149,7 +148,8 @@ class res_partner(osv.osv):
         'function': fields.char('Function', size=128),
         'type': fields.selection( [('default','Default'),('invoice','Invoice'),
                                    ('delivery','Delivery'), ('contact','Contact'),
-                                   ('other','Other')],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
+                                   ('other','Other')],
+                   'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'street': fields.char('Street', size=128),
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
