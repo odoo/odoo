@@ -161,7 +161,7 @@ class res_partner(osv.osv):
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
-        'is_company': fields.selection( [ ('contact','Person'),('partner','Company') ],'Contact Type', help="Select if the partner is a company or person"),
+        'is_company': fields.boolean('Company', help="Check if the contact is a company, otherwise it is a person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Check to use the company's address"),
         'photo': fields.binary('Photo'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
@@ -175,9 +175,11 @@ class res_partner(osv.osv):
         return False
 
     def _get_photo(self, cr, uid, is_company, context=None):
-        if is_company == 'contact':
-            return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'photo.png'), 'rb') .read().encode('base64')
-        return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'company_icon.png'), 'rb') .read().encode('base64')
+        if is_company:
+            path = os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'company_icon.png')
+        else:
+            path = os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'photo.png')
+        return open(path, 'rb').read().encode('base64')
 
     _defaults = {
         'active': True,
@@ -185,10 +187,10 @@ class res_partner(osv.osv):
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
         'color': 0,
-        'is_company': 'contact',
+        'is_company': False,
         'type': 'default',
-        'use_parent_address':True,
-        'photo': _get_photo,
+        'use_parent_address': True,
+        'photo': lambda self, cr, uid, context: self._get_photo(cr, uid, False, context)
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -198,19 +200,16 @@ class res_partner(osv.osv):
         default.update({'name': _('%s (copy)')%(name), 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
-    def onchange_type(self, cr, uid, ids, is_company, title, child_ids, photo,context=None):
-        value = {'value': {'is_comapny': '', 'title': '','photo':''}}
-        if is_company == 'contact':
-            value['value'] = {'is_company': is_company,
-                             'title': '','child_ids':[(5,)],
-                             'photo': self._get_photo(cr, uid, is_company, context)}
-        elif is_company == 'partner':
-            value['value'] = {'is_company': is_company,
-                             'title': '',
-                             'parent_id':False,
-                             'photo': self._get_photo(cr, uid, is_company, context)}
-        return value
-
+    def onchange_type(self, cr, uid, ids, is_company, context=None):
+        value = {'title': False,
+                 'photo': self._get_photo(cr, uid, is_company, context)}
+        if is_company:
+            value['parent_id'] = False
+            domain = {'title': [('domain', '=', 'partner')]}
+        else:
+            value['child_ids'] = [(5,)]
+            domain = {'title': [('domain', '=', 'contact')]}
+        return {'value': value, 'domain': domain}
 
     def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
         vals = {'value':{}}
@@ -248,44 +247,37 @@ class res_partner(osv.osv):
                     return False
         return True
 
+#   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
     def write(self, cr, uid, ids, vals, context=None):
-        # Update the all child and parent_id record
-        update_ids=False
+        # Update all children and parent_id records
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for partner_id in self.browse(cr, uid, ids, context=context):
-            is_company=partner_id.is_company
-            parent_id=partner_id.parent_id.id
-            if is_company == 'contact' and  parent_id:
-                update_ids= self.search(cr, uid, [('parent_id', '=', parent_id),('use_parent_address','=',True)], context=context)
-                if parent_id not in update_ids:
-                   update_ids.append(parent_id)
-            elif is_company == 'partner':
-                 update_ids= self.search(cr, uid, [('parent_id', '=', partner_id.id),('use_parent_address','=',True)], context=context)
-            if update_ids:
-                self.udpate_address(cr,uid,update_ids,False,vals,context)
+        for partner in self.browse(cr, uid, ids, context=context):
+            is_company = partner.is_company
+            parent_id = partner.parent_id.id
+            if is_company:
+                update_ids = self.search(cr, uid, [('parent_id', '=', partner.id), ('use_parent_address','=',True)], context=context)
+            elif not is_company and parent_id:
+                update_ids = [parent_id] + self.search(cr, uid, [('parent_id', '=', parent_id), ('use_parent_address','=',True)], context=context)
+            else:
+                update_ids = []
+            self.update_address(cr, uid, update_ids, vals, context)
         return super(res_partner,self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if vals.get('parent_id') and vals.get('use_parent_address'):
-             update_ids= self.search(cr, uid, [('parent_id', '=', vals.get('parent_id')),('use_parent_address','=',True)], context=context)
-             update_ids.append(vals.get('parent_id'))
-             self.udpate_address(cr,uid,False,update_ids,vals)
+             update_ids = [vals['parent_id']] + \
+                self.search(cr, uid, [('parent_id', '=', vals['parent_id']),('use_parent_address','=',True)], context=context)
+             self.update_address(cr, uid, update_ids, vals)
         return super(res_partner,self).create(cr, uid, vals, context=context)
 
-
-    def udpate_address(self,cr,uid,update_ids,parent_id,vals, context=None):
+    def update_address(self, cr, uid, ids, vals, context=None):
+        addr_vals = {}
         for key, data in vals.iteritems():
-            if key in ('street','street2','zip','city','state_id','country_id','email','phone','fax','mobile','website','ref','lang')  and  data :
-                update_list=update_ids or parent_id
-                if update_list :
-                    sql = """UPDATE res_partner SET %(field)s = %%(value)s
-                                    WHERE id in %%(id)s"""%{'field' : key,}
-                    cr.execute(sql, {'value': data or '',
-                                    'id':tuple(update_list)})
-        return True
-#   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
+            if key in ('street','street2','zip','city','state_id','country_id','email','phone','fax','mobile','website','ref','lang') and data:
+                addr_vals[key] = data
+        return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
 
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
@@ -401,7 +393,7 @@ class res_partner(osv.osv):
                                                 ('name','=','main_partner')])[0],
                 ).res_id
 
-    def _display_address(self, cr, uid, address,type ,context=None):
+    def _display_address(self, cr, uid, address, type, context=None):
         '''
         The purpose of this function is to build and return an address formatted accordingly to the
         standards of the country where it belongs.
@@ -413,10 +405,10 @@ class res_partner(osv.osv):
         '''
 
         if type:
-            if address.is_company=='partner' and address.child_ids:
+            if address.is_company and address.child_ids:
                 for child_id in address.child_ids:
-                    if child_id.type==type:
-                        address=child_id
+                    if child_id.type == type:
+                        address = child_id
 
         # get the information that will be injected into the display format
         # get the address format
@@ -435,14 +427,9 @@ class res_partner(osv.osv):
 
         return address_format % args
 
-    def default_get(self, cr, uid, fields, context=None):
-        res =  super(res_partner, self).default_get( cr, uid, fields, context)
-        if 'is_company' in res:
-            res.update({'photo': self._get_photo(cr, uid, res.get('is_company', 'contact'), context)})
-        return res
 
 
-#This feature is Deprecated for backward Compability only
+# res.partner.address is deprecated; it is still there for backward compability only
 class res_partner_address(osv.osv):
     _table = "res_partner"
     _name = 'res.partner.address'
@@ -478,4 +465,5 @@ class res_partner_address(osv.osv):
     def create(self, cr, uid, vals, context=None):
         logging.getLogger('res.partner').warning("Deprecated, use of res.partner.address and used res.partner")
         return super(res_partner_address,self).create(cr, uid, vals, context=context)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
