@@ -180,12 +180,15 @@ class sale_configuration(osv.osv_memory):
             self.set_tax_policy(cr, uid, ids, context=context)
         if tax_policy == 'global_on_order':
             res['value'].update({'group_sale_taxes_global_on_order': True})
+            res['value'].update({'group_sale_taxes_on_order_line': False})
+
         elif tax_policy == 'on_order_line':
             res['value'].update({'group_sale_taxes_on_order_line': True})
+            res['value'].update({'group_sale_taxes_global_on_order': False})
         else:
             res['value'].update({'group_sale_taxes_on_order_line': False, 'group_sale_taxes_global_on_order': False})
         return res
-    
+
     def set_default_taxes(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
         taxes = self._check_default_tax(cr, uid, context=context)
