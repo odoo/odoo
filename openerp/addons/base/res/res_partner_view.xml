@@ -331,8 +331,8 @@
                             <field name="name" required="1"/>
                             <field name="title" size="0" groups="base.group_extended" domain="[('domain', '=', 'contact')]"/>
                             <newline/>
-                            <field name="function" attrs="{'invisible': [('is_company', '=', True)]}"/>
-                            <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', True)]}"
+                            <field name="function" attrs="{'invisible': [('is_company', '=', True)]}" colspan="4"/>
+                            <field name="parent_id" string="Company" colspan="4" attrs="{'invisible': [('is_company','=', True)]}"
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
                                 on_change="onchange_address(use_parent_address, parent_id)"/>
                         </group>
@@ -378,25 +378,26 @@
                                 <field name="child_ids" context="{'default_parent_id': active_id}" nolabel="1">
                                 <form string="Partners">
                                     <group col="8" colspan="4">
-                                        <group col="2">
-                                            <field name="is_company" on_change="onchange_type(is_company)" domain="[('is_company', '=', 'partner')]"/>
-                                            <field name="function" attrs="{'invisible': [('is_company','=', True)]}" colspan="2"/>
-                                            <field name="title" size="0" groups="base.group_extended" domain="[('domain', '=', is_company)]"/>
+                                        <group col="4" colspan="4">
+                                            <field name="name" required="1"/>
+                                            <field name="title" size="0" groups="base.group_extended" domain="[('domain', '=', 'contact')]"/>
+                                            <newline/>
+                                            <field name="function" attrs="{'invisible': [('is_company', '=', True)]}" colspan="4"/>
+                                            <field name="parent_id" string="Company" colspan="4" attrs="{'invisible': [('is_company','=', True)]}"
+                                                domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
+                                                on_change="onchange_address(use_parent_address, parent_id)" invisible="1"/>
                                         </group>
-                                    <group col="2">
-                                        <field name="name" required="1"/>
-                                        <field name="parent_id" string="Company" attrs="{'invisible': [('is_company','=', True)]}"
-                                            domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
-                                            on_change="onchange_address(use_parent_address, parent_id)" invisible="1"/>
+                                        <group col="2">
+                                            <field name="is_company" on_change="onchange_type(is_company)"/>
+                                        </group>
+                                        <group col="2">
+                                            <field name="customer"/>
+                                            <field name="supplier"/>
+                                        </group>
+                                        <group col="2">
+                                            <field name="photo" widget='image' nolabel="1"/>
+                                        </group>
                                     </group>
-                                    <group col="2">
-                                        <field name="customer"/>
-                                        <field name="supplier"/>
-                                    </group>
-                                    <group col="2">
-                                        <field name="photo" widget='image' nolabel="1"/>
-                                    </group>
-                                </group>
                             <notebook colspan="4">
                                 <page string="General">
                                     <group colspan="2">
