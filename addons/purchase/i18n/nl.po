@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-03-01 18:30+0000\n"
+"PO-Revision-Date: 2012-03-06 12:40+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-02 05:24+0000\n"
-"X-Generator: Launchpad (build 14886)\n"
+"X-Launchpad-Export-Date: 2012-03-07 06:04+0000\n"
+"X-Generator: Launchpad (build 14907)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -162,7 +162,7 @@ msgstr "Offerteaanvraag"
 #. module: purchase
 #: selection:purchase.config.wizard,default_method:0
 msgid "Based on Receptions"
-msgstr "Gebaseerd op ontvangsten"
+msgstr "Gebaseerd op ontvangsten (geleverde hoeveelheid)"
 
 #. module: purchase
 #: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
@@ -516,7 +516,7 @@ msgstr "Bevestigen"
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4_picking_to_invoice
 #: selection:purchase.order,invoice_method:0
 msgid "Based on receptions"
-msgstr "Gebaseerd op ontvangsten"
+msgstr "Gebaseerd op ontvangsten (geleverde hoeveelheid)"
 
 #. module: purchase
 #: constraint:res.company:0
@@ -718,7 +718,7 @@ msgstr "Aantal"
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
 msgid "Create invoice"
-msgstr "Factuur maken"
+msgstr "Maak factuur"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -777,9 +777,9 @@ msgid ""
 "according to your settings. Once you receive a supplier invoice, you can "
 "match it with the draft invoice and validate it."
 msgstr ""
-"Gebruik dit menu om te ontvangen facturen van leveranciers te beheren. "
-"OpenERP voor-genereert concept facturen van uw inkooporders of ontvangsten, "
-"volgens uw instellingen. Nadat u de inkoopfactuur ontvangt van uw "
+"Gebruik dit menu om te ontvangen facturen van leveranciers te beheren. Op "
+"basis van uw factuurcontrole instelling genereert OpenERP concept facturen "
+"van uw inkooporders of ontvangsten. Nadat u de inkoopfactuur ontvangt van uw "
 "leverancier kunt u hem vergelijken met uw concept factuur en hem goedkeuren."
 
 #. module: purchase
@@ -1036,7 +1036,7 @@ msgstr "Agendaweergave"
 #. module: purchase
 #: selection:purchase.config.wizard,default_method:0
 msgid "Based on Purchase Order Lines"
-msgstr "Gebaseerd op inkooporderregels"
+msgstr "Gebaseerd op inkooporders (bestelde hoeveelheid)"
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
@@ -1066,7 +1066,7 @@ msgid ""
 msgstr ""
 "Een inkooporder genereert een inkoopfactuur zodra deze is bevestigd door de "
 "leveranciers, Afhankelijk van de factuurinstelling van de inkooporder is de "
-"factuur gebaseerd op de ontvangen of de bestelde aantallen."
+"factuur gebaseerd op de ontvangen of de bestelde hoeveelheden."
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
@@ -1278,7 +1278,7 @@ msgid ""
 "Based on receptions: let you create an invoice when receptions are validated."
 msgstr ""
 "Op basis van inkooporderregels: plaats de afzonderlijke regels in "
-"'Factuurcontrole >Gebaseerd op inkooporderregels' van waar u selectief een "
+"'Factuurcontrole >Gebaseerd op inkooporders' van waar u selectief een "
 "factuur kan maken.\n"
 "Op basis van gegenereerde factuur: maak een ontwerp-factuur welke u later "
 "kunt goedkeuren.\n"
@@ -1693,7 +1693,7 @@ msgstr "Eigen orderreferentie"
 #: report:purchase.quotation:0 field:purchase.report,expected_date:0
 #: view:stock.picking:0
 msgid "Expected Date"
-msgstr "Verwachte datum"
+msgstr "Datum verwacht"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -2017,7 +2017,7 @@ msgstr "Jaar"
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr "Gebaseerd op inkooporderregels"
+msgstr "Gebaseerd op inkooporders (bestelde hoeveelheid)"
 
 #. module: purchase
 #: model:ir.actions.todo.category,name:purchase.category_purchase_config
