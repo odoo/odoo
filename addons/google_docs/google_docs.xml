@@ -4,6 +4,26 @@
 
         <!-- add google docs config field in user form -->
 
+        <record model="ir.ui.view" id="view_google_docs_users_preferences_inherited_form">
+            <field name="name">res.user.google_docs.prefs.inherited</field>
+            <field name="model">res.users</field>
+            <field name='inherit_id' ref='base.view_users_form_simple_modif'/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <group name='default_filters' position='inside'>
+                <!--field name="signature" position="after">
+                    <group colspan='4'>
+                        <separator string='Google Docs Config' colspan='4'/-->
+                        <field name="context_model_id"/>
+                        <field name='context_gdocs_resource_id'/>
+                        <field name='context_name'/>
+                        <field name='context_name_template'/>
+                    <!--/group>
+                </field-->
+                </group>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_google_docs_users_config_inherited_form">
             <field name="name">res.user.google_docs.config.inherited</field>
             <field name="model">res.users</field>
