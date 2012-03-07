@@ -59,8 +59,10 @@ openerp.mail = function(session) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            /* events */
+            /* display customization and events */
             this.$element.find('p.oe_mail_p_nomore').hide();
+            if (this.params.thread_level > 0) this.$element.find('div.oe_mail_thread_act').hide();
+            if (this.params.thread_level > 0) this.$element.find('div.oe_mail_thread_more').hide();
             this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
             this.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); });
             this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
