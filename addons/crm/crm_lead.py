@@ -60,7 +60,6 @@ class crm_lead(crm_case, osv.osv):
         'stage_id': _read_group_stage_ids
     }
 
-    # overridden because res.partner.address has an inconvenient name_get,
     # especially if base_contact is installed.
     def name_get(self, cr, user, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -147,7 +146,6 @@ class crm_lead(crm_case, osv.osv):
         return res
 
     _columns = {
-        # Overridden from res.partner.address:
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
             select=True, help="Optional linked partner, usually after conversion of the lead"),
 

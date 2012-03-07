@@ -105,7 +105,7 @@ class crm_claim(crm.crm_case, osv.osv):
                               'partner_phone': False
                             }
                    }
-        address = self.pool.get('res.partner.address').browse(cr, uid, part)
+        address = self.pool.get('res.partner').browse(cr, uid, part)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone}}
 
     def case_open(self, cr, uid, ids, *args):
