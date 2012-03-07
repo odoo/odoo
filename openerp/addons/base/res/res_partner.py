@@ -177,7 +177,7 @@ class res_partner(osv.osv):
     def _get_photo(self, cr, uid, is_company, context=None):
         if is_company == 'contact':
             return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'photo.png'), 'rb') .read().encode('base64')
-        return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
+        return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'company_icon.png'), 'rb') .read().encode('base64')
 
     _defaults = {
         'active': True,
@@ -301,7 +301,7 @@ class res_partner(osv.osv):
         for record in reads:
             name = record.get('name', '/')
             if record['parent_id']:
-                name =  "%s ( %s )"%(name, record['parent_id'][1])
+                name =  "%s (%s)"%(name, record['parent_id'][1])
             res.append((record['id'], name))
         return res
 
