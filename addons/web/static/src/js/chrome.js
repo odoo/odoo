@@ -1127,6 +1127,12 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
                 self.menu.on_menu_click(null, action.menu_id);
             });
         }
+    },
+    set_content_full_screen: function(fullscreen) {
+        if (fullscreen)
+            this.$element.addClass("oe_content_full_screen");
+        else
+            this.$element.removeClass("oe_content_full_screen");
     }
 });
 
