@@ -577,7 +577,7 @@ openerp.mail = function(session) {
                         'res_model': model_name, 'res_id': records[0]['res_id'], 'uid': self.session.uid, 'records': records,
                         'parent_id': false, 'thread_level': self.params.thread_level}
                         );
-                    thread.appendTo(self.$element.find('div.oe_mail_wall_thread_content:last'));
+                    thread.appendTo(self.$element.find('div.oe_mail_wall_thread:last'));
                 });
             });
         },
