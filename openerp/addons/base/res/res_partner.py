@@ -244,33 +244,33 @@ class res_partner(osv.osv):
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
     def write(self, cr, uid, ids, vals, context=None):
+        # Update parent and siblings or children records
         if isinstance(ids, (int, long)):
             ids = [ids]
-        res = super(res_partner,self).write(cr, uid, ids, vals, context=context)
-        self.update_address(cr, uid, ids, context)
-        return res
-
-    def create(self, cr, uid, vals, context=None):
-        if 'photo' not in vals:
-            vals['photo'] = self._get_photo(cr, uid, vals.get('is_company', False), context)
-        id = super(res_partner,self).create(cr, uid, vals, context=context)
-        self.update_address(cr, uid, [id], context)
-        return id
-
-    def update_address(self, cr, uid, ids, context=None):
-        """ update parent and children after having changed partner ids """
-        for partner in self.browse(cr, uid, ids, context):
+        for partner in self.browse(cr, uid, ids, context=context):
             update_ids = []
             if partner.is_company:
-                children_domain = [('parent_id', '=', partner.id), ('use_parent_address','=',True)]
-                update_ids = self.search(cr, uid, children_domain, context=context)
-            elif partner.parent_id and partner.use_parent_address:
-                parent_and_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address','=',True)]
-                update_ids = [partner.parent_id.id] + self.search(cr, uid, parent_and_siblings, context=context)
-            if update_ids:
-                vals = dict((key, value_or_id(partner[key])) for key in POSTAL_ADDRESS_FIELDS if partner[key])
-                super(res_partner, self).write(cr, uid, ids, vals, context)
-        return True
+                domain_children = [('parent_id', '=', partner.id), ('use_parent_address', '=', True)]
+                update_ids = self.search(cr, uid, domain_children, context=context)
+            elif partner.parent_id:
+                domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
+                update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
+            self.update_address(cr, uid, update_ids, vals, context)
+        return super(res_partner,self).write(cr, uid, ids, vals, context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        # Update parent and siblings records
+        if vals.get('parent_id') and vals.get('use_parent_address'):
+            domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
+            update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
+            self.update_address(cr, uid, update_ids, vals, context)
+        if 'photo' not in vals:
+            vals['photo'] = self._get_photo(cr, uid, vals.get('is_company', False), context)
+        return super(res_partner,self).create(cr, uid, vals, context=context)
+
+    def update_address(self, cr, uid, ids, vals, context=None):
+        addr_vals = dict((key, vals[key]) for key in POSTAL_ADDRESS_FIELDS if vals.get(key))
+        return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
 
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
