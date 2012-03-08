@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-03-01 11:55+0000\n"
-"Last-Translator: ignas <ignassladkevicius@yahoo.com>\n"
+"PO-Revision-Date: 2012-03-07 16:42+0000\n"
+"Last-Translator: Paulius Sladkevičius <paulius@hacbee.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-02 05:24+0000\n"
-"X-Generator: Launchpad (build 14886)\n"
+"X-Launchpad-Export-Date: 2012-03-08 05:24+0000\n"
+"X-Generator: Launchpad (build 14914)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -175,6 +175,11 @@ msgid ""
 "the product is a service, shipped quantities means hours spent on the "
 "associated tasks."
 msgstr ""
+"Pardavimo užsakymas automatiškai sukuria sąskaitą (juodraštinę sąskaitą "
+"faktūrą). Užsakytas ir pristatytas kiekiai gali būti nevienodi. Jūs turite "
+"pasirinkti, ar norite turėti sąskaitą faktūrą pagal užsakytų ar pristatytų "
+"produktų kiekį. Jei produktas yra paslauga, išsiunčiami kiekiai reiškia "
+"valandas, praleistos susijusiai užduočiai atlikti."
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
@@ -184,7 +189,7 @@ msgstr "Numatytasis mokėjimo terminas"
 #. module: sale
 #: field:sale.config.picking_policy,deli_orders:0
 msgid "Based on Delivery Orders"
-msgstr ""
+msgstr "Remaintis pristatymo užsakimu"
 
 #. module: sale
 #: field:sale.config.picking_policy,time_unit:0
@@ -205,12 +210,13 @@ msgstr "Nuol. (%)"
 #. module: sale
 #: view:sale.report:0 field:sale.report,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Bendra kaina"
 
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
 msgstr ""
+"Pažymėkite žymės langelį, kad sugrupuoti tų pačių klientų sąskaitas faktūras"
 
 #. module: sale
 #: view:sale.order:0
@@ -273,7 +279,7 @@ msgstr ""
 #: code:addons/sale/sale.py:330
 #, python-format
 msgid "Pricelist Warning!"
-msgstr ""
+msgstr "Kainoraščio Įspėjimas!"
 
 #. module: sale
 #: field:sale.order.line,discount:0
