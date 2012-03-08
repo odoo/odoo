@@ -1,8 +1,7 @@
-
 openerp.web_uservoice = function(instance) {
 
-instance.web_uservoice.UserVoice = instance.web.OldWidget.extend({
-    template: 'Header-UserVoice',
+instance.web_uservoice.UserVoice = instance.web.Widget.extend({
+    template: 'Systray.UserVoice',
     default_forum: '77459',
 
     init: function() {
@@ -16,7 +15,12 @@ instance.web_uservoice.UserVoice = instance.web.OldWidget.extend({
             showTab: false
         };
 
-        instance.webclient.menu.do_menu_click.add_first(this.do_menu_click);
+        instance.webclient.menu.on('menuClicked', this, function(id, $clicked_menu) {
+            var root = $clicked_menu.parents('div.oe_menu').length === 1;
+            if (id && root) {
+                this.uservoiceOptions.forum = this.uservoiceForums[id] || this.default_forum;
+            }
+        });
     },
 
     start: function() {
@@ -45,27 +49,16 @@ instance.web_uservoice.UserVoice = instance.web.OldWidget.extend({
                 self.uservoiceForums[menu.id] = forum_mapping[menu.name.toLowerCase()] || self.default_forum;
             });
         });
-        
+
         this.$element.find('a').click(function(e) {
             e.preventDefault();
             UserVoice.Popin.show(self.uservoiceOptions);
             return false;
         });
-    },
-
-
-    do_menu_click: function($clicked_menu, manual) {
-        var id = $clicked_menu.attr('data-menu'),
-            root = $clicked_menu.parents('div.menu').length === 1;
-        if (id && root) {
-            this.uservoiceOptions.forum = this.uservoiceForums[id] || this.default_forum;
-        }
-    },
-
+    }
 });
 
-
-instance.web.Header.include({
+instance.web.UserMenu.include({
     do_update: function() {
         var self = this;
         this._super();
@@ -74,11 +67,10 @@ instance.web.Header.include({
                 self.uservoice.destroy();
             }
             self.uservoice = new instance.web_uservoice.UserVoice(self);
-            self.uservoice.prependTo(self.$element.find('div.header_corner'));
+            self.uservoice.appendTo(instance.webclient.$element.find('.oe_systray'));
         });
     }
 });
-
 
 if (instance.webclient) {
     $(function() {
