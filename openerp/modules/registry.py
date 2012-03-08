@@ -261,33 +261,28 @@ class RegistryManager(object):
     @classmethod
     def check_registry_signaling(cls, db_name):
         if openerp.multi_process and db_name in cls.registries:
-            # Check if the model registry must be reloaded (e.g. after the
-            # database has been updated by another process).
             registry = cls.get(db_name, pooljobs=False)
             cr = registry.db.cursor()
-            registry_reloaded = False
             try:
-                cr.execute('SELECT last_value FROM base_registry_signaling')
-                r = cr.fetchone()[0]
+                cr.execute("""
+                    SELECT base_registry_signaling.last_value,
+                           base_cache_signaling.last_value
+                    FROM base_registry_signaling, base_cache_signaling""")
+                r, c = cr.fetchone()
+                print ">>>", r, c
+                # Check if the model registry must be reloaded (e.g. after the
+                # database has been updated by another process).
                 if registry.base_registry_signaling_sequence != r:
                     _logger.info("Reloading the model registry after database signaling.")
                     # Don't run the cron in the Gunicorn worker.
                     registry = cls.new(db_name, pooljobs=False)
                     registry.base_registry_signaling_sequence = r
-                    registry_reloaded = True
-            finally:
-                cr.close()
-
-            # Check if the model caches must be invalidated (e.g. after a write
-            # occured on another process). Don't clear right after a registry
-            # has been reload.
-            cr = openerp.sql_db.db_connect(db_name).cursor()
-            try:
-                cr.execute('SELECT last_value FROM base_cache_signaling')
-                r = cr.fetchone()[0]
-                if registry.base_cache_signaling_sequence != r and not registry_reloaded:
+                # Check if the model caches must be invalidated (e.g. after a write
+                # occured on another process). Don't clear right after a registry
+                # has been reload.
+                elif registry.base_cache_signaling_sequence != c:
                     _logger.info("Invalidating all model caches after database signaling.")
-                    registry.base_cache_signaling_sequence = r
+                    registry.base_cache_signaling_sequence = c
                     registry.clear_caches()
                     registry.reset_any_cache_cleared()
             finally:
