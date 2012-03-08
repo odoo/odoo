@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-02-24 21:36+0000\n"
-"Last-Translator: lholivier <olivier.lenoir@free.fr>\n"
+"PO-Revision-Date: 2012-03-07 15:41+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-25 05:51+0000\n"
-"X-Generator: Launchpad (build 14860)\n"
+"X-Launchpad-Export-Date: 2012-03-08 05:24+0000\n"
+"X-Generator: Launchpad (build 14914)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -101,7 +101,7 @@ msgstr "Code (ex:fr__FR)"
 #: field:workflow.transition,wkf_id:0
 #: field:workflow.workitem,wkf_id:0
 msgid "Workflow"
-msgstr "Flux métier"
+msgstr "Workflow"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -2602,7 +2602,7 @@ msgstr "Description générale"
 #. module: base
 #: view:workflow.activity:0
 msgid "Workflow Activity"
-msgstr "Activité du flux"
+msgstr "Activité du workflow"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view
@@ -2718,7 +2718,7 @@ msgstr ""
 #. module: base
 #: view:workflow:0
 msgid "Workflow Editor"
-msgstr "Editeur de Flux"
+msgstr "Éditeur de workflow"
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -3637,7 +3637,7 @@ msgstr "Vue diagramme OpenERP web"
 #. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "HR Officer"
-msgstr ""
+msgstr "Responsable RH"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract
@@ -4474,6 +4474,9 @@ msgid ""
 "la moneda Lempira. -- Adds accounting chart for Honduras.  It also includes "
 "taxes and the Lempira currency"
 msgstr ""
+"Agrega una nomenclatura contable para Honduras. También incluye impuestos y "
+"la moneda Lempira. -- Adds accounting chart for Honduras.  It also includes "
+"taxes and the Lempira currency"
 
 #. module: base
 #: selection:ir.actions.act_window,view_type:0
@@ -4494,6 +4497,12 @@ msgid ""
 "Italian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Piano dei conti italiano di un'impresa generica.\n"
+"================================================\n"
+"\n"
+"Italian accounting chart and localization.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.me
@@ -5394,7 +5403,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_workflow
 #: model:ir.ui.menu,name:base.menu_workflow_root
 msgid "Workflows"
-msgstr "Processus"
+msgstr "Workflows"
 
 #. module: base
 #: model:ir.module.module,description:base.module_profile_tools
@@ -8345,7 +8354,7 @@ msgstr ""
 #. module: base
 #: view:workflow.workitem:0
 msgid "Workflow Workitems"
-msgstr "Workflow Workitems"
+msgstr "Tâches de Workflow"
 
 #. module: base
 #: model:res.country,name:base.vc
@@ -12776,7 +12785,7 @@ msgstr "ir.wizard.screen"
 #. module: base
 #: model:ir.model,name:base.model_workflow
 msgid "workflow"
-msgstr "processus"
+msgstr "workflow"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:255
@@ -16858,7 +16867,7 @@ msgstr "Mois"
 #. module: base
 #: view:workflow.instance:0
 msgid "Workflow Instances"
-msgstr "Instances du processus"
+msgstr "Instances de workflow"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:284
@@ -17004,6 +17013,30 @@ msgid ""
 "module.\n"
 "    "
 msgstr ""
+"\n"
+"Module de génération de modules sans développement.\n"
+"======================================================================\n"
+"\n"
+"Il enregistre toutes les opérations sur les objets lors de leur "
+"configuration et génère un module .ZIP. Ceci permet de créer un module "
+"directement à partir du client OpenERP.\n"
+"\n"
+"Cette version fonctionne pour créer et mettre à jour des enregistrements "
+"existants. Elle recalcule les dépendances et les relie avec tous les types "
+"de composants graphiques  (many2one, many2many, ...).\n"
+"Elles supporte aussi les workflows, les données de démonstration et les "
+"données de mise à jour.\n"
+"\n"
+"Ceci devrait vous aider à créer facilement des modules publiables et "
+"réutilisables pour adapter des configurations et des données de "
+"test/démonstration.\n"
+"\n"
+"Mode d'emploi :\n"
+"Lancer Administration/Customization/Module Creation/Export Customizations "
+"comme assistant de module.\n"
+"Sélectionner le critère datetime of recording et les objets à enregistrer "
+"puis enregistrer le module.\n"
+"    "
 
 #. module: base
 #: selection:base.language.install,lang:0
