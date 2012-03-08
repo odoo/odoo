@@ -744,6 +744,14 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                         var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
                         return self.rpc('/web/webclient/jslist', {mods: to_load}).pipe(function(files) {
                             return self.do_load_js(file_list.concat(files));
+                        }).then(function () {
+                            if (!Date.CultureInfo.pmDesignator) {
+                                // If no am/pm designator is specified but the openerp
+                                // datetime format uses %i, date.js won't be able to
+                                // correctly format a date. See bug#938497.
+                                Date.CultureInfo.amDesignator = 'AM';
+                                Date.CultureInfo.pmDesignator = 'PM';
+                            }
                         });
                     }))
             }
