@@ -3314,10 +3314,17 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
         this.$element.find('.oe-binary').toggle(!this.readonly);
     },
     set_value: function(value) {
+        console.log(value)
         this._super.apply(this, arguments);
         this.set_image_maxwidth();
-        var url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +
-            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime());
+
+        var url;
+        if (value && value.substr(0, 10).indexOf(' ') == -1) {
+            url = 'data:image/png;base64,' + this.value;
+        } else {
+            url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +
+                this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime());
+        }
         this.$image.attr('src', url);
     },
     set_image_maxwidth: function() {
