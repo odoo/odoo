@@ -7,7 +7,7 @@
         <div class="oe_mail_wall_left">
             <div class="oe_mail_wall_act">
                 <div class="oe_mail_wall_tweet">
-                    <textarea class="oe_mail_wall_action_textarea" onfocus="this.value='';">Enter your comment here...</textarea><br />
+                    <textarea class="oe_mail oe_mail_wall_action_textarea" placeholder="Add a personnal message here..."/><br />
                     <button class="oe_mail_wall_button_comment" type="button">Post comment</button>
                 </div>
             </div>
@@ -33,11 +33,10 @@
             <div class="oe_mail_actions">
                 <button type="button" class="oe_mail_button_follow">Follow</button>
                 <button type="button" class="oe_mail_button_unfollow">Unfollow</button>
+                <button type="button" class="oe_mail_button_followers">Display followers</button>
             </div>
             <div class="oe_mail_followers">
-                <div class="oe_mail_followers_actions">
-                    <button type="button" class="oe_mail_button_followers">Display followers</button>
-                </div>
+                <h4>Followers</h4>
                 <div class="oe_mail_followers_display">
                 </div>
             </div>
@@ -46,9 +45,9 @@
 
     <div t-name="Thread" class="oe_mail_thread">
         <div class="oe_mail_thread_act">
-            <div class="oe_mail_msg_image">User_image</div>
+            <img class="oe_mail_msg_image oe_mail_oe_left" alt="User img"/>
             <div class="oe_mail_msg_content">
-                <textarea class="oe_mail_action_textarea" onfocus="this.value='';">Enter your comment here...</textarea><br />
+                <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..."/><br />
                 <button type="button" class="oe_mail_button_comment">Post comment</button>
             </div>
         </div>
@@ -60,9 +59,7 @@
     </div>
 
     <div t-name="ThreadMsg" t-attf-class="{record.type} oe_mail_thread_msg">
-        <div class="oe_mail_msg_image">
-            <img t-att-src="record.mini_url"/>
-        </div>
+        <img class="oe_mail_msg_image oe_mail_oe_left" t-att-src="record.mini_url"/>
         <div class="oe_mail_msg_content">
             <t t-if="record.type == 'email'"><t t-call="EmailDisplay" /></t>
             <t t-if="record.type == 'notification' || record.type == 'comment'"><t t-call="NoteDisplay" /></t>
@@ -71,15 +68,14 @@
     </div>
     
     <t t-name="NoteDisplay">
-        <p class="oe_mail_msg_p">
-            <span class="oe_mail_msg_author">
-                <a href="#" class="intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
+        <p class="oe_mail_msg">
+            <span class="oe_mail_oe_fade">
+                <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
                 <t t-if="record.type == 'notification'">via OpenERP System Notification</t>
-            </span>
+            
             <t t-if="record.need_action_user_id != false">
-                - <span class="oe_mail_msg_need_action">Need action by <a href="#"><t t-raw="record.need_action_user_id[1]"/></a></span>
-            </t>
-            wrote on <span class="oe_mail_msg_date"><t t-raw="record.date"/></span>
+                - <span class="oe_mail_oe_warning">Need action by <a href="#" class="intlink" data-res-model='res.users' t-attf-data-res-id='{record.need_action_user_id[0]}'><t t-raw="record.need_action_user_id[1]"/></a></span>
+            </t>on <t t-raw="record.date"/></span>
             <br />
             <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
             <t t-if="record.tr_body_text"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body_text"/></span></t>
@@ -87,9 +83,10 @@
     </t>
     
     <t t-name="EmailDisplay">
-        <p class="oe_mail_msg_p oe_mail_msg_p_email_header">
-            From: <t t-esc="email_from"/> on <span class="oe_mail_msg_date"><t t-raw="record.date"/></span><br />
-            To: <t t-sec="mail_to"/><br />
+        <p class="oe_mail_msg oe_mail_msg_p_email_header">
+            <span class="oe_mail_oe_bold">From:</span> <t t-esc="email_from"/> on <span class="oe_mail_oe_fade"><t t-raw="record.date"/></span><br />
+            <span>To:</span> <t t-sec="mail_to"/><br />
+            <span>Subject:</span> <t t-sec="subject"/><br />
         </p>
         <p class="oe_mail_msg_p">
             <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>

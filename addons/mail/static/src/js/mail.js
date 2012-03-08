@@ -221,8 +221,7 @@ openerp.mail = function(session) {
         },
         
         display_current_user: function () {
-            return this.$element.find('div.oe_mail_msg_image').empty().html(
-                '<img src="' + this.thread_get_avatar_mini('res.users', 'avatar_mini', this.params.uid) + '"/>');
+            return this.$element.find('img.oe_mail_msg_image').attr('src', this.thread_get_avatar_mini('res.users', 'avatar_mini', this.params.uid));
         },
         
         do_comment: function () {
@@ -281,7 +280,7 @@ openerp.mail = function(session) {
             var regex_res = regex_login.exec(string);
             while (regex_res != null) {
                 var login = regex_res[2];
-                string = string.replace(regex_res[0], '<a href="#" class="intlink" data-res-model="res.users" data-res-login = ' + login + '>@' + login + '</a>');
+                string = string.replace(regex_res[0], '<a href="#" class="intlink oe_mail_oe_intlink" data-res-model="res.users" data-res-login = ' + login + '>@' + login + '</a>');
                 regex_res = regex_login.exec(string);
             }
             return string;
@@ -345,7 +344,7 @@ openerp.mail = function(session) {
 
         init: function() {
             this.is_sub = 0;
-            this.see_sub = 0;
+            this.see_sub = 1;
             this._super.apply(this, arguments);
             this.thread = null;
             /* DataSets */
@@ -370,10 +369,9 @@ openerp.mail = function(session) {
             console.log('set_value');
             var self = this;
             this._super.apply(this, arguments);
-            this.see_sub = 0;
+            this.see_sub = 1;
             /* hide follow/unfollow/see followers buttons */
-            this.$element.find('button.oe_mail_button_followers').html('Display followers')
-            this.$element.find('div.oe_mail_followers_display').hide();
+            this.$element.find('button.oe_mail_button_followers').html('Hide followers')
             this.$element.find('button.oe_mail_button_follow').hide();
             this.$element.find('button.oe_mail_button_unfollow').hide();
             if (! this.view.datarecord.id) { return; }
@@ -397,12 +395,13 @@ openerp.mail = function(session) {
         },
         
         display_subscribers: function (records) {
-            this.$element.find('div.oe_mail_followers_display').empty();
             var self = this;
+            var sub_node = this.$element.find('div.oe_mail_followers')
+            sub_node.empty();
+            $('<h4/>').html('Followers (' + records.length + ')').appendTo(sub_node);
             _(records).each(function (record) {
-                $('<div class="oe_mail_followers_vignette">').html(
-                    '<img src="' + self.thread_get_avatar_mini('res.users', 'avatar_mini', record.id) + '" title="' + record.name + '" alt="' + record.name + '"/>'
-                    ).appendTo(self.$element.find('div.oe_mail_followers_display'));
+                var mini_url = self.thread_get_avatar_mini('res.users', 'avatar_mini', record.id);
+                $('<img  class="oe_mail_oe_left oe_mail_msg_image" src="' + mini_url + '" title="' + record.name + '" alt="' + record.name + '"/>').appendTo(sub_node);
             });
         },
         
@@ -426,7 +425,7 @@ openerp.mail = function(session) {
             this.see_sub = 1 - this.see_sub;
             if (this.see_sub == 1) { this.$element.find('button.oe_mail_button_followers').html('Hide followers'); }
             else { this.$element.find('button.oe_mail_button_followers').html('Display followers'); }
-            this.$element.find('div.oe_mail_followers_display').toggle();
+            this.$element.find('div.oe_mail_followers').toggle();
         },
         
         thread_get_avatar_mini: function(model, field, id) {
