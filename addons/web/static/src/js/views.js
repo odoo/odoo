@@ -49,6 +49,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
     do_push_state: function(state) {
         if (this.widget_parent && this.widget_parent.do_push_state) {
             if (this.inner_action) {
+                state['title'] = this.inner_action.name;
                 state['model'] = this.inner_action.res_model;
                 if (this.inner_action.id) {
                     state['action_id'] = this.inner_action.id;
