@@ -118,9 +118,12 @@ def _lang_get(self, cr, uid, context=None):
     res = lang_pool.read(cr, uid, ids, ['code', 'name'], context)
     return [(r['code'], r['name']) for r in res] + [('','')]
 
+def value_or_id(val):
+    """ return val or val.id if val is a browse record """
+    return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
 
-ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id',
-                  'email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
+POSTAL_ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
+ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
 
 class res_partner(osv.osv):
     _description='Partner'
@@ -217,12 +220,10 @@ class res_partner(osv.osv):
         return {'value': value, 'domain': domain}
 
     def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
-        vals = {'value': {}}
         if use_parent_address and parent_id:
             parent = self.browse(cr, uid, parent_id, context=context)
-            for key in ADDRESS_FIELDS:
-                vals['value'][key] = parent[key]
-        return vals
+            return {'value': dict((key, value_or_id(parent[key])) for key in ADDRESS_FIELDS)}
+        return {}
 
     def _check_ean_key(self, cr, uid, ids, context=None):
         for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
@@ -243,33 +244,33 @@ class res_partner(osv.osv):
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
     def write(self, cr, uid, ids, vals, context=None):
-        # Update all children and parent_id records
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for partner in self.browse(cr, uid, ids, context=context):
-            is_company = partner.is_company
-            parent_id = partner.parent_id.id
-            if is_company:
-                update_ids = self.search(cr, uid, [('parent_id', '=', partner.id), ('use_parent_address','=',True)], context=context)
-            elif not is_company and parent_id:
-                update_ids = [parent_id] + self.search(cr, uid, [('parent_id', '=', parent_id), ('use_parent_address','=',True)], context=context)
-            else:
-                update_ids = []
-            self.update_address(cr, uid, update_ids, vals, context)
-        return super(res_partner,self).write(cr, uid, ids, vals, context=context)
+        res = super(res_partner,self).write(cr, uid, ids, vals, context=context)
+        self.update_address(cr, uid, ids, context)
+        return res
 
     def create(self, cr, uid, vals, context=None):
-        if vals.get('parent_id') and vals.get('use_parent_address'):
-            update_ids = [vals['parent_id']] + \
-                self.search(cr, uid, [('parent_id', '=', vals['parent_id']),('use_parent_address','=',True)], context=context)
-            self.update_address(cr, uid, update_ids, vals)
         if 'photo' not in vals:
             vals['photo'] = self._get_photo(cr, uid, vals.get('is_company', False), context)
-        return super(res_partner,self).create(cr, uid, vals, context=context)
+        id = super(res_partner,self).create(cr, uid, vals, context=context)
+        self.update_address(cr, uid, [id], context)
+        return id
 
-    def update_address(self, cr, uid, ids, vals, context=None):
-        addr_vals = dict( [(key, vals[key]) for key in ADDRESS_FIELDS if vals.get(key)] )
-        return super(res_partner, self).write(cr, uid, ids, addr_vals, context)
+    def update_address(self, cr, uid, ids, context=None):
+        """ update parent and children after having changed partner ids """
+        for partner in self.browse(cr, uid, ids, context):
+            update_ids = []
+            if partner.is_company:
+                children_domain = [('parent_id', '=', partner.id), ('use_parent_address','=',True)]
+                update_ids = self.search(cr, uid, children_domain, context=context)
+            elif partner.parent_id and partner.use_parent_address:
+                parent_and_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address','=',True)]
+                update_ids = [partner.parent_id.id] + self.search(cr, uid, parent_and_siblings, context=context)
+            if update_ids:
+                vals = dict((key, value_or_id(partner[key])) for key in POSTAL_ADDRESS_FIELDS if partner[key])
+                super(res_partner, self).write(cr, uid, ids, vals, context)
+        return True
 
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
