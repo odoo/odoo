@@ -263,7 +263,7 @@ class mail_message(osv.osv):
             attachment_data = {
                     'name': fname,
                     'datas_fname': fname,
-                    'datas': fcontent,
+                    'datas': fcontent and fcontent.encode('base64'),
                     'res_model': self._name,
                     'res_id': email_msg_id,
             }
