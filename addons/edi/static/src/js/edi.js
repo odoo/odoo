@@ -142,8 +142,8 @@ openerp.edi.EdiImport = openerp.web.OldWidget.extend({
     },
 
     destroy_content: function() {
-        _.each(_.clone(this.widget_children), function(el) {
-            el.stop();
+        _.each(_.clone(this.getChildren()), function(el) {
+            el.destroy();
         });
         this.$element.children().remove();
     },

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="event_sale_order">
+             <field name="name">event.product</field>
+             <field name="model">product.product</field>
+             <field name="type">form</field>
+             <field name="inherit_id" ref="product.product_normal_form_view" />
+             <field name="arch" type="xml">
+                <field name="purchase_ok" position="after">
+                    <field name="event_ok" on_change="onchange_event_ok(event_ok, context)"/>
+                </field>
+                <field name='supply_method' position='after'>
+                    <field name="event_type_id" attrs="{'readonly': [('event_ok', '=', False)]}" groups="base.group_extended"/>
+                </field>
+             </field>
+        </record>
+
+        <record model="ir.ui.view" id="event_order_line">
+             <field name="name">event.sale.order</field>
+             <field name="model">sale.order</field>
+             <field name="type">form</field>
+             <field name="inherit_id" ref="sale.view_order_form" />
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='discount']" position="after">
+                    <field name="event_id" colspan="3" domain="[('type', 'in', list(set((event_type_id,False))))]" attrs="{'invisible': [('event_ok', '=', False)],'required': [('event_ok', '!=', False)]}"/>
+                    <field name="event_type_id" invisible="1"/>
+                    <field name="event_ok" invisible="1"/>
+                </xpath>
+             </field>
+        </record>
+    </data>
+</openerp>

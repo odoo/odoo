@@ -157,7 +157,7 @@ class mail_message(osv.osv):
                     msg_txt += truncate_text(message.body_text)
             else:
                 msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
-                msg_txt += message.subject
+                msg_txt += (message.subject or '')
             result[message.id] = msg_txt
         return result
 
@@ -417,7 +417,8 @@ class mail_message(osv.osv):
             if 'text/html' in msg.get('content-type', ''):
                 msg['body_html'] =  body
                 msg['subtype'] = 'html'
-                body = tools.html2plaintext(body)
+                if body:
+                    body = tools.html2plaintext(body)
             msg['body_text'] = tools.ustr(body, encoding)
 
         attachments = []

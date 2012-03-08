@@ -34,20 +34,6 @@ class followup(osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account_followup.followup', context=c),
     }
     
-    def check_company_uniq(self, cr, uid, ids, context=None):
-        sr_id = self.search(cr,uid,[],context=context)
-        lines = self.browse(cr, uid, sr_id, context=context)
-        company = []
-        for l in lines:
-            if l.company_id.id in company:
-                return False
-            if l.company_id.id not in company:
-                company.append(l.company_id.id)
-        return True
-    _constraints = [
-        (check_company_uniq, 'Only One Followup by Company.',['company_id'] )
-        ]
-
 followup()
 
 class followup_line(osv.osv):
