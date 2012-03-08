@@ -408,6 +408,7 @@ class procurement_order(osv.osv):
         """
         return 0
 
+    # XXX action_cancel() should accept a context argument
     def action_cancel(self, cr, uid, ids):
         """Cancel Procurements and either cancel or assign the related Stock Moves, depending on the procurement configuration.
         
