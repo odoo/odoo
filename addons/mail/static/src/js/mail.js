@@ -667,7 +667,7 @@ openerp.mail = function(session) {
          */
         do_comment: function () {
             var body_text = this.$element.find('textarea.oe_mail_wall_action_textarea').val();
-            return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, type='comment']).then(this.init_comments());
+            return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment']).then(this.init_comments());
         },
         
         /**

@@ -25,6 +25,7 @@ import base64
 import email
 from email.utils import parsedate
 
+import re
 import logging
 import xmlrpclib
 from osv import osv, fields
@@ -119,15 +120,19 @@ class mail_thread(osv.osv):
             notification_obj.create(cr, uid, {'user_id': vals['need_action_user_id'], 'message_id': msg_id}, context=context)
         
         # parse message to get requested users
-        user_ids = self.message_parse_users(cr, uid, [msg_id], 'body_text', context=context)
+        user_ids = self.message_parse_users(cr, uid, [msg_id], vals['body_text'], context=context)
         for user_id in user_ids:
+            print 'pushed to %d' % (user_id)
             notification_obj.create(cr, uid, {'user_id': user_id, 'message_id': msg_id}, context=context)
         
         return msg_id
     
-    def message_parse_users(self, cr, uid, ids, field_name='body_text', context=None):
-        '''Parse message content; if find @login: returns the related id'''
-        user_ids = []
+    def message_parse_users(self, cr, uid, ids, string, context=None):
+        '''Parse message content; if find @login -(^|\s)@(\w*)-: returns the related ids'''
+        regex = re.compile('(^|\s)@(\w*)')
+        login_lst = [item[1] for item in regex.findall(string)]
+        if not login_lst: return []
+        user_ids = self.pool.get('res.users').search(cr, uid, [('login', 'in', login_lst)], context=context)
         return user_ids
     
     def message_capable_models(self, cr, uid, context=None):
