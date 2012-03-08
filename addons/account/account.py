@@ -724,7 +724,7 @@ class account_journal(osv.osv):
         if name:
             ids = self.search(cr, user, [('code', 'ilike', name)]+ args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name', 'ilike', name)]+ args, limit=limit, context=context)#fix it ilike should be replace with operator
+            ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit, context=context)
 
         return self.name_get(cr, user, ids, context=context)
 
