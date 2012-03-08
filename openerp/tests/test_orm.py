@@ -2,9 +2,10 @@ import os
 import unittest2
 
 import openerp
+import common
 
-UID = 1
-DB = openerp.tools.config['db_name']
+UID = common.ADMIN_USER_ID
+DB = common.DB
 
 CREATE = lambda values: (0, False, values)
 UPDATE = lambda id, values: (1, id, values)
@@ -14,16 +15,12 @@ LINK_TO = lambda id: (4, id, False)
 DELETE_ALL = lambda: (5, False, False)
 REPLACE_WITH = lambda ids: (6, False, ids)
 
-class TestO2MSerialization(unittest2.TestCase):
+class TestO2MSerialization(common.TransactionCase):
 
     def setUp(self):
-        self.cr = openerp.modules.registry.RegistryManager.get(DB).db.cursor()
-        self.partner = openerp.modules.registry.RegistryManager.get(DB)['res.partner']
-        self.address = openerp.modules.registry.RegistryManager.get(DB)['res.partner.address']
-
-    def tearDown(self):
-        self.cr.rollback()
-        self.cr.close()
+        super(TestO2MSerialization, self).setUp()
+        self.partner = self.registry('res.partner')
+        self.address = self.registry('res.partner.address')
 
     def test_no_command(self):
         " empty list of commands yields an empty list of records "
