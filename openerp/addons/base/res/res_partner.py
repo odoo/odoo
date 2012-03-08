@@ -159,6 +159,7 @@ class res_partner(osv.osv):
         'city': fields.char('City', size=128),
         'state_id': fields.many2one("res.country.state", 'Fed. State', domain="[('country_id','=',country_id)]"),
         'country_id': fields.many2one('res.country', 'Country'),
+        'country': fields.related('country_id', type='many2one', relation='res.country', string='Country'),   # for backward compatibility
         'email': fields.char('E-Mail', size=240),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
@@ -426,7 +427,8 @@ class res_partner_address(osv.osv):
     _name = 'res.partner.address'
     _order = 'type, name'
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
+        'parent_id': fields.many2one('res.partner', 'Company', ondelete='set null', select=True),
+        'partner_id': fields.related('parent_id', type='many2one', relation='res.partner', string='Partner'),   # for backward compatibility
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'function': fields.char('Function', size=128),
         'title': fields.many2one('res.partner.title','Title'),
@@ -450,11 +452,11 @@ class res_partner_address(osv.osv):
     }
 
     def write(self, cr, uid, ids, vals, context=None):
-        logging.getLogger('res.partner').warning("Deprecated, use of res.partner.address and used res.partner")
+        logging.getLogger('res.partner').warning("Deprecated use of res.partner.address")
         return super(res_partner_address,self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        logging.getLogger('res.partner').warning("Deprecated, use of res.partner.address and used res.partner")
+        logging.getLogger('res.partner').warning("Deprecated use of res.partner.address")
         return super(res_partner_address,self).create(cr, uid, vals, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

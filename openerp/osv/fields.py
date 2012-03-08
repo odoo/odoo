@@ -1155,17 +1155,17 @@ class related(function):
     def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
         self._field_get2(cr, uid, obj, context)
         i = len(self._arg)-1
-        sarg = name
+        sarg = name if isinstance(name, (list, tuple)) else [name]
         while i>0:
-            if type(sarg) in [type([]), type( (1,) )]:
-                where = [(self._arg[i], 'in', sarg)]
-            else:
-                where = [(self._arg[i], '=', sarg)]
             if domain:
                 where = map(lambda x: (self._arg[i],x[1], x[2]), domain)
                 domain = []
+            else:
+                where = [(self._arg[i], 'in', sarg)]
             sarg = obj.pool.get(self._relations[i]['object']).search(cr, uid, where, context=context)
             i -= 1
+        if domain:   # happens if len(self._arg) == 1
+            return map(lambda x: (self._arg[0],x[1], x[2]), domain)
         return [(self._arg[0], 'in', sarg)]
 
     def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
