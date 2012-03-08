@@ -59,7 +59,7 @@ class base_action_rule(osv.osv):
             reply_to = emailfrom
         if not emailfrom:
             raise osv.except_osv(_('Error!'), _("No E-Mail Found for your Company address!"))
-        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model='base.action.rule', reply_to=reply_to, res_id=obj.id)
+        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model=obj._name, reply_to=reply_to, res_id=obj.id)
 
     def do_check(self, cr, uid, action, obj, context=None):
         ok = super(base_action_rule, self).do_check(cr, uid, action, obj, context=context)
@@ -90,7 +90,6 @@ class base_action_rule(osv.osv):
         return ok
 
     def do_action(self, cr, uid, action, model_obj, obj, context=None):
-        res = super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
         write = {}
         if hasattr(action, 'act_section_id') and action.act_section_id:
             obj.section_id = action.act_section_id
