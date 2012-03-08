@@ -330,15 +330,15 @@ class mail_thread(osv.osv):
     def message_get_discussions_nbr(self, cr, uid, ids, context=None):
         count = 0
         message_obj = self.pool.get('mail.message')
-        for obj in self.browse(cr, uid, ids, context=context):
-            count += message_obj.search(cr, uid, [('model', '=', self._name), ('res_id', '=', obj.id)], count=True) # TODO: add parent_id when merging branch
+        for id in ids:
+            count += message_obj.search(cr, uid, [('model', '=', self._name), ('res_id', '=', id)], count=True) # TODO: add parent_id when merging branch
         return count
     
     def message_get_messages_nbr(self, cr, uid, ids, context=None):
         count = 0
         message_obj = self.pool.get('mail.message')
-        for obj in self.browse(cr, uid, ids, context=context):
-            count += message_obj.search(cr, uid, [('model', '=', self._name), ('res_id', '=', obj.id)], count=True)
+        for id in ids:
+            count += message_obj.search(cr, uid, [('model', '=', self._name), ('res_id', '=', id)], count=True)
         return count
         
     #------------------------------------------------------
@@ -629,20 +629,20 @@ class mail_thread(osv.osv):
     
     def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
         subscription_obj = self.pool.get('mail.subscription')
-        sub_user_ids = [uid] if user_ids is None else user_ids
+        to_subscribe_uids = [uid] if user_ids is None else user_ids
         create_ids = []
         for id in ids:
-            for user_id in sub_user_ids:
+            for user_id in to_subscribe_uids:
                 if self.message_is_subscriber(cr, uid, [id], user_id=user_id, context=context): continue
                 create_ids.append(subscription_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context))
         return create_ids
 
-    def message_unsubscribe(self, cr, uid, ids, context=None):
+    def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
         subscription_obj = self.pool.get('mail.subscription')
-        subscriber_id = uid # TODO
-        sub_ids = subscription_obj.search(cr, uid,
-                        ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', '=', subscriber_id)], context=context)
-        subscription_obj.unlink(cr, uid, sub_ids, context=context)
+        to_unsubscribe_uids = [uid] if user_ids is None else user_ids
+        to_delete_sub_ids = subscription_obj.search(cr, uid,
+                        ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', 'in', to_unsubscribe_uids)], context=context)
+        subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
         return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
