@@ -97,11 +97,9 @@ class base_module_upgrade(osv.osv_memory):
             raise osv.except_osv(_('Unmet dependency !'), _('Following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
         mod_obj.download(cr, uid, ids, context=context)
         cr.commit()
-        
         # process to remove modules
         remove_module_ids = mod_obj.search(cr, uid, [('state', 'in', ['to remove'])])
         mod_obj.module_uninstall(cr, uid, remove_module_ids, context)
-        
         
         _db, pool = pooler.restart_pool(cr.dbname, update_module=True)
         

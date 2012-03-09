@@ -343,7 +343,6 @@ class module(osv.osv):
         # Mark them to be installed.
         if to_install_ids:
             self.button_install(cr, uid, to_install_ids, context=context)
-
         return dict(ACTION_DICT, name=_('Install'))
 
     def button_immediate_install(self, cr, uid, ids, context=None):
@@ -377,11 +376,20 @@ class module(osv.osv):
         return True
     
     def module_uninstall(self, cr, uid, ids, context=None):
+
+        # you have to uninstall in the right order, not all modules at the same time
+
         model_data = self.pool.get('ir.model.data')
         remove_modules = map(lambda x: x.name, self.browse(cr, uid, ids, context))
+        
         data_ids = model_data.search(cr, uid, [('module', 'in', remove_modules)])
+
+        model_data._pre_process_unlink(cr, uid, data_ids, context)
         model_data.unlink(cr, uid, data_ids, context)
+        
         self.write(cr, uid, ids, {'state': 'uninstalled'})
+        
+        # should we call process_end istead of loading, or both ?
         return True
     
     def button_uninstall(self, cr, uid, ids, context=None):

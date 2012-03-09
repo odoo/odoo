@@ -374,13 +374,12 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             tools.config[kind] = {}
 
         cr.commit()
-        if update_module:
+#        if update_module:
             # Remove records referenced from ir_model_data for modules to be
             # removed (and removed the references from ir_model_data).
             #cr.execute("select id,name from ir_module_module where state=%s", ('to remove',))
             #remove_modules = map(lambda x: x['name'], cr.dictfetchall())
             # Cleanup orphan records
-            #print "pooler", pool.get('mrp.bom')
             #pool.get('ir.model.data')._process_end(cr, 1, remove_modules, noupdate=None)
 #            for mod_id, mod_name in cr.fetchall():
 #                cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
@@ -398,20 +397,20 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             # (child) menu item, ir_values, or ir_model_data.
             # This code could be a method of ir_ui_menu.
             # TODO: remove menu without actions of children
-            while True:
-                cr.execute('''delete from
-                        ir_ui_menu
-                    where
-                        (id not IN (select parent_id from ir_ui_menu where parent_id is not null))
-                    and
-                        (id not IN (select res_id from ir_values where model='ir.ui.menu'))
-                    and
-                        (id not IN (select res_id from ir_model_data where model='ir.ui.menu'))''')
-                cr.commit()
-                if not cr.rowcount:
-                    break
-                else:
-                    _logger.info('removed %d unused menus', cr.rowcount)
+#            while True:
+#                cr.execute('''delete from
+#                        ir_ui_menu
+#                    where
+#                        (id not IN (select parent_id from ir_ui_menu where parent_id is not null))
+#                    and
+#                        (id not IN (select res_id from ir_values where model='ir.ui.menu'))
+#                    and
+#                        (id not IN (select res_id from ir_model_data where model='ir.ui.menu'))''')
+#                cr.commit()
+#                if not cr.rowcount:
+#                    break
+#                else:
+#                    _logger.info('removed %d unused menus', cr.rowcount)
 
             # Pretend that modules to be removed are actually uninstalled.
             #cr.execute("update ir_module_module set state=%s where state=%s", ('uninstalled', 'to remove',))

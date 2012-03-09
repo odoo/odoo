@@ -904,6 +904,7 @@ class BaseModel(object):
                                     # If new class defines a constraint with
                                     # same function name, we let it override
                                     # the old one.
+                                    
                                     new[c2] = c
                                     exist = True
                                     break
@@ -2760,7 +2761,6 @@ class BaseModel(object):
         update_custom_fields = context.get('update_custom_fields', False)
         self._field_create(cr, context=context)
         create = not self._table_exist(cr)
-
         if getattr(self, '_auto', True):
 
             if create:
@@ -3029,11 +3029,16 @@ class BaseModel(object):
 
         return todo_end
 
-
     def _auto_end(self, cr, context=None):
         """ Create the foreign keys recorded by _auto_init. """
         for t, k, r, d in self._foreign_keys:
             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
+            name_id = "foreign_key_"+t+"_"+k+"_fkey"
+            cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, self._module))
+            if not cr.rowcount:
+                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module, model) VALUES (%s, now(), now(), %s, %s)", \
+                    (name_id, self._module, t)
+                )
         cr.commit()
         del self._foreign_keys
 
@@ -3112,13 +3117,13 @@ class BaseModel(object):
 
     def _o2m_raise_on_missing_reference(self, cr, f):
         # TODO this check should be a method on fields.one2many.
+        
         other = self.pool.get(f._obj)
         if other:
             # TODO the condition could use fields_get_keys().
             if f._fields_id not in other._columns.keys():
                 if f._fields_id not in other._inherit_fields.keys():
                     raise except_orm('Programming Error', ("There is no reference field '%s' found for '%s'") % (f._fields_id, f._obj,))
-
 
     def _m2m_raise_or_create_relation(self, cr, f):
         m2m_tbl, col1, col2 = f._sql_names(self)
@@ -3129,7 +3134,14 @@ class BaseModel(object):
             dest_model = self.pool.get(f._obj)
             ref = dest_model._table
             cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (m2m_tbl, col1, col2, col1, col2))
-
+            #create many2many references
+            name_id = 'table_'+m2m_tbl
+            cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, self._module))
+            if not cr.rowcount:
+                cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module, model) VALUES (%s, now(), now(), %s, %s)", \
+                    (name_id, self._module, self._name)
+                )
+         #   self.pool.get('ir.model.data')._update(cr, 1, self._name,  self._module, {}, 'table_'+m2m_tbl, store=True, noupdate=False, mode='init', res_id=False, context=None)
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (ref,))
             if not cr.fetchall():
@@ -3157,7 +3169,6 @@ class BaseModel(object):
 
             cr.execute("SELECT conname, pg_catalog.pg_get_constraintdef(oid, true) as condef FROM pg_constraint where conname=%s", (conname,))
             existing_constraints = cr.dictfetchall()
-
             sql_actions = {
                 'drop': {
                     'execute': False,
@@ -3198,11 +3209,10 @@ class BaseModel(object):
                     _schema.debug(sql_action['msg_ok'])
                     name_id = 'constraint_'+ conname
                     cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, module))
-                    if not cr.rowcount:
+                    if  not cr.rowcount:                    
                         cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module, model) VALUES (%s, now(), now(), %s, %s)", \
                             (name_id, module, self._name)
                         )
-#                    
                 except:
                     _schema.warning(sql_action['msg_err'])
                     cr.rollback()
