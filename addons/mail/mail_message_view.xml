@@ -13,7 +13,7 @@
                     <field name="subject"/>
                     <field name="user_id"/>
                     <field name="model"/>
-                    <field name="res_id" invisible="1"/>
+                    <field name="res_id"/>
                 </tree>
             </field>
         </record>
@@ -30,13 +30,14 @@
                         <field name="subject"/>
                         <field name="date"/>
                         <field name="type"/>
-                        <field name="body_text"/>
                         <field name="need_action_user_id"/>
+                        <field name="body_text"/>
                     </group>
                     <group colspan="2" col="2">
                         <field name="user_id" string="User" readonly="0"/>
                         <field name="model"/>
                         <field name="res_id"/>
+                        <field name="parent_id"/>
                     </group>
                 </form>
             </field>
@@ -51,6 +52,7 @@
                 <search string="Tweet Search">
                     <field name="user_id"/>
                     <field name="model"/>
+                    <field name="date"/>
                 </search>
             </field>
         </record>
