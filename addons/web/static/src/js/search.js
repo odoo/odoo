@@ -32,6 +32,8 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
         this.hidden = !!hidden;
         this.headless = this.hidden && !this.has_defaults;
 
+        this.filter_data = {};
+
         this.ready = $.Deferred();
     },
     start: function() {
@@ -271,7 +273,12 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
                         group_by instanceof Array ? group_by : group_by.split(','),
                         function (el) { return { group_by: el }; });
                 }
-                this.on_search([filter.domain], [filter.context], groupbys);
+                this.filter_data = {
+                    domains: [filter.domain],
+                    contexts: [filter.context],
+                    groupbys: groupbys
+                };
+                this.do_search();
             }, this));
         } else {
             select.val('');
@@ -339,9 +346,6 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
         if (this.headless && !this.has_defaults) {
             return this.on_search([], [], []);
         }
-        // reset filters management
-        var select = this.$element.find(".oe_search-view-filters-management");
-        select.val("_filters");
 
         if (e && e.preventDefault) { e.preventDefault(); }
 
@@ -385,6 +389,16 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
                 .map(function (filter) { return filter.get_context();})
                 .compact()
                 .value();
+
+        if (this.filter_data.contexts) {
+            contexts = this.filter_data.contexts.concat(contexts)
+        }
+        if (this.filter_data.domains) {
+            domains = this.filter_data.domains.concat(domains);
+        }
+        if (this.filter_data.groupbys) {
+            groupbys = this.filter_data.groupbys.concat(groupbys);
+        }
         return {domains: domains, contexts: contexts, errors: errors, groupbys: groupbys};
     },
     /**
@@ -423,6 +437,9 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
      * @param {Boolean} [reload_view=true]
      */
     do_clear: function (reload_view) {
+        this.filter_data = {};
+        this.$element.find(".oe_search-view-filters-management").val('');
+
         this.$element.find('.filter_label, .filter_icon').removeClass('enabled');
         this.enabled_filters.splice(0);
         var string = $('a.searchview_group_string');
