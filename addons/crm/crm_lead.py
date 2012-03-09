@@ -271,13 +271,21 @@ class crm_lead(crm_case, osv.osv):
     def stage_find_won(self, cr, uid, section_id):
         return self.stage_find_percent(cr, uid, 100.0, section_id)
 
+    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = False
+            if (obj.state == 'draft' and obj.user_id):
+                result[obj.id] = obj.user_id.id
+        return result
+
     def _case_reset_notification(self,  cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context=context):
             if lead.type == 'lead':
                 message = _("Lead is <b>renewed</b>.")
             elif lead.type == 'opportunity':
                 message = _("Opportunity is <b>renewed</b>.")
-            lead.message_append_note('' ,message, need_action_user_id=lead.user_id.id)
+            lead.message_append_note('' ,message)
 
     def _case_create_notification(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -289,7 +297,7 @@ class crm_lead(crm_case, osv.osv):
             else:
                 message = _("Case is <b>created</b>.")
             self.message_append_note(cr, uid, ids, _('System notification'),
-                        message, type='notification', need_action_user_id=obj.user_id.id, context=context)
+                        message, type='notification', context=context)
         return True
 
     def _case_open_notification(self, lead, context=None):
@@ -301,10 +309,9 @@ class crm_lead(crm_case, osv.osv):
             message = _("Opportunity is <b>opened</b>.")
         else:
             message = _("Case is <b>opened</b>.")
-        lead.message_append_note('' ,message, need_action_user_id=lead.user_id.id)
+        lead.message_append_note('' ,message)
 
     def _case_close_notification(self, lead, context=None):
-        lead[0].message_mark_done(context)
         if lead[0].type == 'lead':
             message = _("Lead is <b>closed</b>.")
         elif lead[0].type == 'opportunity':
@@ -314,17 +321,14 @@ class crm_lead(crm_case, osv.osv):
         lead[0].message_append_note('' ,message)
 
     def _case_mark_lost_notification(self, lead, context=None):
-        lead.message_mark_done(context)
         message = _("Opportunity is <b>marked as lost</b>.")
         lead.message_append_note('' ,message)
 
     def _case_mark_won_notification(self, lead, context=None):
-        lead.message_mark_done(context)
         message = _("Opportunity is <b>won</b>.")
         lead.message_append_note('' ,message)
 
     def _case_cancel_notification(self, lead, context=None):
-        lead[0].message_mark_done(context)
         if lead[0].type == 'lead':
             message = _("Lead is <b>cancelled</b>.")
         elif lead[0].type == 'opportunity':
@@ -514,7 +518,7 @@ class crm_lead(crm_case, osv.osv):
 
         subject = subject[0] + ", ".join(subject[1:])
         details = "\n\n".join(details)
-        return opportunity.message_append_note(subject, body=details, need_action_user_id=opportunity.user_id.id)
+        return opportunity.message_append_note(subject, body=details)
 
     def _merge_opportunity_history(self, cr, uid, opportunity_id, opportunities, context=None):
         message = self.pool.get('mail.message')
@@ -625,7 +629,7 @@ class crm_lead(crm_case, osv.osv):
 
     def _convert_opportunity_notification(self, cr, uid, lead, context=None):
         success_message = _("Lead is <b>converted to an opportunity</b>.")
-        lead.message_append_note(success_message ,success_message, need_action_user_id=lead.user_id.id)
+        lead.message_append_note(success_message ,success_message)
         return True
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):

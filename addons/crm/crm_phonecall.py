@@ -90,8 +90,16 @@ class crm_phonecall(crm_base, osv.osv):
         'user_id': lambda self,cr,uid,ctx: uid,
         'active': 1,
     }
+
+    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = False
+            if (obj.state == 'draft' and obj.user_id):
+                result[obj.id] = obj.user_id.id
+        return result
+
     def _case_cancel_notification(self, phonecall, context=None):
-        phonecall[0].message_mark_done(context)
         message = _("Phonecall is <b>cancelled</b>.")
         phonecall[0].message_append_note( _('System notification'),
                         message, type='notification', context=context)
@@ -102,7 +110,6 @@ class crm_phonecall(crm_base, osv.osv):
 
     def done_notification(self, cr, uid, ids, context=None):
         for phonecall in self.browse(cr, uid, ids):
-            phonecall.message_mark_done(context)
             message = _("Phonecall is <b>done</b>.")
             self.message_append_note(cr, uid, [phonecall.id], _('System notification'),
                         message, type='notification', context=context)
@@ -110,7 +117,7 @@ class crm_phonecall(crm_base, osv.osv):
     def _case_open_notification(self, phonecall, context=None):
         phonecall.message_subscribe([phonecall.user_id.id], context=context)
         message = _("Phonecall is <b>opened</b>.")
-        phonecall.message_append_note('' ,message, need_action_user_id=phonecall.user_id.id)
+        phonecall.message_append_note('' ,message)
 
     # From crm.case
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
