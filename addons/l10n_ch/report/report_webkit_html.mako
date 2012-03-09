@@ -10,20 +10,20 @@
        <div id="inv_cont_${inv.id}" style="padding-left:20mm;padding-top:0;padding-bottom:10;border-width:0px;border-style:solid">
        <table class="dest_address">
            <tr><td ><b>${inv.partner_id.title.name or ''|entity}  ${inv.partner_id.name |entity}</b></td></tr>
-           <tr><td>${inv.address_invoice_id.street or ''|entity}</td></tr>
-           <tr><td>${inv.address_invoice_id.street2 or ''|entity}</td></tr>
-           <tr><td>${inv.address_invoice_id.zip or ''|entity} ${inv.address_invoice_id.city or ''|entity}</td></tr>
-           %if inv.address_invoice_id.country_id :
-           <tr><td>${inv.address_invoice_id.country_id.name or ''|entity} </td></tr>
+           <tr><td>${inv.partner_id.street or ''|entity}</td></tr>
+           <tr><td>${inv.partner_id.street2 or ''|entity}</td></tr>
+           <tr><td>${inv.partner_id.zip or ''|entity} ${inv.partner_id.city or ''|entity}</td></tr>
+           %if inv.partner_id.country_id :
+           <tr><td>${inv.partner_id.country_id.name or ''|entity} </td></tr>
            %endif
-           %if inv.address_invoice_id.phone :
-           <tr><td>${_("Tel") |entity}: ${inv.address_invoice_id.phone|entity}</td></tr>
+           %if inv.partner_id.phone :
+           <tr><td>${_("Tel") |entity}: ${inv.partner_id.phone|entity}</td></tr>
            %endif
-           %if inv.address_invoice_id.fax :
-           <tr><td>${_("Fax") |entity}: ${inv.address_invoice_id.fax|entity}</td></tr>
+           %if inv.partner_id.fax :
+           <tr><td>${_("Fax") |entity}: ${inv.partner_id.fax|entity}</td></tr>
            %endif
-           %if inv.address_invoice_id.email :
-           <tr><td>${_("E-mail") |entity}: ${inv.address_invoice_id.email|entity}</td></tr>
+           %if inv.partner_id.email :
+           <tr><td>${_("E-mail") |entity}: ${inv.partner_id.email|entity}</td></tr>
            %endif
            %if inv.partner_id.vat :
            <tr><td>${_("VAT") |entity}: ${inv.partner_id.vat|entity}</td></tr>
