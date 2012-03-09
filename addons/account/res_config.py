@@ -67,14 +67,19 @@ class account_configuration(osv.osv_memory):
             'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year'),
             'default_paypal_account': fields.char("Your Paypal Account", size=128, help="Paypal username (usually email) for receiving online payments.", default_model='res.company'),
             'company_footer': fields.char("Footer of Reports", size=128, readonly=True),
-            'customer_invoice_sequence_prefix': fields.char('Invoice Sequence', size=64),
-            'customer_invoice_sequence_padding': fields.integer('Invoice Sequence Padding'),
-            'customer_refund_sequence_prefix': fields.char('Refund Sequence', size=64),
-            'customer_refund_sequence_padding': fields.integer('Refund Sequence Padding'),
-            'supplier_invoice_sequence_prefix': fields.char('Supplier Invoice Sequence', size=64),
-            'supplier_invoice_sequence_padding': fields.integer('Supplier Invoice Sequence Padding'),
-            'supplier_refund_sequence_prefix': fields.char('Supplier Refund Sequence', size=64),
-            'supplier_refund_sequence_padding': fields.integer('Supplier Refund Sequence Padding'),
+            'sale_journal_id': fields.many2one('account.journal','Sale Journal'),
+            'customer_invoice_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Invoice Sequence'),
+            'customer_invoice_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Invoice Sequence Next Number'),
+            'sale_refund_journal_id': fields.many2one('account.journal','Sale Refund Journal'),
+            'customer_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Refund Sequence'),
+            'customer_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Refund Sequence Next Number'),
+            
+            'purchase_journal_id': fields.many2one('account.journal','Purchase Journal'),
+            'supplier_invoice_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Supplier Invoice Sequence'),
+            'supplier_invoice_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Supplier Invoice Sequence Next Number'),
+            'purchase_refund_journal_id': fields.many2one('account.journal','Purchase Refund Journal'),
+            'supplier_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Supplier Refund Sequence'),
+            'supplier_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Supplier Refund Sequence Next Number'),
 
             'module_account_check_writing': fields.boolean('Support check writings'),
             'module_account_accountant': fields.boolean('Accountant Features'),
@@ -127,6 +132,7 @@ class account_configuration(osv.osv_memory):
         ir_values_obj = self.pool.get('ir.values')
         chart_template_obj = self.pool.get('account.chart.template')
         fiscalyear_obj = self.pool.get('account.fiscalyear')
+        journal_obj = self.pool.get('account.journal')
         res = super(account_configuration, self).default_get(cr, uid, fields_list, context=context)
         res.update({'sale_tax': 15.0, 'purchase_tax': 15.0})
         taxes = self._check_default_tax(cr, uid, context)
@@ -136,6 +142,18 @@ class account_configuration(osv.osv_memory):
         cmp_id = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'main_company').id
         company_data = self.pool.get('res.company').browse(cr, uid, cmp_id)
         res.update({'company_footer': company_data.rml_footer2})
+
+        journal_ids = journal_obj.search(cr, uid, [('company_id', '=', res.get('company_id'))])
+        if journal_ids:
+            for journal in journal_obj.browse(cr, uid, journal_ids, context=context):
+                if journal.type == 'sale':
+                    res.update({'sale_journal_id': journal.id})
+                if journal.type == 'sale_refund':
+                    res.update({'sale_refund_journal_id': journal.id})
+                if journal.type == 'purchase':
+                    res.update({'purchase_journal_id': journal.id})
+                if journal.type == 'purchase_refund':
+                    res.update({'purchase_refund_journal_id': journal.id})
 
         if chart_template_ids:
             res.update({'chart_template_id': chart_template_ids[0]})
@@ -152,7 +170,7 @@ class account_configuration(osv.osv_memory):
         ir_values_obj = self.pool.get('ir.values')
         res = super(account_configuration, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         cmp_select = []
-        if self._check_default_tax(cr, uid, context) and taxes:
+        if self._check_default_tax(cr, uid, context):
             if res['fields'].get('sale_tax') and res['fields'].get('purchase_tax'):
                 res['fields']['sale_tax'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Default Sale Tax'}
                 res['fields']['purchase_tax'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Default Purchase Tax'}
@@ -187,7 +205,7 @@ class account_configuration(osv.osv_memory):
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
             return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
         return {}
-    
+
     def execute(self, cr, uid, ids, context=None):
         self.execute_simple(cr, uid, ids, context)
         super(account_configuration, self).execute(cr, uid, ids, context=context)

@@ -42,12 +42,14 @@
                     <group col="2" colspan="2">
                         <separator string="Customer Invoices" colspan="2"/>
                         <group col="4" colspan="2">
+                            <field name="sale_journal_id" invisible="1"/>
                             <field name="customer_invoice_sequence_prefix"/>
-                            <field name="customer_invoice_sequence_padding" nolabel="1"/>
+                            <field name="customer_invoice_sequence_next" nolabel="1"/>
                         </group>
                         <group col="4" colspan="2">
+                            <field name="sale_refund_journal_id" invisible="1"/>
                             <field name="customer_refund_sequence_prefix"/>
-                            <field name="customer_refund_sequence_padding" nolabel="1"/>
+                            <field name="customer_refund_sequence_next" nolabel="1"/>
                         </group>
                         <field name="module_account_invoice_layout"/>
                         <newline/>
@@ -60,13 +62,15 @@
                     <group col="2" colspan="2">
                         <separator string="Supplier Invoices" colspan="2"/>
                         <group col="4" colspan="2">
+                            <field name="purchase_journal_id" invisible="1"/>
                             <field name="supplier_invoice_sequence_prefix"/>
-                            <field name="supplier_invoice_sequence_padding" nolabel="1" colspan="1"/>
+                            <field name="supplier_invoice_sequence_next" nolabel="1" colspan="1"/>
                         </group>
                         <newline/>
                         <group col="4" colspan="2">
+                            <field name="purchase_refund_journal_id" invisible="1"/>
                             <field name="supplier_refund_sequence_prefix"/>
-                            <field name="supplier_refund_sequence_padding" nolabel="1"/>
+                            <field name="supplier_refund_sequence_next" nolabel="1"/>
                         </group>
                         <field name="module_account_payment"/>
                     </group>
@@ -76,7 +80,7 @@
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Bank &amp; Cash" colspan="2"/>
-                        <field name="company_footer"/>
+                        <field name="company_footer" nolabel="1" colspan="2"/>
                         <newline/>
                         <label string="Setup your bank accounts: "/>
                         <button name="%(action_bank_tree)d" string="Setup Your Bank Accounts" icon="gtk-execute" type="action"/>
