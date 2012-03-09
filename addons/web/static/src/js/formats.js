@@ -148,7 +148,7 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
             return value.toString(normalize_format(l10n.time_format));
-        case 'selection':
+        case 'selection': case 'statusbar':
             // Each choice is [value, label]
             if(_.isArray(value)) {
                  value = value[0]
