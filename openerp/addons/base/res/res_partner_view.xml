@@ -20,7 +20,7 @@
           =====================
         -->
 
-        <!--record id="view_res_partner_address_filter" model="ir.ui.view">
+        <record id="view_res_partner_address_filter" model="ir.ui.view">
             <field name="name">res.partner.address.select</field>
             <field name="model">res.partner.address</field>
             <field name="type">search</field>
@@ -200,14 +200,14 @@
         </record>
         <menuitem action="action_partner_address_form" id="menu_partner_address_form"
             groups="base.group_extended" name="Contacts"
-            parent="base.menu_address_book" sequence="30"/-->
+            parent="base.menu_address_book" sequence="30"/>
 
         <!--
           =========================================
           the short form used in the partner form
           =========================================
         -->
-        <!--record id="view_partner_address_form2" model="ir.ui.view">
+        <record id="view_partner_address_form2" model="ir.ui.view">
             <field name="name">res.partner.address.form2</field>
             <field name="model">res.partner.address</field>
             <field name="type">form</field>
@@ -234,7 +234,7 @@
                     <field name="email" widget="email"/>
                 </form>
             </field>
-        </record-->
+        </record>
 
         <!--
           =======================
