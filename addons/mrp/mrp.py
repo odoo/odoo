@@ -523,12 +523,20 @@ class mrp_production(osv.osv):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete a manufacturing order in state \'%s\'') % production.state)
         return super(mrp_production, self).unlink(cr, uid, ids, context=context)
 
+    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = False
+            if (obj.state == 'draft' and obj.user_id):
+                result[obj.id] = obj.user_id.id
+        return result
+
     def create_notification(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id.id :
                 self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
                 self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Manufacturing Order is <b>Created</b>."), type='notification', need_action_user_id=obj.user_id.id, context=context)
+                        _("Manufacturing Order is <b>Created</b>."), type='notification', context=context)
             else :
                 self.message_append_note(cr, uid, ids, _('System notification'),
                         _("Manufacturing Order is <b>Created</b>."), type='notification', context=context)
@@ -550,7 +558,6 @@ class mrp_production(osv.osv):
         return True
 
     def done_notification(self, cr, uid, ids, context=None):
-        self.message_mark_done(cr, uid, ids, context)
         message = _("Manufacturing order is <b>done</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
