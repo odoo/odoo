@@ -211,6 +211,14 @@ class crm_lead(osv.osv):
                         ('country', '=', lead.country_id.id),
                     ], context=context)
 
+                # 3. third way: in the same country, extra large area
+                if not partner_ids:
+                    partner_ids = res_partner.search(cr, uid, [
+                        ('partner_weight','>', 0),
+                        ('partner_latitude','>', latitude - 8), ('partner_latitude','<', latitude + 8),
+                        ('partner_longitude','>', longitude - 8), ('partner_longitude','<', longitude + 8),
+                        ('country', '=', lead.country_id.id),
+                    ], context=context)
 
                 # 5. fifth way: anywhere in same country
                 if not partner_ids:
