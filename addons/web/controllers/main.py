@@ -358,12 +358,7 @@ class Database(openerpweb.Controller):
         return {"db_list": dbs}
 
     @openerpweb.jsonrequest
-    def progress(self, req, password, id):
-        return req.session.proxy('db').get_progress(password, id)
-
-    @openerpweb.jsonrequest
     def create(self, req, fields):
-
         params = dict(map(operator.itemgetter('name', 'value'), fields))
         create_attrs = (
             params['super_admin_pwd'],
@@ -373,17 +368,7 @@ class Database(openerpweb.Controller):
             params['create_admin_pwd']
         )
 
-        try:
-            return req.session.proxy("db").create(*create_attrs)
-        except xmlrpclib.Fault, e:
-            if e.faultCode and isinstance(e.faultCode, str)\
-                and e.faultCode.split(':')[0] == 'AccessDenied':
-                    return {'error': e.faultCode, 'title': 'Database creation error'}
-            return {
-                'error': "Could not create database '%s': %s" % (
-                    params['db_name'], e.faultString),
-                'title': 'Database creation error'
-            }
+        return req.session.proxy("db").create_database(*create_attrs)
 
     @openerpweb.jsonrequest
     def drop(self, req, fields):
