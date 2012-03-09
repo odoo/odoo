@@ -159,7 +159,7 @@ class mail_message(osv.osv):
                     msg_txt += truncate_text(message.body_text)
             else:
                 msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
-                msg_txt += message.subject
+                msg_txt += (message.subject or '')
             result[message.id] = msg_txt
         return result
     
@@ -184,7 +184,6 @@ class mail_message(osv.osv):
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
                         ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
-        'need_action_user_id': fields.many2one('res.users', 'Action by user', help="User requested to perform an action"),
     }
         
     _defaults = {

@@ -15,18 +15,13 @@
             </div>
             <div class="oe_mail_wall_more">
                 <button class="oe_mail_wall_button_more" type="button">See more discussions
-                    <t t-if="msg_left"> (<t t-raw="msg_left"/> left)</t>
                 </button>
+            </div>
+            <div class="oe_mail_wall_nomore">
+                You have loaded all discussions.
             </div>
         </div>
         <div class="oe_mail_wall_right">
-            <div class="oe_mail_followers">
-                <div class="oe_mail_followers_actions">
-                    <button class="oe_mail_button_followers" type="button">Display followers</button>
-                </div>
-                <div class="oe_mail_followers_display">
-                </div>
-            </div>
         </div>
     </div>
 
@@ -69,9 +64,10 @@
         <div class="oe_mail_thread_display">
         </div>
         <div class="oe_mail_thread_more">
-            <div class="oe_mail_thread_msg">
-                <t t-call="MoreButton"/>
-            </div>
+            <button class="oe_mail_button_more" type="button">More</button>
+        </div>
+        <div class="oe_mail_thread_nomore">
+            You have loaded all messages in this thread.
         </div>
     </div>
 
@@ -99,9 +95,6 @@
                     <a href="#" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
                 </span>
             </t>
-            <t t-if="record.need_action_user_id != false">
-                - <span class="oe_mail_msg_need_action">Need action by <a href="#"><t t-raw="record.need_action_user_id[1]"/></a></span>
-            </t>
             wrote on <span class="oe_mail_msg_date"><t t-raw="record.date"/></span>
             <br />
             <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
@@ -116,14 +109,6 @@
         <p class="oe_mail_msg_p">
             <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
         </p>
-    </t>
-    
-    <t t-name="MoreButton">
-        <div class="oe_mail_thread_msg_more">
-            <button class="oe_mail_button_more" type="button">More
-                <t t-if="msg_left"> (<t t-raw="msg_left"/> left)</t>
-            </button>
-        </div>
     </t>
 
 </template>

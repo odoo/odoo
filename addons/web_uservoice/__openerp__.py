@@ -38,7 +38,6 @@ Invite OpenERP user feedback, powered by uservoice.
     'certificate': '0040452504963885',
 
     'js': ['static/src/js/web_uservoice.js'],
-    'css': ['static/src/css/uservoice.css'],
     'qweb' : [
         "static/src/xml/*.xml",
     ],

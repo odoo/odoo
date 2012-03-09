@@ -31,7 +31,8 @@ openerp.mail = function(session) {
             this.params.offset = this.params.offset || 0;
             this.params.records = this.params.records || null;
             this.params.char_show_more = this.params.char_show_more || 100;
-            this.map_hash = {'res.users': {'login': [] }};
+            this.map_hash = {};
+            this.params.show_more = true;
             /* define DataSets */
             this.ds = new session.web.DataSet(this, this.params.res_model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
@@ -40,17 +41,28 @@ openerp.mail = function(session) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            /* bind buttons */
+            /* events */
             this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
-            /* delegate links */
-            self.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
-                self.do_action({
-                    type: 'ir.actions.act_window',
-                    res_model: event.srcElement.dataset.resModel,
-                    res_id: parseInt(event.srcElement.dataset.resId),
-                    views: [[false, 'form']]
+            this.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); });
+            this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
+                // lazy implementation: fetch data and try to redirect
+                if (! event.srcElement.dataset.resModel) return false;
+                else var res_model = event.srcElement.dataset.resModel;
+                if (! event.srcElement.dataset.resLogin) return false;
+                else var res_login = event.srcElement.dataset.resLogin;
+                var ds = new session.web.DataSet(self, res_model);
+                var defer = ds.call('search', [[['login', '=', res_login]]]).then(function (records) {
+                    if (records[0]) {
+                        self.do_action({
+                            type: 'ir.actions.act_window',
+                            res_model: res_model,
+                            res_id: parseInt(records[0]),
+                            views: [[false, 'form']]
+                        });
+                    }
                 });
             });
+            this.$element.find('div.oe_mail_thread_nomore').hide();
             /* display user, fetch comments */
             this.display_current_user();
             if (this.params.records) return this.display_comments(this.params.records);
@@ -65,18 +77,32 @@ openerp.mail = function(session) {
             var self = this;
             this.params.offset = 0;
             this.$element.find('div.oe_mail_thread_display').empty();
-            return this.fetch_comments().then(function () {
-                self.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); });
-            });
+            return this.fetch_comments().then();
         },
         
         fetch_comments: function (limit, offset) {
-            return this.ds.call('message_load', [[this.params.res_id], limit=(limit||this.params.limit), offset=(offset||this.params.offset)]).then(
-                this.proxy('display_comments'));
+            var self = this;
+            var defer = this.ds.call('message_load', [[this.params.res_id], limit=(limit||this.params.limit), offset=(offset||this.params.offset)]);
+            $.when(defer).then(function (records) {
+                if (records.length < self.params.limit) self.params.show_more = false;
+                self.display_comments(records);
+                if (self.params.show_more == true) {
+                    self.$element.find('div.oe_mail_thread_more').show();
+                    self.$element.find('div.oe_mail_thread_nomore').hide(); }
+                else {
+                    self.$element.find('div.oe_mail_thread_more').hide();
+                    self.$element.find('div.oe_mail_thread_nomore').show(); }
+                });
+            return defer;
         },
         
         display_comments: function (records) {
             var self = this;
+            
+            // temporary verification of need_action_user_id (TODO: better display)
+            if (this.params.need_action_user_id) {
+                $('<div class="oe_mail_thread_msg"/>').text('Need action by ' + this.params.need_action_user_id[1]).appendTo(self.$element.find('div.oe_mail_thread_display')); }
+            
             /* WIP: map matched regexp -> records to browse with name */
             //_(records).each(function (record) {
                 //self.do_check_internal_links(record.body_text);
@@ -131,13 +157,7 @@ openerp.mail = function(session) {
             var regex_res = regex_login.exec(string);
             while (regex_res != null) {
                 var login = regex_res[2];
-                var res_id = 1;
-                //var user_loaded = this.ds_users.call('search', [[['login', 'in', [login]]]]).then(function (records) {
-                    //console.log(records);
-                    //if (records) string = string.replace(regex_res[0], '<a href="#" class="intlink" data-res-model="res.users" data-res-id = ' + records[0] + '>@' + login + '</a>');
-                //});
-                //$.when(user_loaded).then(function() {
-                //});
+                string = string.replace(regex_res[0], '<a href="#" class="intlink" data-res-model="res.users" data-res-login = ' + login + '>@' + login + '</a>');
                 regex_res = regex_login.exec(string);
             }
             return string;
@@ -169,6 +189,7 @@ openerp.mail = function(session) {
             var regex_res = regex_login.exec(string);
             while (regex_res != null) {
                 var login = regex_res[2];
+                if (! ('res.users' in this.map_hash)) { this.map_hash['res.users']['name'] = []; }
                 this.map_hash['res.users']['login'].push(login);
                 regex_res = regex_login.exec(string);
             }
@@ -222,6 +243,7 @@ openerp.mail = function(session) {
         },
         
         set_value: function() {
+            console.log(this);
             var self = this;
             this._super.apply(this, arguments);
             /* hide follow/unfollow/see followers buttons */
@@ -237,7 +259,8 @@ openerp.mail = function(session) {
             this.fetch_subscribers();
             /* create ThreadDisplay widget and render it */
             this.$element.find('div.oe_mail_thread_left').empty();
-            this.thread_display = new mail.ThreadDisplay(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid});
+            this.thread_display = new mail.ThreadDisplay(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id,
+                                                                'uid': this.session.uid, 'need_action_user_id': this.view.datarecord.need_action_user_id});
             this.thread_display.appendTo(this.$element.find('div.oe_mail_thread_left'));
         },
         
@@ -300,6 +323,7 @@ openerp.mail = function(session) {
          * @param {Object} parent parent
          * @param {Object} [params]
          * @param {Number} [params.limit=20] number of messages to show and fetch
+         * @param {Number} [params.search_view_id=false] search view id for messages
          * @var {Array} sorted_comments records sorted by res_model and res_id
          *                  records.res_model = {res_ids}
          *                  records.res_model.res_id = [records]
@@ -308,6 +332,7 @@ openerp.mail = function(session) {
             this._super(parent);
             this.params = params || {};
             this.params.limit = params.limit || 20;
+            this.params.search_view_id = params.search_view_id || false;
             this.params.search = {};
             this.params.domain = [];
             this.sorted_comments = {};
@@ -320,9 +345,12 @@ openerp.mail = function(session) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });   
+            /* events and buttons */
+            this.$element.find('button.oe_mail_button_comment').bind('click', function () { self.do_comment(); });
+            this.$element.find('button.oe_mail_wall_button_more').bind('click', function () { self.do_more(); });
+            this.$element.find('div.oe_mail_wall_nomore').hide();
             /* load mail.message search view */
-            var search_view_loaded = this.load_search_view();
+            var search_view_loaded = this.load_search_view(this.params.search_view_id, {}, false);
             var search_view_ready = $.when(search_view_loaded).then(function () {
                 self.searchview.on_search.add(self.do_searchview_search);
             });
@@ -338,7 +366,7 @@ openerp.mail = function(session) {
         /**
          * Loads the mail.message search view
          * @param {Number} view_id id of the search view to load
-         * @param {??} defaults ??
+         * @param {Object} defaults ??
          * @param {Boolean} hidden ??
          */
         load_search_view: function (view_id, defaults, hidden) {
@@ -380,9 +408,7 @@ openerp.mail = function(session) {
             this.params.domain = [];
             this.sorted_comments = {};
             this.$element.find('div.oe_mail_wall_threads').empty();
-            return this.fetch_comments(domain, context, offset, limit).then(function () {
-                self.$element.find('button.oe_mail_wall_button_more').bind('click', function () { self.do_more(); });
-            });
+            return this.fetch_comments(domain, context, offset, limit);
         },
 
         /**
