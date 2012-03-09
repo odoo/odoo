@@ -294,7 +294,7 @@ class RegistryManager(object):
             # through the database to other processes.
             registry = cls.get(db_name, pooljobs=False)
             if registry.any_cache_cleared():
-                _logger.info("At least one model cache has been cleare, signaling through the database.")
+                _logger.info("At least one model cache has been cleared, signaling through the database.")
                 cr = registry.db.cursor()
                 r = 1
                 try:
