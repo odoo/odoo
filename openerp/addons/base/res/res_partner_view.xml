@@ -503,7 +503,7 @@
 
         <!-- Partner Kanban View -->
         <record model="ir.ui.view" id="res_partner_kanban_view">
-            <field name="name">RES - PARTNER KANBAN</field>
+            <field name="name">res.partner.kanban</field>
             <field name="model">res.partner</field>
             <field name="type">kanban</field>
             <field name="arch" type="xml">
@@ -536,7 +536,9 @@
                                             <table class="oe_kanban_table">
                                                 <tr>
                                                     <td class="oe_kanban_title1" align="left" valign="middle">
-                                                        <h4><a type="edit"><field name="name"/></a></h4>
+                                                        <h4><a type="edit"><field name="name"/></a>
+                                                            <div t-if="record.parent_id.raw_value"><field name="parent_id"/></div>
+                                                        </h4>
                                                             <i><div t-if="record.street.raw_value or  record.street2.raw_value"><field name="street"/>
                                                             <field name="street2"/><br/></div>
                                                             <div t-if="record.city.raw_value or  record.zip.raw_value"><field name="city"/>
