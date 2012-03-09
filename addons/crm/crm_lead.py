@@ -597,21 +597,20 @@ class crm_lead(crm_case, osv.osv):
             'is_company': is_company,
             'type': 'contact'
         }
-
         partner = partner.create(cr, uid,vals, context)
         return partner
 
     def _create_lead_partner(self, cr, uid, lead, context=None):
         partner_id =  False
         if lead.partner_name and lead.contact_name:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, 'partner', context=context)
-            self._lead_create_contact(cr, uid, lead, lead.contact_name, 'contact', partner_id, context=context)
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
+            self._lead_create_contact(cr, uid, lead, lead.contact_name, False, partner_id, context=context)
         elif lead.partner_name and not lead.contact_name:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, 'partner', context=context)
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
         elif not lead.partner_name and lead.contact_name:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, 'contact', context=context)
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, False, context=context)
         else:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.name, 'contact', context=context)
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.name, False, context=context)
         return partner_id
 
     def _lead_set_partner(self, cr, uid, lead, partner_id, context=None):
