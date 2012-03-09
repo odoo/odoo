@@ -15,6 +15,30 @@
         <field name="category_id" ref="base.module_category_accounting_and_finance"/>
         <field name="implied_ids" eval="[(4, ref('group_account_user'))]"/>
     </record>
+    <record id="base.group_analytic_account_for_sales" model="res.groups">
+        <field name="name">Analytic Accounting for Sales</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+    <record id="base.group_analytic_account_for_purchase" model="res.groups">
+        <field name="name">Analytic Accounting for Purchase</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+    <record id="base.group_dates_periods" model="res.groups">
+        <field name="name">Dates and Periods</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+    <record id="base.group_proforma_invoices" model="res.groups">
+        <field name="name">Pro-forma Invoices</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(6,0,[
+        ref('base.group_analytic_account_for_sales'),
+        ref('base.group_analytic_account_for_purchase'),
+        ref('base.group_dates_periods'),
+        ref('base.group_proforma_invoices'),
+        ])]"/>
+    </record>
 
     <record id="account_move_comp_rule" model="ir.rule">
         <field name="name">Account Entry</field>
