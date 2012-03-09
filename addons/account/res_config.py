@@ -26,6 +26,7 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from os.path import join as opj
 
+
 from tools.translate import _
 from osv import fields, osv
 import netsvc
@@ -50,7 +51,7 @@ class account_configuration(osv.osv_memory):
 
     _columns = {
             'company_id': fields.many2one('res.company', 'Company'),
-            'currency_id': fields.many2one('res.currency','Main Currency'),
+            'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', string='Currency', store=True),
             'sale_tax': fields.float('Default Sale Tax'),
             'purchase_tax': fields.float('Default Purchase Tax'),
             'charts': fields.selection(_get_charts, 'Chart of Accounts',
@@ -64,8 +65,8 @@ class account_configuration(osv.osv_memory):
             'has_default_company' : fields.boolean('Has Default Company', readonly=True),
             'chart_template_id': fields.many2one('account.chart.template', 'Chart Template'),
             'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year'),
-            'paypal_account': fields.char("Your Paypal Account", size=128, help="Paypal username (usually email) for receiving online payments."),
-            'company_footer': fields.char("Footer of Reports", size=128),
+            'default_paypal_account': fields.char("Your Paypal Account", size=128, help="Paypal username (usually email) for receiving online payments.", default_model='res.company'),
+            'company_footer': fields.char("Footer of Reports", size=128, readonly=True),
             'customer_invoice_sequence_prefix': fields.char('Invoice Sequence', size=64),
             'customer_invoice_sequence_padding': fields.integer('Invoice Sequence Padding'),
             'customer_refund_sequence_prefix': fields.char('Refund Sequence', size=64),
@@ -131,6 +132,11 @@ class account_configuration(osv.osv_memory):
         taxes = self._check_default_tax(cr, uid, context)
         chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
         fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('date_start','=',time.strftime('%Y-01-01')),('date_stop','=',time.strftime('%Y-12-31'))])
+
+        cmp_id = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'main_company').id
+        company_data = self.pool.get('res.company').browse(cr, uid, cmp_id)
+        res.update({'company_footer': company_data.rml_footer2})
+
         if chart_template_ids:
             res.update({'chart_template_id': chart_template_ids[0]})
         if fiscalyear_ids:
