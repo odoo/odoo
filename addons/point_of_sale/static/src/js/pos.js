@@ -1325,8 +1325,7 @@ openerp.point_of_sale = function(db) {
                 });
 
                 pos.app = new App(self.$element);
-                $('.oe_toggle_secondary_menu').hide();
-                $('.oe_footer').hide();
+                db.webclient.set_content_full_screen(true);
                 
                 if (pos.store.get('account.bank.statement').length === 0)
                     return new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
@@ -1384,8 +1383,7 @@ openerp.point_of_sale = function(db) {
             }, this));
         },
         destroy: function() {
-            $('.oe_footer').show();
-            $('.oe_toggle_secondary_menu').show();
+            db.webclient.set_content_full_screen(false);
             pos = undefined;
             this._super();
         }
