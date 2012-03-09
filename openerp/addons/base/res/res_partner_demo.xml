@@ -239,15 +239,17 @@
             <field name="website">http://www.dubois.be/</field>
         </record>
 
-        <!--record id="res_partner_ericdubois0" model="res.partner">
+        <record id="res_partner_ericdubois0" model="res.partner">
             <field name="name">Eric Dubois</field>
+            <field name="is_company">1</field>
             <field name="address" eval="[]"/>
         </record>
 
         <record id="res_partner_fabiendupont0" model="res.partner">
             <field name="name">Fabien Dupont</field>
+            <field name="is_company">1</field>
             <field name="address" eval="[]"/>
-        </record-->
+        </record>
 
         <record id="res_partner_lucievonck0" model="res.partner">
             <field name="name">Lucie Vonck</field>
@@ -667,21 +669,21 @@
         </record>
 
 
-        <record id="res_partner_fabiendupont0" model="res.partner">
+        <record id="res_partner_address_fabiendupont0" model="res.partner">
             <field eval="'Namur'" name="city"/>
             <field eval="'Fabien Dupont'" name="name"/>
             <field eval="'5000'" name="zip"/>
-            <!--field name="parent_id" ref="res_partner_fabiendupont0"/-->
+            <field name="parent_id" ref="res_partner_fabiendupont0"/>
             <field name="country_id" ref="base.be"/>
             <field eval="'Blvd Kennedy, 13'" name="street"/>
         </record>
 
 
-        <record id="res_partner_ericdubois0" model="res.partner">
+        <record id="res_partner_address_ericdubois0" model="res.partner">
             <field eval="'Mons'" name="city"/>
             <field eval="'Eric Dubois'" name="name"/>
             <field eval="'7000'" name="zip"/>
-            <!--field name="parent_id" ref="res_partner_ericdubois0"/-->
+            <field name="parent_id" ref="res_partner_ericdubois0"/>
             <field name="country_id" ref="base.be"/>
             <field eval="'Chaussée de Binche, 27'" name="street"/>
             <field eval="'e.dubois@gmail.com'" name="email"/>
