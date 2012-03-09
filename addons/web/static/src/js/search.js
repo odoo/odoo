@@ -3,7 +3,7 @@ var QWeb = openerp.web.qweb,
       _t =  openerp.web._t,
      _lt = openerp.web._lt;
 
-openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.SearchView# */{
+openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.SearchView# */{
     template: "EmptyComponent",
     /**
      * @constructs openerp.web.SearchView
@@ -35,7 +35,56 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
         this.ready = $.Deferred();
     },
     start: function() {
-        this._super();
+        var p = this._super();
+
+        this.field = VS.init({
+            container: this.$element,
+            query: '',
+            callbacks: {
+                search: function (query, searchCollection) {
+                    console.log(query, searchCollection);
+                },
+                facetMatches: function (callback) {
+                    callback([
+                        'account', 'filter', 'access', 'title',
+                        { label: 'city',    category: 'location' },
+                        { label: 'address', category: 'location' },
+                        { label: 'country', category: 'location' },
+                        { label: 'state',   category: 'location' }
+                    ]);
+                },
+                valueMatches : function(facet, searchTerm, callback) {
+                    switch (facet) {
+                    case 'account':
+                        callback([
+                            { value: '1-amanda', label: 'Amanda' },
+                            { value: '2-aron',   label: 'Aron' },
+                            { value: '3-eric',   label: 'Eric' },
+                            { value: '4-jeremy', label: 'Jeremy' },
+                            { value: '5-samuel', label: 'Samuel' },
+                            { value: '6-scott',  label: 'Scott' }
+                        ]);
+                        break;
+                    case 'filter':
+                        callback(['published', 'unpublished', 'draft']);
+                        break;
+                    case 'access':
+                        callback(['public', 'private', 'protected']);
+                        break;
+                    case 'title':
+                        callback([
+                            'Pentagon Papers',
+                            'CoffeeScript Manual',
+                            'Laboratory for Object Oriented Thinking',
+                            'A Repository Grows in Brooklyn'
+                        ]);
+                        break;
+                    }
+                }
+            }
+        });
+        return p;
+
         if (this.hidden) {
             this.$element.hide();
         }
@@ -336,6 +385,9 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
      * @param e jQuery event object coming from the "Search" button
      */
     do_search: function (e) {
+        console.log(this.field.searchBox.value());
+        console.log(this.field.searchBox.facets());
+        return this.on_search([], [], []);
         if (this.headless && !this.has_defaults) {
             return this.on_search([], [], []);
         }

@@ -12,6 +12,7 @@
  *  http://documentcloud.github.com/visualsearch
  */
 
+var VS = {};
 (function() {
 
   var $ = jQuery; // Handle namespaced jQuery
