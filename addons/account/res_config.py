@@ -40,8 +40,8 @@ class account_configuration(osv.osv_memory):
         return charts
 
     _columns = {
-            'company_id': fields.many2one('res.company', 'Company'),
-            'currency_id': fields.many2one('res.currency','Main Currency'),
+            'company_id': fields.many2one('res.company', 'Company', default_model='res.company'),
+            'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', string='Currency', store=True),
             'sale_tax': fields.float('Default Sale Tax'),
             'purchase_tax': fields.float('Default Purchase Tax'),
             'charts': fields.selection(_get_charts, 'Chart of Accounts',
@@ -51,8 +51,8 @@ class account_configuration(osv.osv_memory):
                                              "country."),
             'chart_template_id': fields.many2one('account.chart.template', 'Chart Template'),
             'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year'),
-            'paypal_account': fields.char("Your Paypal Account", size=128, help="Paypal username (usually email) for receiving online payments."),
-            'company_footer': fields.char("Footer of Reports", size=128),
+            'default_paypal_account': fields.char("Your Paypal Account", size=128, help="Paypal username (usually email) for receiving online payments.", default_model='res.company'),
+            'company_footer': fields.char("Footer of Reports", size=128, readonly=True),
             'customer_invoice_sequence_prefix': fields.char('Invoice Sequence', size=64),
             'customer_invoice_sequence_padding': fields.integer('Invoice Sequence Padding'),
             'customer_refund_sequence_prefix': fields.char('Refund Sequence', size=64),
@@ -81,7 +81,7 @@ class account_configuration(osv.osv_memory):
 
     _defaults = {
             'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
-            'currency_id': lambda s, cr, uid, c: s.pool.get('res.currency').search(cr, uid, [])[0],
+            #'currency_id': lambda s, cr, uid, c: s.pool.get('res.currency').search(cr, uid, [])[0],
             'charts': 'configurable',
     }
 
@@ -103,6 +103,11 @@ class account_configuration(osv.osv_memory):
         res.update({'sale_tax': 15.0, 'purchase_tax': 15.0})
         taxes = self._check_default_tax(cr, uid, context)
         chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
+
+        cmp_id = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'main_company').id
+        company_data = self.pool.get('res.company').browse(cr, uid, cmp_id)
+        res.update({'company_footer': company_data.rml_footer2})
+
         if chart_template_ids:
             res.update({'chart_template_id': chart_template_ids[0]})
         if taxes:
