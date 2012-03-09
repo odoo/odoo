@@ -94,7 +94,7 @@ class res_partner(osv.osv):
             contact = partner.address[0] #TOFIX: should be get latitude and longitude for default contact?
             addr = ', '.join(filter(None, [
                     contact.street, 
-                    "%s %s" % (contact.zip , contact.city), 
+                    ("%s %s" % (contact.zip or '', contact.city or '')).strip(), 
                     contact.state_id and contact.state_id.name, 
                     contact.country_id and contact.country_id.name]))
             result = geo_find(tools.ustr(addr))
@@ -160,8 +160,8 @@ class crm_lead(osv.osv):
             if not lead.country_id:
                 continue
             addr = ', '.join(filter(None, [
-                    lead.street, 
-                    "%s %s" % (lead.zip, lead.city), 
+                    lead.street,  
+                    ("%s %s" % (lead.zip or '', lead.city or '')).strip(), 
                     lead.state_id and lead.state_id.name or '', 
                     lead.country_id and lead.country_id.name or ''
             ]))
