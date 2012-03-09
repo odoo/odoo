@@ -30,7 +30,6 @@
                         <field name="subject"/>
                         <field name="date"/>
                         <field name="type"/>
-                        <field name="need_action_user_id"/>
                         <field name="body_text"/>
                     </group>
                     <group colspan="2" col="2">
@@ -185,9 +184,7 @@
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-<!--
             <field name="context">{'tree_view_ref': 'mail.view_message_tree_short', 'form_view_ref': 'mail.view_message_form_short'}</field>
--->
             <field name="search_view_id" ref="view_message_search_short"/>
         </record>
 
@@ -196,9 +193,7 @@
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-<!--
-            <field name="domain">['&', ('type', '=', 'email'), '|',('state','in',['outgoing','exception']),('email_from', '!=', False)]</field>
--->
+            <field name="domain">[('type', '=', 'email'), '|',('state','in',['outgoing','exception']),('email_from', '!=', False)]</field>
             <field name="search_view_id" ref="view_email_message_search"/>
         </record>
 
