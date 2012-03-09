@@ -4,93 +4,95 @@
     
         <record id="view_account_config" model="ir.ui.view">
             <field name="name">Accounting Application</field>
-            <field name="model">res.config.settings</field>
+            <field name="model">account.installer</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_res_config_settings"/>
             <field name="arch" type="xml">
-                <form position="replace">
-                    <form string="Accounting Applications">
-                        <field name="chart_template_id" invisible="1"/>
-                        <group col="4" colspan="4" string="Warning" attrs="{'invisible': [('chart_template_id','!=',False)]}">
-                           <label string="You have no chart of accounts or taxes defined for this company. Select a chart of account to proceed." colspan="4"/>
-                           <field name="charts"/>
-                           <button name="%(action_account_configuration_installer)d" string="Install Chart of Account" icon="gtk-execute" type="action"/>
-                        </group>
-                        <field name="fiscalyear_id" invisible="1"/>
-                        <group col="4" colspan="4" string="Warning" attrs="{'invisible': [('fiscalyear_id','!=',False)]}">
-                           <label string="You have no fiscal year/period open for this date." colspan="4"/>
-                           
-                        </group>
-                        <field name="company_id" widget="selection"/>
-                        <separator string="Accounting Configuration" colspan="4"/>
-                        <group col="4" colspan="4">
-                            <group col="2" colspan="2">
-                                <field name="sale_tax"/>
-                                <field name="module_account_accountant"/>
-                                <field name="module_account_asset"/>
-                                <field name="group_dates_periods"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <field name="purchase_tax"/>
-                                <field name="currency_id" widget="selection"/>
-                                <field name="module_account_budget"/>
-                            </group>
+                <form string="Accounting Applications">
+                    <field name="chart_template_id" invisible="1"/>
+                    <group col="4" colspan="4" string="Warning" attrs="{'invisible': [('chart_template_id','!=',False)]}">
+                       <label string="You have no chart of accounts or taxes defined for this company. Select a chart of account to proceed." colspan="4"/>
+                       <field name="charts"/>
+                       <button name="action_next" string="Install Chart of Account" icon="gtk-execute" type="object"/>
+                    </group>
+                    <field name="fiscalyear_id" invisible="1"/>
+                    <group col="4" colspan="4" string="Warning" attrs="{'invisible': [('fiscalyear_id','!=',False)]}">
+                       <field name="has_default_company" invisible="1" />
+                       <field name="date_start" on_change="on_change_start_date(date_start)"/>
+                       <field name="date_stop"/>
+                       <field name="period" colspan="4"/>
+                       <newline/>
+                       <label string="You have no fiscal year/period open for this date."/>
+                       <button name="configure_fiscalyear" string="Configure Fiscalyear" icon="gtk-execute" type="object"/>
+                    </group>
+                    <field name="company_id" widget="selection" attrs="{'invisible': [('has_default_company', '=', True)]}"/>
+                    <separator string="Accounting Configuration" colspan="4"/>
+                    <group col="4" colspan="4">
+                        <group col="2" colspan="2">
+                            <field name="sale_tax"/>
+                            <field name="module_account_accountant"/>
+                            <field name="module_account_asset"/>
+                            <field name="group_dates_periods"/>
                         </group>
                         <group col="2" colspan="2">
-                            <separator string="Customer Invoices" colspan="2"/>
-                            <group col="4" colspan="2">
-                                <field name="customer_invoice_sequence_prefix"/>
-                                <field name="customer_invoice_sequence_padding" nolabel="1"/>
-                            </group>
-                            <group col="4" colspan="2">
-                                <field name="customer_refund_sequence_prefix"/>
-                                <field name="customer_refund_sequence_padding" nolabel="1"/>
-                            </group>
-                            <field name="module_account_invoice_layout"/>
-                            <newline/>
-                            <field name="module_account_voucher"/>
-                            <newline/>
-                            <field name="module_account_followup"/>
-                            <newline/>
-                            <field name="group_proforma_invoices"/>
+                            <field name="purchase_tax"/>
+                            <field name="currency_id" widget="selection"/>
+                            <field name="module_account_budget"/>
                         </group>
-                        <group col="2" colspan="2">
-                            <separator string="Supplier Invoices" colspan="2"/>
-                            <group col="4" colspan="2">
-                                <field name="supplier_invoice_sequence_prefix"/>
-                                <field name="supplier_invoice_sequence_padding" nolabel="1" colspan="1"/>
-                            </group>
-                            <newline/>
-                            <group col="4" colspan="2">
-                                <field name="supplier_refund_sequence_prefix"/>
-                                <field name="supplier_refund_sequence_padding" nolabel="1"/>
-                            </group>
-                            <field name="module_account_payment"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Customer Invoices" colspan="2"/>
+                        <group col="4" colspan="2">
+                            <field name="customer_invoice_sequence_prefix"/>
+                            <field name="customer_invoice_sequence_padding" nolabel="1"/>
                         </group>
-                        <group col="2" colspan="2">
-                            <separator string="Electronic Payments" colspan="2"/>
-                            <field name="paypal_account"/>
+                        <group col="4" colspan="2">
+                            <field name="customer_refund_sequence_prefix"/>
+                            <field name="customer_refund_sequence_padding" nolabel="1"/>
                         </group>
-                        <group col="2" colspan="2">
-                            <separator string="Bank &amp; Cash" colspan="2"/>
-                            <field name="company_footer"/>
-                            <newline/>
-                            <label string="Setup your bank accounts: "/>
-                            <button name="%(action_bank_tree)d" string="Setup Your Bank Accounts" icon="gtk-execute" type="action"/>
-                            <newline/>
-                            <field name="module_account_check_writing"/>
+                        <field name="module_account_invoice_layout"/>
+                        <newline/>
+                        <field name="module_account_voucher"/>
+                        <newline/>
+                        <field name="module_account_followup"/>
+                        <newline/>
+                        <field name="group_proforma_invoices"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Supplier Invoices" colspan="2"/>
+                        <group col="4" colspan="2">
+                            <field name="supplier_invoice_sequence_prefix"/>
+                            <field name="supplier_invoice_sequence_padding" nolabel="1" colspan="1"/>
                         </group>
-                        <group col="2" colspan="2">
-                            <separator string="Analytic Accounting" colspan="2"/>
-                            <field name="group_analytic_account_for_sales"/>
-                            <newline/>
-                            <field name="group_analytic_account_for_purchase"/>
-                            <newline/>
-                            <field name="module_account_analytic_plans"/>
-                            <newline/>
-                            <field name="module_account_analytic_default"/>
+                        <newline/>
+                        <group col="4" colspan="2">
+                            <field name="supplier_refund_sequence_prefix"/>
+                            <field name="supplier_refund_sequence_padding" nolabel="1"/>
                         </group>
-                    </form>
+                        <field name="module_account_payment"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Electronic Payments" colspan="2"/>
+                        <field name="default_paypal_account"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Bank &amp; Cash" colspan="2"/>
+                        <field name="company_footer"/>
+                        <newline/>
+                        <label string="Setup your bank accounts: "/>
+                        <button name="%(action_bank_tree)d" string="Setup Your Bank Accounts" icon="gtk-execute" type="action"/>
+                        <newline/>
+                        <field name="module_account_check_writing"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Analytic Accounting" colspan="2"/>
+                        <field name="group_analytic_account_for_sales"/>
+                        <newline/>
+                        <field name="group_analytic_account_for_purchase"/>
+                        <newline/>
+                        <field name="module_account_analytic_plans"/>
+                        <newline/>
+                        <field name="module_account_analytic_default"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -98,13 +100,13 @@
         <record id="action_account_config" model="ir.actions.act_window">
             <field name="name">Configure Accounting Application</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.config.settings</field>
+            <field name="res_model">account.installer</field>
             <field name="view_id" ref="view_account_config"/>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
         </record>
         
-        <menuitem id="menu_account_config" name="Accounting" parent="base.menu_config" sequence="4" action="action_account_config"/>
+        <menuitem id="menu_account_config" name="Accounting" parent="base.menu_config" sequence="2" action="action_account_config"/>
         
     </data>
 </openerp>

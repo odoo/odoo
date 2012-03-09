@@ -20,7 +20,7 @@
 ##############################################################################
 
 import account
-import installer
+#import installer
 import project
 import partner
 import account_invoice
