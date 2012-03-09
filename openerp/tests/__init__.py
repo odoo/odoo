@@ -11,6 +11,7 @@ See the :ref:`test-framework` section in the :ref:`features` list.
 import test_expression
 import test_ir_sequence
 import test_orm
+import test_fields
 
 fast_suite = [
     test_ir_sequence,
@@ -19,6 +20,7 @@ fast_suite = [
 checks = [
     test_expression,
     test_orm,
+    test_fields,
     ]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
