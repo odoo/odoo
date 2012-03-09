@@ -19,13 +19,22 @@
 #
 ##############################################################################
 
+import logging
+import time
+import datetime
+from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+from os.path import join as opj
 
-from osv import fields, osv
 from tools.translate import _
+from osv import fields, osv
+import netsvc
+import tools
 
 class account_configuration(osv.osv_memory):
+    _name = 'account.installer'
     _inherit = 'res.config.settings'
+    __logger = logging.getLogger(_name)
     
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
@@ -49,6 +58,10 @@ class account_configuration(osv.osv_memory):
                                         help="Installs localized accounting charts to match as closely as "
                                              "possible the accounting needs of your company based on your "
                                              "country."),
+            'date_start': fields.date('Start Date', required=True),
+            'date_stop': fields.date('End Date', required=True),
+            'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
+            'has_default_company' : fields.boolean('Has Default Company', readonly=True),
             'chart_template_id': fields.many2one('account.chart.template', 'Chart Template'),
             'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year'),
             'paypal_account': fields.char("Your Paypal Account", size=128, help="Paypal username (usually email) for receiving online payments."),
@@ -75,13 +88,26 @@ class account_configuration(osv.osv_memory):
 
             'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales'),
             'group_analytic_account_for_purchase': fields.boolean('Analytic Accounting for Purchase'),
-            'group_dates_periods': fields.boolean('Allow dates/periods'),
+            'group_dates_periods': fields.boolean('Allow dates/periods', 
+                                                  help="Allows you to keep the period same as your invoice date when you validate the invoice."\
+                                                       "It will add the group 'Allow dates and periods' for all users."),
             'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices'),
     }
+    
+    def _default_company(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.company_id and user.company_id.id or False
+
+    def _default_has_default_company(self, cr, uid, context=None):
+        count = self.pool.get('res.company').search_count(cr, uid, [], context=context)
+        return bool(count == 1)
 
     _defaults = {
-            'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
-            'currency_id': lambda s, cr, uid, c: s.pool.get('res.currency').search(cr, uid, [])[0],
+            'date_start': lambda *a: time.strftime('%Y-01-01'),
+            'date_stop': lambda *a: time.strftime('%Y-12-31'),
+            'period': 'month',
+            'company_id': _default_company,
+            'has_default_company': _default_has_default_company,
             'charts': 'configurable',
     }
 
@@ -99,15 +125,19 @@ class account_configuration(osv.osv_memory):
     def default_get(self, cr, uid, fields_list, context=None):
         ir_values_obj = self.pool.get('ir.values')
         chart_template_obj = self.pool.get('account.chart.template')
+        fiscalyear_obj = self.pool.get('account.fiscalyear')
         res = super(account_configuration, self).default_get(cr, uid, fields_list, context=context)
         res.update({'sale_tax': 15.0, 'purchase_tax': 15.0})
         taxes = self._check_default_tax(cr, uid, context)
         chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
+        fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('date_start','=',time.strftime('%Y-01-01')),('date_stop','=',time.strftime('%Y-12-31'))])
         if chart_template_ids:
             res.update({'chart_template_id': chart_template_ids[0]})
+        if fiscalyear_ids:
+            res.update({'fiscalyear_id': fiscalyear_ids[0]})
         if taxes:
             sale_tax_id = taxes.get('taxes_id')
-            res.update({'sale_tax': sale_tax_id and sale_tax_id[0]})
+            res.update({'sale_tax': sale_tax_id and sale_tax_id[0]}) 
             purchase_tax_id = taxes.get('supplier_taxes_id')
             res.update({'purchase_tax': purchase_tax_id and purchase_tax_id[0]})
         return res
@@ -115,11 +145,86 @@ class account_configuration(osv.osv_memory):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         ir_values_obj = self.pool.get('ir.values')
         res = super(account_configuration, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        cmp_select = []
         if self._check_default_tax(cr, uid, context) and taxes:
             if res['fields'].get('sale_tax') and res['fields'].get('purchase_tax'):
                 res['fields']['sale_tax'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Default Sale Tax'}
                 res['fields']['purchase_tax'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Default Purchase Tax'}
+        # display in the widget selection only the companies that haven't been configured yet
+        unconfigured_cmp = self.get_unconfigured_cmp(cr, uid, context=context)
+        for field in res['fields']:
+            if field == 'company_id':
+                res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
+                res['fields'][field]['selection'] = [('', '')]
+                if unconfigured_cmp:
+                    cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
+                    res['fields'][field]['selection'] = cmp_select
         return res
+
+    def get_unconfigured_cmp(self, cr, uid, context=None):
+        """ get the list of companies that have not been configured yet
+        but don't care about the demo chart of accounts """
+        cmp_select = []
+        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
+        cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
+        configured_cmp = [r[0] for r in cr.fetchall()]
+        return list(set(company_ids)-set(configured_cmp))
+
+    def check_unconfigured_cmp(self, cr, uid, context=None):
+        """ check if there are still unconfigured companies """
+        if not self.get_unconfigured_cmp(cr, uid, context=context):
+            raise osv.except_osv(_('No unconfigured company !'), _("There are currently no company without chart of account. The wizard will therefore not be executed."))
+
+    def on_change_start_date(self, cr, uid, id, start_date=False):
+        if start_date:
+            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+            end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
+            return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
+        return {}
+    
+    def execute(self, cr, uid, ids, context=None):
+        self.execute_simple(cr, uid, ids, context)
+        super(account_configuration, self).execute(cr, uid, ids, context=context)
+    
+    def execute_simple(self, cr, uid, ids, context=None):
+        ir_module = self.pool.get('ir.module.module')
+        if context is None:
+            context = {}
+        for res in self.read(cr, uid, ids, context=context):
+            if res.get('charts') == 'configurable':
+                #load generic chart of account
+                fp = tools.file_open(opj('account', 'configurable_account_chart.xml'))
+                tools.convert_xml_import(cr, 'account', fp, {}, 'init', True, None)
+                fp.close()
+            else:
+                mod_ids = ir_module.search(cr, uid, [('name','=',res.get('charts'))])
+                if mod_ids and ir_module.browse(cr, uid, mod_ids[0], context).state == 'uninstalled':
+                    ir_module.button_immediate_install(cr, uid, mod_ids, context)
+
+    def configure_fiscalyear(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        fy_obj = self.pool.get('account.fiscalyear')
+        for res in self.read(cr, uid, ids, context=context):
+            if 'date_start' in res and 'date_stop' in res:
+                f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'][0])], context=context)
+                if not f_ids:
+                    name = code = res['date_start'][:4]
+                    if int(name) != int(res['date_stop'][:4]):
+                        name = res['date_start'][:4] +'-'+ res['date_stop'][:4]
+                        code = res['date_start'][2:4] +'-'+ res['date_stop'][2:4]
+                    vals = {
+                        'name': name,
+                        'code': code,
+                        'date_start': res['date_start'],
+                        'date_stop': res['date_stop'],
+                        'company_id': res['company_id'][0]
+                    }
+                    fiscal_id = fy_obj.create(cr, uid, vals, context=context)
+                    if res['period'] == 'month':
+                        fy_obj.create_period(cr, uid, [fiscal_id])
+                    elif res['period'] == '3months':
+                        fy_obj.create_period3(cr, uid, [fiscal_id])
 
 account_configuration()
 
