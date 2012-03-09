@@ -60,7 +60,7 @@ class partner_massmail_wizard(osv.osv_memory):
         ir_mail_server = self.pool.get('ir.mail_server')
         emails_seen = set()
         for partner in partners:
-            for adr in partner.address:
+            for adr in partner.child_ids:
                 if adr.email and not adr.email in emails_seen:
                     try:
                         emails_seen.add(adr.email)

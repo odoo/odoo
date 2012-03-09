@@ -91,7 +91,6 @@
         'test/bug_lp541545.xml',
         'test/test_osv_expression.yml',
         'test/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
-        'test/test_ir_values.yml',
         # Commented because this takes some time.
         # This must be (un)commented with the corresponding import statement
         # in test/__init__.py.

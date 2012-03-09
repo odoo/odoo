@@ -320,8 +320,8 @@ class rml_parse(object):
                 res='%s %s'%(currency_obj.symbol, res)
         return res
 
-    def display_address(self, address_browse_record):
-        return self.pool.get('res.partner.address')._display_address(self.cr, self.uid, address_browse_record)
+    def display_address(self, address_browse_record,type=''):
+        return self.pool.get('res.partner')._display_address(self.cr, self.uid, address_browse_record,type)
 
     def repeatIn(self, lst, name,nodes_parent=False):
         ret_lst = []

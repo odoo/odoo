@@ -50,6 +50,7 @@ import openerp.pooler as pooler
 import openerp.release as release
 import openerp.tools as tools
 import openerp.tools.osutil as osutil
+import openerp.tools.assertion_report as assertion_report
 
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
@@ -94,19 +95,20 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
     def load_test(module_name, idref, mode):
         cr.commit()
-        if not tools.config.options['test_disable']:
-            try:
-                threading.currentThread().testing = True
-                _load_data(cr, module_name, idref, mode, 'test')
-            except Exception, e:
-                _logger.exception(
-                    'Tests failed to execute in module %s', module_name)
-            finally:
-                threading.currentThread().testing = False
-                if tools.config.options['test_commit']:
-                    cr.commit()
-                else:
-                    cr.rollback()
+        try:
+            threading.currentThread().testing = True
+            _load_data(cr, module_name, idref, mode, 'test')
+            return True
+        except Exception, e:
+            _logger.error(
+                'module %s: an exception occurred in a test', module_name)
+            return False
+        finally:
+            threading.currentThread().testing = False
+            if tools.config.options['test_commit']:
+                cr.commit()
+            else:
+                cr.rollback()
 
     def _load_data(cr, module_name, idref, mode, kind):
         """
@@ -133,7 +135,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 elif ext == '.sql':
                     process_sql_file(cr, fp)
                 elif ext == '.yml':
-                    tools.convert_yaml_import(cr, module_name, fp, idref, mode, noupdate)
+                    tools.convert_yaml_import(cr, module_name, fp, idref, mode, noupdate, report)
                 else:
                     tools.convert_xml_import(cr, module_name, fp, idref, mode, noupdate, report)
             finally:
@@ -201,7 +203,14 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 # on demo data. Other tests can be added into the regular
                 # 'data' section, but should probably not alter the data,
                 # as there is no rollback.
-                load_test(module_name, idref, mode)
+                if tools.config.options['test_enable']:
+                    report.record_result(load_test(module_name, idref, mode))
+
+                    # Run the `fast_suite` and `checks` tests given by the module.
+                    if module_name == 'base':
+                        # Also run the core tests after the database is created.
+                        report.record_result(openerp.modules.module.run_unit_tests('openerp'))
+                    report.record_result(openerp.modules.module.run_unit_tests(module_name))
 
             processed_modules.append(package.name)
 
@@ -282,7 +291,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # This is a brand new pool, just created in pooler.get_db_and_pool()
         pool = pooler.get_pool(cr.dbname)
 
-        report = tools.assertion_report()
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
@@ -295,6 +303,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
+        report = assertion_report.assertion_report()
         loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
         if tools.config['load_language']:
@@ -414,7 +423,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("update ir_module_module set state=%s where state=%s", ('uninstalled', 'to remove',))
             cr.commit()
 
-        _logger.info('Modules loaded.')
+        if report.failures:
+            _logger.error('At least one test failed when loading the modules.')
+        else:
+            _logger.info('Modules loaded.')
     finally:
         cr.close()
 

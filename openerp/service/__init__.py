@@ -48,6 +48,8 @@ import openerp.wsgi
 
 _logger = logging.getLogger(__name__)
 
+# TODO block until the server is really up, accepting connections
+# TODO be idemptotent (as long as stop_service was not called).
 def start_services():
     """ Start all services.
 

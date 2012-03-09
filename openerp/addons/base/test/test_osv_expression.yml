@@ -68,20 +68,20 @@
 -
     Testing that some domain expressions work
 -
-    !python {model: res.partner.address }: |
-        ids = self.search(cr, uid, [('partner_id','=','Agrolait')])
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('parent_id','=','Agrolait')])
         assert len(ids) >= 1, ids
 -
     Trying the "in" operator, for scalar value
 -
-    !python {model: res.partner.address }: |
-        ids = self.search(cr, uid, [('partner_id','in','Agrolait')])
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('parent_id','in','Agrolait')])
         assert len(ids) >= 1, ids
 -
     Trying the "in" operator for list value
 -
-    !python {model: res.partner.address }: |
-        ids = self.search(cr, uid, [('partner_id','in',['Agrolait','ASUStek'])])
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('parent_id','in',['Agrolait','ASUStek'])])
         assert len(ids) >= 1, ids
 -
     Check we can use "in" operator for plain fields.
@@ -89,15 +89,6 @@
     !python {model: ir.ui.menu }: |
         ids = self.search(cr, uid, [('sequence','in',[1, 2, 10, 20])])
         assert len(ids) >= 1, ids
--
-    Test one2many operator with empty search list
--
-    !assert {model: res.partner, search: "[('address', 'in', [])]", count: 0, string: "Ids should be empty"}
--
-    Test one2many operator with False
--
-    !assert {model: res.partner, search: "[('address', '=', False)]"}:
-        - address in (False, None, [])
 -
     Test many2many operator with empty search list
 -
@@ -107,10 +98,6 @@
 -
     !assert {model: res.partner, search: "[('category_id', '=', False)]"}:
         - category_id in (False, None, [])
--
-    Filtering on invalid value across x2many relationship should return an empty set
--
-    !assert {model: res.partner, search: "[('address.city','=','foo')]", count: 0, string: "Searching for address.city = foo should give empty results"}
 -
     Check if many2one works with empty search list
 -
@@ -441,16 +428,6 @@
         assert res_3 == expected
         assert res_4 == expected
 -
-    Verify that normalize_domain() works.
--
-    !python {model: res.partner}: |
-        from osv import expression
-        norm_domain = domain = ['&',(1,'=',1),('a','=','b')]
-        assert norm_domain == expression.normalize(domain), "Normalized domains should be left untouched"
-        domain = [('x','in',['y','z']),('a.v','=','e'),'|','|',('a','=','b'),'!',('c','>','d'),('e','!=','f'),('g','=','h')]
-        norm_domain = ['&','&','&'] + domain
-        assert norm_domain == expression.normalize(domain), "Non-normalized domains should be properly normalized"
--
     Unaccent. Create a company with an accent in its name.
 -
     !record {model: res.company, id: ymltest_unaccent_company}:
@@ -525,15 +502,7 @@
         vals = {'category_id': [(6, 0, [ref("base.res_partner_category_8")])],
                 'name': 'OpenERP Test',
                 'active': False,
-                'address': [(0, 0, {'country_id': ref("base.be")})]
                 }
         self.create(cr, uid, vals, context=context)
         res_ids = self.search(cr, uid, [('category_id', 'ilike', 'supplier'), ('active', '=', False)])
         assert len(res_ids) != 0, "Record not Found with category supplier and active False."
--
-    Testing for One2Many field with country Belgium and active=False
--
-    !python {model: res.partner }: |
-        res_ids = self.search(cr, uid, [('address.country_id','=','Belgium'),('active','=',False)])
-        assert len(res_ids) != 0, "Record not Found with country Belgium and active False."
-
