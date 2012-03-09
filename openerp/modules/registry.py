@@ -269,7 +269,6 @@ class RegistryManager(object):
                            base_cache_signaling.last_value
                     FROM base_registry_signaling, base_cache_signaling""")
                 r, c = cr.fetchone()
-                print ">>>", r, c
                 # Check if the model registry must be reloaded (e.g. after the
                 # database has been updated by another process).
                 if registry.base_registry_signaling_sequence != r:
