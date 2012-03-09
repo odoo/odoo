@@ -374,6 +374,7 @@ class email_template(osv.osv):
                 was executed for this message only.
            :returns: id of the mail.message that was created 
         """
+        if context is None: context = {}
         mail_message = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
@@ -390,8 +391,7 @@ class email_template(osv.osv):
                     'res_model': mail_message._name,
                     'res_id': msg_id,
             }
-            if context.has_key('default_type'):
-                del context['default_type']
+            context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
         if force_send:
             mail_message.send(cr, uid, [msg_id], context=context)
