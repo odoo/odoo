@@ -73,10 +73,10 @@ class account_configuration(osv.osv_memory):
             'module_account_analytic_default': fields.boolean('Rules for Analytic Assignation'),
             'module_account_invoice_layout': fields.boolean('Allow notes and subtotals'),
 
-            'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales'),
-            'group_analytic_account_for_purchase': fields.boolean('Analytic Accounting for Purchase'),
-            'group_dates_periods': fields.boolean('Allow dates/periods'),
-            'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices'),
+            'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales', group='base.group_user', implied_group='base.group_analytic_account_for_sales'),
+            'group_analytic_account_for_purchase': fields.boolean('Analytic Accounting for Purchase', group='base.group_user', implied_group='base.group_analytic_account_for_purchase'),
+            'group_dates_periods': fields.boolean('Allow dates/periods', group='base.group_user', implied_group='base.group_dates_periods'),
+            'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices', group='base.group_user', implied_group='base.group_proforma_invoices'),
     }
 
     _defaults = {
