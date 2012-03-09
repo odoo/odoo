@@ -129,7 +129,6 @@ class mail_thread(osv.osv):
         # parse message to get requested users
         user_ids = self.message_parse_users(cr, uid, [msg_id], vals['body_text'], context=context)
         for user_id in user_ids:
-            print 'pushed to %d' % (user_id)
             notification_obj.create(cr, uid, {'user_id': user_id, 'message_id': msg_id}, context=context)
         
         return msg_id
@@ -233,7 +232,7 @@ class mail_thread(osv.osv):
                 'res_id': thread.id,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'message_id': message_id,
-                'body_text': body_text or (hasattr(thread, 'description') and thread.description or False),
+                'body_text': body_text or (hasattr(thread, 'description') and thread.description or ''),
                 'attachment_ids': [(6, 0, to_attach)],
                 'state': 'received',
                 'type': type,
