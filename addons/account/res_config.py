@@ -26,7 +26,6 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from os.path import join as opj
 
-
 from tools.translate import _
 from osv import fields, osv
 import netsvc
@@ -92,12 +91,12 @@ class account_configuration(osv.osv_memory):
             'module_account_analytic_default': fields.boolean('Rules for Analytic Assignation'),
             'module_account_invoice_layout': fields.boolean('Allow notes and subtotals'),
 
-            'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales'),
-            'group_analytic_account_for_purchase': fields.boolean('Analytic Accounting for Purchase'),
-            'group_dates_periods': fields.boolean('Allow dates/periods', 
+            'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales', group='base.group_user', implied_group='base.group_analytic_account_for_sales'),
+            'group_analytic_account_for_purchase': fields.boolean('Analytic Accounting for Purchase', group='base.group_user', implied_group='base.group_analytic_account_for_purchase'),
+            'group_dates_periods': fields.boolean('Allow dates/periods', group='base.group_user', implied_group='base.group_dates_periods',
                                                   help="Allows you to keep the period same as your invoice date when you validate the invoice."\
                                                        "It will add the group 'Allow dates and periods' for all users."),
-            'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices'),
+            'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices', group='base.group_user', implied_group='base.group_proforma_invoices'),
     }
     
     def _default_company(self, cr, uid, context=None):
