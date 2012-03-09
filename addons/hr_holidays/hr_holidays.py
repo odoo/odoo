@@ -358,6 +358,14 @@ class hr_holidays(osv.osv):
     # OpenChatter and notifications
     # -----------------------------
     
+    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = False
+            if (obj.state == 'confirm' and obj.employee_id.parent_id):
+                result[obj.id] = obj.employee_id.parent_id.user_id.id
+        return result
+    
     def message_get_subscribers(self, cr, uid, ids, context=None):
         sub_ids = self._message_get_subscribers_ids(cr, uid, ids, context=context);
         # add the employee and its manager if specified to the subscribed users
@@ -377,12 +385,10 @@ class hr_holidays(osv.osv):
         for obj in self.browse(cr, uid, ids):
             self.message_append_note(cr, uid, [obj.id], _('System notification'), 
                     _("The %s request '%s' has been confirmed and is waiting for validation by the manager.")
-                    % ('leave' if obj.type == 'remove' else 'allocation', obj.name,), type='notification',
-                    need_action_user_id = obj.employee_id.parent_id.user_id.id if obj.employee_id.parent_id else False)
+                    % ('leave' if obj.type == 'remove' else 'allocation', obj.name,), type='notification')
     
     def holidays_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
-            self.message_mark_done(cr, uid, [obj.id], context=context)
             if obj.holiday_status_id.double_validation:
                 self.message_append_note(cr, uid, [obj.id], _('System notification'),
                     _("The %s request '%s' has been validated. A second validation is necessary and is now pending.")
