@@ -1154,10 +1154,6 @@ class related(function):
 
     def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
         self._field_get2(cr, uid, obj, context)
-        
-        models = map(lambda r: r['object'], self._relations)
-        model_fields = zip(models, self._arg)
-        
         i = len(self._arg)-1
         sarg = name
         while i>0:
