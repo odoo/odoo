@@ -23,7 +23,6 @@ openerp.mail = function(session) {
         template: 'Thread',
 
         /**
-         *
          * @param {Object} parent parent
          * @param {Object} [params]
          * @param {String} [params.res_model] res_model of mail.thread object
@@ -49,6 +48,7 @@ openerp.mail = function(session) {
             this.params.offset = this.params.offset || 0;
             this.params.records = this.params.records || null;
             /* DataSets and internal vars */
+            this.name = 'Unknown'
             this.map_hash = {};
             this.sorted_comments = {'root_ids': [], 'root_id_msg_list': {}};
             this.display_show_more = true;
@@ -83,10 +83,15 @@ openerp.mail = function(session) {
                 }
                 else self.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(res_id), views: [[false, 'form']]});
             });
-            /* display user, fetch comments */
-            this.display_current_user();
-            if (this.params.records) return this.display_comments(this.params.records);
-            else return this.init_comments();
+            /* get record name */
+            var name_get_done = self.ds.name_get([this.params.res_id]).then(function (records) { self.name = records[0][1]; });
+            var display_done = $.when(name_get_done).then(function () {
+                /* display user, fetch comments */
+                self.display_current_user();
+                if (self.params.records) return self.display_comments(self.params.records);
+                else return self.init_comments();
+            });
+            return display_done
         },
         
         stop: function () {
@@ -164,7 +169,8 @@ openerp.mail = function(session) {
             record.body_text = this.do_replace_internal_links(record.body_text);
             if (record.tr_body_text) record.tr_body_text = this.do_replace_internal_links(record.tr_body_text);
             // render
-            $(session.web.qweb.render('ThreadMsg', {'record': record})).appendTo(this.$element.children('div.oe_mail_thread_display:first'));    
+            $(session.web.qweb.render('ThreadMsg', {'record': record, 'res_model': this.params.res_model, 'res_id': this.params.res_id, 'name': this.name})).appendTo(
+                this.$element.children('div.oe_mail_thread_display:first'));
             // truncated: hide full-text, show summary, add buttons
             if (record.tr_body_text) {
                 var node_body = this.$element.find('span.oe_mail_msg_body:last').append(' <a href="#" class="reduce">[ ... Show less]</a>');
@@ -530,7 +536,6 @@ openerp.mail = function(session) {
          * @param {Number} limit number of messages to fetch
          */
         init_comments: function(domain, context, offset, limit) {
-            var self = this;
             this.params.domain = [];
             this.display_show_more = true;
             this.sorted_comments = {'models': {}};
@@ -576,7 +581,7 @@ openerp.mail = function(session) {
                         'res_model': model_name, 'res_id': records[0]['res_id'], 'uid': self.session.uid, 'records': records,
                         'parent_id': false, 'thread_level': self.params.thread_level}
                         );
-                    thread.appendTo(self.$element.find('div.oe_mail_wall_thread:last'));
+                    var thread_displayed = thread.appendTo(self.$element.find('div.oe_mail_wall_thread:last'));
                 });
             });
         },

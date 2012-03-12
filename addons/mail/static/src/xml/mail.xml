@@ -69,18 +69,14 @@
     
     <t t-name="NoteDisplay">
         <p class="oe_mail_msg">
-            <span class="oe_mail_oe_fade">
-                <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
-                <t t-if="record.type == 'notification'">via OpenERP System Notification</t>            
-<!--
-            <t t-if="record.need_action_user_id != false">
-                - <span class="oe_mail_oe_warning">Need action by <a href="#" class="intlink" data-res-model='res.users' t-attf-data-res-id='{record.need_action_user_id[0]}'><t t-raw="record.need_action_user_id[1]"/></a></span>
-            </t>
--->
-            on <t t-raw="record.date"/></span>
-            <br />
+            <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{res_model}' t-attf-data-res-id='{res_id}'><t t-raw="name"/></a>
             <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
             <t t-if="record.tr_body_text"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body_text"/></span></t>
+            <br />
+            <span class="oe_mail_oe_fade">
+                <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
+                on <t t-raw="record.date"/>
+            </span>
         </p>
     </t>
     
