@@ -51,8 +51,8 @@ class account_configuration(osv.osv_memory):
     _columns = {
             'company_id': fields.many2one('res.company', 'Company'),
             'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', string='Currency', store=True),
-            'sale_tax': fields.float('Default Sale Tax'),
-            'purchase_tax': fields.float('Default Purchase Tax'),
+            'default_taxes_id': fields.float('Default Sale Tax', default_model='product.product'),
+            'default_supplier_taxes_id': fields.float('Default Purchase Tax', default_model='product.product'),
             'charts': fields.selection(_get_charts, 'Chart of Accounts',
                                         required=True,
                                         help="Installs localized accounting charts to match as closely as "
@@ -121,11 +121,10 @@ class account_configuration(osv.osv_memory):
         taxes = {}
         for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.product']):
             if tax[1] == 'taxes_id':
-                taxes.update({'taxes_id': tax[2]})
+                taxes.update({'taxes_id': int(tax[2])})
             if tax[1] == 'supplier_taxes_id':
-                taxes.update({'supplier_taxes_id': tax[2]})
-            return taxes
-        return False
+                taxes.update({'supplier_taxes_id': int(tax[2])})
+        return taxes
 
     def default_get(self, cr, uid, fields_list, context=None):
         ir_values_obj = self.pool.get('ir.values')
@@ -133,7 +132,7 @@ class account_configuration(osv.osv_memory):
         fiscalyear_obj = self.pool.get('account.fiscalyear')
         journal_obj = self.pool.get('account.journal')
         res = super(account_configuration, self).default_get(cr, uid, fields_list, context=context)
-        res.update({'sale_tax': 15.0, 'purchase_tax': 15.0})
+        res.update({'default_taxes_id': 15.0, 'default_supplier_taxes_id': 15.0})
         taxes = self._check_default_tax(cr, uid, context)
         chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
         fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('date_start','=',time.strftime('%Y-01-01')),('date_stop','=',time.strftime('%Y-12-31'))])
@@ -160,19 +159,19 @@ class account_configuration(osv.osv_memory):
             res.update({'fiscalyear_id': fiscalyear_ids[0]})
         if taxes:
             sale_tax_id = taxes.get('taxes_id')
-            res.update({'sale_tax': sale_tax_id and sale_tax_id[0]}) 
+            res.update({'default_taxes_id': sale_tax_id})
             purchase_tax_id = taxes.get('supplier_taxes_id')
-            res.update({'purchase_tax': purchase_tax_id and purchase_tax_id[0]})
+            res.update({'default_supplier_taxes_id': purchase_tax_id})
         return res
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         ir_values_obj = self.pool.get('ir.values')
         res = super(account_configuration, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         cmp_select = []
         if self._check_default_tax(cr, uid, context):
-            if res['fields'].get('sale_tax') and res['fields'].get('purchase_tax'):
-                res['fields']['sale_tax'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Default Sale Tax'}
-                res['fields']['purchase_tax'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Default Purchase Tax'}
+            if res['fields'].get('default_taxes_id') and res['fields'].get('default_supplier_taxes_id'):
+                res['fields']['default_taxes_id'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Default Sale Tax'}
+                res['fields']['default_supplier_taxes_id'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Default Purchase Tax'}
         # display in the widget selection only the companies that haven't been configured yet
         unconfigured_cmp = self.get_unconfigured_cmp(cr, uid, context=context)
         for field in res['fields']:
