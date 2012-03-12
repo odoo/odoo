@@ -109,7 +109,7 @@ class google_docs(osv.osv):
     def doc_get(self, cr, uid, model, id, type_doc):# TODO fix logic here
         google_docs_config_ref = self.pool.get('res.users')
         ir_attachment_ref = self.pool.get('ir.attachment')
-        google_docs_config = google_docs_config_ref.search(cr, uid, [('model_id', '=', model)])
+        google_docs_config = google_docs_config_ref.search(cr, uid, [('context_model_id', '=', model)])
 
         if not google_docs_config:
             google_document = ir_attachment_ref.create_empty_google_doc(cr, uid, model, id, type_doc)
@@ -121,20 +121,22 @@ class google_docs(osv.osv):
         if not google_docs_config:
             return -1
 
-class users(osv.osv):
-    _inherit = 'res.users'
-    _description = "User\'s gdocs config"
+class config(osv.osv):
+    _name = 'google.docs.config'
+    _description = "Google Docs templates config"
 
     _columns = {
         'context_model_id': fields.many2one('ir.model', 'Model'),
         'context_gdocs_resource_id': fields.char('Google resource ID', size=64),
         'context_name_template': fields.char('GDoc name template ', size=64, help='This is the name which appears on google side'),
-        'context_name': fields.char('Name', size=64, help='This is the attachment\'s name. As well, it appears on the panel.')
-        # 'multi': fields.boolean('Multiple documents')
+        'context_name': fields.char('Name', size=64, help='This is the attachment\'s name. As well, it appears on the panel.'),
+        'context_multiple': fields.boolean('Multiple documents')
     }
 
     _defaults = {
-        'context_name_template': 'Google Document'
+        'context_name_template': 'Google Document',
+        'context_name': 'pr_%(name)',
+        'context_multiple': False,
     }
 
     def create(self, cr, uid, vals, context=None):
@@ -143,12 +145,13 @@ class users(osv.osv):
         if vals.get('context_gdocs_resource_id') and vals.get('context_model_id'):
             self.write(cr, uid, 
                 {
-                    'model_id': model_obj.get(cr, uid, vals.get('context_model_id'))[0],
-                    'gdocs_resource_id': vals.get('context_gdocs_resource_id'),
-                    'name_template': vals('context_name_template'),
-                    'name': vals('context_name'),
+                    'context_model_id': model_obj.get(cr, uid, vals.get('context_model_id'))[0],
+                    'context_gdocs_resource_id': vals.get('context_gdocs_resource_id'),
+                    'context_name_template': vals.get('context_name_template'),
+                    'context_name': self.context_name % {'name': vals.get('context_name')},
+                    'context_multiple': vals.get('context_multiple'),
                 },
                 context)
         return res
 
-users()
+config()

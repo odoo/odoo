@@ -6,8 +6,7 @@
 
         <record model="ir.ui.view" id="view_google_docs_users_config_inherited_form">
             <field name="name">google_docs.config.user.inherited.form</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form" />
+            <field name="model">google.docs.config</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <group name="default_filters" position="inside">
@@ -16,6 +15,6 @@
                 </group>
             </field>
         </record>
-        <menuitem name='Google Docs configuration' id='menu_gdocs_config' parent='base.menu_config'/>
+        <menuitem name='Google Docs configuration' id='menu_gdocs_config' parent='menu_management' action='view_google_docs_users_config_inherited_form'/>
     </data>
 </openerp>
