@@ -347,7 +347,7 @@ class crm_lead(crm_case, osv.osv):
 
     def _case_partner_notification(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context=context):
-            message = _("Partner is <b>created</b> for this %s") % ('Opportunity' if lead.type == 'opportunity' else 'Lead')
+            message = _("Partner has <b>created</b> for this %s") % ('Opportunity' if lead.type == 'opportunity' else 'Lead')
             lead.message_append_note('' ,message)
         return True
 

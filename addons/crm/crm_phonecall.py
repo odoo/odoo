@@ -127,7 +127,7 @@ class crm_phonecall(crm_base, osv.osv):
 
     def _case_partner_notification(self, cr, uid, ids, context=None):
         for phonecall in self.browse(cr, uid, ids, context=context):
-            message = _("Partner is <b>created</b>")
+            message = _("Partner has been <b>created</b>")
             phonecall.message_append_note('' ,message)
         return True
 
