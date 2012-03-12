@@ -65,9 +65,11 @@ module named account_voucher.
         'report/account_analytic_entries_report_view.xml',
         'wizard/account_move_bank_reconcile_view.xml',
         'wizard/account_use_model_view.xml',
-        'account_installer.xml',
+#        'account_installer.xml',
         'wizard/account_period_close_view.xml',
         'account_view.xml',
+        "account_bank_view.xml",
+        'res_config_view.xml',
         'account_report.xml',
         'account_financial_report_data.xml',
         'wizard/account_report_common_view.xml',
@@ -124,8 +126,7 @@ module named account_voucher.
         'company_view.xml',
         'board_account_view.xml',
         "edi/invoice_action_data.xml",
-        "account_bank_view.xml",
-        "account_pre_install.yml"
+#        "account_pre_install.yml",
     ],
     'demo_xml': [
         'demo/account_demo.xml',
