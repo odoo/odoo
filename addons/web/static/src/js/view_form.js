@@ -3314,7 +3314,6 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
         this.$element.find('.oe-binary').toggle(!this.readonly);
     },
     set_value: function(value) {
-        console.log(value)
         this._super.apply(this, arguments);
         this.set_image_maxwidth();
 
