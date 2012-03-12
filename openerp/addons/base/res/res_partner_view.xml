@@ -358,22 +358,22 @@
                                         on_change="onchange_address(use_parent_address, parent_id)"/>
                                 </group>
                                 <newline/>
-                                <field name="street" colspan="4"/>
-                                <field name="street2" colspan="4"/>
-                                <field name="zip"/>
-                                <field name="city"/>
-                                <field name="country_id"/>
-                                <field name="state_id"/>
+                                <field name="street" colspan="4" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
+                                <field name="street2" colspan="4" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
+                                <field name="zip" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
+                                <field name="city" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
+                                <field name="country_id" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
+                                <field name="state_id" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
                             </group>
                             <group colspan="2">
                                 <separator string="Communication" colspan="4"/>
-                                <field name="lang" colspan="4"/>
-                                <field name="phone" colspan="4"/>
-                                <field name="mobile" colspan="4"/>
-                                <field name="fax" colspan="4"/>
-                                <field name="email" widget="email" colspan="4"/>
-                                <field name="website" widget="url" colspan="4"/>
-                                <field name="ref" groups="base.group_extended" colspan="4"/>
+                                <field name="lang" colspan="4" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
+                                <field name="phone" colspan="4" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
+                                <field name="mobile" colspan="4" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
+                                <field name="fax" colspan="4" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
+                                <field name="email" widget="email" colspan="4" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
+                                <field name="website" widget="url" colspan="4" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
+                                <field name="ref" groups="base.group_extended" colspan="4" attrs="{'readonly': [('parent_id', '!=', False), ('use_parent_address', '=', True)]}"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('is_company','=', False)]}">
                                 <field name="child_ids" context="{'default_parent_id': active_id}" nolabel="1">
@@ -408,22 +408,22 @@
                                             <field name="use_parent_address" attrs="{'invisible': [('is_company','=', True)]}" on_change="onchange_address(use_parent_address, parent_id)"/>
                                         </group>
                                         <newline/>
-                                            <field name="street" colspan="4"/>
-                                            <field name="street2" colspan="4"/>
-                                            <field name="zip"/>
-                                            <field name="city"/>
-                                            <field name="country_id"/>
-                                            <field name="state_id"/>
+                                            <field name="street" colspan="4" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
+                                            <field name="street2" colspan="4" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
+                                            <field name="zip" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
+                                            <field name="city" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
+                                            <field name="country_id" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
+                                            <field name="state_id" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
                                         </group>
                                         <group colspan="2">
                                             <separator string="Communication" colspan="4"/>
-                                            <field name="lang" colspan="4"/>
-                                            <field name="phone" colspan="4"/>
-                                            <field name="mobile" colspan="4"/>
-                                            <field name="fax" colspan="4"/>
-                                            <field name="email" widget="email" colspan="4"/>
-                                            <field name="website" widget="url" colspan="4"/>
-                                            <field name="ref" groups="base.group_extended" colspan="4"/>
+                                            <field name="lang" colspan="4" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
+                                            <field name="phone" colspan="4" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
+                                            <field name="mobile" colspan="4" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
+                                            <field name="fax" colspan="4" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
+                                            <field name="email" widget="email" colspan="4" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
+                                            <field name="website" widget="url" colspan="4" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
+                                            <field name="ref" groups="base.group_extended" colspan="4" attrs="{'readonly': [('use_parent_address', '=', True)]}"/>
                                         </group>
                                         <group colspan="4" attrs="{'invisible': [('is_company','=', False)]}">
                                             <field name="child_ids"  domain="[('id','!=',parent_id.id)]"   nolabel="1"/>

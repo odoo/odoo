@@ -104,10 +104,16 @@
         </record>
         <record id="res_partner_c2c" model="res.partner">
             <field name="name">Camptocamp</field>
-            <field name="is_company">1</field>
             <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_5')])]" name="category_id"/>
             <field name="supplier">1</field>
             <field name="is_company">1</field>
+            <field name="city">Le Bourget du Lac</field>
+            <field name="zip">73377</field>
+            <field name="phone">+41 21 619 10 04 </field>
+            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
+            <field name="street">Savoie Technolac, BP 352</field>
+            <field name="type">default</field>
+            <field name="email">openerp@camptocamp.com</field>
             <field name="website">www.camptocamp.com</field>
         </record>
         <record id="res_partner_sednacom" model="res.partner">
@@ -539,6 +545,7 @@
             <field model="res.country" name="country_id" search="[('name','=','Switzerland')]"/>
             <field name="street">PSE-A, EPFL </field>
             <field name="type">default</field>
+            <field name="use_parent_address" eval="0"/>
             <field name="parent_id" ref="res_partner_c2c"/>
         </record>
         <record id="res_partner_address_seagate" model="res.partner">

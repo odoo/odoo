@@ -143,6 +143,7 @@ class res_company(osv.osv):
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32), 
         'company_registry': fields.char('Company Registry', size=64),
         'paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True),
+        'photo': fields.related('partner_id', 'photo', string="Photo", type="binary"),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
@@ -227,7 +228,7 @@ class res_company(osv.osv):
             self.cache_restart(cr)
             return super(res_company, self).create(cr, uid, vals, context=context)
         obj_partner = self.pool.get('res.partner')
-        partner_id = obj_partner.create(cr, uid, {'name': vals['name']}, context=context)
+        partner_id = obj_partner.create(cr, uid, {'name': vals['name'],'is_company':1}, context=context)
         vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
         company_id = super(res_company, self).create(cr, uid, vals, context=context)
