@@ -232,6 +232,11 @@ class ir_mail_server(osv.osv):
 
         if user:
             # Attempt authentication - will raise if AUTH service not supported
+            # The user/password must be converted to bytestrings in order to be usable for
+            # certain hashing schemes, like HMAC.
+            # See also bug #597143 and python issue #5285
+            user = tools.ustr(user).encode('utf-8')
+            password = tools.ustr(password).encode('utf-8') 
             connection.login(user, password)
         return connection
 
