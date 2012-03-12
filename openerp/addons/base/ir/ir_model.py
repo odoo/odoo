@@ -140,12 +140,12 @@ class ir_model(osv.osv):
             model_pool = self.pool.get(model.model)
             # this test should be removed, but check if drop view instead of drop table
             # just check if table or view exists
-            cr.execute("select relkind from pg_class where relname=%s", (model_pool._table,))
+            cr.execute('select relkind from pg_class where relname=%s', (model_pool._table,))
             result = cr.fetchone()
             if result and result[0] == 'v':
-                cr.execute("DROP view %s" % (model_pool._table,))
+                cr.execute('DROP view %s' % (model_pool._table,))
             elif result and result[0] == 'r':
-                cr.execute("DROP TABLE %s" % (model_pool._table,))
+                cr.execute('DROP TABLE %s' % (model_pool._table,))
         return True
 
     def unlink(self, cr, user, ids, context=None):
@@ -281,12 +281,12 @@ class ir_model_fields(osv.osv):
     def _drop_column(self, cr, uid, ids, context=None):
         field = self.browse(cr, uid, ids, context)
         model = self.pool.get(field.model)
-        cr.execute("select relkind from pg_class where relname=%s", (model._table,))
+        cr.execute('select relkind from pg_class where relname=%s', (model._table,))
         result = cr.fetchone()
-        cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name ='%s'and column_name='%s'"%(model._table, field.name))
+        cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name ='%s' and column_name='%s'" %(model._table, field.name))
         column_name = cr.fetchone()
         if  column_name and (result and result[0] == 'r'):
-            cr.execute("ALTER table  %s DROP column %s cascade" % (model._table, field.name))
+            cr.execute('ALTER table "%s" DROP column "%s" cascade' % (model._table, field.name))
         model._columns.pop(field.name, None)
         return True
 
