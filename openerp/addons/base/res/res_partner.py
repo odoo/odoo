@@ -406,7 +406,7 @@ class res_partner(osv.osv):
         # get the information that will be injected into the display format
         # get the address format
         address_format = address.country_id and address.country_id.address_format or \
-                                         '%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s'
+                                         '%(company_name)s\n%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s'
         args = {
             'state_code': address.state_id and address.state_id.code or '',
             'state_name': address.state_id and address.state_id.name or '',
