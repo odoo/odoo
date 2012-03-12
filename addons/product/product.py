@@ -412,14 +412,16 @@ class product_product(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         for id in ids:
             res.setdefault(id, 0.0)
-        for product in self.browse(cr, uid, ids, context=context):
+        product_fields_to_read = ['uos_id', 'uom_id', 'list_price', 'price_margin', 'price_extra']
+        for product in self.read(cr, uid, ids, product_fields_to_read, context=context):
+            product_id = product['id']
             if 'uom' in context:
-                uom = product.uos_id or product.uom_id
-                res[product.id] = product_uom_obj._compute_price(cr, uid,
-                        uom.id, product.list_price, context['uom'])
+                uom_id = product['uos_id'] and product['uos_id'][0] or product['uom_id'][0]
+                res[product_id] = product_uom_obj._compute_price(cr, uid,
+                        uom_id, product['list_price'], context['uom'])
             else:
-                res[product.id] = product.list_price
-            res[product.id] =  (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
+                res[product_id] = product['list_price']
+            res[product_id] =  (res[product_id] or 0.0) * (product['price_margin'] or 1.0) + product['price_extra']
         return res
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
