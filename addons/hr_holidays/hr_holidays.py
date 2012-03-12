@@ -377,38 +377,38 @@ class hr_holidays(osv.osv):
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("The %s request '%s' has been created and is waiting confirmation")
-                        % ('leave' if obj.type == 'remove' else 'allocation', obj.name), type='notification', context=context)
+                        _("The %s request has been created and is waiting confirmation")
+                        % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
         return True
     
     def holidays_confirm_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             self.message_append_note(cr, uid, [obj.id], _('System notification'), 
-                    _("The %s request '%s' has been confirmed and is waiting for validation by the manager.")
-                    % ('leave' if obj.type == 'remove' else 'allocation', obj.name,), type='notification')
+                    _("The %s request has been confirmed and is waiting for validation by the manager.")
+                    % ('leave' if obj.type == 'remove' else 'allocation',,), type='notification')
     
     def holidays_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             if obj.holiday_status_id.double_validation:
                 self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                    _("The %s request '%s' has been validated. A second validation is necessary and is now pending.")
-                    % ('leave' if obj.type == 'remove' else 'allocation', obj.name), type='notification', context=context)
+                    _("The %s request has been validated. A second validation is necessary and is now pending.")
+                    % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
             else:
                 self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                    _("The %s request '%s' has been validated. The validation process is now over.")
-                    % ('leave' if obj.type == 'remove' else 'allocation', obj.name), type='notification', context=context)
+                    _("The %s request has been validated. The validation process is now over.")
+                    % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
     
     def holidays_valid2_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                    _("The %s request '%s' has been double validated. The validation process is now over.")
-                    % ('leave' if obj.type == 'remove' else 'allocation', obj.name,), type='notification', context=context)
+                    _("The %s request has been double validated. The validation process is now over.")
+                    % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
     
     def holidays_refuse_notificate(self, cr, uid, ids, approval, context=None):
         for obj in self.browse(cr, uid, ids):
             self.message_append_note(cr, uid, [obj.id], _('System notification'),
-                    _("The %s request '%s' has been refused. The validation process is now over.")
-                    % ('leave' if obj.type == 'remove' else 'allocation', obj.name,), type='notification', context=context)
+                    _("The %s request has been refused. The validation process is now over.")
+                    % ('leave' if obj.type == 'remove' else 'allocation',), type='notification', context=context)
     
 hr_holidays()
 
