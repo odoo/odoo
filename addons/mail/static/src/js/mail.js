@@ -54,11 +54,11 @@ openerp.mail = function(session) {
             this.sorted_comments = {'root_ids': [], 'root_id_msg_list': {}};
             /* Display vars */
             this.display = {};
-            this.display.show_post_comment = (this.params.thread_level > 0);
-            this.display.show_reply = true;
+            this.display.show_post_comment = false;
+            this.display.show_reply = (this.params.thread_level > 0);
             this.display.show_delete = true;
             this.display.show_hide = true;
-            this.display.show_more = (this.params.thread_level > 0);
+            this.display.show_more = (this.params.thread_level == 0);
             // not used currently
             this.intlinks_mapping = {};
         },
@@ -68,8 +68,8 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             /* display customization and events */
             this.$element.find('p.oe_mail_p_nomore').hide();
-            if (this.display.show_post_comment) this.$element.find('div.oe_mail_thread_act').hide();
-            if (this.display.show_more) this.$element.find('div.oe_mail_thread_more').hide();
+            if (! this.display.show_post_comment) this.$element.find('div.oe_mail_thread_act').hide();
+            if (! this.display.show_more) this.$element.find('div.oe_mail_thread_more').hide();
             this.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); });
             this.$element.find('textarea.oe_mail_action_textarea').bind('keyup', function (event) {
                 var charCode = (event.which) ? event.which : window.event.keyCode;
@@ -77,14 +77,8 @@ openerp.mail = function(session) {
                 else if (charCode == 13) { self.do_comment(); }
             });
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
-               console.log(event); 
-               console.log(this);
-               console.log($(this));
-               var node = $(this).parents('div.oe_mail_thread_display');
-               console.log(node);
-               var node2 = node.find('div.oe_mail_thread_act:first');
-               console.log(node2);
-               node2.toggle();
+               var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_act:first');
+               act_dom.toggle();
             });
             this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
                 // lazy implementation: fetch data and try to redirect
@@ -251,8 +245,9 @@ openerp.mail = function(session) {
         },
         
         do_comment: function () {
-            var body_text = this.$element.find('textarea').val();
-            //console.log(body_text + '-' + this.params.parent_id + '-' + this.params.res_id);
+            var comment_node = this.$element.find('textarea');
+            var body_text = comment_node.val();
+            comment_node.val('');
             return this.ds.call('message_append_note', [[this.params.res_id], 'Reply comment', body_text, this.params.parent_id, 'comment']).then(
                 this.proxy('init_comments'));
         },
@@ -322,7 +317,7 @@ openerp.mail = function(session) {
         },
         
         do_clean_text: function (string) {
-            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?b\\s*&gt;', 'gi'), '<$1b>');
+            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em)\\s*&gt;', 'gi'), '<$1$2>');
             return html;
         },
         
