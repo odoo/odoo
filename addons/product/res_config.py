@@ -25,7 +25,7 @@ class product_groups_configuration(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'group_sale_pricelist_per_customer':fields.boolean("Pricelist per customer",
+        'group_sale_pricelist_per_customer':fields.boolean("Pricelist per Customer",
                                                            group='base.group_user', implied_group='base.group_sale_pricelist_per_customer',
                                                            help="""Allows to manage different prices based on rules per category of customers. 
                                                            Example: 10% for retailers, promotion of 5 EUR on this product, etc.
@@ -36,6 +36,13 @@ class product_groups_configuration(osv.osv_memory):
                                                     Allows you to select and maintain different unit of measures per product.
                                                     It assigns the "UOM per product" group to all employees.
                                                     """),
+        'group_purchase_pricelist_per_supplier':fields.boolean("Pricelist per Supplier", group='base.group_user', xml_id='base.group_purchase_pricelist_per_supplier',
+                                                           help="""Allows to manage different prices based on rules per category of Supplier.
+                                                           Example: 10% for retailers, promotion of 5 EUR on this product, etc.
+                                                           It assigns the "Pricelist" group to all employees."""),
+        'group_stock_packaging':fields.boolean("Manage packaging by products", group='base.group_user', implied_group='base.group_stock_packaging',
+                                               help=""" Allows you to create and manage your packaging dimensions and types you want to be maintained in your system.
+                                               It assigns the "Packaging" group to employee."""),
 }
 
 product_groups_configuration()

@@ -23,15 +23,27 @@
         <field name="name">Sales Pricelists</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
+    
+    <record id="base.group_purchase_pricelist_per_supplier" model="res.groups">
+        <field name="name">Purchase Pricelists</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
 
     <record id="base.group_sale_uom_per_product" model="res.groups">
         <field name="name">Product UOM</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
+    
+    <record id="base.group_stock_packaging" model="res.groups">
+        <field name="name">Packaging</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
 
     <record id="base.group_user" model="res.groups">
         <field name="implied_ids" eval="[(6,0,[ref('base.group_sale_pricelist_per_customer'),
-        ref('base.group_sale_uom_per_product')])]"/>
+        ref('base.group_sale_uom_per_product'),
+        ref('base.group_purchase_pricelist_per_supplier'),
+        ref('base.group_stock_packaging')])]"/>
     </record>
 
     <record model="ir.rule" id="product_pricelist_comp_rule">
