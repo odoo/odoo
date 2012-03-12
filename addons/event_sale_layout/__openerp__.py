@@ -26,8 +26,8 @@
     'category': 'Tools',
     'complexity': "easy",
     'description': """
-    change the layout to match with sale layout
-""",
+    This module ensures the compatibility of the changes made on the sale.order.line form view in event_sale with the sale_layout module (that is replacing the whole field in the view by another one). Its installation is automatically triggered when both modules are installed.
+    """,
     'author': 'OpenERP SA',
     'depends': ['event_sale','sale_layout'],
     'update_xml': [
