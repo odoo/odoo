@@ -1282,6 +1282,13 @@ session.web.json_node_to_xml = function(node, human_readable, indent) {
         return r + '/>';
     }
 }
+session.web.xml_to_str = function(node) {
+    if (window.ActiveXObject) {
+        return node.xml;
+    } else {
+        return (new XMLSerializer()).serializeToString(node);
+    }
+}
 
 };
 

@@ -12,7 +12,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      */
     searchable: false,
     readonly : false,
-    form_template: "FormView",
+    template: "FormView",
     display_name: _lt('Form'),
     /**
      * @constructs openerp.web.FormView
@@ -91,22 +91,24 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_loaded: function(data) {
         var self = this;
         if (!data) {
-        	throw "No data provided.";
+            throw new Error("No data provided.");
         }
-        if (this.root_frame) {
-        	throw "Form view does not support multiple calls to on_loaded";
+        if (this.arch) {
+            throw "Form view does not support multiple calls to on_loaded";
         }
         this.fields_order = [];
         this.fields_view = data;
+        this.arch = this.preprocess_arch(data);
 
-        this.rendered = QWeb.render(this.form_template, {'widget': this});
-        this.$element.html(this.rendered);
-        
-        this.root_frame = instanciate_widget(this.registry.get_object('frame'), this, this.fields_view.arch);
-        var to_append = $(".oe_form_header", this.$element);
-        this.root_frame.appendTo(to_append.length > 0 ? to_append : this.$element);
-        this.root_frame.$element.children().unwrap();
-        
+        debugger
+        var html_view = openerp.web.xml_to_str(this.arch);
+        this.$element.find('.oe_form_content').append(html_view);
+
+        //this.root_frame = instanciate_widget(this.registry.get_object('frame'), this, this.fields_view.arch);
+        //var to_append = $(".oe_form_header", this.$element);
+        //this.root_frame.appendTo(to_append.length > 0 ? to_append : this.$element);
+        //this.root_frame.$element.children().unwrap();
+
         this.$form_header = this.$element.find('.oe_form_header:first');
         this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
@@ -134,6 +136,63 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }]);
         }
         this.has_been_loaded.resolve();
+    },
+    preprocess_arch: function(data) {
+        // TODO: extract embeded views before preprocessing
+        // Cut down this function into rendering API amongst form, page and kanban
+        //
+        // OpenERP views spec :
+        //      - @width is obsolete ?
+        var self = this,
+            baseclass = 'oe_layout_',
+            fields = data.fields,
+            arch = $($.parseXML('<?xml version="1.0" encoding="UTF-8"?>' + data.arch_string));
+
+        // First pass:
+        //  - If field has no @string, fetch it from fvg.fields.
+        //  - If field has no label, create one.
+        //  - Unless @nolabel, create unique @id and @for pair
+        $(arch).find('field').each(function() {
+            var $field = $(this),
+                name = $field.attr('name'),
+                field_orm = fields[name],
+                field_id = _.uniqueId([self.dataset.model, name, '#'].join('.'));
+            if (!field_orm) {
+                throw new Error("Field '" + name + "' specified in view could not be found.");
+            }
+            var $label = $(arch).find('label[for="' + name + '"]'),
+                label_string = $field.attr('string') || field_orm.string || '';
+            if ($label.length) {
+                label_string = $label.attr('string') || $label.text();
+            } else {
+                // TODO: find a way to prevent @xmlns.
+                $label = $('<label/>').insertBefore($field);
+            }
+            $field.attr('id', field_id);
+            $label.attr('for', field_id).text(label_string);
+        });
+
+        // Second pass:
+        //  - Convert groups to table
+        while (true) {
+            var $group = $(arch).find('group:first');
+            if (!$group.length) {
+                break;
+            }
+
+            var $table = $('<table/>').addClass(baseclass + 'group');
+            $group.find('*').each(function() {
+                var $tr, $td, colspan, $child = $(this);
+                if (!$tr) {
+                    $tr = $('<tr/>').addClass(baseclass + 'group_row').appendTo($table);
+                }
+
+                $td = $('<td/>').addClass(baseclass + 'group_cell');
+                $tr.append($td.append(child));
+            });
+            $group.replaceWith($table);
+        }
+        return arch;
     },
 
     do_load_state: function(state, warm) {

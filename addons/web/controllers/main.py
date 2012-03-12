@@ -1113,6 +1113,7 @@ class View(openerpweb.Controller):
             arch = fvg['arch'].encode('utf-8')
         else:
             arch = fvg['arch']
+        fvg['arch_string'] = arch
 
         if transform:
             evaluation_context = session.evaluation_context(context or {})
