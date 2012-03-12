@@ -82,7 +82,7 @@ class crm_meeting(crm_base, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
-        self._case_opportunity_meeting_notification(cr, uid, [obj_id], context=context)
+        self._case_create_notification(cr, uid, [obj_id], context=context)
         return obj_id
 
     def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
@@ -93,11 +93,11 @@ class crm_meeting(crm_base, osv.osv):
                 result[obj.id] = obj.user_id.id
         return result
 
-    def _case_opportunity_meeting_notification(self, cr, uid, ids, context=None):
+    def _case_create_notification(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
         phonecall_obj = self.pool.get('crm.phonecall')
         for obj in self.browse(cr, uid, ids, context=context):
-            if(obj.opportunity_id.id):
+            if(obj.opportunity_id.id): # meeting can be create from phonecalls or opportunities, therefore checking for the parent
                 newid = obj.opportunity_id.id
                 message = _("Meeting has been <b>scheduled</b> on <em>%s</em> for opportunity.") % (obj.date)
                 for lead in lead_obj.browse(cr, uid, [newid], context=context):

@@ -273,9 +273,6 @@ class crm_base(object):
     def _case_reset_notification(self, cr, uid, ids, context=None):
         return True
 
-    def _case_escalate_notification(self, cr, uid, ids, context=None):
-        return True
-
     def _case_phonecall_notification(self, case, action, context=None):
         return True
 
@@ -414,6 +411,9 @@ class crm_case(crm_base):
             if self._columns.get('date_open'):
                 default.update({ 'date_open': False })
         return super(crm_case, self).copy(cr, uid, id, default, context=context)
+
+    def _case_escalate_notification(self, cr, uid, ids, context=None):
+        return True
 
     def case_open(self, cr, uid, ids, context=None):
         """Opens Case"""
