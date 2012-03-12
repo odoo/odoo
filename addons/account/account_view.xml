@@ -2883,6 +2883,11 @@ action = pool.get('res.config').next(cr, uid, [], context)
 
         <menuitem id="menu_account_report_tree_hierarchy" name="Account Reports Hierarchy"
                   parent="menu_account_reports" action="action_account_report_tree_hierarchy"/>
+        
+        <record id="category_accounting_configuration" model="ir.actions.todo.category">
+            <field name="name">Accounting</field>
+            <field name="sequence">5</field>
+        </record>
 
     </data>
 </openerp>
