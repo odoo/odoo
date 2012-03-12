@@ -282,10 +282,10 @@ class ir_model_fields(osv.osv):
         field = self.browse(cr, uid, ids, context)
         model = self.pool.get(field.model)
         cr.execute("select relkind from pg_class where relname=%s", (model._table,))
-        result = cr.fetchone()[0]
+        result = cr.fetchone()
         cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name ='%s'and column_name='%s'"%(model._table, field.name))
         column_name = cr.fetchone()
-        if  column_name and result == 'r':
+        if  column_name and (result and result[0] == 'r'):
             cr.execute("ALTER table  %s DROP column %s cascade" % (model._table, field.name))
         model._columns.pop(field.name, None)
         return True
