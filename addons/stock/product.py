@@ -224,10 +224,16 @@ class product_product(osv.osv):
             location_ids = location_ids
 
         uoms_o = {}
+        uoms_ids = {}
         product2uom = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            product2uom[product.id] = product.uom_id.id
-            uoms_o[product.uom_id.id] = product.uom_id
+        for product in self.read(cr, uid, ids, ['uom_id'], context=context):
+            product_uom_id = product['uom_id'][0] # uom id is required!
+            product2uom[product['id']] = product_uom_id
+            uoms_ids[product_uom_id] = True
+
+        uom_obj = self.pool.get('product.uom')
+        for uom in uom_obj.browse(cr, uid, uoms_ids.keys(), context=context):
+            uoms_o[uom.id] = uom
 
         results = []
         results2 = []
