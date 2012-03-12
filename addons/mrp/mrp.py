@@ -369,7 +369,7 @@ class mrp_bom(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             for prod in prod_obj.browse(cr, uid, [obj.product_id], context=context):
                 self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Bill of Material is <b>Created</b> for <em>%s</em> product.") % (prod.id.name_template), type='notification', context=context)
+                        _("Bill of Material has been <b>Created</b> for <em>%s</em> product.") % (prod.id.name_template), type='notification', context=context)
         return True
 
 mrp_bom()
@@ -535,15 +535,11 @@ class mrp_production(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id.id :
                 self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
-                self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Manufacturing Order is <b>Created</b>."), type='notification', context=context)
-            else :
-                self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Manufacturing Order is <b>Created</b>."), type='notification', context=context)
+            obj.message_append_note('',_("Manufacturing Order has been <b>Created</b>."))
         return True
 
     def cancel_notification(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order is <b>cancelled</b>.")
+        message = _("Manufacturing order has been <b>cancelled</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
 
@@ -558,12 +554,12 @@ class mrp_production(osv.osv):
         return True
 
     def done_notification(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order is <b>done</b>.")
+        message = _("Manufacturing order has been <b>done</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
 
     def waiting_notification(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order is <b>confirmed and waiting for goods</b>.")
+        message = _("Manufacturing order has been <b>confirmed and waiting for goods</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
 
