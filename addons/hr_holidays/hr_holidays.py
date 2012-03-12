@@ -385,7 +385,7 @@ class hr_holidays(osv.osv):
         for obj in self.browse(cr, uid, ids):
             self.message_append_note(cr, uid, [obj.id], _('System notification'), 
                     _("The %s request has been confirmed and is waiting for validation by the manager.")
-                    % ('leave' if obj.type == 'remove' else 'allocation',,), type='notification')
+                    % ('leave' if obj.type == 'remove' else 'allocation',), type='notification')
     
     def holidays_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
