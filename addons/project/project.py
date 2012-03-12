@@ -758,7 +758,7 @@ class account_analytic_account(osv.osv):
     
     def unlink(self, cr, uid, ids, *args, **kwargs):
         project_obj = self.pool.get('project.project')
-        project_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
+        project_ids = project_obj.search(cr, 1, [('analytic_account_id','in',ids)])
         if project_ids:
             raise osv.except_osv(_('Warning !'), _('Please delete the project linked with this account first.'))
         return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
