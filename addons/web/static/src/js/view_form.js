@@ -100,7 +100,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.fields_view = data;
         this.arch = this.preprocess_arch(data);
 
-        debugger
         var html_view = openerp.web.xml_to_str(this.arch);
         this.$element.find('.oe_form_content').append(html_view);
 
@@ -146,9 +145,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var self = this,
             baseclass = 'oe_layout_',
             fields = data.fields,
-            arch = $($.parseXML('<?xml version="1.0" encoding="UTF-8"?>' + data.arch_string));
+            arch = $.parseXML(data.arch_string);
 
-        // First pass:
+        // Step #1:
         //  - If field has no @string, fetch it from fvg.fields.
         //  - If field has no label, create one.
         //  - Unless @nolabel, create unique @id and @for pair
@@ -170,28 +169,51 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
             $field.attr('id', field_id);
             $label.attr('for', field_id).text(label_string);
+
+            // debug
+            $field.text('INPUT: ' + name)
         });
 
-        // Second pass:
-        //  - Convert groups to table
+        // Step #2:
+        //  - Convert groups to tables
         while (true) {
             var $group = $(arch).find('group:first');
             if (!$group.length) {
                 break;
             }
 
-            var $table = $('<table/>').addClass(baseclass + 'group');
-            $group.find('*').each(function() {
-                var $tr, $td, colspan, $child = $(this);
-                if (!$tr) {
-                    $tr = $('<tr/>').addClass(baseclass + 'group_row').appendTo($table);
-                }
+            var $table = $('<table border="1"/>').addClass(baseclass + 'group'),
+                $tr,
+                cols = parseInt($group.attr('col') || 4, 10),
+                row_cols = cols;
 
-                $td = $('<td/>').addClass(baseclass + 'group_cell');
-                $tr.append($td.append(child));
+            $group.find('*').each(function() {
+                var $child = $(this),
+                    colspan = parseInt($child.attr('colspan') || 1, 10);
+                if ($child[0].tagName === 'newline') {
+                    $tr = null;
+                    return;
+                }
+                if (!$tr || row_cols < colspan) {
+                    $tr = $('<tr/>').addClass(baseclass + 'group_row').appendTo($table);
+                    row_cols = cols;
+                }
+                row_cols -= colspan;
+                var $td = $('<td/>').addClass(baseclass + 'group_cell');
+                $tr.append($td.append($child));
             });
             $group.replaceWith($table);
         }
+
+        // Step #3:
+        //  - Process <button>'s
+        $(arch).find('button[string], button[icon]').each(function() {
+            var $button = $(this).addClass('oe_button');
+            if ($button.attr('icon')) {
+                $('<img/>').appendTo($button).attr('src', openerp.connection.origin + '/web/static/src/img/icons/' + $button.attr('icon') + '.png');
+            }
+            $('<span/>').text($button.attr('string')).appendTo($button);
+        });
         return arch;
     },
 
