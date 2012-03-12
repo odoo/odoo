@@ -339,7 +339,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             });
         }
     },
-    do_edit_event: function(event_id) {
+    do_edit_event: function(event_id, evt) {
         var self = this;
         var index = this.dataset.get_id_index(event_id);
         if (index !== null) {
@@ -363,6 +363,8 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             // I tried scheduler.editStop(event_id); but doesn't work either
             // After losing one hour on this, here's a quick and very dirty fix :
             $(".dhx_cancel_btn").click();
+        } else {
+            scheduler.editStop($(evt.target).hasClass('icon_save'));
         }
     },
     get_event_data: function(event_obj) {
