@@ -99,34 +99,39 @@ class crm_meeting(crm_base, osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             if(obj.opportunity_id.id):
                 newid = obj.opportunity_id.id
-                message = _("Meeting is <b>scheduled</b> on <em>%s</em> for opportunity.") % (obj.date)
+                message = _("Meeting has been <b>scheduled</b> on <em>%s</em> for opportunity.") % (obj.date)
                 for lead in lead_obj.browse(cr, uid, [newid], context=context):
                     lead.message_append_note('', message)
                     obj.message_append_note('', message)
             elif(obj.phonecall_id.id):
                 newid = obj.phonecall_id.id
-                message = _("Meeting is <b>scheduled</b> on <em>%s</em> for phonecall.") % (obj.date)
+                message = _("Meeting has been <b>scheduled</b> on <em>%s</em> for phonecall.") % (obj.date)
                 for phonecall in phonecall_obj.browse(cr, uid, [newid], context=context):
                     phonecall.message_append_note('', message)
                     obj.message_append_note('', message)
             else:
-                message = _("Meeting is <b>scheduled</b> on<em> %s </em>.") % (obj.date)
+                message = _("Meeting has been <b>scheduled</b> on<em> %s </em>.") % (obj.date)
                 obj.message_append_note('', message)
 
-    def _case_close_notification(self, meeting, context=None):
-        message = _("Meeting is <b>done</b>.")
-        meeting[0].message_append_note('' ,message)
-
-    def _case_reset_notification(self,  cr, uid, ids, context=None):
+    def _case_close_notification(self, cr, uid, ids, context=None):
         for meeting in self.browse(cr, uid, ids, context=context):
-            message = _("Meeting is <b>renewed</b>.")
+            message = _("Meeting has been <b>done</b>.")
             meeting.message_append_note('' ,message)
+        return True
 
-    def _case_open_notification(self, meeting, context=None):
-        if meeting.state != 'draft':
-            return False
-        message = _("Meeting is <b>confirmed</b>.")
-        meeting.message_append_note('' ,message)
+    def _case_reset_notification(self, cr, uid, ids, context=None):
+        for meeting in self.browse(cr, uid, ids, context=context):
+            message = _("Meeting has been <b>renewed</b>.")
+            meeting.message_append_note('' ,message)
+        return True
+
+    def _case_open_notification(self, cr, uid, ids, context=None):
+        for meeting in self.browse(cr, uid, ids, context=context):
+            if meeting.state != 'draft':
+                return False
+            message = _("Meeting has been <b>confirmed</b>.")
+            meeting.message_append_note('' ,message)
+        return True
 
     def case_open(self, cr, uid, ids, context=None):
         """Confirms meeting
