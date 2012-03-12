@@ -3208,8 +3208,10 @@ class BaseModel(object):
                     cr.commit()
                     _schema.debug(sql_action['msg_ok'])
                     name_id = 'constraint_'+ conname
+                    cr.execute('select conname from pg_constraint where contype=%s and conname=%s',('u', conname),)
+                    existing_const = cr.fetchall()                    
                     cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, module))
-                    if  not cr.rowcount:                    
+                    if  not cr.rowcount and not existing_const:                    
                         cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module, model) VALUES (%s, now(), now(), %s, %s)", \
                             (name_id, module, self._name)
                         )
