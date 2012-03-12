@@ -47,8 +47,7 @@
         <div class="oe_mail_thread_act">
             <img class="oe_mail_msg_image oe_mail_oe_left" alt="User img"/>
             <div class="oe_mail_msg_content">
-                <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..."/><br />
-                <button type="button" class="oe_mail_button_comment">Post comment</button>
+                <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/><br />
             </div>
         </div>
         <div class="oe_mail_thread_display"></div>
@@ -77,6 +76,9 @@
                 <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
                 on <t t-raw="record.date"/>
             </span>
+            <t t-if="display.show_reply"><span class="oe_mail_oe_space"><a href="#" class="oe_mail_msg_reply">Reply</a></span></t>
+            <t t-if="display.show_delete"><span class="oe_mail_oe_space"><a href="#" class="oe_mail_msg_reply">Delete</a></span></t>
+            <t t-if="display.show_hide"><span class="oe_mail_oe_space"><a href="#" class="oe_mail_msg_reply">Hide</a></span></t>
         </p>
     </t>
     
