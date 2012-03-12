@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-03-08 14:18+0000\n"
+"PO-Revision-Date: 2012-03-10 15:06+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-09 05:28+0000\n"
+"X-Launchpad-Export-Date: 2012-03-11 05:06+0000\n"
 "X-Generator: Launchpad (build 14914)\n"
 
 #. module: account
@@ -209,7 +209,7 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
-"Geeft het type van het analytisch dagboek aan. Wanneer een document, "
+"Geeft het type van het kostenplaatsdagboek aan. Wanneer een document, "
 "bijvoorbeeld een factuur aanleiding geeft tot kostenplaatsenboekingen, dan "
 "zal OpenERP zoeken naar een dagboek van hetzelfde type."
 
@@ -1083,7 +1083,7 @@ msgstr "Code"
 #: code:addons/account/account_move_line.py:173
 #, python-format
 msgid "No Analytic Journal !"
-msgstr "Geen analytisch dagboek !"
+msgstr "Geen kostenplaatsdagboek !"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -1092,7 +1092,7 @@ msgstr "Geen analytisch dagboek !"
 #: model:ir.actions.report.xml,name:account.account_3rdparty_account_balance
 #: model:ir.ui.menu,name:account.menu_account_partner_balance_report
 msgid "Partner Balance"
-msgstr "Ouderdomsanalyse per relatie"
+msgstr "Balans per relatie"
 
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
@@ -1190,7 +1190,7 @@ msgstr "Genereer boekingen voor:"
 #. module: account
 #: view:account.move.line:0
 msgid "Unbalanced Journal Items"
-msgstr "Dagboekboekingen in onbelans"
+msgstr "Journaalpostregels  in onbelans"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
@@ -1366,7 +1366,7 @@ msgstr "Concept abonnement"
 #: model:ir.model,name:account.model_account_account
 #: field:report.account.sales,account_id:0
 msgid "Account"
-msgstr "Grootboekrekening"
+msgstr "Grootboekrek."
 
 #. module: account
 #: field:account.tax,include_base_amount:0
@@ -1645,7 +1645,7 @@ msgstr "Bankafschriften zoeken"
 #. module: account
 #: view:account.move.line:0
 msgid "Unposted Journal Items"
-msgstr "Onbevestigde journaalposten"
+msgstr "Ongeboekte journaalposten"
 
 #. module: account
 #: view:account.chart.template:0
@@ -2021,8 +2021,8 @@ msgid ""
 "If set to True then do not accept the entry if the entry date is not into "
 "the period dates"
 msgstr ""
-"Indien \"Waar\", accepteer de boeking alleen als de boekingsdatum binnen de "
-"boekingsperiode valt."
+"Indien aangevinkt worden de boeking alleen geaccepteerd als de boekingsdatum "
+"binnen de boekingsperiode valt."
 
 #. module: account
 #: code:addons/account/account_invoice.py:73
@@ -2282,7 +2282,7 @@ msgstr "Running"
 #: field:product.category,property_account_income_categ:0
 #: field:product.template,property_account_income:0
 msgid "Income Account"
-msgstr "Inkomsten rekening"
+msgstr "Opbrengsten rekening"
 
 #. module: account
 #: code:addons/account/account_invoice.py:370
@@ -2812,7 +2812,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_aged_balance_view
 #: model:ir.ui.menu,name:account.menu_aged_trial_balance
 msgid "Aged Partner Balance"
-msgstr "Ouderdomsanalyse debiteuren/crediteuren"
+msgstr "Ouderdomsanalyse per relatie"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_entriesreconcile0
@@ -2880,7 +2880,7 @@ msgstr "Er is geen nummering gedefinieerd voor dit dagboek!"
 #: code:addons/account/account_move_line.py:173
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr "U moet een een analytisch dagboek definieren op het '%s' dagboek!"
+msgstr "U moet een een kostenplaatsdagboek definiëren bij het '%s' dagboek!"
 
 #. module: account
 #: code:addons/account/account.py:407
@@ -2965,7 +2965,7 @@ msgstr "Verplicht"
 #: field:product.category,property_account_expense_categ:0
 #: field:product.template,property_account_expense:0
 msgid "Expense Account"
-msgstr "Kostenrekening"
+msgstr "Kosten rekening"
 
 #. module: account
 #: help:account.invoice,period_id:0
@@ -3054,7 +3054,7 @@ msgstr ""
 #. module: account
 #: field:account.partner.ledger,page_split:0
 msgid "One Partner Per Page"
-msgstr "Een relatie per pagina"
+msgstr "Één relatie per pagina"
 
 #. module: account
 #: field:account.account,child_parent_ids:0
@@ -3574,7 +3574,7 @@ msgstr "Overzicht van de verkopen per rekeningsoort"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr "Onafgeletterde boekingen"
+msgstr "Onafgeletterde journaalposten"
 
 #. module: account
 #: sql_constraint:res.currency:0
@@ -3810,7 +3810,7 @@ msgstr "Betwist"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Search Analytic Lines"
-msgstr "Zoek analytische boekingen"
+msgstr "Zoek kostenplaats boekingen"
 
 #. module: account
 #: field:res.partner,property_account_payable:0
@@ -3843,7 +3843,7 @@ msgstr "Eenheidsprijs"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tree1
 msgid "Analytic Items"
-msgstr "Analytische attributen"
+msgstr "Kostenplaats attributen"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1153
@@ -4100,7 +4100,7 @@ msgstr "30 Dagen einde van de maand"
 #: model:ir.actions.act_window,name:account.action_account_analytic_balance
 #: model:ir.actions.report.xml,name:account.account_analytic_account_balance
 msgid "Analytic Balance"
-msgstr "Analytische balans"
+msgstr "Kostenplaats balans"
 
 #. module: account
 #: help:account.account,active:0
@@ -4114,7 +4114,7 @@ msgstr ""
 #. module: account
 #: view:account.move.line:0
 msgid "Posted Journal Items"
-msgstr "Geboekte dagboekregels"
+msgstr "Geboekte journaalposten"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4216,8 +4216,8 @@ msgid ""
 "accounts. These generate draft supplier invoices."
 msgstr ""
 "Analytische kosten (Tijdregistratie, sommige aangekochte producten, ...) "
-"zijn afkomstig van analytische rekeningen. Deze genereren proforma facturen "
-"van leveranciers"
+"zijn afkomstig van kostenplaatsen. Deze genereren proforma facturen van "
+"leveranciers"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4283,7 +4283,7 @@ msgstr "Balans +/- teken omdraaien"
 #. module: account
 #: view:account.analytic.account:0
 msgid "Overdue Account"
-msgstr "Achterstallige rekening"
+msgstr "Verlopen kostenplaats"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -4533,7 +4533,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.account:0
 msgid "Analytic Account Statistics"
-msgstr "Analytische rekening statistieken"
+msgstr "Kostenplaats statistieken"
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -4627,7 +4627,7 @@ msgstr ""
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the income account"
-msgstr "Laat leeg om de inkomsten rekening te gebruiken"
+msgstr "Laat leeg om de opbrengsten rekening te gebruiken"
 
 #. module: account
 #: code:addons/account/account.py:3299
@@ -4728,7 +4728,7 @@ msgstr "Startdatum"
 #. module: account
 #: field:account.chart.template,property_account_income:0
 msgid "Income Account on Product Template"
-msgstr "Inkomstenrekening op product sjabloon"
+msgstr "Opbrengsten rekening op product sjabloon"
 
 #. module: account
 #: code:addons/account/account.py:3120
@@ -4901,7 +4901,7 @@ msgstr "Belastingstoepassing"
 #: model:ir.ui.menu,name:account.menu_eaction_account_moves_sale
 #, python-format
 msgid "Journal Items"
-msgstr "Dagboekregels"
+msgstr "Journaalpostregels"
 
 #. module: account
 #: code:addons/account/account.py:1088
@@ -5009,7 +5009,7 @@ msgstr "Mutaties"
 #. module: account
 #: view:report.hr.timesheet.invoice.journal:0
 msgid "Sale journal in this month"
-msgstr "Verkoopdag boekregels in deze maand"
+msgstr "Verkoop dagboek in deze maand"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
@@ -5078,7 +5078,7 @@ msgstr ""
 #. module: account
 #: report:account.analytic.account.balance:0
 msgid "Analytic Balance -"
-msgstr "Analytisch Saldo -"
+msgstr "Kostenplaats saldo -"
 
 #. module: account
 #: report:account.account.balance:0
@@ -5777,7 +5777,7 @@ msgstr "Aanmaakdatum"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journals"
-msgstr "Analyse grootboeken"
+msgstr "Kostenplaatsen"
 
 #. module: account
 #: field:account.account,child_id:0
@@ -5806,7 +5806,7 @@ msgstr "Totaal te betalen"
 #: model:account.account.type,name:account.data_account_type_income
 #: model:account.financial.report,name:account.account_financial_report_income0
 msgid "Income"
-msgstr "Inkomen"
+msgstr "Opbrengst"
 
 #. module: account
 #: selection:account.bank.statement.line,type:0
@@ -6045,7 +6045,7 @@ msgstr "Deze naam wordt weergegeven op overzichten"
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 msgid "Printing date"
-msgstr "Printdatum"
+msgstr "Afdrukdatum"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -6451,7 +6451,7 @@ msgstr "Afletteren: Ga naar de volgende relatie"
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
 #: model:ir.actions.report.xml,name:account.account_analytic_account_inverted_balance
 msgid "Inverted Analytic Balance"
-msgstr "Omgekeerde analytische Balans"
+msgstr "Omgekeerde kostenplaats balans"
 
 #. module: account
 #: field:account.tax.template,applicable_type:0
@@ -6485,7 +6485,7 @@ msgstr "Liquiditeit"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr "Kostenplaats boekingen"
+msgstr "Kostenplaats journaalposten"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -6631,7 +6631,7 @@ msgstr "rekening.reeks.boekjaar"
 #: model:ir.actions.report.xml,name:account.analytic_journal_print
 #: model:ir.model,name:account.model_account_analytic_journal
 msgid "Analytic Journal"
-msgstr "Kostenplaats dagboek"
+msgstr "Kostenplaatsdagboek"
 
 #. module: account
 #: code:addons/account/account.py:622
@@ -6696,8 +6696,8 @@ msgstr "Kostenplaats boekingen analyses"
 #, python-format
 msgid "You can not remove an account containing journal items."
 msgstr ""
-"Het is niet mogelijk een rekening te verwijderen welke nog dagboekregels "
-"bevat."
+"Het is niet mogelijk een rekening te verwijderen welke nog "
+"journaalpostregels bevat."
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:145
@@ -6797,7 +6797,7 @@ msgid ""
 "account for the current partner"
 msgstr ""
 "Deze rekening zal gebruikt worden in plaats van de standaard- als de "
-"inkomstenrekening voor de huidige relatie."
+"opbrengsten rekening voor de huidige relatie."
 
 #. module: account
 #: field:account.tax,python_applicable:0
@@ -6976,7 +6976,7 @@ msgstr ""
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "JRNL"
-msgstr "GBOEK"
+msgstr "DGBK"
 
 #. module: account
 #: view:account.partner.balance:0
@@ -7151,7 +7151,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_income
 msgid "Income Accounts"
-msgstr "Inkomsten-rekeningen"
+msgstr "Opbrengsten rekeningen"
 
 #. module: account
 #: help:report.invoice.created,origin:0
@@ -7234,13 +7234,13 @@ msgid ""
 "you request an interval of 30 days OpenERP generates an analysis of "
 "creditors for the past month, past two months, and so on. "
 msgstr ""
-"De ouderdomsanalyse debiteuren/crediteuren is een meer gedetailleerd verslag "
-"van uw vorderingen in intervallen. Bij het openen van dat verslag, vraagt "
-"​OpenERP ​naar de naam van het bedrijf, de fiscale periode en de grootte van "
-"het te analyseren interval (in dagen). OpenERP berekent vervolgens een saldo "
-"balans per periode. Dus als u om een ​​interval van 30 dagen vraagt, zal "
-"OpenERP een analyse genereren van de crediteuren van de afgelopen maand, "
-"afgelopen twee maanden, en ga zo maar door. "
+"De ouderdomsanalyse per relatie is een meer gedetailleerd verslag van uw "
+"vorderingen in intervallen. Bij het openen van dat verslag, vraagt ​OpenERP "
+"​naar de naam van het bedrijf, de fiscale periode en de grootte van het te "
+"analyseren interval (in dagen). OpenERP berekent vervolgens een saldo balans "
+"per periode. Dus als u om een ​​interval van 30 dagen vraagt, zal OpenERP "
+"een analyse genereren van de crediteuren van de afgelopen maand, afgelopen "
+"twee maanden, en ga zo maar door. "
 
 #. module: account
 #: field:account.invoice,origin:0
@@ -7341,7 +7341,7 @@ msgstr "Maandelijkse omzet"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Analytic Lines"
-msgstr "Analytische regels"
+msgstr "Kostenplaats regels"
 
 #. module: account
 #: field:account.analytic.journal,line_ids:0
@@ -7501,7 +7501,7 @@ msgstr "Standaard belastingen op inkopen"
 #. module: account
 #: field:account.chart.template,property_account_income_opening:0
 msgid "Opening Entries Income Account"
-msgstr "Openingsboekingen voor de inkomsten rekening"
+msgstr "Openingsboekingen voor de opbrengsten  rekening"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7745,7 +7745,7 @@ msgstr "Verkoop dagboek"
 #: code:addons/account/wizard/account_move_journal.py:104
 #, python-format
 msgid "Open Journal Items !"
-msgstr "Open dagboekregels!"
+msgstr "Open journaalpostregels!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -8288,7 +8288,7 @@ msgstr ""
 #. module: account
 #: report:account.analytic.account.inverted.balance:0
 msgid "Inverted Analytic Balance -"
-msgstr "Geïnverteerde analytische balans -"
+msgstr "Geïnverteerde kostenplaatsbalans -"
 
 #. module: account
 #: view:account.move.bank.reconcile:0
@@ -8892,7 +8892,7 @@ msgstr "Liquiditeit"
 #: view:account.analytic.journal.report:0
 #: view:account.common.report:0
 msgid "Print"
-msgstr "Print"
+msgstr "Afdrukken"
 
 #. module: account
 #: view:account.journal:0
@@ -9102,10 +9102,10 @@ msgid ""
 msgstr ""
 "Voor rekeningen welke normaliter meer debet zijn dan credit en welke u "
 "afgedrukt wilt hebben als negatief bedrag in uw rapporten, dient u het +/- "
-"teken van de balans om te draaien. Bijvoorbeeld voor de kostenrekening. "
-"Hetzelfde geld voor rekeningen welke normaliter meer credit zijn dan debet "
-"en welke u wilt afdrukken als positief bedrag in uw rapporten, bijvoorbeeld "
-"de inkomsten rekening."
+"teken van de balans om te draaien. Bijvoorbeeld voor de opbrengsten "
+"rekening. Hetzelfde geld voor rekeningen welke normaliter meer credit zijn "
+"dan debet en welke u wilt afdrukken als positief bedrag in uw rapporten, "
+"bijvoorbeeld de inkomsten rekening."
 
 #. module: account
 #: field:res.partner,contract_ids:0
@@ -9537,7 +9537,7 @@ msgstr ""
 "Dit formulier wordt gebruikt door boekhouders voor het invoeren van grote "
 "hoeveelheden boekingen in OpenERP. Indien u een klantfactuur wilt boeken, "
 "selecteert u het dagboek en de periode in de zoekbalk. Beging vervolgens met "
-"het vastleggen van de regel voor de inkomstenrekening, OpenERP zal u "
+"het vastleggen van de regel voor de opbrengsten rekening, OpenERP zal u "
 "automatisch de een voorstel doen voor de belastingen, gerelateerd aan deze "
 "rekening en de tegenrekening \"Debiteuren\""
 
@@ -9861,7 +9861,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.account:0
 msgid "Pending"
-msgstr "Lopende"
+msgstr "Wachten"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_analyticinvoice0
@@ -10434,7 +10434,7 @@ msgstr "Factuurregels"
 #. module: account
 #: field:account.chart,period_to:0
 msgid "End period"
-msgstr "Periodeeinde"
+msgstr "Eindperiode"
 
 #. module: account
 #: sql_constraint:account.journal:0
@@ -10566,7 +10566,7 @@ msgstr "Boekings is reeds afgeletterd"
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
 msgid "Receivable accounts"
-msgstr "'Te ontvangen' rekeningen"
+msgstr "Debiteuren"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -10581,7 +10581,7 @@ msgstr "Bereik"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Journal Items related to a purchase journal."
-msgstr "Kostenplaats boekingen gerelateerd aan een inkoopdagboek"
+msgstr "Kostenplaatsboekingen gerelateerd aan een inkoopdagboek"
 
 #. module: account
 #: help:account.account,type:0
@@ -10779,7 +10779,8 @@ msgstr ""
 #. module: account
 #: help:account.invoice.line,account_id:0
 msgid "The income or expense account related to the selected product."
-msgstr "De inkomsten of kostenrekening gerelateerd aan het gekozen produkt."
+msgstr ""
+"De opbrengsten of kostenrekening gerelateerd aan het gekozen produkt."
 
 #. module: account
 #: field:account.subscription,period_total:0

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-03-07 15:41+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2012-03-09 21:45+0000\n"
+"Last-Translator: t.o <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-08 05:24+0000\n"
+"X-Launchpad-Export-Date: 2012-03-10 05:26+0000\n"
 "X-Generator: Launchpad (build 14914)\n"
 
 #. module: base
@@ -971,7 +971,7 @@ msgstr ""
 #. module: base
 #: view:res.users:0
 msgid "Email Preferences"
-msgstr "Préférences du mail"
+msgstr "Préférences de messageie électronique"
 
 #. module: base
 #: model:ir.module.module,description:base.module_audittrail
@@ -2362,7 +2362,7 @@ msgstr "Site internet: "
 #. module: base
 #: model:ir.ui.menu,name:base.menu_administration
 msgid "Settings"
-msgstr "Préférences"
+msgstr "Configuration"
 
 #. module: base
 #: selection:ir.actions.act_window,view_type:0
@@ -7061,6 +7061,42 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Un sous-système générique de courriels  avec stockage des messages et files "
+"d'attente\n"
+"================================================== ========\n"
+"\n"
+"Ce sous-système de courriel n'est pas destiné à être utilisé comme une "
+"application en mode\n"
+"autonome, mais à fournir une gestion unifiée des courriels  que toutes les\n"
+"autres applications peuvent utiliser.\n"
+"\n"
+"Les principales caractéristiques sont les suivantes:\n"
+"\n"
+"    * Repose sur les serveurs globaux de courriels sortants configurés dans "
+"le\n"
+"      Menu Administration pour la distribution des courriels sortants;\n"
+"    * Fournit une API pour envoyer des messages et leur archivage,\n"
+"      regroupés par conversation\n"
+"    * Tout document OpenERP peut agir comme un sujet de conversation, à "
+"condition\n"
+"      qu'il comprenne les éléments nécessaires pour la manipulation des "
+"courriels entrants\n"
+"       (voir la classe mail.thread  pour plus de détails).\n"
+"    * Comprend un mécanisme de file d'attente avec ordonnanceur\n"
+"      configurable automatisé \n"
+"    * Comprend un assistant de composition de courriels générique , qui peut "
+"se transformer\n"
+"      en un assistant de publipostage qui  est capable d'interpréter\n"
+"      des champs de publipostage  * expressions * qui seront remplacés par\n"
+"      des données dynamiques avant l'envoi du courriel.\n"
+"      Grâce à des extensions, cet assistant générique peut facilement   "
+"fournir des\n"
+"      caractéristiques avancées (voir email_template par exemple, qui ajoute "
+"des modèles\n"
+"      de courriels à cet assistant)\n"
+"\n"
+"    "
 
 #. module: base
 #: view:res.lang:0
@@ -7911,7 +7947,7 @@ msgstr ""
 "Les comptes bancaires peuvent être saisis dans l'onglet comptabilité  du "
 "formulaire du partenaire en spécifiant le type de compte \"RIB\". Les quatre "
 "champs RIB standard deviendront alors obligatoires:\n"
-"    - code de la banque\n"
+"    - code banque\n"
 "    - code guichet\n"
 "    - numéro du compte\n"
 "    - clé RIB \n"
@@ -10482,7 +10518,7 @@ msgstr "Date de création"
 #. module: base
 #: help:ir.actions.server,trigger_name:0
 msgid "The workflow signal to trigger"
-msgstr ""
+msgstr "Le signal de workflow à déclencher"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp
@@ -12434,7 +12470,7 @@ msgstr "Tout arrêter"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_user_function
 msgid "Jobs on Contracts"
-msgstr ""
+msgstr "Postes des contrats"
 
 #. module: base
 #: model:ir.module.module,description:base.module_import_sugarcrm
