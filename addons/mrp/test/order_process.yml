@@ -17,7 +17,7 @@
     woodmm10 = False
     metalcleats = False
     for line in order.product_lines:
-        if line.product_id.id == ref('product.product_product_sidepanel0'):                         #SIDEPAN 	 2 	    PCE
+        if line.product_id.id == ref('product.product_product_sidepanel0'):                         #SIDEPAN 	 2 	    Unit
             assert not sidepanel, "Production line is already generated for SIDEPAN."
             assert line.product_qty == (2.0*factor), "Qty is not correspond."
             assert line.product_uom.id == ref('product.product_uom_unit'), "UOM is not correspond"
@@ -32,7 +32,7 @@
             assert line.product_qty == (0.25*factor), "Qty is not correspond."
             assert line.product_uom.id == ref('product.product_uom_meter'), "UOM is not correspond"
             woodmm0 = True
-        elif line.product_id.id == ref('product.product_product_metalcleats0'):                     #METC000      4*3      PCE  
+        elif line.product_id.id == ref('product.product_product_metalcleats0'):                     #METC000      4*3      Unit  
             assert not metalcleats, "Production line is already generated for METC000."
             assert line.product_qty == (4*3*factor), "Qty is not correspond."
             assert line.product_uom.id == ref('product.product_uom_unit'), "UOM is not correspond"
