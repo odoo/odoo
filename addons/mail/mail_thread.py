@@ -101,10 +101,6 @@ class mail_thread(osv.osv):
         subscription_obj = self.pool.get('mail.subscription')
         notification_obj = self.pool.get('mail.notification')
         
-        # notifications do not come from any user, but from system
-        if vals.get('type') == 'notification': vals['user_id'] = False
-        if not 'model' in vals: vals['model'] = False
-        if not 'res_id' in vals: vals['res_id'] = 0
         need_action_pushed = False
         
         # create message
