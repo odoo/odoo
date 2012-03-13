@@ -218,7 +218,7 @@ class users(osv.osv):
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
     def onchange_avatar_mini(self, cr, uid, ids, value, context=None):
-        return {'value': {'avatar': value } }
+        return {'value': {'avatar': value, 'avatar_mini': self._avatar_resize(cr, uid, value)  } }
     
     def _set_avatar_mini(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'avatar': value}, context=context)
