@@ -61,7 +61,7 @@ class mrp_configuration(osv.osv_memory):
                                            - Quality Control
                                            - After Sales Services
                                            - Supplier Returns.
-                                    It Installs stock_location module."""),
+                                    It installs stock_location module."""),
         'module_mrp_jit': fields.boolean("Allow the just in time scheduling",
                         help="""This allows Just In Time computation of procurement orders.
                         All procurement orders will be processed immediately, which could in some
@@ -71,10 +71,10 @@ class mrp_configuration(osv.osv_memory):
                         help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
                         It installs the mrp_operations module."""),
         'group_mrp_routings':fields.boolean("Manage manufacturing operations ",group='base.group_user', implied_group='base.group_mrp_routings',
-                           help="""Routings allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials..
+                           help="""Routings allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials.
                            It assigns the "Routings" group to employee."""),
         'group_mrp_properties':fields.boolean("Allow different properties per product in your order",group='base.group_user', implied_group='base.group_mrp_properties',
-                           help="""Allows to Define specific property groups that can be assigned to the properties of your bill of materials.
+                           help="""Allows to define specific property that can be assigned to your bill of materials.
                            It assigns the "Properties of Product" group to employee."""),
     }
 
