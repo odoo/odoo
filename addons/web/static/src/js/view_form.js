@@ -98,10 +98,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
         this.fields_order = [];
         this.fields_view = data;
-        this.arch = this.preprocess_arch(data);
 
-        var html_view = openerp.web.xml_to_str(this.arch);
-        this.$element.find('.oe_form_content').append(html_view);
+        var $form = this.create_view(data);
+        this.$element.find('.oe_form_content').appendTo(this.$form);
 
         //this.root_frame = instanciate_widget(this.registry.get_object('frame'), this, this.fields_view.arch);
         //var to_append = $(".oe_form_header", this.$element);
@@ -136,75 +135,64 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
         this.has_been_loaded.resolve();
     },
-    preprocess_arch: function(data) {
+    create_view: function(fvg) {
         // TODO: extract embeded views before preprocessing
         // Cut down this function into rendering API amongst form, page and kanban
         //
         // OpenERP views spec :
         //      - @width is obsolete ?
-        var self = this,
-            baseclass = 'oe_layout_',
-            fields = data.fields,
-            arch = $.parseXML(data.arch_string);
+        var view = this,
+            fields = fvg.fields,
+            $form = $(fvg.arch_string)
+            field_prefix = view.dataset ? view.dataset.model : '';
 
         // Step #1:
         //  - If field has no @string, fetch it from fvg.fields.
         //  - If field has no label, create one.
         //  - Unless @nolabel, create unique @id and @for pair
-        $(arch).find('field').each(function() {
+        $form.find('field').each(function() {
             var $field = $(this),
                 name = $field.attr('name'),
                 field_orm = fields[name],
-                field_id = _.uniqueId([self.dataset.model, name, '#'].join('.'));
+                field_id = _.uniqueId([field_prefix, name, '#'].join('.'));
             if (!field_orm) {
                 throw new Error("Field '" + name + "' specified in view could not be found.");
             }
-            var $label = $(arch).find('label[for="' + name + '"]'),
+            // TODO: manage @nolabel
+            var $label = $form.find('label[for="' + name + '"]'),
                 label_string = $field.attr('string') || field_orm.string || '';
             if ($label.length) {
                 label_string = $label.attr('string') || $label.text();
             } else {
-                // TODO: find a way to prevent @xmlns.
                 $label = $('<label/>').insertBefore($field);
             }
-            $field.attr('id', field_id);
-            $label.attr('for', field_id).text(label_string);
-
-            // debug
-            $field.text('INPUT: ' + name)
+            $field.attr({
+                'id' : field_id,
+                'data-widget' : $field.attr('widget') || field_orm.widget
+            });
+            $label.attr({
+                'for' : field_id,
+                'string' : label_string,
+                'help' : $field.attr('help') || field_orm.help || '',
+                'data-widget' : 'label'
+            });
+            // TODO: Add custom attribute in orer to differenciate from a real label
         });
 
-        // Step #2:
-        //  - Convert groups to tables
-        var $group, $table, $tr, $td, $child, cols, row_cols, colspan;
-        while (true) {
-            $group = $(arch).find('group:first');
-            if (!$group.length) {
-                break;
+        // TODO: modifiers invisible. Add a special attribute, eg: data-invisible  that should be used in order to create openerp.form.InvisibleWidgetG
+        // TODO: split registry ? tags and fields types ?
+
+        $form.find('*').each(function() {
+            var $elem = $(this),
+                key = $elem.attr('data-widget') || $elem[0].tagName.toLowerCase();
+            if (view.registry.contains(key)) {
+                var obj = view.registry.get_object(key);
+                var w = new (obj)(view, $elem[0]);
+                w.replace($elem);
             }
+        });
 
-            $table = $('<table border="1"/>').addClass(baseclass + 'group');
-            $tr = null;
-            cols = parseInt($group.attr('col') || 4, 10);
-            row_cols = cols;
-
-            $group.children().each(function() {
-                $child = $(this);
-                colspan = parseInt($child.attr('colspan') || 1, 10);
-                if ($child[0].tagName === 'newline') {
-                    $tr = null;
-                    return;
-                }
-                if (!$tr || row_cols < colspan) {
-                    $tr = $('<tr/>').addClass(baseclass + 'group_row').appendTo($table);
-                    row_cols = cols;
-                }
-                row_cols -= colspan;
-                $td = $('<td/>').addClass(baseclass + 'group_cell');
-                $tr.append($td.append($child));
-            });
-            $group.replaceWith($table);
-        }
+return $form
 
         // Step #3:
         //  - Process <button>'s
@@ -416,7 +404,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 var response = {}, can_process_onchange = $.Deferred();
                 processed = processed || [];
                 processed.push(widget.name);
-                var on_change = widget.node.attrs.on_change;
+                var on_change = widget.node_attrs.on_change;
                 if (on_change) {
                     var change_spec = self.parse_on_change(on_change, widget);
                     if (change_spec) {
@@ -515,9 +503,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
         if (result.domain) {
             function edit_domain(node) {
-                var new_domain = result.domain[node.attrs.name];
+                var new_domain = result.domain[node_attrs.name];
                 if (new_domain) {
-                    node.attrs.domain = new_domain;
+                    node_attrs.domain = new_domain;
                 }
                 _(node.children).each(edit_domain);
             }
@@ -624,7 +612,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var msg = "<ul>";
         _.each(this.fields, function(f) {
             if (!f.is_valid()) {
-                msg += "<li>" + f.string + "</li>";
+                msg += "<li>" + f.node_attrs.string + "</li>";
             }
         });
         msg += "</ul>";
@@ -762,7 +750,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
 
                 return {
                     name: name,
-                    string: field.string,
+                    string: field.node_atts.string,
                     value: value,
                     displayed: displayed,
                     // convert undefined to false
@@ -770,7 +758,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 }
             })
             .compact()
-            .sortBy(function (field) { return field.string; })
+            .sortBy(function (field) { return field.node_atts.string; })
             .value();
         var conditions = _.chain(fields)
             .filter(function (field) { return field.change_default; })
@@ -966,11 +954,10 @@ openerp.web.form.compute_domain = function(expr, fields) {
     return _.all(stack, _.identity);
 };
 
-openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.form.Widget# */{
-    form_template: 'Widget',
+openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.Widget# */{
     /**
      * @constructs openerp.web.form.Widget
-     * @extends openerp.web.OldWidget
+     * @extends openerp.web.Widget
      *
      * @param view
      * @param node
@@ -978,32 +965,17 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
     init: function(view, node) {
         this.view = view;
         this.node = node;
-        this.modifiers = JSON.parse(this.node.attrs.modifiers || '{}');
+        this.node_attrs = {};
+        for (var attr, i = 0, attrs = this.node.attributes, l = attrs.length; i < l; i++) {
+            attr = attrs.item(i)
+            this.node_attrs[attr.nodeName] = attr.nodeValue;
+        }
+        this.modifiers = JSON.parse(this.node_attrs.modifiers || '{}');
         this.always_invisible = (this.modifiers.invisible && this.modifiers.invisible === true);
-        this.type = this.type || node.tag;
-        this.element_name = this.element_name || this.type;
 
         this._super(view);
 
-        this.children = node.children;
-        this.colspan = parseInt(node.attrs.colspan || 1, 10);
-        this.decrease_max_width = 0;
-
-        this.string = this.string || node.attrs.string;
-        this.help = this.help || node.attrs.help;
         this.invisible = this.modifiers['invisible'] === true;
-        this.classname = 'oe_form_' + this.type;
-
-        this.align = parseFloat(this.node.attrs.align);
-        if (isNaN(this.align) || this.align === 1) {
-            this.align = 'right';
-        } else if (this.align === 0) {
-            this.align = 'left';
-        } else {
-            this.align = 'center';
-        }
-
-        this.width = this.node.attrs.width;
     },
     destroy: function() {
         this._super.apply(this, arguments);
@@ -1017,9 +989,6 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
     },
     update_dom: function() {
         this.$element.toggle(!this.invisible);
-    },
-    renderElement: function() {
-    	this.$element.html(QWeb.render(this.form_template, { "widget": this }));
     },
     do_attach_tooltip: function(widget, trigger, options) {
         widget = widget || this;
@@ -1204,8 +1173,41 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
     }
 });
 
-openerp.web.form.WidgetGroup = openerp.web.form.WidgetFrame.extend({
-    form_template: 'WidgetGroup'
+openerp.web.form.WidgetGroup = openerp.web.form.Widget.extend({
+    template: 'WidgetGroup',
+    init: function(view, node) {
+        this._super(view, node);
+    },
+    start: function() {
+        this._super();
+        var self = this,
+            $table;
+        if (this.$element.is('table')) {
+            $table = this.$element;
+        } else {
+            $table = this.$element.find('table:first');
+        }
+        var $tr, $td, $child, cols, row_cols, colspan;
+        $tr = null;
+        cols = parseInt(self.node_attrs('col') || 4, 10);
+        row_cols = cols;
+
+        $(node).children().each(function() {
+            $child = $(this);
+            colspan = parseInt($child.attr('colspan') || 1, 10);
+            if ($child[0].tagName.toLowerCase() === 'newline') {
+                $tr = null;
+                return;
+            }
+            if (!$tr || row_cols < colspan) {
+                $tr = $('<tr/>').addClass(baseclass + 'group_row').appendTo($table);
+                row_cols = cols;
+            }
+            row_cols -= colspan;
+            $td = $('<td/>').addClass(baseclass + 'group_cell');
+            $tr.append($td.append($child));
+        });
+    }
 }),
 
 openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
@@ -1299,15 +1301,12 @@ openerp.web.form.WidgetSeparator = openerp.web.form.Widget.extend({
 });
 
 openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
-    form_template: 'WidgetButton',
+    template: 'WidgetButton',
     init: function(view, node) {
         this._super(view, node);
         this.force_disabled = false;
-        if (this.string) {
-            // We don't have button key bindings in the webclient
-            this.string = this.string.replace(/_/g, '');
-        }
-        if (node.attrs.default_focus == '1') {
+        this.string = (this.node_attrs.string || '').replace(/_/g, '');
+        if (this.node_attrs.default_focus == '1') {
             // TODO fme: provide enter key binding to widgets
             this.view.default_focus_button = this;
         }
@@ -1318,6 +1317,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         if (this.help || openerp.connection.debug) {
             this.do_attach_tooltip();
         }
+        debugger
     },
     on_click: function() {
         var self = this;
@@ -1394,6 +1394,15 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
         this.element_name = 'label_' + node.attrs.name;
 
         this._super(view, node);
+
+        this.align = parseFloat(this.node.attrs.align);
+        if (isNaN(this.align) || this.align === 1) {
+            this.align = 'right';
+        } else if (this.align === 0) {
+            this.align = 'left';
+        } else {
+            this.align = 'center';
+        }
 
         if (this.node.tag == 'label' && !this.string && this.node.children.length) {
             this.string = this.node.children[0];

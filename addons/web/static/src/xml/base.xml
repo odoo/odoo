@@ -857,14 +857,14 @@
     </t>
 </t>
 <t t-name="WidgetGroup">
-    <t t-if="widget.string">
-    <fieldset class="oe_group_box">
-        <legend><t t-esc="widget.string"/></legend>
-        <t t-call="WidgetFrame"/>
-    </fieldset>
+    <t t-if="widget.node_attrs.string">
+        <fieldset class="oe_group_box">
+            <legend><t t-esc="widget.node_attrs.string"/></legend>
+            <table border="1"/>
+        </fieldset>
     </t>
-    <t t-if="!widget.string">
-        <t t-call="WidgetFrame"/>
+    <t t-if="!widget.node_attrs.string">
+        <table border="1"/>
     </t>
 </t>
 <t t-name="WidgetNotebook">
@@ -1209,7 +1209,7 @@
 </t>
 <t t-name="WidgetButton">
     <button type="button" class="oe_button">
-        <img t-if="widget.node.attrs.icon" t-att-src="_s + '/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
+        <img t-if="widget.node_attrs.icon" t-att-src="_s + '/web/static/src/img/icons/' + widget.node_attrs.icon + '.png'" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
 </t>
