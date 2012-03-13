@@ -147,8 +147,9 @@ class mail_thread(osv.osv):
         if thread_obj.need_action_user_id and thread_obj.need_action_user_id.id not in user_to_push_ids:
             user_to_push_ids.append(thread_obj.need_action_user_id.id)
         
-        # effectively subscribe users
-        self.message_subscribe(cr, uid, [thread_id], user_to_push_ids, context=context)
+        # effectively push message to users
+        for id in user_to_push_ids:
+            notification_obj.create(cr, uid, {'user_id': id, 'message_id': msg_id}, context=context)
         
         return msg_id
     
