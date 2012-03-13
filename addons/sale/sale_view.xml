@@ -235,11 +235,6 @@
                                 <field name="fiscal_position" widget="selection"/>
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                             </group>
-                            <group colspan="2" col="2" groups="base.group_extended">
-                                <separator string="Dates" colspan="2"/>
-                                <field name="create_date"/>
-                                <field name="date_confirm"/>
-                            </group>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
@@ -250,6 +245,7 @@
                             <field colspan="4" name="picking_ids" nolabel="1"/>
                         </page>
                     </notebook>
+                <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
             </field>
         </record>
