@@ -1181,8 +1181,7 @@ openerp.web.form.WidgetGroup = openerp.web.form.Widget.extend({
             row_cols = cols;
 
         $(this.node).children().each(function() {
-            var $tr,
-                $child = $(this),
+            var $child = $(this),
                 colspan = parseInt($child.attr('colspan') || 1, 10);
             if ($child[0].tagName.toLowerCase() === 'newline') {
                 $tr = null;
