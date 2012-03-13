@@ -884,12 +884,12 @@
 <t t-name="WidgetNotebook.tooltip">
     <t t-foreach="widget.pages" t-as="page">
         <div class="oe_tooltip_string">
-            Notebook Page "<t t-esc="page.string"/>"
+            Notebook Page "<t t-esc="page.node_attrs.string"/>"
         </div>
         <ul class="oe_tooltip_technical">
             <li data-item="modifiers">
                 <span class="oe_tooltip_technical_title">Modifiers:</span>
-                <t t-esc="page.node.attrs.modifiers"/>
+                <t t-esc="page.node_attrs.modifiers"/>
             </li>
         </ul>
     </t>
@@ -912,7 +912,7 @@
 </t>
 <t t-name="WidgetLabel.tooltip">
     <div class="oe_tooltip_string" t-if="widget.string">
-        <t t-esc="widget.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
+        <t t-esc="widget.node_attrs.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
     </div>
     <p t-if="widget.help" class="oe_tooltip_help"><t t-esc="widget.help"/></p>
     <ul t-if="debug" class="oe_tooltip_technical">
@@ -928,33 +928,33 @@
             <span class="oe_tooltip_technical_title">Type:</span>
             <t t-esc="widget.field.type"/>
         </li>
-        <li t-if="widget.node.attrs.widget" data-item="widget">
+        <li t-if="widget.node_attrs.widget" data-item="widget">
             <span class="oe_tooltip_technical_title">Widget:</span>
-            <t t-esc="widget.node.attrs.widget"/>
+            <t t-esc="widget.node_attrs.widget"/>
         </li>
-        <li t-if="widget.node.attrs.size || (widget.field and widget.field.size)" data-item="size">
+        <li t-if="widget.node_attrs.size || (widget.field and widget.field.size)" data-item="size">
             <span class="oe_tooltip_technical_title">Size:</span>
-            <t t-esc="widget.node.attrs.size || widget.field.size"/>
+            <t t-esc="widget.node_attrs.size || widget.field.size"/>
         </li>
-        <li t-if="widget.node.attrs.context" data-item="context">
+        <li t-if="widget.node_attrs.context" data-item="context">
             <span class="oe_tooltip_technical_title">Context:</span>
-            <t t-esc="widget.node.attrs.context_string"/>
+            <t t-esc="widget.node_attrs.context_string"/>
         </li>
-        <li t-if="widget.node.attrs.domain" data-item="domain">
+        <li t-if="widget.node_attrs.domain" data-item="domain">
             <span class="oe_tooltip_technical_title">Domain:</span>
-            <t t-esc="widget.node.attrs.domain_string"/>
+            <t t-esc="widget.node_attrs.domain_string"/>
         </li>
-        <li t-if="widget.node.attrs.modifiers and widget.node.attrs.modifiers != '{}'" data-item="modifiers">
+        <li t-if="widget.node_attrs.modifiers and widget.node_attrs.modifiers != '{}'" data-item="modifiers">
             <span class="oe_tooltip_technical_title">Modifiers:</span>
-            <t t-esc="widget.node.attrs.modifiers"/>
+            <t t-esc="widget.node_attrs.modifiers"/>
         </li>
         <li t-if="widget.field and widget.field.change_default" data-item="change_default">
             <span class="oe_tooltip_technical_title">Change default:</span>
             Yes
         </li>
-        <li t-if="widget.node.attrs.on_change" data-item="on_change">
+        <li t-if="widget.node_attrs.on_change" data-item="on_change">
             <span class="oe_tooltip_technical_title">On change:</span>
-            <t t-esc="widget.node.attrs.on_change"/>
+            <t t-esc="widget.node_attrs.on_change"/>
         </li>
         <li t-if="widget.field and widget.field.relation" data-item="relation">
             <span class="oe_tooltip_technical_title">Relation:</span>
@@ -1022,7 +1022,6 @@
 <t t-name="FieldText">
     <textarea rows="6"
         t-att-name="widget.name"
-        t-att-id="widget.element_id"
         t-attf-class="field_#{widget.type}"
         style="width: 100%"
     ></textarea><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
@@ -1099,7 +1098,6 @@
 <t t-name="FieldBoolean">
     <input type="checkbox"
         t-att-name="widget.name"
-        t-att-id="widget.element_id"
         t-attf-class="field_#{widget.type}"/>
 </t>
 <t t-name="FieldProgressBar">

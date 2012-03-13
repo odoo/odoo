@@ -168,13 +168,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
             $field.attr({
                 'id' : field_id,
-                'data-widget' : $field.attr('widget') || field_orm.widget
+                'widget' : $field.attr('widget') || field_orm.widget || field_orm.type
             });
             $label.attr({
                 'for' : field_id,
                 'string' : label_string,
                 'help' : $field.attr('help') || field_orm.help || '',
-                'data-widget' : 'label'
+                'widget' : 'label'
             });
             // TODO: Add custom attribute in orer to differenciate from a real label
         });
@@ -182,9 +182,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         // TODO: modifiers invisible. Add a special attribute, eg: data-invisible  that should be used in order to create openerp.form.InvisibleWidgetG
         // TODO: split registry ? tags and fields types ?
 
-        $form.find('group,notebook,separator,label,field,button,html').each(function() {
+        $form.find('*').each(function() {
             var $elem = $(this),
-                key = $elem.attr('data-widget') || $elem[0].tagName.toLowerCase();
+                key = $elem.attr('widget') || $elem[0].tagName.toLowerCase();
             if (view.registry.contains(key)) {
                 var obj = view.registry.get_object(key);
                 var w = new (obj)(view, $elem[0]);
@@ -1027,7 +1027,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
      */
     build_context: function(blacklist) {
         // only use the model's context if there is not context on the node
-        var v_context = this.node.attrs.context;
+        var v_context = this.node_attrs.context;
         if (! v_context) {
             v_context = (this.field || {}).context || {};
         }
@@ -1040,7 +1040,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
     },
     build_domain: function() {
         var f_domain = this.field.domain || [];
-        var n_domain = this.node.attrs.domain || null;
+        var n_domain = this.node_attrs.domain || null;
         // if there is a domain on the node, overrides the model's domain
         var final_domain = n_domain !== null ? n_domain : f_domain;
         if (!(final_domain instanceof Array) || true) { //TODO: remove true
@@ -1533,7 +1533,7 @@ openerp.web.form.FieldID = openerp.web.form.FieldChar.extend({
 });
 
 openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
-    form_template: 'FieldEmail',
+    template: 'FieldEmail',
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('button').click(this.on_button_clicked);
@@ -1548,7 +1548,7 @@ openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
 });
 
 openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
-    form_template: 'FieldUrl',
+    template: 'FieldUrl',
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('button').click(this.on_button_clicked);
@@ -1565,10 +1565,10 @@ openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
 openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
     init: function (view, node) {
         this._super(view, node);
-        if (node.attrs.digits) {
-            this.parse_digits(node.attrs.digits);
+        if (this.node_attrs.digits) {
+            this.parse_digits(this.node_attrs.digits);
         } else {
-            this.digits = view.fields_view.fields[node.attrs.name].digits;
+            this.digits = this.field.digits;
         }
     },
     parse_digits: function (digits_attr) {
@@ -1708,16 +1708,16 @@ openerp.web.form.FieldDate = openerp.web.form.FieldDatetime.extend({
 });
 
 openerp.web.form.FieldText = openerp.web.form.Field.extend({
-    form_template: 'FieldText',
+    template: 'FieldText',
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.find('textarea').change(this.on_ui_change);
+        this.$textarea = this.$element.find('textarea').change(this.on_ui_change);
         this.resized = false;
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
         var show_value = openerp.web.format_value(value, this, '');
-        this.$element.find('textarea').val(show_value);
+        this.$textarea.val(show_value);
         if (!this.resized && this.view.options.resize_textareas) {
             this.do_resize(this.view.options.resize_textareas);
             this.resized = true;
@@ -1725,27 +1725,27 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.find('textarea').prop('readonly', this.readonly);
+        this.$textarea.prop('readonly', this.readonly);
     },
     set_value_from_ui: function() {
-        this.value = openerp.web.parse_value(this.$element.find('textarea').val(), this);
+        this.value = openerp.web.parse_value(this.$textarea.val(), this);
         this._super();
     },
     validate: function() {
         this.invalid = false;
         try {
-            var value = openerp.web.parse_value(this.$element.find('textarea').val(), this, '');
+            var value = openerp.web.parse_value(this.$textarea.val(), this, '');
             this.invalid = this.required && value === '';
         } catch(e) {
             this.invalid = true;
         }
     },
     focus: function($element) {
-        this._super($element || this.$element.find('textarea:first'));
+        this._super($element || this.$textarea);
     },
     do_resize: function(max_height) {
         max_height = parseInt(max_height, 10);
-        var $input = this.$element.find('textarea'),
+        var $input = this.$textarea,
             $div = $('<div style="position: absolute; z-index: 1000; top: 0"/>').width($input.width()),
             new_height;
         $div.text($input.val());
@@ -1769,26 +1769,25 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
-    form_template: 'FieldBoolean',
+    template: 'FieldBoolean',
     start: function() {
-        var self = this;
         this._super.apply(this, arguments);
-        this.$element.find('input').click(self.on_ui_change);
+        this.$checkbox = this.$element.click(this.on_ui_change);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        this.$element.find('input')[0].checked = value;
+        this.$checkbox[0].checked = value;
     },
     set_value_from_ui: function() {
-        this.value = this.$element.find('input').is(':checked');
-        this._super();
+        this.value = this.$checkbox.is(':checked');
+        this._super.apply(this, arguments);
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.find('input').prop('disabled', this.readonly);
+        this.$checkbox.prop('disabled', this.readonly);
     },
     focus: function($element) {
-        this._super($element || this.$element.find('input:first'));
+        this._super($element || this.$checkbox);
     }
 });
 
@@ -2338,7 +2337,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     load_views: function() {
         var self = this;
         
-        var modes = this.node.attrs.mode;
+        var modes = this.node_attrs.mode;
         modes = !!modes ? modes.split(",") : ["tree"];
         var views = [];
         _.each(modes, function(mode) {
@@ -3261,7 +3260,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
                 model: this.view.dataset.model,
                 id: (this.view.datarecord.id || ''),
                 field: this.name,
-                filename_field: (this.node.attrs.filename || ''),
+                filename_field: (this.node_attrs.filename || ''),
                 context: this.view.dataset.get_context()
             })},
             complete: $.unblockUI,
@@ -3288,8 +3287,8 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
     set_value: function(value) {
         this._super.apply(this, arguments);
         var show_value;
-        if (this.node.attrs.filename) {
-            show_value = this.view.datarecord[this.node.attrs.filename] || '';
+        if (this.node_attrs.filename) {
+            show_value = this.view.datarecord[this.node_attrs.filename] || '';
         } else {
             show_value = (value != null && value !== false) ? value : '';
         }
@@ -3303,7 +3302,7 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
         this.set_filename(name);
     },
     set_filename: function(value) {
-        var filename = this.node.attrs.filename;
+        var filename = this.node_attrs.filename;
         if (this.view.fields[filename]) {
             this.view.fields[filename].set_value(value);
             this.view.fields[filename].on_ui_change();
@@ -3374,7 +3373,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     },
     render_list: function() {
         var self = this;
-        var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
+        var shown = _.map(((this.node_attrs || {}).statusbar_visible || "").split(","),
             function(x) { return _.str.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
 
@@ -3389,7 +3388,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
         var content = openerp.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
 
-        var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
+        var colors = JSON.parse((this.node_attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
         if (color) {
             var elem = this.$element.find("li.oe-arrow-list-selected span");
