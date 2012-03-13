@@ -898,15 +898,15 @@
 </t>
 <t t-name="WidgetSeparator">
     <div t-if="widget.orientation !== 'vertical'" t-att-class="'separator ' + widget.orientation">
-        <t t-esc="widget.string"/>
+        <t t-esc="widget.node_attrs.string"/>
     </div>
 </t>
 <t t-name="WidgetLabel">
-    <label t-att-for="widget.element_id"
-           t-attf-class="oe_label#{widget.help ? '_help' : ''} oe_align_#{widget.align}">
-        <t t-esc="widget.string"/>
-        <span t-if="widget.help">?</span>
-        <t t-if="widget.string and widget.node.tag != 'label'">:</t>
+    <label t-att-for="widget.node_attrs.for"
+           t-attf-class="oe_label#{widget.node_attrs.help ? '_help' : ''} oe_align_#{widget.align}">
+        <t t-esc="widget.node_attrs.string"/>
+        <span t-if="widget.node_attrs.help">?</span>
+        :
     </label>
 </t>
 <t t-name="WidgetLabel.tooltip">
@@ -971,13 +971,10 @@
         </li>
     </ul>
 </t>
-<t t-name="WidgetParagraph">
-    <p t-attf-class="oe_form_paragraph oe_align_#{widget.align} #{widget.multilines ? 'oe_multilines' : ''}"><t t-esc="widget.string"/></p>
-</t>
 <t t-name="FieldChar">
     <input t-att-type="widget.password ? 'password' : 'text'" size="1"
         t-att-name="widget.name"
-        t-att-id="widget.element_id"
+        t-att-id="widget.node_attrs.id"
         t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
         style="width: 100%"
     /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
@@ -1040,15 +1037,16 @@
     </div>
 </t>
 <t t-name="FieldSelection">
-    <select
-        t-att-name="widget.name"
-        t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type}"
-        style="width: 100%">
-            <t t-foreach="widget.values" t-as="option">
-                <option><t t-esc="option[1]"/></option>
-            </t>
-    </select>
+    <span class="oe_field_selection">
+        <select
+            t-att-name="widget.name"
+            t-att-id="widget.node_attrs.id"
+            style="width: 100%">
+                <t t-foreach="widget.values" t-as="option">
+                    <option><t t-esc="option[1]"/></option>
+                </t>
+        </select>
+    </span>
 </t>
 <t t-name="FieldMany2One">
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
