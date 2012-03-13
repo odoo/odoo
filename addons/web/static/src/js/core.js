@@ -1300,7 +1300,7 @@ openerp.web._lt = function (s) {
     return {toString: function () { return openerp.web._t(s); }}
 };
 openerp.web.qweb = new QWeb2.Engine();
-openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
+openerp.web.qweb.debug = ($.deparam($.param.querystring()).debug != undefined);
 openerp.web.qweb.default_dict = {
     '_' : _,
     '_t' : openerp.web._t
