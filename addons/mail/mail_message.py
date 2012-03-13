@@ -26,6 +26,7 @@ import email
 import logging
 import re
 import time
+import datetime
 from email.header import decode_header
 from email.message import Message
 
@@ -71,8 +72,8 @@ class mail_message_common(osv.osv_memory):
     _rec_name = 'subject'
     _columns = {
         'subject': fields.char('Subject', size=512, required=True),
-        'model': fields.char('Related Document model', size=128, select=1, readonly=1),
-        'res_id': fields.integer('Related Document ID', select=1, readonly=1),
+        'model': fields.char('Related Document model', size=128, select=1), # was readonly
+        'res_id': fields.integer('Related Document ID', select=1), # was readonly
         'date': fields.datetime('Date'),
         'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences. If empty, this is not a mail but a message.'),
         'email_to': fields.char('To', size=256, help='Message recipients'),
@@ -91,7 +92,8 @@ class mail_message_common(osv.osv_memory):
     }
 
     _defaults = {
-        'subtype': 'plain'
+        'subtype': 'plain',
+        'date': (lambda *a: datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
     }
 
 class mail_message(osv.osv):
@@ -107,7 +109,7 @@ class mail_message(osv.osv):
 
     _name = 'mail.message'
     _inherit = 'mail.message.common'
-    _description = 'Email Message'
+    _description = 'Generic Message (Email, Comment, Notification)'
     _order = 'date desc'
 
     # XXX to review - how to determine action to use?
@@ -160,7 +162,7 @@ class mail_message(osv.osv):
                 msg_txt += (message.subject or '')
             result[message.id] = msg_txt
         return result
-
+    
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Related partner'),
         'user_id': fields.many2one('res.users', 'Related user', readonly=1),
@@ -176,12 +178,36 @@ class mail_message(osv.osv):
                         ], 'State', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
         'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
+        # note feature: add type (email, comment, notification) and need_action
+        'type': fields.selection([
+                        ('email', 'e-mail'),
+                        ('comment', 'Comment'),
+                        ('notification', 'System notification'),
+                        ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
+        'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message if message belongs to a thread"),
     }
-
+        
     _defaults = {
         'state': 'received',
+        'type': 'comment',
     }
 
+    #------------------------------------------------------
+    # Generic api
+    #------------------------------------------------------
+    
+    def create(self, cr, uid, vals, context=None):
+        # temporary log directly created messages (to debug OpenSocial)
+        if not 'mail.thread' in context:
+            _logger.warning('Creating message without using mail.thread API')
+            _logger.warning('Message details: %s', str(vals))
+        msg_id = super(mail_message, self).create(cr, uid, vals, context)
+        return msg_id
+    
+    #------------------------------------------------------
+    # E-Mail api
+    #------------------------------------------------------
+    
     def init(self, cr):
         cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
         if not cr.fetchone():
