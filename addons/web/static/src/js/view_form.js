@@ -1176,6 +1176,7 @@ openerp.web.form.WidgetGroup = openerp.web.form.Widget.extend({
         } else {
             $table = this.$element.find('table:first');
         }
+        $table.addClass('oe_layout_table');
         var $tr,
             cols = parseInt(self.node_attrs['col'] || 4, 10),
             row_cols = cols;
@@ -1188,11 +1189,11 @@ openerp.web.form.WidgetGroup = openerp.web.form.Widget.extend({
                 return;
             }
             if (!$tr || row_cols < colspan) {
-                $tr = $('<tr/>').appendTo($table);
+                $tr = $('<tr/>').addClass('oe_layout_row').appendTo($table);
                 row_cols = cols;
             }
             row_cols -= colspan;
-            var $td = $('<td/>');
+            var $td = $('<td/>').addClass('oe_layout_cell').attr('colspan', colspan);
             $tr.append($td.append($child));
         });
     }

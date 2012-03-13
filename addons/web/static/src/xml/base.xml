@@ -857,14 +857,17 @@
     </t>
 </t>
 <t t-name="WidgetGroup">
+    <t t-set="table">
+        <table border="1" cellpadding="0" cellspacing="0" width="100%"/>
+    </t>
     <t t-if="widget.node_attrs.string">
         <fieldset class="oe_group_box">
             <legend><t t-esc="widget.node_attrs.string"/></legend>
-            <table border="1"/>
+            <t t-raw="table"/>
         </fieldset>
     </t>
     <t t-if="!widget.node_attrs.string">
-        <table border="1"/>
+        <t t-raw="table"/>
     </t>
 </t>
 <t t-name="WidgetNotebook">
