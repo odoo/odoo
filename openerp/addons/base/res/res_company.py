@@ -143,7 +143,6 @@ class res_company(osv.osv):
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32), 
         'company_registry': fields.char('Company Registry', size=64),
         'paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True),
-        'photo': fields.related('partner_id', 'photo', string="Photo", type="binary"),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
