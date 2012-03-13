@@ -361,10 +361,10 @@ class mrp_bom(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(mrp_bom, self).create(cr, uid, vals, context=context)
-        self.create_notification(cr, uid, [obj_id], context=context)
+        self.case_create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
-    def create_notification(self, cr, uid, ids, context=None):
+    def case_create_send_note(self, cr, uid, ids, context=None):
         prod_obj = self.pool.get('product.product')
         for obj in self.browse(cr, uid, ids, context=context):
             for prod in prod_obj.browse(cr, uid, [obj.product_id], context=context):
@@ -514,7 +514,7 @@ class mrp_production(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(mrp_production, self).create(cr, uid, vals, context=context)
-        self.create_notification(cr, uid, [obj_id], context=context)
+        self.case_create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
     def unlink(self, cr, uid, ids, context=None):
@@ -531,34 +531,34 @@ class mrp_production(osv.osv):
                 result[obj.id] = obj.user_id.id
         return result
 
-    def create_notification(self, cr, uid, ids, context=None):
+    def case_create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id.id :
                 self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
             obj.message_append_note('',_("Manufacturing Order has been <b>Created</b>."))
         return True
 
-    def cancel_notification(self, cr, uid, ids, context=None):
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>cancelled</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
 
-    def ready_notification(self, cr, uid, ids, context=None):
+    def case_ready_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order is <b>ready to produce</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
 
-    def inproduction_notification(self, cr, uid, ids, context=None):
+    def case_inproduction_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order is <b>in production</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
 
-    def done_notification(self, cr, uid, ids, context=None):
+    def case_done_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>done</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
 
-    def waiting_notification(self, cr, uid, ids, context=None):
+    def case_waiting_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>confirmed and waiting for goods</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
@@ -689,7 +689,7 @@ class mrp_production(osv.osv):
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
         self.write(cr, uid, ids, {'state': 'cancel'})
-        self.cancel_notification(cr, uid, ids, context)
+        self.case_cancel_send_note(cr, uid, ids, context)
         return True
 
     def action_ready(self, cr, uid, ids, context=None):
@@ -704,7 +704,7 @@ class mrp_production(osv.osv):
             if production.move_prod_id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
                         {'location_id': production.location_dest_id.id})
-            self.ready_notification(cr, uid, [production_id], context)
+            self.case_ready_send_note(cr, uid, [production_id], context)
         return True
 
     def action_production_end(self, cr, uid, ids, context=None):
@@ -714,7 +714,7 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids):
             self._costs_generate(cr, uid, production)
         self.write(cr, uid, ids, {'state': 'done', 'date_finished': time.strftime('%Y-%m-%d %H:%M:%S')})
-        self.done_notification(cr, uid, ids, context)
+        self.case_done_send_note(cr, uid, ids, context)
         return True
 
     def test_production_done(self, cr, uid, ids):
@@ -884,7 +884,7 @@ class mrp_production(osv.osv):
         @return: True
         """
         self.write(cr, uid, ids, {'state': 'in_production', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
-        self.inproduction_notification(cr, uid, ids, context)
+        self.case_inproduction_send_note(cr, uid, ids, context)
         return True
 
     def test_if_product(self, cr, uid, ids):
@@ -1062,7 +1062,7 @@ class mrp_production(osv.osv):
                 production.name,
                 datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y'),
             )
-            self.waiting_notification(cr, uid, [production.id], context);
+            self.case_waiting_send_note(cr, uid, [production.id], context);
         return shipment_id
 
     def force_production(self, cr, uid, ids, *args):
