@@ -259,13 +259,15 @@ class res_partner(osv.osv):
         return super(res_partner,self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context={}
         # Update parent and siblings records
         if vals.get('parent_id') and vals.get('use_parent_address'):
             domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
             update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
             self.update_address(cr, uid, update_ids, vals, context)
-        if 'photo' not in vals:
-            vals['photo'] = self._get_photo(cr, uid, vals.get('is_company', False), context)
+        if 'photo' not in vals  :
+            vals['photo'] = self._get_photo(cr, uid, vals.get('is_company', False) or context.get('default_is_company'), context)
         return super(res_partner,self).create(cr, uid, vals, context=context)
 
     def update_address(self, cr, uid, ids, vals, context=None):
