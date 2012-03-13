@@ -45,11 +45,7 @@ class base_needaction(osv.osv):
     _description = 'Need action mechanism'
     
     def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
-        if context is None:
-            context = {}
-        result = {}
-        for id in ids:
-            result[id] = False
+        result = dict.fromkeys[ids, False]
         return result
 
     ''' Wrapper: in 6.1 the reference to a method is given to a function
