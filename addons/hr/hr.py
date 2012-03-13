@@ -150,7 +150,6 @@ class hr_employee(osv.osv):
     _inherits = {'resource.resource': "resource_id"}
 
     def onchange_photo_mini(self, cr, uid, ids, value, context=None):
-        print 'cacacaporinfeorinf'
         return {'value': {'photo': value, 'photo_mini': self._photo_resize(cr, uid, value) } }
     
     def _set_photo_mini(self, cr, uid, id, name, value, args, context=None):
@@ -170,7 +169,7 @@ class hr_employee(osv.osv):
             if not hr_empl.photo:
                 result[hr_empl.id] = False
             else:
-                result[hr_empl.id] = self._photo_resize(cr, uid, hr_empl.photo)
+                result[hr_empl.id] = self._photo_resize(cr, uid, hr_empl.photo, context=context)
         return result
     
     _columns = {
