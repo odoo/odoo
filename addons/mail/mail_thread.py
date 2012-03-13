@@ -647,7 +647,7 @@ class mail_thread(osv.osv):
     
     def message_append_note(self, cr, uid, ids, subject, body, parent_id=False, type='notification', context=None):
         return self.message_append(cr, uid, ids, subject, body_text=body, parent_id=parent_id, type=type, context=context)
-            
+    
     #------------------------------------------------------
     # Subscription mechanism
     #------------------------------------------------------

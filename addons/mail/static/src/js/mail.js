@@ -50,6 +50,7 @@ openerp.mail = function(session) {
             /* DataSets and internal vars */
             this.ds = new session.web.DataSet(this, this.params.res_model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
+            this.ds_msg = new session.web.DataSet(this, 'mail.message');
             this.name = 'Unknown record'
             this.sorted_comments = {'root_ids': [], 'root_id_msg_list': {}};
             /* Display vars */
@@ -76,10 +77,10 @@ openerp.mail = function(session) {
                 if (event.shiftKey && charCode == 13) { this.value = this.value+"\n"; }
                 else if (charCode == 13) { self.do_comment(); }
             });
-            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
-               var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_act:first');
-               act_dom.toggle();
-            });
+            
+            // add event
+            this.add_events();
+            
             this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
                 // lazy implementation: fetch data and try to redirect
                 if (! event.srcElement.dataset.resModel) return false;
@@ -107,6 +108,23 @@ openerp.mail = function(session) {
                 else return self.init_comments();
             });
             return display_done
+        },
+        
+        add_events: function() {
+            var self = this;
+            // event: click on 'reply'
+            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
+               var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_act:first');
+               act_dom.toggle();
+            });
+            // event: click on 'delete'
+            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_delete', 'click', function (event) {
+               console.log('deleting');
+               var msg_id = event.srcElement.dataset.id;
+               if (! msg_id) return false;
+               self.ds_msg.unlink([parseInt(msg_id)]).then();
+               return false;
+            });
         },
         
         stop: function () {
