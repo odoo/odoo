@@ -203,25 +203,6 @@ class users(osv.osv):
             self.write(cr, uid, ids, {'groups_id': [(4, extended_group_id)]}, context=context)
         return True
 
-    def _get_avatar_mini(self, cr, uid, ids, name, args, context=None):
-        result = {}
-        for obj in self.browse(cr, uid, ids, context=context):
-            if not obj.avatar:
-                result[obj.id] = False
-                continue
-
-            image_stream = io.BytesIO(obj.avatar.decode('base64'))
-            img = Image.open(image_stream)
-            img.thumbnail((180, 150), Image.ANTIALIAS)
-            img_stream = StringIO.StringIO()
-            img.save(img_stream, "JPEG")
-            result[obj.id] = img_stream.getvalue().encode('base64')
-        return result
-
-    def _set_avatar_mini(self, cr, uid, id, name, value, args, context=None):
-        self.write(cr, uid, [id], {'avatar': value}, context=context)
-        return True
-
     def _get_interface_type(self, cr, uid, ids, name, args, context=None):
         """Implementation of 'view' function field getter, returns the type of interface of the users.
         @param field_name: Name of the field
@@ -232,6 +213,24 @@ class users(osv.osv):
         extended_group_id = group_obj.get_extended_interface_group(cr, uid, context=context)
         extended_users = group_obj.read(cr, uid, extended_group_id, ['users'], context=context)['users']
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
+
+    def _set_avatar_mini(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'avatar': value}, context=context)
+    
+    def _get_avatar_mini(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for user in self.browse(cr, uid, ids, context=context):
+            if not user.avatar:
+                result[user.id] = False
+                continue
+
+            image_stream = io.BytesIO(user.avatar.decode('base64'))
+            img = Image.open(image_stream)
+            img.thumbnail((180, 150), Image.ANTIALIAS)
+            img_stream = StringIO.StringIO()
+            img.save(img_stream, "JPEG")
+            result[user.id] = img_stream.getvalue().encode('base64')
+        return result
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
