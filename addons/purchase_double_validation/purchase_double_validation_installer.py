@@ -22,9 +22,10 @@
 from osv import fields, osv
 
 class purchase_double_validation_installer(osv.osv_memory):
-    _inherit = 'res.config.settings'
+    _name = 'purchase.double.validation.installer'
+    _inherit = 'purchase.configuration'
     _columns = {
-        'limit_amount': fields.integer('Maximum Purchase Amount', default_model='model.name',required=True, help="Maximum amount after which validation of purchase is required."),
+        'limit_amount': fields.integer('Maximum Purchase Amount',required=True, help="Maximum amount after which validation of purchase is required."),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -42,9 +43,9 @@ class purchase_double_validation_installer(osv.osv_memory):
         'limit_amount': 5000,
     }
 
-    def execute(self, cr, uid, ids, vals, context=None):
+    def execute(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)
-        super(purchase_double_validation_installer, self).execute(cr, uid, ids, vals)
+        super(purchase_double_validation_installer, self).execute(cr, uid, ids, context)
         if not data:
             return {}
         amt = data[0]['limit_amount']

@@ -24,15 +24,16 @@ import pooler
 from tools.translate import _
 
 class purchase_configuration(osv.osv_memory):
+    _name = 'purchase.configuration'
     _inherit = 'res.config.settings'
 
     _columns = {
-        'default_method' : fields.selection(
+        'default_invoice_method' : fields.selection(
             [('manual', 'Based on Purchase Order Lines'),
              ('picking', 'Based on Receptions'),
              ('order', 'Pre-Generate Draft Invoices based on Purchase Orders'),
-            ], 'Invoicing Control Method', required=True , help="You can set Invoicing Control Method."),
-        'module_purchase_analytic_plans': fields.boolean('Purchase Analytic Plan',
+            ], 'Invoicing Control Method', required=True, default_model='purchase.order' , help="You can set Invoicing Control Method."),
+        'module_purchase_analytic_plans': fields.boolean('Purchase analytic plan',
                                    help ="""
                                    Allows the user to maintain several analysis plans. These let you split
                                    a line on a supplier purchase order into several accounts and analytic plans.
@@ -42,14 +43,14 @@ class purchase_configuration(osv.osv_memory):
                                   help="""To trigger warnings in OpenERP objects.
                                   Warning messages can be displayed for objects like sale order, purchase order, picking and invoice. The message is triggered by the form's onchange event.
                                   It installs the warning module."""),
-        'module_product_manufacturer': fields.boolean("Define a manufacturer on products",
-                        help="""TYou can now define the following for a product:
+        'module_product_manufacturer': fields.boolean("Define a manufacturer of products",
+                        help="""This allows you to define the following for a product:
                             * Manufacturer
                             * Manufacturer Product Name
                             * Manufacturer Product Code
                             * Product Attributes.
                         It installs the product_manufacturer module."""),
-        'module_purchase_double_validation': fields.boolean("Configure Limit amount",
+        'module_purchase_double_validation': fields.boolean("Configure limit amount",
                         help="""This allows you double-validation for purchases exceeding minimum amount.
                         It installs the purchase_double_validation module."""),
         'module_purchase_requisition' : fields.boolean("Track the best price with Purchase Requisition",
@@ -69,15 +70,27 @@ class purchase_configuration(osv.osv_memory):
         'group_purchase_taxes_on_order_line':fields.boolean("On order line", group='base.group_user', implied_group='base.group_purchase_taxes_on_order_line'),
     }
 
+    def default_get(self, cr, uid, fields, context=None):
+        data_obj = self.pool.get('ir.model.data')
+        res = super(purchase_configuration, self).default_get(cr, uid, fields, context)
+        if res.get('group_purchase_taxes_global_on_order'):
+            res.update({'tax_policy': 'global_on_order'})
+        elif res.get('group_purchase_taxes_on_order_line'):
+            res.update({'tax_policy': 'on_order_line'})
+        else:
+            res.update({'tax_policy': 'no_tax'})
+        return res
+
+
     _defaults = {
-        'default_method': lambda s,c,u,ctx: s.pool.get('purchase.order').default_get(c,u,['invoice_method'],context=ctx)['invoice_method'],
+        'default_invoice_method': lambda s,c,u,ctx: s.pool.get('purchase.order').default_get(c,u,['invoice_method'],context=ctx)['invoice_method'],
         'tax_policy': 'global_on_order',
     }
 
     def _check_default_tax(self, cr, uid, context=None):
         ir_values_obj = self.pool.get('ir.values')
         for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.product']):
-            if tax[1] == 'taxes_id':
+            if tax[1] == 'supplier_taxes_id':
                 return tax[2]
         return False
 
@@ -86,13 +99,11 @@ class purchase_configuration(osv.osv_memory):
         taxes = self._check_default_tax(cr, uid, context=context)
         if taxes:
             ir_values_obj.set(cr, uid, 'default', False, 'tax_id', ['purchase.order'], taxes[0])
-            ir_values_obj.set(cr, uid, 'default', False, 'tax_id', ['purchase.order.line'], taxes)
-            ir_values_obj.set(cr, uid, 'default', False, 'taxes_id', ['product.product'], taxes)
+            ir_values_obj.set(cr, uid, 'default', False, 'taxes_id', ['purchase.order.line'], taxes)
+            ir_values_obj.set(cr, uid, 'default', False, 'supplier_taxes_id', ['product.product'], taxes)
 
     def onchange_tax_policy(self, cr, uid, ids, tax_policy, context=None):
         res = {'value': {}}
-        if ids:
-            self.set_tax_policy(cr, uid, ids, context=context)
         if tax_policy == 'global_on_order':
             res['value'].update({'group_purchase_taxes_global_on_order': True})
             res['value'].update({'group_purchase_taxes_on_order_line': False})
