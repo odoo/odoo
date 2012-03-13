@@ -91,6 +91,13 @@ class crm_phonecall(crm_base, osv.osv):
         'active': 1,
     }
 
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_phonecall, self).create(cr, uid, vals, context)
+        for phonecall in self.browse(cr, uid, [obj_id], context=context):
+            if not phonecall.opportunity_id:
+                self.case_open_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
     def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for obj in self.browse(cr, uid, ids, context=context):
@@ -99,33 +106,38 @@ class crm_phonecall(crm_base, osv.osv):
                 result[obj.id] = obj.user_id.id
         return result
 
-    def _case_cancel_notification(self, cr, uid, ids, context=None):
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
         for phonecall in self.browse(cr, uid, ids, context=context):
             message = _("Phonecall has been <b>cancelled</b>.")
             phonecall.message_append_note( _('System notification'),
                         message, type='notification', context=context)
         return True
 
-    def _case_pending_notification(self, cr, uid, ids, context=None):
+    def case_pending_send_note(self, cr, uid, ids, context=None):
         for phonecall in self.browse(cr, uid, ids, context=context):
             message = _("Phonecall is <b>pending</b>.")
             phonecall.message_append_note('' ,message)
         return True
 
-    def done_notification(self, cr, uid, ids, context=None):
+    def case_done_send_note(self, cr, uid, ids, context=None):
         for phonecall in self.browse(cr, uid, ids, context=context):
             message = _("Phonecall has been <b>done</b>.")
             phonecall.message_append_note('', message)
         return True
 
-    def _case_open_notification(self, cr, uid, ids, context=None):
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        lead_obj = self.pool.get('crm.lead')
         for phonecall in self.browse(cr, uid, ids, context=context):
             phonecall.message_subscribe([phonecall.user_id.id], context=context)
-            message = _("Phonecall has been <b>opened</b>.")
+            if phonecall.opportunity_id :
+                for lead in lead_obj.browse(cr, uid, [phonecall.opportunity_id.id], context=context):
+                    message = _("Phonecall linked to the opportunity %s has been <b>created and opened </b>on <em>%s</em>.") % (lead.name, phonecall.date)
+            else:
+                message = _("Phonecall has been <b>created and opened</b>.")
             phonecall.message_append_note('' ,message)
         return True
 
-    def _case_partner_notification(self, cr, uid, ids, context=None):
+    def case_partner_send_note(self, cr, uid, ids, context=None):
         for phonecall in self.browse(cr, uid, ids, context=context):
             message = _("Partner has been <b>created</b>")
             phonecall.message_append_note('' ,message)
@@ -153,7 +165,7 @@ class crm_phonecall(crm_base, osv.osv):
                 data.update({'duration': duration.seconds/float(60)})
             res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], context)
             self.write(cr, uid, [phone_id], data)
-            self.done_notification(cr, uid, [phone_id], context);
+            self.case_done_send_note(cr, uid, [phone_id], context);
         return res
 
     def case_reset(self, cr, uid, ids, context=None):
@@ -161,7 +173,7 @@ class crm_phonecall(crm_base, osv.osv):
         """
         res = super(crm_phonecall, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'duration': 0.0, 'state':'open'})
-        self._case_open_notification(cr, uid, ids, context=context)
+        self.case_open_send_note(cr, uid, ids, context=context)
         return res
 
 
@@ -202,7 +214,6 @@ class crm_phonecall(crm_base, osv.osv):
                     'priority': call.priority,
             }
             new_id = self.create(cr, uid, vals, context=context)
-            self.case_open(cr, uid, [new_id])
             if action == 'log':
                 self.case_close(cr, uid, [new_id])
             phonecall_dict[call.id] = new_id
@@ -220,7 +231,7 @@ class crm_phonecall(crm_base, osv.osv):
 
     def _call_set_partner(self, cr, uid, ids, partner_id, context=None):
         self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
-        self._case_partner_notification(cr, uid, ids, context)
+        self.case_partner_send_note(cr, uid, ids, context)
 
     def _call_create_partner_address(self, cr, uid, phonecall, partner_id, context=None):
         address = self.pool.get('res.partner.address')

@@ -82,7 +82,7 @@ class crm_meeting(crm_base, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
-        self._case_create_notification(cr, uid, [obj_id], context=context)
+        self.case_create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
     def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
@@ -93,39 +93,40 @@ class crm_meeting(crm_base, osv.osv):
                 result[obj.id] = obj.user_id.id
         return result
 
-    def _case_create_notification(self, cr, uid, ids, context=None):
+    def case_create_send_note(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
         phonecall_obj = self.pool.get('crm.phonecall')
         for obj in self.browse(cr, uid, ids, context=context):
+            message = _("The meeting has been <b>scheduled</b> on <em>%s</em>.") % (obj.date)
             if(obj.opportunity_id.id): # meeting can be create from phonecalls or opportunities, therefore checking for the parent
                 newid = obj.opportunity_id.id
-                message = _("Meeting has been <b>scheduled</b> on <em>%s</em> for opportunity.") % (obj.date)
                 for lead in lead_obj.browse(cr, uid, [newid], context=context):
+                    opp_message = _("Meeting linked to the opportunity <em>%s</em> has been <b>created and scheduled</b> on <em>%s</em>.") % (lead.name,obj.date)
                     lead.message_append_note('', message)
-                    obj.message_append_note('', message)
+                    obj.message_append_note('', opp_message)
             elif(obj.phonecall_id.id):
                 newid = obj.phonecall_id.id
-                message = _("Meeting has been <b>scheduled</b> on <em>%s</em> for phonecall.") % (obj.date)
                 for phonecall in phonecall_obj.browse(cr, uid, [newid], context=context):
+                    phn_message = _("Meeting linked to the phonecall <em>%s</em> has been <b>created and scheduled</b> on <em>%s</em>.") % (phonecall.name,obj.date)
                     phonecall.message_append_note('', message)
-                    obj.message_append_note('', message)
+                    obj.message_append_note('', phn_message)
             else:
                 message = _("Meeting has been <b>scheduled</b> on<em> %s </em>.") % (obj.date)
                 obj.message_append_note('', message)
 
-    def _case_close_notification(self, cr, uid, ids, context=None):
+    def case_close_send_note(self, cr, uid, ids, context=None):
         for meeting in self.browse(cr, uid, ids, context=context):
             message = _("Meeting has been <b>done</b>.")
             meeting.message_append_note('' ,message)
         return True
 
-    def _case_reset_notification(self, cr, uid, ids, context=None):
+    def case_reset_send_note(self, cr, uid, ids, context=None):
         for meeting in self.browse(cr, uid, ids, context=context):
             message = _("Meeting has been <b>renewed</b>.")
             meeting.message_append_note('' ,message)
         return True
 
-    def _case_open_notification(self, cr, uid, ids, context=None):
+    def case_open_send_note(self, cr, uid, ids, context=None):
         for meeting in self.browse(cr, uid, ids, context=context):
             if meeting.state != 'draft':
                 return False

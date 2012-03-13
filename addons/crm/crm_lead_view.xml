@@ -77,9 +77,10 @@
                             icon="gtk-go-forward" context="{'stage_type': 'lead'}" />
                     </group>
                     <field name="type" invisible="1"/>
+                    <label colspan="6"  string=""/>
                     <button string="Send New Email"
-                        name="%(mail.action_email_compose_message_wizard)d"
-                        icon="terp-mail-message-new" type="action"/>
+                            name="%(mail.action_email_compose_message_wizard)d"
+                            icon="terp-mail-message-new" type="action"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Lead">
@@ -168,9 +169,6 @@
                     </group>
                  </page>
                 </notebook>
-                <separator string="Temporary Need Action" colspan="4"/>
-                <field name="need_action_user_id"/>
-                <newline/>
                 <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
             </form>
         </field>
@@ -437,15 +435,15 @@
                     <button name="action_makeMeeting" type="object"
                     string="Schedule Meeting" icon="gtk-redo" />
                     <newline/>
-                    <button string="Send New Email"
-                        name="%(mail.action_email_compose_message_wizard)d"
-                        icon="terp-mail-message-new" type="action"/>
-                    <newline/>
                     <field name="date_action"/>
                     <field name="title_action"/>
                     <field name="priority" string="Priority"/>
                     <newline/>
                     <field name="type" invisible="1"/>
+                    <label colspan="6"  string=""/>
+                    <button string="Send New Email"
+                        name="%(mail.action_email_compose_message_wizard)d"
+                        icon="terp-mail-message-new" type="action"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Opportunity">
@@ -540,9 +538,6 @@
                     <field name="ref2"/>
                 </page>
                 </notebook>
-                <separator string="Temporary Need Action" colspan="4"/>
-                <field name="need_action_user_id"/>
-                <newline/>
                 <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
             </form>
         </field>
