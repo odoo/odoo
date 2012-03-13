@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-2011 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2010-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -29,9 +29,9 @@ from PIL import Image
 
 class mail_group(osv.osv):
     """
-    A mail_group is a collection of users sharing messages in a discussion group.
-    Mail groups are different from user groups because they don't have a specific field holding users.
-    Group users are users that follow the mail group, using the subscription/follow mechanism of OpenChatter.
+    A mail_group is a collection of users sharing messages in a discussion
+    group. Group users are users that follow the mail group, using the
+    subscription/follow mechanism of OpenSocial.
     """
     
     _name = 'mail.group'
@@ -42,25 +42,30 @@ class mail_group(osv.osv):
     
     def action_group_leave(self, cr, uid, ids, context={}):
         return self.message_unsubscribe(cr, uid, ids, context=context);
-    
-    def _get_photo_mini(self, cr, uid, ids, name, args, context=None):
-        result = {}
-        for obj in self.browse(cr, uid, ids, context=context):
-            if not obj.photo:
-                result[obj.id] = False
-                continue
 
-            image_stream = io.BytesIO(obj.photo.decode('base64'))
-            img = Image.open(image_stream)
-            img.thumbnail((120, 100), Image.ANTIALIAS)
-            img_stream = StringIO.StringIO()
-            img.save(img_stream, "JPEG")
-            result[obj.id] = img_stream.getvalue().encode('base64')
-        return result
+    def onchange_photo_mini(self, cr, uid, ids, value, context=None):
+        return {'value': {'photo': value, 'photo_mini': self._photo_resize(cr, uid, value) } }
     
     def _set_photo_mini(self, cr, uid, id, name, value, args, context=None):
         self.write(cr, uid, [id], {'photo': value}, context=context)
         return True
+    
+    def _photo_resize(self, cr, uid, photo, context=None):
+        image_stream = io.BytesIO(photo.decode('base64'))
+        img = Image.open(image_stream)
+        img.thumbnail((120, 100), Image.ANTIALIAS)
+        img_stream = StringIO.StringIO()
+        img.save(img_stream, "JPEG")
+        return img_stream.getvalue().encode('base64')
+        
+    def _get_photo_mini(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for group in self.browse(cr, uid, ids, context=context):
+            if not group.photo:
+                result[group.id] = False
+            else:
+                result[group.id] = self._photo_resize(cr, uid, group.photo, context=context)
+        return result
     
     def is_subscriber(self, cr, uid, ids, name, args, context=None):
         result = {}
@@ -83,7 +88,7 @@ class mail_group(osv.osv):
     def get_members_nbr(self, cr, uid, ids, name, args, context=None):
         result = {}
         for id in ids:
-            result[id] = len(self._message_get_subscribers_ids(cr, uid, [id], context=context))
+            result[id] = len(self.message_get_subscribers_ids(cr, uid, [id], context=context))
         return result
         
     _columns = {
@@ -105,6 +110,7 @@ class mail_group(osv.osv):
 
     _defaults = {
         'public': True,
+        'responsible_id': (lambda s, cr, uid, ctx: uid),
     }
 
 mail_group()
