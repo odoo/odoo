@@ -377,9 +377,11 @@ openerp.mail = function(session) {
             var self = this;
             this._super.apply(this, arguments);
             /* bind and hide buttons */
-            self.$element.find('button.oe_mail_button_followers').bind('click', function () { self.do_toggle_followers(); });
-            self.$element.find('button.oe_mail_button_follow').bind('click', function () { self.do_follow(); }).hide();
-            self.$element.find('button.oe_mail_button_unfollow').bind('click', function () { self.do_unfollow(); }).hide();
+            self.$element.find('button.oe_mail_button_followers').bind('click', function () { self.do_toggle_followers(); }).hide();
+            self.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); }).hide()
+                .mouseover(function () { $(this).html('Follow'); }).mouseleave(function () { $(this).html('Not following'); });
+            self.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); }).hide()
+                .mouseover(function () { $(this).html('Unfollow'); }).mouseleave(function () { $(this).html('Following'); });
         },
 
         stop: function () {
@@ -387,7 +389,6 @@ openerp.mail = function(session) {
         },
         
         set_value: function() {
-            console.log('set_value');
             var self = this;
             this._super.apply(this, arguments);
             this.see_sub = 1;
@@ -428,12 +429,12 @@ openerp.mail = function(session) {
         
         do_follow: function () {
             this.do_toggle_follow();
-            return this.ds.call('message_subscribe', [[this.view.datarecord.id]]).when();
+            return this.ds.call('message_subscribe', [[this.view.datarecord.id]]).then(this.proxy('fetch_subscribers'));
         },
         
         do_unfollow: function () {
             this.do_toggle_follow();
-            return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).when();
+            return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).then(this.proxy('fetch_subscribers'));
         },
         
         do_toggle_follow: function () {
@@ -450,9 +451,7 @@ openerp.mail = function(session) {
         },
         
         thread_get_avatar_mini: function(model, field, id) {
-            id = id || '';
-            var url = this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
-            return url;
+            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
     });
     
