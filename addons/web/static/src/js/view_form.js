@@ -1359,6 +1359,58 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
     }
 });
 
+/**
+ * Interface to be implemented by fields.
+ * 
+ * Novajs Attributes:
+ *     - ...
+ * 
+ * Novajs Events:
+ *     - ...
+ * 
+ */
+openerp.web.form.FieldInterface = {
+    /**
+     * Called by the form view to indicate the value of the field.
+     * 
+     * set_value() may return an object that can be passed to $.when() that represents the moment when
+     * the field has finished all operations necessary before the user can effectively use the widget.
+     * 
+     * Multiple calls to set_value() can occur at any time and must be handled correctly by the implementation,
+     * regardless of any asynchronous operation currently running and the status of any promise that a
+     * previous call to set_value() could have returned.
+     * 
+     * set_value() must be able, at any moment, to handle the syntax returned by the "read" method of the
+     * osv class in the OpenERP server as well as the syntax used by the set_value() (see below). It must
+     * also be able to handle any other format commonly used in the _defaults key on the models in the addons
+     * as well as any format commonly returned in a on_change. It must be able to autodetect those formats as
+     * no information is ever given to know which format is used.
+     */
+    set_value: function(value) {},
+    /**
+     * Get the current value of the widget.
+     * 
+     * Must always return a syntaxically correct value to be passed to the "write" method of the osv class in
+     * the OpenERP server, although it is not assumed to respect the constraints applied to the field.
+     * For example if the field is marqued as "required", a call to get_value() can return false.
+     * 
+     * get_value() can also be called *before* a call to set_value() and, in that case, is supposed to
+     * return a defaut value according to the type of field.
+     * 
+     * This method is always assumed to perform synchronously, it can not return a promise.
+     * 
+     * If there was no user interaction to modify the value of the field, it is always assumed that
+     * get_value() return the same semantic value than the one passed in the last call to set_value(),
+     * altough the syntax can be different. This can be the case for type of fields that have a different
+     * syntax for "read" and "write" (example: m2o: set_value([0, "Administrator"]), get_value() => 0).
+     */
+    get_value: function() {},
+};
+
+/**
+ * Abstract class for classes implementing FieldInterface. Should be renamed to AbstractField some
+ * day.
+ */
 openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.form.Field# */{
     /**
      * @constructs openerp.web.form.Field
@@ -2237,6 +2289,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         this.$input.prop('readonly', this.readonly);
     }
 });
+openerp.web.check_interface(openerp.web.form.FieldMany2One, openerp.web.form.FieldInterface);
 
 /*
 # Values: (0, 0,  { fields })    create

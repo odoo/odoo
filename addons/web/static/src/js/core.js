@@ -1335,6 +1335,23 @@ openerp.web.qweb.preprocess_node = function() {
     }
 };
 
+/**
+ * A small utility function to check if a class implements correctly an interface, assuming that
+ * interface is simply specified using a dictionary containing methods and attributes with the
+ * correct type. It only performs the check when in debug mode and the only effect of an invalid
+ * check is messages in the console.
+ */
+openerp.web.check_interface = function(_class, _interface) {
+    if (! openerp.web.check_interface.debug)
+        return;
+    for (var member in _interface) {
+        if ( (typeof _class.prototype[member] != typeof _interface[member]) ) {
+            console.error("class failed to implement interface member '" + member + "'");
+        }
+    }
+}
+openerp.web.check_interface.debug = ($.deparam($.param.querystring()).debug != undefined);
+
 /** Jquery extentions */
 $.Mutex = (function() {
     function Mutex() {
