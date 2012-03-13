@@ -54,7 +54,7 @@ openerp.mail = function(session) {
             this.sorted_comments = {'root_ids': [], 'root_id_msg_list': {}};
             /* Display vars */
             this.display = {};
-            this.display.show_post_comment = false;
+            this.display.show_post_comment = this.params.show_post_comment || false;
             this.display.show_reply = (this.params.thread_level > 0);
             this.display.show_delete = true;
             this.display.show_hide = true;
@@ -406,7 +406,7 @@ openerp.mail = function(session) {
             /* create ThreadDisplay widget and render it */
             this.$element.find('div.oe_mail_recthread_left').empty();
             if (this.thread) this.thread.stop();
-            this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid});
+            this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid, 'show_post_comment': true});
             this.thread.appendTo(this.$element.find('div.oe_mail_recthread_left'));
             return fetch_fol_done && fetch_sub_done;
         },
