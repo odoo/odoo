@@ -9,11 +9,11 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <field name="create_date" position="after">
-                    <field name="requested_date"/>
+                    <field name="requested_date" groups="base.group_no_one"/>
                 </field>
                 <field name="date_confirm" position="after">
-                    <field name="commitment_date"/>
-                    <field name="effective_date"/>
+                    <field name="commitment_date" groups="base.group_no_one"/>
+                    <field name="effective_date" groups="base.group_no_one"/>
                 </field>
             </field>
         </record>

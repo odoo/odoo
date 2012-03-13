@@ -178,10 +178,10 @@
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Dates" colspan="2" col="2"/>
-                        <field name="create_date"/>
-                        <field name="write_date"/>
-                        <field name="date_open"/>
-                        <field name="date_closed"/>
+                        <field name="create_date" groups="base.group_no_one"/>
+                        <field name="write_date" groups="base.group_no_one"/>
+                        <field name="date_open" groups="base.group_no_one"/>
+                        <field name="date_closed" groups="base.group_no_one"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Mailings" colspan="2" col="2"/>
@@ -190,8 +190,8 @@
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Statistics" colspan="2" col="2"/>
-                        <field name="day_open"/>
-                        <field name="day_close"/>
+                        <field name="day_open" groups="base.group_no_one"/>
+                        <field name="day_close" groups="base.group_no_one"/>
                     </group>
                  </page>
                 </notebook>
