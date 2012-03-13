@@ -291,40 +291,42 @@
                         <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="border">oe_kanban_color_red</t>
                         <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
                             <div class="oe_kanban_box oe_kanban_color_border">
-                                <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                <tr>
-                                    <td align="left" valign="middle" width="16">
-                                        <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
-                                        <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
-                                    </td>
-                                    <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
-                                        <field name="partner_id"/>
-                                        <t t-if="record.planned_revenue.raw_value">
-                                            - <t t-esc="Math.round(record.planned_revenue.value)"/>
-                                            <field name="company_currency"/>
-                                        </t>
-                                    </td>
-                                    <td valign="top" width="22"><img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/></td>
-                                </tr>
-                                </table>
-
-                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                    <div>
-                                        <b>
-                                            <a t-if="record.partner_address_email.raw_value" t-attf-href="mailto:#{record.partner_address_email.raw_value}">
-                                                <field name="partner_address_name"/>
-                                            </a>
-                                            <field t-if="!record.partner_address_email.raw_value" name="partner_address_name"/>
-                                        </b>
-                                    </div>
-                                    <div>
-                                        <field name="name"/>
-                                    </div>
-                                    <div style="padding-left: 0.5em">
-                                        <i><field name="date_action"/><t t-if="record.date_action.raw_value"> : </t><field name="title_action"/></i>
+                                <div class="oe_proj_task_avatar_box">
+                                    <img t-att-src="kanban_image('res.users', 'avatar_mini', record.user_id.raw_value[0])" class="oe_kanban_avatar" t-att-title="record.user_id.value"/>
+                                </div>
+                                <div class="oe_proj_task_content_box">
+                                    <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                    <tr>
+                                        <td align="left" valign="middle" width="16">
+                                            <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
+                                            <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                        </td>
+                                        <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
+                                            <field name="partner_id"/>
+                                            <t t-if="record.planned_revenue.raw_value">
+                                                - <t t-esc="Math.round(record.planned_revenue.value)"/>
+                                                <field name="company_currency"/>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    </table>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
+                                        <div>
+                                            <b>
+                                                <a t-if="record.partner_address_email.raw_value" t-attf-href="mailto:#{record.partner_address_email.raw_value}">
+                                                    <field name="partner_address_name"/>
+                                                </a>
+                                                <field t-if="!record.partner_address_email.raw_value" name="partner_address_name"/>
+                                            </b>
+                                        </div>
+                                        <div>
+                                            <field name="name"/>
+                                        </div>
+                                        <div style="padding-left: 0.5em">
+                                            <i><field name="date_action"/><t t-if="record.date_action.raw_value"> : </t><field name="title_action"/></i>
+                                        </div>
                                     </div>
                                 </div>
-
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left">
                                         <a string="Edit" icon="gtk-edit" type="edit"/>
