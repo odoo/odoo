@@ -54,7 +54,7 @@
                         <page string="Voucher Entry">
                             <field name="line_ids" on_change="onchange_price(line_ids, tax_id, partner_id)" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
                                 <tree string="Voucher Items" editable="bottom">
-                                    <field name="account_id"/>
+                                    <field name="account_id" domain="[('type','!=','view')]"/>
                                     <field name="name"/>
                                     <field name="amount" sum="Total Amount"/>
                                     <field name="type"/>
