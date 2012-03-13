@@ -22,6 +22,13 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(6,0,[
+        ref('base.group_mrp_routings'),
+        ref('base.group_mrp_properties'),
+        ])]"/>
+    </record>
+
     <!-- restrict access to menu -->
     <record model='ir.ui.menu' id="mrp_Sched_all">
         <field eval="[(6,0,[ref('group_mrp_manager')])]" name="groups_id"/>

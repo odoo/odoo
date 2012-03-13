@@ -24,6 +24,7 @@ import pooler
 from tools.translate import _
 
 class mrp_configuration(osv.osv_memory):
+    _name = 'mrp.configuration'
     _inherit = 'res.config.settings'
 
     _columns = {
@@ -33,13 +34,13 @@ class mrp_configuration(osv.osv_memory):
                                    It installs the stock_planning module.
                                    """),
         'module_mrp_repair': fields.boolean("Track products repair",
-                                  help="""The aim is to have a complete module to manage all products repairs.
+                                  help="""Allows to manage all products repairs.
                                   * Add/remove products in the reparation
                                   * Impact for stocks
                                   * Invoicing (products and/or services)
                                   * Warranty concept
                                   * Repair quotation report
-                                  * Notes for the technician and for the final customer
+                                  * Notes for the technician and for the final customer.
                                   It installs the mrp_repair module."""),
         'module_mrp_operations': fields.boolean("Track dates in work order operations",
                         help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
@@ -52,7 +53,7 @@ class mrp_configuration(osv.osv_memory):
                                 A + B + C -> D + E.
                             It installs the mrp_subproduct module."""),
         'module_stock_location' : fields.boolean("Allow push/pull flows by product",
-                                    help="""This module supplements the Warehouse application by effectively implementing Push and Pull inventory flows.
+                                    help="""Allows to implement Push and Pull inventory flows.
                                     Typically this could be used to:
                                         * Manage product manufacturing chains
                                         * Manage default locations per product
@@ -69,10 +70,10 @@ class mrp_configuration(osv.osv_memory):
         'module_mrp_operations': fields.boolean("Track dates in work order operations",
                         help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
                         It installs the mrp_operations module."""),
-        'group_mrp_routings':fields.boolean("Manage manufacturing operations ",group='base.group_user', xml_id='base.group_mrp_routings',
+        'group_mrp_routings':fields.boolean("Manage manufacturing operations ",group='base.group_user', implied_group='base.group_mrp_routings',
                            help="""Routings allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials..
                            It assigns the "Routings" group to employee."""),
-        'group_mrp_properties':fields.boolean("Allow different properties per product in your order",group='base.group_user', xml_id='base.group_mrp_routings',
+        'group_mrp_properties':fields.boolean("Allow different properties per product in your order",group='base.group_user', implied_group='base.group_mrp_properties',
                            help="""Allows to Define specific property groups that can be assigned to the properties of your bill of materials.
                            It assigns the "Properties of Product" group to employee."""),
     }

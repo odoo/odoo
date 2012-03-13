@@ -3,7 +3,7 @@
 
         <record id="view_mrp_config" model="ir.ui.view">
             <field name="name">Manufacturing Application</field>
-            <field name="model">res.config.settings</field>
+            <field name="model">mrp.configuration</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
 	        <form string="Manufacturing Application">
@@ -45,13 +45,13 @@
         <record id="action_mrp_configuration" model="ir.actions.act_window">
             <field name="name">Configure Manufacturing Application</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.config.settings</field>
+            <field name="res_model">mrp.configuration</field>
             <field name="view_id" ref="view_mrp_config"/>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
         </record>
 
-        <menuitem id="base.menu_mrp_config" name="MRP" parent="base.menu_config" sequence="1" action="action_mrp_configuration"/>
+        <menuitem id="base.menu_mrp_config" name="Manufacturing" parent="base.menu_config" sequence="1" action="action_mrp_configuration"/>
 
     </data>
 </openerp>
