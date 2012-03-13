@@ -1187,24 +1187,24 @@ openerp.web.form.WidgetGroup = openerp.web.form.Widget.extend({
         } else {
             $table = this.$element.find('table:first');
         }
-        var $tr, $td, $child, cols, row_cols, colspan;
-        $tr = null;
-        cols = parseInt(self.node_attrs('col') || 4, 10);
-        row_cols = cols;
+        var $tr,
+            cols = parseInt(self.node_attrs['col'] || 4, 10),
+            row_cols = cols;
 
-        $(node).children().each(function() {
-            $child = $(this);
-            colspan = parseInt($child.attr('colspan') || 1, 10);
+        $(this.node).children().each(function() {
+            var $tr,
+                $child = $(this),
+                colspan = parseInt($child.attr('colspan') || 1, 10);
             if ($child[0].tagName.toLowerCase() === 'newline') {
                 $tr = null;
                 return;
             }
             if (!$tr || row_cols < colspan) {
-                $tr = $('<tr/>').addClass(baseclass + 'group_row').appendTo($table);
+                $tr = $('<tr/>').appendTo($table);
                 row_cols = cols;
             }
             row_cols -= colspan;
-            $td = $('<td/>').addClass(baseclass + 'group_cell');
+            var $td = $('<td/>');
             $tr.append($td.append($child));
         });
     }
