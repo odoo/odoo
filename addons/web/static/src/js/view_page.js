@@ -142,50 +142,8 @@ openerp.web.page = function (openerp) {
             this.$element.find('div').text(option ? option[1] : this.values[0][1]);
         }
     });
-    openerp.web.page.FieldMany2OneReadonly = openerp.web.page.FieldURIReadonly.extend({
-        set_value: function (value) {
-            value = value || null;
-            this.invalid = false;
-            var self = this;
-            this.value = value;
-            self.update_dom();
-            self.on_value_changed();
-            var real_set_value = function(rval) {
-                self.value = rval;
-                self.$element.find('a')
-                     .unbind('click')
-                     .text(rval ? rval[1] : '')
-                     .click(function () {
-                        self.do_action({
-                            type: 'ir.actions.act_window',
-                            res_model: self.field.relation,
-                            res_id: self.value[0],
-                            context: self.build_context(),
-                            views: [[false, 'page'], [false, 'form']],
-                            target: 'current'
-                        });
-                        return false;
-                     });
-            };
-            if (value && !(value instanceof Array)) {
-                new openerp.web.DataSetStatic(
-                        this, this.field.relation, self.build_context())
-                    .name_get([value], function(data) {
-                        real_set_value(data[0]);
-                });
-            } else {
-                $.async_when().then(function() {real_set_value(value);});
-            }
-        },
-        get_value: function() {
-            if (!this.value) {
-                return false;
-            } else if (this.value instanceof Array) {
-                return this.value[0];
-            } else {
-                return this.value;
-            }
-        }
+    openerp.web.page.FieldMany2OneReadonly = openerp.web.form.FieldMany2One.extend({
+        force_readonly: true,
     });
     openerp.web.page.FieldReferenceReadonly = openerp.web.page.FieldMany2OneReadonly.extend({
         set_value: function (value) {

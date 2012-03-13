@@ -1919,6 +1919,9 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         this.last_search = [];
         this.tmp_value = undefined;
     },
+    is_readonly: function() {
+        return this.readonly || this.force_readonly;
+    },    
     start: function() {
         this._super();
         var self = this;
@@ -1938,12 +1941,12 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 $cmenu.append(QWeb.render("FieldMany2One.context_menu", {widget: self}));
                 var bindings = {};
                 bindings[self.cm_id + "_search"] = function() {
-                    if (self.readonly)
+                    if (self.is_readonly())
                         return;
                     self._search_create_popup("search");
                 };
                 bindings[self.cm_id + "_create"] = function() {
-                    if (self.readonly)
+                    if (self.is_readonly())
                         return;
                     self._search_create_popup("form");
                 };
@@ -1977,7 +1980,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                         } else {
                             $("#" + self.cm_id + " .oe_m2o_menu_item_mandatory").addClass("oe-m2o-disabled-cm");
                         }
-                        if (!self.readonly) {
+                        if (!self.is_readonly()) {
                             $("#" + self.cm_id + " .oe_m2o_menu_item_noreadonly").removeClass("oe-m2o-disabled-cm");
                         } else {
                             $("#" + self.cm_id + " .oe_m2o_menu_item_noreadonly").addClass("oe-m2o-disabled-cm");
@@ -2000,7 +2003,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             }
         });
         this.$drop_down.click(function() {
-            if (self.readonly)
+            if (self.is_readonly())
                 return;
             if (self.$input.autocomplete("widget").is(":visible")) {
                 self.$input.autocomplete("close");
@@ -2234,7 +2237,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$input.prop('readonly', this.readonly);
+        this.$input.prop('readonly', this.is_readonly());
     }
 });
 
