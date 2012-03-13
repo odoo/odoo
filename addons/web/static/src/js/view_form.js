@@ -176,20 +176,21 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
 
         // Step #2:
         //  - Convert groups to tables
+        var $group, $table, $tr, $td, $child, cols, row_cols, colspan;
         while (true) {
-            var $group = $(arch).find('group:first');
+            $group = $(arch).find('group:first');
             if (!$group.length) {
                 break;
             }
 
-            var $table = $('<table border="1"/>').addClass(baseclass + 'group'),
-                $tr,
-                cols = parseInt($group.attr('col') || 4, 10),
-                row_cols = cols;
+            $table = $('<table border="1"/>').addClass(baseclass + 'group');
+            $tr = null;
+            cols = parseInt($group.attr('col') || 4, 10);
+            row_cols = cols;
 
-            $group.find('*').each(function() {
-                var $child = $(this),
-                    colspan = parseInt($child.attr('colspan') || 1, 10);
+            $group.children().each(function() {
+                $child = $(this);
+                colspan = parseInt($child.attr('colspan') || 1, 10);
                 if ($child[0].tagName === 'newline') {
                     $tr = null;
                     return;
@@ -199,7 +200,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     row_cols = cols;
                 }
                 row_cols -= colspan;
-                var $td = $('<td/>').addClass(baseclass + 'group_cell');
+                $td = $('<td/>').addClass(baseclass + 'group_cell');
                 $tr.append($td.append($child));
             });
             $group.replaceWith($table);
