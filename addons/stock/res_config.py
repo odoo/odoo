@@ -42,13 +42,13 @@ class warehouse_configuration(osv.osv_memory):
                         help="""This allows to automatically launch
                         the invoicing wizard if the delivery is to be invoiced When you send or deliver goods.
                         It installs the stock_invoice_directly module."""),
-        'module_product_expiry': fields.boolean("Allow to manage expiry date on product ",
+        'module_product_expiry': fields.boolean("Allow to manage expiry date on product",
                         help="""Track different dates on products and production lots.
                         Following dates can be tracked:
                         - end of life
                         - best before date
                         - removal date
-                        - alert date
+                        - alert date.
                         It installs the product_expiry module."""),
         'group_stock_production_lot':fields.boolean("Track production lot",group='base.group_user', implied_group='base.group_stock_production_lot',
                            help="""This allows you to manage products produced by you using production lots (serial numbers).
@@ -58,14 +58,14 @@ class warehouse_configuration(osv.osv_memory):
                            help="""Allows you to get the upstream or downstream traceability of the products contained in lot.
                            It assigns the "Tracking lots" group to employee."""),
         'group_stock_inventory_valuation':fields.boolean("Track inventory valuation by products ",group='base.group_user', implied_group='base.group_stock_inventory_valuation',
-                           help="""
+                           help="""This allows to split stock inventory lines according to production lot.
                            It assigns the "Inventory valuation" group to employee."""),
         'group_stock_counterpart_location':fields.boolean("Manage your stock counterpart by products",group='base.group_user', implied_group='base.group_stock_counterpart_location',
-                           help="""
+                           help="""This allows to use different stock locations instead of the default one for procurement, production and inventory.
                            It assigns the "Counter-Part Locations" group to employee."""),
         'group_stock_inventory_properties':fields.boolean("Define stock locations",group='base.group_user', implied_group='base.group_stock_inventory_properties',
-                           help=""".
-                           It assigns the "" group to employee."""),
+                           help="""This allows you to set destination location for goods you send to partner or goods you receive from the current partner.
+                           It assigns the "Inventory properties in partner form" group to employee."""),
     }
 
 warehouse_configuration()

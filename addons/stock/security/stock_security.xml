@@ -37,6 +37,14 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(6,0,[ref('base.group_stock_production_lot'),
+        ref('base.group_stock_tracking_lot'),
+        ref('base.group_stock_inventory_valuation'),
+        ref('base.group_stock_inventory_properties'),
+        ref('base.group_stock_counterpart_location')])]"/>
+    </record>
+
 <!-- multi -->
 
     <record model="ir.rule" id="stock_picking_rule">
