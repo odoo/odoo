@@ -12,7 +12,7 @@
                     <group col="4" colspan="4" string="Warning" attrs="{'invisible': [('chart_template_id','!=',False)]}">
                        <label string="You have no chart of accounts or taxes defined for this company. Select a chart of account to proceed." colspan="4"/>
                        <field name="charts"/>
-                       <button name="action_next" string="Install Chart of Account" icon="gtk-execute" type="object"/>
+                       <button name="install_chartofaccounts" string="Install Chart of Account" icon="gtk-execute" type="object"/>
                     </group>
                     <field name="fiscalyear_id" invisible="1"/>
                     <group col="4" colspan="4" string="Warning" attrs="{'invisible': [('fiscalyear_id','!=',False)]}">

@@ -198,9 +198,9 @@ class account_configuration(osv.osv_memory):
             res.update({'fiscalyear_id': fiscalyear_ids[0]})
         if taxes:
             sale_tax_id = taxes.get('taxes_id')
-            res.update({'sale_tax': sale_tax_id and sale_tax_id[0]}) 
+            res.update({'sale_tax': isinstance(sale_tax_id,list) and sale_tax_id[0] or False}) 
             purchase_tax_id = taxes.get('supplier_taxes_id')
-            res.update({'purchase_tax': purchase_tax_id and purchase_tax_id[0]})
+            res.update({'purchase_tax': isinstance(purchase_tax_id,list) and purchase_tax_id[0] or False})
         return res
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -243,22 +243,19 @@ class account_configuration(osv.osv_memory):
             return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
         return {}
 
-    def execute(self, cr, uid, ids, context=None):
-        self.execute_simple(cr, uid, ids, context)
-        super(account_configuration, self).execute(cr, uid, ids, context=context)
-    
-    def execute_simple(self, cr, uid, ids, context=None):
+    def install_chartofaccounts(self, cr, uid, ids, context=None):
         ir_module = self.pool.get('ir.module.module')
         if context is None:
             context = {}
         for res in self.read(cr, uid, ids, context=context):
-            if res.get('charts') == 'configurable':
+            chart = res.get('charts')
+            if chart == 'configurable':
                 #load generic chart of account
                 fp = tools.file_open(opj('account', 'configurable_account_chart.xml'))
                 tools.convert_xml_import(cr, 'account', fp, {}, 'init', True, None)
                 fp.close()
-            else:
-                mod_ids = ir_module.search(cr, uid, [('name','=',res.get('charts'))])
+            elif chart.startswith('l10n_'):
+                mod_ids = ir_module.search(cr, uid, [('name','=',chart)])
                 if mod_ids and ir_module.browse(cr, uid, mod_ids[0], context).state == 'uninstalled':
                     ir_module.button_immediate_install(cr, uid, mod_ids, context)
 
