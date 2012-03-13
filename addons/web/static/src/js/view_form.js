@@ -182,7 +182,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         // TODO: modifiers invisible. Add a special attribute, eg: data-invisible  that should be used in order to create openerp.form.InvisibleWidgetG
         // TODO: split registry ? tags and fields types ?
 
-        $form.find('*').each(function() {
+        $form.find('group,notebook,separator,label,field,button,html').each(function() {
             var $elem = $(this),
                 key = $elem.attr('data-widget') || $elem[0].tagName.toLowerCase();
             if (view.registry.contains(key)) {
@@ -1200,38 +1200,23 @@ openerp.web.form.WidgetGroup = openerp.web.form.Widget.extend({
 }),
 
 openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
-    form_template: 'WidgetNotebook',
+    template: 'WidgetNotebook',
     init: function(view, node) {
+        var self = this;
         this._super(view, node);
         this.pages = [];
-        for (var i = 0; i < node.children.length; i++) {
-            var n = node.children[i];
-            if (n.tag == "page") {
-                var page = instanciate_widget(this.view.registry.get_object('notebookpage'),
-                        this.view, n, this, this.pages.length);
-                this.pages.push(page);
-            }
-        }
-    },
-    renderElement: function() {
-    	this._super();
-    	var self = this;
-	    _.each(this.pages, function(page) {
-        	page.$element = self.$element.find('.' + page.element_class);
-        	page.renderElement();
-	    });
+        $(node).find('> page').each(function(index) {
+            var page_node = this,
+                obj = self.view.registry.get_object('notebookpage'),
+                page = new (obj)(self.view, page_node, self, index);
+            self.pages.push(page);
+        });
     },
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this.$element.find('> ul > li').each(function (index, tab_li) {
-            var page = self.pages[index],
-                id = _.uniqueId(self.element_name + '-');
-            page.element_id = id;
-            $(tab_li).find('a').attr('href', '#' + id);
-        });
-        this.$element.find('> div').each(function (index, page) {
-            page.id = self.pages[index].element_id;
+        _.each(self.pages, function(page) {
+            page.appendTo(self.$element);
         });
         this.$element.tabs();
         this.view.on_button_new.add_first(this.do_select_first_visible_tab);
@@ -1240,9 +1225,6 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
                 gravity: 's'
             });
         }
-	    _.each(this.pages, function(page) {
-        	page.start();
-	    });
     },
     do_select_first_visible_tab: function() {
         for (var i = 0; i < this.pages.length; i++) {
@@ -1255,18 +1237,18 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
     }
 });
 
-openerp.web.form.WidgetNotebookPage = openerp.web.form.WidgetFrame.extend({
-    form_template: 'WidgetNotebookPage',
+openerp.web.form.WidgetNotebookPage = openerp.web.form.Widget.extend({
+    template: 'WidgetNotebookPage',
     init: function(view, node, notebook, index) {
+        this._super(view, node);
         this.notebook = notebook;
         this.index = index;
-        this.element_name = 'page_' + index;
-        this._super(view, node);
+        this.page_id = _.uniqueId('notebook_page_');
     },
     start: function() {
+        var self = this;
         this._super.apply(this, arguments);
-        this.$element_tab = this.notebook.$element.find(
-                '> ul > li:eq(' + this.index + ')');
+        $(this.node).children().appendTo(this.$element);
     },
     update_dom: function() {
         if (this.invisible && this.index === this.notebook.$element.tabs('option', 'selected')) {

@@ -868,17 +868,15 @@
     </t>
 </t>
 <t t-name="WidgetNotebook">
-    <ul>
-        <li t-foreach="widget.pages" t-as="page">
-            <a href="#">
-                <t t-esc="page.string"/>
-            </a>
-        </li>
-    </ul>
-    <t t-foreach="widget.pages" t-as="page">
-    	<div t-att-class="page.element_class">
-    	</div>
-    </t>
+    <div class="oe_form_notebook">
+        <ul>
+            <li t-foreach="widget.pages" t-as="page">
+                <a t-attf-href="##{page.page_id}">
+                    <t t-esc="page.node_attrs.string"/>
+                </a>
+            </li>
+        </ul>
+    </div>
 </t>
 <t t-name="WidgetNotebook.tooltip">
     <t t-foreach="widget.pages" t-as="page">
@@ -894,7 +892,7 @@
     </t>
 </t>
 <t t-name="WidgetNotebookPage">
-	<t t-call="WidgetFrame"/>
+    <div class="oe_form_notebook_page" t-att-id="widget.page_id"/>
 </t>
 <t t-name="WidgetSeparator">
     <div t-if="widget.orientation !== 'vertical'" t-att-class="'separator ' + widget.orientation">
