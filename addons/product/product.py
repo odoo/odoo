@@ -536,7 +536,7 @@ class product_product(osv.osv):
     def case_create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Product has been <b>Created</b>."), type='notification', context=context)
+                        _("Product has been <b>created</b>."), type='notification', context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):

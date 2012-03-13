@@ -369,7 +369,7 @@ class mrp_bom(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             for prod in prod_obj.browse(cr, uid, [obj.product_id], context=context):
                 self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Bill of Material has been <b>Created</b> for <em>%s</em> product.") % (prod.id.name_template), type='notification', context=context)
+                        _("Bill of Material has been <b>created</b> for <em>%s</em> product.") % (prod.id.name_template), type='notification', context=context)
         return True
 
 mrp_bom()
@@ -535,7 +535,7 @@ class mrp_production(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id.id :
                 self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
-            obj.message_append_note('',_("Manufacturing Order has been <b>Created</b>."))
+            obj.message_append_note('',_("Manufacturing order has been <b>created</b>."))
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):

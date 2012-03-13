@@ -160,7 +160,7 @@ class mrp_production_workcenter_line(osv.osv):
         prod_obj = self.pool.get('mrp.production')
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("Work Order has been <b>created</b> for <em>%s</em> production order.") % (prod.id.name)
+                message = _("Work order has been <b>created</b> for <em>%s</em> production order.") % (prod.id.name)
         self.message_append_note(cr, uid, ids, '', message)
         return True
 
@@ -168,7 +168,7 @@ class mrp_production_workcenter_line(osv.osv):
         prod_obj = self.pool.get('mrp.production')
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("Work Order has been <b>started</b> for <em>%s</em> production order.") % (prod.id.name)
+                message = _("Work order has been <b>started</b> for <em>%s</em> production order.") % (prod.id.name)
         self.message_append_note(cr, uid, ids, '', message)
         return True
 
@@ -176,7 +176,7 @@ class mrp_production_workcenter_line(osv.osv):
         prod_obj = self.pool.get('mrp.production')
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("Work Order has been <b>done</b> for <em>%s</em> production order.") % (prod.id.name)
+                message = _("Work order has been <b>done</b> for <em>%s</em> production order.") % (prod.id.name)
         self.message_append_note(cr, uid, ids, '', message)
         return True
 
@@ -184,7 +184,7 @@ class mrp_production_workcenter_line(osv.osv):
         prod_obj = self.pool.get('mrp.production')
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("Work Order is <b>pending</b> for <em>%s</em> production order.") % (prod.id.name)
+                message = _("Work order is <b>pending</b> for <em>%s</em> production order.") % (prod.id.name)
         self.message_append_note(cr, uid, ids, '', message)
         return True
 
@@ -192,7 +192,7 @@ class mrp_production_workcenter_line(osv.osv):
         prod_obj = self.pool.get('mrp.production')
         for workorder in self.browse(cr, uid, ids):
             for prod in prod_obj.browse(cr, uid, [workorder.production_id]):
-                message = _("Work Order has been <b>cancelled</b> for <em>%s</em> production order.") % (prod.id.name)
+                message = _("Work order has been <b>cancelled</b> for <em>%s</em> production order.") % (prod.id.name)
                 self.message_append_note(cr, uid, ids, '', message)
         return True
 
