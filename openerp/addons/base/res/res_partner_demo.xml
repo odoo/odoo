@@ -64,25 +64,22 @@
         <!--
         Resource: res.partner.category for training
         -->
-    <record id="res_partner_category_consumers0" model="res.partner.category">
-        <field name="name">Consumers</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
-    </record>    
-    <record id="res_partner_category_retailers0" model="res.partner.category">
-        <field name="name">Retailers</field>
-            <field name="parent_id" ref="res_partner_category_0"/>
-    </record>
-
-    <record id="res_partner_category_miscellaneoussuppliers0" model="res.partner.category">
-          <field name="name">Miscellaneous Suppliers</field>
-            <field name="parent_id" ref="res_partner_category_8"/>
-    </record>
-
-
-    <record id="res_partner_category_woodsuppliers0" model="res.partner.category">
-        <field name="name">Wood Suppliers</field>
-            <field name="parent_id" ref="res_partner_category_8"/>
-    </record>
+		<record id="res_partner_category_consumers0" model="res.partner.category">
+		    <field name="name">Consumers</field>
+		    <field name="parent_id" ref="res_partner_category_0"/>
+		</record>   
+		<record id="res_partner_category_retailers0" model="res.partner.category">
+		    <field name="name">Retailers</field>
+		    <field name="parent_id" ref="res_partner_category_0"/>
+		</record>
+		<record id="res_partner_category_miscellaneoussuppliers0" model="res.partner.category">
+		    <field name="name">Miscellaneous Suppliers</field>
+		    <field name="parent_id" ref="res_partner_category_8"/>
+		</record>
+		<record id="res_partner_category_woodsuppliers0" model="res.partner.category">
+		    <field name="name">Wood Suppliers</field>
+		    <field name="parent_id" ref="res_partner_category_8"/>
+		</record>
 
        <!--
         Resource: res.partner
@@ -565,8 +562,8 @@
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">71 rue de Chimay</field>
             <field name="type">delivery</field>
-	    <field name="email">p.l@agrolait.be</field>
-	    <field name="phone">003281588557</field>
+	    	<field name="email">p.l@agrolait.be</field>
+	    	<field name="phone">003281588557</field>
             <field name="use_parent_address" eval="0"/>
             <field name="parent_id" ref="res_partner_agrolait"/>
             <field name="title" ref="base.res_partner_title_sir"/>
@@ -578,8 +575,8 @@
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">69 rue de Chimay</field>
             <field name="type">invoice</field>
-	    <field name="email">serge.l@agrolait.be</field>
-	    <field name="phone">003281588556</field>
+	    	<field name="email">serge.l@agrolait.be</field>
+	    	<field name="phone">003281588556</field>
             <field name="use_parent_address" eval="0"/>
             <field name="parent_id" ref="res_partner_agrolait"/>
             <field name="title" ref="base.res_partner_title_sir"/>
@@ -635,14 +632,14 @@
         </record>
         <record id="res_partner_address_12" model="res.partner">
             <field name="type">default</field>
-  	    <field name="city">Grenoble</field>
+  	    	<field name="city">Grenoble</field>
             <field name="name">Loïc Dupont</field>
             <field name="zip">38100</field>
             <field model="res.country" name="country_id" search="[('name','=','China')]"/>
             <field name="street">Rue Lavoisier 145</field>
             <field name="type">default</field>
-	    <field name="email">l.dupont@tecsas.fr</field>
-	    <field name="phone">+33-658-256545</field>
+	    	<field name="email">l.dupont@tecsas.fr</field>
+	    	<field name="phone">+33-658-256545</field>
             <field name="use_parent_address" eval="0"/>
             <field name="parent_id" ref="res_partner_10"/>
         </record>
@@ -671,10 +668,10 @@
             <field name="type">default</field>
             <field name="name">Marine Leclerc</field>
             <field name="street">rue Grande</field>
-	    <field name="city">Brest</field>
+	    	<field name="city">Brest</field>
             <field name="zip">29200</field>
-	    <field name="email">marine@leclerc.fr</field>
-	    <field name="phone">+33-298.334558</field>
+	    	<field name="email">marine@leclerc.fr</field>
+	    	<field name="phone">+33-298.334558</field>
 	        <field name="use_parent_address" eval="0"/>
             <field name="parent_id" ref="res_partner_11"/>
         </record>
@@ -682,10 +679,10 @@
             <field name="type">invoice</field>
             <field name="name">Claude Leclerc</field>
             <field name="street">rue Grande</field>
-	    <field name="city">Brest</field>
+	    	<field name="city">Brest</field>
             <field name="zip">29200</field>
-	    <field name="email">claude@leclerc.fr</field>
-	    <field name="phone">+33-298.334598</field>
+	    	<field name="email">claude@leclerc.fr</field>
+	    	<field name="phone">+33-298.334598</field>
 	        <field name="use_parent_address" eval="0"/>
             <field name="parent_id" ref="res_partner_11"/>
         </record>

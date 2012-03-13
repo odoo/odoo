@@ -198,9 +198,9 @@
             <field name="view_id" ref="view_partner_address_form1"/>
             <field name="act_window_id" ref="action_partner_address_form"/>
         </record>
-        <menuitem action="action_partner_address_form" id="menu_partner_address_form"
+        <!--menuitem action="action_partner_address_form" id="menu_partner_address_form"
             groups="base.group_extended" name="Contacts"
-            parent="base.menu_address_book" sequence="30"/>
+            parent="base.menu_address_book" sequence="30"/-->
 
         <!--
           =========================================
@@ -316,6 +316,7 @@
                     <field name="email"/>
                     <field name="user_id" invisible="1"/>
                     <field name="is_company" invisible="1"/>
+                    <field name="country" invisible="1"/>
                     <field name="country_id" invisible="1"/>
                 </tree>
             </field>

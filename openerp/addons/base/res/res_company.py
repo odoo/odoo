@@ -124,7 +124,7 @@ class res_company(osv.osv):
         'rml_header': fields.text('RML Header', required=True),
         'rml_header2': fields.text('RML Internal Header', required=True),
         'rml_header3': fields.text('RML Internal Header', required=True),
-        'logo': fields.binary('Logo'),
+        'logo': fields.related('partner_id', 'photo', string="Photo", type="binary"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
@@ -224,11 +224,12 @@ class res_company(osv.osv):
         self._get_company_children.clear_cache(self)
 
     def create(self, cr, uid, vals, context=None):
+        
         if not vals.get('name', False) or vals.get('partner_id', False):
             self.cache_restart(cr)
             return super(res_company, self).create(cr, uid, vals, context=context)
         obj_partner = self.pool.get('res.partner')
-        partner_id = obj_partner.create(cr, uid, {'name': vals['name'],'is_company':1}, context=context)
+        partner_id = obj_partner.create(cr, uid, {'name': vals['name'],'is_company':True}, context=context)
         vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
         company_id = super(res_company, self).create(cr, uid, vals, context=context)
