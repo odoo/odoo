@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: Carlos @ smile-iberia <Unknown>\n"
+"PO-Revision-Date: 2012-03-12 08:16+0000\n"
+"Last-Translator: mikel <mikel.martin@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 06:08+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-03-13 05:34+0000\n"
+"X-Generator: Launchpad (build 14933)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -3690,7 +3690,7 @@ msgstr "Fecha"
 #. module: account
 #: view:account.move:0
 msgid "Post"
-msgstr ""
+msgstr "Enviar"
 
 #. module: account
 #: view:account.unreconcile:0
@@ -4733,7 +4733,7 @@ msgstr "Varios"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Factura (Ref ${object.number or 'n/d' })"
 
 #. module: account
 #: help:res.partner,last_reconciliation_date:0
@@ -6268,7 +6268,7 @@ msgstr "Facturas abiertas y pagadas"
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children flat"
-msgstr ""
+msgstr "Mostrar descendientes  en plano"
 
 #. module: account
 #: code:addons/account/account.py:629
@@ -6592,7 +6592,7 @@ msgstr "Sólo lectura"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Valuation: Balance"
-msgstr ""
+msgstr "  Evaluación: Balance"
 
 #. module: account
 #: field:account.invoice.line,uos_id:0
@@ -8208,6 +8208,8 @@ msgid ""
 "The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
 msgstr ""
+"El balance del asiento es incorrecto\n"
+"El balance esperado (%.2f) es diferente al calculado. (%.2f)"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:353
@@ -8498,7 +8500,7 @@ msgstr "Cuenta de la categoría de ingresos"
 #. module: account
 #: field:account.account,adjusted_balance:0
 msgid "Adjusted Balance"
-msgstr ""
+msgstr "Balance ajustado"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
@@ -8659,7 +8661,7 @@ msgstr "Tipos de cuentas"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Value amount: n.a"
-msgstr ""
+msgstr "  Valor del importe: n.d."
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -8755,7 +8757,7 @@ msgstr "La cuenta de la empresa utilizada para esta factura."
 #: code:addons/account/account.py:3296
 #, python-format
 msgid "Tax %.2f%%"
-msgstr ""
+msgstr "Impuestox %.2f%%"
 
 #. module: account
 #: view:account.analytic.account:0
