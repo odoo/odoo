@@ -35,7 +35,7 @@ class account_configuration(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.settings'
     __logger = logging.getLogger(_name)
-    
+
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
         # Looking for the module with the 'Account Charts' category
@@ -51,8 +51,8 @@ class account_configuration(osv.osv_memory):
     _columns = {
             'company_id': fields.many2one('res.company', 'Company',help="Your company."),
             'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', string='Currency', store=True, help="Currency of your company."),
-            'sale_tax': fields.float('Default Sale Tax'),
-            'purchase_tax': fields.float('Default Purchase Tax'),
+            'default_taxes_id': fields.float('Default Sale Tax', default_model='product.template'),
+            'default_supplier_taxes_id': fields.float('Default Purchase Tax', default_model='product.template'),
             'charts': fields.selection(_get_charts, 'Chart of Accounts',
                                         required=True,
                                         help="Installs localized accounting charts to match as closely as "
@@ -72,7 +72,6 @@ class account_configuration(osv.osv_memory):
             'sale_refund_journal_id': fields.many2one('account.journal','Sale Refund Journal'),
             'customer_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Refund Sequence'),
             'customer_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Refund Sequence Next Number'),
-
             'purchase_journal_id': fields.many2one('account.journal','Purchase Journal'),
             'supplier_invoice_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Supplier Invoice Sequence'),
             'supplier_invoice_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Supplier Invoice Sequence Next Number'),
@@ -136,7 +135,6 @@ class account_configuration(osv.osv_memory):
             'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices', group='base.group_user', implied_group='base.group_proforma_invoices',
                                                       help="Allows you to put invoice in pro-forma state. It assigns 'Allow Pro-forma Invoices' group to all employees."),
     }
-
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id and user.company_id.id or False
@@ -157,13 +155,12 @@ class account_configuration(osv.osv_memory):
     def _check_default_tax(self, cr, uid, context=None):
         ir_values_obj = self.pool.get('ir.values')
         taxes = {}
-        for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.product']):
+        for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.template']):
             if tax[1] == 'taxes_id':
                 taxes.update({'taxes_id': tax[2]})
             if tax[1] == 'supplier_taxes_id':
                 taxes.update({'supplier_taxes_id': tax[2]})
-            return taxes
-        return False
+        return taxes
 
     def default_get(self, cr, uid, fields_list, context=None):
         ir_values_obj = self.pool.get('ir.values')
@@ -171,7 +168,6 @@ class account_configuration(osv.osv_memory):
         fiscalyear_obj = self.pool.get('account.fiscalyear')
         journal_obj = self.pool.get('account.journal')
         res = super(account_configuration, self).default_get(cr, uid, fields_list, context=context)
-        res.update({'sale_tax': 15.0, 'purchase_tax': 15.0})
         taxes = self._check_default_tax(cr, uid, context)
         chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
         fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('date_start','=',time.strftime('%Y-01-01')),('date_stop','=',time.strftime('%Y-12-31'))])
@@ -198,19 +194,21 @@ class account_configuration(osv.osv_memory):
             res.update({'fiscalyear_id': fiscalyear_ids[0]})
         if taxes:
             sale_tax_id = taxes.get('taxes_id')
-            res.update({'sale_tax': isinstance(sale_tax_id,list) and sale_tax_id[0] or False}) 
+            res.update({'default_taxes_id': isinstance(sale_tax_id,list) and sale_tax_id[0] or sale_tax_id}) 
             purchase_tax_id = taxes.get('supplier_taxes_id')
-            res.update({'purchase_tax': isinstance(purchase_tax_id,list) and purchase_tax_id[0] or False})
+            res.update({'default_supplier_taxes_id': isinstance(purchase_tax_id,list) and purchase_tax_id[0] or purchase_tax_id})
+        else:
+            res.update({'default_taxes_id': 15.0, 'default_supplier_taxes_id': 15.0})
         return res
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         ir_values_obj = self.pool.get('ir.values')
         res = super(account_configuration, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         cmp_select = []
         if self._check_default_tax(cr, uid, context):
-            if res['fields'].get('sale_tax') and res['fields'].get('purchase_tax'):
-                res['fields']['sale_tax'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Default Sale Tax'}
-                res['fields']['purchase_tax'] = {'domain': [], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Default Purchase Tax'}
+            if res['fields'].get('default_taxes_id') and res['fields'].get('default_supplier_taxes_id'):
+                res['fields']['default_taxes_id'] = {'domain': [('type_tax_use','=','sale')], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Default Sale Tax'}
+                res['fields']['default_supplier_taxes_id'] = {'domain': [('type_tax_use','=','purchase')], 'views': {}, 'context': {}, 'selectable': True, 'type': 'many2one', 'relation': 'account.tax', 'string': 'Default Purchase Tax'}
         # display in the widget selection only the companies that haven't been configured yet
         unconfigured_cmp = self.get_unconfigured_cmp(cr, uid, context=context)
         for field in res['fields']:
