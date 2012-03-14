@@ -116,9 +116,9 @@
                             </group>
                             <group col="2" colspan="2">
                             <separator colspan="2" string="Validation"/>
-                            <field name="date_confirm" readonly = "1"/>
-                            <field name="date_valid" readonly = "1"/>
-                            <field name="user_valid"/>
+                            <field name="date_confirm" readonly = "1" groups="base.group_no_one"/>
+                            <field name="date_valid" readonly = "1" groups="base.group_no_one"/>
+                            <field name="user_valid" groups="base.group_no_one"/>
                             </group>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>

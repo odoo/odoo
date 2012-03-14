@@ -42,7 +42,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Applicants" colors="grey:state in ('cancel','done');blue:state=='pending'">
-                <field name="create_date"/>
+                <field name="create_date" groups="base.group_no_one"/>
                 <field name="name" string="Subject"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
@@ -126,10 +126,10 @@
                         </group>
                         <group col="2" colspan="2">
                            <separator colspan="2" string="Dates"/>
-                           <field name="create_date"/>
-                           <field name="write_date"/>
-                           <field name="date_closed"/>
-                           <field name="date_open"/>
+                           <field name="create_date" groups="base.group_no_one"/>
+                           <field name="write_date" groups="base.group_no_one"/>
+                           <field name="date_closed" groups="base.group_no_one"/>
+                           <field name="date_open" groups="base.group_no_one"/>
                         </group>
                         <separator colspan="4" string="Status"/>
                         <group col="8" colspan="4">
@@ -229,7 +229,7 @@
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Source" icon="terp-face-plain" domain="[]" context="{'group_by':'source_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Creation Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
+                    <filter string="Creation Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                 </group>
            </search>
         </field>
