@@ -67,11 +67,14 @@ class base_needaction(osv.osv):
     _name = 'base.needaction'
     _description = 'Need action mechanism'
     
+    _columns = {
+    }
+    
     #------------------------------------------------------
-    # base_needaction_users_rel API
+    # need action relationship management
     #------------------------------------------------------
     
-    def needaction_create(self, cr, uid, ids, user_ids, context=None):
+    def _link_users(self, cr, uid, ids, user_ids, context=None):
         if context is None:
             context = {}
         needact_rel_obj = self.pool.get('base.needaction_users_rel')
@@ -80,68 +83,76 @@ class base_needaction(osv.osv):
                 needact_rel_obj.create(cr, uid, {'res_model': self._name, 'res_id': id, 'user_id': user_id}, context=context)
         return True
     
-    def needaction_unlink_users(self, cr, uid, ids, context=None):
+    def _unlink_users(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         needact_rel_obj = self.pool.get('base.needaction_users_rel')
         to_del_ids = needact_rel_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         return needact_rel_obj.unlink(cr, uid, to_del_ids, context=context)
     
-    def needaction_write_users(self, cr, uid, ids, user_ids, context=None):
+    def _update_users(self, cr, uid, ids, user_ids, context=None):
         if context is None:
             context = {}
         # unlink old records
-        self.needaction_unlink_users(cr, uid, ids, context=context)
+        self._unlink_users(cr, uid, ids, context=context)
         # link new records
         for res_id in ids:
-            self.needaction_create(cr, uid, ids, user_ids, context=context)
+            self._link_users(cr, uid, ids, user_ids, context=context)
         return True
     
     #------------------------------------------------------
     # Addon API
     #------------------------------------------------------
-
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        needact_rel_obj = self.pool.get('base.needaction_users_rel')
-        needact_rel_ids = needact_rel_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        needact_rel_objs = needact_rel_obj.read(cr, uid, needact_rel_ids, ['user_id'], context=context)
-        return [needact_rel_obj['user_id'][0] for needact_rel_obj in needact_rel_objs]
     
-    def set_needaction_user_ids(self, cr, uid, ids, context=None):
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
         return result
+    
+    def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
+        # perform create
+        obj_id = super(base_needaction, self).create(cr, uid, ids, values, context=context)
+        # link user_ids
+        needaction_user_ids = self.get_needaction_user_ids(cr, uid, [obj_id], context=context)
+        self._update_users(cr, uid, [id], needaction_user_ids[obj_id], context=context)
+        return obj_id
     
     def write(self, cr, uid, ids, values, context=None):
         if context is None:
             context = {}
-        # get and update needaction_user_ids
-        needaction_user_ids = self.set_needaction_user_ids(cr, uid, ids, context=context)
+        # get and update user_ids
+        needaction_user_ids = self.get_needaction_user_ids(cr, uid, ids, context=context)
         for id in ids:
-            self.needaction_write_users(cr, uid, [id], needaction_user_ids[id], context=context)
+            self._update_users(cr, uid, [id], needaction_user_ids[id], context=context)
         # perform write
         return super(base_needaction, self).write(cr, uid, ids, values, context=context)
-
-    _columns = {
-    }
     
+    def unlink(self, cr, uids, ids, context=None):
+        if context is None:
+            context = {}
+        # unlink user_ids
+        self._unlink_users(cr, uid, ids, context=context)
+        # perform unlink
+        return super(base_needaction, self).unlink(cr, uid, ids, values, context=context)
     
     #------------------------------------------------------
     # General API
     #------------------------------------------------------
     
-    def get_user_needaction_ids(self, cr, uid, user_id, offset=0, limit=None, order=None, count=False, context=None):
+    def needaction_get_user_needaction_ids(self, cr, uid, user_id, offset=0, limit=None, order=None, count=False, context=None):
         if context is None:
             context = {}
         needact_rel_obj = self.pool.get('base.needaction_users_rel')
         search_res = needact_rel_obj.search(cr, uid, [('user_id', '=', user_id)], offset=offset, limit=limit, order=order, count=count, context=context)
         return search_res
     
-    def get_record_references(self, cr, uid, user_id, offset=0, limit=None, order=None, context=None):
+    def needaction_get_record_references(self, cr, uid, user_id, offset=0, limit=None, order=None, context=None):
         if context is None:
             context = {}
         needact_rel_obj = self.pool.get('base.needaction_users_rel')
-        search_res = self.get_user_needaction_ids(cr, uid, user_id, offset=offset, limit=limit, order=order, context=context)
-        needact_objs = needact_rel_obj.browse(cr, uid, search_res, context=context)
+        needact_obj_ids = self.get_user_needaction_ids(cr, uid, user_id, offset=offset, limit=limit, order=order, context=context)
+        needact_objs = needact_rel_obj.browse(cr, uid, needact_obj_ids, context=context)
         record_references = [(needact_obj.res_model, needact_obj.res_id) for needact_obj in needact_objs]
         return record_references
 
