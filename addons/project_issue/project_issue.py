@@ -370,7 +370,7 @@ class project_issue(crm.crm_case, osv.osv):
 
     def _case_close_notification(self, case, context=None):
         case[0].message_mark_done(context)
-        message = _("Issue <em>%s</em> is <b>closed</b>.")
+        message = _("Issue is <b>closed</b>.")
         case[0].message_append_note('' ,message, type='notification')
         return True
 
@@ -394,7 +394,7 @@ class project_issue(crm.crm_case, osv.osv):
 
     def _case_escalate_notification(self, case, context=None):
         if case[0].project_id.project_escalation_id.user_id.id:
-            message = _("Issue is <b>escalated</b> from project <em>'%s'</em>.") % (case[0].project_id.name)
+            message = _("Issue is <b>escalated</b> from project <em>'%s'</em> to project <em>'%s'</em>.") % (case[0].project_id.name, case[0].project_id.project_escalation_id.name)
             case[0].message_append_note('' ,message, type='notification', need_action_user_id=case[0].project_id.project_escalation_id.user_id.id, context=context)
         else:
             message = _("Issue is <b>escalated</b>.")
