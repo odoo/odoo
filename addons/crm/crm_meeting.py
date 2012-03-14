@@ -111,7 +111,7 @@ class crm_meeting(crm_base, osv.osv):
                     phonecall.message_append_note('', message)
                     obj.message_append_note('', phn_message)
             else:
-                message = _("Meeting has been <b>scheduled</b> on<em> %s </em>.") % (obj.date)
+                message = _("Meeting has been <b>scheduled</b> on <em>%s</em>.") % (obj.date)
                 obj.message_append_note('', message)
 
     def case_close_send_note(self, cr, uid, ids, context=None):

@@ -131,7 +131,7 @@ class crm_phonecall(crm_base, osv.osv):
             phonecall.message_subscribe([phonecall.user_id.id], context=context)
             if phonecall.opportunity_id :
                 for lead in lead_obj.browse(cr, uid, [phonecall.opportunity_id.id], context=context):
-                    message = _("Phonecall linked to the opportunity %s has been <b>created and opened </b>on <em>%s</em>.") % (lead.name, phonecall.date)
+                    message = _("Phonecall linked to the opportunity <em>%s</em> has been <b>created and opened </b>on <em>%s</em>.") % (lead.name, phonecall.date)
             else:
                 message = _("Phonecall has been <b>created and opened</b>.")
             phonecall.message_append_note('' ,message)
