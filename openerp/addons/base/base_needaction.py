@@ -128,13 +128,13 @@ class base_needaction(osv.osv):
         # perform write
         return super(base_needaction, self).write(cr, uid, ids, values, context=context)
     
-    def unlink(self, cr, uids, ids, context=None):
+    def unlink(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         # unlink user_ids
         self._unlink_users(cr, uid, ids, context=context)
         # perform unlink
-        return super(base_needaction, self).unlink(cr, uid, ids, values, context=context)
+        return super(base_needaction, self).unlink(cr, uid, ids, context=context)
     
     #------------------------------------------------------
     # General API
