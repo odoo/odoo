@@ -140,15 +140,15 @@ class config(osv.osv):
     }
 
     def create(self, cr, uid, vals, context=None):
-        res = super(users, self).create(cr, uid, vals, context=context)
+        res = super(config, self).create(cr, uid, vals, context=context)
         model_obj=self.pool.get('ir.model')
         if vals.get('context_gdocs_resource_id') and vals.get('context_model_id'):
             self.write(cr, uid, 
                 {
-                    'context_model_id': model_obj.get(cr, uid, vals.get('context_model_id'))[0],
+                    'context_model_id': model_obj.read(cr, uid, [vals.get('context_model_id')])[0],
                     'context_gdocs_resource_id': vals.get('context_gdocs_resource_id'),
                     'context_name_template': vals.get('context_name_template'),
-                    'context_name': self.context_name % {'name': vals.get('context_name')},
+                    'context_name': vals.get('context_name'),
                     'context_multiple': vals.get('context_multiple'),
                 },
                 context)
