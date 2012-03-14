@@ -139,4 +139,11 @@ class config(osv.osv):
         'context_multiple': False,
     }
 
+    def has_config_set(self, cr, uid, model):
+        print model
+        import pdb
+        pdb.set_trace()
+        domain = [('context_model_id', '=', model)]
+        return self.search_count(cr, uid, domain) != 0
+
 config()
