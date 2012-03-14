@@ -296,7 +296,7 @@ class account_cash_statement(osv.osv):
                     c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
                     st_number = obj_seq.next_by_id(cr, uid, statement.journal_id.sequence_id.id, context=c)
                 else:
-                    st_number = obj_seq.next_by_code(cr, uid, 'account.cash.statement')
+                    st_number = obj_seq.next_by_code(cr, uid, 'account.cash.statement', context=c)
                 vals.update({
                     'name': st_number
                 })

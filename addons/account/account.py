@@ -1652,7 +1652,7 @@ class account_move_reconcile(osv.osv):
         'create_date': fields.date('Creation date', readonly=True),
     }
     _defaults = {
-        'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/',
+        'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile', ctx) or '/',
     }
 
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
