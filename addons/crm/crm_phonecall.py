@@ -78,10 +78,6 @@ class crm_phonecall(crm_base, osv.osv):
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(crm_phonecall, self).create(cr, uid, vals, context=context)
-        return obj_id
-
     def _get_default_state(self, cr, uid, context=None):
         if context and context.get('default_state', False):
             return context.get('default_state')
@@ -95,6 +91,58 @@ class crm_phonecall(crm_base, osv.osv):
         'active': 1,
     }
 
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(crm_phonecall, self).create(cr, uid, vals, context)
+        for phonecall in self.browse(cr, uid, [obj_id], context=context):
+            if not phonecall.opportunity_id:
+                self.case_open_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = False
+            if (obj.state == 'draft' and obj.user_id):
+                result[obj.id] = obj.user_id.id
+        return result
+
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
+        for phonecall in self.browse(cr, uid, ids, context=context):
+            message = _("Phonecall has been <b>cancelled</b>.")
+            phonecall.message_append_note( _('System notification'),
+                        message, type='notification', context=context)
+        return True
+
+    def case_pending_send_note(self, cr, uid, ids, context=None):
+        for phonecall in self.browse(cr, uid, ids, context=context):
+            message = _("Phonecall is <b>pending</b>.")
+            phonecall.message_append_note('' ,message)
+        return True
+
+    def case_done_send_note(self, cr, uid, ids, context=None):
+        for phonecall in self.browse(cr, uid, ids, context=context):
+            message = _("Phonecall has been <b>done</b>.")
+            phonecall.message_append_note('', message)
+        return True
+
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        lead_obj = self.pool.get('crm.lead')
+        for phonecall in self.browse(cr, uid, ids, context=context):
+            phonecall.message_subscribe([phonecall.user_id.id], context=context)
+            if phonecall.opportunity_id :
+                for lead in lead_obj.browse(cr, uid, [phonecall.opportunity_id.id], context=context):
+                    message = _("Phonecall linked to the opportunity <em>%s</em> has been <b>created and opened </b>on <em>%s</em>.") % (lead.name, phonecall.date)
+            else:
+                message = _("Phonecall has been <b>created and opened</b>.")
+            phonecall.message_append_note('' ,message)
+        return True
+
+    def case_partner_send_note(self, cr, uid, ids, context=None):
+        for phonecall in self.browse(cr, uid, ids, context=context):
+            message = _("Partner has been <b>created</b>")
+            phonecall.message_append_note('' ,message)
+        return True
+
     # From crm.case
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         res = super(crm_phonecall, self).onchange_partner_address_id(cr, uid, ids, add, email)
@@ -105,7 +153,7 @@ class crm_phonecall(crm_base, osv.osv):
             res['value']['partner_mobile'] = address.mobile
         return res
 
-    def case_close(self, cr, uid, ids, *args):
+    def case_close(self, cr, uid, ids, context=None):
         """Overrides close for crm_case for setting close date
         """
         res = True
@@ -115,22 +163,24 @@ class crm_phonecall(crm_base, osv.osv):
             if phone.duration <=0:
                 duration = datetime.now() - datetime.strptime(phone.date, '%Y-%m-%d %H:%M:%S')
                 data.update({'duration': duration.seconds/float(60)})
-            res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], args)
+            res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], context)
             self.write(cr, uid, [phone_id], data)
+            self.case_done_send_note(cr, uid, [phone_id], context);
         return res
 
-    def case_reset(self, cr, uid, ids, *args):
+    def case_reset(self, cr, uid, ids, context=None):
         """Resets case as Todo
         """
-        res = super(crm_phonecall, self).case_reset(cr, uid, ids, args)
+        res = super(crm_phonecall, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'duration': 0.0, 'state':'open'})
+        self.case_open_send_note(cr, uid, ids, context=context)
         return res
 
 
-    def case_open(self, cr, uid, ids, *args):
+    def case_open(self, cr, uid, ids, context=None):
         """Overrides cancel for crm_case for setting Open Date
         """
-        res = super(crm_phonecall, self).case_open(cr, uid, ids, *args)
+        res = super(crm_phonecall, self).case_open(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
 
@@ -163,9 +213,7 @@ class crm_phonecall(crm_base, osv.osv):
                     'partner_mobile' : call.partner_mobile,
                     'priority': call.priority,
             }
-
             new_id = self.create(cr, uid, vals, context=context)
-            self.case_open(cr, uid, [new_id])
             if action == 'log':
                 self.case_close(cr, uid, [new_id])
             phonecall_dict[call.id] = new_id
@@ -182,7 +230,8 @@ class crm_phonecall(crm_base, osv.osv):
         return partner_id
 
     def _call_set_partner(self, cr, uid, ids, partner_id, context=None):
-        return self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
+        self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
+        self.case_partner_send_note(cr, uid, ids, context)
 
     def _call_create_partner_address(self, cr, uid, phonecall, partner_id, context=None):
         address = self.pool.get('res.partner.address')

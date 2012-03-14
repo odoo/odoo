@@ -42,7 +42,7 @@ class crm_meeting(crm_base, osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = "calendar.event"
+    _inherit = ["calendar.event","mail.thread"]
     _columns = {
         # From crm.case
         'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),
@@ -82,20 +82,59 @@ class crm_meeting(crm_base, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
-        self._case_opportunity_meeting_notification(cr, uid, [obj_id], context=context)
+        self.case_create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
-    def _case_opportunity_meeting_notification(self, cr, uid, ids, context=None):
-        lead_obj = self.pool.get('crm.lead')
-
+    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
+        result = {}
         for obj in self.browse(cr, uid, ids, context=context):
-            if(obj.opportunity_id.id):
-                newid = obj.opportunity_id.id
-                message = _("<b>scheduled for meeting</b> %s.") % (obj.date)
-                for lead in lead_obj.browse(cr, uid, [newid], context=context):
-                    lead.message_append_note('', message)
+            result[obj.id] = False
+            if (obj.state == 'draft' and obj.user_id):
+                result[obj.id] = obj.user_id.id
+        return result
 
-    def case_open(self, cr, uid, ids, *args):
+    def case_create_send_note(self, cr, uid, ids, context=None):
+        lead_obj = self.pool.get('crm.lead')
+        phonecall_obj = self.pool.get('crm.phonecall')
+        for obj in self.browse(cr, uid, ids, context=context):
+            message = _("The meeting has been <b>scheduled</b> on <em>%s</em>.") % (obj.date)
+            if(obj.opportunity_id.id): # meeting can be create from phonecalls or opportunities, therefore checking for the parent
+                newid = obj.opportunity_id.id
+                for lead in lead_obj.browse(cr, uid, [newid], context=context):
+                    opp_message = _("Meeting linked to the opportunity <em>%s</em> has been <b>created and scheduled</b> on <em>%s</em>.") % (lead.name,obj.date)
+                    lead.message_append_note('', message)
+                    obj.message_append_note('', opp_message)
+            elif(obj.phonecall_id.id):
+                newid = obj.phonecall_id.id
+                for phonecall in phonecall_obj.browse(cr, uid, [newid], context=context):
+                    phn_message = _("Meeting linked to the phonecall <em>%s</em> has been <b>created and scheduled</b> on <em>%s</em>.") % (phonecall.name,obj.date)
+                    phonecall.message_append_note('', message)
+                    obj.message_append_note('', phn_message)
+            else:
+                message = _("Meeting has been <b>scheduled</b> on <em>%s</em>.") % (obj.date)
+                obj.message_append_note('', message)
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        for meeting in self.browse(cr, uid, ids, context=context):
+            message = _("Meeting has been <b>done</b>.")
+            meeting.message_append_note('' ,message)
+        return True
+
+    def case_reset_send_note(self, cr, uid, ids, context=None):
+        for meeting in self.browse(cr, uid, ids, context=context):
+            message = _("Meeting has been <b>renewed</b>.")
+            meeting.message_append_note('' ,message)
+        return True
+
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        for meeting in self.browse(cr, uid, ids, context=context):
+            if meeting.state != 'draft':
+                return False
+            message = _("Meeting has been <b>confirmed</b>.")
+            meeting.message_append_note('' ,message)
+        return True
+
+    def case_open(self, cr, uid, ids, context=None):
         """Confirms meeting
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -103,11 +142,9 @@ class crm_meeting(crm_base, osv.osv):
         @param ids: List of Meeting Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(crm_meeting, self).case_open(cr, uid, ids, args)
+        res = super(crm_meeting, self).case_open(cr, uid, ids, context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The meeting '%s' has been confirmed.") % name
             id=base_calendar.base_calendar_id2real_id(id)
-            self.log(cr, uid, id, message)
         return res
 
 crm_meeting()
