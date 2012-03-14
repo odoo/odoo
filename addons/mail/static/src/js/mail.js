@@ -50,11 +50,12 @@ openerp.mail = function(session) {
             /* DataSets and internal vars */
             this.ds = new session.web.DataSet(this, this.params.res_model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
+            this.ds_msg = new session.web.DataSet(this, 'mail.message');
             this.name = 'Unknown record'
             this.sorted_comments = {'root_ids': [], 'root_id_msg_list': {}};
             /* Display vars */
             this.display = {};
-            this.display.show_post_comment = false;
+            this.display.show_post_comment = this.params.show_post_comment || false;
             this.display.show_reply = (this.params.thread_level > 0);
             this.display.show_delete = true;
             this.display.show_hide = true;
@@ -76,10 +77,10 @@ openerp.mail = function(session) {
                 if (event.shiftKey && charCode == 13) { this.value = this.value+"\n"; }
                 else if (charCode == 13) { self.do_comment(); }
             });
-            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
-               var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_act:first');
-               act_dom.toggle();
-            });
+            
+            // add event
+            this.add_events();
+            
             this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
                 // lazy implementation: fetch data and try to redirect
                 if (! event.srcElement.dataset.resModel) return false;
@@ -107,6 +108,23 @@ openerp.mail = function(session) {
                 else return self.init_comments();
             });
             return display_done
+        },
+        
+        add_events: function() {
+            var self = this;
+            // event: click on 'reply'
+            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
+               var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_act:first');
+               act_dom.toggle();
+            });
+            // event: click on 'delete'
+            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_delete', 'click', function (event) {
+               console.log('deleting');
+               var msg_id = event.srcElement.dataset.id;
+               if (! msg_id) return false;
+               self.ds_msg.unlink([parseInt(msg_id)]).then();
+               return false;
+            });
         },
         
         stop: function () {
@@ -377,9 +395,11 @@ openerp.mail = function(session) {
             var self = this;
             this._super.apply(this, arguments);
             /* bind and hide buttons */
-            self.$element.find('button.oe_mail_button_followers').bind('click', function () { self.do_toggle_followers(); });
-            self.$element.find('button.oe_mail_button_follow').bind('click', function () { self.do_follow(); }).hide();
-            self.$element.find('button.oe_mail_button_unfollow').bind('click', function () { self.do_unfollow(); }).hide();
+            self.$element.find('button.oe_mail_button_followers').bind('click', function () { self.do_toggle_followers(); }).hide();
+            self.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); }).hide()
+                .mouseover(function () { $(this).html('Follow'); }).mouseleave(function () { $(this).html('Not following'); });
+            self.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); }).hide()
+                .mouseover(function () { $(this).html('Unfollow'); }).mouseleave(function () { $(this).html('Following'); });
         },
 
         stop: function () {
@@ -387,7 +407,6 @@ openerp.mail = function(session) {
         },
         
         set_value: function() {
-            console.log('set_value');
             var self = this;
             this._super.apply(this, arguments);
             this.see_sub = 1;
@@ -406,7 +425,7 @@ openerp.mail = function(session) {
             /* create ThreadDisplay widget and render it */
             this.$element.find('div.oe_mail_recthread_left').empty();
             if (this.thread) this.thread.stop();
-            this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid});
+            this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid, 'show_post_comment': true});
             this.thread.appendTo(this.$element.find('div.oe_mail_recthread_left'));
             return fetch_fol_done && fetch_sub_done;
         },
@@ -428,12 +447,12 @@ openerp.mail = function(session) {
         
         do_follow: function () {
             this.do_toggle_follow();
-            return this.ds.call('message_subscribe', [[this.view.datarecord.id]]).when();
+            return this.ds.call('message_subscribe', [[this.view.datarecord.id]]).then(this.proxy('fetch_subscribers'));
         },
         
         do_unfollow: function () {
             this.do_toggle_follow();
-            return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).when();
+            return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).then(this.proxy('fetch_subscribers'));
         },
         
         do_toggle_follow: function () {
@@ -450,9 +469,7 @@ openerp.mail = function(session) {
         },
         
         thread_get_avatar_mini: function(model, field, id) {
-            id = id || '';
-            var url = this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
-            return url;
+            return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
     });
     

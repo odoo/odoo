@@ -31,8 +31,8 @@
         </div>
         <div class="oe_mail_recthread_right">
             <div class="oe_mail_actions">
-                <button type="button" class="oe_mail_button_follow">Follow</button>
-                <button type="button" class="oe_mail_button_unfollow">Unfollow</button>
+                <button type="button" class="oe_mail_button_follow">Not following</button>
+                <button type="button" class="oe_mail_button_unfollow">Following</button>
                 <button type="button" class="oe_mail_button_followers">Display followers</button>
             </div>
             <div class="oe_mail_followers">
@@ -77,8 +77,8 @@
                 on <t t-raw="record.date"/>
             </span>
             <t t-if="display.show_reply"><span class="oe_mail_oe_space"><a href="#" class="oe_mail_msg_reply">Reply</a></span></t>
-            <t t-if="display.show_delete"><span class="oe_mail_oe_space"><a href="#" class="oe_mail_msg_delete">Delete</a></span></t>
-            <t t-if="display.show_hide"><span class="oe_mail_oe_space"><a href="#" class="oe_mail_msg_hide">Hide</a></span></t>
+            <t t-if="display.show_delete"><span class="oe_mail_oe_space"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete">Delete</a></span></t>
+            <t t-if="display.show_hide"><span class="oe_mail_oe_space"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide">Hide</a></span></t>
         </p>
     </t>
     

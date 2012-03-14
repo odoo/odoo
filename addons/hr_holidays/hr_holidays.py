@@ -367,7 +367,7 @@ class hr_holidays(osv.osv):
         return result
     
     def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self._message_get_subscribers_ids(cr, uid, ids, context=context);
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
         # add the employee and its manager if specified to the subscribed users
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.employee_id.parent_id:
