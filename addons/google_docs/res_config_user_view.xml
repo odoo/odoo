@@ -4,10 +4,10 @@
 
         <!-- add google docs config field in user form -->
 
-        <record model="ir.ui.view" id="view_google_docs_users_config_inherited_form">
-            <field name="name">google_docs.config.user.inherited.form</field>
+        <record model="ir.ui.view" id="view_google_docs_model_config_form">
+            <field name="name">google_docs.config.form</field>
             <field name="model">google.docs.config</field>
-            <field name="type">form</field>
+            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <group name="default_filters" position="inside">
                     <field name="context_model_id" completion="1"
@@ -16,11 +16,13 @@
             </field>
         </record>
         <record model='ir.actions.act_window' id='action_google_docs_users_config_inherited_form'>
-            <field name='name'>google_docs.config.user.inherited.form</field>
+            <field name='name'>Models configuration</field>
             <field name='res_model'>google.docs.config</field>
             <field name='type'>ir.actions.act_window</field>
-            <field name='view_id' ref='view_google_docs_users_config_inherited_form'/>
+            <field name='view_type'>form</field>
+            <field name='view_id' ref='view_google_docs_model_config_form'/>
         </record>
-        <menuitem name='Google Docs configuration' id='menu_gdocs_config' parent='base.menu_administration' action='action_google_docs_users_config_inherited_form'/>
+        <menuitem name='Google Docs configuration' id='menu_gdocs_config' parent='base.menu_administration'/>
+        <menuitem name='Models configuration' id='menu_gdocs_model_config' parent='menu_gdocs_config' action='action_google_docs_users_config_inherited_form'/>
     </data>
 </openerp>
