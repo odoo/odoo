@@ -3,7 +3,7 @@
 
         <record id="view_project_config" model="ir.ui.view">
             <field name="name">Project Application</field>
-            <field name="model">project.configuration</field>
+            <field name="model">res.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
 	        <form string ="Project Application">
@@ -65,7 +65,7 @@
         <record id="action_project_configuration" model="ir.actions.act_window">
             <field name="name">Configure Project Application</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">project.configuration</field>
+            <field name="res_model">res.config.settings</field>
             <field name="view_id" ref="view_project_config"/>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
