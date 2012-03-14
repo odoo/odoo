@@ -24,7 +24,7 @@ import pooler
 from tools.translate import _
 
 class project_configuration(osv.osv_memory):
-    _inherit = 'res.config.settings'
+    _inherit = 'project.config.settings'
 
     _columns = {
         'module_project_mrp': fields.boolean('Allow to create tasks directly from a sale order',
@@ -57,9 +57,8 @@ class project_configuration(osv.osv_memory):
         'module_project_issue_sheet': fields.boolean("Track and invoice working time",
                         help="""Allows to the timesheet support for the Issues/Bugs Management in Project.
                         It installs the project_issue_sheet module."""),
-        'module_project_issue': fields.boolean("Create issue from an email account",
-                        help="""This allows you issues/bugs management in project
-                        It installs the project_issue module."""),
+        'project_issue': fields.boolean("Create issue from an email account",
+                        help="""Allows you to configure your incoming mail server. And creates issue for your mails."""),
         'issue_server' : fields.char('Server Name', size=256),
         'issue_port' : fields.integer('Port'),
         'issue_type': fields.selection([
@@ -70,9 +69,9 @@ class project_configuration(osv.osv_memory):
         'issue_is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
         'issue_user' : fields.char('Username', size=256),
         'issue_password' : fields.char('Password', size=1024),
-        'module_crm_claim': fields.boolean("Create claims from an email account",
-                        help="""This allows you to track your customers/suppliers claims and grievances.
-                        It installs the crm_claim module."""),
+        'crm_claim': fields.boolean("Create claims from an email account",
+                        help="""Allows you to configure your incoming mail server. And creates claims for your mails.
+                        """),
         'claim_server' : fields.char('Server Name', size=256),
         'claim_port' : fields.integer('Port'),
         'claim_type': fields.selection([
@@ -102,7 +101,6 @@ class project_configuration(osv.osv_memory):
             values[type+'_server'] = ''
         values[type+'_port'] = port
         return {'value': values}
-
 
 project_configuration()
 

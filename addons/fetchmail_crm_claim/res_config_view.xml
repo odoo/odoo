@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_project_config_claim" model="ir.ui.view">
+            <field name="name">Project Application</field>
+            <field name="model">project.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.project_settings_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/group[@name='Helpdesk and support']" position="inside">
+                    <field name="crm_claim"/>
+                    <group col="4" colspan="2" attrs="{'invisible': [('crm_claim','=',False)]}">
+                          <field name="claim_server" attrs="{'required': [('crm_claim','=',True)]}"/>
+                          <field name="claim_type" nolabel="1" on_change="onchange_server_type(claim_type, claim_is_ssl,'claim')" attrs="{'required': [('crm_claim','=',True)]}"/>
+                          <field name="claim_port" attrs="{'required': [('crm_claim','=',True)]}"/>
+                          <field name="claim_is_ssl" on_change="onchange_server_type(claim_type, claim_is_ssl,'claim')"/>
+                          <newline/>
+                          <field name="claim_user" attrs="{'required': [('crm_claim','=',True)]}"/>
+                          <field name="claim_password" password="True" attrs="{'required': [('crm_claim','=',True)]}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

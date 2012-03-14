@@ -25,12 +25,14 @@ import pooler
 from tools.translate import _
 
 class project_configuration(osv.osv_memory):
-    _inherit = 'res.config.settings'
+    _inherit = 'project.config.settings'
 
     def get_default_email_configurations(self, cr, uid, ids, context=None):
         fetchmail_obj = self.pool.get('fetchmail.server')
         result = {}
         issue_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Issues'),('state','!=','done')])
+        if issue_ids:
+            result.update({'project_issue': True})
         if issue_ids:
             issue_id = fetchmail_obj.browse(cr, uid, issue_ids[0], context=context)
             result.update({'issue_server': issue_id.server})
@@ -41,6 +43,8 @@ class project_configuration(osv.osv_memory):
             result.update({'issue_password': issue_id.password})
 
         claim_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Claims'),('state','!=','done')])
+        if claim_ids:
+            result.update({'crm_claim': True})
         if claim_ids:
             claim_id = fetchmail_obj.browse(cr, uid, claim_ids[0], context=context)
             result.update({'claim_server': claim_id.server})
@@ -59,7 +63,7 @@ class project_configuration(osv.osv_memory):
         issue_id = model_obj.search(cr, uid, [('model','=','project.issue')])
         claim_id = model_obj.search(cr, uid, [('model','=','crm.claim')])
         vals = self.read(cr, uid, ids[0], [], context=context)
-        if vals.get('module_project_issue') and issue_id:
+        if vals.get('project_issue') and issue_id:
             issue_vals = {
                     'name': 'Incoming Issues',
                     'object_id': issue_id[0],
@@ -82,7 +86,7 @@ class project_configuration(osv.osv_memory):
             server_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Issues'),('state','=','done')])
             fetchmail_obj.set_draft(cr, uid, server_ids, context=None)
 
-        if vals.get('module_crm_claim') and claim_id:
+        if vals.get('crm_claim') and claim_id:
             claim_vals = {
                     'name': 'Incoming Claims',
                     'object_id': claim_id[0],

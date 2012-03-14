@@ -31,6 +31,7 @@
     'init_xml': [],
     'update_xml': [
         "installer.xml",
+        "res_config_view.xml",
     ],
     'demo_xml': [
     ],

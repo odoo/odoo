@@ -3,75 +3,49 @@
 
         <record id="view_project_config" model="ir.ui.view">
             <field name="name">Project Application</field>
-            <field name="model">res.config.settings</field>
+            <field name="model">project.config.settings</field>
             <field name="type">form</field>
+            <field name="inherit_id" ref="base.project_settings_form_view"/>
             <field name="arch" type="xml">
-	        <form string ="Project Application">
-		            <separator string="Project" colspan="4"/>
-		            <group colspan="4" col="8">
-		                <group  colspan="4" col="4">
-		                   <field name="module_project_mrp"/>
-		                   <newline/>
-		                   <field name="module_pad"/>
-		                   <newline/>
-		                </group>
-		                <group colspan="4" col="4">
-		                    <newline/>
-		                    <field name="module_project_timesheet"/>
-		                    <newline/>
-		                    <field name="module_project_scrum"/>
-		                    <newline/>
-		                </group>
-		            </group>
+                <xpath expr="//form/group[@name='Project']" position="inside">
+	                <group name="Project" position="inside">
+			            <separator string="Project" colspan="4"/>
+			            <group colspan="4" col="8">
+			                <group  colspan="4" col="4">
+			                   <field name="module_project_mrp"/>
+			                   <newline/>
+			                   <field name="module_pad"/>
+			                   <newline/>
+			                </group>
+			                <group colspan="4" col="4">
+			                    <newline/>
+			                    <field name="module_project_timesheet"/>
+			                    <newline/>
+			                    <field name="module_project_scrum"/>
+			                    <newline/>
+			                </group>
+			            </group>
 
-		            <separator string="Planning" colspan="4"/>
-                    <group  colspan="4" col="4">
-                        <group  colspan="4" col="4">
-                           <field name="module_project_planning"/>
-                        </group>
-                        <group colspan="4" col="4">
-                            <field name="module_project_long_term"/>
-                        </group>
-                    </group>
+			            <separator string="Planning" colspan="4"/>
+	                    <group  colspan="4" col="4">
+	                        <group  colspan="4" col="4">
+	                           <field name="module_project_planning"/>
+	                        </group>
+	                        <group colspan="4" col="4">
+	                            <field name="module_project_long_term"/>
+	                        </group>
+	                    </group>
+	                </group>
+                </xpath>
 
-		            <separator string="Helpdesk and support" colspan="4"/>
-                    <group  colspan="4" col="4">
-                        <field name="module_project_issue"/>
-	                        <group col="4" colspan="2" attrs="{'invisible': [('module_project_issue','=',False)]}">
-	                            <field name="issue_server" attrs="{'required': [('module_project_issue','=',True)]}"/>
-	                            <field name="issue_type" nolabel="1" on_change="onchange_server_type(issue_type, issue_is_ssl,'issue')" attrs="{'required': [('module_project_issue','=',True)]}"/>
-	                            <field name="issue_port" attrs="{'required': [('module_project_issue','=',True)]}"/>
-	                            <field name="issue_is_ssl" on_change="onchange_server_type(issue_type, issue_is_ssl, 'issue')"/>
-	                            <newline/>
-	                            <field name="issue_user" attrs="{'required': [('module_project_issue','=',True)]}"/>
-	                            <field name="issue_password" password="True" attrs="{'required': [('module_project_issue','=',True)]}"/>
-	                        </group>
-	                    <field name="module_crm_claim"/>
-	                        <group col="4" colspan="2" attrs="{'invisible': [('module_crm_claim','=',False)]}">
-	                            <field name="claim_server" attrs="{'required': [('module_crm_claim','=',True)]}"/>
-	                            <field name="claim_type" nolabel="1" on_change="onchange_server_type(claim_type, claim_is_ssl,'claim')" attrs="{'required': [('module_crm_claim','=',True)]}"/>
-	                            <field name="claim_port" attrs="{'required': [('module_crm_claim','=',True)]}"/>
-	                            <field name="claim_is_ssl" on_change="onchange_server_type(claim_type, claim_is_ssl,'claim')"/>
-	                            <newline/>
-	                            <field name="claim_user" attrs="{'required': [('module_crm_claim','=',True)]}"/>
-	                            <field name="claim_password" password="True" attrs="{'required': [('module_crm_claim','=',True)]}"/>
-	                        </group>
-	                    <field name="module_project_issue_sheet" colspan="4"/>
-                    </group>
-            </form>
+                 <xpath expr="//form/group[@name='Helpdesk and support']" position="inside">
+                        <field name="module_project_issue_sheet" colspan="4"/>
+                 </xpath>
+
             </field>
         </record>
 
-        <record id="action_project_configuration" model="ir.actions.act_window">
-            <field name="name">Configure Project Application</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.config.settings</field>
-            <field name="view_id" ref="view_project_config"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-        </record>
-
-        <menuitem id="base.menu_project_config" name="Project" parent="base.menu_config" sequence="1" action="action_project_configuration"/>
+        <menuitem id="base.menu_project_config" name="Project" parent="base.menu_config" sequence="1" action="base.action_project_config"/>
 
     </data>
 </openerp>
