@@ -537,10 +537,10 @@ class Session(openerpweb.Controller):
         # already installed modules have no dependencies
         modules = dict.fromkeys(loaded, [])
 
-        # Compute active true modules that might be on the web side only
+        # Compute auto_install modules that might be on the web side only
         modules.update((name, openerpweb.addons_manifest[name].get('depends', []))
                       for name in candidates
-                      if openerpweb.addons_manifest[name].get('active'))
+                      if openerpweb.addons_manifest[name].get('auto_install'))
 
         # Retrieve database installed modules
         Modules = req.session.model('ir.module.module')
