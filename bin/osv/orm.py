@@ -2243,20 +2243,20 @@ class orm(orm_template):
             del d['id']
         return data
 
-    def _inherits_join_add(self, current_table, parent_model_name, query):
+    def _inherits_join_add(self, parent_model_name, query):
         """
         Add missing table SELECT and JOIN clause to ``query`` for reaching the parent table (no duplicates)
 
         :param parent_model_name: name of the parent model for which the clauses should be added
         :param query: query object on which the JOIN should be added
         """
-        inherits_field = current_table._inherits[parent_model_name]
+        inherits_field = self._inherits[parent_model_name]
         parent_model = self.pool.get(parent_model_name)
         parent_table_name = parent_model._table
         quoted_parent_table_name = '"%s"' % parent_table_name
         if quoted_parent_table_name not in query.tables:
             query.tables.append(quoted_parent_table_name)
-            query.where_clause.append('(%s.%s = %s.id)' % (current_table._table, inherits_field, parent_table_name))
+            query.where_clause.append('("%s".%s = %s.id)' % (self._table, inherits_field, parent_table_name))
 
     def _inherits_join_calc(self, field, query):
         """
@@ -2271,7 +2271,7 @@ class orm(orm_template):
         while field in current_table._inherit_fields and not field in current_table._columns:
             parent_model_name = current_table._inherit_fields[field][0]
             parent_table = self.pool.get(parent_model_name)
-            self._inherits_join_add(current_table, parent_model_name, query)
+            current_table._inherits_join_add(parent_model_name, query)
             current_table = parent_table
         return '"%s".%s' % (current_table._table, field)
 
@@ -3904,7 +3904,7 @@ class orm(orm_template):
                 if parent_model and child_object:
                     # as inherited rules are being applied, we need to add the missing JOIN
                     # to reach the parent table (if it was not JOINed yet in the query)
-                    child_object._inherits_join_add(child_object, parent_model, query)
+                    child_object._inherits_join_add(parent_model, query)
                 query.where_clause += added_clause
                 query.where_clause_params += added_params
                 for table in added_tables:
