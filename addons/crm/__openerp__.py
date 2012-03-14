@@ -130,9 +130,6 @@ Creates a dashboard for CRM that includes:
             'test/ui/duplicate_lead.yml',
             'test/ui/delete_lead.yml'
              ],
-    'css': [
-        'static/src/css/crm_kanban.css',
-    ],
     'installable': True,
     'application': True,
     'auto_install': False,
