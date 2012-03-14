@@ -393,35 +393,35 @@ class hr_applicant(crm.crm_case, osv.osv):
 
     def case_open_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            message = _("Changed Status to <b>In Progress<b>.")
+            message = _("has been <b>in Progress<b>.")
             obj.message_append_note('' ,message)
         return True
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.emp_id:
-                message = _("Applicant is <b>hired</b> and employee created.")
+                message = _("has been <b>hired</b> and created as an employee.")
                 obj.message_append_note('', message)
             else:
-                message = _("Applicant is <b>hired</b>.")
+                message = _("has been <b>hired</b>.")
                 obj.message_append_note('' ,message)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            message = _("Applicant is <b>cancelled<b>.")
+            message = _("has been <b>cancelled<b>.")
             obj.message_append_note('' ,message)
         return True
 
     def case_pending_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            message = _("Changed Status to <b>pending<b>.")
+            message = _("has been <b>pending<b>.")
             obj.message_append_note('' ,message)
         return True
 
     def case_reset_send_note(self,  cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            message =_("Changed Status to <b>new<b>.")
+            message =_("has been set as <b>new<b>.")
             obj.message_append_note('' ,message)
         return True
 
@@ -436,7 +436,7 @@ class hr_applicant(crm.crm_case, osv.osv):
     def case_create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
-            message = _("Applicant has been <b>created</b>.")
+            message = _("has been <b>created</b>.")
             self.message_append_note(cr, uid, ids, _('System notification'),
                         message, type='notification', context=context)
         return True
@@ -529,7 +529,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         if 'stage_id' in vals and vals['stage_id']:
             stage = self.pool.get('hr.recruitment.stage').browse(cr, uid, vals['stage_id'], context=context)
             self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Changed Stage to <b>%s</b>.") % stage.name, type='notification')
+                        _("changed stage to <b>%s</b>.") % stage.name, type='notification')
         return super(hr_applicant,self).write(cr, uid, ids, vals, context=context)
 
 hr_applicant()
