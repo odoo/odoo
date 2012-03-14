@@ -1283,6 +1283,18 @@ if ($.blockUI) {
     $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
 }
 
+/** Custom jQuery plugins */
+$.fn.getAttributes = function() {
+    var o = {};
+    if (this.length) {
+        for (var attr, i = 0, attrs = this[0].attributes, l = attrs.length; i < l; i++) {
+            attr = attrs.item(i)
+            o[attr.nodeName] = attr.nodeValue;
+        }
+    }
+    return o;
+}
+
 /** Configure default qweb */
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
 /**

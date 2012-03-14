@@ -1244,6 +1244,20 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     }
 });
 
+session.web.xml_to_json = function(node) {
+    switch (node.nodeType) {
+        case 3:
+        case 4:
+            return node.data;
+        break;
+        case 1:
+            return {
+                tag: node.tagName.toLowerCase(),
+                attrs: $(node).getAttributes(),
+                children: _.map(node.childNodes, session.web.xml_to_json)
+            }
+    }
+}
 session.web.json_node_to_xml = function(node, human_readable, indent) {
     // For debugging purpose, this function will convert a json node back to xml
     // Maybe useful for xml view editor
