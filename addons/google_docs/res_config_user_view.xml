@@ -15,6 +15,12 @@
                 </group>
             </field>
         </record>
-        <menuitem name='Google Docs configuration' id='menu_gdocs_config' parent='menu_management' action='view_google_docs_users_config_inherited_form'/>
+        <record model='ir.actions.act_window' id='action_google_docs_users_config_inherited_form'>
+            <field name='name'>google_docs.config.user.inherited.form</field>
+            <field name='res_model'>google.docs.config</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='view_id' ref='view_google_docs_users_config_inherited_form'/>
+        </record>
+        <menuitem name='Google Docs configuration' id='menu_gdocs_config' parent='base.menu_administration' action='action_google_docs_users_config_inherited_form'/>
     </data>
 </openerp>
