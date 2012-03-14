@@ -21,7 +21,7 @@
     assert product.price == product.lst_price, "Sell price is not correspond."
 
 -
-  I check sale price of IT componet if more than 3 PCE.
+  I check sale price of IT componet if more than 3 Unit.
 -
   !python {model: product.product}: |
     context.update({'quantity':5})
@@ -51,7 +51,7 @@
     product = self.browse(cr, uid, ref("product_product_pc2"), context=context)
     assert product.price == 450, "cost price is not correspond."
 -
-  I check cost price of PC2 if more than 3 PCE.
+  I check cost price of PC2 if more than 3 Unit.
 -
   !python {model: product.product}: |
     context.update({'quantity':3})
