@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP S.A (<http://www.openerp.com>)
+#    Copyright (C) 2011-2012 OpenERP S.A (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -232,6 +232,11 @@ class ir_mail_server(osv.osv):
 
         if user:
             # Attempt authentication - will raise if AUTH service not supported
+            # The user/password must be converted to bytestrings in order to be usable for
+            # certain hashing schemes, like HMAC.
+            # See also bug #597143 and python issue #5285
+            user = tools.ustr(user).encode('utf-8')
+            password = tools.ustr(password).encode('utf-8') 
             connection.login(user, password)
         return connection
 
@@ -364,7 +369,6 @@ class ir_mail_server(osv.osv):
         :param smtp_user: optional SMTP user, if mail_server_id is not passed
         :param smtp_password: optional SMTP password to use, if mail_server_id is not passed
         :param smtp_debug: optional SMTP debug flag, if mail_server_id is not passed
-        :param debug: whether to turn on the SMTP level debugging, output to DEBUG log level
         :return: the Message-ID of the message that was just sent, if successfully sent, otherwise raises
                  MailDeliveryException and logs root cause.
         """
