@@ -1123,5 +1123,27 @@ class property(function):
         self.field_id = {}
 
 
+class column_info(object):
+    """Struct containing details about an osv column, either one local to
+       its model, or one inherited via _inherits.
+
+       :attr name: name of the column
+       :attr column: column instance, subclass of osv.fields._column
+       :attr parent_model: if the column is inherited, name of the model
+                           that contains it, None for local columns.
+       :attr parent_column: the name of the column containing the m2o
+                            relationship to the parent model that contains
+                            this column, None for local columns.
+       :attr original_parent: if the column is inherited, name of the original
+                            parent model that contains it i.e in case of multilevel
+                            inheritence, None for local columns.
+    """
+    def __init__(self, name, column, parent_model=None, parent_column=None, original_parent=None):
+        self.name = name
+        self.column = column
+        self.parent_model = parent_model
+        self.parent_column = parent_column
+        self.original_parent = original_parent
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
