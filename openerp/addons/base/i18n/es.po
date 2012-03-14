@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-02-20 08:50+0000\n"
+"PO-Revision-Date: 2012-03-12 08:10+0000\n"
 "Last-Translator: German Figueredo <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-21 05:54+0000\n"
-"X-Generator: Launchpad (build 14838)\n"
+"X-Launchpad-Export-Date: 2012-03-13 05:07+0000\n"
+"X-Generator: Launchpad (build 14933)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -105,7 +105,7 @@ msgstr "Flujo"
 #. module: base
 #: selection:ir.sequence,implementation:0
 msgid "No gap"
-msgstr ""
+msgstr "Sin hueco"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -115,7 +115,7 @@ msgstr "Húngaro / Magyar"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (PY) / Español (PY)"
-msgstr "Español (PY) / Español (PY)"
+msgstr "Español (UY) / Español (UY)"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_project_management
@@ -203,7 +203,7 @@ msgstr "Distribución Analítica de Ventas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_process
 msgid "Process"
-msgstr ""
+msgstr "Proceso"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_journal_billing_rate
@@ -242,7 +242,7 @@ msgstr "ir.ui.view.custom"
 #: code:addons/base/ir/ir_model.py:313
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
-msgstr ""
+msgstr "No está permitido renombrar el campo \"%s\""
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -370,6 +370,11 @@ msgid ""
 "  - tree_but_open\n"
 "For defaults, an optional condition"
 msgstr ""
+"Para accciones, uno de los posibles slots:\n"
+"  - client_action_multi\n"
+"  - client_print_multi\n"
+"  - client_action_relate\n"
+"  - tree_but_open"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -419,7 +424,7 @@ msgstr "group_by no válido"
 #. module: base
 #: field:ir.module.category,child_ids:0
 msgid "Child Applications"
-msgstr ""
+msgstr "Aplicaciones hijas"
 
 #. module: base
 #: field:res.partner,credit_limit:0
@@ -439,7 +444,7 @@ msgstr "Fecha de actualización"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_action_rule
 msgid "Automated Action Rules"
-msgstr ""
+msgstr "Reglas de acción automáticas"
 
 #. module: base
 #: view:ir.attachment:0
@@ -500,7 +505,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
 msgid "Specifications on PADs"
-msgstr ""
+msgstr "Especificaciones en PADs"
 
 #. module: base
 #: help:ir.filters,user_id:0
@@ -508,6 +513,8 @@ msgid ""
 "The user this filter is available to. When left empty the filter is usable "
 "by the system only."
 msgstr ""
+"El filtro está disponible para el usuario. Cuando se deja vacío el filtro se "
+"puede utilizar por el único sistema."
 
 #. module: base
 #: help:res.partner,website:0
@@ -572,7 +579,7 @@ msgstr ""
 #. module: base
 #: view:ir.values:0
 msgid "Action Binding"
-msgstr ""
+msgstr "Acción vinculada"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -601,7 +608,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_layout
 msgid "Sales Orders Print Layout"
-msgstr ""
+msgstr "Diseño de la Impresión de Órdenes de Venta"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -845,6 +852,10 @@ msgid ""
 "Launch Manually Once: after hacing been launched manually, it sets "
 "automatically to Done."
 msgstr ""
+"Manual: Se lanza manualmente.\n"
+"Automático: Se ejecuta cuando el sistema se reconfigura.\n"
+"Manual una vez: después de lanzarlo manualmente, automáticamente se marca "
+"como Aceptado"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -924,6 +935,8 @@ msgid ""
 "The module adds google contact in partner address and add google calendar "
 "events details in Meeting"
 msgstr ""
+"El módulo añade contacto de google en la dirección de la empresa y "
+"calendario de google en las reuniones."
 
 #. module: base
 #: view:res.users:0
@@ -1070,6 +1083,12 @@ msgid ""
 "If Value type is selected, the value will be used directly without "
 "evaluation."
 msgstr ""
+"Expresión que contiene una especificación de valor.\n"
+"Cuando se selecciona el tipo fórmula, este campo puede ser una expresión "
+"Python que puede utilizar los mismos valores para el campo de condición de "
+"la acción del servidor.\n"
+"Si se selecciona el tipo valor, el valor se puede utilizar directamente sin "
+"evaluación."
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -1363,7 +1382,7 @@ msgstr ""
 #. module: base
 #: field:ir.module.category,parent_id:0
 msgid "Parent Application"
-msgstr ""
+msgstr "Aplicación padre"
 
 #. module: base
 #: code:addons/base/res/res_users.py:222
@@ -1380,7 +1399,7 @@ msgstr "Para exportar un nuevo idioma, no seleccione un idioma."
 #: model:ir.module.module,shortdesc:base.module_document
 #: model:ir.module.module,shortdesc:base.module_knowledge
 msgid "Document Management System"
-msgstr ""
+msgstr "Gestión documental"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_claim
