@@ -50,8 +50,8 @@
                        </group>
                        <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
                             <form string="Functions and Addresses">
-                                <field name="partner_id" />
-                                <field name="location_id" domain="[('partner_id', '=', partner_id)]"/>
+                                <field name="parent_id" />
+                                <field name="location_id" domain="[('partner_id', '=', parent_id)]"/>
                                 <field name="function" />
                                 <separator string="Professional Info" colspan="4"/>
                                 <field name="phone"/>
@@ -135,10 +135,10 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <separator string="Postal Address" position="after">
+            <separator string="Address" position="after">
                 <field name="location_id" on_change="onchange_location_id(location_id)" domain="[('partner_id', '=', parent.id)]"/>
             </separator>
-            <xpath expr="//field[@string='Contact Name']" position="replace">
+            <xpath expr="//field[@name='name']" position="replace">
                 <field name="contact_id"/>
             </xpath>
             <field name="title" position="replace"/>
