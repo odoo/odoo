@@ -562,10 +562,10 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Transaction" name="statement_line_ids">
-                            <field colspan="4" name="line_ids" nolabel="1">
+                            <field colspan="4" name="line_ids" nolabel="1" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines">
                                     <field name="sequence" readonly="1" invisible="1"/>
-                                    <field name="date" groups="base.group_extended"/>
+                                    <field name="date" groups="base.group_extended" on_change="onchange_date(date, parent.period_id)"/>
                                     <field name="name"/>
                                     <field name="ref"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
@@ -575,7 +575,7 @@
                                     <field name="amount"/>
                                 </tree>
                                 <form string="Statement lines">
-                                    <field name="date"/>
+                                    <field name="date" groups="base.group_extended" on_change="onchange_date(date, parent.period_id)"/>
                                     <field name="name"/>
                                     <field name="ref"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
@@ -2580,7 +2580,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
 
                     <notebook colspan="4">
                         <page string="Cash Transactions" attrs="{'invisible': [('state','=','draft')]}">
-                            <field colspan="4" name="line_ids" nolabel="1">
+                            <field colspan="4" name="line_ids" nolabel="1" context="{'date':date}">
                                 <tree editable="bottom" string="Statement lines">
                                     <field name="sequence" invisible="1"/>
                                     <field name="date" groups="base.group_extended"/>

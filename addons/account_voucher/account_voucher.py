@@ -977,6 +977,12 @@ class account_bank_statement(osv.osv):
         bank_st_line_obj = self.pool.get('account.bank.statement.line')
         st_line = bank_st_line_obj.browse(cr, uid, st_line_id, context=context)
         if st_line.voucher_id:
+            if st_line.statement_id.period_id != st_line.voucher_id.period_id:
+                raise osv.except_osv(_('Error !'),_("Bank statement period %s and voucher period %s of Statement line '%s' (ref: %s) are not same!")
+                                     % (st_line.statement_id.period_id.name, st_line.voucher_id.period_id.name, st_line.name, st_line.ref or ''))
+            if st_line.date != st_line.voucher_id.date:
+                raise osv.except_osv(_('Error !'),_("Statement line '%s' (ref: %s) date %s and its voucher date %s are not same!")
+                                     % (st_line.name, st_line.ref or '' , st_line.date, st_line.voucher_id.date))
             voucher_obj.write(cr, uid, [st_line.voucher_id.id], {'number': next_number}, context=context)
             if st_line.voucher_id.state == 'cancel':
                 voucher_obj.action_cancel_draft(cr, uid, [st_line.voucher_id.id], context=context)
@@ -1019,6 +1025,13 @@ class account_bank_statement_line(osv.osv):
                 if not (abs(obj.amount) == obj.voucher_id.amount):
                     return False
         return True
+    
+    def onchange_date(self, cr, uid, statement_lines, date, bank_period_id, context=None):
+        voucher_obj = self.pool.get('account.voucher')
+        for line in self.browse(cr, uid, statement_lines, context=context):
+            if line.voucher_id:
+                voucher_obj.write(cr, uid, [line.voucher_id.id], {'date': date, 'period_id': bank_period_id}, context=context)
+        return {}
 
     _constraints = [
         (_check_amount, 'The amount of the voucher must be the same amount as the one on the statement line', ['amount']),
