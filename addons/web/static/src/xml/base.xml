@@ -861,6 +861,11 @@
 <t t-name="FormRenderingNotebookPage">
     <div class="oe_form_notebook_page" t-att-id="id"/>
 </t>
+<t t-name="FormRenderingSeparator">
+    <div class="oe_horizontal_separator">
+        <t t-esc="string"/>
+    </div>
+</t>
 <t t-name="FormRenderingLabel">
     <label  t-att-for="for"
             t-att-title="help"
@@ -874,11 +879,6 @@
 <t t-name="Widget">
     Unhandled widget
     <t t-js="dict">console.warn('Unhandled widget', dict.widget);</t>
-</t>
-<t t-name="WidgetSeparator">
-    <div t-if="widget.orientation !== 'vertical'" t-att-class="'separator ' + widget.orientation">
-        <t t-esc="widget.node.attrs.string"/>
-    </div>
 </t>
 <t t-name="WidgetLabel.tooltip">
     <div class="oe_tooltip_string" t-if="widget.string">

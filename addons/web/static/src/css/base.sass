@@ -85,7 +85,7 @@ $colour4: #8a89ba
             left: 0
         .topbar, .leftbar
             display: none
-    // }}
+    // }}}
 
     // Topbar {{{
     .oe_topbar
@@ -322,7 +322,21 @@ $colour4: #8a89ba
                         @include box-shadow(none)
     // }}}
 
-.openerp
+    // FormView Widgets {{{
+    .oe_horizontal_separator
+        font-weight: bold
+        border-bottom: 1px solid #666
+        margin: 3px 4px 3px 1px
+        height: 17px
+        font-size: 95%
+    .oe_horizontal_separator:empty
+        height: 5px
+    .oe_vertical_separator
+        border-left: 1px solid #666
+        padding: 0 4px 0 4px
+        // }}}
+
+    .openerp
     // Transitional overrides for old styles {{{
     // }}}
 

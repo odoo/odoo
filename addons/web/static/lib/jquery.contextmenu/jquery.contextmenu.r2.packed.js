@@ -34,7 +34,7 @@
     };
     $.fn.contextMenu= function(id,options) {
         if(!menu) {
-            menu=$('<div id="jqContextMenu" class="openerp"></div>').hide().css({
+            menu=$('<div id="jqContextMenu" class="openerp openerp2"></div>').hide().css({
                 position:'absolute',
                 zIndex:'2000'
             }).appendTo('body').bind('click', function(e) {

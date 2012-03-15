@@ -801,8 +801,9 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
 
         $group.children().each(function() {
             var $child = $(this),
-                colspan = parseInt($child.attr('colspan') || 1, 10);
-            if ($child[0].tagName.toLowerCase() === 'newline') {
+                colspan = parseInt($child.attr('colspan') || 1, 10),
+                tagName = $child[0].tagName.toLowerCase();
+            if (tagName === 'newline') {
                 $tr = null;
                 return;
             }
@@ -812,6 +813,10 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             }
             row_cols -= colspan;
             var $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
+            if (tagName === 'separator' && $child.attr('orientation') === 'vertical') {
+                $td.addClass('oe_vertical_separator').attr('width', '1');
+                $child = null;
+            }
             $tr.append($td.append($child));
         });
         $group.before($new_group).remove();
@@ -832,7 +837,9 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         $notebook.before($new_notebook).remove();
         $new_notebook.tabs();
     },
-    process_separator: function($group, $form) {
+    process_separator: function($separator, $form) {
+        var $new_separator = $(QWeb.render('FormRenderingSeparator', $separator.getAttributes()));
+        $separator.before($new_separator).remove();
     },
     process_label: function($label, $form) {
         var $new_label = $(QWeb.render('FormRenderingLabel', $label.getAttributes()));
@@ -1874,7 +1881,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             minLength: 0,
             delay: 0
         });
-        this.$input.autocomplete("widget").addClass("openerp");
+        this.$input.autocomplete("widget").addClass("openerp openerp2");
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {
             if (e.which === 13) {
@@ -3139,7 +3146,6 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
         this.$element.find('.oe-binary').toggle(!this.readonly);
     },
     set_value: function(value) {
-        console.log(value)
         this._super.apply(this, arguments);
         this.set_image_maxwidth();
 

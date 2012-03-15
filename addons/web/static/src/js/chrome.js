@@ -47,7 +47,7 @@ openerp.web.Notification =  openerp.web.OldWidget.extend(/** @lends openerp.web.
 
 openerp.web.dialog = function(element) {
     var result = element.dialog.apply(element, _.rest(_.toArray(arguments)));
-    result.dialog("widget").addClass("openerp");
+    result.dialog("widget").addClass("openerp openerp2");
     return result;
 }
 
@@ -1148,7 +1148,7 @@ openerp.web.EmbeddedClient = openerp.web.OldWidget.extend({
 
     start: function() {
         var self = this;
-        this.am.appendTo(this.$element.addClass('openerp'));
+        this.am.appendTo(this.$element.addClass('openerp openerp2'));
         return this.rpc("/web/action/load", { action_id: this.action_id }, function(result) {
             var action = result.result;
             action.flags = _.extend({
