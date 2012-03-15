@@ -821,7 +821,21 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         });
         $group.before($new_group).remove();
     },
-    process_notebook: function($group, $form) {
+    process_notebook: function($notebook, $form) {
+        var pages = [];
+        $notebook.find('> page').each(function() {
+            var $page = $(this),
+                page_attrs = $page.getAttributes();
+            page_attrs.id = _.uniqueId('notebook_page_');
+            pages.push(page_attrs);
+            var $new_page = $(QWeb.render('FormRenderingNotebookPage', page_attrs));
+            $page.children().appendTo($new_page);
+            $page.before($new_page).remove();
+        });
+        var $new_notebook = $(QWeb.render('FormRenderingNotebook', { pages : pages }));
+        $notebook.children().appendTo($new_notebook);
+        $notebook.before($new_notebook).remove();
+        $new_notebook.tabs();
     },
     process_separator: function($group, $form) {
     },

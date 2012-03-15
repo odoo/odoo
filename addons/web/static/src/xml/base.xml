@@ -850,16 +850,16 @@
 <t t-name="FormRenderingNotebook">
     <div class="oe_form_notebook">
         <ul>
-            <li t-foreach="widget.pages" t-as="page">
-                <a t-attf-href="##{page.page_id}">
-                    <t t-esc="page.node.attrs.string"/>
+            <li t-foreach="pages" t-as="page">
+                <a t-attf-href="##{page.id}">
+                    <t t-esc="page.string"/>
                 </a>
             </li>
         </ul>
     </div>
 </t>
 <t t-name="FormRenderingNotebookPage">
-    <div class="oe_form_notebook_page" t-att-id="widget.page_id"/>
+    <div class="oe_form_notebook_page" t-att-id="id"/>
 </t>
 <t t-name="FormRenderingLabel">
     <label  t-att-for="for"
