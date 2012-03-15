@@ -121,12 +121,13 @@ class base_needaction(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         if context is None:
             context = {}
+        # perform write
+        write_res = super(base_needaction, self).write(cr, uid, ids, values, context=context)
         # get and update user_ids
         needaction_user_ids = self.get_needaction_user_ids(cr, uid, ids, context=context)
         for id in ids:
             self._update_users(cr, uid, [id], needaction_user_ids[id], context=context)
-        # perform write
-        return super(base_needaction, self).write(cr, uid, ids, values, context=context)
+        return write_res
     
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
