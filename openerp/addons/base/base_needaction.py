@@ -112,10 +112,10 @@ class base_needaction(osv.osv):
         if context is None:
             context = {}
         # perform create
-        obj_id = super(base_needaction, self).create(cr, uid, ids, values, context=context)
+        obj_id = super(base_needaction, self).create(cr, uid, values, context=context)
         # link user_ids
         needaction_user_ids = self.get_needaction_user_ids(cr, uid, [obj_id], context=context)
-        self._update_users(cr, uid, [id], needaction_user_ids[obj_id], context=context)
+        self._update_users(cr, uid, [obj_id], needaction_user_ids[obj_id], context=context)
         return obj_id
     
     def write(self, cr, uid, ids, values, context=None):
