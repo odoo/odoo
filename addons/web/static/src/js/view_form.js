@@ -1050,7 +1050,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
                 delayOut: 0,
                 fade: true,
                 title: function() {
-                    var template = widget.form_template + '.tooltip';
+                    var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
                         template = 'WidgetLabel.tooltip';
                     }
@@ -1541,7 +1541,7 @@ openerp.web.DateWidget = openerp.web.DateTimeWidget.extend({
 });
 
 openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
-    form_template: "EmptyComponent",
+    template: "EmptyComponent",
     build_widget: function() {
         return new openerp.web.DateTimeWidget(this);
     },
@@ -1662,10 +1662,10 @@ openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.FieldProgressBar = openerp.web.form.Field.extend({
-    form_template: 'FieldProgressBar',
+    template: 'FieldProgressBar',
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.find('div').progressbar({
+        this.$element.progressbar({
             value: this.value,
             disabled: this.readonly
         });
@@ -1677,7 +1677,7 @@ openerp.web.form.FieldProgressBar = openerp.web.form.Field.extend({
             show_value = 0;
         }
         var formatted_value = openerp.web.format_value(show_value, { type : 'float' }, '0');
-        this.$element.find('div').progressbar('option', 'value', show_value).find('span').html(formatted_value + '%');
+        this.$element.progressbar('option', 'value', show_value).find('span').html(formatted_value + '%');
     }
 });
 
@@ -1792,7 +1792,7 @@ openerp.web.form.dialog = function(content, options) {
 };
 
 openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
-    form_template: 'EmptyComponent',
+    template: 'EmptyComponent',
     init: function(view, node) {
         this._super(view, node);
         this.previous_readonly = this.is_readonly();
@@ -1804,7 +1804,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     },
     is_readonly: function() {
         return this.readonly || this.force_readonly;
-    },    
+    },
     start: function() {
         this._super();
         this.render_content();
@@ -2209,7 +2209,7 @@ var commands = {
     }
 };
 openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
-    form_template: 'FieldOne2Many',
+    template: 'FieldOne2Many',
     multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
@@ -2583,7 +2583,7 @@ openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
 });
 
 openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
-    form_template: 'FieldMany2Many',
+    template: 'FieldMany2Many',
     multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
@@ -3032,7 +3032,7 @@ openerp.web.form.FormOpenDataset = openerp.web.ProxyDataSet.extend({
 });
 
 openerp.web.form.FieldReference = openerp.web.form.Field.extend({
-    form_template: 'FieldReference',
+    template: 'FieldReference',
     init: function(view, node) {
         this._super(view, node);
         this.fields_view = {
@@ -3078,6 +3078,7 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
     },
     start: function() {
         this._super();
+        // TODO: not niv compliant
         this.selection.$element = $(".oe_form_view_reference_selection", this.$element);
         this.selection.renderElement();
         this.selection.start();
@@ -3191,7 +3192,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
-    form_template: 'FieldBinaryFile',
+    template: 'FieldBinaryFile',
     update_dom: function() {
         this._super.apply(this, arguments);
         this.$element.find('.oe-binary-file-set, .oe-binary-file-clear').toggle(!this.readonly);
@@ -3229,7 +3230,7 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
 });
 
 openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
-    form_template: 'FieldBinaryImage',
+    template: 'FieldBinaryImage',
     start: function() {
         this._super.apply(this, arguments);
         this.$image = this.$element.find('img.oe-binary-image');
@@ -3270,7 +3271,7 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
 });
 
 openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
-    form_template: "EmptyComponent",
+    template: "EmptyComponent",
     start: function() {
         this._super();
         this.selected_value = null;
