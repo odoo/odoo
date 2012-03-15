@@ -767,23 +767,30 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
     },
     process_field: function($field, $form) {
         var name = $field.attr('name'),
-            field_orm = this.fvg.fields[name];
+            field_orm = this.fvg.fields[name],
+            field_string = $field.attr('string') || field_orm.string || '',
+            field_help = $field.attr('help') || field_orm.help || '';
+
         if (!field_orm) {
             throw new Error("Field '" + name + "' specified in view could not be found.");
         }
-        // TODO: manage @nolabel
+
         if ($field.attr('nolabel') !== '1') {
             var $label = $form.find('label[for="' + name + '"]');
             if (!$label.length) {
+                field_string = $label.attr('string') || $label.text() || field_string;
+                field_help = $label.attr('help') || field_help;
                 $('<label/>').attr({
                     'for' : name,
-                    'string' : $field.attr('string') || field_orm.string || '',
-                    'help' : $label.attr('help') || $field.attr('help') || field_orm.help || ''
+                    'string' : field_string,
+                    'help' :  field_help
                 }).insertBefore($field).text();
             }
         }
         $field.attr({
-            'widget' : $field.attr('widget') || field_orm.type
+            'widget' : $field.attr('widget') || field_orm.type,
+            'string' : field_string,
+            'help' : field_help
         });
     },
     process_group: function($group, $form) {
@@ -1107,14 +1114,6 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
     }
 });
 
-openerp.web.form.WidgetSeparator = openerp.web.form.Widget.extend({
-    template: 'WidgetSeparator',
-    init: function(view, node) {
-        this._super(view, node);
-        this.orientation = this.node.attrs.orientation || 'horizontal';
-    }
-});
-
 openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     template: 'WidgetButton',
     init: function(view, node) {
@@ -1147,7 +1146,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         var exec_action = function() {
             if (self.node.attrs.confirm) {
                 var def = $.Deferred();
-                var dialog = openerp.web.dialog($('<div>' + self.node.attrs.confirm + '</div>'), {
+                var dialog = openerp.web.dialog($('<div/>').text(self.node.attrs.confirm), {
                     title: _t('Confirm'),
                     modal: true,
                     buttons: [
@@ -1179,7 +1178,6 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     on_confirmed: function() {
         var self = this;
 
-        debugger // TODO: use pyjs
         var context = this.node.attrs.context;
         if (context && context.__ref) {
             context = new openerp.web.CompoundContext(context);
