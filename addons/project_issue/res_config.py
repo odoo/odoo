@@ -19,9 +19,19 @@
 #
 ##############################################################################
 
-import crm_claim
-import report
-import res_config
+from osv import fields, osv
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class project_issue_mail_configuration(osv.osv_memory):
+    _inherit = 'project.config.settings'
 
+    def get_default_issue_server(self, cr, uid, ids, context=None):
+        context = {'type':'claim'}
+        res = self.get_default_email_configurations(cr, uid, ids, context)
+        return res
+
+    def set_default_issue_server(self, cr, uid, ids, context=None):
+        context = {'type':'issue','obj':'project.issue'}
+        res = self.set_email_configurations(cr, uid, ids, context)
+
+
+project_issue_mail_configuration()

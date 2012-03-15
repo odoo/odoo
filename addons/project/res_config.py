@@ -69,7 +69,7 @@ class project_configuration(osv.osv_memory):
         'issue_is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
         'issue_user' : fields.char('Username', size=256),
         'issue_password' : fields.char('Password', size=1024),
-        'crm_claim': fields.boolean("Create claims from an email account",
+        'project_claim': fields.boolean("Create claims from an email account",
                         help="""Allows you to configure your incoming mail server. And creates claims for your mails.
                         """),
         'claim_server' : fields.char('Server Name', size=256),
