@@ -462,7 +462,6 @@ class task(osv.osv):
 
 
     def _resolve_project_id_from_context(self, cr, uid, context=None):
-        print "\n ::: resolve project id from context ::::"
         """Return ID of project based on the value of 'project_id'
            context key, or None if it cannot be resolved to a single project.
         """
@@ -477,7 +476,6 @@ class task(osv.osv):
                 return project_ids[0][0]
 
     def _read_group_type_id(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        print "\n :::: read group type id ::::"
         stage_obj = self.pool.get('project.task.type')
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         order = stage_obj._order
@@ -496,7 +494,6 @@ class task(osv.osv):
         return result
 
     def _read_group_user_id(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        print "\n :: read group user id :::"
         res_users = self.pool.get('res.users')
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         access_rights_uid = access_rights_uid or uid
@@ -520,7 +517,6 @@ class task(osv.osv):
 
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        print "\n ::: search :::"
         obj_project = self.pool.get('project.project')
         for domain in args:
             if domain[0] == 'project_id' and (not isinstance(domain[2], str)):
@@ -531,14 +527,12 @@ class task(osv.osv):
         return super(task, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def _str_get(self, task, level=0, border='***', context=None):
-        print "\n :: st get :::"
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
             border[0]+' '+(task.name or '')+'\n'+ \
             (task.description or '')+'\n\n'
 
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
-        print "\n ::: hours get :::"
         res = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
@@ -554,17 +548,14 @@ class task(osv.osv):
 
 
     def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned = 0.0):
-        print "\n ::: onchange remaining :::"
         if remaining and not planned:
             return {'value':{'planned_hours': remaining}}
         return {}
 
     def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
-        print "\n :::: onchange planned ::::"
         return {'value':{'remaining_hours': planned - effective}}
 
     def onchange_project(self, cr, uid, id, project_id):
-        print "\n :: onchange project :::"
         if not project_id:
             return {}
         data = self.pool.get('project.project').browse(cr, uid, [project_id])
@@ -574,7 +565,6 @@ class task(osv.osv):
         return {}
 
     def duplicate_task(self, cr, uid, map_ids, context=None):
-        print "\n ::: duplicate tasK:::"
         for new in map_ids.values():
             task = self.browse(cr, uid, new, context)
             child_ids = [ ch.id for ch in task.child_ids]
@@ -594,7 +584,6 @@ class task(osv.osv):
             self.write(cr, uid, new, {'parent_ids':[(6,0,set(parent_ids))], 'child_ids':[(6,0, set(child_ids))]})
 
     def copy_data(self, cr, uid, id, default={}, context=None):
-        print "\n :: copy data :::"
         default = default or {}
         default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
         if not default.get('remaining_hours', False):
@@ -610,7 +599,6 @@ class task(osv.osv):
 
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
-        print "\n :: is template :::"
         res = {}
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = True
@@ -620,7 +608,6 @@ class task(osv.osv):
         return res
 
     def _get_task(self, cr, uid, ids, context=None):
-        print "\n :: get task ::"
         result = {}
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
             if work.task_id: result[work.task_id.id] = True
@@ -697,25 +684,21 @@ class task(osv.osv):
     _order = "priority, sequence, date_start, name, id"
 
     def set_priority(self, cr, uid, ids, priority):
-        print "\n :: set priority :::"
         """Set task priority
         """
         return self.write(cr, uid, ids, {'priority' : priority})
 
     def set_high_priority(self, cr, uid, ids, *args):
-        print "\n :: set high priority :::"
         """Set task priority to high
         """
         return self.set_priority(cr, uid, ids, '1')
 
     def set_normal_priority(self, cr, uid, ids, *args):
-        print "\n :: set normal priority :::"
         """Set task priority to normal
         """
         return self.set_priority(cr, uid, ids, '2')
 
     def _check_recursion(self, cr, uid, ids, context=None):
-        print "\n :: check recursion :::"
         for id in ids:
             visited_branch = set()
             visited_node = set()
@@ -726,7 +709,6 @@ class task(osv.osv):
         return True
 
     def _check_cycle(self, cr, uid, id, visited_branch, visited_node, context=None):
-        print "\n :: check cycle :::"
         if id in visited_branch: #Cycle
             return False
 
@@ -747,7 +729,6 @@ class task(osv.osv):
         return True
 
     def _check_dates(self, cr, uid, ids, context=None):
-        print "\n :: check dates :::"
         if context == None:
             context = {}
         obj_task = self.browse(cr, uid, ids[0], context=context)
@@ -766,7 +747,6 @@ class task(osv.osv):
     # Override view according to the company definition
     #
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        print "\n :: fields view get :::"
         users_obj = self.pool.get('res.users')
 
         # read uom as admin to avoid access rights issues, e.g. for portal/share users,
@@ -798,7 +778,6 @@ class task(osv.osv):
         return res
 
     def _check_child_task(self, cr, uid, ids, context=None):
-        print "\n :: check child task :::"
         if context == None:
             context = {}
         tasks = self.browse(cr, uid, ids, context=context)
@@ -810,7 +789,6 @@ class task(osv.osv):
         return True
 
     def action_close(self, cr, uid, ids, context=None):
-        print "\n :: action close :::"
         # This action open wizard to send email to partner or project manager after close task.
         if context == None:
             context = {}
@@ -835,7 +813,6 @@ class task(osv.osv):
         return res
 
     def do_close(self, cr, uid, ids, context={}):
-        print "\n :: do close ::"
         """
         Close Task
         """
@@ -875,8 +852,7 @@ class task(osv.osv):
         return True
 
     def do_reopen(self, cr, uid, ids, context=None):
-        print "\n :: do reopen:::"
-        request = self.pool.get('res.request')
+         request = self.pool.get('res.request')
 
         for task in self.browse(cr, uid, ids, context=context):
             project = task.project_id
@@ -895,7 +871,6 @@ class task(osv.osv):
         return True
 
     def do_cancel(self, cr, uid, ids, context={}):
-        print "\n :: do cancel ::"
         request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids, context=context)
         self._check_child_task(cr, uid, ids, context=context)
@@ -917,7 +892,6 @@ class task(osv.osv):
         return True
 
     def do_open(self, cr, uid, ids, context={}):
-        print "\n :: do open:::"
         if not isinstance(ids,list): ids = [ids]
         tasks= self.browse(cr, uid, ids, context=context)
         for t in tasks:
@@ -930,13 +904,11 @@ class task(osv.osv):
         return True
 
     def do_draft(self, cr, uid, ids, context={}):
-        print "\n ::do draft ::"
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         return True
 
 
     def _delegate_task_attachments(self, cr, uid, task_id, delegated_task_id, context=None):
-        print "\n :: delegate task attachents :::"
         attachment = self.pool.get('ir.attachment')
         attachment_ids = attachment.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', task_id)], context=context)
         new_attachment_ids = []
@@ -946,7 +918,6 @@ class task(osv.osv):
         
 
     def do_delegate(self, cr, uid, ids, delegate_data={}, context=None):
-        print "\n do delegate :::"
         """
         Delegate Task to another users.
         """
@@ -982,7 +953,6 @@ class task(osv.osv):
         return delegated_tasks
 
     def do_pending(self, cr, uid, ids, context={}):
-        print "\n ::: do pending :::"
         self.write(cr, uid, ids, {'state': 'pending'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The task '%s' is pending.") % name
@@ -990,7 +960,6 @@ class task(osv.osv):
         return True
 
     def set_remaining_time(self, cr, uid, ids, remaining_time=1.0, context=None):
-        print "\n ::: set remaining time ::"
         for task in self.browse(cr, uid, ids, context=context):
             if (task.state=='draft') or (task.planned_hours==0.0):
                 self.write(cr, uid, [task.id], {'planned_hours': remaining_time}, context=context)
@@ -998,35 +967,27 @@ class task(osv.osv):
         return True
 
     def set_remaining_time_1(self, cr, uid, ids, context=None):
-        print "\n :: set remaining time 1 :::"
         return self.set_remaining_time(cr, uid, ids, 1.0, context)
 
     def set_remaining_time_2(self, cr, uid, ids, context=None):
-        print "\n set remaining time 2 :::"
         return self.set_remaining_time(cr, uid, ids, 2.0, context)
 
     def set_remaining_time_5(self, cr, uid, ids, context=None):
-        print "\n set remaining time 5 :::"
         return self.set_remaining_time(cr, uid, ids, 5.0, context)
 
     def set_remaining_time_10(self, cr, uid, ids, context=None):
-        print "\n set remaining time 10 :::"
         return self.set_remaining_time(cr, uid, ids, 10.0, context)
 
     def set_kanban_state_blocked(self, cr, uid, ids, context=None):
-        print "\n ::: set kanban state blocked :::"
         self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
 
     def set_kanban_state_normal(self, cr, uid, ids, context=None):
-        print "\n :: set kanban state normal :::"
         self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
 
     def set_kanban_state_done(self, cr, uid, ids, context=None):
-        print "\n :: set kanban state done ::::"
         self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
 
     def _change_type(self, cr, uid, ids, next, *args):
-        print "\n ::: change type :::"
         """
             go to the next stage
             if next is False, go to previous stage
@@ -1050,15 +1011,12 @@ class task(osv.osv):
         return True
 
     def next_type(self, cr, uid, ids, *args):
-        print "\n :: next type ::"
         return self._change_type(cr, uid, ids, True, *args)
 
     def prev_type(self, cr, uid, ids, *args):
-        print "\n :: prev type :::"
         return self._change_type(cr, uid, ids, False, *args)
 
     def _store_history(self, cr, uid, ids, context=None):
-        print "\n ::: store history ::"
         for task in self.browse(cr, uid, ids, context=context):
             self.pool.get('project.task.history').create(cr, uid, {
                 'task_id': task.id,
@@ -1073,7 +1031,6 @@ class task(osv.osv):
         return True
 
     def create(self, cr, uid, vals, context=None):
-        print "\n :: create :::"
         result = super(task, self).create(cr, uid, vals, context=context)
         self._store_history(cr, uid, [result], context=context)
         return result
@@ -1081,7 +1038,6 @@ class task(osv.osv):
     # Overridden to reset the kanban_state to normal whenever
     # the stage (type_id) of the task changes.
     def write(self, cr, uid, ids, vals, context=None):
-        print "\n :: write :::"
         if isinstance(ids, (int, long)):
             ids = [ids]
         if vals and not 'kanban_state' in vals and 'type_id' in vals:
@@ -1098,7 +1054,6 @@ class task(osv.osv):
         return result
 
     def unlink(self, cr, uid, ids, context=None):
-        print "\n :: unlink::::"
         if context == None:
             context = {}
         self._check_child_task(cr, uid, ids, context=context)
@@ -1106,7 +1061,6 @@ class task(osv.osv):
         return res
 
     def _generate_task(self, cr, uid, tasks, ident=4, context=None):
-        print "\n ::: generate task :::"
         context = context or {}
         result = ""
         ident = ' '*ident
