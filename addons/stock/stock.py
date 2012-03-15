@@ -673,25 +673,25 @@ class stock_picking(osv.osv):
             context = {}
         type = context.get('default_type', False)
         res = super(stock_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        if res.get('toolbar', False):
-            for i in xrange(0, len(res['toolbar']['print'])):
-                if res['toolbar']['print'][i]['name'] == 'Packing list':
+        if type:
+            if res.get('toolbar', False):
+                for i in xrange(0, len(res['toolbar']['print'])):
+                    if res['toolbar']['print'][i]['name'] == 'Packing list':
+                        if type == 'in':
+                            res['toolbar']['print'][i]['string'] = 'Incoming Shipment/Receipt'
+                        elif type == 'internal':
+                            res['toolbar']['print'][i]['string'] = 'Internal Shipment'
+                        elif type == 'out':
+                            res['toolbar']['print'][i]['string'] = 'Delivery Order'
+
+            for field in res['fields']:
+                if field == 'state':
                     if type == 'in':
-                        res['toolbar']['print'][i]['string'] = 'Incoming Shipment/Receipt'
+                        res['fields']['state']['selection'] = [('draft', u'New'), ('auto', u'Waiting Another Operation'), ('confirmed', u'Waiting Availability'), ('assigned', u'Ready to Receive'), ('done', 'Received'), ('cancel', u'Cancelled')]
                     elif type == 'internal':
-                        res['toolbar']['print'][i]['string'] = 'Internal Shipment'
+                        res['fields']['state']['selection'] = [('draft', u'New'), ('auto', u'Waiting Another Operation'), ('confirmed', u'Waiting Availability'), ('assigned', u'Ready to Move'), ('done', 'Moved'), ('cancel', u'Cancelled')]
                     elif type == 'out':
-                        res['toolbar']['print'][i]['string'] = 'Delivery Order'
-
-        for field in res['fields']:
-            if field == 'state':
-                if type == 'in':
-                    res['fields']['state']['selection'] = [('draft', u'New'), ('auto', u'Waiting Another Operation'), ('confirmed', u'Waiting Availability'), ('assigned', u'Ready to Receive'), ('done', 'Received'), ('cancel', u'Cancelled')]
-                elif type == 'internal':
-                    res['fields']['state']['selection'] = [('draft', u'New'), ('auto', u'Waiting Another Operation'), ('confirmed', u'Waiting Availability'), ('assigned', u'Ready to Move'), ('done', 'Moved'), ('cancel', u'Cancelled')]
-                elif type == 'out':
-                    res['fields']['state']['selection'] = [('draft', u'New'), ('auto', u'Waiting Another Operation'), ('confirmed', u'Waiting Availability'), ('assigned', u'Ready to Deliver'), ('done', 'Delivered'), ('cancel', u'Cancelled')]
-
+                        res['fields']['state']['selection'] = [('draft', u'New'), ('auto', u'Waiting Another Operation'), ('confirmed', u'Waiting Availability'), ('assigned', u'Ready to Deliver'), ('done', 'Delivered'), ('cancel', u'Cancelled')]
         return res
 
     def action_process(self, cr, uid, ids, context=None):
