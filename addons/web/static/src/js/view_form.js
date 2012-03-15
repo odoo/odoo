@@ -817,14 +817,10 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
                 colspan = parseInt($child.attr('colspan') || 1, 10),
                 tagName = $child[0].tagName.toLowerCase();
             if (tagName === 'newline') {
-                self.compute_width($tr, cols);
                 $tr = null;
                 return;
             }
             if (!$tr || row_cols < colspan) {
-                if (row_cols < colspan) {
-                    self.compute_width($tr, cols);
-                }
                 $tr = $('<tr/>').addClass('oe_form_group_row').appendTo($table);
                 row_cols = cols;
             }
@@ -833,12 +829,12 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             $tr.append($td.append($child));
         });
         $group.before($new_group).remove();
-    },
-    compute_width: function($tr, cols) {
-        if ($tr) {
+
+        // Now compute width of cells
+        $table.find('tbody > tr').each(function() {
             var to_compute = [],
                 total = 100;
-            $tr.children().each(function() {
+            $(this).children().each(function() {
                 var $td = $(this),
                     $child = $td.children(':first');
                 switch ($child[0].tagName.toLowerCase()) {
@@ -866,7 +862,7 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
                 $td.attr('width', ((i == to_compute.length - 1) ? total : width) + '%');
                 total -= width;
             });
-        }
+        });
     },
     process_notebook: function($notebook, $form) {
         var pages = [];
