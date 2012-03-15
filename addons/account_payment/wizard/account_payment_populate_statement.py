@@ -113,6 +113,7 @@ class account_payment_populate_statement(osv.osv_memory):
                 'statement_id': statement.id,
                 'ref': line.communication,
                 'voucher_id': voucher_id,
+                'date': line.date or time.strftime('%Y-%m-%d'),
                 }, context=context)
 
             line_obj.write(cr, uid, [line.id], {'bank_statement_line_id': st_line_id})
