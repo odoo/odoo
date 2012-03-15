@@ -393,6 +393,8 @@ class email_template(osv.osv):
             }
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
+        if attachment_ids:
+            mail_message.write(cr, uid, msg_id, {'attachment_ids': [(6, 0, attachment_ids)]}, context=context)
         if force_send:
             mail_message.send(cr, uid, [msg_id], context=context)
         return msg_id
