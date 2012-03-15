@@ -613,17 +613,17 @@ class stock_picking(osv.osv):
         return new_id
 
     _columns = {
-        'name': fields.char('Reference', size=64, select=True),
-        'origin': fields.char('Origin', size=64, help="Reference of the document that produced this picking.", select=True),
-        'backorder_id': fields.many2one('stock.picking', 'Back Order of', help="If this picking was split this field links to the picking that contains the other part that has been processed already.", select=True),
-        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
-        'note': fields.text('Notes'),
-        'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True),
-        'location_id': fields.many2one('stock.location', 'Location', help="Keep empty if you produce at the location where the finished products are needed." \
+        'name': fields.char('Reference', size=64, select=True, states={'done': [('readonly', True)]}),
+        'origin': fields.char('Origin', size=64, states={'done': [('readonly', True)]}, help="Reference of the document that produced this picking.", select=True),
+        'backorder_id': fields.many2one('stock.picking', 'Back Order of', states={'done': [('readonly', True)]}, help="If this picking was split this field links to the picking that contains the other part that has been processed already.", select=True),
+        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, states={'done': [('readonly', True)]}, help="Shipping type specify, goods coming in or going out."),
+        'note': fields.text('Notes', states={'done': [('readonly', True)]}),
+        'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True, states={'done': [('readonly', True)]}),
+        'location_id': fields.many2one('stock.location', 'Location', states={'done': [('readonly', True)]}, help="Keep empty if you produce at the location where the finished products are needed." \
                 "Set a location if you produce at a fixed location. This can be a partner location " \
                 "if you subcontract the manufacturing operations.", select=True),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location',help="Location where the system will stock the finished products.", select=True),
-        'move_type': fields.selection([('direct', 'Partial Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, help="It specifies goods to be delivered all at once or by direct delivery"),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', states={'done': [('readonly', True)]}, help="Location where the system will stock the finished products.", select=True),
+        'move_type': fields.selection([('direct', 'Partial Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done': [('readonly', True)]}, help="It specifies goods to be delivered all at once or by direct delivery"),
         'state': fields.selection([
             ('draft', 'New'),
             ('auto', 'Waiting Another Operation'),
@@ -640,20 +640,20 @@ class stock_picking(osv.osv):
                  "* Cancelled: has been cancelled, can't be confirmed anymore"),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed"),
-        'date': fields.datetime('Order Date', help="Date of Order", select=True),
-        'date_done': fields.datetime('Date Done', help="Date of Completion"),
+        'date': fields.datetime('Order Date', help="Date of Order", select=True, states={'done': [('readonly', True)]}),
+        'date_done': fields.datetime('Date Done', help="Date of Completion", states={'done': [('readonly', True)]}),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  store=True, type='datetime', string='Max. Expected Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
-        'auto_picking': fields.boolean('Auto-Picking'),
-        'address_id': fields.many2one('res.partner.address', 'Address', help="Address of partner"),
+        'auto_picking': fields.boolean('Auto-Picking', states={'done': [('readonly', True)]}),
+        'address_id': fields.many2one('res.partner.address', 'Address', states={'done': [('readonly', True)]}, help="Address of partner"),
         'partner_id': fields.related('address_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True),
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Control",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done': [('readonly', True)]}),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -667,6 +667,30 @@ class stock_picking(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
     ]
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
+        type = context.get('default_type', False)
+        res = super(stock_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        if res.get('toolbar', False):
+            if type == 'in':
+                res['toolbar']['print'] = [{'report_file': 'stock/report/picking.rml', 'groups_id': [], 'multi': False, 'report_xsl': False, 'name': 'Packing list', 'string': 'Incoming Shipment/Receipt', 'auto': True, 'report_name': 'stock.picking.list', 'header': True, 'attachment': False, 'report_type': 'pdf', 'usage': False, 'model': 'stock.picking', 'type': 'ir.actions.report.xml', 'id': 333, 'report_xml': False, 'attachment_use': False}]
+            if type == 'internal':
+                res['toolbar']['print'] = [{'report_file': 'stock/report/picking.rml', 'groups_id': [], 'multi': False, 'report_xsl': False, 'name': 'Packing list', 'string': 'Internal Shipment', 'auto': True, 'report_name': 'stock.picking.list', 'header': True, 'attachment': False, 'report_type': 'pdf', 'usage': False, 'model': 'stock.picking', 'type': 'ir.actions.report.xml', 'id': 333, 'report_xml': False, 'attachment_use': False}]
+            if type == 'out':
+                res['toolbar']['print'] = [{'report_file': 'stock/report/picking.rml', 'groups_id': [], 'multi': False, 'report_xsl': False, 'name': 'Packing list', 'string': 'Delivery Order', 'auto': True, 'report_name': 'stock.picking.list', 'header': True, 'attachment': False, 'report_type': 'pdf', 'usage': False, 'model': 'stock.picking', 'type': 'ir.actions.report.xml', 'id': 333, 'report_xml': False, 'attachment_use': False}]
+
+        for field in res['fields']:
+            if field == 'state':
+                if type == 'in':
+                    res['fields']['state']['selection'] = [('draft', u'New'), ('auto', u'Waiting Another Operation'), ('confirmed', u'Waiting Availability'), ('assigned', u'Ready to Receive'), ('done', 'Received'), ('cancel', u'Cancelled')]
+                if type == 'internal':
+                    res['fields']['state']['selection'] = [('draft', u'New'), ('auto', u'Waiting Another Operation'), ('confirmed', u'Waiting Availability'), ('assigned', u'Ready to Move'), ('done', 'Moved'), ('cancel', u'Cancelled')]
+                if type == 'out':
+                    res['fields']['state']['selection'] = [('draft', u'New'), ('auto', u'Waiting Another Operation'), ('confirmed', u'Waiting Availability'), ('assigned', u'Ready to Deliver'), ('done', 'Delivered'), ('cancel', u'Cancelled')]
+
+        return res
 
     def action_process(self, cr, uid, ids, context=None):
         if context is None: context = {}
