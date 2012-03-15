@@ -20,8 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-import pooler
-from tools.translate import _
 
 class project_configuration(osv.osv_memory):
     _inherit = 'project.config.settings'

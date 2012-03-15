@@ -28,11 +28,13 @@ class project_configuration(osv.osv_memory):
     _inherit = 'project.config.settings'
 
     def get_default_email_configurations(self, cr, uid, ids, context=None):
+        fetchmail_obj = self.pool.get('fetchmail.server')
         result = {}
-        if context and context.get('type'):
-            type = context.get('type')
-            fetchmail_obj = self.pool.get('fetchmail.server')
-            server_ids = fetchmail_obj.search(cr, uid, [('name','=',type),('state','!=','done')])
+        if not context:
+            context = {}
+        type = context.get('type')
+        if type:
+            server_ids = fetchmail_obj.search(cr, uid, [('name','=',type),('state','=','done')])
             if server_ids:
                 result.update({'project_'+type: True})
                 server_id = fetchmail_obj.browse(cr, uid, server_ids[0])
@@ -46,12 +48,14 @@ class project_configuration(osv.osv_memory):
         return result
 
     def set_email_configurations(self, cr, uid, ids, context=None):
-        if context and context.get('type'):
-            model_obj = self.pool.get('ir.model')
-            fetchmail_obj = self.pool.get('fetchmail.server')
-            ir_values_obj = self.pool.get('ir.values')
-            model = context.get('obj')
-            type = context.get('type')
+        model_obj = self.pool.get('ir.model')
+        fetchmail_obj = self.pool.get('fetchmail.server')
+        ir_values_obj = self.pool.get('ir.values')
+        if not context:
+            context = {}
+        type = context.get('type')
+        model = context.get('obj')
+        if type and model:
             object_id = model_obj.search(cr, uid, [('model','=',model)])
             vals = self.read(cr, uid, ids[0], [], context=context)
             if vals.get('project_'+type) and object_id:

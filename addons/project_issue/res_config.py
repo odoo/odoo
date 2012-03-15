@@ -43,13 +43,13 @@ class project_issue_mail_configuration(osv.osv_memory):
     }
 
     def get_default_issue_server(self, cr, uid, ids, context=None):
-        context = {'type':'issue'}
+        context.update({'type':'issue'})
         res = self.get_default_email_configurations(cr, uid, ids, context)
         return res
 
     def set_default_issue_server(self, cr, uid, ids, context=None):
-        context = {'type':'issue','obj':'project.issue'}
-        res = self.set_email_configurations(cr, uid, ids, context)
+        context.update({'type':'issue','obj':'project.issue'})
+        self.set_email_configurations(cr, uid, ids, context)
 
 
 project_issue_mail_configuration()

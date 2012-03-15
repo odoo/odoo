@@ -46,11 +46,10 @@ class project_claim_mail_configuration(osv.osv_memory):
     def get_default_claim_server(self, cr, uid, ids, context=None):
         context.update({'type':'claim'})
         res = self.get_default_email_configurations(cr, uid, ids, context)
-
         return res
 
     def set_default_claim_server(self, cr, uid, ids, context=None):
         context.update({'type':'claim','obj':'crm.claim'})
-        res = self.set_email_configurations(cr, uid, ids, context)
+        self.set_email_configurations(cr, uid, ids, context)
 
 project_claim_mail_configuration()
