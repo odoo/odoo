@@ -1312,7 +1312,7 @@ openerp.web._lt = function (s) {
     return {toString: function () { return openerp.web._t(s); }}
 };
 openerp.web.qweb = new QWeb2.Engine();
-openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
+openerp.web.qweb.debug = ($.deparam($.param.querystring()).debug != undefined);
 openerp.web.qweb.default_dict = {
     '_' : _,
     '_t' : openerp.web._t
@@ -1346,6 +1346,23 @@ openerp.web.qweb.preprocess_node = function() {
             }
     }
 };
+
+/**
+ * A small utility function to check if a class implements correctly an interface, assuming that
+ * interface is simply specified using a dictionary containing methods and attributes with the
+ * correct type. It only performs the check when in debug mode and the only effect of an invalid
+ * check is messages in the console.
+ */
+openerp.web.check_interface = function(_class, _interface) {
+    if (! openerp.web.check_interface.debug)
+        return;
+    for (var member in _interface) {
+        if ( (typeof _class.prototype[member] != typeof _interface[member]) ) {
+            console.error("class failed to implement interface member '" + member + "'");
+        }
+    }
+}
+openerp.web.check_interface.debug = ($.deparam($.param.querystring()).debug != undefined);
 
 /** Jquery extentions */
 $.Mutex = (function() {
