@@ -35,8 +35,11 @@ from tools.translate import _
 import openerp
 import openerp.exceptions
 
+# for avatar resizing
 import io, StringIO
 from PIL import Image
+# for default avatar choice
+import random
 
 _logger = logging.getLogger(__name__)
 
@@ -203,25 +206,6 @@ class users(osv.osv):
             self.write(cr, uid, ids, {'groups_id': [(4, extended_group_id)]}, context=context)
         return True
 
-    def _get_avatar_mini(self, cr, uid, ids, name, args, context=None):
-        result = {}
-        for obj in self.browse(cr, uid, ids, context=context):
-            if not obj.avatar:
-                result[obj.id] = False
-                continue
-
-            image_stream = io.BytesIO(obj.avatar.decode('base64'))
-            img = Image.open(image_stream)
-            img.thumbnail((180, 150), Image.ANTIALIAS)
-            img_stream = StringIO.StringIO()
-            img.save(img_stream, "JPEG")
-            result[obj.id] = img_stream.getvalue().encode('base64')
-        return result
-
-    def _set_avatar_mini(self, cr, uid, id, name, value, args, context=None):
-        self.write(cr, uid, [id], {'avatar': value}, context=context)
-        return True
-
     def _get_interface_type(self, cr, uid, ids, name, args, context=None):
         """Implementation of 'view' function field getter, returns the type of interface of the users.
         @param field_name: Name of the field
@@ -232,6 +216,29 @@ class users(osv.osv):
         extended_group_id = group_obj.get_extended_interface_group(cr, uid, context=context)
         extended_users = group_obj.read(cr, uid, extended_group_id, ['users'], context=context)['users']
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
+
+    def onchange_avatar_mini(self, cr, uid, ids, value, context=None):
+        return {'value': {'avatar': value, 'avatar_mini': self._avatar_resize(cr, uid, value)  } }
+    
+    def _set_avatar_mini(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'avatar': value}, context=context)
+    
+    def _avatar_resize(self, cr, uid, avatar, context=None):
+        image_stream = io.BytesIO(avatar.decode('base64'))
+        img = Image.open(image_stream)
+        img.thumbnail((180, 150), Image.ANTIALIAS)
+        img_stream = StringIO.StringIO()
+        img.save(img_stream, "JPEG")
+        return img_stream.getvalue().encode('base64')
+    
+    def _get_avatar_mini(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for user in self.browse(cr, uid, ids, context=context):
+            if not user.avatar:
+                result[user.id] = False
+            else:
+                result[user.id] = self._avatar_resize(cr, uid, user.avatar)
+        return result
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
@@ -379,13 +386,15 @@ class users(osv.osv):
         return result
 
     def _get_avatar(self, cr, uid, context=None):
-        avatar_path = openerp.modules.get_module_resource('base','images','photo.png')
-        return open(avatar_path, 'rb').read().encode('base64')
-
+        # default avatar file name: avatar0 -> avatar6, choose randomly
+        random.seed()
+        avatar_path = openerp.modules.get_module_resource('base', 'images', 'avatar%d.jpg' % random.randint(0, 6))
+        return self._avatar_resize(cr, uid, open(avatar_path, 'rb').read().encode('base64'))
+    
     _defaults = {
         'password' : '',
         'context_lang': 'en_US',
-        'avatar': _get_avatar,
+        'avatar_mini': _get_avatar,
         'active' : True,
         'menu_id': _get_menu,
         'company_id': _get_company,
