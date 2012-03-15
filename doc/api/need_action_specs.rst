@@ -12,6 +12,8 @@ This class also offers several global services,:
 
 This mechanism is used for instance to display the number of pending actions in menus, such as Leads (12).
 
+A menu in Settings/Users has been added to allows having a quick look to need_action_user_ids.
+
 Addon implementation example
 ++++++++++++++++++++++++++++
 
