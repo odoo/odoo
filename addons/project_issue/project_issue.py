@@ -287,9 +287,9 @@ class project_issue(crm.crm_case, osv.osv):
                 'task_id': new_task_id,
                 'state':'pending'
             }
-            self._convert_to_task_notification(cr, uid, ids, context)
+            self.convert_to_task_send_note(cr, uid, ids, context)
             cases = self.browse(cr, uid, ids)
-            self._case_pending_notification(cases, context=context)
+            self.case_pending_send_note(cr, uid, ids, context)
             case_obj.write(cr, uid, [bug.id], vals)
 
         return  {
@@ -345,14 +345,14 @@ class project_issue(crm.crm_case, osv.osv):
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
-        #Update last action date everytime the user change the stage, the state or send a new email
+        #Update last action date every time the user change the stage, the state or send a new email
         logged_fields = ['type_id', 'state', 'message_ids']
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
         if 'type_id' in vals and vals['type_id']:
             stage = self.pool.get('project.task.type').browse(cr, uid, vals['type_id'], context=context)
             self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Changed stage to <b>%s</b>.") % stage.name, type='notification')
+                        _("changed stage to <b>%s</b>.") % stage.name, type='notification')
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
@@ -362,56 +362,69 @@ class project_issue(crm.crm_case, osv.osv):
         task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
         return {'value':{'user_id': task.user_id.id,}}
 
-    def _case_open_notification(self, case, context=None):
-        if case.state:
-            message = _("Issue is <b>opened</b>.")
-            case.message_append_note('' ,message, type='notification')
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            message = _("has been <b>opened</b>.")
+            obj.message_append_note('' ,message)
         return True
 
-    def _case_close_notification(self, case, context=None):
-        case[0].message_mark_done(context)
-        message = _("Issue is <b>closed</b>.")
-        case[0].message_append_note('' ,message, type='notification')
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            message = _("has been <b>closed</b>.")
+            obj.message_append_note('' ,message)
         return True
 
 
-    def _convert_to_task_notification(self, cr, uid, ids, context=None):
+    def convert_to_task_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Issue is <b>converted</b> in to task."), type='notification', context=context)
+                        _("has been <b>converted</b> in to task."), type='notification', context=context)
         return True
 
-    def create_notificate(self, cr, uid, ids, context=None):
+    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
+        result = {}
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Issue is <b>created</b>."), type='notification', need_action_user_id=False, context=context)
-        return True
+            result[obj.id] = False
+            if (obj.state == 'draft' and obj.user_id):
+                result[obj.id] = obj.user_id.id
+            if obj.project_id.project_escalation_id.user_id:
+                result[obj.id] = obj.project_id.project_escalation_id.user_id.id
+        return result
 
-    def _case_pending_notification(self, case, context=None):
-        message = _("Issue is on <b>pending<b>.")
-        case[0].message_append_note('' ,message, type='notification')
-        return True
-
-    def _case_escalate_notification(self, case, context=None):
-        if case[0].project_id.project_escalation_id.user_id.id:
-            message = _("Issue is <b>escalated</b> from project <em>'%s'</em> to project <em>'%s'</em>.") % (case[0].project_id.name, case[0].project_id.project_escalation_id.name)
-            case[0].message_append_note('' ,message, type='notification', need_action_user_id=case[0].project_id.project_escalation_id.user_id.id, context=context)
-        else:
-            message = _("Issue is <b>escalated</b>.")
-            case[0].message_append_note('' ,message, type='notification', need_action_user_id=False, context=context)
-        
-        return True
-
-    def _case_reset_notification(self, cr, uid, ids, context=None):
+    def case_escalate_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("Issue is reset as <b>new<b>."), type='notification', need_action_user_id=obj.user_id.id, context=context)
+            if obj.project_id.project_escalation_id.user_id.id:
+                message = _("has been<b>escalated</b> from project <em>'%s'</em> to project <em>'%s'</em>.") % (obj.project_id.name, obj.project_id.project_escalation_id.name)
+                obj.message_append_note('' ,message, type='notification', context=context)
+            else:
+                message = _("has been <b>escalated</b>.")
+                obj.message_append_note('' ,message, type='notification', context=context)
         return True
 
-    def _case_cancel_notification(self, case, context=None):
-        case[0].message_mark_done(context=context)
-        message = _("Issue is <b>cancelled<b>.")
-        case[0].message_append_note('' ,message, type="notification")
+    def case_create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+#            self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
+            message = _("has been <b>created</b>.")
+            self.message_append_note(cr, uid, ids, _('System notification'),
+                        message, type='notification', context=context)
+        return True
+
+    def case_pending_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            message = _("has been <b>pending<b>.")
+            obj.message_append_note('' ,message)
+        return True
+
+    def case_reset_send_note(self,  cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            message =_("has been set as <b>new<b>.")
+            obj.message_append_note('' ,message)
+        return True
+
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            message = _("has been <b>cancelled<b>.")
+            obj.message_append_note('' ,message)
         return True
 
     def case_reset(self, cr, uid, ids, context=None):
@@ -419,7 +432,7 @@ class project_issue(crm.crm_case, osv.osv):
         """
         res = super(project_issue, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
-        self._case_reset_notification(cr, uid, ids, context)
+        self.case_reset_send_note(cr, uid, ids, context)
         return res
 
     def case_pending(self, cr, uid, ids, context=None):
@@ -429,6 +442,7 @@ class project_issue(crm.crm_case, osv.osv):
         return res
 
     def case_cancel(self, cr, uid, ids, context=None):
+        print "\n :: case cancel ::::"
         """Overrides cancel for crm_case for setting probability
         """
         res = super(project_issue, self).case_cancel(cr, uid, ids, context)
@@ -437,7 +451,7 @@ class project_issue(crm.crm_case, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(project_issue, self).create(cr, uid, vals, context=context)
-        self.create_notificate(cr, uid, [obj_id], context=context)
+        self.case_create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
     def case_open(self, cr, uid, ids, context=None):
@@ -482,7 +496,7 @@ class project_issue(crm.crm_case, osv.osv):
             else:
                 raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.write(cr, uid, [case.id], data)
-        self._case_escalate_notification(cases, context=context)
+        self.case_escalate_send_note(cr, uid, ids, context=context)
         return True
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
