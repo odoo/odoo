@@ -287,37 +287,9 @@ class crm_lead(crm_case, osv.osv):
                         message, type='notification', context=context)
         return True
 
-    def case_open_send_note(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            if lead.state == 'draft' and lead.state == 'pending':
-                continue
-            context['msg_prefix'] = 'Opportunity' if lead.type == 'opportunity' else 'Lead'
-            super(crm_lead, self).case_open_send_note(cr, uid, [lead.id], context=context)
-        return True
-
-    def case_close_send_note(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            context['msg_prefix'] = 'Opportunity' if lead.type == 'opportunity' else 'Lead'
-            super(crm_lead, self).case_close_send_note(cr, uid, ids, context=context)
-        return True
-
-    def case_cancel_send_note(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            context['msg_prefix'] = 'Opportunity' if lead.type == 'opportunity' else 'Lead'
-            super(crm_lead, self).case_cancel_send_note(cr, uid, ids, context=context)
-        return True
-
-    def case_pending_send_note(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            context['msg_prefix'] = 'Opportunity' if lead.type == 'opportunity' else 'Lead'
-            super(crm_lead, self).case_pending_send_note(cr, uid, ids, context=context)
-        return True
-    
-    def case_reset_send_note(self,  cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            context['msg_prefix'] = 'Opportunity' if lead.type == 'opportunity' else 'Lead'
-            super(crm_lead, self).case_reset_send_note(cr, uid, ids, context=context)
-        return True
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+		lead = self.browse(cr, uid, [id], context=context)[0]
+		return ('Opportunity' if lead.type == 'opportunity' else 'Lead')
     
     def case_mark_lost_send_note(self, cr, uid, ids, context=None):
         for opportunity in self.browse(cr, uid, ids, context=context):
