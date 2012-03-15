@@ -96,6 +96,7 @@ class test_ir_sequence_no_gap(unittest2.TestCase):
         """
         cr0 = cursor()
         cr1 = cursor()
+        cr1._default_log_exceptions = False # Prevent logging a traceback
         msg_re = '^could not obtain lock on row in relation "ir_sequence"$'
         with self.assertRaisesRegexp(psycopg2.OperationalError, msg_re):
             n0 = registry('ir.sequence').get(cr0, ADMIN_USER_ID, 'test_sequence_type_2', {})
