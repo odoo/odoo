@@ -675,12 +675,13 @@ class stock_picking(osv.osv):
         res = super(stock_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if res.get('toolbar', False):
             for i in xrange(0, len(res['toolbar']['print'])):
-                if type == 'in':
-                    res['toolbar']['print'][i]['string'] = 'Incoming Shipment/Receipt'
-                elif type == 'internal':
-                    res['toolbar']['print'][i]['string'] = 'Internal Shipment'
-                elif type == 'out':
-                    res['toolbar']['print'][i]['string'] = 'Delivery Order'
+                if res['toolbar']['print'][i]['name'] == 'Packing list':
+                    if type == 'in':
+                        res['toolbar']['print'][i]['string'] = 'Incoming Shipment/Receipt'
+                    elif type == 'internal':
+                        res['toolbar']['print'][i]['string'] = 'Internal Shipment'
+                    elif type == 'out':
+                        res['toolbar']['print'][i]['string'] = 'Delivery Order'
 
         for field in res['fields']:
             if field == 'state':
