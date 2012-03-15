@@ -52,6 +52,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.mutating_mutex = new $.Mutex();
         this.on_change_mutex = new $.Mutex();
         this.reload_mutex = new $.Mutex();
+        this.set({"force_readonly": false});
     },
     start: function() {
         this._super();
@@ -1202,16 +1203,35 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
 });
 
 /**
+ * Interface implemented by the form view or any other object
+ * able to provide the features necessary for the fields to work.
+ * 
+ * Properties:
+ *     - force_readonly: boolean, When it is true, all the fields should always appear
+ *      in read only mode, no matter what the value of their "readonly" property can be.
+ */
+
+openerp.web.form.FieldManagerInterface = {
+
+};
+
+/**
  * Interface to be implemented by fields.
  * 
- * Novajs Attributes:
- *     - ...
+ * Properties:
+ *     - readonly: boolean. If set to true the field should appear in readonly mode.
  * 
- * Novajs Events:
+ * Events:
  *     - ...
  * 
  */
 openerp.web.form.FieldInterface = {
+    /**
+     * Constructor takes 2 arguments:
+     * - field_manager: Implements FieldManagerInterface
+     * - node: the "<field>" node in json form
+     */
+    init: function(field_manager, node) {},
     /**
      * Called by the form view to indicate the value of the field.
      * 
@@ -1252,26 +1272,43 @@ openerp.web.form.FieldInterface = {
 /**
  * Abstract class for classes implementing FieldInterface. Should be renamed to AbstractField some
  * day.
+ * 
+ * Properties:
+ *     - effective_readonly: when it is true, the widget is displayed as readonly. Vary depending
+ *      the values of the "readonly" property and the "force_readonly" property on the field manager.
+ * 
  */
 openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.form.Field# */{
     /**
      * @constructs openerp.web.form.Field
      * @extends openerp.web.form.Widget
      *
-     * @param view
+     * @param field_manager
      * @param node
      */
-    init: function(view, node) {
-        this._super(view, node);
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
         this.name = this.node.attrs.name;
         this.value = undefined;
-        view.fields[this.name] = this;
-        view.fields_order.push(this.name);
+        this.view.fields[this.name] = this;
+        this.view.fields_order.push(this.name);
         this.type = this.node.attrs.widget;
-        this.field = view.fields_view.fields[this.name] || {};
-        this.readonly = this.modifiers['readonly'] === true;
+        this.field = this.view.fields_view.fields[this.name] || {};
         this.required = this.modifiers['required'] === true;
         this.invalid = this.dirty = false;
+        
+        // because I'm lazy to refactor right now
+        this.on("change:readonly", this, function() {this.readonly = this.get("readonly");});
+        
+        // some events to make the property "effective_readonly" sync automatically with "readonly" and
+        // "force_readonly"
+        this.set({"readonly": this.modifiers['readonly'] === true});
+        var test_effective_readonly = function() {
+            this.set({"effective_readonly": this.get("readonly") || this.view.get("force_readonly")});
+        };
+        this.view.on("change:readonly", this, test_effective_readonly);
+        this.view.on("change:force_readonly", this, test_effective_readonly);
+        _.bind(test_effective_readonly, this)();
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1322,6 +1359,8 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
                 this.$element.toggleClass('invalid', !this.is_valid());
             }
         }
+        // one more shit code to avoid refactoring this.readonly right now
+        this.set({"readonly": this.readonly});
     },
     on_ui_change: function() {
         this.dirty = true;
@@ -1795,15 +1834,16 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     template: 'EmptyComponent',
     init: function(view, node) {
         this._super(view, node);
-        this.previous_readonly = this.is_readonly();
         this.limit = 7;
         this.value = null;
         this.cm_id = _.uniqueId('m2o_cm_');
         this.last_search = [];
         this.tmp_value = undefined;
-    },
-    is_readonly: function() {
-        return this.readonly || this.force_readonly;
+        this.on("change:effective_readonly", this, function(origin, event) {
+            if (event.oldValue !== event.newValue) {
+                this.render_content();
+            }
+        });
     },
     start: function() {
         this._super();
@@ -1811,7 +1851,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     },
     render_content: function() {
         this.$element.html("");
-        if (!this.is_readonly())
+        if (!this.get("effective_readonly"))
             this.render_editable();
         else
             this.render_readonly();
@@ -1836,12 +1876,12 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 $cmenu.append(QWeb.render("FieldMany2One.context_menu", {widget: self}));
                 var bindings = {};
                 bindings[self.cm_id + "_search"] = function() {
-                    if (self.is_readonly())
+                    if (self.get("effective_readonly"))
                         return;
                     self._search_create_popup("search");
                 };
                 bindings[self.cm_id + "_create"] = function() {
-                    if (self.is_readonly())
+                    if (self.get("effective_readonly"))
                         return;
                     self._search_create_popup("form");
                 };
@@ -1875,7 +1915,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                         } else {
                             $("#" + self.cm_id + " .oe_m2o_menu_item_mandatory").addClass("oe-m2o-disabled-cm");
                         }
-                        if (!self.is_readonly()) {
+                        if (!self.get("effective_readonly")) {
                             $("#" + self.cm_id + " .oe_m2o_menu_item_noreadonly").removeClass("oe-m2o-disabled-cm");
                         } else {
                             $("#" + self.cm_id + " .oe_m2o_menu_item_noreadonly").addClass("oe-m2o-disabled-cm");
@@ -1898,7 +1938,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             }
         });
         this.$drop_down.click(function() {
-            if (self.is_readonly())
+            if (self.get("effective_readonly"))
                 return;
             if (self.$input.autocomplete("widget").is(":visible")) {
                 self.$input.autocomplete("close");
@@ -2060,7 +2100,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     },
     render_value: function() {
         var self = this;
-        if (!this.is_readonly()) {
+        if (!this.get("effective_readonly")) {
             this.$input.val(this.value ? this.value[1] : "");
         } else {
             self.$element.find('a')
@@ -2156,9 +2196,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        if (this.previous_readonly != this.is_readonly()) {
-            this.render_content();
-        }
     }
 });
 openerp.web.check_interface(openerp.web.form.FieldMany2One, openerp.web.form.FieldInterface);

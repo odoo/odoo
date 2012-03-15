@@ -9,6 +9,7 @@ openerp.web.page = function (openerp) {
         init: function () {
             this._super.apply(this, arguments);
             this.registry = openerp.web.page.readonly;
+            this.set({"force_readonly": true});
         },
         reload: function () {
             if (this.dataset.index == null) {
@@ -142,10 +143,7 @@ openerp.web.page = function (openerp) {
             this.$element.find('div').text(option ? option[1] : this.values[0][1]);
         }
     });
-    openerp.web.page.FieldMany2OneReadonly = openerp.web.form.FieldMany2One.extend({
-        force_readonly: true,
-    });
-    openerp.web.page.FieldReferenceReadonly = openerp.web.page.FieldMany2OneReadonly.extend({
+    openerp.web.page.FieldReferenceReadonly = openerp.web.form.FieldMany2One.extend({
         set_value: function (value) {
             if (!value) {
                 return this._super(null);
@@ -213,7 +211,6 @@ openerp.web.page = function (openerp) {
         'date': 'openerp.web.page.FieldCharReadonly',
         'datetime': 'openerp.web.page.FieldCharReadonly',
         'selection' : 'openerp.web.page.FieldSelectionReadonly',
-        'many2one': 'openerp.web.page.FieldMany2OneReadonly',
         'many2many' : 'openerp.web.page.FieldMany2ManyReadonly',
         'one2many' : 'openerp.web.page.FieldOne2ManyReadonly',
         'one2many_list' : 'openerp.web.page.FieldOne2ManyReadonly',
