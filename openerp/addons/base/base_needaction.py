@@ -24,12 +24,12 @@ from tools.translate import _
 
 class base_needaction_users_rel(osv.osv):
     '''
-    base_needaction_users_rel holds the data related to the needaction
+    base_needaction_users_rel holds data related to the needaction
     mechanism inside OpenERP. A needaction is characterized by:
-    - res_model: model of the followed objects
-    - res_id: ID of resource
+    - res_model: model of the record requiring an action
+    - res_id: ID of the record requiring an action
     - user_id: foreign key to the res.users table, to the user that
-      has to perform an action
+      has to perform the action
     '''
     
     _name = 'base.needaction_users_rel'
@@ -46,23 +46,33 @@ class base_needaction_users_rel(osv.osv):
 
 
 class base_needaction(osv.osv):
-    '''Mixin class for object implementing the need action mechanism.
+    '''Mixin class for objects using the need action feature.
     
-    Need action mechanism can be used by objects that have to be able to
+    Need action feature can be used by objects willing to be able to
     signal that an action is required on a particular record. If in the
     business logic an action must be performed by somebody, for instance
-    validation by a manager, this mechanism allows to set a field with
-    the user_id of the user requested to perform the action.
+    validation by a manager, this mechanism allows to set a list of
+    users asked ot perform an action.
     
-    Technically, this class adds a need_action_user_id field; when
-    set to false, no action is required; when an user_id is set,
-    this user has an action to perform. This field is a function field.
-    Setting an user_id is done through redefining the get_needaction_user_id method.
-    Therefore by redefining only one method, you can specify
-    the cases in which an action will be required on a particular record.
+    This class wraps a table (base.needaction_users_rel) that behaves
+    like a many2many field. However, no field is added to the model
+    inheriting from base.needaction. The mixin class manages the low-level
+    considerations of updating relationships. Every change made on the
+    record calls a method that updates the relationships.
     
-    This mechanism is used for instance to display the number of pending actions
-    in menus, such as Leads (12).
+    Objects using the need_action feature should override the
+    ``get_needaction_user_ids`` method. This methods returns a dictionary
+    whose keys are record ids, and values a list of user ids, like
+    in a many2many relationship. Therefore by defining only one method,
+    you can specify if an action is required by defining the users
+    that have to do it, in every possible situation.
+    
+    This class also offers several global services,:
+    - ``needaction_get_user_record_references``: for a given uid, get all
+      the records that asks this user to perform an action. Records
+    are given as references, a list of tuples (model_name, record_id).
+    This mechanism is used for instance to display the number of pending
+    actions in menus, such as Leads (12).
     '''
     _name = 'base.needaction'
     _description = 'Need action mechanism'
@@ -148,7 +158,10 @@ class base_needaction(osv.osv):
         search_res = needact_rel_obj.search(cr, uid, [('user_id', '=', user_id)], offset=offset, limit=limit, order=order, count=count, context=context)
         return search_res
     
-    def needaction_get_record_references(self, cr, uid, user_id, offset=0, limit=None, order=None, context=None):
+    def needaction_get_user_record_references(self, cr, uid, user_id, offset=0, limit=None, order=None, context=None):
+        '''for a given uid, get all the records that asks this user to
+           perform an action. Records are given as references, a list of
+           tuples (model_name, record_id).'''
         if context is None:
             context = {}
         needact_rel_obj = self.pool.get('base.needaction_users_rel')
