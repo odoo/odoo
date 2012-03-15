@@ -387,14 +387,14 @@ class project_issue(crm.crm_case, osv.osv):
             result[obj.id] = False
             if (obj.state == 'draft' and obj.user_id):
                 result[obj.id] = obj.user_id.id
-            if obj.project_id.project_escalation_id.user_id:
-                result[obj.id] = obj.project_id.project_escalation_id.user_id.id
+            if obj.project_id.user_id:
+                result[obj.id] = obj.project_id.user_id.id
         return result
 
     def case_escalate_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.project_id.project_escalation_id.user_id.id:
-                message = _("has been<b>escalated</b> from project <em>'%s'</em> to project <em>'%s'</em>.") % (obj.project_id.name, obj.project_id.project_escalation_id.name)
+            if obj.project_id:
+                message = _("has been <b>escalated</b> to <em>'%s'</em>.") % (obj.project_id.name)
                 obj.message_append_note('' ,message, type='notification', context=context)
             else:
                 message = _("has been <b>escalated</b>.")
@@ -442,7 +442,6 @@ class project_issue(crm.crm_case, osv.osv):
         return res
 
     def case_cancel(self, cr, uid, ids, context=None):
-        print "\n :: case cancel ::::"
         """Overrides cancel for crm_case for setting probability
         """
         res = super(project_issue, self).case_cancel(cr, uid, ids, context)
