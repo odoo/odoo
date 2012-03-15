@@ -392,7 +392,8 @@ class module(osv.osv):
         # should we call process_end istead of loading, or both ?
         return True
     
-    def button_uninstall(self, cr, uid, ids, context=None):
+    def check_dependancy(self, cr, uid, ids, context):
+        res = []
         for module in self.browse(cr, uid, ids):
             cr.execute('''select m.id
                 from
@@ -403,11 +404,15 @@ class module(osv.osv):
                     d.name=%s and
                     m.state not in ('uninstalled','uninstallable','to remove')''', (module.name,))
             res = cr.fetchall()
-            for i in range(0,len(res)):
-               ids.append(res[i][0])            
-#            if res:
-#                self.write(cr, uid, ids, {'state': 'to remove'})
-##                raise orm.except_orm(_('Error'), _('Some installed modules depend on the module you plan to Uninstall :\n %s') % '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
+        return res    
+    
+    def button_uninstall(self, cr, uid, ids, context=None):
+        res = self.check_dependancy(cr, uid, ids, context)        
+        for i in range(0,len(res)):
+           res_depend = self.check_dependancy(cr, uid, [res[i][0]], context)  
+           for j in range(0,len(res_depend)):
+                ids.append(res_depend[j][0])
+           ids.append(res[i][0])
         self.write(cr, uid, ids, {'state': 'to remove'})
         return dict(ACTION_DICT, name=_('Uninstall'))
 
