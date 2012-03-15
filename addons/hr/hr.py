@@ -152,7 +152,6 @@ class hr_employee(osv.osv):
     def _get_photo_mini(self, cr, uid, ids, name, args, context=None):
         result = {}
         for obj in self.browse(cr, uid, ids, context=context):
-            print obj
             if not obj.photo:
                 result[obj.id] = False
                 continue

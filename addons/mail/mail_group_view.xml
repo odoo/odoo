@@ -11,19 +11,31 @@
             <field name="arch" type="xml">
                 <kanban>
                     <templates>
+                        <t t-name="kanban-description">
+                            <div class="oe_group_description" t-if="record.description.raw_value">
+                                <field name="description"/>
+                            </div>
+                        </t>
                         <t t-name="kanban-box">
-                            <div class="oe_group_vignette">
+                            <div t-attf-class="{record.joined.raw_value} oe_group_vignette">
                                 <div class="oe_group_image">
-                                    Image
+                                    <a type="edit"><img t-att-src="kanban_image('mail.group', 'photo', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
                                 </div>
                                 <div class="oe_group_details">
                                     <h4><a type="edit"><field name="name"/></a></h4>
+                                    <span style="display: none;"><field name="joined"/></span>
                                     <ul>
-                                        <li><a name="action_group_join" string="Join" type="object">Join</a></li>
-                                        <li>Joined</li>
+                                        <li><field name="members_nbr"/> members</li>
+                                        <li t-if="record.joined.raw_value"><b>Joined</b></li>
+                                        <li t-if="! record.joined.raw_value"><a name="action_group_join" string="Join" type="object">Join</a></li>
+                                        <li t-if="record.joined.raw_value"><a name="action_group_leave" string="Join" type="object">Leave</a></li>
+                                        <li><field name="messages_nbr"/> messages in <field name="discussions_nbr"/> discussions</li>
                                     </ul>
                                 </div>
                             </div>
+                            <script>
+                                $('.oe_group_photo').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_group_photo_wide') } });
+                            </script>
                         </t>
                     </templates>
                 </kanban>
@@ -38,20 +50,54 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Group">
-                    <field name="name" colspan="2"/>
-                    <field name="responsible_id" colspan="2"/>
-                    <newline/>
-                    <field name="description" colspan="4"/>
-                    <newline/>
-                    <separator string="Privacy settings" colspan="4"/>
-                    <group colspan="2" col="4">
-                        <field name="public" nolabel="1" colspan="1"/>
-                        <label string="This group is visible by non members" colspan="2"/>
+                    <group colspan="4" col="8">
+                        <group colspan="6" col="4">
+                            <separator string="General information" colspan="4"/>
+                            <field name="name" colspan="2"/>
+                            <field name="responsible_id" colspan="2"/>
+                            <newline/>
+                            <field name="description" colspan="4"/>
+                        </group>
+                        <group colspan="1" col="2">
+                            <separator string="Group image" colspan="2"/>
+                            <field name="photo_mini" widget='image' nolabel="1" on_change="onchange_photo_mini(photo_mini)"/>
+                        </group>
+                        <group colspan="1" col="2">
+                            <separator string="Privacy settings" colspan="2"/>
+                            <field name="public" nolabel="1"/>
+                            <label string="This group is visible by non members" colspan="2"/>
+                        </group>
                     </group>
-                    <separator string="Test actions" colspan="4"/>
-                    <button name="action_null" string="Test2" type="object" icon="gtk-go-forward" colspan="2"/>
                     <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
                 </form>
+            </field>
+        </record>
+
+        <!-- Group List View !-->
+        <record  model="ir.ui.view" id="view_group_tree">
+            <field name="name">mail.group.tree</field>
+            <field name="model">mail.group</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree string="Groups">
+                    <field name="name" colspan="2"/>
+                    <field name="responsible_id" colspan="2"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Group Search View !-->
+        <record  model="ir.ui.view" id="view_group_search">
+            <field name="name">mail.group.search</field>
+            <field name="model">mail.group</field>
+            <field name="type">search</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <search string="Search groups">
+                    <field name="name" colspan="2"/>
+                    <field name="responsible_id" colspan="2"/>
+                </search>
             </field>
         </record>
 
@@ -61,7 +107,11 @@
             <field name="res_model">mail.group</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_group_search"/>
         </record>
 
+        <!-- left-side menu: Groups !-->
+        <menuitem id="mail_groups" name="Groups" sequence="15" parent="mail_feeds_main"/>
+        <menuitem id="mail_allgroups" name="All groups" parent="mail_groups" action="action_view_groups"/>
     </data>
 </openerp>

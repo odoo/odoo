@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-2011 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2010-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -72,10 +72,10 @@ class mail_message_common(osv.osv_memory):
     _rec_name = 'subject'
     _columns = {
         'subject': fields.char('Subject', size=512, required=True),
-        'model': fields.char('Related Document model', size=128, select=1), # was readonly
-        'res_id': fields.integer('Related Document ID', select=1), # was readonly
+        'model': fields.char('Related Document model', size=128, select=1),
+        'res_id': fields.integer('Related Document ID', select=1),
         'date': fields.datetime('Date'),
-        'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences. If empty, this is not a mail but a message.'),
+        'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences.'),
         'email_to': fields.char('To', size=256, help='Message recipients'),
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
@@ -89,16 +89,19 @@ class mail_message_common(osv.osv_memory):
                                                              "select plaintext or rich text contents accordingly", readonly=1),
         'body_text': fields.text('Text contents', help="Plain-text version of the message"),
         'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message"),
+        'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message, used for displaying as threads with hierarchy"),
     }
 
     _defaults = {
         'subtype': 'plain',
-        'date': (lambda *a: datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
+        'date': (lambda *a: fields.datetime.now()),
     }
 
 class mail_message(osv.osv):
-    '''Model holding RFC2822 email messages, and providing facilities
-       to parse, queue and send new messages
+    '''Model holding messages: system notification (replacing res.log
+       notifications), comments (for OpenSocial feature) and
+       RFC2822 email messages. This model also provides facilities to
+       parse, queue and send new email messages.
 
        Messages that do not have a value for the email_from column
        are simple log messages (e.g. document state changes), while
@@ -178,31 +181,18 @@ class mail_message(osv.osv):
                         ], 'State', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
         'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
-        # note feature: add type (email, comment, notification) and need_action
         'type': fields.selection([
                         ('email', 'e-mail'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
                         ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
-        'need_action_user_id': fields.many2one('res.users', 'Action by user', help="User requested to perform an action"),
+        
     }
         
     _defaults = {
         'state': 'received',
         'type': 'comment',
     }
-
-    #------------------------------------------------------
-    # Generic api
-    #------------------------------------------------------
-    
-    def create(self, cr, uid, vals, context=None):
-        # temporary log directly created messages (to debug OpenSocial)
-        if not 'mail.thread' in context:
-            _logger.warning('Creating message without using mail.thread API')
-            _logger.warning('Message details: %s', str(vals))
-        msg_id = super(mail_message, self).create(cr, uid, vals, context)
-        return msg_id
     
     #------------------------------------------------------
     # E-Mail api
