@@ -53,6 +53,7 @@ class project(osv.osv):
     _name = "project.project"
     _description = "Project"
     _inherits = {'account.analytic.account': "analytic_account_id"}
+    _inherit = ['mail.thread']
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
@@ -204,6 +205,46 @@ class project(osv.osv):
         'type_ids': _get_type_common
     }
 
+    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = False
+            if (obj.state == 'draft' and obj.user_id):
+                result[obj.id] = obj.user_id.id
+        return result
+
+    def create(self, cr, uid, vals, context=None):
+        obj_id = super(project, self).create(cr, uid, vals, context=context)
+        self.case_create_send_note(cr, uid, [obj_id], context=context)
+        return obj_id
+
+    def case_create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id.id :
+                self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
+            obj.message_append_note('',_("Project has been <b>created</b>."))
+        return True
+
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        message = _("Project has been <b>opened</b>.")
+        self.message_append_note(cr, uid, ids, '', message, context=context)
+        return True
+
+    def case_pending_send_note(self, cr, uid, ids, context=None):
+        message = _("Project is <b>pending</b>.")
+        self.message_append_note(cr, uid, ids, '', message, context=context)
+        return True
+
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
+        message = _("Project has been <b>cancelled</b>.")
+        self.message_append_note(cr, uid, ids, '', message, context=context)
+        return True
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        message = _("Project has been <b>closed</b>.")
+        self.message_append_note(cr, uid, ids, '', message, context=context)
+        return True
+
     # TODO: Why not using a SQL contraints ?
     def _check_dates(self, cr, uid, ids, context=None):
         for leave in self.read(cr, uid, ids, ['date_start', 'date'], context=context):
@@ -225,9 +266,7 @@ class project(osv.osv):
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', 'not in', ('cancelled', 'done'))])
         task_obj.write(cr, uid, task_ids, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'close'}, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The project '%s' has been closed.") % name
-            self.log(cr, uid, id, message)
+        self.case_close_send_note(cr, uid, ids, context=context)
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
@@ -235,23 +274,24 @@ class project(osv.osv):
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', '!=', 'done')])
         task_obj.write(cr, uid, task_ids, {'state': 'cancelled', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+        self.case_cancel_send_note(cr, uid, ids, context=context)
         return True
 
     def set_pending(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        self.case_pending_send_note(cr, uid, ids, context=context)
         return True
 
     def set_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
+        self.case_open_send_note(cr, uid, ids, context=context)
         return True
 
     def reset_project(self, cr, uid, ids, context=None):
         res = self.setActive(cr, uid, ids, value=True, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The project '%s' has been opened.") % name
-            self.log(cr, uid, id, message)
+        self.case_open_send_note(cr, uid, ids, context=context)
         return res
-    
+
     def map_tasks(self, cr, uid, old_project_id, new_project_id, context=None):
         """ copy and map tasks from old to new project """
         if context is None:
