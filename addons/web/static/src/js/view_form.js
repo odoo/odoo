@@ -770,7 +770,8 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         var name = $field.attr('name'),
             field_orm = this.fvg.fields[name],
             field_string = $field.attr('string') || field_orm.string || '',
-            field_help = $field.attr('help') || field_orm.help || '';
+            field_help = $field.attr('help') || field_orm.help || '',
+            field_colspan = parseInt($field.attr('colspan'), 10);
 
         if (!field_orm) {
             throw new Error("Field '" + name + "' specified in view could not be found.");
@@ -786,6 +787,9 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
                     'string' : field_string,
                     'help' :  field_help
                 }).insertBefore($field).text();
+                if (field_colspan > 1) {
+                    $field.attr('colspan', field_colspan - 1);
+                }
             }
         }
         $field.attr({
@@ -795,8 +799,9 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         });
     },
     process_group: function($group, $form) {
-        var $new_group = $(QWeb.render('FormRenderingGroup', $group.getAttributes()));
-        var $table;
+        var self = this,
+            $new_group = $(QWeb.render('FormRenderingGroup', $group.getAttributes())),
+            $table;
         if ($new_group.is('table')) {
             $table = $new_group;
         } else {
@@ -812,22 +817,56 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
                 colspan = parseInt($child.attr('colspan') || 1, 10),
                 tagName = $child[0].tagName.toLowerCase();
             if (tagName === 'newline') {
+                self.compute_width($tr, cols);
                 $tr = null;
                 return;
             }
             if (!$tr || row_cols < colspan) {
+                if (row_cols < colspan) {
+                    self.compute_width($tr, cols);
+                }
                 $tr = $('<tr/>').addClass('oe_form_group_row').appendTo($table);
                 row_cols = cols;
             }
             row_cols -= colspan;
             var $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
-            if (tagName === 'separator' && $child.attr('orientation') === 'vertical') {
-                $td.addClass('oe_vertical_separator').attr('width', '1');
-                $child = null;
-            }
             $tr.append($td.append($child));
         });
         $group.before($new_group).remove();
+    },
+    compute_width: function($tr, cols) {
+        if ($tr) {
+            var to_compute = [],
+                total = 100;
+            $tr.children().each(function() {
+                var $td = $(this),
+                    $child = $td.children(':first');
+                switch ($child[0].tagName.toLowerCase()) {
+                    case 'separator':
+                        if ($child.attr('orientation') === 'vertical') {
+                            $td.addClass('oe_vertical_separator').attr('width', '1');
+                            $td.empty();
+                            cols--;
+                        }
+                        break;
+                    case 'label':
+                        if ($child.attr('for')) {
+                            $td.attr('width', '1%');
+                            cols--;
+                            total--;
+                        }
+                        break;
+                    default:
+                        to_compute.push($td);
+                }
+            });
+            var unit = Math.floor(total / cols);
+            _.each(to_compute, function($td, i) {
+                var width = parseInt($td.attr('colspan'), 10) * unit;
+                $td.attr('width', ((i == to_compute.length - 1) ? total : width) + '%');
+                total -= width;
+            });
+        }
     },
     process_notebook: function($notebook, $form) {
         var pages = [];
