@@ -372,13 +372,15 @@ openerp.web.list_editable = function (openerp) {
     if (!openerp.web.list.form) {
         openerp.web.list.form = {};
     }
-    openerp.web.list.form.WidgetFrame = openerp.web.form.WidgetFrame.extend({
-        form_template: 'ListView.row.frame'
-    });
+    // TODO: EDITABLE LIST SHOULD USE openerp.web.FormRenderingEngine
+    //openerp.web.list.form.WidgetFrame = openerp.web.form.WidgetFrame.extend({
+    //    form_template: 'ListView.row.frame'
+    //});
     var form_widgets = openerp.web.form.widgets;
     openerp.web.list.form.widgets = form_widgets.extend({
-        'frame': 'openerp.web.list.form.WidgetFrame'
+    //    'frame': 'openerp.web.list.form.WidgetFrame'
     });
+
     // All form widgets inherit a problematic behavior from
     // openerp.web.form.WidgetFrame: the cell itself is removed when invisible
     // whether it's @invisible or @attrs[invisible]. In list view, only the

@@ -102,11 +102,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var form = new openerp.web.FormRenderingEngine(this, data);
         form.appendTo(this.$element.find('.oe_form_content'));
 
-        //this.root_frame = instanciate_widget(this.registry.get_object('frame'), this, this.fields_view.arch);
-        //var to_append = $(".oe_form_header", this.$element);
-        //this.root_frame.appendTo(to_append.length > 0 ? to_append : this.$element);
-        //this.root_frame.$element.children().unwrap();
-
         this.$form_header = this.$element.find('.oe_form_header:first');
         this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
@@ -1102,177 +1097,6 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
             final_domain = new openerp.web.CompoundDomain(final_domain).set_eval_context(fields_values);
         }
         return final_domain;
-    }
-});
-
-openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
-    form_template: 'WidgetFrame',
-    init: function(view, node) {
-        this._super(view, node);
-        this.columns = parseInt(node.attrs.col || 4, 10);
-        this.x = 0;
-        this.y = 0;
-        this.table = [];
-        this.add_row();
-        for (var i = 0; i < node.children.length; i++) {
-            var n = node.children[i];
-            if (n.tag == "newline") {
-                this.add_row();
-            } else {
-                this.handle_node(n);
-            }
-        }
-        this.set_row_cells_with(this.table[this.table.length - 1]);
-    },
-    renderElement: function() {
-    	this._super();
-    	var self = this;
-	    _.each(this.table, function(row) {
-	        _.each(row, function(td) {
-	        	td.$element = self.$element.find('.' + td.element_class);
-	        	td.renderElement();
-	        });
-	    });
-    },
-    start: function() {
-	    _.each(this.table, function(row) {
-	        _.each(row, function(td) {
-	        	td.start();
-	        });
-	    });
-    },
-    add_row: function(){
-        if (this.table.length) {
-            this.set_row_cells_with(this.table[this.table.length - 1]);
-        }
-        var row = [];
-        this.table.push(row);
-        this.x = 0;
-        this.y += 1;
-        return row;
-    },
-    set_row_cells_with: function(row) {
-        var bypass = 0,
-            max_width = 100,
-            row_length = row.length;
-        for (var i = 0; i < row.length; i++) {
-            if (row[i].always_invisible) {
-                row_length--;
-            } else {
-                bypass += row[i].width === undefined ? 0 : 1;
-                max_width -= row[i].decrease_max_width;
-            }
-        }
-        var size_unit = Math.round(max_width / (this.columns - bypass)),
-            colspan_sum = 0;
-        for (var i = 0; i < row.length; i++) {
-            var w = row[i];
-            if (w.always_invisible) {
-                continue;
-            }
-            colspan_sum += w.colspan;
-            if (w.width === undefined) {
-                var width = (i === row_length - 1 && colspan_sum === this.columns) ? max_width : Math.round(size_unit * w.colspan);
-                max_width -= width;
-                w.width = width + '%';
-            }
-        }
-    },
-    handle_node: function(node) {
-        var type = {};
-        if (node.tag == 'field') {
-            type = this.view.fields_view.fields[node.attrs.name] || {};
-            if (node.attrs.widget == 'statusbar' && node.attrs.nolabel !== '1') {
-                // This way we can retain backward compatibility between addons and old clients
-                node.attrs.colspan = (parseInt(node.attrs.colspan, 10) || 1) + 1;
-                node.attrs.nolabel = '1';
-            }
-        }
-        var widget = instanciate_widget(this.view.registry.get_any(
-                [node.attrs.widget, type.type, node.tag]), this.view, node);
-        if (node.tag == 'field') {
-            if (!this.view.default_focus_field || node.attrs.default_focus == '1') {
-                this.view.default_focus_field = widget;
-            }
-            if (node.attrs.nolabel != '1') {
-                var label = instanciate_widget(this.view.registry.get_object('label'), this.view, node);
-                label["for"] = widget;
-                this.add_widget(label, widget.colspan + 1);
-            }
-        }
-        this.add_widget(widget);
-    },
-    add_widget: function(widget, colspan) {
-        var current_row = this.table[this.table.length - 1];
-        if (!widget.always_invisible) {
-            colspan = colspan || widget.colspan;
-            if (current_row.length && (this.x + colspan) > this.columns) {
-                current_row = this.add_row();
-            }
-            this.x += widget.colspan;
-        }
-        current_row.push(widget);
-        return widget;
-    }
-});
-
-openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
-    template: 'WidgetNotebook',
-    init: function(view, node) {
-        var self = this;
-        this._super(view, node);
-        this.pages = [];
-        $(node).find('> page').each(function(index) {
-            var page_node = this,
-                obj = self.view.registry.get_object('notebookpage'),
-                page = new (obj)(self.view, page_node, self, index);
-            self.pages.push(page);
-        });
-    },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
-        _.each(self.pages, function(page) {
-            page.appendTo(self.$element);
-        });
-        this.$element.tabs();
-        this.view.on_button_new.add_first(this.do_select_first_visible_tab);
-        if (openerp.connection.debug) {
-            this.do_attach_tooltip(this, this.$element.find('ul:first'), {
-                gravity: 's'
-            });
-        }
-    },
-    do_select_first_visible_tab: function() {
-        for (var i = 0; i < this.pages.length; i++) {
-            var page = this.pages[i];
-            if (page.invisible === false) {
-                this.$element.tabs('select', page.index);
-                break;
-            }
-        }
-    }
-});
-
-openerp.web.form.WidgetNotebookPage = openerp.web.form.Widget.extend({
-    template: 'WidgetNotebookPage',
-    init: function(view, node, notebook, index) {
-        this._super(view, node);
-        this.notebook = notebook;
-        this.index = index;
-        this.page_id = _.uniqueId('notebook_page_');
-    },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
-        $(this.node).children().appendTo(this.$element);
-    },
-    update_dom: function() {
-        if (this.invisible && this.index === this.notebook.$element.tabs('option', 'selected')) {
-            this.notebook.do_select_first_visible_tab();
-        }
-        this.$element_tab.toggle(!this.invisible);
-        this.$element.toggle(!this.invisible);
     }
 });
 
@@ -3411,42 +3235,10 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     }
 });
 
-openerp.web.form.WidgetHtml = openerp.web.form.Widget.extend({
-    renderElement: function () {
-        var $root = $('<div class="oe_form_html_view">');
-        this.render_children(this, $root);
-        var rendered = $root.html();
-        this.$element.html(rendered);
-    },
-    render_children: function (object, $into) {
-        var self = this,
-            fields = this.view.fields_view.fields;
-        _(object.children).each(function (child) {
-            if (typeof child === 'string') {
-                $into.text(child);
-            } else if (child.tag === 'field') {
-            	var widget = instanciate_widget(self.view.registry.get_object('frame'),
-                        self.view, {tag: 'ueule', attrs: {}, children: [child] });
-                widget.appendTo($into);
-            } else {
-                var $child = $(document.createElement(child.tag))
-                        .attr(child.attrs)
-                        .appendTo($into);
-                self.render_children(child, $child);
-            }
-        });
-    }
-});
-
-
 /**
  * Registry of form widgets, called by :js:`openerp.web.FormView`
  */
 openerp.web.form.widgets = new openerp.web.Registry({
-    'frame' : 'openerp.web.form.WidgetFrame',
-    'notebook' : 'openerp.web.form.WidgetNotebook',
-    'notebookpage' : 'openerp.web.form.WidgetNotebookPage',
-    'separator' : 'openerp.web.form.WidgetSeparator',
     'button' : 'openerp.web.form.WidgetButton',
     'char' : 'openerp.web.form.FieldChar',
     'id' : 'openerp.web.form.FieldID',
@@ -3468,18 +3260,8 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'progressbar': 'openerp.web.form.FieldProgressBar',
     'image': 'openerp.web.form.FieldBinaryImage',
     'binary': 'openerp.web.form.FieldBinaryFile',
-    'statusbar': 'openerp.web.form.FieldStatus',
-    'html': 'openerp.web.form.WidgetHtml'
+    'statusbar': 'openerp.web.form.FieldStatus'
 });
-
-var instanciate_widget = function(claz, view, node, o1, o2) {
-	var widget = new (claz)(view, node, o1, o2);
-	widget.element_class = (['formview', view.view_id, widget.element_name,
-    	view.widgets_counter++].join("_")).replace(/[^\r\n\f0-9A-Za-z_-]/g, "_");
-    view.widgets[widget.element_class] = widget;
-    return widget;
-}
-
 
 };
 
