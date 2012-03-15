@@ -674,20 +674,21 @@ class stock_picking(osv.osv):
         type = context.get('default_type', False)
         res = super(stock_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if res.get('toolbar', False):
-            if type == 'in':
-                res['toolbar']['print'] = [{'report_file': 'stock/report/picking.rml', 'groups_id': [], 'multi': False, 'report_xsl': False, 'name': 'Packing list', 'string': 'Incoming Shipment/Receipt', 'auto': True, 'report_name': 'stock.picking.list', 'header': True, 'attachment': False, 'report_type': 'pdf', 'usage': False, 'model': 'stock.picking', 'type': 'ir.actions.report.xml', 'id': 333, 'report_xml': False, 'attachment_use': False}]
-            if type == 'internal':
-                res['toolbar']['print'] = [{'report_file': 'stock/report/picking.rml', 'groups_id': [], 'multi': False, 'report_xsl': False, 'name': 'Packing list', 'string': 'Internal Shipment', 'auto': True, 'report_name': 'stock.picking.list', 'header': True, 'attachment': False, 'report_type': 'pdf', 'usage': False, 'model': 'stock.picking', 'type': 'ir.actions.report.xml', 'id': 333, 'report_xml': False, 'attachment_use': False}]
-            if type == 'out':
-                res['toolbar']['print'] = [{'report_file': 'stock/report/picking.rml', 'groups_id': [], 'multi': False, 'report_xsl': False, 'name': 'Packing list', 'string': 'Delivery Order', 'auto': True, 'report_name': 'stock.picking.list', 'header': True, 'attachment': False, 'report_type': 'pdf', 'usage': False, 'model': 'stock.picking', 'type': 'ir.actions.report.xml', 'id': 333, 'report_xml': False, 'attachment_use': False}]
+            for i in xrange(0, len(res['toolbar']['print'])):
+                if type == 'in':
+                    res['toolbar']['print'][i]['string'] = 'Incoming Shipment/Receipt'
+                elif type == 'internal':
+                    res['toolbar']['print'][i]['string'] = 'Internal Shipment'
+                elif type == 'out':
+                    res['toolbar']['print'][i]['string'] = 'Delivery Order'
 
         for field in res['fields']:
             if field == 'state':
                 if type == 'in':
                     res['fields']['state']['selection'] = [('draft', u'New'), ('auto', u'Waiting Another Operation'), ('confirmed', u'Waiting Availability'), ('assigned', u'Ready to Receive'), ('done', 'Received'), ('cancel', u'Cancelled')]
-                if type == 'internal':
+                elif type == 'internal':
                     res['fields']['state']['selection'] = [('draft', u'New'), ('auto', u'Waiting Another Operation'), ('confirmed', u'Waiting Availability'), ('assigned', u'Ready to Move'), ('done', 'Moved'), ('cancel', u'Cancelled')]
-                if type == 'out':
+                elif type == 'out':
                     res['fields']['state']['selection'] = [('draft', u'New'), ('auto', u'Waiting Another Operation'), ('confirmed', u'Waiting Availability'), ('assigned', u'Ready to Deliver'), ('done', 'Delivered'), ('cancel', u'Cancelled')]
 
         return res
