@@ -23,6 +23,7 @@ import time
 from osv import fields, osv
 from tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import decimal_precision as dp
+from lxml import etree
 from tools.translate import _
 
 class stock_partial_picking_line(osv.TransientModel):
@@ -71,6 +72,28 @@ class stock_partial_picking(osv.osv_memory):
         'picking_id': fields.many2one('stock.picking', 'Picking', required=True, ondelete='CASCADE'),
         'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column prodlot has to be shown on the move_ids field or not'),
      }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', 
+                        context=None, toolbar=False, submenu=False):
+        if context is None:
+            context={}
+        res = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        type = context.get('default_type', False)
+        doc = etree.XML(res['arch'])
+        nodes = doc.xpath("//group/button[@string='_Validate']")
+        for field in res['fields']:
+            if type == 'in':
+                for node in nodes:
+                    node.set('string', '_Receive')
+            if type == 'internal':
+                for node in nodes:
+                    node.set('string', '_Move')
+            if type == 'out':
+                for node in nodes:
+                    node.set('string', '_Deliver')
+        
+        res['arch'] = etree.tostring(doc)
+        return res
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None: context = {}

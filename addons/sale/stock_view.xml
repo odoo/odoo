@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <field name="auto_picking" position="after">
-                    <field name="sale_id"/>
+                    <field name="sale_id" invisible="1"/>
                 </field>
             </field>
         </record>
@@ -57,9 +57,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
-                <field name="move_type" position="after">
+                <xpath expr="/form/notebook/page/field[@name='date']"  position="after">
                     <field name="sale_id"/>
-                </field>
+                </xpath>
             </field>
         </record>
 
