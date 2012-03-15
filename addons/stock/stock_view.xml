@@ -798,9 +798,8 @@
                             </field>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                                <button name="draft_force_assign" states="draft" string="Move Later" type="object" icon="gtk-apply"/>
                                 <button name="draft_validate" states="draft" string="Move Now" type="object" icon="gtk-media-play"/>
-                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
+                                <button name="action_assign" states="draft" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="action_process" states="assigned" string="Move"  groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
                                 <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl" />
