@@ -57,38 +57,7 @@ class project_configuration(osv.osv_memory):
         'module_project_issue_sheet': fields.boolean("Track and invoice working time",
                         help="""Allows to the timesheet support for the Issues/Bugs Management in Project.
                         It installs the project_issue_sheet module."""),
-        'project_issue': fields.boolean("Create issue from an email account",
-                        help="""Allows you to configure your incoming mail server. And creates issue for your mails."""),
-        'issue_server' : fields.char('Server Name', size=256),
-        'issue_port' : fields.integer('Port'),
-        'issue_type': fields.selection([
-                   ('pop', 'POP Server'),
-                   ('imap', 'IMAP Server'),
-                   ('local', 'Local Server'),
-               ], 'Server Type'),
-        'issue_is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
-        'issue_user' : fields.char('Username', size=256),
-        'issue_password' : fields.char('Password', size=1024),
-        'project_claim': fields.boolean("Create claims from an email account",
-                        help="""Allows you to configure your incoming mail server. And creates claims for your mails.
-                        """),
-        'claim_server' : fields.char('Server Name', size=256),
-        'claim_port' : fields.integer('Port'),
-        'claim_type': fields.selection([
-                   ('pop', 'POP Server'),
-                   ('imap', 'IMAP Server'),
-                   ('local', 'Local Server'),
-               ], 'Server Type'),
-        'claim_is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
-        'claim_user' : fields.char('Username', size=256),
-        'claim_password' : fields.char('Password', size=1024),
     }
-
-    _defaults = {
-        'issue_type': 'pop',
-        'claim_type': 'pop',
-    }
-
 
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False , type=[]):
         port = 0

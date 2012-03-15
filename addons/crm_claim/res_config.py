@@ -23,15 +23,32 @@ from osv import fields, osv
 
 class project_claim_mail_configuration(osv.osv_memory):
     _inherit = 'project.config.settings'
+    _columns = {
+        'project_issue': fields.boolean("Create issue from an email account",
+                        help="""Allows you to configure your incoming mail server. And creates issue for your mails."""),
+        'issue_server' : fields.char('Server Name', size=256),
+        'issue_port' : fields.integer('Port'),
+        'issue_type': fields.selection([
+                   ('pop', 'POP Server'),
+                   ('imap', 'IMAP Server'),
+                   ('local', 'Local Server'),
+               ], 'Server Type'),
+        'issue_is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
+        'issue_user' : fields.char('Username', size=256),
+        'issue_password' : fields.char('Password', size=1024),
+    }
+    _defaults = {
+        'issue_type': 'pop',
+    }
 
     def get_default_claim_server(self, cr, uid, ids, context=None):
-        context = {'type':'issue'}
+        context.update({'type':'claim'})
         res = self.get_default_email_configurations(cr, uid, ids, context)
 
         return res
 
     def set_default_claim_server(self, cr, uid, ids, context=None):
-        context = {'type':'claim','obj':'crm.claim'}
+        context.update({'type':'claim','obj':'crm.claim'})
         res = self.set_email_configurations(cr, uid, ids, context)
 
 project_claim_mail_configuration()
