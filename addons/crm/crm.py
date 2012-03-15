@@ -259,19 +259,24 @@ class crm_base(object):
         return {'value': data}
 
     def case_open_send_note(self, cr, uid, ids, context=None):
-        return True
+        msg = '%s has been <b>opened</b>.' % (context['msg_prefix'] if context['msg_prefix'] else '')
+        return self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
 
     def case_close_send_note(self, cr, uid, ids, context=None):
-        return True
+        msg = '%s has been <b>closed</b>.' % (context['msg_prefix'] if context['msg_prefix'] else '')
+        return self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
-        return True
+        msg = '%s has been <b>canceled</b>.' % (context['msg_prefix'] if context['msg_prefix'] else '')
+        return self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
 
     def case_pending_send_note(self, cr, uid, ids, context=None):
-        return True
+        msg = '%s is now <b>pending</b>.' % (context['msg_prefix'] if context['msg_prefix'] else '')
+        return self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
 
     def case_reset_send_note(self, cr, uid, ids, context=None):
-        return True
+        msg = '%s has been <b>renewed</b>.' % (context['msg_prefix'] if context['msg_prefix'] else '')
+        return self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
 
     def case_open(self, cr, uid, ids, context=None):
         """Opens Case
