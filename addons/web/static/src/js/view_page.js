@@ -68,29 +68,6 @@ openerp.web.page = function (openerp) {
     /** @namespace */
     openerp.web.page = {};
     
-    openerp.web.page.FieldSelectionReadonly = openerp.web.form.AbstractField.extend({
-        form_template: 'FieldChar.readonly',
-        init: function(view, node) {
-            // lifted straight from r/w version
-            var self = this;
-            this._super(view, node);
-            this.values = _.clone(this.field.selection);
-            _.each(this.values, function(v, i) {
-                if (v[0] === false && v[1] === '') {
-                    self.values.splice(i, 1);
-                }
-            });
-            this.values.unshift([false, '']);
-        },
-        set_value: function (value) {
-            value = value === null ? false : value;
-            value = value instanceof Array ? value[0] : value;
-            var option = _(this.values)
-                .detect(function (record) { return record[0] === value; });
-            this._super(value);
-            this.$element.find('div').text(option ? option[1] : this.values[0][1]);
-        }
-    });
     openerp.web.page.FieldReferenceReadonly = openerp.web.form.FieldMany2One.extend({
         set_value: function (value) {
             if (!value) {
@@ -144,7 +121,6 @@ openerp.web.page = function (openerp) {
         }
     });
     openerp.web.page.readonly = openerp.web.form.widgets.extend({
-        'selection' : 'openerp.web.page.FieldSelectionReadonly',
         'reference': 'openerp.web.page.FieldReferenceReadonly',
         'binary': 'openerp.web.page.FieldBinaryFileReadonly',
         'image': 'openerp.web.page.FieldBinaryImageReaonly',

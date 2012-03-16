@@ -1808,6 +1808,15 @@ openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend({
         this.values.unshift([false, '']);
     },
     start: function() {
+        this._super.apply(this, arguments);
+        this.bind_events();
+        this.on("change:effective_readonly", this, function() {
+            this.render_element();
+            this.bind_events();
+            this.render_value();
+        });
+    },
+    bind_events: function() {
         // Flag indicating whether we're in an event chain containing a change
         // event on the select, in order to know what to do on keyup[RETURN]:
         // * If the user presses [RETURN] as part of changing the value of a
@@ -1820,7 +1829,6 @@ openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend({
         //   changing the selected value), takes the action as validating the
         //   row
         var ischanging = false;
-        this._super.apply(this, arguments);
         this.$element.find('select')
             .change(this.on_ui_change)
             .change(function () { ischanging = true; })
@@ -1835,21 +1843,31 @@ openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend({
         value = value === null ? false : value;
         value = value instanceof Array ? value[0] : value;
         this._super(value);
-        var index = 0;
-        for (var i = 0, ii = this.values.length; i < ii; i++) {
-            if (this.values[i][0] === value) index = i;
+        this.render_value();
+    },
+    render_value: function() {
+        if (!this.get("effective_readonly")) {
+            var index = 0;
+            for (var i = 0, ii = this.values.length; i < ii; i++) {
+                if (this.values[i][0] === this.value) index = i;
+            }
+            this.$element.find('select')[0].selectedIndex = index;
+        } else {
+            var self = this;
+            var option = _(this.values)
+                .detect(function (record) { return record[0] === self.value; }); 
+            this.$element.text(option ? option[1] : this.values[0][1]);
         }
-        this.$element.find('select')[0].selectedIndex = index;
     },
     set_value_from_ui: function() {
         this.value = this.values[this.$element.find('select')[0].selectedIndex][0];
         this._super();
     },
-    update_dom: function() {
-        this._super.apply(this, arguments);
-        this.$element.find('select').prop('disabled', this.readonly);
-    },
     validate: function() {
+        if (this.get("effective_readonly")) {
+            this.invalid = false;
+            return;
+        }
         var value = this.values[this.$element.find('select')[0].selectedIndex];
         this.invalid = !(value && !(this.required && value[0] === false));
     },
