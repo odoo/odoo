@@ -472,7 +472,7 @@ class account_bank_statement_line(osv.osv):
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
-        'date': lambda self, cr, uid, context, *a: context.get('date'),
+        'date': lambda self, cr, uid, context, *a: context.get('date') or time.strftime('%Y-%m-%d'),
         'type': 'general',
     }
 
