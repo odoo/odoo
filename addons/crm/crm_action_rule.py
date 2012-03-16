@@ -23,6 +23,7 @@ import re
 import tools
 
 from tools.translate import _
+from tools import ustr
 from osv import fields
 from osv import osv
 
@@ -73,9 +74,9 @@ class base_action_rule(osv.osv):
         regex = action.regex_history
         if regex:
             res = False
-            ptrn = re.compile(str(regex))
+            ptrn = re.compile(ustr(regex))
             for history in obj.message_ids:
-                _result = ptrn.search(str(history.name))
+                _result = ptrn.search(ustr(history.subject))
                 if _result:
                     res = True
                     break
