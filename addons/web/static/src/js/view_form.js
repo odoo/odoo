@@ -1490,9 +1490,18 @@ openerp.web.form.FieldID = openerp.web.form.FieldChar.extend({
 
 openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
     template: 'FieldEmail',
-    start: function() {
-        this._super.apply(this, arguments);
+    bind_events: function() {
+        this._super();
         this.$element.find('button').click(this.on_button_clicked);
+    },
+    render_value: function() {
+        if (!this.get("effective_readonly")) {
+            this._super();
+        } else {
+            this.$element.find('a')
+                    .attr('href', 'mailto:' + this.value)
+                    .text(this.value);
+        }
     },
     on_button_clicked: function() {
         if (!this.value || !this.is_valid()) {

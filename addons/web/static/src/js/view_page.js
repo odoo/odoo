@@ -75,13 +75,7 @@ openerp.web.page = function (openerp) {
             return value;
         },
         set_value: function (value) {
-            this.$element.find('a')
-                    .attr('href', this.scheme + ':' + value)
-                    .text(this.format_value(value));
         }
-    });
-    openerp.web.page.FieldEmailReadonly = openerp.web.page.FieldURIReadonly.extend({
-        scheme: 'mailto'
     });
     openerp.web.page.FieldUrlReadonly = openerp.web.page.FieldURIReadonly.extend({
         set_value: function (value) {
@@ -175,7 +169,6 @@ openerp.web.page = function (openerp) {
     });
     openerp.web.page.readonly = openerp.web.form.widgets.extend({
         'frame': 'openerp.web.page.WidgetFrameReadonly',
-        'email': 'openerp.web.page.FieldEmailReadonly',
         'url': 'openerp.web.page.FieldUrlReadonly',
         'selection' : 'openerp.web.page.FieldSelectionReadonly',
         'reference': 'openerp.web.page.FieldReferenceReadonly',

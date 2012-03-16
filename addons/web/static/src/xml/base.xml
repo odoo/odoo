@@ -966,18 +966,25 @@
     </div>
 </t>
 <t t-name="FieldEmail">
-    <table t-attf-class="oe_form_field_#{type}" cellpadding="0" cellspacing="0" border="0" width="100%">
-    <tr>
-        <td width="100%">
-            <t t-call="FieldChar"/>
-        </td>
-        <td width="16">
-            <button class="oe_button oe_field_button" type="button" title="Send an e-mail with your default e-mail client">
-                <img t-att-src='_s + "/web/static/src/img/icons/terp-mail-message-new.png"'/>
-            </button>
-        </td>
-    </tr>
-    </table>
+    <t t-if="!widget.get('effective_readonly')">
+        <table t-attf-class="oe_form_field_#{type}" cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+            <td width="100%">
+                <t t-call="FieldChar"/>
+            </td>
+            <td width="16">
+                <button class="oe_button oe_field_button" type="button" title="Send an e-mail with your default e-mail client">
+                    <img t-att-src='_s + "/web/static/src/img/icons/terp-mail-message-new.png"'/>
+                </button>
+            </td>
+        </tr>
+        </table>
+    </t>
+    <t t-if="widget.get('effective_readonly')">
+        <div>
+            <a href="#" class="oe_form_uri"/>
+        </div>
+    </t>
 </t>
 <t t-name="FieldUrl">
     <table t-attf-class="oe_form_field_#{type}" cellpadding="0" cellspacing="0" border="0" width="100%">
