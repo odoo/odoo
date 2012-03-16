@@ -61,6 +61,9 @@ class partner_massmail_wizard(osv.osv_memory):
         emails_seen = set()
         for partner in partners:
             for adr in partner.child_ids:
+                if adr.is_company:
+                    #we don't want to consider child companies but only the contacts
+                    continue
                 if adr.email and not adr.email in emails_seen:
                     try:
                         emails_seen.add(adr.email)
