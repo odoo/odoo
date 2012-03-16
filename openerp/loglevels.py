@@ -131,10 +131,10 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
         upstream and should be tried first to decode ``value``.
     :param str error: optional `errors` flag to pass to the unicode
         built-in to indicate how illegal character values should be
-        treated: 'strict', 'ignore' or 'replace'. Passing anything
-        other than 'strict' means that the first encoding tried will
-        succeed, even if it's not the correct one to use, so be
-        careful!
+        treated when converting a string: 'strict', 'ignore' or 'replace'.
+        Passing anything other than 'strict' means that the first
+        encoding tried will be used, even if it's not the correct
+        one to use, so be careful! Ignore if value is not a string/unicode.
     :rtype: unicode
     :raise: UnicodeError if value cannot be coerced to unicode
     """
@@ -146,7 +146,7 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
 
     if not isinstance(value, basestring):
         try:
-            return unicode(value, errors=errors)
+            return unicode(value)
         except Exception:
             raise UnicodeError('unable to convert %r' % (value,))
 
@@ -158,13 +158,13 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
     raise UnicodeError('unable to convert %r' % (value,))
 
 
-def exception_to_unicode(e, errors='strict'):
+def exception_to_unicode(e):
     if (sys.version_info[:2] < (2,6)) and hasattr(e, 'message'):
         return ustr(e.message)
     if hasattr(e, 'args'):
-        return "\n".join((ustr(a, errors=errors) for a in e.args))
+        return "\n".join((ustr(a) for a in e.args))
     try:
-        return unicode(e, errors=errors)
+        return unicode(e)
     except Exception:
         return u"Unknown message"
 
