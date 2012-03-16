@@ -244,6 +244,8 @@ Source: http://meyerweb.com/eric/thoughts/2007/05/01/reset-reloaded/
   background-color: #F6F6F6;
   cursor: pointer;
   z-index: 10000;
+  padding: 0;
+  margin: 0;
   width: auto;
   min-width: 80px;
   max-width: 220px;
@@ -267,11 +269,16 @@ Source: http://meyerweb.com/eric/thoughts/2007/05/01/reset-reloaded/
     color: white;
     cursor: default;
   }
+  .VS-interface.ui-autocomplete .ui-menu-item {
+      float: none;
+  }
   .VS-interface.ui-autocomplete .ui-menu-item a {
     color: #000;
     outline: none;
     display: block;
     padding: 3px 4px 5px;
+    border-radius: none;
+    line-height: 1;
     background-color: #F8F8F8;
     background-image: -moz-linear-gradient(top, #F8F8F8, #F3F3F3); /* FF3.6 */
     background-image: -webkit-gradient(linear, left top, left bottom, from(#F8F8F8), to(#F3F3F3)); /* Saf4+, Chrome */
@@ -289,7 +296,13 @@ Source: http://meyerweb.com/eric/thoughts/2007/05/01/reset-reloaded/
     background-image: linear-gradient(top, #648bF5, #2465f3);
     border-top: 1px solid #5b83ec;
     border-bottom: 1px solid #1459e9;
+    border-left: none;
+    border-right: none;
     color: white;
+    margin: 0;
+  }
+  .VS-interface.ui-autocomplete .ui-corner-all {
+    border-radius: 0;
   }
   .VS-interface.ui-autocomplete li {
     list-style: none;

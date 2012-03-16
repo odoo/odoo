@@ -3,6 +3,11 @@ var QWeb = openerp.web.qweb,
       _t =  openerp.web._t,
      _lt = openerp.web._lt;
 
+// Replace VS.ui.SearchFacet by a factory function returning potentially
+// customized backbone views for custom facets
+var SearchFacet = VS.ui.SearchFacet;
+VS.ui.SearchFacet = function (options) { return new SearchFacet(options); };
+
 openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.SearchView# */{
     template: "EmptyComponent",
     /**
