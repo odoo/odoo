@@ -22,6 +22,7 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from operator import itemgetter
 from osv import osv
 from tools.translate import _
 from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
@@ -267,7 +268,8 @@ class procurement_order(osv.osv):
                         if op.procurement_draft_ids:
                         # Check draft procurement related to this order point
                             pro_ids = [x.id for x in op.procurement_draft_ids]
-                            procure_datas = procurement_obj.read(cr, uid, pro_ids, ['id','product_qty'], context=context, order='product_qty desc')
+                            procure_datas = procurement_obj.read(
+                                cr, uid, pro_ids, ['id', 'product_qty'], context=context)
                             to_generate = qty
                             for proc_data in procure_datas:
                                 if to_generate >= proc_data['product_qty']:
