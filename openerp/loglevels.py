@@ -121,17 +121,22 @@ def get_encodings(hint_encoding='utf-8'):
         if prefenc:
             yield prefenc
 
-def ustr(value, hint_encoding='utf-8'):
-    """This method is similar to the builtin `str` method, except
-       it will return unicode() string.
+def ustr(value, hint_encoding='utf-8', errors='strict'):
+    """This method is similar to the builtin `unicode`, except
+    that it may try multiple encodings to find one that works
+    for decoding `value`, and defaults to 'utf-8' first.
 
-    @param value: the value to convert
-    @param hint_encoding: an optional encoding that was detected
-                          upstream and should be tried first to
-                          decode ``value``.
-
-    @rtype: unicode
-    @return: unicode string
+    :param: value: the value to convert
+    :param: hint_encoding: an optional encoding that was detecte
+        upstream and should be tried first to decode ``value``.
+    :param str error: optional `errors` flag to pass to the unicode
+        built-in to indicate how illegal character values should be
+        treated: 'strict', 'ignore' or 'replace'. Passing anything
+        other than 'strict' means that the first encoding tried will
+        succeed, even if it's not the correct one to use, so be
+        careful!
+    :rtype: unicode
+    :raise: UnicodeError if value cannot be coerced to unicode
     """
     if isinstance(value, Exception):
         return exception_to_unicode(value)
@@ -141,25 +146,25 @@ def ustr(value, hint_encoding='utf-8'):
 
     if not isinstance(value, basestring):
         try:
-            return unicode(value)
+            return unicode(value, errors=errors)
         except Exception:
             raise UnicodeError('unable to convert %r' % (value,))
 
     for ln in get_encodings(hint_encoding):
         try:
-            return unicode(value, ln)
+            return unicode(value, ln, errors=errors)
         except Exception:
             pass
     raise UnicodeError('unable to convert %r' % (value,))
 
 
-def exception_to_unicode(e):
+def exception_to_unicode(e, errors='strict'):
     if (sys.version_info[:2] < (2,6)) and hasattr(e, 'message'):
         return ustr(e.message)
     if hasattr(e, 'args'):
-        return "\n".join((ustr(a) for a in e.args))
+        return "\n".join((ustr(a, errors=errors) for a in e.args))
     try:
-        return unicode(e)
+        return unicode(e, errors=errors)
     except Exception:
         return u"Unknown message"
 
