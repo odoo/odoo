@@ -100,6 +100,23 @@ test("base", function() {
     equal(tmp, 1);
 });
 
+test("change event only when changed", function() {
+    var Claz = nova.Class.extend(_.extend({}, nova.GetterSetterMixin, {}));
+    var x = new Claz();
+    var exec1 = false;
+    var exec2 = false;
+    x.on("change:test", null, function() {exec1 = true;});
+    x.on("change", null, function() {exec2 = true;});
+    x.set({"test": 3});
+    equal(exec1, true);
+    equal(exec2, true);
+    exec1 = false;
+    exec2 = false;
+    x.set({"test": 3});
+    equal(exec1, false);
+    equal(exec2, false);
+});
+
 module("Widget");
 
 test("base", function() {
