@@ -1878,10 +1878,8 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     start: function() {
         this._super();
         this.render_content();
-        this.on("change:effective_readonly", this, function(origin, event) {
-            if (event.oldValue !== event.newValue) {
-                this.render_content();
-            }
+        this.on("change:effective_readonly", this, function() {
+            this.render_content();
         });
     },
     render_content: function() {
@@ -2228,9 +2226,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     },
     focus: function ($element) {
         this._super($element || this.$input);
-    },
-    update_dom: function() {
-        this._super.apply(this, arguments);
     }
 });
 openerp.web.check_interface(openerp.web.form.FieldMany2One, openerp.web.form.FieldInterface);
