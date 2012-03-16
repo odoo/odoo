@@ -205,42 +205,45 @@ class project(osv.osv):
         'type_ids': _get_type_common
     }
 
-    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
-        result = {}
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = False
-            if (obj.state == 'draft' and obj.user_id):
-                result[obj.id] = obj.user_id.id
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
         return result
+
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(project, self).create(cr, uid, vals, context=context)
-        self.case_create_send_note(cr, uid, [obj_id], context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
-    def case_create_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id.id :
-                self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
-            obj.message_append_note('',_("Project has been <b>created</b>."))
+    def create_send_note(self, cr, uid, ids, context=None):
+        self.message_append_note(cr, uid, ids, 'System Notification', _("Project has been <b>created</b>."), context=context)
         return True
 
-    def case_open_send_note(self, cr, uid, ids, context=None):
+    def set_open_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>opened</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
 
-    def case_pending_send_note(self, cr, uid, ids, context=None):
+    def set_pending_send_note(self, cr, uid, ids, context=None):
         message = _("Project is <b>pending</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
 
-    def case_cancel_send_note(self, cr, uid, ids, context=None):
+    def set_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>cancelled</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
 
-    def case_close_send_note(self, cr, uid, ids, context=None):
+    def set_close_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>closed</b>.")
         self.message_append_note(cr, uid, ids, '', message, context=context)
         return True
@@ -266,7 +269,7 @@ class project(osv.osv):
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', 'not in', ('cancelled', 'done'))])
         task_obj.write(cr, uid, task_ids, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'close'}, context=context)
-        self.case_close_send_note(cr, uid, ids, context=context)
+        self.set_close_send_note(cr, uid, ids, context=context)
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
@@ -274,22 +277,22 @@ class project(osv.osv):
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', '!=', 'done')])
         task_obj.write(cr, uid, task_ids, {'state': 'cancelled', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
-        self.case_cancel_send_note(cr, uid, ids, context=context)
+        self.set_cancel_send_note(cr, uid, ids, context=context)
         return True
 
     def set_pending(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
-        self.case_pending_send_note(cr, uid, ids, context=context)
+        self.set_pending_send_note(cr, uid, ids, context=context)
         return True
 
     def set_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
-        self.case_open_send_note(cr, uid, ids, context=context)
+        self.set_open_send_note(cr, uid, ids, context=context)
         return True
 
     def reset_project(self, cr, uid, ids, context=None):
         res = self.setActive(cr, uid, ids, value=True, context=context)
-        self.case_open_send_note(cr, uid, ids, context=context)
+        self.set_open_send_note(cr, uid, ids, context=context)
         return res
 
     def map_tasks(self, cr, uid, old_project_id, new_project_id, context=None):
