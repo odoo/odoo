@@ -113,9 +113,9 @@ class account_invoice_report(osv.osv):
                          ail.quantity / u.factor
                         end) as product_qty,
                     sum(case when ai.type in ('out_refund','in_invoice') then
-                         ail.quantity*ail.price_unit * -1
+                         ail.price_subtotal * -1
                         else
-                         ail.quantity*ail.price_unit
+                         ail.price_subtotal
                         end) / cr.rate as price_total,
                     sum(case when ai.type in ('out_refund','in_invoice') then
                          ai.amount_total * -1
