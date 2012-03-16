@@ -1305,17 +1305,16 @@ openerp.web.form.FieldInterface = {
 };
 
 /**
- * Abstract class for classes implementing FieldInterface. Should be renamed to AbstractField some
- * day.
+ * Abstract class for classes implementing FieldInterface.
  * 
  * Properties:
  *     - effective_readonly: when it is true, the widget is displayed as readonly. Vary depending
  *      the values of the "readonly" property and the "force_readonly" property on the field manager.
  * 
  */
-openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.form.Field# */{
+openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends openerp.web.form.AbstractField# */{
     /**
-     * @constructs openerp.web.form.Field
+     * @constructs openerp.web.form.AbstractField
      * @extends openerp.web.form.Widget
      *
      * @param field_manager
@@ -1431,7 +1430,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
     }
 });
 
-openerp.web.form.FieldChar = openerp.web.form.Field.extend({
+openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend({
     template: 'FieldChar',
     init: function (view, node) {
         this._super(view, node);
@@ -1614,7 +1613,7 @@ openerp.web.DateWidget = openerp.web.DateTimeWidget.extend({
     type_of_date: "date"
 });
 
-openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
+openerp.web.form.FieldDatetime = openerp.web.form.AbstractField.extend({
     template: "EmptyComponent",
     build_widget: function() {
         return new openerp.web.DateTimeWidget(this);
@@ -1651,7 +1650,7 @@ openerp.web.form.FieldDate = openerp.web.form.FieldDatetime.extend({
     }
 });
 
-openerp.web.form.FieldText = openerp.web.form.Field.extend({
+openerp.web.form.FieldText = openerp.web.form.AbstractField.extend({
     template: 'FieldText',
     start: function() {
         this._super.apply(this, arguments);
@@ -1712,7 +1711,7 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
     }
 });
 
-openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
+openerp.web.form.FieldBoolean = openerp.web.form.AbstractField.extend({
     template: 'FieldBoolean',
     start: function() {
         this._super.apply(this, arguments);
@@ -1735,7 +1734,7 @@ openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
     }
 });
 
-openerp.web.form.FieldProgressBar = openerp.web.form.Field.extend({
+openerp.web.form.FieldProgressBar = openerp.web.form.AbstractField.extend({
     template: 'FieldProgressBar',
     start: function() {
         this._super.apply(this, arguments);
@@ -1755,11 +1754,11 @@ openerp.web.form.FieldProgressBar = openerp.web.form.Field.extend({
     }
 });
 
-openerp.web.form.FieldTextXml = openerp.web.form.Field.extend({
+openerp.web.form.FieldTextXml = openerp.web.form.AbstractField.extend({
 // to replace view editor
 });
 
-openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
+openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend({
     template: 'FieldSelection',
     init: function(view, node) {
         var self = this;
@@ -1865,7 +1864,7 @@ openerp.web.form.dialog = function(content, options) {
     return dialog.$element;
 };
 
-openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
+openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend({
     template: 'EmptyComponent',
     init: function(view, node) {
         this._super(view, node);
@@ -2275,7 +2274,7 @@ var commands = {
         return [6, false, ids];
     }
 };
-openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
+openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
     template: 'FieldOne2Many',
     multi_selection: false,
     init: function(view, node) {
@@ -2649,7 +2648,7 @@ openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
     }
 });
 
-openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
+openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
     template: 'FieldMany2Many',
     multi_selection: false,
     init: function(view, node) {
@@ -3098,7 +3097,7 @@ openerp.web.form.FormOpenDataset = openerp.web.ProxyDataSet.extend({
     }
 });
 
-openerp.web.form.FieldReference = openerp.web.form.Field.extend({
+openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend({
     template: 'FieldReference',
     init: function(view, node) {
         this._super(view, node);
@@ -3185,7 +3184,7 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
     }
 });
 
-openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
+openerp.web.form.FieldBinary = openerp.web.form.AbstractField.extend({
     init: function(view, node) {
         this._super(view, node);
         this.iframe = this.element_id + '_iframe';
@@ -3337,7 +3336,7 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
     }
 });
 
-openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
+openerp.web.form.FieldStatus = openerp.web.form.AbstractField.extend({
     template: "EmptyComponent",
     start: function() {
         this._super();

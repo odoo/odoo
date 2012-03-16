@@ -71,7 +71,7 @@ openerp.web.page = function (openerp) {
     //openerp.web.page.WidgetFrameReadonly = openerp.web.form.WidgetFrame.extend({
     //    form_template: 'WidgetFrame.readonly'
     //});
-    openerp.web.page.FieldReadonly = openerp.web.form.Field.extend({
+    openerp.web.page.FieldReadonly = openerp.web.form.AbstractField.extend({
 
     });
     openerp.web.page.FieldCharReadonly = openerp.web.page.FieldReadonly.extend({
