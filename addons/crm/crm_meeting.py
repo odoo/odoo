@@ -82,7 +82,7 @@ class crm_meeting(crm_base, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
-        self.case_create_send_note(cr, uid, [obj_id], context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
     def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
@@ -93,7 +93,7 @@ class crm_meeting(crm_base, osv.osv):
                 result[obj.id] = obj.user_id.id
         return result
 
-    def case_create_send_note(self, cr, uid, ids, context=None):
+    def create_send_note(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
         phonecall_obj = self.pool.get('crm.phonecall')
         for obj in self.browse(cr, uid, ids, context=context):

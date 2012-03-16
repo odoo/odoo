@@ -91,6 +91,9 @@ class crm_phonecall(crm_base, osv.osv):
         'active': 1,
     }
 
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return ''
+
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_phonecall, self).create(cr, uid, vals, context)
         for phonecall in self.browse(cr, uid, [obj_id], context=context):
@@ -137,7 +140,7 @@ class crm_phonecall(crm_base, osv.osv):
             phonecall.message_append_note('' ,message)
         return True
 
-    def case_partner_send_note(self, cr, uid, ids, context=None):
+    def set_partner_send_note(self, cr, uid, ids, context=None):
         for phonecall in self.browse(cr, uid, ids, context=context):
             message = _("Partner has been <b>created</b>")
             phonecall.message_append_note('' ,message)
@@ -231,7 +234,7 @@ class crm_phonecall(crm_base, osv.osv):
 
     def _call_set_partner(self, cr, uid, ids, partner_id, context=None):
         self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
-        self.case_partner_send_note(cr, uid, ids, context)
+        self.set_partner_send_note(cr, uid, ids, context)
 
     def _call_create_partner_address(self, cr, uid, phonecall, partner_id, context=None):
         address = self.pool.get('res.partner.address')

@@ -226,7 +226,7 @@ class crm_lead(crm_case, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
-        self.case_create_send_note(cr, uid, [obj_id], context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
 
@@ -271,26 +271,31 @@ class crm_lead(crm_case, osv.osv):
     def stage_find_won(self, cr, uid, section_id):
         return self.stage_find_percent(cr, uid, 100.0, section_id)
 
-    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
-        result = {}
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = False
-            if (obj.state == 'draft' and obj.user_id):
-                result[obj.id] = obj.user_id.id
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
         return result
 
-    def case_create_send_note(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, ids, [lead.user_id.id], context=context)
-            message = _("%s has been <b>created</b>.") % ('Opportunity' if lead.type == 'opportunity' and lead.state == 'draft' else 'Lead')
-            self.message_append_note(cr, uid, ids, _('System notification'),
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            message = _("%s has been <b>created</b>.")% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], _('System notification'),
                         message, type='notification', context=context)
         return True
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
 		lead = self.browse(cr, uid, [id], context=context)[0]
 		return ('Opportunity' if lead.type == 'opportunity' else 'Lead')
-    
+
     def case_mark_lost_send_note(self, cr, uid, ids, context=None):
         for opportunity in self.browse(cr, uid, ids, context=context):
             message = _("Opportunity has been <b>marked as lost</b>.")
@@ -309,26 +314,27 @@ class crm_lead(crm_case, osv.osv):
             lead.message_append_note('' ,message)
         return True
 
-    def case_phonecall_send_note(self, cr, uid, ids, case, phonecall, action, context=None):
+    def schedule_phonecall_send_note(self, cr, uid, ids, case, phonecall, action, context=None):
         for obj in phonecall.browse(cr, uid, ids, context=context):
             message = _("<b>%s a call</b> for the <em>%s</em>.") % (action, obj.date)
             case.message_append_note('', message)
 
-    def case_partner_send_note(self, cr, uid, ids, context=None):
+    def _lead_set_partner_send_note(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context=context):
             message = _("Partner has been <b>created</b>")
             lead.message_append_note('' ,message)
         return True
 
     def case_open(self, cr, uid, ids, context=None):
-        res = super(crm_lead, self).case_open(cr, uid, ids, context)
         for lead in self.browse(cr, uid, ids, context=context):
-            value = {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')}
-            self.write(cr, uid, [lead.id], value)
-            if lead.type == 'opportunity' and not lead.stage_id:
-                stage_id = self.stage_find(cr, uid, lead.section_id.id or False, [('sequence','>',0)])
-                if stage_id:
-                    self.stage_set(cr, uid, [lead.id], stage_id)
+            if lead.state == 'draft':
+                value = {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')}
+                self.write(cr, uid, [lead.id], value)
+                if lead.type == 'opportunity' and not lead.stage_id:
+                    stage_id = self.stage_find(cr, uid, lead.section_id.id or False, [('sequence','>',0)])
+                    if stage_id:
+                        self.stage_set(cr, uid, [lead.id], stage_id)
+        res = super(crm_lead, self).case_open(cr, uid, ids, context)
         return res
 
     def case_close(self, cr, uid, ids, context=None):
@@ -348,7 +354,6 @@ class crm_lead(crm_case, osv.osv):
         """
         res = super(crm_lead, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'stage_id': False, 'probability': 0.0})
-        self.case_reset_send_note(cr, uid, ids, context=context)
         return res
 
     def case_mark_lost(self, cr, uid, ids, context=None):
@@ -477,7 +482,7 @@ class crm_lead(crm_case, osv.osv):
 
         subject = subject[0] + ", ".join(subject[1:])
         details = "\n\n".join(details)
-        return opportunity.message_append_note(subject, body=details)
+        return self.message_append_note(cr, uid, [opportunity_id], subject, body=details)
 
     def _merge_opportunity_history(self, cr, uid, opportunity_id, opportunities, context=None):
         message = self.pool.get('mail.message')
@@ -633,7 +638,8 @@ class crm_lead(crm_case, osv.osv):
             res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id.id or False})
             contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
             res = lead.write({'partner_id' : partner_id, 'partner_address_id': contact_id}, context=context)
-            self.case_partner_send_note(cr, uid, [lead.id], context)
+            self._lead_set_partner_send_note(cr, uid, [lead.id], context)
+
         return res
 
     def _lead_create_partner_address(self, cr, uid, lead, partner_id, context=None):
@@ -739,7 +745,7 @@ class crm_lead(crm_case, osv.osv):
             if action == 'log':
                 phonecall.case_close(cr, uid, [new_id])
             phonecall_dict[lead.id] = new_id
-            self.case_phonecall_send_note(cr, uid, [new_id], lead, phonecall, action, context=context)
+            self.schedule_phonecall_send_note(cr, uid, [new_id], lead, phonecall, action, context=context)
         return phonecall_dict
 
 
