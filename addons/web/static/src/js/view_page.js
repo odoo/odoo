@@ -68,24 +68,6 @@ openerp.web.page = function (openerp) {
     /** @namespace */
     openerp.web.page = {};
 
-    openerp.web.page.FieldURIReadonly = openerp.web.form.FieldChar.extend({
-        form_template: 'FieldURI.readonly',
-        scheme: null,
-        format_value: function (value) {
-            return value;
-        },
-        set_value: function (value) {
-        }
-    });
-    openerp.web.page.FieldUrlReadonly = openerp.web.page.FieldURIReadonly.extend({
-        set_value: function (value) {
-            var s = /(\w+):(.+)/.exec(value);
-            if (!s) {
-                value = "http://" + value;
-            }
-            this.$element.find('a').attr('href', value).text(value);
-        }
-    });
     openerp.web.page.FieldBooleanReadonly = openerp.web.form.FieldBoolean.extend({
         update_dom: function() {
             this._super.apply(this, arguments);
@@ -168,8 +150,6 @@ openerp.web.page = function (openerp) {
         }
     });
     openerp.web.page.readonly = openerp.web.form.widgets.extend({
-        'frame': 'openerp.web.page.WidgetFrameReadonly',
-        'url': 'openerp.web.page.FieldUrlReadonly',
         'selection' : 'openerp.web.page.FieldSelectionReadonly',
         'reference': 'openerp.web.page.FieldReferenceReadonly',
         'boolean': 'openerp.web.page.FieldBooleanReadonly',
