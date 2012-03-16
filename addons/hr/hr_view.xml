@@ -339,7 +339,7 @@
             <field eval="'ir.actions.act_window,%d'%hr_employee_normal_action_tree" name="value"/>
         </record>
 
-        <menuitem action="open_view_categ_tree"
+        <menuitem action="open_view_categ_tree" groups="base.group_no_one"
             id="menu_view_employee_category_tree" parent="menu_view_employee_category_configuration_form" sequence="2"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
@@ -434,7 +434,7 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem parent="hr.menu_view_employee_category_configuration_form" id="menu_hr_job" action="action_hr_job" sequence="2"/>
+        <menuitem parent="hr.menu_view_employee_category_configuration_form" id="menu_hr_job" action="action_hr_job" sequence="2" groups="base.group_no_one"/>
 
     </data>
 </openerp>

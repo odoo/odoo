@@ -417,7 +417,7 @@
         name="Stages"
         parent="menu_hr_recruitment_recruitment"
         action="hr_recruitment_stage_act"
-        sequence="1"/>
+        sequence="1" groups="base.group_no_one"/>
 
 <!-- Degree Tree View -->
 
@@ -461,7 +461,7 @@
             name="Degrees"
             parent="menu_hr_recruitment_recruitment"
             action="hr_recruitment_degree_action"
-            sequence="1"/>
+            sequence="1" groups="base.group_no_one"/>
 
 <!-- Source Tree View -->
 
@@ -495,6 +495,7 @@
             id="menu_hr_recruitment_source"
             parent="menu_hr_recruitment_recruitment"
             action="hr_recruitment_source_action"
+			groups="base.group_no_one"
             sequence="1"/>
 
 
