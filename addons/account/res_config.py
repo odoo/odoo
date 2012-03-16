@@ -207,13 +207,13 @@ class account_configuration(osv.osv_memory):
                     res.update({'purchase_refund_journal_id': journal.id})
 
         if chart_template_ids:
+            res.update({'chart_template_id': chart_template_ids[0]})
             data = chart_template_obj.browse(cr, uid, chart_template_ids[0], context=context)
             res.update({'complete_tax_set': data.complete_tax_set})
             supplier_taxes_id = ir_values_obj.get_default(cr, uid, 'product.template', 'supplier_taxes_id')
             res.update({'supplier_taxes_id': supplier_taxes_id})
             taxes_id = ir_values_obj.get_default(cr, uid, 'product.template', 'taxes_id')
-            res.update({'chart_template_id': taxes_id})
-            res.update({'chart_template_id': chart_template_ids[0]})
+            res.update({'taxes_id': taxes_id})
 
         if fiscalyear_ids:
             res.update({'fiscalyear_id': fiscalyear_ids[0]})
@@ -274,7 +274,6 @@ class account_configuration(osv.osv_memory):
         chart_template_obj = self.pool.get('account.chart.template')
         tax_templ_obj = self.pool.get('account.tax.template')
 
-        data = self.read(cr, uid, ids, context=context)[0]
         if context is None:
             context = {}
         for res in self.read(cr, uid, ids, context=context):
@@ -289,12 +288,12 @@ class account_configuration(osv.osv_memory):
                 if mod_ids and ir_module.browse(cr, uid, mod_ids[0], context).state == 'uninstalled':
                     ir_module.button_immediate_install(cr, uid, mod_ids, context)
 
-        chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
-        complete_tax_set = chart_template_obj.browse(cr, uid, chart_template_ids[0]).complete_tax_set
-        if not complete_tax_set:
-            code_digits = multi_chart_obj.onchange_chart_template_id(cr, uid, [], chart_template_ids[0], context=context)['value']['code_digits']
-            object_id = multi_chart_obj.create(cr, uid, {'code_digits': code_digits , 'sale_tax_rate':data['sale_tax_rate'], 'purchase_tax_rate': data['purchase_tax_rate']}, context=context)
-            multi_chart_obj.execute(cr, uid, [object_id], context=context)
+            chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
+            complete_tax_set = chart_template_obj.browse(cr, uid, chart_template_ids[0]).complete_tax_set
+            if not complete_tax_set:
+                code_digits = multi_chart_obj.onchange_chart_template_id(cr, uid, [], chart_template_ids[0], context=context)['value']['code_digits']
+                object_id = multi_chart_obj.create(cr, uid, {'code_digits': code_digits , 'sale_tax_rate': res.get('sale_tax_rate'), 'purchase_tax_rate': res.get('purchase_tax_rate')}, context=context)
+                multi_chart_obj.execute(cr, uid, [object_id], context=context)
 
     def configure_fiscalyear(self, cr, uid, ids, context=None):
         if context is None:
