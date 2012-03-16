@@ -1438,17 +1438,30 @@ openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
+        this.bind_events();
+        this.on("change:effective_readonly", this, function() {
+            this.render_element();
+            this.bind_events();
+            this.render_value();
+        });
+    },
+    bind_events: function() {
         this.$element.find('input').change(this.on_ui_change);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        var show_value = openerp.web.format_value(value, this, '');
-        this.$element.find('input').val(show_value);
-        return show_value;
+        this.render_value();
     },
-    update_dom: function() {
-        this._super.apply(this, arguments);
-        this.$element.find('input').prop('readonly', this.readonly);
+    render_value: function() {
+        var show_value = openerp.web.format_value(this.value, this, '');
+        if (!this.get("effective_readonly")) {
+            this.$element.find('input').val(show_value);
+        } else {
+            if (this.password) {
+                show_value = new Array(show_value.length + 1).join('*');
+            }
+            this.$element.text(show_value);
+        }
     },
     set_value_from_ui: function() {
         this.value = openerp.web.parse_value(this.$element.find('input').val(), this);

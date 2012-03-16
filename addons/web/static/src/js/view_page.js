@@ -68,29 +68,7 @@ openerp.web.page = function (openerp) {
     /** @namespace */
     openerp.web.page = {};
 
-    //openerp.web.page.WidgetFrameReadonly = openerp.web.form.WidgetFrame.extend({
-    //    form_template: 'WidgetFrame.readonly'
-    //});
-    openerp.web.page.FieldReadonly = openerp.web.form.AbstractField.extend({
-
-    });
-    openerp.web.page.FieldCharReadonly = openerp.web.page.FieldReadonly.extend({
-        form_template: 'FieldChar.readonly',
-        init: function(view, node) {
-            this._super(view, node);
-            this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
-        },
-        set_value: function (value) {
-            this._super.apply(this, arguments);
-            var show_value = openerp.web.format_value(value, this, '');
-            if (this.password) {
-                show_value = new Array(show_value.length + 1).join('*');
-            }
-            this.$element.find('div').text(show_value);
-            return show_value;
-        }
-    });
-    openerp.web.page.FieldURIReadonly = openerp.web.page.FieldCharReadonly.extend({
+    openerp.web.page.FieldURIReadonly = openerp.web.form.FieldChar.extend({
         form_template: 'FieldURI.readonly',
         scheme: null,
         format_value: function (value) {
@@ -120,7 +98,7 @@ openerp.web.page = function (openerp) {
             this.$element.find('input').prop('disabled', true);
         }
     });
-    openerp.web.page.FieldSelectionReadonly = openerp.web.page.FieldReadonly.extend({
+    openerp.web.page.FieldSelectionReadonly = openerp.web.form.AbstractField.extend({
         form_template: 'FieldChar.readonly',
         init: function(view, node) {
             // lifted straight from r/w version
@@ -197,19 +175,11 @@ openerp.web.page = function (openerp) {
     });
     openerp.web.page.readonly = openerp.web.form.widgets.extend({
         'frame': 'openerp.web.page.WidgetFrameReadonly',
-        'char': 'openerp.web.page.FieldCharReadonly',
-        'id': 'openerp.web.page.FieldCharReadonly',
         'email': 'openerp.web.page.FieldEmailReadonly',
         'url': 'openerp.web.page.FieldUrlReadonly',
-        'text': 'openerp.web.page.FieldCharReadonly',
-        'date': 'openerp.web.page.FieldCharReadonly',
-        'datetime': 'openerp.web.page.FieldCharReadonly',
         'selection' : 'openerp.web.page.FieldSelectionReadonly',
         'reference': 'openerp.web.page.FieldReferenceReadonly',
         'boolean': 'openerp.web.page.FieldBooleanReadonly',
-        'float': 'openerp.web.page.FieldCharReadonly',
-        'integer': 'openerp.web.page.FieldCharReadonly',
-        'float_time': 'openerp.web.page.FieldCharReadonly',
         'binary': 'openerp.web.page.FieldBinaryFileReadonly',
         'image': 'openerp.web.page.FieldBinaryImageReaonly'
     });
