@@ -457,6 +457,7 @@ class task(osv.osv):
     _description = "Task"
     _log_create = True
     _date_name = "date_start"
+    _inherit = ['mail.thread']
 
 
     def _resolve_project_id_from_context(self, cr, uid, context=None):
@@ -845,8 +846,7 @@ class task(osv.osv):
             if not task.date_end:
                 vals.update({ 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
             self.write(cr, uid, [task.id],vals, context=context)
-            message = _("The task '%s' is done") % (task.name,)
-            self.log(cr, uid, task.id, message)
+            self.case_close_send_note(cr, uid, [task.id], context)
         return True
 
     def do_reopen(self, cr, uid, ids, context=None):
@@ -866,6 +866,7 @@ class task(osv.osv):
                 }, context=context)
 
             self.write(cr, uid, [task.id], {'state': 'open'}, context=context)
+            self.case_open_send_note(cr, uid, [task.id], context)
         return True
 
     def do_cancel(self, cr, uid, ids, context={}):
@@ -884,8 +885,7 @@ class task(osv.osv):
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
                 }, context=context)
-            message = _("The task '%s' is cancelled.") % (task.name,)
-            self.log(cr, uid, task.id, message)
+            self.case_cancel_send_note(cr, uid, [task.id], context)
             self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0}, context=context)
         return True
 
@@ -897,12 +897,12 @@ class task(osv.osv):
             if not t.date_start:
                 data['date_start'] = time.strftime('%Y-%m-%d %H:%M:%S')
             self.write(cr, uid, [t.id], data, context=context)
-            message = _("The task '%s' is opened.") % (t.name,)
-            self.log(cr, uid, t.id, message)
+            self.case_open_send_note(cr, uid, [t.id], context)
         return True
 
     def do_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+        self.case_draft_send_note(cr, uid, ids, context)
         return True
 
 
@@ -941,20 +941,16 @@ class task(osv.osv):
                 'name': newname,
             }, context=context)
             if delegate_data['state'] == 'pending':
-                self.do_pending(cr, uid, task.id, context=context)
+                self.do_pending(cr, uid, [task.id], context=context)
             elif delegate_data['state'] == 'done':
-                self.do_close(cr, uid, task.id, context=context)
-            
-            message = _("The task '%s' has been delegated to %s.") % (delegate_data['name'], delegate_data['user_id'][1])
-            self.log(cr, uid, task.id, message)
+                self.do_close(cr, uid, [task.id], context=context)
+            self.case_delegation_send_note(cr, uid, [task.id], context)
             delegated_tasks[task.id] = delegated_task_id
         return delegated_tasks
 
     def do_pending(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'pending'}, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The task '%s' is pending.") % name
-            self.log(cr, uid, id, message)
+        self.case_pending_send_note(cr, uid, ids, context)
         return True
 
     def set_remaining_time(self, cr, uid, ids, remaining_time=1.0, context=None):
@@ -985,7 +981,7 @@ class task(osv.osv):
     def set_kanban_state_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
 
-    def _change_type(self, cr, uid, ids, next, *args):
+    def _change_type(self, cr, uid, ids, next, context=None):
         """
             go to the next stage
             if next is False, go to previous stage
@@ -1006,13 +1002,14 @@ class task(osv.osv):
                 elif typeid and typeid in sorted_types and sorted_types.index(typeid) != len(sorted_types)-1:
                     index = sorted_types.index(typeid)
                     self.write(cr, uid, task.id, {'type_id': sorted_types[index+1]})
+                self.case_state_change_send_note(cr, uid, [task.id], context)
         return True
 
-    def next_type(self, cr, uid, ids, *args):
-        return self._change_type(cr, uid, ids, True, *args)
+    def next_type(self, cr, uid, ids, context=None):
+        return self._change_type(cr, uid, ids, True, context)
 
-    def prev_type(self, cr, uid, ids, *args):
-        return self._change_type(cr, uid, ids, False, *args)
+    def prev_type(self, cr, uid, ids, context=None):
+        return self._change_type(cr, uid, ids, False, context)
 
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
@@ -1028,10 +1025,67 @@ class task(osv.osv):
             }, context=context)
         return True
 
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if (obj.state == 'draft' and obj.user_id):
+                result[obj.id] = [obj.user_id.id]
+        return result
+
     def create(self, cr, uid, vals, context=None):
         result = super(task, self).create(cr, uid, vals, context=context)
         self._store_history(cr, uid, [result], context=context)
+        self.create_send_note(cr, uid, [result], context=context)
         return result
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id.id :
+                self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
+            obj.message_append_note('',_("Task has been <b>created</b>."))
+        return True
+
+    def case_pending_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = 'Task is now <b>pending</b>.'
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+        return True
+
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = 'Task has been <b>opened</b>.'
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+        return True
+
+    def case_cancel_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = 'Task has been <b>canceled</b>.'
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+        return True
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = 'Task has been <b>closed</b>.'
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+        return True
+
+    def case_draft_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = 'Task has been <b>renewed</b>.'
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+        return True
+
+    def case_delegation_send_note(self, cr, uid, ids, context=None):
+        for task in self.browse(cr, uid, ids, context=context):
+            msg = 'Task has been <b>delegated</b> to <em>%s</em>.' % (task.user_id.name)
+            self.message_append_note(cr, uid, [task.id], 'System Notification', msg, context=context)
+        return True
+
+    def case_state_change_send_note(self, cr, uid, ids, context=None):
+        for task in self.browse(cr, uid, ids, context=context):
+            msg = 'Stage changed to <b>%s</b>' % (task.type_id.name)
+            self.message_append_note(cr, uid, [task.id], 'System Notification', msg, context=context)
+        return True
 
     # Overridden to reset the kanban_state to normal whenever
     # the stage (type_id) of the task changes.
