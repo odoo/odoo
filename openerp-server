@@ -169,7 +169,7 @@ def dumpstacks(sig, frame):
     id2name = dict([(threadId, thread.getName()) for threadId, thread in thread_map.items()])
     code = []
     for threadId, stack in sys._current_frames().items():
-        code.append("\n# Thread: %s(%d)" % (id2name[threadId], threadId))
+        code.append("\n# Thread: %s(%d)" % (id2name.get(threadId,'n/a'), threadId))
         for filename, lineno, name, line in traceback.extract_stack(stack):
             code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
             if line:
