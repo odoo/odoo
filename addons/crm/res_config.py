@@ -112,7 +112,7 @@ class crm_configuration(osv.osv_memory):
                     'user': vals.get('default_user'),
                     'password': vals.get('default_password')
             }
-            server_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads'),('state','!=','done')])
+            server_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads'),('state','=','done')])
             if not server_ids:
                 server_ids = [fetchmail_obj.create(cr, uid, fetchmail_vals, context=context)]
             else:
