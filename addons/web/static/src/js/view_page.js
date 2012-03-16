@@ -147,6 +147,17 @@ openerp.web.page = function (openerp) {
         'selection' : 'openerp.web.page.FieldSelectionReadonly',
         'reference': 'openerp.web.page.FieldReferenceReadonly',
         'binary': 'openerp.web.page.FieldBinaryFileReadonly',
-        'image': 'openerp.web.page.FieldBinaryImageReaonly'
+        'image': 'openerp.web.page.FieldBinaryImageReaonly',
+            
+        'id': 'openerp.web.form.FieldChar',
+        'text': 'openerp.web.form.FieldChar',
+        'date': 'openerp.web.form.FieldChar',
+        'datetime': 'openerp.web.form.FieldChar',
+        'float': 'openerp.web.form.FieldChar',
+        'integer': 'openerp.web.form.FieldChar',
+        'float_time': 'openerp.web.form.FieldChar',
     });
+    
+
+    
 };
