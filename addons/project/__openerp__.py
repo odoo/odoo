@@ -67,9 +67,6 @@ Dashboard for project members that includes:
         'test/project_process.yml',
         'test/task_process.yml',
     ],
-    'css': [
-        'static/src/css/project_task.css',
-    ],
     'installable': True,
     'auto_install': False,
     'application': True,

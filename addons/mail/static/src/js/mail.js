@@ -67,20 +67,56 @@ openerp.mail = function(session) {
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
-            /* display customization and events */
+            // customize display
             this.$element.find('p.oe_mail_p_nomore').hide();
             if (! this.display.show_post_comment) this.$element.find('div.oe_mail_thread_act').hide();
             if (! this.display.show_more) this.$element.find('div.oe_mail_thread_more').hide();
-            this.$element.find('button.oe_mail_button_more').bind('click', function () { self.do_more(); });
-            this.$element.find('textarea.oe_mail_action_textarea').bind('keyup', function (event) {
+            // add events
+            this.add_events();
+            /* get record name */
+            var name_get_done = self.ds.name_get([this.params.res_id]).then(function (records) { self.name = records[0][1]; });
+            var display_done = $.when(name_get_done).then(function () {
+                /* display user, fetch comments */
+                self.display_current_user();
+                if (self.params.records) return self.display_comments(self.params.records);
+                else return self.init_comments();
+            });
+            return display_done
+        },
+        
+        add_events: function() {
+            var self = this;
+            // event: click on 'more'
+            this.$element.find('button.oe_mail_button_more').click(function () {
+                self.do_more();
+            });
+            // event: writing in textarea
+            this.$element.find('textarea.oe_mail_action_textarea').keyup(function (event) {
                 var charCode = (event.which) ? event.which : window.event.keyCode;
                 if (event.shiftKey && charCode == 13) { this.value = this.value+"\n"; }
                 else if (charCode == 13) { self.do_comment(); }
             });
-            
-            // add event
-            this.add_events();
-            
+            // event: click on 'reply'
+            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
+               var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_act:first');
+               act_dom.toggle();
+            });
+            // event: click on 'delete'
+            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_delete', 'click', function (event) {
+               console.log('deleting');
+               var msg_id = event.srcElement.dataset.id;
+               if (! msg_id) return false;
+               self.ds_msg.unlink([parseInt(msg_id)]).then();
+               return false;
+            });
+            // event: click on 'hide'
+            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide', 'click', function (event) {
+               console.log('hiding');
+               var msg_id = event.srcElement.dataset.id;
+               if (! msg_id) return false;
+               return false;
+            });
+            // event: click on an internal link
             this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
                 // lazy implementation: fetch data and try to redirect
                 if (! event.srcElement.dataset.resModel) return false;
@@ -98,32 +134,6 @@ openerp.mail = function(session) {
                     });
                 }
                 else self.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(res_id), views: [[false, 'form']]});
-            });
-            /* get record name */
-            var name_get_done = self.ds.name_get([this.params.res_id]).then(function (records) { self.name = records[0][1]; });
-            var display_done = $.when(name_get_done).then(function () {
-                /* display user, fetch comments */
-                self.display_current_user();
-                if (self.params.records) return self.display_comments(self.params.records);
-                else return self.init_comments();
-            });
-            return display_done
-        },
-        
-        add_events: function() {
-            var self = this;
-            // event: click on 'reply'
-            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
-               var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_act:first');
-               act_dom.toggle();
-            });
-            // event: click on 'delete'
-            this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_delete', 'click', function (event) {
-               console.log('deleting');
-               var msg_id = event.srcElement.dataset.id;
-               if (! msg_id) return false;
-               self.ds_msg.unlink([parseInt(msg_id)]).then();
-               return false;
             });
         },
         
