@@ -1050,33 +1050,28 @@ class task(osv.osv):
         return True
 
     def do_pending_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = 'Task is now <b>pending</b>.'
-            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+        msg = 'Task is now <b>pending</b>.'
+        self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
         return True
 
     def do_open_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = 'Task has been <b>opened</b>.'
-            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+        msg = 'Task has been <b>opened</b>.'
+        self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
         return True
 
     def do_cancel_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = 'Task has been <b>canceled</b>.'
-            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+        msg = 'Task has been <b>canceled</b>.'
+        self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
         return True
 
     def do_close_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = 'Task has been <b>closed</b>.'
-            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+        msg = 'Task has been <b>closed</b>.'
+        self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
         return True
 
     def do_draft_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            msg = 'Task has been <b>renewed</b>.'
-            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+        msg = 'Task has been <b>renewed</b>.'
+        self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
         return True
 
     def do_delegation_send_note(self, cr, uid, ids, context=None):
