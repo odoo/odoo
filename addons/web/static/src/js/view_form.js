@@ -1874,15 +1874,15 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         this.cm_id = _.uniqueId('m2o_cm_');
         this.last_search = [];
         this.tmp_value = undefined;
+    },
+    start: function() {
+        this._super();
+        this.render_content();
         this.on("change:effective_readonly", this, function(origin, event) {
             if (event.oldValue !== event.newValue) {
                 this.render_content();
             }
         });
-    },
-    start: function() {
-        this._super();
-        this.render_content();
     },
     render_content: function() {
         this.$element.html("");
