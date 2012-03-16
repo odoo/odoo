@@ -313,15 +313,20 @@ nova = (function() {
         },
         set: function(map) {
             var self = this;
+            var changed = false;
             _.each(map, function(val, key) {
                 var tmp = self.__getterSetterInternalMap[key];
+                if (tmp === val)
+                    return;
+                changed = true;
                 self.__getterSetterInternalMap[key] = val;
                 self.trigger("change:" + key, self, {
                     oldValue: tmp,
                     newValue: val
                 });
             });
-            self.trigger("change", self);
+            if (changed)
+                self.trigger("change", self);
         },
         get: function(key) {
             return this.__getterSetterInternalMap[key];
