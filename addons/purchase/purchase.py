@@ -151,7 +151,6 @@ class purchase_order(osv.osv):
         ('done', 'Done'),
         ('cancel', 'Cancelled')
     ]
-
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True, help="unique number of the purchase order,computed automatically when the purchase order is created"),
         'origin': fields.char('Source Document', size=64,
@@ -230,7 +229,7 @@ class purchase_order(osv.osv):
     def create(self, cr, uid, vals, context=None):
         order =  super(purchase_order, self).create(cr, uid, vals, context=context)
         if order:
-            self.create_notificate(cr, uid, [order], context=context)
+            self.create_send_note(cr, uid, [order], context=context)
         return order
     
     def unlink(self, cr, uid, ids, context=None):
@@ -299,7 +298,7 @@ class purchase_order(osv.osv):
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
-        self.confirm_notificate(cr, uid, ids, context)
+        self.confirm_send_note(cr, uid, ids, context)
         return True
 
     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
@@ -402,12 +401,12 @@ class purchase_order(osv.osv):
             order.write({'invoice_ids': [(4, inv_id)]}, context=context)
             res = inv_id
         if res:
-            self.invoice_notificate(cr, uid, ids, res, context)
+            self.invoice_send_note(cr, uid, ids, res, context)
         return res
     
     def invoice_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'approved'}, context=context)
-        self.invoice_paid_notificate(cr, uid, ids, context=context)
+        self.invoice_paid_send_note(cr, uid, ids, context=context)
         return True
         
     def has_stockable_product(self,cr, uid, ids, *args):
@@ -523,12 +522,12 @@ class purchase_order(osv.osv):
         # one that should trigger the advancement of the purchase workflow.
         # By default we will consider the first one as most important, but this behavior can be overridden.
         if picking_ids:
-            self.shipment_notificate(cr, uid, ids, picking_ids[0], context=context)
+            self.shipment_send_note(cr, uid, ids, picking_ids[0], context=context)
         return picking_ids[0] if picking_ids else False
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
-        self.shipment_done_notificate(cr, uid, ids, context=context)
+        self.shipment_done_send_note(cr, uid, ids, context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -659,46 +658,53 @@ class purchase_order(osv.osv):
     # -----------------------------
     # OpenChatter and notifications
     # -----------------------------
-    def create_notificate(self, cr, uid, ids, context=None):
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.state == 'approved':
+                result[obj.id] = [obj.validator.id]
+        return result
+    
+    def create_send_note(self, cr, uid, ids, context=None):
         self.message_append_note(cr, uid, ids, _('System notification'),
                         _("""Request for quotation <b>created</b>."""),
                             type='notification', context=context)
 
-    def confirm_notificate(self, cr, uid, ids, context=None):
+    def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, ids, [obj.validator.id], context=context)
-            self.message_append_note(cr, uid, ids, _('System notification'),
+            self.message_subscribe(cr, uid, [obj.id], [obj.validator.id], context=context)
+            self.message_append_note(cr, uid, [obj.id], _('System notification'),
                         _("""Quotation <em>%s</em> <b>converted</b> to a Purchase Order of  %s %s.""")
                         % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), type='notification', context=context)
         
-    def shipment_notificate(self, cr, uid, ids, picking_id, context=None):
+    def shipment_send_note(self, cr, uid, ids, picking_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
             for picking in (pck for pck in order.picking_ids if pck.id == picking_id):
                 pck_date =  datetime.strptime(picking.min_date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
-                self.message_append_note(cr, uid, ids, _('System notification'),
+                self.message_append_note(cr, uid, [order.id], _('System notification'),
                         _("""Shipment <em>%s</em> <b>scheduled</b> for %s.""")
                         % (picking.name, pck_date), type='notification', context=context)
     
-    def invoice_notificate(self, cr, uid, ids, invoice_id, context=None):
+    def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
             for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
-                self.message_append_note(cr, uid, ids, _('System notification'),
+                self.message_append_note(cr, uid, [order.id], _('System notification'),
                         _("""Draft Invoice of %s %s <b>waiting for validation</b>.""")
                         % (invoice.amount_total, invoice.currency_id.symbol), type='notification', context=context)
     
-    def shipment_done_notificate(self, cr, uid, ids, context=None):
+    def shipment_done_send_note(self, cr, uid, ids, context=None):
         self.message_append_note(cr, uid, ids, _('System notification'),
                     _("""Shipment <b>received</b>.""")
                      ,type='notification', context=context)
      
-    def invoice_paid_notificate(self, cr, uid, ids, context=None):
+    def invoice_paid_send_note(self, cr, uid, ids, context=None):
         self.message_append_note(cr, uid, ids, _('System notification'),
                     _("""Invoice <b>paid</b>.""")
                      ,type='notification', context=context)
     
-    def cancel_notificate(self, cr, uid, ids, context=None):
+    def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, ids, _('System notification'),
+            self.message_append_note(cr, uid, [obj.id], _('System notification'),
                         _("""Purchase Order for <em>%s</em> <b>cancelled</b>.""")
                         % (obj.partner_id.name), type='notification', context=context)
 
