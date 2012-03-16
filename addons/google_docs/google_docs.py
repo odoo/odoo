@@ -106,7 +106,7 @@ class google_docs_ir_attachment(osv.osv):
 class google_docs(osv.osv):
     _name = 'google.docs'
 
-    def doc_get(self, cr, uid, model, id, type_doc):# TODO fix logic here
+    def doc_get(self, cr, uid, model, id, type_doc):
         google_docs_config_ref = self.pool.get('res.users')
         ir_attachment_ref = self.pool.get('ir.attachment')
         google_docs_config = google_docs_config_ref.search(cr, uid, [('context_model_id', '=', model)])
@@ -139,11 +139,11 @@ class config(osv.osv):
         'context_multiple': False,
     }
 
-    def has_config_set(self, cr, uid, model):
-        print model
-        import pdb
-        pdb.set_trace()
+    def get_config(self, cr, uid, model):
         domain = [('context_model_id', '=', model)]
-        return self.search_count(cr, uid, domain) != 0
+        if self.search_count(cr, uid, domain) != 0:
+            return False
+        else:
+            return self.search(cr, uid, domain)
 
 config()
