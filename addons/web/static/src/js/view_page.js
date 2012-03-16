@@ -67,13 +67,7 @@ openerp.web.page = function (openerp) {
 
     /** @namespace */
     openerp.web.page = {};
-
-    openerp.web.page.FieldBooleanReadonly = openerp.web.form.FieldBoolean.extend({
-        update_dom: function() {
-            this._super.apply(this, arguments);
-            this.$element.find('input').prop('disabled', true);
-        }
-    });
+    
     openerp.web.page.FieldSelectionReadonly = openerp.web.form.AbstractField.extend({
         form_template: 'FieldChar.readonly',
         init: function(view, node) {
@@ -152,7 +146,6 @@ openerp.web.page = function (openerp) {
     openerp.web.page.readonly = openerp.web.form.widgets.extend({
         'selection' : 'openerp.web.page.FieldSelectionReadonly',
         'reference': 'openerp.web.page.FieldReferenceReadonly',
-        'boolean': 'openerp.web.page.FieldBooleanReadonly',
         'binary': 'openerp.web.page.FieldBinaryFileReadonly',
         'image': 'openerp.web.page.FieldBinaryImageReaonly'
     });

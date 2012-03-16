@@ -1749,7 +1749,13 @@ openerp.web.form.FieldBoolean = openerp.web.form.AbstractField.extend({
     template: 'FieldBoolean',
     start: function() {
         this._super.apply(this, arguments);
-        this.$checkbox = this.$element.click(this.on_ui_change);
+        this.$checkbox = $("input", this.$element);
+        this.$element.click(this.on_ui_change);
+        var check_readonly = function() {
+            this.$checkbox.prop('disabled', this.get("effective_readonly"));
+        };
+        this.on("change:effective_readonly", this, check_readonly);
+        _.bind(check_readonly, this)();
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
@@ -1758,10 +1764,6 @@ openerp.web.form.FieldBoolean = openerp.web.form.AbstractField.extend({
     set_value_from_ui: function() {
         this.value = this.$checkbox.is(':checked');
         this._super.apply(this, arguments);
-    },
-    update_dom: function() {
-        this._super.apply(this, arguments);
-        this.$checkbox.prop('disabled', this.readonly);
     },
     focus: function($element) {
         this._super($element || this.$checkbox);
