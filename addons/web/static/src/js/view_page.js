@@ -168,9 +168,6 @@ openerp.web.page = function (openerp) {
         }
     });
 
-    openerp.web.page.FieldMany2ManyReadonly = openerp.web.form.FieldMany2Many.extend({
-        force_readonly: true
-    });
     openerp.web.page.FieldOne2ManyReadonly = openerp.web.form.FieldOne2Many.extend({
         force_readonly: true
     });
@@ -211,7 +208,6 @@ openerp.web.page = function (openerp) {
         'date': 'openerp.web.page.FieldCharReadonly',
         'datetime': 'openerp.web.page.FieldCharReadonly',
         'selection' : 'openerp.web.page.FieldSelectionReadonly',
-        'many2many' : 'openerp.web.page.FieldMany2ManyReadonly',
         'one2many' : 'openerp.web.page.FieldOne2ManyReadonly',
         'one2many_list' : 'openerp.web.page.FieldOne2ManyReadonly',
         'reference': 'openerp.web.page.FieldReferenceReadonly',

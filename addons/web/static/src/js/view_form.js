@@ -2648,6 +2648,9 @@ openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
     }
 });
 
+/*
+ * TODO niv: clean those deferred stuff, it could be better
+ */
 openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
     template: 'FieldMany2Many',
     multi_selection: false,
@@ -2672,6 +2675,14 @@ openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
         this.is_setted.then(function() {
             self.load_view();
         });
+        this.is_loaded.then(function() {
+            self.on("change:effective_readonly", self, function() {
+                self.list_view.destroy();
+                return $.when(self.load_view()).then(function() {
+                    self.reload_content();
+                });
+            });
+        })
     },
     set_value: function(value) {
         value = value || [];
@@ -2690,16 +2701,13 @@ openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
     validate: function() {
         this.invalid = false;
     },
-    is_readonly: function() {
-        return this.readonly || this.force_readonly;
-    },
     load_view: function() {
         var self = this;
         this.list_view = new openerp.web.form.Many2ManyListView(this, this.dataset, false, {
-                    'addable': self.is_readonly() ? null : _t("Add"),
-                    'deletable': self.is_readonly() ? false : true,
+                    'addable': self.get("effective_readonly") ? null : _t("Add"),
+                    'deletable': self.get("effective_readonly") ? false : true,
                     'selectable': self.multi_selection,
-                    'isClarkGable': self.is_readonly() ? false : true
+                    'isClarkGable': self.get("effective_readonly") ? false : true
             });
         var embedded = (this.field.views || {}).tree;
         if (embedded) {
@@ -2722,21 +2730,6 @@ openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
             return self.list_view.reload_content();
         });
     },
-    update_dom: function() {
-        this._super.apply(this, arguments);
-        var self = this;
-        if (this.previous_readonly !== this.readonly) {
-            this.previous_readonly = this.readonly;
-            if (this.list_view) {
-                this.is_loaded = this.is_loaded.pipe(function() {
-                    self.list_view.destroy();
-                    return $.when(self.load_view()).then(function() {
-                        self.reload_content();
-                    });
-                });
-            }
-        }
-    }
 });
 
 openerp.web.form.Many2ManyDataSet = openerp.web.DataSetStatic.extend({
@@ -2777,7 +2770,7 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends open
         var pop = new openerp.web.form.FormOpenPopup(this);
         pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {
             title: _t("Open: ") + this.name,
-            readonly: this.getParent().is_readonly()
+            readonly: this.getParent().get("effective_readonly")
         });
         pop.on_write_completed.add_last(function() {
             self.reload_content();
