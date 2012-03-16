@@ -530,10 +530,10 @@ class product_product(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(product_product, self).create(cr, uid, vals, context=context)
-        self.case_create_send_note(cr, uid, [obj_id], context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
-    def case_create_send_note(self, cr, uid, ids, context=None):
+    def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_append_note(cr, uid, ids, _('System notification'),
                         _("Product has been <b>created</b>."), type='notification', context=context)
