@@ -454,12 +454,25 @@ class res_partner_address(osv.osv):
         'color': fields.integer('Color Index'),
     }
 
+    _defaults = {
+        'active': True,
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
+        'color': 0,
+        'type': 'default',
+    }
+
     def write(self, cr, uid, ids, vals, context=None):
         logging.getLogger('res.partner').warning("Deprecated use of res.partner.address")
-        return super(res_partner_address,self).write(cr, uid, ids, vals, context=context)
+        if 'partner_id' in vals:
+            vals['parent_id'] = vals.get('partner_id')
+            del(vals['partner_id'])
+        return self.pool.get('res.partner').write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         logging.getLogger('res.partner').warning("Deprecated use of res.partner.address")
-        return super(res_partner_address,self).create(cr, uid, vals, context=context)
+        if 'partner_id' in vals:
+            vals['parent_id'] = vals.get('partner_id')
+            del(vals['partner_id'])
+        return self.pool.get('res.partner').create(cr, uid, vals, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
