@@ -521,7 +521,9 @@ class mail_message(osv.osv):
                 message.refresh()
                 if message.state == 'sent' and message.auto_delete:
                     self.pool.get('ir.attachment').unlink(cr, uid,
-                                                          [x.id for x in message.attachment_ids],
+                                                          [x.id for x in message.attachment_ids \
+                                                                if x.res_model == self._name and \
+                                                                   x.res_id == message.id],
                                                           context=context)
                     message.unlink()
             except Exception:
