@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-2011 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2009-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,49 +19,44 @@
 #
 ##############################################################################
 
-import tools
 from osv import osv
 from osv import fields
-from tools.translate import _
 
 class mail_subscription(osv.osv):
     """
     mail_subscription holds the data related to the follow mechanism inside OpenERP.
-    A subscription can be of following:
+    A subscription is characterized by:
     - res_model: model of the followed objects
-    - res_id: ID of resource OR
-    - res_domain: a domain filtering followed objects - currently removed
+    - res_id: ID of resource (may be 0 for every objects)
     """
     _name = 'mail.subscription'
     _rec_name = 'id'
+    _order = 'res_model asc'
     _columns = {
         'res_model': fields.char('Related Document Model', size=128,
                         select=1, required=True),
         'res_id': fields.integer('Related Document ID', select=1),
-        #'res_domain': fields.char('res_domain', size=256),
         'user_id': fields.many2one('res.users', string='Related User ID',
                         ondelete='cascade', required=True, select=1),
     }
-    _defaults = {
-    }
-mail_subscription()
 
 class mail_notification(osv.osv):
     """
-    TODO
+    mail_notification is a relational table modeling messages pushed to users.
+    - read: todo
     """
     _name = 'mail.notification'
     _rec_name = 'id'
     _log_access = False
+    _order = 'message_id desc'
     _columns = {
         'user_id': fields.many2one('res.users', string='User',
                         ondelete='cascade', required=True, select=1),
         'message_id': fields.many2one('mail.message', string='Message',
-                        ondelete='cascade', required=True),
+                        ondelete='cascade', required=True, select=1),
         'read': fields.boolean('Read'),
         # TODO: add a timestamp ? or use message date ?
     }
     _defaults = {
         'read': False,
     }
-mail_notification()

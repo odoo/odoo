@@ -31,8 +31,8 @@
         </div>
         <div class="oe_mail_recthread_right">
             <div class="oe_mail_actions">
-                <button type="button" class="oe_mail_button_follow">Follow</button>
-                <button type="button" class="oe_mail_button_unfollow">Unfollow</button>
+                <button type="button" class="oe_mail_button_follow">Not following</button>
+                <button type="button" class="oe_mail_button_unfollow">Following</button>
                 <button type="button" class="oe_mail_button_followers">Display followers</button>
             </div>
             <div class="oe_mail_followers">
@@ -47,8 +47,7 @@
         <div class="oe_mail_thread_act">
             <img class="oe_mail_msg_image oe_mail_oe_left" alt="User img"/>
             <div class="oe_mail_msg_content">
-                <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..."/><br />
-                <button type="button" class="oe_mail_button_comment">Post comment</button>
+                <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/><br />
             </div>
         </div>
         <div class="oe_mail_thread_display"></div>
@@ -69,18 +68,17 @@
     
     <t t-name="NoteDisplay">
         <p class="oe_mail_msg">
-            <span class="oe_mail_oe_fade">
-                <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
-                <t t-if="record.type == 'notification'">via OpenERP System Notification</t>            
-<!--
-            <t t-if="record.need_action_user_id != false">
-                - <span class="oe_mail_oe_warning">Need action by <a href="#" class="intlink" data-res-model='res.users' t-attf-data-res-id='{record.need_action_user_id[0]}'><t t-raw="record.need_action_user_id[1]"/></a></span>
-            </t>
--->
-            on <t t-raw="record.date"/></span>
-            <br />
+            <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{res_model}' t-attf-data-res-id='{res_id}'><t t-raw="name"/></a>
             <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
             <t t-if="record.tr_body_text"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body_text"/></span></t>
+            <br />
+            <span class="oe_mail_oe_fade">
+                <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
+                on <t t-raw="record.date"/>
+            </span>
+            <t t-if="display.show_reply"><span class="oe_mail_oe_space"><a href="#" class="oe_mail_msg_reply">Reply</a></span></t>
+            <t t-if="display.show_delete"><span class="oe_mail_oe_space"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete">Delete</a></span></t>
+            <t t-if="display.show_hide"><span class="oe_mail_oe_space"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide">Hide</a></span></t>
         </p>
     </t>
     
