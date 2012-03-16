@@ -330,7 +330,7 @@ class ir_mail_server(osv.osv):
             msg['Cc'] = encode_rfc2822_address_header(COMMASPACE.join(email_cc))
         if email_bcc:
             msg['Bcc'] = encode_rfc2822_address_header(COMMASPACE.join(email_bcc))
-        msg['Date'] = formatdate(localtime=True)
+        msg['Date'] = formatdate()
         # Custom headers may override normal headers or provide additional ones
         for key, value in headers.iteritems():
             msg[ustr(key).encode('utf-8')] = encode_header(value)
