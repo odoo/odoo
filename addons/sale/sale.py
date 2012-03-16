@@ -392,7 +392,7 @@ class sale_order(osv.osv):
                 vals.update({'invoice_quantity': 'procurement'})
         order =  super(sale_order, self).create(cr, uid, vals, context=context)
         if order:
-            self.create_notificate(cr, uid, [order], context=context)
+            self.create_send_note(cr, uid, [order], context=context)
         return order
 
     def button_dummy(self, cr, uid, ids, context=None):
@@ -558,7 +558,7 @@ class sale_order(osv.osv):
                         picking_obj.write(cr, uid, map(lambda x: x.id, order.picking_ids), {'invoice_state': 'invoiced'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
         if res:
-            self.invoice_notificate(cr, uid, ids, res, context)
+            self.invoice_send_note(cr, uid, ids, res, context)
         return res
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
@@ -610,7 +610,7 @@ class sale_order(osv.osv):
             #
             if order.state == 'invoice_except':
                 self.write(cr, uid, [order.id], {'state': 'progress'}, context=context)
-        self.invoice_paid_notificate(cr, uid, ids, context=None)
+        self.invoice_paid_send_note(cr, uid, ids, context=None)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -644,7 +644,7 @@ class sale_order(osv.osv):
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
-            self.cancel_notificate(cr, uid, [sale.id], context=None)
+            self.cancel_send_note(cr, uid, [sale.id], context=None)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
@@ -657,7 +657,7 @@ class sale_order(osv.osv):
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
-            self.confirm_notificate(cr, uid, ids, context)
+            self.confirm_send_note(cr, uid, ids, context)
         return True
 
     def procurement_lines_get(self, cr, uid, ids, *args):
@@ -842,7 +842,7 @@ class sale_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         if picking_id:
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-            self.delivery_notificate(cr, uid, [order.id], picking_id, context)
+            self.delivery_send_note(cr, uid, [order.id], picking_id, context)
 
 
         for proc_id in proc_ids:
@@ -884,7 +884,7 @@ class sale_order(osv.osv):
                     self.pool.get('sale.order.line').write(cr, uid, towrite, {'state': 'done'}, context=context)
             res = self.write(cr, uid, [order.id], val)
             if res:
-                self.delivery_end_notificate(cr, uid, [order.id], context=context)
+                self.delivery_end_send_note(cr, uid, [order.id], context=context)
         return True
 
     def _log_event(self, cr, uid, ids, factor=0.7, name='Open Order'):
@@ -920,55 +920,54 @@ class sale_order(osv.osv):
     # -----------------------------
     # OpenChatter and notifications
     # -----------------------------
-    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
-        result = {}
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = False
             if (obj.state == 'manual' or obj.state == 'progress'):
-               result[obj.id] = obj.user_id.id
+                result[obj.id] = [obj.user_id.id]
         return result
-    
-    def create_notificate(self, cr, uid, ids, context=None):
+ 
+    def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
-            self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("""Quotation for <em>%s</em> <b>created</b>.""")
-                        % (obj.partner_id.name), type='notification', context=context)
+            self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
+            self.message_append_note(cr, uid, [obj.id], _('System notification'),
+          _("""Quotation for <em>%s</em> <b>created</b>.""")
+          % (obj.partner_id.name), type='notification', context=context)
         
-    def confirm_notificate(self, cr, uid, ids, context=None):
+    def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("""Quotation <em>%s</em> <b>converted</b> to a Sale Order of  %s %s.""")
+            self.message_append_note(cr, uid, [obj.id], _('System notification'),
+                        _("""Quotation <em>%s</em> <b>converted</b> to Sale Order of  %s %s.""")
                         % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), type='notification', context=context)
     
-    def cancel_notificate(self, cr, uid, ids, context=None):
+    def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, ids, _('System notification'),
+            self.message_append_note(cr, uid, [obj.id], _('System notification'),
                         _("""Sale Order for <em>%s</em> <b>cancelled</b>.""")
                         % (obj.partner_id.name), type='notification', context=context)
         
-    def delivery_notificate(self, cr, uid, ids, picking_id, context=None):
+    def delivery_send_note(self, cr, uid, ids, picking_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
             for picking in (pck for pck in order.picking_ids if pck.id == picking_id):
                 pck_date =  datetime.strptime(picking.min_date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
-                self.message_append_note(cr, uid, ids, _('System notification'),
+                self.message_append_note(cr, uid, [order.id], _('System notification'),
                         _("""Delivery Order <em>%s</em> <b>scheduled</b> for  %s.""")
                         % (picking.name, pck_date), type='notification', context=context)
     
-    def delivery_end_notificate(self, cr, uid, ids, context=None):
+    def delivery_end_send_note(self, cr, uid, ids, context=None):
         self.message_append_note(cr, uid, ids, _('System notification'),
                         _("""Order <b>delivered</b>.""")
                          ,type='notification', context=context)
      
-    def invoice_paid_notificate(self, cr, uid, ids, context=None):
+    def invoice_paid_send_note(self, cr, uid, ids, context=None):
         self.message_append_note(cr, uid, ids, _('System notification'),
                         _("""Invoice <b>paid</b>.""")
                          ,type='notification', context=context)
         
-    def invoice_notificate(self, cr, uid, ids, invoice_id, context=None):
+    def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
             for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
-                self.message_append_note(cr, uid, ids, _('System notification'),
+                self.message_append_note(cr, uid, [order.id], _('System notification'),
                         _("""Draft Invoice of %s %s <b>waiting for validation</b>.""")
                         % (invoice.amount_total, invoice.currency_id.symbol), type='notification', context=context)
             
