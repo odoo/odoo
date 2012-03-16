@@ -165,11 +165,16 @@ def dumpstacks(sig, frame):
     """ Signal handler: dump a stack trace for each existing thread."""
     # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
     # modified for python 2.5 compatibility
-    thread_map = dict(threading._active, **threading._limbo)
-    id2name = dict([(threadId, thread.getName()) for threadId, thread in thread_map.items()])
+    threads_info = dict([(th.ident, {'name': th.name,
+                                    'uid': getattr(th,'uid','n/a')})
+                                for th in threading.enumerate()])
     code = []
     for threadId, stack in sys._current_frames().items():
-        code.append("\n# Thread: %s(%d)" % (id2name.get(threadId,'n/a'), threadId))
+        thread_info = threads_info.get(threadId)
+        code.append("\n# Thread: %s (id:%s) (uid:%s)" % \
+                    (thread_info and thread_info['name'] or 'n/a',
+                     threadId,
+                     thread_info and thread_info['uid'] or 'n/a'))
         for filename, lineno, name, line in traceback.extract_stack(stack):
             code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
             if line:
