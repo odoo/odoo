@@ -2303,15 +2303,22 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
         this.is_setted.then(function() {
             self.load_views();
         });
+        this.is_loaded.then(function() {
+            self.on("change:effective_readonly", self, function() {
+                self.is_loaded = self.is_loaded.pipe(function() {
+                    self.viewmanager.destroy();
+                    return $.when(self.load_views()).then(function() {
+                        self.reload_current_view();
+                    });
+                });
+            });
+        });
     },
     trigger_on_change: function() {
         var tmp = this.doing_on_change;
         this.doing_on_change = true;
         this.on_ui_change();
         this.doing_on_change = tmp;
-    },
-    is_readonly: function() {
-        return this.readonly || this.force_readonly;
     },
     load_views: function() {
         var self = this;
@@ -2330,13 +2337,13 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
             }
             if(view.view_type === "list") {
                 view.options.selectable = self.multi_selection;
-                if (self.is_readonly()) {
+                if (self.get("effective_readonly")) {
                     view.options.addable = null;
                     view.options.deletable = null;
                     view.options.isClarkGable = false;
                 }
             } else if (view.view_type === "form") {
-                if (self.is_readonly()) {
+                if (self.get("effective_readonly")) {
                     view.view_type = 'page';
                 }
                 view.options.not_interactible_on_create = true;
@@ -2361,10 +2368,10 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             if (view_type == "list") {
                 controller.o2m = self;
-                if (self.is_readonly())
+                if (self.get("effective_readonly"))
                     controller.set_editable(false);
             } else if (view_type == "form" || view_type == 'page') {
-                if (view_type == 'page' || self.is_readonly()) {
+                if (view_type == 'page' || self.get("effective_readonly")) {
                     $(".oe_form_buttons", controller.$element).children().remove();
                 }
                 controller.on_record_loaded.add_last(function() {
@@ -2541,21 +2548,6 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
     is_dirty: function() {
         this.save_any_view();
         return this._super();
-    },
-    update_dom: function() {
-        this._super.apply(this, arguments);
-        var self = this;
-        if (this.previous_readonly !== this.readonly) {
-            this.previous_readonly = this.readonly;
-            if (this.viewmanager) {
-                this.is_loaded = this.is_loaded.pipe(function() {
-                    self.viewmanager.destroy();
-                    return $.when(self.load_views()).then(function() {
-                        self.reload_current_view();
-                    });
-                });
-            }
-        }
     }
 });
 
@@ -2615,7 +2607,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
                 return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
             },
             form_view_options: {'not_interactible_on_create':true},
-            readonly: self.o2m.is_readonly()
+            readonly: self.o2m.get("effective_readonly")
         });
         pop.on_write.add(function(id, data) {
             self.o2m.dataset.write(id, data, {}, function(r) {
@@ -2677,9 +2669,11 @@ openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
         });
         this.is_loaded.then(function() {
             self.on("change:effective_readonly", self, function() {
-                self.list_view.destroy();
-                return $.when(self.load_view()).then(function() {
-                    self.reload_content();
+                self.is_loaded = self.is_loaded.pipe(function() {
+                    self.list_view.destroy();
+                    return $.when(self.load_view()).then(function() {
+                        self.reload_content();
+                    });
                 });
             });
         })

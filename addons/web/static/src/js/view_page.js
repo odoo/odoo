@@ -168,9 +168,6 @@ openerp.web.page = function (openerp) {
         }
     });
 
-    openerp.web.page.FieldOne2ManyReadonly = openerp.web.form.FieldOne2Many.extend({
-        force_readonly: true
-    });
     openerp.web.page.FieldBinaryImageReaonly = openerp.web.form.FieldBinaryImage.extend({
         update_dom: function() {
             this._super.apply(this, arguments);
@@ -208,8 +205,6 @@ openerp.web.page = function (openerp) {
         'date': 'openerp.web.page.FieldCharReadonly',
         'datetime': 'openerp.web.page.FieldCharReadonly',
         'selection' : 'openerp.web.page.FieldSelectionReadonly',
-        'one2many' : 'openerp.web.page.FieldOne2ManyReadonly',
-        'one2many_list' : 'openerp.web.page.FieldOne2ManyReadonly',
         'reference': 'openerp.web.page.FieldReferenceReadonly',
         'boolean': 'openerp.web.page.FieldBooleanReadonly',
         'float': 'openerp.web.page.FieldCharReadonly',
