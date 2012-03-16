@@ -149,7 +149,7 @@
             <field name="context">{'search_default_draft': 1}</field>
             <field name="help">Here you can define a financial period, an interval of time in your company's financial year. An accounting period typically is a month or a quarter. It usually corresponds to the periods of the tax declaration. Create and manage periods from here and decide whether a period should be closed or left open depending on your company's activities over a specific period.</field>
         </record>
-        <menuitem action="action_account_period_form" id="menu_action_account_period_form" parent="account.next_id_23"/>
+        <menuitem action="action_account_period_form" id="menu_action_account_period_form" parent="account.next_id_23" groups="base.group_no_one"/>
 
 
         <!--
@@ -810,7 +810,7 @@
             <field name="search_view_id" ref="view_account_type_search"/>
             <field name="help">An account type is used to determine how an account is used in each journal. The deferral method of an account type determines the process for the annual closing. Reports such as the Balance Sheet and the Profit and Loss report use the category (profit/loss or balance sheet). For example, the account type could be linked to an asset account, expense account or payable account. From this view, you can create and manage the account types you need for your company.</field>
         </record>
-        <menuitem action="action_account_type_form" sequence="20" id="menu_action_account_type_form" parent="account_account_menu" groups="base.group_extended"/>
+        <menuitem action="action_account_type_form" sequence="20" id="menu_action_account_type_form" parent="account_account_menu" groups="base.group_no_one"/>
         <!--
     Entries
     -->
@@ -924,7 +924,7 @@
             <field name="help">The tax code definition depends on the tax declaration of your country. OpenERP allows you to define the tax structure and manage it from this menu. You can define both numeric and alphanumeric tax codes.</field>
         </record>
        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_accounting"/>
-       <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12"/>
+       <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12" groups="base.group_no_one"/>
 
 
         <!--
