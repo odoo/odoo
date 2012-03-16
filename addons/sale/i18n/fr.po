@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-29 15:33+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2012-03-15 21:31+0000\n"
+"Last-Translator: t.o <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-01 05:19+0000\n"
-"X-Generator: Launchpad (build 14874)\n"
+"X-Launchpad-Export-Date: 2012-03-16 05:30+0000\n"
+"X-Generator: Launchpad (build 14951)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
 msgid "Based on Timesheet"
-msgstr ""
+msgstr "Basée sur les feuilles de temps"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -192,7 +192,7 @@ msgstr "Condition de règlement par défaut"
 #. module: sale
 #: field:sale.config.picking_policy,deli_orders:0
 msgid "Based on Delivery Orders"
-msgstr ""
+msgstr "Basée sur les bons de livraisons"
 
 #. module: sale
 #: field:sale.config.picking_policy,time_unit:0
@@ -268,7 +268,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.picking_policy,task_work:0
 msgid "Based on Tasks' Work"
-msgstr ""
+msgstr "Basée sur les temps passés sur les tâches"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -284,7 +284,7 @@ msgstr "Vente : Facturer"
 #: code:addons/sale/sale.py:330
 #, python-format
 msgid "Pricelist Warning!"
-msgstr ""
+msgstr "Avertissement sur liste de prix!"
 
 #. module: sale
 #: field:sale.order.line,discount:0
@@ -599,7 +599,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.picking_policy,sale_orders:0
 msgid "Based on Sales Orders"
-msgstr ""
+msgstr "Basée sur les bons de commande"
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -786,7 +786,7 @@ msgstr "Septembre"
 #: code:addons/sale/sale.py:632
 #, python-format
 msgid "You cannot confirm a sale order which has no line."
-msgstr ""
+msgstr "Vous ne pouvez pas confirmer un bon de commande sans ligne"
 
 #. module: sale
 #: code:addons/sale/sale.py:1259
@@ -899,7 +899,7 @@ msgstr ""
 #: code:addons/sale/sale.py:1272
 #, python-format
 msgid "No valid pricelist line found ! :"
-msgstr ""
+msgstr "Pas de ligne de liste de prix correcte trouvée ! :"
 
 #. module: sale
 #: view:sale.order:0
@@ -909,7 +909,7 @@ msgstr "Historique"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice on order after delivery"
-msgstr ""
+msgstr "Facturer sur le bon de commande après la livraison"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -987,7 +987,7 @@ msgstr "Total hors-taxes"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Order reference"
-msgstr ""
+msgstr "Référence commande"
 
 #. module: sale
 #: view:sale.open.invoice:0
@@ -1014,6 +1014,7 @@ msgstr "Ouvrir la facture"
 #: model:ir.actions.server,name:sale.ir_actions_server_edi_sale
 msgid "Auto-email confirmed sale orders"
 msgstr ""
+"Envoyer un courriel automatique à la confirmatin des bons de commande"
 
 #. module: sale
 #: code:addons/sale/sale.py:413
@@ -1079,11 +1080,13 @@ msgstr "Créer un bon de livraison"
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'!"
 msgstr ""
+"Vous ne pouvez pas supprimer une ligne de bon de commande qui est dans "
+"l'état '%s' !"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Qty(UoS)"
-msgstr ""
+msgstr "Qté. (UdV)"
 
 #. module: sale
 #: view:sale.order:0
@@ -1098,7 +1101,7 @@ msgstr "Créer un bon de transfert"
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered date of the sales order"
-msgstr ""
+msgstr "Date de commande du bon de commande"
 
 #. module: sale
 #: view:sale.report:0
@@ -1235,6 +1238,80 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"Bonjour ${object.partner_order_id.name and ' ' or "
+"''}${object.partner_order_id.name or ''},\n"
+"\n"
+"Voici la confirmation de votre commande ${object.partner_id.name}:\n"
+"       | Numéro de commande : *${object.name}*\n"
+"       | Montant total de la commande : *${object.amount_total} "
+"${object.pricelist_id.currency_id.name}*\n"
+"       | date de commande : ${object.date_order}\n"
+"       % if object.origin:\n"
+"       | Référence de la commande : ${object.origin}\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       | Votre référence : ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       | Votre contact : ${object.user_id.name} ${object.user_id.user_email "
+"and '<%s>'%(object.user_id.user_email) or ''}\n"
+"\n"
+"Vous pouvez voir la confirmation de la commande, la télécharger et même la "
+"payer en suivant le lien suivant :\n"
+"    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+"\n"
+"% if object.order_policy in ('prepaid','manual') and "
+"object.company_id.paypal_account:\n"
+"<% \n"
+"comp_name = quote(object.company_id.name)\n"
+"order_name = quote(object.name)\n"
+"paypal_account = quote(object.company_id.paypal_account)\n"
+"order_amount = quote(str(object.amount_total))\n"
+"cur_name = quote(object.pricelist_id.currency_id.name)\n"
+"paypal_url = \"https://www.paypal.com/cgi-"
+"bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Order%%20%s&invoice=%s&amo"
+"unt=%s\" \\\n"
+"             "
+"\"&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow"
+"_%s\" % \\\n"
+"             "
+"(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
+"e)\n"
+"%>\n"
+"Il est aussi possible de directement payer avec Paypal :\n"
+"    ${paypal_url}\n"
+"% endif\n"
+"\n"
+"Si vous avez des questions, n'hésitez pas à nous contacter.\n"
+"\n"
+"\n"
+"Merci d'avoir choisi ${object.company_id.name}!\n"
+"\n"
+"\n"
+"--\n"
+"${object.user_id.name} ${object.user_id.user_email and "
+"'<%s>'%(object.user_id.user_email) or ''}\n"
+"${object.company_id.name}\n"
+"% if object.company_id.street:\n"
+"${object.company_id.street or ''}\n"
+"% endif\n"
+"% if object.company_id.street2:\n"
+"${object.company_id.street2}\n"
+"% endif\n"
+"% if object.company_id.city or object.company_id.zip:\n"
+"${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+"% endif\n"
+"% if object.company_id.country_id:\n"
+"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+"or ''} ${object.company_id.country_id.name or ''}\n"
+"% endif\n"
+"% if object.company_id.phone:\n"
+"Téléphone : ${object.company_id.phone}\n"
+"% endif\n"
+"% if object.company_id.website:\n"
+"${object.company_id.website or ''}\n"
+"% endif\n"
+"            "
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
@@ -1260,7 +1337,7 @@ msgstr "Taxes"
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order ready to be invoiced"
-msgstr ""
+msgstr "Bons de commande prêts à facturer"
 
 #. module: sale
 #: help:sale.order,create_date:0
@@ -1280,7 +1357,7 @@ msgstr "Créer les factures"
 #. module: sale
 #: view:sale.report:0
 msgid "Sales order created in current month"
-msgstr ""
+msgstr "Bons de commande créés ce mois-ci"
 
 #. module: sale
 #: report:sale.order:0
@@ -1350,7 +1427,7 @@ msgstr "Qté. (UdM)"
 #. module: sale
 #: view:sale.report:0
 msgid "Ordered Year of the sales order"
-msgstr ""
+msgstr "Année de commande du bon de commande"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1445,7 +1522,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Recreate Packing"
-msgstr "Régénérer le bon de préparation"
+msgstr "Créer un autre bon de préparation"
 
 #. module: sale
 #: view:sale.order:0 field:sale.order.line,property_ids:0
@@ -1481,7 +1558,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order.line:0
 msgid "Confirmed sale order lines, not yet delivered"
-msgstr ""
+msgstr "Lignes de commande confirmées, pas encore livrées"
 
 #. module: sale
 #: code:addons/sale/sale.py:473
@@ -1568,7 +1645,7 @@ msgstr "Mois"
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Commande (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order.line:0 field:sale.order.line,product_id:0
@@ -1639,7 +1716,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Ignore Exception"
-msgstr "Ignorer l'incident"
+msgstr "Ne pas traiter l'incident"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -1786,7 +1863,7 @@ msgstr "Annuler"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
+msgstr "Lignes de commande liées à une de mes commandes"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
@@ -1829,7 +1906,7 @@ msgstr "Quantité (UdV)"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sale Order Lines that are in 'done' state"
-msgstr ""
+msgstr "Lignes de commande en état \"terminé\""
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_packing0
@@ -1852,7 +1929,7 @@ msgstr "Confirmée"
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
 msgid "Main Method Based On"
-msgstr ""
+msgstr "Méthode principale basée sur"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
@@ -1905,7 +1982,7 @@ msgstr "Imprimer la commande"
 #. module: sale
 #: view:sale.report:0
 msgid "Sales order created in current year"
-msgstr ""
+msgstr "Bons de commande créés cette année"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1925,7 +2002,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sale order lines done"
-msgstr ""
+msgstr "Lignes de commande terminées"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -2037,12 +2114,12 @@ msgstr "Colisages"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sale Order Lines ready to be invoiced"
-msgstr ""
+msgstr "Lignes de commande prêtes à facturer"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Sales order created in last month"
-msgstr ""
+msgstr "Bons de commande du mois dernier"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_email_templates

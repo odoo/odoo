@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-03-14 22:21+0000\n"
-"Last-Translator: Pierre Burnier <Unknown>\n"
+"PO-Revision-Date: 2012-03-15 20:39+0000\n"
+"Last-Translator: GaCriv <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-15 05:18+0000\n"
-"X-Generator: Launchpad (build 14933)\n"
+"X-Launchpad-Export-Date: 2012-03-16 05:29+0000\n"
+"X-Generator: Launchpad (build 14951)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -386,10 +386,10 @@ msgid ""
 "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
 "Cash Registers, or Customer/Supplier payments."
 msgstr ""
-"Cet écran est utilisé par les comptables pour saisir des écritures en masse. "
-"Des écritures sont créées par OpenERP, si vous utilisez les fonctionnalités "
-"de relevés bancaires, gestion d'espèces et de règlements des clients ou des "
-"fournisseurs."
+"Les comptables peuvent utiliser cette vue pour saisir des écritures en "
+"volume. Pour saisir des écritures en volume dans OpenERP, utilisez les "
+"fonctions Relevés bancaires, Caisses, Paiements client ou Paiement "
+"fournisseur."
 
 #. module: account
 #: constraint:account.move.line:0
@@ -742,7 +742,7 @@ msgstr "Grand livre"
 #. module: account
 #: view:account.invoice:0
 msgid "Re-Open"
-msgstr "Ré-Ouvrir"
+msgstr "Rouvrir"
 
 #. module: account
 #: view:account.use.model:0
@@ -1430,7 +1430,7 @@ msgstr "Chercher un modèle de taxe"
 #: model:ir.actions.act_window,name:account.action_account_reconcile_select
 #: model:ir.actions.act_window,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr "Rapprocher les écritures"
+msgstr "Lettrer les écritures"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_overdue
@@ -1568,7 +1568,7 @@ msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
 msgstr ""
-"En décochant le champ 'actif', vous masquez la position fiscale sans "
+"En décochant le champ 'actif', vous masquez le régime des taxes sans "
 "l'effacer."
 
 #. module: account
@@ -2611,11 +2611,12 @@ msgid ""
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
-"Si vous utilisez les délais de paiement, la date d'échéance sera calculée "
-"automatiquement lors de la création des écritures comptables. Si vous "
-"laisser les délais de paiement et la date d'échéance vides, cela implique un "
-"paiement direct. Le délai de paiement peut calculer plusieurs dates "
-"d'échéance, par example, 50% maintenant, 50% dans un mois."
+"Si vous utilisez les conditions de règlement, la date d'échéance sera "
+"calculée automatiquement lors de la création des écritures comptables. Si "
+"vous laisser les champs conditions de règlement et la date d'échéance vides, "
+"cela implique un règlement comptant. Les conditions de règlement peuvent "
+"générer plusieurs dates d'échéances, par exemple  50% maintenant et 50% dans "
+"un mois."
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
@@ -3446,7 +3447,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr "Annuler le rapprochement des écritures"
+msgstr "Annuler le lettrage"
 
 #. module: account
 #: field:account.tax.code,notprintable:0
@@ -4676,7 +4677,7 @@ msgstr "Client"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Confirmed"
-msgstr "Confirmé(e)"
+msgstr "Confirmé"
 
 #. module: account
 #: report:account.invoice:0
@@ -5944,9 +5945,10 @@ msgid ""
 "that you should have your last line with the type 'Balance' to ensure that "
 "the whole amount will be threated."
 msgstr ""
-"Sélectionnez ici le type d'évaluation relatif à cette ligne de conditions de "
-"règlement. Notez que vous devez avoir une dernière ligne de type \"Balance\" "
-"pour assurer que le montant total sera traité."
+"Sélectionnez ici le type de valorisation relatif à cette ligne de conditions "
+"de règlement. Notez que vous devez avoir une dernière ligne de type "
+"\"Solde\" pour vous assurer que l'ensemble du montant sera traité (évite les "
+"erreurs d'arrondi)."
 
 #. module: account
 #: field:account.invoice,period_id:0
@@ -6205,8 +6207,8 @@ msgid ""
 "As soon as the reconciliation is done, the invoice's state turns to “done” "
 "(i.e. paid) in the system."
 msgstr ""
-"Dès que le lettrage est fait, la facture passe à l'état \"Terminé\" (c'est à "
-"dire payée) dans le système."
+"Dès que le lettrage est réalisé, la facture passe à l'état \"Terminé\" "
+"(c'est à dire \"payé\") dans le système."
 
 #. module: account
 #: view:account.chart.template:0
@@ -6480,7 +6482,7 @@ msgstr "Applicable ?"
 #. module: account
 #: field:account.invoice.line,invoice_id:0
 msgid "Invoice Reference"
-msgstr "Référence facture"
+msgstr "Référence de la facture"
 
 #. module: account
 #: help:account.tax.template,sequence:0
@@ -8061,9 +8063,10 @@ msgid ""
 "positive, it gives the day of the next month. Set 0 for net days (otherwise "
 "it's based on the beginning of the month)."
 msgstr ""
-"Jour du mois, saisir -1 pour le jour précédent du mois courant. Saisir 0 "
-"pour le jour courant ou saisir un chiffre positif pour le jour équivalent du "
-"mois prochain."
+"Jour du mois.\r\n"
+"Saisir -1 pour le dernier jour du mois courant.\r\n"
+"Saisir  0 pour le jour courant.\r\n"
+"Saisir un chiffre positif pour le numéro du jour du mois prochain."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
@@ -8132,7 +8135,7 @@ msgstr "État de la ligne d'écriture"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
 msgid "Account move line reconcile"
-msgstr "Lettrage de lignes d'écriture"
+msgstr "Lettrage de lignes d'écritures"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -9244,7 +9247,7 @@ msgstr "Lignes d'écriture"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_financial_accounts_installer
 msgid "Review your Financial Accounts"
-msgstr "Réexaminer vos comptes financiers"
+msgstr "Paramétrer vos comptes financiers"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_journal_button
@@ -9408,7 +9411,7 @@ msgstr "Direction d'Analyse"
 #. module: account
 #: field:res.partner,ref_companies:0
 msgid "Companies that refers to partner"
-msgstr "Entreprises qui font réference au partenaire"
+msgstr "Sociétés qui font réference au partenaire"
 
 #. module: account
 #: view:account.journal:0
@@ -10520,7 +10523,7 @@ msgstr "Rapport des ventes par compte"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr "Compte de position fiscale"
+msgstr "Comptes de régime de taxes"
 
 #. module: account
 #: report:account.invoice:0
@@ -10741,7 +10744,7 @@ msgstr ""
 #. module: account
 #: view:account.payment.term:0
 msgid "Description On Invoices"
-msgstr "Description sur les factures"
+msgstr "Intitulé sur les factures"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart

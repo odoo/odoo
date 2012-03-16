@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-03-01 22:38+0000\n"
-"Last-Translator: t.o <Unknown>\n"
+"PO-Revision-Date: 2012-03-15 20:51+0000\n"
+"Last-Translator: GaCriv <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-02 05:24+0000\n"
-"X-Generator: Launchpad (build 14886)\n"
+"X-Launchpad-Export-Date: 2012-03-16 05:29+0000\n"
+"X-Generator: Launchpad (build 14951)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0 field:hr.attendance,sheet_id:0
@@ -44,7 +44,7 @@ msgstr "Regrouper par..."
 #: field:hr_timesheet_sheet.sheet,total_attendance:0
 #: field:hr_timesheet_sheet.sheet,total_attendance_day:0
 msgid "Total Attendance"
-msgstr "Total des présences"
+msgstr "Total des pointages"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -192,13 +192,14 @@ msgid ""
 "the user and can be validated by his manager. If required, as defined on the "
 "project, you can generate the invoices based on the timesheet."
 msgstr ""
-"Ma Feuille de temps ouvre une feuille de temps de façon à vous permettre de "
+"Ma feuille de temps ouvre une feuille de temps de façon à vous permettre de "
 "saisir vos activités dans le système. Sur le même formulaire, vous pouvez "
 "enregistrer vos présences (entrées/sorties) et décrire les heures de travail "
-"effectuées sur les différents projets. A la fin de la période définie par la "
-"société, la feuille de temps est confirmée par l'utilisateur et peut être "
-"validée par son responsable. Si nécessaire, et comme défini pour chaque "
-"projet, vous pouvez générer les factures en fonction des feuilles de temps."
+"effectuées et les imputer sur les différents projets.\r\n"
+"A la fin de la période définie par la société, la feuille de temps est "
+"confirmée par l'utilisateur et peut être validée par son responsable. Si "
+"nécessaire, et comme défini pour chaque projet, vous pouvez générer les "
+"factures en fonction des feuilles de temps."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
@@ -218,7 +219,7 @@ msgstr "Les feuilles de temps de mon département"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Day"
-msgstr "Feuilles de Présence par Jour"
+msgstr "Feuilles de temps par jour"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,name:0
@@ -294,7 +295,7 @@ msgstr "Confirmer"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,timesheet_ids:0
 msgid "Timesheet lines"
-msgstr "Lignes des feuilles de présence"
+msgstr "Lignes des feuilles de temps"
 
 #. module: hr_timesheet_sheet
 #: constraint:res.company:0
@@ -417,7 +418,7 @@ msgstr "Quantité"
 #: view:hr_timesheet_sheet.sheet.day:0
 #: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
 msgid "Total Timesheet"
-msgstr "Total des feuilles de présence"
+msgstr "Total des feuilles de temps"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -608,7 +609,7 @@ msgstr ""
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
 msgid "Timesheets by Period"
-msgstr "Feuilles de présence par période"
+msgstr "Feuilles de temps par période"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0 field:hr.timesheet.report,user_id:0
@@ -620,7 +621,7 @@ msgstr "Utilisateur"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Account"
-msgstr "Feuilles de Présence par Compte"
+msgstr "Feuilles de temps par compte"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,date:0 field:hr_timesheet_sheet.sheet.day,name:0
@@ -724,7 +725,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Unvalidated Timesheets"
-msgstr "Feuilles de temps non validés"
+msgstr "Feuilles de temps non validées"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:457
@@ -768,9 +769,9 @@ msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
-"Différence autorisée entre les heures de pointage en entrée/sortie et le "
-"calcul de la feuille de temps pour une feuille. Mettez \"0\" si vous ne "
-"souhaitez aucun contrôle."
+"Différence autorisée entre les heures de présence (pointage en "
+"entrée/sortie) et les temps saisis et imputés pour une feuille. Mettez \"0\" "
+"si vous ne souhaitez aucun contrôle."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0 field:hr_timesheet_sheet.sheet,period_ids:0
@@ -833,7 +834,7 @@ msgstr "Feuilles de temps de ce mois"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
-msgstr "Feuille de présence par compte"
+msgstr "Feuille de temps par compte"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:51
