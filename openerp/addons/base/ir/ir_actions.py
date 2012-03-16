@@ -670,6 +670,9 @@ class actions_server(osv.osv):
                     _logger.info('No partner email address specified, not sending any email.')
                     continue
 
+                if not isinstance(address, tuple) and not isinstance(address, list):
+                    address = [address]
+
                 if not email_from:
                     _logger.debug('--email-from command line option is not specified, using a fallback value instead.')
                     if user.user_email:
@@ -681,7 +684,7 @@ class actions_server(osv.osv):
                 body = self.merge_message(cr, uid, action.message, action, context)
 
                 ir_mail_server = self.pool.get('ir.mail_server')
-                msg = ir_mail_server.build_email(email_from, [address], subject, body)
+                msg = ir_mail_server.build_email(email_from, address, subject, body)
                 res_email = ir_mail_server.send_email(cr, uid, msg)
                 if res_email:
                     _logger.info('Email successfully sent to: %s', address)
