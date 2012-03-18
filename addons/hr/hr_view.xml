@@ -33,7 +33,7 @@
                         <field name="parent_id" />
                         </group>
                         <group colspan="2" col="1">
-                          <field name="photo" widget='image' nolabel="1"/>
+                          <field name="photo_mini" widget='image' nolabel="1" on_change="onchange_photo_mini(photo_mini)"/>
                         </group>
                     </group>
                     <notebook colspan="6">
@@ -130,13 +130,12 @@
         <field name="model">hr.employee</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
-
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
                             <div class="oe_employee_image">
-                                <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
+                                <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo_mini', record.id.value)" class="oe_employee_picture"/></a>
                             </div>
                             <div class="oe_employee_details">
                                 <h4><a type="edit"><field name="name"/> (<field name="login"/>)</a></h4>

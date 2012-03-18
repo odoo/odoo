@@ -23,6 +23,9 @@ from osv import fields, osv
 import logging
 import addons
 
+import io, StringIO
+from PIL import Image
+
 class hr_employee_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
@@ -145,6 +148,30 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
     _inherits = {'resource.resource': "resource_id"}
+
+    def onchange_photo_mini(self, cr, uid, ids, value, context=None):
+        return {'value': {'photo': value, 'photo_mini': self._photo_resize(cr, uid, value) } }
+    
+    def _set_photo_mini(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'photo': value}, context=context)
+    
+    def _photo_resize(self, cr, uid, photo, context=None):
+        image_stream = io.BytesIO(photo.decode('base64'))
+        img = Image.open(image_stream)
+        img.thumbnail((180, 150), Image.ANTIALIAS)
+        img_stream = StringIO.StringIO()
+        img.save(img_stream, "JPEG")
+        return img_stream.getvalue().encode('base64')
+    
+    def _get_photo_mini(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for hr_empl in self.browse(cr, uid, ids, context=context):
+            if not hr_empl.photo:
+                result[hr_empl.id] = False
+            else:
+                result[hr_empl.id] = self._photo_resize(cr, uid, hr_empl.photo, context=context)
+        return result
+    
     _columns = {
         'country_id': fields.many2one('res.country', 'Nationality'),
         'birthday': fields.date("Date of Birth"),
@@ -171,6 +198,10 @@ class hr_employee(osv.osv):
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
         'photo': fields.binary('Photo'),
+        'photo_mini': fields.function(_get_photo_mini, fnct_inv=_set_photo_mini, string='Photo Mini', type="binary",
+            store = {
+                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['photo'], 10),
+            }),
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
@@ -217,11 +248,11 @@ class hr_employee(osv.osv):
 
     def _get_photo(self, cr, uid, context=None):
         photo_path = addons.get_module_resource('hr','images','photo.png')
-        return open(photo_path, 'rb').read().encode('base64')
+        return self._photo_resize(cr, uid, open(photo_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'active': 1,
-        'photo': _get_photo,
+        'photo_mini': _get_photo,
         'marital': 'single',
         'color': 0,
     }
