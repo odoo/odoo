@@ -81,18 +81,23 @@ class stock_partial_picking(osv.osv_memory):
         type = context.get('default_type', False)
         doc = etree.XML(res['arch'])
         nodes = doc.xpath("//group/button[@string='_Validate']")
+        separator_extended = ''
         for field in res['fields']:
             if type == 'in':
                 for node in nodes:
+                    separator_extended = '''<separator colspan="4" string="Receive Products"/>'''
                     node.set('string', '_Receive')
             if type == 'internal':
                 for node in nodes:
+                    separator_extended = '''<separator colspan="4" string="Move Products"/>'''
                     node.set('string', '_Move')
             if type == 'out':
                 for node in nodes:
+                    separator_extended = '''<separator colspan="4" string="Deliver Products"/>'''
                     node.set('string', '_Deliver')
-        
+
         res['arch'] = etree.tostring(doc)
+        res['arch'] = res['arch'].replace('<separator colspan="4" string="Products"/>', separator_extended)
         return res
 
     def default_get(self, cr, uid, fields, context=None):
