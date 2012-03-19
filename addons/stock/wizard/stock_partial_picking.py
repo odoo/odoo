@@ -97,7 +97,8 @@ class stock_partial_picking(osv.osv_memory):
                     node.set('string', '_Deliver')
 
         res['arch'] = etree.tostring(doc)
-        res['arch'] = res['arch'].replace('<separator colspan="4" string="Products"/>', separator_extended)
+        if separator_extended:
+            res['arch'] = res['arch'].replace('<separator colspan="4" string="Products"/>', separator_extended)
         return res
 
     def default_get(self, cr, uid, fields, context=None):
