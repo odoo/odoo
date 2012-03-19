@@ -207,7 +207,6 @@ class res_partner(osv.osv):
             value['parent_id'] = False
             domain = {'title': [('domain', '=', 'partner')]}
         else:
-            value['child_ids'] = [(5,)]
             domain = {'title': [('domain', '=', 'contact')]}
         return {'value': value, 'domain': domain}
 
@@ -243,6 +242,8 @@ class res_partner(osv.osv):
         # Update parent and siblings or children records
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if vals.get('is_company')==False:
+            vals.update({'child_ids' : [(5,)]}) 
         for partner in self.browse(cr, uid, ids, context=context):
             update_ids = []
             if partner.is_company:
