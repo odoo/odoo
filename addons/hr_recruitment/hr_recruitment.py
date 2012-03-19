@@ -392,38 +392,51 @@ class hr_applicant(crm.crm_case, osv.osv):
         return res
 
     def case_open_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
+        for id in ids:
             message = _("has been <b>in Progress<b>.")
-            obj.message_append_note('' ,message)
+            self.message_append_note(cr, uid, [id], _('System notification'),
+                        message, type='notification', context=context)
         return True
 
     def case_close_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.emp_id:
+        for id in ids:
+            if id.emp_id:
                 message = _("has been <b>hired</b> and created as an employee.")
-                obj.message_append_note('', message)
+                self.message_append_note(cr, uid, [id], _('System notification'),
+                        message, type='notification', context=context)
             else:
                 message = _("has been <b>hired</b>.")
-                obj.message_append_note('' ,message)
+                self.message_append_note(cr, uid, [id], _('System notification'),
+                        message, type='notification', context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
+        for id in ids:
             message = _("has been <b>cancelled<b>.")
-            obj.message_append_note('' ,message)
+            self.message_append_note(cr, uid, [id], _('System notification'),
+                        message, type='notification', context=context)
         return True
 
     def case_pending_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
+        for id in ids:
             message = _("has been <b>pending<b>.")
-            obj.message_append_note('' ,message)
+            self.message_append_note(cr, uid, [id], _('System notification'),
+                        message, type='notification', context=context)
         return True
 
     def case_reset_send_note(self,  cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
+        for id in ids:
             message =_("has been set as <b>new<b>.")
-            obj.message_append_note('' ,message)
+            self.message_append_note(cr, uid, [id], _('System notification'),
+                        message, type='notification', context=context)
         return True
+
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
 
     def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
         result = {}
@@ -433,18 +446,23 @@ class hr_applicant(crm.crm_case, osv.osv):
                 result[obj.id] = obj.user_id.id
         return result
 
-    def case_create_send_note(self, cr, uid, ids, context=None):
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
+        return result
+    def create_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
             message = _("has been <b>created</b>.")
-            self.message_append_note(cr, uid, ids, _('System notification'),
+            self.message_append_note(cr, uid, [id], _('System notification'),
                         message, type='notification', context=context)
         return True
 
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
-        self.case_create_send_note(cr, uid, [obj_id], context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
     def case_open(self, cr, uid, ids, context=None):
@@ -466,7 +484,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         model_data = self.pool.get('ir.model.data')
         act_window = self.pool.get('ir.actions.act_window')
         emp_id = False
-        for applicant in self.browse(cr, uid, ids):
+        for applicant in ids:
             address_id = False
             if applicant.partner_id:
                 address_id = applicant.partner_id.address_get(['contact'])['contact']
