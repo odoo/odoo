@@ -534,6 +534,14 @@ stock_tracking()
 #----------------------------------------------------------
 # Stock Picking
 #----------------------------------------------------------
+PICK_STATE = [
+            ('draft', 'New'),
+            ('auto', 'Waiting Another Operation'),
+            ('confirmed', 'Waiting Availability'),
+            ('assigned', 'Ready to Process'),
+            ('done', 'Done'),
+            ('cancel', 'Cancelled'),
+    ]
 class stock_picking(osv.osv):
     _name = "stock.picking"
     _description = "Picking List"
@@ -675,38 +683,38 @@ class stock_picking(osv.osv):
         res = super(stock_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if type:
             if res.get('toolbar', False):
-                for i in xrange(0, len(res['toolbar']['print'])):
-                    if res['toolbar']['print'][i]['report_name'] == 'stock.picking.list':
-                        if type == 'in':
-                            res['toolbar']['print'][i]['string'] = 'Incoming Shipment/Receipt'
-                        elif type == 'internal':
-                            res['toolbar']['print'][i]['string'] = 'Internal Shipment'
-                        elif type == 'out':
-                            res['toolbar']['print'][i]['string'] = 'Delivery Order'
+                for report in res['toolbar']['print']:
+                    if report['report_name'] != 'stock.picking.list':
+                        continue
+                    if type == 'in':
+                        report['string'] = 'Incoming Shipment'
+                    elif type == 'internal':
+                        report['string'] = 'Internal Shipment'
+                    elif type == 'out':
+                        report['string'] = 'Delivery Order'
+                    report['name'] = report['string']
 
             for field in res['fields']:
                 if field == 'state':
-                    if type == 'in':
-                        res['fields']['state']['selection'] = [('draft', 'New'),
-                                                            ('auto', 'Waiting Another Operation'),
-                                                            ('confirmed', 'Waiting Availability'),
-                                                            ('assigned', 'Ready to Receive'),
-                                                            ('done', 'Received'),
-                                                            ('cancel', 'Cancelled')]
-                    elif type == 'internal':
-                        res['fields']['state']['selection'] = [('draft', 'New'),
-                                                            ('auto', 'Waiting Another Operation'),
-                                                            ('confirmed', 'Waiting Availability'),
-                                                            ('assigned', 'Ready to Move'),
-                                                            ('done', 'Moved'),
-                                                            ('cancel', 'Cancelled')]
-                    elif type == 'out':
-                        res['fields']['state']['selection'] = [('draft', 'New'),
-                                                            ('auto', 'Waiting Another Operation'),
-                                                            ('confirmed', 'Waiting Availability'),
-                                                            ('assigned', 'Ready to Deliver'),
-                                                            ('done', 'Delivered'),
-                                                            ('cancel', 'Cancelled')]
+                    _state = []
+                    for key, value in PICK_STATE:
+                        if type == 'in':
+                            if key == 'assigned':
+                                value = 'Ready to Receive'
+                            elif key == 'done':
+                                value = 'Received'
+                        elif type == 'internal':
+                            if key == 'assigned':
+                                value = 'Ready to Move'
+                            elif key == 'done':
+                                value = 'Moved'
+                        elif type == 'out':
+                            if key == 'assigned':
+                                value = 'Ready to Deliver'
+                            elif key == 'done':
+                                value = 'Delivered'
+                        _state.append((key,value))
+                    res['fields']['state']['selection'] = _state
         return res
 
     def action_process(self, cr, uid, ids, context=None):
