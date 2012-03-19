@@ -1450,20 +1450,32 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
     }
 });
 
-openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend({
+/**
+ * A mixin to apply on any field that has to completely re-render when its readonly state
+ * switch.
+ */
+openerp.web.form.ReinitializeFieldMixin =  {
+    start: function() {
+        this.on("change:effective_readonly", this, function() {
+            this.renderElement();
+            this.bind_events();
+            this.render_value();
+        });
+        this.bind_events();
+    },
+    bind_events: function() {},
+    render_value: function() {},
+};
+
+openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
     template: 'FieldChar',
     init: function (view, node) {
         this._super(view, node);
         this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
     },
     start: function() {
-        this._super.apply(this, arguments);
-        this.bind_events();
-        this.on("change:effective_readonly", this, function() {
-            this.renderElement();
-            this.bind_events();
-            this.render_value();
-        });
+        this._super();
+        openerp.web.form.ReinitializeFieldMixin.start.call(this);
     },
     bind_events: function() {
         this.$element.find('input').change(this.on_ui_change);
@@ -1499,13 +1511,10 @@ openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend({
     focus: function($element) {
         this._super($element || this.$element.find('input:first'));
     }
-});
+}));
 
 openerp.web.form.FieldID = openerp.web.form.FieldChar.extend({
-    update_dom: function() {
-        this._super.apply(this, arguments);
-        this.$element.find('input').prop('readonly', true);
-    }
+    
 });
 
 openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
@@ -1814,7 +1823,7 @@ openerp.web.form.FieldTextXml = openerp.web.form.AbstractField.extend({
 // to replace view editor
 });
 
-openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend({
+openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
     template: 'FieldSelection',
     init: function(view, node) {
         var self = this;
@@ -1828,13 +1837,8 @@ openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend({
         this.values.unshift([false, '']);
     },
     start: function() {
-        this._super.apply(this, arguments);
-        this.bind_events();
-        this.on("change:effective_readonly", this, function() {
-            this.renderElement();
-            this.bind_events();
-            this.render_value();
-        });
+        this._super();
+        openerp.web.form.ReinitializeFieldMixin.start.call(this);
     },
     bind_events: function() {
         // Flag indicating whether we're in an event chain containing a change
@@ -1894,7 +1898,7 @@ openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend({
     focus: function($element) {
         this._super($element || this.$element.find('select:first'));
     }
-});
+}));
 
 // jquery autocomplete tweak to allow html
 (function() {
@@ -2301,7 +2305,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend({
         this._super($element || this.$input);
     }
 });
-openerp.web.check_interface(openerp.web.form.FieldMany2One, openerp.web.form.FieldInterface);
 
 /*
 # Values: (0, 0,  { fields })    create
