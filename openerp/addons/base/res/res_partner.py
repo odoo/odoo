@@ -27,7 +27,6 @@ from tools.translate import _
 import logging
 import pooler
 
-
 class res_payterm(osv.osv):
     _description = 'Payment term'
     _name = 'res.payterm'
@@ -35,7 +34,6 @@ class res_payterm(osv.osv):
     _columns = {
         'name': fields.char('Payment Term (short name)', size=64),
     }
-
 
 class res_partner_category(osv.osv):
 
@@ -101,7 +99,6 @@ class res_partner_category(osv.osv):
     _parent_order = 'name'
     _order = 'parent_left'
 
-
 class res_partner_title(osv.osv):
     _name = 'res.partner.title'
     _columns = {
@@ -111,16 +108,11 @@ class res_partner_title(osv.osv):
     }
     _order = 'name'
 
-
 def _lang_get(self, cr, uid, context=None):
     lang_pool = self.pool.get('res.lang')
     ids = lang_pool.search(cr, uid, [], context=context)
     res = lang_pool.read(cr, uid, ids, ['code', 'name'], context)
     return [(r['code'], r['name']) for r in res] + [('','')]
-
-def value_or_id(val):
-    """ return val or val.id if val is a browse record """
-    return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
 
 POSTAL_ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
@@ -220,6 +212,10 @@ class res_partner(osv.osv):
         return {'value': value, 'domain': domain}
 
     def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+        def value_or_id(val):
+            """ return val or val.id if val is a browse record """
+            return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
+
         if use_parent_address and parent_id:
             parent = self.browse(cr, uid, parent_id, context=context)
             return {'value': dict((key, value_or_id(parent[key])) for key in ADDRESS_FIELDS)}
