@@ -34,8 +34,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.model = dataset.model;
         this.view_id = view_id || false;
         this.fields_view = {};
-        this.widgets = {};
-        this.widgets_counter = 0;
         this.fields = {};
         this.fields_order = [];
         this.datarecord = {};
@@ -80,7 +78,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.sidebar.attachments.destroy();
             this.sidebar.destroy();
         }
-        _.each(this.widgets, function(w) {
+        _.each(this.get_widgets(), function(w) {
             w.destroy();
         });
         this._super();
@@ -217,14 +215,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
     },
     on_form_changed: function() {
-        for (var w in this.widgets) {
-            w = this.widgets[w];
+        _.each(this.get_widgets(), function(w) {
             w.process_modifiers();
             if (w.field) {
                 w.validate();
             }
             w.update_dom();
-        }
+        });
     },
     do_notify_change: function() {
         this.$element.addClass('oe_form_dirty');
@@ -601,6 +598,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     context : { 'bin_size' : true }
                 }).pipe(self.on_record_loaded);
             }
+        });
+    },
+    get_widgets: function() {
+        return _.filter(this.getChildren(), function(obj) {
+            return obj instanceof openerp.web.form.Widget;
         });
     },
     get_fields_values: function(blacklist) {
@@ -3203,9 +3205,7 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend(_.extend
         this.get_selected_ids = view.get_selected_ids;
         this.do_onchange = this.on_form_changed = this.do_notify_change = this.on_nop;
         this.dataset = this.view.dataset;
-        this.widgets_counter = 0;
         this.view_id = 'reference_' + _.uniqueId();
-        this.widgets = {};
         this.fields = {};
         this.fields_order = [];
         this.reference_ready = true;
