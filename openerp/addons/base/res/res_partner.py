@@ -420,7 +420,7 @@ class res_partner(osv.osv):
 
 
 
-# res.partner.address is deprecated; it is still there for backward compability only
+# res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
 class res_partner_address(osv.osv):
     _table = "res_partner"
     _name = 'res.partner.address'
