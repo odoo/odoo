@@ -1242,17 +1242,8 @@
     </t>
 </t>
 
-<t t-name="SearchView">
-    <form class="oe_forms">
-        <t t-call="SearchView.render_lines"/>
-        <div class="oe_search-view-buttons">
-            <button class="oe_button">Search</button>
-            <button class="oe_button" type="reset">Clear</button>
-            <select class="oe_search-view-filters-management">
-            </select>
-        </div>
-    </form>
-</t>
+<div t-name="SearchView" class="oe_searchview"/>
+
 <t t-name="SearchView.managed-filters">
     <option class="oe-filters-title" value="">Filters</option>
     <optgroup label="-- Filters --">

@@ -3,13 +3,50 @@ var QWeb = openerp.web.qweb,
       _t =  openerp.web._t,
      _lt = openerp.web._lt;
 
-// Replace VS.ui.SearchFacet by a factory function returning potentially
-// customized backbone views for custom facets
-var SearchFacet = VS.ui.SearchFacet;
-VS.ui.SearchFacet = function (options) { return new SearchFacet(options); };
+// Have SearchBox optionally use callback function to produce inputs and facets
+// (views) set on callbacks.make_facet and callbacks.make_input keys when
+// initializing VisualSearch
+var SearchBox_renderFacet = function (facet, position) {
+    var view = new (this.app.options.callbacks['make_facet'] || VS.ui.SearchFacet)({
+      app   : this.app,
+      model : facet,
+      order : position
+    });
+
+    // Input first, facet second.
+    this.renderSearchInput();
+    this.facetViews.push(view);
+    this.$('.VS-search-inner').children().eq(position*2).after(view.render().el);
+
+    view.calculateSize();
+    _.defer(_.bind(view.calculateSize, view));
+
+    return view;
+  }; // warning: will not match
+// Ensure we're replacing the function we think
+if (SearchBox_renderFacet.toString() !== VS.ui.SearchBox.prototype.renderFacet.toString().replace(/(VS\.ui\.SearchFacet)/, "(this.app.options.callbacks['make_facet'] || $1)")) {
+    throw new Error(
+        "Trying to replace wrong version of VS.ui.SearchBox#renderFacet. "
+        + "Please fix replacement.");
+}
+var SearchBox_renderSearchInput = function () {
+    var input = new (this.app.options.callbacks['make_input'] || VS.ui.SearchInput)({position: this.inputViews.length, app: this.app});
+    this.$('.VS-search-inner').append(input.render().el);
+    this.inputViews.push(input);
+  };
+// Ensure we're replacing the function we think
+if (SearchBox_renderSearchInput.toString() !== VS.ui.SearchBox.prototype.renderSearchInput.toString().replace(/(VS\.ui\.SearchInput)/, "(this.app.options.callbacks['make_input'] || $1)")) {
+    throw new Error(
+        "Trying to replace wrong version of VS.ui.SearchBox#renderSearchInput. "
+        + "Please fix replacement.");
+}
+_.extend(VS.ui.SearchBox.prototype, {
+    renderFacet: SearchBox_renderFacet,
+    renderSearchInput: SearchBox_renderSearchInput
+});
 
 openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.SearchView# */{
-    template: "EmptyComponent",
+    template: "SearchView",
     /**
      * @constructs openerp.web.SearchView
      * @extends openerp.web.OldWidget
@@ -42,53 +79,22 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
     start: function() {
         var p = this._super();
 
-        this.field = VS.init({
+        this.setup_global_completion();
+        this.vs = VS.init({
             container: this.$element,
             query: '',
             callbacks: {
+                make_facet: this.proxy('make_visualsearch_facet'),
+                make_input: this.proxy('make_visualsearch_input'),
                 search: function (query, searchCollection) {
                     console.log(query, searchCollection);
                 },
                 facetMatches: function (callback) {
-                    callback([
-                        'account', 'filter', 'access', 'title',
-                        { label: 'city',    category: 'location' },
-                        { label: 'address', category: 'location' },
-                        { label: 'country', category: 'location' },
-                        { label: 'state',   category: 'location' }
-                    ]);
                 },
                 valueMatches : function(facet, searchTerm, callback) {
-                    switch (facet) {
-                    case 'account':
-                        callback([
-                            { value: '1-amanda', label: 'Amanda' },
-                            { value: '2-aron',   label: 'Aron' },
-                            { value: '3-eric',   label: 'Eric' },
-                            { value: '4-jeremy', label: 'Jeremy' },
-                            { value: '5-samuel', label: 'Samuel' },
-                            { value: '6-scott',  label: 'Scott' }
-                        ]);
-                        break;
-                    case 'filter':
-                        callback(['published', 'unpublished', 'draft']);
-                        break;
-                    case 'access':
-                        callback(['public', 'private', 'protected']);
-                        break;
-                    case 'title':
-                        callback([
-                            'Pentagon Papers',
-                            'CoffeeScript Manual',
-                            'Laboratory for Object Oriented Thinking',
-                            'A Repository Grows in Brooklyn'
-                        ]);
-                        break;
-                    }
                 }
             }
         });
-        return p;
 
         if (this.hidden) {
             this.$element.hide();
@@ -102,7 +108,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 context: this.dataset.get_context()
             }, this.on_loaded);
         }
-        return this.ready.promise();
+        return $.when(p, this.ready);
     },
     show: function () {
         this.$element.show();
@@ -110,6 +116,121 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
     hide: function () {
         this.$element.hide();
     },
+
+    /**
+     * Sets up search view's view-wide auto-completion widget
+     */
+    setup_global_completion: function () {
+        var self = this;
+        this.$element.autocomplete({
+            source: this.proxy('complete_global_search'),
+            select: this.proxy('select_completion'),
+            focus: function (e) { e.preventDefault(); },
+            html: true,
+            minLength: 0,
+            delay: 0
+        }).data('autocomplete')._renderItem = function (ul, item) {
+            // item of completion list
+            var $item = $( "<li></li>" )
+                .data( "item.autocomplete", item )
+                .appendTo( ul );
+            if (item.type === 'section') {
+                $item.text(item.label)
+                    .css({
+                        borderTop: '1px solid #cccccc',
+                        margin: 0,
+                        padding: 0,
+                        zoom: 1,
+                        'float': 'left',
+                        clear: 'left',
+                        width: '100%'
+                    });
+            } else if (item.type === 'base') {
+                // FIXME: translation
+                $item.append("<a>Search for: \"<strong>" + item.value + "</strong>\"</a>");
+            } else {
+                $item.append($("<a>").text(item.label));
+            }
+            return $item;
+        }
+    },
+    /**
+     * Provide auto-completion result for req.term (an array to `resp`)
+     *
+     * @param {Object} req request to complete
+     * @param {String} req.term searched term to complete
+     * @param {Function} resp response callback
+     */
+    complete_global_search:  function (req, resp) {
+        var completion = [{value: req.term, type: 'base'}];
+        $.when.apply(null, _(this.inputs).chain()
+            .invoke('complete', req.term)
+            .value()).then(function () {
+                var results = completion.concat.apply(
+                        completion, _(arguments).compact());
+                resp(results);
+        });
+    },
+
+    /**
+     * Action to perform in case of selection: create a facet (model)
+     * and add it to the search collection
+     *
+     * @param {Object} e selection event, preventDefault to avoid setting value on object
+     * @param {Object} ui selection information
+     * @param {Object} ui.item selected completion item
+     */
+    select_completion: function (e, ui) {
+        e.preventDefault();
+        if (ui.item.type === 'base') {
+            this.vs.searchQuery.add(new VS.model.SearchFacet({
+                category: null,
+                value: ui.item.value,
+                app: this.vs
+            }));
+            return;
+        }
+        this.vs.searchQuery.add(new VS.model.SearchFacet({
+            category: ui.item.category,
+            value: ui.item.label,
+            real_value: ui.item.value,
+            app: this.vs
+        }));
+    },
+
+    /**
+     * Builds the right SearchFacet view based on the facet object to render
+     * (e.g. readonly facets for filters)
+     *
+     * @param {Object} options
+     * @param {VS.model.SearchFacet} options.model facet object to render
+     */
+    make_visualsearch_facet: function (options) {
+        return new VS.ui.SearchFacet(options);
+    },
+    /**
+     * Proxies searches on a SearchInput to the search view's global completion
+     *
+     * Also disables SearchInput.autocomplete#_move so search view's
+     * autocomplete can get the corresponding events, or something.
+     *
+     * @param options
+     */
+    make_visualsearch_input: function (options) {
+        var self = this, input = new VS.ui.SearchInput(options);
+        input.setupAutocomplete = function () {
+            this.box.autocomplete({
+                minLength: 1,
+                delay: 0,
+                search: function () {
+                    self.$element.autocomplete('search', input.box.val());
+                    return false;
+                }
+            }).data('autocomplete')._move = function () {};
+        };
+        return input;
+    },
+
     /**
      * Builds a list of widget rows (each row is an array of widgets)
      *
@@ -200,28 +321,19 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                     "Got non-search view after asking for a search view: type %s, arch root %s",
                     data.fields_view.type, data.fields_view.arch.tag));
         }
+
         var self = this,
            lines = this.make_widgets(
                 data.fields_view['arch'].children,
                 data.fields_view.fields);
+
+        return this.ready.resolve().promise();
 
         // for extended search view
         var ext = new openerp.web.search.ExtendedSearch(this, this.model);
         lines.push([ext]);
         this.extended_search = ext;
 
-        var render = QWeb.render("SearchView", {
-            'view': data.fields_view['arch'],
-            'lines': lines,
-            'defaults': this.defaults
-        });
-
-        this.$element.html(render);
-
-        var f = this.$element.find('form');
-        this.$element.find('form')
-                .submit(this.do_search)
-                .bind('reset', this.do_clear);
         // start() all the widgets
         var widget_starts = _(lines).chain().flatten().map(function (widget) {
             return widget.start();
@@ -390,9 +502,10 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param e jQuery event object coming from the "Search" button
      */
     do_search: function (e) {
-        console.log(this.field.searchBox.value());
-        console.log(this.field.searchBox.facets());
+        console.log(this.vs.searchBox.value());
+        console.log(this.vs.searchQuery.facets());
         return this.on_search([], [], []);
+
         if (this.headless && !this.has_defaults) {
             return this.on_search([], [], []);
         }
@@ -661,6 +774,18 @@ openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.
         this.view.inputs.push(this);
         this.style = undefined;
     },
+    /**
+     * Fetch auto-completion values for the widget.
+     *
+     * The completion values should be an array of objects with keys category,
+     * label, value prefixed with an object with keys type=section and label
+     *
+     * @param {String} value value to complete
+     * @returns {jQuery.Deferred<null|Object>}
+     */
+    complete: function (value) {
+        return $.when(null)
+    },
     get_context: function () {
         throw new Error(
             "get_context not implemented for widget " + this.attrs.type);
@@ -873,6 +998,14 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
  */
 openerp.web.search.CharField = openerp.web.search.Field.extend( /** @lends openerp.web.search.CharField# */ {
     default_operator: 'ilike',
+    complete: function (value) {
+        // FIXME: formatting
+        var label = _.str.sprintf(_t('Search "%s" for "%s"'),
+                                  this.attrs.string, value);
+        return $.when([
+            {category: this.attrs.name, label: label, value:value}
+        ]);
+    },
     get_value: function () {
         return this.$element.val();
     }
@@ -943,6 +1076,25 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
         this.prepend_empty = !_(this.attrs.selection).detect(function (item) {
             return !item[1];
         });
+    },
+    complete: function (needle) {
+        var self = this;
+        var results = _(this.attrs.selection).chain()
+            .filter(function (sel) {
+                var value = sel[0], label = sel[1];
+                if (!value) { return false; }
+                return label.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+            })
+            .map(function (sel) {
+                return {
+                    category: self.attrs.name,
+                    label: sel[1],
+                    value: sel[0]
+                };
+            }).value();
+        if (_.isEmpty(results)) { return $.when(null); }
+        return $.when.apply(null,
+            [{type: 'section', label: this.attrs.string}].concat(results));
     },
     get_value: function () {
         var index = parseInt(this.$element.val(), 10);
@@ -1069,6 +1221,26 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
         });
         this.dataset = new openerp.web.DataSet(
                 this.view, this.attrs['relation']);
+    },
+    complete: function (needle) {
+        var self = this;
+        // TODO: context
+        // FIXME: "concurrent" searches (multiple requests, mis-ordered responses)
+        return new openerp.web.Model(this.attrs.relation).call('name_search', [], {
+            name: needle,
+            limit: 8,
+            context: {}
+        }).pipe(function (results) {
+            if (_.isEmpty(results)) { return null; }
+            return [{type: 'section', label: self.attrs.string}].concat(
+                _(results).map(function (result) {
+                    return {
+                        category: self.attrs.name,
+                        label: result[1],
+                        value: result[0]
+                    };
+                }));
+        });
     },
     start: function () {
         this._super();
