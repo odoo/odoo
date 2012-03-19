@@ -1440,7 +1440,7 @@ openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend({
         this._super.apply(this, arguments);
         this.bind_events();
         this.on("change:effective_readonly", this, function() {
-            this.render_element();
+            this.renderElement();
             this.bind_events();
             this.render_value();
         });
@@ -1811,7 +1811,7 @@ openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend({
         this._super.apply(this, arguments);
         this.bind_events();
         this.on("change:effective_readonly", this, function() {
-            this.render_element();
+            this.renderElement();
             this.bind_events();
             this.render_value();
         });
