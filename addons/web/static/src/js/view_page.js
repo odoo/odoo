@@ -67,31 +67,6 @@ openerp.web.page = function (openerp) {
 
     /** @namespace */
     openerp.web.page = {};
-    
-    openerp.web.page.FieldReferenceReadonly = openerp.web.form.FieldMany2One.extend({
-        set_value: function (value) {
-            if (!value) {
-                return this._super(null);
-            }
-            var reference = value.split(',');
-            this.field.relation = reference[0];
-            var id = parseInt(reference[1], 10);
-            return this._super(id);
-        },
-        get_value: function () {
-            if (!this.value) {
-                return null;
-            }
-            var id;
-            if (typeof this.value === 'number') {
-                // name_get has not run yet
-                id = this.value;
-            } else {
-                id = this.value[0];
-            }
-            return _.str.sprintf('%s,%d', this.field.relation, id);
-        }
-    });
 
     openerp.web.page.FieldBinaryImageReaonly = openerp.web.form.FieldBinaryImage.extend({
         update_dom: function() {
@@ -121,7 +96,6 @@ openerp.web.page = function (openerp) {
         }
     });
     openerp.web.page.readonly = openerp.web.form.widgets.extend({
-        'reference': 'openerp.web.page.FieldReferenceReadonly',
         'binary': 'openerp.web.page.FieldBinaryFileReadonly',
         'image': 'openerp.web.page.FieldBinaryImageReaonly',
             

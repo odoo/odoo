@@ -3158,7 +3158,7 @@ openerp.web.form.FormOpenDataset = openerp.web.ProxyDataSet.extend({
     }
 });
 
-openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend({
+openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
     template: 'FieldReference',
     init: function(view, node) {
         this._super(view, node);
@@ -3181,17 +3181,7 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend({
         this.widgets = {};
         this.fields = {};
         this.fields_order = [];
-        this.selection = new openerp.web.form.FieldSelection(this, { attrs: {
-            name: 'selection',
-            widget: 'selection'
-        }});
         this.reference_ready = true;
-        this.selection.on_value_changed.add_last(this.on_selection_changed);
-        this.m2o = new openerp.web.form.FieldMany2One(this, { attrs: {
-            name: 'm2o',
-            widget: 'many2one'
-        }});
-        this.m2o.on_ui_change.add_last(this.on_ui_change);
     },
     on_nop: function() {
     },
@@ -3205,10 +3195,37 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend({
     },
     start: function() {
         this._super();
-        // TODO: not niv compliant
-        this.selection.$element = $(".oe_form_view_reference_selection", this.$element);
-        this.selection.renderElement();
-        this.selection.start();
+        openerp.web.form.ReinitializeFieldMixin.start.call(this);
+    },
+    renderElement: function() {
+        if (this.selection) {
+            this.selection.stop();
+            this.selection = undefined;
+        }
+        if (this.m2o) {
+            this.m2o.stop();
+            this.m2o.undefined;
+        }
+        this._super();
+    },
+    bind_events: function() {
+        if (!this.get("effective_readonly")) {
+            this.selection = new openerp.web.form.FieldSelection(this, { attrs: {
+                name: 'selection',
+                widget: 'selection'
+            }});
+            this.selection.on_value_changed.add_last(this.on_selection_changed);
+            
+            this.selection.$element = $(".oe_form_view_reference_selection", this.$element);
+            this.selection.renderElement();
+            this.selection.start();
+        }
+        this.m2o = new openerp.web.form.FieldMany2One(this, { attrs: {
+            name: 'm2o',
+            widget: 'many2one'
+        }});
+        this.m2o.set({"readonly": this.get("effective_readonly")});
+        this.m2o.on_ui_change.add_last(this.on_ui_change);
         this.m2o.$element = $(".oe_form_view_reference_m2o", this.$element);
         this.m2o.renderElement();
         this.m2o.start();
@@ -3221,14 +3238,19 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend({
     },
     set_value: function(value) {
         this._super(value);
+        this.render_value();
+    },
+    render_value: function() {
         this.reference_ready = false;
         var vals = [], sel_val, m2o_val;
-        if (typeof(value) === 'string') {
-            vals = value.split(',');
+        if (typeof(this.value) === 'string') {
+            vals = this.value.split(',');
         }
         sel_val = vals[0] || false;
         m2o_val = vals[1] ? parseInt(vals[1], 10) : false;
-        this.selection.set_value(sel_val);
+        if (!this.get("effective_readonly")) {
+            this.selection.set_value(sel_val);
+        }
         this.m2o.field.relation = sel_val;
         this.m2o.set_value(m2o_val);
         this.m2o.$element.toggle(sel_val !== false);
@@ -3243,7 +3265,7 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend({
             return false;
         }
     }
-});
+}));
 
 openerp.web.form.FieldBinary = openerp.web.form.AbstractField.extend({
     init: function(view, node) {
