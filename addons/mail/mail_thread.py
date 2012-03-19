@@ -61,7 +61,7 @@ class mail_thread(osv.osv):
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
-    _inherit = ['res.needaction']
+    _inherit = ['base.needaction']
     
     def _get_message_ids(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -73,7 +73,8 @@ class mail_thread(osv.osv):
     # OpenSocial: message_ids_social is a dummy field that should not be used
     _columns = {
         'message_ids_social': fields.function(_get_message_ids, method=True,
-                        type='one2many', obj='mail.message', string='Temp messages'),
+                        type='one2many', obj='mail.message', string='Temp messages',
+                        _fields_id = 'res_id'),
     }
 
     #------------------------------------------------------
@@ -144,8 +145,8 @@ class mail_thread(osv.osv):
         # parse message to get requested users
         user_to_push_ids += self.message_parse_users(cr, uid, [msg_id], vals['body_text'], context=context)
         # push to need_action_user_id if set
-        if thread_obj.need_action_user_id and thread_obj.need_action_user_id.id not in user_to_push_ids:
-            user_to_push_ids.append(thread_obj.need_action_user_id.id)
+        #if thread_obj.need_action_user_id and thread_obj.need_action_user_id.id not in user_to_push_ids:
+            #user_to_push_ids.append(thread_obj.need_action_user_id.id)
         
         # effectively push message to users
         for id in user_to_push_ids:

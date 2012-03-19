@@ -149,24 +149,28 @@ class hr_employee(osv.osv):
     _description = "Employee"
     _inherits = {'resource.resource': "resource_id"}
 
+    def onchange_photo_mini(self, cr, uid, ids, value, context=None):
+        return {'value': {'photo': value, 'photo_mini': self._photo_resize(cr, uid, value) } }
+    
+    def _set_photo_mini(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'photo': value}, context=context)
+    
+    def _photo_resize(self, cr, uid, photo, context=None):
+        image_stream = io.BytesIO(photo.decode('base64'))
+        img = Image.open(image_stream)
+        img.thumbnail((180, 150), Image.ANTIALIAS)
+        img_stream = StringIO.StringIO()
+        img.save(img_stream, "JPEG")
+        return img_stream.getvalue().encode('base64')
+    
     def _get_photo_mini(self, cr, uid, ids, name, args, context=None):
         result = {}
-        for obj in self.browse(cr, uid, ids, context=context):
-            if not obj.photo:
-                result[obj.id] = False
-                continue
-
-            image_stream = io.BytesIO(obj.photo.decode('base64'))
-            img = Image.open(image_stream)
-            img.thumbnail((180, 150), Image.ANTIALIAS)
-            img_stream = StringIO.StringIO()
-            img.save(img_stream, "JPEG")
-            result[obj.id] = img_stream.getvalue().encode('base64')
+        for hr_empl in self.browse(cr, uid, ids, context=context):
+            if not hr_empl.photo:
+                result[hr_empl.id] = False
+            else:
+                result[hr_empl.id] = self._photo_resize(cr, uid, hr_empl.photo, context=context)
         return result
-
-    def _set_photo_mini(self, cr, uid, id, name, value, args, context=None):
-        self.write(cr, uid, [id], {'photo': value}, context=context)
-        return True
     
     _columns = {
         'country_id': fields.many2one('res.country', 'Nationality'),
@@ -244,11 +248,11 @@ class hr_employee(osv.osv):
 
     def _get_photo(self, cr, uid, context=None):
         photo_path = addons.get_module_resource('hr','images','photo.png')
-        return open(photo_path, 'rb').read().encode('base64')
+        return self._photo_resize(cr, uid, open(photo_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'active': 1,
-        'photo': _get_photo,
+        'photo_mini': _get_photo,
         'marital': 'single',
         'color': 0,
     }

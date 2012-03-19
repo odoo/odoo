@@ -21,26 +21,20 @@
 
 
 {
-    'name': 'Events Sales',
+    'name': 'Events Sales layout',
     'version': '0.1',
     'category': 'Tools',
     'complexity': "easy",
     'description': """
-Creating registration with sale orders.
-=======================================
-
-This module allows you to automatize and connect your registration creation with your main sale flow and, therefore, to enable the invoicing feature of registrations.
-
-It defines a new kind of service products that offers you the possibility to choose an event category associated with it. When you encode a sale order for that product, you will be able to choose an existing event of that category and when you confirm your sale order it will automatically create a registration for this event.
-""",
+    This module ensures the compatibility of the changes made on the sale.order.line form view in event_sale with the sale_layout module (that is replacing the whole field in the view by another one). Its installation is automatically triggered when both modules are installed.
+    """,
     'author': 'OpenERP SA',
-    'depends': ['event','sale','sale_crm'],
+    'depends': ['event_sale','sale_layout'],
     'update_xml': [
-        'event_sale_view.xml',
-        'event_demo.xml',
+        'event_sale_layout.xml',
     ],
-    'test':['test/confirm.yml'],
     'installable': True,
-    'active': False,
+    'auto_install':True,
+    'category': 'Hidden',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

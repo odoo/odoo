@@ -258,19 +258,37 @@ class crm_base(object):
             data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value': data}
 
+	def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+		return ''
+	
     def case_open_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s has been <b>opened</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
         return True
 
     def case_close_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s has been <b>closed</b>.'% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s has been <b>canceled</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
         return True
 
     def case_pending_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s is now <b>pending</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
         return True
 
     def case_reset_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
+            msg = '%s has been <b>renewed</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
         return True
 
     def case_open(self, cr, uid, ids, context=None):
@@ -483,6 +501,7 @@ class crm_case(crm_base):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': state, 'active': True})
+        self.case_reset_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, state)
         return True
 
