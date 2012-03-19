@@ -3290,14 +3290,17 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend(_.extend
     }
 }));
 
-openerp.web.form.FieldBinary = openerp.web.form.AbstractField.extend({
+openerp.web.form.FieldBinary = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
     init: function(view, node) {
         this._super(view, node);
         this.iframe = this.element_id + '_iframe';
         this.binary_value = false;
     },
     start: function() {
-        this._super.apply(this, arguments);
+        this._super();
+        openerp.web.form.ReinitializeFieldMixin.start.call(this);
+    },
+    bind_events: function() {
         this.$element.find('input.oe-binary-file').change(this.on_file_change);
         this.$element.find('button.oe-binary-file-save').click(this.on_save_as);
         this.$element.find('.oe-binary-file-clear').click(this.on_clear);
@@ -3361,27 +3364,41 @@ openerp.web.form.FieldBinary = openerp.web.form.AbstractField.extend({
         }
         return false;
     }
-});
+}));
 
 openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
     template: 'FieldBinaryFile',
-    start: function() {
-        this._super();
-    },
-    update_dom: function() {
-        this._super.apply(this, arguments);
-        this.$element.find('.oe-binary-file-set, .oe-binary-file-clear').toggle(!this.readonly);
-        this.$element.find('input[type=text]').prop('readonly', this.readonly);
+    bind_events: function() {
+        if (this.get("effective_readonly")) {
+            var self = this;
+            this.$element.find('a').click(function() {
+                if (self.value) {
+                    self.on_save_as();
+                }
+                return false;
+            });
+        }
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        var show_value;
-        if (this.node.attrs.filename) {
-            show_value = this.view.datarecord[this.node.attrs.filename] || '';
+        this.render_value();
+    },
+    render_value: function() {
+        if (!this.get("effective_readonly")) {
+            var show_value;
+            if (this.node.attrs.filename) {
+                show_value = this.view.datarecord[this.node.attrs.filename] || '';
+            } else {
+                show_value = (this.value != null && this.value !== false) ? this.value : '';
+            }
+            this.$element.find('input').eq(0).val(show_value);
         } else {
-            show_value = (value != null && value !== false) ? value : '';
+            this.$element.find('a').show(!!this.value);
+            if (this.value) {
+                var show_value = _t("Download") + " " + (this.view.datarecord[this.node.attrs.filename] || '');
+                this.$element.find('a').text(show_value);
+            }
         }
-        this.$element.find('input').eq(0).val(show_value);
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
         this.value = file_base64;
@@ -3406,24 +3423,22 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
 
 openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
-    start: function() {
-        this._super.apply(this, arguments);
+    bind_events: function() {
         this.$image = this.$element.find('img.oe-binary-image');
-        var check_visibility = function() {
-            if (!this.get("effective_readonly"))
-                this.$element.find('.oe-binary').show();
-            else
-                this.$element.find('.oe-binary').hide();
-        }
-        this.on("change:effective_readonly", this, check_visibility);
-        _.bind(check_visibility, this)();
+        if (!this.get("effective_readonly"))
+            this.$element.find('.oe-binary').show();
+        else
+            this.$element.find('.oe-binary').hide();
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
+        this.render_value();
+    },
+    render_value: function() {
         this.set_image_maxwidth();
 
         var url;
-        if (value && value.substr(0, 10).indexOf(' ') == -1) {
+        if (this.value && this.value.substr(0, 10).indexOf(' ') == -1) {
             url = 'data:image/png;base64,' + this.value;
         } else {
             url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +

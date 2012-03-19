@@ -68,29 +68,7 @@ openerp.web.page = function (openerp) {
     /** @namespace */
     openerp.web.page = {};
 
-    openerp.web.page.FieldBinaryFileReadonly = openerp.web.form.FieldBinary.extend({
-        form_template: 'FieldURI.readonly',
-        start: function() {
-            this._super.apply(this, arguments);
-            var self = this;
-            this.$element.find('a').click(function() {
-                if (self.value) {
-                    self.on_save_as();
-                }
-                return false;
-            });
-        },
-        set_value: function(value) {
-            this._super.apply(this, arguments);
-            this.$element.find('a').show(!!value);
-            if (value) {
-                var show_value = _t("Download") + " " + (this.view.datarecord[this.node.attrs.filename] || '');
-                this.$element.find('a').text(show_value);
-            }
-        }
-    });
     openerp.web.page.readonly = openerp.web.form.widgets.extend({
-        'binary': 'openerp.web.page.FieldBinaryFileReadonly',
     });
     
 
