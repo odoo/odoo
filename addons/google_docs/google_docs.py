@@ -30,22 +30,22 @@ except ImportError:
 class google_docs_ir_attachment(osv.osv):
     _inherit = 'ir.attachment'
 
-    def _auth(self, cr, uid):
+    def _auth(self, cr, uid,context=None):
         # check google_base_account
         users_obj = self.pool.get('res.users')
         user = users_obj.browse(cr, uid, [uid])[0]
-        if not user.gmail_user or not user.gmail_password: 
+        if not user.gmail_user or not user.gmail_password:
             return False
 
         # login
         client = gdata.docs.client.DocsClient(source='openerp.com')
         client.ssl = True
         client.http_client.debug = False
-        client.ClientLogin(user.gmail_user, user.gmail_password, client.source, service='writely')
+        client.ClientLogin(user.gmail_user, user.gmail_password, client.source, service='writely') #authentification in a gmail account
         
         return client
 
-    def create_empty_google_doc(self, cr, uid, model, ids, type_doc):
+    def create_empty_google_doc(self, cr, uid, model, ids, type_doc,context=None):
         '''Associate a copy of the gdoc identified by 'gdocs_res_id' to the current entity.
            @param cr: the current row from the database cursor.
            @param uid: the current user ID, for security checks.
@@ -54,12 +54,13 @@ class google_docs_ir_attachment(osv.osv):
            @return the document object.
            @return False if the google_base_account hasn't been configured yet.
         '''
-
+        
         # authenticate
         client = self._auth(cr, uid)
         if client == False:
-            return False
-
+            return False #return an error
+        
+        
         # create the document in google docs
         if type_doc=='slide':
             local_resource = gdata.docs.data.Resource(gdata.docs.data.PRESENTATION_LABEL)
@@ -67,6 +68,7 @@ class google_docs_ir_attachment(osv.osv):
             local_resource = gdata.docs.data.Resource(gdata.docs.data.SPREADSHEET_LABEL)
         else:
             local_resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL)
+        
         gdocs_resource = client.post(entry=local_resource, uri='https://docs.google.com/feeds/default/private/full/')
 
         # register into the db
@@ -76,30 +78,28 @@ class google_docs_ir_attachment(osv.osv):
             'type': 'url',
             'name': 'new_foo %s' % (type_doc,) , # TODO pending from the working config
             'url': gdocs_resource.get_alternate_link().href
-        })
-
+        },context=context)
+        
+        
         return gdocs_resource
 
-    def copy_gdoc(self, cr, uid, model, ids):
-        if context is None:
-            context={}
-
+    def copy_gdoc(self, cr, uid, model, ids,context=None):
         client = self._auth(cr, uid)
         if client == False:
             return False
-
         # fetch and copy the original document
         original_resource = client.get_resource_by_id(gdocs_resource_id)
         copy_resource = client.copy_resource(entry=original_resource)
-
+        
         # register into the db
         self.create(cr, uid, {
             'res_model': model,
             'res_id': ids[0],
             'type': 'url',
-            'name': 'copy_foo %s' (type_doc,) , # TODO pending from the working config
+            'name': 'file_name',
+            'name': 'copy_foo %s' (type_doc,) ,  #TODO pending from the working config
             'url': copy_resource.get_alternate_link().href
-        })
+        },context=context)
 
         return copy_resource
 
@@ -107,19 +107,16 @@ class google_docs(osv.osv):
     _name = 'google.docs'
 
     def doc_get(self, cr, uid, model, id, type_doc):
-        google_docs_config_ref = self.pool.get('res.users')
         ir_attachment_ref = self.pool.get('ir.attachment')
-        google_docs_config = google_docs_config_ref.search(cr, uid, [('context_model_id', '=', model)])
+        google_docs_config = self.pool.get('google.docs.config').search(cr, uid, [('context_model_id', '=', model)])
 
-        if not google_docs_config:
-            google_document = ir_attachment_ref.create_empty_google_doc(cr, uid, model, id, type_doc)
-        else:
+        if google_docs_config:
             google_document = ir_attachment_ref.copy_gdoc(cr, uid, model, id)
-
-        print google_docs_config
-
-        if not google_docs_config:
+        else:
+            google_document = ir_attachment_ref.create_empty_google_doc(cr, uid, model, id, type_doc)
             return -1
+
+
 
 class config(osv.osv):
     _name = 'google.docs.config'
@@ -138,6 +135,10 @@ class config(osv.osv):
         'context_name': 'pr_%(name)',
         'context_multiple': False,
     }
+    def has_config_set(self, cr, uid, model,context=None):
+        print model
+        import pdb
+        pdb.set_trace()
 
     def get_config(self, cr, uid, model):
         domain = [('context_model_id', '=', model)]

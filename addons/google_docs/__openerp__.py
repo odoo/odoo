@@ -4,9 +4,6 @@
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'category': 'Tools',
-    ''' 'data': [
-        'google_docs.xml'
-    ],'''
     'installable': True,
     'auto_install': False,
     'web': True,

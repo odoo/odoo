@@ -4,6 +4,7 @@ openerp.google_docs = function(instance, session) {
         instance.web.form.SidebarAttachments = instance.web.form.SidebarAttachments.extend({
             init: function() {
                 this._super.apply(this, arguments);
+                this.$element.delegate('.oe_google_docs_text_button', 'click', this.on_add_text_gdoc);
                 var self = this;
                 var config = new instance.web.DataSet(this, 'google.docs.config', this.view.dataset.get_context());
                 config.call('get_config', [this.view.dataset.ids[this.view.dataset.index]], function(r) {
@@ -21,7 +22,7 @@ openerp.google_docs = function(instance, session) {
                     });
                 });
             },
-            on_add_gdoc: function() {
+            on_add_text_gdoc: function() {
                 var self = this;
                 var $gdocbtn = this.$element.find('.oe_google_docs_text_button');
                 $gdocbtn.attr('disabled', 'true').find('img, span').toggle();
