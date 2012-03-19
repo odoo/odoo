@@ -298,21 +298,18 @@
             <field name="arch" type="xml">
                 <form string="Interview Appraisal">
                     <group col="4" colspan="4">
-                        <field name="survey_id"/>
-                        <field name="evaluation_id"/>
-                        <group col="2" colspan="2">
-                            <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                        </group>
-                        <field name="date_deadline"/>
-                        <field name="response" readonly="1"/>
-                        <field name="user_to_review_id"/>
-                        <field name="user_id" string="Interviewer"/>
-                        <group col="2" colspan="2">
-                            <button string="Send Reminder Email"
-                            name="%(mail.action_email_compose_message_wizard)d"
-                            icon="terp-mail-message-new" type="action"
-                            states="waiting_answer"/>
-                            <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                         <field name="user_to_review_id"/>
+                         <field name="user_id" string="Interviewer"/>
+                         <field name="date_deadline"/>
+                          <group col="4" colspan="4">
+                                <field name="survey_id"/>
+                                <button name="action_print_survey" string="Print Survey" type="object" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                                <newline/>
+                                <field name="evaluation_id"/>
+                                <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action" states="waiting_answer"/>
+                                <newline/>
+                                <field name="response" readonly="1"/>
+                                <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                         </group>
                     </group>
                     <newline/>
