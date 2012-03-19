@@ -11,7 +11,7 @@
         </record>
 
         <menuitem parent="base.menu_base_config" id="menu_segm_questionnaire"
-                  action="open_questionnaires" />
+                  action="open_questionnaires" sequence="1"/>
 
         <record model="ir.actions.act_window" id="open_questions">
           <field name="name">Questions</field>
@@ -20,8 +20,8 @@
           <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem parent="base.menu_crm_config_lead" id="menu_segm_answer"
-                  action="open_questions" />
+        <menuitem parent="base.menu_base_config" id="menu_segm_answer"
+                  action="open_questions" sequence="35"/>
 
 <!-- Profiling Questionnaire Tree view  -->
 
