@@ -33,6 +33,7 @@ import tools
 from osv import osv
 from osv import fields
 from tools.translate import _
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger('mail')
 
@@ -149,7 +150,9 @@ class mail_message(osv.osv):
             context = {}
         tz = context.get('tz')
         result = {}
-        for message in self.browse(cr, uid, ids, context=context):
+
+        # Read message as UID 1 to allow viewing author even if from different company
+        for message in self.browse(cr, SUPERUSER_ID, ids):
             msg_txt = ''
             if message.email_from:
                 msg_txt += _('%s wrote on %s: \n Subject: %s \n\t') % (message.email_from or '/', format_date_tz(message.date, tz), message.subject)
