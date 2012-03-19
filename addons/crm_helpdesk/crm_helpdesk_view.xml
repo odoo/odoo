@@ -19,7 +19,7 @@
         </record>
 
         <menuitem action="crm_helpdesk_categ_action" name="Categories"
-            id="menu_crm_case_helpdesk-act" parent="menu_config_helpdesk" />
+            id="menu_crm_case_helpdesk-act" parent="menu_config_helpdesk" groups="base.group_no_one"/>
 
         <!--  Helpdesk Support Form View -->
 
@@ -206,7 +206,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Helpdesk">
-                    <filter icon="terp-check" string="New" 
+                    <filter icon="terp-check" string="New"
                         name="current"
                         domain="[('state','=','draft')]"
                         help="New Helpdesk Request" />
@@ -226,7 +226,7 @@
                         help="Todays's Helpdesk Requests"
                         />
                     <filter icon="terp-go-week"
-                        string="7 Days" 
+                        string="7 Days"
                         help="Helpdesk requests during last 7 days"
                         domain="[('date','&lt;',current_date), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                         />
@@ -239,7 +239,7 @@
                             domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My Sales Team(s)" />
                     </field>
-                    <newline/>                         
+                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"
                             domain="[]" help="Partner"

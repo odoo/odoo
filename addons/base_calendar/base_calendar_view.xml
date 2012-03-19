@@ -215,7 +215,7 @@
         <!--        Menu for Alarms-->
 
          <menuitem id="menu_crm_meeting_avail_alarm"
-            groups="base.group_extended"
+            groups="base.group_no_one"
             action="base_calendar.action_res_alarm_view"
             parent="base.menu_calendar_configuration" />
 
@@ -350,9 +350,9 @@
                             <group col="4" colspan="4">
                                 <field name="rrule_type" string="Recurrency period"
                                    attrs="{'readonly':[('recurrent_uid','!=',False)]}" />
-                                <field name="interval" />                               
-                                                       
-                                
+                                <field name="interval" />
+
+
                                 <separator string="End of recurrency" colspan="4"/>
                                 <field name="end_type" />
                                 <label string=" " colspan="2" />
@@ -362,8 +362,8 @@
                                 <newline />
                                 <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')] }"/>
                                 <newline />
-                           
-                      
+
+
                             </group>
                             <group col="8" colspan="4" name="Select weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
                                 <separator string="Choose day where repeat the meeting" colspan="8"/>
