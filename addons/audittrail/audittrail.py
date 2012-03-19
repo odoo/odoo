@@ -498,7 +498,7 @@ class audittrail_objects_proxy(object_proxy):
         fct_src = super(audittrail_objects_proxy, self).exec_workflow_cr
         if self.check_rules(cr,uid,model,'workflow'):
             return self.log_fct(cr, uid, model, method, fct_src, *args, **kw)
-        return fct_src(cr, uid, model, method, *argsm **kw)
+        return fct_src(cr, uid, model, method, *args, **kw)
 
 audittrail_objects_proxy()
 
