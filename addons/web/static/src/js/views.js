@@ -1251,9 +1251,17 @@ session.web.xml_to_json = function(node) {
             return node.data;
         break;
         case 1:
+            var attrs = $(node).getAttributes();
+            _.each(['domain', 'filter_domain', 'context', 'default_get'], function(key) {
+                if (attrs[key]) {
+                    try {
+                        attrs[key] = JSON.parse(attrs[key]);
+                    } catch(e) { }
+                }
+            });
             return {
                 tag: node.tagName.toLowerCase(),
-                attrs: $(node).getAttributes(),
+                attrs: attrs,
                 children: _.map(node.childNodes, session.web.xml_to_json)
             }
     }
