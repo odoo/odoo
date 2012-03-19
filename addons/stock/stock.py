@@ -741,7 +741,7 @@ class stock_picking(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             if pick.state == 'draft':
-                wf_service.trg_validate(uid, 'stock.picking', pick.id,'button_confirm', cr)
+                wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_confirm', cr)
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
             if not move_ids:
                 raise osv.except_osv(_('Warning !'),_('Not enough stock, unable to reserve the products.'))

@@ -84,16 +84,16 @@ class stock_partial_picking(osv.osv_memory):
         separator_extended = ''
         for field in res['fields']:
             if type == 'in':
+                separator_extended = '''<separator colspan="4" string="Receive Products"/>'''
                 for node in nodes:
-                    separator_extended = '''<separator colspan="4" string="Receive Products"/>'''
                     node.set('string', '_Receive')
-            if type == 'internal':
+            elif type == 'internal':
+                separator_extended = '''<separator colspan="4" string="Move Products"/>'''
                 for node in nodes:
-                    separator_extended = '''<separator colspan="4" string="Move Products"/>'''
                     node.set('string', '_Move')
-            if type == 'out':
+            elif type == 'out':
+                separator_extended = '''<separator colspan="4" string="Deliver Products"/>'''
                 for node in nodes:
-                    separator_extended = '''<separator colspan="4" string="Deliver Products"/>'''
                     node.set('string', '_Deliver')
 
         res['arch'] = etree.tostring(doc)
