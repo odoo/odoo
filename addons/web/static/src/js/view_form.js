@@ -1501,11 +1501,13 @@ openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend(_.extend({}, 
     },
     validate: function() {
         this.invalid = false;
-        try {
-            var value = openerp.web.parse_value(this.$element.find('input').val(), this, '');
-            this.invalid = this.required && value === '';
-        } catch(e) {
-            this.invalid = true;
+        if (!this.get("effective_readonly")) {
+            try {
+                var value = openerp.web.parse_value(this.$element.find('input').val(), this, '');
+                this.invalid = this.required && value === '';
+            } catch(e) {
+                this.invalid = true;
+            }
         }
     },
     focus: function($element) {
