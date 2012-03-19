@@ -34,6 +34,9 @@ from service import security
 from tools.translate import _
 import openerp
 import openerp.exceptions
+from lxml import etree
+from lxml.builder import E
+
 
 _logger = logging.getLogger(__name__)
 
@@ -743,29 +746,27 @@ class groups_view(osv.osv):
         # and introduces the reified group fields
         view = self.get_user_groups_view(cr, uid, context)
         if view:
-            xml = u"""<?xml version="1.0" encoding="utf-8"?>
-<!-- GENERATED AUTOMATICALLY BY GROUPS -->
-<field name="groups_id" position="replace">
-%s
-%s
-</field>
-"""
+
             xml1, xml2 = [], []
-            xml1.append('<separator string="%s" colspan="4"/>' % _('Applications'))
+            xml1.append(E.separator(string=_('Application'), colspan="4"))
             for app, kind, gs in self.get_groups_by_application(cr, uid, context):
                 if kind == 'selection':
                     # application name with a selection field
                     field_name = name_selection_groups(map(int, gs))
-                    xml1.append('<field name="%s"/>' % field_name)
-                    xml1.append('<newline/>')
+                    xml1.append(E.field(name=field_name))
+                    xml1.append(E.newline())
                 else:
                     # application separator with boolean fields
                     app_name = app and app.name or _('Other')
-                    xml2.append('<separator string="%s" colspan="4"/>' % app_name)
+                    xml2.append(E.separator(string=app_name, colspan="4"))
                     for g in gs:
                         field_name = name_boolean_group(g.id)
-                        xml2.append('<field name="%s"/>' % field_name)
-            view.write({'arch': xml % ('\n'.join(xml1), '\n'.join(xml2))})
+                        xml2.append(E.field(name=field_name))
+
+            xml = E.field(*(xml1 + xml2), name="groups_id", position="replace")
+            xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
+            xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
+            view.write({'arch': xml_content})
         return True
 
     def get_user_groups_view(self, cr, uid, context=None):
