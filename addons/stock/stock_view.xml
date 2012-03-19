@@ -1210,7 +1210,7 @@
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
-                                <button name="action_assign" states="draft, confirmed" string="Check Availability" type="object" icon="gtk-find"/>
+                                <button name="action_assign" states="draft" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
                                 <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                                 <button name="%(report_picking_list)d" string="Print Reception" type="action" icon="gtk-print" states="done"/>
