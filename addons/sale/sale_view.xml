@@ -203,11 +203,11 @@
                                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                                 <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
                                 <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
-                                <button name="ship_recreate" states="shipping_except" string="Recreate Packing" icon="gtk-ok"/>
+                                <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order" icon="gtk-ok"/>
                                 <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
                                 <button name="action_quotation_sent" string="Send" type="object" icon="terp-mail-message-new" states="draft"/>
                                 <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
-                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+                                <button name="action_cancel_draft" states="sent,cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                                 <button name="print_quotation" string="Print Quotation" type="object" icon="gtk-print" states="draft"/>
                                 <button name="order_confirm" states="draft,sent" string="Confirm Order" icon="gtk-apply"/>
                                 <button name="action_view_invoice" string="Open Invoice" icon="gtk-go-forward" type="object" 

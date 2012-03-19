@@ -516,60 +516,65 @@ class sale_order(osv.osv):
     def action_view_invoice(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         inv_ids = []
+        result = {}
         for so in self.browse(cr, uid, ids, context=context):
             inv_ids+= [invoice.id for invoice in so.invoice_ids]
-    
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-        res_id = res and res[1] or False
-    
-        return {
-            'name': _('Customer Invoices'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': [res_id],
-            'res_model': 'account.invoice',
-            'context': "{'type':'out_invoice', 'journal_type': 'sale'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-            'res_id': inv_ids and inv_ids[0] or False,
-        }
+        if len(inv_ids)>1:
+            res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
+            result.update({
+                           'view_mode': 'tree,form',
+                           'res_id': inv_ids or False
+            })
+        else:
+            res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+            result.update({
+                           'view_mode': 'form',
+                           'res_id': inv_ids and inv_ids[0] or False,
+            })
+        res_id = res and res[1] or False,
+        result.update({
+                    'name': _('Cutomer Invoice'),
+                    'view_type': 'form',
+                    'view_id': [res_id],
+                    'res_model': 'account.invoice',
+                    'context': "{'type':'out_invoice', 'journal_type': 'sale'}",
+                    'type': 'ir.actions.act_window',
+                    'nodestroy': True,
+                    'target': 'current',
+        })
+        return result
+
     
     def action_view_delivery(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         pick_ids = []
+        result = {}
         for so in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in so.picking_ids]
         if len(pick_ids) > 1:
             res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_tree')
-            res_id = res and res[1] or False,
-            return {
-                'name': _('Delivery Order'),
-                'view_type': 'form',
-                'view_mode': 'tree',
-                'view_id': res_id,
-                'res_model': 'stock.picking',
-                'context': "{'type':'out'}",
-                'type': 'ir.actions.act_window',
-                'nodestroy': True,
-                'target': 'current',
-                'res_id': pick_ids or False,
-            }            
-        else:    
+            result.update({
+                           'view_mode': 'tree,form',
+                           'res_id': pick_ids or False
+            })
+        else:
             res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
-            res_id = res and res[1] or False,
-            return {
-                'name': _('Delivery Order'),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'view_id': res_id,
-                'res_model': 'stock.picking',
-                'context': "{'type':'out'}",
-                'type': 'ir.actions.act_window',
-                'nodestroy': True,
-                'target': 'current',
-                'res_id': pick_ids and pick_ids[0] or False,
-            }
+            result.update({
+                           'view_mode': 'form',
+                           'res_id': pick_ids and pick_ids[0] or False,
+            })
+        res_id = res and res[1] or False,
+        result.update({
+                    'name': _('Delivery Order'),
+                    'view_type': 'form',
+                    'view_id': res_id,
+                    'res_model': 'stock.picking',
+                    'context': "{'type':'out'}",
+                    'type': 'ir.actions.act_window',
+                    'nodestroy': True,
+                    'target': 'current',
+        })
+        return result
 
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
