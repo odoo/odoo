@@ -77,10 +77,6 @@
                             icon="gtk-go-forward" context="{'stage_type': 'lead'}" />
                     </group>
                     <field name="type" invisible="1"/>
-                    <label colspan="6"  string=""/>
-                    <button string="Send New Email"
-                            name="%(mail.action_email_compose_message_wizard)d"
-                            icon="terp-mail-message-new" type="action"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Lead">
@@ -279,7 +275,10 @@
                                             <field name="company_currency"/>
                                         </t>
                                     </td>
-                                    <td valign="top" width="22"><img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/></td>
+                                    <td valign="top" width="22">
+                                        <img t-att-src="kanban_image('res.users', 'avatar_mini', record.user_id.raw_value[0])"  t-att-title="record.user_id.value"
+                                        width="22" height="22" class="oe_kanban_gravatar"/>
+                                    </td>
                                 </tr>
                                 </table>
 
@@ -440,10 +439,6 @@
                     <field name="priority" string="Priority"/>
                     <newline/>
                     <field name="type" invisible="1"/>
-                    <label colspan="6"  string=""/>
-                    <button string="Send New Email"
-                        name="%(mail.action_email_compose_message_wizard)d"
-                        icon="terp-mail-message-new" type="action"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Opportunity">
