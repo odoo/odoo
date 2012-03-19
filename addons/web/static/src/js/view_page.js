@@ -68,12 +68,6 @@ openerp.web.page = function (openerp) {
     /** @namespace */
     openerp.web.page = {};
 
-    openerp.web.page.FieldBinaryImageReaonly = openerp.web.form.FieldBinaryImage.extend({
-        update_dom: function() {
-            this._super.apply(this, arguments);
-            this.$element.find('.oe-binary').hide();
-        }
-    });
     openerp.web.page.FieldBinaryFileReadonly = openerp.web.form.FieldBinary.extend({
         form_template: 'FieldURI.readonly',
         start: function() {
@@ -97,7 +91,6 @@ openerp.web.page = function (openerp) {
     });
     openerp.web.page.readonly = openerp.web.form.widgets.extend({
         'binary': 'openerp.web.page.FieldBinaryFileReadonly',
-        'image': 'openerp.web.page.FieldBinaryImageReaonly',
     });
     
 

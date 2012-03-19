@@ -3365,6 +3365,9 @@ openerp.web.form.FieldBinary = openerp.web.form.AbstractField.extend({
 
 openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
     template: 'FieldBinaryFile',
+    start: function() {
+        this._super();
+    },
     update_dom: function() {
         this._super.apply(this, arguments);
         this.$element.find('.oe-binary-file-set, .oe-binary-file-clear').toggle(!this.readonly);
@@ -3406,10 +3409,14 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.$image = this.$element.find('img.oe-binary-image');
-    },
-    update_dom: function() {
-        this._super.apply(this, arguments);
-        this.$element.find('.oe-binary').toggle(!this.readonly);
+        var check_visibility = function() {
+            if (!this.get("effective_readonly"))
+                this.$element.find('.oe-binary').show();
+            else
+                this.$element.find('.oe-binary').hide();
+        }
+        this.on("change:effective_readonly", this, check_visibility);
+        _.bind(check_visibility, this)();
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
