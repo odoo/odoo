@@ -1058,15 +1058,9 @@
         <record id="main_partner" model="res.partner">
             <field name="name">Your Company</field>
             <!-- Address and Company ID will be set later -->
-            <field name="address" eval="[]"/>
             <field name="company_id" eval="None"/>
             <field name="customer" eval="False"/>
             <field name="is_company" eval="True"/>
-        </record>
-        <record id="main_address" model="res.partner.address">
-            <field name="partner_id" ref="main_partner"/>
-            <field name="type">default</field>
-            <field name="company_id" eval="None"/>
         </record>
 
         <!-- Currencies -->
@@ -1101,9 +1095,6 @@
         </record>
 
         <record id="main_partner" model="res.partner">
-            <field name="company_id" ref="main_company"/>
-        </record>
-        <record id="main_address" model="res.partner.address">
             <field name="company_id" ref="main_company"/>
         </record>
         <record id="EUR" model="res.currency">
