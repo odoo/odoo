@@ -2851,9 +2851,9 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends open
         );
         var self = this;
         pop.on_select_elements.add(function(element_ids) {
-            _.each(element_ids, function(element_id) {
-                if(! _.detect(self.dataset.ids, function(x) {return x == element_id;})) {
-                    self.dataset.set_ids([].concat(self.dataset.ids, [element_id]));
+            _.each(element_ids, function(one_id) {
+                if(! _.detect(self.dataset.ids, function(x) {return x == one_id;})) {
+                    self.dataset.set_ids([].concat(self.dataset.ids, [one_id]));
                     self.m2m_field.on_ui_change();
                     self.reload_content();
                 }
@@ -2969,7 +2969,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                         'selectable': !self.options.disable_multiple_selection
                     }, self.options.list_view_options || {}));
             self.view_list.popup = self;
-            self.view_list.appendTo($("#" + self.element_id + "_view_list")).pipe(function() {
+            self.view_list.appendTo($(".oe-select-create-popup-view-list", self.$element)).pipe(function() {
                 self.view_list.do_show();
             }).pipe(function() {
                 self.searchview.do_search();
@@ -2991,7 +2991,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                 });
             });
         });
-        this.searchview.appendTo($("#" + this.element_id + "_search"));
+        this.searchview.appendTo($(".oe-select-create-popup-view-list", self.$element));
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
@@ -3040,7 +3040,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
-        this.view_form.appendTo(this.$element.find("#" + this.element_id + "_view_form"));
+        this.view_form.appendTo(this.$element.find(".oe-select-create-popup-view-form"));
         this.view_form.on_loaded.add_last(function() {
             var $buttons = self.view_form.$element.find(".oe_form_buttons");
             $buttons.html(QWeb.render("SelectCreatePopup.form.buttons", {widget:self}));
@@ -3151,7 +3151,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
-        this.view_form.appendTo(this.$element.find("#" + this.element_id + "_view_form"));
+        this.view_form.appendTo(this.$element.find(".oe-form-open-popup-form-view"));
         this.view_form.on_loaded.add_last(function() {
             var $buttons = self.view_form.$element.find(".oe_form_buttons");
             $buttons.html(QWeb.render("FormOpenPopup.form.buttons"));

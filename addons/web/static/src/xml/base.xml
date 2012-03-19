@@ -1459,20 +1459,20 @@
     </select>
 </t>
 <t t-name="SelectCreatePopup">
-    <div t-att-id="widget.element_id">
+    <div>
         <table style="width:100%">
             <tr style="width:100%">
                 <td style="width:100%">
-                    <div t-att-id="widget.element_id + '_search'" style="width:100%"></div>
+                    <div class="oe-select-create-popup-view-search" style="width:100%"></div>
                 </td>
             </tr>
             <tr style="width:100%">
                 <td style="width:100%">
-                    <div t-att-id="widget.element_id + '_view_list'" style="width:100%"></div>
+                    <div class="oe-select-create-popup-view-list" style="width:100%"></div>
                 </td>
             </tr>
         </table>
-        <div t-att-id="widget.element_id + '_view_form'" style="width:100%"></div>
+        <div class="oe-select-create-popup-view-form" style="width:100%"></div>
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
@@ -1490,8 +1490,8 @@
     <button type="button" class="oe_button oe_selectcreatepopup-form-close">Cancel</button>
 </t>
 <t t-name="FormOpenPopup">
-    <div t-att-id="widget.element_id">
-        <div t-att-id="widget.element_id + '_view_form'" style="width:100%"></div>
+    <div>
+        <div class="oe-form-open-popup-form-view" style="width:100%"></div>
     </div>
 </t>
 <t t-name="FormOpenPopup.form.buttons">
