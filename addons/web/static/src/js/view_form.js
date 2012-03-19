@@ -1713,7 +1713,11 @@ openerp.web.form.FieldDatetime = openerp.web.form.AbstractField.extend(_.extend(
         }
     },
     get_value: function() {
-        return this.datewidget.get_value();
+        if (!this.get("effective_readonly")) {
+            return this.datewidget.get_value();
+        } else {
+            return this.value;
+        }
     },
     validate: function() {
         this.invalid = this.get("effective_readonly") || !this.datewidget.is_valid(this.required);
