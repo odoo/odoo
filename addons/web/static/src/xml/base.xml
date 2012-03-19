@@ -869,7 +869,7 @@
 <t t-name="FormRenderingLabel">
     <label  t-att-for="for"
             t-att-title="help"
-            t-attf-class="oe_label#{help ? '_help' : ''} oe_align_#{align}">
+            t-attf-class="oe_form_label#{help ? '_help' : ''} oe_align_#{align}">
         <t t-esc="string"/>
         <span t-if="help">?</span>
         :
@@ -944,12 +944,11 @@
 </t>
 <t t-name="FieldChar">
     <t t-if="!widget.get('effective_readonly')">
-        <div t-attf-class="oe_form_field_#{type}">
-            <input t-att-type="widget.password ? 'password' : 'text'" size="1"
+        <div t-attf-class="oe_form_field_#{widget.type}">
+            <input t-att-type="widget.password ? 'password' : 'text'"
                 t-att-name="widget.name"
-                t-att-id="widget.node.attrs.id"
+                t-att-id="widget.id_for_label"
                 t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
-                style="width: 100%"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </div>
     </t>
@@ -962,9 +961,9 @@
 </t>
 <t t-name="FieldEmail">
     <t t-if="!widget.get('effective_readonly')">
-        <table t-attf-class="oe_form_field_#{type}" cellpadding="0" cellspacing="0" border="0" width="100%">
+        <table t-attf-class="oe_form_field_#{widget.type}" cellpadding="0" cellspacing="0" border="0">
         <tr>
-            <td width="100%">
+            <td>
                 <t t-call="FieldChar"/>
             </td>
             <td width="16">
@@ -983,9 +982,9 @@
 </t>
 <t t-name="FieldUrl">
     <t t-if="!widget.get('effective_readonly')">
-        <table t-attf-class="oe_form_field_#{type}" cellpadding="0" cellspacing="0" border="0" width="100%">
+        <table t-attf-class="oe_form_field_#{widget.type}" cellpadding="0" cellspacing="0" border="0">
         <tr>
-            <td width="100%">
+            <td>
                 <t t-call="FieldChar"/>
             </td>
             <td width="16">
@@ -1003,18 +1002,17 @@
     </t>
 </t>
 <t t-name="FieldText">
-    <div t-attf-class="oe_form_field_#{type}">
+    <div t-attf-class="oe_form_field_#{widget.type}">
         <textarea rows="6"
             t-att-name="widget.name"
             t-attf-class="field_#{widget.type}"
-            style="width: 100%"
         ></textarea><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
     </div>
 </t>
 <t t-name="web.datetimepicker">
-    <div class="oe_datepicker_root" t-attf-class="oe_form_field_#{type}">
-        <input type="text" size="1" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
-        <input type="text" size="1" style="width: 100%"
+    <div class="oe_datepicker_root" t-attf-class="oe_form_field_#{widget.type}">
+        <input type="text" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
+        <input type="text"
             t-att-name="widget.name"
             t-attf-class="oe_datepicker_master field_#{widget.type_of_date}"
         /><img class="oe_input_icon oe_datepicker_trigger" t-att-src='_s + "/web/static/src/img/ui/field_calendar.png"'
@@ -1023,11 +1021,10 @@
 </t>
 <t t-name="FieldSelection">
     <t t-if="!widget.get('effective_readonly')">
-        <div t-attf-class="oe_form_field_#{type}">
+        <div t-attf-class="oe_form_field_#{widget.type}">
             <select
                 t-att-name="widget.name"
-                t-att-id="widget.node.attrs.id"
-                style="width: 100%">
+                t-att-id="widget.id_for_label">
                     <t t-foreach="widget.values" t-as="option">
                         <option><t t-esc="option[1]"/></option>
                     </t>
@@ -1042,9 +1039,9 @@
     </t>
 </t>
 <t t-name="FieldMany2One">
-    <table t-attf-class="oe_form_field_#{type}" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <table t-attf-class="oe_form_field_#{widget.type}" cellpadding="0" cellspacing="0" border="0">
     <tr>
-        <td width="100%" valign="top">
+        <td valign="top">
             <t t-call="FieldChar"/>
             <span class="oe-m2o-drop-down-button">
                 <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
@@ -1079,10 +1076,10 @@
 <t t-name="FieldOne2Many">
 </t>
 <t t-name="FieldMany2Many">
-    <div t-attf-class="oe_form_field_#{type}" t-att-id="widget.list_id"></div>
+    <div t-attf-class="oe_form_field_#{widget.type}" t-att-id="widget.list_id"></div>
 </t>
 <t t-name="FieldReference">
-    <table t-attf-class="oe_form_field_#{type}" border="0" width="100%" cellpadding="0" cellspacing="0" class="oe_frame oe_forms">
+    <table t-attf-class="oe_form_field_#{widget.type}" border="0" cellpadding="0" cellspacing="0" class="oe_frame oe_forms">
     <tr>
         <td t-attf-class="oe_form_frame_cell oe_form_selection oe_form_view_reference_selection">
         </td>
@@ -1092,19 +1089,19 @@
     </table>
 </t>
 <t t-name="FieldBoolean">
-    <div t-attf-class="oe_form_field_#{type}">
+    <div t-attf-class="oe_form_field_#{widget.type}">
         <input type="checkbox"
             t-att-name="widget.name"
             t-attf-class="field_#{widget.type}"/>
     </div>
 </t>
 <t t-name="FieldProgressBar">
-    <div t-attf-class="oe_form_field_#{type}" t-opentag="true">
+    <div t-attf-class="oe_form_field_#{widget.type}" t-opentag="true">
         <span></span>
     </div>
 </t>
 <t t-name="FieldBinaryImage">
-    <table t-attf-class="oe_form_field_#{type}" cellpadding="0" cellspacing="0" border="0">
+    <table t-attf-class="oe_form_field_#{widget.type}" cellpadding="0" cellspacing="0" border="0">
     <tr>
         <td align="center">
             <img t-att-src='_s + "/web/static/src/img/placeholder.png"' class="oe-binary-image"
@@ -1153,13 +1150,13 @@
     </table>
 </t>
 <t t-name="FieldBinaryFile">
-    <table t-attf-class="oe_form_field_#{type}" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <table t-attf-class="oe_form_field_#{widget.type}" cellpadding="0" cellspacing="0" border="0">
     <tr>
-        <td width="100%">
+        <td>
             <input type="text" size="1" readonly="readonly"
                 t-att-name="widget.name"
                 t-att-id="widget.element_id + '_field'"
-                t-attf-class="field_#{widget.type}" style="width: 100%"
+                t-attf-class="field_#{widget.type}"
             />
         </td>
         <td class="oe-binary" nowrap="true">
@@ -1203,7 +1200,7 @@
     </table>
 </t>
 <t t-name="WidgetButton">
-    <div t-attf-class="oe_form_field_#{type}">
+    <div t-attf-class="oe_form_field_#{widget.type}">
         <button type="button" class="oe_button">
             <img t-if="widget.node.attrs.icon" t-att-src="_s + '/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
             <span t-if="widget.string"><t t-esc="widget.string"/></span>

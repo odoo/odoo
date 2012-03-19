@@ -885,7 +885,17 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         $separator.before($new_separator).remove();
     },
     process_label: function($label, $form) {
-        var $new_label = $(QWeb.render('FormRenderingLabel', $label.getAttributes()));
+        var dict = $label.getAttributes();
+        var align = parseFloat(dict.align);
+        if (isNaN(align) || align === 1) {
+            align = 'right';
+        } else if (align === 0) {
+            align = 'left';
+        } else {
+            align = 'center';
+        }
+        dict.align = align;
+        var $new_label = $(QWeb.render('FormRenderingLabel', dict));
         $label.before($new_label).remove();
     }
 });
@@ -1343,6 +1353,16 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
         this.view.on("change:readonly", this, test_effective_readonly);
         this.view.on("change:force_readonly", this, test_effective_readonly);
         _.bind(test_effective_readonly, this)();
+
+        if (this.view) {
+            this.$label = this.view.$element.find('label[for="' + this.name + '"]');
+            if (this.$label.length) {
+                this.id_for_label = _.uniqueId(['field', this.type, this.name, ''].join('_'));
+                this.$label.attr('for', this.id_for_label);
+            } else {
+                this.$label;
+            }
+        }
     },
     start: function() {
         this._super.apply(this, arguments);
