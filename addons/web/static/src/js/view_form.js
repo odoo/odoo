@@ -3369,6 +3369,7 @@ openerp.web.form.FieldBinary = openerp.web.form.AbstractField.extend(_.extend({}
 openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
     template: 'FieldBinaryFile',
     bind_events: function() {
+        this._super();
         if (this.get("effective_readonly")) {
             var self = this;
             this.$element.find('a').click(function() {
@@ -3424,6 +3425,7 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
 openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
     bind_events: function() {
+        this._super();
         this.$image = this.$element.find('img.oe-binary-image');
         if (!this.get("effective_readonly"))
             this.$element.find('.oe-binary').show();
