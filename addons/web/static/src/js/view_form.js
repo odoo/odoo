@@ -1676,36 +1676,50 @@ openerp.web.DateWidget = openerp.web.DateTimeWidget.extend({
     type_of_date: "date"
 });
 
-openerp.web.form.FieldDatetime = openerp.web.form.AbstractField.extend({
+openerp.web.form.FieldDatetime = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
     template: "EmptyComponent",
     build_widget: function() {
         return new openerp.web.DateTimeWidget(this);
     },
     start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
-        this.datewidget = this.build_widget();
-        this.datewidget.on_change.add_last(this.on_ui_change);
-        this.datewidget.appendTo(this.$element);
+        this._super();
+        openerp.web.form.ReinitializeFieldMixin.start.call(this);
+    },
+    renderElement: function() {
+        if (this.datewidget) {
+            this.datewidget.stop();
+            this.datewidget = undefined;
+        }
+        this._super();
+    },
+    bind_events: function() {
+        if (!this.get("effective_readonly")) {
+            this.datewidget = this.build_widget();
+            this.datewidget.on_change.add_last(this.on_ui_change);
+            this.datewidget.appendTo(this.$element);
+        }
     },
     set_value: function(value) {
         this._super(value);
-        this.datewidget.set_value(value);
+        this.render_value();
+    },
+    render_value: function() {
+        if (!this.get("effective_readonly")) {
+            this.datewidget.set_value(this.value);
+        } else {
+            this.$element.text(openerp.web.format_value(this.value, this, ''));
+        }
     },
     get_value: function() {
         return this.datewidget.get_value();
     },
-    update_dom: function() {
-        this._super.apply(this, arguments);
-        this.datewidget.set_readonly(this.readonly);
-    },
     validate: function() {
-        this.invalid = !this.datewidget.is_valid(this.required);
+        this.invalid = this.get("effective_readonly") || !this.datewidget.is_valid(this.required);
     },
     focus: function($element) {
         this._super($element || this.datewidget.$input);
     }
-});
+}));
 
 openerp.web.form.FieldDate = openerp.web.form.FieldDatetime.extend({
     build_widget: function() {
