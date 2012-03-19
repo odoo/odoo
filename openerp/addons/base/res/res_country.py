@@ -55,14 +55,18 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
             args=[]
         if not context:
             context={}
-        ids = False
+        ids = []
         if len(name) == 2:
             ids = self.search(cr, user, [('code', 'ilike', name)] + args,
                     limit=limit, context=context)
-        if not ids:
-            ids = self.search(cr, user, [('name', operator, name)] + args,
-                    limit=limit, context=context)
-        return self.name_get(cr, user, ids, context)
+
+        search_domain = [('name', operator, name)]
+        if ids:
+            search_domain.append(('id', 'not in', ids))
+        ids.extend(self.search(cr, user, search_domain + args,
+                               limit=limit, context=context))
+        countries = self.name_get(cr, user, ids, context)
+        return sorted(countries, key=lambda c: ids.index(c[0]))
     _order='name'
 
     def create(self, cursor, user, vals, context=None):
@@ -96,12 +100,18 @@ class CountryState(osv.osv):
             args = []
         if not context:
             context = {}
-        ids = self.search(cr, user, [('code', 'ilike', name)] + args, limit=limit,
-                context=context)
-        if not ids:
-            ids = self.search(cr, user, [('name', operator, name)] + args,
+        ids = []
+        if len(name) == 2:
+            ids = self.search(cr, user, [('code', 'ilike', name)] + args,
                     limit=limit, context=context)
-        return self.name_get(cr, user, ids, context)
+
+        search_domain = [('name', operator, name)]
+        if ids:
+            search_domain.append(('id', 'not in', ids))
+        ids.extend(self.search(cr, user, search_domain + args,
+                               limit=limit, context=context))
+        states = self.name_get(cr, user, ids, context)
+        return sorted(states, key=lambda c: ids.index(c[0]))
 
     _order = 'code'
 CountryState()
