@@ -1727,25 +1727,30 @@ openerp.web.form.FieldDate = openerp.web.form.FieldDatetime.extend({
     }
 });
 
-openerp.web.form.FieldText = openerp.web.form.AbstractField.extend({
+openerp.web.form.FieldText = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
     template: 'FieldText',
-    start: function() {
-        this._super.apply(this, arguments);
-        this.$textarea = this.$element.find('textarea').change(this.on_ui_change);
-        this.resized = false;
+    bind_events: function() {
+        this.$textarea = undefined;
+        if (!this.get("effective_readonly")) {
+            this.$textarea = this.$element.find('textarea').change(this.on_ui_change);
+            this.resized = false;
+        }
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        var show_value = openerp.web.format_value(value, this, '');
-        this.$textarea.val(show_value);
-        if (!this.resized && this.view.options.resize_textareas) {
-            this.do_resize(this.view.options.resize_textareas);
-            this.resized = true;
-        }
+        this.render_value();
     },
-    update_dom: function() {
-        this._super.apply(this, arguments);
-        this.$textarea.prop('readonly', this.readonly);
+    render_value: function() {
+        var show_value = openerp.web.format_value(this.value, this, '');
+        if (!this.get("effective_readonly")) {
+            this.$textarea.val(show_value);
+            if (!this.resized && this.view.options.resize_textareas) {
+                this.do_resize(this.view.options.resize_textareas);
+                this.resized = true;
+            }
+        } else {
+            this.$element.text(show_value);
+        }
     },
     set_value_from_ui: function() {
         this.value = openerp.web.parse_value(this.$textarea.val(), this);
@@ -1753,11 +1758,13 @@ openerp.web.form.FieldText = openerp.web.form.AbstractField.extend({
     },
     validate: function() {
         this.invalid = false;
-        try {
-            var value = openerp.web.parse_value(this.$textarea.val(), this, '');
-            this.invalid = this.required && value === '';
-        } catch(e) {
-            this.invalid = true;
+        if (!this.get("effective_readonly")) {
+            try {
+                var value = openerp.web.parse_value(this.$textarea.val(), this, '');
+                this.invalid = this.required && value === '';
+            } catch(e) {
+                this.invalid = true;
+            }
         }
     },
     focus: function($element) {
@@ -1786,7 +1793,7 @@ openerp.web.form.FieldText = openerp.web.form.AbstractField.extend({
     reset: function() {
         this.resized = false;
     }
-});
+}));
 
 openerp.web.form.FieldBoolean = openerp.web.form.AbstractField.extend({
     template: 'FieldBoolean',
