@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-26 20:11+0000\n"
+"PO-Revision-Date: 2012-03-16 06:50+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-27 05:56+0000\n"
-"X-Generator: Launchpad (build 14868)\n"
+"X-Launchpad-Export-Date: 2012-03-17 05:32+0000\n"
+"X-Generator: Launchpad (build 14951)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -44,7 +44,7 @@ msgstr "Locație închisă dacă este fixă"
 #. module: stock
 #: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
 msgid "Put in a new pack"
-msgstr "Puneţi într-un ambalaj nou"
+msgstr "Puneți într-un ambalaj nou"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_traceability.py:54
@@ -77,7 +77,7 @@ msgstr "Numărul reviziei"
 #. module: stock
 #: view:stock.move:0
 msgid "Orders processed Today or planned for Today"
-msgstr ""
+msgstr "Comenzi procesate azi sau planificate pentru azi"
 
 #. module: stock
 #: view:stock.partial.move.line:0 view:stock.partial.picking:0
@@ -177,7 +177,7 @@ msgstr "Zi"
 #: view:stock.move:0 field:stock.move.split,product_uom:0 view:stock.picking:0
 #: view:stock.production.lot:0
 msgid "UoM"
-msgstr "UdeM (Unitatea de masură)"
+msgstr "UM"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
@@ -305,7 +305,7 @@ msgstr ""
 #. module: stock
 #: view:stock.partial.move:0 view:stock.partial.picking:0
 msgid "_Validate"
-msgstr "_Validate"
+msgstr "_Validează"
 
 #. module: stock
 #: code:addons/stock/stock.py:1149
@@ -1021,7 +1021,7 @@ msgstr "Luna-1"
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
-"Dacă nu bifați campul activ, puteți ascunde o locație fără a o șterge."
+"Dacă  debifați câmpul activ, puteți ascunde o locație fără a o șterge."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:44
@@ -1195,7 +1195,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Stock moves that are Available (Ready to process)"
-msgstr ""
+msgstr "Mișcările de stoc sunt disponibile (Gata de procesare)"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1567,8 +1567,7 @@ msgstr "Rafturi (Y)"
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM without deleting it."
 msgstr ""
-"Lăsând câmpul activ nebifat, puteți ascunde un INCOTERM fără a-l șterge.\r\n"
-"."
+"Lăsând câmpul activ nebifat, puteți ascunde un INCOTERM fără să-l ștergeți."
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0 field:stock.picking,date:0
@@ -1597,12 +1596,12 @@ msgid ""
 "* Done: has been processed, can't be modified or cancelled anymore\n"
 "* Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
-"* Ciorna: inca neconfirmat si nu va fi programat pana cand nu va fi "
+"* Ciornă: încă neconfirmat și nu va fi programat până când nu va fi "
 "confirmat\n"
-"* Confirmat: inca in asteptarea disponibilitatii produselor\n"
-"* Disponibil: produse rezervate, care mai asteapta doar confirmarea.\n"
-"* In asteptare: in asteptarea unei miscari pentru a continua inainte de a "
-"deveni disponibil automat (de exemplu in fluxurile Facut-la-Comanda)\n"
+"* Confirmat: încă în așteptarea disponibilității produselor\n"
+"* Disponibil: produse rezervate, care mai așteaptă doar confirmarea.\n"
+"* În așteptare: în așteptarea altei mișcări de procesat pentru  a deveni "
+"automat disponibil  (de exemplu în fluxurile Facut-la-Comanda)\n"
 "* Efectuat: a fost procesat, nu mai poate fi modificat sau anulat\n"
 "* Anulat: a fost anulat, nu mai poate fi confirmat"
 
@@ -1686,8 +1685,8 @@ msgid ""
 "If this picking was split this field links to the picking that contains the "
 "other part that has been processed already."
 msgstr ""
-"Daca aceasta preluare a fost impartita, acest camp face legatura cu "
-"preluarea care contine cealalta parte care a fost deja procesata."
+"Dacă această preluare a fost împărțită, acest câmp face legatura cu "
+"preluarea care conține cealaltă parte care a fost deja procesată."
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
@@ -2187,8 +2186,8 @@ msgid ""
 "Move date: scheduled date until move is done, then date of actual move "
 "processing"
 msgstr ""
-"Data miscării: data planificată pana cand miscarea este efectuată, apoi data "
-"procesarii miscarii actuale."
+"Data mișcării: data planificată până când mișcarea este efectuată, apoi data "
+"procesării mișcării actuale."
 
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
@@ -2616,7 +2615,7 @@ msgstr "ID-ul activ nu este setat in context"
 #. module: stock
 #: view:stock.picking:0
 msgid "Force Availability"
-msgstr "Fortare disponibilitate"
+msgstr "Forțare disponibilitate"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_scrap view:stock.move.scrap:0
@@ -2671,7 +2670,7 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a pack without deleting it."
 msgstr ""
-"Lasand campul activ nebifat, puteti ascunde un pachet fara sa-l stergeti."
+"Lăsând câmpul activ nebifat, puteți ascunde un pachet fără să-l stergeti."
 
 #. module: stock
 #: view:stock.inventory.merge:0
@@ -2873,7 +2872,7 @@ msgstr "Catre"
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
 msgid "Process"
-msgstr "Proces"
+msgstr "Procesare"
 
 #. module: stock
 #: field:stock.production.lot.revision,name:0
@@ -3020,7 +3019,7 @@ msgstr "Va rugam introduceti Cantitatea corecta !"
 #. module: stock
 #: field:stock.move,product_uos:0
 msgid "Product UOS"
-msgstr "UdV produs"
+msgstr "UOS produs"
 
 #. module: stock
 #: field:stock.location,posz:0
@@ -3409,16 +3408,16 @@ msgid ""
 "* Fixed Location: The chained location is taken from the next field: Chained "
 "Location if Fixed."
 msgstr ""
-"Determina daca aceasta locatie este legata de alta locatie, adica daca "
-"exista vreun produs intrat in acea locatie\n"
-"ar trebui sa mearga in locatia in lant. Aceasta este determinata in functie "
+"Determină dacă această locație este legată de alta locație, adică dacă "
+"există vreun produs intrat în acea locație\n"
+"ar trebui să meargă în locația în lanț. Această este determinată în funcție "
 "de tipul ei :\n"
-"* Nici unul: Nici o inlantuire\n"
-"* Client: Locatia in lant va fi luata din campul Locatiei clientului in "
+"* Nici unul: Nici o înlănțuire\n"
+"* Client: Locația în lanț va fi luată din câmpul Locației clientului în "
 "formularul Partenerului al Partenerului care este specificat in lista de "
 "ridicare a produselor intrate.\n"
-"* Locatia fixa: Locatia fixa este luata din campul urmator: Locatia "
-"inlantuita daca este Fixa."
+"* Locația fixă: Locația fixă este luată din câmpul următor: Locația "
+"înlănțuită dacă este Fixă."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
@@ -3521,7 +3520,7 @@ msgstr "Cantitatea totala care iese"
 #. module: stock
 #: selection:stock.move,state:0 selection:stock.picking,state:0
 msgid "New"
-msgstr ""
+msgstr "Nou"
 
 #. module: stock
 #: help:stock.partial.move.line,cost:0 help:stock.partial.picking.line,cost:0
@@ -3623,7 +3622,7 @@ msgstr "Clienţi"
 #. module: stock
 #: selection:stock.move,state:0 selection:stock.picking,state:0
 msgid "Waiting Availability"
-msgstr ""
+msgstr "Așteaptă disponibilitate"
 
 #. module: stock
 #: code:addons/stock/stock.py:1347
@@ -3714,15 +3713,15 @@ msgid ""
 "Technical field used to record the currency chosen by the user during a "
 "picking confirmation (when average price costing method is used)"
 msgstr ""
-"Camp tehnic folosit pentru a inregistra moneda aleasa de catre utilizator in "
-"timpul confirmarii ridicarii (atunci cand este folosita metoda de estimare a "
-"pretului mediu)"
+"Câmp tehnic folosit pentru a înregistra moneda aleasă de către utilizator în "
+"timpul confirmării ridicării (atunci cand este folosită metodă de estimare a "
+"prețului mediu)"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:53
 #, python-format
 msgid "Stock Inventory is already Validated."
-msgstr "Inventarul Stocului este deja Validat."
+msgstr "Inventarul stocului este deja validat."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
@@ -3814,7 +3813,7 @@ msgstr ""
 #: code:addons/stock/stock.py:1346
 #, python-format
 msgid "is ready to process."
-msgstr "este gata pentru procesare."
+msgstr "este gata de procesare."
 
 #. module: stock
 #: help:stock.picking,origin:0
@@ -4223,7 +4222,7 @@ msgstr "Locaţii fizice"
 #. module: stock
 #: view:stock.picking:0 selection:stock.picking,state:0
 msgid "Ready to Process"
-msgstr ""
+msgstr "Gata de procesare"
 
 #. module: stock
 #: help:stock.location,posx:0 help:stock.location,posy:0

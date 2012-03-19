@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-03-09 14:44+0000\n"
-"Last-Translator: Marcel van der Boom (HS-Development BV) <Unknown>\n"
+"PO-Revision-Date: 2012-03-16 11:20+0000\n"
+"Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-10 05:27+0000\n"
-"X-Generator: Launchpad (build 14914)\n"
+"X-Launchpad-Export-Date: 2012-03-17 05:32+0000\n"
+"X-Generator: Launchpad (build 14951)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -69,7 +69,7 @@ msgstr "Geweigerd"
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
 msgid "Category of Employee"
-msgstr "Medewerker categorie"
+msgstr "Werknemer categorie"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -89,7 +89,7 @@ msgstr "Resterende dagen"
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee"
-msgstr "Per medewerker"
+msgstr "Per werknemer"
 
 #. module: hr_holidays
 #: help:hr.holidays,employee_id:0
@@ -98,7 +98,7 @@ msgid ""
 "for every employee"
 msgstr ""
 "De verlof manager kan dit veld leeg laten als de aanvraag/reservering voor "
-"elke medewerker is"
+"elke werknemer is"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -130,9 +130,8 @@ msgid ""
 msgstr ""
 "Verlofaanvragen kunnen worden ingediend door medewerkers en goedgekeurd door "
 "hun managers. Als een verlofaanvraag is goedgekeurd, verschijnt het "
-"automatisch in de agenda van de medewerker. U kunt verschillende "
-"verlofvormen definiëren (betaald verlof, ziek, etc.) en verlof per vorm "
-"beheren."
+"automatisch in de agenda van de werknemer. U kunt verschillende verlofvormen "
+"definiëren (betaald verlof, ziek, etc.) en verlof per vorm beheren."
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -161,7 +160,7 @@ msgstr "Weigeren"
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
 msgstr ""
-"U kunt geen verlof goedkeuren voor medewerker %s: onvoldoende resterende "
+"U kunt geen verlof goedkeuren voor werknemer %s: onvoldoende resterende "
 "dagen (%s)."
 
 #. module: hr_holidays
@@ -249,7 +248,7 @@ msgstr "Kleur in overzicht"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Holidays Summary Report By Employee"
-msgstr "HR Vakantie samenvatting overzicht per medewerker"
+msgstr "HR Vakantie samenvatting overzicht per werknemer"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id:0
@@ -330,7 +329,7 @@ msgstr "Totaal vakantiedagen per soort"
 #: field:hr.holidays.remaining.leaves.user,name:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
-msgstr "Medewerker"
+msgstr "Werknemer"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
@@ -409,7 +408,7 @@ msgstr "Verlofsoort zoeken"
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "You have to select an employee or a category"
-msgstr "U moet een medewerker of categorie selecteren"
+msgstr "U moet een werknemer of categorie selecteren"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
@@ -428,7 +427,7 @@ msgstr "Wacht op goedkeuring"
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,emp:0
 msgid "Employee(s)"
-msgstr "Medewerkers"
+msgstr "Werknemer(s)"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -475,7 +474,7 @@ msgstr "Toestaan om de limiet te overschrijden"
 #: view:hr.holidays.summary.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
 msgid "Employee's Holidays"
-msgstr "Medewerkers vakantie"
+msgstr "Werknemer vakantie"
 
 #. module: hr_holidays
 #: view:hr.holidays:0 field:hr.holidays,category_id:0
@@ -494,7 +493,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:board.board:0
 msgid "All Employee Leaves"
-msgstr "Alle medewerkers verlof"
+msgstr "Alle werknemer verlof"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -717,7 +716,7 @@ msgstr "Mijn verlof"
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee Category"
-msgstr "Per medewerker categorie"
+msgstr "Per werknemer categorie"
 
 #. module: hr_holidays
 #: view:hr.holidays:0 selection:hr.holidays,type:0
@@ -745,9 +744,8 @@ msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee "
 "Category: Allocation/Request for group of employees in category"
 msgstr ""
-"Per medewerker: Reservering/aanvraag voor individuele medewerker. Per "
-"medewerker categorie: Reservering/aanvraag voor groep medewerkers in "
-"categorie"
+"Per werknemer : Reservering/aanvraag voor individuele medewerker. Per "
+"werknemer categorie: Reservering/aanvraag voor groep werknemers in categorie"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:199
@@ -796,7 +794,7 @@ msgid ""
 "If you tick this checkbox, the system will allow, for this section, the "
 "employees to take more leaves than the available ones."
 msgstr ""
-"Als u dit aanvinkt laat het systeem toe dat de medewerkers voor deze sectie "
+"Als u dit aanvinkt laat het systeem toe dat de werknemers voor deze sectie "
 "meer verlof opnemen dan er beschikbaar is."
 
 #. module: hr_holidays

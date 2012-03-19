@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: Aline (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-03-16 18:37+0000\n"
+"Last-Translator: GaCriv <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 06:32+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-03-17 05:32+0000\n"
+"X-Generator: Launchpad (build 14951)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -68,7 +68,7 @@ msgstr "Ligne de tarif"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "Le partenaire qui assure la livraison"
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -88,7 +88,7 @@ msgstr "Colisages à facturer"
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "Tarification avancée"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
@@ -152,7 +152,7 @@ msgstr "Méthode de livraison"
 #: code:addons/delivery/delivery.py:213
 #, python-format
 msgid "No price available!"
-msgstr ""
+msgstr "Aucun prix disponible !"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -206,6 +206,9 @@ msgid ""
 "Define your delivery methods and their pricing. The delivery costs can be "
 "added on the sale order form or in the invoice, based on the delivery orders."
 msgstr ""
+"Définissez vos méthodes de livraison et de leur prix. Les frais de livraison "
+"peuvent être ajoutés sur le bon de commande ou sur la facture, basés sur les "
+"bons de livraison."
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -215,7 +218,7 @@ msgstr "Lot"
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "Transporteur"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -227,6 +230,8 @@ msgstr "Tarifs de livraison"
 #, python-format
 msgid "No line matched this product or order in the choosed delivery grid."
 msgstr ""
+"Pas de ligne ou de commande associée à ce produit dans la grille de "
+"livraison choisie."
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -264,6 +269,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"Montant de la commande pour bénéficier de la livraison gratuite, exprimé "
+"dans la devise de la société"
 
 #. module: delivery
 #: code:addons/delivery/stock.py:89
@@ -294,12 +301,12 @@ msgstr "Code postal destination"
 #: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "Default price"
-msgstr ""
+msgstr "Prix par défaut"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_define_delivery_steps_wizard
 msgid "delivery.define.delivery.steps.wizard"
-msgstr ""
+msgstr "delivery.define.delivery.steps.wizard"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
@@ -341,12 +348,15 @@ msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
 msgstr ""
+"Cochez cette case si vous souhaitez gérer les frais de livraison dépendants "
+"de la destination, du poids, du montant de la commande, etc"
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
+"Gardez vide si le prix dépend de la tarification avancée par destination"
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -374,7 +384,7 @@ msgstr "La commande n'est pas à l'état de brouillon"
 #. module: delivery
 #: view:delivery.define.delivery.steps.wizard:0
 msgid "Choose Your Default Picking Policy"
-msgstr ""
+msgstr "Choisissez votre politique de livraison par défaut"
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -444,12 +454,12 @@ msgstr "Quantité"
 #: view:delivery.define.delivery.steps.wizard:0
 #: model:ir.actions.act_window,name:delivery.action_define_delivery_steps
 msgid "Setup Your Picking Policy"
-msgstr ""
+msgstr "Paramétrer votre politique de livraison"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form1
 msgid "Define Delivery Methods"
-msgstr ""
+msgstr "Paramétrer les méthodes de livraison"
 
 #. module: delivery
 #: help:delivery.carrier,free_if_more_than:0
@@ -457,6 +467,8 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
+"Si la commande dépasse un certain montant, le client peut bénéficier d'une "
+"livraison gratuite"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
@@ -475,7 +487,7 @@ msgstr "Annuler"
 #: code:addons/delivery/delivery.py:130
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "Gratuit si plus de %.2f"
 
 #. module: delivery
 #: sql_constraint:sale.order:0
@@ -489,6 +501,9 @@ msgid ""
 "reinvoice the delivery costs when you are doing invoicing based on delivery "
 "orders"
 msgstr ""
+"Définir les méthodes de livraison que vous utilisez et leur prix afin de "
+"refacturer les frais de livraison quand vous faites de la facturation basée "
+"sur des ordres de livraison"
 
 #. module: delivery
 #: view:res.partner:0
@@ -508,7 +523,7 @@ msgstr "Vous devez affecter un lot de fabrication à ce produit."
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If More Than"
-msgstr ""
+msgstr "Gratuit si plus élevé que"
 
 #. module: delivery
 #: view:delivery.sale.order:0
@@ -580,7 +595,7 @@ msgstr "Le transporteur %s (id: %d) n'a pas de tarif de livraison !"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr ""
+msgstr "Information sur tarification"
 
 #. module: delivery
 #: selection:delivery.define.delivery.steps.wizard,picking_policy:0
@@ -590,7 +605,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "Tarification avancée en fonction de la destination"
 
 #. module: delivery
 #: view:delivery.carrier:0

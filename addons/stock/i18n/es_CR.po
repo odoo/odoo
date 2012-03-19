@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-03-17 18:09+0000\n"
+"Last-Translator: Carlos Vásquez (CLEARCORP) "
+"<carlos.vasquez@clearcorp.co.cr>\n"
 "Language-Team: Spanish (Costa Rica) <es_CR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 07:09+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-03-18 05:07+0000\n"
+"X-Generator: Launchpad (build 14951)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -25,7 +26,7 @@ msgstr "Lotes de seguimiento en salida"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
 msgid "Stock move Split lines"
-msgstr ""
+msgstr "Stock se líneas se mueven en división"
 
 #. module: stock
 #: help:product.category,property_stock_account_input_categ:0
@@ -36,6 +37,12 @@ msgid ""
 "value for all products in this category. It can also directly be set on each "
 "product"
 msgstr ""
+"Cuando se realiza en tiempo real de valuación de inventarios, artículos de "
+"revistas de contraparte para todos los movimientos de stock entrantes serán "
+"publicados en esta cuenta, a menos que exista un conjunto de valoración "
+"específica de la cuenta en la ubicación de origen. Este es el valor por "
+"defecto para todos los productos de esta categoría. También puede "
+"directamente establecer en cada producto"
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -78,7 +85,7 @@ msgstr "Número de revisión"
 #. module: stock
 #: view:stock.move:0
 msgid "Orders processed Today or planned for Today"
-msgstr ""
+msgstr "Hoy en día los pedidos procesados ​​o previstas para hoy"
 
 #. module: stock
 #: view:stock.partial.move.line:0 view:stock.partial.picking:0
@@ -90,7 +97,7 @@ msgstr "Movimientos productos"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
-msgstr ""
+msgstr "Categorías UdM"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_move_report
@@ -130,7 +137,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_change_product_qty.py:87
 #, python-format
 msgid "Quantity cannot be negative."
-msgstr ""
+msgstr "Cantidad no puede ser negativa."
 
 #. module: stock
 #: view:stock.picking:0
@@ -162,7 +169,7 @@ msgid ""
 "This is the list of all delivery orders that have to be prepared, according "
 "to your different sales orders and your logistics rules."
 msgstr ""
-"Esta es la lista de albaranes de salida que deben ser preparados, en función "
+"Esta es la lista de órdenes de entrega que deben ser preparados, en función "
 "de sus pedidos de venta y sus reglas logísticas."
 
 #. module: stock
@@ -192,13 +199,13 @@ msgstr "Diario de inventario"
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
 msgid "Current month"
-msgstr ""
+msgstr "Mes actual"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:222
 #, python-format
 msgid "Unable to assign all lots to this move!"
-msgstr ""
+msgstr "¡No se puede asignar todos los lotes de este movimiento!"
 
 #. module: stock
 #: code:addons/stock/stock.py:2516
@@ -221,18 +228,18 @@ msgstr "¡No puede eliminar ningún registro!"
 #. module: stock
 #: view:stock.picking:0
 msgid "Delivery orders to invoice"
-msgstr ""
+msgstr "Órdenes de entrega de la factura"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Assigned Delivery Orders"
-msgstr ""
+msgstr "Asignación de órdenes de entrega"
 
 #. module: stock
 #: field:stock.partial.move.line,update_cost:0
 #: field:stock.partial.picking.line,update_cost:0
 msgid "Need cost update"
-msgstr ""
+msgstr "Necesita actualización de costos"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_splitinto.py:49
@@ -265,7 +272,7 @@ msgstr "Origen"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_stock_incoming_product_delay
 msgid "Incoming Products"
-msgstr "Albaranes de entrada"
+msgstr "Productos entrantes"
 
 #. module: stock
 #: view:report.stock.lines.date:0
@@ -303,7 +310,7 @@ msgstr ""
 #. module: stock
 #: view:stock.partial.move:0 view:stock.partial.picking:0
 msgid "_Validate"
-msgstr ""
+msgstr "_Validar"
 
 #. module: stock
 #: code:addons/stock/stock.py:1149
@@ -344,6 +351,9 @@ msgid ""
 "Can not create Journal Entry, Input Account defined on this product and "
 "Valuation account on category of this product are same."
 msgstr ""
+"No se puede crear entrada del diario, cuenta de entrada se define en esta "
+"cuenta los productos y Valoración de la categoría de este producto son los "
+"mismos."
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
@@ -353,7 +363,7 @@ msgstr "No facturación"
 #. module: stock
 #: view:stock.move:0
 msgid "Stock moves that have been processed"
-msgstr ""
+msgstr "Movimientos de stock que se han procesado"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -375,7 +385,7 @@ msgstr "Movimientos para este paquete"
 #. module: stock
 #: view:stock.picking:0
 msgid "Incoming Shipments Available"
-msgstr ""
+msgstr "Envíos entrantes disponibles"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -473,7 +483,7 @@ msgstr "Dividir en"
 #. module: stock
 #: view:stock.location:0
 msgid "Internal Locations"
-msgstr ""
+msgstr "Ubicaciones Internas"
 
 #. module: stock
 #: field:stock.move,price_currency_id:0
@@ -549,7 +559,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree6
 #: field:stock.picking,move_lines:0
 msgid "Internal Moves"
-msgstr "Albaranes internos"
+msgstr "Movimientos internos"
 
 #. module: stock
 #: field:stock.move,location_dest_id:0
@@ -559,7 +569,7 @@ msgstr "Ubicación destino"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move_line
 msgid "stock.partial.move.line"
-msgstr ""
+msgstr "stock.partial.move.line"
 
 #. module: stock
 #: code:addons/stock/stock.py:760
@@ -615,7 +625,7 @@ msgstr "Ubicación / Producto"
 #. module: stock
 #: field:stock.move,address_id:0
 msgid "Destination Address "
-msgstr ""
+msgstr "Dirección de destino "
 
 #. module: stock
 #: code:addons/stock/stock.py:1333
@@ -663,6 +673,12 @@ msgid ""
 "queries regarding your account, please contact us.\n"
 "Thank you in advance.\n"
 msgstr ""
+"Nuestros registros indican que los siguientes pagos siguen siendo debidos. "
+"Si la cantidad\n"
+"ya ha sido pagada, por favor ignore este aviso. Sin embargo, si usted tiene "
+"cualquiera\n"
+"consultas sobre su cuenta, póngase en contacto con nosotros.\n"
+"Gracias de antemano.\n"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -677,11 +693,15 @@ msgid ""
 "according to the original purchase order. You can validate the shipment "
 "totally or partially."
 msgstr ""
+"Los envíos entrantes es la lista de todas las órdenes que recibe de sus "
+"proveedores. Un envío entrante contiene una lista de productos que se "
+"reciban de acuerdo con la orden de compra original. Puede validar el envío "
+"total o parcialmente."
 
 #. module: stock
 #: field:stock.move.split.lines,wizard_exist_id:0
 msgid "Parent Wizard (for existing lines)"
-msgstr ""
+msgstr "Asistente de Padres (para las líneas existentes)"
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
@@ -695,6 +715,8 @@ msgid ""
 "There is no inventory Valuation account defined on the product category: "
 "\"%s\" (id: %d)"
 msgstr ""
+"No hay ninguna cuenta de evaluación de inventario definido en la categoría "
+"de producto: \"%s\" (id:% d)"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -752,7 +774,7 @@ msgstr "Destinatario"
 #. module: stock
 #: model:stock.location,name:stock.location_refrigerator
 msgid "Refrigerator"
-msgstr ""
+msgstr "Refrigerador"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
@@ -788,7 +810,7 @@ msgstr "Procesar albarán"
 #. module: stock
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "¡La referencia debe ser única por compañía!"
 
 #. module: stock
 #: code:addons/stock/product.py:417
@@ -815,7 +837,7 @@ msgstr ""
 #: code:addons/stock/product.py:75
 #, python-format
 msgid "Valuation Account is not specified for Product Category: %s"
-msgstr ""
+msgstr "Cuenta de valuación no se especifica la categoría del producto:%s"
 
 #. module: stock
 #: field:stock.move,move_dest_id:0
@@ -889,7 +911,7 @@ msgstr "Cambiar cantidad producto"
 #. module: stock
 #: field:report.stock.inventory,month:0
 msgid "unknown"
-msgstr ""
+msgstr "Desconocido"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
@@ -908,7 +930,7 @@ msgstr "P&L futuras"
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4 view:stock.picking:0
 msgid "Incoming Shipments"
-msgstr "Albaranes de entrada"
+msgstr "Envíos entrantes"
 
 #. module: stock
 #: view:report.stock.inventory:0 view:stock.move:0 view:stock.picking:0
@@ -949,7 +971,7 @@ msgstr "Buscar paquete"
 #. module: stock
 #: view:stock.picking:0
 msgid "Pickings already processed"
-msgstr ""
+msgstr "Ganancias ya procesadas"
 
 #. module: stock
 #: field:stock.partial.move.line,currency:0
@@ -966,7 +988,7 @@ msgstr "Diario"
 #: code:addons/stock/stock.py:1345
 #, python-format
 msgid "is scheduled %s."
-msgstr ""
+msgstr "Está previsto%s."
 
 #. module: stock
 #: help:stock.picking,location_id:0
@@ -992,7 +1014,7 @@ msgstr "Tiempo inicial de ejecución (días)"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move
 msgid "Partial Move Processing Wizard"
-msgstr ""
+msgstr "Mover de procesamiento parcial Asistente"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
@@ -1031,7 +1053,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Pickings"
-msgstr ""
+msgstr "Ganancias confirmadas"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -1047,7 +1069,7 @@ msgstr "Vista"
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
 msgid "Last month"
-msgstr ""
+msgstr "Último mes"
 
 #. module: stock
 #: field:stock.location,parent_left:0
@@ -1057,13 +1079,13 @@ msgstr "Padre izquierdo"
 #. module: stock
 #: field:product.category,property_stock_valuation_account_id:0
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "Valore de cuenta de evaluación"
 
 #. module: stock
 #: code:addons/stock/stock.py:1349
 #, python-format
 msgid "is waiting."
-msgstr ""
+msgstr "esta esperando."
 
 #. module: stock
 #: constraint:product.product:0
@@ -1175,6 +1197,8 @@ msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
 "entries."
 msgstr ""
+"Para cancelar este inventario, primero debe Quitar la asociación de revistas "
+"relacionadas con las entradas."
 
 #. module: stock
 #: field:stock.picking,date_done:0
@@ -1188,11 +1212,13 @@ msgid ""
 "The uom rounding does not allow you to ship \"%s %s\", only roundings of "
 "\"%s %s\" is accepted by the uom."
 msgstr ""
+"El redondeo de la UOM no le permite enviar \"%s%s\", redondeos sólo de "
+"\"%s%s\" es aceptado por la UOM."
 
 #. module: stock
 #: view:stock.move:0
 msgid "Stock moves that are Available (Ready to process)"
-msgstr ""
+msgstr "Se mueve de archivo que están disponibles (listo para procesar)"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1257,7 +1283,7 @@ msgstr "Ubicaciones de empresas"
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
 msgid "Current year"
-msgstr ""
+msgstr "Año actual"
 
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
@@ -1314,7 +1340,7 @@ msgstr "Albarán:"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Waiting Another Move"
-msgstr ""
+msgstr "Esperando mover otro"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1330,7 +1356,7 @@ msgstr ""
 #. module: stock
 #: view:product.product:0
 msgid "Expected Stock Variations"
-msgstr ""
+msgstr "Esperados variaciones de las existencias"
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -1354,9 +1380,9 @@ msgid ""
 "This is the list of all your packs. When you select a Pack, you can get the "
 "upstream or downstream traceability of the products contained in the pack."
 msgstr ""
-"Esta es la lista de todos sus albaranes. Cuando selecciona un albarán, puede "
-"obtener la trazabilidad hacia arriba o hacia abajo de los productos que "
-"forman este paquete."
+"Esta es la lista de todos sus movimientos. Cuando selecciona un movimiento, "
+"puede obtener la trazabilidad hacia arriba o hacia abajo de los productos "
+"que forman este paquete."
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
@@ -1407,14 +1433,14 @@ msgstr "Desde"
 #. module: stock
 #: view:stock.picking:0
 msgid "Incoming Shipments already processed"
-msgstr ""
+msgstr "Envíos entrantes ya procesados"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:99
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
-"¡Sólo puede devolver albaranes que estén confirmados, reservados o "
+"¡Sólo puede devolver movimientos que estén confirmados, reservados o "
 "realizados!"
 
 #. module: stock
@@ -1462,7 +1488,7 @@ msgstr "Tipo"
 #. module: stock
 #: view:stock.picking:0
 msgid "Available Pickings"
-msgstr ""
+msgstr "Ganancias disponible"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
@@ -1472,7 +1498,7 @@ msgstr "Proveedores TI genéricos"
 #. module: stock
 #: view:stock.move:0
 msgid "Stock to be receive"
-msgstr ""
+msgstr "Archivo que se reciben"
 
 #. module: stock
 #: help:stock.location,valuation_out_account_id:0
@@ -1483,6 +1509,12 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Se utiliza para la valoración de inventario en tiempo real. Cuando se está "
+"en una ubicación virtual (tipo interno no), esta cuenta se utiliza para "
+"mantener el valor de los productos que se mueven fuera de este lugar y en "
+"una ubicación interna, en lugar de la Cuenta de la salida genérica "
+"establecida en el producto. Esto no tiene efecto para las ubicaciones de "
+"internos."
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1526,7 +1558,7 @@ msgstr "Sólo puede eliminar movimientos borrador."
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line_split_lines
 msgid "Inventory Split lines"
-msgstr ""
+msgstr "Lineas de inventario dividido"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview
@@ -1543,6 +1575,8 @@ msgstr "Información general"
 #: view:report.stock.inventory:0
 msgid "Analysis including future moves (similar to virtual stock)"
 msgstr ""
+"El análisis incluye los movimientos futuros (similares a las existencias "
+"virtual)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action3 view:stock.tracking:0
@@ -1576,7 +1610,7 @@ msgstr "Fecha orden"
 #: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
 msgid "INV: %s"
-msgstr ""
+msgstr "INV: %s"
 
 #. module: stock
 #: view:stock.location:0 field:stock.location,location_id:0
@@ -1695,7 +1729,7 @@ msgstr "Estadísticas de stock"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Month Planned"
-msgstr ""
+msgstr "Mes Planeado"
 
 #. module: stock
 #: field:product.product,track_production:0
@@ -1705,12 +1739,12 @@ msgstr "Lotes seguimiento de fabricación"
 #. module: stock
 #: view:stock.picking:0
 msgid "Is a Back Order"
-msgstr ""
+msgstr "Es un pedido pendiente"
 
 #. module: stock
 #: field:stock.location,valuation_out_account_id:0
 msgid "Stock Valuation Account (Outgoing)"
-msgstr ""
+msgstr "Existencia de cuenta de evaluación (de salida)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -1751,7 +1785,7 @@ msgstr "Movimientos creados"
 #. module: stock
 #: field:stock.location,valuation_in_account_id:0
 msgid "Stock Valuation Account (Incoming)"
-msgstr ""
+msgstr "Existencia de cuenta de evaluación (entrante)"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_14
@@ -1766,7 +1800,7 @@ msgstr "Lote seguimiento"
 #. module: stock
 #: view:stock.picking:0
 msgid "Back Orders"
-msgstr "Albaranes pendientes"
+msgstr "Movimientos pendientes"
 
 #. module: stock
 #: view:product.product:0 view:product.template:0
@@ -1803,6 +1837,11 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
+"Cuando se realiza en tiempo real de valuación de inventarios, artículos de "
+"revistas de contraparte para todos los movimientos de valores de salida se "
+"publicará en esta cuenta, a menos que exista un conjunto de valoración "
+"específica de la cuenta en la ubicación de destino. Cuando no se establece "
+"en el producto, la una de la categoría de producto se utiliza."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2354,7 +2393,7 @@ msgstr ""
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_stock_outgoing_product_delay
 msgid "Outgoing Products"
-msgstr "Albaranes de salida"
+msgstr "Productos salientes"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_reception_picking_move
@@ -3444,7 +3483,7 @@ msgstr "Fecha de revisión"
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree view:stock.picking:0
 msgid "Delivery Orders"
-msgstr "Albaranes de salida"
+msgstr "Órdenes de entrega"
 
 #. module: stock
 #: view:stock.picking:0
@@ -3833,7 +3872,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:98
 #, python-format
 msgid "None of these picking lists require invoicing."
-msgstr "Ninguno de estos albaranes requiere facturación."
+msgstr "Ninguno de estos movimientos requiere facturación."
 
 #. module: stock
 #: selection:report.stock.move,month:0
