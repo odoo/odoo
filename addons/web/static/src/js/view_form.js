@@ -2352,7 +2352,6 @@ var commands = {
     }
 };
 openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
-    template: 'FieldOne2Many',
     multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
@@ -2721,11 +2720,9 @@ openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
  * TODO niv: clean those deferred stuff, it could be better
  */
 openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
-    template: 'FieldMany2Many',
     multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
-        this.list_id = _.uniqueId("many2many");
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
         this.is_setted = $.Deferred();
@@ -2791,7 +2788,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
             loaded.resolve();
         });
         $.async_when().then(function () {
-            self.list_view.appendTo($("#" + self.list_id));
+            self.list_view.appendTo(self.$element);
         });
         return loaded;
     },
