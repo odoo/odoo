@@ -953,9 +953,7 @@
         </div>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div
-            t-att-id="widget.element_id"
-            t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}">
+        <div t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}">
         </div>
     </t>
 </t>
@@ -1034,9 +1032,7 @@
         </div>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div
-            t-att-id="widget.element_id"
-            t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}">
+        <div t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}">
         </div>
     </t>
 </t>
@@ -1108,7 +1104,6 @@
         <td align="center">
             <img t-att-src='_s + "/web/static/src/img/placeholder.png"' class="oe-binary-image"
                 t-att-border="widget.readonly ? 0 : 1"
-                t-att-id="widget.element_id + '_field'"
                 t-att-name="widget.name"
                 t-attf-class="field_#{widget.type}"
                 t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
@@ -1158,7 +1153,6 @@
             <td>
                 <input type="text" size="1" readonly="readonly"
                     t-att-name="widget.name"
-                    t-att-id="widget.element_id + '_field'"
                     t-attf-class="field_#{widget.type}"
                 />
             </td>
