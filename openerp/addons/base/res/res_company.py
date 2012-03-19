@@ -223,12 +223,11 @@ class res_company(osv.osv):
         self._get_company_children.clear_cache(self)
 
     def create(self, cr, uid, vals, context=None):
-        
         if not vals.get('name', False) or vals.get('partner_id', False):
             self.cache_restart(cr)
             return super(res_company, self).create(cr, uid, vals, context=context)
         obj_partner = self.pool.get('res.partner')
-        partner_id = obj_partner.create(cr, uid, {'name': vals['name'],'is_company':True}, context=context)
+        partner_id = obj_partner.create(cr, uid, {'name': vals['name'], 'is_company':True}, context=context)
         vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
         company_id = super(res_company, self).create(cr, uid, vals, context=context)
@@ -295,12 +294,12 @@ class res_company(osv.osv):
 
 
             <drawString x="1.3cm" y="%s">[[ company.partner_id.name ]]</drawString>
-            <drawString x="1.3cm" y="%s">[[ company.partner_id and company.partner_id.street or  '' ]]</drawString>
-            <drawString x="1.3cm" y="%s">[[ company.partner_id and company.partner_id.city or '' ]] - [[ company.partner_id and company.partner_id.country_id and company.partner_id.country_id.name  or '']]</drawString>
+            <drawString x="1.3cm" y="%s">[[ company.partner_id.street or  '' ]]</drawString>
+            <drawString x="1.3cm" y="%s">[[ company.partner_id.city or '' ]] - [[ company.partner_id.country_id and company.partner_id.country_id.name  or '']]</drawString>
             <drawString x="1.3cm" y="%s">Phone:</drawString>
-            <drawRightString x="7cm" y="%s">[[ company.partner_id and company.partner_id.phone or '' ]]</drawRightString>
+            <drawRightString x="7cm" y="%s">[[ company.partner_id.phone or '' ]]</drawRightString>
             <drawString x="1.3cm" y="%s">Mail:</drawString>
-            <drawRightString x="7cm" y="%s">[[ company.partner_id and company.partner_id.email or '' ]]</drawRightString>
+            <drawRightString x="7cm" y="%s">[[ company.partner_id.email or '' ]]</drawRightString>
             <lines>1.3cm %s 7cm %s</lines>
 
             <!--page bottom-->
