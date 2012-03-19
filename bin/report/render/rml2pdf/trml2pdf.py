@@ -115,15 +115,19 @@ class NumberedCanvas(canvas.Canvas):
         self._doc.SaveToFile(self._filename, self)
 
 class PageCount(platypus.Flowable):
+    def __init__(self, story_count=1):
+        platypus.Flowable.__init__(self)
+        self.story_count = story_count
+
     def draw(self):
-        self.canv.beginForm("pageCount")
+        self.canv.beginForm("pageCount%s" % (self.story_count))
         self.canv.setFont("Helvetica", utils.unit_get(str(8)))
         self.canv.drawString(0, 0, str(self.canv.getPageNumber()))
         self.canv.endForm()
 
 class PageReset(platypus.Flowable):
     def draw(self):
-        self.canv._pageNumber = 0
+        self.canv._doPageReset = True
 
 class _rml_styles(object,):
     def __init__(self, nodes, localcontext):
@@ -303,6 +307,7 @@ class _rml_doc(object):
             pt_obj.render(el)
         else:
             self.canvas = canvas.Canvas(out)
+            self.canvas.story_count = 1
             pd = self.etree.find('pageDrawing')[0]
             pd_obj = _rml_canvas(self.canvas, self.localcontext, None, self, self.images, path=self.path, title=self.title)
             pd_obj.render(pd)
@@ -335,7 +340,7 @@ class _rml_canvas(object):
             if n.tag == 'pageCount':
                 if x or y:
                     self.canvas.translate(x,y)
-                self.canvas.doForm('pageCount')
+                self.canvas.doForm('pageCount%s' % (self.canvas.story_count))
                 if x or y:
                     self.canvas.translate(-x,-y)
             if n.tag == 'pageNumber':
@@ -866,6 +871,13 @@ class EndFrameFlowable(ActionFlowable):
         ActionFlowable.__init__(self,('frameEnd',resume))
 
 class TinyDocTemplate(platypus.BaseDocTemplate):
+
+    def beforeDocument(self):
+        # Store some useful value directly inside canvas, so it's available
+        # on flowable drawing
+        self.canv.story_count = 1
+        self.canv._doPageReset = False
+
     def ___handle_pageBegin(self):
         self.page = self.page + 1
         self.pageTemplate.beforeDrawPage(self.canv,self)
@@ -881,12 +893,15 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
                 self.frame = f
                 break
         self.handle_frameBegin()
-    def afterFlowable(self, flowable):
-        if isinstance(flowable, PageReset):
-            self.canv._pageCount=self.page
-            self.page=0
-            self.canv._flag=True
+
+    def afterPage(self):
+        if self.canv._doPageReset:
+            # Following a <pageNumberReset/> tag, we reset page number to 0
+            # and increment story count (so that page count is specific to
+            # the story
             self.canv._pageNumber = 0
+            self.canv._doPageReset = False
+            self.canv.story_count += 1
 
 class _rml_template(object):
     def __init__(self, localcontext, out, node, doc, images={}, path='.', title=None):
@@ -936,6 +951,7 @@ class _rml_template(object):
         fis = []
         r = _rml_flowable(self.doc,self.localcontext, images=self.images, path=self.path, title=self.title)
         story_cnt = 0
+        page_cnt = 0
         for node_story in node_stories:
             if story_cnt > 0:
                 fis.append(platypus.PageBreak())
@@ -943,12 +959,18 @@ class _rml_template(object):
             # Reset Page Number with new story tag
             fis.append(PageReset())
             story_cnt += 1
-        if self.localcontext and self.localcontext.get('internal_header',False):
-            self.doc_tmpl.afterFlowable(fis)
-            self.doc_tmpl.build(fis,canvasmaker=NumberedCanvas)
-        else:
-            fis.append(PageCount())
-            self.doc_tmpl.build(fis)
+            if self.localcontext and self.localcontext.get('internal_header',False):
+                self.doc_tmpl.afterFlowable(fis)
+                self.doc_tmpl.build(fis,canvasmaker=NumberedCanvas)
+            else:
+                page_cnt += 1
+                for (st, _n) in etree.iterwalk(node_story, tag='pageBreak'):
+                    fis.append(PageCount(story_count=page_cnt))
+                    page_cnt += 1
+                if self.localcontext:
+                    # 1 PageCount for each story
+                    fis.append(PageCount(story_count=page_cnt))
+        self.doc_tmpl.build(fis)
 
 def parseNode(rml, localcontext=None,fout=None, images=None, path='.',title=None):
     node = etree.XML(rml)
