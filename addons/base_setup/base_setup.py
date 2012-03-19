@@ -201,4 +201,13 @@ class specify_partner_terminology(osv.osv_memory):
                 self.make_translations(cr, uid, ids, act_ref, 'model', act_id.help, _case_insensitive_replace(act_id.help,'Customer',o.partner), res_id=act_id.id, context=context)
         return {}
 
+
+
+# Preferences wizard for Sales & CRM.
+# It is defined here because it must be inherited independently in modules sale and crm.
+#
+class sale_config_settings(osv.osv_memory):
+    _name = 'sale.config.settings'
+    _inherit = 'res.config.settings'
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
