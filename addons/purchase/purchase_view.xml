@@ -220,9 +220,11 @@
                                 <field name="fiscal_position" widget="selection"/>
                             </group>
                             <newline/>
+                            <group colspan="2" col="2" groups="base.group_no_one">
                             <separator string="Purchase Control" colspan="4"/>
                             <field name="validator" groups="base.group_no_one"/>
                             <field name="date_approve" groups="base.group_no_one"/>
+                            </group>
                             <separator string="Invoices" colspan="4"/>
                             <newline/>
                             <field name="invoice_ids" groups="base.group_extended" nolabel="1" colspan="4" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>

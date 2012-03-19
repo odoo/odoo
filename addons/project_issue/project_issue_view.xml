@@ -117,7 +117,7 @@
                                 icon="terp-mail-message-new" type="action"/>
                         </page>
                            <page string="Extra Info" groups="base.group_extended">
-                            <group col="2" colspan="2">
+                            <group col="2" colspan="2" groups="base.group_no_one">
                             <separator colspan="2" string="Date"/>
                             <field name="create_date" groups="base.group_no_one"/>
                             <field name="write_date"  groups="base.group_no_one"/>
@@ -125,7 +125,7 @@
                             <field name="date_open" groups="base.group_no_one"/>
                             <field name="date_action_last" groups="base.group_no_one"/>
                             </group>
-                            <group colspan="2" col="2">
+                            <group colspan="2" col="2" groups="base.group_no_one">
                             <separator string="Statistics" colspan="2" col="2"/>
                             <field name="day_open" groups="base.group_no_one"/>
                             <field name="day_close" groups="base.group_no_one"/>

@@ -176,8 +176,8 @@
                         <field name="channel_id" select="1" widget="selection"/>
                         <field name="referred"/>
                     </group>
-                    <group colspan="2" col="2">
-                        <separator string="Dates" colspan="2" col="2"/>
+                    <group colspan="2" col="2" groups="base.group_no_one">
+                        <separator string="Dates" colspan="2" col="2" />
                         <field name="create_date" groups="base.group_no_one"/>
                         <field name="write_date" groups="base.group_no_one"/>
                         <field name="date_open" groups="base.group_no_one"/>
@@ -188,8 +188,8 @@
                         <field name="optin" on_change="on_change_optin(optin)"/>
                         <field name="optout" on_change="on_change_optout(optout)"/>
                     </group>
-                    <group colspan="2" col="2">
-                        <separator string="Statistics" colspan="2" col="2"/>
+                    <group colspan="2" col="2" groups="base.group_no_one">
+                        <separator string="Statistics" colspan="2" col="2" />
                         <field name="day_open" groups="base.group_no_one"/>
                         <field name="day_close" groups="base.group_no_one"/>
                     </group>
@@ -570,7 +570,7 @@
                        icon="terp-mail-message-new" type="action"/>
                 </page>
                 <page string="Extra Info" groups="base.group_extended">
-                    <group col="2" colspan="2">
+                    <group col="2" colspan="2" groups="base.group_no_one">
                         <separator string="Dates" colspan="2"/>
                         <field name="create_date" groups="base.group_no_one"/>
                         <field name="write_date" groups="base.group_no_one"/>
@@ -578,7 +578,7 @@
                         <field name="date_open" groups="base.group_no_one"/>
                     </group>
                     <group col="2" colspan="2">
-                        <separator string="Misc" colspan="2"/>
+                        <separator string="Misc" colspan="2" groups="base.group_no_one"/>
                         <field name="active"/>
                         <field name="day_open" groups="base.group_no_one"/>
                         <field name="day_close" groups="base.group_no_one"/>
