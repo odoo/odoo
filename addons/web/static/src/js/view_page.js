@@ -8,7 +8,6 @@ openerp.web.page = function (openerp) {
         display_name: _lt('Page'),
         init: function () {
             this._super.apply(this, arguments);
-            this.registry = openerp.web.page.readonly;
             this.set({"force_readonly": true});
         },
         reload: function () {
@@ -64,13 +63,5 @@ openerp.web.page = function (openerp) {
             return def.promise();
         }
     });
-
-    /** @namespace */
-    openerp.web.page = {};
-
-    openerp.web.page.readonly = openerp.web.form.widgets.extend({
-    });
-    
-
     
 };
