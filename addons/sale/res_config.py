@@ -24,7 +24,7 @@ import pooler
 from tools.translate import _
 
 class sale_configuration(osv.osv_memory):
-    _inherit = 'res.config.settings'
+    _inherit = 'sale.config.settings'
 
     _columns = {
         'sale_orders': fields.boolean('Based on Sales Orders',
@@ -210,7 +210,5 @@ class sale_configuration(osv.osv_memory):
             ir_values_obj.set(cr, uid, 'default', False, 'tax_id', ['sale.order'], taxes[0])
             ir_values_obj.set(cr, uid, 'default', False, 'tax_id', ['sale.order.line'], taxes)
             ir_values_obj.set(cr, uid, 'default', False, 'taxes_id', ['product.product'], taxes)
-
-sale_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

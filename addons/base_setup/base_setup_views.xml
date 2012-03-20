@@ -142,7 +142,7 @@
         <field name="sequence">1</field>
     </record>
 
-    <record id="base.sale_settings_form_view" model="ir.ui.view">
+    <record id="base.view_sale_config_settings" model="ir.ui.view">
         <field name="name">sale.config.settings</field>
         <field name="model">sale.config.settings</field>
         <field name="type">form</field>
@@ -151,8 +151,8 @@
                 <group name="sales" colspan="4">
                 </group>
                 <group name="crm" colspan="4">
-                </group>
-                <group name="plugins" colspan="4">
+                    <group name="plugin" colspan="4">
+                    </group>
                 </group>
             </form>
         </field>
@@ -162,7 +162,7 @@
         <field name="name">Configure Sales &amp; CRM</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.config.settings</field>
-        <field name="view_id" ref="base.sale_settings_form_view"/>
+        <field name="view_id" ref="base.view_sale_config_settings"/>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
     </record>

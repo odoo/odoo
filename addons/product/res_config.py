@@ -21,8 +21,8 @@
 
 from osv import fields, osv
 
-class product_groups_configuration(osv.osv_memory):
-    _inherit = 'res.config.settings'
+class sale_config_settings(osv.osv_memory):
+    _inherit = 'sale.config.settings'
 
     _columns = {
         'group_sale_pricelist_per_customer':fields.boolean("Pricelist per Customer",
@@ -44,5 +44,3 @@ class product_groups_configuration(osv.osv_memory):
                                                help=""" Allows you to create and manage your packaging dimensions and types you want to be maintained in your system.
                                                It assigns the "Packaging" group to employee."""),
 }
-
-product_groups_configuration()

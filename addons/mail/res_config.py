@@ -22,7 +22,7 @@
 from osv import fields, osv
 
 class plugin_configuration(osv.osv_memory):
-    _inherit = 'res.config.settings'
+    _inherit = 'sale.config.settings'
     
     _columns = {
         'module_plugin_thunderbird': fields.boolean('Thunderbird plugin',
@@ -43,7 +43,5 @@ class plugin_configuration(osv.osv_memory):
                                     It installs plugin_outlook module.
                                     """),
     }
-
-plugin_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

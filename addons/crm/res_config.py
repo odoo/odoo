@@ -22,7 +22,7 @@
 from osv import fields, osv
 
 class crm_configuration(osv.osv_memory):
-    _inherit = 'res.config.settings'
+    _inherit = 'sale.config.settings'
 
     _columns = {
         'module_crm_caldav' : fields.boolean("Caldav Synchronization",
@@ -128,7 +128,5 @@ class crm_configuration(osv.osv_memory):
         else:
             server_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads'),('state','=','done')])
             fetchmail_obj.set_draft(cr, uid, server_ids, context=None)
-
-crm_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
