@@ -8,49 +8,38 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="mail.view_sales_config_plugin"/>
             <field name="arch" type="xml">
-                <xpath expr="//form/group[@name='crm']/group[@name='plugin']/group[@name='plugins']" position="after">
-                    <group col="2" colspan="2" name="emails">
-                        <separator string="Emails" colspan="2"/>
-                        <field name="fetchmail_crm"/>
+                <group name="emails" position="inside">
+                    <separator string="Emails" colspan="4"/>
+                    <field name="fetchmail_crm"/>
+                    <group colspan="2" attrs="{'invisible': [('fetchmail_crm','=',False)]}">
+                        <field name="default_server" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                        <field name="default_type" nolabel="1" on_change="onchange_server_type(default_type, default_is_ssl)" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                        <field name="default_port" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                        <field name="default_is_ssl" on_change="onchange_server_type(default_type, default_is_ssl)"/>
                         <newline/>
-                        <group col="4" colspan="2" attrs="{'invisible': [('fetchmail_crm','=',False)]}">
-                            <field name="default_server" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-                            <field name="default_type" nolabel="1" on_change="onchange_server_type(default_type, default_is_ssl)" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-                            <field name="default_port" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-                            <field name="default_is_ssl" on_change="onchange_server_type(default_type, default_is_ssl)"/>
-                            <newline/>
-                            <field name="default_user" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-                            <field name="default_password" password="True" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-                        </group>
+                        <field name="default_user" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                        <field name="default_password" password="True" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
                     </group>
-                </xpath>
-
-                <xpath expr="//form/group[@name='crm']/group[@name='plugin']" position="after">
-                    <group colspan="4" col="4" name="synchronization">
-                        <separator string="Import and Synchronize data from an other application" colspan="4"/>
-                        <group  colspan="2" col="2">
-                           <field name="module_import_sugarcrm"/>
-                           <newline/>
-                           <field name="module_import_google"/>
-                        </group>
-                        <group colspan="2" col="2">
-                            <field name="module_crm_caldav"/>
-                        </group>
+                </group>
+                <group name="synchronization" position="inside">
+                    <separator string="Import and Synchronize data from an other application" colspan="4"/>
+                    <group colspan="2" col="2">
+                        <field name="module_import_sugarcrm"/>
+                        <field name="module_import_google"/>
                     </group>
-
-                    <group  colspan="4" col="4">
-                        <group  colspan="2" col="2">
-                           <separator string="Documents and Wiki" colspan="2"/>
-                           <field name="module_wiki_sale_faq" />
-                        </group>
-                        <group  colspan="2" col="2">
-                           <separator string="Customer Form" colspan="2"/>
-                           <field name="module_base_contact"/>
-                           <newline/>
-                           <field name="module_google_map"/>
-                        </group>
+                    <group colspan="2" col="2">
+                        <field name="module_crm_caldav"/>
                     </group>
-                </xpath>
+                </group>
+                <group name="documents" position="inside">
+                    <separator string="Documents and Wiki" colspan="4"/>
+                    <field name="module_wiki_sale_faq" />
+                </group>
+                <group name="customer_form" position="inside">
+                    <separator string="Customer Form" colspan="4"/>
+                    <field name="module_base_contact"/>
+                    <field name="module_google_map"/>
+                </group>
             </field>
         </record>
 

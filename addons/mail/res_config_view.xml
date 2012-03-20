@@ -7,15 +7,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <xpath expr="//form/group[@name='crm']/group[@name='plugin']" position="inside">
-                    <group col="4" colspan="2" name="plugins">
-                        <separator string="Plugins" colspan="4"/>
-                        <newline/>
-                        <field name="module_plugin_thunderbird"/>
-                        <newline/>
-                        <field name="module_plugin_outlook"/>
-                    </group>
-                </xpath>
+                <group name="emails" position="inside">
+                    <separator string="Plugins" colspan="4"/>
+                    <field name="module_plugin_thunderbird"/>
+                    <newline/>
+                    <field name="module_plugin_outlook"/>
+                </group>
             </field>
         </record>
 

@@ -117,12 +117,10 @@
             <field name="inherit_id" ref="sale.view_sales_config"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <group name="sale_order" position="after">
-                    <group col="4" colspan="4">
-                        <separator string="Contracts" colspan="4"/>
-                        <field name="module_analytic_user_function" attrs="{'invisible': [('module_account_analytic_analysis','=',False)]}"/>
-                        <field name="module_analytic_journal_billing_rate" attrs="{'invisible': [('module_account_analytic_analysis','=',False)]}"/>
-                    </group>
+                <group name="contracts" position="inside">
+                    <separator string="Contracts" colspan="4"/>
+                    <field name="module_analytic_user_function"/>
+                    <field name="module_analytic_journal_billing_rate"/>
                 </group>
             </field>
         </record>
