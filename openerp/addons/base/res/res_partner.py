@@ -299,7 +299,7 @@ class res_partner(osv.osv):
                           LEFT JOIN res_partner company ON partner.parent_id = company.id 
                           WHERE partner.name || ' (' || COALESCE(company.name,'') || ')'
                           ''' + operator + ''' %s ''', (name,))
-            ids = cr.fetchall()
+            ids = map(lambda x: x[0], cr.fetchall())
             if args:
                 ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
             if ids:
