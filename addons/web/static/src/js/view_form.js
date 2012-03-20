@@ -780,15 +780,16 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         if (fn) {
             var args = [].slice.call(arguments);
             args[0] = $tag;
-            fn.apply(self, args);
+            return fn.apply(self, args);
         } else {
             // generic tag handling, just process children
             $tag.children().each(function() {
                 self.process($(this));
             });
+            return $tag;
         }
     },
-    process_field: function($field, no_process_label) {
+    process_field: function($field) {
         var name = $field.attr('name'),
             field_orm = this.fvg.fields[name],
             field_string = $field.attr('string') || field_orm.string || '',
@@ -799,20 +800,19 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             throw new Error("Field '" + name + "' specified in view could not be found.");
         }
 
+        var $label;
         if ($field.attr('nolabel') !== '1') {
             var $label = this.$form.find('label[for="' + name + '"]');
             if (!$label.length) {
                 field_string = $label.attr('string') || $label.text() || field_string;
                 field_help = $label.attr('help') || field_help;
-                var $label = $('<label/>').attr({
+                $label = $('<label/>').attr({
                     'for' : name,
                     'string' : field_string,
                     'help' :  field_help
                 });
                 $label.insertBefore($field);
-                if (!no_process_label) {
-                    this.process($label);
-                }
+                $label = this.process($label);
                 if (field_colspan > 1) {
                     $field.attr('colspan', field_colspan - 1);
                 }
@@ -823,12 +823,20 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             'string' : field_string,
             'help' : field_help
         });
+        to_return = $();
+        if ($label)
+            to_return.push($label[0]);
+        to_return.push($field[0]);
+        return to_return;
     },
     process_group: function($group) {
         var self = this;
-        var fields = [];
-        $group.children('field').each(function() {
-            self.process($(this), true);
+        var no_reprocess = [];
+        $group.children('field,label').each(function() {
+            var processed = self.process($(this));
+            processed.each(function(i) {
+                no_reprocess.push(processed[i]);
+            });
         });
         var $new_group = $(QWeb.render('FormRenderingGroup', $group.getAttributes())),
             $table;
@@ -897,10 +905,11 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             });
         });
         _.each(children, function(el) {
-            if (!_.include(fields, el)) {
+            if (!_.include(no_reprocess, el)) {
                 self.process($(el));
             }
         });
+        return $new_group;
     },
     process_notebook: function($notebook) {
         var self = this;
@@ -921,10 +930,12 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         $notebook.children().appendTo($new_notebook);
         $notebook.before($new_notebook).remove();
         $new_notebook.tabs();
+        return $new_notebook;
     },
     process_separator: function($separator) {
         var $new_separator = $(QWeb.render('FormRenderingSeparator', $separator.getAttributes()));
         $separator.before($new_separator).remove();
+        return $new_separator;
     },
     process_label: function($label) {
         var dict = $label.getAttributes();
@@ -939,6 +950,7 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         dict.align = align;
         var $new_label = $(QWeb.render('FormRenderingLabel', dict));
         $label.before($new_label).remove();
+        return $new_label;
     }
 });
 
