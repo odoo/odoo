@@ -893,7 +893,7 @@ class task(osv.osv):
         return True
 
     def do_reopen(self, cr, uid, ids, context=None):
-         request = self.pool.get('res.request')
+        request = self.pool.get('res.request')
 
         for task in self.browse(cr, uid, ids, context=context):
             project = task.project_id
