@@ -1977,8 +1977,8 @@ openerp.web.form.dialog = function(content, options) {
     return dialog.$element;
 };
 
-openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend({
-    template: 'EmptyComponent',
+openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
+    template: "FieldMany2One",
     init: function(view, node) {
         this._super(view, node);
         this.limit = 7;
@@ -1987,23 +1987,12 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend({
         this.last_search = [];
         this.tmp_value = undefined;
     },
-    start: function() {
-        this._super();
-        this.render_content();
-        this.on("change:effective_readonly", this, function() {
-            this.render_content();
-        });
-    },
-    render_content: function() {
-        this.$element.html("");
+    initialize_content: function() {
         if (!this.get("effective_readonly"))
             this.render_editable();
-        else
-            this.render_readonly();
         this.render_value();
     },
     render_editable: function() {
-        this.$element.html(QWeb.render("FieldMany2One", {widget: this}));
         var self = this;
         this.$input = this.$element.find("input");
         this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
@@ -2141,9 +2130,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend({
             }
             isSelecting = false;
         });
-    },
-    render_readonly: function() {
-        this.$element.html(QWeb.render("FieldMany2One_readonly"));
     },
     // autocomplete component content handling
     get_search_result: function(request, response) {
@@ -2339,7 +2325,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend({
     focus: function ($element) {
         this._super($element || this.$input);
     }
-});
+}));
 
 /*
 # Values: (0, 0,  { fields })    create
