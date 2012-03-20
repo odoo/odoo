@@ -6,9 +6,9 @@ openerp.web.page = function (openerp) {
     openerp.web.PageView = openerp.web.FormView.extend({
         template: "PageView",
         display_name: _lt('Page'),
-        init: function () {
+        init: function() {
             this._super.apply(this, arguments);
-            this.set({"force_readonly": true});
+            this.rendering_engine = new openerp.web.FormRenderingEngineReadonly(this);
         },
         reload: function () {
             if (this.dataset.index == null) {
@@ -62,6 +62,12 @@ openerp.web.page = function (openerp) {
             });
             return def.promise();
         }
+    });
+    
+    openerp.web.FormRenderingEngineReadonly = openerp.web.FormRenderingEngine.extend({
+        alter_field: function(field) {
+            field.set({"force_readonly": true});
+        },
     });
     
 };

@@ -50,6 +50,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.on_change_mutex = new $.Mutex();
         this.reload_mutex = new $.Mutex();
         this.set({"force_readonly": false});
+        this.rendering_engine = new openerp.web.FormRenderingEngine(this);
     },
     start: function() {
         this._super();
@@ -97,8 +98,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.fields_order = [];
         this.fields_view = data;
 
-        var form = new openerp.web.FormRenderingEngine(this, data);
-        form.appendTo(this.$element.find('.oe_form_content'));
+        this.rendering_engine.set_fields_view(data);
+        this.rendering_engine.render_to(this.$element.find('.oe_form_content'));
 
         this.$form_header = this.$element.find('.oe_form_header:first');
         this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
@@ -725,24 +726,34 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     }
 });
 
-openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
-    init: function(parent, fvg, registry) {
-        this._super.apply(this, arguments);
-        this.registry = registry;
+/**
+ * Default rendering engine for the form view.
+ * 
+ * It is necessary to set the view using set_view() before usage.
+ */
+openerp.web.FormRenderingEngine = openerp.web.Class.extend({
+    init: function(view) {
+        this.view = view;
+    },
+    set_fields_view: function(fvg) {
         this.fvg = fvg;
-        this.view = parent;
+    },
+    set_registry: function(registry) {
+        this.registry = registry;
+    },
+    render_to: function($element) {
+        var self = this;
+        this.$element = $element;
+        
         this.fields_prefix = this.view.dataset ? this.view.dataset.model : '';
-
+        
         // TODO: I know this will save the world and all the kitten for a moment,
         //       but one day, we will have to get rid of xml2json
-        var xml = openerp.web.json_node_to_xml(fvg.arch);
+        var xml = openerp.web.json_node_to_xml(this.fvg.arch);
         this.$form = $(xml);
 
         this.process(this.$form);
-    },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
+        
         this.$form.children().appendTo(this.$element);
         // OpenERP views spec :
         //      - @width is obsolete ?
@@ -754,11 +765,13 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             if (self.view.registry.contains(key)) {
                 var obj = self.view.registry.get_object(key);
                 var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
+                self.alter_field(w);
                 w.replace($elem);
             }
         });
         $('<button>Debug layout</button>').appendTo(this.$element).click(this.do_toggle_layout_debugging);
     },
+    alter_field: function(field) {},
     do_toggle_layout_debugging: function() {
         if (!this.$element.has('.oe_layout_debug_cell:first').length) {
             this.$element.find('.oe_form_group_cell').each(function() {
@@ -1309,8 +1322,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
  * able to provide the features necessary for the fields to work.
  * 
  * Properties:
- *     - force_readonly: boolean, When it is true, all the fields should always appear
- *      in read only mode, no matter what the value of their "readonly" property can be.
+ *     - ...
  */
 
 openerp.web.form.FieldManagerInterface = {
@@ -1322,7 +1334,8 @@ openerp.web.form.FieldManagerInterface = {
  * 
  * Properties:
  *     - readonly: boolean. If set to true the field should appear in readonly mode.
- * 
+ *     - force_readonly: boolean, When it is true, the field should always appear
+ *      in read only mode, no matter what the value of the "readonly" property can be.
  * Events:
  *     - ...
  * 
@@ -1402,10 +1415,10 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
         // "force_readonly"
         this.set({"readonly": this.modifiers['readonly'] === true});
         var test_effective_readonly = function() {
-            this.set({"effective_readonly": this.get("readonly") || this.view.get("force_readonly")});
+            this.set({"effective_readonly": this.get("readonly") || this.get("force_readonly")});
         };
         this.on("change:readonly", this, test_effective_readonly);
-        this.view.on("change:force_readonly", this, test_effective_readonly);
+        this.on("change:force_readonly", this, test_effective_readonly);
         _.bind(test_effective_readonly, this)();
 
         if (this.view) {
