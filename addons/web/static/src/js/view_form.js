@@ -739,7 +739,7 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         var xml = openerp.web.json_node_to_xml(fvg.arch);
         this.$form = $(xml);
 
-        this.process_any(this.$form);
+        this.process(this.$form);
     },
     start: function() {
         var self = this;
@@ -770,32 +770,23 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         this.$element.toggleClass('oe_layout_debugging');
 
     },
-    process_any: function($tag) {
+    process: function($tag) {
         var self = this;
-        // TODO: extract embeded views before preprocessing
         var tagname = $tag[0].nodeName.toLowerCase();
         var fn = self['process_' + tagname]; 
         if (this.registry && this.registry.contains(tagname)) {
             fn = this.registry.get_object(tagname);
         }
-        if (fn)
-            fn.call(self, $tag);
-        else { // generic tag handling, just process children
-            _.each($tag.children(), function(el) {
-                self.process_any($(el));
+        if (fn) {
+            var args = [].slice.call(arguments);
+            args[0] = $tag;
+            fn.apply(self, args);
+        } else {
+            // generic tag handling, just process children
+            $tag.children().each(function() {
+                self.process($(this));
             });
         }
-        /*
-        _.each(['field', 'group', 'notebook', 'separator', 'label'], function(tag) {
-            var fn = self['process_' + tag]; 
-            if (this.registry && this.registry.contains(tag)) {
-                fn = this.registry.get_object(tag);
-            }
-            $form.find(tag).each(function() {
-                fn.call(self, $(this), $form);
-            });
-        });
-        */
     },
     process_field: function($field, no_process_label) {
         var name = $field.attr('name'),
@@ -813,14 +804,15 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             if (!$label.length) {
                 field_string = $label.attr('string') || $label.text() || field_string;
                 field_help = $label.attr('help') || field_help;
-                var label = $('<label/>').attr({
+                var $label = $('<label/>').attr({
                     'for' : name,
                     'string' : field_string,
                     'help' :  field_help
                 });
-                label.insertBefore($field);
-                if (!no_process_label)
-                    this.process_label(label);
+                $label.insertBefore($field);
+                if (!no_process_label) {
+                    this.process($label);
+                }
                 if (field_colspan > 1) {
                     $field.attr('colspan', field_colspan - 1);
                 }
@@ -835,12 +827,8 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
     process_group: function($group) {
         var self = this;
         var fields = [];
-        _.each($group.children(), function(el) {
-            var tagname = el.nodeName.toLowerCase();
-            if (tagname === "field") {
-                self.process_field($(el), true);
-                fields.push(el);
-            }
+        $group.children('field').each(function() {
+            self.process($(this), true);
         });
         var $new_group = $(QWeb.render('FormRenderingGroup', $group.getAttributes())),
             $table;
@@ -909,14 +897,15 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             });
         });
         _.each(children, function(el) {
-            if (!_.include(fields, el))
-                self.process_any($(el));
+            if (!_.include(fields, el)) {
+                self.process($(el));
+            }
         });
     },
     process_notebook: function($notebook) {
         var self = this;
-        _.each($notebook.children(), function(el) {
-            self.process_any($(el));
+        $notebook.children().each(function() {
+            self.process($(this));
         });
         var pages = [];
         $notebook.find('> page').each(function() {
