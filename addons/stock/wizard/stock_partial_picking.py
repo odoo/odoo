@@ -73,34 +73,30 @@ class stock_partial_picking(osv.osv_memory):
         'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column prodlot has to be shown on the move_ids field or not'),
      }
     
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', 
-                        context=None, toolbar=False, submenu=False):
-        # remove the entry with key 'form_view_ref', otherwise fields_view_get crashes
-        context.pop('form_view_ref', None)
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context={}
-        res = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        # remove the entry with key 'form_view_ref', otherwise fields_view_get crashes
+        context.pop('form_view_ref', None)
+        res = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         type = context.get('default_type', False)
-        doc = etree.XML(res['arch'])
-        nodes = doc.xpath("//group/button[@string='_Validate']")
-        separator_extended = ''
-        for field in res['fields']:
-            if type == 'in':
-                separator_extended = '''<separator colspan="4" string="Receive Products"/>'''
-                for node in nodes:
+        if type:
+            doc = etree.XML(res['arch'])
+            for node in doc.xpath("//group/button[@string='_Validate']"):
+                if type == 'in':
                     node.set('string', '_Receive')
-            elif type == 'internal':
-                separator_extended = '''<separator colspan="4" string="Move Products"/>'''
-                for node in nodes:
+                elif type == 'internal':
                     node.set('string', '_Move')
-            elif type == 'out':
-                separator_extended = '''<separator colspan="4" string="Deliver Products"/>'''
-                for node in nodes:
+                elif type == 'out':
                     node.set('string', '_Deliver')
-
-        res['arch'] = etree.tostring(doc)
-        if separator_extended:
-            res['arch'] = res['arch'].replace('<separator colspan="4" string="Products"/>', separator_extended)
+            for node in doc.xpath("//separator[@string='Products']"):
+                if type == 'in':
+                    node.set('string', 'Receive Products')
+                elif type == 'internal':
+                    node.set('string', 'Move Products')
+                elif type == 'out':
+                    node.set('string', 'Deliver Products')
+            res['arch'] = etree.tostring(doc)
         return res
 
     def default_get(self, cr, uid, fields, context=None):
