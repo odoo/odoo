@@ -846,6 +846,7 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         // Now compute width of cells
         $table.find('tbody > tr').each(function() {
             var to_compute = [],
+                row_cols = cols,
                 total = 100;
             $(this).children().each(function() {
                 var $td = $(this),
@@ -855,13 +856,13 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
                         if ($child.attr('orientation') === 'vertical') {
                             $td.addClass('oe_vertical_separator').attr('width', '1');
                             $td.empty();
-                            cols--;
+                            row_cols--;
                         }
                         break;
                     case 'label':
                         if ($child.attr('for')) {
                             $td.attr('width', '1%');
-                            cols--;
+                            row_cols--;
                             total--;
                         }
                         break;
@@ -869,7 +870,7 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
                         to_compute.push($td);
                 }
             });
-            var unit = Math.floor(total / cols);
+            var unit = Math.floor(total / row_cols);
             _.each(to_compute, function($td, i) {
                 var width = parseInt($td.attr('colspan'), 10) * unit;
                 $td.attr('width', ((i == to_compute.length - 1) ? total : width) + '%');
