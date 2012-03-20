@@ -42,10 +42,11 @@ if (SearchBox_renderSearchInput.toString() !== VS.ui.SearchBox.prototype.renderS
 }
 var SearchBox_searchEvent = function (e) {
     var query = this.value();
+    this.renderFacets();
     this.app.options.callbacks.search(query, this.app.searchQuery);
   };
 if (SearchBox_searchEvent.toString() !== VS.ui.SearchBox.prototype.searchEvent.toString().replace(
-        /this\.focusSearch\(e\);\n[ ]{4}this\.value\(query\);\n[ ]{4}/, '')) {
+        /this\.focusSearch\(e\);\n[ ]{4}this\.value\(query\)/, 'this.renderFacets()')) {
     throw new Error(
         "Trying to replace wrong version of VS.ui.SearchBox#searchEvent. "
         + "Please fix replacement.");

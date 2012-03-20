@@ -99,7 +99,7 @@ Finally, :js:func:`VS.ui.SearchBox.searchEvent` is monkey-patched to
 get rid of its serialize/load round-tripping of facet data: the
 additional attributes needed by the search view don't round-trip (at
 all) so VisualSearch must not load any data from its (fairly
-simplistic) text-serialization format
+simplistic) text-serialization format.
 
 .. note::
 
