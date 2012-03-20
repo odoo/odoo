@@ -42,12 +42,12 @@ class res_partner_contact(osv.osv):
         'title': fields.many2one('res.partner.title','Title', domain=[('domain','=','contact')]),
         'website': fields.char('Website', size=120),
         'lang_id': fields.many2one('res.lang', 'Language'),
-        'job_ids': fields.one2many('res.partner.address', 'contact_id', 'Functions and Addresses'),
+        'job_ids': fields.one2many('res.partner', 'contact_id', 'Functions and Addresses'),
         'country_id': fields.many2one('res.country','Nationality'),
         'birthdate': fields.char('Birthdate', size=64),
         'active': fields.boolean('Active', help="If the active field is set to False,\
                  it will allow you to hide the partner contact without removing it."),
-        'partner_id': fields.related('job_ids', 'partner_id', type='many2one',\
+        'partner_id': fields.related('job_ids', 'parent_id', type='many2one',\
                          relation='res.partner', string='Main Employer'),
         'function': fields.related('job_ids', 'function', type='char', \
                                  string='Main Function'),
@@ -103,9 +103,9 @@ class res_partner_contact(osv.osv):
                 SELECT
                     id,COALESCE(name, '/'),COALESCE(name, '/'),title,true,email,mobile,birthdate
                 FROM
-                    res_partner_address""")
-            cr.execute("alter table res_partner_address add contact_id int references res_partner_contact")
-            cr.execute("update res_partner_address set contact_id=id")
+                    res_partner""")
+            cr.execute("alter table res_partner add contact_id int references res_partner_contact")
+            cr.execute("update res_partner set contact_id=id")
             cr.execute("select setval('res_partner_contact_id_seq', (select max(id)+1 from res_partner_contact))")
 
 res_partner_contact()
@@ -121,8 +121,8 @@ class res_partner_location(osv.osv):
         'state_id': fields.many2one("res.country.state", 'Fed. State', domain="[('country_id','=',country_id)]"),
         'country_id': fields.many2one('res.country', 'Country'),
         'company_id': fields.many2one('res.company', 'Company',select=1),
-        'job_ids': fields.one2many('res.partner.address', 'location_id', 'Contacts'),
-        'partner_id': fields.related('job_ids', 'partner_id', type='many2one',\
+        'job_ids': fields.one2many('res.partner', 'location_id', 'Contacts'),
+        'partner_id': fields.related('job_ids', 'parent_id', type='many2one',\
                          relation='res.partner', string='Main Partner'),
     }
     _defaults = {
@@ -147,10 +147,10 @@ class res_partner_location(osv.osv):
                     id,street,street2,zip,city,
                     state_id,country_id,company_id
                 FROM
-                    res_partner_address""")
-            cr.execute("alter table res_partner_address add location_id int references res_partner_location")
-            cr.execute("update res_partner_address set location_id=id")
-            cr.execute("select setval('res_partner_location_id_seq', (select max(id)+1 from res_partner_address))")
+                    res_partner""")
+            cr.execute("alter table res_partner add location_id int references res_partner_location")
+            cr.execute("update res_partner set location_id=id")
+            cr.execute("select setval('res_partner_location_id_seq', (select max(id)+1 from res_partner))")
 
     def name_get(self, cr, uid, ids, context=None):
         result = {}
@@ -227,8 +227,8 @@ class res_partner_address(osv.osv):
         result = {}
         for rec in self.browse(cr,uid, ids, context=context):
             res = []
-            if rec.partner_id:
-                res.append(rec.partner_id.name_get()[0][1])
+            if rec.parent_id:
+                res.append(rec.parent_id.name_get()[0][1])
             if rec.contact_id and rec.contact_id.name:
                 res.append(rec.contact_id.name)
             if rec.location_id:
