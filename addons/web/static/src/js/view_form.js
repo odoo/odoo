@@ -728,27 +728,18 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
 
 openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
     init: function(parent, fvg, registry) {
-        var self = this;
         this._super.apply(this, arguments);
+        this.registry = registry;
         this.fvg = fvg;
         this.view = parent;
         this.fields_prefix = this.view.dataset ? this.view.dataset.model : '';
 
         // TODO: I know this will save the world and all the kitten for a moment,
         //       but one day, we will have to get rid of xml2json
-        var xml = openerp.web.json_node_to_xml(fvg.arch),
-            $form = this.$form = $(xml);
+        var xml = openerp.web.json_node_to_xml(fvg.arch);
+        this.$form = $(xml);
 
-        // TODO: extract embeded views before preprocessing
-        _.each(['field', 'group', 'notebook', 'separator', 'label'], function(tag) {
-            var fn = self['process_' + tag];
-            if (registry && registry.contains(tag)) {
-                fn = registry.get_object(tag);
-            }
-            $form.find(tag).each(function() {
-                fn.call(self, $(this), $form);
-            });
-        });
+        this.process_any(this.$form);
     },
     start: function() {
         var self = this;
@@ -768,7 +759,34 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             }
         });
     },
-    process_field: function($field, $form) {
+    process_any: function($tag) {
+        var self = this;
+        // TODO: extract embeded views before preprocessing
+        var tagname = $tag[0].nodeName.toLowerCase();
+        var fn = self['process_' + tagname]; 
+        if (this.registry && this.registry.contains(tagname)) {
+            fn = this.registry.get_object(tagname);
+        }
+        if (fn)
+            fn.call(self, $tag);
+        else { // generic tag handling, just process children
+            _.each($tag.children(), function(el) {
+                self.process_any($(el));
+            });
+        }
+        /*
+        _.each(['field', 'group', 'notebook', 'separator', 'label'], function(tag) {
+            var fn = self['process_' + tag]; 
+            if (this.registry && this.registry.contains(tag)) {
+                fn = this.registry.get_object(tag);
+            }
+            $form.find(tag).each(function() {
+                fn.call(self, $(this), $form);
+            });
+        });
+        */
+    },
+    process_field: function($field) {
         var name = $field.attr('name'),
             field_orm = this.fvg.fields[name],
             field_string = $field.attr('string') || field_orm.string || '',
@@ -780,15 +798,17 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         }
 
         if ($field.attr('nolabel') !== '1') {
-            var $label = $form.find('label[for="' + name + '"]');
+            var $label = this.$form.find('label[for="' + name + '"]');
             if (!$label.length) {
                 field_string = $label.attr('string') || $label.text() || field_string;
                 field_help = $label.attr('help') || field_help;
-                $('<label/>').attr({
+                var label = $('<label/>').attr({
                     'for' : name,
                     'string' : field_string,
                     'help' :  field_help
-                }).insertBefore($field).text();
+                });
+                label.insertBefore($field);
+                this.process_any(label);
                 if (field_colspan > 1) {
                     $field.attr('colspan', field_colspan - 1);
                 }
@@ -800,9 +820,12 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             'help' : field_help
         });
     },
-    process_group: function($group, $form) {
-        var self = this,
-            $new_group = $(QWeb.render('FormRenderingGroup', $group.getAttributes())),
+    process_group: function($group) {
+        var self = this;
+        _.each($group.children(), function(el) {
+            self.process_any($(el));
+        });
+        var $new_group = $(QWeb.render('FormRenderingGroup', $group.getAttributes())),
             $table;
         if ($new_group.is('table')) {
             $table = $new_group;
@@ -866,7 +889,11 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             });
         });
     },
-    process_notebook: function($notebook, $form) {
+    process_notebook: function($notebook) {
+        var self = this;
+        _.each($notebook.children(), function(el) {
+            self.process_any($(el));
+        });
         var pages = [];
         $notebook.find('> page').each(function() {
             var $page = $(this),
@@ -882,11 +909,11 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         $notebook.before($new_notebook).remove();
         $new_notebook.tabs();
     },
-    process_separator: function($separator, $form) {
+    process_separator: function($separator) {
         var $new_separator = $(QWeb.render('FormRenderingSeparator', $separator.getAttributes()));
         $separator.before($new_separator).remove();
     },
-    process_label: function($label, $form) {
+    process_label: function($label) {
         var dict = $label.getAttributes();
         var align = parseFloat(dict.align);
         if (isNaN(align) || align === 1) {
