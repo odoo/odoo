@@ -257,6 +257,7 @@ class event_registration(osv.osv):
 
 
     def registration_open(self, cr, uid, ids, context=None):
+        """ Open Registration
         """
         res = self.confirm_registration(cr, uid, ids, context=context)
         self.mail_user(cr, uid, ids, context=context)
