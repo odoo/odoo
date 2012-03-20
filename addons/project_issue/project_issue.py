@@ -363,33 +363,39 @@ class project_issue(crm.crm_case, osv.osv):
         return {'value':{'user_id': task.user_id.id,}}
 
     def case_open_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
+        for id in ids:
             message = _("has been <b>opened</b>.")
-            obj.message_append_note('' ,message)
+            self.message_append_note(cr, uid, [id],'System Notification', message, context=context)
         return True
 
     def case_close_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
+        for id in ids:
             message = _("has been <b>closed</b>.")
-            obj.message_append_note('' ,message)
+            self.message_append_note(cr, uid, [id],'System Notification', message, context=context)
         return True
 
 
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("has been <b>converted</b> in to task."), type='notification', context=context)
+        for id in ids:
+            message = _("has been <b>converted</b> in to task.")
+            self.message_append_note(cr, uid, [id], 'System notification', message, context=context)
         return True
 
-    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
-        result = {}
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = False
-            if (obj.state == 'draft' and obj.user_id):
-                result[obj.id] = obj.user_id.id
+            if obj.state == 'draft' and obj.user_id:
+                result[obj.id] = [obj.user_id.id]
             if obj.project_id.user_id:
-                result[obj.id] = obj.project_id.user_id.id
+                result[obj.id] = [obj.project_id.user_id.id]
         return result
+
+    def message_get_subscribers(self, cr, uid, ids, context=None):
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.user_id:
+                sub_ids.append(obj.user_id.id)
+        return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
 
     def case_escalate_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -401,30 +407,29 @@ class project_issue(crm.crm_case, osv.osv):
                 obj.message_append_note('' ,message, type='notification', context=context)
         return True
 
-    def case_create_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-#            self.message_subscribe(cr, uid, ids, [obj.user_id.id], context=context)
+    def create_send_note(self, cr, uid, ids, context=None):
+        for id in ids:
             message = _("has been <b>created</b>.")
-            self.message_append_note(cr, uid, ids, _('System notification'),
+            self.message_append_note(cr, uid, [id], _('System notification'),
                         message, type='notification', context=context)
         return True
 
     def case_pending_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
+        for id in ids:
             message = _("has been <b>pending<b>.")
-            obj.message_append_note('' ,message)
+            self.message_append_note(cr, uid, [id], 'System Notification', message, context=context)
         return True
 
     def case_reset_send_note(self,  cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
+        for id in ids:
             message =_("has been set as <b>new<b>.")
-            obj.message_append_note('' ,message)
+            self.message_append_note(cr, uid, [id],'System Notification', message, context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
+        for id in ids:
             message = _("has been <b>cancelled<b>.")
-            obj.message_append_note('' ,message)
+            self.message_append_note(cr, uid, [id],'System Notification', message, context=context)
         return True
 
     def case_reset(self, cr, uid, ids, context=None):
@@ -450,7 +455,7 @@ class project_issue(crm.crm_case, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(project_issue, self).create(cr, uid, vals, context=context)
-        self.case_create_send_note(cr, uid, [obj_id], context=context)
+        self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
     def case_open(self, cr, uid, ids, context=None):
