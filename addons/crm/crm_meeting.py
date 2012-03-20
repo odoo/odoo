@@ -105,6 +105,8 @@ class crm_meeting(crm_base, osv.osv):
                 phonecall = meeting.phonecall_id
                 parent_message = _("Meeting linked to the phonecall <em>%s</em> has been <b>created</b> and <b>cscheduled</b> on <em>%s</em>.") % (phonecall.name, meeting.date)
                 phonecall.message_append_note('System Notification', message)
+            else:
+                parent_message = message
             if parent_message:
                 meeting.message_append_note('System Notification', parent_message)
         return True
