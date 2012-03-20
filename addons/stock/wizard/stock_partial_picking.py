@@ -75,6 +75,8 @@ class stock_partial_picking(osv.osv_memory):
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', 
                         context=None, toolbar=False, submenu=False):
+        # remove the entry with key 'form_view_ref', otherwise fields_view_get crashes
+        context.pop('form_view_ref', None)
         if context is None:
             context={}
         res = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
