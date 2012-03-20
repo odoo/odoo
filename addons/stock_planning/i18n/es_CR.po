@@ -8,15 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-17 00:37+0000\n"
-"Last-Translator: Carlos Vásquez (CLEARCORP) "
-"<carlos.vasquez@clearcorp.co.cr>\n"
+"PO-Revision-Date: 2012-02-22 22:27+0000\n"
+"Last-Translator: Freddy Gonzalez <freddy.gonzalez@clearcorp.co.cr>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-18 04:59+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-02-23 04:39+0000\n"
+"X-Generator: Launchpad (build 14855)\n"
 "Language: es\n"
 
 #. module: stock_planning
@@ -173,6 +172,10 @@ msgid ""
 "are independent of financial periods. If you need periods other than day-, "
 "week- or month-based, you may also add then manually."
 msgstr ""
+"Este asistente le ayuda con la creación de periodos de planificación de "
+"acciones. Estos períodos son independientes de los ejercicios económicos. Si "
+"necesita otros períodos de día, semana o mes base, también se puede añadir a "
+"continuación de forma manual."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -198,6 +201,7 @@ msgstr "Todos los productos con previsión"
 #: help:stock.planning,maximum_op:0
 msgid "Maximum quantity set in Minimum Stock Rules for this Warehouse"
 msgstr ""
+"Cantidad máxima fijada en las Reglas mínimas para el archivo de almacenes"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -210,6 +214,9 @@ msgid ""
 "Check to make procurement to stock location of selected warehouse. If not "
 "selected procurement will be made into input location of warehouse."
 msgstr ""
+"Verifique que las adquisiciones de valores a la ubicación del almacén "
+"seleccionado. Si no se selecciona la contratación se hará en el lugar de "
+"entrada del almacén."
 
 #. module: stock_planning
 #: help:stock.planning,already_in:0
@@ -414,6 +421,17 @@ msgid ""
 "  \n"
 " Stock Simulation: %s    Minimum stock: %s"
 msgstr ""
+" Contratación creada por MPS para el usuario:% s Fecha de creación:% s\n"
+"  Para el periodo de:% s\n"
+"  acuerdo con el estado:\n"
+"  Pronóstico de almacén:% s\n"
+"  Stock inicial:% s\n"
+"  Planificación de salida:% s programa En: %s\n"
+"  Ya de salida:% s ya se encuentran en: %s\n"
+"  Confirmado salida:% s Confirmado En: %s\n"
+"  Planeado Antes:% s Confirmado En Antes: %s\n"
+"  Se espera de salida: Izquierda entrante%s : %s\n"
+"  Simulación de archivo: Stock mínimo de%s: %s"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:626
@@ -460,7 +478,7 @@ msgstr "Cantidad stock un día antes del periodo actual."
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Procurement history"
-msgstr ""
+msgstr "Historia de Contratación"
 
 #. module: stock_planning
 #: help:stock.planning,product_uom:0
@@ -468,6 +486,9 @@ msgid ""
 "Unit of Measure used to show the quantities of stock calculation.You can use "
 "units from default category or from second category (UoS category)."
 msgstr ""
+"Unidad de medida utilizada para mostrar las cantidades de existencias "
+"calculation.You puede utilizar unidades de la categoría por defecto o de "
+"segunda categoría (categoría EES)."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -481,6 +502,9 @@ msgid ""
 "account periods. You can use wizard for creating periods and review them "
 "here."
 msgstr ""
+"Períodos de archivo se utilizan para la planificación de acciones. Períodos "
+"de archivo son independientes de los períodos de la cuenta. Usted puede "
+"utilizar el asistente para la creación de periodos y revisar aquí."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -511,6 +535,8 @@ msgstr "Previsión de la compañía"
 #: help:stock.planning,minimum_op:0
 msgid "Minimum quantity set in Minimum Stock Rules for this Warehouse"
 msgstr ""
+"La cantidad mínima establecida en las Reglas mínimas para el archivo de "
+"almacenes"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -546,7 +572,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:146
 #, python-format
 msgid "Cannot delete a validated sales forecast!"
-msgstr ""
+msgstr "¡No se puede eliminar una previsión de ventas validado!"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
@@ -561,7 +587,7 @@ msgstr "UdM de producto"
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_company:0
 msgid "This Company Period1"
-msgstr ""
+msgstr "Esta compañía periodo1"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_company:0
@@ -607,7 +633,7 @@ msgstr "Salidas planificadas"
 #. module: stock_planning
 #: field:stock.sale.forecast,product_qty:0
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "Pronóstico de cantidad"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -638,6 +664,9 @@ msgid ""
 "Unit of Measure used to show the quantities of stock calculation.You can use "
 "units form default category or from second category (UoS category)."
 msgstr ""
+"Unidad de medida utilizada para mostrar las cantidades de existencias "
+"calculation.You puede utilizar unidades forman categoría por defecto o de "
+"segunda categoría (categoría EES)."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -660,7 +689,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Current Periods"
-msgstr ""
+msgstr "Períodos actuales"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -671,7 +700,7 @@ msgstr "Suministro interno"
 #: code:addons/stock_planning/stock_planning.py:724
 #, python-format
 msgid "%s Pick List %s (%s,  %s) %s %s \n"
-msgstr ""
+msgstr "%s lista de selección%s (%s,%s)%s%s \n"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_sale_forecast_createlines_form
@@ -712,6 +741,9 @@ msgid ""
 "warehouse, so you don't have to create them one by one. The wizard doesn't "
 "duplicate lines if they already exist for this selection."
 msgstr ""
+"Este asistente ayuda a crear líneas de MPS de planificación para un período "
+"determinado seleccionado y el almacén, por lo que no tiene que crearlos uno "
+"por uno. El asistente no duplicar líneas, si ya existen para esta selección."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
@@ -753,7 +785,7 @@ msgstr "Almacén origen"
 #. module: stock_planning
 #: help:stock.sale.forecast,product_qty:0
 msgid "Forecast Product quantity."
-msgstr ""
+msgstr "Pronóstico de cantidad del producto."
 
 #. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
@@ -781,7 +813,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:702
 #, python-format
 msgid "MPS(%s) %s"
-msgstr ""
+msgstr "MPS (%s)%s"
 
 #. module: stock_planning
 #: field:stock.planning,already_in:0
@@ -803,6 +835,11 @@ msgid ""
 "manual procurement with this forecast when some periods are exceptional for "
 "usual minimum stock rules."
 msgstr ""
+"Esta previsión cantidad de ventas es una indicación de Stock Planner para "
+"hacer compras de forma manual o automática para complementar las "
+"adquisiciones. Puede utilizar la contratación manual con esta previsión, "
+"cuando algunos períodos son excepcionales para las reglas usuales de "
+"existencias mínimas."
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_view_stock_planning_form
@@ -818,6 +855,17 @@ msgid ""
 "can trigger the procurement of what is missing to reach your desired "
 "quantities"
 msgstr ""
+"El programa de adquisiciones maestro puede ser el principal motor para la "
+"reposición de almacén, o puede complementar la programación automática de "
+"planificación de necesidades (normas mínimas de derechos, etc.)\n"
+"Cada línea MPS le da una visión pre-computados de las cantidades que entran "
+"y salen de un determinado producto durante un período determinado archivo en "
+"un almacén determinado, sobre la base de los niveles de stock actuales y "
+"futuras,\n"
+"así como los movimientos de stock planificadas. Las cantidades previstas se "
+"puede modificar de forma manual, y cuando esté satisfecho con el resultado "
+"(simulado) la cantidad de archivo, puede desencadenar la adquisición de lo "
+"que falta para llegar a sus cantidades deseadas"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:685
@@ -836,6 +884,16 @@ msgid ""
 " Expected Out: %s   Incoming Left: %s                                     \n"
 " Stock Simulation: %s   Minimum stock: %s "
 msgstr ""
+"Elige creado a partir de MPS por el usuario:%s Fecha de creación:%s\n"
+"Para el periodo de:%s en función del estado:\n"
+"  Pronóstico de almacén:%s\n"
+"  Stock inicial:%s\n"
+"  Planificación de salida:%s programa En:%s\n"
+"  Ya de salida:%s ya se encuentran en:%s\n"
+"  Confirmado salida:% s Confirmado En:% s\n"
+"  Planeado Antes:% s Confirmado En Antes:% s\n"
+"  Se espera de salida: Izquierda entrante% s:% s\n"
+"  Simulación de archivo: Stock mínimo de% s:% s "
 
 #. module: stock_planning
 #: field:stock.planning,period_id:0
@@ -884,7 +942,7 @@ msgstr "Periodos"
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_period_creatlines
 msgid "Create Stock Periods"
-msgstr ""
+msgstr "Crear períodos de stocks"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -953,6 +1011,10 @@ msgid ""
 "supply will be made from Output location of Supply Warehouse. Used in "
 "'Supply from Another Warehouse' with Supply Warehouse."
 msgstr ""
+"Verifique que el suministro procedente de la ubicación de archivo de almacén "
+"de suministros. Si está desactivado el suministro se hará desde la ubicación "
+"de salida del almacén de suministros. Se utiliza en \"El suministro de otro "
+"almacén\" con almacén de suministros."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
@@ -985,6 +1047,8 @@ msgid ""
 "Warehouse used as source in supply pick move created by 'Supply from Another "
 "Warehouse'."
 msgstr ""
+"Almacén utilizado como fuente de suministro de selección se mueven creado "
+"por 'El suministro de otro almacén."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
@@ -1005,7 +1069,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:661
 #, python-format
 msgid "%s Procurement (%s,  %s) %s %s \n"
-msgstr ""
+msgstr "%s Contratación(% s,% s)%s%s \n"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyze_company:0
@@ -1066,7 +1130,7 @@ msgstr "Fecha inicial para el periodo planificado."
 #: view:stock.period:0
 #: view:stock.period.createlines:0
 msgid "Stock Periods"
-msgstr ""
+msgstr "Periodos de Stock"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1108,7 +1172,7 @@ msgstr "UdM"
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Closed Periods"
-msgstr ""
+msgstr "Periodos cerrados"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1160,7 +1224,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:631
 #, python-format
 msgid "MPS planning for %s"
-msgstr ""
+msgstr "MPS planeado para %s"
 
 #. module: stock_planning
 #: field:stock.planning,stock_start:0
@@ -1199,7 +1263,7 @@ msgstr "Muestra quién creó esta previsión, o quién la validó."
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_team_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Equipo de ventas"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_left:0
@@ -1220,6 +1284,9 @@ msgid ""
 "difference between Planned Out and Confirmed Out. For current period Already "
 "Out is also calculated"
 msgstr ""
+"Cantidad esperada que en el período seleccionado, además de salida "
+"confirmada. Como diferencia entre planificado y confirmada de salida. Para "
+"el período actual ya de salida se calcula también"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1233,6 +1300,9 @@ msgid ""
 "you only have to fill in the forecast quantities. The wizard doesn't "
 "duplicate the line when another one exist for the same selection."
 msgstr ""
+"Este asistente ayuda a crear muchas líneas de pronóstico a la vez. Después "
+"de su creación sólo tiene que rellenar las cantidades previstas. El "
+"asistente no duplicar la línea cuando otro existe para la misma selección."
 
 #~ msgid "Create Stock and Sales Periods"
 #~ msgstr "Crear periodos de stock y ventas"

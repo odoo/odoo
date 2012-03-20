@@ -622,7 +622,6 @@ account_bank_statement()
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
     _columns= {
-        'journal_id': fields.related('statement_id','journal_id','name', store=True, string='Journal', type='char', size=64),
         'pos_statement_id': fields.many2one('pos.order', ondelete='cascade'),
     }
 account_bank_statement_line()

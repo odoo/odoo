@@ -29,7 +29,7 @@
     'complexity': "easy",
     "description": """
 Installer for knowledge-based Hidden.
-====================================
+=====================================
 
 Makes the Knowledge Application Configuration available from where you can install
 document and Wiki based Hidden.
