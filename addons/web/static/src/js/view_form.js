@@ -1725,7 +1725,7 @@ openerp.web.form.FieldDatetime = openerp.web.form.AbstractField.extend(_.extend(
         this.invalid = this.get("effective_readonly") || !this.datewidget.is_valid(this.required);
     },
     focus: function($element) {
-        this._super($element || this.datewidget.$input);
+        this._super($element || (this.datewidget && this.datewidget.$input));
     }
 }));
 
