@@ -338,6 +338,8 @@ class res_partner_address(osv.osv):
                 ids = self.search(cr, user, [('city',operator,name)] + args, limit=limit, context=context)
             if name:
                 ids += self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
+                ids += self.search(cr, user, [('street',operator,name)] + args, limit=limit, context=context)
+                ids += self.search(cr, user, [('country_id',operator,name)] + args, limit=limit, context=context)
                 ids += self.search(cr, user, [('partner_id',operator,name)] + args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
