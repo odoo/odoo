@@ -314,6 +314,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         }
     },
     on_loaded: function(data) {
+        var self = this;
         this.fields_view = data.fields_view;
         if (data.fields_view.type !== 'search' ||
             data.fields_view.arch.tag !== 'search') {
@@ -322,12 +323,16 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                     data.fields_view.type, data.fields_view.arch.tag));
         }
 
-        var self = this,
-           lines = this.make_widgets(
+        this.make_widgets(
                 data.fields_view['arch'].children,
                 data.fields_view.fields);
 
-        return this.ready.resolve().promise();
+        // load defaults
+        return $.when.apply(null, _(this.inputs).invoke('facet_for_defaults', this.defaults))
+            .then(function () {
+                self.vs.searchQuery.reset(_(arguments).compact());
+                self.ready.resolve();
+        });
 
         // for extended search view
         var ext = new openerp.web.search.ExtendedSearch(this, this.model);
@@ -730,10 +735,6 @@ openerp.web.search.Widget = openerp.web.OldWidget.extend( /** @lends openerp.web
     destroy: function () {
         delete this.view;
         this._super();
-    },
-    render: function (defaults) {
-        // FIXME
-        return this._super(_.extend(this, {defaults: defaults}));
     }
 });
 openerp.web.search.add_expand_listener = function($root) {
@@ -781,10 +782,28 @@ openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.
      * label, value prefixed with an object with keys type=section and label
      *
      * @param {String} value value to complete
-     * @returns {jQuery.Deferred<null|Object>}
+     * @returns {jQuery.Deferred<null|Array>}
      */
     complete: function (value) {
         return $.when(null)
+    },
+    /**
+     * Returns a VS.model.SearchFacet instance for the provided defaults if
+     * they apply to this widget, or null if they don't.
+     *
+     * This default implementation will try calling
+     * :js:func:`openerp.web.search.Input#facet_for` if the widget's name
+     * matches the input key
+     *
+     * @param {Object} defaults
+     * @returns {jQuery.Deferred<null|Object>}
+     */
+    facet_for_defaults: function (defaults) {
+        if (!this.attrs ||
+            !(this.attrs.name in defaults && defaults[this.attrs.name])) {
+            return $.when(null);
+        }
+        return this.facet_for(defaults[this.attrs.name]);
     },
     get_context: function () {
         throw new Error(
@@ -880,25 +899,17 @@ openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.w
         });
     },
     /**
-     * Returns whether the filter is currently enabled (in use) or not.
-     *
-     * @returns a boolean
-     */
-    is_enabled:function () {
-        return this.$element.hasClass('enabled');
-    },
-    /**
      * If the filter is present in the defaults (and has a truthy value),
      * enable the filter.
      *
      * @param {Object} defaults the search view's default values
      */
-    render: function (defaults) {
-        if (this.attrs.name && defaults[this.attrs.name]) {
-            this.classes.push('enabled');
-            this.view.do_toggle_filter(this, true);
-        }
-        return this._super(defaults);
+    facet_for: function (value) {
+        return $.when(new VS.model.SearchFacet({
+            category: this.attrs.string || this.attrs.name,
+            value: 'true',
+            app: this.view.vs
+        }));
     },
     get_context: function () {
         if (!this.is_enabled()) {
@@ -938,6 +949,13 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
                     filter_node, view);
         })), view);
         this.make_id('input', field.type, this.attrs.name);
+    },
+    facet_for: function (value) {
+        return $.when(new VS.model.SearchFacet({
+            category: this.attrs.name,
+            value: String(value),
+            app: this.view.vs
+        }));
     },
     start: function () {
         this._super();
@@ -1096,26 +1114,23 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
         return $.when.apply(null,
             [{type: 'section', label: this.attrs.string}].concat(results));
     },
+    facet_for: function (value) {
+        var match = _(this.attrs.selection).detect(function (sel) {
+            return sel[0] === value;
+        });
+        if (!match) { return $.when(null); }
+        return $.when(new VS.model.SearchFacet({
+            category: this.attrs.name,
+            value: match[1],
+            app: this.view.vs
+        }));
+    },
     get_value: function () {
         var index = parseInt(this.$element.val(), 10);
         if (isNaN(index)) { return null; }
         var value = this.attrs.selection[index][0];
         if (value === false) { return null; }
         return value;
-    },
-    /**
-     * The selection field needs a default ``false`` value in case none is
-     * provided, so that selector options with a ``false`` value (convention
-     * for explicitly empty options) get selected by default rather than the
-     * first (value-holding) option in the selection.
-     *
-     * @param {Object} defaults search default values
-     */
-    render: function (defaults) {
-        if (!defaults[this.attrs.name]) {
-            defaults[this.attrs.name] = false;
-        }
-        return this._super(defaults);
     },
     clear: function () {
         var self = this, d = $.Deferred(), selection = this.attrs.selection;
@@ -1145,23 +1160,6 @@ openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @
             ['true', _t("Yes")],
             ['false', _t("No")]
         ];
-    },
-    /**
-     * Search defaults likely to be boolean values (for a boolean field).
-     *
-     * In the HTML, we only want/get strings, and our strings here are ``true``
-     * and ``false``, so ensure we use precisely those by truth-testing the
-     * default value (iif there is one in the view's defaults).
-     *
-     * @param {Object} defaults default values for this search view
-     * @returns {String} rendered boolean field
-     */
-    render: function (defaults) {
-        var name = this.attrs.name;
-        if (name in defaults) {
-            defaults[name] = defaults[name] ? "true" : "false";
-        }
-        return this._super(defaults);
     },
     get_value: function () {
         switch (this.$element.val()) {
@@ -1242,6 +1240,24 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
                 }));
         });
     },
+    facet_for: function (value) {
+        var self = this;
+        if (value instanceof Array) {
+            return $.when(new VS.model.SearchFacet({
+                category: this.attrs.string,
+                value: value[1],
+                app: this.view.vs
+            }));
+        }
+        return new openerp.web.Model(this.attrs.relation)
+            .call('name_get', [value], {}).pipe(function (names) {
+                return new VS.model.SearchFacet({
+                category: self.attrs.string,
+                value: names[0][1],
+                app: self.view.vs
+            });
+        })
+    },
     start: function () {
         this._super();
         this.setup_autocomplete();
@@ -1249,51 +1265,6 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
         this.got_name.then(function () { started.resolve();},
                            function () { started.resolve(); });
         return started.promise();
-    },
-    setup_autocomplete: function () {
-        var self = this;
-        this.$element.autocomplete({
-            source: function (req, resp) {
-                if (self.abort_last) {
-                    self.abort_last();
-                    delete self.abort_last;
-                }
-                self.dataset.name_search(
-                    req.term, self.attrs.domain, 'ilike', 8, function (data) {
-                        resp(_.map(data, function (result) {
-                            return {id: result[0], label: result[1]}
-                        }));
-                });
-                self.abort_last = self.dataset.abort_last;
-            },
-            select: function (event, ui) {
-                self.id = ui.item.id;
-                self.name = ui.item.label;
-            },
-            delay: 0
-        })
-    },
-    on_name_get: function (name_get) {
-        if (!name_get.length) {
-            delete this.id;
-            this.got_name.reject();
-            return;
-        }
-        this.name = name_get[0][1];
-        this.got_name.resolve();
-    },
-    render: function (defaults) {
-        if (defaults[this.attrs.name]) {
-            this.id = defaults[this.attrs.name];
-            if (this.id instanceof Array)
-                this.id = this.id[0];
-            // TODO: maybe this should not be completely removed
-            delete defaults[this.attrs.name];
-            this.dataset.name_get([this.id], $.proxy(this, 'on_name_get'));
-        } else {
-            this.got_name.reject();
-        }
-        return this._super(defaults);
     },
     make_domain: function (name, operator, value) {
         if (this.id && this.name) {
