@@ -31,9 +31,7 @@
             <field name="number">SAJ/2010/010</field>
             <field name="journal_id" ref="account.sales_journal"/>
             <field name="currency_id" ref="base.EUR"/>
-            <field name="address_invoice_id" ref="base.res_partner_address_8invoice"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="address_contact_id" ref="base.res_partner_address_8"/>
             <field name="reference_type">none</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="state">open</field>
@@ -108,7 +106,7 @@
             <field model="pos.order" name="pos_statement_id" search="[('name', '=', u'POS/019')]"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="account_id" ref="account.a_recv"/>
-            <field name="journal_id">Cash Journal - (test)</field>
+            <field name="journal_id" ref="account.cash_journal"/>
             <field eval="[(6,0,[])]" name="move_ids"/>
             <field name="date" eval="time.strftime('%Y-%m-%d')"/>
             <field eval="450.0" name="amount"/>

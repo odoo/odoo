@@ -19,7 +19,6 @@ openerp.point_of_sale = function(db) {
     };
 
     var QWeb = db.web.qweb;
-    QWeb.add_template("/point_of_sale/static/src/xml/pos.xml");
     var qweb_template = function(template) {
         return function(ctx) {
             return QWeb.render(template, _.extend({}, ctx,{
@@ -682,7 +681,7 @@ openerp.point_of_sale = function(db) {
             }, this));
             return (this.shop.get('selectedOrder')).addPaymentLine(cashRegister);
         },
-        render_element: function() {
+        renderElement: function() {
             this.$element.empty();
             return (this.shop.get('cashRegisters')).each(_.bind( function(cashRegister) {
                 var button = new PaymentButtonWidget();
@@ -693,7 +692,7 @@ openerp.point_of_sale = function(db) {
     });
     var PaymentButtonWidget = db.web.OldWidget.extend({
         template_fct: qweb_template('pos-payment-button-template'),
-        render_element: function() {
+        renderElement: function() {
             this.$element.html(this.template_fct({
                 id: this.model.get('id'),
                 name: (this.model.get('journal_id'))[1]
@@ -736,7 +735,7 @@ openerp.point_of_sale = function(db) {
      Shopping carts.
      */
     var OrderlineWidget = db.web.OldWidget.extend({
-        tag_name: 'tr',
+        tagName: 'tr',
         template_fct: qweb_template('pos-orderline-template'),
         init: function(parent, options) {
             this._super(parent);
@@ -756,12 +755,12 @@ openerp.point_of_sale = function(db) {
         clickHandler: function() {
             this.select();
         },
-        render_element: function() {
+        renderElement: function() {
             this.$element.html(this.template_fct(this.model.toJSON()));
             this.select();
         },
         refresh: function() {
-            this.render_element();
+            this.renderElement();
             var heights = _.map(this.$element.prevAll(), function(el) {return $(el).outerHeight();});
             heights.push($('#current-order thead').outerHeight());
             var position = _.reduce(heights, function(memo, num){ return memo + num; }, 0);
@@ -806,12 +805,12 @@ openerp.point_of_sale = function(db) {
         changeSelectedOrder: function() {
             this.currentOrderLines.unbind();
             this.bindOrderLineEvents();
-            this.render_element();
+            this.renderElement();
         },
         bindOrderLineEvents: function() {
             this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
             this.currentOrderLines.bind('add', this.addLine, this);
-            this.currentOrderLines.bind('remove', this.render_element, this);
+            this.currentOrderLines.bind('remove', this.renderElement, this);
         },
         addLine: function(newLine) {
             var line = new OrderlineWidget(null, {
@@ -833,7 +832,7 @@ openerp.point_of_sale = function(db) {
         		this.numpadState.reset();
             this.updateSummary();
         },
-        render_element: function() {
+        renderElement: function() {
             this.$element.empty();
             this.currentOrderLines.each(_.bind( function(orderLine) {
                 var line = new OrderlineWidget(null, {
@@ -864,7 +863,7 @@ openerp.point_of_sale = function(db) {
             this.$element.find(".oe-pos-categories-list a").click(_.bind(this.changeCategory, this));
         },
         template_fct: qweb_template('pos-category-template'),
-        render_element: function() {
+        renderElement: function() {
             var self = this;
             var c;
             this.$element.html(this.template_fct({
@@ -895,7 +894,7 @@ openerp.point_of_sale = function(db) {
         on_change_category: function(id) {},
     });
     var ProductWidget = db.web.OldWidget.extend({
-        tag_name:'li',
+        tagName:'li',
         template_fct: qweb_template('pos-product-template'),
         init: function(parent, options) {
             this._super(parent);
@@ -910,7 +909,7 @@ openerp.point_of_sale = function(db) {
             event.preventDefault();
             return (this.shop.get('selectedOrder')).addProduct(this.model);
         },
-        render_element: function() {
+        renderElement: function() {
             this.$element.addClass("product");
             this.$element.html(this.template_fct(this.model.toJSON()));
             return this;
@@ -921,9 +920,9 @@ openerp.point_of_sale = function(db) {
             this._super(parent);
             this.model = options.model;
             this.shop = options.shop;
-            this.shop.get('products').bind('reset', this.render_element, this);
+            this.shop.get('products').bind('reset', this.renderElement, this);
         },
-        render_element: function() {
+        renderElement: function() {
             this.$element.empty();
             (this.shop.get('products')).each(_.bind( function(product) {
                 var p = new ProductWidget(null, {
@@ -939,7 +938,7 @@ openerp.point_of_sale = function(db) {
      "Payment" step.
      */
     var PaymentlineWidget = db.web.OldWidget.extend({
-        tag_name: 'tr',
+        tagName: 'tr',
         template_fct: qweb_template('pos-paymentline-template'),
         init: function(parent, options) {
             this._super(parent);
@@ -959,9 +958,9 @@ openerp.point_of_sale = function(db) {
         },
         changedAmount: function() {
         	if (this.amount !== this.model.get('amount'))
-        		this.render_element();
+        		this.renderElement();
         },
-        render_element: function() {
+        renderElement: function() {
         	this.amount = this.model.get('amount');
             this.$element.html(this.template_fct({
                 name: (this.model.get('journal_id'))[1],
@@ -1005,7 +1004,7 @@ openerp.point_of_sale = function(db) {
         bindPaymentLineEvents: function() {
             this.currentPaymentLines = (this.shop.get('selectedOrder')).get('paymentLines');
             this.currentPaymentLines.bind('add', this.addPaymentLine, this);
-            this.currentPaymentLines.bind('remove', this.render_element, this);
+            this.currentPaymentLines.bind('remove', this.renderElement, this);
             this.currentPaymentLines.bind('all', this.updatePaymentSummary, this);
         },
         bindOrderLineEvents: function() {
@@ -1017,7 +1016,7 @@ openerp.point_of_sale = function(db) {
             this.bindPaymentLineEvents();
             this.currentOrderLines.unbind();
             this.bindOrderLineEvents();
-            this.render_element();
+            this.renderElement();
         },
         addPaymentLine: function(newPaymentLine) {
             var x = new PaymentlineWidget(null, {
@@ -1026,7 +1025,7 @@ openerp.point_of_sale = function(db) {
             x.on_delete.add(_.bind(this.deleteLine, this, x));
             x.appendTo(this.paymentLineList());
         },
-        render_element: function() {
+        renderElement: function() {
             this.paymentLineList().empty();
             this.currentPaymentLines.each(_.bind( function(paymentLine) {
                 this.addPaymentLine(paymentLine);
@@ -1080,7 +1079,7 @@ openerp.point_of_sale = function(db) {
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.changeSelectedOrder();
         },
-        render_element: function() {
+        renderElement: function() {
             this.$element.html(qweb_template('pos-receipt-view'));
             $('button#pos-finish-order', this.$element).click(_.bind(this.finishOrder, this));
             $('button#print-the-ticket', this.$element).click(_.bind(this.print, this));
@@ -1110,14 +1109,14 @@ openerp.point_of_sale = function(db) {
         },
     });
     var OrderButtonWidget = db.web.OldWidget.extend({
-        tag_name: 'li',
+        tagName: 'li',
         template_fct: qweb_template('pos-order-selector-button-template'),
         init: function(parent, options) {
             this._super(parent);
             this.order = options.order;
             this.shop = options.shop;
             this.order.bind('destroy', _.bind( function() {
-                return this.stop();
+                this.destroy();
             }, this));
             this.shop.bind('change:selectedOrder', _.bind( function(shop) {
                 var selectedOrder;
@@ -1143,7 +1142,7 @@ openerp.point_of_sale = function(db) {
         closeOrder: function(event) {
             this.order.destroy();
         },
-        render_element: function() {
+        renderElement: function() {
             this.$element.html(this.template_fct({widget:this}));
             this.$element.addClass('order-selector-button');
         }
@@ -1162,13 +1161,13 @@ openerp.point_of_sale = function(db) {
                 shop: this.shop
             });
             this.productListView.$element = $("#products-screen-ol");
-            this.productListView.render_element();
+            this.productListView.renderElement();
             this.productListView.start();
             this.paypadView = new PaypadWidget(null, {
                 shop: this.shop
             });
             this.paypadView.$element = $('#paypad');
-            this.paypadView.render_element();
+            this.paypadView.renderElement();
             this.paypadView.start();
             this.numpadView = new NumpadWidget(null);
             this.numpadView.$element = $('#numpad');
@@ -1182,7 +1181,7 @@ openerp.point_of_sale = function(db) {
                 shop: this.shop
             });
             this.paymentView.$element = $('#payment-screen');
-            this.paymentView.render_element();
+            this.paymentView.renderElement();
             this.paymentView.start();
             this.receiptView = new ReceiptWidget(null, {
                 shop: this.shop,
@@ -1252,7 +1251,7 @@ openerp.point_of_sale = function(db) {
             c = pos.categories[id];
             this.categoryView.ancestors = c.ancestors;
             this.categoryView.children = c.children;
-            this.categoryView.render_element();
+            this.categoryView.renderElement();
             this.categoryView.start();
             products = pos.store.get('product.product').filter( function(p) {
                 var _ref;
@@ -1289,13 +1288,13 @@ openerp.point_of_sale = function(db) {
             this._super.apply(this, arguments);
             this.nbr_pending = 0;
         },
-        render_element: function() {
+        renderElement: function() {
             this._super.apply(this, arguments);
             $('.oe_pos_synch-notification-button', this.$element).click(this.on_synch);
         },
         on_change_nbr_pending: function(nbr_pending) {
             this.nbr_pending = nbr_pending;
-            this.render_element();
+            this.renderElement();
         },
         on_synch: function() {}
     });
@@ -1313,7 +1312,7 @@ openerp.point_of_sale = function(db) {
         start: function() {
             var self = this;
             return pos.ready.then(_.bind(function() {
-                this.render_element();
+                this.renderElement();
                 this.synch_notification = new db.point_of_sale.SynchNotification(this);
                 this.synch_notification.replace($('.oe_pos_synch-notification', this.$element));
                 this.synch_notification.on_synch.add(_.bind(pos.flush, pos));
@@ -1326,8 +1325,7 @@ openerp.point_of_sale = function(db) {
                 });
 
                 pos.app = new App(self.$element);
-                $('.oe_toggle_secondary_menu').hide();
-                $('.oe_footer').hide();
+                db.webclient.set_content_full_screen(true);
                 
                 if (pos.store.get('account.bank.statement').length === 0)
                     return new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_open_statement']], ['res_id']).pipe(
@@ -1384,9 +1382,8 @@ openerp.point_of_sale = function(db) {
                 }, this));
             }, this));
         },
-        stop: function() {
-            $('.oe_footer').show();
-            $('.oe_toggle_secondary_menu').show();
+        destroy: function() {
+            db.webclient.set_content_full_screen(false);
             pos = undefined;
             this._super();
         }

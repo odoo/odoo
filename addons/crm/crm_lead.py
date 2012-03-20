@@ -60,7 +60,6 @@ class crm_lead(crm_case, osv.osv):
         'stage_id': _read_group_stage_ids
     }
 
-    # overridden because res.partner.address has an inconvenient name_get,
     # especially if base_contact is installed.
     def name_get(self, cr, user, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -147,7 +146,6 @@ class crm_lead(crm_case, osv.osv):
         return res
 
     _columns = {
-        # Overridden from res.partner.address:
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
             select=True, help="Optional linked partner, usually after conversion of the lead"),
 
@@ -172,7 +170,7 @@ class crm_lead(crm_case, osv.osv):
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
         'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
-        'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
+        'opt_out': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
@@ -233,10 +231,10 @@ class crm_lead(crm_case, osv.osv):
         return {'value': {'email_from': address.email, 'phone': address.phone, 'country_id': address.country_id.id}}
 
     def on_change_optin(self, cr, uid, ids, optin):
-        return {'value':{'optin':optin,'optout':False}}
+        return {'value':{'optin':optin,'opt_out':False}}
 
     def on_change_optout(self, cr, uid, ids, optout):
-        return {'value':{'optout':optout,'optin':False}}
+        return {'value':{'opt_out':optout,'optin':False}}
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
         if not stage_id:
@@ -599,21 +597,20 @@ class crm_lead(crm_case, osv.osv):
             'is_company': is_company,
             'type': 'contact'
         }
-
         partner = partner.create(cr, uid,vals, context)
         return partner
 
     def _create_lead_partner(self, cr, uid, lead, context=None):
         partner_id =  False
         if lead.partner_name and lead.contact_name:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, 'partner', context=context)
-            self._lead_create_contact(cr, uid, lead, lead.contact_name, 'contact', partner_id, context=context)
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
+            self._lead_create_contact(cr, uid, lead, lead.contact_name, False, partner_id, context=context)
         elif lead.partner_name and not lead.contact_name:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, 'partner', context=context)
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
         elif not lead.partner_name and lead.contact_name:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, 'contact', context=context)
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.contact_name, False, context=context)
         else:
-            partner_id = self._lead_create_contact(cr, uid, lead, lead.name, 'contact', context=context)
+            partner_id = self._lead_create_contact(cr, uid, lead, lead.name, False, context=context)
         return partner_id
 
     def _lead_set_partner(self, cr, uid, lead, partner_id, context=None):

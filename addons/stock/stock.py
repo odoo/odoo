@@ -980,14 +980,12 @@ class stock_picking(osv.osv):
             @param journal_id: ID of the accounting journal
             @return: dict that will be used to create the invoice object
         """
-        partner = self.pool.get('res.partner').browse(cr, uid, partner, context=context)
+        if isinstance(partner, int):
+            partner = self.pool.get('res.partner').browse(cr, uid, partner, context=context)
         if inv_type in ('out_invoice', 'out_refund'):
             account_id = partner.property_account_receivable.id
         else:
             account_id = partner.property_account_payable.id
-        address_contact_id, address_invoice_id = \
-                self.pool.get('res.partner').address_get(cr, uid, [partner.id],
-                        ['contact', 'invoice']).values()
         comment = self._get_comment_invoice(cr, uid, picking)
         invoice_vals = {
             'name': picking.name,
