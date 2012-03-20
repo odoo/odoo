@@ -797,7 +797,7 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
         });
         */
     },
-    process_field: function($field) {
+    process_field: function($field, no_process_label) {
         var name = $field.attr('name'),
             field_orm = this.fvg.fields[name],
             field_string = $field.attr('string') || field_orm.string || '',
@@ -819,7 +819,8 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
                     'help' :  field_help
                 });
                 label.insertBefore($field);
-                this.process_any(label);
+                if (!no_process_label)
+                    this.process_label(label);
                 if (field_colspan > 1) {
                     $field.attr('colspan', field_colspan - 1);
                 }
@@ -833,8 +834,13 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
     },
     process_group: function($group) {
         var self = this;
+        var fields = [];
         _.each($group.children(), function(el) {
-            self.process_any($(el));
+            var tagname = el.nodeName.toLowerCase();
+            if (tagname === "field") {
+                self.process_field($(el), true);
+                fields.push(el);
+            }
         });
         var $new_group = $(QWeb.render('FormRenderingGroup', $group.getAttributes())),
             $table;
@@ -848,6 +854,7 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             cols = parseInt($group.attr('col') || 4, 10),
             row_cols = cols;
 
+        var children = [];
         $group.children().each(function() {
             var $child = $(this),
                 colspan = parseInt($child.attr('colspan') || 1, 10),
@@ -863,6 +870,7 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             row_cols -= colspan;
             var $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
             $tr.append($td.append($child));
+            children.push($child[0]);
         });
         $group.before($new_group).remove();
 
@@ -899,6 +907,10 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
                 $td.attr('width', ((i == to_compute.length - 1) ? total : width) + '%');
                 total -= width;
             });
+        });
+        _.each(children, function(el) {
+            if (!_.include(fields, el))
+                self.process_any($(el));
         });
     },
     process_notebook: function($notebook) {
