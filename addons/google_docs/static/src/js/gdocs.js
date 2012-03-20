@@ -12,7 +12,6 @@ openerp.google_docs = function(instance, session) {
                     // if the configuration isn't set, the buttons should be hidden.
                     if (r==false) {
                         $('.oe_google_docs_text_button').css('display', 'none');
-
                         return;
                     }
 

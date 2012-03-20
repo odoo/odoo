@@ -24,6 +24,9 @@ try:
     import gdata.docs.client
     from gdata.client import RequestError
     from gdata.docs.service import DOCUMENT_LABEL
+    import gdata.auth
+    import gdata.docs.service
+    import webbrowser
 except ImportError:
     raise osv.except_osv(_('Google Docs Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
@@ -56,11 +59,15 @@ class google_docs_ir_attachment(osv.osv):
         '''
         
         # authenticate
+
+        '''
         client = self._auth(cr, uid)
         if client == False:
-            return False #return an error
-        
-        
+            return False
+        '''
+        client = self.pool.get('google.oauth')
+        client.login(cr,uid,ids,context=context)
+
         # create the document in google docs
         if type_doc=='slide':
             local_resource = gdata.docs.data.Resource(gdata.docs.data.PRESENTATION_LABEL)
@@ -68,8 +75,9 @@ class google_docs_ir_attachment(osv.osv):
             local_resource = gdata.docs.data.Resource(gdata.docs.data.SPREADSHEET_LABEL)
         else:
             local_resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL)
-        
-        gdocs_resource = client.post(entry=local_resource, uri='https://docs.google.com/feeds/default/private/full/')
+       
+       #create a new doc in Google Docs 
+        gdocs_resource = client.Post(entry=local_resource, uri='https://docs.google.com/feeds/default/private/full/')
 
         # register into the db
         self.create(cr, uid, {
@@ -117,14 +125,13 @@ class google_docs(osv.osv):
             return -1
 
 
-
 class config(osv.osv):
     _name = 'google.docs.config'
     _description = "Google Docs templates config"
 
     _columns = {
         'context_model_id': fields.many2one('ir.model', 'Model'),
-        'context_gdocs_resource_id': fields.char('Google resource ID', size=64),
+        'context_gdocs_resource_id': fields.char('Google resource ID', size=64,help='This is the id of the template document you kind find it in the URL'),
         'context_name_template': fields.char('GDoc name template ', size=64, help='This is the name which appears on google side'),
         'context_name': fields.char('Name', size=64, help='This is the attachment\'s name. As well, it appears on the panel.'),
         'context_multiple': fields.boolean('Multiple documents')
@@ -135,16 +142,35 @@ class config(osv.osv):
         'context_name': 'pr_%(name)',
         'context_multiple': False,
     }
-    def has_config_set(self, cr, uid, model,context=None):
-        print model
-        import pdb
-        pdb.set_trace()
-
     def get_config(self, cr, uid, model):
         domain = [('context_model_id', '=', model)]
         if self.search_count(cr, uid, domain) != 0:
             return False
         else:
             return self.search(cr, uid, domain)
-
 config()
+
+
+
+class oauth (osv.osv):
+    _name = 'google.oauth'
+    def login(self,cr,uid,ids,context=None):
+        consumer_key = '751376579939.apps.googleusercontent.com'
+        consumer_secret = '_KGpgyO8DZIseyG3N-j-h8gN'
+        gd_client = gdata.docs.service.DocsService()
+        #Set OAuth input parameters
+        gd_client.SetOAuthInputParameters(gdata.auth.OAuthSignatureMethod.HMAC_SHA1,consumer_key, consumer_secret=consumer_secret)
+        #Fetch OAuth Request token
+        request_token = gd_client.FetchOAuthRequestToken()
+        #Set the fetched OAuth token
+        gd_client.SetOAuthToken(request_token)
+        #Generate OAuth authorization URL
+        auth_url = gd_client.GenerateOAuthAuthorizationURL()
+        webbrowser.open(auth_url)
+        print gd_client.SetOAuthToken(request_token) 
+        consumer_key = raw_input('Please enter consumer key: ')
+
+        #Upgrade to an OAuth access token
+        gd_client.UpgradeToOAuthAccessToken()
+        #Access Token
+        gd_client.token_store.find_token(request_token.scopes[0])
