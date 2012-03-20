@@ -1457,15 +1457,34 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
  * switch.
  */
 openerp.web.form.ReinitializeFieldMixin =  {
+    /**
+     * Default implementation of start(), use it or call explicitly initialize_field().
+     */
     start: function() {
+        this._super();
+        this.initialize_field();
+    },
+    initialize_field: function() {
         this.on("change:effective_readonly", this, function() {
+            this.destroy_content();
             this.renderElement();
-            this.bind_events();
+            this.initialize_content();
             this.render_value();
         });
-        this.bind_events();
+        this.initialize_content();
     },
-    bind_events: function() {},
+    /**
+     * Called to destroy anything that could have been created previously, called before a
+     * re-initialization.
+     */
+    destroy_content: function() {},
+    /**
+     * Called to initialize the content.
+     */
+    initialize_content: function() {},
+    /**
+     * Called to render the value. Should also be explicitly called at the end of a set_value().
+     */
     render_value: function() {},
 };
 
@@ -1475,11 +1494,7 @@ openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend(_.extend({}, 
         this._super(view, node);
         this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
     },
-    start: function() {
-        this._super();
-        openerp.web.form.ReinitializeFieldMixin.start.call(this);
-    },
-    bind_events: function() {
+    initialize_content: function() {
         this.$element.find('input').change(this.on_ui_change);
     },
     set_value: function(value) {
@@ -1523,7 +1538,7 @@ openerp.web.form.FieldID = openerp.web.form.FieldChar.extend({
 
 openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
     template: 'FieldEmail',
-    bind_events: function() {
+    initialize_content: function() {
         this._super();
         this.$element.find('button').click(this.on_button_clicked);
     },
@@ -1547,7 +1562,7 @@ openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
 
 openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
     template: 'FieldUrl',
-    bind_events: function() {
+    initialize_content: function() {
         this._super();
         this.$element.find('button').click(this.on_button_clicked);
     },
@@ -1685,18 +1700,13 @@ openerp.web.form.FieldDatetime = openerp.web.form.AbstractField.extend(_.extend(
     build_widget: function() {
         return new openerp.web.DateTimeWidget(this);
     },
-    start: function() {
-        this._super();
-        openerp.web.form.ReinitializeFieldMixin.start.call(this);
-    },
-    renderElement: function() {
+    destroy_content: function() {
         if (this.datewidget) {
             this.datewidget.destroy();
             this.datewidget = undefined;
         }
-        this._super();
     },
-    bind_events: function() {
+    initialize_content: function() {
         if (!this.get("effective_readonly")) {
             this.datewidget = this.build_widget();
             this.datewidget.on_change.add_last(this.on_ui_change);
@@ -1737,7 +1747,7 @@ openerp.web.form.FieldDate = openerp.web.form.FieldDatetime.extend({
 
 openerp.web.form.FieldText = openerp.web.form.AbstractField.extend(_.extend({}, openerp.web.form.ReinitializeFieldMixin, {
     template: 'FieldText',
-    bind_events: function() {
+    initialize_content: function() {
         this.$textarea = undefined;
         if (!this.get("effective_readonly")) {
             this.$textarea = this.$element.find('textarea').change(this.on_ui_change);
@@ -1865,11 +1875,7 @@ openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend(_.extend
         });
         this.values.unshift([false, '']);
     },
-    start: function() {
-        this._super();
-        openerp.web.form.ReinitializeFieldMixin.start.call(this);
-    },
-    bind_events: function() {
+    initialize_content: function() {
         // Flag indicating whether we're in an event chain containing a change
         // event on the select, in order to know what to do on keyup[RETURN]:
         // * If the user presses [RETURN] as part of changing the value of a
@@ -3220,11 +3226,7 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend(_.extend
             this.m2o.$element.toggle(sel !== false);
         }
     },
-    start: function() {
-        this._super();
-        openerp.web.form.ReinitializeFieldMixin.start.call(this);
-    },
-    renderElement: function() {
+    destroy_content: function() {
         if (this.selection) {
             this.selection.destroy();
             this.selection = undefined;
@@ -3233,9 +3235,8 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend(_.extend
             this.m2o.destroy();
             this.m2o.undefined;
         }
-        this._super();
     },
-    bind_events: function() {
+    initialize_content: function() {
         if (!this.get("effective_readonly")) {
             this.selection = new openerp.web.form.FieldSelection(this, { attrs: {
                 name: 'selection',
@@ -3300,11 +3301,7 @@ openerp.web.form.FieldBinary = openerp.web.form.AbstractField.extend(_.extend({}
         this.iframe = this.element_id + '_iframe';
         this.binary_value = false;
     },
-    start: function() {
-        this._super();
-        openerp.web.form.ReinitializeFieldMixin.start.call(this);
-    },
-    bind_events: function() {
+    initialize_content: function() {
         this.$element.find('input.oe-binary-file').change(this.on_file_change);
         this.$element.find('button.oe-binary-file-save').click(this.on_save_as);
         this.$element.find('.oe-binary-file-clear').click(this.on_clear);
@@ -3372,7 +3369,7 @@ openerp.web.form.FieldBinary = openerp.web.form.AbstractField.extend(_.extend({}
 
 openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
     template: 'FieldBinaryFile',
-    bind_events: function() {
+    initialize_content: function() {
         this._super();
         if (this.get("effective_readonly")) {
             var self = this;
@@ -3428,7 +3425,7 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
 
 openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
-    bind_events: function() {
+    initialize_content: function() {
         this._super();
         this.$image = this.$element.find('img.oe-binary-image');
         if (!this.get("effective_readonly"))
