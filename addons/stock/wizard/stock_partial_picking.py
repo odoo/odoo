@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+from lxml import etree
 from osv import fields, osv
 from tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import decimal_precision as dp
@@ -71,6 +72,32 @@ class stock_partial_picking(osv.osv_memory):
         'picking_id': fields.many2one('stock.picking', 'Picking', required=True, ondelete='CASCADE'),
         'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column prodlot has to be shown on the move_ids field or not'),
      }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:
+            context={}
+        # remove the entry with key 'form_view_ref', otherwise fields_view_get crashes
+        context.pop('form_view_ref', None)
+        res = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        type = context.get('default_type', False)
+        if type:
+            doc = etree.XML(res['arch'])
+            for node in doc.xpath("//group/button[@string='_Validate']"):
+                if type == 'in':
+                    node.set('string', '_Receive')
+                elif type == 'internal':
+                    node.set('string', '_Move')
+                elif type == 'out':
+                    node.set('string', '_Deliver')
+            for node in doc.xpath("//separator[@string='Products']"):
+                if type == 'in':
+                    node.set('string', 'Receive Products')
+                elif type == 'internal':
+                    node.set('string', 'Move Products')
+                elif type == 'out':
+                    node.set('string', 'Deliver Products')
+            res['arch'] = etree.tostring(doc)
+        return res
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None: context = {}
