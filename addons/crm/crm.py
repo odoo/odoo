@@ -427,7 +427,13 @@ class crm_case(crm_base):
                 default.update({ 'date_open': False })
         return super(crm_case, self).copy(cr, uid, id, default, context=context)
 
-    def case_escalate_send_note(self, cr, uid, ids, context=None):
+    def case_escalate_send_note(self, cr, uid, ids, new_section=None, context=None):
+        for id in ids:
+            if new_section:
+                msg = '%s has been <b>escalated</b> to <b>%s</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context), new_section.name)
+            else:
+                msg = '%s has been <b>escalated</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
         return True
 
     def case_open(self, cr, uid, ids, context=None):
@@ -469,8 +475,8 @@ class crm_case(crm_base):
             else:
                 raise osv.except_osv(_('Error !'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data)
+            case.case_escalate_send_note(case.section_id.parent_id)
         cases = self.browse(cr, uid, ids)
-        self.case_escalate_send_note(cr, uid, ids, context=context)
         self._action(cr, uid, cases, 'escalate')
         return True
 
@@ -496,8 +502,6 @@ class crm_case(crm_base):
     def case_reset(self, cr, uid, ids, context=None):
         """Resets case as draft"""
         state = 'draft'
-        if 'crm.phonecall' in context: #TO fix: move into crm_phonecall.py?
-            state = 'open'
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': state, 'active': True})
