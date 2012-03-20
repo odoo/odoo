@@ -362,7 +362,7 @@
             <field name="view_id" ref="product_category_list_view"/>
         </record>
         <menuitem action="product_category_action_form"
-            groups="base.group_extended"
+            groups="base.group_no_one"
             id="menu_product_category_action_form"
             parent="prod_config_main" sequence="2"/>
 
@@ -494,7 +494,7 @@
             <field name="help">Create and manage your packaging dimensions and types you want to be maintained in your system.</field>
         </record>
         <menuitem
-            action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
+            action="product_ul_form_action" groups="base.group_no_one" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3" />
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>

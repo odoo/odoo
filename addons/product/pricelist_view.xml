@@ -46,7 +46,7 @@
         </record>
         <menuitem
             action="product_pricelist_action" id="menu_product_pricelist_action"
-            parent="product.menu_product_pricelist_main" sequence="2"/>
+            parent="product.menu_product_pricelist_main" sequence="2" groups="base.group_no_one"/>
 
         <record id="product_pricelist_item_tree_view" model="ir.ui.view">
             <field name="name">product.pricelist.item.tree</field>
@@ -206,7 +206,7 @@
 
         <menuitem
             action="product_price_type_action" id="menu_product_price_type"
-            parent="product.menu_product_pricelist_main" sequence="4" />
+            parent="product.menu_product_pricelist_main" sequence="4" groups="base.group_no_one"/>
 
         <!-- Moved to extra module 'sale_pricelist_type_menu':
         <record id="product_pricelist_type_view" model="ir.ui.view">
