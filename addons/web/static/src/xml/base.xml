@@ -948,7 +948,7 @@
             <input t-att-type="widget.password ? 'password' : 'text'"
                 t-att-name="widget.name"
                 t-att-id="widget.id_for_label"
-                t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
+                t-attf-class="oe_field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </div>
     </t>

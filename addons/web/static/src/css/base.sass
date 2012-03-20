@@ -340,6 +340,27 @@ $colour4: #8a89ba
         .oe_form_button
             width: 100%
             white-space: nowrap
+    .oe_form_group_cell
+        position: relative
+        .oe_field_char, .oe_form_field_selection select
+            width: 99%
+        .oe_form_field_selection select
+            min-width: 90px
+    .oe_layout_debugging
+        .oe_form_group
+            border: 1px solid red
+        .oe_form_group_cell
+            border: 1px solid blue
+        .oe_layout_debug_cell
+            position: absolute
+            color: white
+            bottom: 0
+            left: 0
+            background: green
+        .oe_layout_debug_cell
+            display: block
+    .oe_layout_debug_cell
+        display: none
     // }}}
 
     .openerp

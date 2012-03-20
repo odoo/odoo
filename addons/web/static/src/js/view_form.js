@@ -767,6 +767,17 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
                 w.replace($elem);
             }
         });
+        $('<button>Debug layout</button>').appendTo(this.$element).click(this.do_toggle_layout_debugging);
+    },
+    do_toggle_layout_debugging: function() {
+        if (!this.$element.has('.oe_layout_debug_cell:first').length) {
+            this.$element.find('.oe_form_group_cell').each(function() {
+                var $span = $('<span class="oe_layout_debug_cell"/>').text($(this).attr('width'));
+                $span.prependTo($(this));
+            });
+        }
+        this.$element.toggleClass('oe_layout_debugging');
+
     },
     process_field: function($field, $form) {
         var name = $field.attr('name'),
