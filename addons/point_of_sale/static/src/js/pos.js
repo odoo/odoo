@@ -1323,8 +1323,17 @@ openerp.point_of_sale = function(db) {
                 this.$element.find("#loggedas button").click(function() {
                     self.try_close();
                 });
+                // TODO bind barcode reader event
+                console.log('--------------------');
 
                 pos.app = new App(self.$element);
+
+                $.getScript('/point_of_sale/static/src/js/jquery.barcodelistener-1.1-min.js');
+                char0 = new Array("§", "32");
+                char1 = new Array("˜", "732");
+                characters = new Array(char0, char1);
+                new jQuery.fn.BarcodeListener(characters, function(code) {console.log('<<<<<<<<<<<<<<<');});
+
                 db.webclient.set_content_full_screen(true);
                 
                 if (pos.store.get('account.bank.statement').length === 0)
