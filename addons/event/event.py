@@ -217,7 +217,7 @@ class event_registration(osv.osv):
     """Event Registration"""
     _name= 'event.registration'
     _description = __doc__
-    _inherit = ['mail.thread','res.partner.address']
+    _inherit = ['mail.thread','res.partner']
     _columns = {
         'id': fields.integer('ID'),
         'origin': fields.char('Origin', size=124,readonly=True,help="Name of the sale order which create the registration"),
@@ -225,8 +225,6 @@ class event_registration(osv.osv):
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
 
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner', states={'done': [('readonly', True)]}),
-        "contact_id": fields.many2one('res.partner.address', 'Partner Contact', readonly=False, states={'done': [('readonly', True)]}),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'date_closed': fields.datetime('Attended Date', readonly=True),
         'date_open': fields.datetime('Registration Date', readonly=True),
@@ -310,7 +308,7 @@ class event_registration(osv.osv):
         data ={}
         if not contact:
             return data
-        addr_obj = self.pool.get('res.partner.address')
+        addr_obj = self.pool.get('res.partner')
         contact_id =  addr_obj.browse(cr, uid, contact, context=context)
         data = {
             'email':contact_id.email,
