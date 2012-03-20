@@ -85,46 +85,37 @@ class crm_meeting(crm_base, osv.osv):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
-    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
-        result = {}
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = False
             if (obj.state == 'draft' and obj.user_id):
-                result[obj.id] = obj.user_id.id
+                result[obj.id] = [obj.user_id.id]
         return result
 
     def create_send_note(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
         phonecall_obj = self.pool.get('crm.phonecall')
-        for obj in self.browse(cr, uid, ids, context=context):
-            message = _("The meeting has been <b>scheduled</b> on <em>%s</em>.") % (obj.date)
-            if(obj.opportunity_id.id): # meeting can be create from phonecalls or opportunities, therefore checking for the parent
-                newid = obj.opportunity_id.id
-                for lead in lead_obj.browse(cr, uid, [newid], context=context):
-                    opp_message = _("Meeting linked to the opportunity <em>%s</em> has been <b>created and scheduled</b> on <em>%s</em>.") % (lead.name,obj.date)
-                    lead.message_append_note('', message)
-                    obj.message_append_note('', opp_message)
-            elif(obj.phonecall_id.id):
-                newid = obj.phonecall_id.id
-                for phonecall in phonecall_obj.browse(cr, uid, [newid], context=context):
-                    phn_message = _("Meeting linked to the phonecall <em>%s</em> has been <b>created and scheduled</b> on <em>%s</em>.") % (phonecall.name,obj.date)
-                    phonecall.message_append_note('', message)
-                    obj.message_append_note('', phn_message)
-            else:
-                message = _("Meeting has been <b>scheduled</b> on <em>%s</em>.") % (obj.date)
-                obj.message_append_note('', message)
-
-    def case_close_send_note(self, cr, uid, ids, context=None):
         for meeting in self.browse(cr, uid, ids, context=context):
-            message = _("Meeting has been <b>done</b>.")
-            meeting.message_append_note('' ,message)
+            message = _("A meeting has been <b>scheduled</b> on <em>%s</em>.") % (meeting.date)
+            if meeting.opportunity_id: # meeting can be create from phonecalls or opportunities, therefore checking for the parent
+                lead = meeting.opportunity_id
+                parent_message = _("Meeting linked to the opportunity <em>%s</em> has been <b>created</b> and <b>cscheduled</b> on <em>%s</em>.") % (lead.name, meeting.date)
+                lead.message_append_note('System Notification', message)
+            elif meeting.phonecall_id:
+                phonecall = meeting.phonecall_id
+                parent_message = _("Meeting linked to the phonecall <em>%s</em> has been <b>created</b> and <b>cscheduled</b> on <em>%s</em>.") % (phonecall.name, meeting.date)
+                phonecall.message_append_note('System Notification', message)
+            if parent_message:
+                meeting.message_append_note('System Notification', parent_message)
         return True
+    
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        message = _("Meeting has been <b>done</b>.")
+        return self.message_append_note(cr, uid, ids, message, context=context)
 
     def case_reset_send_note(self, cr, uid, ids, context=None):
-        for meeting in self.browse(cr, uid, ids, context=context):
-            message = _("Meeting has been <b>renewed</b>.")
-            meeting.message_append_note('' ,message)
-        return True
+        message = _("Meeting has been <b>renewed</b>.")
+        return self.message_append_note(cr, uid, ids, message, context=context)
 
     def case_open_send_note(self, cr, uid, ids, context=None):
         for meeting in self.browse(cr, uid, ids, context=context):
