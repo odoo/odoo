@@ -789,19 +789,14 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             return $tag;
         }
     },
-    process_field: function($field) {
+    preprocess_field: function($field) {
         var name = $field.attr('name'),
             field_orm = this.fvg.fields[name],
             field_string = $field.attr('string') || field_orm.string || '',
             field_help = $field.attr('help') || field_orm.help || '',
             field_colspan = parseInt($field.attr('colspan'), 10);
-
-        if (!field_orm) {
-            throw new Error("Field '" + name + "' specified in view could not be found.");
-        }
-
-        var $label;
         if ($field.attr('nolabel') !== '1') {
+            $field.attr('nolabel', '1');
             var $label = this.$form.find('label[for="' + name + '"]');
             if (!$label.length) {
                 field_string = $label.attr('string') || $label.text() || field_string;
@@ -812,31 +807,38 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
                     'help' :  field_help
                 });
                 $label.insertBefore($field);
-                $label = this.process($label);
                 if (field_colspan > 1) {
                     $field.attr('colspan', field_colspan - 1);
                 }
             }
+            return $label;
         }
+    },
+    process_field: function($field) {
+        var $label = this.preprocess_field($field);
+        if ($label)
+            this.process($label);
+        var name = $field.attr('name'),
+            field_orm = this.fvg.fields[name],
+            field_string = $field.attr('string') || field_orm.string || '',
+            field_help = $field.attr('help') || field_orm.help || '',
+            field_colspan = parseInt($field.attr('colspan'), 10);
+
+        if (!field_orm) {
+            throw new Error("Field '" + name + "' specified in view could not be found.");
+        }
+
         $field.attr({
             'widget' : $field.attr('widget') || field_orm.type,
             'string' : field_string,
             'help' : field_help
         });
-        to_return = $();
-        if ($label)
-            to_return.push($label[0]);
-        to_return.push($field[0]);
-        return to_return;
+        return $field;
     },
     process_group: function($group) {
         var self = this;
-        var no_reprocess = [];
-        $group.children('field,label').each(function() {
-            var processed = self.process($(this));
-            processed.each(function(i) {
-                no_reprocess.push(processed[i]);
-            });
+        $group.children('field').each(function() {
+            self.preprocess_field($(this));
         });
         var $new_group = $(QWeb.render('FormRenderingGroup', $group.getAttributes())),
             $table;
@@ -905,9 +907,7 @@ openerp.web.FormRenderingEngine = openerp.web.Widget.extend({
             });
         });
         _.each(children, function(el) {
-            if (!_.include(no_reprocess, el)) {
-                self.process($(el));
-            }
+            self.process($(el));
         });
         return $new_group;
     },
