@@ -1093,6 +1093,7 @@ class task(osv.osv):
         return True
 
     def do_pending_send_note(self, cr, uid, ids, context=None):
+        if not isinstance(ids,list): ids = [ids]
         msg = 'Task is now <b>pending</b>.'
         self.message_append_note(cr, uid, ids, 'System Notification', msg, context=context)
         return True
