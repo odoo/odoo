@@ -459,6 +459,7 @@ class mail_message(osv.osv):
                         msg['body_html'] = content
                         msg['subtype'] = 'html' # html version prevails
                         body = tools.ustr(tools.html2plaintext(content))
+                        body = body.replace('&#13;', '')
                     elif part.get_content_subtype() == 'plain':
                         body = content
                 elif part.get_content_maintype() in ('application', 'image'):
