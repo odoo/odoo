@@ -286,7 +286,6 @@
                     <group col="6" colspan="4">
                         <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
                         <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
-                        <field name="contact_id" attrs="{'readonly':[('state','!=', 'draft')]}" domain="[('partner_id','=',partner_id)]" on_change="onchange_contact_id(contact_id, context)"/>
                         <field name="nb_register"/>
                         <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                         <field name="origin"/>
@@ -378,7 +377,7 @@
                         <separator orientation="vertical"/>
                         <field name="event_id" widget="selection"/>
                         <field name="name" string="Participant"
-                            filter_domain="['|','|','|', ('name','ilike',self), ('contact_id','ilike',self), ('partner_id','ilike',self), ('email','ilike',self)]"/>
+                            filter_domain="['|','|','|', ('name','ilike',self), ('partner_id','ilike',self), ('email','ilike',self)]"/>
                         <field name="user_id" groups="base.group_extended">
                         <filter icon="terp-personal"
                               string="My Registrations"

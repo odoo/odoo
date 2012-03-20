@@ -176,7 +176,7 @@ class event_event(osv.osv):
         'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
         'speaker_ids': fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers', readonly=False, states={'done': [('readonly', True)]}),
-        'address_id': fields.many2one('res.partner.address','Location Address', readonly=False, states={'done': [('readonly', True)]}),
+        'address_id': fields.many2one('res.partner','Location Address', readonly=False, states={'done': [('readonly', True)]}),
         'speaker_confirmed': fields.boolean('Speaker Confirmed', readonly=False, states={'done': [('readonly', True)]}),
         'country_id': fields.related('address_id', 'country_id',
                     type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}),
@@ -217,15 +217,14 @@ class event_registration(osv.osv):
     """Event Registration"""
     _name= 'event.registration'
     _description = __doc__
-    _inherit = ['mail.thread','res.partner.address']
+    _inherit = ['mail.thread','res.partner']
     _columns = {
         'id': fields.integer('ID'),
         'origin': fields.char('Origin', size=124,readonly=True,help="Name of the sale order which create the registration"),
         'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner', states={'done': [('readonly', True)]}),
-        "contact_id": fields.many2one('res.partner.address', 'Partner Contact', readonly=False, states={'done': [('readonly', True)]}),
+
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'date_closed': fields.datetime('Attended Date', readonly=True),
         'date_open': fields.datetime('Registration Date', readonly=True),
@@ -309,7 +308,7 @@ class event_registration(osv.osv):
         data ={}
         if not contact:
             return data
-        addr_obj = self.pool.get('res.partner.address')
+        addr_obj = self.pool.get('res.partner')
         contact_id =  addr_obj.browse(cr, uid, contact, context=context)
         data = {
             'email':contact_id.email,
@@ -347,5 +346,6 @@ class event_registration(osv.osv):
         return {'value': data}
 
 event_registration()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
