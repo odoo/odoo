@@ -82,8 +82,8 @@
                             <field name="number_of_days_temp"/>
                             <field name="double_validation" invisible="1"/>
                             <newline/>
-                            <field name="manager_id"/>
-                            <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
+                            <field name="manager_id" groups="base.group_no_one"/>
+                            <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}" groups="base.group_no_one"/>
                             <separator string="Reasons" colspan="4"/>
                             <field name="notes" nolabel="1" colspan="4"/>
                             <newline/>
