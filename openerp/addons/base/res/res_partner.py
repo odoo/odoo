@@ -292,22 +292,14 @@ class res_partner(osv.osv):
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
-        # short-circuit ref match when possible
         if name and operator in ('=', 'ilike', '=ilike', 'like'):
-            ids = self.search(cr, uid, [('ref', '=', name)] + args, limit=limit, context=context)
-            if not ids:
-                names = map(lambda x : x.strip(),name.split('('))
-                for name in range(len(names)):
-                    domain = [('name', operator, names[name])]
-                    if name > 0:
-                        domain.extend([('id', 'child_of', ids)])
-                    ids = self.search(cr, uid, domain, limit=limit, context=context)
-                contact_ids = ids
-                while contact_ids:
-                    contact_ids = self.search(cr, uid, [('parent_id', 'in', contact_ids)], limit=limit, context=context)
-                    ids.extend(contact_ids)
-                if args:
-                    ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
+            # search on the name of the contacts and of its company
+            name = '%' + name + '%'
+            cr.execute('''SELECT partner.id FROM res_partner partner 
+                          LEFT JOIN res_partner company ON partner.parent_id = company.id 
+                          WHERE partner.name || ' (' || COALESCE(company.name,'') || ')'
+                          ''' + operator + ''' %s ''', (name,))
+            ids = cr.fetchall()
             if ids:
                 return self.name_get(cr, uid, ids, context)
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
