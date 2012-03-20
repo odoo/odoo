@@ -727,6 +727,14 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
 });
 
 /**
+ * Interface to be implemented by rendering engines for the form view.
+ */
+openerp.web.FormRenderingEngineInterface = {
+    set_fields_view: function(fields_view) {},
+    render_to: function($element) {},
+};
+
+/**
  * Default rendering engine for the form view.
  * 
  * It is necessary to set the view using set_view() before usage.
