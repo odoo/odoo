@@ -364,7 +364,15 @@ class time(_column):
 class binary(_column):
     _type = 'binary'
     _symbol_c = '%s'
-    _symbol_f = lambda symb: symb and Binary(symb) or None
+
+    # Binary values may be byte strings (python 2.6 byte array), but
+    # the legacy OpenERP convention is to transfer and store binaries
+    # as base64-encoded strings. The base64 string may be provided as a
+    # unicode in some circumstances, hence the str() cast in symbol_f.
+    # This str coercion will only work for pure ASCII unicode strings,
+    # on purpose - non base64 data must be passed as a 8bit byte strings.
+    _symbol_f = lambda symb: symb and Binary(str(symb)) or None
+
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self, x: x and str(x)
 
