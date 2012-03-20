@@ -212,7 +212,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         this.vs.searchQuery.add(new VS.model.SearchFacet({
             category: ui.item.category,
             value: ui.item.label,
-            real_value: ui.item.value,
+            json: ui.item.value,
             app: this.vs
         }));
     },
@@ -873,6 +873,8 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
             category: 'q',
             value: _(fs).map(function (f) {
                 return f.attrs.string || f.attrs.name }).join(' | '),
+            json: fs,
+            field: this,
             app: this.view.vs
         }));
 
@@ -956,8 +958,10 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
     },
     facet_for: function (value) {
         return $.when(new VS.model.SearchFacet({
-            category: this.attrs.name,
+            category: this.attrs.string || this.attrs.name,
             value: String(value),
+            json: value,
+            field: this,
             app: this.view.vs
         }));
     },
@@ -1124,8 +1128,10 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
         });
         if (!match) { return $.when(null); }
         return $.when(new VS.model.SearchFacet({
-            category: this.attrs.name,
+            category: this.attrs.string || this.attrs.name,
             value: match[1],
+            json: match[0],
+            field: this,
             app: this.view.vs
         }));
     },
@@ -1248,16 +1254,20 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
         var self = this;
         if (value instanceof Array) {
             return $.when(new VS.model.SearchFacet({
-                category: this.attrs.string,
+                category: this.attrs.string || this.attrs.name,
                 value: value[1],
+                json: value[0],
+                field: this,
                 app: this.view.vs
             }));
         }
         return new openerp.web.Model(this.attrs.relation)
             .call('name_get', [value], {}).pipe(function (names) {
                 return new VS.model.SearchFacet({
-                category: self.attrs.string,
+                category: self.attrs.string || self.attrs.name,
                 value: names[0][1],
+                json: names[0][0],
+                field: self,
                 app: self.view.vs
             });
         })
