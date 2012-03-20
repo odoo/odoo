@@ -92,7 +92,7 @@ class crm_phonecall(crm_base, osv.osv):
     }
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-        return ''
+        return 'Phonecall'
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_phonecall, self).create(cr, uid, vals, context)
@@ -101,46 +101,34 @@ class crm_phonecall(crm_base, osv.osv):
                 self.case_open_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
-    def get_needaction_user_id(self, cr, uid, ids, name, arg, context=None):
-        result = {}
+    def get_needaction_user_ids(self, cr, uid, ids, context=None):
+        result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = False
             if (obj.state == 'draft' and obj.user_id):
-                result[obj.id] = obj.user_id.id
+                result[obj.id] = [obj.user_id.id]
         return result
 
-    def case_cancel_send_note(self, cr, uid, ids, context=None):
-        for phonecall in self.browse(cr, uid, ids, context=context):
-            message = _("Phonecall has been <b>cancelled</b>.")
-            phonecall.message_append_note( _('System notification'),
-                        message, type='notification', context=context)
-        return True
-
-    def case_pending_send_note(self, cr, uid, ids, context=None):
-        for phonecall in self.browse(cr, uid, ids, context=context):
-            message = _("Phonecall is <b>pending</b>.")
-            phonecall.message_append_note('' ,message)
-        return True
-
-    def case_done_send_note(self, cr, uid, ids, context=None):
-        for phonecall in self.browse(cr, uid, ids, context=context):
-            message = _("Phonecall has been <b>done</b>.")
-            phonecall.message_append_note('', message)
-        return True
+    def case_reset_send_note(self, cr, uid, ids, context=None):
+        message = 'Phonecall has been <b>reset and set as open</b>.'
+        return self.message_append_note(cr, uid, ids, 'System Notification', message, context=context)
+    
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        message = _("Phonecall has been <b>done</b>.")
+        return self.message_append_note(cr, uid, ids, 'System Notification', message, context=context)
 
     def case_open_send_note(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
         for phonecall in self.browse(cr, uid, ids, context=context):
             phonecall.message_subscribe([phonecall.user_id.id], context=context)
-            if phonecall.opportunity_id :
-                for lead in lead_obj.browse(cr, uid, [phonecall.opportunity_id.id], context=context):
-                    message = _("Phonecall linked to the opportunity <em>%s</em> has been <b>created and opened </b>on <em>%s</em>.") % (lead.name, phonecall.date)
+            if phonecall.opportunity_id:
+                lead = phonecall.opportunity_id
+                message = _("Phonecall linked to the opportunity <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (lead.name, phonecall.date)
             else:
                 message = _("Phonecall has been <b>created and opened</b>.")
-            phonecall.message_append_note('' ,message)
+            phonecall.message_append_note('System Notification' ,message)
         return True
 
-    def set_partner_send_note(self, cr, uid, ids, context=None):
+    def _call_set_partner_send_note(self, cr, uid, ids, context=None):
         for phonecall in self.browse(cr, uid, ids, context=context):
             message = _("Partner has been <b>created</b>")
             phonecall.message_append_note('' ,message)
@@ -168,7 +156,7 @@ class crm_phonecall(crm_base, osv.osv):
                 data.update({'duration': duration.seconds/float(60)})
             res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], context)
             self.write(cr, uid, [phone_id], data)
-            self.case_done_send_note(cr, uid, [phone_id], context);
+            self.case_close_send_note(cr, uid, [phone_id], context);
         return res
 
     def case_reset(self, cr, uid, ids, context=None):
@@ -176,7 +164,7 @@ class crm_phonecall(crm_base, osv.osv):
         """
         res = super(crm_phonecall, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'duration': 0.0, 'state':'open'})
-        self.case_open_send_note(cr, uid, ids, context=context)
+        self.case_reset_send_note(cr, uid, ids, context=context)
         return res
 
 
@@ -233,8 +221,9 @@ class crm_phonecall(crm_base, osv.osv):
         return partner_id
 
     def _call_set_partner(self, cr, uid, ids, partner_id, context=None):
-        self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
-        self.set_partner_send_note(cr, uid, ids, context)
+        write_res = self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
+        self._call_set_partner_send_note(cr, uid, ids, context)
+        return write_res
 
     def _call_create_partner_address(self, cr, uid, phonecall, partner_id, context=None):
         address = self.pool.get('res.partner.address')
