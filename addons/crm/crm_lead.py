@@ -274,12 +274,14 @@ class crm_lead(crm_case, osv.osv):
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
+            # salesman must perform an action when in draft mode
             if obj.state == 'draft' and obj.user_id:
                 result[obj.id] = [obj.user_id.id]
         return result
 
     def message_get_subscribers(self, cr, uid, ids, context=None):
-        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context);
+        sub_ids = self.message_get_subscribers_ids(cr, uid, ids, context=context)
+        # add salesman to the subscribers
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id:
                 sub_ids.append(obj.user_id.id)
@@ -297,32 +299,24 @@ class crm_lead(crm_case, osv.osv):
 		return ('Opportunity' if lead.type == 'opportunity' else 'Lead')
 
     def case_mark_lost_send_note(self, cr, uid, ids, context=None):
-        for opportunity in self.browse(cr, uid, ids, context=context):
-            message = _("Opportunity has been <b>marked as lost</b>.")
-            opportunity.message_append_note('' ,message)
-        return True
+        message = _("Opportunity has been <b>lost</b>.")
+        return self.message_append_note(cr, uid, ids, message, context=context)
 
     def case_mark_won_send_note(self, cr, uid, ids, context=None):
-        for opportunity in self.browse(cr, uid, ids, context=context):
-            message = _("Opportunity has been <b>won</b>.")
-            opportunity.message_append_note('' ,message)
-        return True
+        message = _("Opportunity has been <b>won</b>.")
+        return self.message_append_note(cr, uid, ids, message, context=context)
 
-    def case_escalate_send_note(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context=context):
-            message = _("Lead has been <b>escalated</b>.")
-            lead.message_append_note('' ,message)
-        return True
-
-    def schedule_phonecall_send_note(self, cr, uid, ids, case, phonecall, action, context=None):
-        for obj in phonecall.browse(cr, uid, ids, context=context):
-            message = _("<b>%s a call</b> for the <em>%s</em>.") % (action, obj.date)
-            case.message_append_note('', message)
+    def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
+        phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
+        if action == 'log': prefix = 'Logged'
+        else: prefix = 'Scheduled'
+        message = _("<b>%s a call</b> for the <em>%s</em>.") % (prefix, phonecall.date)
+        return self. message_append_note(cr, uid, ids, 'System Notification', message, context=context)
 
     def _lead_set_partner_send_note(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context=context):
-            message = _("Partner has been <b>created</b>")
-            lead.message_append_note('' ,message)
+            message = _("%s <b>partner</b> is now set to <em>%s</em>." % (self.case_get_note_msg_prefix(cr, uid, lead.id, context=context), lead.partner_id.name))
+            lead.message_append_note('System Notification' ,message)
         return True
 
     def case_open(self, cr, uid, ids, context=None):
@@ -741,11 +735,11 @@ class crm_lead(crm_case, osv.osv):
                     'priority': lead.priority,
             }
             new_id = phonecall.create(cr, uid, vals, context=context)
-            phonecall.case_open(cr, uid, [new_id])
+            phonecall.case_open(cr, uid, [new_id], context=context)
             if action == 'log':
-                phonecall.case_close(cr, uid, [new_id])
+                phonecall.case_close(cr, uid, [new_id], context=context)
             phonecall_dict[lead.id] = new_id
-            self.schedule_phonecall_send_note(cr, uid, [new_id], lead, phonecall, action, context=context)
+            self.schedule_phonecall_send_note(cr, uid, [lead.id], new_id, action, context=context)
         return phonecall_dict
 
 
