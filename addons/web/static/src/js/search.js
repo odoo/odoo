@@ -55,6 +55,14 @@ _.extend(VS.ui.SearchBox.prototype, {
     renderSearchInput: SearchBox_renderSearchInput,
     searchEvent: SearchBox_searchEvent
 });
+_.extend(VS.model.SearchFacet.prototype, {
+    value: function () {
+        if (this.has('json')) {
+            return this.get('json');
+        }
+        return this.get('value');
+    }
+});
 
 openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.SearchView# */{
     template: "SearchView",
