@@ -1247,9 +1247,11 @@ class account_invoice(osv.osv):
         # Update the stored value (fields.function), so we write to trigger recompute
         self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
-   # -----------------------------
-    # OpenChatter and notifications
-    # -----------------------------
+    
+    # -----------------------------------------
+    # OpenChatter notifications and need_action
+    # -----------------------------------------
+    
     def _get_document_type(self, type):
         type_dict = {
                 'out_invoice': 'Customer invoice',
@@ -1257,7 +1259,7 @@ class account_invoice(osv.osv):
                 'out_refund': 'Customer Refund',
                 'in_refund': 'Supplier Refund',
         }
-        return type_dict[type]
+        return type_dict.get(type, 'Invoice')
     
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
