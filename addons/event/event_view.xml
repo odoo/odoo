@@ -265,9 +265,9 @@
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-today" string="Up Coming"
-        name="upcoming"
-        domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-        help="Up coming events form today" />
+                                name="upcoming"
+                                domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
+                                help="Up coming events form today" />
                         <field name="name"/>
                         <field name="type" widget="selection"/>
                         <field name="user_id" widget="selection">
