@@ -11,7 +11,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      * view should be displayed (if there is one active).
      */
     searchable: false,
-    readonly : false,
     template: "FormView",
     display_name: _lt('Form'),
     /**
@@ -496,7 +495,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     if (!first_invalid_field) {
                         first_invalid_field = f;
                     }
-                } else if (f.name !== 'id' && !f.readonly && (!self.datarecord.id || f.is_dirty())) {
+                } else if (f.name !== 'id' && !f.get("readonly") && (!self.datarecord.id || f.is_dirty())) {
                     // Special case 'id' field, do not save this field
                     // on 'create' : save all non readonly fields
                     // on 'edit' : save non readonly modified fields
@@ -657,7 +656,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 // or m2m
                 if (!value
                         || field.invisible
-                        || field.readonly
+                        || field.get("readonly")
                         || field.field.type === 'one2many'
                         || field.field.type === 'many2many') {
                     return false;
@@ -1135,9 +1134,13 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
     },
     process_modifiers: function() {
         var compute_domain = openerp.web.form.compute_domain;
+        var to_set = {};
         for (var a in this.modifiers) {
-            this[a] = compute_domain(this.modifiers[a], this.view.fields);
+            var val = compute_domain(this.modifiers[a], this.view.fields);
+            this[a] = val;
+            to_set[a] = val;
         }
+        this.set(to_set);
     },
     update_dom: function() {
         this.$element.toggle(!this.invisible);
@@ -1295,7 +1298,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         this.check_disable();
     },
     check_disable: function() {
-        var disabled = (this.readonly || this.force_disabled || !this.view.is_interactible_record());
+        var disabled = (this.force_disabled || !this.view.is_interactible_record());
         this.$element.prop('disabled', disabled);
         this.$element.css('color', disabled ? 'grey' : '');
     }
@@ -1395,9 +1398,6 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
         this.required = this.modifiers['required'] === true;
         this.invalid = this.dirty = false;
         
-        // because I'm lazy to refactor right now
-        this.on("change:readonly", this, function() {this.readonly = this.get("readonly");});
-        
         // some events to make the property "effective_readonly" sync automatically with "readonly" and
         // "force_readonly"
         this.set({"readonly": this.modifiers['readonly'] === true});
@@ -1450,7 +1450,7 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
         return !this.invalid;
     },
     is_dirty: function() {
-        return this.dirty && !this.readonly;
+        return this.dirty && !this.get("effective_readonly");
     },
     get_on_change_value: function() {
         return this.get_value();
@@ -1461,14 +1461,12 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
             this.$element.find('.oe_field_translate').toggle(!!this.view.datarecord.id);
         }
         if (!this.disable_utility_classes) {
-            this.$element.toggleClass('disabled', this.readonly);
+            this.$element.toggleClass('disabled', this.get("effective_readonly"));
             this.$element.toggleClass('required', this.required);
             if (show_invalid) {
                 this.$element.toggleClass('invalid', !this.is_valid());
             }
         }
-        // one more shit code to avoid refactoring this.readonly right now
-        this.set({"readonly": this.readonly});
     },
     on_ui_change: function() {
         this.dirty = true;
@@ -1683,7 +1681,7 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
             showButtonPanel: true
         });
         this.$element.find('img.oe_datepicker_trigger').click(function() {
-            if (!self.readonly && !self.picker('widget').is(':visible')) {
+            if (!self.get("effective_readonly") && !self.picker('widget').is(':visible')) {
                 self.picker('setDate', self.value ? openerp.web.auto_str_to_date(self.value) : new Date());
                 self.$input_picker.show();
                 self.picker('show');
@@ -1896,7 +1894,7 @@ openerp.web.form.FieldProgressBar = openerp.web.form.AbstractField.extend({
         this._super.apply(this, arguments);
         this.$element.progressbar({
             value: this.value,
-            disabled: this.readonly
+            disabled: this.get("effective_readonly")
         });
     },
     set_value: function(value) {
