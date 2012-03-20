@@ -1364,21 +1364,21 @@ class stock_picking(osv.osv):
             message += state_list[pick.state]
         return True
     
+    # -----------------------------------------
+    # OpenChatter notifications and need_action
+    # -----------------------------------------
     
-    # -----------------------------
-    # OpenChatter and notifications
-    # -----------------------------
     def _get_document_type(self, type):
         type_dict = {
                 'out': 'Delivery order',
                 'in': 'Shipment',
                 'internal': 'Internal picking',
         }
-        return type_dict[type]
+        return type_dict.get(type, 'Stock picking')
     
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, ids, _('System notification'),
+            self.message_append_note(cr, uid, [obj.id], _('System notification'),
                     _("""%s <b>created</b>.""") % (self._get_document_type(obj.type)),
                       type='notification', context=context)
     
@@ -1399,13 +1399,13 @@ class stock_picking(osv.osv):
                 'internal': 'moved',
         }
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, ids, _('System notification'),
-                        _("""Product <b>%s</b>.""") % (type_dict[obj.type]),
+            self.message_append_note(cr, uid, [obj.id], _('System notification'),
+                        _("""Product <b>%s</b>.""") % (type_dict.get(obj.type, 'move done')),
                          type='notification', context=context)
     
     def ship_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, ids, _('System notification'),
+            self.message_append_note(cr, uid, [obj.id], _('System notification'),
                         _("""%s <b>cancelled</b>.""") % (self._get_document_type(obj.type)),
                          type='notification', context=context)
             
