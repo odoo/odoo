@@ -40,9 +40,20 @@ if (SearchBox_renderSearchInput.toString() !== VS.ui.SearchBox.prototype.renderS
         "Trying to replace wrong version of VS.ui.SearchBox#renderSearchInput. "
         + "Please fix replacement.");
 }
+var SearchBox_searchEvent = function (e) {
+    var query = this.value();
+    this.app.options.callbacks.search(query, this.app.searchQuery);
+  };
+if (SearchBox_searchEvent.toString() !== VS.ui.SearchBox.prototype.searchEvent.toString().replace(
+        /this\.focusSearch\(e\);\n[ ]{4}this\.value\(query\);\n[ ]{4}/, '')) {
+    throw new Error(
+        "Trying to replace wrong version of VS.ui.SearchBox#searchEvent. "
+        + "Please fix replacement.");
+}
 _.extend(VS.ui.SearchBox.prototype, {
     renderFacet: SearchBox_renderFacet,
-    renderSearchInput: SearchBox_renderSearchInput
+    renderSearchInput: SearchBox_renderSearchInput,
+    searchEvent: SearchBox_searchEvent
 });
 
 openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.SearchView# */{
@@ -843,13 +854,20 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
     init: function (filters, view) {
         this._super(view);
         this.filters = filters;
-        this.length = filters.length;
+        this.make_id('filters');
     },
-    start: function () {
-        this._super();
-        _.each(this.filters, function (filter) {
-            filter.start();
+    facet_for_defaults: function (defaults) {
+        var fs = _(this.filters).filter(function (f) {
+            return f.attrs && f.attrs.name && !!defaults[f.attrs.name];
         });
+        if (_.isEmpty(fs)) { return $.when(null); }
+        return $.when(new VS.model.SearchFacet({
+            category: 'q',
+            value: _(fs).map(function (f) {
+                return f.attrs.string || f.attrs.name }).join(' | '),
+            app: this.view.vs
+        }));
+
     },
     get_context: function () { },
     /**
@@ -887,35 +905,13 @@ openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.w
     init: function (node, view) {
         this._super(view);
         this.load_attrs(node.attrs);
-        this.classes = [this.attrs.string ? 'filter_label' : 'filter_icon'];
-        this.make_id('filter', this.attrs.name);
     },
-    start: function () {
-        this._super();
-        var self = this;
-        this.$element.click(function (e) {
-            $(this).toggleClass('enabled');
-            self.view.do_toggle_filter(self);
-        });
-    },
-    /**
-     * If the filter is present in the defaults (and has a truthy value),
-     * enable the filter.
-     *
-     * @param {Object} defaults the search view's default values
-     */
-    facet_for: function (value) {
-        return $.when(new VS.model.SearchFacet({
-            category: this.attrs.string || this.attrs.name,
-            value: 'true',
-            app: this.view.vs
-        }));
-    },
+    facet_for: function () { return $.when(null); },
     get_context: function () {
-        if (!this.is_enabled()) {
-            return;
-        }
-        return this.attrs.context;
+         if (!this.is_enabled()) {
+             return;
+         }
+         return this.attrs.context;
     },
     /**
      * Does not return anything: filter domain is handled at the FilterGroup
