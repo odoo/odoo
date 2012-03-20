@@ -1352,7 +1352,7 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
         var test_effective_readonly = function() {
             this.set({"effective_readonly": this.get("readonly") || this.view.get("force_readonly")});
         };
-        this.view.on("change:readonly", this, test_effective_readonly);
+        this.on("change:readonly", this, test_effective_readonly);
         this.view.on("change:force_readonly", this, test_effective_readonly);
         _.bind(test_effective_readonly, this)();
 
@@ -1691,7 +1691,7 @@ openerp.web.form.FieldDatetime = openerp.web.form.AbstractField.extend(_.extend(
     },
     renderElement: function() {
         if (this.datewidget) {
-            this.datewidget.stop();
+            this.datewidget.destroy();
             this.datewidget = undefined;
         }
         this._super();
@@ -3226,11 +3226,11 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend(_.extend
     },
     renderElement: function() {
         if (this.selection) {
-            this.selection.stop();
+            this.selection.destroy();
             this.selection = undefined;
         }
         if (this.m2o) {
-            this.m2o.stop();
+            this.m2o.destroy();
             this.m2o.undefined;
         }
         this._super();
