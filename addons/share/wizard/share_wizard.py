@@ -165,6 +165,10 @@ class share_wizard(osv.osv_memory):
         'user_type': fields.selection(lambda s, *a, **k: s._user_type_selection(*a, **k),'Sharing method', required=True,
                      help="Select the type of user(s) you would like to share data with."),
         'new_users': fields.text("Emails"),
+        'email_1': fields.char('New user email', size=64),
+        'email_2': fields.char('New user email', size=64),
+        'email_3': fields.char('New user email', size=64),
+        'invite': fields.boolean('Invite users to OpenSocial record'),
         'access_mode': fields.selection([('readonly','Can view'),('readwrite','Can edit')],'Access Mode', required=True,
                                         help="Access rights to be granted on the shared documents."),
         'result_line_ids': fields.one2many('share.wizard.result.line', 'share_wizard_id', 'Summary', readonly=True),
@@ -181,6 +185,7 @@ class share_wizard(osv.osv_memory):
     _defaults = {
         'view_type': 'page',
         'user_type' : 'embedded',
+        'invite': False,
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
         'access_mode': 'readonly',
@@ -192,11 +197,14 @@ class share_wizard(osv.osv_memory):
         return bool(self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email)
 
     def go_step_1(self, cr, uid, ids, context=None):
-        user_type = self.browse(cr,uid,ids,context)[0].user_type
-        if user_type == 'emails' and not self.has_email(cr, uid, context=context):
+        wizard_data = self.browse(cr,uid,ids,context)[0]
+        if wizard_data.user_type == 'emails' and not self.has_email(cr, uid, context=context):
             raise osv.except_osv(_('No e-mail address configured'),
                                  _('You must configure your e-mail address in the user preferences before using the Share button.'))
-        model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
+        if wizard_data.invite:
+            model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1_mail')
+        else:
+            model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
         action = self.pool.get(model).read(cr, uid, res_id, context=context)
         action['res_id'] = ids[0]
         action.pop('context', '')
@@ -223,12 +231,18 @@ class share_wizard(osv.osv_memory):
         created_ids = []
         existing_ids = []
         if wizard_data.user_type == 'emails':
-            for new_user in (wizard_data.new_users or '').split('\n'):
+            # get new user list from email data
+            new_users = (wizard_data.new_users or '').split('\n')
+            new_users += [wizard_data.email_1 or '', wizard_data.email_2 or '', wizard_data.email_3 or '']
+            for new_user in new_users:
                 # Ignore blank lines
                 new_user = new_user.strip()
                 if not new_user: continue
                 # Ignore the user if it already exists.
-                existing = user_obj.search(cr, UID_ROOT, [('login', '=', new_user)])
+                if not wizard_data.invite:
+                    existing = user_obj.search(cr, UID_ROOT, [('login', '=', new_user)])
+                else:
+                    existing = user_obj.search(cr, UID_ROOT, [('user_email', '=', new_user)])
                 existing_ids.extend(existing)
                 if existing:
                     new_line = { 'user_id': existing[0],
@@ -643,7 +657,7 @@ class share_wizard(osv.osv_memory):
                      _('You must be a member of the Share/User group to use the share wizard'),
                      context=context)
         if wizard_data.user_type == 'emails':
-            self._assert(wizard_data.new_users,
+            self._assert((wizard_data.new_users or wizard_data.email_1 or wizard_data.email_2 or wizard_data.email_3),
                      _('Please indicate the emails of the persons to share with, one per line'),
                      context=context)
 
@@ -667,21 +681,21 @@ class share_wizard(osv.osv_memory):
         if new_ids:
             # new users need a new shortcut AND a home action
             self._setup_action_and_shortcut(cr, uid, wizard_data, new_ids, make_home=True, context=context)
-        return group_id
+        return group_id, new_ids, existing_ids
 
     def go_step_2(self, cr, uid, ids, context=None):
         wizard_data = self.browse(cr, uid, ids[0], context=context)
         self._check_preconditions(cr, uid, wizard_data, context=context)
 
         # Create shared group and users
-        group_id = self._create_share_users_group(cr, uid, wizard_data, context=context)
+        group_id, new_ids, existing_ids = self._create_share_users_group(cr, uid, wizard_data, context=context)
 
         current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
         model_obj = self.pool.get('ir.model')
         model_id = model_obj.search(cr, uid, [('model','=', wizard_data.action_id.res_model)])[0]
         model = model_obj.browse(cr, uid, model_id, context=context)
-
+        
         # ACCESS RIGHTS
         # We have several classes of objects that should receive different access rights:
         # Let:
@@ -731,6 +745,14 @@ class share_wizard(osv.osv_memory):
 
         # refresh wizard_data
         wizard_data = self.browse(cr, uid, ids[0], context=context)
+        
+        # Invite (OpenSocial): automatically subscribe users to the record
+        res_id = 0
+        for cond in safe_eval(main_domain):
+            if cond[0] == 'id':
+                res_id = cond[2]
+        if wizard_data.invite and res_id > 0:
+            self.pool.get(model.model).message_subscribe(cr, uid, [res_id], new_ids + existing_ids, context=context)
 
         # send the confirmation emails:
         self.send_emails(cr, uid, wizard_data, context=context)
