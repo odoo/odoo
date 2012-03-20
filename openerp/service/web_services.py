@@ -561,6 +561,7 @@ class objects_proxy(netsvc.ExportService):
 
     def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
+        threading.current_thread().uid = uid
         params = params[3:]
         if method == 'obj_list':
             raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")
@@ -594,6 +595,7 @@ class wizard(netsvc.ExportService):
 
     def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
+        threading.current_thread().uid = uid
         params = params[3:]
         if method not in ['execute','create']:
             raise KeyError("Method not supported %s" % method)
@@ -645,6 +647,7 @@ class report_spool(netsvc.ExportService):
 
     def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
+        threading.current_thread().uid = uid
         params = params[3:]
         if method not in ['report', 'report_get', 'render_report']:
             raise KeyError("Method not supported %s" % method)
