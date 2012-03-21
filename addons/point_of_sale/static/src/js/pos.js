@@ -1259,34 +1259,34 @@ openerp.point_of_sale = function(db) {
             });
             (this.shop.get('products')).reset(products);
             var self = this;
-                // bind barcode reader event
-                codeNumbers = []
-                $('.openerp').keypress(function (e){
-                    console.log('keyup!!!')
-                    if (e.keyCode >= 48 && e.keyCode <= 57) {
-                        // a number
-                        if (codeNumbers.length==0) {
-                            codeNumbers.timeStamp = new Date().getTime()
-                        } else {
-                            if (codeNumbers.lastTimeStamp + 30 < new Date().getTime()) {
-                                // not a barcode reader
-                            console.log(e)
-                                codeNumbers = []
-                                codeNumbers.timeStamp = new Date().getTime()
-                            }
-                        }
-                        codeNumbers.push(e.keyCode - 48)
-                        codeNumbers.lastTimeStamp = new Date().getTime()
-                        if (codeNumbers.length == 13) {
-                            // a barcode reader
-                            console.log('barcode: ' + codeNumbers.join())
-                            codeNumbers = []
-                        }
+            // bind barcode reader event
+            codeNumbers = []
+            $('body').delegate('','keyup', function (e){
+                console.log('keyup!!!')
+                if (e.keyCode >= 48 && e.keyCode <= 57) {
+                    // a number
+                    if (codeNumbers.length==0) {
+                        codeNumbers.timeStamp = new Date().getTime()
                     } else {
-                        // NaN
+                        if (codeNumbers.lastTimeStamp + 30 < new Date().getTime()) {
+                            // not a barcode reader
+                            console.log(e)
+                            codeNumbers = []
+                            codeNumbers.timeStamp = new Date().getTime()
+                        }
+                    }
+                    codeNumbers.push(e.keyCode - 48)
+                    codeNumbers.lastTimeStamp = new Date().getTime()
+                    if (codeNumbers.length == 13) {
+                        // a barcode reader
+                        console.log('barcode: ' + codeNumbers.join())
                         codeNumbers = []
                     }
-                })
+                } else {
+                    // NaN
+                    codeNumbers = []
+                }
+            })
             $('.searchbox input').keyup(function() {
                 var m, s;
                 s = $(this).val().toLowerCase();
