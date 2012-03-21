@@ -154,8 +154,15 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             var $item = $( "<li></li>" )
                 .data( "item.autocomplete", item )
                 .appendTo( ul );
-            if (item.type === 'section') {
-                $item.text(item.label)
+
+            if ('value' in item) {
+                // regular completion item
+                $item.append(
+                    ('label' in item)
+                        ? $('<a>').html(item.label)
+                        : $('<a>').text(item.value));
+            } else {
+                $item.text(item.category)
                     .css({
                         borderTop: '1px solid #cccccc',
                         margin: 0,
@@ -165,11 +172,6 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                         clear: 'left',
                         width: '100%'
                     });
-            } else if (item.type === 'base') {
-                // FIXME: translation
-                $item.append("<a>Search for: \"<strong>" + item.value + "</strong>\"</a>");
-            } else {
-                $item.append($("<a>").text(item.label));
             }
             return $item;
         }
@@ -182,7 +184,15 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param {Function} resp response callback
      */
     complete_global_search:  function (req, resp) {
-        var completion = [{value: req.term, type: 'base'}];
+        var completion = [{
+            category: null,
+            value: req.term,
+            label: _.str.sprintf(_.str.escapeHTML(
+                _t("Search for: %(value)s")), {
+                    value: '<strong>' + _.str.escapeHTML(req.term) + '</strong>'
+                }),
+            field: null
+        }];
         $.when.apply(null, _(this.inputs).chain()
             .invoke('complete', req.term)
             .value()).then(function () {
@@ -202,20 +212,8 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      */
     select_completion: function (e, ui) {
         e.preventDefault();
-        if (ui.item.type === 'base') {
-            this.vs.searchQuery.add(new VS.model.SearchFacet({
-                category: null,
-                value: ui.item.value,
-                app: this.vs
-            }));
-            return;
-        }
-        this.vs.searchQuery.add(new VS.model.SearchFacet({
-            category: ui.item.category,
-            value: ui.item.label,
-            json: ui.item.value,
-            app: this.vs
-        }));
+        this.vs.searchQuery.add(new VS.model.SearchFacet(_.extend(
+            {app: this.vs}, ui.item)));
     },
 
     /**
@@ -1026,12 +1024,16 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
 openerp.web.search.CharField = openerp.web.search.Field.extend( /** @lends openerp.web.search.CharField# */ {
     default_operator: 'ilike',
     complete: function (value) {
-        // FIXME: formatting
-        var label = _.str.sprintf(_t('Search "%s" for "%s"'),
-                                  this.attrs.string, value);
-        return $.when([
-            {category: this.attrs.name, label: label, value:value}
-        ]);
+        var label = _.str.sprintf(_.str.escapeHTML(
+            _t("Search %(field)s for: %(value)s")), {
+                field: '<em>' + this.attrs.string + '</em>',
+                value: '<strong>' + _.str.escapeHTML(value) + '</strong>'});
+        return $.when([{
+            category: this.attrs.string,
+            label: label,
+            value: value,
+            field: this
+        }]);
     },
     get_value: function () {
         return this.$element.val();
@@ -1114,14 +1116,16 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
             })
             .map(function (sel) {
                 return {
-                    category: self.attrs.name,
-                    label: sel[1],
-                    value: sel[0]
+                    category: self.attrs.string,
+                    field: self,
+                    value: sel[1],
+                    json: sel[0]
                 };
             }).value();
         if (_.isEmpty(results)) { return $.when(null); }
-        return $.when.apply(null,
-            [{type: 'section', label: this.attrs.string}].concat(results));
+        return $.when.apply(null, [{
+            category: this.attrs.name
+        }].concat(results));
     },
     facet_for: function (value) {
         var match = _(this.attrs.selection).detect(function (sel) {
@@ -1129,11 +1133,11 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
         });
         if (!match) { return $.when(null); }
         return $.when(new VS.model.SearchFacet({
-            category: this.attrs.string || this.attrs.name,
+            category: this.attrs.string,
             value: match[1],
             json: match[0],
             field: this,
-            app: this.view.vs
+            app: this.view.app
         }));
     },
     get_value: function () {
@@ -1241,12 +1245,13 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
             context: {}
         }).pipe(function (results) {
             if (_.isEmpty(results)) { return null; }
-            return [{type: 'section', label: self.attrs.string}].concat(
+            return [{category: self.attrs.string}].concat(
                 _(results).map(function (result) {
                     return {
-                        category: self.attrs.name,
-                        label: result[1],
-                        value: result[0]
+                        category: self.attrs.string,
+                        value: result[1],
+                        json: result[0],
+                        field: self
                     };
                 }));
         });
@@ -1255,7 +1260,7 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
         var self = this;
         if (value instanceof Array) {
             return $.when(new VS.model.SearchFacet({
-                category: this.attrs.string || this.attrs.name,
+                category: this.attrs.string,
                 value: value[1],
                 json: value[0],
                 field: this,
@@ -1265,7 +1270,7 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
         return new openerp.web.Model(this.attrs.relation)
             .call('name_get', [value], {}).pipe(function (names) {
                 return new VS.model.SearchFacet({
-                category: self.attrs.string || self.attrs.name,
+                category: self.attrs.string,
                 value: names[0][1],
                 json: names[0][0],
                 field: self,

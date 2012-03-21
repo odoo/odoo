@@ -153,6 +153,45 @@ values. These completion values will then be provided to the global
 autocompletion list, implemented via `jquery-ui autocomplete
 <http://jqueryui.com/demos/autocomplete/>`_.
 
+Because the search view uses a custom renderer for its completion, it
+was possible to fix some incompatibilities between the attributes of
+completion items and VisualSearch's facet model:
+
+Actual completion items
++++++++++++++++++++++++
+
+These are selectable items, and upon selection are turned into actual
+search facet objects. They should have all the properties of a search
+facet (as described above) and can have one more optional property:
+``label``.
+
+When rendering an item in the list, the renderer will first try to use
+the ``label`` property if it exists (``label`` can contain HTML and
+will be inserted as-is, so it can bold or emphasize some of its
+elements), if it does not it'll use the ``value`` property.
+
+.. note:: the ``app`` key should not be specified on completion item,
+          it will be set automatically when the search view creates
+          the facet from the item.
+
+Section titles
+++++++++++++++
+
+A second option is to use section titles. Section titles are similar
+to completion items but only have a ``category`` property. They will
+be rendered in a different style and can not be selected in the
+auto-completion (they will be skipped).
+
+.. note::
+
+    Technically, section title items can have any property they want
+    *as long as they do not have a value property*. A ``value``
+    property set to ``false``, ``null`` or ``undefined`` is **not**
+    equivalent to not having a ``value`` property.
+
+If an input *may* fetch more than one completion item, it *should*
+prepend a section title (using its own name) to the completion items.
+
 Converting to and from facet objects
 ------------------------------------
 
