@@ -364,9 +364,16 @@ $colour4: #8a89ba
         display: none
     // }}}
 
-    .openerp
-    // Transitional overrides for old styles {{{
-    // }}}
+// Transitional overrides for old styles {{{
+.openerp
+    .oe_form_field_many2one
+        td:first
+            position: relative
+        span.oe-m2o-drop-down-button
+            position: absolute
+            top: 3px
+            right: 2px
+// }}}
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
