@@ -631,7 +631,7 @@ class stock_picking(osv.osv):
                 "Set a location if you produce at a fixed location. This can be a partner location " \
                 "if you subcontract the manufacturing operations.", select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Location where the system will stock the finished products.", select=True),
-        'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be delivered all at once or by direct delivery"),
+        'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be deliver partially or all at once"),
         'state': fields.selection(PICK_STATE, 'State', readonly=True, select=True,
             help="* Draft: not confirmed yet and will not be scheduled until confirmed\n"\
                  "* Confirmed: still waiting for the availability of products\n"\
