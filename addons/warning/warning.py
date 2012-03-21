@@ -57,7 +57,7 @@ class sale_order(osv.osv):
     _inherit = 'sale.order'
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
-            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False, 'payment_term' : False}}
+            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'payment_term' : False}}
         warning = {}
         title = False
         message = False
