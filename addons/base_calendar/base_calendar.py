@@ -1616,20 +1616,13 @@ class ir_attachment(osv.osv):
     _inherit = 'ir.attachment'
 
     def search_count(self, cr, user, args, context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param user: the current user’s ID for security checks,
-        @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
-        @param context: A standard dictionary for contextual values
-        """
-
-        args1 = []
-        for arg in args:
-            args1.append(map(lambda x:str(x).split('-')[0], arg))
-        return super(ir_attachment, self).search_count(cr, user, args1, context)
-
-
+        new_args = []
+        for domain_item in args:
+            if isinstance(domain_item, (list, tuple)) and len(domain_item) == 3 and domain_item[0] == 'res_id':
+                new_args.append((domain_item[0], domain_item[1], base_calendar_id2real_id(domain_item[2])))
+            else:
+                new_args.append(domain_item)
+        return super(ir_attachment, self).search_count(cr, user, new_args, context)
 
     def create(self, cr, uid, vals, context=None):
         if context:
@@ -1639,21 +1632,12 @@ class ir_attachment(osv.osv):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
-        @param offset: The Number of Results to pass,
-        @param limit: The Number of Results to Return,
-        @param context: A standard dictionary for contextual values
-        """
-
-        new_args = args
-        for i, arg in enumerate(new_args):
-            if arg[0] == 'res_id':
-                new_args[i] = (arg[0], arg[1], base_calendar_id2real_id(arg[2]))
-
+        new_args = []
+        for domain_item in args:
+            if isinstance(domain_item, (list, tuple)) and len(domain_item) == 3 and domain_item[0] == 'res_id':
+                new_args.append((domain_item[0], domain_item[1], base_calendar_id2real_id(domain_item[2])))
+            else:
+                new_args.append(domain_item)
         return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
                             limit=limit, order=order, context=context, count=False)
 ir_attachment()
