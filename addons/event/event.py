@@ -221,9 +221,10 @@ class event_event(osv.osv):
         user = user_pool.browse(cr,uid,uid,context)
         if not curr_reg_id:
             curr_reg_id = register_pool.create(cr, uid, {'event_id':ids[0],
-                                                    'email':user.user_email,
-                                                    'name':user.name,
-                                                    'subscribe':True,
+                                                         'email':user.user_email,
+                                                         'name':user.name,
+                                                         'user_id':uid,
+                                                         'subscribe':True,
                                                     })
             
             
@@ -293,7 +294,7 @@ class event_registration(osv.osv):
         'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('email_from', '=', False),('model','=',_name)]),
         'event_end_date': fields.related('event_id','date_end', type='datetime', string="Event End Date", readonly=True),
         'event_begin_date': fields.related('event_id', 'date_begin', type='datetime', string="Event Start Date", readonly=True),
-        'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
+        'user_id': fields.many2one('res.users', 'Attendee', states={'done': [('readonly', True)]}),
         'company_id': fields.related('event_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Unconfirmed'),
                                     ('open', 'Confirmed'),
@@ -306,7 +307,7 @@ class event_registration(osv.osv):
     _defaults = {
         'nb_register': 1,
         'state': 'draft',
-        'user_id': lambda self, cr, uid, ctx: uid,
+        #'user_id': lambda self, cr, uid, ctx: uid,
     }
     _order = 'name, create_date desc'
 
