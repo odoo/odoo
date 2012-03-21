@@ -350,7 +350,9 @@ class res_partner_address(osv.osv):
         if not context:
             context={}
 
-        if context.get('contact_display', 'contact')=='partner':
+        if not name:
+            ids = self.search(cr, user, args, limit=limit, context=context)
+        elif context.get('contact_display', 'contact')=='partner':
             ids = self.search(cr, user, [('partner_id', operator, name)] + args, limit=limit, context=context)
         else:
             # first lookup zip code, as it is a common and efficient way to search on these data
@@ -372,6 +374,8 @@ class res_partner_address(osv.osv):
                 old_ids = set(ids)
                 ids.extend([id for id in new_ids if id not in old_ids])
 
+        if len(ids) > limit:
+            ids = ids[:limit]
         return self.name_get(cr, user, ids, context=context)
 
     def get_city(self, cr, uid, id):
