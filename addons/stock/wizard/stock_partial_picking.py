@@ -20,10 +20,10 @@
 ##############################################################################
 
 import time
+from lxml import etree
 from osv import fields, osv
 from tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import decimal_precision as dp
-from lxml import etree
 from tools.translate import _
 
 class stock_partial_picking_line(osv.TransientModel):

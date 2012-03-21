@@ -671,7 +671,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Internal Moves">
                     <field name="name"/>
                     <field name="partner_id" invisible="True"/>
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -681,7 +681,7 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="action_process" states="assigned" groups="stock.group_stock_user" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="action_process" states="assigned" groups="stock.group_stock_user" string="Move" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -797,13 +797,12 @@
                             </field>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
-                                <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
-                                <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
-                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
+                                <button name="draft_validate" states="draft" string="Move Now" type="object" icon="gtk-media-play"/>
+                                <button name="action_assign" states="draft" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="action_process" states="assigned" string="Process"  groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
+                                <button name="action_process" states="assigned" string="Move"  groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
                                 <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl" />
+                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -876,7 +875,7 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -990,10 +989,10 @@
                             </field>
                             <group col="12" colspan="4">
                                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                                <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
+                                <button name="draft_validate" states="draft" string="Deliver Now" type="object" icon="gtk-media-play"/>
                                 <button name="action_assign" states="draft" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                                <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward"/>
                                 <button name="%(report_picking_list)d" string="Print Delivery Order" states="done" type="action" icon="gtk-print"/>
                                 <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
                                 <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl"/>
@@ -1087,7 +1086,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';grey:state == 'done';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state == 'draft';grey:state == 'done';red:state not in ('cancel', 'done') and date &lt; current_date" string="Receptions">
                     <field name="name"/>
                     <field name="partner_id" />
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -1097,7 +1096,7 @@
                     <field name="invoice_state" groups="base.group_extended"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="action_process" states="assigned" string="Receive" type="object" icon="gtk-go-forward"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
                 </tree>
             </field>
@@ -1211,10 +1210,10 @@
                             </field>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                                <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
+                                <button name="draft_validate" states="draft" string="Receive Now" type="object" icon="gtk-media-play"/>
                                 <button name="action_assign" states="draft, confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
-                                <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                                <button name="action_process" states="assigned" string="Receive" type="object" icon="gtk-go-forward"/>
                                 <button name="%(report_picking_list)d" string="Print Reception" type="action" icon="gtk-print" states="done"/>
                                 <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
                                 <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}" type="action" icon="terp-gtk-go-back-rtl" />
@@ -1277,7 +1276,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','in')]</field>
-            <field name="context">{'contact_display': 'partner_address',"search_default_available":1}</field>
+            <field name="context">{'default_type': 'in', 'contact_display': 'partner_address',"search_default_available":1}</field>
             <field name="search_view_id" ref="view_picking_in_search"/>
             <field name="help">The Incoming Shipments is the list of all orders you will receive from your suppliers. An incoming shipment contains a list of products to be received according to the original purchase order. You can validate the shipment totally or partially.</field>
         </record>
@@ -1808,6 +1807,7 @@
             src_model="product.product"/>
 
         <act_window
+            context="{'default_type': 'internal'}"
             domain="[('move_lines','=',active_id)]"
             id="act_relate_picking"
             name="Related Picking"
