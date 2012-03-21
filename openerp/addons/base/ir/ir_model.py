@@ -1,5 +1,5 @@
+# -*- coding: utf-8 -*-
 
- # -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -74,7 +74,7 @@ class ir_model(osv.osv):
     def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
         if not domain:
             return []
-        field, operator, value = domain[0]
+        _, operator, value = domain[0]
         if operator not in ['=', '!=']:
             raise osv.except_osv(_('Invalid search criterions'), _('The osv_memory field can only be compared with = and != operator.'))
         value = bool(value) if operator == '=' else not bool(value)
@@ -315,7 +315,7 @@ class ir_model_fields(osv.osv):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
 
             if vals.get('relation',False) and not self.pool.get('ir.model').search(cr, user, [('model','=',vals['relation'])]):
-                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
+                raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
             if self.pool.get(vals['model']):
                 self.pool.get(vals['model']).__init__(self.pool, cr)
@@ -434,7 +434,7 @@ class ir_model_fields(osv.osv):
             ctx = context.copy()
             ctx.update({'select': vals.get('select_level','0'),'update_custom_fields':True})
 
-            for model_key, patch_struct in models_patch.items():
+            for _, patch_struct in models_patch.items():
                 obj = patch_struct[0]
                 for col_name, col_prop, val in patch_struct[1]:
                     setattr(obj._columns[col_name], col_prop, val)
@@ -828,8 +828,8 @@ class ir_model_data(osv.osv):
                 # test if constraint exists
                 cr.execute('select conname from pg_constraint where contype=%s and conname=%s',('f', name),)
                 if cr.fetchall():
-                      cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model,name),)
-                      _logger.info('Drop CONSTRAINT %s@%s', name, model)
+                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model,name),)
+                    _logger.info('Drop CONSTRAINT %s@%s', name, model)
                 continue
             
             if str(name).startswith('table_'):
@@ -840,7 +840,7 @@ class ir_model_data(osv.osv):
                 continue
             
             if str(name).startswith('constraint_'):
-                 # test if constraint exists
+                # test if constraint exists
                 cr.execute('select conname from pg_constraint where contype=%s and conname=%s',('u', name),)
                 if cr.fetchall():
                     cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table,name[11:]),)
@@ -856,7 +856,7 @@ class ir_model_data(osv.osv):
         for model,res_id in wkf_todo:
             wf_service = netsvc.LocalService("workflow")
             try:
-               wf_service.trg_write(uid, model, res_id, cr)
+                wf_service.trg_write(uid, model, res_id, cr)
             except:
                 _logger.info('Unable to process workflow %s@%s', res_id, model)
 
@@ -911,7 +911,6 @@ class ir_model_data(osv.osv):
         if not modules:
             return True
         modules = list(modules)
-        data_ids = self.search(cr, uid, [('module','in',modules)])
         module_in = ",".join(["%s"] * len(modules))
         process_query = 'select id,name,model,res_id,module from ir_model_data where module IN (' + module_in + ')'
         process_query+= ' and noupdate=%s'
@@ -926,6 +925,5 @@ class ir_model_data(osv.osv):
                     _logger.info('Deleting %s@%s', res_id, model)
                     self.pool.get(model).unlink(cr, uid, [res_id])
                     
-ir_model_data()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
