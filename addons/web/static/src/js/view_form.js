@@ -827,9 +827,7 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         } else {
             $el.before($root);
         }
-        $dst.children().each(function() {
-            self.process($(this));
-        });
+        self.process($root);
     },
     preprocess_field: function($field) {
         var name = $field.attr('name'),
