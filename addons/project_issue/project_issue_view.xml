@@ -116,23 +116,23 @@
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" type="action"/>
                         </page>
-                           <page string="Extra Info" groups="base.group_extended">
-                            <group col="2" colspan="2" groups="base.group_no_one">
-                            <separator colspan="2" string="Date"/>
-                            <field name="create_date" groups="base.group_no_one"/>
-                            <field name="write_date"  groups="base.group_no_one"/>
-                            <field name="date_closed" groups="base.group_no_one"/>
-                            <field name="date_open" groups="base.group_no_one"/>
-                            <field name="date_action_last" groups="base.group_no_one"/>
+                           <page string="Extra Info" groups="base.group_no_one">
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Date"/>
+                               <field name="create_date"/>
+                                <field name="write_date" />
+                                <field name="date_closed"/>
+                                <field name="date_open"/>
+                                <field name="date_action_last"/>
                             </group>
-                            <group colspan="2" col="2" groups="base.group_no_one">
-                            <separator string="Statistics" colspan="2" col="2"/>
-                            <field name="day_open" groups="base.group_no_one"/>
-                            <field name="day_close" groups="base.group_no_one"/>
-                            <field name="working_hours_open" widget="float_time" groups="base.group_no_one"/>
-                            <field name="working_hours_close" widget="float_time" groups="base.group_no_one"/>
-                            <field name="inactivity_days" groups="base.group_no_one"/>
-                            <field name="days_since_creation" groups="base.group_no_one"/>
+                            <group colspan="2" col="2">
+                                <separator string="Statistics" colspan="2" col="2"/>
+                                <field name="day_open"/>
+                                <field name="day_close"/>
+                                <field name="working_hours_open" widget="float_time"/>
+                                <field name="working_hours_close" widget="float_time"/>
+                                <field name="inactivity_days"/>
+                                <field name="days_since_creation"/>
                             </group>
                             <group colspan="2" col="2">
                             <separator string="References" colspan="2"/>

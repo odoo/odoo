@@ -177,11 +177,11 @@
                         <field name="referred"/>
                     </group>
                     <group colspan="2" col="2" groups="base.group_no_one">
-                        <separator string="Dates" colspan="2" col="2" />
-                        <field name="create_date" groups="base.group_no_one"/>
-                        <field name="write_date" groups="base.group_no_one"/>
-                        <field name="date_open" groups="base.group_no_one"/>
-                        <field name="date_closed" groups="base.group_no_one"/>
+                        <separator string="Dates" colspan="2" col="2"/>
+                        <field name="create_date"/>
+                        <field name="write_date"/>
+                        <field name="date_open"/>
+                        <field name="date_closed"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Mailings" colspan="2" col="2"/>
@@ -189,9 +189,9 @@
                         <field name="optout" on_change="on_change_optout(optout)"/>
                     </group>
                     <group colspan="2" col="2" groups="base.group_no_one">
-                        <separator string="Statistics" colspan="2" col="2" />
-                        <field name="day_open" groups="base.group_no_one"/>
-                        <field name="day_close" groups="base.group_no_one"/>
+                        <separator string="Statistics" colspan="2" col="2"/>
+                        <field name="day_open"/>
+                        <field name="day_close"/>
                     </group>
                  </page>
                 </notebook>
@@ -417,7 +417,7 @@
                     <separator orientation="vertical"/>
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
+                    <separator orientation="vertical" groups="base.group_no_one"/>
                     <filter string="Creation" help="Create date" icon="terp-go-month"
                         domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                 </group>
@@ -572,13 +572,13 @@
                 <page string="Extra Info" groups="base.group_extended">
                     <group col="2" colspan="2" groups="base.group_no_one">
                         <separator string="Dates" colspan="2"/>
-                        <field name="create_date" groups="base.group_no_one"/>
-                        <field name="write_date" groups="base.group_no_one"/>
-                        <field name="date_closed" groups="base.group_no_one"/>
-                        <field name="date_open" groups="base.group_no_one"/>
+                        <field name="create_date"/>
+                        <field name="write_date"/>
+                        <field name="date_closed"/>
+                        <field name="date_open"/>
                     </group>
                     <group col="2" colspan="2">
-                        <separator string="Misc" colspan="2" groups="base.group_no_one"/>
+                        <separator string="Misc" colspan="2"/>
                         <field name="active"/>
                         <field name="day_open" groups="base.group_no_one"/>
                         <field name="day_close" groups="base.group_no_one"/>

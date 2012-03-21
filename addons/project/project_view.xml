@@ -293,9 +293,9 @@
                             </group>
                             <group colspan="2" col="2" groups="base.group_no_one">
                                 <separator string="Dates" colspan="2"/>
-                                <field name="date_start" groups="base.group_no_one"/>
-                                <field name="date_end" groups="base.group_no_one"/>
-                                <field name="create_date" groups="base.group_no_one"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="create_date"/>
                             </group>
                             <separator string="Miscelleanous" colspan="4"/>
                             <field name="partner_id" />
@@ -510,7 +510,7 @@
                         <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadline" icon="terp-gnome-cpu-frequency-applet+" domain="[]" context="{'group_by':'date_deadline'}"/>
-                        <separator orientation="vertical"/>
+                        <separator orientation="vertical" groups="base.group_no_one"/>
                         <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" groups="base.group_no_one"/>
                         <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}" groups="base.group_no_one"/>
                     </group>

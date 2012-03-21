@@ -1584,7 +1584,7 @@
                     <field name="product_id"/>
                     <field name="product_qty" />
                     <field name="product_uom" string="UoM"/>
-                    <field name="date"  groups="base.group_no_one" />
+                    <field name="date" groups="base.group_no_one" />
                     <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
@@ -1687,7 +1687,7 @@
                         <separator orientation="vertical"/>
                         <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
+                        <separator orientation="vertical" groups="base.group_no_one"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" groups="base.group_no_one"/>
                     </group>
                 </search>
@@ -1720,7 +1720,7 @@
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
+                        <separator orientation="vertical" groups="base.group_no_one"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" groups="base.group_no_one"/>
                     </group>
                 </search>
