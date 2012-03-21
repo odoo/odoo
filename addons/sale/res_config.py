@@ -34,25 +34,23 @@ class sale_configuration(osv.osv_memory):
             implied_group='sale.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
         'task_work': fields.boolean('Based on Tasks\' Work',
-                                    help="""Lets you transfer the entries under tasks defined for Project Management to
-                                    the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways
-                                    and to automatically creates project tasks from procurement lines.
-                                    It installs the project_timesheet and project_mrp modules."""),
+            help="""Lets you transfer the entries under tasks defined for Project Management to
+                the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways
+                and to automatically creates project tasks from procurement lines.
+                This installs the modules project_timesheet and project_mrp."""),
         'module_account_analytic_analysis': fields.boolean('Based on Timesheet',
-                                    help = """For modifying account analytic view to show important data to project manager of services companies.
-                                    You can also view the report of account analytic summary user-wise as well as month wise.
-                                    It installs the account_analytic_analysis module."""),
+            help = """For modifying account analytic view to show important data to project manager of services companies.
+                You can also view the report of account analytic summary user-wise as well as month wise.
+                This installs the module account_analytic_analysis."""),
         'default_order_policy': fields.selection(
             [('manual', 'Invoice Based on Sales Orders'), ('picking', 'Invoice Based on Deliveries')],
             'Main Method Based On', required=True, default_model='sale.order',
             help="You can generate invoices based on sales orders or based on shippings."),
-        'module_delivery': fields.boolean('Do you charge the delivery?',
-                                   help ="""
-                                   Allows you to add delivery methods in sale orders and delivery orders.
-                                   You can define your own carrier and delivery grids for prices.
-                                   It installs the delivery module.
-                                   """),
-        'time_unit': fields.many2one('product.uom','Working Time Unit'),
+        'module_delivery': fields.boolean('Charge delivery costs',
+            help ="""Allows you to add delivery methods in sale orders and delivery orders.
+                You can define your own carrier and delivery grids for prices.
+                This installs the module delivery."""),
+        'time_unit': fields.many2one('product.uom', 'Working Time Unit'),
         'default_picking_policy' : fields.boolean("Deliver all products at once",
             help = "You can set picking policy on sale order that will allow you to deliver all products at once."),
         'group_sale_delivery_address':fields.boolean("Multiple Address", group='base.group_user', implied_group='base.group_sale_delivery_address',
@@ -91,19 +89,16 @@ class sale_configuration(osv.osv_memory):
         'group_sale_taxes_global_on_order':fields.boolean("Global on order", group='base.group_user', implied_group='base.group_sale_taxes_global_on_order'),
         'group_sale_taxes_on_order_line':fields.boolean("On order line", group='base.group_user', implied_group='base.group_sale_taxes_on_order_line'),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
-        'module_project_mrp': fields.boolean("Project mrp"),
-
+        'module_project_mrp': fields.boolean("Project MRP"),
     }
 
     def default_get(self, cr, uid, fields, context=None):
-        data_obj = self.pool.get('ir.model.data')
+        ir_model_data = self.pool.get('ir.model.data')
         res = super(sale_configuration, self).default_get(cr, uid, fields, context)
-        if res.get('module_project_mrp') and res.get('module_project_timesheet'):
-            res.update({'task_work': True})
+        res['task_work'] = res.get('module_project_mrp') and res.get('module_project_timesheet')
         if res.get('module_account_analytic_analysis'):
-            prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
-            uom_id = self.pool.get('product.product').browse(cr, uid, prod_id).uom_id.id
-            res.update({'time_unit': uom_id})
+            product = ir_model_data.get_object(cr, uid, 'product', 'product_consultant')
+            res['time_unit'] = product.uom_id.id
         if res.get('group_sale_taxes_global_on_order'):
             res.update({'tax_policy': 'global_on_order'})
         elif res.get('group_sale_taxes_on_order_line'):
@@ -119,9 +114,13 @@ class sale_configuration(osv.osv_memory):
             'default_picking_policy': default_picking_policy == 'one',
         }
 
+    def _get_default_time_unit(self, cr, uid, context=None):
+        ids = self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=context)
+        return ids and ids[0] or False
+
     _defaults = {
         'default_order_policy': 'manual',
-        'time_unit': lambda self, cr, uid, c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c) and self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c)[0] or False,
+        'time_unit': _get_default_time_unit,
         'tax_policy': 'global_on_order',
     }
 
@@ -144,28 +143,20 @@ class sale_configuration(osv.osv_memory):
         ir_values.set_default(cr, uid, 'sale.order', 'picking_policy', default_picking_policy)
 
         if wizard.time_unit:
-            prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
-            product_obj = self.pool.get('product.product')
-            product_obj.write(cr, uid, prod_id, {'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
+            product = ir_model_data.get_object(cr, uid, 'product', 'product_consultant')
+            product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 
         if wizard.task_work and wizard.time_unit:
-            company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-            self.pool.get('res.company').write(cr, uid, [company_id], {
-                'project_time_mode_id': wizard.time_unit.id
-            }, context=context)
+            user = self.pool.get('res.users').browse(cr, uid, uid, context)
+            user.company_id.write({'project_time_mode_id': wizard.time_unit.id})
 
         return res
 
     def onchange_task_work(self, cr, uid, ids, task_work, context=None):
-        res = {'value': {}}
-        if task_work:
-            res['value'].update({'module_project_timesheet': True})
-            res['value'].update({'module_project_mrp': True})
-        else:
-            res['value'].update({'module_project_timesheet': False})
-            res['value'].update({'module_project_mrp': False})
-
-        return res
+        return {'value': {
+            'module_project_timesheet': task_work,
+            'module_project_mrp': task_work,
+        }}
 
     def onchange_tax_policy(self, cr, uid, ids, tax_policy, context=None):
         res = {'value': {}}
