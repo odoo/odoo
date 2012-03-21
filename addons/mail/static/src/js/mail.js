@@ -137,8 +137,8 @@ openerp.mail = function(session) {
             });
         },
         
-        stop: function () {
-            //this._super.apply(this, arguments);
+        destroy: function () {
+            this._super.apply(this, arguments);
         },
         
         init_comments: function() {
@@ -392,52 +392,51 @@ openerp.mail = function(session) {
         form_template: 'RecordThread',
 
         init: function() {
-            this.is_sub = 0;
-            this.see_sub = 1;
             this._super.apply(this, arguments);
+            this.see_subscribers = true;
             this.thread = null;
-            /* DataSets */
+            // datasets
             this.ds = new session.web.DataSet(this, this.view.model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
 
         start: function() {
-            var self = this;
             this._super.apply(this, arguments);
-            /* bind and hide buttons */
-            self.$element.find('button.oe_mail_button_followers').bind('click', function () { self.do_toggle_followers(); }).hide();
-            self.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); }).hide()
+            var self = this;
+            // bind buttons
+            this.$element.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); }).hide();
+            this.$element.find('button.oe_mail_button_follow').click(function () { self.do_follow(); })
                 .mouseover(function () { $(this).html('Follow'); }).mouseleave(function () { $(this).html('Not following'); });
-            self.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); }).hide()
+            this.$element.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
                 .mouseover(function () { $(this).html('Unfollow'); }).mouseleave(function () { $(this).html('Following'); });
+            this.reinit();
         },
 
-        stop: function () {
+        destroy: function () {
             this._super.apply(this, arguments);
         },
         
-        set_value: function() {
-            var self = this;
-            this._super.apply(this, arguments);
-            this.see_sub = 1;
-            /* hide follow/unfollow/see followers buttons */
+        reinit: function() {
+            this.see_subscribers = true;
             this.$element.find('button.oe_mail_button_followers').html('Hide followers')
             this.$element.find('button.oe_mail_button_follow').hide();
             this.$element.find('button.oe_mail_button_unfollow').hide();
-            if (! this.view.datarecord.id) { return; }
-            /* find wich (un)follow buttons to show */
-            var fetch_fol_done = this.ds.call('message_is_subscriber', [[this.view.datarecord.id]]).then(function (records) {
-                if (records == true) { self.is_sub = 1; self.$element.find('button.oe_mail_button_unfollow').show(); }
-                else { self.is_sub = 0; self.$element.find('button.oe_mail_button_follow').show(); }
-                });
-            /* fetch subscribers */
+        },
+        
+        set_value: function() {
+            this._super.apply(this, arguments);
+            var self = this;
+            this.reinit();
+            if (! this.view.datarecord.id) { this.$element.find('ul.oe_mail_thread').hide(); return; }
+            // fetch followers
             var fetch_sub_done = this.fetch_subscribers();
-            /* create ThreadDisplay widget and render it */
+            // create and render Thread widget
             this.$element.find('div.oe_mail_recthread_left').empty();
-            if (this.thread) this.thread.stop();
-            this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid, 'show_post_comment': true});
-            this.thread.appendTo(this.$element.find('div.oe_mail_recthread_left'));
-            return fetch_fol_done && fetch_sub_done;
+            if (this.thread) this.thread.destroy();
+            this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid,
+                            'show_post_comment': true, 'limit': 15});
+            var thread_done = this.thread.appendTo(this.$element.find('div.oe_mail_recthread_left'));
+            return fetch_sub_done && thread_done;
         },
         
         fetch_subscribers: function () {
@@ -450,30 +449,32 @@ openerp.mail = function(session) {
             sub_node.empty();
             $('<h4/>').html('Followers (' + records.length + ')').appendTo(sub_node);
             _(records).each(function (record) {
+                if (record.id == self.session.uid) { self.is_subscriber = true; }
                 var mini_url = self.thread_get_avatar_mini('res.users', 'avatar_mini', record.id);
-                $('<img  class="oe_mail_oe_left oe_mail_msg_image" src="' + mini_url + '" title="' + record.name + '" alt="' + record.name + '"/>').appendTo(sub_node);
+                $('<img class="oe_mail_oe_left oe_mail_msg_image" src="' + mini_url + '" title="' + record.name + '" alt="' + record.name + '"/>').appendTo(sub_node);
             });
+            if (self.is_subscriber) {
+                self.$element.find('button.oe_mail_button_follow').hide();
+                self.$element.find('button.oe_mail_button_unfollow').show(); }
+            else {
+                self.$element.find('button.oe_mail_button_follow').show();
+                self.$element.find('button.oe_mail_button_unfollow').hide(); }
         },
         
         do_follow: function () {
-            this.do_toggle_follow();
-            return this.ds.call('message_subscribe', [[this.view.datarecord.id]]).then(this.proxy('fetch_subscribers'));
+            return this.ds.call('message_subscribe', [[this.view.datarecord.id]]).pipe(this.proxy('fetch_subscribers'));
         },
         
         do_unfollow: function () {
-            this.do_toggle_follow();
-            return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).then(this.proxy('fetch_subscribers'));
-        },
-        
-        do_toggle_follow: function () {
-            this.is_sub = 1 - this.is_sub;
-            this.$element.find('button.oe_mail_button_unfollow').toggle();
-            this.$element.find('button.oe_mail_button_follow').toggle();
+            var self = this;
+            return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).then(function (record) {
+                self.do_notify("Impossible to unsubscribe", "You are automatically subscribed to this record. You cannot unsubscribe.");
+                }).pipe(this.proxy('fetch_subscribers'));
         },
         
         do_toggle_followers: function () {
-            this.see_sub = 1 - this.see_sub;
-            if (this.see_sub == 1) { this.$element.find('button.oe_mail_button_followers').html('Hide followers'); }
+            this.see_subscribers = ! this.see_subscribers;
+            if (this.see_subscribers) { this.$element.find('button.oe_mail_button_followers').html('Hide followers'); }
             else { this.$element.find('button.oe_mail_button_followers').html('Display followers'); }
             this.$element.find('div.oe_mail_recthread_followers').toggle();
         },

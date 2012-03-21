@@ -681,6 +681,8 @@ class mail_thread(osv.osv):
         return create_ids
 
     def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
+        if not user_ids and not uid in self.message_get_subscribers_ids(cr, uid, ids, context=context):
+            return False
         subscription_obj = self.pool.get('mail.subscription')
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
         to_delete_sub_ids = subscription_obj.search(cr, uid,
