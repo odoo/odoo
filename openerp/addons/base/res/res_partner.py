@@ -359,7 +359,7 @@ class res_partner_address(osv.osv):
             ids = self.search(cr, user, [('zip', '=', name)] + args, limit=limit, context=context)
             # then search on other fields:
             if context.get('contact_display', 'contact')=='partner_address':
-                fields = ['name', 'country_id', 'city', 'street', 'partner_id']
+                fields = ['partner_id', 'name', 'country_id', 'city', 'street']
             else:
                 fields = ['name', 'country_id', 'city', 'street']
             # Here we have to search the records that satisfy the domain:
