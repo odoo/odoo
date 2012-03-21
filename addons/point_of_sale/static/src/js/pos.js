@@ -1403,6 +1403,9 @@ openerp.point_of_sale = function(db) {
             }, this));
         },
         close: function() {
+            // remove barcode reader event listener
+            $('body').undelegate('', 'keyup')
+
             return new db.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_close_statement']], ['res_id']).pipe(
                     _.bind(function(res) {
                 return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
