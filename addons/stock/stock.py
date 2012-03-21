@@ -622,8 +622,8 @@ class stock_picking(osv.osv):
 
     _columns = {
         'name': fields.char('Reference', size=64, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'origin': fields.char('Origin', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document that produced this picking.", select=True),
-        'backorder_id': fields.many2one('stock.picking', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this picking was split this field links to the picking that contains the other part that has been processed already.", select=True),
+        'origin': fields.char('Origin', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document", select=True),
+        'backorder_id': fields.many2one('stock.picking', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Shipping type specify, goods coming in or going out."),
         'note': fields.text('Notes', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
@@ -631,7 +631,7 @@ class stock_picking(osv.osv):
                 "Set a location if you produce at a fixed location. This can be a partner location " \
                 "if you subcontract the manufacturing operations.", select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Location where the system will stock the finished products.", select=True),
-        'move_type': fields.selection([('direct', 'Partial Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be delivered all at once or by direct delivery"),
+        'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be delivered all at once or by direct delivery"),
         'state': fields.selection(PICK_STATE, 'State', readonly=True, select=True,
             help="* Draft: not confirmed yet and will not be scheduled until confirmed\n"\
                  "* Confirmed: still waiting for the availability of products\n"\
@@ -640,8 +640,8 @@ class stock_picking(osv.osv):
                  "* Done: has been processed, can't be modified or cancelled anymore\n"\
                  "* Cancelled: has been cancelled, can't be confirmed anymore"),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                 store=True, type='datetime', string='Scheduled Date', select=1, help="Expected date for the picking to be processed"),
-        'date': fields.datetime('Order Date', help="Date of Order", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+                 store=True, type='datetime', string='Scheduled Date', select=1, help="Scheduled date for the shipment to be processed"),
+        'date': fields.datetime('Order Date', help="Date of order", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'date_done': fields.datetime('Date Done', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  store=True, type='datetime', string='Max. Expected Date', select=2),
@@ -708,6 +708,15 @@ class stock_picking(osv.osv):
                                 value = 'Delivered'
                         _state.append((key,value))
                     res['fields']['state']['selection'] = _state
+                if field == 'address_id':
+                    _tooltip = ''
+                    if type == 'in':
+                        _tooltip = "supplier"
+                    elif type == 'internal':
+                        _tooltip="warehouse"
+                    elif type == 'out':
+                        _tooltip="customer"
+                    res['fields']['address_id']['help'] = "Address of %s" %(_tooltip)
         return res
 
     def action_process(self, cr, uid, ids, context=None):
