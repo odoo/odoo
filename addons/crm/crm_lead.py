@@ -300,23 +300,23 @@ class crm_lead(crm_case, osv.osv):
 
     def case_mark_lost_send_note(self, cr, uid, ids, context=None):
         message = _("Opportunity has been <b>lost</b>.")
-        return self.message_append_note(cr, uid, ids, message, context=context)
+        return self.message_append_note(cr, uid, ids, _('System notification'), message, context=context)
 
     def case_mark_won_send_note(self, cr, uid, ids, context=None):
         message = _("Opportunity has been <b>won</b>.")
-        return self.message_append_note(cr, uid, ids, message, context=context)
+        return self.message_append_note(cr, uid, ids, _('System notification'), message, context=context)
 
     def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
         phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
         if action == 'log': prefix = 'Logged'
         else: prefix = 'Scheduled'
         message = _("<b>%s a call</b> for the <em>%s</em>.") % (prefix, phonecall.date)
-        return self. message_append_note(cr, uid, ids, 'System Notification', message, context=context)
+        return self. message_append_note(cr, uid, ids, _('System notification'), message, context=context)
 
     def _lead_set_partner_send_note(self, cr, uid, ids, context=None):
         for lead in self.browse(cr, uid, ids, context=context):
             message = _("%s <b>partner</b> is now set to <em>%s</em>." % (self.case_get_note_msg_prefix(cr, uid, lead.id, context=context), lead.partner_id.name))
-            lead.message_append_note('System Notification' ,message)
+            lead.message_append_note(_('System notification'), message)
         return True
 
     def case_open(self, cr, uid, ids, context=None):
@@ -587,7 +587,7 @@ class crm_lead(crm_case, osv.osv):
 
     def convert_opportunity_send_note(self, cr, uid, lead, context=None):
         message = _("Lead has been <b>converted to an opportunity</b>.")
-        lead.message_append_note('' ,message)
+        lead.message_append_note(_('System Notification') ,message)
         return True
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
@@ -883,7 +883,7 @@ class crm_lead(crm_case, osv.osv):
                 vals['probability'] = stage.probability
             for case in self.browse(cr, uid, ids, context=context):
                 message = _("Stage changed to <b>%s</b>.") % (stage.name)
-                case.message_append_note('', message)
+                case.message_append_note(_('System Notification'), message)
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
 
 crm_lead()

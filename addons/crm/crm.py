@@ -368,7 +368,7 @@ class crm_case(crm_base):
     And need a stage_id field
     And object that inherit (orm inheritance) from a class the overwrite copy
     """
-
+    
     def stage_find(self, cr, uid, section_id, domain=[], order='sequence'):
         domain = list(domain)
         if section_id:
