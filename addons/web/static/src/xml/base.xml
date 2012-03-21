@@ -726,7 +726,7 @@
                 </t>
             </div>
         </div>
-        <div class="oe_form_content"/>
+        <div class="oe_form_container"/>
     </div>
 </t>
 <t t-name="One2Many.formview" t-extend="FormView">
@@ -833,6 +833,12 @@
     </table>
 </form>
 
+<t t-name="FormRenderingRoot">
+    <div class="oe_form">
+        <h3 style="display: none"><!-- TODO: check how 'string' should be used in new layout --><t t-esc="string"/></h3>
+        <group t-if="legacy_mode" col="4"/>
+    </div>
+</t>
 <t t-name="FormRenderingGroup">
     <t t-set="table">
         <table border="0" cellpadding="0" cellspacing="0" width="100%"/>
@@ -859,7 +865,9 @@
     </div>
 </t>
 <t t-name="FormRenderingNotebookPage">
-    <div class="oe_form_notebook_page" t-att-id="id"/>
+    <div class="oe_form_notebook_page" t-att-id="id">
+        <group t-if="legacy_mode" col="4"/>
+    </div>
 </t>
 <t t-name="FormRenderingSeparator">
     <div class="oe_horizontal_separator">

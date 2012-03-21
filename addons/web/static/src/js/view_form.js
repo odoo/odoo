@@ -99,7 +99,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.fields_view = data;
 
         this.rendering_engine.set_fields_view(data);
-        this.rendering_engine.render_to(this.$element.find('.oe_form_content'));
+        this.rendering_engine.render_to(this.$element.find('.oe_form_container'));
 
         this.$form_header = this.$element.find('.oe_form_header:first');
         this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
@@ -742,6 +742,7 @@ openerp.web.FormRenderingEngineInterface = {
 openerp.web.FormRenderingEngine = openerp.web.Class.extend({
     init: function(view) {
         this.view = view;
+        this.legacy_mode = false;
     },
     set_fields_view: function(fvg) {
         this.fvg = fvg;
@@ -752,16 +753,14 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
     render_to: function($element) {
         var self = this;
         this.$element = $element;
-        
-        this.fields_prefix = this.view.dataset ? this.view.dataset.model : '';
-        
+
         // TODO: I know this will save the world and all the kitten for a moment,
         //       but one day, we will have to get rid of xml2json
         var xml = openerp.web.json_node_to_xml(this.fvg.arch);
         this.$form = $(xml);
 
         this.process(this.$form);
-        
+
         this.$form.children().appendTo(this.$element);
         // OpenERP views spec :
         //      - @width is obsolete ?
@@ -777,10 +776,15 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
                 w.replace($elem);
             }
         });
-        $('<button>Debug layout</button>').appendTo(this.$element).click(this.do_toggle_layout_debugging);
+        $('<button>Debug layout</button>').appendTo(this.$element).click($.proxy(this.toggle_layout_debugging, this));
+    },
+    render_element: function(template, dict) {
+        dict = dict || {};
+        dict.legacy_mode = this.legacy_mode;
+        return $(QWeb.render(template, dict));
     },
     alter_field: function(field) {},
-    do_toggle_layout_debugging: function() {
+    toggle_layout_debugging: function() {
         if (!this.$element.has('.oe_layout_debug_cell:first').length) {
             this.$element.find('.oe_form_group_cell').each(function() {
                 var $span = $('<span class="oe_layout_debug_cell"/>').text($(this).attr('width'));
@@ -808,6 +812,24 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
             });
             return $tag;
         }
+    },
+    process_form: function($form) {
+        this.legacy_mode = true;
+        this.process_html.apply(this, arguments);
+    },
+    process_html: function($el) {
+        var self = this,
+            $root = this.render_element('FormRenderingRoot', $el.getAttributes()),
+            $dst = this.legacy_mode ? $root.find('group:first') : $root;
+        $el.children().appendTo($dst);
+        if ($el[0] === this.$form[0]) {
+            this.$form = $root;
+        } else {
+            $el.before($root);
+        }
+        $dst.children().each(function() {
+            self.process($(this));
+        });
     },
     preprocess_field: function($field) {
         var name = $field.attr('name'),
@@ -933,22 +955,23 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
     },
     process_notebook: function($notebook) {
         var self = this;
-        $notebook.children().each(function() {
-            self.process($(this));
-        });
         var pages = [];
         $notebook.find('> page').each(function() {
             var $page = $(this),
                 page_attrs = $page.getAttributes();
             page_attrs.id = _.uniqueId('notebook_page_');
             pages.push(page_attrs);
-            var $new_page = $(QWeb.render('FormRenderingNotebookPage', page_attrs));
-            $page.children().appendTo($new_page);
+            var $new_page = self.render_element('FormRenderingNotebookPage', page_attrs),
+                $dst = self.legacy_mode ? $new_page.find('group:first') : $new_page;
+            $page.children().appendTo($dst);
             $page.before($new_page).remove();
         });
         var $new_notebook = $(QWeb.render('FormRenderingNotebook', { pages : pages }));
         $notebook.children().appendTo($new_notebook);
         $notebook.before($new_notebook).remove();
+        $new_notebook.children().each(function() {
+            self.process($(this));
+        });
         $new_notebook.tabs();
         return $new_notebook;
     },
