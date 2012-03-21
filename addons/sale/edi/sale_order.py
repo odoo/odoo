@@ -110,13 +110,13 @@ class sale_order(osv.osv, EDIMixin):
 
         # imported company_address = new partner address
         address_info = edi_document.pop('company_address')
-#        address_info['partner_id'] = (src_company_id, src_company_name)
+        address_info['parent_id'] = (src_company_id, src_company_name)
         address_info['type'] = 'default'
         address_id = res_partner.edi_import(cr, uid, address_info, context=context)
 
         # modify edi_document to refer to new partner/address
         partner_address = res_partner.browse(cr, uid, address_id, context=context)
-#        edi_document['partner_id'] = (src_company_id, src_company_name)
+       # edi_document['parent_id'] = (src_company_id, src_company_name)
         edi_document.pop('partner_address', False) # ignored
         address_edi_m2o = self.edi_m2o(cr, uid, partner_address, context=context)
         edi_document['partner_invoice_id'] = address_edi_m2o
