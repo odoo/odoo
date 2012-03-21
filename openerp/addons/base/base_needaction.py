@@ -131,6 +131,8 @@ class base_needaction(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         if context is None:
             context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         # perform write
         write_res = super(base_needaction, self).write(cr, uid, ids, values, context=context)
         # get and update user_ids
