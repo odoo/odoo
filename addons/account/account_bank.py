@@ -55,7 +55,7 @@ class bank(osv.osv):
                 # Find the code and parent of the bank account to create
                 dig = 6
                 current_num = 1
-                ids = obj_acc.search(cr, uid, [('type','=','liquidity')], context=context)
+                ids = obj_acc.search(cr, uid, [('type','=','liquidity'), ('company_id', '=', bank.company_id.id)], context=context)
                 # No liquidity account exists, no template available
                 if not ids: continue
 
