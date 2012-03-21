@@ -726,6 +726,7 @@
                 </t>
             </div>
         </div>
+        <div style="clear: both;"/>
         <div class="oe_form_container"/>
     </div>
 </t>
@@ -833,9 +834,8 @@
     </table>
 </form>
 
-<t t-name="FormRenderingRoot">
+<t t-name="FormRenderingForm">
     <div class="oe_form">
-        <h3 style="display: none"><!-- TODO: check how 'string' should be used in new layout --><t t-esc="string"/></h3>
         <group t-if="legacy_mode" col="4"/>
     </div>
 </t>

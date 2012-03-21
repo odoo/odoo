@@ -746,6 +746,7 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
     },
     set_fields_view: function(fvg) {
         this.fvg = fvg;
+        this.legacy_mode = (this.fvg.arch.tag === 'form');
     },
     set_registry: function(registry) {
         this.registry = registry;
@@ -761,10 +762,9 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
 
         this.process(this.$form);
 
-        this.$form.children().appendTo(this.$element);
+        this.$form.appendTo(this.$element);
         // OpenERP views spec :
         //      - @width is obsolete ?
-        // TODO: modifiers invisible. Add a special attribute, eg: data-invisible  that should be used in order to create openerp.form.InvisibleWidgetG
 
         this.$element.find('field, button').each(function() {
             var $elem = $(this),
@@ -814,20 +814,16 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         }
     },
     process_form: function($form) {
-        this.legacy_mode = true;
-        this.process_html.apply(this, arguments);
-    },
-    process_html: function($el) {
-        var self = this,
-            $root = this.render_element('FormRenderingRoot', $el.getAttributes()),
-            $dst = this.legacy_mode ? $root.find('group:first') : $root;
-        $el.children().appendTo($dst);
-        if ($el[0] === this.$form[0]) {
-            this.$form = $root;
+        var $new_form = this.render_element('FormRenderingForm', $form.getAttributes());
+            $dst = this.legacy_mode ? $new_form.find('group:first') : $new_form;
+        $form.children().appendTo($dst);
+        if ($form[0] === this.$form[0]) {
+            // If root element, replace it
+            this.$form = $new_form;
         } else {
-            $el.before($root);
+            $form.before($new_form).remove();
         }
-        self.process($root);
+        this.process($new_form);
     },
     preprocess_field: function($field) {
         var name = $field.attr('name'),
