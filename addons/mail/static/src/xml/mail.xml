@@ -23,16 +23,16 @@
     </t>
 
     <div t-name="RecordThread" class="oe_mail_recthread">
-        <div class="separator horizontal">OpenSocial</div>
+        <h4>History and Comments</h4>
         <div class="oe_mail_recthread_left">
         </div>
         <div class="oe_mail_recthread_right">
-            <div class="oe_mail_actions">
+            <div class="oe_mail_recthread_actions">
                 <button type="button" class="oe_mail_button_follow">Not following</button>
                 <button type="button" class="oe_mail_button_unfollow">Following</button>
                 <button type="button" class="oe_mail_button_followers">Display followers</button>
             </div>
-            <div class="oe_mail_followers">
+            <div class="oe_mail_recthread_followers">
                 <h4>Followers</h4>
                 <div class="oe_mail_followers_display">
                 </div>
@@ -40,11 +40,11 @@
         </div>
     </div>
 
-    <div t-name="Thread" class="oe_mail_thread">
+    <ul t-name="Thread" class="oe_mail_thread oe_mail">
         <div class="oe_mail_thread_act">
             <img class="oe_mail_msg_image oe_mail_oe_left" alt="User img"/>
             <div class="oe_mail_msg_content">
-                <textarea class="oe_mail oe_mail_action_textarea" placeholder="Add your comment here..." onfocus="this.value = '';"/><br />
+                <textarea class="oe_mail_action_textarea oe_mail" placeholder="Add your comment here..." onfocus="this.value = '';"/><br />
             </div>
         </div>
         <div class="oe_mail_thread_display"></div>
@@ -52,16 +52,16 @@
             <button class="oe_mail_button_more" type="button">Load more messages</button>
             <p class="oe_mail_p_nomore">You have loaded all messages in this thread.</p>
         </div>
-    </div>
+    </ul>
 
-    <div t-name="ThreadMsg" t-attf-class="{record.type} oe_mail_thread_msg">
+    <li t-name="ThreadMsg" t-attf-class="{record.type} oe_mail_thread_msg oe_mail">
         <img class="oe_mail_msg_image oe_mail_oe_left" t-att-src="record.mini_url"/>
         <div class="oe_mail_msg_content">
             <t t-if="record.type == 'email'"><t t-call="EmailDisplay" /></t>
             <t t-if="record.type == 'notification' || record.type == 'comment'"><t t-call="NoteDisplay" /></t>
         </div>
         <t t-if="record.type == 'tmp'"><t t-call="ThreadDisplay" /></t>
-    </div>
+    </li>
     
     <t t-name="NoteDisplay">
         <p class="oe_mail_msg">

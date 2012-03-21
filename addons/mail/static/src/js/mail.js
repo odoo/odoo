@@ -446,7 +446,7 @@ openerp.mail = function(session) {
         
         display_subscribers: function (records) {
             var self = this;
-            var sub_node = this.$element.find('div.oe_mail_followers')
+            var sub_node = this.$element.find('div.oe_mail_recthread_followers')
             sub_node.empty();
             $('<h4/>').html('Followers (' + records.length + ')').appendTo(sub_node);
             _(records).each(function (record) {
@@ -475,7 +475,7 @@ openerp.mail = function(session) {
             this.see_sub = 1 - this.see_sub;
             if (this.see_sub == 1) { this.$element.find('button.oe_mail_button_followers').html('Hide followers'); }
             else { this.$element.find('button.oe_mail_button_followers').html('Display followers'); }
-            this.$element.find('div.oe_mail_followers').toggle();
+            this.$element.find('div.oe_mail_recthread_followers').toggle();
         },
         
         thread_get_avatar_mini: function(model, field, id) {
