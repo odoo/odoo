@@ -43,10 +43,12 @@ if (SearchBox_renderSearchInput.toString() !== VS.ui.SearchBox.prototype.renderS
 var SearchBox_searchEvent = function (e) {
     var query = this.value();
     this.renderFacets();
+    this.focusSearch(e);
     this.app.options.callbacks.search(query, this.app.searchQuery);
   };
 if (SearchBox_searchEvent.toString() !== VS.ui.SearchBox.prototype.searchEvent.toString().replace(
-        /this\.focusSearch\(e\);\n[ ]{4}this\.value\(query\)/, 'this.renderFacets()')) {
+        /this\.focusSearch\(e\);\n[ ]{4}this\.value\(query\)/,
+        'this\.renderFacets();\n    this\.focusSearch(e)')) {
     throw new Error(
         "Trying to replace wrong version of VS.ui.SearchBox#searchEvent. "
         + "Please fix replacement.");
@@ -200,6 +202,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         e.preventDefault();
         this.vs.searchQuery.add(new VS.model.SearchFacet(_.extend(
             {app: this.vs}, ui.item)));
+        this.vs.searchBox.searchEvent({});
     },
 
     /**
