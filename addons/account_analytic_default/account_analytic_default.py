@@ -90,7 +90,7 @@ class stock_picking(osv.osv):
 
     def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
         partner_id = picking.address_id and picking.address_id.id or False
-        rec = self.pool.get('account.analytic.default').account_get(cursor, user, move_line.product_id.id, partner_id and partner_id.id, user, time.strftime('%Y-%m-%d'), context={})
+        rec = self.pool.get('account.analytic.default').account_get(cursor, user, move_line.product_id.id, partner_id , user, time.strftime('%Y-%m-%d'), context={})
 
         if rec:
             return rec.analytic_id.id
