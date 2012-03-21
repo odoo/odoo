@@ -64,9 +64,7 @@ class account_analytic_line(osv.osv):
                 raise osv.except_osv(_('Analytic Account incomplete'),
                         _('Please fill in the Partner or Customer and Sale Pricelist fields in the Analytic Account:\n%s') % (account.name,))
 
-            if not partner.address:
-                raise osv.except_osv(_('Partner incomplete'),
-                        _('Please fill in the Address field in the Partner: %s.') % (partner.name,))
+
 
             date_due = False
             if partner.property_payment_term:
