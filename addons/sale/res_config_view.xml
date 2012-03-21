@@ -8,7 +8,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <group name="invoice_policy" position="inside">
+                <group name="config_sale" position="inside">
                     <separator string="Picking and Invoice Policy" colspan="4"/>
                     <group colspan="4">
                         <group colspan="2" col="2">
@@ -26,8 +26,6 @@
                             <field name="time_unit" domain="[('category_id.name','=','Working Time')]" attrs="{'invisible':[('task_work','=',False),('module_account_analytic_analysis','=',False)],'required': [('module_account_analytic_analysis','=',True)]}"/>
                         </group>
                     </group>
-                </group>
-                <group name="sale_order" position="inside">
                     <separator string="Sale Order" colspan="4"/>
                     <group colspan="2" col="2">
                         <field name="group_sale_pricelist_per_customer"/>

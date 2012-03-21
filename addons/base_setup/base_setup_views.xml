@@ -148,13 +148,13 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Configure Sales &amp; CRM">
-                <group name="invoice_policy" colspan="4"/>
-                <group name="sale_order" colspan="4"/>
-                <group name="contracts" colspan="4"/>
-                <group name="emails" colspan="4"/>
-                <group name="synchronization" colspan="4"/>
-                <group name="documents" colspan="4"/>
-                <group name="customer_form" colspan="4"/>
+                <group name="config_sale" colspan="4"/>
+                <group name="config_contracts" colspan="4"/>
+                <group name="config_emails" colspan="4"/>
+                <group name="config_crm" colspan="4"/>
+                <label colspan="2"/>
+                <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                <button string="Apply" icon="gtk-ok" type="object" name="execute"/>
             </form>
         </field>
     </record>
@@ -164,8 +164,8 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.config.settings</field>
         <field name="view_id" ref="base.view_sale_config_settings"/>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
+        <field name="target">new</field>
     </record>
 
   </data>
