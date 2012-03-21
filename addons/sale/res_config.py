@@ -27,10 +27,12 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
-        'sale_orders': fields.boolean('Based on Sales Orders',
-                                      help="To allow your salesman to make invoices for sale order lines using 'Lines to Invoice' menu."),
-        'deli_orders': fields.boolean('Based on Delivery Orders',
-                                      help="To allow your salesman to make invoices for Delivery Orders using 'Deliveries to Invoice' menu."),
+        'group_invoice_so_lines': fields.boolean('Based on Sales Orders',
+            implied_group='sale.group_invoice_so_lines',
+            help="To allow your salesman to make invoices for sale order lines using the menu 'Lines to Invoice'."),
+        'group_invoice_deli_orders': fields.boolean('Based on Delivery Orders',
+            implied_group='sale.group_invoice_deli_orders',
+            help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
         'task_work': fields.boolean('Based on Tasks\' Work',
                                     help="""Lets you transfer the entries under tasks defined for Project Management to
                                     the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways
@@ -116,15 +118,6 @@ class sale_configuration(osv.osv_memory):
         data_obj = self.pool.get('ir.model.data')
         menu_obj = self.pool.get('ir.ui.menu')
         result = {}
-        invoicing_groups_id = [gid.id for gid in data_obj.get_object(cr, uid, 'sale', 'menu_invoicing_sales_order_lines').groups_id]
-        picking_groups_id = [gid.id for gid in data_obj.get_object(cr, uid, 'sale', 'menu_action_picking_list_to_invoice').groups_id]
-        group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
-        for menu in ir_values_obj.get(cr, uid, 'default', False, ['ir.ui.menu']):
-            if menu[1] == 'groups_id' and group_id in menu[2][0]:
-                if group_id in invoicing_groups_id:
-                    result['sale_orders'] = True
-                if group_id in picking_groups_id:
-                    result['deli_orders'] = True
         for res in ir_values_obj.get(cr, uid, 'default', False, ['sale.order']):
             result[res[1]] = res[2]
         return result
@@ -149,16 +142,6 @@ class sale_configuration(osv.osv_memory):
         res = {}
         wizard = self.browse(cr, uid, ids)[0]
         group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
-
-        if wizard.sale_orders:
-            menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_invoicing_sales_order_lines').id
-            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]})
-            ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['ir.ui.menu'], [(4,group_id)])
-
-        if wizard.deli_orders:
-            menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_action_picking_list_to_invoice').id
-            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]})
-            ir_values_obj.set(cr, uid, 'default', False, 'groups_id', ['ir.ui.menu'], [(4,group_id)])
 
         if wizard.default_picking_policy:
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], 'one')
