@@ -1037,7 +1037,10 @@ class task(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.user_id:
                 sub_ids.append(obj.user_id.id)
+            if obj.manager_id:
+                sub_ids.append(obj.manager_id.id)
         return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
+
 
     def create(self, cr, uid, vals, context=None):
         result = super(task, self).create(cr, uid, vals, context=context)
