@@ -221,17 +221,20 @@ class event_event(osv.osv):
         user = user_pool.browse(cr,uid,uid,context)
         print user.user_email
         if not curr_reg_id:
-            register_pool.create(cr, uid, {'state':'open',
-                                           'event_id':ids[0],
-                                           'email':user.user_email,
-                                           'name':user.name,
-                                           'subscribe':True,
-                                           })
+            curr_reg_id = register_pool.create(cr, uid, {'event_id':ids[0],
+                                                    'email':user.user_email,
+                                                    'name':user.name,
+                                                    'subscribe':True,
+                                                    })
+            
+            
         else:
             register_pool.write(cr, uid, curr_reg_id,{'state':'open','subscribe':True,
                             'event_id':ids[0],
                             })
-        
+        if isinstance(curr_reg_id, (int, long)):
+            curr_reg_id = [curr_reg_id]
+        register_pool.confirm_registration(cr,uid,curr_reg_id,context)
         self.write(cr,uid,ids,{'subscribe':True})
         return True
     
@@ -239,11 +242,13 @@ class event_event(osv.osv):
         register_pool = self.pool.get('event.registration')
         curr_reg_id = register_pool.search(cr,uid,[('user_id','=',uid),('event_id','=',ids[0])])
         if curr_reg_id:
-            register_pool.write(cr, uid, curr_reg_id,{'state':'cancel',
-                                                      'event_id':ids[0],
+            if isinstance(curr_reg_id, (int, long)):
+                curr_reg_id = [curr_reg_id]
+            register_pool.write(cr, uid, curr_reg_id,{'event_id':ids[0],
                                                       'subscribe':False
                                                      })
-        self.write(cr,uid,ids,{'subscribe':False})
+            register_pool.button_reg_cancel(cr,uid,curr_reg_id,context)
+            self.write(cr,uid,ids,{'subscribe':False})
         return True
 
     def _check_closing_date(self, cr, uid, ids, context=None):
