@@ -117,8 +117,8 @@
                         <page string="Sales Order">
                             <field name="partner_id" options='{"quick_create": false}' on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id" on_change="onchange_partner_order_id(partner_order_id, partner_invoice_id, partner_shipping_id)" options='{"quick_create": false}'/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_sale_delivery_address" options='{"quick_create": false}'/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_sale_delivery_address" options='{"quick_create": false}'/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="group_delivery_invoice_address" options='{"quick_create": false}'/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="group_delivery_invoice_address" options='{"quick_create": false}'/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="project_id" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                             <newline/>
@@ -149,7 +149,7 @@
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}" on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)"
                                                 domain="[('product_id','=',product_id)]" groups="base.group_extended"
                                                 colspan="3"/>
-                                            <field name="discount" groups="base.group_sale_disc_per_sale_order_line"/>
+                                            <field name="discount" groups="group_discount_per_so_line"/>
                                             <separator colspan="5" string="Notes" groups="base.group_sale_notes_subtotal"/>
                                             <field colspan="5" name="notes" nolabel="1" groups="base.group_sale_notes_subtotal"/>
                                             <separator colspan="5" string="Taxes" groups="base.group_sale_taxes_on_order_line"/>
@@ -187,7 +187,7 @@
                                     <field name="product_uom" string="UoM" groups="product.group_uom"/>
                                     <field groups="product.group_uos" name="product_uos_qty" string="Qty(UoS)"/>
                                     <field groups="product.group_uos" name="product_uos" string="UoS"/>
-                                    <field name="discount" groups="base.group_sale_disc_per_sale_order_line"/>
+                                    <field name="discount" groups="group_discount_per_so_line"/>
                                     <field name="price_unit"/>
                                     <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                                 </tree>
@@ -392,7 +392,7 @@
                     <separator colspan="4" string="Price"/>
                     <group colspan="4" col="6">
                         <field name="price_unit"/>
-                        <field name="discount" groups="base.group_sale_disc_per_sale_order_line"/>
+                        <field name="discount" groups="group_discount_per_so_line"/>
                         <field name="price_subtotal" groups="base.group_sale_notes_subtotal"/>
                     </group>
                     <separator colspan="4" string="Notes" groups="base.group_sale_notes_subtotal"/>

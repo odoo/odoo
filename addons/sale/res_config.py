@@ -53,41 +53,41 @@ class sale_configuration(osv.osv_memory):
         'time_unit': fields.many2one('product.uom', 'Working Time Unit'),
         'default_picking_policy' : fields.boolean("Deliver all products at once",
             help = "You can set picking policy on sale order that will allow you to deliver all products at once."),
-        'group_sale_delivery_address':fields.boolean("Multiple Address", group='base.group_user', implied_group='base.group_sale_delivery_address',
-                                                     help="Allows you to set different delivery address and invoice address. It assigns Multiple Address group to all employees."),
-        'group_sale_disc_per_sale_order_line':fields.boolean("Discounts per sale order lines ", group='base.group_user', implied_group='base.group_sale_disc_per_sale_order_line',
-                                                             help="This allows you to apply discounts per sale order lines, it assigns Discounts per sale order lines group to all employees."),
-        'module_sale_layout':fields.boolean("Notes & subtotals per line",help="Allows to format sale order lines using notes, separators, titles and subtotals. It installs the sale_layout module."),
+        'group_sale_delivery_address': fields.boolean("Specify delivery and invoice addresses",
+            implied_group='sale.group_delivery_invoice_address',
+            help="Allows you to specify different delivery and invoice addresses on a sale order."),
+        'group_discount_per_so_line': fields.boolean("Discount per sale order line",
+            implied_group='sale.group_discount_per_so_line',
+            help="Allows you to apply discount per sale order line."),
+        'module_sale_layout': fields.boolean("Notes & subtotals per line",
+            help="""Allows to format sale order lines using notes, separators, titles and subtotals.
+                This installs the module sale_layout."""),
         'module_warning': fields.boolean("Alerts by products or customers",
-                                  help="""To raise user specific warning messages on different products used in Sales Orders, Purchase Orders, Invoices and Deliveries.
-                                  It installs the warning module."""),
-        'module_sale_margin': fields.boolean("Display Margin For Users",
-                        help="""This adds the 'Margin' on sales order.
-                        This gives the profitability by calculating the difference between the Unit Price and Cost Price.
-                        It installs the sale_margin module."""),
+            help="""To raise user specific warning messages on different products used in Sales Orders, Purchase Orders, Invoices and Deliveries.
+                This installs the module warning."""),
+        'module_sale_margin': fields.boolean("Display Margins For Users",
+            help="""This adds the 'Margin' on sales order.
+                This gives the profitability by calculating the difference between the Unit Price and Cost Price.
+                This installs the module sale_margin."""),
         'module_sale_journal': fields.boolean("Invoice Journal",
-                        help="""Allows you to categorize your sales and deliveries (picking lists) between different journals.
-                        It installs the sale_journal module."""),
-        'module_analytic_user_function' : fields.boolean("User function by contracts",
-                                    help="""Allows you to define what is the default function of a specific user on a given account.
-                                    This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
-                                    But the possibility to change these values is still available.
-                                    It installs analytic_user_function module."""),
-        'module_analytic_journal_billing_rate' : fields.boolean("Billing rates by contracts",
-                                    help="""Allows you to define what is the default invoicing rate for a specific journal on a given account.
-                                    It installs analytic_journal_billing_rate module.
-                                    """),
-        'tax_policy': fields.selection([
-                ('no_tax', 'No Tax'),
-                ('global_on_order', 'Global On Order'),
-                ('on_order_line', 'On Order Lines'),
-            ], 'Taxes', required=True,
-            help="""
-                If you want to apply global tax on sale order then select 'Global On Order' it will add 'Global On Order' group to employees.
-                If you want to apply different taxes for sale order lines then select 'On Order Lines' it will add 'On Order Lines' group to employees.
-            """),
-        'group_sale_taxes_global_on_order':fields.boolean("Global on order", group='base.group_user', implied_group='base.group_sale_taxes_global_on_order'),
-        'group_sale_taxes_on_order_line':fields.boolean("On order line", group='base.group_user', implied_group='base.group_sale_taxes_on_order_line'),
+            help="""Allows you to categorize your sales and deliveries (picking lists) between different journals.
+                This installs the module sale_journal."""),
+        'module_analytic_user_function': fields.boolean("User function by contracts",
+            help="""Allows you to define what is the default function of a specific user on a given account.
+                This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
+                But the possibility to change these values is still available.
+                This installs the module analytic_user_function."""),
+        'module_analytic_journal_billing_rate': fields.boolean("Billing rates by contracts",
+            help="""Allows you to define the default invoicing rate for a specific journal on a given account.
+                This installs the module analytic_journal_billing_rate."""),
+        'tax_policy': fields.selection(
+            [('no_tax', 'No Tax'), ('global_on_order', 'Global On Order'), ('on_order_line', 'On Order Lines')],
+            'Taxes', required=True,
+            help="""Choose between either applying global taxes on a sale order, or applying different taxes on sale order lines, or applying no tax at all.""")
+        'group_sale_taxes_global_on_order': fields.boolean("Global on order",
+            implied_group='base.group_sale_taxes_global_on_order'),
+        'group_sale_taxes_on_order_line': fields.boolean("On order line",
+            implied_group='base.group_sale_taxes_on_order_line'),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
     }
@@ -95,16 +95,15 @@ class sale_configuration(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         res = super(sale_configuration, self).default_get(cr, uid, fields, context)
+        # task_work, time_unit and tax_policy depend on other fields
         res['task_work'] = res.get('module_project_mrp') and res.get('module_project_timesheet')
         if res.get('module_account_analytic_analysis'):
             product = ir_model_data.get_object(cr, uid, 'product', 'product_consultant')
             res['time_unit'] = product.uom_id.id
-        if res.get('group_sale_taxes_global_on_order'):
-            res.update({'tax_policy': 'global_on_order'})
-        elif res.get('group_sale_taxes_on_order_line'):
-            res.update({'tax_policy': 'on_order_line'})
-        else:
-            res.update({'tax_policy': 'no_tax'})
+        res['tax_policy'] = \
+            (res.get('group_sale_taxes_global_on_order') and 'global_on_order') or \
+            (res.get('group_sale_taxes_on_order_line') and 'on_order_line') or \
+            'no_tax'
         return res
 
     def get_default_sale_config(self, cr, uid, ids, context=None):
@@ -123,13 +122,6 @@ class sale_configuration(osv.osv_memory):
         'time_unit': _get_default_time_unit,
         'tax_policy': 'global_on_order',
     }
-
-    def _check_default_tax(self, cr, uid, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.product']):
-            if tax[1] == 'taxes_id':
-                return tax[2]
-        return False
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
@@ -156,26 +148,9 @@ class sale_configuration(osv.osv_memory):
         }}
 
     def onchange_tax_policy(self, cr, uid, ids, tax_policy, context=None):
-        res = {'value': {}}
-        if ids:
-            self.set_tax_policy(cr, uid, ids, context=context)
-        if tax_policy == 'global_on_order':
-            res['value'].update({'group_sale_taxes_global_on_order': True})
-            res['value'].update({'group_sale_taxes_on_order_line': False})
-
-        elif tax_policy == 'on_order_line':
-            res['value'].update({'group_sale_taxes_on_order_line': True})
-            res['value'].update({'group_sale_taxes_global_on_order': False})
-        else:
-            res['value'].update({'group_sale_taxes_on_order_line': False, 'group_sale_taxes_global_on_order': False})
-        return res
-
-    def set_default_taxes(self, cr, uid, ids, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        taxes = self._check_default_tax(cr, uid, context=context)
-        if taxes:
-            ir_values_obj.set(cr, uid, 'default', False, 'tax_id', ['sale.order'], taxes[0])
-            ir_values_obj.set(cr, uid, 'default', False, 'tax_id', ['sale.order.line'], taxes)
-            ir_values_obj.set(cr, uid, 'default', False, 'taxes_id', ['product.product'], taxes)
+        return {'value': {
+            'group_sale_taxes_global_on_order': tax_policy == 'global_on_order',
+            'group_sale_taxes_on_order_line': tax_policy == 'on_order_line',
+        }}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
