@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_sales_config_crm" model="ir.ui.view">
+            <field name="name">Sales Application</field>
+            <field name="model">sale.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="mail.view_sales_config_plugin"/>
+            <field name="arch" type="xml">
+                <group name="config_emails" position="inside">
+                    <separator string="Emails" colspan="4"/>
+                    <field name="fetchmail_crm"/>
+                    <group colspan="2" attrs="{'invisible': [('fetchmail_crm','=',False)]}">
+                        <field name="default_server" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                        <field name="default_type" nolabel="1" on_change="onchange_server_type(default_type, default_is_ssl)" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                        <field name="default_port" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                        <field name="default_is_ssl" on_change="onchange_server_type(default_type, default_is_ssl)"/>
+                        <newline/>
+                        <field name="default_user" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                        <field name="default_password" password="True" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                    </group>
+                </group>
+                <group name="config_crm" position="inside">
+                    <separator string="Import and Synchronize data from an other application" colspan="4"/>
+                    <group colspan="2" col="2">
+                        <field name="module_import_sugarcrm"/>
+                        <field name="module_import_google"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <field name="module_crm_caldav"/>
+                    </group>
+                    <separator string="Documents and Wiki" colspan="4"/>
+                    <field name="module_wiki_sale_faq" />
+                    <separator string="Customer Form" colspan="4"/>
+                    <field name="module_base_contact"/>
+                    <field name="module_google_map"/>
+                </group>
+            </field>
+        </record>
+
+        <menuitem id="base.menu_sale_config" name="Sales &amp; CRM" parent="base.menu_config" sequence="1" action="base.action_sale_config"/>
+
+    </data>
+</openerp>

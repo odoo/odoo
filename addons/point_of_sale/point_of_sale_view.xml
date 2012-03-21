@@ -80,7 +80,7 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="shop_id" widget="selection"/>
                                 <field name="user_id"/>
-                                <field name="pricelist_id" domain="[('type','=','sale')]"/>
+                                <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]"/>
                                 <field name="picking_id" readonly="1" groups="base.group_extended"/>
                             </group>
                             <group colspan="2" col="3">

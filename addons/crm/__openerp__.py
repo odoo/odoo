@@ -111,6 +111,8 @@ Creates a dashboard for CRM that includes:
         'res_partner_view.xml',
         'board_crm_statistical_view.xml',
         'board_crm_view.xml',
+        
+        'res_config_view.xml',
 
     ],
     'demo_xml': [
