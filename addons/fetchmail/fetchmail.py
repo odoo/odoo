@@ -180,6 +180,8 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
             logger.info('start checking for new emails on %s server %s', server.type, server.name)
             context.update({'fetchmail_server_id': server.id, 'server_type': server.type})
             count = 0
+            imap_server = False
+            pop_server = False
             if server.type == 'imap':
                 try:
                     imap_server = server.connect()
