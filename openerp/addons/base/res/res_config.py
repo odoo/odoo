@@ -413,8 +413,7 @@ class res_config_settings(osv.osv_memory):
                     'other_field': fields.type(...),
                 }
 
-        The method ``execute`` is automatically called after creating and writing on records.
-        It provides some support based on a naming convention:
+        The method ``execute`` provides some support based on a naming convention:
 
         *   For a field like 'default_XXX', ``execute`` sets the (global) default value of
             the field 'XXX' in the model named by ``default_model`` to the field's value.
@@ -437,16 +436,6 @@ class res_config_settings(osv.osv_memory):
     """
     _name = 'res.config.settings'
     _inherit = 'res.config'
-
-    def create(self, cr, uid, values, context=None):
-        id = super(res_config_settings, self).create(cr, uid, values, context)
-        self.execute(cr, uid, [id], context)
-        return id
-
-    def write(self, cr, uid, ids, values, context=None):
-        res = super(res_config_settings, self).write(cr, uid, ids, values, context)
-        self.execute(cr, uid, ids, context)
-        return res
 
     def _get_classified_fields(self, cr, uid, context=None):
         """ return a dictionary with the fields classified by category::
