@@ -25,108 +25,102 @@ class crm_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
-        'module_crm_caldav' : fields.boolean("Caldav Synchronization",
-                                    help="""Allows Caldav features in Meeting, Share meeting with other calendar clients like sunbird.
-                                    It installs crm_caldav module."""),
-        'fetchmail_crm': fields.boolean("Lead/Opportunity mail gateway", help="Allows you to configure your incoming mail server. And creates leads for your mails."),
-        'default_server' : fields.char('Server Name', size=256),
-        'default_port' : fields.integer('Port'),
+        'module_crm_caldav': fields.boolean("Caldav Synchronization",
+            help="""Use protocol caldav to synchronize meetings with other calendar applications (like Sunbird).
+                This installs the module crm_caldav."""),
+        'fetchmail_crm': fields.boolean("Lead/Opportunity mail gateway",
+            help="Create leads automatically from an email gateway."),
+        'default_server': fields.char('Server Name', size=256),
+        'default_port': fields.integer('Port'),
         'default_type': fields.selection([
-                   ('pop', 'POP Server'),
-                   ('imap', 'IMAP Server'),
-                   ('local', 'Local Server'),
-               ], 'Server Type'),
-        'default_is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
-        'default_user' : fields.char('Username', size=256),
-        'default_password' : fields.char('Password', size=1024),
-        'module_import_sugarcrm' : fields.boolean("SugarCRM Import",
-                                    help="""Import SugarCRM Leads, Opportunities, Users, Accounts, Contacts, Employees, Meetings, Phonecalls, Emails, and Project, Project Tasks Data.
-                                    It installs import_sugarcrm module.
-                                    """),
-        'module_import_google' : fields.boolean("Google Import",
-                                    help="""
-                                    Import google contact in partner address and add google calendar events details in Meeting.
-                                    It installs import_google module.
-                                    """),
-        'module_wiki_sale_faq' : fields.boolean("Install a sales FAQ?",
-                                    help="""
-                                    It provides demo data, thereby creating a Wiki Group and a Wiki Page for Wiki Sale FAQ.
-                                    It installs wiki_sale_faq module.
-                                    """),
-        'module_base_contact' : fields.boolean("Manage a several address per customer",
-                                    help="""
-                                    It lets you define:
-                                        * contacts unrelated to a partner,
-                                        * contacts working at several addresses (possibly for different partners),
-                                        * contacts with possibly different functions for each of its job's addresses.
-                                    It installs base_contact module.
-                                    """),
-        'module_google_map' : fields.boolean("Google maps on customer",
-                                    help="""
-                                    Allows you to locate customer on Google Map.
-                                    It installs google_map module.
-                                    """),
+                ('pop', 'POP Server'),
+                ('imap', 'IMAP Server'),
+                ('local', 'Local Server'),
+            ], 'Server Type'),
+        'default_is_ssl': fields.boolean('SSL/TLS',
+            help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
+        'default_user': fields.char('Username', size=256),
+        'default_password': fields.char('Password', size=1024),
+        'module_import_sugarcrm': fields.boolean("SugarCRM Import",
+            help="""Import SugarCRM leads, opportunities, users, accounts, contacts, employees, meetings, phonecalls, emails, project and project tasks data.
+                This installs the module import_sugarcrm."""),
+        'module_import_google': fields.boolean("Google Import",
+            help="""Import google contact in partner address and add google calendar events details in Meeting.
+                This installs the module import_google."""),
+        'module_wiki_sale_faq': fields.boolean("Install a sales FAQ",
+            help="""This provides demo data, thereby creating a Wiki Group and a Wiki Page for Wiki Sale FAQ.
+                This installs the module wiki_sale_faq."""),
+        'module_base_contact': fields.boolean("Manage a several addresses per customer",
+            help="""Lets you define:
+                    * contacts unrelated to a partner,
+                    * contacts working at several addresses (possibly for different partners),
+                    * contacts with possibly different job functions.
+                This installs the module base_contact."""),
+        'module_google_map': fields.boolean("Google maps on customer",
+            help="""Locate customers on Google Map.
+                This installs the module google_map."""),
     }
 
     _defaults = {
         'default_type': 'pop',
     }
 
-    def get_default_email_configurations(self, cr, uid, ids, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        fetchmail_obj = self.pool.get('fetchmail.server')
-        result = {}
-        server_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads'),('state','=','done')])
-        if server_ids:
-            result.update({'fetchmail_crm': True})
-        for val in ir_values_obj.get(cr, uid, 'default', False, ['fetchmail.server']):
-            result.update({'default_'+val[1]: val[2]})
-        return result
-    
-    def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
-        port = 0
+    def onchange_server_type(self, cr, uid, ids, server_type, ssl, context=None):
         values = {}
         if server_type == 'pop':
-            port = ssl and 995 or 110
+            values['default_port'] = ssl and 995 or 110
         elif server_type == 'imap':
-            port = ssl and 993 or 143
+            values['default_port'] = ssl and 993 or 143
         else:
-            values['default_server'] = ''
-        values['default_port'] = port
+            values['default_server'] = False
+            values['default_port'] = 0
         return {'value': values}
-    
+
+    def get_default_email_configurations(self, cr, uid, ids, context=None):
+        ir_values = self.pool.get('ir.values')
+        server_count = self.pool.get('fetchmail.server').search(cr, uid,
+                        [('name','=','Incoming Leads'), ('state','=','done')], count=True)
+        return {
+            'fetchmail_crm': bool(server_count),
+            'default_server': ir_values.get_default(cr, uid, 'fetchmail.server', 'server') or False,
+            'default_port': ir_values.get_default(cr, uid, 'fetchmail.server', 'port') or False,
+            'default_type': ir_values.get_default(cr, uid, 'fetchmail.server', 'type') or False,
+            'default_is_ssl': ir_values.get_default(cr, uid, 'fetchmail.server', 'is_ssl') or False,
+            'default_user': ir_values.get_default(cr, uid, 'fetchmail.server', 'user') or False,
+            'default_password': ir_values.get_default(cr, uid, 'fetchmail.server', 'password') or False,
+        }
+
     def set_email_configurations(self, cr, uid, ids, context=None):
-        model_obj = self.pool.get('ir.model')
+        ir_values = self.pool.get('ir.values')
         fetchmail_obj = self.pool.get('fetchmail.server')
-        ir_values_obj = self.pool.get('ir.values')
-        object_id = model_obj.search(cr, uid, [('model','=','crm.lead')])
-        vals = self.read(cr, uid, ids[0], [], context=context)
-        if vals.get('fetchmail_crm') and object_id:
+        config = self.browse(cr, uid, ids[0], context)
+        model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'crm.lead')])
+        if config.fetchmail_crm and model_ids:
             fetchmail_vals = {
                     'name': 'Incoming Leads',
-                    'object_id': object_id[0],
-                    'server': vals.get('default_server'),
-                    'port': vals.get('default_port'),
-                    'is_ssl': vals.get('default_is_ssl'),
-                    'type': vals.get('default_type'),
-                    'user': vals.get('default_user'),
-                    'password': vals.get('default_password')
+                    'object_id': model_ids[0],
+                    'server': config.default_server,
+                    'port': config.default_port,
+                    'is_ssl': config.default_is_ssl,
+                    'type': config.default_type,
+                    'user': config.default_user,
+                    'password': config.default_password,
             }
-            server_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads'),('state','=','done')])
+            server_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads'), ('state','=','done')])
             if not server_ids:
                 server_ids = [fetchmail_obj.create(cr, uid, fetchmail_vals, context=context)]
             else:
                 server_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads')], context=context)
                 fetchmail_obj.write(cr, uid, server_ids, fetchmail_vals, context=context)
             fetchmail_obj.button_confirm_login(cr, uid, server_ids, context=None)
-            ir_values_obj.set(cr, uid, 'default', False, 'server', ['fetchmail.server'], fetchmail_vals.get('server'))
-            ir_values_obj.set(cr, uid, 'default', False, 'port', ['fetchmail.server'], fetchmail_vals.get('port'))
-            ir_values_obj.set(cr, uid, 'default', False, 'is_ssl', ['fetchmail.server'], fetchmail_vals.get('is_ssl'))
-            ir_values_obj.set(cr, uid, 'default', False, 'type', ['fetchmail.server'], fetchmail_vals.get('type'))
-            ir_values_obj.set(cr, uid, 'default', False, 'user', ['fetchmail.server'], fetchmail_vals.get('user'))
-            ir_values_obj.set(cr, uid, 'default', False, 'password', ['fetchmail.server'], fetchmail_vals.get('password'))
+            ir_values.set_default(cr, uid, 'fetchmail.server', 'server', config.default_server)
+            ir_values.set_default(cr, uid, 'fetchmail.server', 'port', config.default_port)
+            ir_values.set_default(cr, uid, 'fetchmail.server', 'is_ssl', config.default_is_ssl)
+            ir_values.set_default(cr, uid, 'fetchmail.server', 'type', config.default_type)
+            ir_values.set_default(cr, uid, 'fetchmail.server', 'user', config.default_user)
+            ir_values.set_default(cr, uid, 'fetchmail.server', 'password', config.default_password)
         else:
-            server_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads'),('state','=','done')])
+            server_ids = fetchmail_obj.search(cr, uid, [('name','=','Incoming Leads'), ('state','=','done')])
             fetchmail_obj.set_draft(cr, uid, server_ids, context=None)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
