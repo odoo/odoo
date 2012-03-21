@@ -25,22 +25,18 @@ class sale_config_settings(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
-        'group_sale_pricelist_per_customer':fields.boolean("Pricelist per Customer",
-                                                           group='base.group_user', implied_group='base.group_sale_pricelist_per_customer',
-                                                           help="""Allows to manage different prices based on rules per category of customers. 
-                                                           Example: 10% for retailers, promotion of 5 EUR on this product, etc.
-                                                           It assigns the "Pricelist" group to all employees."""),
-        'group_sale_uom_per_product':fields.boolean("UOM per product",
-                                                    group='base.group_user', implied_group='base.group_sale_uom_per_product',
-                                                    help="""
-                                                    Allows you to select and maintain different unit of measures per product.
-                                                    It assigns the "UOM per product" group to all employees.
-                                                    """),
-        'group_purchase_pricelist_per_supplier':fields.boolean("Pricelist per Supplier", group='base.group_user', xml_id='base.group_purchase_pricelist_per_supplier',
-                                                           help="""Allows to manage different prices based on rules per category of Supplier.
-                                                           Example: 10% for retailers, promotion of 5 EUR on this product, etc.
-                                                           It assigns the "Pricelist" group to all employees."""),
-        'group_stock_packaging':fields.boolean("Manage packaging by products", group='base.group_user', implied_group='base.group_stock_packaging',
-                                               help=""" Allows you to create and manage your packaging dimensions and types you want to be maintained in your system.
-                                               It assigns the "Packaging" group to employee."""),
+        'group_sale_pricelist':fields.boolean("Pricelist per Customer",
+            implied_group='product.group_sale_pricelist',
+            help="""Allows to manage different prices based on rules per category of customers. 
+                Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
+        'group_purchase_pricelist':fields.boolean("Pricelist per Supplier",
+            implied_group='product.group_purchase_pricelist',
+            help="""Allows to manage different prices based on rules per category of Supplier.
+                Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
+        'group_sale_uom':fields.boolean("UOM per product",
+            implied_group='product.group_uom',
+            help="""Allows you to select and maintain different unit of measures per product."""),
+        'group_stock_packaging':fields.boolean("Manage packaging by products",
+            implied_group='product.group_packaging',
+            help=""" Allows you to create and manage your packaging dimensions and types you want to be maintained in your system."""),
 }

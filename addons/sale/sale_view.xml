@@ -21,7 +21,7 @@
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <separator colspan="4" string="Accounting"/>
                     <field name="payment_default_id"/>
-                    <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_sale_pricelist_per_customer" select="1"/>
+                    <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" select="1"/>
                     <field name="project_id" select="1" groups="analytic.group_analytic_accounting"/>
                 </form>
             </field>
@@ -34,7 +34,7 @@
                 <tree string="Sales Shop">
                     <field name="name"/>
                     <field name="warehouse_id"/>
-                    <field name="pricelist_id" groups="base.group_sale_pricelist_per_customer"/>
+                    <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                     <field name="project_id" groups="analytic.group_analytic_accounting"/>
                 </tree>
             </field>
@@ -119,7 +119,7 @@
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id" on_change="onchange_partner_order_id(partner_order_id, partner_invoice_id, partner_shipping_id)" options='{"quick_create": false}'/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_sale_delivery_address" options='{"quick_create": false}'/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_sale_delivery_address" options='{"quick_create": false}'/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_sale_pricelist_per_customer" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="project_id" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" widget="one2many_list">
@@ -139,7 +139,7 @@
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
                                             <field name="product_uom"
                                                 on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"
-                                                nolabel="1" groups="base.group_sale_uom_per_product"/>
+                                                nolabel="1" groups="product.group_uom"/>
                                             <field name="price_unit"/>
 
                                             <field groups="product.group_uos" name="product_uos_qty"/>
@@ -184,7 +184,7 @@
                                 <tree string="Sales Order Lines">
                                     <field colspan="4" name="name"/>
                                     <field name="product_uom_qty" string="Qty(UoM)"/>
-                                    <field name="product_uom" string="UoM" groups="base.group_sale_uom_per_product"/>
+                                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
                                     <field groups="product.group_uos" name="product_uos_qty" string="Qty(UoS)"/>
                                     <field groups="product.group_uos" name="product_uos" string="UoS"/>
                                     <field name="discount" groups="base.group_sale_disc_per_sale_order_line"/>
@@ -363,7 +363,7 @@
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
-                    <field name="product_uom" string="UoM" groups="base.group_sale_uom_per_product"/>
+                    <field name="product_uom" string="UoM" groups="product.group_uom"/>
                     <field name="salesman_id"/>
                     <field name="price_subtotal" sum="Total" groups="base.group_sale_notes_subtotal"/>
                     <field name="state"/>
@@ -384,7 +384,7 @@
 
                         <field name="product_id" readonly="1"/>
                         <field name="product_uom_qty" readonly="1"/>
-                        <field name="product_uom" groups="base.group_sale_uom_per_product"/>
+                        <field name="product_uom" groups="product.group_uom"/>
 
                         <field colspan="4" name="name" groups="base.group_extended"/>
                         <field name="company_id" groups="base.group_multi_company" readonly="1"/>
