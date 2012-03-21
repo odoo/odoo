@@ -26,22 +26,18 @@ class plugin_configuration(osv.osv_memory):
     
     _columns = {
         'module_plugin_thunderbird': fields.boolean('Thunderbird plugin',
-                                    help="""
-                                    The plugin allows you archive email and its attachments to the selected
-                                    OpenERP objects. You can select a partner, a task, a project, an analytical
-                                    account, or any other object and attach the selected mail as a .eml file in
-                                    the attachment of a selected record. You can create documents for CRM Lead,
-                                    HR Applicant and Project Issue from selected mails.
-                                    It installs plugin_thunderbird module.
-                                    """),
+            help="""The plugin allows you archive email and its attachments to the selected
+                OpenERP objects. You can select a partner, a task, a project, an analytical
+                account, or any other object and attach the selected mail as a .eml file in
+                the attachment of a selected record. You can create documents for CRM Lead,
+                HR Applicant and Project Issue from the selected emails.
+                This installs the module plugin_thunderbird."""),
         'module_plugin_outlook': fields.boolean('Outlook plugin',
-                                    help="""
-                                    Outlook plug-in allows you to select an object that you would like to add
-                                    to your email and its attachments from MS Outlook. You can select a partner, a task,
-                                    a project, an analytical account, or any other object and archive selected
-                                    mail into mail.message with attachments.
-                                    It installs plugin_outlook module.
-                                    """),
+            help="""The Outlook plugin allows you to select an object that you would like to add
+                to your email and its attachments from MS Outlook. You can select a partner, a task,
+                a project, an analytical account, or any other object and archive a selected
+                email into an OpenERP mail message with attachments.
+                This installs the module plugin_outlook."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
