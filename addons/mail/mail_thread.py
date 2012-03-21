@@ -690,4 +690,20 @@ class mail_thread(osv.osv):
         subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
         return True
 
+    #------------------------------------------------------
+    # Notification API
+    #------------------------------------------------------
+    
+    def message_remove_pushed_notif(self, cr, uid, ids, msg_ids, remove_childs=True, context=None):
+        if context is None:
+            context = {}
+        notif_obj = self.pool.get('mail.notification')
+        msg_obj = self.pool.get('mail.message')
+        if remove_childs:
+            notif_msg_ids = msg_obj.search(cr, uid, [('id', 'child_of', msg_ids)], context=context)
+        else:
+            notif_msg_ids = msg_ids
+        to_del_notif_ids = notif_obj.search(cr, uid, ['&', ('user_id', '=', uid), ('message_id', 'in', notif_msg_ids)], context=context)
+        return notif_obj.unlink(cr, uid, to_del_notif_ids, context=context)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

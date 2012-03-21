@@ -65,7 +65,7 @@
     
     <t t-name="NoteDisplay">
         <p class="oe_mail_msg">
-            <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{res_model}' t-attf-data-res-id='{res_id}'><t t-raw="name"/></a>
+            <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="thread.name"/></a>
             <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
             <t t-if="record.tr_body_text"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body_text"/></span></t>
             <br />
@@ -73,9 +73,13 @@
                 <a href="#" class="intlink oe_mail_oe_intlink" data-res-model='res.users' t-attf-data-res-id='{record.user_id[0]}'><t t-raw="record.user_id[1]"/></a>
                 on <t t-raw="record.date"/>
             </span>
-            <t t-if="display.show_reply"><span class="oe_mail_oe_space"><a href="#" class="oe_mail_msg_reply">Reply</a></span></t>
-            <t t-if="display.show_delete"><span class="oe_mail_oe_space"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete">Delete</a></span></t>
-            <t t-if="display.show_hide"><span class="oe_mail_oe_space"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide">Hide</a></span></t>
+            <t t-if="display['show_reply']"><span class="oe_mail_oe_space"><a href="#" class="oe_mail_msg_reply oe_mail_oe_intlink">Reply</a></span></t>
+            <t t-if="display['show_delete']">
+                <t t-if="thread._is_author(record.user_id[0])"><span class="oe_mail_oe_space"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_delete oe_mail_oe_intlink">Delete</a></span></t>
+            </t>
+            <t t-if="display['show_hide']">
+                <t t-if="!(thread._is_author(record.user_id[0]))"><span class="oe_mail_oe_space"><a href="#" t-attf-data-id='{record.id}' class="oe_mail_msg_hide oe_mail_oe_intlink">Hide</a></span></t>
+            </t>
         </p>
     </t>
     
