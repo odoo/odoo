@@ -368,18 +368,14 @@ class project_issue(crm.crm_case, osv.osv):
             self.message_append_note(cr, uid, [id],'System Notification', message, context=context)
         return True
 
-    def case_close_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("has been <b>closed</b>.")
-            self.message_append_note(cr, uid, [id],'System Notification', message, context=context)
-        return True
-
-
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             message = _("has been <b>converted</b> in to task.")
             self.message_append_note(cr, uid, [id], 'System notification', message, context=context)
         return True
+
+    def case_get_note_msg_prefix(self, cr, uid, id, context=None):
+        return ''
 
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = dict.fromkeys(ids, [])
@@ -414,21 +410,9 @@ class project_issue(crm.crm_case, osv.osv):
                         message, type='notification', context=context)
         return True
 
-    def case_pending_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("has been <b>pending<b>.")
-            self.message_append_note(cr, uid, [id], 'System Notification', message, context=context)
-        return True
-
     def case_reset_send_note(self,  cr, uid, ids, context=None):
         for id in ids:
             message =_("has been set as <b>new<b>.")
-            self.message_append_note(cr, uid, [id],'System Notification', message, context=context)
-        return True
-
-    def case_cancel_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("has been <b>cancelled<b>.")
             self.message_append_note(cr, uid, [id],'System Notification', message, context=context)
         return True
 
@@ -438,19 +422,6 @@ class project_issue(crm.crm_case, osv.osv):
         res = super(project_issue, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
         self.case_reset_send_note(cr, uid, ids, context)
-        return res
-
-    def case_pending(self, cr, uid, ids, context=None):
-        """Marks case as pending"""
-        res = super(project_issue, self).case_pending(cr, uid, ids, context)
-        self.write(cr, uid, ids, context)
-        return res
-
-    def case_cancel(self, cr, uid, ids, context=None):
-        """Overrides cancel for crm_case for setting probability
-        """
-        res = super(project_issue, self).case_cancel(cr, uid, ids, context)
-        self.write(cr, uid, ids, context)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -468,17 +439,6 @@ class project_issue(crm.crm_case, osv.osv):
 
         res = super(project_issue, self).case_open(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id' : uid})
-        return res
-
-    def case_close(self, cr, uid, ids, context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        """
-
-        res = super(project_issue, self).case_close(cr, uid, ids, context)
         return res
 
     def case_escalate(self, cr, uid, ids, context=None):
