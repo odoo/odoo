@@ -21,6 +21,14 @@ use of Backbone's models and views. As a result, understanding the
 implementation of the OpenERP Web 6.2 search view also requires a
 basic understanding of Backbone.
 
+.. note::
+
+    This document may mention *fetching* data. This is a shortcut for
+    "returning a deferred to [whatever is being fetched]". Unless
+    further noted, the function or method may opt to return nothing by
+    fetching ``null`` (which can easily be done by returning
+    ``$.when(null)``, which simply wraps the ``null`` in a Deferred).
+
 Interaction between the Search View and VisualSearch
 ----------------------------------------------------
 
@@ -66,7 +74,7 @@ to associate with facet objects:
 
 .. note::
 
-     in order to simplify fetching an actual value from a search facet
+     in order to simplify getting the logical value of a search facet
      model, :js:class:`VS.model.SearchFacet` has been extended with a
      :js:func:`~VS.model.SearchFacet.value` method
 
@@ -114,19 +122,20 @@ Loading Defaults
 After loading the view data, the SearchView will call
 :js:func:`openerp.web.search.Input.facet_for_defaults` with the
 ``defaults`` mapping of key:values (where each key corresponds to an
-input).
+input). This method should look into the ``defaults`` mapping and
+fetch the field's default value as a
+:js:class:`~VS.models.SearchFacet` if applicable.
 
 The default implementation is to check if there is a default value for
 the current input's name (via
 :js:attr:`openerp.web.search.Input.attrs.name`) and if there is to
-convert this value to a :js:class:`VS.models.SearchFacet` by calling
+convert this value to a :js:class:`~VS.models.SearchFacet` by calling
 :js:func:`openerp.web.search.Input.facet_for`.
-
-Both methods should return a
-``jQuery.Deferred<Null|VS.model.SearchFacet>``.
 
 There is no built-in (default) implementation of
-:js:func:`openerp.web.search.Input.facet_for`.
+:js:func:`openerp.web.search.Input.facet_for`. This method should
+fetch the :js:class:`~VS.models.SearchFacet` corresponding to the
+"raw" value passed as argument.
 
 Providing auto-completion
 -------------------------
@@ -139,11 +148,10 @@ auto-completions for a given value being typed by the user.
 
 This is done by implementing
 :js:func:`openerp.web.search.Input.complete`: the method is provided
-with a value to complete, and the input must either return a
-``jQuery.Deferred<Null>`` or fetch (by returning a
-``jQuery.Deferred``) an array of completion values.
-
-.. todo:: describe the shape of "completion values"?
+with a value to complete, and should fetch an ``Array`` of completion
+values. These completion values will then be provided to the global
+autocompletion list, implemented via `jquery-ui autocomplete
+<http://jqueryui.com/demos/autocomplete/>`_.
 
 Converting to and from facet objects
 ------------------------------------
