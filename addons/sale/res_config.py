@@ -85,9 +85,9 @@ class sale_configuration(osv.osv_memory):
             'Taxes', required=True,
             help="""Choose between either applying global taxes on a sale order, or applying different taxes on sale order lines, or applying no tax at all.""")
         'group_sale_taxes_global_on_order': fields.boolean("Global on order",
-            implied_group='base.group_sale_taxes_global_on_order'),
+            implied_group='sale.group_taxes_global_on_order'),
         'group_sale_taxes_on_order_line': fields.boolean("On order line",
-            implied_group='base.group_sale_taxes_on_order_line'),
+            implied_group='sale.group_taxes_on_order_line'),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
     }

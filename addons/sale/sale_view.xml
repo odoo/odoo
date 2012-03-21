@@ -152,9 +152,9 @@
                                             <field name="discount" groups="group_discount_per_so_line"/>
                                             <separator colspan="5" string="Notes" groups="base.group_sale_notes_subtotal"/>
                                             <field colspan="5" name="notes" nolabel="1" groups="base.group_sale_notes_subtotal"/>
-                                            <separator colspan="5" string="Taxes" groups="base.group_sale_taxes_on_order_line"/>
+                                            <separator colspan="5" string="Taxes" groups="group_taxes_on_order_line"/>
                                             <field colspan="5" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" 
-                                                groups="base.group_sale_taxes_on_order_line" />
+                                                groups="group_taxes_on_order_line" />
                                             <group colspan="5" col="5" groups="base.group_extended">
                                                 <separator colspan="5" string="States"/>
                                                 <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
@@ -194,9 +194,9 @@
                             </field>
                             <newline/>
                             <group col="13" colspan="10">
-                                <field name="tax_id" groups="base.group_sale_taxes_global_on_order" on_change="onchange_taxes(tax_id)"/>
-                                <field name="amount_untaxed" sum="Untaxed amount" groups="base.group_sale_taxes_on_order_line,base.group_sale_taxes_global_on_order"/>
-                                <field name="amount_tax" groups="base.group_sale_taxes_on_order_line,base.group_sale_taxes_global_on_order"/>
+                                <field name="tax_id" groups="group_taxes_global_on_order" on_change="onchange_taxes(tax_id)"/>
+                                <field name="amount_untaxed" sum="Untaxed amount" groups="group_taxes_on_order_line,group_taxes_global_on_order"/>
+                                <field name="amount_tax" groups="group_taxes_on_order_line,group_taxes_global_on_order"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                                 <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
