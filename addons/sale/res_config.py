@@ -133,10 +133,7 @@ class sale_configuration(osv.osv_memory):
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
-        ir_values_obj = self.pool.get('ir.values')
-        data_obj = self.pool.get('ir.model.data')
-        menu_obj = self.pool.get('ir.ui.menu')
-        res = {}
+        ir_model_data = self.pool.get('ir.model.data')
         wizard = self.browse(cr, uid, ids)[0]
 
         default_picking_policy = 'one' if wizard.default_picking_policy else 'direct'
@@ -150,7 +147,7 @@ class sale_configuration(osv.osv_memory):
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             user.company_id.write({'project_time_mode_id': wizard.time_unit.id})
 
-        return res
+        return {}
 
     def onchange_task_work(self, cr, uid, ids, task_work, context=None):
         return {'value': {
