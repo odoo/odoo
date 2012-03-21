@@ -42,11 +42,10 @@ class sale_configuration(osv.osv_memory):
                                     help = """For modifying account analytic view to show important data to project manager of services companies.
                                     You can also view the report of account analytic summary user-wise as well as month wise.
                                     It installs the account_analytic_analysis module."""),
-        'default_order_policy': fields.selection([
-                                ('manual', 'Invoice Based on Sales Orders'),
-                                ('picking', 'Invoice Based on Deliveries'),
-                            ], 'Main Method Based On', required=True, default_model='sale.order',
-                            help="You can generate invoices based on sales orders or based on shippings."),
+        'default_order_policy': fields.selection(
+            [('manual', 'Invoice Based on Sales Orders'), ('picking', 'Invoice Based on Deliveries')],
+            'Main Method Based On', required=True, default_model='sale.order',
+            help="You can generate invoices based on sales orders or based on shippings."),
         'module_delivery': fields.boolean('Do you charge the delivery?',
                                    help ="""
                                    Allows you to add delivery methods in sale orders and delivery orders.
@@ -54,8 +53,8 @@ class sale_configuration(osv.osv_memory):
                                    It installs the delivery module.
                                    """),
         'time_unit': fields.many2one('product.uom','Working Time Unit'),
-        'default_picking_policy' : fields.boolean("Deliver all products at once?", default_model='sale.order',
-                                                  help = "You can set picking policy on sale order that will allow you to deliver all products at once."),
+        'default_picking_policy' : fields.boolean("Deliver all products at once",
+            help = "You can set picking policy on sale order that will allow you to deliver all products at once."),
         'group_sale_delivery_address':fields.boolean("Multiple Address", group='base.group_user', implied_group='base.group_sale_delivery_address',
                                                      help="Allows you to set different delivery address and invoice address. It assigns Multiple Address group to all employees."),
         'group_sale_disc_per_sale_order_line':fields.boolean("Discounts per sale order lines ", group='base.group_user', implied_group='base.group_sale_disc_per_sale_order_line',
@@ -113,14 +112,12 @@ class sale_configuration(osv.osv_memory):
             res.update({'tax_policy': 'no_tax'})
         return res
 
-    def get_default_sale_configs(self, cr, uid, ids, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        data_obj = self.pool.get('ir.model.data')
-        menu_obj = self.pool.get('ir.ui.menu')
-        result = {}
-        for res in ir_values_obj.get(cr, uid, 'default', False, ['sale.order']):
-            result[res[1]] = res[2]
-        return result
+    def get_default_sale_config(self, cr, uid, ids, context=None):
+        ir_values = self.pool.get('ir.values')
+        default_picking_policy = ir_values.get_default(cr, uid, 'sale.order', 'picking_policy')
+        return {
+            'default_picking_policy': default_picking_policy == 'one',
+        }
 
     _defaults = {
         'default_order_policy': 'manual',
@@ -136,22 +133,21 @@ class sale_configuration(osv.osv_memory):
         return False
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
+        ir_values = self.pool.get('ir.values')
         ir_values_obj = self.pool.get('ir.values')
         data_obj = self.pool.get('ir.model.data')
         menu_obj = self.pool.get('ir.ui.menu')
         res = {}
         wizard = self.browse(cr, uid, ids)[0]
-        group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
 
-        if wizard.default_picking_policy:
-            ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], 'one')
+        default_picking_policy = 'one' if wizard.default_picking_policy else 'direct'
+        ir_values.set_default(cr, uid, 'sale.order', 'picking_policy', default_picking_policy)
 
         if wizard.time_unit:
             prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
             product_obj = self.pool.get('product.product')
             product_obj.write(cr, uid, prod_id, {'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 
-        ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], wizard.default_order_policy)
         if wizard.task_work and wizard.time_unit:
             company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
             self.pool.get('res.company').write(cr, uid, [company_id], {
