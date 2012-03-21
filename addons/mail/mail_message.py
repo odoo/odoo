@@ -34,6 +34,7 @@ import tools
 from osv import osv
 from osv import fields
 from tools.translate import _
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger('mail')
 
@@ -154,7 +155,9 @@ class mail_message(osv.osv):
             context = {}
         tz = context.get('tz')
         result = {}
-        for message in self.browse(cr, uid, ids, context=context):
+
+        # Read message as UID 1 to allow viewing author even if from different company
+        for message in self.browse(cr, SUPERUSER_ID, ids):
             msg_txt = ''
             if message.email_from:
                 msg_txt += _('%s wrote on %s: \n Subject: %s \n\t') % (message.email_from or '/', format_date_tz(message.date, tz), message.subject)
@@ -279,7 +282,7 @@ class mail_message(osv.osv):
             attachment_data = {
                     'name': fname,
                     'datas_fname': fname,
-                    'datas': fcontent,
+                    'datas': fcontent and fcontent.encode('base64'),
                     'res_model': self._name,
                     'res_id': email_msg_id,
             }
@@ -539,7 +542,9 @@ class mail_message(osv.osv):
                 message.refresh()
                 if message.state == 'sent' and message.auto_delete:
                     self.pool.get('ir.attachment').unlink(cr, uid,
-                                                          [x.id for x in message.attachment_ids],
+                                                          [x.id for x in message.attachment_ids \
+                                                                if x.res_model == self._name and \
+                                                                   x.res_id == message.id],
                                                           context=context)
                     message.unlink()
             except Exception:
