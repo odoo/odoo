@@ -50,7 +50,7 @@ set on all search facets created programmatically:
 
 ``category``
   the *name* of the facet, displayed in the first section of a facet
-  view. The category *may* be ``null``.
+  view.
 
 ``value``
   the *displayed value* of the facet, it is directly printed to the
@@ -60,17 +60,17 @@ The search view uses additional keys to store state and data it needs
 to associate with facet objects:
 
 ``field``
-  the search field instance which created the facet, optional. May or
-  may not be inferrable from ``category``.
+  the search field instance which created the facet, used when the
+  search view needs to serialize the facets.
 
 ``json``
   the "logical" value of the facet, can be absent if the logical and
   "printable" values of the facet are the same (e.g. for a basic text
   field).
 
-  This value may be a complex javascript object such as an array or an
-  object (the name stands for json-compatible value, it is not
-  JSON-encoded).
+  This value may be a complex javascript object such as an array (the
+  name stands for json-compatible value, it is not a JSON-encoded
+  string).
 
 .. note::
 
@@ -120,10 +120,10 @@ Loading Defaults
 ----------------
 
 After loading the view data, the SearchView will call
-:js:func:`openerp.web.search.Input.facet_for_defaults` with the
-``defaults`` mapping of key:values (where each key corresponds to an
-input). This method should look into the ``defaults`` mapping and
-fetch the field's default value as a
+:js:func:`openerp.web.search.Input.facet_for_defaults` on each of its
+inputs with the ``defaults`` mapping of key:values (where each key
+corresponds to an input). This method should look into the
+``defaults`` mapping and fetch the field's default value as a
 :js:class:`~VS.models.SearchFacet` if applicable.
 
 The default implementation is to check if there is a default value for
@@ -168,7 +168,7 @@ facet (as described above) and can have one more optional property:
 When rendering an item in the list, the renderer will first try to use
 the ``label`` property if it exists (``label`` can contain HTML and
 will be inserted as-is, so it can bold or emphasize some of its
-elements), if it does not it'll use the ``value`` property.
+elements), if it does not the ``value`` property will be used.
 
 .. note:: the ``app`` key should not be specified on completion item,
           it will be set automatically when the search view creates
@@ -177,10 +177,10 @@ elements), if it does not it'll use the ``value`` property.
 Section titles
 ++++++++++++++
 
-A second option is to use section titles. Section titles are similar
-to completion items but only have a ``category`` property. They will
-be rendered in a different style and can not be selected in the
-auto-completion (they will be skipped).
+A second kind of completion values is the section titles. Section
+titles are similar to completion items but only have a ``category``
+property. They will be rendered in a different style and can not be
+selected in the auto-completion (they will be skipped).
 
 .. note::
 
@@ -192,8 +192,30 @@ auto-completion (they will be skipped).
 If an input *may* fetch more than one completion item, it *should*
 prepend a section title (using its own name) to the completion items.
 
-Converting to and from facet objects
-------------------------------------
+Converting from facet objects
+-----------------------------
+
+Ultimately, the point of the search view is to allow searching. In
+OpenERP this is done via :ref:`domains <openerpserver:domains>`. On
+the other hand, the OpenERP Web 6.2 search view's state is modelled
+after a collection of :js:class:`~VS.model.SearchFacet`, and each
+field of a search view may have special requirements when it comes to
+the domains it produces [#]_.
+
+So there needs to be some way of mapping
+:js:class:`~VS.model.SearchFacet` objects to OpenERP search data.
+
+This is done via an input's
+:js:func:`~openerp.web.search.Input.get_domain` and
+:js:func:`~openerp.web.search.Input.get_context`. Each takes a
+:js:class:`~VS.model.SearchFacet` and returns whatever it's supposed
+to generate (a domain or a context, respectively). Either can return
+``null`` if the current value does not map to a domain or context, and
+can throw an :js:class:`~openerp.web.search.Invalid` exception if the
+value is not valid at all for the field.
+
+Converting to facet objects
+---------------------------
 
 Changes
 -------
@@ -204,8 +226,8 @@ The displaying of the search view was significantly altered from
 OpenERP Web 6.1 to OpenERP Web 6.2.
 
 As a result, while the external API used to interact with the search
-view does not change the internal details — including the interaction
-between the search view and its widgets — is significantly altered:
+view does not change many internal details — including the interaction
+between the search view and its widgets — were significantly altered:
 
 Widgets API
 +++++++++++
@@ -215,10 +237,32 @@ Widgets API
 * Search field objects are not openerp widgets anymore, their
   ``start`` is not generally called
 
+* :js:func:`~openerp.web.search.Input.get_domain` and
+  :js:func:`~openerp.web.search.Input.get_context` now take a
+  :js:class:`~VS.model.SearchFacet` as parameter, from which it's
+  their job to get whatever value they want
+
 Filters
 +++++++
 
 * :js:func:`openerp.web.search.Filter.is_enabled` has been removed
+
+Fields
+++++++
+
+* ``get_value`` now takes a :js:class:`~VS.model.SearchFacet` (instead
+  of taking no argument).
+
+  A default implementation is provided as
+  :js:func:`openerp.web.search.Field.get_value` and simply calls
+  :js:func:`VS.model.SearchFacet.value`.
+
+* The third argument to
+  :js:func:`~openerp.web.search.Field.make_domain` is now the
+  :js:class:`~VS.model.SearchFacet` received by
+  :js:func:`~openerp.web.search.Field.get_domain`, so child classes
+  have all the information they need to derive the "right" resulting
+  domain.
 
 Many To One
 +++++++++++
@@ -232,5 +276,8 @@ Many To One
        Search view's implementation module. Changes to the
        VisualSearch code should only update the library to new
        revisions or releases.
+.. [#] search view fields may also bundle context data to add to the
+       search context
+
 .. _commit 3fca87101d:
      https://github.com/documentcloud/visualsearch/commit/3fca87101d

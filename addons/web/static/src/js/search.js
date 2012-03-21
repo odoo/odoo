@@ -87,7 +87,6 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         this.has_defaults = !_.isEmpty(this.defaults);
 
         this.inputs = [];
-        this.enabled_filters = [];
 
         this.has_focus = false;
 
@@ -97,6 +96,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         this.ready = $.Deferred();
     },
     start: function() {
+        var self = this;
         var p = this._super();
 
         this.setup_global_completion();
@@ -107,7 +107,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 make_facet: this.proxy('make_visualsearch_facet'),
                 make_input: this.proxy('make_visualsearch_input'),
                 search: function (query, searchCollection) {
-                    console.log(query, searchCollection);
+                    self.do_search();
                 },
                 facetMatches: function (callback) {
                 },
@@ -141,7 +141,6 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * Sets up search view's view-wide auto-completion widget
      */
     setup_global_completion: function () {
-        var self = this;
         this.$element.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
@@ -157,23 +156,21 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
 
             if ('value' in item) {
                 // regular completion item
-                $item.append(
+                return $item.append(
                     ('label' in item)
                         ? $('<a>').html(item.label)
                         : $('<a>').text(item.value));
-            } else {
-                $item.text(item.category)
-                    .css({
-                        borderTop: '1px solid #cccccc',
-                        margin: 0,
-                        padding: 0,
-                        zoom: 1,
-                        'float': 'left',
-                        clear: 'left',
-                        width: '100%'
-                    });
             }
-            return $item;
+            return $item.text(item.category)
+                .css({
+                    borderTop: '1px solid #cccccc',
+                    margin: 0,
+                    padding: 0,
+                    zoom: 1,
+                    'float': 'left',
+                    clear: 'left',
+                    width: '100%'
+                });
         }
     },
     /**
@@ -184,21 +181,10 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param {Function} resp response callback
      */
     complete_global_search:  function (req, resp) {
-        var completion = [{
-            category: null,
-            value: req.term,
-            label: _.str.sprintf(_.str.escapeHTML(
-                _t("Search for: %(value)s")), {
-                    value: '<strong>' + _.str.escapeHTML(req.term) + '</strong>'
-                }),
-            field: null
-        }];
         $.when.apply(null, _(this.inputs).chain()
             .invoke('complete', req.term)
             .value()).then(function () {
-                var results = completion.concat.apply(
-                        completion, _(arguments).compact());
-                resp(results);
+                resp(_(_(arguments).compact()).flatten(true));
         });
     },
 
@@ -525,43 +511,20 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param e jQuery event object coming from the "Search" button
      */
     do_search: function (e) {
-        console.log(this.vs.searchBox.value());
-        console.log(this.vs.searchQuery.facets());
-        return this.on_search([], [], []);
+        var self = this;
+        var domains = [], contexts = [], groupbys = [], errors = [];
 
-        if (this.headless && !this.has_defaults) {
-            return this.on_search([], [], []);
-        }
-        // reset filters management
-        var select = this.$element.find(".oe_search-view-filters-management");
-        select.val("_filters");
-
-        if (e && e.preventDefault) { e.preventDefault(); }
-
-        var data = this.build_search_data();
-
-        if (data.errors.length) {
-            this.on_invalid(data.errors);
-            return;
-        }
-
-        this.on_search(data.domains, data.contexts, data.groupbys);
-    },
-    build_search_data: function() {
-        var domains = [],
-           contexts = [],
-             errors = [];
-
-        _.each(this.inputs, function (input) {
+        this.vs.searchQuery.each(function (facet) {
+            var field = facet.get('field');
             try {
-                var domain = input.get_domain();
+                var domain = field.get_domain(facet);
                 if (domain) {
                     domains.push(domain);
                 }
-
-                var context = input.get_context();
+                var context = field.get_context(facet);
                 if (context) {
                     contexts.push(context);
+                    groupbys.push(context);
                 }
             } catch (e) {
                 if (e instanceof openerp.web.search.Invalid) {
@@ -572,13 +535,11 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             }
         });
 
-        // TODO: do we need to handle *fields* with group_by in their context?
-        var groupbys = _(this.enabled_filters)
-                .chain()
-                .map(function (filter) { return filter.get_context();})
-                .compact()
-                .value();
-        return {domains: domains, contexts: contexts, errors: errors, groupbys: groupbys};
+        if (!_.isEmpty(errors)) {
+            this.on_invalid(errors);
+            return;
+        }
+        return this.on_search(domains, contexts, groupbys);
     },
     /**
      * Triggered after the SearchView has collected all relevant domains and
@@ -876,15 +837,33 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
             field: this,
             app: this.view.vs
         }));
-
     },
-    get_context: function () { },
+    /**
+     * Fetches contexts for all enabled filters in the group
+     *
+     * @param {VS.model.SearchFacet} facet
+     * @return {*} combined contexts of the enabled filters in this group
+     */
+    get_context: function (facet) {
+        var contexts = _(facet.get('json')).chain()
+            .map(function (filter) { return filter.attrs.context; })
+            .reject(_.isEmpty)
+            .value();
+
+        if (!contexts.length) { return; }
+        if (contexts.length === 1) { return contexts[0]; }
+        return _.extend(new openerp.web.CompoundContext, {
+            __contexts: contexts
+        });
+    },
     /**
      * Handles domains-fetching for all the filters within it: groups them.
+     *
+     * @param {VS.model.SearchFacet} facet
+     * @return {*} combined domains of the enabled filters in this group
      */
-    get_domain: function () {
-        var domains = _(this.filters).chain()
-            .filter(function (filter) { return filter.is_enabled(); })
+    get_domain: function (facet) {
+        var domains = _(facet.get('json')).chain()
             .map(function (filter) { return filter.attrs.domain; })
             .reject(_.isEmpty)
             .value();
@@ -905,6 +884,10 @@ openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.w
      * Implementation of the OpenERP filters (button with a context and/or
      * a domain sent as-is to the search view)
      *
+     * Filters are only attributes holder, the actual work (compositing
+     * domains and contexts, converting between facets and filters) is
+     * performed by the filter group.
+     *
      * @constructs openerp.web.search.Filter
      * @extends openerp.web.search.Input
      *
@@ -916,16 +899,7 @@ openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.w
         this.load_attrs(node.attrs);
     },
     facet_for: function () { return $.when(null); },
-    get_context: function () {
-         if (!this.is_enabled()) {
-             return;
-         }
-         return this.attrs.context;
-    },
-    /**
-     * Does not return anything: filter domain is handled at the FilterGroup
-     * level
-     */
+    get_context: function () { },
     get_domain: function () { }
 });
 openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.web.search.Field# */ {
@@ -968,8 +942,11 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
         this._super();
         this.filters.start();
     },
-    get_context: function () {
-        var val = this.get_value();
+    get_value: function (facet) {
+        return facet.value();
+    },
+    get_context: function (facet) {
+        var val = this.get_value(facet);
         // A field needs a value to be "active", and a context to send when
         // active
         var has_value = (val !== null && val !== '');
@@ -992,11 +969,11 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
      * @param {Number|String} value parsed value for the field
      * @returns {Array<Array>} domain to include in the resulting search
      */
-    make_domain: function (name, operator, value) {
-        return [[name, operator, value]];
+    make_domain: function (name, operator, facet) {
+        return [[name, operator, facet.value()]];
     },
-    get_domain: function () {
-        var val = this.get_value();
+    get_domain: function (facet) {
+        var val = this.get_value(facet);
         if (val === null || val === '') {
             return;
         }
@@ -1006,7 +983,7 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
             return this.make_domain(
                 this.attrs.name,
                 this.attrs.operator || this.default_operator,
-                val);
+                facet);
         }
         return _.extend({}, domain, {own_values: {self: val}});
     }
@@ -1034,9 +1011,6 @@ openerp.web.search.CharField = openerp.web.search.Field.extend( /** @lends opene
             value: value,
             field: this
         }]);
-    },
-    get_value: function () {
-        return this.$element.val();
     }
 });
 openerp.web.search.NumberField = openerp.web.search.Field.extend(/** @lends openerp.web.search.NumberField# */{
@@ -1124,7 +1098,7 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
             }).value();
         if (_.isEmpty(results)) { return $.when(null); }
         return $.when.apply(null, [{
-            category: this.attrs.name
+            category: this.attrs.string
         }].concat(results));
     },
     facet_for: function (value) {
@@ -1140,12 +1114,8 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
             app: this.view.app
         }));
     },
-    get_value: function () {
-        var index = parseInt(this.$element.val(), 10);
-        if (isNaN(index)) { return null; }
-        var value = this.attrs.selection[index][0];
-        if (value === false) { return null; }
-        return value;
+    get_value: function (facet) {
+        return facet.get('json');
     },
     clear: function () {
         var self = this, d = $.Deferred(), selection = this.attrs.selection;
@@ -1286,16 +1256,13 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
                            function () { started.resolve(); });
         return started.promise();
     },
-    make_domain: function (name, operator, value) {
-        if (this.id && this.name) {
-            if (value === this.name) {
-                return [[name, '=', this.id]];
-            } else {
-                delete this.id;
-                delete this.name;
-            }
+    make_domain: function (name, operator, facet) {
+        // ``json`` -> actual auto-completed id
+        if (facet.get('json')) {
+            return [[name, '=', facet.get('json')]];
         }
-        return this._super(name, operator, value);
+
+        return this._super(name, operator, facet);
     }
 });
 
