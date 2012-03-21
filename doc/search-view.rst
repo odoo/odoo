@@ -229,13 +229,25 @@ As a result, while the external API used to interact with the search
 view does not change many internal details — including the interaction
 between the search view and its widgets — were significantly altered:
 
+Internal operations
++++++++++++++++++++
+
+* :js:func:`openerp.web.SearchView.do_clear` has been removed
+* :js:func:`openerp.web.SearchView.do_toggle_filter` has been removed
+
 Widgets API
 +++++++++++
 
 * :js:func:`openerp.web.search.Widget.render` has been removed
 
+* :js:func:`openerp.web.search.Widget.make_id` has been removed
+
 * Search field objects are not openerp widgets anymore, their
   ``start`` is not generally called
+
+* :js:func:`~openerp.web.search.Input.clear` has been removed since
+  clearing the search view now simply consists of removing all search
+  facets from VisualSearch
 
 * :js:func:`~openerp.web.search.Input.get_domain` and
   :js:func:`~openerp.web.search.Input.get_context` now take a

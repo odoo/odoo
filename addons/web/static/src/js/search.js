@@ -340,22 +340,6 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 self.vs.searchQuery.reset(_(arguments).compact());
                 self.ready.resolve();
         });
-
-        // for extended search view
-        var ext = new openerp.web.search.ExtendedSearch(this, this.model);
-        lines.push([ext]);
-        this.extended_search = ext;
-
-        // start() all the widgets
-        var widget_starts = _(lines).chain().flatten().map(function (widget) {
-            return widget.start();
-        }).value();
-
-        $.when.apply(null, widget_starts).then(function () {
-            self.ready.resolve();
-        });
-
-        this.reload_managed_filters();
     },
     reload_managed_filters: function() {
         var self = this;
@@ -513,8 +497,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      *
      * @param e jQuery event object coming from the "Search" button
      */
-    do_search: function (e) {
-        var self = this;
+    do_search: function () {
         var domains = [], contexts = [], groupbys = [], errors = [];
 
         this.vs.searchQuery.each(function (facet) {
@@ -575,51 +558,6 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      */
     on_invalid: function (errors) {
         this.do_notify(_t("Invalid Search"), _t("triggered from search view"));
-    },
-    /**
-     * @param {Boolean} [reload_view=true]
-     */
-    do_clear: function (reload_view) {
-        this.$element.find('.filter_label, .filter_icon').removeClass('enabled');
-        this.enabled_filters.splice(0);
-        var string = $('a.searchview_group_string');
-        _.each(string, function(str){
-            $(str).closest('div.searchview_group').removeClass("expanded").addClass('folded');
-         });
-        this.$element.find('table:last').hide();
-
-        $('.searchview_extended_groups_list').empty();
-        return $.async_when.apply(
-            null, _(this.inputs).invoke('clear')).pipe(
-                reload_view !== false ? this.on_clear : null);
-    },
-    /**
-     * Triggered when the search view gets cleared
-     *
-     * @event
-     */
-    on_clear: function () {
-        this.do_search();
-    },
-    /**
-     * Called by a filter propagating its state changes
-     *
-     * @param {openerp.web.search.Filter} filter a filter which got toggled
-     * @param {Boolean} default_enabled filter got enabled through the default values, at render time.
-     */
-    do_toggle_filter: function (filter, default_enabled) {
-        if (default_enabled || filter.is_enabled()) {
-            this.enabled_filters.push(filter);
-        } else {
-            this.enabled_filters = _.without(
-                this.enabled_filters, filter);
-        }
-
-        if (!default_enabled) {
-            // selecting a filter after initial loading automatically
-            // triggers refresh
-            this.$element.find('form').submit();
-        }
     }
 });
 
@@ -680,43 +618,6 @@ openerp.web.search.Widget = openerp.web.OldWidget.extend( /** @lends openerp.web
     init: function (view) {
         this._super(view);
         this.view = view;
-    },
-    /**
-     * Sets and returns a globally unique identifier for the widget.
-     *
-     * If a prefix is specified, the identifier will be appended to it.
-     *
-     * @params prefix prefix sections, empty/falsy sections will be removed
-     */
-    make_id: function () {
-        this.element_id = _.uniqueId(
-            ['search'].concat(
-                _.compact(_.toArray(arguments)),
-                ['']).join('_'));
-        return this.element_id;
-    },
-    /**
-     * "Starts" the widgets. Called at the end of the rendering, this allows
-     * widgets to hook themselves to their view sections.
-     *
-     * On widgets, if they kept a reference to a view and have an element_id,
-     * will fetch and set their root element on $element.
-     */
-    start: function () {
-        this._super();
-        if (this.view && this.element_id) {
-            // id is unique, and no getElementById on elements
-            this.$element = $(document.getElementById(
-                this.element_id));
-        }
-    },
-    /**
-     * "Stops" the widgets. Called when the view destroys itself, this
-     * lets the widgets clean up after themselves.
-     */
-    destroy: function () {
-        delete this.view;
-        this._super();
     }
 });
 openerp.web.search.add_expand_listener = function($root) {
@@ -733,15 +634,6 @@ openerp.web.search.Group = openerp.web.search.Widget.extend({
         this.attrs = view_section.attrs;
         this.lines = view.make_widgets(
             view_section.children, fields);
-        this.make_id('group');
-    },
-    start: function () {
-        this._super();
-        openerp.web.search.add_expand_listener(this.$element);
-        var widget_starts = _(this.lines).chain().flatten()
-                .map(function (widget) { return widget.start(); })
-            .value();
-        return $.when.apply(null, widget_starts);
     }
 });
 
@@ -804,11 +696,7 @@ openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.
             }
         }
         this.attrs = attrs;
-    },
-    /**
-     * Specific clearing operations, if any
-     */
-    clear: function () {}
+    }
 });
 openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends openerp.web.search.FilterGroup# */{
     template: 'SearchView.filters',
@@ -825,7 +713,6 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
     init: function (filters, view) {
         this._super(view);
         this.filters = filters;
-        this.make_id('filters');
     },
     facet_for_defaults: function (defaults) {
         var fs = _(this.filters).filter(function (f) {
@@ -930,7 +817,6 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
                 return new openerp.web.search.Filter(
                     filter_node, view);
         })), view);
-        this.make_id('input', field.type, this.attrs.name);
     },
     facet_for: function (value) {
         return $.when(new VS.model.SearchFacet({
@@ -940,10 +826,6 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
             field: this,
             app: this.view.vs
         }));
-    },
-    start: function () {
-        this._super();
-        this.filters.start();
     },
     get_value: function (facet) {
         return facet.value();
@@ -1119,22 +1001,6 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
     },
     get_value: function (facet) {
         return facet.get('json');
-    },
-    clear: function () {
-        var self = this, d = $.Deferred(), selection = this.attrs.selection;
-        for(var index=0; index<selection.length; ++index) {
-            var item = selection[index];
-            if (!item[1]) {
-                setTimeout(function () {
-                    // won't override mutable, because we immediately bail out
-                    //noinspection JSReferencingMutableVariableFromClosure
-                    self.$element.val(index);
-                    d.resolve();
-                }, 0);
-                return d.promise();
-            }
-        }
-        return d.resolve().promise();
     }
 });
 openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @lends openerp.web.search.BooleanField# */{
@@ -1176,9 +1042,6 @@ openerp.web.search.DateField = openerp.web.search.Field.extend(/** @lends opener
     },
     get_value: function () {
         return this.datewidget.get_value() || null;
-    },
-    clear: function () {
-        this.datewidget.set_value(false);
     }
 });
 /**
@@ -1201,18 +1064,13 @@ openerp.web.search.DateTimeField = openerp.web.search.DateField.extend(/** @lend
 openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
     init: function (view_section, field, view) {
         this._super(view_section, field, view);
-        var self = this;
-        this.got_name = $.Deferred().then(function () {
-            self.$element.val(self.name);
-        });
-        this.dataset = new openerp.web.DataSet(
-                this.view, this.attrs['relation']);
+        this.model = new openerp.web.Model(this.attrs.relation);
     },
     complete: function (needle) {
         var self = this;
         // TODO: context
         // FIXME: "concurrent" searches (multiple requests, mis-ordered responses)
-        return new openerp.web.Model(this.attrs.relation).call('name_search', [], {
+        return this.model.call('name_search', [], {
             name: needle,
             limit: 8,
             context: {}
@@ -1240,8 +1098,7 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
                 app: this.view.vs
             }));
         }
-        return new openerp.web.Model(this.attrs.relation)
-            .call('name_get', [value], {}).pipe(function (names) {
+        return this.model.call('name_get', [value], {}).pipe(function (names) {
                 return new VS.model.SearchFacet({
                 category: self.attrs.string,
                 value: names[0][1],
@@ -1250,14 +1107,6 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
                 app: self.view.vs
             });
         })
-    },
-    start: function () {
-        this._super();
-        this.setup_autocomplete();
-        var started = $.Deferred();
-        this.got_name.then(function () { started.resolve();},
-                           function () { started.resolve(); });
-        return started.promise();
     },
     make_domain: function (name, operator, facet) {
         // ``json`` -> actual auto-completed id
