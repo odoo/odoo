@@ -349,14 +349,29 @@ class res_partner_address(osv.osv):
             args=[]
         if not context:
             context={}
+
         if context.get('contact_display', 'contact')=='partner':
-            fields = ['partner_id']
+            ids = self.search(cr, user, [('partner_id', operator, name)] + args, limit=limit, context=context)
         else:
-            fields = ['name', 'country_id', 'city', 'street']
+            # first lookup zip code, as it is a common and efficient way to search on these data
+            ids = self.search(cr, user, [('zip', '=', name)] + args, limit=limit, context=context)
+            # then search on other fields:
             if context.get('contact_display', 'contact')=='partner_address':
-                fields.append('partner_id')
-        domain = ['|'] * (len(fields)-1) + map(lambda f: (f, operator, name), fields)
-        ids = self.search(cr, user, domain + args, limit=limit, context=context)
+                fields = ['name', 'country_id', 'city', 'street', 'partner_id']
+            else:
+                fields = ['name', 'country_id', 'city', 'street']
+            # Here we have to search the records that satisfy the domain:
+            #       OR([[(f, operator, name)] for f in fields])) + args
+            # Searching on such a domain can be dramatically inefficient, due to the expansion made
+            # for field translations, and the handling of the disjunction by the DB engine itself.
+            # So instead, we search field by field until the search limit is reached.
+            while len(ids) < limit and fields:
+                f = fields.pop(0)
+                new_ids = self.search(cr, user, [(f, operator, name)] + args, limit=limit, context=context)
+                # extend ids with the ones in new_ids that are not in ids yet (and keep order)
+                old_ids = set(ids)
+                ids.extend([id for id in new_ids if id not in old_ids])
+
         return self.name_get(cr, user, ids, context=context)
 
     def get_city(self, cr, uid, id):
