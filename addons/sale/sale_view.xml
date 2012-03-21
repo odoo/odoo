@@ -214,7 +214,7 @@
                                 		attrs="{'invisible': ['|','|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking'),
                                 		'&amp;','&amp;',('order_policy','=','postpaid'),('state', '=','progress'),('shipped','=',False)]}"/>
 								<button name="action_view_delivery" string="Open Delivery Order" icon="gtk-go-forward" type="object" 
-								attrs="{'invisible': ['|','|', ('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
+								attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
                                 <button name="cancel" states="draft,sent" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
                                 <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
