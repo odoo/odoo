@@ -289,7 +289,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
             // form field
             if (self.fields[field]) {
-                var value = self.fields[field].get_on_change_value();
+                var value = self.fields[field].get_value();
                 return value == null ? false : value;
             }
             // parent field
@@ -359,7 +359,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                         value = response.value[fieldname];
                     } else {
                         // otherwise get form value for field
-                        value = self.fields[fieldname].get_on_change_value();
+                        value = self.fields[fieldname].get_value();
                     }
                     var condition = fieldname + '=' + value;
 
@@ -1489,9 +1489,6 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
     },
     is_dirty: function() {
         return this.dirty && !this.get("effective_readonly");
-    },
-    get_on_change_value: function() {
-        return this.get_value();
     },
     update_dom: function(show_invalid) {
         this._super.apply(this, arguments);
