@@ -43,5 +43,4 @@
   I test that the total of the attached invoice is correct
 -
   !assert {model: pos.order, id: pos_order_pos1, string: Invoice not correct}:
-     - bool(invoice_id)
-     - invoice_id.amount_total == (450*2 + 300*3*1.05)*0.95
+     - amount_total == (450*2 + 300*3*1.05)*0.95

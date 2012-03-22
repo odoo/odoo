@@ -146,6 +146,14 @@ table.oe_edi_data, .oe_edi_doc_title {
     font-style: italic;
     font-size: 95%;
     padding-left: 10px;
+
+    /* prevent wide notes from disrupting layout due to <pre> styling */
+    white-space: pre-line;
+    width: 90%;
+}
+.oe_edi_data_row .oe_edi_inner_note {
+    /* prevent wide notes from disrupting layout due to <pre> styling */
+    width: 25em;
 }
 .oe_edi_shade {
     background: #e8e8e8;

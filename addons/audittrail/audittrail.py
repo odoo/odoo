@@ -240,7 +240,7 @@ class audittrail_objects_proxy(object_proxy):
             line_id = log_line_pool.create(cr, uid, vals)
         return True
 
-    def log_fct(self, cr, uid_orig, model, method, fct_src, *args):
+    def log_fct(self, cr, uid_orig, model, method, fct_src, *args, **kw):
         """
         Logging function: This function is performing the logging operation
         @param model: Object whose values are being changed
@@ -262,12 +262,12 @@ class audittrail_objects_proxy(object_proxy):
         old_values = new_values = {}
 
         if method == 'create':
-            res = fct_src(cr, uid_orig, model.model, method, *args)
+            res = fct_src(cr, uid_orig, model.model, method, *args, **kw)
             if res:
                 res_ids = [res]
                 new_values = self.get_data(cr, uid_orig, pool, res_ids, model, method)
         elif method == 'read':
-            res = fct_src(cr, uid_orig, model.model, method, *args)
+            res = fct_src(cr, uid_orig, model.model, method, *args, **kw)
             # build the res_ids and the old_values dict. Here we don't use get_data() to
             # avoid performing an additional read()
             res_ids = []
@@ -279,7 +279,7 @@ class audittrail_objects_proxy(object_proxy):
         elif method == 'unlink':
             res_ids = args[0]
             old_values = self.get_data(cr, uid_orig, pool, res_ids, model, method)
-            res = fct_src(cr, uid_orig, model.model, method, *args)
+            res = fct_src(cr, uid_orig, model.model, method, *args, **kw)
         else: # method is write, action or workflow action
             res_ids = []
             if args:
@@ -290,7 +290,7 @@ class audittrail_objects_proxy(object_proxy):
                 # store the old values into a dictionary
                 old_values = self.get_data(cr, uid_orig, pool, res_ids, model, method)
             # process the original function, workflow trigger...
-            res = fct_src(cr, uid_orig, model.model, method, *args)
+            res = fct_src(cr, uid_orig, model.model, method, *args, **kw)
             if method == 'copy':
                 res_ids = [res]
             if res_ids:
@@ -491,14 +491,14 @@ class audittrail_objects_proxy(object_proxy):
     def execute_cr(self, cr, uid, model, method, *args, **kw):
         fct_src = super(audittrail_objects_proxy, self).execute_cr
         if self.check_rules(cr,uid,model,method):
-            return self.log_fct(cr, uid, model, method, fct_src, *args)
-        return fct_src(cr, uid, model, method, *args)
+            return self.log_fct(cr, uid, model, method, fct_src, *args, **kw)
+        return fct_src(cr, uid, model, method, *args, **kw)
 
-    def exec_workflow_cr(self, cr, uid, model, method, *args, **argv):
+    def exec_workflow_cr(self, cr, uid, model, method, *args, **kw):
         fct_src = super(audittrail_objects_proxy, self).exec_workflow_cr
         if self.check_rules(cr,uid,model,'workflow'):
-            return self.log_fct(cr, uid, model, method, fct_src, *args)
-        return fct_src(cr, uid, model, method, *args)
+            return self.log_fct(cr, uid, model, method, fct_src, *args, **kw)
+        return fct_src(cr, uid, model, method, *args, **kw)
 
 audittrail_objects_proxy()
 

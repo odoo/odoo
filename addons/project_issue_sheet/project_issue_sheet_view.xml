@@ -11,7 +11,7 @@
                     <attribute name="on_change">on_change_project(project_id)</attribute>
                 </field>
                 <xpath expr="/form/notebook" position="before">
-                    <field invisible="1" name="analytic_account_id"
+                    <field name="analytic_account_id"
                         domain="[('parent_id','!=',False),('partner_id', '=', partner_id),('type', '!=', 'view')]"
                         on_change='on_change_account_id(analytic_account_id)'
                         groups="base.group_extended" />
