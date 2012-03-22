@@ -393,6 +393,12 @@ class project_issue(crm.crm_case, osv.osv):
                 sub_ids.append(obj.user_id.id)
         return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
 
+    def create_send_note(self, cr, uid, ids, context=None):
+        message = _("has been <b>created</b>.")
+        self.message_append_note(cr, uid, ids, _('System notification'),
+                        message, type='notification', context=context)
+        return True
+
     def case_escalate_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.project_id:
@@ -403,25 +409,11 @@ class project_issue(crm.crm_case, osv.osv):
                 obj.message_append_note('' ,message, type='notification', context=context)
         return True
 
-    def create_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("has been <b>created</b>.")
-            self.message_append_note(cr, uid, [id], _('System notification'),
-                        message, type='notification', context=context)
-        return True
-
-    def case_reset_send_note(self,  cr, uid, ids, context=None):
-        for id in ids:
-            message =_("has been set as <b>new<b>.")
-            self.message_append_note(cr, uid, [id],'System Notification', message, context=context)
-        return True
-
     def case_reset(self, cr, uid, ids, context=None):
         """Resets case as draft
         """
         res = super(project_issue, self).case_reset(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
-        self.case_reset_send_note(cr, uid, ids, context)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -436,7 +428,6 @@ class project_issue(crm.crm_case, osv.osv):
         @param uid: the current user’s ID for security checks,
         @param ids: List of case's Ids
         """
-
         res = super(project_issue, self).case_open(cr, uid, ids, context)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id' : uid})
         return res
@@ -460,7 +451,7 @@ class project_issue(crm.crm_case, osv.osv):
             else:
                 raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.write(cr, uid, [case.id], data)
-        self.case_escalate_send_note(cr, uid, ids, context=context)
+            self.case_escalate_send_note(cr, uid, [case.id], context)
         return True
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
