@@ -8,7 +8,7 @@
             groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
-        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="1"/>
+        <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="25" groups="base.group_no_one"/>
         <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_management" name="Employees" sequence="1" />
 
         <!--
@@ -313,7 +313,7 @@
         </record>
 
         <menuitem action="open_view_categ_form" id="menu_view_employee_category_form"
-            parent="menu_view_employee_category_configuration_form" sequence="1"/>
+            parent="hr.menu_hr_configuration" sequence="1"/>
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
             <field name="name">Categories structure</field>
@@ -339,8 +339,8 @@
             <field eval="'ir.actions.act_window,%d'%hr_employee_normal_action_tree" name="value"/>
         </record>
 
-        <menuitem action="open_view_categ_tree" groups="base.group_no_one"
-            id="menu_view_employee_category_tree" parent="menu_view_employee_category_configuration_form" sequence="2"/>
+        <menuitem action="open_view_categ_tree"
+            id="menu_view_employee_category_tree" parent="menu_hr_management" sequence="2"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
             <field name="name">hr.job.form</field>
@@ -434,7 +434,7 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem parent="hr.menu_view_employee_category_configuration_form" id="menu_hr_job" action="action_hr_job" sequence="2" groups="base.group_no_one"/>
+        <menuitem parent="hr.menu_hr_management" id="menu_hr_job" action="action_hr_job" sequence="6"/>
 
     </data>
 </openerp>

@@ -3,7 +3,7 @@
     <data>
         <!-- Root Menus -->
         <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="9"/>
-        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll"/>
+        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_no_one" sequence="45"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
         <!-- Employee View -->
@@ -138,8 +138,8 @@
         <menuitem
             id="menu_hr_payroll_structure_view"
             action="action_view_hr_payroll_structure_list_form"
-            parent="payroll_configure"
-            sequence="1"
+            parent="hr.menu_hr_configuration"
+            sequence="20"
         />
         <record id="action_view_hr_payroll_structure_tree" model="ir.actions.act_window">
             <field name="name">Salary Structures Hierarchy</field>
@@ -152,7 +152,6 @@
             id="menu_hr_payroll_structure_tree"
             action="action_view_hr_payroll_structure_tree"
             parent="payroll_configure"
-			groups="base.group_no_one"
             sequence="2"
             icon="STOCK_INDENT"
         />
@@ -482,7 +481,6 @@
             action="action_hr_salary_rule_category"
             parent="payroll_configure"
             sequence="11"
-            groups="base.group_no_one"
         />
         <record id="action_hr_salary_rule_category_tree_view" model="ir.actions.act_window">
             <field name="name">Salary Rule Categories Hierarchy</field>
@@ -496,7 +494,6 @@
             action="action_hr_salary_rule_category_tree_view"
             parent="payroll_configure"
             sequence="12"
-            groups="base.group_no_one"			
             icon="STOCK_INDENT"
         />
 
@@ -552,7 +549,7 @@
         <menuitem
             id="menu_action_hr_contribution_register_form"
             action="action_contribution_register_form"
-            parent="payroll_configure" groups="base.group_no_one"
+            parent="payroll_configure" 
             sequence="14"
         />
 
