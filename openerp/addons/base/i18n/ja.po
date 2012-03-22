@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-02-28 16:02+0000\n"
+"PO-Revision-Date: 2012-03-21 21:49+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-10 04:49+0000\n"
-"X-Generator: Launchpad (build 14914)\n"
+"X-Launchpad-Export-Date: 2012-03-22 04:56+0000\n"
+"X-Generator: Launchpad (build 14981)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -8310,11 +8310,14 @@ msgid ""
 "interface, which has less features but is easier to use. You can switch to "
 "the other interface from the User/Preferences menu at any time."
 msgstr ""
+"OpenERPは簡易 / "
+"拡張の２種類のユーザインタフェースを提供します。最初にOpenERPを使う場合は，機能は少ないながらも使い易い簡易なユーザインタフェースを選択することを強"
+"くお勧めします。なお，いつでも設定メニューから拡張インタフェースに変更できます。"
 
 #. module: base
 #: model:res.country,name:base.cc
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "ココス諸島"
 
 #. module: base
 #: selection:base.language.install,state:0
@@ -8326,22 +8329,22 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "11. %U or %W       ==> 48 (49th week)"
-msgstr ""
+msgstr "11. %U or %W ==> 48（49番目の週）"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_bank_type_field
 msgid "Bank type fields"
-msgstr ""
+msgstr "銀行タイプ項目"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Dutch / Nederlands"
-msgstr ""
+msgstr "オランダ"
 
 #. module: base
 #: selection:res.company,paper_format:0
 msgid "US Letter"
-msgstr ""
+msgstr "US レター"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_location
@@ -8433,6 +8436,63 @@ msgid ""
 "from Gate A\n"
 "    "
 msgstr ""
+"\n"
+"このモジュールはプッシュ型プル型倉庫フローを効果的に実行する倉庫アプリケーションを補います。\n"
+"============================================================================="
+"===============================\n"
+"\n"
+"典型的な利用例：\n"
+"    * 製品製造チェーンの管理\n"
+"    * 製品ごとのデフォルトロケーションの管理\n"
+"    * 以下のようなビジネス要求による倉庫の中の経路の定義：\n"
+"       - 品質管理\n"
+"       - 販売サービスの後\n"
+"       - サプライヤ返品\n"
+"\n"
+"    * レンタル製品の自動返品を生成することでレンタル管理を助けます。\n"
+"\n"
+"ひとたびこのモジュールがインストールされたら，製品フォームに追加タブが現れます。\n"
+"そこで，プッシュとプルのフローの仕様を加えることができます。\n"
+"CPU１製品のプッシュとプルのデモデータ：\n"
+"\n"
+"プッシュフロー\n"
+"----------\n"
+"プッシュフローは，一定の製品が常に必要に応じて他の場所に対応して動く到着する時，\n"
+"オプションとして一定の遅延がある時に役立ちます。\n"
+"オリジナルの倉庫アプリケーションは既にそれ自身にプッシュフローの仕様をサポートしています。\n"
+"しかし，これは製品ごとに改良されません。\n"
+"\n"
+"プッシュプローの仕様はどの場所がどの場所と何のパラメータでつながれているかを示します。\n"
+"製品の所定の量が供給元の場所で動きがあるや否や結び付けられた動作がフロー定義\n"
+"（目的地の場所，遅延，移動の種類，ジャーナル他）でセットされたパラメータにしたがって\n"
+"自動的に予測されます。\n"
+"この新しい動きはパラメータにしたがって自動的に実行されるか，手動確認を要求します。\n"
+"\n"
+"プルフロー\n"
+"----------\n"
+"プルフローはプッシュフローとは少し異なっています。これは製品の動きの処理には関係せず，\n"
+"むしろ獲得した注文の処理に関係します。直接の商品ではなくニーズに依ります。\n"
+"プルフローの古典的な例は，供給に責任を持つ親会社を持つアウトレット会社です。\n"
+"\n"
+"  [ 顧客 ] <- A - [ アウトレット ] <- B - [ 親会社 ] <~ C ~ [ 供給者 ]\n"
+"\n"
+"新しい獲得注文（A：例として注文の確認が来ます）がアウトレットに到着すると，それは親会社から要求されたもう一つの獲得注文に変換されます（B：プルフローのタ"
+"イプは'move'）。親会社により獲得注文Bが処理される時，そしてその製品が在庫切れの時，それは供給者からの受注（C：プルフローのタイプは購入）に変換され"
+"ます。結果として獲得注文，ニーズは顧客と供給者の間の全てにプッシュされる。\n"
+"\n"
+"専門的には，プルフローは獲得注文と別に処理することを許します。製品に対しての考慮に依存するのみならず，その製品のニーズを持つ場所（即ち獲得注文の目的地）に"
+"依存します。\n"
+"\n"
+"使用例\n"
+"--------\n"
+"\n"
+"以下のデモデータを使います：\n"
+"  CPU1：ショップ1からいくらかのCPU1を売り，スケジューラを走らせます。\n"
+"     - 倉庫：配達注文，ショップ1: 受付\n"
+"  CPU3:\n"
+"     - 商品を受け取る時，それは品質管理場所に行き，棚2に保管されます。\n"
+"     - 顧客に配達する時：ピックリスト -> 梱包 -> GateAから配達注文\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_marketing
@@ -8444,11 +8504,17 @@ msgid ""
 "Contains the installer for marketing-related modules.\n"
 "    "
 msgstr ""
+"\n"
+"マーケティングメニュー\n"
+"===================\n"
+"\n"
+"マーケティング関連のモジュールのインストーラを含んでいます。\n"
+"    "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_knowledge_management
 msgid "Knowledge Management"
-msgstr ""
+msgstr "知識管理"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.bank_account_update
