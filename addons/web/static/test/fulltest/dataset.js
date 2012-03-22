@@ -11,17 +11,15 @@ $(document).ready(function () {
         ds.ids = [10, 20, 30, 40, 50];
         ds.index = 2;
         t.expect(ds.read_index(['a', 'b', 'c']), function (result) {
-            strictEqual(result.method, 'search');
+            strictEqual(result.method, 'read');
             strictEqual(result.model, 'some.model');
 
-            strictEqual(result.args.length, 5);
-            deepEqual(result.args[0], []);
-            strictEqual(result.args[1], 2);
-            strictEqual(result.args[2], 1);
-            strictEqual(result.args[3], false);
-            deepEqual(result.args[4], context_());
+            strictEqual(result.args.length, 2);
+            deepEqual(result.args[0], [30]);
 
-            ok(_.isEmpty(result.kwargs));
+            deepEqual(result.kwargs, {
+                context: context_()
+            });
         });
     });
     t.test('default_get', function (openerp) {

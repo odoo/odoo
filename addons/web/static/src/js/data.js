@@ -623,12 +623,9 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
      */
     read_index: function (fields, options) {
         options = options || {};
-        // not very good
-        return this._model.query(fields)
-            .context(options.context)
-            .offset(this.index).first().pipe(function (record) {
-                if (!record) { return $.Deferred().reject().promise(); }
-                return record;
+        return this.read_ids([this.ids[this.index]], fields, options).pipe(function (records) {
+            if (_.isEmpty(records)) { return $.Deferred().reject().promise(); }
+            return records[0];
         });
     },
     /**
