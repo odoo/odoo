@@ -73,7 +73,8 @@ class mail_thread(osv.osv):
     # OpenSocial: message_ids_social is a dummy field that should not be used
     _columns = {
         'message_ids_social': fields.function(_get_message_ids, method=True,
-                        type='one2many', obj='mail.message', string='Temp messages'),
+                        type='one2many', obj='mail.message', string='Temp messages',
+                        _fields_id = 'res_id'),
     }
 
     #------------------------------------------------------
@@ -86,6 +87,8 @@ class mail_thread(osv.osv):
         return thread_id;
     
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         write_res = super(mail_thread, self).write(cr, uid, ids, vals, context=context);
         if write_res:
             self.message_subscribe(cr, uid, ids, [uid], context=context)
