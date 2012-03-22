@@ -382,8 +382,6 @@ class project_issue(crm.crm_case, osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.state == 'draft' and obj.user_id:
                 result[obj.id] = [obj.user_id.id]
-            if obj.project_id.user_id:
-                result[obj.id] = [obj.project_id.user_id.id]
         return result
 
     def message_get_subscribers(self, cr, uid, ids, context=None):
