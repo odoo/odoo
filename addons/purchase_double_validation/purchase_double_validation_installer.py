@@ -28,6 +28,10 @@ class purchase_config_settings(osv.osv_memory):
             help="Maximum amount after which validation of purchase is required."),
     }
 
+    _defaults = {
+        'limit_amount': 5000,
+    }
+
     def get_default_limit_amount(self, cr, uid, fields, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         transition = ir_model_data.get_object(cr, uid, 'purchase_double_validation', 'trans_waiting_confirmed')
