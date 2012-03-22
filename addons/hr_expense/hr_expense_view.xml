@@ -114,11 +114,11 @@
                             <field name="journal_id"/>
                             <field name="invoice_id" context="{'type':'in_invoice', 'journal_type': 'purchase'}"/>
                             </group>
-                            <group col="2" colspan="2">
-                            <separator colspan="2" string="Validation"/>
-                            <field name="date_confirm" readonly = "1"/>
-                            <field name="date_valid" readonly = "1"/>
-                            <field name="user_valid"/>
+                            <group col="2" colspan="2" groups="base.group_no_one">
+                                <separator colspan="2" string="Validation"/>
+                                <field name="date_confirm" readonly = "1"/>
+                                <field name="date_valid" readonly = "1"/>
+                                <field name="user_valid"/>
                             </group>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
