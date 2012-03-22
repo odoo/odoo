@@ -85,7 +85,7 @@ openerp.point_of_sale = function(db) {
                 }, this));
             }, this));
             $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
-                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image_small'], [['pos_categ_id', '!=', 'false']]),
+                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'product_image_small', 'ean13'], [['pos_categ_id', '!=', 'false']]),
                 this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name'],
                     [['state', '=', 'open'], ['user_id', '=', this.session.uid]]),
                 this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']),
@@ -1280,6 +1280,11 @@ openerp.point_of_sale = function(db) {
                     if (codeNumbers.length == 13) {
                         // a barcode reader
                         console.log('barcode: ' + codeNumbers.join())
+                        selectedOrder = self.shop.get('selectedOrder')
+                        products = pos.store.get('product.product')
+                        scannedProduct = _.detect(products, function(el){return el.ean13 === codeNumbers.join('')})
+                        //TODO INSERT THE scannedProduct into the selectedOrder
+
                         codeNumbers = []
                     }
                 } else {
