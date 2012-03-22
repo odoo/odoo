@@ -226,14 +226,17 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
     make_visualsearch_input: function (options) {
         var self = this, input = new VS.ui.SearchInput(options);
         input.setupAutocomplete = function () {
-            this.box.autocomplete({
+            _.extend(this.box.autocomplete({
                 minLength: 1,
                 delay: 0,
                 search: function () {
                     self.$element.autocomplete('search', input.box.val());
                     return false;
                 }
-            }).data('autocomplete')._move = function () {};
+            }).data('autocomplete'), {
+                _move: function () {},
+                close: function () { self.$element.autocomplete('close'); }
+            });
         };
         return input;
     },
