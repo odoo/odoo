@@ -55,7 +55,7 @@ class ir_property(osv.osv):
         'fields_id': fields.many2one('ir.model.fields', 'Field', ondelete='cascade', required=True, select=1),
 
         'value_float' : fields.float('Value'),
-        'value_integer' : fields.integer('Value')
+        'value_integer' : fields.integer('Value'),
         'value_text' : fields.text('Value'), # will contain (char, text)
         'value_binary' : fields.binary('Value'),
         'value_reference': fields.reference('Value', selection=_models_get2, size=128),
