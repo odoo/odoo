@@ -989,12 +989,13 @@
                             </field>
                             <group col="12" colspan="4">
                                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                                <button name="draft_validate" states="draft" string="Deliver Now" type="object" icon="gtk-media-play"/>
-                                <button name="action_assign" states="draft" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-find"/>
+                                <button name="draft_force_assign" states="draft" string="Confirm" type="object" icon="gtk-ok"/>
+                                <button name="draft_validate" states="draft" string="Confirm and Deliver" type="object" icon="gtk-media-play"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward"/>
-                                <button name="%(report_picking_list)d" string="Print Delivery Order" states="done" type="action" icon="gtk-print"/>
-                                <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
+                                <button name="%(report_picking_list)d" string="Print Delivery Slip" states="done" type="action" icon="gtk-print"/>
+                                <button name="%(act_stock_return_picking)d" string="Products Return" states="done" type="action" icon="gtk-execute"/>
                                 <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
@@ -1043,7 +1044,12 @@
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
-                        <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
+                        <filter st                             <field name="origin"/>
+                             <field name="address_id" string="Supplier" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" domain="[('partner_id','&lt;&gt;',False)]" colspan="4"/>
+                             <field name="invoice_state" string="Invoice Control"/>
+-                            
++
+ring="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
                         <separator orientation="vertical" />
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
                     </group>
