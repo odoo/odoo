@@ -57,6 +57,8 @@ class email_template(osv.osv):
            :param int res_id: id of the document record this mail is related to.
         """
         if not template: return u""
+        if context is None:
+            context = {}
         try:
             template = tools.ustr(template)
             record = None
