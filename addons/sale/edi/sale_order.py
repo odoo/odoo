@@ -101,28 +101,25 @@ class sale_order(osv.osv, EDIMixin):
         self._edi_requires_attributes(('company_id','company_address'), edi_document)
         res_partner = self.pool.get('res.partner')
 
-        # imported company = as a new partner
-        src_company_id, src_company_name = edi_document.pop('company_id')
-        partner_id = self.edi_import_relation(cr, uid, 'res.partner', src_company_name,
-                                              src_company_id, context=context)
-        partner_value = {'supplier': True}
-        res_partner.write(cr, uid, [partner_id], partner_value, context=context)
-
         # imported company_address = new partner address
+        src_company_id, src_company_name = edi_document.pop('company_id')
+
         address_info = edi_document.pop('company_address')
-        address_info['parent_id'] = (src_company_id, src_company_name)
-        address_info['type'] = 'default'
+        address_info['supplier'] = True
+        if 'name' not in address_info:
+            address_info['name'] = src_company_name
+
         address_id = res_partner.edi_import(cr, uid, address_info, context=context)
 
         # modify edi_document to refer to new partner/address
         partner_address = res_partner.browse(cr, uid, address_id, context=context)
-       # edi_document['parent_id'] = (src_company_id, src_company_name)
         edi_document.pop('partner_address', False) # ignored
         address_edi_m2o = self.edi_m2o(cr, uid, partner_address, context=context)
+        edi_document['partner_id'] = address_edi_m2o
         edi_document['partner_invoice_id'] = address_edi_m2o
         edi_document['partner_shipping_id'] = address_edi_m2o
 
-        return partner_id
+        return address_id
 
     def _edi_get_pricelist(self, cr, uid, partner_id, currency, context=None):
         # TODO: refactor into common place for purchase/sale, e.g. into product module
@@ -210,7 +207,7 @@ class sale_order_line(osv.osv, EDIMixin):
                                product_qty=line.product_uos_qty)
 
             # company.security_days is for internal use, so customer should only
-            # see the expected date_planned based on line.delay 
+            # see the expected date_planned based on line.delay
             date_planned = datetime.strptime(line.order_id.date_order, DEFAULT_SERVER_DATE_FORMAT) + \
                             relativedelta(days=line.delay or 0.0)
             edi_doc['date_planned'] = date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)

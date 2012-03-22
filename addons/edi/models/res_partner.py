@@ -20,7 +20,7 @@
 ##############################################################################
 import logging
 
-from osv import fields,osv 
+from osv import fields,osv
 from edi import EDIMixin
 from openerp import SUPERUSER_ID
 from tools.translate import _
@@ -74,9 +74,9 @@ class res_partner(osv.osv, EDIMixin):
         edi_bank_ids = edi_document.pop('bank_ids', None)
         contact_id = super(res_partner,self).edi_import(cr, uid, edi_document, context=context)
         if edi_bank_ids:
-            contacts = self.browse(cr, uid, contact_id, context=context)
+            contact = self.browse(cr, uid, contact_id, context=context)
             import_ctx = dict((context or {}),
-                              default_partner_id=contacts.parent_id.id,
+                              default_partner_id=contact.id,
                               default_state=self._get_bank_type(cr, uid, context))
             for ext_bank_id, bank_name in edi_bank_ids:
                 try:
