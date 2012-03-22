@@ -68,13 +68,13 @@ openerp.web.page = function (openerp) {
     openerp.web.page = {};
 
     openerp.web.page.WidgetFrameReadonly = openerp.web.form.WidgetFrame.extend({
-        template: 'WidgetFrame.readonly'
+        form_template: 'WidgetFrame.readonly'
     });
     openerp.web.page.FieldReadonly = openerp.web.form.Field.extend({
 
     });
     openerp.web.page.FieldCharReadonly = openerp.web.page.FieldReadonly.extend({
-        template: 'FieldChar.readonly',
+        form_template: 'FieldChar.readonly',
         init: function(view, node) {
             this._super(view, node);
             this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
@@ -89,13 +89,27 @@ openerp.web.page = function (openerp) {
             return show_value;
         }
     });
+    openerp.web.page.FieldFloatReadonly = openerp.web.page.FieldCharReadonly.extend({
+        init: function (view, node) {
+            this._super(view, node);
+            if (node.attrs.digits) {
+                this.digits = py.eval(node.attrs.digits).toJSON();
+            } else {
+                this.digits = view.fields_view.fields[node.attrs.name].digits;
+            }
+        }
+    });
     openerp.web.page.FieldURIReadonly = openerp.web.page.FieldCharReadonly.extend({
-        template: 'FieldURI.readonly',
+        form_template: 'FieldURI.readonly',
         scheme: null,
         format_value: function (value) {
             return value;
         },
         set_value: function (value) {
+            if (!value) {
+                this.$element.find('a').text('').attr('href', '#');
+                return;
+            }
             this.$element.find('a')
                     .attr('href', this.scheme + ':' + value)
                     .text(this.format_value(value));
@@ -106,6 +120,10 @@ openerp.web.page = function (openerp) {
     });
     openerp.web.page.FieldUrlReadonly = openerp.web.page.FieldURIReadonly.extend({
         set_value: function (value) {
+            if (!value) {
+                this.$element.find('a').text('').attr('href', '#');
+                return;
+            }
             var s = /(\w+):(.+)/.exec(value);
             if (!s) {
                 value = "http://" + value;
@@ -120,7 +138,7 @@ openerp.web.page = function (openerp) {
         }
     });
     openerp.web.page.FieldSelectionReadonly = openerp.web.page.FieldReadonly.extend({
-        template: 'FieldChar.readonly',
+        form_template: 'FieldChar.readonly',
         init: function(view, node) {
             // lifted straight from r/w version
             var self = this;
@@ -225,7 +243,7 @@ openerp.web.page = function (openerp) {
         }
     });
     openerp.web.page.FieldBinaryFileReadonly = openerp.web.form.FieldBinary.extend({
-        template: 'FieldURI.readonly',
+        form_template: 'FieldURI.readonly',
         start: function() {
             this._super.apply(this, arguments);
             var self = this;
@@ -261,7 +279,7 @@ openerp.web.page = function (openerp) {
         'one2many_list' : 'openerp.web.page.FieldOne2ManyReadonly',
         'reference': 'openerp.web.page.FieldReferenceReadonly',
         'boolean': 'openerp.web.page.FieldBooleanReadonly',
-        'float': 'openerp.web.page.FieldCharReadonly',
+        'float': 'openerp.web.page.FieldFloatReadonly',
         'integer': 'openerp.web.page.FieldCharReadonly',
         'float_time': 'openerp.web.page.FieldCharReadonly',
         'binary': 'openerp.web.page.FieldBinaryFileReadonly',

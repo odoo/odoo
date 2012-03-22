@@ -10,7 +10,7 @@ if (!openerp.web_dashboard) {
 openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.template = 'DashBoard';
+        this.form_template = 'DashBoard';
         this.actions_attrs = {};
         this.action_managers = [];
     },
@@ -31,18 +31,16 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         this.$element.delegate('.oe-dashboard-column .oe-dashboard-fold', 'click', this.on_fold_action);
         this.$element.delegate('.oe-dashboard-column .ui-icon-closethick', 'click', this.on_close_action);
 
-        this.actions_attrs = {};
         // Init actions
         _.each(this.node.children, function(column, column_index) {
             _.each(column.children, function(action, action_index) {
                 delete(action.attrs.width);
                 delete(action.attrs.height);
                 delete(action.attrs.colspan);
-                self.actions_attrs[action.attrs.name] = action.attrs;
                 self.rpc('/web/action/load', {
                     action_id: parseInt(action.attrs.name, 10)
                 }, function(result) {
-                    self.on_load_action(result, column_index + '_' + action_index);
+                    self.on_load_action(result, column_index + '_' + action_index, action.attrs);
                 });
             });
         });
@@ -58,7 +56,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         var qdict = {
             current_layout : this.$element.find('.oe-dashboard').attr('data-layout')
         };
-        var $dialog = $('<div>').dialog({
+        var $dialog = openerp.web.dialog($('<div>'), {
                             modal: true,
                             title: _t("Edit Layout"),
                             width: 'auto',
@@ -97,9 +95,9 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             $action = $e.parents('.oe-dashboard-action:first'),
             id = parseInt($action.attr('data-id'), 10);
         if ($e.is('.ui-icon-minusthick')) {
-            this.actions_attrs[id].fold = '1';
+            $action.data('action_attrs').fold = '1';
         } else {
-            delete(this.actions_attrs[id].fold);
+            delete($action.data('action_attrs').fold);
         }
         $e.toggleClass('ui-icon-minusthick ui-icon-plusthick');
         $action.find('.oe-dashboard-action-content').toggle();
@@ -122,7 +120,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             var actions = [];
             $(this).find('.oe-dashboard-action').each(function() {
                 var action_id = $(this).attr('data-id'),
-                    new_attrs = _.clone(self.actions_attrs[action_id]);
+                    new_attrs = _.clone($(this).data('action_attrs'));
                 if (new_attrs.domain) {
                     new_attrs.domain = new_attrs.domain_string;
                     delete(new_attrs.domain_string);
@@ -143,19 +141,25 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             self.$element.find('.oe-dashboard-link-reset').show();
         });
     },
-    on_load_action: function(result, index) {
+    on_load_action: function(result, index, action_attrs) {
         var self = this,
             action = result.result,
-            action_attrs = this.actions_attrs[action.id],
             view_mode = action_attrs.view_mode;
 
-        if (action_attrs.context) {
-            action.context = _.extend((action.context || {}), action_attrs.context);
+        if (action_attrs.context && action_attrs.context['dashboard_merge_domains_contexts'] === false) {
+            // TODO: replace this 6.1 workaround by attribute on <action/>
+            action.context = action_attrs.context || {};
+            action.domain = action_attrs.domain || [];
+        } else {
+            if (action_attrs.context) {
+                action.context = _.extend((action.context || {}), action_attrs.context);
+            }
+            if (action_attrs.domain) {
+                action.domain = action.domain || [];
+                action.domain.unshift.apply(action.domain, action_attrs.domain);
+            }
         }
-        if (action_attrs.domain) {
-            action.domain = action.domain || [];
-            action.domain.unshift.apply(action.domain, action_attrs.domain);
-        }
+
         var action_orig = _.extend({ flags : {} }, action);
 
         if (view_mode && view_mode != action.view_mode) {
@@ -187,6 +191,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         var am = new openerp.web.ActionManager(this),
             // FIXME: ideally the dashboard view shall be refactored like kanban.
             $action = $('#' + this.view.element_id + '_action_' + index);
+        $action.parent().data('action_attrs', action_attrs);
         this.action_managers.push(am);
         am.appendTo($action);
         am.do_action(action);
@@ -225,7 +230,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             });
         }
     },
-    render: function() {
+    renderElement: function() {
         // We should start with three columns available
         for (var i = this.node.children.length; i < 3; i++) {
             this.node.children.push({
@@ -234,17 +239,18 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
                 children: []
             });
         }
-        return QWeb.render(this.template, this);
+        var rendered = QWeb.render(this.form_template, this);
+        this.$element.html(rendered);
     },
     do_reload: function() {
-        var view_manager = this.view.widget_parent,
-            action_manager = view_manager.widget_parent;
-        this.view.stop();
+        var view_manager = this.view.getParent(),
+            action_manager = view_manager.getParent();
+        this.view.destroy();
         action_manager.do_action(view_manager.action);
     }
 });
 openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
-    render: function() {
+    renderElement: function() {
         if (this.node.tag == 'hpaned') {
             this.node.attrs.style = '2-1';
         } else if (this.node.tag == 'vpaned') {
@@ -263,7 +269,7 @@ openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
                 }
             }
         });
-        return this._super(this, arguments);
+        this._super(this);
     }
 });
 
@@ -340,7 +346,7 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
                 });
             })
             .delegate('li:not(.oe-done)', 'click', function () {
-                self.widget_parent.widget_parent.widget_parent.do_execute_action({
+                self.getParent().getParent().getParent().do_execute_action({
                         type: 'object',
                         name: 'action_launch'
                     }, self.dataset,
@@ -405,7 +411,6 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.OldWidget.extend({
     },
     start: function() {
         var self = this;
-        openerp.webclient.menu.do_hide_secondary();
         var domain = [['application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
         var ds = new openerp.web.DataSetSearch(this, 'ir.module.module',{},domain);
         ds.read_slice(['id']).then(function(result) {
@@ -462,8 +467,8 @@ openerp.web_dashboard.ApplicationInstaller = openerp.web.OldWidget.extend({
         });
         return r;
     },
-    stop: function() {
-        this.action_manager.stop();
+    destroy: function() {
+        this.action_manager.destroy();
         return this._super();
     }
 });

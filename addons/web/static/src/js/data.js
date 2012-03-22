@@ -1012,18 +1012,25 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                              : (v1 > v2) ? 1
                              : 0;
                     };
-            records.sort(function (a, b) {
-                return _.reduce(sort_fields, function (acc, field) {
-                    if (acc) { return acc; }
-
-                    var sign = 1;
-                    if (field[0] === '-') {
-                        sign = -1;
-                        field = field.slice(1);
-                    }
-                    return sign * compare(a[field], b[field]);
-                }, 0);
-            });
+            // Array.sort is not necessarily stable. We must be careful with this because
+            // sorting an array where all items are considered equal is a worst-case that
+            // will randomize the array with an unstable sort! Therefore we must avoid
+            // sorting if there are no sort_fields (i.e. all items are considered equal)
+            // See also: http://ecma262-5.com/ELS5_Section_15.htm#Section_15.4.4.11 
+            //           http://code.google.com/p/v8/issues/detail?id=90
+            if (sort_fields.length) {
+                records.sort(function (a, b) {
+                    return _.reduce(sort_fields, function (acc, field) {
+                        if (acc) { return acc; }
+                        var sign = 1;
+                        if (field[0] === '-') {
+                            sign = -1;
+                            field = field.slice(1);
+                        }
+                        return sign * compare(a[field], b[field]);
+                    }, 0);
+                });
+            }
             completion.resolve(records);
         };
         if(to_get.length > 0) {

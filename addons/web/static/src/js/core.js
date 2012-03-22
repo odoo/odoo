@@ -10,110 +10,8 @@ if (!console.debug) {
 }
 
 openerp.web.core = function(openerp) {
-/**
- * John Resig Class with factory improvement
- */
-(function() {
-    var initializing = false,
-        fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
-    // The web Class implementation (does nothing)
-    /**
-     * Extended version of John Resig's Class pattern
-     *
-     * @class
-     */
-    openerp.web.Class = function(){};
 
-    /**
-     * Subclass an existing class
-     *
-     * @param {Object} prop class-level properties (class attributes and instance methods) to set on the new class
-     */
-    openerp.web.Class.extend = function(prop) {
-        var _super = this.prototype;
-
-        // Instantiate a web class (but only create the instance,
-        // don't run the init constructor)
-        initializing = true;
-        var prototype = new this();
-        initializing = false;
-
-        // Copy the properties over onto the new prototype
-        for (var name in prop) {
-            // Check if we're overwriting an existing function
-            prototype[name] = typeof prop[name] == "function" &&
-                              typeof _super[name] == "function" &&
-                              fnTest.test(prop[name]) ?
-                    (function(name, fn) {
-                        return function() {
-                            var tmp = this._super;
-
-                            // Add a new ._super() method that is the same
-                            // method but on the super-class
-                            this._super = _super[name];
-
-                            // The method only need to be bound temporarily, so
-                            // we remove it when we're done executing
-                            var ret = fn.apply(this, arguments);
-                            this._super = tmp;
-
-                            return ret;
-                        };
-                    })(name, prop[name]) :
-                    prop[name];
-        }
-
-        // The dummy class constructor
-        function Class() {
-            // All construction is actually done in the init method
-            if (!initializing && this.init) {
-                var ret = this.init.apply(this, arguments);
-                if (ret) { return ret; }
-            }
-            return this;
-        }
-        Class.include = function (properties) {
-            for (var name in properties) {
-                if (typeof properties[name] !== 'function'
-                        || !fnTest.test(properties[name])) {
-                    prototype[name] = properties[name];
-                } else if (typeof prototype[name] === 'function'
-                           && prototype.hasOwnProperty(name)) {
-                    prototype[name] = (function (name, fn, previous) {
-                        return function () {
-                            var tmp = this._super;
-                            this._super = previous;
-                            var ret = fn.apply(this, arguments);
-                            this._super = tmp;
-                            return ret;
-                        }
-                    })(name, properties[name], prototype[name]);
-                } else if (typeof _super[name] === 'function') {
-                    prototype[name] = (function (name, fn) {
-                        return function () {
-                            var tmp = this._super;
-                            this._super = _super[name];
-                            var ret = fn.apply(this, arguments);
-                            this._super = tmp;
-                            return ret;
-                        }
-                    })(name, properties[name]);
-                }
-            }
-        };
-
-        // Populate our constructed prototype object
-        Class.prototype = prototype;
-
-        // Enforce the constructor to be what we expect
-        Class.constructor = Class;
-
-        // And make this class extendable
-        Class.extend = arguments.callee;
-
-        return Class;
-    };
-})();
+openerp.web.Class = nova.Class;
 
 openerp.web.callback = function(obj, method) {
     var callback = function() {
@@ -172,31 +70,6 @@ openerp.web.callback = function(obj, method) {
         self:obj,
         args:Array.prototype.slice.call(arguments, 2)
     });
-};
-
-/**
- * Generates an inherited class that replaces all the methods by null methods (methods
- * that does nothing and always return undefined).
- *
- * @param {Class} claz
- * @param {Object} add Additional functions to override.
- * @return {Class}
- */
-openerp.web.generate_null_object_class = function(claz, add) {
-    var newer = {};
-    var copy_proto = function(prototype) {
-        for (var name in prototype) {
-            if(typeof prototype[name] == "function") {
-                newer[name] = function() {};
-            }
-        }
-        if (prototype.prototype)
-            copy_proto(prototype.prototype);
-    };
-    copy_proto(claz.prototype);
-    newer.init = openerp.web.Widget.prototype.init;
-    var tmpclass = claz.extend(newer);
-    return tmpclass.extend(add || {});
 };
 
 /**
@@ -362,11 +235,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
     }
 });
 
-openerp.web.CallbackEnabled = openerp.web.Class.extend(/** @lends openerp.web.CallbackEnabled# */{
-    /**
-     * @constructs openerp.web.CallbackEnabled
-     * @extends openerp.web.Class
-     */
+openerp.web.CallbackEnabledMixin = {
     init: function() {
         // Transform on_* method into openerp.web.callbacks
         for (var name in this) {
@@ -404,7 +273,14 @@ openerp.web.CallbackEnabled = openerp.web.Class.extend(/** @lends openerp.web.Ca
             return self[method_name].apply(self, arguments);
         }
     }
-});
+};
+
+openerp.web.CallbackEnabled = openerp.web.Class.extend(_.extend({}, nova.GetterSetterMixin, openerp.web.CallbackEnabledMixin, {
+    init: function() {
+        nova.GetterSetterMixin.init.call(this);
+        openerp.web.CallbackEnabledMixin.init.call(this);
+    }
+}));
 
 openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.web.Connection# */{
     /**
@@ -422,7 +298,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.name = openerp._session_id;
         this.qweb_mutex = new $.Mutex();
     },
-    bind: function(origin) {
+    bind_session: function(origin) {
         var window_origin = location.protocol+"//"+location.host, self=this;
         this.origin = origin ? _.str.rtrim(origin,'/') : window_origin;
         this.prefix = this.origin;
@@ -444,6 +320,269 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         this.shortcuts = [];
         this.active_id = null;
         return this.session_init();
+    },
+    test_eval_get_context: function () {
+        var asJS = function (arg) {
+            if (arg instanceof py.object) {
+                return arg.toJSON();
+            }
+            return arg;
+        };
+
+        var datetime = new py.object();
+        datetime.datetime = new py.type(function datetime() {
+            throw new Error('datetime.datetime not implemented');
+        });
+        var date = datetime.date = new py.type(function date(y, m, d) {
+            if (y instanceof Array) {
+                d = y[2];
+                m = y[1];
+                y = y[0];
+            }
+            this.year = asJS(y);
+            this.month = asJS(m);
+            this.day = asJS(d);
+        }, py.object, {
+            strftime: function (args) {
+                var f = asJS(args[0]), self = this;
+                return new py.str(f.replace(/%([A-Za-z])/g, function (m, c) {
+                    switch (c) {
+                    case 'Y': return self.year;
+                    case 'm': return _.str.sprintf('%02d', self.month);
+                    case 'd': return _.str.sprintf('%02d', self.day);
+                    }
+                    throw new Error('ValueError: No known conversion for ' + m);
+                }));
+            }
+        });
+        date.__getattribute__ = function (name) {
+            if (name === 'today') {
+                return date.today;
+            }
+            throw new Error("AttributeError: object 'date' has no attribute '" + name +"'");
+        };
+        date.today = new py.def(function () {
+            var d = new Date();
+            return new date(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+        });
+        datetime.time = new py.type(function time() {
+            throw new Error('datetime.time not implemented');
+        });
+
+        var time = new py.object();
+        time.strftime = new py.def(function (args) {
+            return date.today.__call__().strftime(args);
+        });
+
+        var relativedelta = new py.type(function relativedelta(args, kwargs) {
+            if (!_.isEmpty(args)) {
+                throw new Error('Extraction of relative deltas from existing datetimes not supported');
+            }
+            this.ops = kwargs;
+        }, py.object, {
+            __add__: function (other) {
+                if (!(other instanceof datetime.date)) {
+                    return py.NotImplemented;
+                }
+                // TODO: test this whole mess
+                var year = asJS(this.ops.year) || asJS(other.year);
+                if (asJS(this.ops.years)) {
+                    year += asJS(this.ops.years);
+                }
+
+                var month = asJS(this.ops.month) || asJS(other.month);
+                if (asJS(this.ops.months)) {
+                    month += asJS(this.ops.months);
+                    // FIXME: no divmod in JS?
+                    while (month < 1) {
+                        year -= 1;
+                        month += 12;
+                    }
+                    while (month > 12) {
+                        year += 1;
+                        month -= 12;
+                    }
+                }
+
+                var lastMonthDay = new Date(year, month, 0).getDate();
+                var day = asJS(this.ops.day) || asJS(other.day);
+                if (day > lastMonthDay) { day = lastMonthDay; }
+                var days_offset = ((asJS(this.ops.weeks) || 0) * 7) + (asJS(this.ops.days) || 0);
+                if (days_offset) {
+                    day = new Date(year, month-1, day + days_offset).getDate();
+                }
+                // TODO: leapdays?
+                // TODO: hours, minutes, seconds? Not used in XML domains
+                // TODO: weekday?
+                return new datetime.date(year, month, day);
+            },
+            __radd__: function (other) {
+                return this.__add__(other);
+            },
+
+            __sub__: function (other) {
+                if (!(other instanceof datetime.date)) {
+                    return py.NotImplemented;
+                }
+                // TODO: test this whole mess
+                var year = asJS(this.ops.year) || asJS(other.year);
+                if (asJS(this.ops.years)) {
+                    year -= asJS(this.ops.years);
+                }
+
+                var month = asJS(this.ops.month) || asJS(other.month);
+                if (asJS(this.ops.months)) {
+                    month -= asJS(this.ops.months);
+                    // FIXME: no divmod in JS?
+                    while (month < 1) {
+                        year -= 1;
+                        month += 12;
+                    }
+                    while (month > 12) {
+                        year += 1;
+                        month -= 12;
+                    }
+                }
+
+                var lastMonthDay = new Date(year, month, 0).getDate();
+                var day = asJS(this.ops.day) || asJS(other.day);
+                if (day > lastMonthDay) { day = lastMonthDay; }
+                var days_offset = ((asJS(this.ops.weeks) || 0) * 7) + (asJS(this.ops.days) || 0);
+                if (days_offset) {
+                    day = new Date(year, month-1, day - days_offset).getDate();
+                }
+                // TODO: leapdays?
+                // TODO: hours, minutes, seconds? Not used in XML domains
+                // TODO: weekday?
+                return new datetime.date(year, month, day);
+            },
+            __rsub__: function (other) {
+                return this.__sub__(other);
+            }
+        });
+
+        return {
+            uid: new py.float(this.uid),
+            datetime: datetime,
+            time: time,
+            relativedelta: relativedelta
+        };
+    },
+    /**
+     * FIXME: Huge testing hack, especially the evaluation context, rewrite + test for real before switching
+     */
+    test_eval: function (source, expected) {
+        try {
+            var ctx = this.test_eval_contexts(source.contexts);
+            if (!_.isEqual(ctx, expected.context)) {
+                console.group('Local context does not match remote, nothing is broken but please report to R&D (xmo)');
+                console.warn('source', source.contexts);
+                console.warn('local', ctx);
+                console.warn('remote', expected.context);
+                console.groupEnd();
+            }
+        } catch (e) {
+            console.group('Failed to evaluate contexts, nothing is broken but please report to R&D (xmo)');
+            console.error(e);
+            console.log('source', source.contexts);
+            console.groupEnd();
+        }
+
+        try {
+            var dom = this.test_eval_domains(source.domains, this.test_eval_get_context());
+            if (!_.isEqual(dom, expected.domain)) {
+                console.group('Local domain does not match remote, nothing is broken but please report to R&D (xmo)');
+                console.warn('source', source.domains);
+                console.warn('local', dom);
+                console.warn('remote', expected.domain);
+                console.groupEnd();
+            }
+        } catch (e) {
+            console.group('Failed to evaluate domains, nothing is broken but please report to R&D (xmo)');
+            console.error(e);
+            console.log('source', source.domains);
+            console.groupEnd();
+        }
+
+        try {
+            var groups = this.test_eval_groupby(source.group_by_seq);
+            if (!_.isEqual(groups, expected.group_by)) {
+                console.group('Local groupby does not match remote, nothing is broken but please report to R&D (xmo)');
+                console.warn('source', source.group_by_seq);
+                console.warn('local', groups);
+                console.warn('remote', expected.group_by);
+                console.groupEnd();
+            }
+        } catch (e) {
+            console.group('Failed to evaluate groupby, nothing is broken but please report to R&D (xmo)');
+            console.error(e);
+            console.log('source', source.group_by_seq);
+            console.groupEnd();
+        }
+    },
+    test_eval_contexts: function (contexts) {
+        var result_context = _.extend({}, this.user_context),
+            self = this;
+        _(contexts).each(function (ctx) {
+            switch(ctx.__ref) {
+            case 'context':
+                _.extend(result_context, py.eval(ctx.__debug));
+                break;
+            case 'compound_context':
+                _.extend(
+                    result_context, self.test_eval_contexts(ctx.__contexts));
+                break;
+            default:
+                _.extend(result_context, ctx);
+            }
+        });
+        return result_context;
+    },
+    test_eval_domains: function (domains, eval_context) {
+        var result_domain = [], self = this;
+        _(domains).each(function (dom) {
+            switch(dom.__ref) {
+            case 'domain':
+                result_domain.push.apply(
+                    result_domain, py.eval(dom.__debug, eval_context));
+                break;
+            case 'compound_domain':
+                result_domain.push.apply(
+                    result_domain, self.test_eval_domains(
+                            dom.__domains, eval_context));
+                break;
+            default:
+                result_domain.push.apply(
+                    result_domain, dom);
+            }
+        });
+        return result_domain;
+    },
+    test_eval_groupby: function (contexts) {
+        var result_group = [], self = this;
+        _(contexts).each(function (ctx) {
+            var group;
+            switch(ctx.__ref) {
+            case 'context':
+                group = py.eval(ctx.__debug).group_by;
+                break;
+            case 'compound_context':
+                group = self.test_eval_contexts(ctx.__contexts).group_by;
+                break;
+            default:
+                group = ctx.group_by
+            }
+            if (!group) { return; }
+            if (typeof group === 'string') {
+                result_group.push(group);
+            } else if (group instanceof Array) {
+                result_group.push.apply(result_group, group);
+            } else {
+                throw new Error('Got invalid groupby {{'
+                        + JSON.stringify(group) + '}}');
+            }
+        });
+        return result_group;
     },
     /**
      * Executes an RPC call, registering the provided callbacks.
@@ -480,6 +619,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             function (response, textStatus, jqXHR) {
                 self.on_rpc_response();
                 if (!response.error) {
+                    if (url.url === '/web/session/eval_domain_and_context') {
+                        self.test_eval(params, response.result);
+                    }
                     deferred.resolve(response["result"], textStatus, jqXHR);
                 } else if (response.error.data.type === "session_invalid") {
                     self.uid = false;
@@ -733,6 +875,14 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                         var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
                         return self.rpc('/web/webclient/jslist', {mods: to_load}).pipe(function(files) {
                             return self.do_load_js(file_list.concat(files));
+                        }).then(function () {
+                            if (!Date.CultureInfo.pmDesignator) {
+                                // If no am/pm designator is specified but the openerp
+                                // datetime format uses %i, date.js won't be able to
+                                // correctly format a date. See bug#938497.
+                                Date.CultureInfo.amDesignator = 'AM';
+                                Date.CultureInfo.pmDesignator = 'PM';
+                            }
                         });
                     }))
             }
@@ -873,9 +1023,12 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         _(_.extend({}, options.data || {},
                    {session_id: this.session_id, token: token}))
             .each(function (value, key) {
-                $('<input type="hidden" name="' + key + '">')
-                    .val(value)
-                    .appendTo($form_data);
+                var $input = $form.find('[name=' + key +']');
+                if (!$input.length) {
+                    $input = $('<input type="hidden" name="' + key + '">')
+                        .appendTo($form_data);
+                }
+                $input.val(value)
             });
 
         $form
@@ -958,11 +1111,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
  *
  * And of course, when you don't need that widget anymore, just do:
  *
- * my_widget.stop();
+ * my_widget.destroy();
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.Widget# */{
+openerp.web.Widget = nova.Widget.extend(_.extend({}, openerp.web.CallbackEnabledMixin, {
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -971,18 +1124,13 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      */
     template: null,
     /**
-     * Tag name when creating a default $element.
-     * @type string
-     */
-    tag_name: 'div',
-    /**
      * Constructs the widget and sets its parent if a parent is given.
      *
      * @constructs openerp.web.Widget
      * @extends openerp.web.CallbackEnabled
      *
      * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
-     * When that widget is destroyed by calling stop(), the current instance will be
+     * When that widget is destroyed by calling destroy(), the current instance will be
      * destroyed too. Can be null.
      * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
      * to bind the current Widget to an already existing part of the DOM, which is not compatible
@@ -990,132 +1138,24 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      * for new components this argument should not be provided any more.
      */
     init: function(parent) {
-        this._super();
+        this._super(parent);
+        openerp.web.CallbackEnabledMixin.init.call(this);
         this.session = openerp.connection;
-        
-        this.$element = $(document.createElement(this.tag_name));
-
-        this.widget_parent = parent;
-        this.widget_children = [];
-        if(parent && parent.widget_children) {
-            parent.widget_children.push(this);
-        }
-        // useful to know if the widget was destroyed and should not be used anymore
-        this.widget_is_stopped = false;
     },
     /**
-     * Renders the current widget and appends it to the given jQuery object or Widget.
-     *
-     * @param target A jQuery object or a Widget instance.
+     * Renders the element. The default implementation renders the widget using QWeb,
+     * `this.template` must be defined. The context given to QWeb contains the "widget"
+     * key that references `this`.
      */
-    appendTo: function(target) {
-        var self = this;
-        return this._render_and_insert(function(t) {
-            self.$element.appendTo(t);
-        }, target);
-    },
-    /**
-     * Renders the current widget and prepends it to the given jQuery object or Widget.
-     *
-     * @param target A jQuery object or a Widget instance.
-     */
-    prependTo: function(target) {
-        var self = this;
-        return this._render_and_insert(function(t) {
-            self.$element.prependTo(t);
-        }, target);
-    },
-    /**
-     * Renders the current widget and inserts it after to the given jQuery object or Widget.
-     *
-     * @param target A jQuery object or a Widget instance.
-     */
-    insertAfter: function(target) {
-        var self = this;
-        return this._render_and_insert(function(t) {
-            self.$element.insertAfter(t);
-        }, target);
-    },
-    /**
-     * Renders the current widget and inserts it before to the given jQuery object or Widget.
-     *
-     * @param target A jQuery object or a Widget instance.
-     */
-    insertBefore: function(target) {
-        var self = this;
-        return this._render_and_insert(function(t) {
-            self.$element.insertBefore(t);
-        }, target);
-    },
-    /**
-     * Renders the current widget and replaces the given jQuery object.
-     *
-     * @param target A jQuery object or a Widget instance.
-     */
-    replace: function(target) {
-        return this._render_and_insert(_.bind(function(t) {
-            this.$element.replaceAll(t);
-        }, this), target);
-    },
-    _render_and_insert: function(insertion, target) {
-        this.render_element();
-        if (target instanceof openerp.web.Widget)
-            target = target.$element;
-        insertion(target);
-        this.on_inserted(this.$element, this);
-        return this.start();
-    },
-    on_inserted: function(element, widget) {},
-    /**
-     * Renders the element and insert the result of the render() method in this.$element.
-     */
-    render_element: function() {
-        var rendered = this.render();
-        if (rendered) {
+    renderElement: function() {
+        var rendered = null;
+        if (this.template)
+            rendered = openerp.web.qweb.render(this.template, {widget: this});
+        if (_.str.trim(rendered)) {
             var elem = $(rendered);
             this.$element.replaceWith(elem);
             this.$element = elem;
         }
-        return this;
-    },
-    /**
-     * Renders the widget using QWeb, `this.template` must be defined.
-     * The context given to QWeb contains the "widget" key that references `this`.
-     *
-     * @param {Object} additional Additional context arguments to pass to the template.
-     */
-    render: function (additional) {
-        if (this.template)
-            return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
-        return null;
-    },
-    /**
-     * Method called after rendering. Mostly used to bind actions, perform asynchronous
-     * calls, etc...
-     *
-     * By convention, the method should return a promise to inform the caller when
-     * this widget has been initialized.
-     *
-     * @returns {jQuery.Deferred}
-     */
-    start: function() {
-        return $.Deferred().done().promise();
-    },
-    /**
-     * Destroys the current widget, also destroys all its children before destroying itself.
-     */
-    stop: function() {
-        _.each(_.clone(this.widget_children), function(el) {
-            el.stop();
-        });
-        if(this.$element != null) {
-            this.$element.remove();
-        }
-        if (this.widget_parent && this.widget_parent.widget_children) {
-            this.widget_parent.widget_children = _.without(this.widget_parent.widget_children, this);
-        }
-        this.widget_parent = null;
-        this.widget_is_stopped = true;
     },
     /**
      * Informs the action manager to do an action. This supposes that
@@ -1123,37 +1163,36 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      * If that's not the case this method will simply return `false`.
      */
     do_action: function(action, on_finished) {
-        if (this.widget_parent) {
-            return this.widget_parent.do_action(action, on_finished);
+        if (this.getParent()) {
+            return this.getParent().do_action(action, on_finished);
         }
         return false;
     },
     do_notify: function() {
-        if (this.widget_parent) {
-            return this.widget_parent.do_notify.apply(this,arguments);
+        if (this.getParent()) {
+            return this.getParent().do_notify.apply(this,arguments);
         }
         return false;
     },
     do_warn: function() {
-        if (this.widget_parent) {
-            return this.widget_parent.do_warn.apply(this,arguments);
+        if (this.getParent()) {
+            return this.getParent().do_warn.apply(this,arguments);
         }
         return false;
     },
-
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
         openerp.connection.rpc(url, data). then(function() {
-            if (!self.widget_is_stopped)
+            if (!self.isDestroyed())
                 def.resolve.apply(def, arguments);
         }, function() {
-            if (!self.widget_is_stopped)
+            if (!self.isDestroyed())
                 def.reject.apply(def, arguments);
         });
         return def.promise();
     }
-});
+}));
 
 /**
  * @deprecated use :class:`openerp.web.Widget`
@@ -1164,7 +1203,21 @@ openerp.web.OldWidget = openerp.web.Widget.extend({
         this.element_id = element_id;
         this.element_id = this.element_id || _.uniqueId('widget-');
         var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : $(document.createElement(this.tag_name));
+        this.$element = tmp ? $(tmp) : $(document.createElement(this.tagName));
+    },
+    renderElement: function() {
+        var rendered = this.render();
+        if (rendered) {
+            var elem = $(rendered);
+            this.$element.replaceWith(elem);
+            this.$element = elem;
+        }
+        return this;
+    },
+    render: function (additional) {
+        if (this.template)
+            return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+        return null;
     }
 });
 
@@ -1196,7 +1249,7 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
         if (translation_bundle.lang_parameters) {
             this.parameters = translation_bundle.lang_parameters;
             this.parameters.grouping = py.eval(
-                    this.parameters.grouping).toJSON();
+                    this.parameters.grouping);
         }
     },
     add_module_translation: function(mod) {
@@ -1244,7 +1297,7 @@ openerp.web._lt = function (s) {
     return {toString: function () { return openerp.web._t(s); }}
 };
 openerp.web.qweb = new QWeb2.Engine();
-openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
+openerp.web.qweb.debug = ($.deparam($.param.querystring()).debug != undefined);
 openerp.web.qweb.default_dict = {
     '_' : _,
     '_t' : openerp.web._t
@@ -1278,6 +1331,23 @@ openerp.web.qweb.preprocess_node = function() {
             }
     }
 };
+
+/**
+ * A small utility function to check if a class implements correctly an interface, assuming that
+ * interface is simply specified using a dictionary containing methods and attributes with the
+ * correct type. It only performs the check when in debug mode and the only effect of an invalid
+ * check is messages in the console.
+ */
+openerp.web.check_interface = function(_class, _interface) {
+    if (! openerp.web.check_interface.debug)
+        return;
+    for (var member in _interface) {
+        if ( (typeof _class.prototype[member] != typeof _interface[member]) ) {
+            console.error("class failed to implement interface member '" + member + "'");
+        }
+    }
+}
+openerp.web.check_interface.debug = ($.deparam($.param.querystring()).debug != undefined);
 
 /** Jquery extentions */
 $.Mutex = (function() {

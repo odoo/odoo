@@ -32,6 +32,8 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
         this.hidden = !!hidden;
         this.headless = this.hidden && !this.has_defaults;
 
+        this.filter_data = {};
+
         this.ready = $.Deferred();
     },
     start: function() {
@@ -232,7 +234,7 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
             context.add({"group_by": groupbys});
             var dial_html = QWeb.render("SearchView.managed-filters.add");
             var $dial = $(dial_html);
-            $dial.dialog({
+            openerp.web.dialog($dial, {
                 modal: true,
                 title: _t("Filter Entry"),
                 buttons: [
@@ -263,10 +265,20 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
             var filter = this.managed_filters[val];
             this.do_clear(false).then(_.bind(function() {
                 select.val('get:' + val);
-                var groupbys = _.map(filter.context.group_by.split(","), function(el) {
-                    return {"group_by": el};
-                });
-                this.on_search([filter.domain], [filter.context], groupbys);
+
+                var groupbys = [];
+                var group_by = filter.context.group_by;
+                if (group_by) {
+                    groupbys = _.map(
+                        group_by instanceof Array ? group_by : group_by.split(','),
+                        function (el) { return { group_by: el }; });
+                }
+                this.filter_data = {
+                    domains: [filter.domain],
+                    contexts: [filter.context],
+                    groupbys: groupbys
+                };
+                this.do_search();
             }, this));
         } else {
             select.val('');
@@ -281,7 +293,7 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
                 selected_menu_id : menu.$element.find('a.active').data('menu')
             }));
         $dialog.find('input').val(this.fields_view.name);
-        $dialog.dialog({
+        openerp.web.dialog($dialog, {
             modal: true,
             title: _t("Add to Dashboard"),
             buttons: [
@@ -303,10 +315,10 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
                     });
                     self.rpc('/web/searchview/add_to_dashboard', {
                         menu_id: menu_id,
-                        action_id: self.widget_parent.action.id,
+                        action_id: self.getParent().action.id,
                         context_to_save: context,
                         domain: domain,
-                        view_mode: self.widget_parent.active_view,
+                        view_mode: self.getParent().active_view,
                         name: title
                     }, function(r) {
                         if (r === false) {
@@ -334,9 +346,6 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
         if (this.headless && !this.has_defaults) {
             return this.on_search([], [], []);
         }
-        // reset filters management
-        var select = this.$element.find(".oe_search-view-filters-management");
-        select.val("_filters");
 
         if (e && e.preventDefault) { e.preventDefault(); }
 
@@ -380,6 +389,16 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
                 .map(function (filter) { return filter.get_context();})
                 .compact()
                 .value();
+
+        if (this.filter_data.contexts) {
+            contexts = this.filter_data.contexts.concat(contexts)
+        }
+        if (this.filter_data.domains) {
+            domains = this.filter_data.domains.concat(domains);
+        }
+        if (this.filter_data.groupbys) {
+            groupbys = this.filter_data.groupbys.concat(groupbys);
+        }
         return {domains: domains, contexts: contexts, errors: errors, groupbys: groupbys};
     },
     /**
@@ -418,6 +437,9 @@ openerp.web.SearchView = openerp.web.OldWidget.extend(/** @lends openerp.web.Sea
      * @param {Boolean} [reload_view=true]
      */
     do_clear: function (reload_view) {
+        this.filter_data = {};
+        this.$element.find(".oe_search-view-filters-management").val('');
+
         this.$element.find('.filter_label, .filter_icon').removeClass('enabled');
         this.enabled_filters.splice(0);
         var string = $('a.searchview_group_string');
@@ -552,7 +574,7 @@ openerp.web.search.Widget = openerp.web.OldWidget.extend( /** @lends openerp.web
      * "Stops" the widgets. Called when the view destroys itself, this
      * lets the widgets clean up after themselves.
      */
-    stop: function () {
+    destroy: function () {
         delete this.view;
         this._super();
     },
@@ -1114,7 +1136,7 @@ openerp.web.search.ExtendedSearch = openerp.web.search.Input.extend({
         if(this.$element.closest("table.oe-searchview-render-line").css("display") == "none") {
             return null;
         }
-        return _.reduce(this.widget_children,
+        return _.reduce(this.getChildren(),
             function(mem, x) { return mem.concat(x.get_domain());}, []);
     },
     on_activate: function() {
@@ -1133,9 +1155,9 @@ openerp.web.search.ExtendedSearch = openerp.web.search.Input.extend({
         }
     },
     check_last_element: function() {
-        _.each(this.widget_children, function(x) {x.set_last_group(false);});
-        if (this.widget_children.length >= 1) {
-            this.widget_children[this.widget_children.length - 1].set_last_group(true);
+        _.each(this.getChildren(), function(x) {x.set_last_group(false);});
+        if (this.getChildren().length >= 1) {
+            this.getChildren()[this.getChildren().length - 1].set_last_group(true);
         }
     }
 });
@@ -1148,7 +1170,7 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
     },
     add_prop: function() {
         var prop = new openerp.web.search.ExtendedSearchProposition(this, this.fields);
-        var render = prop.render({'index': this.widget_children.length - 1});
+        var render = prop.render({'index': this.getChildren().length - 1});
         this.$element.find('.searchview_extended_propositions_list').append(render);
         prop.start();
     },
@@ -1159,11 +1181,11 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
             _this.add_prop();
         });
         this.$element.find('.searchview_extended_delete_group').click(function () {
-            _this.stop();
+            _this.destroy();
         });
     },
     get_domain: function() {
-        var props = _(this.widget_children).chain().map(function(x) {
+        var props = _(this.getChildren()).chain().map(function(x) {
             return x.get_proposition();
         }).compact().value();
         var choice = this.$element.find(".searchview_extended_group_choice").val();
@@ -1172,10 +1194,10 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
             _.map(_.range(_.max([0,props.length - 1])), function() { return op; }),
             props);
     },
-    stop: function() {
-        var parent = this.widget_parent;
-        if (this.widget_parent.widget_children.length == 1)
-            this.widget_parent.hide();
+    destroy: function() {
+        var parent = this.getParent();
+        if (this.getParent().getChildren().length == 1)
+            this.getParent().hide();
         this._super();
         parent.check_last_element();
     },
@@ -1210,16 +1232,16 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
             _this.changed();
         });
         this.$element.find('.searchview_extended_delete_prop').click(function () {
-            _this.stop();
+            _this.destroy();
         });
     },
-    stop: function() {
+    destroy: function() {
         var parent;
-        if (this.widget_parent.widget_children.length == 1)
-            parent = this.widget_parent;
+        if (this.getParent().getChildren().length == 1)
+            parent = this.getParent();
         this._super();
         if (parent)
-            parent.stop();
+            parent.destroy();
     },
     changed: function() {
         var nval = this.$element.find(".searchview_extended_prop_field").val();
@@ -1235,7 +1257,7 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
     select_field: function(field) {
         var self = this;
         if(this.attrs.selected != null) {
-            this.value.stop();
+            this.value.destroy();
             this.value = null;
             this.$element.find('.searchview_extended_prop_op').html('');
         }

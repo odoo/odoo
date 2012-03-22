@@ -9,5 +9,5 @@
     "depends": [],
     "js": ["static/src/js/*.js"],
     "css": ['static/src/css/*.css'],
-    'active': True,
+    'auto_install': True,
 }

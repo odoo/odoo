@@ -9,6 +9,6 @@
     "depends": [],
     "js": ["static/*/*.js", "static/*/js/*.js"],
     "css": [],
-    'active': False,
+    'auto_install': False,
     'web_preload': False,
 }

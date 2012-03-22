@@ -139,7 +139,7 @@ openerp.web.list_editable = function (openerp) {
             }
             cancelled.then(function () {
                 self.view.unpad_columns();
-                self.edition_form.stop();
+                self.edition_form.destroy();
                 self.edition_form.$element.remove();
                 delete self.edition_form;
                 delete self.edition_id;
@@ -235,26 +235,16 @@ openerp.web.list_editable = function (openerp) {
                 }
                 self.edition = true;
                 self.edition_id = record_id;
-                self.edition_form = _.extend(new openerp.web.ListEditableFormView(self.view, self.dataset, false), {
-                    form_template: 'ListView.row.form',
-                    registry: openerp.web.list.form.widgets,
-                    $element: $new_row
-                });
-                // HA HA
-                self.edition_form.appendTo();
+                self.edition_form = new openerp.web.ListEditableFormView(self.view, self.dataset, false);
+                self.edition_form.$element = $new_row;
+                self.edition_form.editable_list = self;
+                // HO HO
+                // empty
                 $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
                     // put in $.when just in case  FormView.on_loaded becomes asynchronous
                     $new_row.find('> td')
-                          .addClass('oe-field-cell')
-                          .removeAttr('width')
                       .end()
                       .find('td:last').removeClass('oe-field-cell').end();
-                    if (self.options.selectable) {
-                        $new_row.prepend('<th>');
-                    }
-                    if (self.options.isClarkGable) {
-                        $new_row.prepend('<th>');
-                    }
                     // pad in case of groupby
                     _(self.columns).each(function (column) {
                         if (column.meta) {
@@ -383,7 +373,7 @@ openerp.web.list_editable = function (openerp) {
         openerp.web.list.form = {};
     }
     openerp.web.list.form.WidgetFrame = openerp.web.form.WidgetFrame.extend({
-        template: 'ListView.row.frame'
+        form_template: 'ListView.row.frame'
     });
     var form_widgets = openerp.web.form.widgets;
     openerp.web.list.form.widgets = form_widgets.extend({
@@ -418,9 +408,10 @@ openerp.web.list_editable = function (openerp) {
     });
     
     openerp.web.ListEditableFormView = openerp.web.FormView.extend({
-        init_view: function() {},
-        _render_and_insert: function () {
-            return this.start();
-        }
+        form_template: 'ListView.row.form',
+        init: function() {
+        	this._super.apply(this, arguments);
+        	this.registry = openerp.web.list.form.widgets;
+        },
     });
 };

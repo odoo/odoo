@@ -12,7 +12,7 @@ openerp.web_process = function (openerp) {
         },
         process_check: function() {
             var self = this,
-            grandparent = this.widget_parent && this.widget_parent.widget_parent,
+            grandparent = this.getParent() && this.getParent().getParent(),
             view = this.views[this.views_src[0].view_type],
             $process_view = this.$element.find('.oe-process-view');
             if (!(grandparent instanceof openerp.web.WebClient) ||
@@ -128,7 +128,7 @@ openerp.web_process = function (openerp) {
             this.$element.find('#edit_process').click(function() {
                 self.edit_process_view();
             });
-            var $parent = this.widget_parent.$element;
+            var $parent = this.getParent().$element;
             $parent.find('#change_process').click(function() {
                 self.process_selection = false,
                 self.process_id = $parent.find('#select_process').val(),

@@ -148,7 +148,7 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             if (typeof(value) == "string")
                 value = openerp.web.auto_str_to_date(value);
             return value.toString(normalize_format(l10n.time_format));
-        case 'selection':
+        case 'selection': case 'statusbar':
             // Each choice is [value, label]
             if(_.isArray(value)) {
                  value = value[0]
@@ -336,7 +336,7 @@ openerp.web.format_cell = function (row_data, column, options) {
     case 'progressbar':
         return _.template(
             '<progress value="<%-value%>" max="100"><%-value%>%</progress>', {
-                value: row_data[column.id].value
+                value: _.str.sprintf("%.0f", row_data[column.id].value || 0)
             });
     }
 

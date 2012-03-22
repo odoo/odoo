@@ -96,7 +96,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (this._limit === undefined) {
             this._limit = (this.options.limit
                         || this.defaults.limit
-                        || (this.widget_parent.action || {}).limit
+                        || (this.getParent().action || {}).limit
                         || 80);
         }
         return this._limit;
@@ -158,7 +158,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             var pair = this.colors[i],
                 color = pair[0],
                 expression = pair[1];
-            if (py.evaluate(expression, _.extend({bool: py.bool}, context))) {
+            if (py.evaluate(expression, context).toJSON()) {
                 return 'color: ' + color + ';';
             }
             // TODO: handle evaluation errors
@@ -291,7 +291,10 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      */
     configure_pager: function (dataset) {
         this.dataset.ids = dataset.ids;
-        this.dataset._length = dataset._length;
+        // Not exactly clean
+        if (dataset._length) {
+            this.dataset._length = dataset._length;
+        }
 
         var limit = this.limit(),
             total = dataset.size(),
@@ -360,7 +363,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 _(this.fields_view.arch.children).map(field_to_column));
         if (grouped) {
             this.columns.unshift({
-                id: '_group', tag: '', string: "Group", meta: true,
+                id: '_group', tag: '', string: _t("Group"), meta: true,
                 modifiers_for: function () { return {}; }
             }, {
                 id: '_count', tag: '', string: '#', meta: true,
@@ -541,19 +544,17 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Array} records selected record values
      */
     do_select: function (ids, records) {
-        this.$element.find('.oe-list-delete')
-            .attr('disabled', !ids.length);
-        if (this.sidebar) {
-            if (ids.length) {
-                this.sidebar.do_unfold();
-            } else {
-                this.sidebar.do_fold();
-            }
-        }
-        if (!records.length) {
+        this.$element.find('.oe-list-delete').attr('disabled', !ids.length);
+        if (!ids.length) {
+            this.dataset.index = 0;
+            if (this.sidebar) { this.sidebar.do_fold(); }
             this.compute_aggregates();
             return;
         }
+
+        this.dataset.index = _(this.dataset.ids).indexOf(ids[0]);
+        if (this.sidebar) { this.sidebar.do_unfold(); }
+
         this.compute_aggregates(_(records).map(function (record) {
             return {count: 1, values: record};
         }));
@@ -1260,9 +1261,11 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     if (column.meta) {
                         // do not do anything
                     } else if (column.id in group.aggregates) {
-                        var value = group.aggregates[column.id];
+                        var r = {};
+                        r[column.id] = {value: group.aggregates[column.id]};
                         $('<td class="oe-number">')
-                            .html(openerp.web.format_value(value, column))
+                            .html(openerp.web.format_cell(
+                                r, column, {process_modifiers: false}))
                             .appendTo($row);
                     } else {
                         $row.append('<td>');

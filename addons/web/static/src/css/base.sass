@@ -1,0 +1,330 @@
+// Variables {{{
+$colour4: #8a89ba
+//$colour4: #d14836
+// }}}
+
+// Mixins {{{
+@mixin vertical-gradient($startColor: #555, $endColor: #333)
+    background-color: $startColor
+    background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(top, $startColor, $endColor) /* Chrome 10+, Saf5.1+, iOS 5+ */
+    background-image:    -moz-linear-gradient(top, $startColor, $endColor) /* FF3.6 */
+    background-image:     -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
+    background-image:      -o-linear-gradient(top, $startColor, $endColor) /* Opera 11.10+ */
+    background-image:         linear-gradient(to bottom, $startColor, $endColor)
+
+
+@mixin radial-gradient($gradient)
+    background-position: center center
+    background-image: -webkit-radial-gradient(circle, $gradient)
+    background-image: -moz-radial-gradient($gradient)
+    background-image: -ms-radial-gradient($gradient)
+    background-image: radial-gradient($gradient)
+
+@mixin radius($radius: 5px)
+    -moz-border-radius: $radius
+    -webkit-border-radius: $radius
+    border-radius: $radius
+
+@mixin box-shadow($bsval: 0px 1px 4px #777)
+    -moz-box-shadow: $bsval
+    -webkit-box-shadow: $bsval
+    -box-shadow: $bsval
+
+@mixin transition($transval: (border linear 0.2s, box-shadow linear 0.2s))
+    -webkit-transition: $transval
+    -moz-transition: $transval
+    -ms-transition: $transval
+    -o-transition: $transval
+    transition: $transval
+
+@mixin opacity($opacity: .5)
+    filter: alpha(opacity=$opacity * 100)
+    opacity: $opacity
+
+@mixin background-clip($clip: padding-box)
+    -webkit-background-clip: $clip
+    -moz-background-clip: $clip
+    background-clip: $clip
+// }}}
+
+.openerp2
+    // Common styles {{{
+    padding: 0
+    margin: 0
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    color: #4c4c4c
+    font-size: 13px
+    background: white
+    position: relative
+
+    a
+        text-decoration: none
+    // }}}
+
+    // WebClient {{{
+    .oe_webclient
+        position: absolute
+        top: 0
+        bottom: 0
+        left: 0
+        right: 0
+
+        .oe_application
+            position: absolute
+            top: 32px
+            bottom: 0
+            left: 206px
+            right: 0
+    // }}}
+
+    // Fullscreen mode {{{
+    .oe_content_full_screen
+        .oe_application
+            top: 0
+            left: 0
+        .topbar, .leftbar
+            display: none
+    // }}
+
+    // Topbar {{{
+    .oe_topbar
+        width: 100%
+        height: 31px
+        border-top: solid 1px #d3d3d3
+        border-bottom: solid 1px black
+        @include vertical-gradient(#646060, #262626)
+
+        .oe_systray
+            float: right
+        .oe_systray > div
+            float: left
+            padding: 0 4px 0 4px
+
+        .oe_topbar_item
+            li
+                float: left
+                a
+                    display: block
+                    padding: 5px 10px 7px
+                    line-height: 20px
+                    height: 20px
+                    color: #eee
+                    vertical-align: top
+                    text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+                    &:hover
+                        background: #303030
+                        color: white
+                        @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+            .oe_active
+                background: #303030
+                font-weight: bold
+                color: white
+                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+
+        .oe_topbar_avatar
+            width: 24px
+            height: 24px
+            margin: -2px 2px 0 0
+            @include radius(4px)
+        .oe_topbar_avatar
+            vertical-align: top
+    // }}}
+
+    // Leftbar {{{
+    .oe_leftbar
+        width: 205px
+        height: 100%
+        background: #f0eeee
+        border-right: 1px solid #afafb6
+        overflow: auto
+        text-shadow: 0 1px 1px white
+
+        .oe_footer
+            position: absolute
+            width: 205px
+            text-align: center
+            bottom: 8px
+    a.oe_logo
+        display: block
+        text-align: center
+        height: 70px
+        line-height: 70px
+        img
+            height: 40px
+            width: 157px
+            margin: 14px 0
+    .oe_footer
+        position: absolute
+        width: 205px
+        text-align: center
+        bottom: 8px
+        a
+            font-weight: 800
+            font-family: serif
+            font-size: 16px
+            color: black
+            span
+                color: #c81010
+                font-style: italic
+    // }}}
+
+    // Menu {{{
+    .oe_menu
+        float: left
+        padding: 0
+        margin: 0
+        li
+            list-style-type: none
+            float: left
+        a
+            display: block
+            padding: 5px 10px 7px
+            line-height: 20px
+            height: 20px
+            color: #eee
+            vertical-align: top
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+            &:hover
+                background: #303030
+                color: white
+                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+        .oe_active
+            background: #303030
+            font-weight: bold
+            color: white
+            @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+    .oe_secondary_menu_section
+        font-weight: bold
+        margin-left: 8px
+        color: $colour4
+    .oe_secondary_submenu
+        padding: 2px 0 8px 0
+        margin: 0
+        width: 100%
+        display: inline-block
+        li
+            position: relative
+            padding: 1px 0 1px 16px
+            list-style-type: none
+            a
+                display: block
+                color: #4c4c4c
+                padding: 2px 4px 2px 0
+            .oe_menu_label
+                position: absolute
+                top: 1px
+                right: 1px
+                font-size: 10px
+                background: $colour4
+                color: white
+                padding: 2px 4px
+                margin: 1px 6px 0 0
+                border: 1px solid lightGray
+                text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+                @include radius(4px)
+                @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
+        .oe_active
+            background: $colour4
+            border-top: 1px solid lightGray
+            border-bottom: 1px solid lightGray
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+            @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
+            a
+                color: white
+            .oe_menu_label
+                background: #eee
+                color: $colour4
+                text-shadow: 0 1px 1px white
+                @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.2))
+        .oe_menu_toggler:before
+            width: 0
+            height: 0
+            display: inline-block
+            content: "&darr"
+            text-indent: -99999px
+            vertical-align: top
+            margin-left: -8px
+            margin-top: 4px
+            margin-right: 4px
+            border-top: 4px solid transparent
+            border-bottom: 4px solid transparent
+            border-left: 4px solid #4c4c4c
+            @include opacity(0.5)
+        .oe_menu_opened:before
+            margin-top: 6px
+            margin-left: -12px
+            margin-right: 4px
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid #4c4c4c
+    // }}}
+
+    // UserMenu {{{
+    .oe_user_menu
+        float: right
+        padding: 0
+        margin: 0
+        li
+            list-style-type: none
+            float: left
+        .oe_dropdown
+            position: relative
+
+        .oe_dropdown_toggle:after
+            width: 0
+            height: 0
+            display: inline-block
+            content: "&darr"
+            text-indent: -99999px
+            vertical-align: top
+            margin-top: 8px
+            margin-left: 4px
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid white
+            @include opacity(0.5)
+
+        .oe_dropdown_options
+            float: left
+            background: #333
+            background: rgba(37,37,37,0.9)
+            display: none
+            position: absolute
+            top: 32px
+            right: -1px
+            border: 0
+            z-index: 900
+            margin-left: 0
+            margin-right: 0
+            padding: 6px 0
+            zoom: 1
+            border-color: #999
+            border-color: rgba(0, 0, 0, 0.2)
+            border-style: solid
+            border-width: 0 1px 1px
+            @include radius(0 0 6px 6px)
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+            @include background-clip()
+            li
+                float: none
+                display: block
+                background-color: none
+                a
+                    display: block
+                    padding: 4px 15px
+                    clear: both
+                    font-weight: normal
+                    line-height: 18px
+                    color: #eee
+                    &:hover
+                        @include vertical-gradient(#292929, #191919)
+                        @include box-shadow(none)
+    // }}}
+
+.openerp
+    // Transitional overrides for old styles {{{
+    // }}}
+
+// au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
+// vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

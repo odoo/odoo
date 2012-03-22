@@ -98,18 +98,71 @@ html_template = """<!DOCTYPE html>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title>OpenERP</title>
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+        <link rel="stylesheet" href="/web/static/src/css/full.css" />
         %(css)s
         %(js)s
         <script type="text/javascript">
             $(function() {
                 var s = new openerp.init(%(modules)s);
-                %(init)s
+                var wc = new s.web.WebClient();
+                wc.appendTo($(document.body));
             });
         </script>
     </head>
-    <body class="openerp" id="oe"></body>
+    <body></body>
 </html>
 """
+
+def sass2scss(src):
+    # Validated by diff -u of sass2scss against:
+    # sass-convert -F sass -T scss openerp.sass openerp.scss
+    block = []
+    sass = ('', block)
+    reComment = re.compile(r'//.*$')
+    reIndent = re.compile(r'^\s+')
+    reIgnore = re.compile(r'^\s*(//.*)?$')
+    reFixes = { re.compile(r'\(\((.*)\)\)') : r'(\1)', }
+    lastLevel = 0
+    prevBlocks = {}
+    for l in src.split('\n'):
+        l = l.rstrip()
+        if reIgnore.search(l): continue
+        l = reComment.sub('', l)
+        l = l.rstrip()
+        indent = reIndent.match(l)
+        level = indent.end() if indent else 0
+        l = l[level:]
+        if level>lastLevel:
+            prevBlocks[lastLevel] = block
+            newBlock = []
+            block[-1] = (block[-1], newBlock)
+            block = newBlock
+        elif level<lastLevel:
+            block = prevBlocks[level]
+        lastLevel = level
+        if not l: continue
+        # Fixes
+        for ereg, repl in reFixes.items():
+            l = ereg.sub(repl if type(repl)==str else repl(), l)
+        block.append(l)
+
+    def write(sass, level=-1):
+        out = ""
+        indent = '  '*level
+        if type(sass)==tuple:
+            if level>=0:
+                out += indent+sass[0]+" {\n"
+            for e in sass[1]:
+                out += write(e, level+1)
+            if level>=0:
+                out = out.rstrip(" \n")
+                out += ' }\n'
+            if level==0:
+                out += "\n"
+        else:
+            out += indent+sass+";\n"
+        return out
+    return write(sass)
 
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
@@ -270,7 +323,6 @@ class WebClient(openerpweb.Controller):
             'js': js,
             'css': css,
             'modules': simplejson.dumps(self.server_wide_modules(req)),
-            'init': 'new s.web.WebClient().start();',
         }
         return r
 
@@ -351,19 +403,14 @@ class Database(openerpweb.Controller):
     def get_list(self, req):
         proxy = req.session.proxy("db")
         dbs = proxy.list()
-        h = req.httprequest.headers['Host'].split(':')[0]
+        h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
         d = h.split('.')[0]
         r = req.config.dbfilter.replace('%h', h).replace('%d', d)
         dbs = [i for i in dbs if re.match(r, i)]
         return {"db_list": dbs}
 
     @openerpweb.jsonrequest
-    def progress(self, req, password, id):
-        return req.session.proxy('db').get_progress(password, id)
-
-    @openerpweb.jsonrequest
     def create(self, req, fields):
-
         params = dict(map(operator.itemgetter('name', 'value'), fields))
         create_attrs = (
             params['super_admin_pwd'],
@@ -373,17 +420,7 @@ class Database(openerpweb.Controller):
             params['create_admin_pwd']
         )
 
-        try:
-            return req.session.proxy("db").create(*create_attrs)
-        except xmlrpclib.Fault, e:
-            if e.faultCode and isinstance(e.faultCode, str)\
-                and e.faultCode.split(':')[0] == 'AccessDenied':
-                    return {'error': e.faultCode, 'title': 'Database creation error'}
-            return {
-                'error': "Could not create database '%s': %s" % (
-                    params['db_name'], e.faultString),
-                'title': 'Database creation error'
-            }
+        return req.session.proxy("db").create_database(*create_attrs)
 
     @openerpweb.jsonrequest
     def drop(self, req, fields):
@@ -434,6 +471,50 @@ class Database(openerpweb.Controller):
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return {'error': e.faultCode, 'title': 'Change Password'}
         return {'error': 'Error, password not changed !', 'title': 'Change Password'}
+
+def topological_sort(modules):
+    """ Return a list of module names sorted so that their dependencies of the
+    modules are listed before the module itself
+
+    modules is a dict of {module_name: dependencies}
+
+    :param modules: modules to sort
+    :type modules: dict
+    :returns: list(str)
+    """
+
+    dependencies = set(itertools.chain.from_iterable(modules.itervalues()))
+    # incoming edge: dependency on other module (if a depends on b, a has an
+    # incoming edge from b, aka there's an edge from b to a)
+    # outgoing edge: other module depending on this one
+
+    # [Tarjan 1976], http://en.wikipedia.org/wiki/Topological_sorting#Algorithms
+    #L ← Empty list that will contain the sorted nodes
+    L = []
+    #S ← Set of all nodes with no outgoing edges (modules on which no other
+    #    module depends)
+    S = set(module for module in modules if module not in dependencies)
+
+    visited = set()
+    #function visit(node n)
+    def visit(n):
+        #if n has not been visited yet then
+        if n not in visited:
+            #mark n as visited
+            visited.add(n)
+            #change: n not web module, can not be resolved, ignore
+            if n not in modules: return
+            #for each node m with an edge from m to n do (dependencies of n)
+            for m in modules[n]:
+                #visit(m)
+                visit(m)
+            #add n to L
+            L.append(n)
+    #for each node n in S do
+    for n in S:
+        #visit(n)
+        visit(n)
+    return L
 
 class Session(openerpweb.Controller):
     _cp_path = "/web/session"
@@ -502,20 +583,32 @@ class Session(openerpweb.Controller):
     def modules(self, req):
         # Compute available candidates module
         loadable = openerpweb.addons_manifest
-        loaded = req.config.server_wide_modules
+        loaded = set(req.config.server_wide_modules)
         candidates = [mod for mod in loadable if mod not in loaded]
 
-        # Compute active true modules that might be on the web side only
-        active = set(name for name in candidates
-                     if openerpweb.addons_manifest[name].get('active'))
+        # already installed modules have no dependencies
+        modules = dict.fromkeys(loaded, [])
+
+        # Compute auto_install modules that might be on the web side only
+        modules.update((name, openerpweb.addons_manifest[name].get('depends', []))
+                      for name in candidates
+                      if openerpweb.addons_manifest[name].get('auto_install'))
 
         # Retrieve database installed modules
         Modules = req.session.model('ir.module.module')
-        installed = set(module['name'] for module in Modules.search_read(
-            [('state','=','installed'), ('name','in', candidates)], ['name']))
+        for module in Modules.search_read(
+                        [('state','=','installed'), ('name','in', candidates)],
+                        ['name', 'dependencies_id']):
+            deps = module.get('dependencies_id')
+            if deps:
+                dependencies = map(
+                    operator.itemgetter('name'),
+                    req.session.model('ir.module.module.dependency').read(deps, ['name']))
+                modules[module['name']] = list(
+                    set(modules.get(module['name'], []) + dependencies))
 
-        # Merge both
-        return list(active | installed)
+        sorted_modules = topological_sort(modules)
+        return [module for module in sorted_modules if module not in loaded]
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
@@ -762,11 +855,13 @@ class Menu(openerpweb.Controller):
         Menus = s.model('ir.ui.menu')
         # If a menu action is defined use its domain to get the root menu items
         user_menu_id = s.model('res.users').read([s._uid], ['menu_id'], context)[0]['menu_id']
+
+        menu_domain = [('parent_id', '=', False)]
         if user_menu_id:
-            menu_domain = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'], context)[0]['domain']
-            menu_domain = ast.literal_eval(menu_domain)
-        else:
-            menu_domain = [('parent_id', '=', False)]
+            domain_string = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'], context)[0]['domain']
+            if domain_string:
+                menu_domain = ast.literal_eval(domain_string)
+
         return Menus.search(menu_domain, 0, False, False, context)
 
     def do_load(self, req):
@@ -780,13 +875,13 @@ class Menu(openerpweb.Controller):
         context = req.session.eval_context(req.context)
         Menus = req.session.model('ir.ui.menu')
 
-        menu_roots = Menus.read(self.do_get_user_roots(req), ['name', 'sequence', 'parent_id'], context)
+        menu_roots = Menus.read(self.do_get_user_roots(req), ['name', 'sequence', 'parent_id', 'action'], context)
         menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, ''], 'children' : menu_roots}
 
         # menus are loaded fully unlike a regular tree view, cause there are a
         # limited number of items (752 when all 6.1 addons are installed)
         menu_ids = Menus.search([], 0, False, False, context)
-        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'], context)
+        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id', 'action'], context)
         # adds roots at the end of the sequence, so that they will overwrite
         # equivalent menu items from full menu read when put into id:item
         # mapping, resulting in children being correctly set on the roots.
@@ -1179,10 +1274,15 @@ class SearchView(View):
         filters = Model.get_filters(model)
         for filter in filters:
             try:
-                filter["context"] = req.session.eval_context(
-                    parse_context(filter["context"], req.session))
-                filter["domain"] = req.session.eval_domain(
-                    parse_domain(filter["domain"], req.session))
+                parsed_context = parse_context(filter["context"], req.session)
+                filter["context"] = (parsed_context
+                        if not isinstance(parsed_context, common.nonliterals.BaseContext)
+                        else req.session.eval_context(parsed_context))
+
+                parsed_domain = parse_domain(filter["domain"], req.session)
+                filter["domain"] = (parsed_domain
+                        if not isinstance(parsed_domain, common.nonliterals.BaseDomain)
+                        else req.session.eval_domain(parsed_domain))
             except Exception:
                 logger.exception("Failed to parse custom filter %s in %s",
                                  filter['name'], model)
@@ -1215,6 +1315,7 @@ class SearchView(View):
         ctx = common.nonliterals.CompoundContext(context_to_save)
         ctx.session = req.session
         ctx = ctx.evaluate()
+        ctx['dashboard_merge_domains_contexts'] = False # TODO: replace this 6.1 workaround by attribute on <action/>
         domain = common.nonliterals.CompoundDomain(domain)
         domain.session = req.session
         domain = domain.evaluate()
@@ -1230,7 +1331,7 @@ class SearchView(View):
                 if board and 'arch' in board:
                     xml = ElementTree.fromstring(board['arch'])
                     column = xml.find('./board/column')
-                    if column:
+                    if column is not None:
                         new_action = ElementTree.Element('action', {
                                 'name' : str(action_id),
                                 'string' : name,

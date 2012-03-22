@@ -30,31 +30,31 @@ session.web.ActionManager = session.web.OldWidget.extend({
     },
     dialog_stop: function () {
         if (this.dialog) {
-            this.dialog_viewmanager.stop();
+            this.dialog_viewmanager.destroy();
             this.dialog_viewmanager = null;
-            this.dialog.stop();
+            this.dialog.destroy();
             this.dialog = null;
         }
     },
     content_stop: function () {
         if (this.inner_viewmanager) {
-            this.inner_viewmanager.stop();
+            this.inner_viewmanager.destroy();
             this.inner_viewmanager = null;
         }
         if (this.client_widget) {
-            this.client_widget.stop();
+            this.client_widget.destroy();
             this.client_widget = null;
         }
     },
     do_push_state: function(state) {
-        if (this.widget_parent && this.widget_parent.do_push_state) {
+        if (this.getParent() && this.getParent().do_push_state) {
             if (this.inner_action) {
                 state['model'] = this.inner_action.res_model;
                 if (this.inner_action.id) {
                     state['action_id'] = this.inner_action.id;
                 }
             }
-            this.widget_parent.do_push_state(state);
+            this.getParent().do_push_state(state);
         }
     },
     do_load_state: function(state, warm) {
@@ -65,6 +65,9 @@ session.web.ActionManager = session.web.OldWidget.extend({
             if (run_action) {
                 this.null_action();
                 action_loaded = this.do_action(state.action_id);
+                session.webclient.menu.has_been_loaded.then(function() {
+                    session.webclient.menu.open_action(state.action_id);
+                });
             }
         } else if (state.model && state.id) {
             // TODO handle context & domain ?
@@ -142,7 +145,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
                 if(on_close)
                     this.dialog.on_close.add(on_close);
             } else {
-                this.dialog_viewmanager.stop();
+                this.dialog_viewmanager.destroy();
             }
             this.dialog.dialog_title = action.name;
             this.dialog_viewmanager = new session.web.ViewManagerAction(this, action);
@@ -150,7 +153,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
             this.dialog.open();
         } else  {
             if(action.menu_id) {
-                return this.widget_parent.do_action(action, function () {
+                return this.getParent().do_action(action, function () {
                     session.webclient.menu.open_menu(action.menu_id);
                 });
             }
@@ -180,7 +183,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
         this.content_stop();
         this.dialog_stop();
         var ClientWidget = session.web.client_actions.get_object(action.tag);
-        (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
+        (this.client_widget = new ClientWidget(this, action.params)).appendTo(this.$element);
     },
     ir_actions_report_xml: function(action, on_closed) {
         var self = this;
@@ -209,7 +212,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
         window.open(action.url, action.target === 'self' ? '_self' : '_blank');
     },
     ir_ui_menu: function (action) {
-        this.widget_parent.do_action(action);
+        this.getParent().do_action(action);
     }
 });
 
@@ -385,7 +388,7 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
     setup_search_view: function(view_id, search_defaults) {
         var self = this;
         if (this.searchview) {
-            this.searchview.stop();
+            this.searchview.destroy();
         }
         this.searchview = new session.web.SearchView(
                 this, this.dataset,
@@ -408,6 +411,9 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
             var groupby = results.group_by.length
                         ? results.group_by
                         : action_context.group_by;
+            if (_.isString(groupby)) {
+                groupby = [groupby];
+            }
             controller.do_search(results.domain, results.context, groupby || []);
         });
     },
@@ -680,9 +686,9 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         });
     },
     do_push_state: function(state) {
-        if (this.widget_parent && this.widget_parent.do_push_state) {
+        if (this.getParent() && this.getParent().do_push_state) {
             state["view_type"] = this.active_view;
-            this.widget_parent.do_push_state(state);
+            this.getParent().do_push_state(state);
         }
     },
     do_load_state: function(state, warm) {
@@ -702,7 +708,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
     },
     shortcut_check : function(view) {
         var self = this;
-        var grandparent = this.widget_parent && this.widget_parent.widget_parent;
+        var grandparent = this.getParent() && this.getParent().getParent();
         // display shortcuts if on the first view for the action
         var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
         if (!this.action.name ||
@@ -796,8 +802,8 @@ session.web.Sidebar = session.web.OldWidget.extend({
     },
     add_default_sections: function() {
         var self = this,
-            view = this.widget_parent,
-            view_manager = view.widget_parent,
+            view = this.getParent(),
+            view_manager = view.getParent(),
             action = view_manager.action;
         if (this.session.uid === 1) {
             this.add_section(_t('Customize'), 'customize');
@@ -912,11 +918,11 @@ session.web.Sidebar = session.web.OldWidget.extend({
     },
     on_item_action_clicked: function(item) {
         var self = this;
-        self.widget_parent.sidebar_context().then(function (context) {
-            var ids = self.widget_parent.get_selected_ids();
+        self.getParent().sidebar_context().then(function (context) {
+            var ids = self.getParent().get_selected_ids();
             if (ids.length == 0) {
                 //TODO: make prettier warning?
-                $("<div />").text(_t("You must choose at least one record.")).dialog({
+            	openerp.web.dialog($("<div />").text(_t("You must choose at least one record.")), {
                     title: _t("Warning"),
                     modal: true
                 });
@@ -925,7 +931,7 @@ session.web.Sidebar = session.web.OldWidget.extend({
             var additional_context = _.extend({
                 active_id: ids[0],
                 active_ids: ids,
-                active_model: self.widget_parent.dataset.model
+                active_model: self.getParent().dataset.model
             }, context);
             self.rpc("/web/action/load", {
                 action_id: item.action.id,
@@ -937,7 +943,7 @@ session.web.Sidebar = session.web.OldWidget.extend({
                 result.result.flags.new_window = true;
                 self.do_action(result.result, function () {
                     // reload view
-                    self.widget_parent.reload();
+                    self.getParent().reload();
                 });
             });
         });
@@ -1111,8 +1117,8 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         var self = this;
         var result_handler = function () {
             if (on_closed) { on_closed.apply(null, arguments); }
-            if (self.widget_parent && self.widget_parent.on_action_executed) {
-                return self.widget_parent.on_action_executed.apply(null, arguments);
+            if (self.getParent() && self.getParent().on_action_executed) {
+                return self.getParent().on_action_executed.apply(null, arguments);
             }
         };
         var context = new session.web.CompoundContext(dataset.get_context(), action_data.context || {});
@@ -1184,8 +1190,8 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         this.$element.hide();
     },
     do_push_state: function(state) {
-        if (this.widget_parent && this.widget_parent.do_push_state) {
-            this.widget_parent.do_push_state(state);
+        if (this.getParent() && this.getParent().do_push_state) {
+            this.getParent().do_push_state(state);
         }
     },
     do_load_state: function(state, warm) {
