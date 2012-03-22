@@ -50,11 +50,11 @@
 }
 
 /* Left-side CSS */
-.oe_mail_actions {
+.oe_mail_recthread_actions {
     margin-bottom: 10px;
 }
 
-.oe_mail_followers {
+.oe_mail_recthread_followers {
     margin-bottom: 10px;
 }
 
@@ -93,6 +93,7 @@
 div.oe_mail_thread_act {
     white-space: normal;
     margin-bottom: 5px;
+    padding: 4px;
 }
 
 div.oe_mail_thread_display {
@@ -109,7 +110,7 @@ div.oe_mail_thread_more {
     border-bottom: 1px solid #D2D9E7;
 }
 
-div.oe_mail_thread_msg {
+li.oe_mail_thread_msg {
     padding: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -118,15 +119,15 @@ div.oe_mail_thread_msg {
     border-radius: 4px;
 }
 
-div.notification {
+li.notification {
     background: #E0E0E0;
 }
 
-div.email {
+li.email {
     background: #E0E0E0;
 }
 
-div.oe_mail_thread_msg:after, div.oe_mail_thread_act:after {
+li.oe_mail_thread_msg:after, div.oe_mail_thread_act:after {
     content: "";
     display: block;
     clear: both; 
@@ -176,6 +177,16 @@ div.oe_mail_thread_msg:after, div.oe_mail_thread_act:after {
 /* Styling (should be openerp)    */
 /* ------------------------------ */
 
+ul.oe_mail {
+    padding: 0;
+    margin: 0;
+}
+
+li.oe_mail {
+    list-style-type: none;
+    margin-bottom: 2px;
+}
+
 input.oe_mail, textarea.oe_mail {
     width: 100%;
     padding: 4px;
@@ -218,7 +229,6 @@ p.oe_mail_msg {
 }
 
 .oe_mail_oe_fade {
-    font-size: 12px;
     color: #888888;
 }
 

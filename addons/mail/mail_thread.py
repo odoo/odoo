@@ -383,6 +383,17 @@ class mail_thread(osv.osv):
         msg_ids = msg_obj.search(cr, uid, search_domain, limit=limit, offset=offset, context=context)
         if (ascent): msg_ids = self._message_get_parent_ids(cr, uid, ids, msg_ids, root_ids, context=context)
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
+        
+        #cr.execute(
+             #'''
+             #select * from mail_notification notif
+             #left join mail_message mes
+             #on (notif.message_id=mes.id)
+             #where notif.user_id=%s
+             #''',
+             #(str(uid)),)
+        #print res
+        
         return msgs
     
     # Message tools
@@ -679,11 +690,29 @@ class mail_thread(osv.osv):
         return create_ids
 
     def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
+        if not user_ids and not uid in self.message_get_subscribers_ids(cr, uid, ids, context=context):
+            return False
         subscription_obj = self.pool.get('mail.subscription')
         to_unsubscribe_uids = [uid] if user_ids is None else user_ids
         to_delete_sub_ids = subscription_obj.search(cr, uid,
                         ['&', '&', ('res_model', '=', self._name), ('res_id', 'in', ids), ('user_id', 'in', to_unsubscribe_uids)], context=context)
         subscription_obj.unlink(cr, uid, to_delete_sub_ids, context=context)
         return True
+
+    #------------------------------------------------------
+    # Notification API
+    #------------------------------------------------------
+    
+    def message_remove_pushed_notif(self, cr, uid, ids, msg_ids, remove_childs=True, context=None):
+        if context is None:
+            context = {}
+        notif_obj = self.pool.get('mail.notification')
+        msg_obj = self.pool.get('mail.message')
+        if remove_childs:
+            notif_msg_ids = msg_obj.search(cr, uid, [('id', 'child_of', msg_ids)], context=context)
+        else:
+            notif_msg_ids = msg_ids
+        to_del_notif_ids = notif_obj.search(cr, uid, ['&', ('user_id', '=', uid), ('message_id', 'in', notif_msg_ids)], context=context)
+        return notif_obj.unlink(cr, uid, to_del_notif_ids, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
