@@ -64,18 +64,16 @@ $colour4: #8a89ba
 
     // WebClient {{{
     .oe_webclient
-        position: absolute
-        top: 0
-        bottom: 0
-        left: 0
-        right: 0
-
         .oe_application
             position: absolute
-            top: 32px
+            top: 33px
             bottom: 0
-            left: 206px
+            left: 222px
             right: 0
+            a
+                color: $colour4
+                &:hover
+                    text-decoration: underline
     // }}}
 
     // Fullscreen mode {{{
@@ -132,19 +130,19 @@ $colour4: #8a89ba
     // }}}
 
     // Leftbar {{{
-    .oe_leftbar
-        width: 205px
+    .oe_leftbarbg
+        position: fixed
+        width: 220px
+        top: 0
+        left: 0
         height: 100%
         background: #f0eeee
         border-right: 1px solid #afafb6
-        overflow: auto
+        z-index: -1
+    .oe_leftbar
+        float: left
+        width: 221px
         text-shadow: 0 1px 1px white
-
-        .oe_footer
-            position: absolute
-            width: 205px
-            text-align: center
-            bottom: 8px
     a.oe_logo
         display: block
         text-align: center
@@ -155,10 +153,12 @@ $colour4: #8a89ba
             width: 157px
             margin: 14px 0
     .oe_footer
-        position: absolute
-        width: 205px
+        position: fixed
+        bottom: 0
+        padding: 4px 0
+        background: #f0eeee
+        width: 220px
         text-align: center
-        bottom: 8px
         a
             font-weight: 800
             font-family: serif
