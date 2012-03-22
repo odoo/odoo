@@ -60,9 +60,9 @@ class purchase_config_settings(osv.osv_memory):
             'Taxes', required=True,
             help="""Choose between either applying global taxes on a purchase order, or applying different taxes on purchase order lines, or applying no tax at all."""),
         'group_purchase_taxes_global_on_order':fields.boolean("Global on order",
-            implied_group='base.group_purchase_taxes_global_on_order'),
+            implied_group='purchase.group_taxes_global_on_order'),
         'group_purchase_taxes_on_order_line':fields.boolean("On order line",
-            implied_group='base.group_purchase_taxes_on_order_line'),
+            implied_group='purchase.group_taxes_on_order_line'),
     }
 
     def default_get(self, cr, uid, fields, context=None):
