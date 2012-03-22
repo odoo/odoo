@@ -99,14 +99,13 @@ class res_partner(osv.osv):
     def geo_localize(self, cr, uid, ids, context=None):
         # Don't pass context to browse()! We need country names in english below
         for partner in self.browse(cr, uid, ids):
-            if not partner.address:
+            if not partner:
                 continue
-            contact = partner.address[0] #TOFIX: should be get latitude and longitude for default contact?
-            result = geo_find(geo_query_address(street=contact.street,
-                                                zip=contact.zip,
-                                                city=contact.city,
-                                                state=contact.state_id.name,
-                                                country=contact.country_id.name))
+            result = geo_find(geo_query_address(street=partner.street,
+                                                zip=partner.zip,
+                                                city=partner.city,
+                                                state=partner.state_id.name,
+                                                country=partner.country_id.name))
             if result:
                 self.write(cr, uid, [partner.id], {
                     'partner_latitude': result[0],
