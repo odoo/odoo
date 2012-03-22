@@ -28,93 +28,59 @@ class purchase_configuration(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'default_invoice_method' : fields.selection(
+        'default_invoice_method': fields.selection(
             [('manual', 'Based on Purchase Order Lines'),
              ('picking', 'Based on Receptions'),
              ('order', 'Pre-Generate Draft Invoices based on Purchase Orders'),
-            ], 'Invoicing Control Method', required=True, default_model='purchase.order' , help="You can set Invoicing Control Method."),
+            ], 'Invoicing Method', required=True, default_model='purchase.order'),
         'module_purchase_analytic_plans': fields.boolean('Purchase analytic plan',
-                                   help ="""
-                                   Allows the user to maintain several analysis plans. These let you split
-                                   a line on a supplier purchase order into several accounts and analytic plans.
-                                   It installs the purchase_analytic_plans module.
-                                   """),
-        'module_warning': fields.boolean("Alerts by products or customers",
-                                  help="""To trigger warnings in OpenERP objects.
-                                  Warning messages can be displayed for objects like sale order, purchase order, picking and invoice. The message is triggered by the form's onchange event.
-                                  It installs the warning module."""),
+            help ="""Allows the user to maintain several analysis plans. These let you split
+                lines on a purchase order between several accounts and analytic plans.
+                This installs the module purchase_analytic_plans."""),
+        'module_warning': fields.boolean("Alerts by products or supplier",
+            help="""To trigger warnings in OpenERP objects.
+                Warning messages can be displayed for objects like sale order, purchase order, picking and invoice.
+                This installs the module warning."""),
         'module_product_manufacturer': fields.boolean("Define a manufacturer of products",
-                        help="""This allows you to define the following for a product:
-                            * Manufacturer
-                            * Manufacturer Product Name
-                            * Manufacturer Product Code
-                            * Product Attributes.
-                        It installs the product_manufacturer module."""),
+            help="""This allows you to define the following for a product:
+                    * Manufacturer
+                    * Manufacturer Product Name
+                    * Manufacturer Product Code
+                    * Product Attributes.
+                This installs the module product_manufacturer."""),
         'module_purchase_double_validation': fields.boolean("Configure limit amount",
-                        help="""This allows you double-validation for purchases exceeding minimum amount.
-                        It installs the purchase_double_validation module."""),
-        'module_purchase_requisition' : fields.boolean("Track the best price with Purchase Requisition",
-                                    help="""When a purchase order is created, you now have the opportunity to save the related requisition.
-                                    This new object will regroup and will allow you to easily keep track and order all your purchase orders.
-                                    It Installs purchase_requisition module."""),
-        'tax_policy': fields.selection([
-                ('no_tax', 'No Tax'),
-                ('global_on_order', 'Global On Order'),
-                ('on_order_line', 'On Order Lines'),
-            ], 'Taxes', required=True,
-            help="""
-                If you want to apply global tax on sale order then select 'Global On Order' it will add 'Global On Order' group to employees.
-                If you want to apply different taxes for sale order lines then select 'On Order Lines' it will add 'On Order Lines' group to employees.
-            """),
-        'group_purchase_taxes_global_on_order':fields.boolean("Global on order", group='base.group_user', implied_group='base.group_purchase_taxes_global_on_order'),
-        'group_purchase_taxes_on_order_line':fields.boolean("On order line", group='base.group_user', implied_group='base.group_purchase_taxes_on_order_line'),
+            help="""Provide a double validation mechanism for purchases exceeding minimum amount.
+                This installs the module purchase_double_validation."""),
+        'module_purchase_requisition': fields.boolean("Track the best price with Purchase Requisition",
+            help="""When a purchase order is created, you have the opportunity to save the related requisition.
+                This object regroups and allows you to keep track and order all your purchase orders.
+                This installs the module purchase_requisition."""),
+        'tax_policy': fields.selection(
+            [('no_tax', 'No Tax'), ('global_on_order', 'Global On Order'), ('on_order_line', 'On Order Lines')],
+            'Taxes', required=True,
+            help="""Choose between either applying global taxes on a purchase order, or applying different taxes on purchase order lines, or applying no tax at all."""),
+        'group_purchase_taxes_global_on_order':fields.boolean("Global on order",
+            implied_group='base.group_purchase_taxes_global_on_order'),
+        'group_purchase_taxes_on_order_line':fields.boolean("On order line",
+            implied_group='base.group_purchase_taxes_on_order_line'),
     }
 
     def default_get(self, cr, uid, fields, context=None):
-        data_obj = self.pool.get('ir.model.data')
         res = super(purchase_configuration, self).default_get(cr, uid, fields, context)
-        if res.get('group_purchase_taxes_global_on_order'):
-            res.update({'tax_policy': 'global_on_order'})
-        elif res.get('group_purchase_taxes_on_order_line'):
-            res.update({'tax_policy': 'on_order_line'})
-        else:
-            res.update({'tax_policy': 'no_tax'})
+        res['tax_policy'] = \
+            (res.get('group_purchase_taxes_global_on_order') and 'global_on_order') or \
+            (res.get('group_purchase_taxes_on_order_line') and 'on_order_line') or \
+            'no_tax'
         return res
 
-
     _defaults = {
-        'default_invoice_method': lambda s,c,u,ctx: s.pool.get('purchase.order').default_get(c,u,['invoice_method'],context=ctx)['invoice_method'],
         'tax_policy': 'global_on_order',
     }
 
-    def _check_default_tax(self, cr, uid, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.product']):
-            if tax[1] == 'supplier_taxes_id':
-                return tax[2]
-        return False
-
-    def set_default_taxes(self, cr, uid, ids, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        taxes = self._check_default_tax(cr, uid, context=context)
-        if taxes:
-            ir_values_obj.set(cr, uid, 'default', False, 'tax_id', ['purchase.order'], taxes[0])
-            ir_values_obj.set(cr, uid, 'default', False, 'taxes_id', ['purchase.order.line'], taxes)
-            ir_values_obj.set(cr, uid, 'default', False, 'supplier_taxes_id', ['product.product'], taxes)
-
     def onchange_tax_policy(self, cr, uid, ids, tax_policy, context=None):
-        res = {'value': {}}
-        if tax_policy == 'global_on_order':
-            res['value'].update({'group_purchase_taxes_global_on_order': True})
-            res['value'].update({'group_purchase_taxes_on_order_line': False})
-
-        elif tax_policy == 'on_order_line':
-            res['value'].update({'group_purchase_taxes_on_order_line': True})
-            res['value'].update({'group_purchase_taxes_global_on_order': False})
-        else:
-            res['value'].update({'group_purchase_taxes_on_order_line': False, 'group_purchase_taxes_global_on_order': False})
-        return res
-
-purchase_configuration()
+        return {'value': {
+            'group_purchase_taxes_global_on_order': tax_policy == 'global_on_order',
+            'group_purchase_taxes_on_order_line': tax_policy == 'on_order_line',
+        }}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

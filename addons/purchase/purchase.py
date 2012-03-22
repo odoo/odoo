@@ -207,7 +207,6 @@ class purchase_order(osv.osv):
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
         'create_uid':  fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1),
-        'tax_id': fields.many2one('account.tax', 'Tax'),
     }
     _defaults = {
         'date_order': fields.date.context_today,
