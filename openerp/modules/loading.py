@@ -24,41 +24,24 @@
 
 """
 
-import base64
-import imp
 import itertools
 import logging
 import os
-import re
 import sys
 import threading
-import zipfile
-import zipimport
-
-from cStringIO import StringIO
-from os.path import join as opj
-from zipfile import PyZipFile, ZIP_DEFLATED
-
 
 import openerp
 import openerp.modules.db
 import openerp.modules.graph
 import openerp.modules.migration
-import openerp.netsvc as netsvc
 import openerp.osv as osv
 import openerp.pooler as pooler
 import openerp.release as release
 import openerp.tools as tools
-import openerp.tools.osutil as osutil
 import openerp.tools.assertion_report as assertion_report
 
-from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
-from openerp.modules.module import \
-    get_modules, get_modules_with_version, \
-    load_information_from_description_file, \
-    get_module_resource, zip_directory, \
-    get_module_path, initialize_sys_path, \
+from openerp.modules.module import initialize_sys_path, \
     load_openerp_module, init_module_models
 
 _logger = logging.getLogger(__name__)
@@ -99,7 +82,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             threading.currentThread().testing = True
             _load_data(cr, module_name, idref, mode, 'test')
             return True
-        except Exception, e:
+        except Exception:
             _logger.error(
                 'module %s: an exception occurred in a test', module_name)
             return False
@@ -257,7 +240,7 @@ def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_m
     while True:
         cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(states),))
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
-        new_modules_in_graph = graph.add_modules(cr, module_list, force)
+        graph.add_modules(cr, module_list, force)
         _logger.debug('Updating graph with %d more modules', len(module_list))
         loaded, processed = load_module_graph(cr, graph, progressdict, report=report, skip_modules=loaded_modules)
         processed_modules.extend(processed)
