@@ -19,26 +19,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import base64
-import cStringIO
 import imp
 import logging
-import os
 import re
-import StringIO
 import urllib
-import zipfile
 import zipimport
 
-import openerp.modules as addons
-import pooler
-import release
-import tools
-
-from tools.parse_version import parse_version
-from tools.translate import _
-
-from osv import fields, osv, orm
+from openerp import modules, pooler, release, tools
+from openerp.tools.parse_version import parse_version
+from openerp.tools.translate import _
+from openerp.osv import fields, osv, orm
 
 _logger = logging.getLogger(__name__)
 
@@ -95,7 +85,7 @@ class module(osv.osv):
     def get_module_info(cls, name):
         info = {}
         try:
-            info = addons.load_information_from_description_file(name)
+            info = modules.load_information_from_description_file(name)
             info['version'] = release.major_version + '.' + info['version']
         except Exception:
             _logger.debug('Error when trying to fetch informations for '
@@ -165,7 +155,7 @@ class module(osv.osv):
             except Exception, e:
                 _logger.warning('Unknown error while fetching data of %s',
                       module_rec.name, exc_info=True)
-        for key, value in res.iteritems():
+        for key, _ in res.iteritems():
             for k, v in res[key].iteritems():
                 res[key][k] = "\n".join(sorted(v))
         return res
@@ -276,7 +266,7 @@ class module(osv.osv):
             while parts:
                 part = parts.pop()
                 try:
-                    f, path, descr = imp.find_module(part, path and [path] or None)
+                    _, path, _ = imp.find_module(part, path and [path] or None)
                 except ImportError:
                     raise ImportError('No module named %s' % (pydep,))
 
@@ -355,7 +345,7 @@ class module(osv.osv):
         """
         self.button_install(cr, uid, ids, context=context)
         cr.commit()
-        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+        _, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
         config = pool.get('res.config').next(cr, uid, [], context=context) or {}
         if config.get('type') not in ('ir.actions.reload', 'ir.actions.act_window_close'):
@@ -409,10 +399,10 @@ class module(osv.osv):
     def button_uninstall(self, cr, uid, ids, context=None):
         res = self.check_dependancy(cr, uid, ids, context)        
         for i in range(0,len(res)):
-           res_depend = self.check_dependancy(cr, uid, [res[i][0]], context)  
-           for j in range(0,len(res_depend)):
+            res_depend = self.check_dependancy(cr, uid, [res[i][0]], context)  
+            for j in range(0,len(res_depend)):
                 ids.append(res_depend[j][0])
-           ids.append(res[i][0])
+            ids.append(res[i][0])
         self.write(cr, uid, ids, {'state': 'to remove'})
         return dict(ACTION_DICT, name=_('Uninstall'))
 
@@ -486,7 +476,7 @@ class module(osv.osv):
         known_mods_names = dict([(m.name, m) for m in known_mods])
 
         # iterate through detected modules and update/create them in db
-        for mod_name in addons.get_modules():
+        for mod_name in modules.get_modules():
             mod = known_mods_names.get(mod_name)
             terp = self.get_module_info(mod_name)
             values = self.get_values_from_terp(terp)
@@ -505,7 +495,7 @@ class module(osv.osv):
                 if updated_values:
                     self.write(cr, uid, mod.id, updated_values)
             else:
-                mod_path = addons.get_module_path(mod_name)
+                mod_path = modules.get_module_path(mod_name)
                 if not mod_path:
                     continue
                 if not terp or not terp.get('installable', True):
@@ -534,7 +524,7 @@ class module(osv.osv):
             if not download:
                 continue
             zip_content = urllib.urlopen(mod.url).read()
-            fname = addons.get_module_path(str(mod.name)+'.zip', downloaded=True)
+            fname = modules.get_module_path(str(mod.name)+'.zip', downloaded=True)
             try:
                 with open(fname, 'wb') as fp:
                     fp.write(zip_content)
@@ -604,17 +594,17 @@ class module(osv.osv):
         for mod in self.browse(cr, uid, ids):
             if mod.state != 'installed':
                 continue
-            modpath = addons.get_module_path(mod.name)
+            modpath = modules.get_module_path(mod.name)
             if not modpath:
                 # unable to find the module. we skip
                 continue
             for lang in filter_lang:
                 iso_lang = tools.get_iso_codes(lang)
-                f = addons.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
+                f = modules.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
                 context2 = context and context.copy() or {}
                 if f and '_' in iso_lang:
                     iso_lang2 = iso_lang.split('_')[0]
-                    f2 = addons.get_module_resource(mod.name, 'i18n', iso_lang2 + '.po')
+                    f2 = modules.get_module_resource(mod.name, 'i18n', iso_lang2 + '.po')
                     if f2:
                         _logger.info('module %s: loading base translation file %s for language %s', mod.name, iso_lang2, lang)
                         tools.trans_load(cr, f2, lang, verbose=False, context=context)
@@ -624,7 +614,7 @@ class module(osv.osv):
                 # like "en".
                 if (not f) and '_' in iso_lang:
                     iso_lang = iso_lang.split('_')[0]
-                    f = addons.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
+                    f = modules.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
                 if f:
                     _logger.info('module %s: loading translation file (%s) for language %s', mod.name, iso_lang, lang)
                     tools.trans_load(cr, f, lang, verbose=False, context=context2)
