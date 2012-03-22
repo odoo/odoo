@@ -1,34 +1,34 @@
-- 
+-
   In order to test BVR printing. I create Partner data .
-- 
+-
   !record {model: res.partner.category, id: res_partner_category_bvr}:
     name: Customers
 -
   I create BVR DUMMY Customer.
-- 
+-
   !record {model: res.partner, id: res_partner_bvr}:
     category_id:
       - res_partner_category_bvr
     name: BVR DUMMY
-- 
+-
   I create contact address for BVR DUMMY.
-- 
+-
   !record {model: res.partner, id: res_partner_address_1}:
-    partner_id: res_partner_bvr
+    parent_id: res_partner_bvr
     street: Route de Bélario
     type: contact
-- 
+-
   I create invoice address for BVR DUMMY.
-- 
+-
   !record {model: res.partner, id: res_partner_address_2}:
-    partner_id: res_partner_bvr
+    parent_id: res_partner_bvr
     street: Route de Bélario
     type: invoice
-- 
+-
   I create delivery address for BVR DUMMY.
-- 
+-
   !record {model: res.partner, id: res_partner_address_3}:
-    partner_id: res_partner_bvr
+    parent_id: res_partner_bvr
     street: Route de Bélario
     type: delivery
 

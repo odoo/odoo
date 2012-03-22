@@ -126,30 +126,30 @@ class account_invoice(osv.osv, EDIMixin):
         self._edi_requires_attributes(('company_id','company_address','type'), edi_document)
         res_partner = self.pool.get('res.partner')
 
-        # imported company = new partner
         src_company_id, src_company_name = edi_document.pop('company_id')
-        partner_id = self.edi_import_relation(cr, uid, 'res.partner', src_company_name,
-                                              src_company_id, context=context)
+
         invoice_type = edi_document['type']
         partner_value = {}
         if invoice_type in ('out_invoice', 'out_refund'):
             partner_value.update({'customer': True})
         if invoice_type in ('in_invoice', 'in_refund'):
             partner_value.update({'supplier': True})
-        res_partner.write(cr, uid, [partner_id], partner_value, context=context)
 
         # imported company_address = new partner address
         address_info = edi_document.pop('company_address')
-        address_info['parent_id'] = (src_company_id, src_company_name)
+        if 'name' not in address_info:
+            address_info['name'] = src_company_name
         address_info['type'] = 'invoice'
+        address_info.update(partner_value)
         address_id = res_partner.edi_import(cr, uid, address_info, context=context)
 
         # modify edi_document to refer to new partner
         partner_address = res_partner.browse(cr, uid, address_id, context=context)
-        edi_document['partner_id'] = (src_company_id, src_company_name)
+        address_edi_m2o = self.edi_m2o(cr, uid, partner_address, context=context)
+        edi_document['partner_id'] = address_edi_m2o
         edi_document.pop('partner_address', False) # ignored
 
-        return partner_id
+        return address_id
 
 
     def edi_import(self, cr, uid, edi_document, context=None):

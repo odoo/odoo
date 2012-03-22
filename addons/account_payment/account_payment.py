@@ -35,7 +35,7 @@ class payment_mode(osv.osv):
             domain=[('type', 'in', ('bank','cash'))], help='Bank or Cash Journal for the Payment Mode'),
         'company_id': fields.many2one('res.company', 'Company',required=True),
         'partner_id':fields.related('company_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True,),
-        
+
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
@@ -51,14 +51,14 @@ class payment_mode(osv.osv):
             JOIN payment_mode pm ON (pm.bank_id = pb.id)
             WHERE pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
-    
+
     def onchange_company_id (self, cr, uid, ids, company_id=False, context=None):
         result = {}
         if company_id:
             partner_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).partner_id.id
             result['partner_id'] = partner_id
         return {'value': result}
-                
+
 
 payment_mode()
 
@@ -191,21 +191,20 @@ class payment_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             owner = line.order_id.mode.bank_id.partner_id
             result[line.id] = False
-            if owner.address:
-                for ads in owner.address:
-                    if ads.type == 'default':
-                        st = ads.street and ads.street or ''
-                        st1 = ads.street2 and ads.street2 or ''
-                        if 'zip_id' in ads:
-                            zip_city = ads.zip_id and partner_zip_obj.name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
-                        else:
-                            zip = ads.zip and ads.zip or ''
-                            city = ads.city and ads.city or  ''
-                            zip_city = zip + ' ' + city
-                        cntry = ads.country_id and ads.country_id.name or ''
-                        info = owner.name + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
-                        result[line.id] = info
-                        break
+            if owner:
+                if owner.type == 'default':
+                    st = owner.street and owner.street or ''
+                    st1 = owner.street2 and owner.street2 or ''
+                    if 'zip_id' in owner:
+                        zip_city = owner.zip_id and partner_zip_obj.name_get(cr, uid, [owner.zip_id.id])[0][1] or ''
+                    else:
+                        zip = owner.zip and owner.zip or ''
+                        city = owner.city and owner.city or  ''
+                        zip_city = zip + ' ' + city
+                    cntry = owner.country_id and owner.country_id.name or ''
+                    info = owner.name + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
+                    result[line.id] = info
+                    break
         return result
 
     def info_partner(self, cr, uid, ids, name=None, args=None, context=None):
@@ -219,18 +218,18 @@ class payment_line(osv.osv):
             if not line.partner_id:
                 break
             partner = line.partner_id.name or ''
-            if line.partner_id.address:
-                for ads in line.partner_id.address:
-                    if ads.type == 'default':
-                        st = ads.street and ads.street or ''
-                        st1 = ads.street2 and ads.street2 or ''
-                        if 'zip_id' in ads:
-                            zip_city = ads.zip_id and partner_zip_obj.name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
+            if line.partner_id:
+                #for ads in line.partner_id.address:
+                    if line.partner_id.type == 'default':
+                        st = line.partner_id.street and line.partner_id.street or ''
+                        st1 = line.partner_id.street2 and line.partner_id.street2 or ''
+                        if 'zip_id' in line.partner_id:
+                            zip_city = line.partner_id.zip_id and partner_zip_obj.name_get(cr, uid, [line.partner_id.zip_id.id])[0][1] or ''
                         else:
-                            zip = ads.zip and ads.zip or ''
-                            city = ads.city and ads.city or  ''
+                            zip = line.partner_id.zip and line.partner_id.zip or ''
+                            city = line.partner_id.city and line.partner_id.city or  ''
                             zip_city = zip + ' ' + city
-                        cntry = ads.country_id and ads.country_id.name or ''
+                        cntry = line.partner_id.country_id and line.partner_id.country_id.name or ''
                         info = partner + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
                         result[line.id] = info
                         break
@@ -428,24 +427,23 @@ class payment_line(osv.osv):
         if partner_id:
             part_obj = partner_obj.browse(cr, uid, partner_id, context=context)
             partner = part_obj.name or ''
+            if part_obj:
+                #for ads in part_obj.address:
+                if part_obj.type == 'default':
+                    st = part_obj.street and part_obj.street or ''
+                    st1 = part_obj.street2 and part_obj.street2 or ''
 
-            if part_obj.address:
-                for ads in part_obj.address:
-                    if ads.type == 'default':
-                        st = ads.street and ads.street or ''
-                        st1 = ads.street2 and ads.street2 or ''
+                    if 'zip_id' in part_obj:
+                        zip_city = part_obj.zip_id and partner_zip_obj.name_get(cr, uid, [part_obj.zip_id.id])[0][1] or ''
+                    else:
+                        zip = part_obj.zip and part_obj.zip or ''
+                        city = part_obj.city and part_obj.city or  ''
+                        zip_city = zip + ' ' + city
 
-                        if 'zip_id' in ads:
-                            zip_city = ads.zip_id and partner_zip_obj.name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
-                        else:
-                            zip = ads.zip and ads.zip or ''
-                            city = ads.city and ads.city or  ''
-                            zip_city = zip + ' ' + city
+                    cntry = part_obj.country_id and part_obj.country_id.name or ''
+                    info = partner + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
 
-                        cntry = ads.country_id and ads.country_id.name or ''
-                        info = partner + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
-
-                        data['info_partner'] = info
+                    data['info_partner'] = info
 
             if part_obj.bank_ids and payment_type:
                 bank_type = payment_mode_obj.suitable_bank_types(cr, uid, payment_type, context=context)

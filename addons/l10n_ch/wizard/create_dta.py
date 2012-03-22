@@ -491,7 +491,7 @@ def _create_dta(obj, cr, uid, data, context=None):
                         or ''
             else:
                 v['partner_country']= pline.partner_id.country_id \
-                        and pline.partner_id.acountry_id.name \
+                        and pline.partner_id.country_id.name \
                         or ''
         else:
             v['partner_street'] =''
