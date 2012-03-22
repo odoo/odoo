@@ -156,7 +156,7 @@
                     <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
                     <filter icon="terp-check" name="sent" string="Sent" domain="[('state','=','sent')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-stop" string="Failed" domain="[('state','=','exception')]"/>
+                    <filter icon="terp-gtk-stop" name="exception" string="Failed" domain="[('state','=','exception')]"/>
                     <field name="email_from"/>
                     <field name="email_to"/>
                     <field name="subject"/>
@@ -194,7 +194,8 @@
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('type', '=', 'email'), '|',('state','in',['outgoing','exception']),('email_from', '!=', False)]</field>
+            <field name="domain">[('type', '=', 'email')]</field>
+            <field name="context">{'search_default_received': 1, 'search_default_exception': 1}</field>
             <field name="search_view_id" ref="view_email_message_search"/>
         </record>
 
@@ -205,10 +206,11 @@
             src_model="res.partner"
             view_id="view_email_message_tree"/>
 
-        <menuitem name="Messages"
-            id="menu_email_message"
-            parent="base.menu_email"
-            action="action_view_mail_message" />
+        <!-- Add menu entry in Settings/Email -->
+        <menuitem name="Emails" id="menu_email_message" parent="base.menu_email" action="action_view_mail_message" />
+        
+        <!-- Add menu entry in Settings/Email -->
+        <menuitem name="All messages" id="menu_email_notifications" parent="base.menu_email" action="action_view_all_messages_short" />
 
         <record id="action_mail_all_feeds" model="ir.actions.client">
             <field name="name">All Feeds</field>

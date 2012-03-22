@@ -102,18 +102,16 @@ class mail_message(osv.osv):
     '''Model holding messages: system notification (replacing res.log
        notifications), comments (for OpenSocial feature) and
        RFC2822 email messages. This model also provides facilities to
-       parse, queue and send new email messages.
-
-       Messages that do not have a value for the email_from column
-       are simple log messages (e.g. document state changes), while
-       actual e-mails have the email_from value set.
+       parse, queue and send new email messages. Type of messages
+       are differentiated using the 'type' column.
+       
        The ``display_text`` field will have a slightly different
        presentation for real emails and for log messages.
        '''
 
     _name = 'mail.message'
     _inherit = 'mail.message.common'
-    _description = 'Generic Message (Email, Comment, Notification)'
+    _description = 'Mail Message (Email, Comment, Notification)'
     _order = 'date desc'
 
     # XXX to review - how to determine action to use?
