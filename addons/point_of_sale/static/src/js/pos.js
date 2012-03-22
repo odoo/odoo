@@ -1356,8 +1356,6 @@ openerp.point_of_sale = function(db) {
                 });
 
                 pos.app = new App(self.$element);
-
-
                 db.webclient.set_content_full_screen(true);
                 
                 if (pos.store.get('account.bank.statement').length === 0)
