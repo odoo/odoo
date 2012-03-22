@@ -1262,14 +1262,13 @@ openerp.point_of_sale = function(db) {
             // bind barcode reader event
             codeNumbers = []
             $('body').delegate('','keyup', function (e){
-                if (e.keyCode >= 48 && e.keyCode <= 57) {
+                if (!isNaN(Number(String.fromCharCode(e.keyCode)))) {
                     // a number
                     if (codeNumbers.length==0) {
                         codeNumbers.timeStamp = new Date().getTime()
                     } else {
                         if (codeNumbers.lastTimeStamp + 30 < new Date().getTime()) {
                             // not a barcode reader
-                            console.log(e)
                             codeNumbers = []
                             codeNumbers.timeStamp = new Date().getTime()
                         }
