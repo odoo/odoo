@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
 
@@ -6,51 +7,40 @@
             <field name="model">stock.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-	        <form string ="Warehouse Application">
-	            <separator string="Traceability" colspan="4"/>
-                   <group  colspan="2" col="4">
-                       <newline/>
-                       <field name="group_stock_production_lot"/>
-                       <newline/>
-                       <field name="group_stock_tracking_lot"/>
-                       <newline/>
-                       <field name="module_product_expiry"/>
-                   </group>
+                <form string ="Warehouse Application">
+                    <separator string="Traceability" colspan="4"/>
+                    <field name="group_stock_production_lot"/>
+                    <newline/>
+                    <field name="group_stock_tracking_lot"/>
+                    <newline/>
+                    <field name="module_product_expiry"/>
+                    <newline/>
 
-	            <separator string="Logistic" colspan="4"/>
-                   <group  colspan="2" col="4">
-                       <newline/>
-                       <field name="module_stock_no_autopicking"/>
-                       <newline/>
-                       <field name="module_stock_invoice_directly"/>
-                       <newline/>
-                   </group>
+                    <separator string="Logistics" colspan="4"/>
+                    <field name="module_stock_no_autopicking"/>
+                    <newline/>
+                    <field name="module_stock_invoice_directly"/>
+                    <newline/>
 
-                   <separator string="Products" colspan="4"/>
-                   <group colspan="4" col="8">
-                       <group  colspan="2" col="4">
-                          <field name="group_stock_packaging"/>
-                          <newline/>
-                          <field name="group_uom"/>
-                          <newline/>
-                       </group>
-                       <group colspan="2" col="4">
-                           <newline/>
-                           <field name="group_stock_inventory_valuation"/>
-                           <newline/>
-                           <field name="group_stock_counterpart_location"/>
-                           <newline/>
-                       </group>
-                   </group>
+                    <separator string="Products" colspan="4"/>
+                    <group colspan="2" col="2">
+                        <field name="group_stock_packaging"/>
+                        <field name="group_uom"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <field name="group_stock_inventory_valuation"/>
+                        <field name="group_stock_counterpart_location"/>
+                    </group>
 
-	            <separator string="Partners" colspan="4"/>
-                   <group  colspan="2" col="4">
-                       <newline/>
+                    <separator string="Partners" colspan="4"/>
                     <field name="group_stock_inventory_properties"/>
                     <newline/>
                     <field name="module_claim_from_delivery"/>
                     <newline/>
-                   </group>
+
+                    <label colspan="2"/>
+                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                    <button string="Apply" icon="gtk-ok" type="object" name="execute"/>
                 </form>
             </field>
         </record>
