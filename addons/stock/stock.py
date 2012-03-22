@@ -676,6 +676,7 @@ class stock_picking(osv.osv):
         res = super(stock_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if type:
             if res.get('toolbar', False):
+                # To update the report label according to shipping type
                 for report in res['toolbar']['print']:
                     if report['report_name'] != 'stock.picking.list':
                         continue
@@ -688,6 +689,7 @@ class stock_picking(osv.osv):
                     report['name'] = report['string']
 
             for field in res['fields']:
+                # To update the states label according to shipping type
                 if field == 'state':
                     _state = []
                     for key, value in PICK_STATE:
@@ -708,6 +710,7 @@ class stock_picking(osv.osv):
                                 value = 'Delivered'
                         _state.append((key,value))
                     res['fields']['state']['selection'] = _state
+                # To update the fields tooltips according to shipping type
                 if field == 'address_id':
                     _tooltip = ''
                     if type == 'in':
