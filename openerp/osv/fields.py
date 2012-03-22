@@ -1520,7 +1520,7 @@ def field_to_dict(model, cr, user, field, context=None):
         else:
             # call the 'dynamic selection' function
             res['selection'] = field.selection(model, cr, user, context)
-    if res['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
+    if res['type'] in ('one2many', 'many2many', 'many2one'):
         res['relation'] = field._obj
         res['domain'] = field._domain
         res['context'] = field._context
