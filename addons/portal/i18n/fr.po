@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-03-15 21:19+0000\n"
+"PO-Revision-Date: 2012-03-21 18:33+0000\n"
 "Last-Translator: t.o <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-16 05:30+0000\n"
-"X-Generator: Launchpad (build 14951)\n"
+"X-Launchpad-Export-Date: 2012-03-22 06:23+0000\n"
+"X-Generator: Launchpad (build 14981)\n"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:51
@@ -151,7 +151,7 @@ msgstr "Nom de l'utilisateur"
 #. module: portal
 #: help:res.portal,group_id:0
 msgid "The group corresponding to this portal"
-msgstr ""
+msgstr "Groupe correspondant à ce portail"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_portal_widget
@@ -178,7 +178,7 @@ msgstr "Votre compte OpenERP chez %(company)s"
 #: code:addons/portal/portal.py:184
 #, python-format
 msgid "%s Menu"
-msgstr ""
+msgstr "Menu de %s"
 
 #. module: portal
 #: help:res.portal.wizard,portal_id:0
@@ -193,7 +193,7 @@ msgstr "Assistant portail"
 #. module: portal
 #: help:res.portal,widget_ids:0
 msgid "Widgets assigned to portal users"
-msgstr ""
+msgstr "Widgets attribuées aux utilisateurs du portail"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:163
@@ -239,7 +239,7 @@ msgstr "Widget"
 #. module: portal
 #: help:res.portal.wizard.user,lang:0
 msgid "The language for the user's user interface"
-msgstr ""
+msgstr "La langue pour l'interface utilisateur de l'utilisateur"
 
 #. module: portal
 #: view:res.portal.wizard:0
@@ -254,19 +254,21 @@ msgstr "Site web"
 #. module: portal
 #: view:res.portal:0
 msgid "Create Parent Menu"
-msgstr ""
+msgstr "Créer un menu parent"
 
 #. module: portal
 #: view:res.portal.wizard:0
 msgid ""
 "The following text will be included in the welcome email sent to users."
 msgstr ""
+"Le texte suivant sera inclus dans le courriel de bienvenue envoyé aux "
+"utilisateurs."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:135
 #, python-format
 msgid "Email required"
-msgstr ""
+msgstr "Courriel requis"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_users
@@ -284,6 +286,8 @@ msgstr "Adresse de courriel incorrecte"
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
+"Vous devez avoir une adresse de courriel définie dans vos préférences "
+"utilisateur pour envoyer des courriels."
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_menu
@@ -308,7 +312,7 @@ msgstr "Portails"
 #. module: portal
 #: help:res.portal,parent_menu_id:0
 msgid "The menu action opens the submenus of this menu item"
-msgstr ""
+msgstr "L'action de menu ouvre le sous-menus de cet élément de menu"
 
 #. module: portal
 #: field:res.portal.widget,sequence:0
@@ -323,7 +327,7 @@ msgstr "Partenaires associés"
 #. module: portal
 #: view:res.portal:0
 msgid "Portal Menu"
-msgstr ""
+msgstr "Menu du portail"
 
 #. module: portal
 #: sql_constraint:res.users:0
@@ -356,23 +360,38 @@ msgid ""
 "OpenERP - Open Source Business Applications\n"
 "http://www.openerp.com\n"
 msgstr ""
+"Cher %(name)s,\n"
+"\n"
+"Nous vous avons créé un compte à notre système d'information accessible à "
+"%(url)s.\n"
+"\n"
+"Vous pouvez y accéder avec les paramètres suivants :\n"
+"    Base de données : %(db)s\n"
+"    Utilisateur             : %(login)s\n"
+"    Mot de passe        : %(password)s\n"
+"\n"
+"%(message)s\n"
+"\n"
+"--\n"
+"\n"
+"Signature\n"
 
 #. module: portal
 #: model:res.groups,name:portal.group_portal_manager
 msgid "Manager"
-msgstr ""
+msgstr "Responsable"
 
 #. module: portal
 #: help:res.portal.wizard.user,name:0
 msgid "The user's real name"
-msgstr ""
+msgstr "Nom réel de l'utilisateur"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.address_wizard_action
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: view:res.portal.wizard:0
 msgid "Add Portal Access"
-msgstr ""
+msgstr "Ajouter l'accès au portail"
 
 #. module: portal
 #: field:res.portal.wizard.user,partner_id:0
@@ -389,6 +408,13 @@ msgid ""
 "the portal's users.\n"
 "            "
 msgstr ""
+"\n"
+"Un portail permet de définir des vues spécifiques et des règles pour un "
+"groupe d'utilisateurs (le groupe\n"
+"du portail). Un menu du portail, des widgets et des groupes spécifiques "
+"peuvent être affectés aux\n"
+"utilisateurs du portail.\n"
+"            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_share_wizard
