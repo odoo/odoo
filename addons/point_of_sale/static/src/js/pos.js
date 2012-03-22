@@ -1262,7 +1262,6 @@ openerp.point_of_sale = function(db) {
             // bind barcode reader event
             codeNumbers = []
             $('body').delegate('','keyup', function (e){
-                console.log('keyup!!!')
                 if (e.keyCode >= 48 && e.keyCode <= 57) {
                     // a number
                     if (codeNumbers.length==0) {
@@ -1281,9 +1280,9 @@ openerp.point_of_sale = function(db) {
                         // a barcode reader
                         console.log('barcode: ' + codeNumbers.join())
                         selectedOrder = self.shop.get('selectedOrder')
-                        products = pos.store.get('product.product')
-                        scannedProduct = _.detect(products, function(el){return el.ean13 === codeNumbers.join('')})
-                        //TODO INSERT THE scannedProduct into the selectedOrder
+                        productsCollection = self.shop.get('products')
+                        scannedProductModel = _.detect(productsCollection.models, function(pc) { return pc.attributes.ean13 === codeNumbers.join('')})
+                        selectedOrder.addProduct(scannedProductModel)
 
                         codeNumbers = []
                     }
