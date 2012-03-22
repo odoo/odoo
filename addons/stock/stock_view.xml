@@ -1044,12 +1044,7 @@
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
-                        <filter st                             <field name="origin"/>
-                             <field name="address_id" string="Supplier" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" domain="[('partner_id','&lt;&gt;',False)]" colspan="4"/>
-                             <field name="invoice_state" string="Invoice Control"/>
--                            
-+
-ring="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
+                        <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
                         <separator orientation="vertical" />
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
                     </group>
