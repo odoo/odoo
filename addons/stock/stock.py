@@ -680,11 +680,11 @@ class stock_picking(osv.osv):
                     if report['report_name'] != 'stock.picking.list':
                         continue
                     if type == 'in':
-                        report['string'] = 'Incoming Shipment'
+                        report['string'] = 'Receipt Slip'
                     elif type == 'internal':
-                        report['string'] = 'Internal Shipment'
+                        report['string'] = 'Picking Slip'
                     elif type == 'out':
-                        report['string'] = 'Delivery Order'
+                        report['string'] = 'Delivery Slip'
                     report['name'] = report['string']
 
             for field in res['fields']:
