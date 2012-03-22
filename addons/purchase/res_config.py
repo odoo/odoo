@@ -23,8 +23,8 @@ from osv import fields, osv
 import pooler
 from tools.translate import _
 
-class purchase_configuration(osv.osv_memory):
-    _name = 'purchase.configuration'
+class purchase_config_settings(osv.osv_memory):
+    _name = 'purchase.config.settings'
     _inherit = 'res.config.settings'
 
     _columns = {
@@ -66,7 +66,7 @@ class purchase_configuration(osv.osv_memory):
     }
 
     def default_get(self, cr, uid, fields, context=None):
-        res = super(purchase_configuration, self).default_get(cr, uid, fields, context)
+        res = super(purchase_config_settings, self).default_get(cr, uid, fields, context)
         res['tax_policy'] = \
             (res.get('group_purchase_taxes_global_on_order') and 'global_on_order') or \
             (res.get('group_purchase_taxes_on_order_line') and 'on_order_line') or \

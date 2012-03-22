@@ -22,7 +22,7 @@
 from osv import fields, osv
 
 class purchase_double_validation_installer(osv.osv_memory):
-    _inherit = 'purchase.configuration'
+    _inherit = 'purchase.config.settings'
     _columns = {
         'limit_amount': fields.integer('Maximum Purchase Amount',required=True, help="Maximum amount after which validation of purchase is required."),
     }
