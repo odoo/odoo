@@ -169,7 +169,7 @@
                             <separator string="Purchase Description"/>
                             <field colspan="4" name="description_purchase" nolabel="1"/>
                         </page>
-                        <page groups="stock.group_packaging" string="Packaging">
+                        <page groups="product.group_stock_packaging" string="Packaging">
                             <field colspan="4" name="packaging" nolabel="1">
                                 <form string="Packaging">
                                     <field name="ean"/>
@@ -494,7 +494,7 @@
             <field name="help">Create and manage your packaging dimensions and types you want to be maintained in your system.</field>
         </record>
         <menuitem
-            action="product_ul_form_action" groups="stock.group_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
+            action="product_ul_form_action" groups="product.group_stock_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>

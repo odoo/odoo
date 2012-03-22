@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <record id="view_stock.config.settings" model="ir.ui.view">
+        <record id="view_stock_config_settings" model="ir.ui.view">
             <field name="name">Warehouse Application</field>
             <field name="model">stock.config.settings</field>
             <field name="type">form</field>
@@ -45,7 +45,7 @@
             </field>
         </record>
 
-        <record id="action_stock.config.settings" model="ir.actions.act_window">
+        <record id="action_stock_config_settings" model="ir.actions.act_window">
             <field name="name">Configure Warehouse</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.config.settings</field>
@@ -53,8 +53,8 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem id="menu_stock.config.settings" name="Warehouse" parent="base.menu_config"
-            sequence="3" action="action_stock.config.settings"/>
+        <menuitem id="menu_stock_config_settings" name="Warehouse" parent="base.menu_config"
+            sequence="3" action="action_stock_config_settings"/>
 
     </data>
 </openerp>

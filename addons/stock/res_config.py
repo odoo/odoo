@@ -52,7 +52,7 @@ class stock_config_settings(osv.osv_memory):
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different unit of measures per product."""),
         'group_stock_packaging': fields.boolean("Manage packaging by products",
-            implied_group='stock.group_packaging',
+            implied_group='product.group_stock_packaging',
             help="""Allows you to create and manage your packaging dimensions and types you want to be maintained in your system."""),
         'group_stock_production_lot': fields.boolean("Track production lots",
             implied_group='stock.group_production_lot',
