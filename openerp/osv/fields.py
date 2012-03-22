@@ -159,32 +159,6 @@ class integer(_column):
                 " `required` has no effect, as NULL values are "
                 "automatically turned into 0.")
 
-class integer_big(_column):
-    """Experimental 64 bit integer column type, currently unused.
-
-       TODO: this field should work fine for values up
-             to 32 bits, but greater values will not fit
-             in the XML-RPC int type, so a specific
-             get() method is needed to pass them as floats,
-             like what we do for integer functional fields.
-    """
-    _type = 'integer_big'
-    # do not reference the _symbol_* of integer class, as that would possibly
-    # unbind the lambda functions
-    _symbol_c = '%s'
-    _symbol_f = lambda x: int(x or 0)
-    _symbol_set = (_symbol_c, _symbol_f)
-    _symbol_get = lambda self,x: x or 0
-    _deprecated = True
-
-    def __init__(self, string='unknown', required=False, **args):
-        super(integer_big, self).__init__(string=string, required=required, **args)
-        if required:
-            _logger.debug(
-                "required=True is deprecated: making an integer_big field"
-                " `required` has no effect, as NULL values are "
-                "automatically turned into 0.")
-
 class reference(_column):
     _type = 'reference'
     _classic_read = False # post-process to handle missing target
@@ -347,20 +321,6 @@ class datetime(_column):
                               exc_info=True)
         return timestamp
 
-class time(_column):
-    _type = 'time'
-    _deprecated = True
-    @staticmethod
-    def now( *args):
-        """ Returns the current time in a format fit for being a
-        default value to a ``time`` field.
-
-        This method should be proivided as is to the _defaults dict,
-        it should not be called.
-        """
-        return DT.datetime.now().strftime(
-            tools.DEFAULT_SERVER_TIME_FORMAT)
-
 class binary(_column):
     _type = 'binary'
     _symbol_c = '%s'
@@ -426,34 +386,6 @@ class selection(_column):
 #         (4, ID)                link
 #         (5)                    unlink all (only valid for one2many)
 #
-#CHECKME: dans la pratique c'est quoi la syntaxe utilisee pour le 5? (5) ou (5, 0)?
-class one2one(_column):
-    _classic_read = False
-    _classic_write = True
-    _type = 'one2one'
-    _deprecated = True
-
-    def __init__(self, obj, string='unknown', **args):
-        _logger.warning("The one2one field is deprecated and doesn't work anymore.")
-        _column.__init__(self, string=string, **args)
-        self._obj = obj
-
-    def set(self, cr, obj_src, id, field, act, user=None, context=None):
-        if not context:
-            context = {}
-        obj = obj_src.pool.get(self._obj)
-        self._table = obj_src.pool.get(self._obj)._table
-        if act[0] == 0:
-            id_new = obj.create(cr, user, act[1])
-            cr.execute('update '+obj_src._table+' set '+field+'=%s where id=%s', (id_new, id))
-        else:
-            cr.execute('select '+field+' from '+obj_src._table+' where id=%s', (act[0],))
-            id = cr.fetchone()[0]
-            obj.write(cr, user, [id], act[1], context=context)
-
-    def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
-        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit, context=context)
-
 
 class many2one(_column):
     _classic_read = False

@@ -547,7 +547,6 @@ FIELDS_TO_PGTYPES = {
     fields.integer_big: 'int8',
     fields.text: 'text',
     fields.date: 'date',
-    fields.time: 'time',
     fields.datetime: 'timestamp',
     fields.binary: 'bytea',
     fields.many2one: 'int4',
