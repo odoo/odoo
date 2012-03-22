@@ -23,61 +23,58 @@ from osv import fields, osv
 import pooler
 from tools.translate import _
 
-class mrp_configuration(osv.osv_memory):
-    _name = 'mrp.configuration'
+class mrp_config_settings(osv.osv_memory):
+    _name = 'mrp.config.settings'
     _inherit = 'res.config.settings'
 
     _columns = {
         'module_stock_planning': fields.boolean('Track work order planning',
-                                   help ="""
-                                   This allows to create a manual procurement plan apart of the normal MRP scheduling, which works automatically based on minimum stock rules.
-                                   It installs the stock_planning module.
-                                   """),
+            help ="""This allows to create a manual procurement plan apart of the normal MRP scheduling,
+                which works automatically based on minimum stock rules.
+                This installs the module stock_planning."""),
         'module_mrp_repair': fields.boolean("Track products repair",
-                                  help="""Allows to manage all products repairs.
-                                  * Add/remove products in the reparation
-                                  * Impact for stocks
-                                  * Invoicing (products and/or services)
-                                  * Warranty concept
-                                  * Repair quotation report
-                                  * Notes for the technician and for the final customer.
-                                  It installs the mrp_repair module."""),
+            help="""Allows to manage all products repairs.
+                    * Add/remove products in the reparation
+                    * Impact for stocks
+                    * Invoicing (products and/or services)
+                    * Warranty concept
+                    * Repair quotation report
+                    * Notes for the technician and for the final customer.
+                This installs the module mrp_repair."""),
         'module_mrp_operations': fields.boolean("Track dates in work order operations",
-                        help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
-                        It installs the mrp_operations module."""),
+            help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
+                This installs the module mrp_operations."""),
         'module_mrp_subproduct': fields.boolean("Produce several products from one production",
-                        help="""You can configure sub-products in the bill of material.
-                            Without this module:
-                                A + B + C -> D
-                            With this module:
-                                A + B + C -> D + E.
-                            It installs the mrp_subproduct module."""),
-        'module_stock_location' : fields.boolean("Allow push/pull flows by product",
-                                    help="""Allows to implement Push and Pull inventory flows.
-                                    Typically this could be used to:
-                                        * Manage product manufacturing chains
-                                        * Manage default locations per product
-                                        * Define routes within your warehouse according to business needs, such as:
-                                           - Quality Control
-                                           - After Sales Services
-                                           - Supplier Returns.
-                                    It installs stock_location module."""),
-        'module_mrp_jit': fields.boolean("Allow the just in time scheduling",
-                        help="""This allows Just In Time computation of procurement orders.
-                        All procurement orders will be processed immediately, which could in some
-                        cases entail a small performance impact.
-                        It installs the mrp_jit module."""),
+            help="""You can configure sub-products in the bill of material.
+                Without this module: A + B + C -> D.
+                With this module: A + B + C -> D + E.
+                This installs the module mrp_subproduct."""),
+        'module_stock_location': fields.boolean("Allow push/pull flows by product",
+            help="""Allows to implement Push and Pull inventory flows.
+                Typically this could be used to:
+                    * Manage product manufacturing chains
+                    * Manage default locations per product
+                    * Define routes within your warehouse according to business needs, such as:
+                        - Quality Control
+                        - After Sales Services
+                        - Supplier Returns.
+                This installs the module stock_location."""),
+        'module_mrp_jit': fields.boolean("Allow just in time scheduling",
+            help="""This allows Just In Time computation of procurement orders.
+                All procurement orders will be processed immediately, which could in some
+                cases entail a small performance impact.
+                This installs the module mrp_jit."""),
         'module_mrp_operations': fields.boolean("Track dates in work order operations",
-                        help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
-                        It installs the mrp_operations module."""),
-        'group_mrp_routings':fields.boolean("Manage manufacturing operations ",group='base.group_user', implied_group='base.group_mrp_routings',
-                           help="""Routings allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials.
-                           It assigns the "Routings" group to employee."""),
-        'group_mrp_properties':fields.boolean("Allow different properties per product in your order",group='base.group_user', implied_group='base.group_mrp_properties',
-                           help="""Allows to define specific property that can be assigned to your bill of materials.
-                           It assigns the "Properties of Product" group to employee."""),
+            help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
+                This installs the module mrp_operations."""),
+        'group_mrp_routings': fields.boolean("Manage manufacturing operations ",
+            implied_group='base.group_mrp_routings',
+            help="""Routings allow you to create and manage the manufacturing operations that should be followed
+                within your work centers in order to produce a product. They are attached to bills of materials
+                that will define the required raw materials."""),
+        'group_mrp_properties': fields.boolean("Allow different properties per product in your order",
+            implied_group='base.group_mrp_properties',
+            help="""Allows to define specific property that can be assigned to your bill of materials."""),
     }
-
-mrp_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

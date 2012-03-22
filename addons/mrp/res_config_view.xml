@@ -2,56 +2,44 @@
     <data>
 
         <record id="view_mrp_config" model="ir.ui.view">
-            <field name="name">Manufacturing Application</field>
-            <field name="model">mrp.configuration</field>
+            <field name="name">Configure Manufacturing</field>
+            <field name="model">mrp.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-	        <form string="Manufacturing Application">
-		            <separator string="Manufacturing Order" colspan="4"/>
-		            <group colspan="4" col="8">
-		                <group  colspan="4" col="4">
-		                   <field name="group_mrp_routings"/>
-		                   <newline/>
-		                   <field name="module_stock_planning"/>
-		                   <newline/>
-		                   <field name="module_mrp_repair"/>
-		                   <newline/>
-		                </group>
-		                <group colspan="4" col="4">
-		                    <newline/>
-		                    <field name="module_mrp_operations"/>
-		                    <newline/>
-		                    <field name="module_mrp_subproduct"/>
-		                    <newline/>
-		                </group>
-		            </group>
+                <form string="Manufacturing Application">
+                    <separator string="Manufacturing Order" colspan="4"/>
+                    <field name="group_mrp_routings"/>
+                    <field name="module_mrp_operations"/>
+                    <field name="module_stock_planning"/>
+                    <field name="module_mrp_subproduct"/>
+                    <field name="module_mrp_repair"/>
 
-		            <separator string="Logistic" colspan="4"/>
-                    <group  colspan="4" col="4">
-                        <field name="module_stock_location"/>
-                        <newline/>
-                        <field name="module_mrp_jit"/>
-                        <newline/>
-                    </group>
+		            <separator string="Logistics" colspan="4"/>
+                    <field name="module_stock_location"/>
+                    <newline/>
+                    <field name="module_mrp_jit"/>
 
 		            <separator string="Bill Of Material" colspan="4"/>
-	                <group  colspan="4" col="4">
-	                    <field name="group_mrp_properties"/>
-	                </group>
-            </form>
+                    <field name="group_mrp_properties"/>
+                    <newline/>
+
+                    <label colspan="2"/>
+                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                    <button string="Apply" icon="gtk-ok" type="object" name="execute"/>
+                </form>
             </field>
         </record>
 
         <record id="action_mrp_configuration" model="ir.actions.act_window">
             <field name="name">Configure Manufacturing Application</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.configuration</field>
-            <field name="view_id" ref="view_mrp_config"/>
+            <field name="res_model">mrp.config.settings</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form</field>
+            <field name="target">new</field>
         </record>
 
-        <menuitem id="base.menu_mrp_config" name="Manufacturing" parent="base.menu_config" sequence="1" action="action_mrp_configuration"/>
+        <menuitem id="base.menu_mrp_config" name="Manufacturing" parent="base.menu_config"
+            sequence="4" action="action_mrp_configuration"/>
 
     </data>
 </openerp>

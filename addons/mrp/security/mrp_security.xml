@@ -13,20 +13,13 @@
     </record>
 
     <record id="base.group_mrp_routings" model="res.groups">
-        <field name="name">Routings</field>
+        <field name="name">Manage Routings</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
     <record id="base.group_mrp_properties" model="res.groups">
-        <field name="name">Properties of Product</field>
+        <field name="name">Manage Properties of Product</field>
         <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
-    <record id="base.group_user" model="res.groups">
-        <field name="implied_ids" eval="[(6,0,[
-        ref('base.group_mrp_routings'),
-        ref('base.group_mrp_properties'),
-        ])]"/>
     </record>
 
     <!-- restrict access to menu -->
