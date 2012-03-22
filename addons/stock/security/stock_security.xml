@@ -12,6 +12,31 @@
         <field name="implied_ids" eval="[(4, ref('group_stock_user'))]"/>
     </record>
 
+    <record id="base.group_stock_production_lot" model="res.groups">
+        <field name="name">Production Lots</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="base.group_stock_tracking_lot" model="res.groups">
+        <field name="name">Tracking lots</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="base.group_stock_inventory_valuation" model="res.groups">
+        <field name="name">Inventory valuation </field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="base.group_stock_counterpart_location" model="res.groups">
+        <field name="name">Counter-Part Locations</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="base.group_stock_inventory_properties" model="res.groups">
+        <field name="name">Inventory properties in partner form</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
 <!-- multi -->
 
     <record model="ir.rule" id="stock_picking_rule">
