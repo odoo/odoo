@@ -33,6 +33,13 @@ class purchase_config_settings(osv.osv_memory):
              ('picking', 'Based on Receptions'),
              ('order', 'Pre-Generate Draft Invoices based on Purchase Orders'),
             ], 'Invoicing Method', required=True, default_model='purchase.order'),
+        'group_purchase_pricelist':fields.boolean("Pricelist per Supplier",
+            implied_group='product.group_purchase_pricelist',
+            help="""Allows to manage different prices based on rules per category of Supplier.
+                Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
+        'group_sale_uom':fields.boolean("UOM per product",
+            implied_group='product.group_uom',
+            help="""Allows you to select and maintain different unit of measures per product."""),
         'module_purchase_analytic_plans': fields.boolean('Purchase analytic plan',
             help ="""Allows the user to maintain several analysis plans. These let you split
                 lines on a purchase order between several accounts and analytic plans.

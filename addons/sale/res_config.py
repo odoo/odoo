@@ -53,6 +53,13 @@ class sale_configuration(osv.osv_memory):
         'time_unit': fields.many2one('product.uom', 'Working Time Unit'),
         'default_picking_policy' : fields.boolean("Deliver all products at once",
             help = "You can set picking policy on sale order that will allow you to deliver all products at once."),
+        'group_sale_pricelist':fields.boolean("Pricelist per Customer",
+            implied_group='product.group_sale_pricelist',
+            help="""Allows to manage different prices based on rules per category of customers. 
+                Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
+        'group_sale_uom':fields.boolean("UOM per product",
+            implied_group='product.group_uom',
+            help="""Allows you to select and maintain different unit of measures per product."""),
         'group_sale_delivery_address': fields.boolean("Specify delivery and invoice addresses",
             implied_group='sale.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a sale order."),
