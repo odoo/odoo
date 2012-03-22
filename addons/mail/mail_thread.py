@@ -87,7 +87,7 @@ class mail_thread(osv.osv):
         return thread_id;
     
     def write(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, ('int', 'long')):
+        if isinstance(ids, (int, long)):
             ids = [ids]
         write_res = super(mail_thread, self).write(cr, uid, ids, vals, context=context);
         if write_res:
