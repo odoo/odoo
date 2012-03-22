@@ -385,6 +385,17 @@ class mail_thread(osv.osv):
         msg_ids = msg_obj.search(cr, uid, search_domain, limit=limit, offset=offset, context=context)
         if (ascent): msg_ids = self._message_get_parent_ids(cr, uid, ids, msg_ids, root_ids, context=context)
         msgs = msg_obj.read(cr, uid, msg_ids, context=context)
+        
+        #cr.execute(
+             #'''
+             #select * from mail_notification notif
+             #left join mail_message mes
+             #on (notif.message_id=mes.id)
+             #where notif.user_id=%s
+             #''',
+             #(str(uid)),)
+        #print res
+        
         return msgs
     
     # Message tools

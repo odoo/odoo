@@ -43,7 +43,7 @@ openerp.mail = function(session) {
             this.params.parent_id = this.params.parent_id || false;
             this.params.thread_level = this.params.thread_level || 0;
             this.params.msg_more_limit = this.params.msg_more_limit || 100;
-            this.params.limit = this.params.limit || 2;
+            this.params.limit = this.params.limit || 100;
             this.params.offset = this.params.offset || 0;
             this.params.records = this.params.records || null;
             // datasets and internal vars
@@ -67,20 +67,19 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             var self = this;
             // customize display
-            this.$element.find('p.oe_mail_p_nomore').hide();
             if (! this.display.show_post_comment) this.$element.find('div.oe_mail_thread_act').hide();
             if (! this.display.show_more) this.$element.find('div.oe_mail_thread_more').hide();
             // add events
             this.add_events();
-            /* get record name */
+            // get record name
             var name_get_done = self.ds.name_get([this.params.res_id]).then(function (records) { self.name = records[0][1]; });
             var display_done = $.when(name_get_done).then(function () {
                 /* display user, fetch comments */
                 self.display_current_user();
-                if (self.params.records) return self.display_comments(self.params.records);
+                if (self.params.records) return self.fetch_comments_tmp(self.params.records);
                 else return self.init_comments();
             });
-            return display_done
+            return display_done && name_get_done
         },
         
         add_events: function() {
@@ -159,16 +158,30 @@ openerp.mail = function(session) {
             return this.fetch_comments(this.params.limit, this.params.offset, domain).then();
         },
         
+        fetch_comments_tmp: function (records_good) {
+            console.log('fetch comments tmp');
+            var self = this;
+            var defer = this.ds.call('message_load', [[this.params.res_id], 1, 0, [ ['id', 'child_of', this.params.parent_id], ['id', '!=', this.params.parent_id]] ]);
+            $.when(defer).then(function (records) {
+                console.log(records);
+                if (records.length <= 0) self.display.show_more = false;
+                self.display_comments(records_good);
+                if (self.display.show_more == false) {
+                    self.$element.find('button.oe_mail_button_more:last').hide(); }
+                });
+            return defer;
+        },
+        
         fetch_comments: function (limit, offset, domain) {
             console.log('fetch comments');
             var self = this;
-            var defer = this.ds.call('message_load', [[this.params.res_id], (limit||this.params.limit), (offset||this.params.offset), (domain||[]), (this.params.thread_level > 0), (this.sorted_comments['root_ids'])]);
+            var defer = this.ds.call('message_load', [[this.params.res_id], ( (limit+1)||(this.params.limit+1) ), (offset||this.params.offset), (domain||[]), (this.params.thread_level > 0), (this.sorted_comments['root_ids'])]);
             $.when(defer).then(function (records) {
-                if (records.length < self.params.limit) self.display.show_more = false;
+                if (records.length <= self.params.limit) self.display.show_more = false;
+                else records.pop();
                 self.display_comments(records);
                 if (self.display.show_more == false) {
-                    self.$element.find('button.oe_mail_button_more:last').hide();
-                    self.$element.find('p.oe_mail_p_nomore:last').show(); }
+                    self.$element.find('button.oe_mail_button_more:last').hide(); }
                 });
             return defer;
         },
@@ -297,11 +310,24 @@ openerp.mail = function(session) {
          */
         get_fetch_domain: function (sorted_comments) {
             var domain = [];
-            var ids = [];
+            var ids = sorted_comments.root_ids.slice();
             var dis2 = [];
-            if (this.params.parent_id) {
-                domain.push(['id', 'child_of', this.params.parent_id]);
+            // must be child of current parent
+            if (this.params.parent_id) { domain.push(['id', 'child_of', this.params.parent_id]); }
+            // must not be children of already fetched messages
+            if (ids.length > 0) {
+                domain.push('&');
+                domain.push('!');
+                domain.push(['id', 'child_of', ids]);
             }
+            // must not be current roots
+            //if (this.params.parent_id != false) {
+                //ids.push(this.params.parent_id);
+            //}
+            //if (ids.length > 0) {
+                //domain.push['id', 'not in', ids]);
+            //}
+            
             _(sorted_comments.root_ids).each(function (id) { // each record
                 ids.push(id);
                 dis2.push(id);
