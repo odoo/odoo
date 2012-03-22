@@ -81,6 +81,7 @@ class purchase_config_settings(osv.osv_memory):
         return res
 
     _defaults = {
+        'default_invoice_method': 'manual',
         'tax_policy': 'global_on_order',
     }
 
