@@ -1011,7 +1011,7 @@ class function(_column):
             self._symbol_f = boolean._symbol_f
             self._symbol_set = boolean._symbol_set
 
-        if type in ['integer','integer_big']:
+        if type == 'integer':
             self._symbol_c = integer._symbol_c
             self._symbol_f = integer._symbol_f
             self._symbol_set = integer._symbol_set
@@ -1051,7 +1051,7 @@ class function(_column):
             elif not context.get('bin_raw'):
                 result = sanitize_binary_value(value)
 
-        if field_type in ("integer","integer_big") and value > xmlrpclib.MAXINT:
+        if field_type == "integer" and value > xmlrpclib.MAXINT:
             # integer/long values greater than 2^31-1 are not supported
             # in pure XMLRPC, so we have to pass them as floats :-(
             # This is not needed for stored fields and non-functional integer

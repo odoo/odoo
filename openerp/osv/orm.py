@@ -544,7 +544,6 @@ def pg_varchar(size=0):
 FIELDS_TO_PGTYPES = {
     fields.boolean: 'bool',
     fields.integer: 'int4',
-    fields.integer_big: 'int8',
     fields.text: 'text',
     fields.date: 'date',
     fields.datetime: 'timestamp',
