@@ -21,8 +21,8 @@
 
 from osv import fields, osv
 
-class warehouse_configuration(osv.osv_memory):
-    _name = 'warehouse.configuration'
+class stock_config_settings(osv.osv_memory):
+    _name = 'stock.config.settings'
     _inherit = 'res.config.settings'
 
     _columns = {
