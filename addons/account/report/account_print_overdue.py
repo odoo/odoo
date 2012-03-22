@@ -68,7 +68,7 @@ class Overdue(report_sxw.rml_parse):
             adr=res_partner_address.read(self.cr, self.uid, [adr_id])[0]
             return adr['phone']
         else:
-            return partner.address and partner.address[0].phone or False
+            return partner.phone or False
         return False
 
     def _lines_get(self, partner):
