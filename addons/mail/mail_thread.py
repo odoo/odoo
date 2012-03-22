@@ -82,11 +82,13 @@ class mail_thread(osv.osv):
     #------------------------------------------------------
     
     def create(self, cr, uid, vals, context=None):
+        """Automatically subscribe the creator"""
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context);
         self.message_subscribe(cr, uid, [thread_id], [uid], context=context)
         return thread_id;
     
     def write(self, cr, uid, ids, vals, context=None):
+        """Automatically subscribe the writer"""
         if isinstance(ids, (int, long)):
             ids = [ids]
         write_res = super(mail_thread, self).write(cr, uid, ids, vals, context=context);
@@ -122,9 +124,10 @@ class mail_thread(osv.osv):
     
     def message_create(self, cr, uid, thread_id, vals, context=None):
         """OpenSocial: wrapper of mail.message create method
-        - creates the mail.message
-        - automatically subscribe the message writer if not already done
-        - push the message to subscribed users"""
+           - creates the mail.message
+           - automatically subscribe the message writer if not already done
+           - push the message to subscribed users
+        """
         if context is None:
             context = {}
         user_to_push_ids = []
@@ -155,7 +158,9 @@ class mail_thread(osv.osv):
         return msg_id
     
     def message_parse_users(self, cr, uid, ids, string, context=None):
-        '''Parse message content; if find @login -(^|\s)@(\w*)-: returns the related ids'''
+        """Parse message content
+           - if find @login -(^|\s)@(\w*)-: returns the related ids
+        """
         regex = re.compile('(^|\s)@(\w*)')
         login_lst = [item[1] for item in regex.findall(string)]
         if not login_lst: return []
@@ -179,9 +184,11 @@ class mail_thread(osv.osv):
            containing all the details passed as parameters.  All attachments
            will be attached to the thread record as well as to the actual
            message.
-           If only the ``threads`` and ``subject`` parameters are provided,
-           a *event log* message is created, without the usual envelope
-           attributes (sender, recipients, etc.). 
+           If ``email_from`` is not set or ``type`` not set as 'meail',
+           a note message is created, without the usual envelope
+           attributes (sender, recipients, etc.).
+           The creation of the message is done by calling ``message_create``
+           method, that will manage automatic pushing of notifications.
 
         :param threads: list of thread ids, or list of browse_records representing
                         threads to which a new message should be attached
