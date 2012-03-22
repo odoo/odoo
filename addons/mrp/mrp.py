@@ -368,7 +368,7 @@ class mrp_bom(osv.osv):
         prod_obj = self.pool.get('product.product')
         for obj in self.browse(cr, uid, ids, context=context):
             for prod in prod_obj.browse(cr, uid, [obj.product_id], context=context):
-                self.message_append_note(cr, uid, ids, _('System notification'),
+                self.message_append_note(cr, uid, [obj.id], _('System notification'),
                         _("Bill of Material has been <b>created</b> for <em>%s</em> product.") % (prod.id.name_template), type='notification', context=context)
         return True
 
@@ -538,32 +538,33 @@ class mrp_production(osv.osv):
         return self.pool.get('res.users').read(cr, uid, sub_ids, context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, 'System Notification', _("Manufacturing order has been <b>created</b>."), context=context)
+        self.message_append_note(cr, uid, ids, _('System Notification'), _("Manufacturing order has been <b>created</b>."), context=context)
         return True
 
     def action_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>canceled</b>.")
-        self.message_append_note(cr, uid, ids, 'System Notification', message, context=context)
+        self.message_append_note(cr, uid, ids, _('System Notification'), message, context=context)
         return True
 
     def action_ready_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order is <b>ready to produce</b>.")
-        self.message_append_note(cr, uid, ids, 'System Notification', message, context=context)
+        self.message_append_note(cr, uid, ids, _('System Notification'), message, context=context)
         return True
 
-    def action_inproduction_send_note(self, cr, uid, ids, context=None):
+    def action_in_production_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order is <b>in production</b>.")
-        self.message_append_note(cr, uid, ids, 'System Notification', message, context=context)
+        self.message_append_note(cr, uid, ids, _('System Notification'), message, context=context)
         return True
 
     def action_done_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>done</b>.")
-        self.message_append_note(cr, uid, ids, 'System Notification', message, context=context)
+        self.message_append_note(cr, uid, ids, _('System Notification'), message, context=context)
         return True
 
-    def action_waiting_send_note(self, cr, uid, ids, context=None):
-        message = _("Manufacturing order has been <b>confirmed and waiting for goods</b>.")
-        self.message_append_note(cr, uid, ids, 'System Notification', message, context=context)
+    def action_confirm_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            message = _("Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for the <em>%s</em>.") % (obj.date_planned)
+            self.message_append_note(cr, uid, [obj.id], _('System Notification'), message, context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -716,9 +717,9 @@ class mrp_production(osv.osv):
         """
         for production in self.browse(cr, uid, ids):
             self._costs_generate(cr, uid, production)
-        self.write(cr, uid, ids, {'state': 'done', 'date_finished': time.strftime('%Y-%m-%d %H:%M:%S')})
+        write_res = self.write(cr, uid, ids, {'state': 'done', 'date_finished': time.strftime('%Y-%m-%d %H:%M:%S')})
         self.action_done_send_note(cr, uid, ids, context)
-        return True
+        return write_res
 
     def test_production_done(self, cr, uid, ids):
         """ Tests whether production is done or not.
@@ -887,7 +888,7 @@ class mrp_production(osv.osv):
         @return: True
         """
         self.write(cr, uid, ids, {'state': 'in_production', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
-        self.action_inproduction_send_note(cr, uid, ids, context)
+        self.action_in_production_send_note(cr, uid, ids, context)
         return True
 
     def test_if_product(self, cr, uid, ids):
@@ -1061,11 +1062,7 @@ class mrp_production(osv.osv):
 
             wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
             production.write({'state':'confirmed'}, context=context)
-            message = _("Manufacturing order '%s' is scheduled for the %s.") % (
-                production.name,
-                datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y'),
-            )
-            self.action_waiting_send_note(cr, uid, [production.id], context);
+            self.action_confirm_send_note(cr, uid, [production.id], context);
         return shipment_id
 
     def force_production(self, cr, uid, ids, *args):

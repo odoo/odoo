@@ -99,10 +99,10 @@ class stock_change_product_qty(osv.osv_memory):
 
             inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
             inventry_obj.action_done(cr, uid, [inventory_id], context=context)
-            self.quantity_change_send_note(cr, uid, [data.id], context)
+            self.change_product_qty_send_note(cr, uid, [data.id], context)
         return {}
 
-    def quantity_change_send_note (self, cr, uid, ids, context=None):
+    def change_product_qty_send_note (self, cr, uid, ids, context=None):
         prod_obj = self.pool.get('product.product')
         location_obj = self.pool.get('stock.location')
         prod_temp_obj = self.pool.get('product.template')
