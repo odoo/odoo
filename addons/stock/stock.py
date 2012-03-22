@@ -535,7 +535,7 @@ stock_tracking()
 # Stock Picking
 #----------------------------------------------------------
 PICK_STATE = [
-            ('draft', 'New'),
+            ('draft', 'Draft'),
             ('auto', 'Waiting Another Operation'),
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Process'),
@@ -700,9 +700,9 @@ class stock_picking(osv.osv):
                                 value = 'Received'
                         elif type == 'internal':
                             if key == 'assigned':
-                                value = 'Ready to Move'
+                                value = 'Ready to Transfer'
                             elif key == 'done':
-                                value = 'Moved'
+                                value = 'Transferred'
                         elif type == 'out':
                             if key == 'assigned':
                                 value = 'Ready to Deliver'

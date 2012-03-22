@@ -86,14 +86,14 @@ class stock_partial_picking(osv.osv_memory):
                 if type == 'in':
                     node.set('string', '_Receive')
                 elif type == 'internal':
-                    node.set('string', '_Move')
+                    node.set('string', '_Transfer')
                 elif type == 'out':
                     node.set('string', '_Deliver')
             for node in doc.xpath("//separator[@string='Products']"):
                 if type == 'in':
                     node.set('string', 'Receive Products')
                 elif type == 'internal':
-                    node.set('string', 'Move Products')
+                    node.set('string', 'Transfer Products')
                 elif type == 'out':
                     node.set('string', 'Deliver Products')
             res['arch'] = etree.tostring(doc)
