@@ -31,18 +31,16 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         this.$element.delegate('.oe-dashboard-column .oe-dashboard-fold', 'click', this.on_fold_action);
         this.$element.delegate('.oe-dashboard-column .ui-icon-closethick', 'click', this.on_close_action);
 
-        this.actions_attrs = {};
         // Init actions
         _.each(this.node.children, function(column, column_index) {
             _.each(column.children, function(action, action_index) {
                 delete(action.attrs.width);
                 delete(action.attrs.height);
                 delete(action.attrs.colspan);
-                self.actions_attrs[action.attrs.name] = action.attrs;
                 self.rpc('/web/action/load', {
                     action_id: parseInt(action.attrs.name, 10)
                 }, function(result) {
-                    self.on_load_action(result, column_index + '_' + action_index);
+                    self.on_load_action(result, column_index + '_' + action_index, action.attrs);
                 });
             });
         });
@@ -97,9 +95,9 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             $action = $e.parents('.oe-dashboard-action:first'),
             id = parseInt($action.attr('data-id'), 10);
         if ($e.is('.ui-icon-minusthick')) {
-            this.actions_attrs[id].fold = '1';
+            $action.data('action_attrs').fold = '1';
         } else {
-            delete(this.actions_attrs[id].fold);
+            delete($action.data('action_attrs').fold);
         }
         $e.toggleClass('ui-icon-minusthick ui-icon-plusthick');
         $action.find('.oe-dashboard-action-content').toggle();
@@ -122,7 +120,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             var actions = [];
             $(this).find('.oe-dashboard-action').each(function() {
                 var action_id = $(this).attr('data-id'),
-                    new_attrs = _.clone(self.actions_attrs[action_id]);
+                    new_attrs = _.clone($(this).data('action_attrs'));
                 if (new_attrs.domain) {
                     new_attrs.domain = new_attrs.domain_string;
                     delete(new_attrs.domain_string);
@@ -143,19 +141,25 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             self.$element.find('.oe-dashboard-link-reset').show();
         });
     },
-    on_load_action: function(result, index) {
+    on_load_action: function(result, index, action_attrs) {
         var self = this,
             action = result.result,
-            action_attrs = this.actions_attrs[action.id],
             view_mode = action_attrs.view_mode;
 
-        if (action_attrs.context) {
-            action.context = _.extend((action.context || {}), action_attrs.context);
+        if (action_attrs.context && action_attrs.context['dashboard_merge_domains_contexts'] === false) {
+            // TODO: replace this 6.1 workaround by attribute on <action/>
+            action.context = action_attrs.context || {};
+            action.domain = action_attrs.domain || [];
+        } else {
+            if (action_attrs.context) {
+                action.context = _.extend((action.context || {}), action_attrs.context);
+            }
+            if (action_attrs.domain) {
+                action.domain = action.domain || [];
+                action.domain.unshift.apply(action.domain, action_attrs.domain);
+            }
         }
-        if (action_attrs.domain) {
-            action.domain = action.domain || [];
-            action.domain.unshift.apply(action.domain, action_attrs.domain);
-        }
+
         var action_orig = _.extend({ flags : {} }, action);
 
         if (view_mode && view_mode != action.view_mode) {
@@ -187,6 +191,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         var am = new openerp.web.ActionManager(this),
             // FIXME: ideally the dashboard view shall be refactored like kanban.
             $action = $('#' + this.view.element_id + '_action_' + index);
+        $action.parent().data('action_attrs', action_attrs);
         this.action_managers.push(am);
         am.appendTo($action);
         am.do_action(action);

@@ -410,12 +410,7 @@ class Database(openerpweb.Controller):
         return {"db_list": dbs}
 
     @openerpweb.jsonrequest
-    def progress(self, req, password, id):
-        return req.session.proxy('db').get_progress(password, id)
-
-    @openerpweb.jsonrequest
     def create(self, req, fields):
-
         params = dict(map(operator.itemgetter('name', 'value'), fields))
         create_attrs = (
             params['super_admin_pwd'],
@@ -425,17 +420,7 @@ class Database(openerpweb.Controller):
             params['create_admin_pwd']
         )
 
-        try:
-            return req.session.proxy("db").create(*create_attrs)
-        except xmlrpclib.Fault, e:
-            if e.faultCode and isinstance(e.faultCode, str)\
-                and e.faultCode.split(':')[0] == 'AccessDenied':
-                    return {'error': e.faultCode, 'title': 'Database creation error'}
-            return {
-                'error': "Could not create database '%s': %s" % (
-                    params['db_name'], e.faultString),
-                'title': 'Database creation error'
-            }
+        return req.session.proxy("db").create_database(*create_attrs)
 
     @openerpweb.jsonrequest
     def drop(self, req, fields):
@@ -486,6 +471,50 @@ class Database(openerpweb.Controller):
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return {'error': e.faultCode, 'title': 'Change Password'}
         return {'error': 'Error, password not changed !', 'title': 'Change Password'}
+
+def topological_sort(modules):
+    """ Return a list of module names sorted so that their dependencies of the
+    modules are listed before the module itself
+
+    modules is a dict of {module_name: dependencies}
+
+    :param modules: modules to sort
+    :type modules: dict
+    :returns: list(str)
+    """
+
+    dependencies = set(itertools.chain.from_iterable(modules.itervalues()))
+    # incoming edge: dependency on other module (if a depends on b, a has an
+    # incoming edge from b, aka there's an edge from b to a)
+    # outgoing edge: other module depending on this one
+
+    # [Tarjan 1976], http://en.wikipedia.org/wiki/Topological_sorting#Algorithms
+    #L ← Empty list that will contain the sorted nodes
+    L = []
+    #S ← Set of all nodes with no outgoing edges (modules on which no other
+    #    module depends)
+    S = set(module for module in modules if module not in dependencies)
+
+    visited = set()
+    #function visit(node n)
+    def visit(n):
+        #if n has not been visited yet then
+        if n not in visited:
+            #mark n as visited
+            visited.add(n)
+            #change: n not web module, can not be resolved, ignore
+            if n not in modules: return
+            #for each node m with an edge from m to n do (dependencies of n)
+            for m in modules[n]:
+                #visit(m)
+                visit(m)
+            #add n to L
+            L.append(n)
+    #for each node n in S do
+    for n in S:
+        #visit(n)
+        visit(n)
+    return L
 
 class Session(openerpweb.Controller):
     _cp_path = "/web/session"
@@ -554,20 +583,32 @@ class Session(openerpweb.Controller):
     def modules(self, req):
         # Compute available candidates module
         loadable = openerpweb.addons_manifest
-        loaded = req.config.server_wide_modules
+        loaded = set(req.config.server_wide_modules)
         candidates = [mod for mod in loadable if mod not in loaded]
 
-        # Compute active true modules that might be on the web side only
-        active = set(name for name in candidates
-                     if openerpweb.addons_manifest[name].get('active'))
+        # already installed modules have no dependencies
+        modules = dict.fromkeys(loaded, [])
+
+        # Compute auto_install modules that might be on the web side only
+        modules.update((name, openerpweb.addons_manifest[name].get('depends', []))
+                      for name in candidates
+                      if openerpweb.addons_manifest[name].get('auto_install'))
 
         # Retrieve database installed modules
         Modules = req.session.model('ir.module.module')
-        installed = set(module['name'] for module in Modules.search_read(
-            [('state','=','installed'), ('name','in', candidates)], ['name']))
+        for module in Modules.search_read(
+                        [('state','=','installed'), ('name','in', candidates)],
+                        ['name', 'dependencies_id']):
+            deps = module.get('dependencies_id')
+            if deps:
+                dependencies = map(
+                    operator.itemgetter('name'),
+                    req.session.model('ir.module.module.dependency').read(deps, ['name']))
+                modules[module['name']] = list(
+                    set(modules.get(module['name'], []) + dependencies))
 
-        # Merge both
-        return list(active | installed)
+        sorted_modules = topological_sort(modules)
+        return [module for module in sorted_modules if module not in loaded]
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
@@ -1304,10 +1345,15 @@ class SearchView(View):
         filters = Model.get_filters(model)
         for filter in filters:
             try:
-                filter["context"] = req.session.eval_context(
-                    parse_context(filter["context"], req.session))
-                filter["domain"] = req.session.eval_domain(
-                    parse_domain(filter["domain"], req.session))
+                parsed_context = parse_context(filter["context"], req.session)
+                filter["context"] = (parsed_context
+                        if not isinstance(parsed_context, common.nonliterals.BaseContext)
+                        else req.session.eval_context(parsed_context))
+
+                parsed_domain = parse_domain(filter["domain"], req.session)
+                filter["domain"] = (parsed_domain
+                        if not isinstance(parsed_domain, common.nonliterals.BaseDomain)
+                        else req.session.eval_domain(parsed_domain))
             except Exception:
                 logger.exception("Failed to parse custom filter %s in %s",
                                  filter['name'], model)
@@ -1340,6 +1386,7 @@ class SearchView(View):
         ctx = common.nonliterals.CompoundContext(context_to_save)
         ctx.session = req.session
         ctx = ctx.evaluate()
+        ctx['dashboard_merge_domains_contexts'] = False # TODO: replace this 6.1 workaround by attribute on <action/>
         domain = common.nonliterals.CompoundDomain(domain)
         domain.session = req.session
         domain = domain.evaluate()
@@ -1355,7 +1402,7 @@ class SearchView(View):
                 if board and 'arch' in board:
                     xml = ElementTree.fromstring(board['arch'])
                     column = xml.find('./board/column')
-                    if column:
+                    if column is not None:
                         new_action = ElementTree.Element('action', {
                                 'name' : str(action_id),
                                 'string' : name,
