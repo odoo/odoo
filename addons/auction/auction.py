@@ -751,8 +751,8 @@ class auction_bid(osv.osv):
         if not partner_id:
             return {'value': {'contact_tel':False}}
         contact = self.pool.get('res.partner').browse(cr, uid, partner_id)
-        if len(contact.address):
-            v_contact=contact.address[0] and contact.address[0].phone
+        if contact:
+            v_contact=contact.phone
         else:
             v_contact = False
         return {'value': {'contact_tel': v_contact}}
