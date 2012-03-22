@@ -156,7 +156,7 @@ class base_needaction(osv.osv):
            records, given their ids"""
         all_user_ids = []
         needaction_user_ids = self.get_needaction_user_ids(cr, uid, ids, context=context)
-        for recird_id, record_user_ids in needaction_user_ids:
+        for record_id, record_user_ids in needaction_user_ids.iteritems():
             all_user_ids += record_user_ids
         return all_user_ids
     
