@@ -60,6 +60,7 @@ Dashboard for purchase management that includes:
         'report/purchase_report_view.xml',
         'board_purchase_view.xml',
         'edi/purchase_order_action_data.xml',
+        'res_config_view.xml',
     ],
     'test': [
         'test/process/cancel_order.yml',
