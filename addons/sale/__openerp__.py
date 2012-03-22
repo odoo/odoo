@@ -85,6 +85,7 @@ Dashboard for Sales Manager that includes:
         'process/sale_process.xml',
         'board_sale_view.xml',
         'edi/sale_order_action_data.xml',
+        'res_config_view.xml',
     ],
     'demo_xml': ['sale_demo.xml'],
     'test': [

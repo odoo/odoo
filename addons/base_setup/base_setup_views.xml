@@ -142,5 +142,31 @@
         <field name="sequence">1</field>
     </record>
 
+    <record id="base.view_sale_config_settings" model="ir.ui.view">
+        <field name="name">sale.config.settings</field>
+        <field name="model">sale.config.settings</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Configure Sales &amp; CRM">
+                <group name="config_sale" colspan="4"/>
+                <group name="config_contracts" colspan="4"/>
+                <group name="config_emails" colspan="4"/>
+                <group name="config_crm" colspan="4"/>
+                <label colspan="2"/>
+                <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                <button string="Apply" icon="gtk-ok" type="object" name="execute"/>
+            </form>
+        </field>
+    </record>
+    
+    <record id="base.action_sale_config" model="ir.actions.act_window">
+        <field name="name">Configure Sales &amp; CRM</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.config.settings</field>
+        <field name="view_id" ref="base.view_sale_config_settings"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
   </data>
 </openerp>
