@@ -148,24 +148,37 @@ class base_needaction(osv.osv):
         return super(base_needaction, self).unlink(cr, uid, ids, context=context)
     
     #------------------------------------------------------
-    # General API
+    # Need action API
     #------------------------------------------------------
     
-    def needaction_get_user_needaction_ids(self, cr, uid, user_id, offset=0, limit=None, order=None, count=False, context=None):
+    def needaction_get_records_user_ids(self, cr, uid, ids, context=None):
+        """Find all users that have to perform an action related to
+           records, given their ids"""
+        all_user_ids = []
+        needaction_user_ids = self.get_needaction_user_ids(cr, uid, ids, context=context)
+        for recird_id, record_user_ids in needaction_user_ids:
+            all_user_ids += record_user_ids
+        return all_user_ids
+    
+    def _needaction_get_user_table_ids(self, cr, uid, ids, user_id, offset=0, limit=None, order=None, count=False, context=None):
+        """General method
+           Given an user_id, get all base.needaction_users_rel ids"""
         if context is None:
             context = {}
         needact_rel_obj = self.pool.get('base.needaction_users_rel')
         search_res = needact_rel_obj.search(cr, uid, [('user_id', '=', user_id)], offset=offset, limit=limit, order=order, count=count, context=context)
         return search_res
     
-    def needaction_get_user_record_references(self, cr, uid, user_id, offset=0, limit=None, order=None, context=None):
-        '''for a given uid, get all the records that asks this user to
+    def needaction_get_user_record_references(self, cr, uid, ids, user_id, offset=0, limit=None, order=None, context=None):
+        """General method
+           For a given uid, get all the records that asks this user to
            perform an action. Records are given as references, a list of
-           tuples (model_name, record_id).'''
+           tuples (model_name, record_id).
+           This method is trans-model."""
         if context is None:
             context = {}
         needact_rel_obj = self.pool.get('base.needaction_users_rel')
-        needact_obj_ids = self.get_user_needaction_ids(cr, uid, user_id, offset=offset, limit=limit, order=order, context=context)
+        needact_obj_ids = self._needaction_get_user_table_ids(cr, uid, user_id, offset=offset, limit=limit, order=order, context=context)
         needact_objs = needact_rel_obj.browse(cr, uid, needact_obj_ids, context=context)
         record_references = [(needact_obj.res_model, needact_obj.res_id) for needact_obj in needact_objs]
         return record_references
