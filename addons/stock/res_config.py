@@ -48,7 +48,7 @@ class stock_config_settings(osv.osv_memory):
                     - removal date
                     - alert date.
                 This installs the module product_expiry."""),
-        'group_uom': fields.boolean("UOM per product",
+        'group_uom': fields.boolean("Allow different UoM per product",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different unit of measures per product."""),
         'group_stock_packaging': fields.boolean("Manage packaging by products",
