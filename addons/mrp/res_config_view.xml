@@ -6,7 +6,7 @@
             <field name="model">mrp.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Manufacturing Application">
+                <form string="Configure Manufacturing">
                     <separator string="Manufacturing Order" colspan="4"/>
                     <field name="group_mrp_routings"/>
                     <field name="module_mrp_operations"/>
@@ -26,7 +26,7 @@
         </record>
 
         <record id="action_mrp_configuration" model="ir.actions.act_window">
-            <field name="name">Configure Manufacturing Application</field>
+            <field name="name">Configure Manufacturing</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.config.settings</field>
             <field name="view_mode">form</field>
