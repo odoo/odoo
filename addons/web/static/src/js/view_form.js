@@ -1428,7 +1428,7 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
     init: function(field_manager, node) {
         this._super(field_manager, node);
         this.name = this.node.attrs.name;
-        this.value = undefined;
+        this.value = false;
         this.view.fields[this.name] = this;
         this.view.fields_order.push(this.name);
         this.type = this.node.attrs.widget;
@@ -1557,6 +1557,7 @@ openerp.web.form.ReinitializeFieldMixin =  {
             this.render_value();
         });
         this.initialize_content();
+        this.render_value();
     },
     /**
      * Called to destroy anything that could have been created previously, called before a
@@ -1675,6 +1676,7 @@ openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
 openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
     init: function (view, node) {
         this._super(view, node);
+        this.value = 0;
         if (this.node.attrs.digits) {
             this.parse_digits(this.node.attrs.digits);
         } else {
@@ -3498,7 +3500,7 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
     initialize_content: function() {
         this._super();
-        this.$image = this.$element.find('img.oe-binary-image');
+        this.$placeholder = $(".oe_form_field-binary-image-placeholder", this.$element);
         if (!this.get("effective_readonly"))
             this.$element.find('.oe-binary').show();
         else
@@ -3509,32 +3511,30 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
         this.render_value();
     },
     render_value: function() {
-        this.set_image_maxwidth();
-
         var url;
         if (this.value && this.value.substr(0, 10).indexOf(' ') == -1) {
             url = 'data:image/png;base64,' + this.value;
-        } else {
+        } else if (this.value) {
             url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +
                 this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime());
+        } else {
+            url = "/web/static/src/img/placeholder.png";
         }
-        this.$image.attr('src', url);
-    },
-    set_image_maxwidth: function() {
-        this.$image.css('max-width', this.$element.width());
+        var rendered = QWeb.render("FieldBinaryImage-img", {widget: this, url: url});;
+        this.$placeholder.html(rendered);
     },
     on_file_change: function() {
-        this.set_image_maxwidth();
+        this.render_value();
         this._super.apply(this, arguments);
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
         this.value = file_base64;
         this.binary_value = true;
-        this.$image.attr('src', 'data:' + (content_type || 'image/png') + ';base64,' + file_base64);
+        this.render_value();
     },
     on_clear: function() {
         this._super.apply(this, arguments);
-        this.$image.attr('src', '/web/static/src/img/placeholder.png');
+        this.render_value();
     }
 });
 
