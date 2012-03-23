@@ -67,7 +67,10 @@ class ir_model(osv.osv):
         models = self.browse(cr, uid, ids, context=context)
         res = dict.fromkeys(ids)
         for model in models:
-            res[model.id] = self.pool.get(model.model).is_transient()
+            if self.pool.get(model.model):
+                res[model.id] = self.pool.get(model.model).is_transient()
+            else:
+                _logger.error('Missing model %s' % (model.model, ))
         return res
 
     def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
@@ -508,7 +511,9 @@ class ir_model_access(osv.osv):
             model_name = model
 
         # TransientModel records have no access rights, only an implicit access rule
-        if self.pool.get(model_name).is_transient():
+        if not (self.pool.get(model_name)):
+            _logger.error('Missing model %s' % (model_name, ))
+        elif self.pool.get(model_name).is_transient():
             return True
 
         # We check if a specific rule exists
