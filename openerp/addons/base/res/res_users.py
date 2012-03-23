@@ -219,13 +219,13 @@ class users(osv.osv):
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
     def onchange_avatar(self, cr, uid, ids, value, context=None):
-        return {'value': {'avatar_stored': value, 'avatar': self._avatar_resize(cr, uid, value, context=context)  } }
+        return {'value': {'avatar_stored': self._avatar_resize(cr, uid, value, context=context), 'avatar': self._avatar_resize(cr, uid, value, context=context)  } }
     
     def _set_avatar(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'avatar_stored': value}, context=context)
     
     def _avatar_resize(self, cr, uid, avatar, context=None):
-        image_stream = io.BytesIO(avatar_stored.decode('base64'))
+        image_stream = io.BytesIO(avatar.decode('base64'))
         img = Image.open(image_stream)
         img.thumbnail((180, 150), Image.ANTIALIAS)
         img_stream = StringIO.StringIO()
@@ -233,11 +233,9 @@ class users(osv.osv):
         return img_stream.getvalue().encode('base64')
     
     def _get_avatar(self, cr, uid, ids, name, args, context=None):
-        result = {}
+        result = dict.fromkeys(ids, False)
         for user in self.browse(cr, uid, ids, context=context):
-            if not user.avatar:
-                result[user.id] = False
-            else:
+            if user.avatar_stored:
                 result[user.id] = self._avatar_resize(cr, uid, user.avatar_stored)
         return result
 
