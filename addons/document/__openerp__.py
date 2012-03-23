@@ -55,6 +55,7 @@ ATTENTION:
         'security/ir.model.access.csv',
         'report/document_report_view.xml',
         'board_document_view.xml',
+        'res_config_view.xml',
     ],
     'demo_xml': [ 'document_demo.xml','board_document_demo.xml'],
     'test': [
