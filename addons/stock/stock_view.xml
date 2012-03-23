@@ -1023,9 +1023,9 @@
             <field name="arch" type="xml">
                 <search string="Picking list">
                     <group>
-                        <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Delivery Orders"/>
+                        <filter icon="terp-check" name="available" string="Ready To Deliver" domain="[('state','=','assigned')]" help="Assigned Delivery Orders"/>
                         <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Delivery Orders"/>
-                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Delivery orders already processed"/>
+                        <filter icon="terp-dialog-close" name="done" string="Delivered" domain="[('state','=','done')]" help="Delivery orders already Delivered"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
@@ -1241,8 +1241,8 @@
             <field name="arch" type="xml">
                 <search string="Incoming Shipments">
                     <group>
-                        <filter icon="terp-check" name="available" string="Ready to Process" domain="[('state','=','assigned')]" help="Incoming Shipments Available" />
-                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
+                        <filter icon="terp-check" name="available" string="Ready To Receive" domain="[('state','=','assigned')]" help="Incoming Shipments Available" />
+                        <filter icon="terp-dialog-close" name="done" string="Received" domain="[('state','=','done')]" help="Incoming Shipments already Received"/>
                         <separator orientation="vertical" />
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
@@ -1307,7 +1307,7 @@
             <field name="arch" type="xml">
                 <search string="Internal Picking List">
                     <group>
-                        <filter icon="terp-check" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Transfers"/>
+                        <filter icon="terp-check" string="Ready To Transfer" domain="[('state','=','assigned')]" help="Assigned Internal Transfers"/>
                         <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Transfers" />
                         <separator orientation="vertical"/>
                         <field name="name"/>
@@ -1674,7 +1674,7 @@
                     <group>
                         <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting " domain="[('state','in',('confirmed','assigned'))]" help="Stock to be receive"/>
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
-                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state', '=', 'done')]"/>
+                        <filter icon="terp-dialog-close" name="done" string="Received" domain="[('state', '=', 'done')]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
@@ -1707,7 +1707,7 @@
                     <group>
                         <filter icon="terp-gtk-go-back-rtl" name="receive" string=" Waiting" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be delivered (Available or not)"/>
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
-                        <filter icon="terp-dialog-close" name="received" string="Done" domain="[('state','=','done')]"/>
+                        <filter icon="terp-dialog-close" name="received" string="Delivered" domain="[('state','=','done')]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
