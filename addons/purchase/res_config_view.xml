@@ -7,30 +7,27 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Purchase Application">
-                    <separator string="Invoicing" colspan="4"/>
-                    <field name="default_invoice_method" />
+                    <group colspan="4" col="6">
+                        <separator string="Invoicing" colspan="6"/>
+                        <field name="default_invoice_method" />
 
-                    <separator string="Purchase Order" colspan="4"/>
-                    <group colspan="2" col="2">
-                       <field name="group_purchase_pricelist"/>
-                       <field name="tax_policy" on_change="onchange_tax_policy(tax_policy)"/>
-                       <field name="group_purchase_taxes_global_on_order" invisible="1"/>
-                       <field name="group_purchase_taxes_on_order_line" invisible="1"/>
-                       <field name="module_warning"/>
-                       <field name="module_purchase_analytic_plans"/>
-                    </group>
-                    <group colspan="2" col="4">
+                        <separator string="Purchase Order" colspan="6"/>
+                        <field name="group_purchase_pricelist"/>
+                        <field name="group_purchase_taxes_global_on_order" invisible="1"/>
+                        <field name="group_purchase_taxes_on_order_line" invisible="1"/>
                         <field name="group_uom"/>
                         <newline/>
+                        <field name="tax_policy" on_change="onchange_tax_policy(tax_policy)"/>
                         <field name="module_purchase_double_validation"/>
                         <newline/>
+                        <field name="module_warning"/>
                         <field name="module_purchase_requisition"/>
                         <newline/>
-                    </group>
+                        <field name="module_purchase_analytic_plans"/>
 
-                    <separator string="Products" colspan="4"/>
-                    <field name="module_product_manufacturer"/>
-                    <newline/>
+                        <separator string="Products" colspan="6"/>
+                        <field name="module_product_manufacturer"/>
+                    </group>
 
                     <label colspan="2"/>
                     <button string="Cancel" icon="gtk-cancel" special="cancel"/>
