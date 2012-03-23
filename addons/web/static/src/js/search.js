@@ -842,9 +842,8 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
         if (!(has_value && context)) {
             return;
         }
-        return _.extend(
-            {}, context,
-            {own_values: {self: val}});
+        return new openerp.web.CompoundContext(context)
+                .set_eval_context({self: val});
     },
     /**
      * Function creating the returned domain for the field, override this
@@ -873,7 +872,8 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
                 this.attrs.operator || this.default_operator,
                 facet);
         }
-        return _.extend({}, domain, {own_values: {self: val}});
+        return new openerp.web.CompoundDomain(domain)
+                .set_eval_context({self: val});
     }
 });
 /**
