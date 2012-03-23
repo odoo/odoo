@@ -218,9 +218,13 @@ class users(osv.osv):
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
     def onchange_avatar(self, cr, uid, ids, value, context=None):
-        return {'value': {'avatar_big': self._avatar_resize(cr, uid, value, 540, 450, context=context), 'avatar': self._avatar_resize(cr, uid, value, context=context)  } }
+        if not value:
+            return {'value': {'avatar_big': value, 'avatar': value} }
+        return {'value': {'avatar_big': self._avatar_resize(cr, uid, value, 540, 450, context=context), 'avatar': self._avatar_resize(cr, uid, value, context=context)} }
     
     def _set_avatar(self, cr, uid, id, name, value, args, context=None):
+        if not value:
+            return {'value': {'avatar_big': value, 'avatar': value} }
         return self.write(cr, uid, [id], {'avatar_big': self._avatar_resize(cr, uid, value, 540, 450, context=context)}, context=context)
     
     def _avatar_resize(self, cr, uid, avatar, height=180, width=150, context=None):
