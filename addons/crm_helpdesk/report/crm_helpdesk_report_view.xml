@@ -156,9 +156,13 @@
             <field name="act_window_id" ref="action_report_crm_helpdesk"/>
         </record>
 
+        <menuitem id="base.menu_project_report" name="Project"
+            groups="base.group_extended"
+            parent="base.menu_reporting" sequence="30"/>
+
         <menuitem name="Helpdesk Analysis" action="action_report_crm_helpdesk"
             groups="base.group_extended"
-            id="menu_report_crm_helpdesks_tree" parent="base.next_id_64" sequence="7"/>
+            id="menu_report_crm_helpdesks_tree" parent="base.menu_project_report" sequence="20"/>
 
     </data>
 </openerp>
