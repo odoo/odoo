@@ -160,8 +160,8 @@
         <menuitem id="base.menu_administration" icon="terp-administration"  name="Settings" sequence="50" action="open_board_administration_form"/>
 
         <!-- add a menu item in adminitration/reporting/dashboards -->
-        <menuitem id="base.menu_reporting" name="Reporting" parent="base.menu_administration" sequence="11" groups="base.group_extended"/>
-        <menuitem id="base.menu_dashboard" name="Dashboards" parent="base.menu_reporting" sequence="0"/>
+        <menuitem id="base.menu_reporting_board" name="Reporting" parent="base.menu_administration" sequence="11" groups="base.group_extended"/>
+        <menuitem id="base.menu_dashboard" name="Dashboards" parent="base.menu_reporting_board" sequence="0"/>
         <menuitem id="base.menu_dashboard_admin" action="open_board_administration_form" parent="base.menu_dashboard" icon="terp-graph"/>
 
 </data>
