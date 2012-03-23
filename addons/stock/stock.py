@@ -672,6 +672,18 @@ class stock_picking(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
+        mod_obj = self.pool.get('ir.model.data')
+        if context.get('default_picking_id', False):
+            picking_type = self.browse(cr, uid, context['default_picking_id'], context=context).type
+            if picking_type == 'out':
+                context.update({'default_type':'out'})
+                view_model, view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
+            elif picking_type == 'in':
+                context.update({'default_type':'in'})
+                view_model, view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
+            elif picking_type == 'internal':
+                context.update({'default_type':'internal'})
+                view_model, view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_form')
         type = context.get('default_type', False)
         res = super(stock_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if type:
@@ -1559,6 +1571,14 @@ stock_production_lot_revision()
 # Fields:
 #   location_dest_id is only used for predicting futur stocks
 #
+MOVE_STATE = [
+            ('draft', 'Draft'),
+            ('waiting', 'Waiting Another Move'),
+            ('confirmed', 'Waiting Availability'),
+            ('assigned', 'Available'),
+            ('done', 'Done'),
+            ('cancel', 'Cancelled')
+]
 class stock_move(osv.osv):
 
     def _getSSCC(self, cr, uid, context=None):
@@ -1650,7 +1670,7 @@ class stock_move(osv.osv):
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History (parent moves)'),
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
-        'state': fields.selection([('draft', 'New'), ('waiting', 'Waiting Another Move'), ('confirmed', 'Waiting Availability'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
+        'state': fields.selection(MOVE_STATE, 'State', readonly=True, select=True,
               help='When the stock move is created it is in the \'Draft\' state.\n After that, it is set to \'Not Available\' state if the scheduler did not find the products.\n When products are reserved it is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
               \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Account'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
@@ -1678,6 +1698,36 @@ class stock_move(osv.osv):
         (_check_product_lot,
             'You try to assign a lot which is not from the same product',
             ['prodlot_id'])]
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
+        type = context.get('default_picking_type', False)
+        res = super(stock_move, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        if type:
+            for field in res['fields']:
+                # To update the states label according to shipping type
+                if field == 'state':
+                    _state = []
+                    for key, value in MOVE_STATE:
+                        if type == 'in':
+                            if key == 'assigned':
+                                value = 'Ready to Receive'
+                            elif key == 'done':
+                                value = 'Received'
+                        elif type == 'internal':
+                            if key == 'assigned':
+                                value = 'Ready to Move'
+                            elif key == 'done':
+                                value = 'Moved'
+                        elif type == 'out':
+                            if key == 'assigned':
+                                value = 'Ready to Deliver'
+                            elif key == 'done':
+                                value = 'Delivered'
+                        _state.append((key,value))
+                    res['fields']['state']['selection'] = _state
+        return res
 
     def _default_location_destination(self, cr, uid, context=None):
         """ Gets default address of partner for destination location

@@ -1436,7 +1436,7 @@
 
                     <group colspan="2" col="2">
                         <separator string="Picking" colspan="2" />
-                        <field name="picking_id"/>
+                        <field name="picking_id" context="{'default_picking_id':picking_id}"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
 
@@ -1624,7 +1624,7 @@
 
                     <group colspan="2" col="2">
                         <separator string="Picking" colspan="2" />
-                        <field name="picking_id"/>
+                        <field name="picking_id" context="{'default_picking_id':picking_id}"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
 
@@ -1738,7 +1738,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'search_default_receive\':1, \'search_default_available\':1, \'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
+            <field name="context" eval="'{\'default_picking_type\':\'in\', \'search_default_receive\':1, \'search_default_available\':1, \'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
             <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
             <field name="help">Here you can receive individual products, no matter what purchase order or picking order they come from. You will find the list of all products you are waiting for. Once you receive an order, you can filter based on the name of the supplier or the purchase order reference. Then you can confirm all products received using the buttons on the right of each line.</field>
         </record>
@@ -1874,7 +1874,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'search_default_receive\':1,\'search_default_available\':1, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
+            <field name="context" eval="'{\'default_picking_type\':\'out\', \'search_default_receive\':1,\'search_default_available\':1, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
             <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
             <field name="help">You will find in this list all products you have to deliver to your customers. You can process the deliveries directly from this list using the buttons on the right of each line. You can filter the products to deliver by customer, products or sale order (using the Origin field).</field>
         </record>
