@@ -224,8 +224,10 @@ class users(osv.osv):
     
     def _set_avatar(self, cr, uid, id, name, value, args, context=None):
         if not value:
-            return {'value': {'avatar_big': value, 'avatar': value} }
-        return self.write(cr, uid, [id], {'avatar_big': self._avatar_resize(cr, uid, value, 540, 450, context=context)}, context=context)
+            vals = {'avatar_big': value}
+        else:
+            vals = {'avatar_big': self._avatar_resize(cr, uid, value, 540, 450, context=context)}
+        return self.write(cr, uid, [id], vals, context=context)
     
     def _avatar_resize(self, cr, uid, avatar, height=180, width=150, context=None):
         image_stream = io.BytesIO(avatar.decode('base64'))
