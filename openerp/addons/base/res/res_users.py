@@ -219,15 +219,15 @@ class users(osv.osv):
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
     def onchange_avatar(self, cr, uid, ids, value, context=None):
-        return {'value': {'avatar_stored': self._avatar_resize(cr, uid, value, context=context), 'avatar': self._avatar_resize(cr, uid, value, context=context)  } }
+        return {'value': {'avatar_stored': self._avatar_resize(cr, uid, value, 360, 300, context=context), 'avatar': self._avatar_resize(cr, uid, value, context=context)  } }
     
     def _set_avatar(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'avatar_stored': value}, context=context)
     
-    def _avatar_resize(self, cr, uid, avatar, context=None):
+    def _avatar_resize(self, cr, uid, avatar, height=180, width=150, context=None):
         image_stream = io.BytesIO(avatar.decode('base64'))
         img = Image.open(image_stream)
-        img.thumbnail((180, 150), Image.ANTIALIAS)
+        img.thumbnail((height, width), Image.ANTIALIAS)
         img_stream = StringIO.StringIO()
         img.save(img_stream, "JPEG")
         return img_stream.getvalue().encode('base64')
@@ -236,7 +236,7 @@ class users(osv.osv):
         result = dict.fromkeys(ids, False)
         for user in self.browse(cr, uid, ids, context=context):
             if user.avatar_stored:
-                result[user.id] = self._avatar_resize(cr, uid, user.avatar_stored)
+                result[user.id] = self._avatar_resize(cr, uid, user.avatar_stored, context=context)
         return result
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
@@ -387,7 +387,7 @@ class users(osv.osv):
     def _get_avatar(self, cr, uid, context=None):
         # default avatar file name: avatar0 -> avatar6.jpg, choose randomly
         avatar_path = openerp.modules.get_module_resource('base', 'images', 'avatar%d.jpg' % random.randint(0, 6))
-        return self._avatar_resize(cr, uid, open(avatar_path, 'rb').read().encode('base64'))
+        return self._avatar_resize(cr, uid, open(avatar_path, 'rb').read().encode('base64'), context=context)
     
     _defaults = {
         'password' : '',
