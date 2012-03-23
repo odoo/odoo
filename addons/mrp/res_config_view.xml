@@ -21,11 +21,6 @@
 
 		            <separator string="Bill Of Material" colspan="4"/>
                     <field name="group_mrp_properties"/>
-                    <newline/>
-
-                    <label colspan="2"/>
-                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
-                    <button string="Apply" icon="gtk-ok" type="object" name="execute"/>
                 </form>
             </field>
         </record>
@@ -34,8 +29,7 @@
             <field name="name">Configure Manufacturing Application</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.config.settings</field>
-            <field name="view_type">form</field>
-            <field name="target">new</field>
+            <field name="view_mode">form</field>
         </record>
 
         <menuitem id="base.menu_mrp_config" name="Manufacturing" parent="base.menu_config"
