@@ -55,7 +55,7 @@ class ir_property(osv.osv):
         'fields_id': fields.many2one('ir.model.fields', 'Field', ondelete='cascade', required=True, select=1),
 
         'value_float' : fields.float('Value'),
-        'value_integer' : fields.integer_big('Value'), # will contain (int, bigint)
+        'value_integer' : fields.integer('Value'),
         'value_text' : fields.text('Value'), # will contain (char, text)
         'value_binary' : fields.binary('Value'),
         'value_reference': fields.reference('Value', selection=_models_get2, size=128),
@@ -65,7 +65,6 @@ class ir_property(osv.osv):
                                    ('float', 'Float'),
                                    ('boolean', 'Boolean'),
                                    ('integer', 'Integer'),
-                                   ('integer_big', 'Integer Big'),
                                    ('text', 'Text'),
                                    ('binary', 'Binary'),
                                    ('many2one', 'Many2One'),
@@ -100,7 +99,6 @@ class ir_property(osv.osv):
             'float': 'value_float',
             'boolean' : 'value_integer',
             'integer': 'value_integer',
-            'integer_big': 'value_integer',
             'text': 'value_text',
             'binary': 'value_binary',
             'many2one': 'value_reference',
@@ -142,7 +140,7 @@ class ir_property(osv.osv):
             return record.value_float
         elif record.type == 'boolean':
             return bool(record.value_integer)
-        elif record.type in ('integer', 'integer_big'):
+        elif record.type == 'integer':
             return record.value_integer
         elif record.type == 'binary':
             return record.value_binary
