@@ -152,6 +152,10 @@
                 <group name="config_contracts" colspan="4"/>
                 <group name="config_emails" colspan="4"/>
                 <group name="config_crm" colspan="4"/>
+                <newline/>
+                <label colspan="2"/>
+                <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                <button string="Apply" icon="gtk-ok" type="object" name="execute"/>
             </form>
         </field>
     </record>
@@ -162,6 +166,7 @@
         <field name="res_model">sale.config.settings</field>
         <field name="view_id" ref="base.view_sale_config_settings"/>
         <field name="view_mode">form</field>
+        <field name="target">new</field>
     </record>
 
   </data>

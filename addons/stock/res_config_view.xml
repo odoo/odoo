@@ -32,6 +32,11 @@
                     <field name="group_stock_inventory_properties"/>
                     <newline/>
                     <field name="module_claim_from_delivery"/>
+                    <newline/>
+
+                    <label colspan="2"/>
+                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                    <button string="Apply" icon="gtk-ok" type="object" name="execute"/>
                 </form>
             </field>
         </record>
@@ -41,6 +46,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.config.settings</field>
             <field name="view_mode">form</field>
+            <field name="target">new</field>
         </record>
 
         <menuitem id="menu_stock_config_settings" name="Warehouse" parent="base.menu_config"
