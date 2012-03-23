@@ -1400,7 +1400,7 @@
                     <field name="date"/>
                     <field name="date_expected"/>
                     <field name="state"/>
-                    <button name="action_done" states="confirmed,assigned" string="Deliver" type="object" icon="gtk-go-forward"/>
+                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1674,7 +1674,7 @@
                 <search string="Stock Moves">
                     <group>
                         <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting " domain="[('state','in',('confirmed','assigned'))]" help="Stock to be receive"/>
-                        <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
+                        <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be receive"/>
                         <filter icon="terp-dialog-close" name="done" string="Received" domain="[('state', '=', 'done')]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
