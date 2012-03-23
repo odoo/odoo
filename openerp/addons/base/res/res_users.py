@@ -222,7 +222,7 @@ class users(osv.osv):
         return self.write(cr, uid, [id], {'avatar_stored': value}, context=context)
     
     def _avatar_resize(self, cr, uid, avatar, context=None):
-        image_stream = io.BytesIO(avatar.decode('base64'))
+        image_stream = io.BytesIO(avatar_stored.decode('base64'))
         img = Image.open(image_stream)
         img.thumbnail((180, 150), Image.ANTIALIAS)
         img_stream = StringIO.StringIO()
