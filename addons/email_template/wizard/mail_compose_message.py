@@ -27,17 +27,18 @@ from tools.translate import _
 import tools
 
 
-def _reopen(self,res_id,model):
+def _reopen(self, wizard_id, res_model, res_id):
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'view_type': 'form',
-            'res_id': res_id,
+            'res_id': wizard_id,
             'res_model': self._name,
             'target': 'new',
 
             # save original model in context, otherwise
             # it will be lost on the action's context switch
-            'context': {'mail.compose.target.model': model}
+            'context': {'mail.compose.target.model': res_model,
+                        'mail.compose.target.id': res_id,}
     }
 
 class mail_compose_message(osv.osv_memory):
@@ -79,7 +80,7 @@ class mail_compose_message(osv.osv_memory):
             context = {}
         values = {}
         if template_id:
-            res_id = context.get('active_id', False)
+            res_id = context.get('mail.compose.target.id') or context.get('active_id') or False
             if context.get('mail.compose.message.mode') == 'mass_mail':
                 # use the original template values - to be rendered when actually sent
                 # by super.send_mail()
@@ -121,7 +122,7 @@ class mail_compose_message(osv.osv_memory):
                                                             False, email_from=record.email_from,
                                                             email_to=record.email_to, context=context)
                 record.write(onchange_defaults['value'])
-            return _reopen(self, record.id, record.model)
+            return _reopen(self, record.id, record.model, record.res_id)
 
     def save_as_template(self, cr, uid, ids, context=None):
         if context is None:
@@ -153,7 +154,7 @@ class mail_compose_message(osv.osv_memory):
                           'use_template': True})
 
         # _reopen same wizard screen with new template preselected
-        return _reopen(self, record.id, model)
+        return _reopen(self, record.id, model, record.res_id)
 
     # override the basic implementation 
     def render_template(self, cr, uid, template, model, res_id, context=None):
