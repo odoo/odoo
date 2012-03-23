@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011 OpenERP S.A (<http://www.openerp.com>)
+#    Copyright (C) 2011-2012 OpenERP S.A (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,6 +22,7 @@
 from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
+from email.Charset import Charset
 from email.Header import Header
 from email.Utils import formatdate, make_msgid, COMMASPACE
 from email import Encoders
@@ -96,6 +97,26 @@ def encode_header(header_text):
     # 7-bit string.
     return header_text_ascii if header_text_ascii\
          else Header(header_text_utf8, 'utf-8')
+
+def encode_header_param(param_text):
+    """Returns an appropriate RFC2047 encoded representation of the given
+       header parameter value, suitable for direct assignation as the
+       param value (e.g. via Message.set_param() or Message.add_header())
+       RFC2822 assumes that headers contain only 7-bit characters,
+       so we ensure it is the case, using RFC2047 encoding when needed.
+
+       :param param_text: unicode or utf-8 encoded string with header value
+       :rtype: string
+       :return: if ``param_text`` represents a plain ASCII string,
+                return the same 7-bit string, otherwise returns an
+                ASCII string containing the RFC2047 encoded text.
+    """
+    # For details see the encode_header() method that uses the same logic
+    if not param_text: return ""
+    param_text_utf8 = tools.ustr(param_text).encode('utf-8')
+    param_text_ascii = try_coerce_ascii(param_text_utf8)
+    return param_text_ascii if param_text_ascii\
+         else Charset('utf8').header_encode(param_text_utf8)
 
 name_with_email_pattern = re.compile(r'("[^<@>]+")\s*<([^ ,<@]+@[^> ,]+)>')
 address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
@@ -232,6 +253,11 @@ class ir_mail_server(osv.osv):
 
         if user:
             # Attempt authentication - will raise if AUTH service not supported
+            # The user/password must be converted to bytestrings in order to be usable for
+            # certain hashing schemes, like HMAC.
+            # See also bug #597143 and python issue #5285
+            user = tools.ustr(user).encode('utf-8')
+            password = tools.ustr(password).encode('utf-8') 
             connection.login(user, password)
         return connection
 
@@ -304,7 +330,7 @@ class ir_mail_server(osv.osv):
             msg['Cc'] = encode_rfc2822_address_header(COMMASPACE.join(email_cc))
         if email_bcc:
             msg['Bcc'] = encode_rfc2822_address_header(COMMASPACE.join(email_bcc))
-        msg['Date'] = formatdate(localtime=True)
+        msg['Date'] = formatdate()
         # Custom headers may override normal headers or provide additional ones
         for key, value in headers.iteritems():
             msg[ustr(key).encode('utf-8')] = encode_header(value)
@@ -329,14 +355,16 @@ class ir_mail_server(osv.osv):
 
         if attachments:
             for (fname, fcontent) in attachments:
-                filename_utf8 = ustr(fname).encode('utf-8')
+                filename_rfc2047 = encode_header_param(fname)
                 part = MIMEBase('application', "octet-stream")
+
+                # The default RFC2231 encoding of Message.add_header() works in Thunderbird but not GMail
+                # so we fix it by using RFC2047 encoding for the filename instead.
+                part.set_param('name', filename_rfc2047)
+                part.add_header('Content-Disposition', 'attachment', filename=filename_rfc2047)
+
                 part.set_payload(fcontent)
                 Encoders.encode_base64(part)
-                # Force RFC2231 encoding for attachment filename
-                # See email.message.Message.add_header doc
-                part.add_header('Content-Disposition', 'attachment',
-                                filename=('utf-8',None,filename_utf8)) 
                 msg.attach(part)
         return msg
 
@@ -364,7 +392,6 @@ class ir_mail_server(osv.osv):
         :param smtp_user: optional SMTP user, if mail_server_id is not passed
         :param smtp_password: optional SMTP password to use, if mail_server_id is not passed
         :param smtp_debug: optional SMTP debug flag, if mail_server_id is not passed
-        :param debug: whether to turn on the SMTP level debugging, output to DEBUG log level
         :return: the Message-ID of the message that was just sent, if successfully sent, otherwise raises
                  MailDeliveryException and logs root cause.
         """
