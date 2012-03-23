@@ -990,12 +990,13 @@
                             </field>
                             <group col="12" colspan="4">
                                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                                <button name="draft_validate" states="draft" string="Deliver Now" type="object" icon="gtk-media-play"/>
-                                <button name="action_assign" states="draft" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-find"/>
+                                <button name="draft_force_assign" states="draft" string="Confirm" type="object" icon="gtk-ok"/>
+                                <button name="draft_validate" states="draft" string="Confirm &amp; Deliver" type="object" icon="gtk-media-play"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward"/>
-                                <button name="%(report_picking_list)d" string="Print Delivery Order" states="done" type="action" icon="gtk-print"/>
-                                <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
+                                <button name="%(report_picking_list)d" string="Print Delivery Slip" states="done" type="action" icon="gtk-print"/>
+                                <button name="%(act_stock_return_picking)d" string="Products Return" states="done" type="action" icon="gtk-execute"/>
                                 <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
@@ -1399,7 +1400,7 @@
                     <field name="date"/>
                     <field name="date_expected"/>
                     <field name="state"/>
-                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="action_done" states="confirmed,assigned" string="Deliver" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1436,7 +1437,7 @@
 
                     <group colspan="2" col="2">
                         <separator string="Picking" colspan="2" />
-                        <field name="picking_id"/>
+                        <field name="picking_id" context="{'default_picking_id':picking_id}"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
 
@@ -1467,10 +1468,10 @@
                     <separator colspan="4"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                     <group col="4" colspan="2">
-                        <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
-                        <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
+                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                         <button name="force_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                        <button name="action_done" states="draft,assigned,confirmed" string="Process Now" type="object" icon="gtk-jump-to"/>
+                        <button name="action_done" states="draft,assigned,confirmed" string="Deliver" type="object" icon="gtk-jump-to"/>
+                        <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -1570,7 +1571,7 @@
                     <field name="date"/>
                     <field name="state"/>
                     <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                    <button name="action_done" string="Process" type="object" states="confirmed,assigned" icon="gtk-go-forward"/>
+                    <button name="action_done" string="Receive" type="object" states="confirmed,assigned" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1588,7 +1589,7 @@
                     <field name="product_qty" />
                     <field name="product_uom" string="UoM"/>
                     <field name="date"/>
-                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="action_done" states="confirmed,assigned" string="Receive" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1624,7 +1625,7 @@
 
                     <group colspan="2" col="2">
                         <separator string="Picking" colspan="2" />
-                        <field name="picking_id"/>
+                        <field name="picking_id" context="{'default_picking_id':picking_id}"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
 
@@ -1655,10 +1656,10 @@
                     <separator colspan="4"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                     <group col="5" colspan="2">
-                        <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
-                        <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
+                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                         <button name="force_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                        <button name="%(action_partial_move_server)d" string="Process" type="action" states="assigned" icon="gtk-go-forward"/>
+                        <button name="%(action_partial_move_server)d" string="Receive" type="action" states="assigned" icon="gtk-go-forward"/>
+                        <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -1738,7 +1739,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'search_default_receive\':1, \'search_default_available\':1, \'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
+            <field name="context" eval="'{\'default_picking_type\':\'in\', \'search_default_receive\':1, \'search_default_available\':1, \'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
             <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
             <field name="help">Here you can receive individual products, no matter what purchase order or picking order they come from. You will find the list of all products you are waiting for. Once you receive an order, you can filter based on the name of the supplier or the purchase order reference. Then you can confirm all products received using the buttons on the right of each line.</field>
         </record>
@@ -1874,7 +1875,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'search_default_receive\':1,\'search_default_available\':1, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
+            <field name="context" eval="'{\'default_picking_type\':\'out\', \'search_default_receive\':1,\'search_default_available\':1, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
             <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
             <field name="help">You will find in this list all products you have to deliver to your customers. You can process the deliveries directly from this list using the buttons on the right of each line. You can filter the products to deliver by customer, products or sale order (using the Origin field).</field>
         </record>
