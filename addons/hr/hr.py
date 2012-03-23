@@ -150,10 +150,16 @@ class hr_employee(osv.osv):
     _inherits = {'resource.resource': "resource_id"}
 
     def onchange_photo(self, cr, uid, ids, value, context=None):
-        return {'value': {'photo_big': self._photo_resize(cr, uid, value, 540, 450, context=context), 'photo': self._photo_resize(cr, uid, value, context=context) } }
+        if not value:
+            return {'value': {'photo_big': value, 'photo': value} }
+        return {'value': {'photo_big': self._photo_resize(cr, uid, value, 540, 450, context=context), 'photo': self._photo_resize(cr, uid, value, context=context)} }
     
     def _set_photo(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'photo_big': self._photo_resize(cr, uid, value, 540, 450, context=context)}, context=context)
+        if not value:
+            vals = {'photo_big': value}
+        else:
+            vals = {'photo_big': self._photo_resize(cr, uid, value, 540, 450, context=context)}
+        return self.write(cr, uid, [id], vals, context=context)
     
     def _photo_resize(self, cr, uid, photo, heigth=180, width=150, context=None):
         image_stream = io.BytesIO(photo.decode('base64'))
