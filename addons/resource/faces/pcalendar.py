@@ -895,7 +895,16 @@ class Calendar(object):
     def _recalc_working_time(self):
         def slot_sum_time(day):
             slots = self.working_times.get(day, DEFAULT_WORKING_DAYS[day])
-            return sum(map(lambda slot: slot[1] - slot[0], slots))
+            def time_diff(times):
+                (start, end) = times
+                if end == start:
+                    return 24*60    # 24 hours
+
+                diff = end - start
+                if end < start:
+                    diff += (24*60)
+                return diff
+            return sum(map(time_diff, slots))
 
         self.day_times = map(slot_sum_time, range(0, 7))
         self.week_time = sum(self.day_times)
