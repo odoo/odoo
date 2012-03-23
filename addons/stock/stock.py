@@ -677,13 +677,13 @@ class stock_picking(osv.osv):
             picking_type = self.browse(cr, uid, context['default_picking_id'], context=context).type
             if picking_type == 'out':
                 context.update({'default_type':'out'})
-                view_model, view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
+                view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')[1]
             elif picking_type == 'in':
                 context.update({'default_type':'in'})
-                view_model, view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
+                view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')[1]
             elif picking_type == 'internal':
                 context.update({'default_type':'internal'})
-                view_model, view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_form')
+                view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_form')[1]
         type = context.get('default_type', False)
         res = super(stock_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if type:
