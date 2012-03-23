@@ -1706,25 +1706,25 @@ class stock_move(osv.osv):
         res = super(stock_move, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if type:
             for field in res['fields']:
-                # To update the states label according to shipping type
+                # To update the states label according to the containing shipping type
                 if field == 'state':
                     _state = []
                     for key, value in MOVE_STATE:
                         if type == 'in':
                             if key == 'assigned':
-                                value = 'Ready to Receive'
+                                value = _('Ready to Receive')
                             elif key == 'done':
-                                value = 'Received'
+                                value = _('Received')
                         elif type == 'internal':
                             if key == 'assigned':
-                                value = 'Ready to Move'
+                                value = _('Ready to Transfer')
                             elif key == 'done':
-                                value = 'Moved'
+                                value = _('Transferred')
                         elif type == 'out':
                             if key == 'assigned':
-                                value = 'Ready to Deliver'
+                                value = _('Ready to Deliver')
                             elif key == 'done':
-                                value = 'Delivered'
+                                value = _('Delivered')
                         _state.append((key,value))
                     res['fields']['state']['selection'] = _state
         return res
