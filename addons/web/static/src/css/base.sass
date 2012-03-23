@@ -356,6 +356,10 @@ $colour4: #8a89ba
             position: absolute
             top: 3px
             right: 2px
+        &.required input
+            background: #D2D2FF
+        &.required.invalid input
+            background: #F66
 // }}}
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"

@@ -1446,6 +1446,7 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
         this.on("change:force_readonly", this, test_effective_readonly);
         _.bind(test_effective_readonly, this)();
 
+        // TODO: do something good about this
         if (this.view) {
             this.$label = this.view.$element.find('label[for="' + this.name + '"]');
             if (this.$label.length) {
