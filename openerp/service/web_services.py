@@ -173,6 +173,8 @@ class db(netsvc.ExportService):
                 raise Exception, e
 
     def exp_drop(self, db_name):
+        if not self.exp_db_exist(db_name):
+            return False
         openerp.modules.registry.RegistryManager.delete(db_name)
         sql_db.close_db(db_name)
 
@@ -180,6 +182,17 @@ class db(netsvc.ExportService):
         cr = db.cursor()
         cr.autocommit(True) # avoid transaction block
         try:
+            # Try to terminate all other connections that might prevent
+            # dropping the database
+            try:
+                cr.execute("""SELECT pg_terminate_backend(procpid)
+                              FROM pg_stat_activity
+                              WHERE datname = %s AND 
+                                    procpid != pg_backend_pid()""",
+                           (db_name,))
+            except Exception:
+                pass
+
             try:
                 cr.execute('DROP DATABASE "%s"' % db_name)
             except Exception, e:
