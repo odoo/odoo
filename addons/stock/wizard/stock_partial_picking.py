@@ -84,18 +84,18 @@ class stock_partial_picking(osv.osv_memory):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//group/button[@string='_Validate']"):
                 if type == 'in':
-                    node.set('string', '_Receive')
+                    node.set('string', _('_Receive'))
                 elif type == 'internal':
-                    node.set('string', '_Transfer')
+                    node.set('string', _('_Transfer'))
                 elif type == 'out':
-                    node.set('string', '_Deliver')
+                    node.set('string', _('_Deliver'))
             for node in doc.xpath("//separator[@string='Products']"):
                 if type == 'in':
-                    node.set('string', 'Receive Products')
+                    node.set('string', _('Receive Products'))
                 elif type == 'internal':
-                    node.set('string', 'Transfer Products')
+                    node.set('string', _('Transfer Products'))
                 elif type == 'out':
-                    node.set('string', 'Deliver Products')
+                    node.set('string', _('Deliver Products'))
             res['arch'] = etree.tostring(doc)
         return res
 
