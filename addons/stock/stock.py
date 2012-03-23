@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from lxml import etree
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import time
@@ -1702,9 +1703,17 @@ class stock_move(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
-        type = context.get('default_picking_type', False)
+        type = context.get('default_type', False)
         res = super(stock_move, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if type:
+            doc = etree.XML(res['arch'])
+            if type == 'out':
+                #To Update button label in case of shipping type is out
+                if view_type == 'tree':
+                    for node in doc.xpath("//button[@string='Receive']"):
+                        node.set('string', _('Deliver'))
+                for node in doc.xpath("//group/button[@string='Process Now']"):
+                    node.set('string', _('Deliver'))
             for field in res['fields']:
                 # To update the states label according to the containing shipping type
                 if field == 'state':
@@ -1727,6 +1736,7 @@ class stock_move(osv.osv):
                                 value = _('Delivered')
                         _state.append((key,value))
                     res['fields']['state']['selection'] = _state
+                    res['arch'] = etree.tostring(doc)
         return res
 
     def _default_location_destination(self, cr, uid, context=None):
