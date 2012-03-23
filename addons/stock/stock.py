@@ -535,7 +535,7 @@ stock_tracking()
 # Stock Picking
 #----------------------------------------------------------
 PICK_STATE = [
-            ('draft', 'New'),
+            ('draft', 'Draft'),
             ('auto', 'Waiting Another Operation'),
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Process'),
@@ -681,11 +681,11 @@ class stock_picking(osv.osv):
                     if report['report_name'] != 'stock.picking.list':
                         continue
                     if type == 'in':
-                        report['string'] = 'Incoming Shipment'
+                        report['string'] = _('Incoming Shipment')
                     elif type == 'internal':
-                        report['string'] = 'Internal Shipment'
+                        report['string'] = _('Internal Shipment')
                     elif type == 'out':
-                        report['string'] = 'Delivery Order'
+                        report['string'] = _('Delivery Order')
                     report['name'] = report['string']
 
             for field in res['fields']:
@@ -695,31 +695,31 @@ class stock_picking(osv.osv):
                     for key, value in PICK_STATE:
                         if type == 'in':
                             if key == 'assigned':
-                                value = 'Ready to Receive'
+                                value = _('Ready to Receive')
                             elif key == 'done':
-                                value = 'Received'
+                                value = _('Received')
                         elif type == 'internal':
                             if key == 'assigned':
-                                value = 'Ready to Move'
+                                value = _('Ready to Transfer')
                             elif key == 'done':
-                                value = 'Moved'
+                                value = _('Transferred')
                         elif type == 'out':
                             if key == 'assigned':
-                                value = 'Ready to Deliver'
+                                value = _('Ready to Deliver')
                             elif key == 'done':
-                                value = 'Delivered'
+                                value = _('Delivered')
                         _state.append((key,value))
                     res['fields']['state']['selection'] = _state
                 # To update the fields tooltips according to shipping type
                 if field == 'address_id':
                     _tooltip = ''
                     if type == 'in':
-                        _tooltip = "supplier"
+                        _tooltip = _('supplier')
                     elif type == 'internal':
-                        _tooltip="warehouse"
+                        _tooltip = _('warehouse')
                     elif type == 'out':
-                        _tooltip="customer"
-                    res['fields']['address_id']['help'] = "Address of %s" %(_tooltip)
+                        _tooltip = _('customer')
+                    res['fields']['address_id']['help'] = _("Address of %s") %(_tooltip)
         return res
 
     def action_process(self, cr, uid, ids, context=None):

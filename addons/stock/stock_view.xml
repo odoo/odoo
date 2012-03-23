@@ -671,7 +671,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Internal Moves">
+                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Internal Transfers">
                     <field name="name"/>
                     <field name="partner_id" invisible="True"/>
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -797,11 +797,12 @@
                             </field>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                                <button name="draft_validate" states="draft" string="Move Now" type="object" icon="gtk-media-play"/>
-                                <button name="action_assign" states="draft" string="Check Availability" type="object" icon="gtk-find"/>
+                                <button name="draft_force_assign" states="draft" string="Confirm" type="object" icon="gtk-ok"/>
+                                <button name="draft_validate" states="draft" string="Confirm &amp; Transfer" type="object" icon="gtk-media-play"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="action_process" states="assigned" string="Move"  groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
+                                <button name="action_process" states="assigned" string="Transfer"  groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
                                 <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl" />
+                                <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" icon="gtk-execute"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
@@ -1022,9 +1023,9 @@
             <field name="arch" type="xml">
                 <search string="Picking list">
                     <group>
-                        <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Delivery Orders"/>
+                        <filter icon="terp-check" name="available" string="Ready To Deliver" domain="[('state','=','assigned')]" help="Assigned Delivery Orders"/>
                         <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Delivery Orders"/>
-                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Delivery orders already processed"/>
+                        <filter icon="terp-dialog-close" name="done" string="Delivered" domain="[('state','=','done')]" help="Delivery orders already Delivered"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
@@ -1210,12 +1211,12 @@
                             </field>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                                <button name="draft_validate" states="draft" string="Receive Now" type="object" icon="gtk-media-play"/>
-                                <button name="action_assign" states="draft, confirmed" string="Check Availability" type="object" icon="gtk-find"/>
+                                <button name="draft_force_assign" states="draft" string="Confirm" type="object" icon="gtk-ok"/>
+                                <button name="draft_validate" states="draft" string="Confirm &amp; Receive" type="object" icon="gtk-media-play"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
                                 <button name="action_process" states="assigned" string="Receive" type="object" icon="gtk-go-forward"/>
-                                <button name="%(report_picking_list)d" string="Print Reception" type="action" icon="gtk-print" states="done"/>
-                                <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
+                                <button name="%(act_stock_return_picking)d" string="Products Return" states="done" type="action" icon="gtk-execute"/>
                                 <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}" type="action" icon="terp-gtk-go-back-rtl" />
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                             </group>
@@ -1240,8 +1241,8 @@
             <field name="arch" type="xml">
                 <search string="Incoming Shipments">
                     <group>
-                        <filter icon="terp-check" name="available" string="Ready to Process" domain="[('state','=','assigned')]" help="Incoming Shipments Available" />
-                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
+                        <filter icon="terp-check" name="available" string="Ready To Receive" domain="[('state','=','assigned')]" help="Incoming Shipments Available" />
+                        <filter icon="terp-dialog-close" name="done" string="Received" domain="[('state','=','done')]" help="Incoming Shipments already Received"/>
                         <separator orientation="vertical" />
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
@@ -1306,8 +1307,8 @@
             <field name="arch" type="xml">
                 <search string="Internal Picking List">
                     <group>
-                        <filter icon="terp-check" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
-                        <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves" />
+                        <filter icon="terp-check" string="Ready To Transfer" domain="[('state','=','assigned')]" help="Assigned Internal Transfers"/>
+                        <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Transfers" />
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="origin"/>
@@ -1330,7 +1331,7 @@
         </record>
 
         <record id="action_picking_tree6" model="ir.actions.act_window">
-            <field name="name">Internal Moves</field>
+            <field name="name">Internal Transfer</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1338,7 +1339,7 @@
             <field name="domain">[('type','=','internal')]</field>
             <field name="context">{'default_type': 'internal', 'contact_display': 'partner_address', 'search_default_available': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
-            <field name="help">Internal Moves display all inventory operations you have to perform in your warehouse. All operations can be categorized into stock journals, so that each worker has his own list of operations to perform in his own journal. Most operations are prepared automatically by OpenERP according to your preconfigured logistics rules, but you can also record manual stock operations.</field>
+            <field name="help">Internal Transfers display all inventory operations you have to perform in your warehouse. All operations can be categorized into stock journals, so that each worker has his own list of operations to perform in his own journal. Most operations are prepared automatically by OpenERP according to your preconfigured logistics rules, but you can also record manual stock operations.</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_picking_tree6_tree_view">
@@ -1673,7 +1674,7 @@
                     <group>
                         <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting " domain="[('state','in',('confirmed','assigned'))]" help="Stock to be receive"/>
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
-                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state', '=', 'done')]"/>
+                        <filter icon="terp-dialog-close" name="done" string="Received" domain="[('state', '=', 'done')]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
@@ -1706,7 +1707,7 @@
                     <group>
                         <filter icon="terp-gtk-go-back-rtl" name="receive" string=" Waiting" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be delivered (Available or not)"/>
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
-                        <filter icon="terp-dialog-close" name="received" string="Done" domain="[('state','=','done')]"/>
+                        <filter icon="terp-dialog-close" name="received" string="Delivered" domain="[('state','=','done')]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
