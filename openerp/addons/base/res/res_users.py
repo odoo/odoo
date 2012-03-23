@@ -35,10 +35,8 @@ from tools.translate import _
 import openerp
 import openerp.exceptions
 
-# for avatar resizing
 import io, StringIO
 from PIL import Image
-# for default avatar choice
 import random
 
 _logger = logging.getLogger(__name__)
@@ -217,11 +215,11 @@ class users(osv.osv):
         extended_users = group_obj.read(cr, uid, extended_group_id, ['users'], context=context)['users']
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
-    def onchange_avatar_mini(self, cr, uid, ids, value, context=None):
-        return {'value': {'avatar': value, 'avatar_mini': self._avatar_resize(cr, uid, value)  } }
+    def onchange_avatar(self, cr, uid, ids, value, context=None):
+        return {'value': {'avatar_stored': value, 'avatar': self._avatar_resize(cr, uid, value, context=context)  } }
     
-    def _set_avatar_mini(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'avatar': value}, context=context)
+    def _set_avatar(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'avatar_stored': value}, context=context)
     
     def _avatar_resize(self, cr, uid, avatar, context=None):
         image_stream = io.BytesIO(avatar.decode('base64'))
@@ -231,13 +229,13 @@ class users(osv.osv):
         img.save(img_stream, "JPEG")
         return img_stream.getvalue().encode('base64')
     
-    def _get_avatar_mini(self, cr, uid, ids, name, args, context=None):
+    def _get_avatar(self, cr, uid, ids, name, args, context=None):
         result = {}
         for user in self.browse(cr, uid, ids, context=context):
             if not user.avatar:
                 result[user.id] = False
             else:
-                result[user.id] = self._avatar_resize(cr, uid, user.avatar)
+                result[user.id] = self._avatar_resize(cr, uid, user.avatar_stored)
         return result
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
@@ -269,11 +267,11 @@ class users(osv.osv):
                                                             "otherwise leave empty. After a change of password, the user has to login again."),
         'user_email': fields.char('Email', size=64),
         'signature': fields.text('Signature', size=64),
-        'avatar': fields.binary('User Avatar'),
-        'avatar_mini': fields.function(_get_avatar_mini, fnct_inv=_set_avatar_mini, string='User Avatar Mini', type="binary",
+        'avatar_stored': fields.binary('Stored avatar', help="This field holds the image used as avatar for the user. The avatar field is used as an interface to access this field. The image is base64 encoded, and PIL-supported."),
+        'avatar': fields.function(_get_avatar, fnct_inv=_set_avatar, string='Avatar', type="binary",
             store = {
-                'res.users': (lambda self, cr, uid, ids, c={}: ids, ['avatar'], 10),
-            }),
+                'res.users': (lambda self, cr, uid, ids, c={}: ids, ['avatar_stored'], 10),
+            }, help="Image used as avatar for the user. It is automatically resized as a 180x150 px image."),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
@@ -386,15 +384,14 @@ class users(osv.osv):
         return result
 
     def _get_avatar(self, cr, uid, context=None):
-        # default avatar file name: avatar0 -> avatar6, choose randomly
-        random.seed()
+        # default avatar file name: avatar0 -> avatar6.jpg, choose randomly
         avatar_path = openerp.modules.get_module_resource('base', 'images', 'avatar%d.jpg' % random.randint(0, 6))
         return self._avatar_resize(cr, uid, open(avatar_path, 'rb').read().encode('base64'))
     
     _defaults = {
         'password' : '',
         'context_lang': 'en_US',
-        'avatar_mini': _get_avatar,
+        'avatar': _get_avatar,
         'active' : True,
         'menu_id': _get_menu,
         'company_id': _get_company,
