@@ -891,7 +891,6 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
 
         var children = [];
         $group.children().each(function(a,b,c) {
-            debugger
             var $child = $(this),
                 colspan = parseInt($child.attr('colspan') || 1, 10),
                 tagName = $child[0].tagName.toLowerCase();
