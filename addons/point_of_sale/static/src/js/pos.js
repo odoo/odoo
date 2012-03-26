@@ -1298,10 +1298,26 @@ openerp.point_of_sale = function(db) {
                             price = '';
                         }
                         var scannedProductModel = _.detect(productsCollection.models, function(pc) { return pc.attributes.ean13 === barcode;});
+                        if (scannedProductModel == undefined) {
+                            // product not recognized, raise warning
+                            $(QWeb.render('pos-scan-warning')).dialog({
+                                resizable: false,
+                                height:160,
+                                modal: true,
+                                title: "Warning",
+                                buttons: {
+                                    "OK": function() {
+                                        $( this ).dialog( "close" );
+                                    },
+                                }
+                            });
+                        }
                         if (weight === '' && price !== '') {
+                            // product sold by price
                             scannedProductModel.price = price;
                         } else if (weight !== '' && price === '') {
-                            // TODO sell by weight: how to calculate the price?
+                            // product sold by weight
+                            // TODO check how to calculate the price
                             scannedProductModel.price *= weight;
                         }
                         selectedOrder.addProduct(scannedProductModel);
