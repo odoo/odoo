@@ -56,6 +56,7 @@ class fetchmail_config_settings(osv.osv_memory):
     _name = 'fetchmail.config.settings'
 
     def get_default_fetchmail_servers(self, cr, uid, fields, context=None):
+        ir_model = self.pool.get('ir.model')
         fetchmail_server = self.pool.get('fetchmail.server')
         fetchmail_fields = [f for f in self._columns if f.startswith('fetchmail_')]
         res = {}
