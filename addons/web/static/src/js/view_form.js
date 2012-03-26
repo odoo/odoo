@@ -1754,10 +1754,10 @@ openerp.web.DateTimeWidget = openerp.web.OldWidget.extend({
         this.$input.prop('readonly', this.readonly);
         this.$element.find('img.oe_datepicker_trigger').toggleClass('oe_input_icon_disabled', readonly);
     },
-    is_valid: function(required) {
+    is_valid: function() {
         var value = this.$input.val();
         if (value === "") {
-            return !required;
+            return true;
         } else {
             try {
                 this.parse_client(value);
@@ -1822,7 +1822,10 @@ openerp.web.form.FieldDatetime = openerp.web.form.AbstractField.extend(_.extend(
         }
     },
     validate: function() {
-        this.invalid = this.get("effective_readonly") || !this.datewidget.is_valid(this.required);
+        this.invalid = false;
+        if (!this.get("effective_readonly")) {
+            this.invalid = !this.datewidget.is_valid() || (this.required && !this.datewidget.get_value());
+        }
     },
     focus: function($element) {
         this._super($element || (this.datewidget && this.datewidget.$input));
