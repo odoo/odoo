@@ -1097,6 +1097,7 @@ class stock_picking(osv.osv):
                     'quantity': move_line.product_uos_qty or move_line.product_qty,
                     'invoice_line_tax_id': [(6, 0, tax_ids)],
                     'account_analytic_id': account_analytic_id,
+                    'note': move_line.note
                 }, context=context)
                 self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
 
