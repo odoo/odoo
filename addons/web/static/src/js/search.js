@@ -972,7 +972,7 @@ openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @
         return this._super(defaults);
     },
     get_value: function () {
-        switch (this.$element.val()) {
+        switch (this._super()) {
             case 'false': return false;
             case 'true': return true;
             default: return null;
