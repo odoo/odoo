@@ -6,12 +6,16 @@
                   web_icon_hover="data/sales-hover.png"
                   groups="base.group_sale_salesman"/>
 
-        <menuitem id="menu_address_book" name="Address Book" parent="menu_base_partner" sequence="2"/>
+        <menuitem id="base.menu_sales" name="Sales"
+            parent="base.menu_base_partner" sequence="1"
+            />
+
+   <!--      <menuitem id="menu_address_book" name="Address Book" parent="menu_base_partner" sequence="2"/> -->
 
         <menuitem id="menu_base_config" name="Configuration" parent="menu_base_partner" sequence="30"
             groups="group_system"/>
 
-        <menuitem id="menu_config_address_book" name="Address Book" parent="menu_base_config" sequence="2"
+        <menuitem id="menu_config_address_book" name="Address Book" parent="menu_base_config" sequence="40"
             groups="group_system"/>
 
         <!--
@@ -175,7 +179,7 @@
             </kanban>
         </field>
     </record>
-            
+
         <record id="action_partner_address_form" model="ir.actions.act_window">
             <field name="name">Addresses</field>
             <field name="type">ir.actions.act_window</field>
@@ -198,9 +202,6 @@
             <field name="view_id" ref="view_partner_address_form1"/>
             <field name="act_window_id" ref="action_partner_address_form"/>
         </record>
-        <menuitem action="action_partner_address_form" id="menu_partner_address_form"
-            groups="base.group_extended" name="Contacts"
-            parent="base.menu_address_book" sequence="30"/>
 
         <!--
           =========================================
@@ -285,7 +286,7 @@
             <field name="help">Manage the partner titles you want to have available in your system. The partner titles is the legal status of the company: Private Limited, SA, etc.</field>
         </record>
 
-        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" parent="menu_config_address_book" sequence="2"/>
+        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" parent="menu_config_address_book" sequence="2" groups="base.group_no_one"/>
 
         <record id="action_partner_title_contact" model="ir.actions.act_window">
             <field name="name">Contact Titles</field>
@@ -297,7 +298,7 @@
             <field name="help">Manage the contact titles you want to have available in your system and the way you want to print them in letters and other documents. Some example: Mr., Mrs. </field>
         </record>
 
-        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" name="Contact Titles" parent="menu_config_address_book" sequence="3"/>
+        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" name="Contact Titles" parent="menu_config_address_book" sequence="3" groups="base.group_no_one"/>
         <!--
           =======================
           Partner
@@ -524,8 +525,8 @@
         <menuitem
             action="action_partner_form"
             id="menu_partner_form"
-            parent="base.menu_address_book"
-            sequence="2"/>
+            parent="base.menu_sales"
+            sequence="8"/>
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
@@ -663,7 +664,7 @@
             <field name="help">Manage the partner categories in order to better classify them for tracking and analysis purposes. A partner may belong to several categories and categories have a hierarchy structure: a partner belonging to a category also belong to his parent category.</field>
         </record>
 
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Categories" sequence="4" parent="menu_config_address_book" groups="base.group_extended"/>
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Categories" sequence="4" parent="menu_config_address_book" groups="base.group_no_one"/>
 
         <act_window domain="[('partner_id', '=', active_id)]" context="{'default_partner_id':active_id}"
             id="act_res_partner_event" name="Events"

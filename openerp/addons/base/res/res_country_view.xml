@@ -41,7 +41,7 @@
 
         <menuitem id="menu_localisation" name="Localisation" parent="menu_config_address_book" sequence="1"/>
 
-        <menuitem action="action_country" id="menu_country_partner" parent="menu_localisation" sequence="0"/>
+        <menuitem action="action_country" id="menu_country_partner" parent="menu_localisation" sequence="0" groups="base.group_no_one"/>
 
         <!--
           State
@@ -82,7 +82,7 @@
             <field name="help">If you are working on the American market, you can manage the different federal states you are working on from here. Each state is attached to one country.</field>
         </record>
 
-          <menuitem action="action_country_state" id="menu_country_state_partner" parent="menu_localisation" sequence="1"/>
+          <menuitem action="action_country_state" id="menu_country_state_partner" parent="menu_localisation" sequence="1" groups="base.group_no_one"/>
 
     </data>
 </openerp>
