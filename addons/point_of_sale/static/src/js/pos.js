@@ -1260,57 +1260,57 @@ openerp.point_of_sale = function(db) {
             (this.shop.get('products')).reset(products);
             var self = this;
             // bind barcode reader event
-            var codeNumbers = []
+            var codeNumbers = [];
             $('body').delegate('','keyup', function (e){
                 if (!isNaN(Number(String.fromCharCode(e.keyCode)))) {
                     // a number
                     if (codeNumbers.length==0) {
-                        codeNumbers.timeStamp = new Date().getTime()
+                        codeNumbers.timeStamp = new Date().getTime();
                     } else {
                         if (codeNumbers.lastTimeStamp + 30 < new Date().getTime()) {
                             // not a barcode reader
-                            codeNumbers = []
-                            codeNumbers.timeStamp = new Date().getTime()
+                            codeNumbers = [];
+                            codeNumbers.timeStamp = new Date().getTime();
                         }
                     }
-                    codeNumbers.push(e.keyCode - 48)
-                    codeNumbers.lastTimeStamp = new Date().getTime()
+                    codeNumbers.push(e.keyCode - 48);
+                    codeNumbers.lastTimeStamp = new Date().getTime();
                     if (codeNumbers.length == 13) {
                         // a barcode reader
-                        var barcode = codeNumbers.join('')
-                        console.log('barcode: ' + barcode)
-                        var selectedOrder = self.shop.get('selectedOrder')
-                        var productsCollection = self.shop.get('products')
+                        var barcode = codeNumbers.join('');
+                        console.log('barcode: ' + barcode);
+                        var selectedOrder = self.shop.get('selectedOrder');
+                        var productsCollection = self.shop.get('products');
                         if (barcode.substring(0,2) in ['02', '22', '24', '26', '28']) {
                             // product with a specific price - specified into the barcode
-                            barcode = barcode.substring(2,5)
+                            barcode = barcode.substring(2,5);
                             // TODO conversion euro - old local currencies
-                            price = Number(barcode.substring(7,5))/100
-                            weight = ''
+                            price = Number(barcode.substring(7,5))/100;
+                            weight = '';
                         } else if (barcode.substring(0,2) in ['21','23','27','29','25']) {
                             // product sold by weight
-                            barcode = barcode.substring(2,5)
-                            weight = Number(barcode.substring(7,5))/1000
-                            price = ''
+                            barcode = barcode.substring(2,5);
+                            weight = Number(barcode.substring(7,5))/1000;
+                            price = '';
                         } else {
                             // product unit
-                            weight = ''
-                            price = ''
+                            weight = '';
+                            price = '';
                         }
-                        var scannedProductModel = _.detect(productsCollection.models, function(pc) { return pc.attributes.ean13 === barcode})
-                        if (weight === '' and price !== '') {
-                            scannedProductModel.price = price
-                        } else if (weight !== '' and price === '') {
+                        var scannedProductModel = _.detect(productsCollection.models, function(pc) { return pc.attributes.ean13 === barcode;});
+                        if (weight === '' && price !== '') {
+                            scannedProductModel.price = price;
+                        } else if (weight !== '' && price === '') {
                             // TODO sell by weight: how to calculate the price?
-                            scannedProductModel.price *= weight
+                            scannedProductModel.price *= weight;
                         }
-                        selectedOrder.addProduct(scannedProductModel)
+                        selectedOrder.addProduct(scannedProductModel);
 
-                        codeNumbers = []
+                        codeNumbers = [];
                     }
                 } else {
                     // NaN
-                    codeNumbers = []
+                    codeNumbers = [];
                 }
             })
             $('.searchbox input').keyup(function() {
