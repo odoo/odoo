@@ -3,12 +3,13 @@
     <data>
 
         <record id="view_project_config_claim" model="ir.ui.view">
-            <field name="name">Project Application</field>
-            <field name="model">project.config.settings</field>
+            <field name="name">crm_claim settings</field>
+            <field name="model">sale.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.project_settings_form_view"/>
+            <field name="inherit_id" ref="base.view_sale_config_settings"/>
+            <field name="priority" eval="12"/>       <!-- to put fetchmail_lead before fetchmail_claim -->
             <field name="arch" type="xml">
-                <group name="helpdesk" position="after">
+                <group name="config_emails" position="after">
                     <field name="fetchmail_claim"/>
                     <group colspan="2" attrs="{'invisible': [('fetchmail_claim','=',False)]}">
                         <field name="claim_server" attrs="{'required': [('fetchmail_claim','=',True)]}"/>

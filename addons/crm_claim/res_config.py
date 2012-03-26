@@ -22,8 +22,8 @@
 from osv import osv, fields
 
 class crm_claim_settings(osv.osv_memory):
-    _name = 'project.config.settings'
-    _inherit = ['project.config.settings', 'fetchmail.config.settings']
+    _name = 'sale.config.settings'
+    _inherit = ['sale.config.settings', 'fetchmail.config.settings']
 
     _columns = {
         'fetchmail_claim': fields.boolean("Create claims from an email account",

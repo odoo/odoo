@@ -3,13 +3,12 @@
     <data>
 
         <record id="view_sales_config_crm" model="ir.ui.view">
-            <field name="name">Sales Application</field>
+            <field name="name">crm settings</field>
             <field name="model">sale.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="mail.view_sales_config_plugin"/>
+            <field name="inherit_id" ref="base.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <group name="config_emails" position="before">
-                    <separator string="Emails" colspan="4"/>
+                <group name="config_emails" position="after">
                     <field name="fetchmail_lead"/>
                     <group colspan="2" attrs="{'invisible': [('fetchmail_lead','=',False)]}">
                         <field name="lead_server" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
