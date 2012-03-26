@@ -70,6 +70,18 @@ class groups(osv.osv):
         ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique !')
     ]
 
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('name','=',name)] + args, limit=limit, context=context)
+        if not ids:
+            ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context)
+
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         # add explicit ordering if search is sorted on full_name
         if order and order.startswith('full_name'):
