@@ -113,7 +113,7 @@ class stock_location(osv.osv):
         """
         if not context:
             context = {}
-        
+
         #Find currency
         currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
         currency_obj = self.pool.get('res.currency')
@@ -126,7 +126,7 @@ class stock_location(osv.osv):
             cr.execute('select distinct product_id from stock_move where location_id in %s', (tuple(ids), ))
             moves = cr.dictfetchall()
             product_ids = [move['product_id'] for move in moves]
-            
+
         #Compute result for all location
         result = dict([(i, dict.fromkeys(field_names, 0.0)) for i in ids])
         for loc_id in ids:
@@ -135,13 +135,13 @@ class stock_location(osv.osv):
             for prod in self.pool.get('product.product').browse(cr, uid, product_ids, context=c):
                 if 'stock_real' in field_names:
                     result[loc_id]['stock_real'] += prod.qty_available
-                elif 'stock_virtual' in field_names:
+                if 'stock_virtual' in field_names:
                     result[loc_id]['stock_virtual'] += prod.virtual_available
-                elif 'stock_real_value' in field_names:
+                if 'stock_real_value' in field_names:
                     amount = prod.qty_available * prod.standard_price
                     amount = currency_obj.round(cr, uid, currency, amount)
                     result[loc_id]['stock_real_value'] += amount
-                elif 'stock_virtual_value' in field_names:
+                if 'stock_virtual_value' in field_names:
                     amount = prod.virtual_available * prod.standard_price
                     amount = currency_obj.round(cr, uid, currency, amount)
                     result[loc_id]['stock_virtual_value'] += amount
