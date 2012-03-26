@@ -613,6 +613,19 @@ class stock_picking(osv.osv):
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
         return res
+    
+    def _tooltip_picking_state(self, state=None):
+        # Update the tooltip of state field based on shipment type e.g: Delivery, Reception and Internal Transfer
+        if state is None:
+            state = PICK_STATE
+        _tooltip_state_assigned = state.get('assigned', False)
+        _tooltip_state_done = state.get('done', False)
+        return _("* Draft: not confirmed yet and will not be scheduled until confirmed\n"\
+                 "* Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"\
+                 "* Waiting Availability: still waiting for the availability of products\n"\
+                 "* %s: products reserved, simply waiting for confirmation.\n"\
+                 "* %s: has been processed, can't be modified or cancelled anymore\n"\
+                 "* Cancelled: has been cancelled, can't be confirmed anymore") % (_tooltip_state_assigned, _tooltip_state_done)
 
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
@@ -633,13 +646,7 @@ class stock_picking(osv.osv):
                 "if you subcontract the manufacturing operations.", select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Location where the system will stock the finished products.", select=True),
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be deliver partially or all at once"),
-        'state': fields.selection(PICK_STATE, 'State', readonly=True, select=True,
-             help="* Draft: not confirmed yet and will not be scheduled until confirmed\n"\
-                 "* Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"\
-                 "* Waiting Availability: still waiting for the availability of products\n"\
-                 "* Ready to Process: products reserved, simply waiting for confirmation.\n"\
-                 "* Done: has been processed, can't be modified or cancelled anymore\n"\
-                 "* Cancelled: has been cancelled, can't be confirmed anymore"),
+        'state': fields.selection(PICK_STATE, 'State', readonly=True, select=True),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  store=True, type='datetime', string='Scheduled Date', select=1, help="Scheduled date for the shipment to be processed"),
         'date': fields.datetime('Order Date', help="Date of order", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
@@ -704,39 +711,18 @@ class stock_picking(osv.osv):
             for field in res['fields']:
                 # To update the states label according to shipping type
                 if field == 'state':
-                    _state = []
-                    _tooltip_state_assigned = ''
-                    _tooltip_state_done = ''
-                    for key, value in PICK_STATE:
-                        if type == 'in':
-                            if key == 'assigned':
-                                value = _('Ready to Receive')
-                                _tooltip_state_assigned = _('Ready to Receive')
-                            elif key == 'done':
-                                value = _('Received')
-                                _tooltip_state_done = _('Received')
-                        elif type == 'internal':
-                            if key == 'assigned':
-                                value = _('Ready to Transfer')
-                                _tooltip_state_assigned = _('Ready to Transfer')
-                            elif key == 'done':
-                                value = _('Transferred')
-                                _tooltip_state_done = _('Transferred')
-                        elif type == 'out':
-                            if key == 'assigned':
-                                value = _('Ready to Deliver')
-                                _tooltip_state_assigned = _('Ready to Deliver')
-                            elif key == 'done':
-                                value = _('Delivered')
-                                _tooltip_state_done = _('Delivered')
-                        _state.append((key,value))
-                    res['fields']['state']['selection'] = _state
-                    res['fields']['state']['help'] = _("* Draft: not confirmed yet and will not be scheduled until confirmed\n"\
-                                                       "* Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n"\
-                                                       "* Waiting Availability: still waiting for the availability of products\n"\
-                                                       "* %s: products reserved, simply waiting for confirmation.\n"\
-                                                       "* %s: has been processed, can't be modified or cancelled anymore\n"\
-                                                       "* Cancelled: has been cancelled, can't be confirmed anymore") %(_tooltip_state_assigned, _tooltip_state_done)
+                    _state = dict(PICK_STATE)
+                    if type == 'in':
+                        _state['assigned'] = _('Ready to Receive')
+                        _state['done'] = _('Received')
+                    elif type == 'internal':
+                        _state['assigned'] = _('Ready to Transfer')
+                        _state['done'] = _('Transferred')
+                    elif type == 'out':
+                        _state['assigned'] = _('Ready to Deliver')
+                        _state['done'] = _('Delivered')
+                    res['fields']['state']['selection'] = list(_state.items())
+                    res['fields']['state']['help'] = self._tooltip_picking_state(_state)
                 # To update the fields tooltips according to shipping type
                 if field == 'address_id':
                     _tooltip = ''
@@ -1657,6 +1643,17 @@ class stock_move(osv.osv):
                 return False
         return True
 
+    def _tooltip_move_state(self, state=None):
+        # Update the tooltip of state field based on shipment type e.g: Delivery, Reception and Internal Transfer
+        if state is None:
+            state = MOVE_STATE
+        _tooltip_state_assigned = state.get('assigned', False)
+        _tooltip_state_done = state.get('done', False)
+        return _("* Draft: When the stock move is created it is in the \'Draft\' state.\n"\
+                 "* Waiting Another Move: it is set to \'Waiting Another Move\' state if the scheduler did not find the products.\n"\
+                 "* Waiting Availability: The state is \'Waiting Availability\' if the move is waiting for another one.\n"\
+                 "* %s: When products are reserved it is set to \'%s\'.\n"\
+                 "* %s: When the shipment is done the state is \'%s\'.") % (_tooltip_state_assigned, _tooltip_state_assigned, _tooltip_state_done, _tooltip_state_done)
     _columns = {
         'name': fields.char('Name', size=250, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -1686,11 +1683,11 @@ class stock_move(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
         'state': fields.selection(MOVE_STATE, 'State', readonly=True, select=True,
-             help="* Draft: When the stock move is created it is in the \'Draft\' state.\n"\
-            "* Waiting Another Move: it is set to \'Waiting Another Move\' state if the scheduler did not find the products.\n"\
-             "* Waiting Availability: The state is \'Waiting Availability\' if the move is waiting for another one.\n"\
-            "* Available: When products are reserved it is set to \'Available\'.\n"\
-            "* Done: When the shipment is done the state is \'Done\'."),
+                help= "* Draft: When the stock move is created it is in the \'Draft\' state.\n"\
+                       "* Waiting Another Move: it is set to \'Waiting Another Move\' state if the scheduler did not find the products.\n"\
+                       "* Waiting Availability: The state is \'Waiting Availability\' if the move is waiting for another one.\n"\
+                       "* Available: When products are reserved it is set to \'Available\'.\n"\
+                       "* Done: When the shipment is done the state is \'Done\'."),
         'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Account'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
         'price_currency_id': fields.many2one('res.currency', 'Currency for average price', help="Technical field used to record the currency chosen by the user during a picking confirmation (when average price costing method is used)"),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
@@ -1734,38 +1731,18 @@ class stock_move(osv.osv):
             for field in res['fields']:
                 # To update the states label according to the containing shipping type
                 if field == 'state':
-                    _state = []
-                    _tooltip_state_assigned = ''
-                    _tooltip_state_done = ''
-                    for key, value in MOVE_STATE:
-                        if type == 'in':
-                            if key == 'assigned':
-                                value = _('Ready to Receive')
-                                _tooltip_state_assigned = _('Ready to Receive')
-                            elif key == 'done':
-                                value = _('Received')
-                                _tooltip_state_done = _('Received')
-                        elif type == 'internal':
-                            if key == 'assigned':
-                                value = _('Ready to Transfer')
-                                _tooltip_state_assigned = _('Ready to Transfer')
-                            elif key == 'done':
-                                value = _('Transferred')
-                                _tooltip_state_done = _('Transferred')
-                        elif type == 'out':
-                            if key == 'assigned':
-                                value = _('Ready to Deliver')
-                                _tooltip_state_assigned = _('Ready to Deliver')
-                            elif key == 'done':
-                                value = _('Delivered')
-                                _tooltip_state_done = _('Delivered')
-                        _state.append((key,value))
-                    res['fields']['state']['selection'] = _state
-                    res['fields']['state']['help'] = _("* Draft: When the stock move is created it is in the \'Draft\' state.\n"\
-                                                       "* Waiting Another Move: it is set to \'Waiting Another Move\' state if the scheduler did not find the products.\n"\
-                                                       "* Waiting Availability: The state is \'Waiting Availability\' if the move is waiting for another one.\n"\
-                                                       "* %s: When products are reserved it is set to %s.\n"\
-                                                       "* %s: When the shipment is done the state is %s.") % (_tooltip_state_assigned, _tooltip_state_assigned, _tooltip_state_done, _tooltip_state_done)
+                    _state = dict(MOVE_STATE)
+                    if type == 'in':
+                        _state['assigned'] = _('Ready to Receive')
+                        _state['done'] = _('Received')
+                    elif type == 'internal':
+                        _state['assigned'] = _('Ready to Transfer')
+                        _state['done'] = _('Transferred')
+                    elif type == 'out':
+                        _state['assigned'] = _('Ready to Deliver')
+                        _state['done'] = _('Delivered')
+                    res['fields']['state']['selection'] = list(_state.items())
+                    res['fields']['state']['help'] = self._tooltip_move_state(_state)
                     res['arch'] = etree.tostring(doc)
         return res
 
