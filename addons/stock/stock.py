@@ -736,23 +736,23 @@ class stock_picking(osv.osv):
         return res
 
     def action_process(self, cr, uid, ids, context=None):
-            if context is None: context = {}
-            mod_obj = self.pool.get('ir.model.data')
-            model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','stock_partial_picking_form')], context=context)
-            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-            ctx = context.copy()
-            ctx.update({'active_model': 'stock.picking', 'active_ids': ids })
-            return {
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'stock.partial.picking',
-                'views': [(resource_id,'form')],
-                'view_id': resource_id,
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'context': ctx,
-                'nodestroy': True,
-            }
+        if context is None: context = {}
+        mod_obj = self.pool.get('ir.model.data')
+        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','stock_partial_picking_form')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        ctx = context.copy()
+        ctx.update({'active_model': 'stock.picking', 'active_ids': ids })
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'stock.partial.picking',
+            'views': [(resource_id,'form')],
+            'view_id': resource_id,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': ctx,
+            'nodestroy': True,
+        }
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
