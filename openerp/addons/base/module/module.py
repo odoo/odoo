@@ -2,8 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -113,7 +112,7 @@ class module(osv.osv):
         if field_name is None or 'menus_by_module' in field_name:
             dmodels.append('ir.ui.menu')
         assert dmodels, "no models for %s" % field_name
-        
+
         for module_rec in self.browse(cr, uid, ids, context=context):
             res[module_rec.id] = {
                 'menus_by_module': [],
@@ -174,7 +173,7 @@ class module(osv.osv):
         #   installed_version refer the latest version (the one on disk)
         #   latest_version refer the installed version (the one in database)
         #   published_version refer the version available on the repository
-        'installed_version': fields.function(_get_latest_version, 
+        'installed_version': fields.function(_get_latest_version,
             string='Latest version', type='char'),
         'latest_version': fields.char('Installed version', size=64, readonly=True),
         'published_version': fields.char('Published Version', size=64, readonly=True),
@@ -364,46 +363,50 @@ class module(osv.osv):
     def button_install_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
         return True
-    
+
     def module_uninstall(self, cr, uid, ids, context=None):
-
-        # you have to uninstall in the right order, not all modules at the same time
-
-        model_data = self.pool.get('ir.model.data')
-        remove_modules = map(lambda x: x.name, self.browse(cr, uid, ids, context))
-        
-        data_ids = model_data.search(cr, uid, [('module', 'in', remove_modules)])
-
-        model_data._pre_process_unlink(cr, uid, data_ids, context)
-        model_data.unlink(cr, uid, data_ids, context)
-        
+        # uninstall must be done respecting the reverse-dependency order
+        ir_model_data = self.pool.get('ir.model.data')
+        modules_to_remove = [m.name for m in self.browse(cr, uid, ids, context)]
+        data_ids = ir_model_data.search(cr, uid, [('module', 'in', modules_to_remove)])
+        ir_model_data._pre_process_unlink(cr, uid, data_ids, context)
+        ir_model_data.unlink(cr, uid, data_ids, context)
         self.write(cr, uid, ids, {'state': 'uninstalled'})
-        
-        # should we call process_end istead of loading, or both ?
+
+        # should we call process_end instead of loading, or both ?
         return True
-    
-    def check_dependancy(self, cr, uid, ids, context):
-        res = []
-        for module in self.browse(cr, uid, ids):
-            cr.execute('''select m.id
-                from
-                    ir_module_module_dependency d
-                join
-                    ir_module_module m on (d.module_id=m.id)
-                where
-                    d.name=%s and
-                    m.state not in ('uninstalled','uninstallable','to remove')''', (module.name,))
-            res = cr.fetchall()
-        return res    
-    
+
+    def downstream_dependencies(self, cr, uid, ids, known_dep_ids=None,
+                                exclude_states=['uninstalled','uninstallable','to remove'],
+                                context=None):
+        """Return the ids of all modules that directly or indirectly depend
+        on the given module `ids`, and that satisfy the `exclude_states`
+        filter"""
+        if not ids: return []
+        known_dep_ids = set(known_dep_ids or [])
+        cr.execute('''SELECT DISTINCT m.id
+                        FROM
+                            ir_module_module_dependency d
+                        JOIN
+                            ir_module_module m ON (d.module_id=m.id)
+                        WHERE
+                            d.name IN (SELECT name from ir_module_module where id in %s) AND
+                            m.state NOT IN %s AND
+                            m.id NOT IN %s ''',
+                   (tuple(ids),tuple(exclude_states), tuple(known_dep_ids or ids)))
+        new_dep_ids = set([m[0] for m in cr.fetchall()])
+        missing_mod_ids = new_dep_ids - known_dep_ids
+        known_dep_ids |= new_dep_ids
+        if missing_mod_ids:
+            known_dep_ids |= set(self.downstream_dependencies(cr, uid, list(missing_mod_ids),
+                                                          known_dep_ids, exclude_states,context))
+        return list(known_dep_ids)
+
     def button_uninstall(self, cr, uid, ids, context=None):
-        res = self.check_dependancy(cr, uid, ids, context)        
-        for i in range(0,len(res)):
-            res_depend = self.check_dependancy(cr, uid, [res[i][0]], context)  
-            for j in range(0,len(res_depend)):
-                ids.append(res_depend[j][0])
-            ids.append(res[i][0])
-        self.write(cr, uid, ids, {'state': 'to remove'})
+        if any(m.name == 'base' for m in self.browse(cr, uid, ids)):
+            raise orm.except_orm(_('Error'), _("The `base` module cannot be uninstalled"))
+        dep_ids = self.downstream_dependencies(cr, uid, ids, context=context)
+        self.write(cr, uid, ids + dep_ids, {'state': 'to remove'})
         return dict(ACTION_DICT, name=_('Uninstall'))
 
     def button_uninstall_cancel(self, cr, uid, ids, context=None):
@@ -486,7 +489,7 @@ class module(osv.osv):
                 updated_values = {}
                 for key in values:
                     old = getattr(mod, key)
-                    updated = isinstance(values[key], basestring) and tools.ustr(values[key]) or values[key] 
+                    updated = isinstance(values[key], basestring) and tools.ustr(values[key]) or values[key]
                     if not old == updated:
                         updated_values[key] = values[key]
                 if terp.get('installable', True) and mod.state == 'uninstallable':
