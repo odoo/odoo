@@ -756,15 +756,15 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         var xml = openerp.web.json_node_to_xml(this.fvg.arch);
         this.$form = $(xml);
 
+        this.to_init = [];
         this.process(this.$form);
 
         this.$form.appendTo(this.$element);
         // OpenERP views spec :
         //      - @width is obsolete ?
 
-        this.$element.find('field, button').each(function() {
-            var $elem = $(this),
-                key = $elem.attr('widget') || $elem[0].tagName.toLowerCase();
+        _.each(this.to_init, function($elem) {
+            var key = $elem.attr('widget') || $elem[0].tagName.toLowerCase();
             if (self.view.registry.contains(key)) {
                 var obj = self.view.registry.get_object(key);
                 var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
@@ -789,7 +789,6 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
             });
         }
         this.$element.toggleClass('oe_layout_debugging');
-
     },
     process: function($tag) {
         var self = this;
@@ -866,6 +865,7 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
             'string' : field_string,
             'help' : field_help
         });
+        this.to_init.push($field);
         return $field;
     },
     process_group: function($group) {
@@ -991,6 +991,10 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         var $new_label = $(QWeb.render('FormRenderingLabel', dict));
         $label.before($new_label).remove();
         return $new_label;
+    },
+    process_button: function($button) {
+        this.to_init.push($button);
+        return $button;
     }
 });
 
