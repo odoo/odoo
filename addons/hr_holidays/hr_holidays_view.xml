@@ -51,6 +51,7 @@
             <field name="type">calendar</field>
             <field name="arch" type="xml">
                 <calendar string="Leave Request" color="user_id" date_start="date_from" date_stop="date_to">
+                    <field name="user_id"/>
                     <field name="holiday_status_id"/>
                 </calendar>
             </field>
@@ -86,9 +87,8 @@
                             <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
                             <separator string="Reasons" colspan="4"/>
                             <field name="notes" nolabel="1" colspan="4"/>
-                            <newline/>
-                            <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}' colspan="2"/>
-                            <group colspan="2" col="6">
+                            <group colspan="4" col="8">
+                                <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                                 <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user,base.group_hr_manager"/>
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                                 <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
@@ -129,9 +129,8 @@
                         <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
                         <separator string="Reasons" colspan="4"/>
                         <field name="notes" nolabel="1" colspan="4"/>
-                        <newline/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}' colspan="2"/>
-                        <group colspan="2" col="6">
+                        <group colspan="4" col="8">
+                            <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                             <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
                             <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                             <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
@@ -258,7 +257,7 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="edit_holiday_new"/>
-            <field name="context">{"search_default_department_id": department_id, "search_default_my_leaves": 1}</field>
+            <field name="context">{"search_default_department_id": department_id}</field>
             <field name="domain">[('type','=','remove')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
             <field name="help">Leave requests can be recorded by employees and validated by their managers. Once a leave request is validated, it appears automatically in the agenda of the employee. You can define several allowance types (paid holidays, sickness, etc.) and manage allowances per type.</field>
