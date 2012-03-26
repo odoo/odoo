@@ -1,14 +1,13 @@
 <openerp>
     <data>
 
-        <record id="view_project_config" model="ir.ui.view">
-            <field name="name">Project Application</field>
+        <record id="view_config_settings" model="ir.ui.view">
+            <field name="name">project settings</field>
             <field name="model">project.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.project_settings_form_view"/>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <group name="project" position="after">
+                <form string="Configure Projects">
                     <separator string="Project" colspan="4"/>
                     <field name="module_project_mrp"/>
                     <field name="module_project_timesheet"/>
@@ -18,17 +17,29 @@
                     <separator string="Planning" colspan="4"/>
                     <field name="module_project_planning"/>
                     <field name="module_project_long_term"/>
-                </group>
 
-                <group name="helpdesk" position="after">
+                    <separator string="Helpdesk and support" colspan="4"/>
+                    <group name="support" colspan="4"/>
                     <field name="module_project_issue_sheet"/>
+
                     <newline/>
-                </group>
+                    <label colspan="2"/>
+                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                    <button string="Apply" icon="gtk-ok" type="object" name="execute"/>
+                </form>
             </field>
         </record>
 
+        <record id="action_config_settings" model="ir.actions.act_window">
+            <field name="name">Configure Projects</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
         <menuitem id="base.menu_project_config" name="Projects" parent="base.menu_config"
-            sequence="5" action="base.action_project_config"/>
+            sequence="5" action="action_config_settings"/>
 
     </data>
 </openerp>

@@ -169,31 +169,5 @@
         <field name="target">new</field>
     </record>
 
-    <record id="base.project_settings_form_view" model="ir.ui.view">
-        <field name="name">project.config.settings</field>
-        <field name="model">project.config.settings</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Configure Projects">
-                <group name="project" colspan="4"/>
-                <separator string="Helpdesk and support" colspan="4"/>
-                <group name="helpdesk" colspan="4"/>
-                <newline/>
-                <label colspan="2"/>
-                <button string="Cancel" icon="gtk-cancel" special="cancel"/>
-                <button string="Apply" icon="gtk-ok" type="object" name="execute"/>
-            </form>
-        </field>
-    </record>
-
-    <record id="base.action_project_config" model="ir.actions.act_window">
-        <field name="name">Configure Projects</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">project.config.settings</field>
-        <field name="view_id" ref="base.project_settings_form_view"/>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-    </record>
-
   </data>
 </openerp>

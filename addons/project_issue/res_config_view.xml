@@ -2,13 +2,13 @@
 <openerp>
     <data>
 
-        <record id="view_project_config_issue" model="ir.ui.view">
+        <record id="view_config_settings" model="ir.ui.view">
             <field name="name">Project Application</field>
             <field name="model">project.config.settings</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.project_settings_form_view"/>
+            <field name="inherit_id" ref="project.view_config_settings"/>
             <field name="arch" type="xml">
-                <group name="helpdesk" position="after">
+                <group name="support" position="after">
                     <field name="fetchmail_issue"/>
                     <group colspan="2" attrs="{'invisible': [('fetchmail_issue','=',False)]}">
                         <field name="issue_server" attrs="{'required': [('fetchmail_issue','=',True)]}"/>
