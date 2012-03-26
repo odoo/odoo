@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-03-20 18:21+0000\n"
+"PO-Revision-Date: 2012-03-24 16:36+0000\n"
 "Last-Translator: Vasil Grigalashvili <vasil.grigalashvili@republic.ge>\n"
 "Language-Team: Georgian <ka@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-21 06:02+0000\n"
+"X-Launchpad-Export-Date: 2012-03-25 06:11+0000\n"
 "X-Generator: Launchpad (build 14981)\n"
 
 #. module: base
@@ -2961,6 +2961,31 @@ msgid ""
 "performing those tasks.\n"
 "    "
 msgstr ""
+"\n"
+"ეს მოდული ნერგავს Getting Things Done მეთოდოლოგიით განსაზღვრულ ყველა "
+"კონცეფციას.\n"
+"============================================================================="
+"======\n"
+"\n"
+"ეს მოდული გაძლევთ საშუალებას გამოიყენოთ პერსონალური გასაკეთებელი საქმეების "
+"ფუნქციონალს. იგი პროექტების მოდულში ამატებს რედაქტირებად ამოცანათა სიას, "
+"რომელიც ძალზედ გამარტივებულია და მინიმალური ველების რაოდენობის შევსებას "
+"მოითხოვს.\n"
+"\n"
+"გასაკეთებელი საქმეების სია დაფუძნებულია GTD მეთოდოლოგიაზე. ეს მეთოდოლოგია "
+"ძალზედ გავრცელებულია მთელი მსოფლიოს მასშტაბით და გამოიყენება პერსონალური "
+"დროის მართვის გასაუმჯობესებლად.\n"
+"\n"
+"Getting Things Done (შემოკლებით GTD) არის ქმედებების მართვის მეთოდი,\n"
+"რომელიც შეიმუშავა დევიდ ალენმა. იგი განმარტებულია იგივე სახელწოდების მქონე "
+"წიგნში.\n"
+"\n"
+"GTD ეყრდნობა პრინციპს რაც გულისხმობს იმას რომ პიროვნებამ ამოცანები თავიდან "
+"უნდა ამოიგდოს\n"
+"და ჩაიწეროს საიდმე. ამ გზით, გონება თავისუფლდება გასაკეთებელი საქმეების "
+"ამოცანებისგან და კონცენტრირებას აკეთებს მხოლოდ მიმდინარე საქმეზე, რაც "
+"პროდუქტიულობას ზრდის და შედეგსაც უკეთესს იძლევა.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -4566,11 +4591,41 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
+"\n"
+"ეს მოდული აუმჯობესებს OpenERP-ს მულტივალუტის მხარდაჭერას ანალიტიკურ "
+"ბუღალტერიაში, მულტივალუტური კომპანიისთვის.\n"
+"\n"
+"მოდული დაფუძნებულია c2c_multicost*-ზე რომელიც გაჩნდა 5.0 სტაბილურ ვერსიაში "
+"და\n"
+"გაძლევთ საშუალებას გააზიაროთ ანალიტიკური ანგარიში კომპანიებს შორის (იმ "
+"შემთხვევაშიც როდესაც ვალუტები ერთმანეთისგან განსხვავდება).\n"
+"\n"
+"რა გაუმჯობესდა:\n"
+"\n"
+"  * Adapt the owner of analytic line (= to company that own the general "
+"account associated with en analytic line)\n"
+"  * Add multi-currency on analytic lines (similar to financial accounting)\n"
+"  * Correct all \"costs\" indicators into analytic account to base them on "
+"the right currency (owner's company)\n"
+"  * By default, nothing change for single company implementation.\n"
+"\n"
+"As a result, we can now really share the same analytic account between "
+"companies that doesn't have the same \n"
+"currency. This setup becomes True, Enjoy !\n"
+"\n"
+"- Company A : EUR\n"
+"- Company B : CHF\n"
+"\n"
+"- Analytic Account A : USD, owned by Company A\n"
+"    - Analytic Account B : CHF, owned by Company A\n"
+"    - Analytic Account C : EUR, owned by Company B\n"
+"\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it
 msgid "Italy - Accounting"
-msgstr ""
+msgstr "იტალია - ბუღალტერია"
 
 #. module: base
 #: field:ir.actions.act_window,help:0
@@ -4589,6 +4644,9 @@ msgid ""
 "its dependencies are satisfied. If the module has no dependency, it is "
 "always installed."
 msgstr ""
+"ავტომატურად დაყენებადი მოდულის ავტომატური დაყენება ხორციელდება მაშინ როდესაც "
+"ყველა მოდული რომელზეც იგი დამოკიდებულია უკვე დაყენებულია. ხოლო თუ მოდულს არ "
+"გააჩნია დამოკიდებულება, იგი ყოველთვის დაყენებულია."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_lang_act_window
@@ -4863,6 +4921,20 @@ msgid ""
 "You can also use the geolocalization without using the GPS coordinates.\n"
 "    "
 msgstr ""
+"\n"
+"ეს მოდული გამოიყენება OpenERP SA-ს მიერ რათა გადაამისამართოს კლიენტები "
+"შესაბამის პარტნიორებთან, გეოგრაფიული ლოკალიზაციის საფუძველზე.\n"
+"============================================================================="
+"=========================\n"
+"\n"
+"თქვენ შეგიძლიათ მოახდინოთ თქვენი შესაძლებლობების გეოლოკალიზაცია ამ მოდულის "
+"გამოყენებით.\n"
+"\n"
+"გამოიყენეთ გეოლოკალიზაცია როდესაც ანიჭებთ შესაძლებლობებს პარტნიორებს.\n"
+"განსაზღვრეთ GPS კორდინატები პარტნიორის მისამართის მიხედვით.\n"
+"ყველაზე მეტად შესაბამისი პარტიონრის მინიჭება შესაძლებელი.\n"
+"თქვენ ასევე შეძლებთ გამოიყენოთ გეოლოკალიზაცია GPS კოორდინატების გარეშე.\n"
+"    "
 
 #. module: base
 #: help:ir.actions.act_window,help:0
@@ -4988,12 +5060,16 @@ msgid ""
 "groups. If this field is empty, OpenERP will compute visibility based on the "
 "related object's read access."
 msgstr ""
+"თუ თქვენ გაქვთ ჯგუფები, ამ მენიუს გამოჩენა დაფუძნებულია მათზე. თუ ეს ველი "
+"ცარიელია, OpenERP გადაწყვეტს გამოჩნდეს თუ არა ობიექტის უფლებების შესაბამისად."
 
 #. module: base
 #: view:base.module.upgrade:0
 msgid ""
 "We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."
 msgstr ""
+"გირჩევთ გადატვირთოთ მენიუს ჩანართი რათა იხილოთ ახალი მენიუები (Ctrl+T შემდეგ "
+"კი Ctrl+R)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_subscription
@@ -5213,6 +5289,15 @@ msgid ""
 "modules like share, lunch, pad, idea, survey and subscription.\n"
 "    "
 msgstr ""
+"\n"
+"დაყენების ოსტატი დამალული ექსტრა კომპონენტებისათვის როგორებიც არის სადილი, "
+"გამოკითხვა, იდეა, გაზიარება, ა.შ.\n"
+"===============================================================\n"
+"\n"
+"გაძლევთ შესაძლებლობა გამოიყენოთ დამალული ექსტრა კომპონენტები.\n"
+"მოდულები როგორიც არის გაზიარება, სადილი, პადი, იდეა, გამოკითხვა და "
+"გამოწერა.\n"
+"    "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_specific_industry_applications
@@ -5341,6 +5426,18 @@ msgid ""
 "of the survey\n"
 "    "
 msgstr ""
+"\n"
+"ეს მოდული გამოიყენება გამოკითხვებისთვის.\n"
+"==================================\n"
+"\n"
+"იგი დამოკიდებულია სხვადასხვა მომხმარებლების პასუხებსა და განხილვებზე.\n"
+"გამოკითხვა შეიძლება შედგებოდეს მრავალი გვერდისგან. ყოველი გვერდი შეიძლება "
+"შეიცავდეს მრავალ კითხვას და ყველა კითხვას შეიძლება გააჩნდეს მრავალი პასუხი.\n"
+"სხვადასხვა მომხმარებლებმა შეიძლება სხვადასხვა პასუხები გასცენ კითხვებს და "
+"შესაბამისად გამოკითხვა სრულდება.\n"
+"შესაძლებელია პარტნიორებთან ელ.ფოსტის მეშვეობით მოსაწვევის გაგზავნა პაროლის "
+"და მომხმარებლის სახელით რათა მიიღონ მონაწილეობა გამოკითხვაში.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.bm
@@ -5414,11 +5511,16 @@ msgid ""
 "sure to save and close all forms before switching to a different company. "
 "(You can click on Cancel in the User Preferences now)"
 msgstr ""
+"გთხოვთ გაითვალისწინოთ რომ ამჟამად გამოჩენილი დოკუმენტები შეიძლება არ იყოს "
+"შესაბამისი სხვა კომპანიაზე გადართვისას. თუ თქვენ გაქვთ შეუნახავი ცვლილებები, "
+"გთხოვთ დარწმუნდეთ რომ შეინახავთ და დახურავთ ყველა ფორმას ვიდრე გადაერთვებით "
+"სხვა კომპანიაზე. (თქვენ ახლავე შეგიძლიათ დაკლიკოთ გაწყვეტა-ზე მენიუში "
+"მომხმარებლის პარამეტრები)"
 
 #. module: base
 #: field:partner.sms.send,app_id:0
 msgid "API ID"
-msgstr ""
+msgstr "API იდენტიფიკატორი"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:533
@@ -5427,6 +5529,8 @@ msgid ""
 "You can not create this document (%s) ! Be sure your user belongs to one of "
 "these groups: %s."
 msgstr ""
+"თქვენ არ შეგიძლიათ შექმნათ ეს დოკუმენტი (%s) ! დარწმუნდით რომ თქვენი "
+"მომხმარებელი მიეკუთვნება ამ ჯგუფებიდან ერთ-ერთს: %s."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_chat
@@ -7490,7 +7594,7 @@ msgstr "ასლი"
 #. module: base
 #: field:ir.model,osv_memory:0
 msgid "In-memory model"
-msgstr ""
+msgstr "In-memory მოდელი"
 
 #. module: base
 #: view:partner.clear.ids:0
@@ -8140,6 +8244,8 @@ msgstr "ველის სახელი"
 msgid ""
 "If this log item has been read, get() should not send it to the client"
 msgstr ""
+"თუ ეს ლოგის ერთეული წაკითხულ იქნა, მაშინ get()-მა არ უნდა გააგზავნოს იგი "
+"კლიენტთან"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_uservoice
@@ -8151,17 +8257,23 @@ msgid ""
 "Invite OpenERP user feedback, powered by uservoice.\n"
 "    "
 msgstr ""
+"\n"
+"უკუკავშირის ღილაკის დამატება ზედა კოლონიტურში.\n"
+"==============================\n"
+"\n"
+"თხოვეთ OpenERP მომხმარებელს უკუკავშირი.\n"
+"    "
 
 #. module: base
 #: field:res.company,rml_header2:0
 #: field:res.company,rml_header3:0
 msgid "RML Internal Header"
-msgstr ""
+msgstr "RML შიდან ზედა კოლონიტური"
 
 #. module: base
 #: field:ir.actions.act_window,search_view_id:0
 msgid "Search View Ref."
-msgstr ""
+msgstr "ვიუ წყაროს ძიება"
 
 #. module: base
 #: field:ir.module.module,installed_version:0
@@ -8365,7 +8477,7 @@ msgstr "დანიური / ჰოლანდიური"
 #. module: base
 #: selection:res.company,paper_format:0
 msgid "US Letter"
-msgstr ""
+msgstr "აშშ წერილი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_location
@@ -8888,6 +9000,8 @@ msgid ""
 "The field on the current object that links to the target object record (must "
 "be a many2one, or an integer field with the record ID)"
 msgstr ""
+"მიმდინარე ობიექტის ველი დაკავშირებული სამიზნე ობიექტის ჩანაწერთან (უნდა იყოს "
+"ბევრი-ერთთან, ან ინტეჯერ ველი ჩანაწერის იდენტიფიკატორით)"
 
 #. module: base
 #: code:addons/base/module/module.py:423
@@ -8925,7 +9039,7 @@ msgstr "მშობელი კატეგორია"
 #. module: base
 #: selection:ir.property,type:0
 msgid "Integer Big"
-msgstr ""
+msgstr "დიდი ინტეჯერი"
 
 #. module: base
 #: selection:res.partner.address,type:0
@@ -9005,7 +9119,7 @@ msgstr "ქუვეითი"
 #. module: base
 #: field:workflow.workitem,inst_id:0
 msgid "Instance"
-msgstr ""
+msgstr "ინსტანსი"
 
 #. module: base
 #: help:ir.actions.report.xml,attachment:0
@@ -9065,7 +9179,7 @@ msgstr "მიღებული მომხმარებლები"
 #. module: base
 #: field:ir.ui.menu,web_icon_data:0
 msgid "Web Icon Image"
-msgstr ""
+msgstr "ვებ ხატულას სურათი"
 
 #. module: base
 #: field:ir.actions.server,wkf_model_id:0
@@ -9370,12 +9484,19 @@ msgid ""
 "memberships, membership products (schemes), etc.\n"
 "    "
 msgstr ""
+"\n"
+"ამ მოდულის დანიშნულებაა ასოციაციასთან დაკავშირებული მოდულების კონფიგურაცია.\n"
+"==============================================================\n"
+"\n"
+"It installs the profile for associations to manage events, registrations, "
+"memberships, membership products (schemes), etc.\n"
+"    "
 
 #. module: base
 #: code:addons/orm.py:2693
 #, python-format
 msgid "The value \"%s\" for the field \"%s.%s\" is not in the selection"
-msgstr ""
+msgstr "მნიშვნელობა \"%s\" ველისთვის \"%s.%s\" არ ფიგურირებს არჩევანში"
 
 #. module: base
 #: view:ir.actions.configuration.wizard:0
@@ -9406,7 +9527,7 @@ msgstr "სლოვენური"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wiki
 msgid "Wiki"
-msgstr ""
+msgstr "ვიკი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de
@@ -9451,6 +9572,25 @@ msgid ""
 "depending on the product's configuration.\n"
 "    "
 msgstr ""
+"\n"
+"ეს მოდული განკუთვნილია შესყიდვების გაანგარიშებისთვის.\n"
+"==============================================\n"
+"\n"
+"ძირითადი რესურსების დაგეგმვის პროცესში, შესყიდვის ორდერები შექმნა ხდება "
+"წარმოების ორდერების აღსაძრავად,\n"
+"შეძენის ორდერების, მარაგების განსაზღვრა, ა.შ. შესყიდვის ორდერები გენერირდება "
+"ავტომატურად სისტემის მიერ და თუ პრობლემა არ შეიქმნა, მომხმარებელს არ მისდის "
+"შეტყობინება. პრობლემის შემთხვევაში, სისტემა გამოიწვევს ახდენს\n"
+"მომხმარებლის ინფორმირებას რათა მოხდეს ხელოვნური ჩარევა\n"
+"პრობლემის მოსაგვარებლად (მაგალითად: მომწოდებელი არ არსებობს ან ზედდებულის "
+"სტრუქტურა არ არსებობს).\n"
+"\n"
+"შესყიდვის ორდერი გაამზადებს შეთავაზებას პროდუქტის\n"
+"ავტომატური შეძენისთვის რომელიც საჭიროებს შევსებას საწყობში/მარაგებში. "
+"აღნიშნული შეძენა აღძრავს ამოცანას,\n"
+"ან შეძენის ორდერის ფორმას მომწოდებლისთვის, ან წარმოების ორდერს პროდუქტის "
+"კონფიგურაციის შესაბამისად.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -9461,7 +9601,7 @@ msgstr "მექსიკა"
 #: code:addons/base/ir/ir_mail_server.py:414
 #, python-format
 msgid "Missing SMTP Server"
-msgstr ""
+msgstr "არასწორი SMTP სერვერუ"
 
 #. module: base
 #: field:ir.attachment,name:0
@@ -9477,7 +9617,7 @@ msgstr "ფაილი"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
 msgid "Module Upgrade Install"
-msgstr ""
+msgstr "მოდულის განახლების დაყენება"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_email_template
@@ -9602,7 +9742,7 @@ msgstr "ესპანური"
 #. module: base
 #: help:ir.ui.view,xml_id:0
 msgid "ID of the view defined in xml file"
-msgstr ""
+msgstr "xml ფაილში განსაზღვრული ვიუს იდენტიფიკატორი"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_import
@@ -9617,7 +9757,7 @@ msgstr "ამერიკული სამოა"
 #. module: base
 #: help:ir.actions.act_window,res_model:0
 msgid "Model name of the object to open in the view window"
-msgstr ""
+msgstr "ახალ ფანჯარაში გასაშვები ობიექტის მოდელის სახელი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_caldav
@@ -9679,13 +9819,22 @@ msgid ""
 "mail into mail.message with attachments.\n"
 "      "
 msgstr ""
+"\n"
+"Outlook-თან ინტეგრაციის მოდული.\n"
+"=========================================\n"
+"Outlook plug-in allows you to select an object that you would like to add\n"
+"to your email and its attachments from MS Outlook. You can select a partner, "
+"a task,\n"
+"a project, an analytical account, or any other object and archive selected\n"
+"mail into mail.message with attachments.\n"
+"      "
 
 #. module: base
 #: view:ir.attachment:0
 #: selection:ir.attachment,type:0
 #: field:ir.module.module,url:0
 msgid "URL"
-msgstr ""
+msgstr "URL მისამართი"
 
 #. module: base
 #: help:res.users,context_tz:0
@@ -9695,6 +9844,8 @@ msgid ""
 "use the same timezone that is otherwise used to pick and render date and "
 "time values: your computer's timezone."
 msgstr ""
+"მომხმარებლის დროითი სარტყელი, გამოიყენება იმისთვის რომ დრო სწორად გამოჩნდეს "
+"ამობეჭდილ რეპორტებში. ამ ველის მნიშვნელობის განსაზღვრა ძალზედ კრიტიკულია."
 
 #. module: base
 #: help:res.country,name:0
@@ -9719,7 +9870,7 @@ msgstr "კომპლექსურობა"
 #. module: base
 #: selection:ir.actions.act_window,target:0
 msgid "Inline"
-msgstr ""
+msgstr "შესაბამისად"
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field_bic
@@ -9747,6 +9898,17 @@ msgid ""
 "* Date\n"
 "    "
 msgstr ""
+"განსაზღვრეთ ნაგულისხმები მნიშვნელობები თქვენი ანალიტიკური ანგარიშებისათვის\n"
+"გაძლევთ საშუალებას ავტომატურად შეირჩეს ანალიტიკური ანგარიშები შემდეგი "
+"კრიტერიუმების მიხედვით:\n"
+"=====================================================================\n"
+"\n"
+"* პროდუქტი\n"
+"* პარტნიორი\n"
+"* მომხმარებელი\n"
+"* კომპანია\n"
+"* თარიღი\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.ae
@@ -9759,6 +9921,7 @@ msgstr "არაბეთის გაერთიანებული ემ�
 msgid ""
 "Unable to delete this document because it is used as a default property"
 msgstr ""
+"შეუძლებელია დოკუმენტის წაშლა რადგანაც ნაგულისხმევ პარამეტრად გამოიყენება"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_case_job_req_main
@@ -9792,6 +9955,7 @@ msgstr "რეუნიონი"
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
 msgstr ""
+"ახალი სვეტის სახელი უნდა იწყებოდეს x_  -ით, რადგანაც ეს განსხვავებული ველია!"
 
 #. module: base
 #: model:ir.module.module,description:base.module_wiki
@@ -9803,6 +9967,12 @@ msgid ""
 "Keep track of Wiki groups, pages, and history.\n"
 "    "
 msgstr ""
+"\n"
+"ეს ძირითადი მოდული განკუთვნილია დოკუმენტების მართვისთვის (ვიკი).\n"
+"==========================================\n"
+"\n"
+"ადევნეთ თვალყური ვიკი ჯგუფებს, გვერდებს და ისტორიას.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
@@ -10074,6 +10244,256 @@ msgid ""
 "product, warehouse and company because results\n"
 "   can be unpredictable. The same applies to Forecasts lines.\n"
 msgstr ""
+"\n"
+"MPS გაძკევთ საშუალებას ხელოვნურად შეადგუბით შესყიდვების გეგმა სტანდარტული "
+"MRP დაგეგმისგან განსხვავებით, რომელიც მუშაობს ავტომატურ რეჟიმში მინიმალური "
+"მარაგების წესების შესაბამისად\n"
+"============================================================================="
+"============================================================\n"
+"\n"
+"Quick Glossary\n"
+"--------------\n"
+"- Stock Period - the time boundaries (between Start Date and End Date) for "
+"your Sales and Stock forecasts and planning\n"
+"- Sales Forecast - the quantity of products you plan to sell during the "
+"related Stock Period.\n"
+"- Stock Planning - the quantity of products you plan to purchase or produce "
+"for the related Stock Period.\n"
+"\n"
+"To avoid confusion with the terms used by the ``sale_forecast`` module, "
+"(\"Sales Forecast\" and \"Planning\" are amounts) we use terms \"Stock and "
+"Sales Forecast\" and \"Stock Planning\" to emphasize that we use quantity "
+"values.\n"
+"\n"
+"Where to begin\n"
+"--------------\n"
+"Using this module is done in three steps:\n"
+"\n"
+" * Create Stock Periods via the Warehouse>Configuration>Stock Periods menu "
+"(Mandatory step)\n"
+" * Create Sale Forecasts fill them with forecast quantities, via the "
+"Sales>Sales Forecast menu. (Optional step but useful for further planning)\n"
+" * Create the actual MPS plan, check the balance and trigger the "
+"procurements as required. The actual procurement is the final step for the "
+"Stock Period.\n"
+"\n"
+"Stock Period configuration\n"
+"--------------------------\n"
+"You have two menu items for Periods in \"Warehouse > Configuration > Stock "
+"Periods\". There are:\n"
+"\n"
+" * \"Create Stock Periods\" - can automatically creating daily, weekly or "
+"monthly periods.\n"
+" * \"Stock Periods\" - allows to create any type of periods, change the "
+"dates and change the state of period.\n"
+"\n"
+"Creating periods is the first step. You can create custom periods using the "
+"\"New\" button in \"Stock Periods\", but it is recommended to use the "
+"automatic assistant \"Create Stock Periods\".\n"
+"\n"
+"Remarks:\n"
+"\n"
+" - These periods (Stock Periods) are completely distinct from Financial or "
+"other periods in the system.\n"
+" - Periods are not assigned to companies (when you use multicompany). Module "
+"suppose that you use the same periods across companies. If you wish to use "
+"different periods for different companies define them as you wish (they can "
+"overlap). Later on in this text will be indications how to use such "
+"periods.\n"
+" - When periods are created automatically their start and finish dates are "
+"with start hour 00:00:00 and end hour 23:59:00. When you create daily "
+"periods they will have start date 31.01.2010 00:00:00 and end date "
+"31.01.2010 23:59:00. It works only in automatic creation of periods. When "
+"you create periods manually you have to take care about hours because you "
+"can have incorrect values form sales or stock.\n"
+" - If you use overlapping periods for the same product, warehouse and "
+"company results can be unpredictable.\n"
+" - If current date doesn't belong to any period or you have holes between "
+"periods results can be unpredictable.\n"
+"\n"
+"Sales Forecasts configuration\n"
+"-----------------------------\n"
+"You have few menus for Sales forecast in \"Sales > Sales Forecasts\":\n"
+"\n"
+" - \"Create Sales Forecasts\" - can automatically create forecast lines "
+"according to your needs\n"
+" - \"Sales Forecasts\" - for managing the Sales forecasts\n"
+"\n"
+"Menu \"Create Sales Forecasts\" creates Forecasts for products from selected "
+"Category, for selected Period and for selected Warehouse.\n"
+"It is also possible to copy the previous forecast.\n"
+"\n"
+"Remarks:\n"
+"\n"
+" - This tool doesn't duplicate lines if you already have an entry for the "
+"same Product, Period, Warehouse, created or validated by the same user. If "
+"you wish to create another forecast, if relevant lines exists you have to do "
+"it manually as described below.\n"
+" - When created lines are validated by someone else you can use this tool to "
+"create another line for the same Period, Product and Warehouse.\n"
+" - When you choose \"Copy Last Forecast\", created line take quantity and "
+"other settings from your (validated by you or created by you if not "
+"validated yet) forecast which is for last period before period of created "
+"forecast.\n"
+"\n"
+"On \"Sales Forecast\" form mainly you have to enter a forecast quantity in "
+"\"Product Quantity\".\n"
+"Further calculation can work for draft forecasts. But validation can save "
+"your data against any accidental changes.\n"
+"You can click \"Validate\" button but it is not mandatory.\n"
+"\n"
+"Instead of forecast quantity you may enter the amount of forecast sales via "
+"the \"Product Amount\" field.\n"
+"The system will count quantity from amount according to Sale price of the "
+"Product.\n"
+"\n"
+"All values on the form are expressed in unit of measure selected on form.\n"
+"You can select a unit of measure from the default category or from secondary "
+"category.\n"
+"When you change unit of measure the forecast product quantity will be re-"
+"computed according to new UoM.\n"
+"\n"
+"To work out your Sale Forecast you can use the \"Sales History\" of the "
+"product.\n"
+"You have to enter parameters to the top and left of this table and system "
+"will count sale quantities according to these parameters.\n"
+"So you can get results for a given sales team or period.\n"
+"\n"
+"\n"
+"MPS or Procurement Planning\n"
+"---------------------------\n"
+"An MPS planning consists in Stock Planning lines, used to analyze and "
+"possibly drive the procurement of \n"
+"products for each relevant Stock Period and Warehouse.\n"
+"The menu is located in \"Warehouse > Schedulers > Master Procurement "
+"Schedule\":\n"
+"\n"
+" - \"Create Stock Planning Lines\" - a wizard to help automatically create "
+"many planning lines\n"
+" - \"Master Procurement Schedule\" - management of your planning lines\n"
+"\n"
+"Similarly to the way Sales forecast serves to define your sales planning, "
+"the MPS lets you plan your procurements (Purchase/Manufacturing).\n"
+"You can quickly populate the MPS with the \"Create Stock Planning Lines\" "
+"wizard, and then proceed to review them via the \"Master Procurement "
+"Schedule\" menu.\n"
+"\n"
+"The \"Create Stock Planning Lines\" wizard lets you to quickly create all "
+"MPS lines for a given Product Category, and a given Period and Warehouse.\n"
+"When you enable the \"All Products with Forecast\" option of the wizard, the "
+"system creates lines for all products having sales forecast for selected\n"
+"Period and Warehouse (the selected Category will be ignored in this case).\n"
+"\n"
+"Under menu \"Master Procurement Schedule\" you will usually change the "
+"\"Planned Out\" and \"Planned In\" quantities and observe the resulting "
+"\"Stock Simulation\" value\n"
+"to decide if you need to procure more products for the given Period.\n"
+"\"Planned Out\" will be initially based on \"Warehouse Forecast\" which is "
+"the sum of all outgoing stock moves already planned for the Period and "
+"Warehouse.\n"
+"Of course you can alter this value to provide your own quantities. It is not "
+"necessary to have any forecast.\n"
+"\"Planned In\" quantity is used to calculate field \"Incoming Left\" which "
+"is the quantity to be procured to reach the \"Stock Simulation\" at the end "
+"of Period.\n"
+"You can compare \"Stock Simulation\" quantity to minimum stock rules visible "
+"on the form.\n"
+"And you can plan different quantity than in Minimum Stock Rules. "
+"Calculations are done for whole Warehouse by default,\n"
+"if you want to see values for Stock location of calculated warehouse you can "
+"check \"Stock Location Only\".\n"
+"\n"
+"When you are satisfied with the \"Planned Out\", \"Planned In\" and end of "
+"period \"Stock Simulation\",\n"
+"you can click on \"Procure Incoming Left\" to create a procurement for the "
+"\"Incoming Left\" quantity.\n"
+"You can decide if procurement will go to the to Stock or Input location of "
+"the Warehouse.\n"
+"\n"
+"If you don't want to Produce or Buy the product but just transfer the "
+"calculated quantity from another warehouse\n"
+"you can click \"Supply from Another Warehouse\" (instead of \"Procure "
+"Incoming Left\") and the system will\n"
+"create the appropriate picking list (stock moves).\n"
+"You can choose to take the goods from the Stock or the Output location of "
+"the source warehouse.\n"
+"Destination location (Stock or Input) in the destination warehouse will be "
+"taken as for the procurement case.\n"
+"\n"
+"To see update the quantities of \"Confirmed In\", \"Confirmed Out\", "
+"\"Confirmed In Before\", \"Planned Out Before\"\n"
+"and \"Stock Simulation\" you can press \"Calculate Planning\".\n"
+"\n"
+"All values on the form are expressed in unit of measure selected on form.\n"
+"You can select one of unit of measure from default category or from "
+"secondary category.\n"
+"When you change unit of measure the editable quantities will be re-computed "
+"according to new UoM. The others will be updated after pressing \"Calculate "
+"Planning\".\n"
+"\n"
+"Computation of Stock Simulation quantities\n"
+"------------------------------------------\n"
+"The Stock Simulation value is the estimated stock quantity at the end of the "
+"period.\n"
+"The calculation always starts with the real stock on hand at the beginning "
+"of the current period, then\n"
+"adds or subtracts the computed quantities.\n"
+"When you are in the same period (current period is the same as calculated) "
+"Stock Simulation is calculated as follows:\n"
+"\n"
+"Stock Simulation =\n"
+"\tStock of beginning of current Period\n"
+"\t- Planned Out\n"
+"\t+ Planned In\n"
+"\n"
+"When you calculate period next to current:\n"
+"\n"
+"Stock Simulation =\n"
+"\tStock of beginning of current Period\n"
+"\t- Planned Out of current Period\n"
+"\t+ Confirmed In of current Period (incl. Already In)\n"
+"\t- Planned Out of calculated Period\n"
+"\t+ Planned In of calculated Period .\n"
+"\n"
+"As you see the calculated Period is taken the same way as in previous case, "
+"but the calculation in the current\n"
+"Period is a little bit different. First you should note that system takes "
+"for only Confirmed moves for the\n"
+"current period. This means that you should complete the planning and "
+"procurement of the current Period before\n"
+"going to the next one.\n"
+"\n"
+"When you plan for future Periods:\n"
+"\n"
+"Stock Simulation =\n"
+"\tStock of beginning of current Period\n"
+"\t- Sum of Planned Out of Periods before calculated\n"
+"\t+ Sum of Confirmed In of Periods before calculated (incl. Already In)\n"
+"\t- Planned Out of calculated Period\n"
+"\t+ Planned In of calculated Period.\n"
+"\n"
+"Here \"Periods before calculated\" designates all periods starting with the "
+"current until the period before the one being calculated.\n"
+"\n"
+"Remarks:\n"
+"\n"
+" - Remember to make the proceed with the planning of each period in "
+"chronological order, otherwise the numbers will not reflect the\n"
+"   reality\n"
+" - If you planned for future periods and find that real Confirmed Out is "
+"larger than Planned Out in some periods before,\n"
+"   you can repeat Planning and make another procurement. You should do it in "
+"the same planning line.\n"
+"   If you create another planning line the suggestions can be wrong.\n"
+" - When you wish to work with different periods for some products, define "
+"two kinds of periods (e.g. Weekly and Monthly) and use\n"
+"   them for different products. Example: If you use always Weekly periods "
+"for Product A, and Monthly periods for Product B\n"
+"   all calculations will work correctly. You can also use different kind of "
+"periods for the same product from different warehouse\n"
+"   or companies. But you cannot use overlapping periods for the same "
+"product, warehouse and company because results\n"
+"   can be unpredictable. The same applies to Forecasts lines.\n"
 
 #. module: base
 #: model:res.country,name:base.mp
@@ -10195,12 +10615,12 @@ msgstr "იგნორირება"
 #. module: base
 #: report:ir.module.reference.graph:0
 msgid "Reference Guide"
-msgstr ""
+msgstr "ფუნქციონალური დოკუმენტაცია"
 
 #. module: base
 #: view:ir.values:0
 msgid "Default Value Scope"
-msgstr ""
+msgstr "ნაგულისხმევი მნიშვნელობის არეალი"
 
 #. module: base
 #: view:ir.ui.view:0
@@ -10224,7 +10644,7 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Flemish (BE) / Vlaams (BE)"
-msgstr ""
+msgstr "ფლამანდური"
 
 #. module: base
 #: field:ir.cron,interval_number:0
@@ -10264,6 +10684,30 @@ msgid ""
 "* Maximal difference between timesheet and attendances\n"
 "    "
 msgstr ""
+"\n"
+"ეს მოდული გეხმარებათ მარტივათ მართოთ დროის და დასწრების აღრიცხვა ერთსა და "
+"იმავე ვიუში.\n"
+"============================================================================="
+"======================\n"
+"\n"
+"The upper part of the view is for attendances and track (sign in/sign out) "
+"events.\n"
+"The lower part is for timesheet.\n"
+"\n"
+"Other tabs contains statistics views to help you analyse your\n"
+"time or the time of your team:\n"
+"* Time spent by day (with attendances)\n"
+"* Time spent by project\n"
+"\n"
+"This module also implements a complete timesheet validation process:\n"
+"* Draft sheet\n"
+"* Confirmation at the end of the period by the employee\n"
+"* Validation by the project manager\n"
+"\n"
+"The validation can be configured in the company:\n"
+"* Period size (day, week, month, year)\n"
+"* Maximal difference between timesheet and attendances\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -10300,7 +10744,7 @@ msgstr "მომხმარებლის ინტერფეისი"
 #: field:res.partner,child_ids:0
 #: field:res.request,ref_partner_id:0
 msgid "Partner Ref."
-msgstr ""
+msgstr "პარტნიორის წყარო"
 
 #. module: base
 #: field:ir.attachment,create_date:0
@@ -10310,7 +10754,7 @@ msgstr "შექმნის თარიღი"
 #. module: base
 #: help:ir.actions.server,trigger_name:0
 msgid "The workflow signal to trigger"
-msgstr ""
+msgstr "აღსაძრავი ვორკფლოუს სიგნალი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp
@@ -10355,11 +10799,50 @@ msgid ""
 "    * Graph of stock value variation\n"
 "    "
 msgstr ""
+"\n"
+"ეს გახლავთ წამორების პროცესის მართვის ძირეული მოდული.\n"
+"=======================================================================\n"
+"\n"
+"Features:\n"
+"---------\n"
+"    * Make to Stock / Make to Order (by line)\n"
+"    * Multi-level BoMs, no limit\n"
+"    * Multi-level routing, no limit\n"
+"    * Routing and work center integrated with analytic accounting\n"
+"    * Scheduler computation periodically / Just In Time module\n"
+"    * Multi-pos, multi-warehouse\n"
+"    * Different reordering policies\n"
+"    * Cost method by product: standard price, average price\n"
+"    * Easy analysis of troubles or needs\n"
+"    * Very flexible\n"
+"    * Allows to browse Bill of Materials in complete structure that include "
+"child and phantom BoMs\n"
+"\n"
+"It supports complete integration and planification of stockable goods,\n"
+"consumable of services. Services are completely integrated with the rest\n"
+"of the software. For instance, you can set up a sub-contracting service\n"
+"in a BoM to automatically purchase on order the assembly of your "
+"production.\n"
+"\n"
+"Reports provided by this module:\n"
+"--------------------------------\n"
+"    * Bill of Material structure and components\n"
+"    * Load forecast on Work Centers\n"
+"    * Print a production order\n"
+"    * Stock forecasts\n"
+"\n"
+"Dashboard provided by this module:\n"
+"----------------------------------\n"
+"    * List of next production orders\n"
+"    * List of procurements in exception\n"
+"    * Graph of work center load\n"
+"    * Graph of stock value variation\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_base_account
 msgid "The module adds google user in res user"
-msgstr ""
+msgstr "ეს მოდული ამატებს გუგლის მომხმარებელს res user-ში."
 
 #. module: base
 #: selection:base.language.install,state:0
@@ -10459,12 +10942,12 @@ msgstr "კომპანიები"
 #. module: base
 #: help:res.currency,symbol:0
 msgid "Currency sign, to be used when printing amounts."
-msgstr ""
+msgstr "ვალუტის ნიშანი, მოცულობების ბეჭდვისას გამოსაყენებლად."
 
 #. module: base
 #: view:res.lang:0
 msgid "%H - Hour (24-hour clock) [00,23]."
-msgstr ""
+msgstr "%H - საათი (24-საათიანი დრო) [00,23]."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:451
@@ -10493,11 +10976,15 @@ msgid ""
 "=====================================================\n"
 "\n"
 msgstr ""
+"\n"
+"დამატებითი პროგრამებისთვის განკუთვნილი ზოგადი ინტერფეისი.\n"
+"=====================================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_jit
 msgid "Just In Time Scheduling"
-msgstr ""
+msgstr "Just In Time განრიგის შედგენა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_extensions
@@ -10514,12 +11001,12 @@ msgstr "Python-ის კოდი"
 #. module: base
 #: help:ir.actions.server,state:0
 msgid "Type of the Action that is to be executed"
-msgstr ""
+msgstr "შესასრულებელი ქმედების ტიპი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
 msgid "The kernel of OpenERP, needed for all installation."
-msgstr ""
+msgstr "OpenERP-ს ბირთვი, სისტემის მთავარი კომპონენტი."
 
 #. module: base
 #: model:ir.model,name:base.model_osv_memory_autovacuum
@@ -10581,6 +11068,16 @@ msgid ""
 "fund status.\n"
 "    "
 msgstr ""
+"\n"
+"სახსრების მოზიდვა.\n"
+"============\n"
+"\n"
+"When you wish to support your organization or a campaign, you can trace\n"
+"all your activities for collecting money. The menu opens a search list\n"
+"where you can find fund descriptions, email, history and probability of\n"
+"success. Several action buttons allow you to easily modify your different\n"
+"fund status.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_margin
@@ -10617,7 +11114,7 @@ msgstr "ფანჯრის ქმედებები"
 #. module: base
 #: view:res.lang:0
 msgid "%I - Hour (12-hour clock) [01,12]."
-msgstr ""
+msgstr "%I - საათი (12-საათიანი დრო ) [01,12]."
 
 #. module: base
 #: selection:publisher_warranty.contract.wizard,state:0
@@ -10632,7 +11129,7 @@ msgstr "გერმანია"
 #. module: base
 #: view:ir.sequence:0
 msgid "Week of the year: %(woy)s"
-msgstr ""
+msgstr "წლის კვირა: %(woy)s"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_14
@@ -10654,11 +11151,17 @@ msgid ""
 "This module is the base module for other multi-company modules.\n"
 "    "
 msgstr ""
+"\n"
+"ეს მოდული განკუთვნილია მრავალკომპანიანი გარემოს მართვისთვის.\n"
+"=======================================================\n"
+"\n"
+"This module is the base module for other multi-company modules.\n"
+"    "
 
 #. module: base
 #: sql_constraint:res.currency:0
 msgid "The currency code must be unique per company!"
-msgstr ""
+msgstr "ვალუტის კოდი უნიკალური უნდა იყოს ყოველი კომპანიისთვის!"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_property
@@ -10717,6 +11220,9 @@ msgid ""
 "        OpenERP Web example module.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP ვებ ნიმუში მოდული.\n"
+"        "
 
 #. module: base
 #: model:res.country,name:base.gy
@@ -10726,7 +11232,7 @@ msgstr "გვიანა"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_expiry
 msgid "Products Expiry Date"
-msgstr ""
+msgstr "პროდუქტების ვადის გასვლის თარიღი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -10760,6 +11266,34 @@ msgid ""
 "module named account_voucher.\n"
 "    "
 msgstr ""
+"\n"
+"ბუღალტერია და ფინანსური მართვა.\n"
+"====================================\n"
+"\n"
+"ფინანსური და ბუღალტრული მოდული, რომელიც მოიცავს:\n"
+"--------------------------------------------\n"
+"ძირითად ბუღალტერია\n"
+"ხარჯვითი / ანალიტიკური ბუღალტერია\n"
+"მესამე პირის ბუღალტერია\n"
+"გადასახადების მართვა\n"
+"ბიუჯეტირება\n"
+"კლიენტის და მომწოდებლის ინვოისინგი\n"
+"საბანკო ამონაწერები\n"
+"პარტნიორებთან აკრიჟვის/რეკონსილაციის პროცესი\n"
+"\n"
+"ქმნის დაფას ბუღალტრებისთვის, რომელიც მოიცავს:\n"
+"--------------------------------------------------\n"
+"* დასადასტურებელი კლიენტების ინვოისების სიას\n"
+"* კომპანიის ანალიზი\n"
+"* ვადაგადაცილებული მისაღები თანხები\n"
+"* ხაზინის გრაფიკი\n"
+"\n"
+"The processes like maintaining of general ledger is done through the defined "
+"financial Journals (entry move line or\n"
+"grouping is maintained through journal) for a particular financial year and "
+"for preparation of vouchers there is a\n"
+"module named account_voucher.\n"
+"    "
 
 #. module: base
 #: help:ir.actions.act_window,view_type:0
@@ -10772,12 +11306,12 @@ msgstr ""
 #: code:addons/base/res/res_config.py:385
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
-msgstr ""
+msgstr "დააკლიკეთ გაგრძელებაზე რათა დააკონფიგურიროთ შემდეგი მოდული"
 
 #. module: base
 #: field:ir.actions.server,record_id:0
 msgid "Create Id"
-msgstr ""
+msgstr "იდენტიფიკატორის შექმნა"
 
 #. module: base
 #: model:res.country,name:base.hn
@@ -10788,7 +11322,7 @@ msgstr "ჰონდურასი"
 #: help:res.users,menu_tips:0
 msgid ""
 "Check out this box if you want to always display tips on each menu action"
-msgstr ""
+msgstr "ჩართეთ ეს ალამი თუ გსურთ მინიშნებების თითოეულ ქმედებაზე გამოჩენა."
 
 #. module: base
 #: model:res.country,name:base.eg
@@ -10798,13 +11332,15 @@ msgstr "ეგვიპტე"
 #. module: base
 #: field:ir.rule,perm_read:0
 msgid "Apply For Read"
-msgstr ""
+msgstr "წაკითხვის უფლებაზე ხელმოწერა"
 
 #. module: base
 #: help:ir.actions.server,model_id:0
 msgid ""
 "Select the object on which the action will work (read, write, create)."
 msgstr ""
+"აირჩიეთ ობიექტი რომელზეც ქმედება იქნება შესაძლებელი (წაკითხვა, ჩაწერა, "
+"შექმნა)."
 
 #. module: base
 #: field:base.language.import,name:0
@@ -10858,7 +11394,7 @@ msgstr "ექსპერტი"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Leaves Management"
-msgstr ""
+msgstr "მივლინებების მართვა"
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -10873,7 +11409,7 @@ msgstr ""
 #: view:res.partner.address:0
 #: view:workflow.activity:0
 msgid "Group By..."
-msgstr ""
+msgstr "დაჯგუფება"
 
 #. module: base
 #: view:ir.model.fields:0
@@ -10889,6 +11425,9 @@ msgid ""
 "Todo list for CRM leads and opportunities.\n"
 "    "
 msgstr ""
+"\n"
+"გასაკეთებელი საქმეების სია CRM ლიდების და შესაძლებლობებისთვის.\n"
+"    "
 
 #. module: base
 #: field:ir.actions.act_window.view,view_id:0
@@ -10945,6 +11484,13 @@ msgid ""
 "outlook, Sunbird, ical, ...\n"
 "    "
 msgstr ""
+"\n"
+"გაძლევთ საშუალებას დაასინქრონიზიროთ კალენდარი სხვა პროგრამებთან.\n"
+"=========================================================\n"
+"\n"
+"Will allow you to synchronise your OpenERP calendars with your phone, "
+"outlook, Sunbird, ical, ...\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.lr
@@ -11029,6 +11575,7 @@ msgstr "დახმარება"
 msgid ""
 "If specified, the action will replace the standard menu for this user."
 msgstr ""
+"თუ განისაზღვრა, ქმედება შეცვლის სტანდარტულ მენიუს ამ მომხმარებლისთვის."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_map
@@ -11043,7 +11590,7 @@ msgstr "რეპორტის წინასწარ ნახვა"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_analytic_plans
 msgid "Purchase Analytic Plans"
-msgstr ""
+msgstr "შესყიდვების ანალიტიკის გეგმები"
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic_journal_billing_rate
@@ -11064,17 +11611,32 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"ეს მოდული გაძლევთ საშუალებას განსაზღვროთ რა არის ნაგულისხმევი ინვოისინგის "
+"ტარიფი მოცემული ანგარიშის ჟურნლაისათვის.\n"
+"============================================================================="
+"=================================\n"
+"\n"
+"This is mostly used when a user encodes his timesheet: the values are "
+"retrieved and the fields are auto-filled. But the possibility to change "
+"these values is still available.\n"
+"\n"
+"Obviously if no data has been recorded for the current account, the default "
+"value is given as usual by the account data so that this module is perfectly "
+"compatible with older configurations.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_fundrising
 msgid "Fund Raising"
-msgstr ""
+msgstr "სახსრების მოზიდვა"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_type
 #: model:ir.ui.menu,name:base.menu_ir_sequence_type
 msgid "Sequence Codes"
-msgstr ""
+msgstr "მიმდევრობის კოდები"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -11096,7 +11658,7 @@ msgstr "მიმდინარე წელი საუკუნით: %(yea
 #. module: base
 #: field:ir.exports,export_fields:0
 msgid "Export ID"
-msgstr ""
+msgstr "იდენტიფიკატორის ექსპორტი"
 
 #. module: base
 #: model:res.country,name:base.fr
@@ -11197,7 +11759,7 @@ msgstr "საკვანძო სიტყვები"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn
 msgid "中国会计科目表 - Accounting"
-msgstr ""
+msgstr "ჩინეთი - ბუღალტერია"
 
 #. module: base
 #: view:ir.model.access:0
@@ -11339,7 +11901,7 @@ msgstr ""
 #. module: base
 #: view:ir.actions.todo.category:0
 msgid "Wizard Category"
-msgstr ""
+msgstr "ვიზარდის კატეგორია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_cancel
@@ -11357,7 +11919,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_rule
 #: model:ir.ui.menu,name:base.menu_action_rule
 msgid "Record Rules"
-msgstr ""
+msgstr "ჩაწერის წესები"
 
 #. module: base
 #: field:res.users,name:0
@@ -11406,6 +11968,9 @@ msgid ""
 "Please define BIC/Swift code on bank for bank type IBAN Account to make "
 "valid payments"
 msgstr ""
+"\n"
+"გთხოვთ განსაზღვროთ BIC/Swift კოდი ბანკის IBAN ანგარიშისთვის რათა "
+"განახორციელოთ გადახდები სწორად."
 
 #. module: base
 #: view:res.lang:0
@@ -11493,19 +12058,19 @@ msgstr ""
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
 msgid "Miss"
-msgstr ""
+msgstr "ქ-ნი"
 
 #. module: base
 #: view:ir.model.access:0
 #: field:ir.model.access,perm_write:0
 #: view:ir.rule:0
 msgid "Write Access"
-msgstr ""
+msgstr "ჩაწერის უფლება"
 
 #. module: base
 #: view:res.lang:0
 msgid "%m - Month number [01,12]."
-msgstr ""
+msgstr "%m - თვის ნომერი [01,12]."
 
 #. module: base
 #: field:res.bank,city:0
@@ -11545,7 +12110,7 @@ msgstr "ელ.ფოსტა"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL-3 or later version"
-msgstr ""
+msgstr "GPL-3 ან უფრო ახალი ვერსია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_map
@@ -11589,11 +12154,14 @@ msgid ""
 "Manage the partner titles you want to have available in your system. The "
 "partner titles is the legal status of the company: Private Limited, SA, etc."
 msgstr ""
+"მართეთ პარტნიორის სახელწოდებების თავსართები რომლებიც გსურთ რომ გქონდეთ "
+"თქვენს სისტემაში. პარტნიორის სათაური წარმოადგენს მათი კომპანიის იურიდიულ "
+"სტატუსს: შპს, სს, მისო და სხვა."
 
 #. module: base
 #: view:base.language.export:0
 msgid "To browse official translations, you can start with these links:"
-msgstr ""
+msgstr "რათა დაათვალიეროთ ოფიციალური თარგმანებით, დაიწყეთ ამ ბმულებიდან:"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:531
@@ -11602,6 +12170,8 @@ msgid ""
 "You can not read this document (%s) ! Be sure your user belongs to one of "
 "these groups: %s."
 msgstr ""
+"თქვენ არ გაქვთ უფლება წაიკითხოთ ეს დოკუმენტი (%s) ! დარწმუნდით რომ თქვენი "
+"მომხმარებელი მიეკუთვნება ამ ჯგუფებიდან ერთ-ერთს: %s."
 
 #. module: base
 #: view:res.bank:0
@@ -11731,17 +12301,17 @@ msgstr "მაგალითები"
 #: field:ir.default,value:0
 #: view:ir.values:0
 msgid "Default Value"
-msgstr ""
+msgstr "ნაგულისხმევი მნიშვნელობა"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
-msgstr ""
+msgstr "ქვეყნის შტატი"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_5
 msgid "Sequences & Identifiers"
-msgstr ""
+msgstr "მიმდევრობები და იდენტიფიკატორები"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -11757,7 +12327,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.kn
 msgid "Saint Kitts & Nevis Anguilla"
-msgstr ""
+msgstr "ნევის აგილა"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_point_of_sale
@@ -11776,6 +12346,14 @@ msgid ""
 "    * Company Contribution Management\n"
 "    "
 msgstr ""
+"\n"
+"ძირითადი ხელფასების სისტემა ინტეგრირებული ბუღალტერიასთან.\n"
+"===================================================\n"
+"\n"
+"    * ხარჯების მართვა\n"
+"    * გადახდების მართვა\n"
+"    * კომპანიის კონტრიბუციის მართვა\n"
+"    "
 
 #. module: base
 #: code:addons/base/res/res_currency.py:190
@@ -11785,6 +12363,9 @@ msgid ""
 "for the currency: %s \n"
 "at the date: %s"
 msgstr ""
+"კურსი ვერ მოიძებნა \n"
+"ვალუტისთვის: %s \n"
+"ამ თარიღში: %s"
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -11804,6 +12385,20 @@ msgid ""
 "    * Allow to refund former sales.\n"
 "    "
 msgstr ""
+"\n"
+"აღნიშნული მოდული გთავაზობთ სწრაფ და მარტივ გაყიდვების პროცესს.\n"
+"===================================================\n"
+"\n"
+"Main features :\n"
+"---------------\n"
+"    * Fast encoding of the sale.\n"
+"    * Allow to choose one payment mode (the quick way) or to split the "
+"payment between several payment mode.\n"
+"    * Computation of the amount of money to return.\n"
+"    * Create and confirm picking list automatically.\n"
+"    * Allow the user to create invoice automatically.\n"
+"    * Allow to refund former sales.\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
@@ -11822,7 +12417,7 @@ msgstr ""
 #. module: base
 #: field:ir.model.fields,model:0
 msgid "Object Name"
-msgstr ""
+msgstr "ობიექტის სახელი"
 
 #. module: base
 #: help:ir.actions.server,srcmodel_id:0
@@ -11836,18 +12431,18 @@ msgstr ""
 #: selection:ir.module.module,state:0
 #: selection:ir.module.module.dependency,state:0
 msgid "Not Installed"
-msgstr ""
+msgstr "არ არის დაყენებული"
 
 #. module: base
 #: view:workflow.activity:0
 #: field:workflow.activity,out_transitions:0
 msgid "Outgoing Transitions"
-msgstr ""
+msgstr "გამავალი ტრანზიციები"
 
 #. module: base
 #: field:ir.ui.menu,icon:0
 msgid "Icon"
-msgstr ""
+msgstr "ხატულა"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources
@@ -11855,16 +12450,18 @@ msgid ""
 "Helps you manage your human resources by encoding your employees structure, "
 "generating work sheets, tracking attendance and more."
 msgstr ""
+"გეხმარებათ მართოთ თქვენი ადამიანური რესურსები - თანამშრომლების სტრუქტურა, "
+"სამუშაო გეგმების შემუშავება, დასწრების მართვა და სხვა მრავალი."
 
 #. module: base
 #: help:ir.model.fields,model_id:0
 msgid "The model this field belongs to"
-msgstr ""
+msgstr "მოდელი რომელსაც ეს ველი ეკუთვნის"
 
 #. module: base
 #: model:res.country,name:base.mq
 msgid "Martinique (French)"
-msgstr ""
+msgstr "მარტინიკი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_wiki_sale_faq
@@ -11881,7 +12478,7 @@ msgstr ""
 #. module: base
 #: view:ir.sequence.type:0
 msgid "Sequences Type"
-msgstr ""
+msgstr "მიმდევრობის ტიპი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_action_rule
@@ -11906,27 +12503,27 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_resquest_ref
 #: view:res.request:0
 msgid "Requests"
-msgstr ""
+msgstr "მოთხოვნები"
 
 #. module: base
 #: model:res.country,name:base.ye
 msgid "Yemen"
-msgstr ""
+msgstr "იემენი"
 
 #. module: base
 #: selection:workflow.activity,split_mode:0
 msgid "Or"
-msgstr ""
+msgstr "ან"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
 msgid "Brazilian - Accounting"
-msgstr ""
+msgstr "ბრაზილიური ბუღალტერია"
 
 #. module: base
 #: model:res.country,name:base.pk
 msgid "Pakistan"
-msgstr ""
+msgstr "პაკისტანი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_margin
@@ -11944,7 +12541,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.al
 msgid "Albania"
-msgstr ""
+msgstr "ალბანეთი"
 
 #. module: base
 #: help:ir.module.module,complexity:0
@@ -11960,6 +12557,8 @@ msgid ""
 "You cannot delete the language which is Active !\n"
 "Please de-activate the language first."
 msgstr ""
+"თქვენ ვერ შეძლებთ აქტიური ენის წაშლას !\n"
+"გთხოვთ პირველ ჯერ დეაქტივაცია გაუკეთოთ აღნიშნულ ენას."
 
 #. module: base
 #: view:base.language.install:0
@@ -11967,11 +12566,13 @@ msgid ""
 "Please be patient, this operation may take a few minutes (depending on the "
 "number of modules currently installed)..."
 msgstr ""
+"გთხოვთ მოითმინოთ, ამ ოპერაციას შეიძლება დაჭირდეს რამოდენიმე წუთი "
+"(დამოკიდებული უკვე დაყენებული მოდულების რაოდენობაზე)..."
 
 #. module: base
 #: field:ir.ui.menu,child_id:0
 msgid "Child IDs"
-msgstr ""
+msgstr "შვილობილი იდენტიფიკატორები"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:748
@@ -11991,7 +12592,7 @@ msgstr ""
 #: view:base.module.import:0
 #: view:base.module.update:0
 msgid "Open Modules"
-msgstr ""
+msgstr "გახსნილი მოდულები"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -12008,17 +12609,17 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_bank_form
 msgid "Manage bank records you want to be used in the system."
-msgstr ""
+msgstr "მართეთ ბანკის ჩანაწერები რომელთა გამოყენებაც გსურთ თქვენს სისტემაში"
 
 #. module: base
 #: view:base.module.import:0
 msgid "Import module"
-msgstr ""
+msgstr "მოდულის იმპორტი"
 
 #. module: base
 #: field:ir.actions.server,loop_action:0
 msgid "Loop Action"
-msgstr ""
+msgstr "ციკლური ქმედება"
 
 #. module: base
 #: help:ir.actions.report.xml,report_file:0
@@ -12026,11 +12627,13 @@ msgid ""
 "The path to the main report file (depending on Report Type) or NULL if the "
 "content is in another field"
 msgstr ""
+"გზა მთავარ რეპორტ ფაილამდე (რეპორტის ტიპზეა დამოკიდებული) ან NULL თუ "
+"შიგთავსი არის სხვა ველში"
 
 #. module: base
 #: model:res.country,name:base.la
 msgid "Laos"
-msgstr ""
+msgstr "ლაოსი"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -12038,7 +12641,7 @@ msgstr ""
 #: field:res.company,email:0
 #: field:res.users,user_email:0
 msgid "Email"
-msgstr ""
+msgstr "ელ.ფოსტა"
 
 #. module: base
 #: field:res.users,action_id:0
@@ -12048,7 +12651,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_project
 msgid "Retro-Planning on Events"
-msgstr ""
+msgstr "რეტროპლანინგი მოვლენებზე"
 
 #. module: base
 #: code:addons/custom.py:555
@@ -12057,16 +12660,18 @@ msgid ""
 "The sum of the data (2nd field) is null.\n"
 "We can't draw a pie chart !"
 msgstr ""
+"მონაცემების ჯამი უდრის ნულს (მეორე ველი).\n"
+"pie chart-ი ვერ აიგება !"
 
 #. module: base
 #: view:partner.clear.ids:0
 msgid "Want to Clear Ids ? "
-msgstr ""
+msgstr "გსურთ იდენტიფიკატორების გასუფთავება ? "
 
 #. module: base
 #: view:res.partner.bank:0
 msgid "Information About the Bank"
-msgstr ""
+msgstr "ინფორმაცია ბანკის შესახებ"
 
 #. module: base
 #: help:ir.actions.server,condition:0
@@ -12094,32 +12699,32 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_woodsuppliers0
 msgid "Wood Suppliers"
-msgstr ""
+msgstr "ხის მასალი მომწოდებლები"
 
 #. module: base
 #: model:res.country,name:base.tg
 msgid "Togo"
-msgstr ""
+msgstr "ტოგო"
 
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Other Proprietary"
-msgstr ""
+msgstr "სხვა დაპატენტებული"
 
 #. module: base
 #: model:res.country,name:base.ec
 msgid "Ecuador"
-msgstr ""
+msgstr "ეკვადორი"
 
 #. module: base
 #: selection:workflow.activity,kind:0
 msgid "Stop All"
-msgstr ""
+msgstr "ყველას შეჩერება"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_user_function
 msgid "Jobs on Contracts"
-msgstr ""
+msgstr "სამუშაოები კონტრაქტებზე"
 
 #. module: base
 #: model:ir.module.module,description:base.module_import_sugarcrm
@@ -12135,7 +12740,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_publisher_warranty_contract_add
 #: view:publisher_warranty.contract.wizard:0
 msgid "Register a Contract"
-msgstr ""
+msgstr "კონტრაქტის რეგისტრაცია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ve
@@ -12150,7 +12755,7 @@ msgstr ""
 #. module: base
 #: view:ir.model.data:0
 msgid "Updatable"
-msgstr ""
+msgstr "განახლებადი"
 
 #. module: base
 #: view:res.lang:0
@@ -12160,12 +12765,12 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Cascade"
-msgstr ""
+msgstr "მიყოლებით დალაგება"
 
 #. module: base
 #: field:workflow.transition,group_id:0
 msgid "Group Required"
-msgstr ""
+msgstr "ჯგუფი აუცილებელია"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_knowledge_management
@@ -12177,27 +12782,27 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Arabic / الْعَرَبيّة"
-msgstr ""
+msgstr "არაბული"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_hello
 msgid "Hello"
-msgstr ""
+msgstr "გამარჯობათ"
 
 #. module: base
 #: view:ir.actions.configuration.wizard:0
 msgid "Next Configuration Step"
-msgstr ""
+msgstr "კონფიგურაციის შემდეგი საფეხური"
 
 #. module: base
 #: field:res.groups,comment:0
 msgid "Comment"
-msgstr ""
+msgstr "კომენტარი"
 
 #. module: base
 #: model:res.groups,name:base.group_hr_manager
 msgid "HR Manager"
-msgstr ""
+msgstr "ადამიანური რესურსების მენეჯერი"
 
 #. module: base
 #: view:ir.filters:0
@@ -12206,43 +12811,43 @@ msgstr ""
 #: field:ir.rule,domain_force:0
 #: field:res.partner.title,domain:0
 msgid "Domain"
-msgstr ""
+msgstr "დომენი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_campaign
 msgid "Marketing Campaigns"
-msgstr ""
+msgstr "მარკეტინგული კამპანიები"
 
 #. module: base
 #: code:addons/base/publisher_warranty/publisher_warranty.py:144
 #, python-format
 msgid "Contract validation error"
-msgstr ""
+msgstr "კონტრაქტის დადასტურების შეცდომა"
 
 #. module: base
 #: field:ir.values,key2:0
 msgid "Qualifier"
-msgstr ""
+msgstr "განმსაზღვრელი"
 
 #. module: base
 #: field:res.country.state,name:0
 msgid "State Name"
-msgstr ""
+msgstr "შტატის სახელი"
 
 #. module: base
 #: view:res.lang:0
 msgid "Update Languague Terms"
-msgstr ""
+msgstr "ენის პირობების განახლება"
 
 #. module: base
 #: field:workflow.activity,join_mode:0
 msgid "Join Mode"
-msgstr ""
+msgstr "შეერთების რეჟიმი"
 
 #. module: base
 #: field:res.users,context_tz:0
 msgid "Timezone"
-msgstr ""
+msgstr "დროის სარტყელი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wiki_faq
@@ -12274,12 +12879,12 @@ msgstr ""
 #: view:ir.sequence:0
 #: model:ir.ui.menu,name:base.menu_ir_sequence_form
 msgid "Sequences"
-msgstr ""
+msgstr "მიმდევრობები"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_miss
 msgid "Mss"
-msgstr ""
+msgstr "მისს"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view
@@ -12290,11 +12895,12 @@ msgstr ""
 #: help:res.lang,code:0
 msgid "This field is used to set/get locales for user"
 msgstr ""
+"ველი გამოიყენება მომხმარებლისთვის ლოკალური პარამეტრების განსაზღვრისთვის"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
 msgid "OpenERP Partners"
-msgstr ""
+msgstr "OpenERP პარტნიორები"
 
 #. module: base
 #: code:addons/base/module/module.py:293
@@ -12302,16 +12908,18 @@ msgstr ""
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: %s"
 msgstr ""
+"შეუძლებელია წაიშალოს მოდული \"%s\" რადგანაც გარე დმოკიდებულება არ სრულდება: "
+"%s"
 
 #. module: base
 #: view:ir.module.module:0
 msgid "Search modules"
-msgstr ""
+msgstr "მოდულების ძიება"
 
 #. module: base
 #: model:res.country,name:base.by
 msgid "Belarus"
-msgstr ""
+msgstr "ბელორუსია"
 
 #. module: base
 #: field:ir.actions.act_window,name:0
@@ -12321,7 +12929,7 @@ msgstr ""
 #: field:ir.actions.server,name:0
 #: field:ir.actions.url,name:0
 msgid "Action Name"
-msgstr ""
+msgstr "ქმედების სახელი"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_users
@@ -12331,35 +12939,40 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
+"შექმენით და მართეთ მომხმარებლები რომლებიც დაუკავშირდებიან სისტემას. "
+"შესაძლებელია მომხმარებლების დეაქტივაცია პერიოდისთვის როდესაც მათ არ ჭირდებათ "
+"(ან არ შეიძლება) სისტემასთან დაკავშირება. თქვენ შეძლებთ მათთვის ჯგუფების "
+"მინიჭებას რათა განუსაზღვროთ წვდომის შესაბამისი უფლებები სხვადასხვა მოდულების "
+"გამოსაყენებლად."
 
 #. module: base
 #: selection:ir.module.module,complexity:0
 #: selection:res.request,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "ნორმალური"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_double_validation
 msgid "Double Validation on Purchases"
-msgstr ""
+msgstr "შესყიდვების ორმაგი ვალიდაცია"
 
 #. module: base
 #: field:res.bank,street2:0
 #: field:res.company,street2:0
 #: field:res.partner.address,street2:0
 msgid "Street2"
-msgstr ""
+msgstr "ქუჩა 2"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
 msgid "Module Update"
-msgstr ""
+msgstr "მოდულის განახლება"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_upgrade.py:95
 #, python-format
 msgid "Following modules are not installed or unknown: %s"
-msgstr ""
+msgstr "შემდეგი მოდულები არ არის დაყენებული ან უცნობია: %s"
 
 #. module: base
 #: view:ir.cron:0
@@ -12374,17 +12987,17 @@ msgstr ""
 #: view:res.users:0
 #: field:res.widget.user,user_id:0
 msgid "User"
-msgstr ""
+msgstr "მომხმარებელი"
 
 #. module: base
 #: model:res.country,name:base.pr
 msgid "Puerto Rico"
-msgstr ""
+msgstr "პუერტო რიკო"
 
 #. module: base
 #: view:ir.actions.act_window:0
 msgid "Open Window"
-msgstr ""
+msgstr "ფანჯრის გახსნა"
 
 #. module: base
 #: field:ir.actions.act_window,auto_search:0
@@ -12394,12 +13007,12 @@ msgstr ""
 #. module: base
 #: field:ir.actions.act_window,filter:0
 msgid "Filter"
-msgstr ""
+msgstr "ფილტრი"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
-msgstr ""
+msgstr "ქ-ნი."
 
 #. module: base
 #: view:base.module.import:0
@@ -12412,22 +13025,22 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ch
 msgid "Switzerland"
-msgstr ""
+msgstr "შვეიცარია"
 
 #. module: base
 #: model:res.country,name:base.gd
 msgid "Grenada"
-msgstr ""
+msgstr "გრენადა"
 
 #. module: base
 #: view:ir.actions.server:0
 msgid "Trigger Configuration"
-msgstr ""
+msgstr "კონფიგურაციის აღძვრა"
 
 #. module: base
 #: view:base.language.install:0
 msgid "Load"
-msgstr ""
+msgstr "ჩატვირთვა"
 
 #. module: base
 #: model:ir.module.module,description:base.module_warning
@@ -12447,7 +13060,7 @@ msgstr ""
 #: code:addons/osv.py:152
 #, python-format
 msgid "Integrity Error"
-msgstr ""
+msgstr "მთლიანობის შეცდომა"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_wizard_screen
@@ -12457,38 +13070,38 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_workflow
 msgid "workflow"
-msgstr ""
+msgstr "ვორკფლოუ"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:255
 #, python-format
 msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "ველის ზომა შეუძლებელია იყოს 1-ზე ნაკლების !"
 
 #. module: base
 #: model:res.country,name:base.so
 msgid "Somalia"
-msgstr ""
+msgstr "სომალი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_operations
 msgid "Manufacturing Operations"
-msgstr ""
+msgstr "წარმოების ოპერაციები"
 
 #. module: base
 #: selection:publisher_warranty.contract,state:0
 msgid "Terminated"
-msgstr ""
+msgstr "ბოლომოღებული"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
 msgid "Important customers"
-msgstr ""
+msgstr "მნიშვნელოვანი კლიენტები"
 
 #. module: base
 #: view:res.lang:0
 msgid "Update Terms"
-msgstr ""
+msgstr "პირობების განახლება"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_messages
@@ -12505,29 +13118,29 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr
 msgid "Employee Directory"
-msgstr ""
+msgstr "თანამშრომლების ცნობარი"
 
 #. module: base
 #: view:ir.cron:0
 #: field:ir.cron,args:0
 msgid "Arguments"
-msgstr ""
+msgstr "არგუმენტები"
 
 #. module: base
 #: code:addons/orm.py:1260
 #, python-format
 msgid "Database ID doesn't exist: %s : %s"
-msgstr ""
+msgstr "მონაცემთა ბაზის იდენტიფიკატორი არ არსებობს: %s : %s"
 
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL Version 2"
-msgstr ""
+msgstr "GPL ვერსია 2"
 
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL Version 3"
-msgstr ""
+msgstr "GPL ვერსია 3"
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -12556,18 +13169,18 @@ msgstr ""
 #: code:addons/orm.py:1388
 #, python-format
 msgid "key '%s' not found in selection field '%s'"
-msgstr ""
+msgstr "გასაღები'%s' ვერ მოიძებნა არჩეულ ველში '%s'"
 
 #. module: base
 #: selection:ir.values,key:0
 #: selection:res.partner.address,type:0
 msgid "Default"
-msgstr ""
+msgstr "ნაგულისხმევი"
 
 #. module: base
 #: view:partner.wizard.ean.check:0
 msgid "Correct EAN13"
-msgstr ""
+msgstr "სწორი EAN13"
 
 #. module: base
 #: selection:res.company,paper_format:0
@@ -12577,7 +13190,7 @@ msgstr ""
 #. module: base
 #: field:publisher_warranty.contract,check_support:0
 msgid "Support Level 1"
-msgstr ""
+msgstr "მხარდაჭერის დონე 1"
 
 #. module: base
 #: field:res.partner,customer:0
@@ -12585,12 +13198,12 @@ msgstr ""
 #: field:res.partner.address,is_customer_add:0
 #: model:res.partner.category,name:base.res_partner_category_0
 msgid "Customer"
-msgstr ""
+msgstr "კლიენტი"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (NI) / Español (NI)"
-msgstr ""
+msgstr "ესპანური"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_visible_discount
@@ -12617,42 +13230,42 @@ msgstr ""
 #. module: base
 #: field:ir.module.module,shortdesc:0
 msgid "Short Description"
-msgstr ""
+msgstr "მოკლე აღწერა"
 
 #. module: base
 #: field:res.country,code:0
 msgid "Country Code"
-msgstr ""
+msgstr "ქვეყნის კოდი"
 
 #. module: base
 #: view:ir.sequence:0
 msgid "Hour 00->24: %(h24)s"
-msgstr ""
+msgstr "საათი 00->24: %(h24)s"
 
 #. module: base
 #: field:ir.cron,nextcall:0
 msgid "Next Execution Date"
-msgstr ""
+msgstr "შემდეგი გაშვების თარიღი"
 
 #. module: base
 #: field:ir.sequence,padding:0
 msgid "Number Padding"
-msgstr ""
+msgstr "ნუმერირება"
 
 #. module: base
 #: help:multi_company.default,field_id:0
 msgid "Select field property"
-msgstr ""
+msgstr "აირჩიეთ ველის პარამეტრი"
 
 #. module: base
 #: field:res.request.history,date_sent:0
 msgid "Date sent"
-msgstr ""
+msgstr "გაგზავნის თარიღი"
 
 #. module: base
 #: view:ir.sequence:0
 msgid "Month: %(month)s"
-msgstr ""
+msgstr "თვე: %(month)s"
 
 #. module: base
 #: field:ir.actions.act_window.view,sequence:0
@@ -12672,60 +13285,60 @@ msgstr ""
 #: field:res.widget.user,sequence:0
 #: field:wizard.ir.model.menu.create.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "მიმდევრობა"
 
 #. module: base
 #: model:res.country,name:base.tn
 msgid "Tunisia"
-msgstr ""
+msgstr "ტუნისი"
 
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Wizards to be Launched"
-msgstr ""
+msgstr "გასაშვებად გამზადებული ვიზარდი"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
 #: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
-msgstr ""
+msgstr "წარმოება"
 
 #. module: base
 #: model:res.country,name:base.km
 msgid "Comoros"
-msgstr ""
+msgstr "კომორის კუნძულები"
 
 #. module: base
 #: view:res.request:0
 msgid "Draft and Active"
-msgstr ""
+msgstr "არასრული და აქტიური"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
 #: view:ir.actions.server:0
 #: model:ir.ui.menu,name:base.menu_server_action
 msgid "Server Actions"
-msgstr ""
+msgstr "სერვერის ქმედებები"
 
 #. module: base
 #: field:res.partner.bank.type,format_layout:0
 msgid "Format Layout"
-msgstr ""
+msgstr "განლაგების ფორმატირება"
 
 #. module: base
 #: field:ir.model.fields,selection:0
 msgid "Selection Options"
-msgstr ""
+msgstr "არჩეულის ოპერაცია"
 
 #. module: base
 #: field:res.partner.category,parent_right:0
 msgid "Right parent"
-msgstr ""
+msgstr "მარჯვენა მშობელი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_openid
 msgid "OpenID Authentification"
-msgstr ""
+msgstr "OpenID აუთენტიფიკაცია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_plugin_thunderbird
@@ -12745,22 +13358,22 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "Legends for Date and Time Formats"
-msgstr ""
+msgstr "თარიღის და დროის ფორმატის ლეგენდა"
 
 #. module: base
 #: selection:ir.actions.server,state:0
 msgid "Copy Object"
-msgstr ""
+msgstr "ობიექტის კოპირება"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail
 msgid "Emails Management"
-msgstr ""
+msgstr "ელ.ფოსტის მართვა"
 
 #. module: base
 #: field:ir.actions.server,trigger_name:0
 msgid "Trigger Signal"
-msgstr ""
+msgstr "სიგნალის აღძვრა"
 
 #. module: base
 #: code:addons/base/res/res_users.py:119
@@ -12768,6 +13381,8 @@ msgstr ""
 msgid ""
 "Group(s) cannot be deleted, because some user(s) still belong to them: %s !"
 msgstr ""
+"ჯგუფი(ები)-ს წაშლა შეუძლებელია, რადგანაც ზოგიერთი მომხმარებელი მიეკუთვნება "
+"მათ: %s !"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_repair
@@ -12790,13 +13405,13 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_country_state
 #: model:ir.ui.menu,name:base.menu_country_state_partner
 msgid "Fed. States"
-msgstr ""
+msgstr "ფედ. შტატები"
 
 #. module: base
 #: view:ir.model:0
 #: view:res.groups:0
 msgid "Access Rules"
-msgstr ""
+msgstr "დაშვების წესები"
 
 #. module: base
 #: model:ir.module.module,description:base.module_knowledge
@@ -12825,7 +13440,7 @@ msgstr ""
 #: code:addons/base/ir/ir_mail_server.py:443
 #, python-format
 msgid "Mail delivery failed"
-msgstr ""
+msgstr "ელ.ფოსტის გაგზავნა არ განხორციელდა"
 
 #. module: base
 #: field:ir.actions.act_window,res_model:0
@@ -12848,7 +13463,7 @@ msgstr ""
 #: field:res.request.link,object:0
 #: field:workflow.triggers,model:0
 msgid "Object"
-msgstr ""
+msgstr "ობიექტი"
 
 #. module: base
 #: code:addons/osv.py:147
@@ -12862,7 +13477,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_plans
 msgid "Multiple Analytic Plans"
-msgstr ""
+msgstr "მრავალი ანალიტიკური გეგმები"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet
@@ -12882,17 +13497,17 @@ msgstr ""
 #. module: base
 #: view:ir.sequence:0
 msgid "Minute: %(min)s"
-msgstr ""
+msgstr "წუთი: %(min)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_10
 msgid "Scheduler"
-msgstr ""
+msgstr "დამგეგმავი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_tools
 msgid "Base Tools"
-msgstr ""
+msgstr "ძირითადი ინსტრუმენტები"
 
 #. module: base
 #: help:res.country,address_format:0
@@ -12928,7 +13543,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk
 msgid "UK - Accounting"
-msgstr ""
+msgstr "ბრიტანეთი - ბუღალტერია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_scrum
@@ -12967,6 +13582,8 @@ msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
 "create it again!"
 msgstr ""
+"სვეტის ტიპის ცვლილება ამ ეტაპზე არ არის მხარდაჭერილი. გთხოვთ წაშალოთ და "
+"თავიდან შექმნათ იგი!"
 
 #. module: base
 #: field:ir.ui.view_sc,user_id:0
@@ -12977,12 +13594,12 @@ msgstr ""
 #: code:addons/base/res/res_users.py:118
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "ფრთხილად !"
 
 #. module: base
 #: model:res.widget,title:base.google_maps_widget
 msgid "Google Maps"
-msgstr ""
+msgstr "Google რუქები"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
@@ -12994,37 +13611,37 @@ msgstr ""
 #: view:res.company:0
 #: model:res.groups,name:base.group_system
 msgid "Configuration"
-msgstr ""
+msgstr "კონფიგურაცია"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in
 msgid "India - Accounting"
-msgstr ""
+msgstr "ინდოეთი - ბუღალტერია"
 
 #. module: base
 #: field:ir.actions.server,expression:0
 msgid "Loop Expression"
-msgstr ""
+msgstr "ექსპრესიის ციკლი"
 
 #. module: base
 #: field:publisher_warranty.contract,date_start:0
 msgid "Starting Date"
-msgstr ""
+msgstr "საწყისი თარიღი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gt
 msgid "Guatemala - Accounting"
-msgstr ""
+msgstr "გვატემალა - ბუღალტერია"
 
 #. module: base
 #: help:ir.cron,args:0
 msgid "Arguments to be passed to the method, e.g. (uid,)."
-msgstr ""
+msgstr "მეთოდისთვის გადასაცემი არგუმენტები, მაგალითად (uid,)."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_5
 msgid "Gold Partner"
-msgstr ""
+msgstr "ოქროს პარტნიორი"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner
@@ -13034,34 +13651,34 @@ msgstr ""
 #: selection:res.partner.title,domain:0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
-msgstr ""
+msgstr "პარტნიორი"
 
 #. module: base
 #: field:ir.model.fields,complete_name:0
 #: field:ir.ui.menu,complete_name:0
 msgid "Complete Name"
-msgstr ""
+msgstr "სრული სახელი"
 
 #. module: base
 #: model:res.country,name:base.tr
 msgid "Turkey"
-msgstr ""
+msgstr "თურქეთი"
 
 #. module: base
 #: model:res.country,name:base.fk
 msgid "Falkland Islands"
-msgstr ""
+msgstr "ფოლკლენდის კუნძულები"
 
 #. module: base
 #: model:res.country,name:base.lb
 msgid "Lebanon"
-msgstr ""
+msgstr "ლიბანი"
 
 #. module: base
 #: view:ir.actions.report.xml:0
 #: field:ir.actions.report.xml,report_type:0
 msgid "Report Type"
-msgstr ""
+msgstr "რეპორტის ტიპი"
 
 #. module: base
 #: field:ir.actions.todo,state:0
@@ -13074,7 +13691,7 @@ msgstr ""
 #: field:workflow.instance,state:0
 #: field:workflow.workitem,state:0
 msgid "State"
-msgstr ""
+msgstr "მდგომარეობა"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_evaluation
@@ -13096,48 +13713,48 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Galician / Galego"
-msgstr ""
+msgstr "გალიციური"
 
 #. module: base
 #: model:res.country,name:base.no
 msgid "Norway"
-msgstr ""
+msgstr "ნორვეგია"
 
 #. module: base
 #: view:res.lang:0
 msgid "4.  %b, %B         ==> Dec, December"
-msgstr ""
+msgstr "4. %b, %B ==> დეკ, დეკემბერი"
 
 #. module: base
 #: view:base.language.install:0
 #: model:ir.ui.menu,name:base.menu_view_base_language_install
 msgid "Load an Official Translation"
-msgstr ""
+msgstr "ოფიციალური თარგმანის ჩატვირთვა"
 
 #. module: base
 #: view:res.currency:0
 msgid "Miscelleanous"
-msgstr ""
+msgstr "სხვადასხვაგვარი"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_10
 msgid "Open Source Service Company"
-msgstr ""
+msgstr "Open Source მომსახურების კომპანია"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Sinhalese / සිංහල"
-msgstr ""
+msgstr "სინჰალური"
 
 #. module: base
 #: selection:res.request,state:0
 msgid "waiting"
-msgstr ""
+msgstr "მოლოდინის რეჟიმში"
 
 #. module: base
 #: field:ir.actions.report.xml,report_file:0
 msgid "Report file"
-msgstr ""
+msgstr "რეპორტის ფაილი"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_triggers
@@ -13148,17 +13765,17 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:74
 #, python-format
 msgid "Invalid search criterions"
-msgstr ""
+msgstr "არასწორი ძიების კრიტერიუმები"
 
 #. module: base
 #: view:ir.mail_server:0
 msgid "Connection Information"
-msgstr ""
+msgstr "ინფორმაცია შეერთების შესახებ"
 
 #. module: base
 #: view:ir.attachment:0
 msgid "Created"
-msgstr ""
+msgstr "შექმნილია"
 
 #. module: base
 #: help:ir.actions.wizard,multi:0
@@ -13175,7 +13792,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.hm
 msgid "Heard and McDonald Islands"
-msgstr ""
+msgstr "მოისმინა და მაკდონალდის კუნძულები"
 
 #. module: base
 #: help:ir.model.data,name:0
@@ -13286,21 +13903,23 @@ msgstr ""
 #: model:ir.module.category,description:base.module_category_sales_management
 msgid "Helps you handle your quotations, sale orders and invoicing."
 msgstr ""
+"გეხმარებათ თქვენი კვოტირებების, გაყიდვების ორდერების და ინვოისების "
+"დამუშავებაში."
 
 #. module: base
 #: field:res.groups,implied_ids:0
 msgid "Inherits"
-msgstr ""
+msgstr "მემკვიდრეობით იღებს"
 
 #. module: base
 #: selection:ir.translation,type:0
 msgid "Selection"
-msgstr ""
+msgstr "არჩეული"
 
 #. module: base
 #: field:ir.module.module,icon:0
 msgid "Icon URL"
-msgstr ""
+msgstr "ხატულას URL"
 
 #. module: base
 #: field:ir.actions.act_window,type:0
@@ -13314,12 +13933,12 @@ msgstr ""
 #: field:ir.actions.url,type:0
 #: field:ir.actions.wizard,type:0
 msgid "Action Type"
-msgstr ""
+msgstr "ქმედების ტიპი"
 
 #. module: base
 #: model:res.country,name:base.vn
 msgid "Vietnam"
-msgstr ""
+msgstr "ვიეტნამი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada
@@ -13341,26 +13960,26 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
 #: model:ir.ui.menu,name:base.menu_view_base_import_language
 msgid "Import Translation"
-msgstr ""
+msgstr "თარგმანის იმპორტი"
 
 #. module: base
 #: field:res.partner.bank.type,field_ids:0
 msgid "Type fields"
-msgstr ""
+msgstr "ტიპის ველები"
 
 #. module: base
 #: view:ir.actions.todo:0
 #: field:ir.actions.todo,category_id:0
 #: field:ir.module.module,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "კატეგორია"
 
 #. module: base
 #: view:ir.attachment:0
 #: selection:ir.attachment,type:0
 #: selection:ir.property,type:0
 msgid "Binary"
-msgstr ""
+msgstr "ორობითი"
 
 #. module: base
 #: field:ir.actions.server,sms:0
@@ -13371,12 +13990,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cr
 msgid "Costa Rica"
-msgstr ""
+msgstr "კოსტა-რიკა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_module_doc_rst
 msgid "Generate Docs of Modules"
-msgstr ""
+msgstr "მოდულების დოკუმენტების გენერირება"
 
 #. module: base
 #: model:res.company,overdue_msg:base.main_company
@@ -13388,28 +14007,33 @@ msgid ""
 "queries regarding your account, please contact us.\n"
 "Thank you in advance.\n"
 msgstr ""
+"ჩვენი ჩანაწერების მიხედვით მოცემული თანხები გადასახდელი გაქვთ. თუ თანხა უკვე "
+"გადაიხადეთ, გთხოვთ არ მიაქციოთ ყურადღება ამ შეტყობინებას. ხოლო, თუ თქვენ "
+"გჭირდებათ თქვენი ანგარიშის შესახებ რაიმე ინფორმაცია,\n"
+"გთხოვთ დაგვიკავშირდეთ.\n"
+"წინასწარ მადლობა.\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_users_ldap
 msgid "Authentication via LDAP"
-msgstr ""
+msgstr "აუთენთიფიკაცია LDAP-ის მეშვეობით"
 
 #. module: base
 #: view:workflow.activity:0
 msgid "Conditions"
-msgstr ""
+msgstr "პირობები"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_other_form
 msgid "Other Partners"
-msgstr ""
+msgstr "სხვა პარტნიორები"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_currency_form
 #: model:ir.ui.menu,name:base.menu_action_currency_form
 #: view:res.currency:0
 msgid "Currencies"
-msgstr ""
+msgstr "ვალუტები"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_client
@@ -13420,12 +14044,12 @@ msgstr ""
 #. module: base
 #: help:ir.values,value:0
 msgid "Default value (pickled) or reference to an action"
-msgstr ""
+msgstr "ნაგულისხმევი მნიშვნელობა (დამწნილებული) ან ქმედების წყარო"
 
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
-msgstr ""
+msgstr "ჯგუფის სახელი უნიკალური უნდა იყოს!"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_report_designer
@@ -13442,22 +14066,22 @@ msgstr ""
 #. module: base
 #: view:ir.sequence:0
 msgid "Hour 00->12: %(h12)s"
-msgstr ""
+msgstr "საათი 00->12: %(h12)s"
 
 #. module: base
 #: help:res.partner.address,active:0
 msgid "Uncheck the active field to hide the contact."
-msgstr ""
+msgstr "შეუძლებელია აქტიური ველის შემოწმება კონტაქტის დასამალად."
 
 #. module: base
 #: model:ir.model,name:base.model_res_widget_wizard
 msgid "Add a widget for User"
-msgstr ""
+msgstr "მომხმარებლისთვის ვიჯეტის დამატება"
 
 #. module: base
 #: model:res.country,name:base.dk
 msgid "Denmark"
-msgstr ""
+msgstr "დანია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_calendar
@@ -13479,7 +14103,7 @@ msgstr ""
 #. module: base
 #: view:ir.rule:0
 msgid "Rule definition (domain filter)"
-msgstr ""
+msgstr "წესის განსაზღვრა (დომენის ფილტრი)"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_instance
@@ -13490,7 +14114,7 @@ msgstr ""
 #: code:addons/orm.py:471
 #, python-format
 msgid "Unknown attribute %s in %s "
-msgstr ""
+msgstr "უცნობი ატრიბუტი %s in %s "
 
 #. module: base
 #: view:res.lang:0
@@ -13501,58 +14125,58 @@ msgstr ""
 #: code:addons/fields.py:122
 #, python-format
 msgid "undefined get method !"
-msgstr ""
+msgstr "განუსაზღვრელი get მეთოდი !"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Norwegian Bokmål / Norsk bokmål"
-msgstr ""
+msgstr "ნოვეგიული მოკმალი"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
 msgid "Madam"
-msgstr ""
+msgstr "ქ-ნ."
 
 #. module: base
 #: model:res.country,name:base.ee
 msgid "Estonia"
-msgstr ""
+msgstr "ესტონეთი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
 #: model:ir.ui.menu,name:base.menu_dashboard
 msgid "Dashboards"
-msgstr ""
+msgstr "დაფები"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_procurement
 msgid "Procurements"
-msgstr ""
+msgstr "შესყიდვები"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
 msgid "Payroll Accounting"
-msgstr ""
+msgstr "სახელფასო ბუღალტერია"
 
 #. module: base
 #: help:ir.attachment,type:0
 msgid "Binary File or external URL"
-msgstr ""
+msgstr "ორობითი ფაილი ან გარე URL"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_order_dates
 msgid "Dates on Sales Order"
-msgstr ""
+msgstr "გაყიდვის ორდერის თარიღები"
 
 #. module: base
 #: view:ir.attachment:0
 msgid "Creation Month"
-msgstr ""
+msgstr "შექმნის თვე"
 
 #. module: base
 #: model:res.country,name:base.nl
 msgid "Netherlands"
-msgstr ""
+msgstr "ჰოლანდია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_edi
@@ -13573,17 +14197,17 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_4
 msgid "Low Level Objects"
-msgstr ""
+msgstr "დაბალი დონის ობიექტები"
 
 #. module: base
 #: help:ir.values,model:0
 msgid "Model to which this entry applies"
-msgstr ""
+msgstr "მოდელის რომელსაც ეს ჩანაწერი შეესაბამება"
 
 #. module: base
 #: field:res.country,address_format:0
 msgid "Address Format"
-msgstr ""
+msgstr "მისამართის ფორმატი"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_values
@@ -13593,7 +14217,7 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_no_one
 msgid "Technical Features"
-msgstr ""
+msgstr "ტექნიკური შესაძლებლობები"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -13607,13 +14231,15 @@ msgid ""
 "Here is what we got instead:\n"
 " %s"
 msgstr ""
+"აი რა მივიღეთ სანაცვლოდ:\n"
+" %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_data
 #: view:ir.model.data:0
 #: model:ir.ui.menu,name:base.ir_model_data_menu
 msgid "External Identifiers"
-msgstr ""
+msgstr "გარე იდენტიფიკატორები"
 
 #. module: base
 #: model:res.groups,name:base.group_sale_salesman
@@ -13623,7 +14249,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cd
 msgid "Congo, The Democratic Republic of the"
-msgstr ""
+msgstr "კონგო, დემოკრატიული რესპუბლიკა"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -13635,7 +14261,7 @@ msgstr ""
 #: field:res.request,body:0
 #: field:res.request.history,req_id:0
 msgid "Request"
-msgstr ""
+msgstr "მოთხოვნა"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.act_ir_actions_todo_form
@@ -13648,24 +14274,24 @@ msgstr ""
 #. module: base
 #: view:res.company:0
 msgid "Portrait"
-msgstr ""
+msgstr "პორტრეტი"
 
 #. module: base
 #: field:ir.cron,numbercall:0
 msgid "Number of Calls"
-msgstr ""
+msgstr "ზარების რაოდენობა"
 
 #. module: base
 #: code:addons/base/res/res_bank.py:189
 #, python-format
 msgid "BANK"
-msgstr ""
+msgstr "ბანკი"
 
 #. module: base
 #: view:base.module.upgrade:0
 #: field:base.module.upgrade,module_info:0
 msgid "Modules to update"
-msgstr ""
+msgstr "გასაახლებელი მოდულები"
 
 #. module: base
 #: help:ir.actions.server,sequence:0
@@ -13673,6 +14299,9 @@ msgid ""
 "Important when you deal with multiple actions, the execution order will be "
 "decided based on this, low number is higher priority."
 msgstr ""
+"მნიშვნელოვანია, როდესაც თქვენ უმკლავდებით მრავალრიცხოვან ქმედებებს, "
+"აღსრულების მიზნით გადაწყდება აქედან გამომდინარე, დაბალი რიცხვი უმაღლესი "
+"პრიორიტეტია."
 
 #. module: base
 #: field:ir.actions.report.xml,header:0
@@ -13696,22 +14325,22 @@ msgstr ""
 #. module: base
 #: view:res.config:0
 msgid "Apply"
-msgstr ""
+msgstr "გააქტიურება"
 
 #. module: base
 #: field:res.request,trigger_date:0
 msgid "Trigger Date"
-msgstr ""
+msgstr "ტრიგერის თარიღი"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Croatian / hrvatski jezik"
-msgstr ""
+msgstr "ხორვატული"
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The code of the country must be unique !"
-msgstr ""
+msgstr "ქვეყნის კოდი უნდა იყოს უნიკალური"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban
@@ -13720,22 +14349,25 @@ msgid ""
 "        OpenERP Web kanban view.\n"
 "        "
 msgstr ""
+"\n"
+"        OpenERP ვებ კანბან ვიუ.\n"
+"        "
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_project_management_time_tracking
 msgid "Time Tracking"
-msgstr ""
+msgstr "დროის კონტროლი"
 
 #. module: base
 #: view:res.partner.category:0
 msgid "Partner Category"
-msgstr ""
+msgstr "პარტნიორის კატეგორია"
 
 #. module: base
 #: view:ir.actions.server:0
 #: selection:ir.actions.server,state:0
 msgid "Trigger"
-msgstr ""
+msgstr "ტრიგერი"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_warehouse_management
@@ -13747,13 +14379,13 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_base_module_update
 msgid "Update Module"
-msgstr ""
+msgstr "მოდულის განახლება"
 
 #. module: base
 #: view:ir.model.fields:0
 #: field:ir.model.fields,translate:0
 msgid "Translate"
-msgstr ""
+msgstr "გადათარგმნა"
 
 #. module: base
 #: model:ir.module.module,description:base.module_users_ldap
@@ -13851,23 +14483,23 @@ msgstr ""
 #. module: base
 #: field:res.request.history,body:0
 msgid "Body"
-msgstr ""
+msgstr "შიგთავსი"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:199
 #, python-format
 msgid "Connection test succeeded!"
-msgstr ""
+msgstr "კავშირის ტესტირება წარმატებით ჩატარდა!"
 
 #. module: base
 #: view:partner.massmail.wizard:0
 msgid "Send Email"
-msgstr ""
+msgstr "ელ.ფოსტის გაგზავნა"
 
 #. module: base
 #: field:res.users,menu_id:0
 msgid "Menu Action"
-msgstr ""
+msgstr "მენიუს ქმედება"
 
 #. module: base
 #: help:ir.model.fields,selection:0
@@ -13880,7 +14512,7 @@ msgstr ""
 #. module: base
 #: selection:base.language.export,state:0
 msgid "choose"
-msgstr ""
+msgstr "არჩევა"
 
 #. module: base
 #: help:ir.model,osv_memory:0
@@ -13900,7 +14532,7 @@ msgstr ""
 #. module: base
 #: view:ir.attachment:0
 msgid "Filter on my documents"
-msgstr ""
+msgstr "გაფილტრე ჩემს დოკუმენტებზე"
 
 #. module: base
 #: help:ir.actions.server,code:0
@@ -13914,12 +14546,12 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: view:res.partner:0
 msgid "Suppliers"
-msgstr ""
+msgstr "მომწოდებლები"
 
 #. module: base
 #: view:publisher_warranty.contract.wizard:0
 msgid "Register"
-msgstr ""
+msgstr "რეგისტრაცია"
 
 #. module: base
 #: field:res.request,ref_doc2:0
@@ -13934,12 +14566,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ga
 msgid "Gabon"
-msgstr ""
+msgstr "გაბონი"
 
 #. module: base
 #: model:res.groups,name:base.group_multi_company
 msgid "Multi Companies"
-msgstr ""
+msgstr "მულტი კომპანიები"
 
 #. module: base
 #: view:ir.model:0
@@ -13948,12 +14580,12 @@ msgstr ""
 #: model:res.groups,name:base.group_erp_manager
 #: view:res.users:0
 msgid "Access Rights"
-msgstr ""
+msgstr "წვდომის უფლებები"
 
 #. module: base
 #: model:res.country,name:base.gl
 msgid "Greenland"
-msgstr ""
+msgstr "გრენლანდია"
 
 #. module: base
 #: model:res.groups,name:base.group_sale_salesman_all_leads
@@ -13963,7 +14595,7 @@ msgstr ""
 #. module: base
 #: field:res.partner.bank,acc_number:0
 msgid "Account Number"
-msgstr ""
+msgstr "ანგარიშის ნომერი"
 
 #. module: base
 #: view:ir.rule:0
@@ -13975,7 +14607,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_th
 msgid "Thailand - Accounting"
-msgstr ""
+msgstr "ტაილანდი - ბუღალტერია"
 
 #. module: base
 #: view:res.lang:0
@@ -13985,7 +14617,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.nc
 msgid "New Caledonia (French)"
-msgstr ""
+msgstr "ახალი კალედონია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_jit
@@ -14011,14 +14643,14 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cy
 msgid "Cyprus"
-msgstr ""
+msgstr "კვიპროსი"
 
 #. module: base
 #: field:ir.actions.server,subject:0
 #: field:partner.massmail.wizard,subject:0
 #: field:res.request,name:0
 msgid "Subject"
-msgstr ""
+msgstr "სათაური"
 
 #. module: base
 #: selection:res.currency,position:0
@@ -14029,38 +14661,38 @@ msgstr ""
 #: field:res.request,act_from:0
 #: field:res.request.history,act_from:0
 msgid "From"
-msgstr ""
+msgstr "გამგზავნი"
 
 #. module: base
 #: view:res.users:0
 msgid "Preferences"
-msgstr ""
+msgstr "პარამეტრები"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_consumers0
 msgid "Consumers"
-msgstr ""
+msgstr "მომხმარებლები"
 
 #. module: base
 #: view:res.company:0
 msgid "Set Bank Accounts"
-msgstr ""
+msgstr "საბანკო ანგარიშების განსაზღვრა"
 
 #. module: base
 #: field:ir.actions.client,tag:0
 msgid "Client action tag"
-msgstr ""
+msgstr "კლიენტის ქმედების თეგი"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:189
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language !"
-msgstr ""
+msgstr "ვერ წაშლით ენას რომელიც მომხმარებლის მიერ გამოყენებულია !"
 
 #. module: base
 #: field:ir.values,model_id:0
 msgid "Model (change only)"
-msgstr ""
+msgstr "მოდელი (მხოლოდ ცვლილება)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_marketing_campaign_crm_demo
@@ -14078,7 +14710,7 @@ msgstr ""
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 msgid "Kanban"
-msgstr ""
+msgstr "კანბანი"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:251
@@ -14091,29 +14723,29 @@ msgstr ""
 #. module: base
 #: view:ir.filters:0
 msgid "Current User"
-msgstr ""
+msgstr "მიმდინარე მომხმარებელი"
 
 #. module: base
 #: field:res.company,company_registry:0
 msgid "Company Registry"
-msgstr ""
+msgstr "კომპანიის რეესტრი"
 
 #. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "სხვადასხვაგვარი"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ir_mail_server_list
 #: view:ir.mail_server:0
 #: model:ir.ui.menu,name:base.menu_mail_servers
 msgid "Outgoing Mail Servers"
-msgstr ""
+msgstr "გამავალი ელ.ფოსტის სერვერები"
 
 #. module: base
 #: model:res.country,name:base.cn
 msgid "China"
-msgstr ""
+msgstr "ჩინეთი"
 
 #. module: base
 #: help:ir.actions.server,wkf_model_id:0
@@ -14128,16 +14760,19 @@ msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
 msgstr ""
+"გაძლევთ საშუალებას შექმნათ თქვენი ინვოისები და აკონტროლოთ გადახდები. ეს არის "
+"ბუღალტრული მოდულის გამარტივებული ვარიანტი მენეჯერებისათვის რომლებსაც არ აქვთ "
+"ბუღალტრის კვალიფიკაცია."
 
 #. module: base
 #: model:res.country,name:base.eh
 msgid "Western Sahara"
-msgstr ""
+msgstr "დასავლეთ სახარა"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_voucher
 msgid "Invoicing & Payments"
-msgstr ""
+msgstr "ინვოისინგი და გადახდები"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_company_form
@@ -14145,11 +14780,13 @@ msgid ""
 "Create and manage the companies that will be managed by OpenERP from here. "
 "Shops or subsidiaries can be created and maintained from here."
 msgstr ""
+"შექმენით და მართეთ კომპანიები რომლებიც მართულ იქნებია OpenERP-ის მიერ "
+"აქედან. მაღაზიების და ფილიალების შექმნა და მოვლა აქედან."
 
 #. module: base
 #: model:res.country,name:base.id
 msgid "Indonesia"
-msgstr ""
+msgstr "ინდონეზია"
 
 #. module: base
 #: view:base.update.translations:0
@@ -14216,7 +14853,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bg
 msgid "Bulgaria"
-msgstr ""
+msgstr "ბულგარეთი"
 
 #. module: base
 #: view:publisher_warranty.contract.wizard:0
@@ -14226,12 +14863,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ao
 msgid "Angola"
-msgstr ""
+msgstr "ანგოლა"
 
 #. module: base
 #: model:res.country,name:base.tf
 msgid "French Southern Territories"
-msgstr ""
+msgstr "საფრანგეთის სამხრეთი ტერიტორიები"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency
@@ -14241,7 +14878,7 @@ msgstr ""
 #: field:res.currency,name:0
 #: field:res.currency.rate,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "ვალუტა"
 
 #. module: base
 #: view:res.lang:0
@@ -14251,67 +14888,67 @@ msgstr ""
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_ltd
 msgid "ltd"
-msgstr ""
+msgstr "შპს"
 
 #. module: base
 #: field:res.log,res_id:0
 msgid "Object ID"
-msgstr ""
+msgstr "ობიექტის იდენტიფიკატორი"
 
 #. module: base
 #: view:res.company:0
 msgid "Landscape"
-msgstr ""
+msgstr "პეიზაჟი"
 
 #. module: base
 #: model:ir.actions.todo.category,name:base.category_administration_config
 #: model:ir.module.category,name:base.module_category_administration
 msgid "Administration"
-msgstr ""
+msgstr "ადმინისტრირება"
 
 #. module: base
 #: view:base.module.update:0
 msgid "Click on Update below to start the process..."
-msgstr ""
+msgstr "დაკლიკეთ განახლებაზე ქვემოთ რათა დაიწყოთ პროცესი"
 
 #. module: base
 #: model:res.country,name:base.ir
 msgid "Iran"
-msgstr ""
+msgstr "ირანი"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_widget_user_act_window
 #: model:ir.ui.menu,name:base.menu_res_widget_user_act_window
 msgid "Widgets per User"
-msgstr ""
+msgstr "ვიჯეტები მომხმარებლების მიხედვით"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_form
 #: model:ir.ui.menu,name:base.menu_publisher_warranty_contract
 msgid "Contracts"
-msgstr ""
+msgstr "კონტრაქტები"
 
 #. module: base
 #: field:base.language.export,state:0
 #: field:ir.ui.menu,icon_pict:0
 #: field:publisher_warranty.contract.wizard,state:0
 msgid "unknown"
-msgstr ""
+msgstr "უცნობი"
 
 #. module: base
 #: field:res.currency,symbol:0
 msgid "Symbol"
-msgstr ""
+msgstr "სიმბოლო"
 
 #. module: base
 #: help:res.users,login:0
 msgid "Used to log into the system"
-msgstr ""
+msgstr "გამოიყენება სისტემაში შესასვლელად"
 
 #. module: base
 #: view:base.update.translations:0
 msgid "Synchronize Translation"
-msgstr ""
+msgstr "თარგმანის სინქრონიზაცია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_module_quality
@@ -14337,23 +14974,23 @@ msgstr ""
 #. module: base
 #: field:res.partner.bank,bank_name:0
 msgid "Bank Name"
-msgstr ""
+msgstr "ბანკის სახელი"
 
 #. module: base
 #: model:res.country,name:base.ki
 msgid "Kiribati"
-msgstr ""
+msgstr "კირიბატი"
 
 #. module: base
 #: model:res.country,name:base.iq
 msgid "Iraq"
-msgstr ""
+msgstr "ერაყი"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_association
 #: model:ir.ui.menu,name:base.menu_association
 msgid "Association"
-msgstr ""
+msgstr "ასოციაცია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_no_autopicking
@@ -14374,7 +15011,7 @@ msgstr ""
 #. module: base
 #: view:ir.actions.server:0
 msgid "Action to Launch"
-msgstr ""
+msgstr "დასაწყები ქმედება"
 
 #. module: base
 #: help:res.users,context_lang:0
@@ -14410,34 +15047,34 @@ msgstr ""
 #. module: base
 #: selection:base.language.export,format:0
 msgid "CSV File"
-msgstr ""
+msgstr "CSV ფაილი"
 
 #. module: base
 #: code:addons/base/res/res_company.py:154
 #, python-format
 msgid "Phone: "
-msgstr ""
+msgstr "ტელეფონი: "
 
 #. module: base
 #: field:res.company,account_no:0
 msgid "Account No."
-msgstr ""
+msgstr "ანგარიშის ნომერი."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:187
 #, python-format
 msgid "Base Language 'en_US' can not be deleted !"
-msgstr ""
+msgstr "ძირითადი ენის წაშლა 'en_US' შეუძლებელია!"
 
 #. module: base
 #: selection:ir.model,state:0
 msgid "Base Object"
-msgstr ""
+msgstr "ძირითადი ობიექტი"
 
 #. module: base
 #: report:ir.module.reference.graph:0
 msgid "Dependencies :"
-msgstr ""
+msgstr "დამოკიდებულებები :"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_analytic_plans
@@ -14455,12 +15092,12 @@ msgstr ""
 #. module: base
 #: field:res.company,vat:0
 msgid "Tax ID"
-msgstr ""
+msgstr "საგადასახადო იდენტიფიკატორი"
 
 #. module: base
 #: field:ir.model.fields,field_description:0
 msgid "Field Label"
-msgstr ""
+msgstr "ველის ჭდე"
 
 #. module: base
 #: help:ir.actions.report.xml,report_rml:0
@@ -14472,17 +15109,17 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
-msgstr ""
+msgstr "ჯიბუტი"
 
 #. module: base
 #: field:ir.translation,value:0
 msgid "Translation Value"
-msgstr ""
+msgstr "თარგმანის მნიშვნელობა"
 
 #. module: base
 #: model:res.country,name:base.ag
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "ანტიგუა და ბარბუდა"
 
 #. module: base
 #: code:addons/orm.py:3669
@@ -14495,30 +15132,30 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.zr
 msgid "Zaire"
-msgstr ""
+msgstr "ზაირი"
 
 #. module: base
 #: field:ir.translation,res_id:0
 #: field:workflow.instance,res_id:0
 #: field:workflow.triggers,res_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "რესურსის იდენტიფიკატორი"
 
 #. module: base
 #: view:ir.cron:0
 #: field:ir.model,info:0
 msgid "Information"
-msgstr ""
+msgstr "ინფორმაცია"
 
 #. module: base
 #: view:res.widget.user:0
 msgid "User Widgets"
-msgstr ""
+msgstr "მომხმარებლის ვიჯეტები"
 
 #. module: base
 #: view:base.module.update:0
 msgid "Update Module List"
-msgstr ""
+msgstr "მოდულების სიის განახლება"
 
 #. module: base
 #: code:addons/base/res/res_users.py:755
@@ -14527,17 +15164,17 @@ msgstr ""
 #: view:res.users:0
 #, python-format
 msgid "Other"
-msgstr ""
+msgstr "სხვა"
 
 #. module: base
 #: view:res.request:0
 msgid "Reply"
-msgstr ""
+msgstr "პასუხი"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Turkish / Türkçe"
-msgstr ""
+msgstr "თურქული"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_long_term
@@ -14570,17 +15207,17 @@ msgstr ""
 #: view:workflow:0
 #: field:workflow,activities:0
 msgid "Activities"
-msgstr ""
+msgstr "ქმედებები"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
-msgstr ""
+msgstr "პროდუქტები და ფასები"
 
 #. module: base
 #: field:ir.actions.act_window,auto_refresh:0
 msgid "Auto-Refresh"
-msgstr ""
+msgstr "ავტომატური განახლება"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:74
@@ -14591,7 +15228,7 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.view,type:0
 msgid "Diagram"
-msgstr ""
+msgstr "დიაგრამა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es
@@ -14601,38 +15238,38 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_no_autopicking
 msgid "Picking Before Manufacturing"
-msgstr ""
+msgstr "მიღება წარმოებამდე"
 
 #. module: base
 #: model:res.country,name:base.wf
 msgid "Wallis and Futuna Islands"
-msgstr ""
+msgstr "ვალიშის და ფუტუნას კუნძულები"
 
 #. module: base
 #: help:multi_company.default,name:0
 msgid "Name it to easily find a record"
-msgstr ""
+msgstr "დაარქვით სახელი ჩანაწერს რათა შემდგომ ადვილად მოძებნოთ"
 
 #. module: base
 #: model:res.country,name:base.gr
 msgid "Greece"
-msgstr ""
+msgstr "საბერძნეთი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_calendar
 msgid "web calendar"
-msgstr ""
+msgstr "ვებ კალენდარი"
 
 #. module: base
 #: field:ir.model.data,name:0
 msgid "External Identifier"
-msgstr ""
+msgstr "გარე იდენტიფიკატორი"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.grant_menu_access
 #: model:ir.ui.menu,name:base.menu_grant_menu_access
 msgid "Menu Items"
-msgstr ""
+msgstr "მენიუს ობიექტები"
 
 #. module: base
 #: constraint:ir.rule:0
@@ -14643,7 +15280,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_event
 #: model:ir.ui.menu,name:base.menu_event_main
 msgid "Events Organisation"
-msgstr ""
+msgstr "მოვლენების ორგანიზება"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -14652,12 +15289,12 @@ msgstr ""
 #: model:ir.ui.menu,name:base.next_id_6
 #: view:workflow.activity:0
 msgid "Actions"
-msgstr ""
+msgstr "მოქმედებები"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
 msgid "Delivery Costs"
-msgstr ""
+msgstr "მიწოდების ხარჯი"
 
 #. module: base
 #: code:addons/base/ir/ir_cron.py:293
@@ -14686,23 +15323,23 @@ msgstr ""
 #. module: base
 #: field:ir.exports.line,export_id:0
 msgid "Export"
-msgstr ""
+msgstr "ექსპორტი"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl
 msgid "Netherlands - Accounting"
-msgstr ""
+msgstr "ჰოლანდია - ბუღალტერია"
 
 #. module: base
 #: field:res.bank,bic:0
 #: field:res.partner.bank,bank_bic:0
 msgid "Bank Identifier Code"
-msgstr ""
+msgstr "ბანკის საიდენტიფიკაციო კოდი"
 
 #. module: base
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
-msgstr ""
+msgstr "თურქმენეთი"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_process
@@ -14753,7 +15390,7 @@ msgstr ""
 #: code:addons/orm.py:3704
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "შეცდომა"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_crypt
@@ -14768,7 +15405,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_writing
 msgid "Check writing"
-msgstr ""
+msgstr "ჩეკის გამოწერა"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_layout
@@ -14790,22 +15427,22 @@ msgstr ""
 #: view:base.module.upgrade:0
 #: view:base.update.translations:0
 msgid "Update"
-msgstr ""
+msgstr "განახლება"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
-msgstr ""
+msgstr "ტექნიკური დოკუმენტაცია"
 
 #. module: base
 #: view:res.company:0
 msgid "Address Information"
-msgstr ""
+msgstr "მისამართი"
 
 #. module: base
 #: model:res.country,name:base.tz
 msgid "Tanzania"
-msgstr ""
+msgstr "ტანზანია"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14820,7 +15457,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cx
 msgid "Christmas Island"
-msgstr ""
+msgstr "შობის კუნძული"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_livechat
@@ -14848,17 +15485,17 @@ msgstr ""
 #. module: base
 #: view:res.partner:0
 msgid "Supplier Partners"
-msgstr ""
+msgstr "მომწოდებელი პარტნიორები"
 
 #. module: base
 #: view:res.config.installer:0
 msgid "Install Modules"
-msgstr ""
+msgstr "მოდულების დაყენება"
 
 #. module: base
 #: view:ir.ui.view:0
 msgid "Extra Info"
-msgstr ""
+msgstr "ექსტრა ინფორმაცია"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -14882,17 +15519,19 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_partner_wizard_ean_check
 msgid "Ean Check"
-msgstr ""
+msgstr "EAN-ის შემოწმება"
 
 #. module: base
 #: view:res.partner:0
 msgid "Customer Partners"
-msgstr ""
+msgstr "კლიენტი პარტნიორები"
 
 #. module: base
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
 msgstr ""
+"თქვენ არ შეიძლება გყავდეთ ორი მომხმარებელი ერთი და იგივე მომხმარებლის "
+"სახელით !"
 
 #. module: base
 #: model:ir.model,name:base.model_res_request_history
@@ -14902,12 +15541,12 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
-msgstr ""
+msgstr "ნაგულისხმევი მულტი კომპანია"
 
 #. module: base
 #: view:res.request:0
 msgid "Send"
-msgstr ""
+msgstr "გაგზავნა"
 
 #. module: base
 #: model:ir.module.module,description:base.module_process
@@ -14927,12 +15566,12 @@ msgstr ""
 #. module: base
 #: field:res.users,menu_tips:0
 msgid "Menu Tips"
-msgstr ""
+msgstr "მენიუს მინიშნებები"
 
 #. module: base
 #: field:ir.translation,src:0
 msgid "Source"
-msgstr ""
+msgstr "წყარო"
 
 #. module: base
 #: help:res.partner.address,partner_id:0
@@ -14942,12 +15581,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.vu
 msgid "Vanuatu"
-msgstr ""
+msgstr "ვანაუტუ"
 
 #. module: base
 #: view:res.company:0
 msgid "Internal Header/Footer"
-msgstr ""
+msgstr "შიდა ზედა/ქვედა კოლონიტური"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm
@@ -14965,7 +15604,7 @@ msgstr ""
 #. module: base
 #: view:base.module.upgrade:0
 msgid "Start configuration"
-msgstr ""
+msgstr "კონფიგურაციის დაწყება"
 
 #. module: base
 #: view:base.language.export:0
