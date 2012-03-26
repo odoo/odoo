@@ -63,7 +63,7 @@
                     <page string="Event">
                         <separator string="Description" colspan="4"/>
                         <field name="note" colspan="4" nolabel="1"/>
-                        <field name="registration_ids" colspan="4" nolabel="1">
+                        <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
                             <tree string="Registration" editable="top">
                                 <field name="name" />
                                 <field name="email" />
@@ -484,7 +484,7 @@
         <menuitem
             name="Registrations"
             id="menu_action_registration" parent="base.menu_event_main"
-            action="action_registration"/>
+            action="action_registration" groups="event.group_event_manager,event.group_event_user"/>
 
 
         <menuitem name="Reporting" id="base.menu_report_association" parent="event_main_menu" sequence="20"/>
