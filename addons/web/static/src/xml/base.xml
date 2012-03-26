@@ -520,20 +520,20 @@
 </t>
 
 <t t-name="TranslateDialog">
-    <table t-if="widget.view.translatable_fields" class="oe_frame oe_forms oe_translation_form" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <table t-if="widget.view.translatable_fields" class="oe_form oe_translation_form" border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td class="oe_form_separator" width="1%" nowrap="nowrap">
-            <div class="separator horizontal">Field</div>
+            <div class="oe_horizontal_separator">Field</div>
         </td>
         <th t-foreach="widget.languages" align="left">
-            <div class="separator horizontal"><t t-esc="name"/></div>
+            <div class="oe_horizontal_separator"><t t-esc="name"/></div>
         </th>
     </tr>
     <tr t-foreach="widget.view.translatable_fields" t-as="field" t-att-data-field="field.name">
-        <td class="oe_form_frame_cell" width="1%" nowrap="nowrap">
-            <label class="oe_label"><t t-esc="field.string"/>:</label>
+        <td class="oe_form_group_cell" width="1%" nowrap="nowrap">
+            <label class="oe_label"><t t-esc="field.node.attrs.string"/>:</label>
         </td>
-        <td t-foreach="widget.languages" t-as="lg" class="oe_form_frame_cell">
+        <td t-foreach="widget.languages" t-as="lg" class="oe_form_group_cell">
             <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
             <textarea t-if="field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
         </td>
