@@ -5,8 +5,9 @@
         """
         OpenERP Web process view.
         """,
-    "depends" : ["web"],
+    "depends" : ["web_diagram"],
     "js": [
+        'static/lib/dracula/*.js',
         "static/src/js/process.js"
     ],
     "css": [
@@ -15,5 +16,5 @@
     'qweb': [
         "static/src/xml/*.xml"
     ],
-    'active': True
+    'auto_install': True
 }

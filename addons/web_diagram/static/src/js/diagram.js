@@ -55,7 +55,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
         this.do_update_pager();
 
         // New Node,Edge
-        this.$element.find('#new_node.oe_diagram_button_new').click(function(){self.add_edit_node(null, self.node);});
+        this.$element.find('#new_node.oe_diagram_button_new').click(function(){self.add_node();});
 
         if(this.id) {
             self.get_diagram_info();
@@ -111,175 +111,233 @@ openerp.web.DiagramView = openerp.web.View.extend({
             this.get_diagram_info();
         }
     },
-    select_node: function (node, element) {
-        if (!this.selected_node) {
-            this.selected_node = node;
-            element.attr('stroke', 'red');
-            return;
-        }
-        // Re-click selected node, deselect it
-        if (node.id === this.selected_node.id) {
-            this.selected_node = null;
-            element.attr('stroke', 'black');
-            return;
-        }
-        this.add_edit_node(null, this.connector, {
-            act_from: this.selected_node.id,
-            act_to: node.id
-        });
-    },
+
+    // Set-up the drawing elements of the diagram
     draw_diagram: function(result) {
-        this.selected_node = null;
-        var diagram = new Graph();
-
-        this.active_model = result['id_model'];
-
-        var res_nodes = result['nodes'];
-        var res_connectors = result['conn'];
-        this.parent_field = result.parent_field;
-
-        //Custom logic
         var self = this;
-        var renderer = function(r, n) {
-            var shape = (n.node.shape === 'rectangle') ? 'rect' : 'ellipse';
+        var res_nodes  = result['nodes'];
+        var res_edges  = result['conn'];
+        this.parent_field = result.parent_field;
+        this.$element.find('h3.oe_diagram_title').text(result.name);
 
-            var node = r[shape](n.node.x, n.node.y).attr({
-                "fill": n.node.color
-            });
+        var id_to_node = {};
 
-            var nodes = r.set(node, r.text(n.node.x, n.node.y, (n.label || n.id)))
-                .attr("cursor", "pointer")
-                .dblclick(function() {
-                    self.add_edit_node(n.node.id, self.node);
-                })
-                .mousedown(function () { node.moved = false; })
-                .mousemove(function () { node.moved = true; })
-                .click(function () {
-                    // Ignore click from move event
-                    if (node.moved) { return; }
-                    self.select_node(n.node, node);
-                });
 
-            if (shape === 'rect') {
-                node.attr({width: "60", height: "44"});
-                node.next.attr({"text-anchor": "middle", x: n.node.x + 20, y: n.node.y + 20});
-            } else {
-                node.attr({rx: "40", ry: "20"});
-            }
+        var style = {
+            edge_color: "#A0A0A0",
+            edge_label_color: "#555",
+            edge_label_font_size: 10,
+            edge_width: 2,
+            edge_spacing: 100,
+            edge_loop_radius: 100,
 
-            return nodes;
+            node_label_color: "#333",
+            node_label_font_size: 12,
+            node_outline_color: "#333",
+            node_outline_width: 1,
+            node_selected_color: "#0097BE",
+            node_selected_width: 2,
+            node_size_x: 110,
+            node_size_y: 80,
+            connector_active_color: "#FFF",
+            connector_radius: 4,
+            
+            close_button_radius: 8,
+            close_button_color: "#333",
+            close_button_x_color: "#FFF",
+
+            gray: "#DCDCDC",
+            white: "#FFF",
+            
+            viewport_margin: 50
         };
 
-        _.each(res_nodes, function(res_node) {
-            diagram.addNode(res_node['name'],{node: res_node,render: renderer});
+        // remove previous diagram
+        var canvas = self.$element.find('div.oe_diagram_diagram')
+                             .empty().get(0);
+
+        var r  = new Raphael(canvas, '100%','100%');
+
+        var graph  = new CuteGraph(r,style,canvas.parentNode);
+        
+        var confirm_dialog = $('#dialog').dialog({ 
+            autoOpen: false,
+            title: _t("Are you sure?") });
+        
+
+        _.each(res_nodes, function(node) {
+            var n = new CuteNode(
+                graph,
+                node.x + 50,  //FIXME the +50 should be in the layout algorithm
+                node.y + 50,
+                CuteGraph.wordwrap(node.name, 14),
+                node.shape === 'rectangle' ? 'rect' : 'circle',
+                node.color === 'white' ? style.white : style.gray);
+
+            n.id = node.id;
+            id_to_node[node.id] = n;
         });
 
-        // Id for Path(Edges)
-        var edge_ids = [];
-
-        _.each(res_connectors, function(connector, index) {
-            edge_ids.push(index);
-            diagram.addEdge(connector['source'], connector['destination'], {directed : true, label: connector['signal']});
+        _.each(res_edges, function(edge) {
+            var e =  new CuteEdge(
+                graph,
+                CuteGraph.wordwrap(edge.signal, 32),
+                id_to_node[edge.s_id],
+                id_to_node[edge.d_id] || id_to_node[edge.s_id]  );  //WORKAROUND
+            e.id = edge.id;
         });
 
-        self.$element.find('.diagram').empty();
-
-        var layouter = new Graph.Layout.Ordered(diagram);
-        var render_diagram = new Graph.Renderer.Raphael('dia-canvas', diagram, $('div#dia-canvas').width(), $('div#dia-canvas').height());
-
-        _.each(diagram.edges, function(edge, index) {
-            if(edge.connection) {
-                edge.connection.fg.attr({cursor: "pointer"}).dblclick(function() {
-                    self.add_edit_node(edge_ids[index], self.connector);
-                });
+        CuteNode.double_click_callback = function(cutenode){
+            self.edit_node(cutenode.id);
+        };
+        var i = 0;
+        CuteNode.destruction_callback = function(cutenode){
+            if(!confirm(_t("Deleting this node cannot be undone.\nIt will also delete all connected transitions.\n\nAre you sure ?"))){
+                return $.Deferred().reject().promise();
             }
-        });
+            return new openerp.web.DataSet(self,self.node).unlink([cutenode.id]);
+        };
+        CuteEdge.double_click_callback = function(cuteedge){
+            self.edit_connector(cuteedge.id);
+        };
+
+        CuteEdge.creation_callback = function(node_start, node_end){
+            return {label:_t("")};
+        };
+        CuteEdge.new_edge_callback = function(cuteedge){
+            self.add_connector(cuteedge.get_start().id,
+                               cuteedge.get_end().id,
+                               cuteedge);
+        };
+        CuteEdge.destruction_callback = function(cuteedge){
+            if(!confirm(_t("Deleting this transition cannot be undone.\n\nAre you sure ?"))){
+                return $.Deferred().reject().promise();
+            }
+            return new openerp.web.DataSet(self,self.connector).unlink([cuteedge.id]);
+        };
+
     },
 
-    add_edit_node: function(id, model, defaults) {
-        defaults = defaults || {};
+    // Creates a popup to edit the content of the node with id node_id
+    edit_node: function(node_id){
         var self = this;
+        var title = _t('Activity');
+        var pop = new openerp.web.form.FormOpenPopup(self);
 
-        if(!model)
-            model = self.node;
-        if(id)
-            id = parseInt(id, 10);
-        
-        var pop,
-            title = model == self.node ? _t('Activity') : _t('Transition');
-        if(!id) {
-            pop = new openerp.web.form.SelectCreatePopup(this);
-            pop.select_element(
-                model,
-                {
-                    title: _t("Create:") + title,
-                    initial_view: 'form',
-                    disable_multiple_selection: true
-                },
-                this.dataset.domain,
-                this.context || this.dataset.context
-            );
-            pop.on_select_elements.add_last(function(element_ids) {
-                self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
-            });
-        } else {
-            pop = new openerp.web.form.FormOpenPopup(this);
-            pop.show_element(
-                model,
-                id,
-                this.context || this.dataset.context,
+        pop.show_element(
+                self.node,
+                node_id,
+                self.context || self.dataset.context,
                 {
                     title: _t("Open: ") + title
                 }
             );
-            pop.on_write.add(function() {
-                self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+
+        pop.on_write.add(function() {
+            self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
             });
-        }
+
+        var form_fields = [self.parent_field];
+        var form_controller = pop.view_form;
+
+        form_controller.on_record_loaded.add_first(function() {
+            _.each(form_fields, function(fld) {
+                if (!(fld in form_controller.fields)) { return; }
+                var field = form_controller.fields[fld];
+                field.$input.prop('disabled', true);
+                field.$drop_down.unbind();
+                field.$menu_btn.unbind();
+            });
+        });
+    },
+
+    // Creates a popup to add a node to the diagram
+    add_node: function(){
+        var self = this;
+        var title = _t('Activity');
+        var pop = new openerp.web.form.SelectCreatePopup(self);
+        pop.select_element(
+            self.node,
+            {
+                title: _t("Create:") + title,
+                initial_view: 'form',
+                disable_multiple_selection: true
+            },
+            self.dataset.domain,
+            self.context || self.dataset.context
+        );
+        pop.on_select_elements.add_last(function(element_ids) {
+            self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+        });
+
+        var form_controller = pop.view_form;
+        var form_fields = [this.parent_field];
+
+        form_controller.on_record_loaded.add_last(function() {
+            _.each(form_fields, function(fld) {
+                if (!(fld in form_controller.fields)) { return; }
+                var field = form_controller.fields[fld];
+                field.set_value(self.id);
+                field.dirty = true;
+            });
+        });
+    },
+
+    // Creates a popup to edit the connector of id connector_id
+    edit_connector: function(connector_id){
+        var self = this;
+        var title = _t('Transition');
+        var pop = new openerp.web.form.FormOpenPopup(self);
+        pop.show_element(
+            self.connector,
+            parseInt(connector_id,10),      //FIXME Isn't connector_id supposed to be an int ?
+            self.context || self.dataset.context,
+            {
+                title: _t("Open: ") + title
+            }
+        );
+        pop.on_write.add(function() {
+            self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+        });
+    },
+
+    // Creates a popup to add a connector from node_source_id to node_dest_id.
+    // dummy_cuteedge if not null, will be removed form the graph after the popup is closed.
+    add_connector: function(node_source_id, node_dest_id, dummy_cuteedge){
+        var self = this;
+        var title = _t('Transition');
+        var pop = new openerp.web.form.SelectCreatePopup(self);
+
+        pop.select_element(
+            self.connector,
+            {
+                title: _t("Create:") + title,
+                initial_view: 'form',
+                disable_multiple_selection: true
+            },
+            this.dataset.domain,
+            this.context || this.dataset.context
+        );
+
+        pop.on_select_elements.add_last(function(element_ids) {
+            self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+        });
+        // We want to destroy the dummy edge after a creation cancel. This destroys it even if we save the changes.
+        // This is not a problem since the diagram is completely redrawn on saved changes.
+        pop.$element.bind("dialogbeforeclose",function(){
+            if(dummy_cuteedge){
+                dummy_cuteedge.remove();
+            }
+        });
 
         var form_controller = pop.view_form;
 
-        var form_fields;
-
-        if (model === self.node) {
-            form_fields = [this.parent_field];
-            if (!id) {
-                form_controller.on_record_loaded.add_last(function() {
-                    _.each(form_fields, function(fld) {
-                        if (!(fld in form_controller.fields)) { return; }
-                        var field = form_controller.fields[fld];
-                        field.set_value([self.id,self.active_model]);
-                        field.dirty = true;
-                    });
-                });
-            } else {
-                form_controller.on_record_loaded.add_first(function() {
-                    _.each(form_fields, function(fld) {
-                        if (!(fld in form_controller.fields)) { return; }
-                        var field = form_controller.fields[fld];
-                        field.$input.prop('disabled', true);
-                        field.$drop_down.unbind();
-                        field.$menu_btn.unbind();
-                    });
-                });
-            }
-        } else {
-            form_fields = [
-                this.connectors.attrs.source,
-                this.connectors.attrs.destination];
-        }
-
-        if (!_.isEmpty(defaults)) {
-            form_controller.on_record_loaded.add_last(function () {
-                _(form_fields).each(function (field) {
-                    if (!defaults[field]) { return; }
-                    form_controller.fields[field].set_value(defaults[field]);
-                    form_controller.fields[field].dirty = true;
-                });
-            });
-        }
-        
-        
+        form_controller.on_record_loaded.add_last(function () {
+            form_controller.fields[self.connectors.attrs.source].set_value(node_source_id);
+            form_controller.fields[self.connectors.attrs.source].dirty = true;
+            form_controller.fields[self.connectors.attrs.destination].set_value(node_dest_id);
+            form_controller.fields[self.connectors.attrs.destination].dirty = true;
+        });
     },
 
     on_pager_action: function(action) {
@@ -297,8 +355,10 @@ openerp.web.DiagramView = openerp.web.View.extend({
                 this.dataset.index = this.dataset.ids.length - 1;
                 break;
         }
-        this.dataset.read_index(_.keys(this.fields_view.fields)).pipe(this.on_diagram_loaded);
+        var loaded = this.dataset.read_index(_.keys(this.fields_view.fields))
+                .pipe(this.on_diagram_loaded);
         this.do_update_pager();
+        return loaded;
     },
 
     do_update_pager: function(hide_index) {
@@ -313,7 +373,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
 
     do_show: function() {
         this.do_push_state({});
-        return this._super();
+        return $.when(this._super(), this.on_pager_action('reload'));
     }
 });
 };

@@ -411,6 +411,9 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
             var groupby = results.group_by.length
                         ? results.group_by
                         : action_context.group_by;
+            if (_.isString(groupby)) {
+                groupby = [groupby];
+            }
             controller.do_search(results.domain, results.context, groupby || []);
         });
     },
