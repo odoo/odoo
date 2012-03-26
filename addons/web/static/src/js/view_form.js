@@ -772,7 +772,9 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
                 w.replace($elem);
             }
         });
-        $('<button>Debug layout</button>').appendTo(this.$element).click($.proxy(this.toggle_layout_debugging, this));
+        if (openerp.connection.debug) {
+            $('<button>Outline Form Layout</button>').appendTo(this.$element).click($.proxy(this.toggle_layout_debugging, this));
+        }
     },
     render_element: function(template, dict) {
         dict = dict || {};
