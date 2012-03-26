@@ -134,12 +134,12 @@ class stock_picking(osv.osv):
                 continue
             sale_lines = picking.sale_id.order_line
             invoice_created = invoices[result[picking.id]]
-            for inv in invoice_obj.browse(cursor, user, [invoice_created.id], context=context):
-                if not inv.fiscal_position:
-                    invoice_obj.write(cursor, user, [inv.id], {'fiscal_position': picking.sale_id.fiscal_position.id}, context=context)
+            vals = {'user_id': picking.sale_id.user_id and picking.sale_id.user_id.id or False}
+            if not invoice_created.fiscal_position:
+                vals.update({'fiscal_position': picking.sale_id.fiscal_position and picking.sale_id.fiscal_position.id or False})
             if picking.sale_id.client_order_ref:
-                inv_name = picking.sale_id.client_order_ref + " : " + invoice_created.name
-                invoice_obj.write(cursor, user, [invoice_created.id], {'name': inv_name}, context=context)
+                vals.update({'name': picking.sale_id.client_order_ref + " : " + invoice_created.name})
+            invoice_obj.write(cursor, user, [invoice_created.id], vals, context=context)
             for sale_line in sale_lines:
                 if sale_line.product_id.type == 'service' and sale_line.invoiced == False:
                     if group:
@@ -179,7 +179,7 @@ class stock_picking(osv.osv):
                         'quantity': sale_line.product_uos_qty,
                         'invoice_line_tax_id': [(6, 0, tax_ids)],
                         'account_analytic_id': account_analytic_id,
-                        'notes':sale_line.notes
+                        'note':sale_line.notes
                     }, context=context)
                     self.pool.get('sale.order.line').write(cursor, user, [sale_line.id], {'invoiced': True,
                         'invoice_lines': [(6, 0, [invoice_line_id])],

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-10-03 14:08+0000\n"
-"PO-Revision-Date: 2012-02-24 15:47+0000\n"
+"PO-Revision-Date: 2012-03-04 19:37+0000\n"
 "Last-Translator: amani ali <applepie9911@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-25 05:35+0000\n"
-"X-Generator: Launchpad (build 14860)\n"
+"X-Launchpad-Export-Date: 2012-03-07 05:48+0000\n"
+"X-Generator: Launchpad (build 14907)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -1001,6 +1001,27 @@ msgid ""
 "location consumes the raw material and produces finished products\n"
 "                      "
 msgstr ""
+"* مكان المورد: المكان الظاهري الذي يمثل مكان مصدر للمنتجات القادمة من "
+"الموردين الخاصة بك\n"
+"\n"
+"* عرض: الموقع الظاهري استخدم لإنشاء الهياكل الهرمية للمستودع الخاص بك، في "
+"مجموعها المواقع التابعة لها، لا يمكن أن تحتوي المنتجات مباشرة\n"
+"\n"
+"* المكان الداخلي: المواقع المادية داخل المستودعات الخاصة بك،\n"
+"\n"
+"*مكان العملاء:أرسلت موقع الظاهري الذي يمثل وجهة للموقع المنتجات للعملاء "
+"الخاص بك\n"
+"\n"
+"* الجرد: موقع الظاهري بمثابة النظير لعمليات الجرد تستخدم لتصحيح مستويات "
+"المخزون (الجرد المادية)\n"
+"\n"
+"* المشتريات: موقع الظاهري بوصفه نظيره مؤقت لعمليات الشراء عندما لا يعرف مصدر "
+"(مورد أو الإنتاج) حتى الآن. وينبغي أن يكون هذا الموقع فارغ عندما المشتريات "
+"جدولة انتهاء تشغيل.\n"
+"\n"
+"* الانتاج: الظاهري موقع النظير لعمليات الإنتاج: هذا الموقع تستهلك المواد "
+"الخام وتنتج المنتجات النهائية\n"
+"                      "
 
 #. module: stock
 #: field:stock.production.lot.revision,author_id:0
@@ -1131,6 +1152,11 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
+"ويستخدم هذا فقط إذا قمت بتحديد نوع موقع مسلسل.\n"
+"وقيمة 'نقل التلقائي'ستنشأ تحرك المخزون بعد النظام الحالي الذي سيتم التحقق من "
+"صحتة تلقائيا. مع \"دليل تشغيل\"، هذه تحرك المخزون لا بد من التحقق من صحته من "
+"قبل العامل. مع 'التلقائي لا الخطوة واضاف'، يتم استبدال موقع في هذه الخطوة "
+"الأصلي."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_traceability.py:54
@@ -1393,6 +1419,13 @@ msgid ""
 "* Done: has been processed, can't be modified or cancelled anymore\n"
 "* Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"* مشروع: لم يتأكد حتى الآن، ولن سيقرر حتى يتم التأكيد\n"
+"* مؤكد: لا تزال تنتظر توافر المنتجات\n"
+"* متوفر: منتجات محفوظة، والانتظار لمجرد تأكيد.\n"
+"* الانتظار: انتظار خطوة أخرى للمضي قدما قبل أن تصبح متوفرة تلقائيا (على سبيل "
+"المثال في جعل لأمر التدفقات)\n"
+"* تم: قد تم تجهيزها، لا يمكن التعديل أو الإلغاء بعد الآن\n"
+"* تم إلغاء: تم الالغاء’ لايمكن تأكيده من بعد الآن"
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -1431,6 +1464,11 @@ msgid ""
 " When the picking is done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"عندما يتم إنشاء خطوة المخزون فهي في حالة \"مشروع\".\n"
+"بعد ذلك، يتم التعيين إلى حالة \"غير متوفر\" إذا لم يجد المقرر هذه المنتجات.\n"
+"عندما يتم حجز المنتجات يتم التعيين إلى \"متوفر\".\n"
+"عندما يتم الاختيار تكون الحالة\"تم\".\n"
+"ولكنتكون الحالة \"انتظار\" إذا كان التحرك ينتظر واحد آخر."
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1623,6 +1661,10 @@ msgid ""
 "Would your payment have been carried out after this mail was sent, please "
 "consider the present one as void."
 msgstr ""
+"يرجى ملاحظة أن الدفعات التالية هي الآن الواجبة. إذا تم إرسال دفعتك، التكرم "
+"بتقديم تفاصيل الدفع. إذا سيتم تأجيل دفع مزيد من المعلومات يرجى الاتصال بنا "
+"لمناقشة.\n"
+"وأجريت الدفع خارج بعد طرد هذا البريد، يرجى النظر في واحدة بوصفها باطلة."
 
 #. module: stock
 #: code:addons/stock/stock.py:513
@@ -2153,6 +2195,10 @@ msgid ""
 "the supplier or the purchase order reference. Then you can confirm all "
 "products received using the buttons on the right of each line."
 msgstr ""
+"هنا يمكنك الحصول على المنتجات الفردية، بغض النظر عن ما أمر شراء أو أمر "
+"الاختيار التي أتوا منها. وسوف تجد لائحة من جميع المنتجات التي كنت تنظرها. "
+"عندما تتلقى النظام، يمكنك تصفيتة استنادا إلى اسم المورد أو مرجع أمر الشراء. "
+"فهل يمكن أن تؤكد جميع المنتجات الواردة باستخدام أزرار على اليمين من كل سطر."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -2200,6 +2246,10 @@ msgid ""
 "current inventory value, and the stock input and stock output account will "
 "hold the counterpart moves for incoming and outgoing products."
 msgstr ""
+"إذا تم التمكين في وقت التقييم الحقيقي للمنتج، وسيقوم النظام تلقائيا كتابة "
+"مقالات مجلة الموافق لتحرك  المخزون. تم تعيين الحساب المتنوع للجرد على فئة من "
+"فئات المنتجات وسوف تمثل قيمة المخزون الحالي، وحساب إدخال المخزون واخراجه "
+"الانتاج وسوف تعقد التحركات النظيره بالنسبة للمنتجات الواردة والصادرة."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_inventory_report
@@ -2233,6 +2283,13 @@ msgid ""
 "location to the Stock location. Each report can be performed on physical, "
 "partner or virtual locations."
 msgstr ""
+"حدد المواقع الخاصة بك لتعكس بنية وتنظيم المستودعات. OpenERP غير قادرة على "
+"إدارة المواقع المادية (المستودعات، والأرفف، بن، الخ)، والمواقع الشريكة "
+"(العملاء والموردين) والمواقع الافتراضية التي هي النظير لعمليات المخزون مثل "
+"الصناعات التحويلية أوامر الاستهلاك، وقوائم الجرد، الخ. كل عملية الأوراق "
+"المالية في OpenERP نقل المنتجات من مكان إلى آخر واحد. على سبيل المثال، إذا "
+"تلقيت المنتجات من المورد،سوف ينقل OpenERP المنتجات من الموقع المورد إلى موقع "
+"المخزون. لا يمكن أن يؤديها كل تقرير عن شريك، مادي أو مواقع الظاهري."
 
 #. module: stock
 #: view:stock.invoice.onshipping:0
@@ -2520,6 +2577,7 @@ msgstr "الكمية (وحدة المبيعات)"
 msgid ""
 "You are moving %.2f %s products but only %.2f %s available in this lot."
 msgstr ""
+"أنت تقوم بنقل %.2f %s من المنتجات لكن يبقى المتاح فقط %.2f %s في هذا المتوفر."
 
 #. module: stock
 #: view:stock.move:0
@@ -2878,6 +2936,11 @@ msgid ""
 "preconfigured logistics rules, but you can also record manual stock "
 "operations."
 msgstr ""
+"تعرض التحركات الداخلية جميع عمليات الجرد لديك لأداء في المستودع الخاص بك. "
+"ويمكن تصنيف جميع العمليات في يوميات المخزون، بحيث كل عامل لديه قائمة خاصة به "
+"من العمليات لأدائها في يوميته الخاصة. وتعد معظم العمليات تلقائيا بواسطة "
+"OpenERP وفقا لقواعد النقل والإمداد الخاصة بك مسبقا، ولكن يمكنك أيضا تسجيل "
+"دليل عمليات المخزون."
 
 #. module: stock
 #: view:stock.move:0
@@ -3025,6 +3088,11 @@ msgid ""
 "'Available' button to get all the lots you produced, received or delivered "
 "to customers."
 msgstr ""
+"هذه هي قائمة بجميع الكثير إنتاج (الأرقام التسلسلية) التي سجلتها. عند تحديد "
+"الكثير، ويمكنك الحصول على تعقب المنبع أو المصب من المنتجات الواردة في "
+"الكثير. افتراضيا، يتم تصفية القائمة على الأرقام التسلسلية المتوفرة في "
+"المستودع الخاص بك ولكن يمكنك إلغاء تحديد زر \"متوفر\"للحصول على كل الكثير "
+"الذي أنتج أو استلامها أو تسليمها للعملاء."
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -3129,6 +3197,15 @@ msgid ""
 "* Fixed Location: The chained location is taken from the next field: Chained "
 "Location if Fixed."
 msgstr ""
+"حدد ما إذا كان هذا الموقع هو بالسلاسل إلى موقع آخر، أي أن أي منتج الواردة في "
+"هذا الموقع\n"
+"يجب أن تذهب إلى الموقع التالي بالسلاسل. يتم تحديد الموقع بالسلاسل وفقا "
+"لنوع:\n"
+"* لا شيء: لا يوجد تسلسل في جميع\n"
+"* العملاء: سيتم اتخاذ موقع بالسلاسل من العملاء الحقل الموقع على شكل الشريك "
+"للشريك الذي تم تحديده في قائمة التقاط للمنتجات الواردة.\n"
+"* المكان الثابتة: يتم أخذ موقع بالسلاسل من الحقل التالي: الموقع تبدا إذا "
+"الثابتة."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
@@ -3283,6 +3360,10 @@ msgid ""
 "If cost price is decreased, stock variation account will be creadited and "
 "stock input account will be debited."
 msgstr ""
+"إذا زاد سعر التكلفة،سوف يتم خصم الحساب المتنوع للمخزون، وسوف تقيد حساب "
+"الخارج من المخزون مع القيمة = (الاختلاف في الكمية * المبلغ المتاح).\n"
+"إذا انخفض سعر التكلفة، سيتم انشاء حساب متنوع للمخزون، وسيتم خصم حساب "
+"المدخلات للمخزون."
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
@@ -3474,6 +3555,11 @@ msgid ""
 " When the picking it done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"عندما يتم إنشاء هذه الخطوة المخزون منه في حالة \"مشروع\".\n"
+"بعد أن يتم التعيين إلى الحالة \"مؤكد\".\n"
+"إذا تم تعيين المخدون المتاح للحالة \"متاح\".\n"
+"عند اختيارها الحالة هي\"تم\".\n"
+"ولكن الحالة حاليا \"انتظار\" إذا كان التحرك ينتظر تحرك آخر."
 
 #. module: stock
 #: view:board.board:0

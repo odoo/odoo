@@ -434,6 +434,16 @@ class purchase_order(osv.osv):
     def action_picking_create(self,cr, uid, ids, *args):
         picking_id = False
         for order in self.browse(cr, uid, ids):
+            reception_address_id = False
+            if order.dest_address_id:
+                reception_address_id = order.dest_address_id.id
+            elif order.warehouse_id and order.warehouse_id.partner_address_id:
+                reception_address_id = order.warehouse_id.partner_address_id.id
+            else:
+                if order.company_id.partner_id.address:
+                    addresses_default = [address.id for address in order.company_id.partner_id.address if address.type == 'default']
+                    addresses_delivery = [address.id for address in order.company_id.partner_id.address if address.type == 'delivery']
+                    reception_address_id = (addresses_delivery and addresses_delivery[0]) or (addresses_default and addresses_default[0]) or False
             loc_id = order.partner_id.property_stock_supplier.id
             istate = 'none'
             if order.invoice_method=='picking':
@@ -443,7 +453,7 @@ class purchase_order(osv.osv):
                 'name': pick_name,
                 'origin': order.name+((order.origin and (':'+order.origin)) or ''),
                 'type': 'in',
-                'address_id': order.dest_address_id.id or order.partner_address_id.id,
+                'address_id': reception_address_id,
                 'invoice_state': istate,
                 'purchase_id': order.id,
                 'company_id': order.company_id.id,
@@ -656,7 +666,7 @@ class purchase_order_line(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        default.update({'state':'draft', 'move_ids':[],'invoiced':0,'invoice_lines':[]})
+        default.update({'state':'draft', 'move_ids':[], 'move_dest_id':False, 'invoiced':0,'invoice_lines':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
@@ -676,9 +686,8 @@ class purchase_order_line(osv.osv):
         lang=False
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, partner_id, ['lang'])['lang']
-        context={'lang':lang}
-        context['partner_id'] = partner_id
-
+        context = self.pool.get('res.users').context_get(cr, uid)
+        context_partner = {'lang':lang, 'partner_id': partner_id}
         prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
         prod_uom_po = prod.uom_po_id.id
         if not uom:
@@ -688,7 +697,7 @@ class purchase_order_line(osv.osv):
         qty = qty or 1.0
         seller_delay = 0
 
-        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context)[0][1]
+        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context_partner)[0][1]
         res = {}
         for s in prod.seller_ids:
             if s.name.id == partner_id:

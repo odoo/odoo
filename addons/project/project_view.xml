@@ -512,10 +512,10 @@
         <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1"/>
         <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_tasks_config" sequence="1"/>
 
-        <act_window context="{'search_default_user_id': [active_id]}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
+        <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
         <act_window
-            domain="[('project_id', '=', active_id)]"
+            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
             id="act_project_project_2_project_task_all"
             name="Tasks"
             res_model="project.task"
@@ -563,7 +563,7 @@
             </page>
        </field>
     </record>
-    <act_window context="{'search_default_user_id': [active_id]}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
-    <act_window context="{'search_default_user_id': [active_id]}" domain="[('date', '&gt;=', time.strftime('%Y-%m-01'))]" id="act_res_users_2_project_task_work_month" name="Month works" res_model="project.task.work" src_model="res.users" view_mode="tree,form" view_type="form"/>
+    <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+    <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('date', '&gt;=', time.strftime('%Y-%m-01'))]" id="act_res_users_2_project_task_work_month" name="Month works" res_model="project.task.work" src_model="res.users" view_mode="tree,form" view_type="form"/>
     </data>
 </openerp>

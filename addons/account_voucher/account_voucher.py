@@ -474,7 +474,8 @@ class account_voucher(osv.osv):
             ids = context['move_line_ids']
         ids.reverse()
         moves = move_line_pool.browse(cr, uid, ids, context=context)
-
+        move_line_found = False
+        invoice_id = context.get('invoice_id', False)
         company_currency = journal.company_id.currency_id.id
         if company_currency != currency_id and ttype == 'payment':
             total_debit = currency_pool.compute(cr, uid, currency_id, company_currency, total_debit, context=context_multi_currency)
@@ -486,8 +487,28 @@ class account_voucher(osv.osv):
                 continue
             if line.debit and line.reconcile_partial_id and ttype == 'payment':
                 continue
-            total_credit += line.credit or 0.0
-            total_debit += line.debit or 0.0
+            if invoice_id:
+                if line.invoice.id == invoice_id:
+                    #if the invoice linked to the voucher line is equal to the invoice_id in context
+                    #then we assign the amount on that line, whatever the other voucher lines
+                    move_line_found = line.id
+                    break
+            elif currency_id == company_currency:
+                #otherwise treatments is the same but with other field names
+                if line.amount_residual == price:
+                    #if the amount residual is equal the amount voucher, we assign it to that voucher
+                    #line, whatever the other voucher lines
+                    move_line_found = line.id
+                    break
+                #otherwise we will split the voucher amount on each line (by most old first)
+                total_credit += line.credit or 0.0
+                total_debit += line.debit or 0.0
+            elif currency_id == line.currency_id.id:
+                if line.amount_residual_currency == price:
+                    move_line_found = line.id
+                    break
+                total_credit += line.credit and line.amount_currency or 0.0
+                total_debit += line.debit and line.amount_currency or 0.0
         for line in moves:
             if line.credit and line.reconcile_partial_id and ttype == 'receipt':
                 continue
@@ -495,25 +516,29 @@ class account_voucher(osv.osv):
                 continue
             original_amount = line.credit or line.debit or 0.0
             amount_unreconciled = currency_pool.compute(cr, uid, line.currency_id and line.currency_id.id or company_currency, currency_id, abs(line.amount_residual_currency), context=context_multi_currency)
+            line_currency_id = line.currency_id and line.currency_id.id or company_currency
             rs = {
                 'name':line.move_id.name,
                 'type': line.credit and 'dr' or 'cr',
                 'move_line_id':line.id,
                 'account_id':line.account_id.id,
+                'amount': (move_line_found == line.id) and min(price, amount_unreconciled) or 0.0,
                 'amount_original': currency_pool.compute(cr, uid, line.currency_id and line.currency_id.id or company_currency, currency_id, line.currency_id and abs(line.amount_currency) or original_amount, context=context_multi_currency),
                 'date_original':line.date,
                 'date_due':line.date_maturity,
                 'amount_unreconciled': amount_unreconciled,
+                'currency_id': line_currency_id,
             }
-
-            if line.credit:
-                amount = min(amount_unreconciled, currency_pool.compute(cr, uid, company_currency, currency_id, abs(total_debit), context=context_multi_currency))
-                rs['amount'] = amount
-                total_debit -= amount
-            else:
-                amount = min(amount_unreconciled, currency_pool.compute(cr, uid, company_currency, currency_id, abs(total_credit), context=context_multi_currency))
-                rs['amount'] = amount
-                total_credit -= amount
+            if not move_line_found:
+                if currency_id == line_currency_id:
+                    if line.credit:
+                        amount = min(amount_unreconciled, abs(total_debit))
+                        rs['amount'] = amount
+                        total_debit -= amount
+                    else:
+                        amount = min(amount_unreconciled, abs(total_credit))
+                        rs['amount'] = amount
+                        total_credit -= amount
 
             default['value']['line_ids'].append(rs)
             if rs['type'] == 'cr':
@@ -596,6 +621,7 @@ class account_voucher(osv.osv):
         res = {
             'state':'cancel',
             'move_id':False,
+            'number': ''
         }
         self.write(cr, uid, ids, res)
         return True
@@ -646,10 +672,8 @@ class account_voucher(osv.osv):
                 continue
             context_multi_currency = context.copy()
             context_multi_currency.update({'date': inv.date})
-
-            if inv.number:
-                name = inv.number
-            elif inv.journal_id.sequence_id:
+            
+            if inv.journal_id.sequence_id:
                 name = seq_obj.get_id(cr, uid, inv.journal_id.sequence_id.id)
             if not name:
                 raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal and make sure it is activated !'))
@@ -863,6 +887,32 @@ class account_voucher_line(osv.osv):
     _defaults = {
         'name': ''
     }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        res = super(account_voucher_line, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            doc = etree.XML(res['arch'])
+            nodes = doc.xpath("//field[@name='account_id']")
+            for node in nodes:
+                if context.get('default_type') == 'dr':
+                    if context.get('type') == 'payment':
+                        node.set('domain', "[('type','=','payable')]")
+                    elif context.get('type') == 'receipt':
+                        node.set('domain', "[('type','=','receivable')]")
+                    elif context.get('type') == 'purchase':
+                        node.set('domain', "[('user_type.report_type','=','expense'), ('type','!=','view')]")
+                elif context.get('default_type') == 'cr':
+                    if context.get('type') == 'sale':
+                        node.set('domain', "[('user_type.report_type','=','income'),('type','!=','view')]")
+                    elif context.get('type') == 'receipt':
+                        node.set('domain', "[('type','=','receivable')]")
+                    elif context.get('type') == 'payment':
+                        node.set('domain', "[('type','=','payable')]")
+                else:
+                    node.set('domain', "[('type','!=','view')]")
+            res['arch'] = etree.tostring(doc)
+        return res
+
 
     def onchange_move_line_id(self, cr, user, ids, move_line_id, context=None):
         """
@@ -952,7 +1002,11 @@ class account_bank_statement(osv.osv):
         bank_st_line_obj = self.pool.get('account.bank.statement.line')
         st_line = bank_st_line_obj.browse(cr, uid, st_line_id, context=context)
         if st_line.voucher_id:
-            voucher_obj.write(cr, uid, [st_line.voucher_id.id], {'number': next_number}, context=context)
+            voucher_obj.write(cr, uid, [st_line.voucher_id.id],
+                            {'number': next_number,
+                            'date': st_line.date,
+                            'period_id': st_line.statement_id.period_id.id},
+                            context=context)
             if st_line.voucher_id.state == 'cancel':
                 voucher_obj.action_cancel_draft(cr, uid, [st_line.voucher_id.id], context=context)
             wf_service.trg_validate(uid, 'account.voucher', st_line.voucher_id.id, 'proforma_voucher', cr)

@@ -593,7 +593,7 @@
         </record>
 
         <act_window
-        	context="{'search_default_sprint_id': [active_id]}"
+        	context="{'search_default_sprint_id': [active_id], 'default_sprint_id': active_id}"
             id="act_scrum_sprint_2_product_backlog"
             name="Backlogs"
             res_model="project.scrum.product.backlog"
@@ -602,7 +602,7 @@
             view_type="form"/>
 
         <act_window
-        	context="{'search_default_sprint_id': active_id, 'search_default_user_id': uid, 'search_default_current':1}"
+        	context="{'search_default_sprint_id': active_id, 'search_default_user_id': uid, 'search_default_current':1, 'default_sprint_id': active_id}"
             id="act_scrum_sprint_2_project_task"
             name="Tasks"
             res_model="project.task"

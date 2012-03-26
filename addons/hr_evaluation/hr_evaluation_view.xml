@@ -250,12 +250,12 @@
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
                    <group col='10' colspan='4'>
-                    <filter icon="terp-check" string="Current" domain="[('state','=','wait'))]" help="Evaluations that are in waiting state"/>                                       
+                    <filter icon="terp-check" string="Current" domain="[('state','=','wait'))]" help="Evaluations that are in waiting state"/>
                     <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Evaluations that are in progress state"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-go-week" string="7 Days" help="Evaluations to close within the next 7 days"
                         domain="[('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" />
-                    <separator orientation="vertical"/> 
+                    <separator orientation="vertical"/>
                     <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                         help="Evaluations that overpassed the deadline" domain="[('date','&lt;=',(datetime.date.today()).strftime('%%Y-%%m-%%d'))]" />
                     <separator orientation="vertical"/>
@@ -405,11 +405,11 @@
            action="action_hr_evaluation_send_mail" sequence="45" groups="base.group_hr_manager"/>
 
       <!-- Evaluation Interviews Button on Employee Form -->
-      <act_window 
-      context="{'search_default_user_to_review_id': [active_id]}"
-      id="act_hr_employee_2_hr__evaluation_interview" 
-      name="Evaluation Interviews" 
-      res_model="hr.evaluation.interview" 
+      <act_window
+      context="{'search_default_user_to_review_id': [active_id], 'default_user_to_review_id': active_id}"
+      id="act_hr_employee_2_hr__evaluation_interview"
+      name="Evaluation Interviews"
+      res_model="hr.evaluation.interview"
       src_model="hr.employee"/>
 
     </data>

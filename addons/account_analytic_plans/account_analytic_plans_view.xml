@@ -31,15 +31,6 @@
        </field>
     </record>
 
-    <record id="account.journal_col11" model="account.journal.column">
-        <field eval="&quot;&quot;&quot;Analytic Distribution&quot;&quot;&quot;" name="name"/>
-        <field eval="11" name="sequence"/>
-        <field name="view_id" ref="account.account_journal_view"/>
-        <field eval="0" name="required"/>
-        <field eval="&quot;&quot;&quot;analytics_id&quot;&quot;&quot;" name="field"/>
-        <field eval="0" name="readonly"/>
-    </record>
-
     <record model="ir.ui.view" id="view_move_line_form_inherit">
         <field name="name">account.move.line.form.inherit</field>
         <field name="model">account.move.line</field>
@@ -154,8 +145,8 @@
     </record>
 
     <act_window name="Distribution Models"
-        domain="[('plan_id', '=', active_id),('plan_id','&lt;&gt;',False)]"
-        context="{'plan_id':active_id}"
+        domain="[('plan_id','&lt;&gt;',False)]"
+        context="{'search_default_plan_id': active_id, 'default_plan_id': active_id}"
         res_model="account.analytic.plan.instance"
         src_model="account.analytic.plan"
         id="account_analytic_instance_model_open"/>

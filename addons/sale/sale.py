@@ -1019,8 +1019,9 @@ class sale_order_line(osv.osv):
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
         if partner_id:
-            lang = partner_obj.browse(cr, uid, partner_id).lang
+            partner_lang = partner_obj.browse(cr, uid, partner_id).lang
         context = {'lang': lang, 'partner_id': partner_id}
+        context_partner = {'lang': partner_lang, 'partner_id': partner_id}
 
         if not product:
             return {'value': {'th_weight': 0, 'product_packaging': False,
@@ -1076,7 +1077,7 @@ class sale_order_line(osv.osv):
             result.update({'type': product_obj.procure_method})
 
         if not flag:
-            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context)[0][1]
+            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id

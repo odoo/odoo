@@ -743,7 +743,7 @@ class account_move_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             company_currency_id = line.company_id.currency_id
             if line.reconcile_id:
-                raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
+                raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name))
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
                     if not line2.reconcile_id:
@@ -818,7 +818,7 @@ class account_move_line(osv.osv):
             raise osv.except_osv(_('Error'), _('Some entries are already reconciled !'))
 
         if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
-           (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
+           (not context.get('fy_closing', False) and account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
             if not writeoff_acc_id:
                 raise osv.except_osv(_('Warning'), _('You have to provide an account for the write off entry !'))
             if writeoff > 0:

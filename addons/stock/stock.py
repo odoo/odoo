@@ -1043,6 +1043,9 @@ class stock_picking(osv.osv):
             for move_line in picking.move_lines:
                 if move_line.state == 'cancel':
                     continue
+                if move_line.scrapped:
+                    # do no invoice scrapped products
+                    continue
                 origin = move_line.picking_id.name or ''
                 if move_line.picking_id.origin:
                     origin += ':' + move_line.picking_id.origin
@@ -1089,6 +1092,7 @@ class stock_picking(osv.osv):
                     'quantity': move_line.product_uos_qty or move_line.product_qty,
                     'invoice_line_tax_id': [(6, 0, tax_ids)],
                     'account_analytic_id': account_analytic_id,
+                    'note': move_line.note
                 }, context=context)
                 self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
 
@@ -2066,7 +2070,7 @@ class stock_move(osv.osv):
                 context = {}
             currency_ctx = dict(context, currency_id = move.company_id.currency_id.id)
             amount_unit = move.product_id.price_get('standard_price', currency_ctx)[move.product_id.id]
-            reference_amount = amount_unit * qty or 1.0
+            reference_amount = amount_unit * qty
 
         return reference_amount, reference_currency_id
 
