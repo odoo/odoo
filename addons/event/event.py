@@ -287,7 +287,6 @@ class event_registration(osv.osv):
     _defaults = {
         'nb_register': 1,
         'state': 'draft',
-        #'user_id': lambda self, cr, uid, ctx: uid,
     }
     _order = 'name, create_date desc'
 
