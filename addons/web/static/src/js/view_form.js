@@ -83,10 +83,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
         this._super();
     },
-    reposition: function ($e) {
-        this.$element = $e;
-        this.on_loaded();
-    },
     on_loaded: function(data) {
         var self = this;
         if (!data) {
@@ -215,8 +211,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
     },
     on_form_changed: function() {
+        this.trigger("view_content_has_changed");
         _.each(this.get_widgets(), function(w) {
-            w.process_modifiers();
             if (w.field) {
                 w.validate();
             }
@@ -1172,6 +1168,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         this._super(view);
 
         this.invisible = this.modifiers['invisible'] === true;
+        this.view.on("view_content_has_changed", this, this.process_modifiers);
     },
     destroy: function() {
         this._super.apply(this, arguments);
@@ -1355,6 +1352,9 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
  * 
  * Properties:
  *     - ...
+ * Events:
+ *     - view_content_has_changed : when the values of the fields have changed. When
+ *     this event is triggered all fields should reprocess their modifiers.
  */
 
 openerp.web.form.FieldManagerInterface = {
