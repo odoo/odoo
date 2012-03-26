@@ -908,7 +908,22 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
                 row_cols = cols;
             }
             row_cols -= colspan;
+            
             $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
+            // invisibility transfer
+            var invisible = undefined;
+            if (_.include(["button", "field"], tagName)) {
+                var field_modifiers = JSON.parse($child.attr('modifiers') || '{}');
+                invisible = field_modifiers.invisible;
+                field_modifiers.invisible = undefined;
+                $child.attr('modifiers', JSON.stringify(field_modifiers));
+            } else {
+                invisible = $child.attr('invisible') !== undefined ? JSON.parse($child.attr('invisible'))
+                    : undefined;
+                $child.removeAttr("invisible");
+            }
+            self.handle_invisible($td, invisible !== undefined ? JSON.stringify(invisible) : undefined);
+            
             $tr.append($td.append($child));
             children.push($child[0]);
         });
