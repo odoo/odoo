@@ -1553,7 +1553,7 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
             this.$element.find('.oe_field_translate').click(this.on_translate);
         }
         if (this.node.attrs.nolabel && openerp.connection.debug) {
-            this.do_attach_tooltip(this, this.$element);
+            this.do_attach_tooltip(this, this.$label || this.$element);
         }
     },
     set_value: function(value) {
