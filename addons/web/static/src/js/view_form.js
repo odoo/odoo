@@ -885,12 +885,13 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
             $table = $new_group.find('table:first');
         }
         $table.addClass('oe_form_group');
-        var $tr,
+        var $tr, $td,
             cols = parseInt($group.attr('col') || 4, 10),
             row_cols = cols;
 
         var children = [];
-        $group.children().each(function() {
+        $group.children().each(function(a,b,c) {
+            debugger
             var $child = $(this),
                 colspan = parseInt($child.attr('colspan') || 1, 10),
                 tagName = $child[0].tagName.toLowerCase();
@@ -903,10 +904,13 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
                 row_cols = cols;
             }
             row_cols -= colspan;
-            var $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
+            $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
             $tr.append($td.append($child));
             children.push($child[0]);
         });
+        if (row_cols) {
+            $td.attr('colspan', parseInt($td.attr('colspan'), 10) + row_cols);
+        }
         $group.before($new_group).remove();
 
         // Now compute width of cells
