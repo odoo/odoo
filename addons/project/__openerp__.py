@@ -57,7 +57,8 @@ Dashboard for project members that includes:
         "report/project_report_view.xml",
         "board_project_view.xml",
         'board_project_manager_view.xml',
-        'report/project_cumulative.xml'
+        'report/project_cumulative.xml',
+        'res_config_view.xml',
     ],
     'demo_xml': [
         'project_demo.xml',

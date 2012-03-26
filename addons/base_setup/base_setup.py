@@ -210,4 +210,10 @@ class sale_config_settings(osv.osv_memory):
     _name = 'sale.config.settings'
     _inherit = 'res.config.settings'
 
+# Preferences wizard for Projects & CRM.
+# It is defined here because it must be inherited independently in modules project and crm_claim.
+class project_config_settings(osv.osv_memory):
+    _name = 'project.config.settings'
+    _inherit = 'res.config.settings'
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

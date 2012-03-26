@@ -1,0 +1,34 @@
+<openerp>
+    <data>
+
+        <record id="view_project_config" model="ir.ui.view">
+            <field name="name">Project Application</field>
+            <field name="model">project.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.project_settings_form_view"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <group name="project" position="after">
+                    <separator string="Project" colspan="4"/>
+                    <field name="module_project_mrp"/>
+                    <field name="module_project_timesheet"/>
+                    <field name="module_pad"/>
+                    <field name="module_project_scrum"/>
+
+                    <separator string="Planning" colspan="4"/>
+                    <field name="module_project_planning"/>
+                    <field name="module_project_long_term"/>
+                </group>
+
+                <group name="helpdesk" position="after">
+                    <field name="module_project_issue_sheet"/>
+                    <newline/>
+                </group>
+            </field>
+        </record>
+
+        <menuitem id="base.menu_project_config" name="Projects" parent="base.menu_config"
+            sequence="5" action="base.action_project_config"/>
+
+    </data>
+</openerp>

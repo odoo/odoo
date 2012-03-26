@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_project_config_issue" model="ir.ui.view">
+            <field name="name">Project Application</field>
+            <field name="model">project.config.settings</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.project_settings_form_view"/>
+            <field name="arch" type="xml">
+                <group name="helpdesk" position="after">
+                    <field name="project_issue"/>
+                    <group colspan="2" attrs="{'invisible': [('project_issue','=',False)]}">
+                        <field name="issue_server" attrs="{'required': [('project_issue','=',True)]}"/>
+                        <field name="issue_type" nolabel="1" on_change="onchange_server_type(issue_type, issue_is_ssl,'issue')" attrs="{'required': [('project_issue','=',True)]}"/>
+                        <field name="issue_port" attrs="{'required': [('project_issue','=',True)]}"/>
+                        <field name="issue_is_ssl" on_change="onchange_server_type(issue_type, issue_is_ssl, 'issue')"/>
+                        <field name="issue_user" attrs="{'required': [('project_issue','=',True)]}"/>
+                        <field name="issue_password" password="True" attrs="{'required': [('project_issue','=',True)]}"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+    </data>
+</openerp>
