@@ -1,4 +1,5 @@
 // Variables {{{
+$section-title-color: #8786b7
 $colour4: #8a89ba
 //$colour4: #d14836
 // }}}
@@ -29,7 +30,7 @@ $colour4: #8a89ba
 @mixin box-shadow($bsval: 0px 1px 4px #777)
     -moz-box-shadow: $bsval
     -webkit-box-shadow: $bsval
-    -box-shadow: $bsval
+    box-shadow: $bsval
 
 @mixin transition($transval: (border linear 0.2s, box-shadow linear 0.2s))
     -webkit-transition: $transval
@@ -46,6 +47,12 @@ $colour4: #8a89ba
     -webkit-background-clip: $clip
     -moz-background-clip: $clip
     background-clip: $clip
+
+@mixin unscrew-box
+    -moz-box-sizing: border-box
+    -webkit-box-sizing: border-box
+    box-sizing: border-box
+
 // }}}
 
 .openerp2
@@ -320,6 +327,67 @@ $colour4: #8a89ba
                     &:hover
                         @include vertical-gradient(#292929, #191919)
                         @include box-shadow(none)
+    // }}}
+
+    // Search View {{{
+    .oe_searchview
+        position: relative
+
+        .VS-search
+            .VS-search-inner
+                margin-right: 40px
+
+            .VS-icon-cancel
+                right: 24px
+
+            .oe_vs_unfold_drawer
+                position: absolute
+                top: 0
+                right: 0
+                height: 100%
+                line-height: 28px
+                padding: 0 7px 0 4px
+                color: #ccc
+                cursor: pointer
+                &:before
+                    content: "▼"
+
+        &.oe_searchview_open_drawer
+            .oe_searchview_drawer
+                display: table
+
+        .oe_searchview_drawer
+            position: absolute
+            top: 100%
+            right: 0
+            background-color: white
+            width: 432px
+            display: none
+            border: 1px solid #ccc
+
+            > div
+                @include unscrew-box
+                display: table-cell
+                width: 50%
+
+            h3
+                margin: 2px 4px 2px 8px
+                color: $section-title-color
+
+            ul
+                margin: 0 12px 3px
+                padding: 0
+                list-style: none
+
+            li
+                list-style: none
+                padding: 3px 6px
+                height: 14px
+                color: inherit
+                cursor: pointer
+
+                &:hover
+                    background-color: #f0f0fa
     // }}}
 
 .openerp

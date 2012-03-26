@@ -259,6 +259,9 @@ Filters
 
 * :js:func:`openerp.web.search.Filter.is_enabled` has been removed
 
+* :js:class:`~openerp.web.search.FilterGroup` instances are still
+  rendered (and started) in the "advanced search" drawer".
+
 Fields
 ++++++
 
@@ -275,6 +278,13 @@ Fields
   :js:func:`~openerp.web.search.Field.get_domain`, so child classes
   have all the information they need to derive the "right" resulting
   domain.
+
+Custom filters
+++++++++++++++
+
+Instead of being an intrinsic part of the search view, custom filters
+are now a special case of filter groups. They are treated specially
+still, but much less so than they used to be.
 
 Many To One
 +++++++++++

@@ -2,6 +2,9 @@ openerp.web.search = function(openerp) {
 var QWeb = openerp.web.qweb,
       _t =  openerp.web._t,
      _lt = openerp.web._lt;
+_.mixin({
+    sum: function (obj) { return _.reduce(obj, function (a, b) { return a + b; }, 0); }
+});
 
 // Have SearchBox optionally use callback function to produce inputs and facets
 // (views) set on callbacks.make_facet and callbacks.make_input keys when
@@ -48,7 +51,7 @@ var SearchBox_searchEvent = function (e) {
   };
 if (SearchBox_searchEvent.toString() !== VS.ui.SearchBox.prototype.searchEvent.toString().replace(
         /this\.focusSearch\(e\);\n[ ]{4}this\.value\(query\)/,
-        'this\.renderFacets();\n    this\.focusSearch(e)')) {
+        'this.renderFacets();\n    this.focusSearch(e)')) {
     throw new Error(
         "Trying to replace wrong version of VS.ui.SearchBox#searchEvent. "
         + "Please fix replacement.");
@@ -89,8 +92,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         this.has_defaults = !_.isEmpty(this.defaults);
 
         this.inputs = [];
-
-        this.has_focus = false;
+        this.controls = {};
 
         this.hidden = !!hidden;
         this.headless = this.hidden && !this.has_defaults;
@@ -130,6 +132,11 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 context: this.dataset.get_context()
             }, this.on_loaded);
         }
+
+        this.$element.on('click', '.oe_vs_unfold_drawer', function () {
+            self.$element.toggleClass('oe_searchview_open_drawer');
+        });
+
         return $.when(p, this.ready);
     },
     show: function () {
@@ -139,6 +146,64 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         this.$element.hide();
     },
 
+    /**
+     * Sets up thingie where all the mess is put?
+     */
+    setup_stuff_drawer: function () {
+        $('<div class="oe_vs_unfold_drawer">').appendTo(this.$element.find('.VS-search-box'));
+        var $drawer = $('<div class="oe_searchview_drawer">').appendTo(this.$element);
+
+        var running_count = 0;
+        // get total filters count
+        var is_group = function (i) { return i instanceof openerp.web.search.FilterGroup; };
+        var filters_count = _(this.controls).chain()
+            .flatten()
+            .filter(is_group)
+            .map(function (i) { return i.filters.length; })
+            .sum()
+            .value();
+
+        var col1 = [], col2 = _(this.controls).map(function (inputs, group) {
+            var filters = _(inputs).filter(is_group);
+            return {
+                name: group === 'null' ? _t("Filters") : group,
+                filters: filters,
+                length: _(filters).chain().map(function (i) {
+                    return i.filters.length; }).sum().value()
+            };
+        });
+
+        while (col2.length) {
+            // col1 + group should be smaller than col2 + group
+            if ((running_count + col2[0].length) <= (filters_count - running_count)) {
+                running_count += col2[0].length;
+                col1.push(col2.shift());
+            } else {
+                break;
+            }
+        }
+
+        [].push.call(col1.length <= col2.length ? col1 : col2, {
+            name: "Custom Filters",
+            filters: [new openerp.web.search.FilterGroup([
+                {attrs: {string: "Custom 0"}},
+                {attrs: {string: "Custom 1"}},
+                {attrs: {string: "Custom 2"}}
+            ], this)],
+            length: 3
+        });
+
+        return $.when(
+            this.render_column(col1, $('<div>').appendTo($drawer)),
+            this.render_column(col2, $('<div>').appendTo($drawer)));
+    },
+    render_column: function (column, $el) {
+        return $.when.apply(null, _(column).map(function (group) {
+            $('<h3>').text(group.name).appendTo($el);
+            return $.when.apply(null,
+                _(group.filters).invoke('appendTo', $el));
+        }));
+    },
     /**
      * Sets up search view's view-wide auto-completion widget
      */
@@ -246,56 +311,41 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      *
      * @param {Array} items a list of nodes to convert to widgets
      * @param {Object} fields a mapping of field names to (ORM) field attributes
-     * @returns Array
+     * @param {String} [group_name] name of the group to put the new controls in
      */
-    make_widgets: function (items, fields) {
-        var rows = [],
-            row = [];
-        rows.push(row);
+    make_widgets: function (items, fields, group_name) {
+        group_name = group_name || null;
+        if (!(group_name in this.controls)) {
+            this.controls[group_name] = [];
+        }
+        var self = this, group = this.controls[group_name];
         var filters = [];
         _.each(items, function (item) {
             if (filters.length && item.tag !== 'filter') {
-                row.push(
-                    new openerp.web.search.FilterGroup(
-                        filters, this));
+                group.push(new openerp.web.search.FilterGroup(filters, this));
                 filters = [];
             }
 
-            if (item.tag === 'newline') {
-                row = [];
-                rows.push(row);
-            } else if (item.tag === 'filter') {
-                if (!this.has_focus) {
-                    item.attrs.default_focus = '1';
-                    this.has_focus = true;
-                }
-                filters.push(
-                    new openerp.web.search.Filter(
-                        item, this));
-            } else if (item.tag === 'separator') {
-                // a separator is a no-op
-            } else {
-                if (item.tag === 'group') {
-                    // TODO: group and field should be fetched from registries, maybe even filters
-                    row.push(
-                        new openerp.web.search.Group(
-                            item, this, fields));
-                } else if (item.tag === 'field') {
-                    if (!this.has_focus) {
-                        item.attrs.default_focus = '1';
-                        this.has_focus = true;
-                    }
-                    row.push(
-                        this.make_field(
-                            item, fields[item['attrs'].name]));
-                }
+            switch (item.tag) {
+            case 'separator': case 'newline':
+                break;
+            case 'filter':
+                filters.push(new openerp.web.search.Filter(item, this));
+                break;
+            case 'group':
+                self.make_widgets(item.children, fields, item.attrs.string);
+                break;
+            case 'field':
+                group.push(this.make_field(item, fields[item['attrs'].name]));
+                // filters
+                self.make_widgets(item.children, fields, group_name);
+                break;
             }
         }, this);
-        if (filters.length) {
-            row.push(new openerp.web.search.FilterGroup(filters, this));
-        }
 
-        return rows;
+        if (filters.length) {
+            group.push(new openerp.web.search.FilterGroup(filters, this));
+        }
     },
     /**
      * Creates a field for the provided field descriptor item (which comes
@@ -334,15 +384,15 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         }
 
         this.make_widgets(
-                data.fields_view['arch'].children,
-                data.fields_view.fields);
+            data.fields_view['arch'].children,
+            data.fields_view.fields);
 
         // load defaults
-        return $.when.apply(null, _(this.inputs).invoke('facet_for_defaults', this.defaults))
-            .then(function () {
-                self.vs.searchQuery.reset(_(arguments).compact());
-                self.ready.resolve();
-        });
+        return $.when(
+                this.setup_stuff_drawer(),
+                $.when.apply(null, _(this.inputs).invoke('facet_for_defaults', this.defaults))
+                    .then(function () { self.vs.searchQuery.reset(_(arguments).compact()); }))
+            .then(function () { self.ready.resolve(); })
     },
     reload_managed_filters: function() {
         var self = this;
@@ -717,6 +767,10 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
         this._super(view);
         this.filters = filters;
     },
+    start: function () {
+        this.$element.on('click', 'li', this.proxy('toggle_filter'));
+        return $.when(null);
+    },
     facet_for_defaults: function (defaults) {
         var fs = _(this.filters).filter(function (f) {
             return f.attrs && f.attrs.name && !!defaults[f.attrs.name];
@@ -769,6 +823,38 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
         return _.extend(new openerp.web.CompoundDomain(), {
             __domains: domains
         });
+    },
+    toggle_filter: function (e) {
+        var self = this, fs;
+        var filter = this.filters[$(e.target).index()];
+
+        var facet = this.view.vs.searchQuery.detect(function (f) {
+            return f.get('field') === self; });
+        if (facet) {
+            fs = facet.get('json');
+            this.view.vs.searchQuery.remove(facet);
+
+            if (_.include(fs, filter)) {
+                fs = _.without(fs, filter);
+            } else {
+                fs.push(filter);
+            }
+            if (_(fs).isEmpty()) {
+                this.view.vs.searchBox.renderFacets();
+                return;
+            }
+        } else {
+            fs = [filter];
+        }
+
+        this.view.vs.searchQuery.add({
+            category: 'q',
+            value: _(fs).map(function (f) {
+                return f.attrs.string || f.attrs.name }).join(' | '),
+            json: fs,
+            field: this,
+            app: this.view.vs
+        });
     }
 });
 openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.web.search.Filter# */{
@@ -809,17 +895,6 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
     init: function (view_section, field, view) {
         this._super(view);
         this.load_attrs(_.extend({}, field, view_section.attrs));
-        this.filters = new openerp.web.search.FilterGroup(_.compact(_.map(
-            view_section.children, function (filter_node) {
-                if (filter_node.attrs.string &&
-                        typeof console !== 'undefined' && console.debug) {
-                    console.debug("Filter-in-field with a 'string' attribute "
-                                + "in view", view);
-                }
-                delete filter_node.attrs.string;
-                return new openerp.web.search.Filter(
-                    filter_node, view);
-        })), view);
     },
     facet_for: function (value) {
         return $.when(new VS.model.SearchFacet({
