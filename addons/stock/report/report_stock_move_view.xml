@@ -4,8 +4,9 @@
 
     <menuitem
         id="stock.next_id_61"
-        name="Reporting"
-        parent="stock.menu_stock_root"/>
+        name="Warehouse"
+        sequence="15"
+        parent="base.menu_reporting"/>
 
     <record id="view_stock_tree" model="ir.ui.view">
         <field name="name">report.stock.move.tree</field>
@@ -261,7 +262,7 @@
         <field name="help">Inventory Analysis allows you to easily check and analyse your company stock levels. Sort and group by selection criteria in order to better analyse and manage your company  activities.</field>
     </record>
     <menuitem action="action_stock_inventory_report"
-        id="menu_action_stock_inventory_report" 
+        id="menu_action_stock_inventory_report"
         parent="next_id_61" sequence="4"/>
 
 

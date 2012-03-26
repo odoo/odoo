@@ -6,8 +6,8 @@
                   groups="group_stock_manager,group_stock_user" sequence="5"
                   web_icon="images/warehouse.png"
                   web_icon_hover="images/warehouse-hover.png"/>
-        <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1"/>
-        <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="2" groups="base.group_extended"/>
+        <menuitem id="menu_stock_warehouse_mgmt" name="Receive/Deliver By Orders" parent="menu_stock_root" sequence="1"/>
+        <menuitem id="menu_stock_products_moves" name="Receive/Deliver Products" parent="menu_stock_root" sequence="2" groups="base.group_extended"/>
         <menuitem id="menu_stock_product" name="Products" parent="menu_stock_root" sequence="6"/>
         <menuitem name="Products by Category" id="menu_product_by_category_stock_form" action="product.product_category_action"
            parent="stock.menu_stock_product" sequence="0"/>
@@ -406,7 +406,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_production_lot_tree"/>
             <field name="search_view_id" ref="search_product_lot_filter" />
-            <field name="context">{"search_default_available":1}</field>
+            <field name="context">{}</field>
             <field name="help">This is the list of all the production lots (serial numbers) you recorded. When you select a lot, you can get the upstream or downstream traceability of the products contained in lot. By default, the list is filtred on the serial numbers that are available in your warehouse but you can uncheck the 'Available' button to get all the lots you produced, received or delivered to customers.</field>
         </record>
         <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
@@ -432,8 +432,8 @@
                     <field name="picking_id"/>
                     <field name="location_id" />
                     <field name="location_dest_id" />
-                    <field name="create_date"/>
-                    <field name="date" string="Date"/>
+                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="date" string="Date" groups="base.group_no_one"/>
                     <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
                 </tree>
@@ -456,8 +456,8 @@
                     <field name="picking_id"/>
                     <field name="location_id" />
                     <field name="location_dest_id" />
-                    <field name="create_date" />
-                    <field name="date" string="Date"/>
+                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="date" string="Date" groups="base.group_no_one"/>
                      <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
                 </tree>
@@ -1060,7 +1060,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address', 'search_default_confirmed': 1, 'search_default_available': 1}</field>
+            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address'}</field>
             <field name="search_view_id" ref="view_picking_out_search"/>
             <field name="help">This is the list of all delivery orders that have to be prepared, according to your different sales orders and your logistics rules.</field>
         </record>
@@ -1278,7 +1278,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','in')]</field>
-            <field name="context">{'default_type': 'in', 'contact_display': 'partner_address',"search_default_available":1}</field>
+            <field name="context">{'default_type': 'in', 'contact_display': 'partner_address'}</field>
             <field name="search_view_id" ref="view_picking_in_search"/>
             <field name="help">The Incoming Shipments is the list of all orders you will receive from your suppliers. An incoming shipment contains a list of products to be received according to the original purchase order. You can validate the shipment totally or partially.</field>
         </record>
@@ -1370,7 +1370,7 @@
                     <field name="name"/>
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
-                    <field name="create_date" invisible="1"/>
+                    <field name="create_date" invisible="1" groups="base.group_no_one"/>
                     <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -1397,7 +1397,7 @@
                         states="draft,assigned,confirmed,done"/>
                     <field name="location_id"/>
                     <field name="location_dest_id"/>
-                    <field name="date"/>
+                    <field name="date" groups="base.group_no_one"/>
                     <field name="date_expected"/>
                     <field name="state"/>
                     <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
@@ -1443,8 +1443,8 @@
 
                     <group colspan="2" col="2">
                         <separator string="Dates" colspan="2" />
-                        <field name="create_date" groups="base.group_extended"/>
-                        <field name="date" groups="base.group_extended"/>
+                        <field name="create_date" groups="base.group_no_one" />
+                        <field name="date" groups="base.group_no_one" />
                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                     </group>
 
@@ -1494,7 +1494,7 @@
                         <field name="product_id"/>
                         <field name="location_id" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
                         <field name="address_id" string="Partner" context="{'contact_display':'partner'}" filter_domain="[('picking_id.address_id','ilike',self)]"/>
-                        <field name="date"/>
+                        <field name="date" groups="base.group_no_one"/>
                         <field name="origin"/>
                         <field name="prodlot_id"/>
                     </group>
@@ -1510,7 +1510,7 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock_effects-object-colorize" string="State" domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical"/>
-                        <filter string="Creation" name="groupby_create_date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
+                        <filter string="Creation" name="groupby_create_date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                         <filter string="Expected" name="groupby_date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
@@ -1524,7 +1524,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
-            <field name="context">{'search_default_ready':1}</field>
+            <field name="context">{}</field>
             <field name="help">This menu gives you the full traceability of inventory operations on a specific product. You can filter on the product to see all the past or future movements for the product.</field>
         </record>
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3"/>
@@ -1568,7 +1568,7 @@
                         groups="base.group_extended"
                         icon="terp-stock_effects-object-colorize"
                         states="draft,assigned,confirmed,done"/>
-                    <field name="date"/>
+                    <field name="date" groups="base.group_no_one"/>
                     <field name="state"/>
                     <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
                     <button name="action_done" string="Receive" type="object" states="confirmed,assigned" icon="gtk-go-forward"/>
@@ -1588,7 +1588,7 @@
                     <field name="product_id"/>
                     <field name="product_qty" />
                     <field name="product_uom" string="UoM"/>
-                    <field name="date"/>
+                    <field name="date" groups="base.group_no_one" />
                     <button name="action_done" states="confirmed,assigned" string="Receive" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
@@ -1631,8 +1631,8 @@
 
                     <group colspan="2" col="2">
                         <separator string="Dates" colspan="2" />
-                        <field name="create_date" groups="base.group_extended"/>
-                        <field name="date" groups="base.group_extended"/>
+                        <field name="create_date" groups="base.group_no_one" />
+                        <field name="date" groups="base.group_no_one" />
                         <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                     </group>
 
@@ -1691,8 +1691,8 @@
                         <separator orientation="vertical"/>
                         <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" />
+                        <separator orientation="vertical" groups="base.group_no_one"/>
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" groups="base.group_no_one"/>
                     </group>
                 </search>
             </field>
@@ -1724,8 +1724,8 @@
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" />
+                        <separator orientation="vertical" groups="base.group_no_one"/>
+                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" groups="base.group_no_one"/>
                     </group>
                 </search>
             </field>
@@ -1739,7 +1739,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'default_type\':\'in\', \'search_default_receive\':1, \'search_default_available\':1, \'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
+            <field name="context" eval="'{\'default_type\':\'in\', \'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
             <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
             <field name="help">Here you can receive individual products, no matter what purchase order or picking order they come from. You will find the list of all products you are waiting for. Once you receive an order, you can filter based on the name of the supplier or the purchase order reference. Then you can confirm all products received using the buttons on the right of each line.</field>
         </record>
@@ -1875,7 +1875,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'default_type\':\'out\', \'search_default_receive\':1,\'search_default_available\':1, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
+            <field name="context" eval="'{\'default_type\':\'out\', \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
             <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
             <field name="help">You will find in this list all products you have to deliver to your customers. You can process the deliveries directly from this list using the buttons on the right of each line. You can filter the products to deliver by customer, products or sale order (using the Origin field).</field>
         </record>
