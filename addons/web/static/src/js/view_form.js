@@ -652,7 +652,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 // ignore fields which are empty, invisible, readonly, o2m
                 // or m2m
                 if (!value
-                        || field.invisible
+                        || field.get('invisible')
                         || field.get("readonly")
                         || field.field.type === 'one2many'
                         || field.field.type === 'many2many') {
@@ -806,6 +806,8 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
             $tag.children().each(function() {
                 self.process($(this));
             });
+            self.handle_invisible($tag, $tag.attr("invisible"));
+            $tag.removeAttr("invisible");
             return $tag;
         }
     },
@@ -826,7 +828,8 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
             field_orm = this.fvg.fields[name],
             field_string = $field.attr('string') || field_orm.string || '',
             field_help = $field.attr('help') || field_orm.help || '',
-            field_colspan = parseInt($field.attr('colspan'), 10);
+            field_colspan = parseInt($field.attr('colspan'), 10),
+            field_modifiers = JSON.parse($field.attr('modifiers') || '{}');
         if ($field.attr('nolabel') !== '1') {
             $field.attr('nolabel', '1');
             var $label = this.$form.find('label[for="' + name + '"]');
@@ -838,6 +841,9 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
                     'string' : field_string,
                     'help' :  field_help
                 });
+                if (field_modifiers.invisible !== undefined) {
+                    $label.attr("invisible", JSON.stringify(field_modifiers.invisible));
+                }
                 $label.insertBefore($field);
                 if (field_colspan > 1) {
                     $field.attr('colspan', field_colspan - 1);
@@ -948,6 +954,7 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         _.each(children, function(el) {
             self.process($(el));
         });
+        this.handle_invisible($new_group, $group.attr("invisible"));
         return $new_group;
     },
     process_notebook: function($notebook) {
@@ -962,6 +969,7 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
                 $dst = self.legacy_mode ? $new_page.find('group:first') : $new_page;
             $page.children().appendTo($dst);
             $page.before($new_page).remove();
+            self.handle_invisible($new_page, $page.attr("invisible"));
         });
         var $new_notebook = $(QWeb.render('FormRenderingNotebook', { pages : pages }));
         $notebook.children().appendTo($new_notebook);
@@ -970,11 +978,13 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
             self.process($(this));
         });
         $new_notebook.tabs();
+        this.handle_invisible($new_notebook, $notebook.attr("invisible"));
         return $new_notebook;
     },
     process_separator: function($separator) {
         var $new_separator = $(QWeb.render('FormRenderingSeparator', $separator.getAttributes()));
         $separator.before($new_separator).remove();
+        this.handle_invisible($new_separator, $separator.attr("invisible"));
         return $new_separator;
     },
     process_label: function($label) {
@@ -990,12 +1000,19 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         dict.align = align;
         var $new_label = $(QWeb.render('FormRenderingLabel', dict));
         $label.before($new_label).remove();
+        this.handle_invisible($new_label, $label.attr("invisible"));
         return $new_label;
     },
     process_button: function($button) {
         this.to_init.push($button);
         return $button;
-    }
+    },
+    handle_invisible: function($element, str_domain) {
+        if (str_domain === undefined)
+            return;
+        var parsed = JSON.parse(str_domain);
+        new openerp.web.form.InvisibilityChanger(this.view, this.view, parsed, $element);
+    },
 });
 
 openerp.web.FormDialog = openerp.web.Dialog.extend({
@@ -1155,7 +1172,47 @@ openerp.web.form.compute_domain = function(expr, fields) {
     return _.all(stack, _.identity);
 };
 
-openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.Widget# */{
+/**
+ * Must be applied over an class already possessing the GetterSetterMixin.
+ *
+ * Apply the result of the "invisible" domain to this.$element.
+ */
+openerp.web.form.InvisibilityChangerMixin = {
+    init: function(field_manager, invisible_domain) {
+        this._ic_field_manager = field_manager
+        this._ic_invisible_modifier = invisible_domain;
+        this._ic_field_manager.on("view_content_has_changed", this, function() {
+            var result = this._ic_invisible_modifier === undefined ? false :
+                openerp.web.form.compute_domain(this._ic_invisible_modifier, this._ic_field_manager.fields);
+            this.set({"invisible": result});
+        });
+        this.set({invisible: this._ic_invisible_modifier === true});
+    },
+    start: function() {
+        var check_visibility = function() {
+            if (this.get("invisible")) {
+                this.$element.hide();
+            } else {
+                this.$element.show();
+            }
+        };
+        this.on("change:invisible", this, check_visibility);
+        _.bind(check_visibility, this)();
+    },
+};
+
+openerp.web.form.InvisibilityChanger = nova.Class.extend(_.extend({}, nova.GetterSetterMixin, openerp.web.form.InvisibilityChangerMixin, {
+    init: function(parent, field_manager, invisible_domain, $element) {
+        this.setParent(parent);
+        nova.GetterSetterMixin.init.call(this);
+        openerp.web.form.InvisibilityChangerMixin.init.call(this, field_manager, invisible_domain);
+        this.$element = $element;
+        this.start();
+    },
+}));
+
+openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.Widget# */
+                                                    _.extend({}, openerp.web.form.InvisibilityChangerMixin, {
     /**
      * @constructs openerp.web.form.Widget
      * @extends openerp.web.Widget
@@ -1164,32 +1221,35 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
      * @param node
      */
     init: function(view, node) {
+        this._super(view);
         this.view = view;
         this.node = node;
         this.modifiers = JSON.parse(this.node.attrs.modifiers || '{}');
-        this.always_invisible = (this.modifiers.invisible && this.modifiers.invisible === true);
+        openerp.web.form.InvisibilityChangerMixin.init.call(this, view, this.modifiers.invisible);
 
-        this._super(view);
-
-        this.invisible = this.modifiers['invisible'] === true;
         this.view.on("view_content_has_changed", this, this.process_modifiers);
     },
+    start: function() {
+        this._super();
+        openerp.web.form.InvisibilityChangerMixin.start.call(this);
+    },
     destroy: function() {
-        this._super.apply(this, arguments);
         $.fn.tipsy.clear();
+        this._super.apply(this, arguments);
     },
     process_modifiers: function() {
         var compute_domain = openerp.web.form.compute_domain;
         var to_set = {};
         for (var a in this.modifiers) {
-            var val = compute_domain(this.modifiers[a], this.view.fields);
-            this[a] = val;
-            to_set[a] = val;
+            if (!_.include(["invisible"], a)) {
+                var val = compute_domain(this.modifiers[a], this.view.fields);
+                this[a] = val;
+                to_set[a] = val;
+            }
         }
         this.set(to_set);
     },
     update_dom: function() {
-        this.$element.toggle(!this.invisible);
     },
     do_attach_tooltip: function(widget, trigger, options) {
         widget = widget || this;
@@ -1261,7 +1321,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         }
         return final_domain;
     }
-});
+}));
 
 openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     template: 'WidgetButton',
