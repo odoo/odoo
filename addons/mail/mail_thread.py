@@ -148,10 +148,8 @@ class mail_thread(osv.osv):
         # parse message to get requested users
         user_to_push_ids += self.message_parse_users(cr, uid, [msg_id], vals['body_text'], context=context)
         # push to need_action_user_ids
-        if hasattr(self, 'needaction_get_records_user_ids'):
-            user_to_push_ids += self.needaction_get_records_user_ids(cr, uid, [thread_id], context=context)
-        else:
-            user_to_push_ids = []
+        if hasattr(self, 'get_needaction_user_ids'):
+            user_to_push_ids += self.get_needaction_user_ids(cr, uid, [thread_id], context=context)[thread_id]
         # remove duplicate entries
         user_to_push_ids = list(set(user_to_push_ids))
         # effectively push message to users
