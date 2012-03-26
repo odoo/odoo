@@ -116,6 +116,76 @@ class stock_picking(osv.osv):
         if picking.purchase_id:
             purchase_obj.write(cursor, user, [picking.purchase_id.id], {'invoice_id': invoice_id,})
         return super(stock_picking, self)._invoice_hook(cursor, user, picking, invoice_id)
+ 
+    def action_invoice_create(self, cr, uid, ids, journal_id=False, group=False, type='in_invoice', context=None):
+        if context is None:
+            context = {}
+        invoice_obj = self.pool.get('account.invoice')
+        picking_obj = self.pool.get('stock.picking')
+        invoice_line_obj = self.pool.get('account.invoice.line')
+        fiscal_position_obj = self.pool.get('account.fiscal.position')
+        order_line_obj = self.pool.get('purchase.order.line')
+
+        result = super(stock_picking, self).action_invoice_create(cr, uid,
+                ids, journal_id=journal_id, group=group, type=type,
+                context=context)
+        picking_ids = result.keys()
+        invoice_ids = result.values()
+        invoices = {}
+        for invoice in invoice_obj.browse(cr, uid, invoice_ids,
+                context=context):
+            invoices[invoice.id] = invoice
+
+        for picking in picking_obj.browse(cr, uid, picking_ids,
+                context=context):
+            if not picking.purchase_id or picking.backorder_id:
+                continue
+            purchase_lines = picking.purchase_id.order_line
+            invoice_created = invoices[result[picking.id]]
+
+            if picking.purchase_id.fiscal_position:
+                invoice_obj.write(cr, uid, [invoice_created.id], {'fiscal_position': picking.purchase_id.fiscal_position.id}, context=context)
+
+            for purchase_line in purchase_lines:
+                if purchase_line.product_id.type == 'service' and purchase_line.invoiced == False:
+                    if not type:
+                        type = context.get('inv_type', False)
+                    if group:
+                        name = picking.name + '-' + purchase_line.name
+                    else:
+                        name = purchase_line.name
+                    if type in ('in_invoice', 'in_refund'):
+                        account_id = purchase_line.product_id.product_tmpl_id.\
+                                property_account_expense.id
+                        if not account_id:
+                            account_id = purchase_line.product_id.categ_id.\
+                                    property_account_expense_categ.id
+                    else:
+                        account_id = purchase_line.product_id.product_tmpl_id.\
+                                property_account_income.id
+                        if not account_id:
+                            account_id = purchase_line.product_id.categ_id.\
+                                    property_account_income_categ.id
+
+                    price_unit = purchase_line.price_unit
+                    tax_id = purchase_line.taxes_id
+                    tax_ids = map(lambda x: x.id, tax_id)
+
+                    account_id = fiscal_position_obj.map_account(cr, uid, picking.purchase_id.partner_id.property_account_position, account_id)
+                    invoice = invoices[result[picking.id]]
+                    invoice_line_id = invoice_line_obj.create(cr, uid, {
+                        'name': name,
+                        'invoice_id': invoice.id,
+                        'uos_id': purchase_line.product_uom.id,
+                        'product_id': purchase_line.product_id.id,
+                        'account_id': account_id,
+                        'price_unit': price_unit,
+                        'quantity': purchase_line.product_qty,
+                        'invoice_line_tax_id': [(6, 0, tax_ids)],
+                        'notes':purchase_line.notes
+                    }, context=context)
+                    purchase_line.write({'invoiced':  True,  'invoice_lines': [(6, 0,  [invoice_line_id])]})
+        return result
 
 stock_picking()
 
