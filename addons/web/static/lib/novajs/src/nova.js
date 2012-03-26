@@ -28,7 +28,44 @@ nova = (function() {
     lib.internal = {};
 
     /*
-     * (Almost) unmodified John Resig's inheritance
+     * (Almost) unmodified John Resig's inheritance.
+     *
+     * Defines The Class object. That object can be used to define and inherit classes using
+     * the extend() method.
+     *
+     * Example:
+     *
+     * var Person = nova.Class.extend({
+     *  init: function(isDancing){
+     *     this.dancing = isDancing;
+     *   },
+     *   dance: function(){
+     *     return this.dancing;
+     *   }
+     * });
+     *
+     * The init() method act as a constructor. This class can be instancied this way:
+     *
+     * var person = new Person(true);
+     * person.dance();
+     *
+     * The Person class can also be extended again:
+     *
+     * var Ninja = Person.extend({
+     *   init: function(){
+     *     this._super( false );
+     *   },
+     *   dance: function(){
+     *     // Call the inherited version of dance()
+     *     return this._super();
+     *   },
+     *   swingSword: function(){
+     *     return true;
+     *   }
+     * });
+     *
+     * When extending a class, each re-defined method can use this._super() to call the previous
+     * implementation of that method.
      */
     /* Simple JavaScript Inheritance
      * By John Resig http://ejohn.org/
