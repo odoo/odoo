@@ -874,6 +874,9 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
     },
     process_group: function($group) {
         var self = this;
+        if ($group.parent().is('.oe_form_group_cell')) {
+            $group.parent().addClass('oe_form_group_nested');
+        }
         $group.children('field').each(function() {
             self.preprocess_field($(this));
         });
