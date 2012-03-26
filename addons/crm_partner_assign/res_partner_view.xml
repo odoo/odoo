@@ -33,7 +33,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="res_partner_activation_config_mi" parent="base.menu_config_address_book" action="res_partner_activation_act"/>
+        <menuitem id="res_partner_activation_config_mi" parent="base.menu_config_address_book" action="res_partner_activation_act" groups="base.group_no_one"/>
 
     <!--Partner Grade -->
 
@@ -69,7 +69,7 @@
         <field name="view_type">form</field>
     </record>
     <menuitem action="res_partner_grade_action" id="menu_res_partner_grade_action"
-        groups="base.group_extended"
+        groups="base.group_no_one"
         parent="base.menu_crm_config_lead" />
 
     <!-- Partner form -->
