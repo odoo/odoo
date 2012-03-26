@@ -154,9 +154,9 @@ class event_event(osv.osv):
         return res
     
     def _subscribe_fnc(self, cr, uid, ids, fields, args, context=None):
-        """Get Confirm or uncofirm register value.
+        """Get Subscribe or Unsubscribe registration value.
         @param ids: List of Event registration type's id
-        @param fields: List of function fields(register_current and register_prospect).
+        @param fields: List of function fields(subscribe).
         @param context: A standard dictionary for contextual values
         @return: Dictionary of function fields value.
         """
@@ -167,10 +167,8 @@ class event_event(osv.osv):
             if not curr_reg_id:res[event.id] = False
             if curr_reg_id:
                 for reg in register_pool.browse(cr,uid,curr_reg_id,context=context):
-                    if not reg.subscribe:
-                        res[event.id]=False
-                    else:
-                        res[event.id]=True
+                    res[event.id] = False
+                    if reg.subscribe:res[event.id]= True
         return res 
 
     _columns = {
@@ -229,26 +227,18 @@ class event_event(osv.osv):
             
             
         else:
-            register_pool.write(cr, uid, curr_reg_id,{'state':'open','subscribe':True,
-                            'event_id':ids[0],
-                            })
-        if isinstance(curr_reg_id, (int, long)):
-            curr_reg_id = [curr_reg_id]
+            register_pool.write(cr, uid, curr_reg_id,{'subscribe':True})
+        if isinstance(curr_reg_id, (int, long)):curr_reg_id = [curr_reg_id]
         register_pool.confirm_registration(cr,uid,curr_reg_id,context)
-        self.write(cr,uid,ids,{'subscribe':True})
         return True
     
     def unsubscribe_to_event(self,cr,uid,ids,context=None):
         register_pool = self.pool.get('event.registration')
         curr_reg_id = register_pool.search(cr,uid,[('user_id','=',uid),('event_id','=',ids[0])])
         if curr_reg_id:
-            if isinstance(curr_reg_id, (int, long)):
-                curr_reg_id = [curr_reg_id]
-            register_pool.write(cr, uid, curr_reg_id,{'event_id':ids[0],
-                                                      'subscribe':False
-                                                     })
+            if isinstance(curr_reg_id, (int, long)):curr_reg_id = [curr_reg_id]
+            register_pool.write(cr, uid, curr_reg_id,{'subscribe':False})
             register_pool.button_reg_cancel(cr,uid,curr_reg_id,context)
-            self.write(cr,uid,ids,{'subscribe':False})
         return True
 
     def _check_closing_date(self, cr, uid, ids, context=None):
