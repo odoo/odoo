@@ -2,8 +2,9 @@
 <openerp>
     <data>
         <!-- Root Menus -->
-        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="9"/>
+
         <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_no_one" sequence="45"/>
+        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="30"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
         <!-- Employee View -->
@@ -549,7 +550,7 @@
         <menuitem
             id="menu_action_hr_contribution_register_form"
             action="action_contribution_register_form"
-            parent="payroll_configure" 
+            parent="payroll_configure"
             sequence="14"
         />
 

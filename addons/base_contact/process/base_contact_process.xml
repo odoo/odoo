@@ -17,7 +17,7 @@
 	-->
 
 		<record id="process_node_contacts0" model="process.node">
-			<field name="menu_id" ref="base_contact.menu_partner_contact_form"/>
+			<!--<field name="menu_id" ref="base_contact.menu_partner_contact_form"/> -->
 			<field name="model_id" ref="base_contact.model_res_partner_contact"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;People you work with.&quot;&quot;&quot;" name="note"/>
@@ -37,7 +37,7 @@
 		</record>
 
 		<record id="process_node_addresses0" model="process.node">
-			<field name="menu_id" ref="base.menu_partner_address_form"/>
+		<!--	<field name="menu_id" ref="base.menu_partner_address_form"/> -->
 			<field name="model_id" ref="base.model_res_partner_address"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Working and private addresses.&quot;&quot;&quot;" name="note"/>

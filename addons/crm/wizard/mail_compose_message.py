@@ -50,7 +50,7 @@ class mail_compose_message(osv.osv_memory):
                     'subject' : data.name or False,
                     'email_to' : data.email_from or False,
                     'email_from' : user.user_email or tools.config.get('email_from', False),
-                    'body_text' : '\n' + tools.ustr(user.signature),
+                    'body_text' : '\n' + tools.ustr(user.signature or ''),
                     'email_cc' : tools.ustr(data.email_cc or ''),
                     'model': model,
                     'res_id': res_id,

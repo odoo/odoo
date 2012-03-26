@@ -39,9 +39,9 @@
                 <th align="left">Your Reference</th>
             </tr>
             <tr class="oe_edi_data_row">
-                <td align="left"><t t-esc="doc.name"/></td>
-                <td align="left"><t t-esc="doc.date_invoice"/></td>
-                <td align="left"><t t-esc="doc.partner_ref"/></td>
+                <td align="left"><t t-if="doc.name" t-esc="doc.name"/></td>
+                <td align="left"><t t-if="doc.date_invoice" t-esc="doc.date_invoice"/></td>
+                <td align="left"><t t-if="doc.partner_ref" t-esc="doc.partner_ref"/></td>
             </tr>
         </table>
         <p/>

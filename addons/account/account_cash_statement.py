@@ -279,11 +279,11 @@ class account_cash_statement(osv.osv):
                 raise osv.except_osv(_('Error !'), (_('User %s does not have rights to access %s journal !') % (statement.user_id.name, statement.journal_id.name)))
 
             if statement.name and statement.name == '/':
+                c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
                 if statement.journal_id.sequence_id:
-                    c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
                     st_number = obj_seq.next_by_id(cr, uid, statement.journal_id.sequence_id.id, context=c)
                 else:
-                    st_number = obj_seq.next_by_code(cr, uid, 'account.cash.statement')
+                    st_number = obj_seq.next_by_code(cr, uid, 'account.cash.statement', context=c)
                 vals.update({
                     'name': st_number
                 })

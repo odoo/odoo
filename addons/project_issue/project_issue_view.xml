@@ -94,7 +94,7 @@
                         </page>
                         <page string="Communication &amp; History" groups="base.group_extended">
                             <group colspan="4">
-                            <field colspan="4" name="email_cc" string="Global CC" widget="url"/>
+                            <field colspan="4" name="email_cc" string="Global CC" widget="email"/>
                             </group>
                             <field name="message_ids" colspan="4" nolabel="1" mode="tree" readonly="1">
                                 <tree string="History">
@@ -116,23 +116,23 @@
                                 name="%(mail.action_email_compose_message_wizard)d"
                                 icon="terp-mail-message-new" type="action"/>
                         </page>
-                           <page string="Extra Info" groups="base.group_extended">
+                           <page string="Extra Info" groups="base.group_no_one">
                             <group col="2" colspan="2">
-                            <separator colspan="2" string="Date"/>
-                            <field name="create_date"/>
-                            <field name="write_date" />
-                            <field name="date_closed"/>
-                            <field name="date_open"/>
-                            <field name="date_action_last"/>
+                                <separator colspan="2" string="Date"/>
+                               <field name="create_date"/>
+                                <field name="write_date" />
+                                <field name="date_closed"/>
+                                <field name="date_open"/>
+                                <field name="date_action_last"/>
                             </group>
                             <group colspan="2" col="2">
-                            <separator string="Statistics" colspan="2" col="2"/>
-                            <field name="day_open"/>
-                            <field name="day_close"/>
-                            <field name="working_hours_open" widget="float_time"/>
-                            <field name="working_hours_close" widget="float_time"/>
-                            <field name="inactivity_days"/>
-                            <field name="days_since_creation"/>
+                                <separator string="Statistics" colspan="2" col="2"/>
+                                <field name="day_open"/>
+                                <field name="day_close"/>
+                                <field name="working_hours_open" widget="float_time"/>
+                                <field name="working_hours_close" widget="float_time"/>
+                                <field name="inactivity_days"/>
+                                <field name="days_since_creation"/>
                             </group>
                             <group colspan="2" col="2">
                             <separator string="References" colspan="2"/>
@@ -152,7 +152,7 @@
             <field name="arch" type="xml">
                 <tree string="Issue Tracker Tree" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="id"/>
-                    <field name="create_date"/>
+                    <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
                     <field name="partner_id" groups="base.group_extended"/>
                     <field name="project_id" />
