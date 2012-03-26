@@ -134,18 +134,35 @@ nova = (function() {
     }).call(lib);
     // end of John Resig's code
 
+    /**
+     * Mixin to express the concept of destroying an object.
+     * When an object is destroyed, it should release any resource
+     * it could have reserved before.
+     */
     lib.DestroyableMixin = {
         init: function() {
             this.__destroyableDestroyed = false;
         },
+        /**
+         * Returns true if destroy() was called on the current object.
+         */
         isDestroyed : function() {
             return this.__destroyableDestroyed;
         },
+        /**
+         * Inform the object it should destroy itself, releasing any
+         * resource it could have reserved.
+         */
         destroy : function() {
             this.__destroyableDestroyed = true;
         }
     };
 
+    /**
+     * Mixin to structure objects' life-cycles folowing a parent-children
+     * relationship. Each object can a have a parent and multiple children.
+     * When an object is destroyed, all its children are destroyed too.
+     */
     lib.ParentedMixin = _.extend({}, lib.DestroyableMixin, {
         __parentedMixin : true,
         init: function() {
@@ -153,6 +170,14 @@ nova = (function() {
             this.__parentedChildren = [];
             this.__parentedParent = null;
         },
+        /**
+         * Set the parent of the current object. When calling this method, the
+         * parent will also be informed and will return the current object
+         * when its getChildren() method is called. If the current object did
+         * already have a parent, it is unregistered before, which means the
+         * previous parent will not return the current object anymore when its
+         * getChildren() method is called.
+         */
         setParent : function(parent) {
             if (this.getParent()) {
                 if (this.getParent().__parentedMixin) {
@@ -165,9 +190,15 @@ nova = (function() {
                 parent.__parentedChildren.push(this);
             }
         },
+        /**
+         * Return the current parent of the object (or null).
+         */
         getParent : function() {
             return this.__parentedParent;
         },
+        /**
+         * Return a list of the children of the current object.
+         */
         getChildren : function() {
             return _.clone(this.__parentedChildren);
         },
