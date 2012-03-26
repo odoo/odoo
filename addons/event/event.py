@@ -215,28 +215,21 @@ class event_event(osv.osv):
     def subscribe_to_event(self,cr,uid,ids,context=None):
         register_pool = self.pool.get('event.registration')
         user_pool = self.pool.get('res.users')
-        curr_reg_id = register_pool.search(cr,uid,[('user_id','=',uid),('event_id','=',ids[0])])
         user = user_pool.browse(cr,uid,uid,context)
+        curr_reg_id = register_pool.search(cr,uid,[('user_id','=',user.id),('event_id','=',ids[0])])
         if not curr_reg_id:
-            curr_reg_id = register_pool.create(cr, uid, {'event_id':ids[0],
-                                                         'email':user.user_email,
-                                                         'name':user.name,
-                                                         'user_id':uid,
-                                                         'subscribe':True})
-        else:
-            register_pool.write(cr, uid, curr_reg_id,{'subscribe':True})
+            curr_reg_id = register_pool.create(cr, uid, {'event_id':ids[0],'email':user.user_email,
+                                                         'name':user.name,'user_id':user.id,
+                                                         'subscribe':True
+                                                         })
         if isinstance(curr_reg_id, (int, long)):curr_reg_id = [curr_reg_id]
-        register_pool.confirm_registration(cr,uid,curr_reg_id,context)
-        return True
+        return register_pool.confirm_registration(cr,uid,curr_reg_id,context)
     
     def unsubscribe_to_event(self,cr,uid,ids,context=None):
         register_pool = self.pool.get('event.registration')
         curr_reg_id = register_pool.search(cr,uid,[('user_id','=',uid),('event_id','=',ids[0])])
-        if curr_reg_id:
-            if isinstance(curr_reg_id, (int, long)):curr_reg_id = [curr_reg_id]
-            register_pool.write(cr, uid, curr_reg_id,{'subscribe':False})
-            register_pool.button_reg_cancel(cr,uid,curr_reg_id,context)
-        return True
+        if isinstance(curr_reg_id, (int, long)):curr_reg_id = [curr_reg_id]
+        return register_pool.button_reg_cancel(cr,uid,curr_reg_id,context)
 
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
@@ -294,7 +287,6 @@ class event_registration(osv.osv):
     _defaults = {
         'nb_register': 1,
         'state': 'draft',
-        #'user_id': lambda self, cr, uid, ctx: uid,
     }
     _order = 'name, create_date desc'
 
@@ -304,7 +296,7 @@ class event_registration(osv.osv):
 
     def confirm_registration(self, cr, uid, ids, context=None):
         self.message_append(cr, uid, ids,_('State set to open'),body_text= _('Open'))
-        return self.write(cr, uid, ids, {'state': 'open'}, context=context)
+        return self.write(cr, uid, ids, {'state': 'open','subscribe':True}, context=context)
 
 
     def registration_open(self, cr, uid, ids, context=None):
@@ -331,7 +323,7 @@ class event_registration(osv.osv):
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
         self.message_append(cr, uid, ids,_('State set to Cancel'),body_text= _('Cancel'))
-        return self.write(cr, uid, ids, {'state': 'cancel'})
+        return self.write(cr, uid, ids, {'state': 'cancel','subscribe':False})
 
     def mail_user(self, cr, uid, ids, context=None):
         """
