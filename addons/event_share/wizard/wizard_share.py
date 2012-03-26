@@ -31,15 +31,16 @@ class share_wizard_event(osv.osv_memory):
     _inherit = "share.wizard"
     
     def _add_access_rights_for_share_group(self, cr, uid, group_id, mode, fields_relations, context=None):
-        print "Calling _add_access_rights_for_share_group.....!!!"
         """Adds access rights to group_id on object models referenced in ``fields_relations``,
            intersecting with access rights of current user to avoid granting too much rights
         """
         res = super(share_wizard_event, self)._add_access_rights_for_share_group(cr, uid, group_id, mode, fields_relations, context=context)
         access_model = self.pool.get('ir.model.access')
+        
         access_ids =  access_model.search(cr,uid,[('group_id','=',group_id)],context = context)
-        access_model.write(cr, uid, access_ids, {'perm_read': True, 'perm_write': True})
-        return res
+        for record in access_model.browse(cr,uid,access_ids,context = context):
+            if record.model_id.model == 'event.registration':
+                access_model.write(cr, uid, record.id, {'perm_read': True, 'perm_write': True,'perm_create':True})
 
 share_wizard_event()
 
