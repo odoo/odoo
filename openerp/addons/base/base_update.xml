@@ -85,7 +85,7 @@
                     <field name="name" readonly="1"/>
                     <newline/>
                     <group colspan="2" col="3">
-                        <group col="2" colspan="2">
+                        <group col="2" colspan="2" name="preferences">
                             <separator string="Preferences" colspan="2"/>
                             <field name="view" readonly="0"/>
                             <field name="context_lang" readonly="0"/>
@@ -128,11 +128,11 @@
                                 <!-- Second nested group to avoid misalignment with email prefs groups
                                     in simplified view -->
                                 <group colspan="7" col="7">
-                                    <group col="2" colspan="1">
+                                    <group col="2" colspan="1" name="avatar">
                                         <separator string="Avatar" colspan="2"/>
                                         <field name="avatar_mini" widget='image' nolabel="1" colspan="2" on_change="onchange_avatar_mini(avatar_mini)"/>
                                     </group>
-                                    <group col="3" colspan="2">
+                                    <group col="3" colspan="2" name="preferences">
                                         <separator string="Preferences" colspan="3"/>
                                         <field name="context_lang"/>
                                         <field name="context_tz"/>
