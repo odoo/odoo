@@ -30,6 +30,7 @@ import urllib
 import zipfile
 import zipimport
 
+import openerp
 import openerp.modules as addons
 import pooler
 import release
@@ -344,6 +345,7 @@ class module(osv.osv):
         if to_install_ids:
             self.button_install(cr, uid, to_install_ids, context=context)
 
+        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return dict(ACTION_DICT, name=_('Install'))
 
     def button_immediate_install(self, cr, uid, ids, context=None):

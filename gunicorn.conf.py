@@ -25,7 +25,6 @@ workers = 4
 
 # Some application-wide initialization is needed.
 on_starting = openerp.wsgi.core.on_starting
-when_ready = openerp.wsgi.core.when_ready
 pre_request = openerp.wsgi.core.pre_request
 post_request = openerp.wsgi.core.post_request
 

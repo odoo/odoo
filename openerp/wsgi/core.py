@@ -447,7 +447,7 @@ def start_server():
 
     The WSGI server can be shutdown with stop_server() below.
     """
-    threading.Thread(target=serve).start()
+    threading.Thread(name='WSGI server', target=serve).start()
 
 def stop_server():
     """ Initiate the shutdown of the WSGI server.
@@ -465,7 +465,7 @@ arbiter_pid = None
 def on_starting(server):
     global arbiter_pid
     arbiter_pid = os.getpid() # TODO check if this is true even after replacing the executable
-    #openerp.tools.cache = kill_workers_cache
+    openerp.multi_process = True # Yay!
     openerp.netsvc.init_logger()
     openerp.osv.osv.start_object_proxy()
     openerp.service.web_services.start_web_services()
@@ -481,11 +481,6 @@ def on_starting(server):
 The `web` module is provided by the addons found in the `openerp-web` project.
 Maybe you forgot to add those addons in your addons_path configuration."""
             _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
-
-# Install our own signal handler on the master process.
-def when_ready(server):
-    # Hijack gunicorn's SIGWINCH handling; we can choose another one.
-    signal.signal(signal.SIGWINCH, make_winch_handler(server))
 
 # Install limits on virtual memory and CPU time consumption.
 def pre_request(worker, req):
@@ -514,30 +509,9 @@ def post_request(worker, req, environ):
             'too high, rebooting the worker.')
         worker.alive = False # Commit suicide after the request.
 
-# Our signal handler will signal a SGIQUIT to all workers.
-def make_winch_handler(server):
-    def handle_winch(sig, fram):
-        server.kill_workers(signal.SIGQUIT) # This is gunicorn specific.
-    return handle_winch
-
 # SIGXCPU (exceeded CPU time) signal handler will raise an exception.
 def time_expired(n, stack):
     _logger.info('CPU time limit exceeded.')
     raise Exception('CPU time limit exceeded.') # TODO one of openerp.exception
-
-# Kill gracefuly the workers (e.g. because we want to clear their cache).
-# This is done by signaling a SIGWINCH to the master process, so it can be
-# called by the workers themselves.
-def kill_workers():
-    try:
-        os.kill(arbiter_pid, signal.SIGWINCH)
-    except OSError, e:
-        if e.errno == errno.ESRCH: # no such pid
-            return
-        raise
-
-class kill_workers_cache(openerp.tools.ormcache):
-    def clear(self, dbname, *args, **kwargs):
-        kill_workers()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

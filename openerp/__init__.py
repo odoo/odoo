@@ -45,5 +45,12 @@ import wizard
 import workflow
 import wsgi
 
+# Is the server running in multi-process mode (e.g. behind Gunicorn).
+# If this is True, the processes have to communicate some events,
+# e.g. database update or cache invalidation. Each process has also
+# its own copy of the data structure and we don't need to care about
+# locks between threads.
+multi_process = False
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
