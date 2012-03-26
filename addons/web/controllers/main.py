@@ -92,7 +92,7 @@ def concat_files(file_list, reader=None, intersperse=""):
     return files_concat, checksum.hexdigest()
 
 html_template = """<!DOCTYPE html>
-<html>
+<html style="height: 100%%">
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
