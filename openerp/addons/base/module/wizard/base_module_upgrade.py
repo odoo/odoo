@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (C) 2004-2012 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-import pooler
-from osv import osv, fields
-from tools.translate import _
+from openerp import pooler
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
 
 class base_module_upgrade(osv.osv_memory):
     """ Module Upgrade """
@@ -34,13 +34,6 @@ class base_module_upgrade(osv.osv_memory):
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        """ Changes the view dynamically
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param context: A standard dictionary
-         @return: New arch of view.
-        """
         res = super(base_module_upgrade, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         if view_type != 'form':
             return res
@@ -71,50 +64,43 @@ class base_module_upgrade(osv.osv_memory):
         return ids
 
     def default_get(self, cr, uid, fields, context=None):
-        """
-        This function checks for precondition before wizard executes
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-        """
         mod_obj = self.pool.get('ir.module.module')
         ids = self.get_module_list(cr, uid, context=context)
         res = mod_obj.read(cr, uid, ids, ['name','state'], context)
         return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res))}
 
     def upgrade_module(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.module.module')
-        data_obj = self.pool.get('ir.model.data')
-        # process to install and upgrade modules
-        ids = mod_obj.search(cr, uid, [('state', 'in', ['to upgrade', 'to install'])])
+        ir_module = self.pool.get('ir.module.module')
+
+        # install and upgrade modules
+        ids = ir_module.search(cr, uid, [('state', 'in', ['to upgrade', 'to install'])])
         unmet_packages = []
         mod_dep_obj = self.pool.get('ir.module.module.dependency')
-        for mod in mod_obj.browse(cr, uid, ids):
+        # TODO: Replace the following loop with a single SQL query to make it much faster!
+        for mod in ir_module.browse(cr, uid, ids):
             depends_mod_ids = mod_dep_obj.search(cr, uid, [('module_id', '=', mod.id)])
             for dep_mod in mod_dep_obj.browse(cr, uid, depends_mod_ids):
                 if dep_mod.state in ('unknown','uninstalled'):
                     unmet_packages.append(dep_mod.name)
-        if len(unmet_packages):
+        if unmet_packages:
             raise osv.except_osv(_('Unmet dependency !'), _('Following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
-        mod_obj.download(cr, uid, ids, context=context)
+        ir_module.download(cr, uid, ids, context=context)
+
+        # uninstall modules
+        to_remove_ids = ir_module.search(cr, uid, [('state', 'in', ['to remove'])])
+        ir_module.module_uninstall(cr, uid, to_remove_ids, context)
+
         cr.commit()
-        # process to remove modules
-        remove_module_ids = mod_obj.search(cr, uid, [('state', 'in', ['to remove'])])
-        mod_obj.module_uninstall(cr, uid, remove_module_ids, context)
-        
-        _db, pool = pooler.restart_pool(cr.dbname, update_module=True)
-        
-        id2 = data_obj._get_id(cr, uid, 'base', 'view_base_module_upgrade_install')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        pooler.restart_pool(cr.dbname, update_module=True)
+
+        ir_model_data = self.pool.get('ir.model.data')
+        _, res_id = ir_model_data.get_object_reference(cr, uid, 'base', 'view_base_module_upgrade_install')
 
         return {
                 'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'base.module.upgrade',
-                'views': [(id2, 'form')],
+                'views': [(res_id, 'form')],
                 'view_id': False,
                 'type': 'ir.actions.act_window',
                 'target': 'new',
@@ -123,6 +109,5 @@ class base_module_upgrade(osv.osv_memory):
     def config(self, cr, uid, ids, context=None):
         return self.pool.get('res.config').next(cr, uid, [], context=context)
 
-base_module_upgrade()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
