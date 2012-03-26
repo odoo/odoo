@@ -21,10 +21,13 @@
 
 from osv import osv, fields
 
-class project_issue_mail_configuration(osv.osv_memory):
-    _inherit = 'project.config.settings'
+class project_issue_settings(osv.osv_memory):
+    _name = 'project.config.settings'
+    _inherit = ['project.config.settings', 'fetchmail.config.settings']
+
     _columns = {
-        'project_issue': fields.boolean("Create issues from an email account",
+        'fetchmail_issue': fields.boolean("Create issues from an email account",
+            fetchmail_model='project.issue', fetchmail_name='Incoming issues',
             help="""Allows you to configure your incoming mail server, and create issues from incoming emails."""),
         'issue_server' : fields.char('Server Name', size=256),
         'issue_port' : fields.integer('Port'),
@@ -36,17 +39,8 @@ class project_issue_mail_configuration(osv.osv_memory):
         'issue_is_ssl': fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP=995)"),
         'issue_user' : fields.char('Username', size=256),
         'issue_password' : fields.char('Password', size=1024),
-
     }
+
     _defaults = {
         'issue_type': 'pop',
     }
-
-    def get_default_issue_server(self, cr, uid, ids, context=None):
-        context.update({'type':'issue'})
-        res = self.get_default_email_configurations(cr, uid, ids, context)
-        return res
-
-    def set_default_issue_server(self, cr, uid, ids, context=None):
-        context.update({'type':'issue','obj':'project.issue'})
-        self.set_email_configurations(cr, uid, ids, context)

@@ -10,14 +10,14 @@
             <field name="arch" type="xml">
                 <group name="config_emails" position="before">
                     <separator string="Emails" colspan="4"/>
-                    <field name="fetchmail_crm"/>
-                    <group colspan="2" attrs="{'invisible': [('fetchmail_crm','=',False)]}">
-                        <field name="default_server" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-                        <field name="default_type" nolabel="1" on_change="onchange_server_type(default_type, default_is_ssl)" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-                        <field name="default_port" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-                        <field name="default_is_ssl" on_change="onchange_server_type(default_type, default_is_ssl)"/>
-                        <field name="default_user" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
-                        <field name="default_password" password="True" attrs="{'required': [('fetchmail_crm','=',True)]}"/>
+                    <field name="fetchmail_lead"/>
+                    <group colspan="2" attrs="{'invisible': [('fetchmail_lead','=',False)]}">
+                        <field name="lead_server" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
+                        <field name="lead_type" nolabel="1" on_change="onchange_fetchmail('lead', lead_type, lead_is_ssl)" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
+                        <field name="lead_port" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
+                        <field name="lead_is_ssl" on_change="onchange_fetchmail('lead', lead_type, lead_is_ssl)"/>
+                        <field name="lead_user" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
+                        <field name="lead_password" password="True" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
                     </group>
                 </group>
                 <group name="config_crm" position="after">

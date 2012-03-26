@@ -21,10 +21,13 @@
 
 from osv import osv, fields
 
-class project_claim_mail_configuration(osv.osv_memory):
-    _inherit = 'project.config.settings'
+class crm_claim_settings(osv.osv_memory):
+    _name = 'project.config.settings'
+    _inherit = ['project.config.settings', 'fetchmail.config.settings']
+
     _columns = {
-        'project_claim': fields.boolean("Create claims from an email account",
+        'fetchmail_claim': fields.boolean("Create claims from an email account",
+            fetchmail_model='crm.claim', fetchmail_name='Incoming claims',
             help="""Allows you to configure your incoming mail server, and create claims from incoming emails."""),
         'claim_server' : fields.char('Server Name', size=256),
         'claim_port' : fields.integer('Port'),
@@ -37,15 +40,7 @@ class project_claim_mail_configuration(osv.osv_memory):
         'claim_user' : fields.char('Username', size=256),
         'claim_password' : fields.char('Password', size=1024),
     }
+
     _defaults = {
         'claim_type': 'pop',
     }
-
-    def get_default_claim_server(self, cr, uid, ids, context=None):
-        context.update({'type':'claim'})
-        res = self.get_default_email_configurations(cr, uid, ids, context)
-        return res
-
-    def set_default_claim_server(self, cr, uid, ids, context=None):
-        context.update({'type':'claim','obj':'crm.claim'})
-        self.set_email_configurations(cr, uid, ids, context)
