@@ -704,7 +704,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     var $defaults = d.$element.find('#formview_default_fields');
                     var field_to_set = $defaults.val();
                     if (!field_to_set) {
-                        $defaults.parent().addClass('invalid');
+                        $defaults.parent().addClass('oe_form_invalid');
                         return;
                     }
                     var condition = d.$element.find('#formview_default_conditions').val(),
@@ -1505,9 +1505,9 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
         }
         if (!this.disable_utility_classes) {
             this.$element.toggleClass('disabled', this.get("effective_readonly"));
-            this.$element.toggleClass('required', this.required);
+            this.$element.toggleClass('oe_form_required', this.required);
             if (show_invalid) {
-                this.$element.toggleClass('invalid', !this.is_valid());
+                this.$element.toggleClass('oe_form_invalid', !this.is_valid());
             }
         }
     },

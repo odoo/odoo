@@ -349,16 +349,12 @@ $colour4: #8a89ba
 // Transitional overrides for old styles {{{
 .openerp
     .oe_form_field_many2one
-        td:first
+        td:first-child
             position: relative
         span.oe-m2o-drop-down-button
             position: absolute
             top: 3px
             right: 2px
-        &.required input
-            background: #D2D2FF
-        &.required.invalid input
-            background: #F66
 // }}}
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
