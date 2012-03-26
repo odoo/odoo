@@ -12,7 +12,7 @@
                     <field name="fetchmail_claim"/>
                     <group colspan="2" attrs="{'invisible': [('fetchmail_claim','=',False)]}">
                         <field name="claim_server" attrs="{'required': [('fetchmail_claim','=',True)]}"/>
-                        <field name="claim_type" nolabel="1" on_change="onchange_fetchmail('claim', claim_type, claim_is_ssl)" attrs="{'required': [('fetchmail_claim','=',True)]}"/>
+                        <field name="claim_type" on_change="onchange_fetchmail('claim', claim_type, claim_is_ssl)" attrs="{'required': [('fetchmail_claim','=',True)]}"/>
                         <field name="claim_port" attrs="{'required': [('fetchmail_claim','=',True)]}"/>
                         <field name="claim_is_ssl" on_change="onchange_fetchmail('claim', claim_type, claim_is_ssl)"/>
                         <field name="claim_user" attrs="{'required': [('fetchmail_claim','=',True)]}"/>

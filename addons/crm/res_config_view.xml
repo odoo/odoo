@@ -13,7 +13,7 @@
                     <field name="fetchmail_lead"/>
                     <group colspan="2" attrs="{'invisible': [('fetchmail_lead','=',False)]}">
                         <field name="lead_server" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
-                        <field name="lead_type" nolabel="1" on_change="onchange_fetchmail('lead', lead_type, lead_is_ssl)" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
+                        <field name="lead_type" on_change="onchange_fetchmail('lead', lead_type, lead_is_ssl)" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
                         <field name="lead_port" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
                         <field name="lead_is_ssl" on_change="onchange_fetchmail('lead', lead_type, lead_is_ssl)"/>
                         <field name="lead_user" attrs="{'required': [('fetchmail_lead','=',True)]}"/>
