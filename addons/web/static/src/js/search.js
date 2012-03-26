@@ -126,11 +126,18 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         if (this.headless) {
             this.ready.resolve();
         } else {
-            this.rpc("/web/searchview/load", {
+            var load_view = this.rpc("/web/searchview/load", {
                 model: this.model,
                 view_id: this.view_id,
-                context: this.dataset.get_context()
-            }, this.on_loaded);
+                context: this.dataset.get_context() });
+            // FIXME: local eval of domain and context to get rid of special endpoint
+            var filters = this.rpc('/web/searchview/get_filters', {
+                model: this.model
+            }).then(function (filters) { self.custom_filters = filters; });
+
+            $.when(load_view, filters)
+                .pipe(function (load) { return load[0]; })
+                .then(this.on_loaded);
         }
 
         this.$element.on('click', '.oe_vs_unfold_drawer', function () {
@@ -150,6 +157,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * Sets up thingie where all the mess is put?
      */
     setup_stuff_drawer: function () {
+        var self = this;
         $('<div class="oe_vs_unfold_drawer">').appendTo(this.$element.find('.VS-search-box'));
         var $drawer = $('<div class="oe_searchview_drawer">').appendTo(this.$element);
 
@@ -183,13 +191,19 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             }
         }
 
+        // Create a Custom Filter FilterGroup for each custom filter read from
+        // the db, add all of this as a group in the smallest column
         [].push.call(col1.length <= col2.length ? col1 : col2, {
             name: "Custom Filters",
-            filters: [new openerp.web.search.FilterGroup([
-                {attrs: {string: "Custom 0"}},
-                {attrs: {string: "Custom 1"}},
-                {attrs: {string: "Custom 2"}}
-            ], this)],
+            filters: _.map(this.custom_filters, function (filter) {
+                // FIXME: handling of ``disabled`` being set
+                var f = new openerp.web.search.Filter({attrs: {
+                    string: filter.name,
+                    context: filter.context,
+                    domain: filter.domain
+                }}, self);
+                return new openerp.web.search.FilterGroup([f], self);
+            }),
             length: 3
         });
 
@@ -393,20 +407,6 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 $.when.apply(null, _(this.inputs).invoke('facet_for_defaults', this.defaults))
                     .then(function () { self.vs.searchQuery.reset(_(arguments).compact()); }))
             .then(function () { self.ready.resolve(); })
-    },
-    reload_managed_filters: function() {
-        var self = this;
-        return this.rpc('/web/searchview/get_filters', {
-            model: this.dataset.model
-        }).then(function(result) {
-            self.managed_filters = result;
-            var filters = self.$element.find(".oe_search-view-filters-management");
-            filters.html(QWeb.render("SearchView.managed-filters", {
-                filters: result,
-                disabled_filter_message: _t('Filter disabled due to invalid syntax')
-            }));
-            filters.change(self.on_filters_management);
-        });
     },
     /**
      * Handle event when the user make a selection in the filters management select box.
@@ -825,6 +825,7 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
         });
     },
     toggle_filter: function (e) {
+        // FIXME: oh god, my eyes, they hurt (also needs to trigger search after toggling filter)
         var self = this, fs;
         var filter = this.filters[$(e.target).index()];
 
