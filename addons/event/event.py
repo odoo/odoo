@@ -222,10 +222,7 @@ class event_event(osv.osv):
                                                          'email':user.user_email,
                                                          'name':user.name,
                                                          'user_id':uid,
-                                                         'subscribe':True,
-                                                    })
-            
-            
+                                                         'subscribe':True})
         else:
             register_pool.write(cr, uid, curr_reg_id,{'subscribe':True})
         if isinstance(curr_reg_id, (int, long)):curr_reg_id = [curr_reg_id]
