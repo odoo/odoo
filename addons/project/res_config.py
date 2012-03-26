@@ -22,7 +22,8 @@
 from osv import osv, fields
 
 class project_configuration(osv.osv_memory):
-    _inherit = 'project.config.settings'
+    _name = 'project.config.settings'
+    _inherit = 'res.config.settings'
 
     _columns = {
         'module_project_mrp': fields.boolean('Create tasks directly from a sale order',
@@ -56,17 +57,5 @@ class project_configuration(osv.osv_memory):
             help="""Provides timesheet support for the issues/bugs management in project.
                 This installs the module project_issue_sheet."""),
     }
-
-    def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False , type=[]):
-        port = 0
-        values = {}
-        if server_type == 'pop':
-            port = ssl and 995 or 110
-        elif server_type == 'imap':
-            port = ssl and 993 or 143
-        else:
-            values[type+'_server'] = ''
-        values[type+'_port'] = port
-        return {'value': values}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
