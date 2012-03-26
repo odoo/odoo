@@ -787,7 +787,8 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
     toggle_layout_debugging: function() {
         if (!this.$element.has('.oe_layout_debug_cell:first').length) {
             this.$element.find('.oe_form_group_cell').each(function() {
-                var $span = $('<span class="oe_layout_debug_cell"/>').text($(this).attr('width'));
+                var text = 'W:' + ($(this).attr('width') || '') + ' - C:' + $(this).attr('colspan'),
+                    $span = $('<span class="oe_layout_debug_cell"/>').text(text);
                 $span.prependTo($(this));
             });
         }
