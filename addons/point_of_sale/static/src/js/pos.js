@@ -1302,7 +1302,7 @@ openerp.point_of_sale = function(db) {
                             // product not recognized, raise warning
                             $(QWeb.render('pos-scan-warning')).dialog({
                                 resizable: false,
-                                height:160,
+                                height:220,
                                 modal: true,
                                 title: "Warning",
                                 buttons: {
