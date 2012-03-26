@@ -19,11 +19,29 @@
 #
 ##############################################################################
 
-from osv import osv
+from osv import osv, fields
+from tools.translate import _
 
 class res_users(osv.osv):
+    '''Update of res.users class
+    - add a preference about sending emails about notificatoins
+    - make a new user follow itself
+    '''
     _name = 'res.users'
     _inherit = ['res.users', 'mail.thread']
+    
+    _columns = {
+        'message_email_pref': fields.selection([
+                        ('all', 'Everytime'),
+                        ('comments', 'Only for comments'),
+                        ('me', 'Only when sent directly to me'),
+                        ('none', 'Never'),
+                        ], 'New feeds email', help="Choose whether you want to receive an email when you receive new feeds."),
+    }
+    
+    _default = {
+        'message_email_pref': 'all',
+    }
     
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
@@ -31,3 +49,15 @@ class res_users(osv.osv):
         self.message_subscribe(cr, uid, [user_id], [user_id], context=context)
         return user_id
 
+    #def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
+        #if context is None:
+            #context = {}
+        #msg_obj = self.pool.get('mail.message')
+        #msg_ids = msg_obj.search(cr, uid, ['&', ('res_id', 'in', ids), ('model', '=', self._name)] + domain,
+            #limit=limit, offset=offset, context=context)
+        #if (ascent): msg_ids = self._message_get_parent_ids(cr, uid, ids, msg_ids, root_ids, context=context)
+        #return msg_ids
+        
+    #def message_load(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
+        #msg_ids = self.message_load_ids(cr, uid, ids, limit, offset, domain, ascent, root_ids, context=context)
+        #return self.pool.get('mail.message').read(cr, uid, msg_ids, context=context)
