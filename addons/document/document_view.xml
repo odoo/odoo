@@ -264,12 +264,12 @@
                         <separator string="Related to" colspan="2"/>
                             <field name="partner_id"/>
                     </group>
-                    <group col="2" colspan="2" groups="base.group_extended">
+                    <group col="2" colspan="2" groups="base.group_no_one">
                         <separator string="Created" colspan="2"/>
                         <field name="create_uid" readonly="1"/>
                         <field name="create_date" readonly="1"/>
                     </group>
-                    <group col="2" colspan="2" groups="base.group_extended">
+                    <group col="2" colspan="2" groups="base.group_no_one">
                         <separator string="Modified" colspan="2"/>
                         <field name="write_uid" readonly="1"/>
                         <field name="write_date" readonly="1"/>
@@ -335,8 +335,8 @@
                 <field name="parent_id" />
                 <field name="user_id"/>
                 <field name="company_id"/>
-                <field name="create_date"/>
-                <field name="write_date"/>
+                <field name="create_date" groups="base.group_no_one"/>
+                <field name="write_date" groups="base.group_no_one"/>
                 <field name="partner_id" groups="base.group_extended" />
                 <field name="type"  groups="base.group_extended"/>
             </tree>
