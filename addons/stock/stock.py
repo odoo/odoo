@@ -1073,6 +1073,7 @@ class stock_picking(osv.osv):
 
         invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
+        parnter_obj = self.pool.get('res.partner')
         invoices_group = {}
         res = {}
         inv_type = type
@@ -1080,6 +1081,8 @@ class stock_picking(osv.osv):
             if picking.invoice_state != '2binvoiced':
                 continue
             partner = self._get_partner_to_invoice(cr, uid, picking, context=context)
+            if isinstance(partner, int):
+                partner=parnter_obj.browse(cr,uid,[partner])[0]
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
