@@ -25,24 +25,20 @@ from functools import partial
 
 import pytz
 
-import netsvc
-import pooler
-import tools
-from osv import fields,osv
-from osv.orm import browse_record
-from service import security
-from tools.translate import _
-import openerp
-import openerp.exceptions
+import io, StringIO
 from lxml import etree
 from lxml.builder import E
-
-
-# for avatar resizing
-import io, StringIO
+import netsvc
+import openerp
+import openerp.exceptions
+from osv import fields,osv
+from osv.orm import browse_record
 from PIL import Image
-# for default avatar choice
+import pooler
 import random
+from service import security
+import tools
+from tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -220,27 +216,31 @@ class users(osv.osv):
         extended_users = group_obj.read(cr, uid, extended_group_id, ['users'], context=context)['users']
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
-    def onchange_avatar_mini(self, cr, uid, ids, value, context=None):
-        return {'value': {'avatar': value, 'avatar_mini': self._avatar_resize(cr, uid, value)  } }
+    def onchange_avatar(self, cr, uid, ids, value, context=None):
+        if not value:
+            return {'value': {'avatar_big': value, 'avatar': value} }
+        return {'value': {'avatar_big': self._avatar_resize(cr, uid, value, 540, 450, context=context), 'avatar': self._avatar_resize(cr, uid, value, context=context)} }
     
-    def _set_avatar_mini(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'avatar': value}, context=context)
+    def _set_avatar(self, cr, uid, id, name, value, args, context=None):
+        if not value:
+            vals = {'avatar_big': value}
+        else:
+            vals = {'avatar_big': self._avatar_resize(cr, uid, value, 540, 450, context=context)}
+        return self.write(cr, uid, [id], vals, context=context)
     
-    def _avatar_resize(self, cr, uid, avatar, context=None):
+    def _avatar_resize(self, cr, uid, avatar, height=180, width=150, context=None):
         image_stream = io.BytesIO(avatar.decode('base64'))
         img = Image.open(image_stream)
-        img.thumbnail((180, 150), Image.ANTIALIAS)
+        img.thumbnail((height, width), Image.ANTIALIAS)
         img_stream = StringIO.StringIO()
         img.save(img_stream, "JPEG")
         return img_stream.getvalue().encode('base64')
-    
-    def _get_avatar_mini(self, cr, uid, ids, name, args, context=None):
-        result = {}
+
+    def _get_avatar(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
         for user in self.browse(cr, uid, ids, context=context):
-            if not user.avatar:
-                result[user.id] = False
-            else:
-                result[user.id] = self._avatar_resize(cr, uid, user.avatar)
+            if user.avatar_big:
+                result[user.id] = self._avatar_resize(cr, uid, user.avatar_big, context=context)
         return result
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
@@ -272,11 +272,11 @@ class users(osv.osv):
                                                             "otherwise leave empty. After a change of password, the user has to login again."),
         'user_email': fields.char('Email', size=64),
         'signature': fields.text('Signature', size=64),
-        'avatar': fields.binary('User Avatar'),
-        'avatar_mini': fields.function(_get_avatar_mini, fnct_inv=_set_avatar_mini, string='User Avatar Mini', type="binary",
+        'avatar_big': fields.binary('Big-sized avatar', help="This field holds the image used as avatar for the user. The avatar field is used as an interface to access this field. The image is base64 encoded, and PIL-supported. It is stored as a 540x450 px image, in case a bigger image must be used."),
+        'avatar': fields.function(_get_avatar, fnct_inv=_set_avatar, string='Avatar', type="binary",
             store = {
-                'res.users': (lambda self, cr, uid, ids, c={}: ids, ['avatar'], 10),
-            }),
+                'res.users': (lambda self, cr, uid, ids, c={}: ids, ['avatar_big'], 10),
+            }, help="Image used as avatar for the user. It is automatically resized as a 180x150 px image. This field serves as an interface to the avatar_big field."),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
@@ -389,15 +389,14 @@ class users(osv.osv):
         return result
 
     def _get_avatar(self, cr, uid, context=None):
-        # default avatar file name: avatar0 -> avatar6, choose randomly
-        random.seed()
+        # default avatar file name: avatar0 -> avatar6.jpg, choose randomly
         avatar_path = openerp.modules.get_module_resource('base', 'images', 'avatar%d.jpg' % random.randint(0, 6))
-        return self._avatar_resize(cr, uid, open(avatar_path, 'rb').read().encode('base64'))
+        return self._avatar_resize(cr, uid, open(avatar_path, 'rb').read().encode('base64'), context=context)
     
     _defaults = {
         'password' : '',
         'context_lang': 'en_US',
-        'avatar_mini': _get_avatar,
+        'avatar': _get_avatar,
         'active' : True,
         'menu_id': _get_menu,
         'company_id': _get_company,
