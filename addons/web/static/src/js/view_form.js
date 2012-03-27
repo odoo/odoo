@@ -1535,7 +1535,7 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
         this.view.fields_order.push(this.name);
         this.type = this.node.attrs.widget;
         this.field = this.view.fields_view.fields[this.name] || {};
-        this.required = this.modifiers['required'] === true;
+        this.set({required: this.modifiers['required'] === true});
         this.invalid = this.dirty = false;
         
         // some events to make the property "effective_readonly" sync automatically with "readonly" and
@@ -1557,6 +1557,18 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
         }
         if (this.node.attrs.nolabel && openerp.connection.debug) {
             this.do_attach_tooltip(this, this.$label || this.$element);
+        }
+        if (!this.disable_utility_classes) {
+            var set_disabled = function() {
+                this.$element.toggleClass('disabled', this.get("effective_readonly"));
+            };
+            this.on("change:effective_readonly", this, set_disabled);
+            _.bind(set_disabled, this)();
+            var set_required = function() {
+                this.$element.toggleClass('oe_form_required', this.get("required"));
+            };
+            this.on("change:required", this, set_required);
+            _.bind(set_required, this)();
         }
     },
     set_value: function(value) {
@@ -1588,8 +1600,6 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
             this.$element.find('.oe_field_translate').toggle(!!this.view.datarecord.id);
         }
         if (!this.disable_utility_classes) {
-            this.$element.toggleClass('disabled', this.get("effective_readonly"));
-            this.$element.toggleClass('oe_form_required', this.required);
             if (show_invalid) {
                 this.$element.toggleClass('oe_form_invalid', !this.is_valid());
             }
@@ -1702,7 +1712,7 @@ openerp.web.form.FieldChar = openerp.web.form.AbstractField.extend(_.extend({}, 
         if (!this.get("effective_readonly")) {
             try {
                 var value = openerp.web.parse_value(this.$element.find('input').val(), this, '');
-                this.invalid = this.required && value === '';
+                this.invalid = this.get("required") && value === '';
             } catch(e) {
                 this.invalid = true;
             }
@@ -1911,7 +1921,7 @@ openerp.web.form.FieldDatetime = openerp.web.form.AbstractField.extend(_.extend(
     validate: function() {
         this.invalid = false;
         if (!this.get("effective_readonly")) {
-            this.invalid = !this.datewidget.is_valid() || (this.required && !this.datewidget.get_value());
+            this.invalid = !this.datewidget.is_valid() || (this.get("required") && !this.datewidget.get_value());
         }
     },
     focus: function($element) {
@@ -1959,7 +1969,7 @@ openerp.web.form.FieldText = openerp.web.form.AbstractField.extend(_.extend({}, 
         if (!this.get("effective_readonly")) {
             try {
                 var value = openerp.web.parse_value(this.$textarea.val(), this, '');
-                this.invalid = this.required && value === '';
+                this.invalid = this.get("required") && value === '';
             } catch(e) {
                 this.invalid = true;
             }
@@ -2108,7 +2118,7 @@ openerp.web.form.FieldSelection = openerp.web.form.AbstractField.extend(_.extend
             return;
         }
         var value = this.values[this.$element.find('select')[0].selectedIndex];
-        this.invalid = !(value && !(this.required && value[0] === false));
+        this.invalid = !(value && !(this.get("required") && value[0] === false));
     },
     focus: function($element) {
         this._super($element || this.$element.find('select:first'));
@@ -2482,7 +2492,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.AbstractField.extend(_.extend(
         this.invalid = false;
         var val = this.tmp_value !== undefined ? this.tmp_value : this.value;
         if (val === null) {
-            this.invalid = this.required;
+            this.invalid = this.get("required");
         }
     },
     open_related: function(related) {
@@ -3429,7 +3439,7 @@ openerp.web.form.FieldReference = openerp.web.form.AbstractField.extend(_.extend
         this.m2o.start();
     },
     is_valid: function() {
-        return this.required === false || typeof(this.get_value()) === 'string';
+        return this.get("required") === false || typeof(this.get_value()) === 'string';
     },
     is_dirty: function() {
         return this.selection.is_dirty() || this.m2o.is_dirty();
