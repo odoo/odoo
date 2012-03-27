@@ -1,7 +1,7 @@
 
 openerp.share = function(session) {
 
-function launch_wizard(self, view, user_type, subscribe) {
+function launch_wizard(self, view, user_type, invite) {
         var action = view.getParent().action;
         var Share = new session.web.DataSet(self, 'share.wizard', view.dataset.get_context());
         var domain = new session.web.CompoundDomain(view.dataset.domain);
@@ -18,7 +18,7 @@ function launch_wizard(self, view, user_type, subscribe) {
                 action_id: action.id,
                 user_type: user_type || 'embedded',
                 view_type: view.fields_view.type,
-                subscribe: subscribe || false,
+                invite: invite || false,
             }, function(result) {
                 var share_id = result.result;
                 var step1 = Share.call('go_step_1', [[share_id],], function(result) {
@@ -69,7 +69,7 @@ session.web.ViewManagerAction.include({
         has_share(function() {
             self.$element.find('a.oe-share_link').click(self.on_click_share_link);
             self.$element.find('a.oe-share').click(self.on_click_share);
-            self.$element.delegate('a.oe-share-mail', 'click', self.on_click_share_mail);
+            self.$element.delegate('button.oe-share-mail', 'click', self.on_click_share_mail);
         }, function() {
             self.$element.find('a.oe-share_link').remove();
             self.$element.find('a.oe-share').remove();
