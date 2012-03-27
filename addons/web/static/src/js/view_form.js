@@ -808,8 +808,8 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
             $tag.children().each(function() {
                 self.process($(this));
             });
-            self.handle_invisible($tag, $tag.attr("invisible"));
-            $tag.removeAttr("invisible");
+            self.handle_invisible($tag, $tag.attr("modifiers"));
+            $tag.removeAttr("modifiers");
             return $tag;
         }
     },
@@ -841,11 +841,9 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
                 $label = $('<label/>').attr({
                     'for' : name,
                     'string' : field_string,
-                    'help' :  field_help
+                    'help' :  field_help,
+                    "modifiers": JSON.stringify({invisible: field_modifiers.invisible}),
                 });
-                if (field_modifiers.invisible !== undefined) {
-                    $label.attr("invisible", JSON.stringify(field_modifiers.invisible));
-                }
                 $label.insertBefore($field);
                 if (field_colspan > 1) {
                     $field.attr('colspan', field_colspan - 1);
@@ -913,18 +911,11 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
             
             $td = $('<td/>').addClass('oe_form_group_cell').attr('colspan', colspan);
             // invisibility transfer
-            var invisible = undefined;
-            if (_.include(["button", "field"], tagName)) {
-                var field_modifiers = JSON.parse($child.attr('modifiers') || '{}');
-                invisible = field_modifiers.invisible;
-                field_modifiers.invisible = undefined;
-                $child.attr('modifiers', JSON.stringify(field_modifiers));
-            } else {
-                invisible = $child.attr('invisible') !== undefined ? JSON.parse($child.attr('invisible'))
-                    : undefined;
-                $child.removeAttr("invisible");
-            }
-            self.handle_invisible($td, invisible !== undefined ? JSON.stringify(invisible) : undefined);
+            var field_modifiers = JSON.parse($child.attr('modifiers') || '{}');
+            var invisible = field_modifiers.invisible;
+            field_modifiers.invisible = undefined;
+            $child.attr('modifiers', JSON.stringify(field_modifiers));
+            self.handle_invisible($td, JSON.stringify({invisible: invisible}));
             
             $tr.append($td.append($child));
             children.push($child[0]);
@@ -971,7 +962,7 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         _.each(children, function(el) {
             self.process($(el));
         });
-        this.handle_invisible($new_group, $group.attr("invisible"));
+        this.handle_invisible($new_group, $group.attr("modifiers"));
         return $new_group;
     },
     process_notebook: function($notebook) {
@@ -986,7 +977,7 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
                 $dst = self.legacy_mode ? $new_page.find('group:first') : $new_page;
             $page.children().appendTo($dst);
             $page.before($new_page).remove();
-            self.handle_invisible($new_page, $page.attr("invisible"));
+            self.handle_invisible($new_page, $page.attr("modifiers"));
         });
         var $new_notebook = $(QWeb.render('FormRenderingNotebook', { pages : pages }));
         $notebook.children().appendTo($new_notebook);
@@ -995,13 +986,13 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
             self.process($(this));
         });
         $new_notebook.tabs();
-        this.handle_invisible($new_notebook, $notebook.attr("invisible"));
+        this.handle_invisible($new_notebook, $notebook.attr("modifiers"));
         return $new_notebook;
     },
     process_separator: function($separator) {
         var $new_separator = $(QWeb.render('FormRenderingSeparator', $separator.getAttributes()));
         $separator.before($new_separator).remove();
-        this.handle_invisible($new_separator, $separator.attr("invisible"));
+        this.handle_invisible($new_separator, $separator.attr("modifiers"));
         return $new_separator;
     },
     process_label: function($label) {
@@ -1017,18 +1008,18 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         dict.align = align;
         var $new_label = $(QWeb.render('FormRenderingLabel', dict));
         $label.before($new_label).remove();
-        this.handle_invisible($new_label, $label.attr("invisible"));
+        this.handle_invisible($new_label, $label.attr("modifiers"));
         return $new_label;
     },
     process_button: function($button) {
         this.to_init.push($button);
         return $button;
     },
-    handle_invisible: function($element, str_domain) {
-        if (str_domain === undefined)
+    handle_invisible: function($element, str_modifiers) {
+        var modifiers = JSON.parse(str_modifiers || "{}");
+        if (modifiers.invisible === undefined)
             return;
-        var parsed = JSON.parse(str_domain);
-        new openerp.web.form.InvisibilityChanger(this.view, this.view, parsed, $element);
+        new openerp.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $element);
     },
 });
 
