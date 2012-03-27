@@ -100,7 +100,6 @@ class mail_compose_message(osv.osv_memory):
         if not result.get('email_from'):
             current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
             result['email_from'] = current_user.user_email or False
-        result['subtype'] = 'html'
         return result
 
     _columns = {
@@ -161,7 +160,6 @@ class mail_compose_message(osv.osv_memory):
             result.update({
                     'subtype' : message_data.subtype or 'plain', # default to the text version due to quoting
                     'body_text' : body,
-                    'body_html' : message_data.body_html,
                     'subject' : subject,
                     'attachment_ids' : [],
                     'model' : message_data.model or False,

@@ -464,6 +464,20 @@ class mail_message(osv.osv):
         msg['sub_type'] = msg['subtype'] or 'plain'
         return msg
 
+    def _postprocess_sent_message(self, cr, uid, message, context=None):
+        """
+        if message is set to auto_delete=True then delete that sent messages as well as attachments
+
+        :param message: the message to parse
+        """
+        if message.auto_delete:
+            self.pool.get('ir.attachment').unlink(cr, uid,
+                                                  [x.id for x in message.attachment_ids \
+                                                        if x.res_model == self._name and \
+                                                           x.res_id == message.id],
+                                                  context=context)
+            message.unlink()
+        return True
 
     def send(self, cr, uid, ids, auto_commit=False, context=None):
         """Sends the selected emails immediately, ignoring their current
@@ -521,18 +535,9 @@ class mail_message(osv.osv):
                     message.write({'state':'sent', 'message_id': res})
                 else:
                     message.write({'state':'exception'})
-                model_pool = self.pool.get(message.model)
-                if hasattr(model_pool, '_hook_message_sent'):
-                    model_pool._hook_message_sent(cr, uid, message.res_id, context=context)
-                # if auto_delete=True then delete that sent messages as well as attachments
                 message.refresh()
-                if message.state == 'sent' and message.auto_delete:
-                    self.pool.get('ir.attachment').unlink(cr, uid,
-                                                          [x.id for x in message.attachment_ids \
-                                                                if x.res_model == self._name and \
-                                                                   x.res_id == message.id],
-                                                          context=context)
-                    message.unlink()
+                if message.state == 'sent':
+                    self._postprocess_sent_message(cr, uid, message, context=context)
             except Exception:
                 _logger.exception('failed sending mail.message %s', message.id)
                 message.write({'state':'exception'})
