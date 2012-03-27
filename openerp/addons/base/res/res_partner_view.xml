@@ -442,8 +442,6 @@
                                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                         <newline/>
                                     </page>
-                                    <page string="History" groups="base.group_extended" invisible="True">
-                                    </page>
                                     <page string="Categories" groups="base.group_extended">
                                         <field name="category_id" colspan="4" nolabel="1"/>
                                     </page>
@@ -533,7 +531,7 @@
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
                             <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                                 <div class="oe_module_vignette">
-                                <a type="edit"> 
+                                <a type="edit">
                                     <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" width="64" height="64" class="oe_module_icon"/>
                                 </a>
                                     <div class="oe_module_desc">
@@ -605,7 +603,7 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_partner_tree"/>
             <field name="act_window_id" ref="action_partner_form"/>
-        </record>        
+        </record>
         <menuitem
             action="action_partner_form"
             id="menu_partner_form"
