@@ -1269,7 +1269,6 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         for (var a in this.modifiers) {
             if (!_.include(["invisible"], a)) {
                 var val = compute_domain(this.modifiers[a], this.view.fields);
-                this[a] = val;
                 to_set[a] = val;
             }
         }
