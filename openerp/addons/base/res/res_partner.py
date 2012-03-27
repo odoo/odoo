@@ -249,9 +249,13 @@ class res_partner(osv.osv):
             if partner.is_company:
                 domain_children = [('parent_id', '=', partner.id), ('use_parent_address', '=', True)]
                 update_ids = self.search(cr, uid, domain_children, context=context)
-            elif vals.get('use_parent_address') ==True and partner.parent_id:
-                domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
-                update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
+            elif partner.parent_id:
+                 if vals.get('use_parent_address')==True:
+                     domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
+                     update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
+                 if 'use_parent_address' not in vals and  partner.use_parent_address:
+                    domain_siblings = [('parent_id', '=', partner.parent_id.id), ('use_parent_address', '=', True)]
+                    update_ids = [partner.parent_id.id] + self.search(cr, uid, domain_siblings, context=context)
             self.update_address(cr, uid, update_ids, vals, context)
         return super(res_partner,self).write(cr, uid, ids, vals, context=context)
 
