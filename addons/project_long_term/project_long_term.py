@@ -217,6 +217,7 @@ class project(osv.osv):
     _inherit = "project.project"
     _columns = {
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
+        'phase' : fields.boolean('Phase',help = "If you check this field Phases are appears in kanban view")
     }
     def schedule_phases(self, cr, uid, ids, context=None):
         context = context or {}

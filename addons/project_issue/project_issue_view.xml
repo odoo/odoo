@@ -370,6 +370,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
+            	<xpath expr="//field[@name='task']" position="after">
+                    <field name="issues"/>
+                </xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
                     <field name="reply_to"/>
