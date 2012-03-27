@@ -95,7 +95,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.fields_view = data;
 
         this.rendering_engine.set_fields_view(data);
-        this.rendering_engine.render_to(this.$element.find('.oe_form_container'));
+        var $dest = this.$element.hasClass("oe_form_container") ? this.$element : this.$element.find('.oe_form_container');
+        this.rendering_engine.render_to($dest);
 
         this.$form_header = this.$element.find('.oe_form_header:first');
         this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
@@ -735,7 +736,7 @@ openerp.web.FormRenderingEngineInterface = {
  * 
  * It is necessary to set the view using set_view() before usage.
  */
-openerp.web.FormRenderingEngine = openerp.web.Class.extend({
+openerp.web.FormRenderingEngine = nova.Class.extend({
     init: function(view) {
         this.view = view;
         this.legacy_mode = false;
@@ -766,8 +767,12 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
 
         _.each(this.to_init, function($elem) {
             var tag_name = $elem[0].tagName.toLowerCase();
-            var key = $elem.attr('widget') || tag_name;
-            if (self.view.registry.contains(key)) {
+            if (tag_name === "field") {
+                var name = $elem.attr("name");
+                var key = $elem.attr('widget') || self.fvg.fields[name].type;
+                if (!self.view.registry.contains(key)) {
+                    throw new Error("Widget type '"+ key + "' is not implemented");
+                }
                 var obj = self.view.registry.get_object(key);
                 var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
                 if (tag_name === "field") {
@@ -777,6 +782,14 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
                     }
                 }
                 self.alter_field(w);
+                w.replace($elem);
+            } else {
+                var key = tag_name;
+                if (!self.view.registry.contains(key)) {
+                    return;
+                }
+                var obj = self.view.registry.get_object(key);
+                var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
                 w.replace($elem);
             }
         });
@@ -867,21 +880,11 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         var $label = this.preprocess_field($field);
         if ($label)
             this.process($label);
-        var name = $field.attr('name'),
-            field_orm = this.fvg.fields[name],
-            field_string = $field.attr('string') || field_orm.string || '',
-            field_help = $field.attr('help') || field_orm.help || '',
-            field_colspan = parseInt($field.attr('colspan'), 10);
 
-        if (!field_orm) {
+        if (!this.fvg.fields[$field.attr("name")]) {
             throw new Error("Field '" + name + "' specified in view could not be found.");
         }
-
-        $field.attr({
-            'widget' : $field.attr('widget') || field_orm.type,
-            'string' : field_string,
-            'help' : field_help
-        });
+        
         this.to_init.push($field);
         return $field;
     },
