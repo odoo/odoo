@@ -921,7 +921,7 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
             $tr.append($td.append($child));
             children.push($child[0]);
         });
-        if (row_cols) {
+        if (row_cols && $td) {
             $td.attr('colspan', parseInt($td.attr('colspan'), 10) + row_cols);
         }
         $group.before($new_group).remove();
