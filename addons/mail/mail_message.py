@@ -69,6 +69,17 @@ class mail_message_common(osv.osv_memory):
        database model or wizard screen that needs to hold a kind of
        message"""
 
+    def get_record_name(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        result = dict.fromkeys(ids, '')
+        for message in self.browse(cr, uid, ids, context=context):
+            if not message.model or not message.res_id:
+                continue
+            model = self.pool.get(message.model)
+            result[message.id] = model.name_get(cr, uid, [message.res_id], context=context)[0][1]
+        return result
+    
     _name = 'mail.message.common'
     _rec_name = 'subject'
     _columns = {
@@ -91,9 +102,16 @@ class mail_message_common(osv.osv_memory):
         'body_text': fields.text('Text contents', help="Plain-text version of the message"),
         'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message"),
         'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message, used for displaying as threads with hierarchy"),
+        'type': fields.selection([
+                        ('email', 'e-mail'),
+                        ('comment', 'Comment'),
+                        ('notification', 'System notification'),
+                        ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
+        'record_name': fields.function(get_record_name, type='string', help="Name of the record, matching the result of the name_get."),
     }
 
     _defaults = {
+        'type': 'comment',
         'subtype': 'plain',
         'date': (lambda *a: fields.datetime.now()),
     }
@@ -182,17 +200,11 @@ class mail_message(osv.osv):
                         ], 'State', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
         'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
-        'type': fields.selection([
-                        ('email', 'e-mail'),
-                        ('comment', 'Comment'),
-                        ('notification', 'System notification'),
-                        ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
         
     }
         
     _defaults = {
         'state': 'received',
-        'type': 'comment',
     }
     
     #------------------------------------------------------
