@@ -586,10 +586,9 @@ class report_sxw(report_rml, preprocess.report):
         create_doc = self.generators[mime_type]
         odt = etree.tostring(create_doc(rml_dom, rml_parser.localcontext),
                              encoding='utf-8', xml_declaration=True)
-        sxw_z = zipfile.ZipFile(sxw_io, mode='a')
-        sxw_z.writestr('content.xml', odt)
-        sxw_z.writestr('meta.xml', meta)
-
+        
+        sxw_contents = {'content.xml':odt, 'meta.xml':meta}
+        
         if report_xml.header:
             #Add corporate header/footer
             rml_file = tools.file_open(os.path.join('base', 'report', 'corporate_%s_header.xml' % report_type))
@@ -607,11 +606,24 @@ class report_sxw(report_rml, preprocess.report):
                     rml_parser._add_header(odt)
                 odt = etree.tostring(odt, encoding='utf-8',
                                      xml_declaration=True)
-                sxw_z.writestr('styles.xml', odt)
+                sxw_contents['styles.xml'] = odt
             finally:
                 rml_file.close()
+                
+        #created empty zip writing sxw contents to avoid duplication
+        sxw_out = StringIO.StringIO()
+        sxw_z = zipfile.ZipFile(sxw_out, mode='w')
+        
+        zin = zipfile.ZipFile (sxw_io, 'r')
+        for item in zin.infolist():
+            if item.filename not in sxw_contents.keys():
+                buffer = zin.read(item.filename)
+                sxw_z.writestr(item.filename, buffer)
+        for item, buffer in sxw_contents.iteritems():
+            sxw_z.writestr(item, buffer)
+            
         sxw_z.close()
-        final_op = sxw_io.getvalue()
+        final_op = sxw_out.getvalue()
         sxw_io.close()
         return (final_op, mime_type)
 
