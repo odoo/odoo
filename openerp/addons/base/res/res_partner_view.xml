@@ -500,7 +500,7 @@
                    <newline />
                    <group expand="0" string="Group By...">
                        <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
-                       <filter string="Company" domain="[('is_company', '=', 1)]" context="{'group_by': 'is_company'}"/>
+                       <filter string="Company" context="{'group_by': 'parent_id'}"/>
                    </group>
                </search>
             </field>
