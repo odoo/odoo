@@ -1,6 +1,6 @@
 <openerp>
     <data noupdate="1">
-        
+
         <record id="expenses_journal" model="account.journal">
             <field name="name">Journal de frais</field>
             <field name="code">EXPF</field>
@@ -8,9 +8,11 @@
             <field name="view_id" ref="account.account_journal_view"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />
+            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
             <field name="entry_posted" eval="True" />
         </record>
-        
+
         <record id="bank_journal" model="account.journal">
             <field name="name">Banque CHF</field>
             <field name="code">BCHF</field>
@@ -18,9 +20,11 @@
             <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field name="entry_posted" eval="True" />
         </record>
-        
+
         <record id="bank_euro_journal" model="account.journal">
             <field name="name">Banque EUR</field>
             <field name="code">BEUR</field>
@@ -29,9 +33,11 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />
             <field name="entry_posted" eval="True" />
-            <field name="currency" model="res.currency" search="[('name','=','EUR')]" />
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
+            <!-- field name="currency" model="res.currency" search="[('name','=','EUR')]" /-->
         </record>
-        
+
         <record id="petty_cash_journal" model="account.journal">
             <field name="name">Caisse</field>
             <field name="code">CAI</field>
@@ -39,9 +45,11 @@
             <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field name="entry_posted" eval="True" />
         </record>
-        
+
         <record id="misc_transaction_journal" model="account.journal">
             <field name="name">Opérations Diverses</field>
             <field name="code">OD</field>
@@ -49,17 +57,21 @@
             <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field name="entry_posted" eval="True" />
         </record>
-        
+
         <record model="account.journal" id="bilan_journal">
             <field name="name">Journal d'ouverture</field>
             <field name="code">JO</field>
             <field name="type">situation</field>
             <field name="centralisation">True</field>
             <field name="view_id" ref="account.account_journal_view"/>
+            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
             <field name="update_posted" eval="True" />
         </record>
-        
+
     </data>
 </openerp>
