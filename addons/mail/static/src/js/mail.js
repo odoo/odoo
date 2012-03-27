@@ -220,7 +220,7 @@ openerp.mail = function(session) {
          */
         display_comment: function (record) {
             if (record.type == 'email') { record.mini_url = ('/mail/static/src/img/email_icon.png'); }
-            else { record.mini_url = this.thread_get_avatar_mini('res.users', 'avatar_mini', record.user_id[0]); }    
+            else { record.mini_url = this.thread_get_avatar('res.users', 'avatar', record.user_id[0]); }    
             // body text manipulation
             record.body_text = this.do_clean_text(record.body_text);
             record.tr_body_text = this.do_truncate_string(record.body_text, this.params.msg_more_limit);
@@ -285,7 +285,7 @@ openerp.mail = function(session) {
         },
         
         display_current_user: function () {
-            return this.$element.find('img.oe_mail_msg_image').attr('src', this.thread_get_avatar_mini('res.users', 'avatar_mini', this.params.uid));
+            return this.$element.find('img.oe_mail_msg_image').attr('src', this.thread_get_avatar('res.users', 'avatar', this.params.uid));
         },
         
         do_comment: function () {
@@ -364,7 +364,7 @@ openerp.mail = function(session) {
             return string;
         },
         
-        thread_get_avatar_mini: function(model, field, id) {
+        thread_get_avatar: function(model, field, id) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
         
@@ -484,7 +484,7 @@ openerp.mail = function(session) {
             $('<h4/>').html('Followers (' + records.length + ')').appendTo(sub_node);
             _(records).each(function (record) {
                 if (record.id == self.session.uid) { self.is_subscriber = true; }
-                var mini_url = self.thread_get_avatar_mini('res.users', 'avatar_mini', record.id);
+                var mini_url = self.thread_get_avatar('res.users', 'avatar', record.id);
                 $('<img class="oe_mail_oe_left oe_mail_msg_image" src="' + mini_url + '" title="' + record.name + '" alt="' + record.name + '"/>').appendTo(sub_node);
             });
             if (self.is_subscriber) {
@@ -513,7 +513,7 @@ openerp.mail = function(session) {
             this.$element.find('div.oe_mail_recthread_followers').toggle();
         },
         
-        thread_get_avatar_mini: function(model, field, id) {
+        thread_get_avatar: function(model, field, id) {
             return this.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
     });
