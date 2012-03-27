@@ -19,11 +19,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Project">
-                    <group colspan="6" col="6">
+                    <group colspan="4" col="8">
                         <field name="name" string="Project Name" select="1"/>
                         <field name="analytic_account_id" invisible="1" required="0"/>
                         <field name="parent_id" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                         <field name="user_id" string="Project Manager" select="1" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
+                        <field name="task"/>
                         <field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="progress_rate" widget="progressbar"/>

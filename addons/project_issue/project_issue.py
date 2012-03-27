@@ -489,7 +489,8 @@ class project(osv.osv):
     _inherit = "project.project"
     _columns = {
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'reply_to' : fields.char('Reply-To Email Address', size=256)
+        'reply_to' : fields.char('Reply-To Email Address', size=256),
+        'issues' : fields.boolean('Issues',help = "If you check this field issues are appears in kanban view")
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):

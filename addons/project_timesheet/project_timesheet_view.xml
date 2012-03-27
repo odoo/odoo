@@ -7,6 +7,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
+           
+            	<xpath expr="//field[@name='progress_rate']" position='after'>
+		        	<field name="timesheets"/>
+                </xpath>
+            
                 <field name="warn_customer" position="after">
                     <group colspan="4" col="4">
                         <separator colspan="4" string="Invoicing Data"/>

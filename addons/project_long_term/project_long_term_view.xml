@@ -98,6 +98,17 @@
     # Project Phase
     # ------------------------------------------------------
 
+        <record id="project_phase_form" model="ir.ui.view">
+            <field name="name">Inherit project form : Phase</field>
+            <field name="model">project.project</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='progress_rate']" position="after">
+                    <field name="phase"/>
+                </xpath>
+            </field>
+        </record>
         <record id="view_project_phase_form" model="ir.ui.view">
             <field name="name">project.phase.form</field>
             <field name="model">project.phase</field>
