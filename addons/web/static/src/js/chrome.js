@@ -393,7 +393,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
                     if (self.db_list) {
                         self.db_list.push(self.to_object(fields)['db_name']);
                         self.db_list.sort();
-                        self.widget_parent.set_db_list(self.db_list);
+                        self.getParent().set_db_list(self.db_list);
                     }
 
                     var form_obj = self.to_object(fields);
