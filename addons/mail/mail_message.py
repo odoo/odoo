@@ -69,6 +69,24 @@ class mail_message_common(osv.osv_memory):
        database model or wizard screen that needs to hold a kind of
        message"""
 
+    def get_body(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        result = dict.fromkeys(ids, '')
+        for message in self.browse(cr, uid, ids, context=context):
+            if message.subtype == 'html':
+                result[message.id] = message.body_html
+            else:
+                result[message.id] = message.body_text
+        return result
+    
+    def search_body(self, cr, uid, obj, name, args, context=None):
+        """should have:
+           - obj: mail.message object
+           - name: 'body'
+           - args: [('body', 'ilike', 'blah')]"""
+        return ['|', '&', ('subtype', '=', 'html'), ('body_html', args[0][1], args[0][2]), ('body_text', args[0][1], args[0][2])]
+    
     def get_record_name(self, cr, uid, ids, name, arg, context=None):
         if context is None:
             context = {}
@@ -93,21 +111,22 @@ class mail_message_common(osv.osv_memory):
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
         'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
         'headers': fields.text('Message headers', readonly=1,
-                               help="Full message headers, e.g. SMTP session headers "
-                                    "(usually available on inbound messages only)"),
+                        help="Full message headers, e.g. SMTP session headers (usually available on inbound messages only)"),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'subtype': fields.char('Message type', size=32, help="Type of message, usually 'html' or 'plain', used to "
                                                              "select plaintext or rich text contents accordingly", readonly=1),
         'body_text': fields.text('Text contents', help="Plain-text version of the message"),
         'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message"),
+        'body': fields.function(get_body, fnct_search = search_body, string='Message content', type='text',
+                        help="Content of the message. This content equals the body_text field for plain-test messages, and body_html for rich-text/HTML messages. This allows having one field if we want to access the content matching the message subtype."),
         'parent_id': fields.many2one('mail.message', 'Parent message', help="Parent message, used for displaying as threads with hierarchy"),
         'type': fields.selection([
                         ('email', 'e-mail'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
                         ], 'Type', help="Message type: e-mail for e-mail message, notification for system message, comment for other messages such as user replies"),
-        'record_name': fields.function(get_record_name, type='string', help="Name of the record, matching the result of the name_get."),
+        'record_name': fields.function(get_record_name, type='string', string='Message record name', help="Name of the record, matching the result of the name_get."),
     }
 
     _defaults = {
