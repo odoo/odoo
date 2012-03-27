@@ -81,15 +81,6 @@
 
     <menuitem name="Ideas" parent="base.menu_tools" id="menu_ideas1" sequence="4"/>
 
-    <menuitem
-        name="Ideas by Categories" parent="menu_ideas1"
-        id="menu_idea_category_tree"
-        action="action_idea_category_tree"/>
-
-    <menuitem name="Give Vote" parent="menu_ideas1"
-        id="menu_give_vote"
-        action="action_idea_select"
-        groups="base.group_tool_user"/>
 
 
     <!-- Open Ideas Action  -->
@@ -384,10 +375,7 @@
     </record>
     <menuitem name="Reporting" parent="base.menu_tools" id="base.menu_lunch_reporting" sequence="6" groups="base.group_tool_manager,base.group_tool_user"/>
 
-    <menuitem name="Idea" parent="base.menu_lunch_reporting" id="menu_idea_reporting" sequence="3"/>
-
-    <menuitem name="Vote Statistics" parent="menu_idea_reporting"
-        id="menu_idea_vote_stat" action="action_idea_vote_stat" groups="base.group_tool_user"/>
+    <menuitem name="Idea" parent="base.menu_reporting" id="menu_idea_reporting" sequence="65"/>
 
     <!-- Vote For Idea Action  -->
     <record model="ir.actions.act_window" id="action_idea_vote">
@@ -398,7 +386,6 @@
         <field name="search_view_id" ref="view_idea_vote_search"/>
     </record>
 
-    <menuitem name="Votes" parent="menu_ideas1" id="menu_idea_vote" action="action_idea_vote"/>
 
     </data>
 </openerp>
