@@ -2355,7 +2355,7 @@ class stock_move(osv.osv):
                 'prodlot_id': move.prodlot_id.id,
             }
             if move.location_id.usage <> 'internal':
-                default_val.update({'location_id': move.location_dest_id.id})
+                default_val.update({'location_id': move.location_id.id})
             new_move = self.copy(cr, uid, move.id, default_val)
 
             res += [new_move]
