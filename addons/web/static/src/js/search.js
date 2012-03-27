@@ -633,9 +633,9 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
 openerp.web.search = {};
 
 openerp.web.search.FilterGroupFacet = VS.ui.SearchFacet.extend({
-    events: {
+    events: _.extend({
         'click': 'selectFacet'
-    },
+    }, VS.ui.SearchFacet.prototype.events),
 
     render: function () {
         this.setMode('not', 'editing');
