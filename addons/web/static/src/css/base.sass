@@ -1,8 +1,8 @@
+
 // Variables {{{
 $colour4: #8a89ba
 //$colour4: #d14836
 // }}}
-
 // Mixins {{{
 @mixin vertical-gradient($startColor: #555, $endColor: #333)
     background-color: $startColor
@@ -61,21 +61,14 @@ $colour4: #8a89ba
     a
         text-decoration: none
     // }}}
-
-    // WebClient {{{
-    .oe_webclient
-        .oe_application
-            position: absolute
-            top: 33px
-            bottom: 0
-            left: 222px
-            right: 0
-            a
-                color: $colour4
-                &:hover
-                    text-decoration: underline
+    // Generic classes {{{
+    .oe_left
+        float: left
+    .oe_right
+        float: right
+    .oe_clear
+        clear: both
     // }}}
-
     // Fullscreen mode {{{
     .oe_content_full_screen
         .oe_application
@@ -84,7 +77,11 @@ $colour4: #8a89ba
         .topbar, .leftbar
             display: none
     // }}}
-
+    // Webclient {{{
+    .oe_webclient
+        width: 100%
+        height: 100%
+    // }}}
     // Topbar {{{
     .oe_topbar
         width: 100%
@@ -128,20 +125,17 @@ $colour4: #8a89ba
         .oe_topbar_avatar
             vertical-align: top
     // }}}
-
-    // Leftbar {{{
-    .oe_leftbarbg
-        position: fixed
-        width: 220px
-        top: 0
-        left: 0
+    // Main {{{
+    .oe_main
+        width: 100%
         height: 100%
+        border-spacing: 0px
+    // }}}
+    // Leftbar {{{
+    .oe_leftbar
+        width: 221px
         background: #f0eeee
         border-right: 1px solid #afafb6
-        z-index: -1
-    .oe_leftbar
-        float: left
-        width: 221px
         text-shadow: 0 1px 1px white
     a.oe_logo
         display: block
@@ -168,7 +162,13 @@ $colour4: #8a89ba
                 color: #c81010
                 font-style: italic
     // }}}
-
+    // Application {{{
+    .oe_application
+        a
+            color: $colour4
+            &:hover
+                text-decoration: underline
+    // }}}
     // Menu {{{
     .oe_menu
         float: left
@@ -259,7 +259,6 @@ $colour4: #8a89ba
             border-right: 4px solid transparent
             border-top: 4px solid #4c4c4c
     // }}}
-
     // UserMenu {{{
     .oe_user_menu
         float: right
@@ -321,15 +320,6 @@ $colour4: #8a89ba
                         @include vertical-gradient(#292929, #191919)
                         @include box-shadow(none)
     // }}}
-
-    // Generic classes {{{
-    .oe_left
-        float: left
-    .oe_right
-        float: right
-    .oe_clear
-        clear: both
-    // }}}
     // FormView Layout {{{
     .oe_form
         border: 1px solid black
@@ -361,7 +351,6 @@ $colour4: #8a89ba
     .oe_form_label_help[for], .oe_form_label[for]
         white-space: nowrap
     // }}}
-
 // Transitional overrides for old styles {{{
 .openerp
     .oe_form_field_many2one

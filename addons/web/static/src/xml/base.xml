@@ -24,19 +24,19 @@
             <div class="oe_user_menu_placeholder"/>
             <div class="oe_systray"/>
         </div>
-
-        <div class="oe_main">
-            <div class="oe_leftbarbg"/>
-            <div class="oe_leftbar">
-                <a href="#" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
-                <div class="oe_secondary_menus_container"/>
-                <div class="oe_footer">
-                    Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
-                </div>
-            </div>
-            <div class="oe_application"/>
-        </div>
-
+        <table class="oe_main">
+            <tr>
+                <td class="oe_leftbar" valign="top">
+                    <a href="#" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                    <div class="oe_secondary_menus_container"/>
+                    <div class="oe_footer">
+                        Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
+                    </div>
+                </td>
+                <td class="oe_application">
+                </td>
+            </tr>
+        </table>
     </div>
 </t>
 <t t-name="Loading">

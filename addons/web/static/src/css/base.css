@@ -10,18 +10,14 @@
 .openerp2 a {
   text-decoration: none;
 }
-.openerp2 .oe_webclient .oe_application {
-  position: absolute;
-  top: 33px;
-  bottom: 0;
-  left: 222px;
-  right: 0;
+.openerp2 .oe_left {
+  float: left;
 }
-.openerp2 .oe_webclient .oe_application a {
-  color: #8a89ba;
+.openerp2 .oe_right {
+  float: right;
 }
-.openerp2 .oe_webclient .oe_application a:hover {
-  text-decoration: underline;
+.openerp2 .oe_clear {
+  clear: both;
 }
 .openerp2 .oe_content_full_screen .oe_application {
   top: 0;
@@ -29,6 +25,10 @@
 }
 .openerp2 .oe_content_full_screen .topbar, .openerp2 .oe_content_full_screen .leftbar {
   display: none;
+}
+.openerp2 .oe_webclient {
+  width: 100%;
+  height: 100%;
 }
 .openerp2 .oe_topbar {
   width: 100%;
@@ -88,19 +88,15 @@
 .openerp2 .oe_topbar .oe_topbar_avatar {
   vertical-align: top;
 }
-.openerp2 .oe_leftbarbg {
-  position: fixed;
-  width: 220px;
-  top: 0;
-  left: 0;
+.openerp2 .oe_main {
+  width: 100%;
   height: 100%;
-  background: #f0eeee;
-  border-right: 1px solid #afafb6;
-  z-index: -1;
+  border-spacing: 0px;
 }
 .openerp2 .oe_leftbar {
-  float: left;
   width: 221px;
+  background: #f0eeee;
+  border-right: 1px solid #afafb6;
   text-shadow: 0 1px 1px white;
 }
 .openerp2 a.oe_logo {
@@ -131,6 +127,12 @@
 .openerp2 .oe_footer a span {
   color: #c81010;
   font-style: italic;
+}
+.openerp2 .oe_application a {
+  color: #8a89ba;
+}
+.openerp2 .oe_application a:hover {
+  text-decoration: underline;
 }
 .openerp2 .oe_menu {
   float: left;
@@ -327,15 +329,6 @@
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   -box-shadow: none;
-}
-.openerp2 .oe_left {
-  float: left;
-}
-.openerp2 .oe_right {
-  float: right;
-}
-.openerp2 .oe_clear {
-  clear: both;
 }
 .openerp2 .oe_form {
   border: 1px solid black;
