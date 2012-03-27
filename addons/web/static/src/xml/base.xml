@@ -958,6 +958,8 @@
         <div t-attf-class="oe_form_field_#{widget.type}">
             <input t-att-type="widget.password ? 'password' : 'text'"
                 t-att-id="widget.id_for_label"
+                t-att-tabindex="widget.node.attrs.tabindex"
+                t-att-autofocus="widget.node.attrs.autofocus"
                 t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </div>
@@ -972,10 +974,14 @@
         <table t-attf-class="oe_form_field_#{widget.type}" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td>
-                <input type="text" t-att-id="widget.id_for_label"/>
+                <input type="text"
+                    t-att-id="widget.id_for_label"
+                    t-att-tabindex="widget.node.attrs.tabindex"
+                    t-att-autofocus="widget.node.attrs.autofocus"
+                />
             </td>
             <td width="16">
-                <button class="oe_button oe_field_button" type="button" title="Send an e-mail with your default e-mail client">
+                <button class="oe_button oe_field_button" tabindex="-1" type="button" title="Send an e-mail with your default e-mail client">
                     <img t-att-src='_s + "/web/static/src/img/icons/terp-mail-message-new.png"'/>
                 </button>
             </td>
@@ -993,10 +999,14 @@
         <table t-attf-class="oe_form_field_#{widget.type}" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td>
-                <input type="text" t-att-id="widget.id_for_label"/>
+                <input type="text"
+                    t-att-id="widget.id_for_label"
+                    t-att-tabindex="widget.node.attrs.tabindex"
+                    t-att-autofocus="widget.node.attrs.autofocus"
+                />
             </td>
             <td width="16">
-                <button class="oe_button oe_field_button" type="button" title="Open this resource">
+                <button class="oe_button oe_field_button" tabindex="-1" type="button" title="Open this resource">
                     <img t-att-src='_s + "/web/static/src/img/icons/gtk-ok.png"'/>
                 </button>
             </td>
@@ -1015,6 +1025,8 @@
             <textarea rows="6"
                 t-att-name="widget.name"
                 t-attf-class="field_#{widget.type}"
+                t-att-tabindex="widget.node.attrs.tabindex"
+                t-att-autofocus="widget.node.attrs.autofocus"
             ></textarea><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </div>
     </t>
@@ -1034,6 +1046,8 @@
         <div t-attf-class="oe_form_field_#{widget.type}">
             <select
                 t-att-name="widget.name"
+                t-att-tabindex="widget.node.attrs.tabindex"
+                t-att-autofocus="widget.node.attrs.autofocus"
                 t-att-id="widget.id_for_label">
                     <t t-foreach="widget.values" t-as="option">
                         <option><t t-esc="option[1]"/></option>
@@ -1051,7 +1065,11 @@
         <table t-attf-class="oe_form_field_#{widget.type}" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td valign="top">
-                <input type="text" t-att-id="widget.id_for_label"/>
+                <input type="text"
+                    t-att-id="widget.id_for_label"
+                    t-att-tabindex="widget.node.attrs.tabindex"
+                    t-att-autofocus="widget.node.attrs.autofocus"
+                />
                 <span class="oe-m2o-drop-down-button">
                     <img t-att-src='_s + "/web/static/src/img/down-arrow.png"' /></span>
             </td>
@@ -1101,12 +1119,14 @@
     </t>
 </t>
 <t t-name="FieldBoolean">
-    <div t-attf-class="oe_form_field_#{widget.type}">
+    <span t-attf-class="oe_form_field_#{widget.type}">
         <input type="checkbox"
             t-att-id="widget.id_for_label"
             t-att-name="widget.name"
+            t-att-tabindex="widget.node.attrs.tabindex"
+            t-att-autofocus="widget.node.attrs.autofocus"
             t-attf-class="field_#{widget.type}"/>
-    </div>
+    </span>
 </t>
 <t t-name="FieldProgressBar">
     <div t-attf-class="oe_form_field_#{widget.type}" t-opentag="true">
@@ -1134,7 +1154,10 @@
                                 <button class="oe_button" type="button" title="Set Image">
                                     <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 </button>
-                                <input type="file" class="oe-binary-file" name="ufile"/>
+                                <input type="file" class="oe-binary-file" name="ufile"
+                                    t-att-tabindex="widget.node.attrs.tabindex"
+                                    t-att-autofocus="widget.node.attrs.autofocus"
+                                />
                             </form>
                         </div>
                     </td>
@@ -1172,6 +1195,8 @@
             <td>
                 <input type="text" size="1" readonly="readonly"
                     t-att-name="widget.name"
+                    t-att-tabindex="widget.node.attrs.tabindex"
+                    t-att-autofocus="widget.node.attrs.autofocus"
                     t-attf-class="field_#{widget.type}"
                 />
             </td>
@@ -1222,7 +1247,9 @@
     </t>
 </t>
 <t t-name="WidgetButton">
-    <button type="button" class="oe_button oe_form_button">
+    <button type="button" class="oe_button oe_form_button"
+        t-att-tabindex="widget.node.attrs.tabindex"
+        t-att-autofocus="widget.node.attrs.autofocus">
         <img t-if="widget.node.attrs.icon" t-att-src="_s + '/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
