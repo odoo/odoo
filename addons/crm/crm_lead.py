@@ -68,6 +68,11 @@ class crm_lead(crm_case, osv.osv):
         return [(r['id'], tools.ustr(r[self._rec_name]))
                     for r in self.read(cr, user, ids, [self._rec_name], context)]
 
+    # overridden because if 'base_contact' is installed - their default_get() will remove
+    # 'default_type' from context making it impossible to record an 'opportunity'
+    def default_get(self, cr, uid, fields_list, context=None):
+        return super(osv.osv, self).default_get(cr, uid, fields_list, context=context)
+
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         @param cr: the current row, from the database cursor,
