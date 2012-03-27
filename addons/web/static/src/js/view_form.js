@@ -1010,8 +1010,8 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         var name = $label.attr("for"),
             field_orm = this.fvg.fields[name];
         var dict = {
-            string: $label.attr('string') || field_orm.string || '',
-            help: $label.attr('help') || field_orm.help || '',
+            string: $label.attr('string') || (field_orm || {}).string || '',
+            help: $label.attr('help') || (field_orm || {}).help || '',
             _for: _.uniqueId('oe-field-input-'),
         };
         var align = parseFloat(dict.align);
