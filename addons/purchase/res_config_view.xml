@@ -2,11 +2,11 @@
     <data>
 
         <record id="view_purchase_configuration" model="ir.ui.view">
-            <field name="name">Purchase Application</field>
+            <field name="name">purchase settings</field>
             <field name="model">purchase.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Purchase Application">
+                <form string="Configure Purchases">
                     <group colspan="4" col="6">
                         <separator string="Invoicing" colspan="6"/>
                         <field name="default_invoice_method" />
@@ -28,10 +28,6 @@
                         <separator string="Products" colspan="6"/>
                         <field name="module_product_manufacturer"/>
                     </group>
-
-                    <label colspan="2"/>
-                    <button string="Cancel" icon="gtk-cancel" special="cancel"/>
-                    <button string="Apply" icon="gtk-ok" type="object" name="execute"/>
                 </form>
             </field>
         </record>
@@ -41,10 +37,9 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.config.settings</field>
             <field name="view_mode">form</field>
-            <field name="target">new</field>
         </record>
 
-        <menuitem id="menu_purchase_config" name="Purchase" parent="base.menu_config"
+        <menuitem id="menu_purchase_config" name="Purchases" parent="base.menu_config"
             sequence="2" action="action_purchase_configuration"/>
 
     </data>
