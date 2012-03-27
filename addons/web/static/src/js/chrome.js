@@ -635,11 +635,13 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     init: function() {
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
+        this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
     },
     start: function() {
         this._super.apply(this, arguments);
         this.$secondary_menus = this.getParent().$element.find('.oe_secondary_menus_container');
         this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
+        $('html').bind('click', this.do_hide_more);
     },
     do_reload: function() {
         var self = this;
@@ -650,13 +652,39 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         });
     },
     on_loaded: function(data) {
+        var self = this;
         this.data = data;
         this.renderElement();
+        this.limit_entries();
         this.$element.on('click', 'a[data-menu]', this.on_menu_click);
+        this.$element.on('click', 'a.oe_menu_more_link', function() {
+            self.$element.find('.oe_menu_more').toggle();
+            return false;
+        });
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
         this.has_been_loaded.resolve();
+    },
+    limit_entries: function() {
+        var maximum_visible_links = this.maximum_visible_links;
+        if (maximum_visible_links === 'auto') {
+            maximum_visible_links = this.auto_limit_entries();
+        }
+        if (maximum_visible_links) {
+            var $more = $(QWeb.render('Menu.more')),
+                $index = this.$element.find('li').eq(maximum_visible_links - 1);
+            $index.after($more);
+            $more.find('.oe_menu_more').append($index.next().nextAll());
+        }
+    },
+    auto_limit_entries: function() {
+        // TODO: auto detect overflow and bind window on resize
+        var width = $(window).width();
+        return Math.floor(width / 125);
+    },
+    do_hide_more: function() {
+        this.$element.find('.oe_menu_more').hide();
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
@@ -702,6 +730,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         }
     },
     on_menu_click: function(ev, id) {
+        this.do_hide_more();
         id = id || 0;
         var $clicked_menu, manual = false;
 
