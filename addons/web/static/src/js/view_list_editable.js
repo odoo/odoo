@@ -388,8 +388,18 @@ openerp.web.list_editable = function (openerp) {
     
             var xml = openerp.web.json_node_to_xml(this.fvg.arch);
             var $xml = $(xml);
+            
+            if (this.view.editable_list.options.selectable)
+                $("<td>").appendTo($element);
+            if (this.view.editable_list.options.isClarkGable)
+                $("<td>").appendTo($element);
+                
             $xml.children().each(function(i, el) {
-                $td = $("<td>");
+                var modifiers = JSON.parse($(el).attr("modifiers") || "{}");
+                // TODO: handle #{td.classname} #{td.element_class}
+                var $td = $("<td class='oe_form_frame_cell oe-field-cell'>");
+                if (modifiers.tree_invisible === true)
+                    $td.hide();
                 var tag_name = el.tagName.toLowerCase();
                 var key = tag_name;
                 if (tag_name === "field") {
