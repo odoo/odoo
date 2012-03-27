@@ -828,30 +828,31 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
     },
     preprocess_field: function($field) {
         var name = $field.attr('name'),
-            field_orm = this.fvg.fields[name],
-            field_string = $field.attr('string') || field_orm.string || '',
-            field_help = $field.attr('help') || field_orm.help || '',
             field_colspan = parseInt($field.attr('colspan'), 10),
             field_modifiers = JSON.parse($field.attr('modifiers') || '{}');
-        if ($field.attr('nolabel') !== '1') {
-            $field.attr('nolabel', '1');
-            var $label = this.$form.find('label[for="' + name + '"]');
-            if (!$label.length) {
-                field_string = $label.attr('string') || $label.text() || field_string;
-                field_help = $label.attr('help') || field_help;
-                $label = $('<label/>').attr({
-                    'for' : name,
-                    'string' : field_string,
-                    'help' :  field_help,
-                    "modifiers": JSON.stringify({invisible: field_modifiers.invisible}),
-                });
-                $label.insertBefore($field);
-                if (field_colspan > 1) {
-                    $field.attr('colspan', field_colspan - 1);
-                }
-            }
-            return $label;
+            
+        if ($field.attr('nolabel') === '1')
+            return;
+        $field.attr('nolabel', '1');
+        var found = false;
+        this.$form.find('label[for="' + name + '"]').each(function(i ,el) {
+            if ($(el).parents("field").length === 0)
+                found = true;
+        });
+        if (found)
+            return;
+        
+        $label = $('<label/>').attr({
+            'for' : name,
+            "modifiers": JSON.stringify({invisible: field_modifiers.invisible}),
+            "string": $field.attr('string'),
+            "help": $field.attr('help'),
+        });
+        $label.insertBefore($field);
+        if (field_colspan > 1) {
+            $field.attr('colspan', field_colspan - 1);
         }
+        return $label;
     },
     process_field: function($field) {
         var $label = this.preprocess_field($field);
@@ -997,7 +998,12 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         return $new_separator;
     },
     process_label: function($label) {
-        var dict = $label.getAttributes();
+        var name = $label.attr("for"),
+            field_orm = this.fvg.fields[name];
+        var dict = {
+            string: $label.attr('string') || field_orm.string || '',
+            help: $label.attr('help') || field_orm.help || '',
+        };
         var align = parseFloat(dict.align);
         if (isNaN(align) || align === 1) {
             align = 'right';
