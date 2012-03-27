@@ -59,6 +59,8 @@ class email_template(osv.osv):
         if context is None:
             context = {}
         if not template: return u""
+        if context is None:
+            context = {}
         try:
             template = tools.ustr(template)
             record = None

@@ -8,7 +8,7 @@
             <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
             <menuitem name="Reporting" parent="base.menu_tools"
                 id="base.menu_lunch_reporting" sequence="6"/>
-            <menuitem name="Surveys" id="menu_reporting" parent="base.menu_lunch_reporting" sequence="2"/>
+            <menuitem name="Reporting" id="menu_reporting" parent="menu_surveys" sequence="60"/>
         <!--
             Survey
         -->
@@ -1167,14 +1167,14 @@
             <field name="view_id" ref="survey_type_tree"></field>
         </record>
 
-        <act_window 
+        <act_window
             context="{'search_default_survey_id': [active_id], 'default_survey_id': active_id}"
             id="act_survey_pages"
             name="Pages"
             res_model="survey.page"
             src_model="survey"/>
 
-        <act_window 
+        <act_window
             context="{'search_default_survey': active_id, 'default_survey': active_id}"
             id="act_survey_question"
             name="Questions"
@@ -1182,7 +1182,7 @@
             src_model="survey"/>
 
 
-        <act_window 
+        <act_window
             context="{'search_default_page_id': active_id, 'default_page_id': active_id}"
             id="act_survey_page_question"
             name="Questions"

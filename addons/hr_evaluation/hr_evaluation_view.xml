@@ -62,10 +62,10 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Appraisal" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="6"/>
+        <menuitem name="Appraisal" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="25"/>
         <menuitem name="Periodic Appraisal" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="4"/>
-        <menuitem parent="menu_eval_hr_config" id="menu_open_view_hr_evaluation_plan_tree"
-            action="open_view_hr_evaluation_plan_tree"/>
+        <menuitem parent="hr.menu_hr_configuration" id="menu_open_view_hr_evaluation_plan_tree"
+            action="open_view_hr_evaluation_plan_tree" sequence="15"/>
 
         <record model="ir.ui.view" id="view_hr_evaluation_plan_phase_form">
             <field name="name">hr_evaluation.plan.phase.form</field>
