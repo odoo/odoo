@@ -328,11 +328,6 @@ class purchase_order(osv.osv):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
 
-    def _hook_message_sent(self, cr, uid, purchase_id, context=None):
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'purchase.order', purchase_id, 'send_rfq', cr)
-        return True
-
     def wkf_send_rfq(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         template_id = self.pool.get('email.template').search(cr, uid, [('model_id', '=', 'purchase.order')])
@@ -1020,4 +1015,16 @@ class procurement_order(osv.osv):
         return res
 
 procurement_order()
+
+class mail_message(osv.osv):
+    _name = 'mail.message'
+    _inherit = 'mail.message'
+    
+    def _postprocess_sent_message(self, cr, uid, message, context=None):
+        if message.model == 'purchase.order':
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'purchase.order', message.res_id, 'send_rfq', cr)
+        return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
+
+mail_message()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

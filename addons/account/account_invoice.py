@@ -371,11 +371,6 @@ class account_invoice(osv.osv):
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
                 raise orm.except_orm(_('Unknown Error'), str(e))
-            
-    def _hook_message_sent(self, cr, uid, invoice_id, context=None):
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'account.invoice', invoice_id, 'invoice_sent', cr)
-        return True
 
     def invoice_print(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService('workflow')
@@ -1699,4 +1694,15 @@ class res_partner(osv.osv):
 
 res_partner()
 
+class mail_message(osv.osv):
+    _name = 'mail.message'
+    _inherit = 'mail.message'
+
+    def _postprocess_sent_message(self, cr, uid, message, context=None):
+        if message.model == 'account.invoice':
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'account.invoice', message.res_id, 'invoice_sent', cr)
+        return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
+
+mail_message()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

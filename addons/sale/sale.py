@@ -752,11 +752,6 @@ class sale_order(osv.osv):
             'nodestroy': True,
         }
 
-    def _hook_message_sent(self, cr, uid, sale_id, context=None):
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'sale.order', sale_id, 'quotation_sent', cr) 
-        return True
-      
     def procurement_lines_get(self, cr, uid, ids, *args):
         res = []
         for order in self.browse(cr, uid, ids, context={}):
@@ -1519,5 +1514,17 @@ class sale_config_picking_policy(osv.osv_memory):
             }, context=context)
 
 sale_config_picking_policy()
+
+class mail_message(osv.osv):
+    _name = 'mail.message'
+    _inherit = 'mail.message'
+    
+    def _postprocess_sent_message(self, cr, uid, message, context=None):
+        if message.model == 'sale.order':
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'sale.order', message.res_id, 'quotation_sent', cr) 
+        return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
+
+mail_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
