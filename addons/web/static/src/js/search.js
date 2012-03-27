@@ -304,6 +304,9 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param {VS.model.SearchFacet} options.model facet object to render
      */
     make_visualsearch_facet: function (options) {
+        if (options.model.get('field') instanceof openerp.web.search.FilterGroup) {
+            return new openerp.web.search.FilterGroupFacet(options);
+        }
         return new VS.ui.SearchFacet(options);
     },
     /**
@@ -628,6 +631,32 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
 
 /** @namespace */
 openerp.web.search = {};
+
+openerp.web.search.FilterGroupFacet = VS.ui.SearchFacet.extend({
+    events: {
+        'click': 'selectFacet'
+    },
+
+    render: function () {
+        this.setMode('not', 'editing');
+        this.setMode('not', 'selected');
+
+        var value = this.model.get('value');
+        this.$el.html([
+            '<div class="category oe_filter">',
+                this.model.get('category'),
+            '</div>',
+            '<div class="search_facet_input_container">',
+                value,
+            '</div>',
+            '<div class="search_facet_remove VS-icon VS-icon-cancel"></div>'
+        ].join(''));
+        // virtual input so SearchFacet code has something to play with
+        this.box = $('<input>').val(value);
+
+        return this;
+    }
+});
 /**
  * Registry of search fields, called by :js:class:`openerp.web.SearchView` to
  * find and instantiate its field widgets.
