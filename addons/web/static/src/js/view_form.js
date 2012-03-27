@@ -757,6 +757,7 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         this.$form = $('<div>' + xml + '</div>');
 
         this.to_init = [];
+        this.labels = {};
         this.process(this.$form);
 
         this.$form.appendTo(this.$element);
@@ -764,14 +765,22 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         //      - @width is obsolete ?
 
         _.each(this.to_init, function($elem) {
-            var key = $elem.attr('widget') || $elem[0].tagName.toLowerCase();
+            var tag_name = $elem[0].tagName.toLowerCase();
+            var key = $elem.attr('widget') || tag_name;
             if (self.view.registry.contains(key)) {
                 var obj = self.view.registry.get_object(key);
                 var w = new (obj)(self.view, openerp.web.xml_to_json($elem[0]));
+                if (tag_name === "field") {
+                    var $label = self.labels[$elem.attr("name")];
+                    if ($label) {
+                        w.set_input_id($label.attr("for"));
+                    }
+                }
                 self.alter_field(w);
                 w.replace($elem);
             }
         });
+        
         if (openerp.connection.debug) {
             $('<button>Outline Form Layout</button>').appendTo(this.$element).click($.proxy(this.toggle_layout_debugging, this));
         }
@@ -1003,6 +1012,7 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         var dict = {
             string: $label.attr('string') || field_orm.string || '',
             help: $label.attr('help') || field_orm.help || '',
+            _for: _.uniqueId('oe-field-input-'),
         };
         var align = parseFloat(dict.align);
         if (isNaN(align) || align === 1) {
@@ -1016,6 +1026,7 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         var $new_label = $(QWeb.render('FormRenderingLabel', dict));
         $label.before($new_label).remove();
         this.handle_invisible($new_label, $label.attr("modifiers"));
+        this.labels[name] = $new_label;
         return $new_label;
     },
     process_button: function($button) {
@@ -1493,6 +1504,11 @@ openerp.web.form.FieldInterface = {
      * syntax for "read" and "write" (example: m2o: set_value([0, "Administrator"]), get_value() => 0).
      */
     get_value: function() {},
+    /**
+     * Inform the current object of the id it should use to match a html <label> that exists somewhere in the
+     * view.
+     */
+    set_input_id: function(id) {}
 };
 
 /**
@@ -1531,17 +1547,6 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
         this.on("change:readonly", this, test_effective_readonly);
         this.on("change:force_readonly", this, test_effective_readonly);
         _.bind(test_effective_readonly, this)();
-
-        // TODO: do something good about this
-        if (this.view) {
-            this.$label = this.view.$element.find('label[for="' + this.name + '"]');
-            if (this.$label.length) {
-                this.id_for_label = _.uniqueId(['field', this.type, this.name, ''].join('_'));
-                this.$label.attr('for', this.id_for_label);
-            } else {
-                this.$label;
-            }
-        }
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1621,7 +1626,10 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
             this.definition_options = JSON.parse(str);
         }
         return this.definition_options;
-    }
+    },
+    set_input_id: function(id) {
+        this.id_for_label = id;
+    },
 });
 
 /**
