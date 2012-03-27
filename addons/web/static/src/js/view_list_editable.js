@@ -396,8 +396,7 @@ openerp.web.list_editable = function (openerp) {
                 
             $xml.children().each(function(i, el) {
                 var modifiers = JSON.parse($(el).attr("modifiers") || "{}");
-                // TODO: handle #{td.classname} #{td.element_class}
-                var $td = $("<td class='oe_form_frame_cell oe-field-cell'>");
+                var $td = $("<td>");
                 if (modifiers.tree_invisible === true)
                     $td.hide();
                 var tag_name = el.tagName.toLowerCase();
@@ -411,6 +410,7 @@ openerp.web.list_editable = function (openerp) {
                 w.appendTo($td);
                 $td.appendTo($element);
             });
+            $("<td><button class='oe-edit-row-save' type='button'></button></td>").appendTo($element);
         },
     });
 };
