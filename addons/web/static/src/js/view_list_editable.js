@@ -235,6 +235,7 @@ openerp.web.list_editable = function (openerp) {
                 }
                 self.edition = true;
                 self.edition_id = record_id;
+                $new_row.addClass("oe_form_container");
                 self.edition_form = new openerp.web.ListEditableFormView(self.view, self.dataset, false);
                 self.edition_form.$element = $new_row;
                 self.edition_form.editable_list = self;
@@ -366,54 +367,40 @@ openerp.web.list_editable = function (openerp) {
             });
         }
     });
-    if (!openerp.web.list) {
-        openerp.web.list = {};
-    }
-    if (!openerp.web.list.form) {
-        openerp.web.list.form = {};
-    }
-    // TODO: EDITABLE LIST SHOULD USE openerp.web.FormRenderingEngine
-    //openerp.web.list.form.WidgetFrame = openerp.web.form.WidgetFrame.extend({
-    //    form_template: 'ListView.row.frame'
-    //});
-    var form_widgets = openerp.web.form.widgets;
-    openerp.web.list.form.widgets = form_widgets.extend({
-    //    'frame': 'openerp.web.list.form.WidgetFrame'
-    });
-
-    // All form widgets inherit a problematic behavior from
-    // openerp.web.form.WidgetFrame: the cell itself is removed when invisible
-    // whether it's @invisible or @attrs[invisible]. In list view, only the
-    // former should completely remove the cell. We need to override update_dom
-    // on all widgets since we can't just hit on widget itself (I think)
-    var list_form_widgets = openerp.web.list.form.widgets;
-    _(form_widgets.map).each(function (widget_path, key) {
-        if (key === 'frame') { return; }
-        var new_path = 'openerp.web.list.form.' + key;
-
-        openerp.web.list.form[key] = (form_widgets.get_object(key)).extend({
-            update_dom: function () {
-                this.$element.children().css('visibility', '');
-                if (this.modifiers.tree_invisible) {
-                    var old_invisible = this.invisible;
-                    this.invisible = true;
-                    this._super();
-                    this.invisible = old_invisible;
-                } else if (this.invisible) {
-                    this.$element.children().css('visibility', 'hidden');
-                } else {
-                    this._super();
-                }
-            }
-        });
-        list_form_widgets.add(key, new_path);
-    });
     
     openerp.web.ListEditableFormView = openerp.web.FormView.extend({
-        form_template: 'ListView.row.form',
         init: function() {
-        	this._super.apply(this, arguments);
-        	this.registry = openerp.web.list.form.widgets;
+            this._super.apply(this, arguments);
+            this.rendering_engine = new openerp.web.ListEditableRenderingEngine(this);
+        },
+        renderElement: function() {}
+    });
+    
+    openerp.web.ListEditableRenderingEngine = openerp.web.Class.extend({
+        init: function(view) {
+            this.view = view;
+        },
+        set_fields_view: function(fields_view) {
+            this.fvg = fields_view;
+        },
+        render_to: function($element) {
+            var self = this;
+    
+            var xml = openerp.web.json_node_to_xml(this.fvg.arch);
+            var $xml = $(xml);
+            $xml.children().each(function(i, el) {
+                $td = $("<td>");
+                var tag_name = el.tagName.toLowerCase();
+                var key = tag_name;
+                if (tag_name === "field") {
+                    var name = $(el).attr("name");
+                    key = $(el).attr('widget') || self.fvg.fields[name].type;
+                }
+                var obj = self.view.registry.get_object(key);
+                var w = new (obj)(self.view, openerp.web.xml_to_json(el));
+                w.appendTo($td);
+                $td.appendTo($element);
+            });
         },
     });
 };
