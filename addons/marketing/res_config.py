@@ -19,32 +19,23 @@
 #
 ##############################################################################
 
+from osv import fields, osv
 
-{
-    "name" : "Marketing",
-    "version" : "1.1",
-    "depends" : ["base", "base_setup"],
-    "author" : "OpenERP SA",
-    "category": 'Hidden/Dependency',
-    'complexity': "expert",
-    "description": """
-Menu for Marketing.
-===================
+class marketing_configuration(osv.osv_memory):
+    _name = 'marketing.configuration'
+    _inherit = 'res.config.settings'
+    
+    _columns = {
+        'module_marketing': fields.boolean('Marketing',
+                           help ="""It installs the marketing_campaign module."""),
+        'module_marketing_campaign': fields.boolean('Marketing Campaign',
+                           help ="""It installs the marketing_campaign module."""),
+        'module_marketing_campaign_crm_demo': fields.boolean('Demo data for the module Marketing Campaign',
+                           help ="""It installs the marketing_campaign_crm_demo module."""),
+        'module_crm_profiling': fields.boolean('Track customer profile to focus your campaigns',
+                           help ="""It install the crm_profiling module."""), 
+    }
 
-Contains the installer for marketing-related modules.
-    """,
-    'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
-        'security/marketing_security.xml',
-        'security/ir.model.access.csv',
-        'marketing_view.xml',
-        'res_config_view.xml',
-    ],
-    'demo_xml': ['marketing_demo.xml'],
-    'installable': True,
-    'auto_install': False,
-    'certificate' : '00598574977629228189',
-    'images': ['images/config_marketing.jpeg'],
-}
+marketing_configuration()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
