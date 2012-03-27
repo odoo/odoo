@@ -1304,6 +1304,15 @@
         <t t-esc="filter.attrs.string or filter.attrs.name or 'Ω'"/>
     </li>
 </ul>
+<t t-name="SearchView.filters.facet">
+    <div class="category oe_filter_category"><t t-esc="facet.get('category')"/></div>
+
+    <div class="search_facet_input_container">
+        <t t-esc="facet.get('value')"/>
+    </div>
+
+    <div class="search_facet_remove VS-icon VS-icon-cancel"/>
+</t>
 <t t-name="SearchView.field">
     <label t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
            t-att-title="attrs.help"

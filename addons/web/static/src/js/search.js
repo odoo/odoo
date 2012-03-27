@@ -642,15 +642,9 @@ openerp.web.search.FilterGroupFacet = VS.ui.SearchFacet.extend({
         this.setMode('not', 'selected');
 
         var value = this.model.get('value');
-        this.$el.html([
-            '<div class="category oe_filter">',
-                this.model.get('category'),
-            '</div>',
-            '<div class="search_facet_input_container">',
-                value,
-            '</div>',
-            '<div class="search_facet_remove VS-icon VS-icon-cancel"></div>'
-        ].join(''));
+        this.$el.html(QWeb.render('SearchView.filters.facet', {
+            facet: this.model
+        }));
         // virtual input so SearchFacet code has something to play with
         this.box = $('<input>').val(value);
 
