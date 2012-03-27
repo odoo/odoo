@@ -38,6 +38,7 @@ modules like base_report_designer and base_report_creator.
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
+        'res_config_view.xml',
     ],
     'demo_xml': [],
     'installable': True,

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,6 +19,21 @@
 #
 ##############################################################################
 
-import res_config
+from osv import fields, osv
+
+class report_configuration(osv.osv_memory):
+    _name = 'report.configuration'
+    _inherit = 'res.config.settings'
+    
+    _columns = {
+        'module_base_report_designer': fields.boolean('Customise your OpenERP Report with OpenOffice',
+                           help ="""It installs the base_report_designer module."""),
+        'module_report_webkit': fields.boolean('Design OpenERP report in HTML',
+                           help ="""It installs the report_webkit module."""),
+        'module_report_webkit_sample': fields.boolean('Samples of HTML report design',
+                           help ="""It installs the report_webkit_sample module."""),
+    }
+
+report_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
