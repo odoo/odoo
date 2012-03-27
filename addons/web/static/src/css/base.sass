@@ -322,9 +322,17 @@ $colour4: #8a89ba
                         @include box-shadow(none)
     // }}}
 
-    // FormView Widgets {{{
-    .oe_form_label_help[for], .oe_form_label[for]
-        white-space: nowrap
+    // FormView Layout {{{
+    .oe_form
+        border: 1px solid black
+        margin: 5%
+        padding: 10px
+    .oe_form_status
+        background: #ccc
+    .oe_form_status_left
+        float: left
+    .oe_form_status_right
+        float: right
     .oe_form_group_cell
         .oe_form_button
             width: 100%
@@ -344,6 +352,10 @@ $colour4: #8a89ba
             display: block
     .oe_layout_debug_cell
         display: none
+    // }}}
+    // FormView Widgets {{{
+    .oe_form_label_help[for], .oe_form_label[for]
+        white-space: nowrap
     // }}}
 
 // Transitional overrides for old styles {{{
