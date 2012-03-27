@@ -1249,6 +1249,7 @@ openerp.point_of_sale = function(db) {
                 id = 0;
             }
             c = pos.categories[id];
+            currency = pos.get('currency');
             this.categoryView.ancestors = c.ancestors;
             this.categoryView.children = c.children;
             this.categoryView.renderElement();
@@ -1307,6 +1308,7 @@ openerp.point_of_sale = function(db) {
                             // product with a specific price - specified into the barcode
                             barcode = barcode.substring(2,5);
                             // TODO conversion euro - old local currencies
+                            new db.web.Model('res.currency').get_func('_get_conversion_rate')(['FRF', 'EUR']).pipe(function(result){});
                             price = Number(barcode.substring(7,5))/100;
                             weight = '';
                         } else if (barcode.substring(0,2) in ['21','23','27','29','25']) {
