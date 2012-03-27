@@ -82,7 +82,7 @@ class purchase_config_settings(osv.osv_memory):
 
     _defaults = {
         'default_invoice_method': 'manual',
-        'tax_policy': 'global_on_order',
+        'tax_policy': 'no_tax',
     }
 
     def onchange_tax_policy(self, cr, uid, ids, tax_policy, context=None):

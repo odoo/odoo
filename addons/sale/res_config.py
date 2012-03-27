@@ -127,7 +127,7 @@ class sale_configuration(osv.osv_memory):
     _defaults = {
         'default_order_policy': 'manual',
         'time_unit': _get_default_time_unit,
-        'tax_policy': 'global_on_order',
+        'tax_policy': 'no_tax',
     }
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
