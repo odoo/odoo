@@ -754,7 +754,7 @@ openerp.web.FormRenderingEngine = openerp.web.Class.extend({
         // TODO: I know this will save the world and all the kitten for a moment,
         //       but one day, we will have to get rid of xml2json
         var xml = openerp.web.json_node_to_xml(this.fvg.arch);
-        this.$form = $(xml);
+        this.$form = $('<div>' + xml + '</div>');
 
         this.to_init = [];
         this.process(this.$form);
