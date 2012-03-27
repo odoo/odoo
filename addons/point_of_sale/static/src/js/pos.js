@@ -1281,7 +1281,28 @@ openerp.point_of_sale = function(db) {
                         console.log('barcode: ' + barcode);
                         var selectedOrder = self.shop.get('selectedOrder');
                         var productsCollection = self.shop.get('products');
-                        var controlDigit = Number(barcode.charAt(12));
+                        // EAN digit control calculation, based on http://es.wikipedia.org/wiki/EAN#Javascript , licensed under Creative Commons Attribution-Share-Alike License 3.0
+                        var checksum = 0;
+                        ean13Reversed = codeNumbers.reverse();
+                        for (var pos in ean13Reversed) {
+                            checksum += ean13Reversed[pos] * (3 - 2 * (pos % 2));
+                        }
+                        checksum = (10 - (checksum % 10)) % 10;
+                        // End of EAN digit control calculation
+                        if (Number(barcode.charAt(12)) !== checksum) {
+                            // barcode read error, raise warning
+                            $(QWeb.render('pos-scan-warning')).dialog({
+                                resizable: false,
+                                height:220,
+                                modal: true,
+                                title: "Warning",
+                                buttons: {
+                                    "OK": function() {
+                                        $( this ).dialog( "close" );
+                                    },
+                                }
+                            });
+                        }
                         if (barcode.substring(0,2) in ['02', '22', '24', '26', '28']) {
                             // product with a specific price - specified into the barcode
                             barcode = barcode.substring(2,5);
