@@ -1281,6 +1281,7 @@ openerp.point_of_sale = function(db) {
                         console.log('barcode: ' + barcode);
                         var selectedOrder = self.shop.get('selectedOrder');
                         var productsCollection = self.shop.get('products');
+                        var controlDigit = Number(barcode.charAt(12));
                         if (barcode.substring(0,2) in ['02', '22', '24', '26', '28']) {
                             // product with a specific price - specified into the barcode
                             barcode = barcode.substring(2,5);
