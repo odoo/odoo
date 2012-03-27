@@ -392,18 +392,12 @@ class account_invoice(osv.osv):
         email_template_obj = self.pool.get('email.template')
         mod_obj = self.pool.get('ir.model.data')
 
-        template_id = email_template_obj.search(cr, uid, [('model_id', '=', 'account.invoice')], context=context)[0]
-        template = email_template_obj.browse(cr, uid, template_id)
-        model_data_id = mod_obj._get_id(cr, uid, 'mail', 'email_compose_message_wizard_form')
-        res_id = mod_obj.browse(cr, uid, model_data_id, context=context).res_id
+        template_id = email_template_obj.search(cr, uid, [('model_id', '=', 'account.invoice')], context=context)
+        res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
+        res_id = res and res[1] or False
 
-        #EDI EXport data
-        id = ids[0]
-        invoice = self.browse(cr, uid, id, context)
-#        if not invoice.partner_id.opt_out:
-#            invoice.edi_export_and_email(template_ext_id='account.email_template_edi_invoice', context=context)
         ctx = context.copy()
-        ctx.update({'active_model': 'account.invoice', 'active_id': invoice.id, 'mail.compose.template_id': template.id})
+        ctx.update({'active_model': 'account.invoice', 'active_id': ids[0], 'mail.compose.template_id': template_id})
 
         return {
             'view_type': 'form',
