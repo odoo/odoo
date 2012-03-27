@@ -44,14 +44,14 @@ if (SearchBox_renderSearchInput.toString() !== VS.ui.SearchBox.prototype.renderS
         + "Please fix replacement.");
 }
 var SearchBox_searchEvent = function (e) {
-    var query = this.value();
+    var query = null;
     this.renderFacets();
     this.focusSearch(e);
     this.app.options.callbacks.search(query, this.app.searchQuery);
   };
 if (SearchBox_searchEvent.toString() !== VS.ui.SearchBox.prototype.searchEvent.toString().replace(
-        /this\.focusSearch\(e\);\n[ ]{4}this\.value\(query\)/,
-        'this.renderFacets();\n    this.focusSearch(e)')) {
+        /this\.value\(\);\n[ ]{4}this\.focusSearch\(e\);\n[ ]{4}this\.value\(query\)/,
+        'null;\n    this.renderFacets();\n    this.focusSearch(e)')) {
     throw new Error(
         "Trying to replace wrong version of VS.ui.SearchBox#searchEvent. "
         + "Please fix replacement.");
@@ -119,6 +119,18 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 }
             }
         });
+
+        var search = function () { self.vs.searchBox.searchEvent({}); };
+        // searchQuery operations
+        this.vs.searchQuery
+            .off('add').on('add', search)
+            .off('change').on('change', search)
+            .off('reset').on('reset', search)
+            .off('remove').on('remove', function (record, collection, options) {
+                if (options['trigger_search']) {
+                    search();
+                }
+            });
 
         if (this.hidden) {
             this.$element.hide();
@@ -833,7 +845,6 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
             return f.get('field') === self; });
         if (facet) {
             fs = facet.get('json');
-            this.view.vs.searchQuery.remove(facet);
 
             if (_.include(fs, filter)) {
                 fs = _.without(fs, filter);
@@ -841,9 +852,15 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
                 fs.push(filter);
             }
             if (_(fs).isEmpty()) {
-                this.view.vs.searchBox.renderFacets();
-                return;
+                this.view.vs.searchQuery.remove(facet, {trigger_search: true});
+            } else {
+                facet.set({
+                    json: fs,
+                    value: _(fs).map(function (f) {
+                        return f.attrs.string || f.attrs.name }).join(' | ')
+                });
             }
+            return;
         } else {
             fs = [filter];
         }
