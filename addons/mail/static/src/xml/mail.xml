@@ -64,7 +64,7 @@
     
     <t t-name="NoteDisplay">
         <p class="oe_mail_msg">
-            <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="thread.name"/></a>
+            <a href="#" class="intlink oe_mail_oe_intlink" t-attf-data-res-model='{params.res_model}' t-attf-data-res-id='{params.res_id}'><t t-raw="record.record_name"/></a>
             <span class="oe_mail_msg_body"><t t-raw="record.body_text"/></span>
             <t t-if="record.tr_body_text"><span class="oe_mail_msg_body_short"><t t-raw="record.tr_body_text"/></span></t>
             <br />

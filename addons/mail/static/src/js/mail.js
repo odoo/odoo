@@ -50,7 +50,6 @@ openerp.mail = function(session) {
             this.ds = new session.web.DataSet(this, this.params.res_model);
             this.ds_users = new session.web.DataSet(this, 'res.users');
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
-            this.name = 'Unknown record'
             this.sorted_comments = {'root_ids': [], 'root_id_msg_list': {}};
             // display customization vars
             this.display = {};
@@ -65,21 +64,16 @@ openerp.mail = function(session) {
         
         start: function() {
             this._super.apply(this, arguments);
-            var self = this;
             // customize display
             if (! this.display.show_post_comment) this.$element.find('div.oe_mail_thread_act').hide();
-            if (! this.display.show_more) this.$element.find('div.oe_mail_thread_more').hide();
+            //if (this.display.show_more) this.$element.find('div.oe_mail_thread_more').show();
             // add events
             this.add_events();
-            // get record name
-            var name_get_done = self.ds.name_get([this.params.res_id]).then(function (records) { self.name = records[0][1]; });
-            var display_done = $.when(name_get_done).then(function () {
-                /* display user, fetch comments */
-                self.display_current_user();
-                if (self.params.records) return self.fetch_comments_tmp(self.params.records);
-                else return self.init_comments();
-            });
-            return display_done && name_get_done
+            /* display user, fetch comments */
+            this.display_current_user();
+            if (this.params.records) var display_done = this.fetch_comments_tmp(this.params.records);
+            else var display_done = this.init_comments();
+            return display_done
         },
         
         add_events: function() {
@@ -163,25 +157,25 @@ openerp.mail = function(session) {
             var self = this;
             var defer = this.ds.call('message_load', [[this.params.res_id], 1, 0, [ ['id', 'child_of', this.params.parent_id], ['id', '!=', this.params.parent_id]] ]);
             $.when(defer).then(function (records) {
-                console.log(records);
+                //console.log(records);
                 if (records.length <= 0) self.display.show_more = false;
                 self.display_comments(records_good);
-                if (self.display.show_more == false) {
-                    self.$element.find('button.oe_mail_button_more:last').hide(); }
+                if (self.display.show_more == true) self.$element.find('div.oe_mail_thread_more:last').show();
+                else self.$element.find('div.oe_mail_thread_more:last').hide();
                 });
             return defer;
         },
         
         fetch_comments: function (limit, offset, domain) {
-            console.log('fetch comments');
+            //console.log('fetch comments');
             var self = this;
             var defer = this.ds.call('message_load', [[this.params.res_id], ( (limit+1)||(this.params.limit+1) ), (offset||this.params.offset), (domain||[]), (this.params.thread_level > 0), (this.sorted_comments['root_ids'])]);
             $.when(defer).then(function (records) {
                 if (records.length <= self.params.limit) self.display.show_more = false;
                 else records.pop();
                 self.display_comments(records);
-                if (self.display.show_more == false) {
-                    self.$element.find('button.oe_mail_button_more:last').hide(); }
+                if (self.display.show_more == true) self.$element.find('div.oe_mail_thread_more:last').show();
+                else  self.$element.find('div.oe_mail_thread_more:last').hide();
                 });
             return defer;
         },
@@ -351,8 +345,8 @@ openerp.mail = function(session) {
         
         do_more: function () {
             domain = this.get_fetch_domain(this.sorted_comments);
-            console.log(domain);
-            console.log(this.params.limit + '-' + this.params.offset + '-' + this.params.parent_id + '-' + this.params.res_id);
+            //console.log(domain);
+            //console.log(this.params.limit + '-' + this.params.offset + '-' + this.params.parent_id + '-' + this.params.res_id);
             //return true;
             return this.fetch_comments(this.params.limit, this.params.offset, domain);
         },
@@ -652,7 +646,7 @@ openerp.mail = function(session) {
          */
         display_comments: function (records) {
             var sorted_comments = this.sort_comments(records);
-            console.log(sorted_comments);
+            //console.log(sorted_comments);
             var self = this;
             _(sorted_comments.model_list).each(function (model_name) {
                 _(sorted_comments.models[model_name].root_ids).each(function (id) {
