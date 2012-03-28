@@ -176,8 +176,13 @@
                     <field name="task"/>
                     <field name="user_id"/>
                     <templates>
-			<t t-name="kanban-box">
-			    <div class="oe_module_vignette oe_kanban_box oe_kanban_color_border">
+                        <t t-name="task_details">
+                            <ul class="oe_kanban_tooltip" t-if="record.open_task.raw_value">
+                                <li><b>Total Task:</b> <field name="open_task"/></li>
+                            </ul>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div class="oe_module_vignette oe_kanban_box oe_kanban_color_border">
                                 <div class="oe_module_icon oe_project oe_project_border">
                                     <div class="sequence">
                                         <a type="edit">
@@ -193,27 +198,30 @@
                                 </div>
                                 <div class="oe_module_desc">
                                     <h4 class="oe_project_font1"><a type="edit"><div class="oe_project_font"><field name="name"/></div></a></h4>
-                                    <div class="progress invoiced">
-                                    <br/>
-                                        <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
-                                       <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
-                                       <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
-                                    </div>
+                                    <table border="0" width="350px">
+                                        <tr>
+                                            <td align="left" valign="bottom" class="buttons">
+                                                <t t-if="record.task.raw_value">
+                                                    <button name="open_tasks" class="oe_project_buttons" type="object" tooltip="task_details"><img src="/project/static/src/img/tasks.png" class="image"/></button>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                                 <table border="0" width="350px">
                                     <tr>
-                                    	<td align="left">
-                                    	    <t t-foreach="record.members.raw_value" t-as="members">
-                                       		<a type="edit"><img class="oe_topbar_avatar" data-default-src="/web/static/src/img/topbar-avatar.png" src="/web/static/src/img/topbar-avatar.png"/></a>
-                                    	    </t>
-                                    	</td>
-                                        <td align="right" valign="bottom" class="buttons">
-
-					    <t t-if="record.task.raw_value">
-                                                <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks.png" width="20" height="20" align="top"/></button>
-
- 					    </t>
-
+                                        <td align="left">
+                                            <t t-foreach="record.members.raw_value" t-as="members">
+                                            <a type="edit"><img class="oe_topbar_avatar" data-default-src="/web/static/src/img/topbar-avatar.png" src="/web/static/src/img/topbar-avatar.png"/></a>
+                                            </t>
+                                        </td>
+                                        <td align="right" valign="bottom">
+                                            <div class="progress invoiced">
+                                            <br/>
+                                                <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
+                                               <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
+                                               <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
+                                            </div>
                                         </td>
                                     </tr>
                                 </table>

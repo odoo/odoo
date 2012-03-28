@@ -105,10 +105,34 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='task']" position="after">
-                    <field name="phase"/>
+                    <field name="phases"/>
                 </xpath>
             </field>
         </record>
+        
+        <record id="view_project_kanban_phase" model="ir.ui.view">
+            <field name="name">project.project.kanban.inherited</field>
+            <field name="model">project.project</field>
+            <field name="type">kanban</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+            <field name="task" position="after">
+            	<field name="phases"/>
+            </field><!--
+                <t t-name="phase_details">
+                    <ul class="oe_kanban_tooltip">
+                        <li><b>Phases</b></li>
+                    </ul>
+                </t>
+-->
+                <xpath expr="//td[@class='buttons']" position="inside">
+                    <t t-if="record.phases.raw_value">
+                	<button name="open_phase" class="oe_project_buttons" type="object" tooltip="phase_details"><img src="/project_long_term/static/src/img/phases_icon.jpg" class="image"/></button>
+                    </t>
+                </xpath>
+            </field>
+        </record>
+        
         <record id="view_project_phase_form" model="ir.ui.view">
             <field name="name">project.phase.form</field>
             <field name="model">project.phase</field>

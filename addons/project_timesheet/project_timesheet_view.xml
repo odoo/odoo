@@ -32,9 +32,16 @@
                 <field name="task" position="after">
                     <field name="timesheets"/>
                 </field>
+<!--
+                    <t t-name="timesheet_details">
+                        <ul class="oe_kanban_tooltip">
+                            <li><b>Timesheet</b></li>
+                        </ul>
+                    </t>
+-->
                 <xpath expr="//td[@class='buttons']" position="inside">
                     <t t-if="record.timesheets.raw_value">
-                        <button name="open_timesheets" class="oe_project_buttons" type="object"><img src="/project/static/src/img/timesheet.png" width="18" height="18" align="top"/></button>
+                        <button name="open_timesheets" class="oe_project_buttons" type="object" tooltip="timesheet_details"><img src="/project_timesheet/static/src/img/timesheet.png" class="image"/></button>
                     </t>
                 </xpath>
             </field>
