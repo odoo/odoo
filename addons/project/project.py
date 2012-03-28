@@ -154,6 +154,14 @@ class project(osv.osv):
             if proj.tasks:
                 raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks. I suggest you to desactivate it.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
+    
+    def _open_task(self, cr, uid, ids, field_name, arg, context=None):
+        open_task={}
+        task_pool=self.pool.get('project.task')
+        for id in ids:
+            task_ids = task_pool.search(cr, uid, [('project_id', '=', id)])
+            open_task[id] = len(task_ids)
+        return open_task
 
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
@@ -192,7 +200,47 @@ class project(osv.osv):
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'task': fields.boolean('Task',help = "If you check this field tasks appears in kanban view"),
+        'open_task': fields.function(_open_task , type='integer',string="Open Tasks"),
      }
+    
+    def open_tasks(self, cr, uid, ids, context=None):
+        #Open the View for the Tasks for the project
+        """
+        This opens Tasks views
+        @return :Dictionary value for task view
+        """
+        if context is None:
+            context = {}
+        value = {}
+        data_obj = self.pool.get('ir.model.data')
+        for project in self.browse(cr, uid, ids, context=context):
+            # Get Task views
+            tree_view = data_obj.get_object_reference(cr, uid, 'project', 'view_task_tree2')
+            form_view = data_obj.get_object_reference(cr, uid, 'project', 'view_task_form2')
+            calander_view = data_obj.get_object_reference(cr, uid, 'project', 'view_task_calendar')
+            search_view = data_obj.get_object_reference(cr, uid, 'project', 'view_task_search_form')
+            kanban_view = data_obj.get_object_reference(cr, uid, 'project', 'view_task_kanban')
+            context.update({
+                #'search_default_user_id': uid,
+                'search_default_project_id':project.id,
+                #'search_default_open':1,
+            })
+            value = {
+                'name': _('Task'),
+                'context': context,
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': 'project.task',
+                'view_id': False,
+                'domain':[('project_id','in',ids)],
+                'context': context,
+                'views': [(kanban_view and kanban_view[1] or False, 'kanban'),(tree_view and tree_view[1] or False, 'tree'),(calander_view and calander_view[1] or False, 'calendar'),(form_view and form_view[1] or False, 'form')],
+                'type': 'ir.actions.act_window',
+                'search_view_id': search_view and search_view[1] or False,
+                'nodestroy': True
+            }
+        return value
+    
     def _get_type_common(self, cr, uid, context):
         ids = self.pool.get('project.task.type').search(cr, uid, [('project_default','=',1)], context=context)
         return ids

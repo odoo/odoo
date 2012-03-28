@@ -171,14 +171,18 @@
                     <field name="effective_hours"/>
                     <field name="total_hours"/>
                     <field name="date"/>
-                    <field name="issues"/>
+
+                    <field name="members"/>
+                    <field name="task"/>
+                    <field name="user_id"/>
                     <templates>
 			<t t-name="kanban-box">
 			    <div class="oe_module_vignette oe_kanban_box oe_kanban_color_border">
                                 <div class="oe_module_icon oe_project oe_project_border">
                                     <div class="sequence">
-                                        <a type="edit"><img class="oe_topbar_avatar" data-default-src="/web/static/src/img/topbar-avatar.png" src="/web/static/src/img/topbar-avatar.png"/></a>
-                                        <!--<field name="priority"/>-->
+                                        <a type="edit">
+                                            <img t-att-src="kanban_gravatar(record.user_id.value, 22)" data-default-src="/web/static/src/img/topbar-avatar.png" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>
+                                        </a>
                                     </div>
                                     <kbd class="user">Manager</kbd><br/>
                                     <div class="manager"><field name="user_id"/></div>
@@ -198,8 +202,18 @@
                                 </div>
                                 <table border="0" width="350px">
                                     <tr>
-                                        <td align="right" valign="bottom" class="tasks">
-                                            <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks.png" width="20" height="20" align="top"/></button>()
+                                    	<td align="left">
+                                    	    <t t-foreach="record.members.raw_value" t-as="members">
+                                       		<a type="edit"><img class="oe_topbar_avatar" data-default-src="/web/static/src/img/topbar-avatar.png" src="/web/static/src/img/topbar-avatar.png"/></a>
+                                    	    </t>
+                                    	</td>
+                                        <td align="right" valign="bottom" class="buttons">
+
+					    <t t-if="record.task.raw_value">
+                                                <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks.png" width="20" height="20" align="top"/></button>
+
+ 					    </t>
+
                                         </td>
                                     </tr>
                                 </table>
