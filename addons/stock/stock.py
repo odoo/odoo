@@ -890,6 +890,8 @@ class stock_picking(osv.osv):
         #TOFIX: assignment of move lines should be call before testing assigment otherwise picking never gone in assign state
         ok = True
         for pick in self.browse(cr, uid, ids):
+            if pick.type == 'in':
+                return True
             mt = pick.move_type
             for move in pick.move_lines:
                 if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
