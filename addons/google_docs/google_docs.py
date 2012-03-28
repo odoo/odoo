@@ -78,16 +78,17 @@ class google_docs_ir_attachment(osv.osv):
     def copy_gdoc(self, cr, uid, model, google_res_id, ids,context=None):
         client = self._auth(cr, uid)
         # fetch and copy the original document
+        print 'test'
         original_resource = client.get_resource_by_id(google_res_id)
-        #copy the document you choose in the configuration 
-        copy_resource = client.copy_resource(original_resource,'copy_foo')
+        #copy the document you choose in the configuration
+        copy_resource = client.copy_resource(original_resource,'copy_%s' % original_resource.title.text)
         
         # register into the db
         self.create(cr, uid, {
             'res_model': model,
             'res_id': ids[0],
             'type': 'url',
-            'name': 'copy_%s' % gdocs_resource.title.text,
+            'name': 'copy_%s' % original_resource.title.text,
             'url': copy_resource.get_alternate_link().href
         },context=context)
 
