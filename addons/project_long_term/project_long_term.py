@@ -215,10 +215,59 @@ project_user_allocation()
 
 class project(osv.osv):
     _inherit = "project.project"
+    
+    def _open_phase(self, cr, uid, ids, field_name, arg, context=None):
+        open_phase={}
+        phase_pool=self.pool.get('project.phase')
+        for id in ids:
+            phase_ids = phase_pool.search(cr, uid, [('project_id', '=', id)])
+            open_phase[id] = len(phase_ids)
+        return open_phase
+     
     _columns = {
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
-        'phase' : fields.boolean('Phase',help = "If you check this field Phases are appears in kanban view")
+        'phases' : fields.boolean('Phase',help = "If you check this field Phases are appears in kanban view"),
+        'open_phases' : fields.function(_open_phase , type='integer',string="Open Phases"),
+        
     }
+    
+    def open_phase(self, cr, uid, ids, context=None):
+        #Open the View for the Tasks for the project
+        """
+        This opens Tasks views
+        @return :Dictionary value for task view
+        """
+        if context is None:
+            context = {}
+        value = {}
+        data_obj = self.pool.get('ir.model.data')
+        for project in self.browse(cr, uid, ids, context=context):
+            # Get Task views
+            tree_view = data_obj.get_object_reference(cr, uid, 'project_long_term', 'view_project_phase_list')
+            form_view = data_obj.get_object_reference(cr, uid, 'project_long_term', 'view_project_phase_form')
+            calander_view = data_obj.get_object_reference(cr, uid, 'project_long_term', 'view_project_phase_calendar')
+            search_view = data_obj.get_object_reference(cr, uid, 'project_long_term', 'view_project_phase_search')
+            context.update({
+                #'search_default_user_id': uid,
+                'search_default_project_id':project.id,
+                #'search_default_open':1,
+            })
+            value = {
+                'name': _('Phase'),
+                'context': context,
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': 'project.phase',
+                'view_id': False,
+                'domain':[('project_id','in',ids)],
+                'context': context,
+                'views': [(tree_view and tree_view[1] or False, 'tree'),(calander_view and calander_view[1] or False, 'calendar'),(form_view and form_view[1] or False, 'form')],
+                'type': 'ir.actions.act_window',
+                'search_view_id': search_view and search_view[1] or False,
+                'nodestroy': True
+            }
+        return value
+    
     def schedule_phases(self, cr, uid, ids, context=None):
         context = context or {}
         if type(ids) in (long, int,):
