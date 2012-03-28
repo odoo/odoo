@@ -8,12 +8,15 @@ function launch_wizard(self, view, user_type, invite) {
         if (view.fields_view.type == 'form') {
             domain = new session.web.CompoundDomain(domain, [['id', '=', view.datarecord.id]]);
         }
+        if (view.fields_view.type == 'form') rec_name = view.datarecord.name;
+        else rec_name = '';
         self.rpc('/web/session/eval_domain_and_context', {
             domains: [domain],
             contexts: [view.dataset.context]
         }, function (result) {
             Share.create({
                 name: action.name,
+                record_name: rec_name,
                 domain: result.domain,
                 action_id: action.id,
                 user_type: user_type || 'embedded',
@@ -78,11 +81,11 @@ session.web.ViewManagerAction.include({
     },
     on_click_share_link: function(e) {
         e.preventDefault();
-        launch_wizard(this, this.views[this.active_view].controller);
+        launch_wizard(this, this.views[this.active_view].controller, 'embedded', false);
     },
     on_click_share: function(e) {
         e.preventDefault();
-        launch_wizard(this, this.views[this.active_view].controller, 'emails');
+        launch_wizard(this, this.views[this.active_view].controller, 'emails', false);
     },
     on_click_share_mail: function(e) {
         e.preventDefault();
