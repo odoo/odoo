@@ -30,8 +30,8 @@
             <field name="view_id" ref="board_sales_manager_form"/>
         </record>
 
-        <menuitem id="board.menu_sales_dasboard" name="Sales" sequence="1" parent="base.menu_dasboard"/>
-        <menuitem action="open_board_sales_manager" icon="terp-graph" id="menu_board_sales_manager" parent="board.menu_sales_dasboard" sequence="0" groups="base.group_sale_manager"/>
+        <menuitem id="board.menu_sales_dashboard" name="Sales" sequence="1" parent="base.menu_reporting_dashboard"/>
+        <menuitem action="open_board_sales_manager" icon="terp-graph" id="menu_board_sales_manager" parent="board.menu_sales_dashboard" sequence="0" groups="base.group_sale_manager"/>
 
 
     <record id="action_quotation_for_sale" model="ir.actions.act_window">
