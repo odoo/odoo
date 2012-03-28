@@ -2505,15 +2505,6 @@ action = pool.get('res.config').next(cr, uid, [], context)
            <field name="name">New Company Financial Setting</field>
         </record>
 
-
-        <record id="menu_act_ir_actions_bleble" model="ir.ui.menu">
-            <field name="name">New Company Financial Setting</field>
-            <field eval="1" name="sequence"/>
-            <field name="parent_id" ref="account.menu_finance_accounting"/>
-            <field name="icon">STOCK_EXECUTE</field>
-            <field name="action" ref="ir_actions_server_action_wizard_multi_chart"/>
-        </record>
-
         <record id="account_account_graph" model="ir.ui.view">
             <field name="name">account.account.graph</field>
             <field name="model">account.account</field>
