@@ -315,7 +315,7 @@ class mail_thread(osv.osv):
                             email_bcc = msg_dict.get('bcc', msg_dict.get('email_bcc')),
                             reply_to = msg_dict.get('reply', msg_dict.get('reply_to')),
                             email_date = msg_dict.get('date'),
-                            message_id = msg_dict.get('rmessage-id', msg_dict.get('message_id')),
+                            message_id = msg_dict.get('message-id', msg_dict.get('message_id')),
                             references = msg_dict.get('references')\
                                       or msg_dict.get('in-reply-to'),
                             attachments = msg_dict.get('attachments'),
