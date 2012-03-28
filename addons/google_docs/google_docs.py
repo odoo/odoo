@@ -25,7 +25,6 @@ try:
     from gdata.client import RequestError
     from gdata.docs.service import DOCUMENT_LABEL
     import gdata.auth
-    import webbrowser
 except ImportError:
     raise osv.except_osv(_('Google Docs Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
@@ -33,17 +32,17 @@ class google_docs_ir_attachment(osv.osv):
     _inherit = 'ir.attachment'
 
     def _auth(self, cr, uid,context=None):
-        # check google_base_account
-        users_obj = self.pool.get('res.users')
-        user = users_obj.browse(cr, uid, [uid])[0]
-        if not user.gmail_user or not user.gmail_password:
-            return False
-
-        # login
-        client = gdata.docs.client.DocsClient(source='openerp.com')
-        client.ssl = True
-        client.http_client.debug = False
-        client.ClientLogin(user.gmail_user, user.gmail_password, client.source, service='writely') #authentification in a gmail account
+        '''
+        Connexion with google base account
+        @return client object for connexion
+        '''
+        #pool the google.login in google_base_account
+        google_pool = self.pool.get('google.login')
+        
+        #get gmail password and login
+        user_config = google_pool.default_get( cr, uid, {'user' : '' , 'password' : ''},context=context)
+        #login gmail account
+        client = google_pool.google_login( user_config['user'], user_config['password'], type='docs_client', context=context)
         
         return client
 
@@ -56,47 +55,31 @@ class google_docs_ir_attachment(osv.osv):
            @return the document object.
            @return False if the google_base_account hasn't been configured yet.
         '''
-        # authenticate
-
-        '''
-        client = self._auth(cr, uid)
-        if client == False:
-            return False
-        '''
-        client = self.pool.get('google.oauth').login(cr,uid,ids)
-
-
+        #login with the base account google module
+        client = self._auth(cr, uid,context=context)
         # create the document in google docs
-        if type_doc=='slide':
-            local_resource = gdata.docs.data.Resource(gdata.docs.data.PRESENTATION_LABEL)
-        elif type_doc=='spreadsheet':
-            local_resource = gdata.docs.data.Resource(gdata.docs.data.SPREADSHEET_LABEL)
-        else:
-            local_resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL)
-       
-       #create a new doc in Google Docs 
-       #gdocs_resource = client.post(entry=local_resource, uri='https://docs.google.com/feeds/default/private/full/')
-
+        local_resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL)
+        #create a new doc in Google Docs 
+        gdocs_resource = client.post(entry=local_resource, uri='https://docs.google.com/feeds/default/private/full/')
+        name = gdocs_resource.title
         # register into the db
         self.create(cr, uid, {
             'res_model': model,
             'res_id': ids[0],
             'type': 'url',
-            'name': 'new_foo %s' % (type_doc,) , # TODO pending from the working config
-            'url': ''#gdocs_resource.get_alternate_link().href
+            'name': name,
+            'url': gdocs_resource.get_alternate_link().href,
         },context=context)
         
         
         return 1
 
-    def copy_gdoc(self, cr, uid, model, ids,context=None):
-        #client = self._auth(cr, uid)
-        #with oauth already connect check for the correct token
-        #if client == False:
-        #    return False
+    def copy_gdoc(self, cr, uid, model, google_res_id, ids,context=None):
+        client = self._auth(cr, uid)
         # fetch and copy the original document
-        original_resource = client.get_resource_by_id(gdocs_resource_id)
-        copy_resource = client.copy_resource(entry=original_resource)
+        original_resource = client.get_resource_by_id(google_res_id)
+        #copy the document you choose in the configuration 
+        copy_resource = client.copy_resource(original_resource,'copy_foo')
         
         # register into the db
         self.create(cr, uid, {
@@ -104,7 +87,7 @@ class google_docs_ir_attachment(osv.osv):
             'res_id': ids[0],
             'type': 'url',
             'name': 'file_name',
-            'name': 'copy_foo %s' (type_doc,) ,  #TODO pending from the working config
+            'name': 'copy_foo' ,  #TODO pending from the working config
             'url': copy_resource.get_alternate_link().href
         },context=context)
 
@@ -113,12 +96,14 @@ class google_docs_ir_attachment(osv.osv):
 class google_docs(osv.osv):
     _name = 'google.docs'
 
-    def doc_get(self, cr, uid, model, id, type_doc):
+    def doc_get(self, cr, uid, model, id, type_doc,context=None):
         ir_attachment_ref = self.pool.get('ir.attachment')
         google_docs_config = self.pool.get('google.docs.config').search(cr, uid, [('context_model_id', '=', model)])
-
+        # check if a model is configurate with a template
         if google_docs_config:
-            google_document = ir_attachment_ref.copy_gdoc(cr, uid, model, id)
+            for google_config in self.pool.get('google.docs.config').browse(cr,uid,google_docs_config,context=context):
+                google_res_id = google_config.context_gdocs_resource_id
+            google_document = ir_attachment_ref.copy_gdoc(cr, uid, model,google_res_id, id)
         else:
             google_document = ir_attachment_ref.create_empty_google_doc(cr, uid, model, id, type_doc)
             return -1
@@ -133,13 +118,11 @@ class config(osv.osv):
         'context_gdocs_resource_id': fields.char('Google resource ID', size=64,help='This is the id of the template document you kind find it in the URL'),
         'context_name_template': fields.char('GDoc name template ', size=64, help='This is the name which appears on google side'),
         'context_name': fields.char('Name', size=64, help='This is the attachment\'s name. As well, it appears on the panel.'),
-        'context_multiple': fields.boolean('Multiple documents')
     }
 
     _defaults = {
         'context_name_template': 'Google Document',
         'context_name': 'pr_%(name)',
-        'context_multiple': False,
     }
     def get_config(self, cr, uid, model):
         domain = [('context_model_id', '=', model)]
@@ -147,57 +130,7 @@ class config(osv.osv):
             return False
         else:
             return self.search(cr, uid, domain)
+
 config()
 
 
-
-class oauth (osv.osv):
-    _name = 'google.oauth'
-
-    '''
-    def open_url(self,uid,ids,url,context=None):
-        return {'type' : 'ir.actions.act_url',
-                'url' : url,
-                'target': 'new',
-                }
-    '''
-    def login(self,cr,uid,ids,context=None):
-    
-        # subscribe the google API
-        CONSUMER_KEY = '751376579939.apps.googleusercontent.com'
-        CONSUMER_SECRET = '_KGpgyO8DZIseyG3N-j-h8gN' 
-
-
-        local_resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL)
-        SCOPES = ['https://docs.google.com/feeds/'] #select the google service
-
-        client = gdata.docs.client.DocsClient(source='openerp.com')
-
-        #the callback url
-        oauth_callback_url = 'http://127.0.0.1:8069/'#TODO give a correct dynamic url
-
-        #create a temporary token need to create a google authorization
-        request_token = client.GetOAuthToken(SCOPES, oauth_callback_url, CONSUMER_KEY, CONSUMER_SECRET)
-        #create an autorization google link
-        auth_url = request_token.generate_authorization_url()
-        #openthe link in your browser
-        webbrowser.open(str(auth_url))
-
-        #when you accept the autorization you are linked in your callback url
-        #you need to catch this url for the moment I copy past it in a raw_input
-        url_after=raw_input()
-
-        #create an autorization token
-        request_token_authorized = gdata.gauth.AuthorizeRequestToken(request_token, url_after)
-        #upgrade the token
-        access_token = client.GetAccessToken(request_token_authorized)
-
-
-        #when your access token you can connect your google services
-        client.auth_token = gdata.gauth.OAuthHmacToken(CONSUMER_KEY,
-                                                       CONSUMER_SECRET,
-                                                       access_token.token,
-                                                       access_token.token_secret,
-                                                       gdata.gauth.ACCESS_TOKEN)
-
-        return client

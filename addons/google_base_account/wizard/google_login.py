@@ -43,6 +43,8 @@ class google_login(osv.osv_memory):
             gd_client = gdata.contacts.service.ContactsService()
         if type == 'calendar':
             gd_client = gdata.calendar.service.CalendarService()
+        if type =='docs_client':
+            gd_client = gdata.docs.client.DocsClient()
         else:
             gd_client = gdata.contacts.service.ContactsService()     
         try:    
