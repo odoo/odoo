@@ -186,9 +186,11 @@ class ir_cron(osv.osv):
         """ Try to process one cron job.
 
         This selects in database all the jobs that should be processed. It then
-        tries to lock each of them and, if it succeeds, run
-        the cron job (if it doesn't succeed, it means the job was already
-        locked to be taken care of by another thread) and stop.
+        tries to lock each of them and, if it succeeds, run the cron job (if it
+        doesn't succeed, it means the job was already locked to be taken care
+        of by another thread) and return.
+
+        If a job was processed, returns True, otherwise returns False.
         """
         db = openerp.sql_db.db_connect(db_name)
         cr = db.cursor()
@@ -239,6 +241,10 @@ class ir_cron(osv.osv):
 
     @classmethod
     def _run(cls, db_names):
+        """
+        Class method intended to be run in a dedicated process to handle jobs.
+        This polls the database for jobs that can be run every 60 seconds.
+        """
         global quit_signal_received
         while not quit_signal_received:
             t1 = time.time()
