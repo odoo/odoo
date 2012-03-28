@@ -379,7 +379,7 @@
                 </field>
             </field>
        </record>
-
+        
         <record id="view_project_kanban_inherited" model="ir.ui.view">
             <field name="name">project.project.kanban.inherited</field>
             <field name="model">project.project</field>
@@ -389,13 +389,31 @@
                 <field name="task" position="after">
                     <field name="issues"/>
                 </field>
+                
+                <!--<t t-extend="ToolTips" t-name="issue">-->
+                <!--    <t t-name="issues">-->
+                <!--        <ul class="oe_kanban_tooltip" t-if="record.open_issues.raw_value">-->
+                <!--            <li><b>Total issues:</b> <field name="open_issues"/></li>-->
+                <!--        </ul>-->
+                <!--    </t>-->
+                <!--</t>-->
+                <xpath expr="//t[@t-name='tasks']" position="after">
+                    <t t-name="issues">
+                        <ul class="oe_kanban_tooltip" t-if="record.open_issues.raw_value">
+                            <li><b>Total issues:</b> <field name="open_issues"/></li>
+                        </ul>
+                   </t>
+                </xpath>
+                
                 <xpath expr="//td[@class='buttons']" position="inside">
                     <t t-if="record.issues.raw_value">
-                        <button name="open_issues" class="oe_project_buttons" type="object"><img src="/project_issue/static/src/img/issue_icon.png" width="50" height="50" align="center" sequence = "2"/></button>
+                        <button name="open_issues" class="oe_project_buttons" type="object" tooltip="tasks"><img src="/project_issue/static/src/img/issue_icon.png" class="project_icon"/></button>
                     </t>
                 </xpath>
             </field>
         </record>
+        
+        
 
     </data>
 </openerp>
