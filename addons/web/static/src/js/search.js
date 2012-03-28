@@ -234,6 +234,12 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * Sets up search view's view-wide auto-completion widget
      */
     setup_global_completion: function () {
+        // Prevent keydown from within a facet's input from reaching the
+        // auto-completion widget and opening the completion list
+        this.$element.on('keydown', '.search_facet input', function (e) {
+            e.stopImmediatePropagation();
+        });
+
         this.$element.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
