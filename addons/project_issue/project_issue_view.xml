@@ -386,18 +386,13 @@
             <field name="type">kanban</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
-                
                 <field name="task" position="after">
                     <field name="issues"/>
                 </field>
-
-                <xpath expr="//td[@class='tasks']" position="replace">
-                    <td class="issues" align="right">
-                        <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks.png" width="20" height="20" align="top"/></button>
-                        <t t-if="record.issues.raw_value == 1">
-                            <button name="open_issues" class="oe_project_buttons" type="object"><img src="/project/static/src/img/bug.png" width="18" height="18" align="top"/></button>
-                        </t>
-                    </td>
+                <xpath expr="//td[@class='buttons']" position="inside">
+                    <t t-if="record.issues.raw_value">
+                        <button name="open_issues" class="oe_project_buttons" type="object"><img src="/project/static/src/img/bug.png" width="18" height="18" align="top"/></button>
+                    </t>
                 </xpath>
             </field>
         </record>
