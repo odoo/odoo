@@ -544,14 +544,18 @@
                                                             <div t-if="record.street2.raw_value">
                                                             <field name="street2"/><br/></div>
                                                             <div t-if="record.city.raw_value or  record.zip.raw_value"><field name="city"/>
-                                                            <field name="zip"/><br/></div><div t-if="record.country_id.raw_value">
-                                                            <field name="country_id"/><br/></div><div t-if="record.email.raw_value">
-                                                            <field name="email"/><br/></div><div t-if="record.mobile.raw_value">
-                                                            <span>Mobile </span><field name="mobile"/><br/>
-                                                            </div><div t-if="record.phone.raw_value">
-                                                            <span>Phone </span><field name="phone"/><br/>
-                                                            </div><div t-if="record.state_id.raw_value">
+                                                            <field name="zip"/><br/></div>
+                                                            <div t-if="record.state_id.raw_value">
                                                             <field name="state_id"/><br/>
+                                                            </div>
+                                                            <div t-if="record.country_id.raw_value">
+                                                            <field name="country_id"/><br/></div><div t-if="record.email.raw_value">
+                                                            <field name="email"/><br/></div>
+                                                            <div t-if="record.mobile.raw_value">
+                                                            <field name="mobile"/><br/>
+                                                            </div>
+                                                            <div t-if="!record.mobile.raw_value and record.phone.raw_value">
+                                                            <field name="phone"/><br/>
                                                             </div></i>
                                                     </td>
                                                     <td t-if="record.is_company.raw_value" valign="top" align="right">
