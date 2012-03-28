@@ -843,8 +843,9 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
                 return;
             var func = new openerp.web.Model("res.users").get_func("read");
             return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
-                // TODO: Only show company if multicompany in use
-                self.$element.find('.oe_topbar_name').text(res.name + '/' + res.company_id[1]);
+                // TODO: Show company if multicompany is in use
+                var topbar_name = _.str.sprintf("%s (%s)", res.name, openerp.connection.db, res.company_id[1]);
+                self.$element.find('.oe_topbar_name').text(topbar_name);
                 return self.shortcut_load();
             });
         };
