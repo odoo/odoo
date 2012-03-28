@@ -250,7 +250,8 @@ class project(osv.osv):
         'active': True,
         'priority': 1,
         'sequence': 10,
-        'type_ids': _get_type_common
+        'type_ids': _get_type_common,
+        'task' : True,
     }
 
     # TODO: Why not using a SQL contraints ?

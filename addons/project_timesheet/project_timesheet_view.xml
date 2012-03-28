@@ -23,6 +23,23 @@
             </field>
         </record>
 
+        <record id="view_project_kanban_inherited" model="ir.ui.view">
+            <field name="name">project.project.kanban.inherited</field>
+            <field name="model">project.project</field>
+            <field name="type">kanban</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <field name="task" position="after">
+                    <field name="timesheets"/>
+                </field>
+                <xpath expr="//td[@class='buttons']" position="inside">
+                    <t t-if="record.timesheets.raw_value">
+                        <button name="open_timesheets" class="oe_project_buttons" type="object"><img src="/project_timesheet/static/src/img/timesheet_icon.png" width="50" height="50" align="center"/></button>
+                    </t>
+                </xpath>
+            </field>
+        </record>
+
         <record id="project_invoice_form_cutomer" model="ir.ui.view">
             <field name="name">Inherit project form : Customer</field>
             <field name="model">project.project</field>

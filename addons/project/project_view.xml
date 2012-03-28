@@ -171,6 +171,7 @@
                     <field name="effective_hours"/>
                     <field name="total_hours"/>
                     <field name="date"/>
+
                     <field name="members"/>
                     <field name="task"/>
                     <field name="user_id"/>
@@ -192,12 +193,15 @@
                                 </div>
                                 <div class="oe_module_desc">
                                     <h4 class="oe_project_font1"><a type="edit"><div class="oe_project_font"><field name="name"/></div></a></h4>
-                                    <div class="progress invoiced">
-                                    <br/>
-                                        <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
-                                       <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
-                                       <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
-                                    </div>
+                                    <table border="0" width="350px">
+                                        <tr>
+                                            <td align="left" valign="bottom" class="buttons">
+                                                <t t-if="record.task.raw_value">
+                                                    <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks_icon.png" width="50" height="50" align="center"/></button>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                                 <table border="0" width="350px">
                                     <tr>
@@ -206,10 +210,13 @@
                                        		<a type="edit"><img class="oe_topbar_avatar" data-default-src="/web/static/src/img/topbar-avatar.png" src="/web/static/src/img/topbar-avatar.png"/></a>
                                     	    </t>
                                     	</td>
-                                        <td align="right" valign="bottom" class="buttons">
-					    					<t t-if="record.task.raw_value">
-                                                <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks.png" width="20" height="20" align="top"/></button>
- 					    					</t>
+                                        <td align="right" valign="bottom">
+					   <div class="progress invoiced">
+                                            <br/>
+                                                <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
+                                               <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
+                                               <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
+                                            </div>
                                         </td>
                                     </tr>
                                 </table>
