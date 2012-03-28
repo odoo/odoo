@@ -171,6 +171,7 @@
                     <field name="effective_hours"/>
                     <field name="total_hours"/>
                     <field name="date"/>
+
                     <field name="members"/>
                     <field name="task"/>
                     <field name="user_id"/>
@@ -207,9 +208,12 @@
                                     	    </t>
                                     	</td>
                                         <td align="right" valign="bottom" class="buttons">
+
 					    <t t-if="record.task.raw_value">
                                                 <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks.png" width="20" height="20" align="top"/></button>
+
  					    </t>
+
                                         </td>
                                     </tr>
                                 </table>

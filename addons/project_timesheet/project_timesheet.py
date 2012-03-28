@@ -43,6 +43,42 @@ class project_project(osv.osv):
                 res['value'].update({'to_invoice': factor_id})
         return res
 
+    def open_timesheets(self, cr, uid, ids, context=None):
+        #Open the View for the Timesheet of the project
+        """
+        This opens Timesheets views
+        @return :Dictionary value for timesheet view
+        """
+        if context is None:
+            context = {}
+        value = {}
+        data_obj = self.pool.get('ir.model.data')
+        for project in self.browse(cr, uid, ids, context=context):
+            # Get Timesheet views
+            tree_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_tree_inherit_account_id')
+            form_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_form_inherit_account_id')
+            search_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_search_account_inherit')
+            context.update({
+                #'search_default_user_id': uid,
+                'search_default_project_id':project.id,
+                #'search_default_open':1,
+            })
+            value = {
+                'name': _('Bill Tasks Works'),
+                'context': context,
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': 'account.analytic.line',
+                'view_id': False,
+            #    'domain':[('project_id','=', context.get('active_id',False))],
+                'context': context,
+                'views': [(tree_view and tree_view[1] or False, 'tree'),(form_view and form_view[1] or False, 'form')],
+                'type': 'ir.actions.act_window',
+                'search_view_id': search_view and search_view[1] or False,
+                'nodestroy': True
+            }
+        return value
+
 project_project()
 
 class project_work(osv.osv):
