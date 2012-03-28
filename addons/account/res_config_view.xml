@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
-        <record id="view_account_config" model="ir.ui.view">
-            <field name="name">Accounting Application</field>
+
+        <record id="view_account_config_settings" model="ir.ui.view">
+            <field name="name">account settings</field>
             <field name="model">account.installer</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Accounting Applications">
+                <form string="Configure Accounting">
                     <field name="chart_template_id" invisible="1"/>
                     <group col="4" colspan="4" string="Warning" attrs="{'invisible': [('chart_template_id','!=',False)]}">
                        <label string="You have no chart of accounts or taxes defined for this company. Select a chart of account to proceed." colspan="4"/>
@@ -107,17 +107,16 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="action_account_config" model="ir.actions.act_window">
-            <field name="name">Configure Accounting Application</field>
+            <field name="name">Configure Accounting</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.installer</field>
-            <field name="view_id" ref="view_account_config"/>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
         </record>
-        
-        <menuitem id="menu_account_config" name="Accounting" parent="base.menu_config" sequence="2" action="action_account_config"/>
-        
+
+        <menuitem id="menu_account_config" name="Accounting" parent="base.menu_config"
+            sequence="6" action="action_account_config"/>
+
     </data>
 </openerp>

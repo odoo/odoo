@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import logging
 import time
 import datetime
 from dateutil.relativedelta import relativedelta
@@ -27,14 +26,12 @@ from operator import itemgetter
 from os.path import join as opj
 
 from tools.translate import _
-from osv import fields, osv
-import netsvc
+from osv import osv, fields
 import tools
 
 class account_configuration(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.settings'
-    __logger = logging.getLogger(_name)
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
@@ -49,97 +46,94 @@ class account_configuration(osv.osv_memory):
         return charts
 
     _columns = {
-            'company_id': fields.many2one('res.company', 'Company',help="Your company."),
-            'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', string='Currency', store=True, help="Currency of your company."),
-            'charts': fields.selection(_get_charts, 'Chart of Accounts',
-                                        required=True,
-                                        help="Installs localized accounting charts to match as closely as "
-                                             "possible the accounting needs of your company based on your "
-                                             "country."),
-            'date_start': fields.date('Start Date', required=True),
-            'date_stop': fields.date('End Date', required=True),
-            'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
-            'has_default_company' : fields.boolean('Has Default Company', readonly=True),
-            'chart_template_id': fields.many2one('account.chart.template', 'Chart Template'),
-            'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year'),
-            'default_paypal_account': fields.char("Your Paypal Account", size=128, help="Paypal username (usually email) for receiving online payments.", default_model='res.company'),
-            'company_footer': fields.char("Footer of Reports", size=128, readonly=True, help="Footer of reports based on your bank accounts."),
-            'sale_journal_id': fields.many2one('account.journal','Sale Journal'),
-            'customer_invoice_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Invoice Sequence'),
-            'customer_invoice_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Invoice Sequence Next Number'),
-            'sale_refund_journal_id': fields.many2one('account.journal','Sale Refund Journal'),
-            'customer_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Refund Sequence'),
-            'customer_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Refund Sequence Next Number'),
-            'purchase_journal_id': fields.many2one('account.journal','Purchase Journal'),
-            'supplier_invoice_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Supplier Invoice Sequence'),
-            'supplier_invoice_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Supplier Invoice Sequence Next Number'),
-            'purchase_refund_journal_id': fields.many2one('account.journal','Purchase Refund Journal'),
-            'supplier_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Supplier Refund Sequence'),
-            'supplier_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Supplier Refund Sequence Next Number'),
+        'company_id': fields.many2one('res.company', 'Company',help="Your company."),
+        'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', string='Currency', store=True, help="Currency of your company."),
+        'charts': fields.selection(_get_charts, 'Chart of Accounts', required=True,
+            help="""Installs localized accounting charts to match as closely as
+                possible the accounting needs of your company based on your country."""),
+        'date_start': fields.date('Start Date', required=True),
+        'date_stop': fields.date('End Date', required=True),
+        'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
+        'has_default_company' : fields.boolean('Has Default Company', readonly=True),
+        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template'),
+        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year'),
+        'default_paypal_account': fields.char("Your Paypal Account", size=128, help="Paypal username (usually email) for receiving online payments.", default_model='res.company'),
+        'company_footer': fields.char("Footer of Reports", size=128, readonly=True, help="Footer of reports based on your bank accounts."),
+        'sale_journal_id': fields.many2one('account.journal','Sale Journal'),
+        'customer_invoice_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Invoice Sequence'),
+        'customer_invoice_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Invoice Sequence Next Number'),
+        'sale_refund_journal_id': fields.many2one('account.journal','Sale Refund Journal'),
+        'customer_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Refund Sequence'),
+        'customer_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Refund Sequence Next Number'),
+        'purchase_journal_id': fields.many2one('account.journal','Purchase Journal'),
+        'supplier_invoice_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Supplier Invoice Sequence'),
+        'supplier_invoice_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Supplier Invoice Sequence Next Number'),
+        'purchase_refund_journal_id': fields.many2one('account.journal','Purchase Refund Journal'),
+        'supplier_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Supplier Refund Sequence'),
+        'supplier_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Supplier Refund Sequence Next Number'),
 
-            'module_account_check_writing': fields.boolean('Support check writings',
-                                            help="""  This allows you to check writing and printing.
-                                            It installs the account_check_writing module."""),
-            'module_account_accountant': fields.boolean('Accountant Features',
-                                        help="""This allows you to access all the accounting features like the journal items and the chart of accounts.
-                                        It installs the account_accountant module."""),
-            'module_account_asset': fields.boolean('Assets Management',
-                                    help="""This allows you to manages the assets owned by a company or an individual. It will keep track of depreciation's occurred on
-                                    those assets. And it allows to create Move's of the depreciation lines.
-                                    It installs the account_asset module."""),
-            'module_account_budget': fields.boolean('Budgets Management',
-                                    help="""This allows accountants to manage analytic and crossovered budgets.
-                                    Once the Master Budgets and the Budgets are defined (in Accounting/Budgets/),
-                                    the Project Managers can set the planned amount on each Analytic Account.
-                                    It installs the account_budget module."""),
-            'module_account_payment': fields.boolean('Supplier Payment Orders',
-                                    help="""This allows you to create and manage your payment orders, with purposes to
-                                    * serve as base for an easy plug-in of various automated payment mechanisms.
-                                    * provide a more efficient way to manage invoice payment.
-                                    It installs the account_payment module."""),
-            'module_account_voucher': fields.boolean('Manage Customer Payments',
-                                    help="""This includes all the basic requirements of Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc.
-                                    It installs the account_voucher module."""),
-            'module_account_followup': fields.boolean('Customer Follow-Ups',
-                                    help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
-                                    It installs the account_followup module."""),
-            'module_account_analytic_plans': fields.boolean('Support Multiple Analytic Plans',
-                                        help="""This allows to use several analytic plans, according to the general journal.
-                                        It installs the account_analytic_plans module."""),
-            'module_account_analytic_default': fields.boolean('Rules for Analytic Assignation',
-                                            help="""Set default values for your analytic accounts
-                                            Allows to automatically select analytic accounts based on criterias:
-                                            * Product
-                                            * Partner
-                                            * User
-                                            * Company
-                                            * Date.
-                                        It installs the account_analytic_default module."""),
-            'module_account_invoice_layout': fields.boolean('Allow notes and subtotals',
-                                            help="""This provides some features to improve the layout of the invoices.
-                                            It gives you the possibility to:
-                                            * order all the lines of an invoice
-                                            * add titles, comment lines, sub total lines
-                                            * draw horizontal lines and put page breaks.
-                                            It installs the account_invoice_layout module."""),
+        'module_account_check_writing': fields.boolean('Support check writings',
+            help="""This allows you to check writing and printing.
+                This installs the module account_check_writing."""),
+        'module_account_accountant': fields.boolean('Accountant Features',
+            help="""This allows you to access all the accounting features, like the journal items and the chart of accounts.
+                This installs the module account_accountant."""),
+        'module_account_asset': fields.boolean('Assets Management',
+            help="""This allows you to manage the assets owned by a company or a person.
+                It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.
+                This installs the module account_asset."""),
+        'module_account_budget': fields.boolean('Budgets Management',
+            help="""This allows accountants to manage analytic and crossovered budgets.
+                Once the master budgets and the budgets are defined,
+                the project managers can set the planned amount on each analytic account.
+                This installs the module account_budget."""),
+        'module_account_payment': fields.boolean('Supplier Payment Orders',
+            help="""This allows you to create and manage your payment orders, with purposes to
+                    * serve as base for an easy plug-in of various automated payment mechanisms, and
+                    * provide a more efficient way to manage invoice payments.
+                This installs the module account_payment."""),
+        'module_account_voucher': fields.boolean('Manage Customer Payments',
+            help="""This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.
+                This installs the module account_voucher."""),
+        'module_account_followup': fields.boolean('Customer Follow-Ups',
+            help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
+                This installs the module account_followup."""),
+        'module_account_analytic_plans': fields.boolean('Support Multiple Analytic Plans',
+            help="""This allows to use several analytic plans, according to the general journal.
+                This installs the module account_analytic_plans."""),
+        'module_account_analytic_default': fields.boolean('Rules for Analytic Assignation',
+            help="""Set default values for your analytic accounts.
+                Allows to automatically select analytic accounts based on criteria like product, partner, user, company, date.
+                This installs the module account_analytic_default."""),
+        'module_account_invoice_layout': fields.boolean('Allow notes and subtotals',
+            help="""This provides some features to improve the layout of invoices.
+                It gives you the possibility to:
+                    * order all the lines of an invoice
+                    * add titles, comment lines, sub total lines
+                    * draw horizontal lines and put page breaks.
+                This installs the module account_invoice_layout."""),
 
-            'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales', group='base.group_user', implied_group='base.group_analytic_account_for_sales',
-                                                               help="Allows you to set analytic account for sale order. It assigns 'Analytic Accounting for Sales' group to all employees."),
-            'group_analytic_account_for_purchase': fields.boolean('Analytic Accounting for Purchase', group='base.group_user', implied_group='base.group_analytic_account_for_purchase',
-                                                                  help="Allows you to set analytic account for purchase order. It assigns 'Analytic Accounting for Purchase' group to all employees."),
-            'group_dates_periods': fields.boolean('Allow dates/periods', group='base.group_user', implied_group='base.group_dates_periods',
-                                                  help="Allows you to keep the period same as your invoice date when you validate the invoice."\
-                                                       "It will add the group 'Allow dates and periods' for all users."),
-            'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices', group='base.group_user', implied_group='base.group_proforma_invoices',
-                                                      help="Allows you to put invoice in pro-forma state. It assigns 'Allow Pro-forma Invoices' group to all employees."),
+        'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales',
+            implied_group='base.group_analytic_account_for_sales',
+            help="Allows you to specify an analytic account on sale orders."),
+        'group_analytic_account_for_purchase': fields.boolean('Analytic Accounting for Purchases',
+            implied_group='base.group_analytic_account_for_purchase',
+            help="Allows you to specify an analytic account on purchase orders."),
+        'group_dates_periods': fields.boolean('Allow dates/periods',
+            implied_group='base.group_dates_periods',
+            help="Allows you to keep the period same as your invoice date when you validate the invoice."),
+        'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices',
+            implied_group='base.group_proforma_invoices',
+            help="Allows you to put invoices in pro-forma state."),
 
-            'multi_charts_id':fields.many2one('wizard.multi.charts.accounts', 'Multi charts accounts'),
-            'taxes_id':fields.many2one('account.tax.template', 'Default Sale Tax', domain="[('type_tax_use','=','sale')]"),
-            'supplier_taxes_id':fields.many2one('account.tax.template', 'Default Purchase Tax', domain="[('type_tax_use','=','purchase')]"),
-            'sale_tax_rate': fields.float('Sales Tax(%)'),
-            'purchase_tax_rate': fields.float('Purchase Tax(%)'),
-            'complete_tax_set': fields.boolean('Complete Set of Taxes'),
+        'multi_charts_id':fields.many2one('wizard.multi.charts.accounts', 'Multi charts accounts'),
+        'taxes_id':fields.many2one('account.tax.template', 'Default Sale Tax', domain="[('type_tax_use','=','sale')]"),
+        'supplier_taxes_id':fields.many2one('account.tax.template', 'Default Purchase Tax', domain="[('type_tax_use','=','purchase')]"),
+        'sale_tax_rate': fields.float('Sales Tax(%)'),
+        'purchase_tax_rate': fields.float('Purchase Tax(%)'),
+        'complete_tax_set': fields.boolean('Complete Set of Taxes'),
     }
+
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id and user.company_id.id or False
@@ -149,12 +143,12 @@ class account_configuration(osv.osv_memory):
         return bool(count == 1)
 
     _defaults = {
-            'date_start': lambda *a: time.strftime('%Y-01-01'),
-            'date_stop': lambda *a: time.strftime('%Y-12-31'),
-            'period': 'month',
-            'company_id': _default_company,
-            'has_default_company': _default_has_default_company,
-            'charts': 'configurable',
+        'date_start': lambda *a: time.strftime('%Y-01-01'),
+        'date_stop': lambda *a: time.strftime('%Y-12-31'),
+        'period': 'month',
+        'company_id': _default_company,
+        'has_default_company': _default_has_default_company,
+        'charts': 'configurable',
     }
 
     def _check_default_tax(self, cr, uid, context=None):
@@ -319,7 +313,5 @@ class account_configuration(osv.osv_memory):
                         fy_obj.create_period(cr, uid, [fiscal_id])
                     elif res['period'] == '3months':
                         fy_obj.create_period3(cr, uid, [fiscal_id])
-
-account_configuration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
