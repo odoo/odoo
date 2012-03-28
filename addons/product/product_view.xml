@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem groups="base.group_extended" id="prod_config_main" name="Products" parent="base.menu_base_config" sequence="9"/>
+        <menuitem groups="base.group_extended" id="prod_config_main" name="Products" parent="base.menu_base_config" sequence="70"/>
 
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
@@ -87,7 +87,7 @@
                     </group>
                     <group colspan="1" col="1">
                         <field name="product_image" widget='image' nolabel="1"/>
-                    </group> 
+                    </group>
                    </group>
 
                     <notebook colspan="4">
@@ -257,24 +257,24 @@
             <field name="view_mode">tree,form,kanban</field>
             <field name="view_type">form</field>
             <field name="context">{"search_default_filter_to_sell":1}</field>
-            <field name="view_id" ref="product_product_tree_view"/>  
-            <field name="search_view_id" ref="product_search_form_view"/>            
+            <field name="view_id" ref="product_product_tree_view"/>
+            <field name="search_view_id" ref="product_search_form_view"/>
             <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
-        
+
         <record id="open_view_product_tree1" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
            <field name="view_id" ref="product_product_tree_view"/>
             <field name="act_window_id" ref="product_normal_action_sell"/>
         </record>
-        
+
         <record id="open_view_product_form1" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="product_normal_form_view"/>
             <field name="act_window_id" ref="product_normal_action_sell"/>
-        </record> 
+        </record>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
         <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1"/>
@@ -362,7 +362,7 @@
             <field name="view_id" ref="product_category_list_view"/>
         </record>
         <menuitem action="product_category_action_form"
-            groups="base.group_extended"
+            groups="base.group_no_one"
             id="menu_product_category_action_form"
             parent="prod_config_main" sequence="2"/>
 
@@ -440,8 +440,8 @@
             <field name="view_id" ref="product_uom_tree_view"/>
             <field name="help">Create and manage the units of measure you want to be used in your system. You can define a conversion rate between several Units of Measure within the same category.</field>
         </record>
-        <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="65"/>
-        <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16"/>
+        <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="30"/>
+        <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="base.menu_base_config" sequence="30"/>
 
         <record id="product_uom_categ_form_view" model="ir.ui.view">
             <field name="name">product.uom.categ.form</field>
@@ -461,7 +461,7 @@
             <field name="view_mode">tree,form</field>
             <field name="help">Create and manage the units of measure categories you want to be used in your system. If several units of measure are in the same category, they can be converted to each other. For example, in the unit of measure category "Time", you will have the following UoM: Hours, Days.</field>
         </record>
-        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="product.next_id_16" sequence="5"/>
+        <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="base.menu_base_config" sequence="25"/>
 
         <record id="product_ul_form_view" model="ir.ui.view">
             <field name="name">product.ul.form.view</field>
@@ -494,7 +494,7 @@
             <field name="help">Create and manage your packaging dimensions and types you want to be maintained in your system.</field>
         </record>
         <menuitem
-            action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
+            action="product_ul_form_action" groups="base.group_no_one" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3" />
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>
