@@ -57,6 +57,7 @@ from lxml import etree
 import fields
 import openerp
 import openerp.netsvc as netsvc
+import openerp.pooler as pooler
 import openerp.tools as tools
 from openerp.tools.config import config
 from openerp.tools.safe_eval import safe_eval as eval
@@ -716,6 +717,27 @@ class BaseModel(object):
                 context=context
         )
 
+    @staticmethod
+    def get_needaction_info(cr, uid, model_name, user_id, limit=None, order=None, domain=False, context=None):
+        """Base method for needaction mechanism
+           - see base.needaction for actual implementation
+           - this method returns default values
+           :return: [has_needaction=False, needaction_ctr=0]
+        """
+        model_obj = pooler.get_pool(cr.dbname).get(model_name)
+        if hasattr(model_obj, 'needaction_get_record_ids'):
+            ids = model_obj.needaction_get_record_ids(cr, uid, model_name, user_id, context=context)
+            if not ids:
+                return [True, 0]
+            if domain:
+                domain = eval(domain)
+                new_domain = domain + [('id', 'in', ids)]
+            else:
+                new_domain = [('ids', 'in', ids)]
+            return [True, model_obj.search(cr, uid, new_domain, limit=limit, order=order, count=True)]
+        else:
+            return [False, 0]
+    
     def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
         pass
