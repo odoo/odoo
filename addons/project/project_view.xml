@@ -191,19 +191,19 @@
                                         <div class="manager"><field name="date"/></div>
                                     </t>
                                 </div>
-                                <div class="oe_module_desc">
+                                <div class="oe_module_desc oe_project_desc">
                                     <h4 class="oe_project_font1"><a type="edit"><div class="oe_project_font"><field name="name"/></div></a></h4>
-                                    <table border="0" width="350px">
+                                    <table class="oe_project_desc">
                                         <tr>
-                                            <td align="left" valign="bottom" class="buttons">
+                                            <td align="left" valign="top" class="buttons">
                                                 <t t-if="record.task.raw_value">
-                                                    <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks.png" width="50" height="50" align="center"/></button>
+                                                    <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks.png" width="50" height="45" align="center"/></button>
                                                 </t>
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
-                                <table border="0" width="350px">
+                                <table border="0" width="360px">
                                     <tr>
                                     	<td align="left">
                                     	    <t t-foreach="record.members.raw_value" t-as="members">
@@ -211,11 +211,10 @@
                                     	    </t>
                                     	</td>
                                         <td align="right" valign="bottom">
-					   <div class="progress invoiced">
-                                            <br/>
+                                            <div class="progress invoiced">
                                                 <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
-                                               <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
-                                               <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
+                                                <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
+                                                <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
                                             </div>
                                         </td>
                                     </tr>
