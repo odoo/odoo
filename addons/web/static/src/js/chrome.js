@@ -410,7 +410,7 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
                     $db_list = $form.find('[name=drop_db]'),
                     db = $db_list.val();
 
-                if (!confirm("Do you really want to delete the database: " + db + " ?")) {
+                if (!db || !confirm("Do you really want to delete the database: " + db + " ?")) {
                     return;
                 }
                 self.rpc("/web/database/drop", {'fields': fields}, function(result) {
