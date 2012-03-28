@@ -388,9 +388,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//td[@class='tasks']" position="replace">
                     <td class="issues" align="right">
-                        <button name="open_tasks" class="oe_project_buttons" type="object"><i>Tasks ()</i></button>
+                        <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks.png" width="20" height="20" align="top"/></button>()
                         <t t-if="record.issues.raw_value == 1">
-                            <button name="open_issues" class="oe_project_buttons" type="object"><i>Issues (<field name="open_issues"/>)</i></button>
+                            <button name="open_issues" class="oe_project_buttons" type="object"><img src="/project/static/src/img/bug.png" width="18" height="18" align="top"/><i>(<field name="open_issues"/>)</i></button>
                         </t>
                         
                     </td>
