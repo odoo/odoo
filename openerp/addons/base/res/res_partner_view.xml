@@ -523,6 +523,7 @@
                     <field name="city"/>
                     <field name="country_id"/>
                     <field name="mobile"/>
+                    <field name="state_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
@@ -546,7 +547,12 @@
                                                             <field name="zip"/><br/></div><div t-if="record.country_id.raw_value">
                                                             <field name="country_id"/><br/></div><div t-if="record.email.raw_value">
                                                             <field name="email"/><br/></div><div t-if="record.mobile.raw_value">
-                                                            <span>+91</span><field name="mobile"/><br/></div></i>
+                                                            <span>Mobile No </span><field name="mobile"/><br/>
+                                                            </div><div t-if="record.phone.raw_value">
+                                                            <span>Phone No </span><field name="phone"/><br/>
+                                                            </div><div t-if="record.state_id.raw_value">
+                                                            <field name="state_id"/><br/>
+                                                            </div></i>
                                                     </td>
                                                     <td t-if="record.is_company.raw_value" valign="top" align="right">
                                                         <!--img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" class="oe_kanban_gravatar"/-->
