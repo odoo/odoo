@@ -1307,8 +1307,9 @@
 <t t-name="SearchView.filters.facet">
     <div class="category oe_filter_category"><t t-esc="facet.get('category')"/></div>
 
-    <div class="search_facet_input_container">
-        <t t-esc="facet.get('value')"/>
+    <div class="search_facet_input_container"
+            t-foreach="facet.get('json')" t-as="filter">
+        <t t-esc="filter.attrs.string || filter.attrs.name"/>
     </div>
 
     <div class="search_facet_remove VS-icon VS-icon-cancel"/>
