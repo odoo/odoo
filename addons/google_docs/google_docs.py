@@ -76,13 +76,18 @@ class google_docs_ir_attachment(osv.osv):
         return 1
 
     def copy_gdoc(self, cr, uid, model, google_res_id, ids,context=None):
+        '''
+        copy an existing document in google docs
+        '''
+
         client = self._auth(cr, uid)
         # fetch and copy the original document
-        print 'test'
-        original_resource = client.get_resource_by_id(google_res_id)
-        #copy the document you choose in the configuration
-        copy_resource = client.copy_resource(original_resource,'copy_%s' % original_resource.title.text)
-        
+        try:
+            original_resource = client.get_resource_by_id(google_res_id)
+            #copy the document you choose in the configuration
+            copy_resource = client.copy_resource(original_resource,'copy_%s' % original_resource.title.text)
+        except:
+            raise osv.except_osv(('Google Docs Error!'),("Your ressource id is not correct. You can find the id in the google docs URL") )
         # register into the db
         self.create(cr, uid, {
             'res_model': model,
@@ -126,6 +131,10 @@ class config(osv.osv):
         'context_name': 'pr_%(name)',
     }
     def get_config(self, cr, uid, model):
+        '''
+        Method use with the js to hidde or show the add google doc button 
+        @return : list of configuration ids or false
+        '''
         domain = [('context_model_id', '=', model)]
         if self.search_count(cr, uid, domain) != 0:
             return False
