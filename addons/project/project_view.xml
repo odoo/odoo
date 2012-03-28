@@ -189,9 +189,6 @@
                                 </div>
                                 <div class="oe_module_desc">
                                     <h4 class="oe_project_font1"><a type="edit"><div class="oe_project_font"><field name="name"/></div></a></h4>
-                                    <!--<p class="tasks">-->
-                                    <!--    <button name="open_tasks" class="oe_project_buttons" type="object"><i>Tasks (<field name="tasks"/>)</i></button>-->
-                                    <!--</p>-->
                                     <div class="progress invoiced">
                                     <br/>
                                         <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
@@ -202,7 +199,7 @@
                                 <table border="0" width="350px">
                                     <tr>
                                         <td align="right" valign="bottom" class="tasks">
-                                            <button name="open_tasks" class="oe_project_buttons" type="object"><i>Tasks ()</i></button>
+                                            <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks.png" width="20" height="20" align="top"/></button>()
                                         </td>
                                     </tr>
                                 </table>
