@@ -43,7 +43,8 @@ class google_docs_ir_attachment(osv.osv):
         user_config = google_pool.default_get( cr, uid, {'user' : '' , 'password' : ''},context=context)
         #login gmail account
         client = google_pool.google_login( user_config['user'], user_config['password'], type='docs_client', context=context)
-        
+        if not client:
+            raise osv.except_osv(('Google Docs Error!'),("Check your google configuration in users/synchronization") )
         return client
 
     def create_empty_google_doc(self, cr, uid, model, ids, type_doc,context=None):
