@@ -30,7 +30,7 @@ from osv import osv, fields
 import tools
 
 class account_configuration(osv.osv_memory):
-    _name = 'account.installer'
+    _name = 'account.config.settings'
     _inherit = 'res.config.settings'
 
     def _get_charts(self, cr, uid, context=None):
@@ -220,35 +220,6 @@ class account_configuration(osv.osv_memory):
         else:
             res.update({'sale_tax_rate': 15.0, 'purchase_tax_rate': 15.0})
         return res
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        ir_values_obj = self.pool.get('ir.values')
-        res = super(account_configuration, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
-        cmp_select = []
-        # display in the widget selection only the companies that haven't been configured yet
-        unconfigured_cmp = self.get_unconfigured_cmp(cr, uid, context=context)
-        for field in res['fields']:
-            if field == 'company_id':
-                res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
-                res['fields'][field]['selection'] = [('', '')]
-                if unconfigured_cmp:
-                    cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
-                    res['fields'][field]['selection'] = cmp_select
-        return res
-
-    def get_unconfigured_cmp(self, cr, uid, context=None):
-        """ get the list of companies that have not been configured yet
-        but don't care about the demo chart of accounts """
-        cmp_select = []
-        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
-        cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
-        configured_cmp = [r[0] for r in cr.fetchall()]
-        return list(set(company_ids)-set(configured_cmp))
-
-    def check_unconfigured_cmp(self, cr, uid, context=None):
-        """ check if there are still unconfigured companies """
-        if not self.get_unconfigured_cmp(cr, uid, context=context):
-            raise osv.except_osv(_('No unconfigured company !'), _("There are currently no company without chart of account. The wizard will therefore not be executed."))
 
     def on_change_start_date(self, cr, uid, id, start_date=False):
         if start_date:

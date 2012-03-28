@@ -4,7 +4,7 @@
 
         <record id="view_account_config_settings" model="ir.ui.view">
             <field name="name">account settings</field>
-            <field name="model">account.installer</field>
+            <field name="model">account.config.settings</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure Accounting">
@@ -111,7 +111,7 @@
         <record id="action_account_config" model="ir.actions.act_window">
             <field name="name">Configure Accounting</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.installer</field>
+            <field name="res_model">account.config.settings</field>
             <field name="view_mode">form</field>
         </record>
 
