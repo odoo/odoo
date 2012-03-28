@@ -840,8 +840,10 @@
 </form>
 
 <t t-name="FormRenderingForm">
-    <div class="oe_form_form">
-        <group t-if="legacy_mode" col="4"/>
+    <div class="oe_form_sheetbg">
+        <div class="oe_form_sheet oe_form_sheet_width">
+            <group t-if="legacy_mode" col="4"/>
+        </div>
     </div>
 </t>
 <t t-name="FormRenderingGroup">

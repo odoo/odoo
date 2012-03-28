@@ -475,10 +475,8 @@
 .openerp2 .oe_application a:hover {
   text-decoration: underline;
 }
-.openerp2 .oe_form_form {
-  border: 1px solid black;
-  margin: 5%;
-  padding: 10px;
+.openerp2 .oe_form label {
+  font-weight: bold;
 }
 .openerp2 .oe_form_topbar {
   border-bottom: 1px solid #cacaca;
@@ -549,6 +547,28 @@
 .openerp2 .oe_form_topbar .oe_form_steps_active {
   font-weight: bold;
   color: #b33630;
+}
+.openerp2 .oe_form_sheetbg {
+  background: url(/web/static/src/img/form_sheetbg.png);
+  padding: 8px;
+  border-bottom: 1px solid #dddddd;
+}
+.openerp2 .oe_form_sheet_width {
+  min-width: 650px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.openerp2 .oe_form_sheet {
+  padding-top: 8px;
+  background: white;
+  min-height: 420px;
+  border: 1px solid #afafb6;
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  -box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.openerp2 .oe_form_group_cell {
+  line-height: 18px;
 }
 .openerp2 .oe_form_group_cell .oe_form_button {
   width: 100%;

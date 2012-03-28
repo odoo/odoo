@@ -837,7 +837,7 @@ openerp.web.FormRenderingEngine = nova.Class.extend({
     },
     process_form: function($form) {
         var $new_form = this.render_element('FormRenderingForm', $form.getAttributes());
-            $dst = this.legacy_mode ? $new_form.find('group:first') : $new_form;
+        var $dst = this.legacy_mode ? $new_form.find('group:first') : $new_form.children();
         $new_form.attr("modifiers", $form.attr("modifiers"));
         $form.children().appendTo($dst);
         if ($form[0] === this.$form[0]) {
