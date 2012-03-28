@@ -38,6 +38,14 @@ from tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+# This variable can be set by a signal handler to stop the infinite loop in
+# ir_cron._run()
+quit_signal_received = False
+
+# This variable can be checked to know if ir_cron._run() is processing a job or
+# sleeping.
+job_in_progress = True
+
 def str2tuple(s):
     return eval('tuple(%s)' % (s or ''))
 
@@ -231,17 +239,22 @@ class ir_cron(osv.osv):
 
     @classmethod
     def _run(cls, db_names):
-        while True:
+        global quit_signal_received
+        while not quit_signal_received:
             t1 = time.time()
             for db_name in db_names:
                 while(cls._acquire_job(db_name)):
-                    pass
+                    if quit_signal_received:
+                        return
             t2 = time.time()
             t = t2 - t1
+            global job_in_progress
             if t > 60:
                 _logger.warning('Cron worker: processing all jobs took more than 1 minute to complete (%ss.).', int(t))
             else:
+                job_in_progress = False
                 time.sleep(60 - t)
+                job_in_progress = True
 
     def _try_lock(self, cr, uid, ids, context=None):
         """Try to grab a dummy exclusive write-lock to the rows with the given ids,

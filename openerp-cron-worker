@@ -9,14 +9,58 @@ OpenERP server but depending on deployment needs, independent worker processes
 can be used.
 """
 
+import logging
+import os
+import signal
+import sys
+
 import openerp
 
+# Also use the `openerp` logger for the main script.
+_logger = logging.getLogger('openerp')
+
+# Variable keeping track of the number of calls to the signal handler defined
+# below. This variable is monitored by ``quit_on_signals()``.
+quit_signals_received = 0
+
+# TODO copy/pasted from openerp-server
+def signal_handler(sig, frame):
+    """ Signal handler: exit ungracefully on the second handled signal.
+
+    :param sig: the signal number
+    :param frame: the interrupted stack frame or None
+    """
+    global quit_signals_received
+    quit_signals_received += 1
+    import openerp.addons.base
+    openerp.addons.base.ir.ir_cron.quit_signal_received = True
+    if quit_signals_received == 1 and openerp.addons.base.ir.ir_cron.job_in_progress:
+        _logger.info("Waiting for the current job to complete.")
+        print "Waiting for the current job to complete."
+        print "Hit Ctrl-C again to force shutdown."
+    if quit_signals_received > 1:
+        # logging.shutdown was already called at this point.
+        sys.stderr.write("Forced shutdown.\n")
+        os._exit(0)
+
+# TODO copy/pasted from openerp-server
+def setup_signal_handlers():
+    """ Register the signal handler defined above. """
+    SIGNALS = map(lambda x: getattr(signal, "SIG%s" % x), "INT TERM".split())
+    if os.name == 'posix':
+        map(lambda sig: signal.signal(sig, signal_handler), SIGNALS)
+    elif os.name == 'nt':
+        import win32api
+        win32api.SetConsoleCtrlHandler(lambda sig: signal_handler(sig, None), 1)
+
 if __name__ == '__main__':
+    setup_signal_handlers()
     openerp.modules.module.initialize_sys_path()
     openerp.modules.loading.open_openerp_namespace()
     openerp.tools.config['log_handler'] = ['openerp.addons.base.ir.ir_cron:DEBUG']
     openerp.netsvc.init_logger()
     import openerp.addons.base
+    print "OpenERP cron jobs worker. Hit Ctrl-C to exit."
     openerp.addons.base.ir.ir_cron.ir_cron._run(['xx'])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
