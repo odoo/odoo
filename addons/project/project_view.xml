@@ -171,6 +171,8 @@
                     <field name="effective_hours"/>
                     <field name="total_hours"/>
                     <field name="date"/>
+                    <field name="members"/>
+                    <field name="task"/>
                     <templates>
 			<t t-name="kanban-box">
 			    <div class="oe_module_vignette oe_kanban_box oe_kanban_color_border">
@@ -197,8 +199,15 @@
                                 </div>
                                 <table border="0" width="350px">
                                     <tr>
+                                    	<td align="left">
+                                    		<t t-foreach="record.members.raw_value" t-as="members">
+                                       			<a type="edit"><img class="oe_topbar_avatar" data-default-src="/web/static/src/img/topbar-avatar.png" src="/web/static/src/img/topbar-avatar.png"/></a>
+                                    		</t>
+                                    	</td>
                                         <td align="right" valign="bottom">
-                                            <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks.png" width="20" height="20" align="top"/></button>()
+											<t t-if="record.task.raw_value">
+                                            <button name="open_tasks" class="oe_project_buttons" type="object"><img src="/project/static/src/img/tasks.png" width="20" height="20" align="top"/></button>(<field name="open_task"/>)
+ 											</t>
                                         </td>
                                     </tr>
                                 </table>
