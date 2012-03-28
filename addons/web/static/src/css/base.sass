@@ -275,6 +275,23 @@ $colour4: #8a89ba
     // }}}
 
     // UserMenu {{{
+    .oe_dropdown
+        position: relative
+
+    .oe_dropdown_toggle:after
+        width: 0
+        height: 0
+        display: inline-block
+        content: "&darr"
+        text-indent: -99999px
+        vertical-align: top
+        margin-top: 8px
+        margin-left: 4px
+        border-left: 4px solid transparent
+        border-right: 4px solid transparent
+        border-top: 4px solid white
+        @include opacity(0.5)
+
     .oe_user_menu
         float: right
         padding: 0
@@ -282,22 +299,6 @@ $colour4: #8a89ba
         li
             list-style-type: none
             float: left
-        .oe_dropdown
-            position: relative
-
-        .oe_dropdown_toggle:after
-            width: 0
-            height: 0
-            display: inline-block
-            content: "&darr"
-            text-indent: -99999px
-            vertical-align: top
-            margin-top: 8px
-            margin-left: 4px
-            border-left: 4px solid transparent
-            border-right: 4px solid transparent
-            border-top: 4px solid white
-            @include opacity(0.5)
 
         .oe_dropdown_options
             float: left
