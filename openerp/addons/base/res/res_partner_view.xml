@@ -527,7 +527,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
-                            <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                                 <div class="oe_module_vignette">
                                 <a type="edit">
                                     <img t-att-src="kanban_image('res.partner', 'photo', record.id.value)" width="64" height="64" class="oe_module_icon"/>
@@ -547,9 +547,9 @@
                                                             <field name="zip"/><br/></div><div t-if="record.country_id.raw_value">
                                                             <field name="country_id"/><br/></div><div t-if="record.email.raw_value">
                                                             <field name="email"/><br/></div><div t-if="record.mobile.raw_value">
-                                                            <span>Mobile No </span><field name="mobile"/><br/>
+                                                            <span>Mobile </span><field name="mobile"/><br/>
                                                             </div><div t-if="record.phone.raw_value">
-                                                            <span>Phone No </span><field name="phone"/><br/>
+                                                            <span>Phone </span><field name="phone"/><br/>
                                                             </div><div t-if="record.state_id.raw_value">
                                                             <field name="state_id"/><br/>
                                                             </div></i>
