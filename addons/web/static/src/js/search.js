@@ -206,7 +206,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         // Create a Custom Filter FilterGroup for each custom filter read from
         // the db, add all of this as a group in the smallest column
         [].push.call(col1.length <= col2.length ? col1 : col2, {
-            name: "Custom Filters",
+            name: _t("Custom Filters"),
             filters: _.map(this.custom_filters, function (filter) {
                 // FIXME: handling of ``disabled`` being set
                 var f = new openerp.web.search.Filter({attrs: {
@@ -256,7 +256,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             if (item.value !== undefined) {
                 // regular completion item
                 return $item.append(
-                    ('label' in item)
+                    (item.label)
                         ? $('<a>').html(item.label)
                         : $('<a>').text(item.value));
             }
