@@ -1266,31 +1266,46 @@ openerp.point_of_sale = function(db) {
                 if (!isNaN(Number(String.fromCharCode(e.keyCode)))) {
                     // a number
                     if (codeNumbers.length==0) {
-                        codeNumbers.timeStamp = new Date().getTime();
+                        timeStamp = new Date().getTime();
                     } else {
-                        if (codeNumbers.lastTimeStamp + 30 < new Date().getTime()) {
+                        if (lastTimeStamp + 30 < new Date().getTime()) {
                             // not a barcode reader
                             codeNumbers = [];
-                            codeNumbers.timeStamp = new Date().getTime();
+                            timeStamp = new Date().getTime();
                         }
                     }
                     codeNumbers.push(e.keyCode - 48);
-                    codeNumbers.lastTimeStamp = new Date().getTime();
+                    lastTimeStamp = new Date().getTime();
                     if (codeNumbers.length == 13) {
                         // a barcode reader
                         var barcode = codeNumbers.join('');
                         console.log('barcode: ' + barcode);
                         var selectedOrder = self.shop.get('selectedOrder');
                         var productsCollection = self.shop.get('products');
-                        // EAN digit control calculation, based on http://es.wikipedia.org/wiki/EAN#Javascript , licensed under Creative Commons Attribution-Share-Alike License 3.0
-                        var checksum = 0;
-                        ean13Reversed = codeNumbers.reverse();
-                        for (var pos in ean13Reversed) {
-                            checksum += ean13Reversed[pos] * (3 - 2 * (pos % 2));
-                        }
-                        checksum = (10 - (checksum % 10)) % 10;
+                        // EAN digit control calculation
+                        var st1 = codeNumbers;
+                        var st2 = st1.slice(0,12).reverse();
+                        var countSt3 = 1;
+                        var st3 = 0;
+                        $.each(st2, function() {
+                            if (countSt3%2 === 1) {
+                                st3 +=  this;
+                            }
+                            countSt3 ++;
+                        });
+                        st3 *= 3;
+                        var st4 = 0;
+                        var countSt4 = 1;
+                        $.each(st2, function() {
+                            if (countSt4%2 === 0) {
+                                st4 += this;
+                            }
+                            countSt4 ++;
+                        });
+                        var st5 = st3 + st4;
+                        var dc = (10 - (st5%10)) % 10;
                         // End of EAN digit control calculation
-                        if (Number(barcode.charAt(12)) !== checksum) {
+                        if (Number(barcode.charAt(12)) !== dc) {
                             // barcode read error, raise warning
                             $(QWeb.render('pos-scan-warning')).dialog({
                                 resizable: false,
@@ -1332,6 +1347,7 @@ openerp.point_of_sale = function(db) {
                                 buttons: {
                                     "OK": function() {
                                         $( this ).dialog( "close" );
+                                        return;
                                     },
                                 }
                             });
