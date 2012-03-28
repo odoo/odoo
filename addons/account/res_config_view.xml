@@ -26,7 +26,8 @@
                             <button name="configure_fiscalyear" string="Configure Fiscalyear" icon="gtk-execute" type="object"/>
                        </group>
                     </group>
-                    <field name="company_id" widget="selection" readonly="1" on_change="onchange_company_id(company_id)" attrs="{'invisible': [('has_default_company', '=', True)]} " />
+                    <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"
+                        attrs="{'invisible': [('has_default_company', '=', True)]}"/>
                     <separator string="Accounting Configuration" colspan="4"/>
                     <group col="4" colspan="4">
                         <field name ="complete_tax_set" invisible="1"/>

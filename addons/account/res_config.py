@@ -226,6 +226,12 @@ class account_configuration(osv.osv_memory):
             'paypal_account': company.paypal_account,
             'company_footer': company.rml_footer2,
         }
+        for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
+            values.update({
+                journal_type + '_journal_id': False,
+                journal_type + '_sequence_prefix': False,
+                journal_type + '_sequence_next': False,
+            })
         journal_obj = self.pool.get('account.journal')
         journal_ids = journal_obj.search(cr, uid, [('company_id', '=', company_id)])
         for journal in journal_obj.browse(cr, uid, journal_ids):
