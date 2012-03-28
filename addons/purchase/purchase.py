@@ -330,18 +330,13 @@ class purchase_order(osv.osv):
 
     def wkf_send_rfq(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
-        template_id = self.pool.get('email.template').search(cr, uid, [('model_id', '=', 'purchase.order')])
+        template_id = self.pool.get('email.template').search(cr, uid, [('model_id', '=', 'purchase.order')], context=context)[0]
 
         res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
         res_id = res and res[1] or False
 
-        #EDI EXport data
-        id = ids[0]
-        order = self.browse(cr, uid, id, context)
-        #if not order.partner_id.opt_out: 
-            #order.edi_export_and_email(template_ext_id='purchase.email_template_edi_purchase', context=context)
         ctx = context.copy()
-        ctx.update({'active_model': 'purchase.order', 'active_id': id, 'mail.compose.template_id': template_id})
+        ctx.update({'active_model': 'purchase.order', 'active_id': ids[0], 'mail.compose.template_id': template_id})
         return {
             'view_type': 'form',
             'view_mode': 'form',
