@@ -63,11 +63,10 @@ openerp.web.page = function (openerp) {
             return def.promise();
         }
     });
-    
+
     openerp.web.FormRenderingEngineReadonly = openerp.web.FormRenderingEngine.extend({
         alter_field: function(field) {
             field.set({"force_readonly": true});
         },
     });
-    
 };
