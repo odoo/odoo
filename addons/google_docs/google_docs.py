@@ -61,13 +61,13 @@ class google_docs_ir_attachment(osv.osv):
         local_resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL)
         #create a new doc in Google Docs 
         gdocs_resource = client.post(entry=local_resource, uri='https://docs.google.com/feeds/default/private/full/')
-        name = gdocs_resource.title
+        
         # register into the db
         self.create(cr, uid, {
             'res_model': model,
             'res_id': ids[0],
             'type': 'url',
-            'name': name,
+            'name': ('new_%s' % gdocs_resource.title.text),
             'url': gdocs_resource.get_alternate_link().href,
         },context=context)
         
@@ -86,8 +86,7 @@ class google_docs_ir_attachment(osv.osv):
             'res_model': model,
             'res_id': ids[0],
             'type': 'url',
-            'name': 'file_name',
-            'name': 'copy_foo' ,  #TODO pending from the working config
+            'name': 'copy_%s' % gdocs_resource.title.text,
             'url': copy_resource.get_alternate_link().href
         },context=context)
 
