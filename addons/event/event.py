@@ -149,26 +149,25 @@ class event_event(osv.osv):
                 elif field == 'register_prospect':
                     number = reg_draft
                 elif field == 'register_avail':
-                    number = event.register_max-reg_open
+                    #the number of ticket is unlimited if the event.register_max field is not set. 
+                    #In that cas we arbitrary set it to 9999, it is used in the kanban view to special case the display of the 'subscribe' button
+                    number = event.register_max - reg_open if event.register_max != 0 else 9999
                 res[event.id][field] = number
         return res
-    
+
     def _subscribe_fnc(self, cr, uid, ids, fields, args, context=None):
-        """Get Subscribe or Unsubscribe registration value.
-        @param ids: List of Event registration type's id
-        @param fields: List of function fields(subscribe).
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary of function fields value.
+        """This functional fields compute if the current user (uid) is already subscribed or not to the event passed in parameter (ids)
         """
         register_pool = self.pool.get('event.registration')
         res = {}
         for event in self.browse(cr, uid, ids, context=context):
-            curr_reg_id = register_pool.search(cr,uid,[('user_id','=',uid),('event_id','=',event.id)])
-            if not curr_reg_id:res[event.id] = False
+            res[event.id] = False
+            curr_reg_id = register_pool.search(cr, uid, [('user_id', '=', uid), ('event_id', '=' ,event.id)])
             if curr_reg_id:
-                for reg in register_pool.browse(cr,uid,curr_reg_id,context=context):
-                    res[event.id] = False
-                    if reg.subscribe:res[event.id]= True
+                for reg in register_pool.browse(cr, uid, curr_reg_id, context=context):
+                    if reg.state in ('open','done'):
+                        res[event.id]= True
+                        continue
         return res 
 
     _columns = {
@@ -185,7 +184,7 @@ class event_event(osv.osv):
         'date_begin': fields.datetime('Start Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([
-            ('draft', 'Draft'),
+            ('draft', 'Unconfirmed'),
             ('confirm', 'Confirmed'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')],
@@ -203,7 +202,7 @@ class event_event(osv.osv):
                     type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}),
         'note': fields.text('Description', readonly=False, states={'done': [('readonly', True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
-        'subscribe' : fields.function(_subscribe_fnc, type="boolean", string='Subscribe'),
+        'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
     }
 
     _defaults = {
@@ -211,25 +210,21 @@ class event_event(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
     }
-    
-    def subscribe_to_event(self,cr,uid,ids,context=None):
+
+    def subscribe_to_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
         user_pool = self.pool.get('res.users')
-        user = user_pool.browse(cr,uid,uid,context)
-        curr_reg_id = register_pool.search(cr,uid,[('user_id','=',user.id),('event_id','=',ids[0])])
-        if not curr_reg_id:
-            curr_reg_id = register_pool.create(cr, uid, {'event_id':ids[0],'email':user.user_email,
-                                                         'name':user.name,'user_id':user.id,
-                                                         'subscribe':True
-                                                         })
-        if isinstance(curr_reg_id, (int, long)):curr_reg_id = [curr_reg_id]
-        return register_pool.confirm_registration(cr,uid,curr_reg_id,context)
-    
+        user = user_pool.browse(cr, uid, uid, context=context)
+        curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
+        if not curr_reg_ids:
+            curr_reg_ids = [register_pool.create(cr, uid, {'event_id': ids[0] ,'email': user.user_email,
+                                                         'name':user.name, 'user_id': user.id,})]
+        return register_pool.confirm_registration(cr, uid, curr_reg_ids, context=context)
+
     def unsubscribe_to_event(self,cr,uid,ids,context=None):
         register_pool = self.pool.get('event.registration')
-        curr_reg_id = register_pool.search(cr,uid,[('user_id','=',uid),('event_id','=',ids[0])])
-        if isinstance(curr_reg_id, (int, long)):curr_reg_id = [curr_reg_id]
-        return register_pool.button_reg_cancel(cr,uid,curr_reg_id,context)
+        curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', uid), ('event_id', '=', ids[0])])
+        return register_pool.button_reg_cancel(cr, uid, curr_reg_ids, context=context)
 
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
@@ -281,7 +276,6 @@ class event_registration(osv.osv):
                                     ('cancel', 'Cancelled'),
                                     ('done', 'Attended')], 'State',
                                     size=16, readonly=True),
-        'subscribe': fields.boolean('Subscribe'),
     }
 
     _defaults = {
@@ -296,7 +290,7 @@ class event_registration(osv.osv):
 
     def confirm_registration(self, cr, uid, ids, context=None):
         self.message_append(cr, uid, ids,_('State set to open'),body_text= _('Open'))
-        return self.write(cr, uid, ids, {'state': 'open','subscribe':True}, context=context)
+        return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
 
     def registration_open(self, cr, uid, ids, context=None):
@@ -323,7 +317,7 @@ class event_registration(osv.osv):
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
         self.message_append(cr, uid, ids,_('State set to Cancel'),body_text= _('Cancel'))
-        return self.write(cr, uid, ids, {'state': 'cancel','subscribe':False})
+        return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def mail_user(self, cr, uid, ids, context=None):
         """

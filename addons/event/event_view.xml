@@ -169,55 +169,55 @@
                     <field name="type"/>
                     <field name="user_id"/>
                     <field name="register_current"/>
-		    <field name="subscribe"/>
+                    <field name="is_subscribed"/>
                     <field name="country_id"/>
-		    <field name="date_begin"/>
-		    <field name="state"/>
-		    <field name="register_avail"/>
-		    <templates>
-			<t t-name="kanban-box">
-			    <div class="oe_module_vignette">
-				<a type="edit" class="oe_module_icon">
-				    <div class="oe_event_date "><t t-esc="record.date_begin.raw_value.getDate()"/></div>
-				    <div class="oe_event_month_year">
-					<t t-esc="record.date_begin.raw_value.toString('MMM')"/>
-					<t t-esc="record.date_begin.raw_value.getFullYear()"/>
-				    </div>
-				    <div class="oe_event_time"><t t-esc="record.date_begin.raw_value.toString('hh:mm tt')"/></div>
-				</a>
-				<div class="oe_module_desc">
-				    <h4><a type="edit"><field name="name"/></a></h4>
-				    <p>
-				    	<t t-if="record.country_id.raw_value">@<field name="country_id"/><br/></t>
-					<t t-if="record.user_id.raw_value">Organized by <field name="user_id"/><br/></t>
-					<t t-if="record.register_avail.raw_value lte 10 and record.register_avail.raw_value gt 0"><i>Only</i></t>
-					     <t t-if="record.register_avail.raw_value == 0"><i>No ticket available.</i></t>
-					    <t t-if="record.register_avail.raw_value != 0">
-						<i><b><field name="register_avail"/></b></i>
-						<i>
-						    <t t-if="record.register_avail.raw_value > 1">tickets </t>
-						    <t t-if="record.register_avail.raw_value == 1 || !record.register_avail.raw_value > 1">ticket </t>available.
-						</i>
-					    </t>
-					
-				    </p>
-				    <t t-if="record.register_avail.raw_value != 0">
-					<t t-if="!record.subscribe.raw_value">
-					    <button type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
-						<span >Subscribe</span>
-					    </button>
-					</t>
-				    </t>
-				    <t t-if="record.subscribe.raw_value">
-					<button type="object" name="unsubscribe_to_event" class="unsubscribe_button oe_event_button_unsubscribe">
-					    <span>Subscribed</span>
-					    <span class="unsubscribe">Unsubscribe</span>
-					</button>
-				    </t>
-				</div>
-			    </div>
-			</t>
-                  </templates>
+                    <field name="date_begin"/>
+                    <field name="state"/>
+                    <field name="register_avail"/>
+                    <templates>
+                    <t t-name="kanban-box">
+                      <div class="oe_module_vignette">
+                        <a type="edit" class="oe_module_icon">
+                           <div class="oe_event_date "><t t-esc="record.date_begin.raw_value.getDate()"/></div>
+                           <div class="oe_event_month_year">
+                             <t t-esc="record.date_begin.raw_value.toString('MMM')"/>
+                             <t t-esc="record.date_begin.raw_value.getFullYear()"/>
+                           </div>
+                           <div class="oe_event_time"><t t-esc="record.date_begin.raw_value.toString('hh:mm tt')"/></div>
+                        </a>
+                        <div class="oe_module_desc">
+                            <h4><a type="edit"><field name="name"/></a></h4>
+                            <p>
+                              <t t-if="record.country_id.raw_value">@<field name="country_id"/><br/></t>
+                              <t t-if="record.user_id.raw_value">Organized by <field name="user_id"/><br/></t>
+                              <t t-if="record.register_avail.raw_value lte 10 and record.register_avail.raw_value gt 0"><i>Only</i></t>
+                              <t t-if="record.register_avail.raw_value == 0"><i>No ticket available.</i></t>
+                              <t t-if="record.register_avail.raw_value != 0">
+                                <i><b><t t-if="record.register_avail.raw_value != 9999"><field name="register_avail"/></t></b></i>
+                                <i>
+                                    <t t-if="record.register_avail.raw_value > 1">tickets </t>
+                                    <t t-if="record.register_avail.raw_value == 1 || !record.register_avail.raw_value > 1">ticket </t>
+                                    available.
+                                </i>
+                              </t>
+                            </p>
+                            <t t-if="record.register_avail.raw_value != 0">
+                              <t t-if="!record.is_subscribed.raw_value">
+                                  <button type="object" name="subscribe_to_event" class="subscribe_button oe_event_button_subscribe">
+                                  <span >Subscribe</span>
+                                  </button>
+                              </t>
+                            </t>
+                            <t t-if="record.is_subscribed.raw_value">
+                              <button type="object" name="unsubscribe_to_event" class="unsubscribe_button oe_event_button_unsubscribe">
+                                <span>Subscribed</span>
+                                <span class="unsubscribe">Unsubscribe</span>
+                              </button>
+                            </t>
+                        </div>
+                      </div>
+                    </t>
+                    </templates>
                 </kanban>
             </field>
         </record>
@@ -299,7 +299,7 @@
            <field name="res_model">event.event</field>
            <field name="view_type">form</field>
            <field name="view_mode">kanban,calendar,tree,form,graph</field>
-	   <field name="context">{"search_default_upcoming":1}</field>
+           <field name="context">{"search_default_upcoming":1}</field>
            <field name="search_view_id" ref="view_event_search"/>
            <field name="help">Event is the low level object used by meeting and others documents that should be synchronized with mobile devices or calendar applications through caldav. Most of the users should work in the Calendar menu, and not in the list of events.</field>
        </record>
