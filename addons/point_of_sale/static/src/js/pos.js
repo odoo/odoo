@@ -1254,6 +1254,7 @@ openerp.point_of_sale = function(db) {
             this.categoryView.children = c.children;
             this.categoryView.renderElement();
             this.categoryView.start();
+            allProducts = pos.store.get('product.product');
             products = pos.store.get('product.product').filter( function(p) {
                 var _ref;
                 return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
@@ -1279,9 +1280,7 @@ openerp.point_of_sale = function(db) {
                     if (codeNumbers.length == 13) {
                         // a barcode reader
                         var barcode = codeNumbers.join('');
-                        console.log('barcode: ' + barcode);
                         var selectedOrder = self.shop.get('selectedOrder');
-                        var productsCollection = self.shop.get('products');
                         // EAN digit control calculation
                         var st1 = codeNumbers;
                         var st2 = st1.slice(0,12).reverse();
@@ -1315,6 +1314,7 @@ openerp.point_of_sale = function(db) {
                                 buttons: {
                                     "OK": function() {
                                         $( this ).dialog( "close" );
+                                        return;
                                     },
                                 }
                             });
@@ -1336,7 +1336,7 @@ openerp.point_of_sale = function(db) {
                             weight = '';
                             price = '';
                         }
-                        var scannedProductModel = _.detect(productsCollection.models, function(pc) { return pc.attributes.ean13 === barcode;});
+                        var scannedProductModel = _.detect(allProducts, function(pc) { return pc.ean13 === barcode;});
                         if (scannedProductModel == undefined) {
                             // product not recognized, raise warning
                             $(QWeb.render('pos-scan-warning')).dialog({
@@ -1360,7 +1360,7 @@ openerp.point_of_sale = function(db) {
                             // TODO check how to calculate the price
                             scannedProductModel.price *= weight;
                         }
-                        selectedOrder.addProduct(scannedProductModel);
+                        selectedOrder.addProduct(new Product(scannedProductModel));
 
                         codeNumbers = [];
                     }
@@ -1368,7 +1368,7 @@ openerp.point_of_sale = function(db) {
                     // NaN
                     codeNumbers = [];
                 }
-            })
+            });
             $('.searchbox input').keyup(function() {
                 var m, s;
                 s = $(this).val().toLowerCase();
