@@ -13,26 +13,26 @@
            parent="stock.menu_stock_product" sequence="0"/>
         <menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15" groups="group_stock_manager"/>
-        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="1"/>
+        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="40" groups="base.group_no_one"/>
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
         <menuitem
             id="menu_product_in_config_stock" name="Products"
-            parent="stock.menu_stock_configuration" sequence="2"/>
+            parent="stock.menu_stock_configuration" sequence="45" groups="base.group_no_one"/>
         <menuitem
             action="product.product_category_action_form" id="menu_product_category_config_stock"
-            parent="stock.menu_product_in_config_stock" sequence="0"/>
+            parent="stock.menu_product_in_config_stock" sequence="0" />
         <menuitem
-            action="product.product_ul_form_action" groups="base.group_extended"
+            action="product.product_ul_form_action" 
             id="menu_product_packaging_stock_action" parent="stock.menu_product_in_config_stock" sequence="1"/>
          <menuitem
             id="menu_stock_unit_measure_stock" name="Units of Measure"
-            parent="stock.menu_product_in_config_stock"  sequence="2"/>
+            parent="stock.menu_product_in_config_stock"  sequence="35"/>
          <menuitem
              action="product.product_uom_categ_form_action" id="menu_stock_uom_categ_form_action"
-             parent="stock.menu_stock_unit_measure_stock" sequence="0"/>
+             parent="menu_stock_configuration" sequence="30"/>
          <menuitem
               action="product.product_uom_form_action" id="menu_stock_uom_form_action"
-              parent="stock.menu_stock_unit_measure_stock" sequence="1"/>
+              parent="menu_stock_configuration" sequence="35"/>
 
         <record id="stock_inventory_line_tree" model="ir.ui.view">
             <field name="name">stock.inventory.line.tree</field>
@@ -586,7 +586,7 @@
             <field name="context">{'search_default_in_location':1}</field>
             <field name="help">Define your locations to reflect your warehouse structure and organization. OpenERP is able to manage physical locations (warehouses, shelves, bin, etc), partner locations (customers, suppliers) and virtual locations which are the counterpart of the stock operations like the manufacturing orders consumptions, inventories, etc. Every stock operation in OpenERP moves the products from one location to another one. For instance, if you receive products from a supplier, OpenERP will move products from the Supplier location to the Stock location. Each report can be performed on physical, partner or virtual locations.</field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_warehouse_config"/>
+        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_stock_configuration" sequence="5"/>
 
         <record id="view_location_tree" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
@@ -651,7 +651,7 @@
             <field name="view_id" ref="view_warehouse_tree"/>
             <field name="help">Create and manage your warehouses and assign them a location from here</field>
         </record>
-        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_warehouse_config"/>
+        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_stock_configuration" sequence="1"/>
 
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
@@ -1791,7 +1791,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="7"/>
+        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="1"/>
 
         <act_window
             context="{'location': active_id}"
@@ -1940,8 +1940,7 @@
         <menuitem
             action="action_stock_journal_form"
             id="menu_action_stock_journal_form"
-            groups="base.group_extended"
-            parent="menu_warehouse_config" />
+            parent="menu_warehouse_config" sequence="1"/>
 
         <record model="ir.actions.todo.category" id="category_stock_management_config">
             <field name="name">Stock Management</field>
