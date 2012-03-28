@@ -46,31 +46,37 @@ class account_configuration(osv.osv_memory):
         return charts
 
     _columns = {
-        'company_id': fields.many2one('res.company', 'Company',help="Your company."),
-        'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', string='Currency', store=True, help="Currency of your company."),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'has_default_company': fields.boolean('Has default company', readonly=True),
+
+        'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency',
+            string='Main currency', help="Main currency of the company."),
+        'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
+            string='Paypal account', help="Paypal username (usually email) for receiving online payments."),
+        'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
+            string='Footer of reports', help="Footer of reports based on your bank accounts."),
+
         'charts': fields.selection(_get_charts, 'Chart of Accounts', required=True,
             help="""Installs localized accounting charts to match as closely as
                 possible the accounting needs of your company based on your country."""),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
-        'has_default_company' : fields.boolean('Has Default Company', readonly=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template'),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year'),
-        'default_paypal_account': fields.char("Your Paypal Account", size=128, help="Paypal username (usually email) for receiving online payments.", default_model='res.company'),
-        'company_footer': fields.char("Footer of Reports", size=128, readonly=True, help="Footer of reports based on your bank accounts."),
-        'sale_journal_id': fields.many2one('account.journal','Sale Journal'),
-        'customer_invoice_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Invoice Sequence'),
-        'customer_invoice_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Invoice Sequence Next Number'),
-        'sale_refund_journal_id': fields.many2one('account.journal','Sale Refund Journal'),
-        'customer_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Refund Sequence'),
-        'customer_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Refund Sequence Next Number'),
-        'purchase_journal_id': fields.many2one('account.journal','Purchase Journal'),
-        'supplier_invoice_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Supplier Invoice Sequence'),
-        'supplier_invoice_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Supplier Invoice Sequence Next Number'),
-        'purchase_refund_journal_id': fields.many2one('account.journal','Purchase Refund Journal'),
-        'supplier_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', relation='ir.sequence', string='Supplier Refund Sequence'),
-        'supplier_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', relation='ir.sequence', string='Supplier Refund Sequence Next Number'),
+
+        'sale_journal_id': fields.many2one('account.journal', 'Sale Journal'),
+        'sale_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', string='Invoice Sequence'),
+        'sale_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', string='Invoice Sequence Next Number'),
+        'sale_refund_journal_id': fields.many2one('account.journal', 'Sale Refund Journal'),
+        'sale_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Refund Sequence'),
+        'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Refund Sequence Next Number'),
+        'purchase_journal_id': fields.many2one('account.journal', 'Purchase Journal'),
+        'purchase_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Invoice Sequence'),
+        'purchase_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', string='Supplier Invoice Sequence Next Number'),
+        'purchase_refund_journal_id': fields.many2one('account.journal', 'Purchase Refund Journal'),
+        'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier Refund Sequence'),
+        'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Supplier Refund Sequence Next Number'),
 
         'module_account_check_writing': fields.boolean('Support check writings',
             help="""This allows you to check writing and printing.
@@ -136,18 +142,18 @@ class account_configuration(osv.osv_memory):
 
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.company_id and user.company_id.id or False
+        return user.company_id.id
 
     def _default_has_default_company(self, cr, uid, context=None):
         count = self.pool.get('res.company').search_count(cr, uid, [], context=context)
         return bool(count == 1)
 
     _defaults = {
+        'company_id': _default_company,
+        'has_default_company': _default_has_default_company,
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
         'period': 'month',
-        'company_id': _default_company,
-        'has_default_company': _default_has_default_company,
         'charts': 'configurable',
     }
 
@@ -184,22 +190,6 @@ class account_configuration(osv.osv_memory):
         chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
         fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('date_start','=',time.strftime('%Y-01-01')),('date_stop','=',time.strftime('%Y-12-31'))])
 
-        cmp_id = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'main_company').id
-        company_data = self.pool.get('res.company').browse(cr, uid, cmp_id)
-        res.update({'company_footer': company_data.rml_footer2})
-
-        journal_ids = journal_obj.search(cr, uid, [('company_id', '=', res.get('company_id'))])
-        if journal_ids:
-            for journal in journal_obj.browse(cr, uid, journal_ids, context=context):
-                if journal.type == 'sale':
-                    res.update({'sale_journal_id': journal.id})
-                if journal.type == 'sale_refund':
-                    res.update({'sale_refund_journal_id': journal.id})
-                if journal.type == 'purchase':
-                    res.update({'purchase_journal_id': journal.id})
-                if journal.type == 'purchase_refund':
-                    res.update({'purchase_refund_journal_id': journal.id})
-
         if chart_template_ids:
             res.update({'chart_template_id': chart_template_ids[0]})
             data = chart_template_obj.browse(cr, uid, chart_template_ids[0], context=context)
@@ -228,10 +218,24 @@ class account_configuration(osv.osv_memory):
             return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
         return {}
 
-    def on_change_company_id(self, cr, uid, id, company_id=False):
-        company_obj = self.pool.get('res.company')
-        currency_id = company_obj.browse(cr, uid, company_id).currency_id
-        return {'value': {'currency_id': currency_id.id}}
+    def onchange_company_id(self, cr, uid, ids, company_id):
+        # change the value of all related fields
+        company = self.pool.get('res.company').browse(cr, uid, company_id)
+        values = {
+            'currency_id': company.currency_id.id,
+            'paypal_account': company.paypal_account,
+            'company_footer': company.rml_footer2,
+        }
+        journal_obj = self.pool.get('account.journal')
+        journal_ids = journal_obj.search(cr, uid, [('company_id', '=', company_id)])
+        for journal in journal_obj.browse(cr, uid, journal_ids):
+            if journal.type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
+                values.update({
+                    journal.type + '_journal_id': journal.id,
+                    journal.type + '_sequence_prefix': journal.sequence_id.prefix,
+                    journal.type + '_sequence_next': journal.sequence_id.number_next,
+                })
+        return {'value': values}
 
     def install_chartofaccounts(self, cr, uid, ids, context=None):
         ir_module = self.pool.get('ir.module.module')
