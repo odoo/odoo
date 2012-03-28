@@ -3,7 +3,7 @@
     <div style="height:100%;"></div>
 </t>
 <t t-name="EdiImport">
-    <t t-call="Interface"/>
+    <t t-call="WebClient"/>
 </t>
 <t t-name="EdiView">
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" id="oe_app" class="oe-application oe_forms">
@@ -11,7 +11,7 @@
         <td colspan="2" valign="top" id="oe_header" class="header">
             <div> <a href="/" class="company_logo_link">
                     <div class="company_logo"
-                         t-att-style="'background: url('+ (doc.company_address ? '/edi/binary?db='+widget.db+'&amp;token='+widget.token : '/web/static/src/img/logo.png')+')'"/></a> </div>
+                         t-att-style="'background-size: 180px 46px; background: url('+ (doc.company_address ? '/edi/binary?db='+widget.db+'&amp;token='+widget.token : '/web/static/src/img/logo.png')+')'"/></a> </div>
         </td>
     </tr>
     <tr>

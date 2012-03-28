@@ -341,11 +341,11 @@ class account_bank_statement(osv.osv):
             if not st.name == '/':
                 st_number = st.name
             else:
+                c = {'fiscalyear_id': st.period_id.fiscalyear_id.id}
                 if st.journal_id.sequence_id:
-                    c = {'fiscalyear_id': st.period_id.fiscalyear_id.id}
                     st_number = obj_seq.next_by_id(cr, uid, st.journal_id.sequence_id.id, context=c)
                 else:
-                    st_number = obj_seq.next_by_code(cr, uid, 'account.bank.statement')
+                    st_number = obj_seq.next_by_code(cr, uid, 'account.bank.statement', context=c)
 
             for line in st.move_line_ids:
                 if line.state <> 'valid':
@@ -472,6 +472,7 @@ class account_bank_statement_line(osv.osv):
             required=True),
         'statement_id': fields.many2one('account.bank.statement', 'Statement',
             select=True, required=True, ondelete='cascade'),
+        'journal_id': fields.related('statement_id', 'journal_id', type='many2one', relation='account.journal', string='Journal', store=True, readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'move_ids': fields.many2many('account.move',
             'account_bank_statement_line_move_rel', 'statement_line_id','move_id',

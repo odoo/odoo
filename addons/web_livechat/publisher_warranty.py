@@ -42,10 +42,6 @@ class publisher_warranty_contract(osv.osv):
         domain = [('state', '=', 'valid'), ('check_support', '=', True)]
         return self.search_count(cr, uid, domain) != 0
 
-    @cache(skiparg=3)
-    def get_default_livechat_text(self, cr, uid):
-        return '<a href="#" target="_blank"><img src="/web_livechat/static/src/img/busy.png"/>Support</a>'
-
 publisher_warranty_contract()
 
 

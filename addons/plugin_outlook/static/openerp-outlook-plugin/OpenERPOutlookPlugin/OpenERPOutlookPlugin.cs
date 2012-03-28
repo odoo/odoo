@@ -144,7 +144,16 @@ namespace OpenERPOutlookPlugin
                 OpenERPConnect openerp_connect = openerp_outlook.Connection;
                 ArrayList args = new ArrayList();               
                 Hashtable vals = new Hashtable();
-                string email = Tools.GetHeader(mail); //TODO: Outlook.MailItem Should be Converted into MIME Message
+                string email;
+                if (Tools.GetHeader(mail)!= null)
+                {
+                    email = Tools.GetHeader(mail); //TODO: Outlook.MailItem Should be Converted into MIME Message
+                }
+                else
+                {
+                    email = "";
+                }
+                
                 args.Add(model);
                 args.Add(email.ToString());
                 args.Add(thread_id);              

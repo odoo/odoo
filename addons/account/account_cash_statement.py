@@ -212,25 +212,12 @@ class account_cash_statement(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context).type == 'cash':
-            open_close = self._get_cash_open_close_box_lines(cr, uid, context)
-            if vals.get('starting_details_ids', False):
-                for start in vals.get('starting_details_ids'):
-                    dict_val = start[2]
-                    for end in open_close['end']:
-                       if end[2]['pieces'] == dict_val['pieces']:
-                           end[2]['number'] += dict_val['number']
-            vals.update({
-#                'ending_details_ids': open_close['start'],
-                'starting_details_ids': open_close['end']
-            })
-        else:
-            vals.update({
-                'ending_details_ids': False,
-                'starting_details_ids': False
-            })
-        res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)
-        self.write(cr, uid, [res_id], {})
-        return res_id
+            amount_total = 0.0
+            for line in vals.get('starting_details_ids',[]):
+                if line and len(line)==3 and line[2]:
+                    amount_total+= line[2]['pieces'] * line[2]['number']
+            vals.update(balance_start= amount_total)
+        return super(account_cash_statement, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         """
@@ -292,11 +279,11 @@ class account_cash_statement(osv.osv):
                 raise osv.except_osv(_('Error !'), (_('User %s does not have rights to access %s journal !') % (statement.user_id.name, statement.journal_id.name)))
 
             if statement.name and statement.name == '/':
+                c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
                 if statement.journal_id.sequence_id:
-                    c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
                     st_number = obj_seq.next_by_id(cr, uid, statement.journal_id.sequence_id.id, context=c)
                 else:
-                    st_number = obj_seq.next_by_code(cr, uid, 'account.cash.statement')
+                    st_number = obj_seq.next_by_code(cr, uid, 'account.cash.statement', context=c)
                 vals.update({
                     'name': st_number
                 })

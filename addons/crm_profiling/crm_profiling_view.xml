@@ -10,8 +10,8 @@
           <field name="help">You can create specific topic-related questionnaires to guide your team(s) in the sales cycle by helping them to ask the right questions. The segmentation tool allows you to automatically assign a partner to a category according to his answers to the different questionnaires.</field>
         </record>
 
-        <menuitem parent="base.menu_crm_config_lead" id="menu_segm_questionnaire"
-                  action="open_questionnaires" />
+        <menuitem parent="base.menu_base_config" id="menu_segm_questionnaire"
+                  action="open_questionnaires" sequence="1"/>
 
         <record model="ir.actions.act_window" id="open_questions">
           <field name="name">Questions</field>
@@ -20,8 +20,8 @@
           <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem parent="base.menu_crm_config_lead" id="menu_segm_answer"
-                  action="open_questions" />
+        <menuitem parent="base.menu_base_config" id="menu_segm_answer"
+                  action="open_questions" sequence="37" groups="base.group_no_one"/>
 
 <!-- Profiling Questionnaire Tree view  -->
 

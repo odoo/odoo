@@ -2,8 +2,9 @@
 <openerp>
     <data>
         <!-- Root Menus -->
-        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="9"/>
-        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll"/>
+
+        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll" groups="base.group_no_one" sequence="45"/>
+        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll" sequence="30"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
         <!-- Employee View -->
@@ -138,8 +139,8 @@
         <menuitem
             id="menu_hr_payroll_structure_view"
             action="action_view_hr_payroll_structure_list_form"
-            parent="payroll_configure"
-            sequence="1"
+            parent="hr.menu_hr_configuration"
+            sequence="20"
         />
         <record id="action_view_hr_payroll_structure_tree" model="ir.actions.act_window">
             <field name="name">Salary Structures Hierarchy</field>
@@ -670,7 +671,7 @@
             <field name="search_view_id" ref="view_hr_rule_filter"/>
         </record>
 
-        <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
+        <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12" groups="base.group_no_one"/>
 
 
         <act_window name="All Children Rules"
