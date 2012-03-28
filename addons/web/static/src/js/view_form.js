@@ -755,7 +755,7 @@ openerp.web.FormRenderingEngine = nova.Class.extend({
         // TODO: I know this will save the world and all the kitten for a moment,
         //       but one day, we will have to get rid of xml2json
         var xml = openerp.web.json_node_to_xml(this.fvg.arch);
-        this.$form = $('<div>' + xml + '</div>');
+        this.$form = $('<div class="oe_form">' + xml + '</div>');
 
         this.to_init = [];
         this.labels = {};
