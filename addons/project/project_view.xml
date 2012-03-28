@@ -161,6 +161,57 @@
                 </tree>
             </field>
         </record>
+        
+        <record model="ir.ui.view" id="view_project_kanban">
+            <field name="name">project.project.kanban</field>
+            <field name="model">project.project</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="effective_hours"/>
+                    <field name="total_hours"/>
+                    <field name="date"/>
+                    <templates>
+			<t t-name="kanban-box">
+			    <div class="oe_module_vignette oe_kanban_box oe_kanban_color_border">
+                                <div class="oe_module_icon oe_project oe_project_border">
+                                    <div class="sequence">
+                                        <a type="edit"><img class="oe_topbar_avatar" data-default-src="/web/static/src/img/topbar-avatar.png" src="/web/static/src/img/topbar-avatar.png"/></a>
+                                        <!--<field name="priority"/>-->
+                                    </div>
+                                    <kbd class="user">Manager</kbd><br/>
+                                    <div class="manager"><field name="user_id"/></div>
+                                    <t t-if="record.date.raw_value">
+                                        <kbd class="user">Deadline</kbd><br/>
+                                        <div class="manager"><field name="date"/></div>
+                                    </t>
+                                </div>
+                                <div class="oe_module_desc">
+                                    <h4 class="oe_project_font1"><a type="edit"><div class="oe_project_font"><field name="name"/></div></a></h4>
+                                    <!--<p class="tasks">-->
+                                    <!--    <button name="open_tasks" class="oe_project_buttons" type="object"><i>Tasks (<field name="tasks"/>)</i></button>-->
+                                    <!--</p>-->
+                                    <div class="progress invoiced">
+                                    <br/>
+                                        <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
+                                       <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
+                                       <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
+                                    </div>
+                                </div>
+                                <table border="0" width="350px">
+                                    <tr>
+                                        <td align="right" valign="bottom">
+                                            <button name="open_tasks" class="oe_project_buttons" type="object"><i>Tasks ()</i></button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+                    </templates>
+
+                </kanban>
+            </field>
+        </record>
 
        <record id="view_project_project_gantt" model="ir.ui.view">
             <field name="name">project.project.gantt</field>
@@ -177,8 +228,8 @@
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
-            <field name="view_mode">tree,form,gantt</field>
-            <field name="view_id" ref="view_project"/>
+            <field name="view_mode">kanban,tree,form,gantt</field>
+            <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
             <field name="help">A project contains a set of tasks or issues that will be performed by your resources assigned to it. A project can be hierarchically structured, as a child of a Parent Project. This allows you to design large project structures with different phases spread over the project duration cycle. Each user can set his default project in his own preferences to automatically filter the tasks or issues he usually works on. If you choose to invoice the time spent on a project task, you can find project tasks to be invoiced in the billing section.</field>
