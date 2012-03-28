@@ -23,6 +23,7 @@ import time
 
 from osv import fields, osv
 from tools.translate import _
+import decimal_precision as dp
 
 class account_move_line_reconcile(osv.osv_memory):
     """
@@ -32,9 +33,9 @@ class account_move_line_reconcile(osv.osv_memory):
     _description = 'Account move line reconcile'
     _columns = {
         'trans_nbr': fields.integer('# of Transaction', readonly=True),
-        'credit': fields.float('Credit amount', readonly=True),
-        'debit': fields.float('Debit amount', readonly=True),
-        'writeoff': fields.float('Write-Off amount', readonly=True),
+        'credit': fields.float('Credit amount', readonly=True, digits_compute=dp.get_precision('Account')),
+        'debit': fields.float('Debit amount', readonly=True, digits_compute=dp.get_precision('Account')),
+        'writeoff': fields.float('Write-Off amount', readonly=True, digits_compute=dp.get_precision('Account')),
     }
 
     def default_get(self, cr, uid, fields, context=None):
