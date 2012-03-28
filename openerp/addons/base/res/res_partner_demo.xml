@@ -755,6 +755,7 @@
             <field eval="'5000'" name="zip"/>
             <!--field name="parent_id" ref="res_partner_notsotinysarl0"/-->
             <field name="country_id" ref="base.be"/>
+            <field name="is_company">1</field>
             <field eval="'(+32).81.81.37.00'" name="phone"/>
             <field eval="'Rue du Nid 1'" name="street"/>
             <field eval="'default'" name="type"/>
@@ -814,7 +815,6 @@
 
         <record id="res_partner_address_rogerpecker1" model="res.partner">
             <field eval="'Roger Pecker'" name="name"/>
-            <field name="is_company">1</field>
             <field eval="'Kainuu'" name="city"/>
             <field eval="'(+358).9.589 689'" name="phone"/>
             <field name="country_id" ref="base.fi"/>
@@ -878,6 +878,7 @@
             <field eval="'2000'" name="zip"/>
             <field name="parent_id" ref="res_partner_address_notsotinysarl0"/>
             <field name="country_id" ref="base.be"/>
+            <field name="use_parent_address" eval="0"/>
             <field eval="'Antwerpsesteenweg 254'" name="street"/>
             <field eval="'invoice'" name="type"/>
         </record>
