@@ -123,9 +123,9 @@ module named account_voucher.
         'ir_sequence_view.xml',
         'company_view.xml',
         'board_account_view.xml',
-        'res_config_view.xml',
         "edi/invoice_action_data.xml",
         "account_bank_view.xml",
+        "res_config_view.xml",
         "account_pre_install.yml"
     ],
     'demo_xml': [
