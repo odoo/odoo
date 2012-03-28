@@ -49,7 +49,7 @@ $colour4: #8a89ba
 // }}}
 
 .openerp2
-    // Common styles {{{
+    // Global style {{{
     padding: 0
     margin: 0
     font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
@@ -60,6 +60,73 @@ $colour4: #8a89ba
 
     a
         text-decoration: none
+
+    // buttons
+    a.button:link, a.button:visited, button, input[type='submit']
+        display: inline-block
+        border: 1px solid #ababab
+        color: #404040
+        margin: 0
+        padding: 4px 12px
+        font-size: 13px
+        text-align: center
+        @include vertical-gradient(#efefef, #d8d8d8)
+        @include radius(3px)
+        @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+        text-shadow: 0 1px 1px rgba(255, 255, 255, .5)
+        -webkit-font-smoothing: antialiased
+        outline: none
+
+    a.button:hover, button:hover, input[type='submit']:hover
+        @include vertical-gradient(#f6f6f6, #e3e3e3)
+        cursor: pointer
+
+    a.button:focus, button:focus, input[type='submit']:focus
+        border: 1px solid #80bfff
+        @include vertical-gradient(#f6f6f6, #e3e3e3)
+        @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
+
+    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active
+        background: #e3e3e3
+        background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
+        background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f
+        background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
+        @include box-shadow(none)
+
+    a.button.disabled, button:disabled, input[type='submit']:disabled
+        background: #efefef !important
+        border: 1px solid #d1d1d1 !important
+        @include box-shadow(none !important)
+        color: #aaa !important
+        cursor: default
+        text-shadow: 0 1px 1px #fff !important
+
+    button.primary
+        color: white
+        @include vertical-gradient(#dc5f59, #b33630)
+        @include box-shadow(none)
+
+    button.primary:hover
+        @include vertical-gradient(lighten(#dc5f59, 3%), lighten(#b33630, 3%))
+        @include box-shadow(0 0 1px rgba(0,0,0,0.2))
+
+    button.primary:active
+        @include vertical-gradient(#b33630, #dc5f59)
+        @include box-shadow(none)
+
+    button.following
+        color: white
+        width: 90px
+        @include vertical-gradient($colour4, darken($colour4, 3%))
+
+    button.unfollow
+        display: none
+        color: white
+        width: 90px
+        @include vertical-gradient(#dc5f59, #b33630)
+  
+
+    
     // }}}
     // Generic classes {{{
     .oe_left
@@ -125,11 +192,66 @@ $colour4: #8a89ba
         .oe_topbar_avatar
             vertical-align: top
     // }}}
-    // Main {{{
-    .oe_main
-        width: 100%
-        height: 100%
-        border-spacing: 0px
+    // TopBarUserMenu {{{
+    .oe_user_menu
+        float: right
+        padding: 0
+        margin: 0
+        li
+            list-style-type: none
+            float: left
+        .oe_dropdown
+            position: relative
+
+        .oe_dropdown_toggle:after
+            width: 0
+            height: 0
+            display: inline-block
+            content: "&darr"
+            text-indent: -99999px
+            vertical-align: top
+            margin-top: 8px
+            margin-left: 4px
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid white
+            @include opacity(0.5)
+
+        .oe_dropdown_options
+            float: left
+            background: #333
+            background: rgba(37,37,37,0.9)
+            display: none
+            position: absolute
+            top: 32px
+            right: -1px
+            border: 0
+            z-index: 900
+            margin-left: 0
+            margin-right: 0
+            padding: 6px 0
+            zoom: 1
+            border-color: #999
+            border-color: rgba(0, 0, 0, 0.2)
+            border-style: solid
+            border-width: 0 1px 1px
+            @include radius(0 0 6px 6px)
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+            @include background-clip()
+            li
+                float: none
+                display: block
+                background-color: none
+                a
+                    display: block
+                    padding: 4px 15px
+                    clear: both
+                    font-weight: normal
+                    line-height: 18px
+                    color: #eee
+                    &:hover
+                        @include vertical-gradient(#292929, #191919)
+                        @include box-shadow(none)
     // }}}
     // Leftbar {{{
     .oe_leftbar
@@ -161,13 +283,6 @@ $colour4: #8a89ba
             span
                 color: #c81010
                 font-style: italic
-    // }}}
-    // Application {{{
-    .oe_application
-        a
-            color: $colour4
-            &:hover
-                text-decoration: underline
     // }}}
     // Menu {{{
     .oe_menu
@@ -273,75 +388,77 @@ $colour4: #8a89ba
             border-right: 4px solid transparent
             border-top: 4px solid #4c4c4c
     // }}}
-    // UserMenu {{{
-    .oe_dropdown
-        position: relative
-
-    .oe_dropdown_toggle:after
-        width: 0
-        height: 0
-        display: inline-block
-        content: "&darr"
-        text-indent: -99999px
-        vertical-align: top
-        margin-top: 8px
-        margin-left: 4px
-        border-left: 4px solid transparent
-        border-right: 4px solid transparent
-        border-top: 4px solid white
-        @include opacity(0.5)
-
-    .oe_user_menu
-        float: right
-        padding: 0
-        margin: 0
-        li
-            list-style-type: none
-            float: left
-
-        .oe_dropdown_options
-            float: left
-            background: #333
-            background: rgba(37,37,37,0.9)
-            display: none
-            position: absolute
-            top: 32px
-            right: -1px
-            border: 0
-            z-index: 900
-            margin-left: 0
-            margin-right: 0
-            padding: 6px 0
-            zoom: 1
-            border-color: #999
-            border-color: rgba(0, 0, 0, 0.2)
-            border-style: solid
-            border-width: 0 1px 1px
-            @include radius(0 0 6px 6px)
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-            @include background-clip()
-            li
-                float: none
-                display: block
-                background-color: none
-                a
-                    display: block
-                    padding: 4px 15px
-                    clear: both
-                    font-weight: normal
-                    line-height: 18px
-                    color: #eee
-                    &:hover
-                        @include vertical-gradient(#292929, #191919)
-                        @include box-shadow(none)
+    // Main {{{
+    .oe_main
+        width: 100%
+        height: 100%
+        border-spacing: 0px
+    // }}}
+    // Application to rename into action {{{
+    .oe_application
+        a
+            color: $colour4
+            &:hover
+                text-decoration: underline
     // }}}
     // FormView Layout {{{
-    .oe_form_page
+    .oe_form_form
         border: 1px solid black
         margin: 5%
         padding: 10px
-    .oe_form_status
-        background: #ccc
+    .oe_form_topbar
+        border-bottom: 1px solid #cacaca
+        @include vertical-gradient(#fcfcfc, #dedede)
+        padding: 0 8px
+        line-height: 30px 
+        button
+            font-size: 12px 
+            height: 24px 
+            line-height: 24px 
+            vertical-align: top
+            padding: 0 10px 
+            margin: 3px 0
+            span.i
+                line-height: 20px 
+                height: 24px 
+        ul
+            height: 30px
+            padding: 0
+            margin: 0
+            text-shadow: 0 1px 1px white
+            border-left: 1px solid #cacaca
+            border-right: 1px solid #cacaca
+            li   
+                padding: 0
+                margin: 0
+                list-style-type: none
+                float: left 
+                vertical-align: top
+                border-right: 1px solid #cacaca
+                height: 30px 
+                padding: 0 12px 
+                &:first-child
+                    border-left: 1px solid #cacaca
+                a    
+                    color: #4c4c4c
+                    &:hover
+                        color: black
+        .oe_form_steps
+            img  
+                margin: 0 8px
+                vertical-align: top
+            li   
+                border-right: none 
+                padding: 0
+                &:first-child
+                    margin-left: 12px 
+                    border-left: none 
+                &:last-child
+                    margin-right: 12px 
+        .oe_form_steps_active
+            font-weight: bold 
+            color: #b33630
+
     .oe_form_group_cell
         .oe_form_button
             width: 100%
@@ -361,11 +478,15 @@ $colour4: #8a89ba
             display: block
     .oe_layout_debug_cell
         display: none
+
+
+
     // }}}
     // FormView Widgets {{{
     .oe_form_label_help[for], .oe_form_label[for]
         white-space: nowrap
     // }}}
+
 // Transitional overrides for old styles {{{
 .openerp
     .oe_form_field_many2one

@@ -14,7 +14,6 @@
 
 .openerp .view-manager-main-content {
     width: 100%;
-    padding: 0 8px 8px 8px;
 }
 
 .openerp .oe_form_group_cell .view-manager-main-content {
@@ -1939,106 +1938,6 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     background-position: 0px -21px;
 }
 
-/* Buttons */
-.openerp .oe_button:link,
-.openerp .oe_button:visited,
-.openerp .oe_button {
-    display: inline-block;
-    border: 1px solid #ababab;
-    color: #404040;
-    font-size: 12px;
-    padding: 3px 10px;
-    text-align: center;
-    -o-background-size: 100% 100%;
-    -moz-background-size: 100% 100%;
-    -webkit-background-size: auto auto !important;
-    background-size: 100% 100%;
-    background: #d8d8d8 none;
-    background: none, -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
-    background: none, -webkit-linear-gradient(#efefef, #d8d8d8);
-    background: none, -moz-linear-gradient(#efefef, #d8d8d8);
-    background: none, -o-linear-gradient(top, #efefef, #d8d8d8);
-    background: none, -khtml-gradient(linear, left top, left bottom, from(#efefef), to(#d8d8d8));
-    background: -ms-linear-gradient(top, #efefef, #d8d8d8);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#efefef', endColorstr='#d8d8d8',GradientType=0 );
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -o-border-radius: 3px;
-    -ms-border-radius: 3px;
-    border-radius: 3px;
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-    -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-    -webkit-font-smoothing: antialiased;
-    outline: none;
-}
-
-.openerp .oe_button:hover {
-    -o-background-size: 100% 100%;
-    -moz-background-size: 100% 100%;
-    -webkit-background-size: auto auto !important;
-    background-size: 100% 100%;
-    background: #e3e3e3 none;
-    background: none, -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
-    background: none, -webkit-linear-gradient(#f6f6f6, #e3e3e3);
-    background: none, -moz-linear-gradient(#f6f6f6, #e3e3e3);
-    background: none, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
-    background: none, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
-    background: -ms-linear-gradient(top, #f6f6f6, #e3e3e3);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#e3e3e3',GradientType=0 );
-    cursor: pointer;
-}
-
-.openerp .oe_button:focus {
-    border: 1px solid #80bfff;
-    -o-background-size: 100% 100%;
-    -moz-background-size: 100% 100%;
-    -webkit-background-size: auto auto !important;
-    background-size: 100% 100%;
-    background: #e3e3e3, none;
-    background: none, -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
-    background: none, -webkit-linear-gradient(#f6f6f6, #e3e3e3);
-    background: none, -moz-linear-gradient(#f6f6f6, #e3e3e3);
-    background: none, -o-linear-gradient(top, #f6f6f6, #e3e3e3);
-    background: none, -khtml-gradient(linear, left top, left bottom, from(#f6f6f6), to(#e3e3e3));
-    background: -ms-linear-gradient(top, #f6f6f6, #e3e3e3);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#e3e3e3',GradientType=0 );
-    -moz-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-    -webkit-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-    -o-box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-    box-shadow: 0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, 0.8) inset;
-}
-
-.openerp .oe_button:active,
-.openerp .oe_button.active {
-    background: #e3e3e3;
-    background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
-    background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f;
-    background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f;
-    background: -ms-linear-gradient(top, #e3e3e3, #f6f6f6);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e3e3e3', endColorstr='#f6f6f6',GradientType=0 );
-    -moz-box-shadow: none, 0 0 0 transparent;
-    -webkit-box-shadow: none, 0 0 0 transparent;
-    -o-box-shadow: none, 0 0 0 transparent;
-    box-shadow: none, 0 0 0 transparent;
-}
-
-.openerp .oe_button.disabled,
-.openerp .oe_button:disabled {
-    background: #efefef !important;
-    border: 1px solid #d1d1d1 !important;
-    font-size: 12px;
-    padding: 3px 10px;
-    -moz-box-shadow: none !important, 0 0 0 transparent;
-    -webkit-box-shadow: none !important, 0 0 0 transparent;
-    -o-box-shadow: none !important, 0 0 0 transparent;
-    box-shadow: none !important, 0 0 0 transparent;
-    color: #aaaaaa !important;
-    cursor: default;
-    text-shadow: 0 1px 1px white !important;
-}
 
 .openerp select.oe_search-view-filters-management {
     font-style: oblique;
