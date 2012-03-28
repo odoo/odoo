@@ -543,7 +543,7 @@
                                                             <i><div t-if="record.street.raw_value"><field name="street"/><br/></div>
                                                             <div t-if="record.street2.raw_value">
                                                             <field name="street2"/><br/></div>
-                                                            <div t-if="record.city.raw_value or  record.zip.raw_value"><field name="city"/>
+                                                            <div t-if="record.city.raw_value"><field name="city"/><span>,</span>
                                                             <field name="zip"/><br/></div>
                                                             <div t-if="record.state_id.raw_value">
                                                             <field name="state_id"/><br/>
