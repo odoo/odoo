@@ -342,7 +342,6 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
     do_edit_event: function(event_id, evt) {
         var self = this;
         var index = this.dataset.get_id_index(event_id);
-        debugger
         if (index !== null) {
             this.dataset.index = index;
             this.do_switch_view('page');
