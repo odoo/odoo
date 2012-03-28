@@ -479,6 +479,7 @@ openerp.mail = function(session) {
         
         display_subscribers: function (records) {
             var self = this;
+            this.is_subscriber = false;
             var sub_node = this.$element.find('div.oe_mail_recthread_followers')
             sub_node.empty();
             $('<h4/>').html('Followers (' + records.length + ')').appendTo(sub_node);
@@ -502,7 +503,7 @@ openerp.mail = function(session) {
         do_unfollow: function () {
             var self = this;
             return this.ds.call('message_unsubscribe', [[this.view.datarecord.id]]).then(function (record) {
-                self.do_notify("Impossible to unsubscribe", "You are automatically subscribed to this record. You cannot unsubscribe.");
+                if (record == false) self.do_notify("Impossible to unsubscribe", "You are automatically subscribed to this record. You cannot unsubscribe.");
                 }).pipe(this.proxy('fetch_subscribers'));
         },
         
