@@ -514,7 +514,7 @@ class res_config_settings(osv.osv_memory):
         res = super(res_config_settings, self).fields_get(cr, uid, allfields, context, write_access)
         classified = self._get_classified_fields(cr, uid, context)
         for name, module in classified['module']:
-            if module.state in ('installed', 'to install', 'to upgrade'):
+            if name in res and module.state in ('installed', 'to install', 'to upgrade'):
                 res[name]['readonly'] = True
         return res
 
