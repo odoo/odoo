@@ -28,37 +28,35 @@
                     </group>
                     <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"
                         attrs="{'invisible': [('has_default_company', '=', True)]}"/>
-                    <separator string="Accounting Configuration" colspan="4"/>
-                    <group col="4" colspan="4">
+                    <group colspan="4">
+                        <separator string="Accounting Configuration" colspan="4"/>
                         <field name ="complete_tax_set" invisible="1"/>
                         <field name ="multi_charts_id" invisible="1"/>
                         <newline/>
-                        <group col="2" colspan="2">
+                        <group colspan="2" col="2">
                             <field name="taxes_id" attrs="{'invisible': [('complete_tax_set', '!=', True)]}"/>
                             <field name="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                             <field name="module_account_accountant"/>
                             <field name="module_account_asset"/>
                             <field name="group_dates_periods"/>
                         </group>
-                        <group col="2" colspan="2">
+                        <group colspan="2" col="2">
                             <field name="supplier_taxes_id" attrs="{'invisible': [('complete_tax_set', '!=', True)]}"/>
                             <field name="purchase_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                             <field name="currency_id" widget="selection"/>
                             <field name="module_account_budget"/>
                         </group>
                     </group>
-                    <group col="2" colspan="2">
-                        <separator string="Customer Invoices" colspan="2"/>
-                        <group col="4" colspan="2">
-                            <field name="sale_journal_id" invisible="1"/>
-                            <field name="sale_sequence_prefix"/>
-                            <field name="sale_sequence_next" nolabel="1"/>
-                        </group>
-                        <group col="4" colspan="2">
-                            <field name="sale_refund_journal_id" invisible="1"/>
-                            <field name="sale_refund_sequence_prefix"/>
-                            <field name="sale_refund_sequence_next" nolabel="1"/>
-                        </group>
+                    <group colspan="2">
+                        <separator string="Customer Invoices" colspan="4"/>
+                        <field name="sale_journal_id" invisible="1"/>
+                        <field name="sale_sequence_prefix" attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
+                        <field name="sale_sequence_next" nolabel="1" attrs="{'readonly': [('sale_journal_id','=',False)]}"/>
+                        <newline/>
+                        <field name="sale_refund_journal_id" invisible="1"/>
+                        <field name="sale_refund_sequence_prefix" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
+                        <field name="sale_refund_sequence_next" nolabel="1" attrs="{'readonly': [('sale_refund_journal_id','=',False)]}"/>
+                        <newline/>
                         <field name="module_account_invoice_layout"/>
                         <newline/>
                         <field name="module_account_voucher"/>
@@ -67,36 +65,33 @@
                         <newline/>
                         <field name="group_proforma_invoices"/>
                     </group>
-                    <group col="2" colspan="2">
-                        <separator string="Supplier Invoices" colspan="2"/>
-                        <group col="4" colspan="2">
-                            <field name="purchase_journal_id" invisible="1"/>
-                            <field name="purchase_sequence_prefix"/>
-                            <field name="purchase_sequence_next" nolabel="1" colspan="1"/>
-                        </group>
+                    <group colspan="2">
+                        <separator string="Supplier Invoices" colspan="4"/>
+                        <field name="purchase_journal_id" invisible="1"/>
+                        <field name="purchase_sequence_prefix" attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
+                        <field name="purchase_sequence_next" nolabel="1" attrs="{'readonly': [('purchase_journal_id','=',False)]}"/>
                         <newline/>
-                        <group col="4" colspan="2">
-                            <field name="purchase_refund_journal_id" invisible="1"/>
-                            <field name="purchase_refund_sequence_prefix"/>
-                            <field name="purchase_refund_sequence_next" nolabel="1"/>
-                        </group>
+                        <field name="purchase_refund_journal_id" invisible="1"/>
+                        <field name="purchase_refund_sequence_prefix" attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}"/>
+                        <field name="purchase_refund_sequence_next" nolabel="1" attrs="{'readonly': [('purchase_refund_journal_id','=',False)]}"/>
+                        <newline/>
                         <field name="module_account_payment"/>
                     </group>
-                    <group col="2" colspan="2">
-                        <separator string="Electronic Payments" colspan="2"/>
+                    <group colspan="2">
+                        <separator string="Electronic Payments" colspan="4"/>
                         <field name="paypal_account"/>
                     </group>
-                    <group col="2" colspan="2">
-                        <separator string="Bank &amp; Cash" colspan="2"/>
-                        <field name="company_footer" nolabel="1" colspan="2"/>
+                    <group colspan="2">
+                        <separator string="Bank &amp; Cash" colspan="4"/>
+                        <field name="company_footer"/>
                         <newline/>
                         <label string="Setup your bank accounts: "/>
-                        <button name="%(action_bank_tree)d" string="Setup Your Bank Accounts" icon="gtk-execute" type="action"/>
+                        <button name="%(action_bank_tree)d" string="My Bank Accounts" icon="gtk-jump-to" type="action"/>
                         <newline/>
                         <field name="module_account_check_writing"/>
                     </group>
-                    <group col="2" colspan="2">
-                        <separator string="Analytic Accounting" colspan="2"/>
+                    <group colspan="2">
+                        <separator string="Analytic Accounting" colspan="4"/>
                         <field name="group_analytic_account_for_sales"/>
                         <newline/>
                         <field name="group_analytic_account_for_purchase"/>
