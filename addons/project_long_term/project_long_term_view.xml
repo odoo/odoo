@@ -105,7 +105,7 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='task']" position="after">
-                    <field name="phase"/>
+                    <field name="phases"/>
                 </xpath>
             </field>
         </record>
@@ -116,10 +116,13 @@
             <field name="type">kanban</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='open_task']" position="after">
-                	<td valign="bottom">
-                		<button name="open_phase" class="oe_project_buttons" type="object">Phase</button>(<field name="open_phases"/>)
-                	</td>
+            <field name="task" position="after">
+            	<field name="phases"/>
+            </field>
+                <xpath expr="//td[@class='buttons']" position="inside">
+                    <t t-if="record.phases.raw_value">
+                		<button name="open_phase" class="oe_project_buttons" type="object">Phases</button>
+                	</t>
                 </xpath>
             </field>
         </record>

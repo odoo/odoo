@@ -226,7 +226,7 @@ class project(osv.osv):
      
     _columns = {
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
-        'phase' : fields.boolean('Phase',help = "If you check this field Phases are appears in kanban view"),
+        'phases' : fields.boolean('Phase',help = "If you check this field Phases are appears in kanban view"),
         'open_phases' : fields.function(_open_phase , type='integer',string="Open Phases"),
         
     }
@@ -267,6 +267,7 @@ class project(osv.osv):
                 'nodestroy': True
             }
         return value
+    
     def schedule_phases(self, cr, uid, ids, context=None):
         context = context or {}
         if type(ids) in (long, int,):
