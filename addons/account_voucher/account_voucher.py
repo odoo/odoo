@@ -32,11 +32,11 @@ class res_company(osv.osv):
     _columns = {
         'income_currency_exchange_account_id': fields.many2one(
             'account.account',
-            string="Income Currency Rate",
+            string="Gain Exchange Rate Account",
             domain="[('type', '=', 'other')]",),
         'expense_currency_exchange_account_id': fields.many2one(
             'account.account',
-            string="Expense Currency Rate",
+            string="Loss Exchange Rate Account",
             domain="[('type', '=', 'other')]",),
     }
 
