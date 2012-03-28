@@ -12,7 +12,7 @@
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
                         <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
+                        <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
                         <filter icon="terp-go-month" name="This Month" string="Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
                         <filter icon="terp-go-month" name="This Month-1" string=" Month-1"
                          domain="[('date_from','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
