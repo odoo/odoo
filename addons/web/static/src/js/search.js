@@ -1011,6 +1011,7 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
 openerp.web.search.CharField = openerp.web.search.Field.extend( /** @lends openerp.web.search.CharField# */ {
     default_operator: 'ilike',
     complete: function (value) {
+        if (_.isEmpty(value)) { return $.when(null); }
         var label = _.str.sprintf(_.str.escapeHTML(
             _t("Search %(field)s for: %(value)s")), {
                 field: '<em>' + this.attrs.string + '</em>',
