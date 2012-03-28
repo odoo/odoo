@@ -253,7 +253,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                 .data( "item.autocomplete", item )
                 .appendTo( ul );
 
-            if ('value' in item) {
+            if (item.value !== undefined) {
                 // regular completion item
                 return $item.append(
                     ('label' in item)
