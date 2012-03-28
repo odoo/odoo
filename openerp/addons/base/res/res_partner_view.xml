@@ -539,7 +539,8 @@
                                                         <h4><a type="edit"><field name="name"/></a>
                                                             <div t-if="record.parent_id.raw_value"><field name="parent_id"/></div>
                                                         </h4>
-                                                            <i><div t-if="record.street.raw_value or  record.street2.raw_value"><field name="street"/>
+                                                            <i><div t-if="record.street.raw_value"><field name="street"/><br/></div>
+                                                            <div t-if="record.street2.raw_value">
                                                             <field name="street2"/><br/></div>
                                                             <div t-if="record.city.raw_value or  record.zip.raw_value"><field name="city"/>
                                                             <field name="zip"/><br/></div><div t-if="record.country_id.raw_value">
@@ -557,7 +558,7 @@
                                             <div class="oe_kanban_left">
                                                 <a string="Edit" icon="gtk-edit" type="edit"/>
                                                 <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                                <a title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
+                                                <a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
                                                     <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
                                                 </a>
                                             </div>
