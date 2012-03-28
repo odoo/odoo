@@ -73,8 +73,7 @@ class mail_thread(osv.osv):
     # OpenSocial: message_ids_social is a dummy field that should not be used
     _columns = {
         'message_ids_social': fields.function(_get_message_ids, method=True,
-                        type='one2many', obj='mail.message', string='Temp messages',
-                        _fields_id = 'res_id'),
+                        type='one2many', obj='mail.message', string='Temp messages', _fields_id = 'res_id'),
     }
 
     #------------------------------------------------------
@@ -316,7 +315,7 @@ class mail_thread(osv.osv):
                             email_bcc = msg_dict.get('bcc', msg_dict.get('email_bcc')),
                             reply_to = msg_dict.get('reply', msg_dict.get('reply_to')),
                             email_date = msg_dict.get('date'),
-                            message_id = msg_dict.get('rmessage-id', msg_dict.get('message_id')),
+                            message_id = msg_dict.get('message-id', msg_dict.get('message_id')),
                             references = msg_dict.get('references')\
                                       or msg_dict.get('in-reply-to'),
                             attachments = msg_dict.get('attachments'),
