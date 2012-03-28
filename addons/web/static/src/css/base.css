@@ -283,8 +283,67 @@
             box-shadow: none; }
   .openerp2 .oe_searchview {
     position: relative; }
+    .openerp2 .oe_searchview .VS-search .VS-search-box {
+      min-height: 0;
+      border-width: 1px;
+      padding: 1px 0; }
+    .openerp2 .oe_searchview .VS-search .VS-icon {
+      top: 5px; }
+    .openerp2 .oe_searchview .VS-search .VS-icon-search {
+      left: 5px; }
     .openerp2 .oe_searchview .VS-search .VS-search-inner {
-      margin-right: 40px; }
+      margin: 0 40px 0 17px;
+      font-size: 13px; }
+      .openerp2 .oe_searchview .VS-search .VS-search-inner input {
+        font-size: inherit;
+        line-height: inherit;
+        height: auto;
+        padding: 0; }
+      .openerp2 .oe_searchview .VS-search .VS-search-inner .VS-input-width-tester {
+        font-size: inherit;
+        padding: 0; }
+      .openerp2 .oe_searchview .VS-search .VS-search-inner .search_input {
+        margin-left: 0;
+        height: 20px; }
+        .openerp2 .oe_searchview .VS-search .VS-search-inner .search_input input, .openerp2 .oe_searchview .VS-search .VS-search-inner .search_input .VS-input-width-tester {
+          padding: 0 2px;
+          height: inherit;
+          margin: 0; }
+      .openerp2 .oe_searchview .VS-search .VS-search-inner .search_facet {
+        padding: 0;
+        margin: 0;
+        border: 1px solid #afafb6;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        background: #f0f0fa;
+        height: 18px; }
+        .openerp2 .oe_searchview .VS-search .VS-search-inner .search_facet.is_selected {
+          border-color: #a6a6fe; }
+          .openerp2 .oe_searchview .VS-search .VS-search-inner .search_facet.is_selected .category {
+            margin-left: 0; }
+          .openerp2 .oe_searchview .VS-search .VS-search-inner .search_facet.is_selected .VS-icon-cancel {
+            filter: alpha(opacity=100);
+            opacity: 1;
+            background-position: center 0; }
+        .openerp2 .oe_searchview .VS-search .VS-search-inner .search_facet .category {
+          padding: 0 4px 0 14px;
+          color: white;
+          background: #8786b7;
+          text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+          font-weight: normal;
+          text-transform: none;
+          height: 18px;
+          line-height: 18px;
+          font-size: inherit; }
+        .openerp2 .oe_searchview .VS-search .VS-search-inner .search_facet .search_facet_input_container {
+          border-left: 1px solid #afafb6;
+          height: 18px;
+          line-height: 18px;
+          padding: 0 4px; }
+        .openerp2 .oe_searchview .VS-search .VS-search-inner .search_facet .search_facet_remove {
+          left: 1px;
+          top: 3px; }
     .openerp2 .oe_searchview .VS-search .VS-icon-cancel {
       right: 24px; }
     .openerp2 .oe_searchview .VS-search .oe_vs_unfold_drawer {
@@ -292,7 +351,7 @@
       top: 0;
       right: 0;
       height: 100%;
-      line-height: 28px;
+      line-height: 23px;
       padding: 0 7px 0 4px;
       color: #cccccc;
       cursor: pointer; }

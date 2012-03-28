@@ -1,5 +1,7 @@
 // Variables {{{
 $section-title-color: #8786b7
+$facets-border: #afafb6
+$facets-border-selected: #a6a6fe
 $colour4: #8a89ba
 //$colour4: #d14836
 // }}}
@@ -334,8 +336,77 @@ $colour4: #8a89ba
         position: relative
 
         .VS-search
+            .VS-search-box
+                min-height: 0
+                border-width: 1px
+                padding: 1px 0
+
+            .VS-icon
+                top: 5px
+
+            .VS-icon-search
+                left: 5px
+
             .VS-search-inner
-                margin-right: 40px
+                margin: 0 40px 0 17px
+                font-size: 13px
+
+                input
+                    font-size: inherit
+                    line-height: inherit
+                    height: auto
+                    padding: 0
+
+                .VS-input-width-tester
+                    font-size: inherit
+                    padding: 0
+
+                .search_input
+                    margin-left: 0
+                    height: 20px
+                    input, .VS-input-width-tester
+                        padding: 0 2px
+                        height: inherit
+                        margin: 0
+
+                .search_facet
+                    padding: 0
+                    margin: 0
+                    border: 1px solid $facets-border
+                    @include radius(3px)
+                    background: #f0f0fa
+                    height: 18px
+
+                    &.is_selected
+                        border-color: $facets-border-selected
+
+                        .category
+                            margin-left: 0
+                        .VS-icon-cancel
+                            // don't change the icon on selection
+                            @include opacity(1.0)
+                            background-position: center 0
+
+                    .category
+                        padding: 0 4px 0 14px
+                        color: white
+                        background: #8786b7
+                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                        font-weight: normal
+                        text-transform: none
+                        height: 18px
+                        line-height: 18px
+                        font-size: inherit
+
+                    .search_facet_input_container
+                        border-left: 1px solid $facets-border
+                        height: 18px
+                        line-height: 18px
+                        padding: 0 4px
+
+                    .search_facet_remove
+                        left: 1px
+                        top: 3px
 
             .VS-icon-cancel
                 right: 24px
@@ -345,7 +416,7 @@ $colour4: #8a89ba
                 top: 0
                 right: 0
                 height: 100%
-                line-height: 28px
+                line-height: 23px
                 padding: 0 7px 0 4px
                 color: #ccc
                 cursor: pointer
