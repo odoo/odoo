@@ -671,7 +671,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         if (maximum_visible_links === 'auto') {
             maximum_visible_links = this.auto_limit_entries();
         }
-        if (maximum_visible_links) {
+        if (maximum_visible_links < this.data.data.children.length) {
             var $more = $(QWeb.render('Menu.more')),
                 $index = this.$element.find('li').eq(maximum_visible_links - 1);
             $index.after($more);
