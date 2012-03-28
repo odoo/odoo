@@ -394,7 +394,7 @@
                                                 on_change="onchange_address(use_parent_address, parent_id)" invisible="1"/>
                                         </group>
                                         <group col="2">
-                                            <field name="is_company" on_change="onchange_type(is_company)"/>
+                                            <field name="is_company" on_change="onchange_type(is_company)" invisible="1"/>
                                         </group>
                                         <group col="2">
                                             <field name="customer"/>
@@ -408,8 +408,8 @@
                                 <page string="General">
                                     <group colspan="2">
                                         <separator string="Address" colspan="4"/>
+                                        <field name="type" string="Type" attrs="{'invisible': [('is_company','=', True)]}"/>
                                         <group colspan="2">
-                                            <field name="type" string="Type" attrs="{'invisible': [('is_company','=', True)]}"/>
                                             <field name="use_parent_address" attrs="{'invisible': [('is_company','=', True)]}" on_change="onchange_address(use_parent_address, parent_id)"/>
                                         </group>
                                         <newline/>
@@ -429,9 +429,6 @@
                                             <field name="email" widget="email" colspan="4"/>
                                             <field name="website" widget="url" colspan="4"/>
                                             <field name="ref" groups="base.group_extended" colspan="4"/>
-                                        </group>
-                                        <group colspan="4" attrs="{'invisible': [('is_company','=', False)]}">
-                                            <field name="child_ids"  domain="[('id','!=',parent_id.id)]"   nolabel="1"/>
                                         </group>
                                     </page>
                                     <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
