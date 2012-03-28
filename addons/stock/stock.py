@@ -710,26 +710,18 @@ class stock_picking(osv.osv):
             for field in res['fields']:
                 # To update the states label according to shipping type
                 if field == 'state':
-                    _state = []
-                    for key, value in PICK_STATE:
-                        if type == 'in':
-                            if key == 'assigned':
-                                value = _('Ready to Receive')
-                            elif key == 'done':
-                                value = _('Received')
-                        elif type == 'internal':
-                            if key == 'assigned':
-                                value = _('Ready to Transfer')
-                            elif key == 'done':
-                                value = _('Transferred')
-                        elif type == 'out':
-                            if key == 'assigned':
-                                value = _('Ready to Deliver')
-                            elif key == 'done':
-                                value = _('Delivered')
-                        _state.append((key,value))
-                    res['fields']['state']['selection'] = _state
-                    res['fields']['state']['help'] = self._tooltip_picking_state(dict(_state))
+                    _state = dict(PICK_STATE)
+                    if type == 'in':
+                        _state['assigned'] = _('Ready to Receive')
+                        _state['done'] = _('Received')
+                    elif type == 'internal':
+                        _state['assigned'] = _('Ready to Transfer')
+                        _state['done'] = _('Transferred')
+                    elif type == 'out':
+                        _state['assigned'] = _('Ready to Deliver')
+                        _state['done'] = _('Delivered')
+                    res['fields']['state']['selection'] = [(x[0], _state[x[0]]) for x in PICK_STATE]
+                    res['fields']['state']['help'] = self._tooltip_picking_state(_state)
                 # To update the fields tooltips according to shipping type
                 if field == 'address_id':
                     _tooltip = ''
@@ -898,6 +890,8 @@ class stock_picking(osv.osv):
         #TOFIX: assignment of move lines should be call before testing assigment otherwise picking never gone in assign state
         ok = True
         for pick in self.browse(cr, uid, ids):
+            if pick.type == 'in':
+                return True
             mt = pick.move_type
             for move in pick.move_lines:
                 if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
@@ -1736,28 +1730,20 @@ class stock_move(osv.osv):
                 for node in doc.xpath("//group/button[@string='Process Now']"):
                     node.set('string', _('Deliver'))
             for field in res['fields']:
-#                # To update the states label according to the containing shipping type
+                # To update the states label according to shipping type
                 if field == 'state':
-                    _state = []
-                    for key, value in MOVE_STATE:
-                        if type == 'in':
-                            if key == 'assigned':
-                                value = _('Ready to Receive')
-                            elif key == 'done':
-                                value = _('Received')
-                        elif type == 'internal':
-                            if key == 'assigned':
-                                value = _('Ready to Transfer')
-                            elif key == 'done':
-                                value = _('Transferred')
-                        elif type == 'out':
-                            if key == 'assigned':
-                                value = _('Ready to Deliver')
-                            elif key == 'done':
-                                value = _('Delivered')
-                        _state.append((key,value))
-                    res['fields']['state']['selection'] = _state
-                    res['fields']['state']['help'] = self._tooltip_move_state(dict(_state))
+                    _state = dict(MOVE_STATE)
+                    if type == 'in':
+                        _state['assigned'] = _('Ready to Receive')
+                        _state['done'] = _('Received')
+                    elif type == 'internal':
+                        _state['assigned'] = _('Ready to Transfer')
+                        _state['done'] = _('Transferred')
+                    elif type == 'out':
+                        _state['assigned'] = _('Ready to Deliver')
+                        _state['done'] = _('Delivered')
+                    res['fields']['state']['selection'] = [(x[0], _state[x[0]]) for x in MOVE_STATE]
+                    res['fields']['state']['help'] = self._tooltip_move_state(_state)
                     res['arch'] = etree.tostring(doc)
         return res
 
