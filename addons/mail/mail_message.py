@@ -290,6 +290,7 @@ class mail_message(osv.osv):
                 'user_id': uid,
                 'model': model,
                 'res_id': res_id,
+                'type': 'email',
                 'body_text': body if subtype != 'html' else False,
                 'body_html': body if subtype == 'html' else False,
                 'email_from': email_from,
