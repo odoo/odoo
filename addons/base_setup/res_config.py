@@ -19,28 +19,22 @@
 #
 ##############################################################################
 
+from osv import fields, osv
 
-{
-    'name': 'Initial Setup Tools',
-    'version': '1.0',
-    'category': 'Hidden',
-    'complexity': "easy",
-    'description': """
-This module helps to configure the system at the installation of a new database.
-================================================================================
+class general_configuration(osv.osv_memory):
+    _name = 'general.configuration'
+    _inherit = 'res.config.settings'
+    
+    _columns = {
+        'group_multi_company': fields.boolean('Active Multi company',
+                           implied_group='base.group_multi_company',
+                           help ="""It allow to set the multi company."""),
+        'module_portal': fields.boolean('Customer Portal',
+                           help ="""It installs the portal module."""),
+        'module_share': fields.boolean('Share',
+                           help ="""It installs the share module."""),
+    }
 
-Shows you a list of applications features to install from.
+general_configuration()
 
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'base_setup_views.xml','res_config_view.xml' ],
-    'demo_xml': [],
-    'installable': True,
-    'auto_install': True,
-    'certificate': '0086711085869',
-    'images': ['images/base_setup1.jpeg','images/base_setup2.jpeg','images/base_setup3.jpeg','images/base_setup4.jpeg',],
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
