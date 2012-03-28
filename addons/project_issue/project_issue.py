@@ -487,11 +487,58 @@ project_issue()
 
 class project(osv.osv):
     _inherit = "project.project"
+
+    def _compute_issue(self, cr, uid, ids, field_name, arg, context=None):
+        res={}
+        issue_pool=self.pool.get('project.issue')
+        for project in self.browse(cr, uid, ids, context=context):
+            issues = issue_pool.search(cr, uid, [('project_id','=',project.id)])
+            res[project.id] = len(issues)
+        return res
+
     _columns = {
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'reply_to' : fields.char('Reply-To Email Address', size=256),
-        'issues' : fields.boolean('Issues',help = "If you check this field issues are appears in kanban view")
+        'issues' : fields.boolean('Issues',help = "If you check this field issues are appears in kanban view"),
+        'open_issues': fields.function(_compute_issue , store=True,type='integer',string="Issue"),
     }
+
+    def open_issues(self, cr, uid, ids, context=None):
+        #Open the View for the Tasks for the project
+        """
+        This opens Issues views
+        @return :Dictionary value for issue view
+        """
+        if context is None:
+            context = {}
+        value = {}
+        data_obj = self.pool.get('ir.model.data')
+        for project in self.browse(cr, uid, ids, context=context):
+            # Get Task views
+            tree_view = data_obj.get_object_reference(cr, uid, 'project_issue', 'project_issue_tree_view')
+            form_view = data_obj.get_object_reference(cr, uid, 'project_issue', 'project_issue_form_view')
+            calander_view = data_obj.get_object_reference(cr, uid, 'project_issue', 'project_issue_calendar_view')
+            search_view = data_obj.get_object_reference(cr, uid, 'project_issue', 'view_project_issue_filter')
+            kanban_view = data_obj.get_object_reference(cr, uid, 'project_issue', 'project_issue_kanban_view')
+            context.update({
+                #'search_default_user_id': uid,
+                'search_default_project_id':project.id
+            })
+            value = {
+                'name': _('Issue'),
+                'context': context,
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': 'project.issue',
+                'view_id': False,
+                'domain':[('project_id','in',ids)],
+                'context': context,
+                'views': [(kanban_view and kanban_view[1] or False, 'kanban'),(tree_view and tree_view[1] or False, 'tree'),(calander_view and calander_view[1] or False, 'calendar'),(form_view and form_view[1] or False, 'form')],
+                'type': 'ir.actions.act_window',
+                'search_view_id': search_view and search_view[1] or False,
+                'nodestroy': True
+            }
+        return value
 
     def _check_escalation(self, cr, uid, ids, context=None):
          project_obj = self.browse(cr, uid, ids[0], context=context)

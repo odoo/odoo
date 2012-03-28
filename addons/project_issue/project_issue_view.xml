@@ -380,5 +380,23 @@
             </field>
        </record>
 
+        <record id="view_project_kanban_inherited" model="ir.ui.view">
+            <field name="name">project.project.kanban.inherited</field>
+            <field name="model">project.project</field>
+            <field name="type">kanban</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//td[@class='tasks']" position="replace">
+                    <td class="issues" align="right">
+                        <button name="open_tasks" class="oe_project_buttons" type="object"><i>Tasks ()</i></button>
+                        <t t-if="record.issues.raw_value == 1">
+                            <button name="open_issues" class="oe_project_buttons" type="object"><i>Issues (<field name="open_issues"/>)</i></button>
+                        </t>
+                        
+                    </td>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>
