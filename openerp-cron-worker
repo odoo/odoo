@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+OpenERP cron jobs worker
+
+This script executes OpenERP cron jobs. Normally, cron jobs are handled by the
+OpenERP server but depending on deployment needs, independent worker processes
+can be used.
+"""
+
+import openerp
+
+if __name__ == '__main__':
+    openerp.modules.module.initialize_sys_path()
+    openerp.modules.loading.open_openerp_namespace()
+    openerp.tools.config['log_handler'] = ['openerp.addons.base.ir.ir_cron:DEBUG']
+    openerp.netsvc.init_logger()
+    import openerp.addons.base
+    openerp.addons.base.ir.ir_cron.ir_cron._run(['xx'])
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

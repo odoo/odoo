@@ -27,7 +27,6 @@ import threading
 
 import openerp.sql_db
 import openerp.osv.orm
-import openerp.cron
 import openerp.tools
 import openerp.modules.db
 import openerp.tools.config
@@ -109,15 +108,6 @@ class Registry(object):
             res.append(cls.create_instance(self, cr))
 
         return res
-
-    def schedule_cron_jobs(self):
-        """ Make the cron thread care about this registry/database jobs.
-        This will initiate the cron thread to check for any pending jobs for
-        this registry/database as soon as possible. Then it will continuously
-        monitor the ir.cron model for future jobs. See openerp.cron for
-        details.
-        """
-        openerp.cron.schedule_wakeup(openerp.cron.WAKE_UP_NOW, self.db.dbname)
 
     def clear_caches(self):
         """ Clear the caches
@@ -213,9 +203,6 @@ class RegistryManager(object):
             finally:
                 cr.close()
 
-        if pooljobs:
-            registry.schedule_cron_jobs()
-
         return registry
 
     @classmethod
@@ -233,8 +220,6 @@ class RegistryManager(object):
             if db_name in cls.registries:
                 cls.registries[db_name].clear_caches()
                 del cls.registries[db_name]
-                openerp.cron.cancel(db_name)
-
 
     @classmethod
     def delete_all(cls):
