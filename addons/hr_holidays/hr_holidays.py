@@ -118,8 +118,8 @@ class hr_holidays(osv.osv):
             \nThe state is \'Refused\', when holiday request is refused by manager.\
             \nThe state is \'Approved\', when holiday request is approved by manager.'),
         'user_id':fields.related('employee_id', 'user_id', type='many2one', relation='res.users', string='User', store=True),
-        'date_from': fields.date('Start Date', readonly=True, states={'draft':[('readonly',False)]}, select=True),
-        'date_to': fields.date('End Date', readonly=True, states={'draft':[('readonly',False)]}),
+        'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)]}, select=True),
+        'date_to': fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)]}),
         'holiday_status_id': fields.many2one("hr.holidays.status", "Leave Type", required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'employee_id': fields.many2one('hr.employee', "Employee", select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)]}, help='Leave Manager can let this field empty if this leave request/allocation is for every employee'),
         #'manager_id': fields.many2one('hr.employee', 'Leave Manager', invisible=False, readonly=True, help='This area is automatically filled by the user who validate the leave'),
@@ -186,11 +186,11 @@ class hr_holidays(osv.osv):
     def _get_number_of_days(self, date_from, date_to):
         """Returns a float equals to the timedelta between two dates given as string."""
 
-        DATETIME_FORMAT = "%Y-%m-%d"
+        DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
         from_dt = datetime.datetime.strptime(date_from, DATETIME_FORMAT)
         to_dt = datetime.datetime.strptime(date_to, DATETIME_FORMAT)
         timedelta = to_dt - from_dt
-        diff_day = timedelta.days
+        diff_day = timedelta.days + float(timedelta.seconds) / 86400
         return diff_day
 
     def unlink(self, cr, uid, ids, context=None):
@@ -413,8 +413,8 @@ class hr_employee(osv.osv):
 
     def _get_leave_status(self, cr, uid, ids, name, args, context=None):
         holidays_id = self.pool.get('hr.holidays').search(cr, uid, 
-           [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d')), 
-            ('date_to','>=',time.strftime('%Y-%m-%d')),('type','=','remove'),('state','not in',('cancel','refuse'))],
+           [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d %H:%M:%S')),
+            ('date_to','>=',time.strftime('%Y-%m-%d %H:%M:%S')),('type','=','remove'),('state','not in',('cancel','refuse'))],
            context=context)
         result = {}
         for id in ids:
