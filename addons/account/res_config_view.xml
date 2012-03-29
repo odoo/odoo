@@ -12,14 +12,15 @@
                     <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"
                         attrs="{'invisible': [('has_default_company', '=', True)]}"/>
 
-                    <field name="chart_template_id" invisible="1"/>
-                    <group string="Configure your Chart of Accounts" colspan="4" attrs="{'invisible': [('chart_template_id','!=',False)]}">
+                    <field name="has_account_chart" invisible="1"/>
+                    <group string="Configure your Chart of Accounts" colspan="4" attrs="{'invisible': [('has_account_chart','=',True)]}">
                         <label string="You have no chart of accounts or taxes defined for this company.  Please select a chart of accounts to proceed." colspan="4"/>
                         <field name="charts"/>
                         <button name="install_chartofaccounts" string="Configure" icon="gtk-execute" type="object"/>
                     </group>
-                    <field name="fiscalyear_id" invisible="1"/>
-                    <group string="Configure your Fiscal Year" colspan="4" attrs="{'invisible': [('fiscalyear_id','!=',False)]}">
+
+                    <field name="has_fiscal_year" invisible="1"/>
+                    <group string="Configure your Fiscal Year" colspan="4" attrs="{'invisible': [('has_fiscal_year','=',True)]}">
                         <group colspan="4">
                             <label string="You have no fiscal year/period open for this date."/>
                             <button name="configure_fiscalyear" string="Configure" icon="gtk-execute" type="object"/>
@@ -34,14 +35,14 @@
                         <field name ="complete_tax_set" invisible="1"/>
                         <newline/>
                         <group colspan="2" col="2">
-                            <field name="taxes_id" attrs="{'invisible': [('complete_tax_set', '!=', True)]}"/>
+                            <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}"/>
                             <field name="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                             <field name="module_account_accountant"/>
                             <field name="module_account_asset"/>
                             <field name="group_dates_periods"/>
                         </group>
                         <group colspan="2" col="2">
-                            <field name="supplier_taxes_id" attrs="{'invisible': [('complete_tax_set', '!=', True)]}"/>
+                            <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}"/>
                             <field name="purchase_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                             <field name="currency_id" widget="selection"/>
                             <field name="module_account_budget"/>
