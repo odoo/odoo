@@ -114,10 +114,10 @@ class account_config_settings(osv.osv_memory):
                 This installs the module account_invoice_layout."""),
 
         'group_dates_periods': fields.boolean('Allow dates/periods',
-            implied_group='base.group_dates_periods',
+            implied_group='account.group_dates_periods',
             help="Allows you to keep the period same as your invoice date when you validate the invoice."),
         'group_proforma_invoices': fields.boolean('Allow Pro-forma Invoices',
-            implied_group='base.group_proforma_invoices',
+            implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
 
         'default_sale_tax': fields.many2one('account.tax', 'Default Sale Tax'),
