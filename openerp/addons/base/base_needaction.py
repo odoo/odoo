@@ -184,13 +184,13 @@ class base_needaction(osv.osv):
         return [need_act['res_id'] for need_act in need_act_obj.read(cr, uid, need_act_ids, context=context)]
     
     @classmethod
-    def needaction_get_action_count(cls, cr, uid, model_name, user_id, context=None):
+    def needaction_get_action_count(cls, cr, uid, model_name, user_id, limit=80, context=None):
         """Given a model and a user_id
            get the number of actions it has to perform"""
         if context is None:
             context = {}
         need_act_obj = pooler.get_pool(cr.dbname).get('base.needaction_users_rel')
-        return need_act_obj.search(cr, uid, [('res_model', '=', model_name), ('user_id', '=', user_id)], count=True, context=context)
+        return need_act_obj.search(cr, uid, [('res_model', '=', model_name), ('user_id', '=', user_id)], limit=limit, count=True, context=context)
     
     @classmethod
     def needaction_get_record_references(cls, cr, uid, user_id, offset=None, limit=None, order=None, context=None):
