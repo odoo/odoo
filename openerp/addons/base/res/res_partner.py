@@ -123,8 +123,8 @@ class res_partner(osv.osv):
 
     def _address_display(self, cr, uid, ids, name, args, context=None):
         res={}
-        for addr in self.browse(cr, uid, ids, context):
-            res[addr.id] =self._display_address(cr,uid,addr,context)
+        for partner in self.browse(cr, uid, ids, context=context):
+            res[partner.id] =self._display_address(cr, uid, partner, context=context)
         return res
 
     _order = "name"
@@ -172,8 +172,7 @@ class res_partner(osv.osv):
         'photo': fields.binary('Photo'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
-        'contact_address': fields.function(_address_display,  type='char', string='Address format'),
-
+        'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
     }
 
     def _default_category(self, cr, uid, context=None):
@@ -344,19 +343,19 @@ class res_partner(osv.osv):
         result = {}
         # retrieve addresses from the partner itself and its children
         res = []
-        # need to fix the ids ,It get  False value in list like ids[False]
+        # need to fix the ids ,It get False value in list like ids[False]
         if ids and ids[0]!=False:
             for p in self.browse(cr, uid, ids):
                 res.append((p.type, p.id))
                 res.extend((c.type, c.id) for c in p.child_ids)
-        addr = dict(reversed(res))
+        address_dict = dict(reversed(res))
         # get the id of the (first) default address if there is one,
         # otherwise get the id of the first address in the list
         default_address = False
         if res:
-            default_address = addr.get('default', res[0][1])
+            default_address = address_dict.get('default', res[0][1])
         for adr in adr_pref:
-            result[adr] = addr.get(adr, default_address)
+            result[adr] = address_dict.get(adr, default_address)
         return result
 
     def gen_next_ref(self, cr, uid, ids):
