@@ -1268,9 +1268,6 @@ openerp.point_of_sale = function(db) {
                 while (st2.length < 12) {
                     st2.push(0);
                 }
-                console.log('code: '+code.join(','));
-                console.log('st1: '+st1.join(','));
-                console.log('st2: '+st2.join(','));
                 var countSt3 = 1;
                 var st3 = 0;
                 $.each(st2, function() {
@@ -1330,15 +1327,15 @@ openerp.point_of_sale = function(db) {
                         }
                         if (barcode.substring(0,2) in {'02':'', '22':'', '24':'', '26':'', '28':''}) {
                             // product with a specific price - specified into the barcode
-                            barcode = barcode.substring(2,5);
+                            price = Number(barcode.substring(7,12))/100;
+                            barcode = barcode.substring(2,7);
                             // TODO conversion euro - old local currencies
-                            new db.web.Model('res.currency').get_func('_get_conversion_rate')(['FRF', 'EUR']).pipe(function(result){});
-                            price = Number(barcode.substring(7,5))/100;
+                            new db.web.Model('res.currency').get_func('get_conversion_rate')([pos.session.uid,'FRF', pos.get('currency'), {}]).pipe(function(result){});
                             weight = '';
                         } else if (barcode.substring(0,2) in {'21':'','23':'','27':'','29':'','25':''}) {
                             // product sold by weight
-                            barcode = barcode.substring(2,5);
-                            weight = Number(barcode.substring(7,5))/1000;
+                            weight = Number(barcode.substring(7,12))/1000;
+                            barcode = barcode.substring(2,7);
                             price = '';
                         } else {
                             // product unit
