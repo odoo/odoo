@@ -866,7 +866,7 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
         });
     },
     toggle_filter: function (e) {
-        // FIXME: oh god, my eyes, they hurt (also needs to trigger search after toggling filter)
+        // FIXME: oh god, my eyes, they hurt
         var self = this, fs;
         var filter = this.filters[$(e.target).index()];
 

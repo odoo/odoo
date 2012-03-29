@@ -260,7 +260,7 @@ Filters
 * :js:func:`openerp.web.search.Filter.is_enabled` has been removed
 
 * :js:class:`~openerp.web.search.FilterGroup` instances are still
-  rendered (and started) in the "advanced search" drawer".
+  rendered (and started) in the "advanced search" drawer.
 
 Fields
 ++++++
