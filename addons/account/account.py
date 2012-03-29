@@ -1994,7 +1994,7 @@ class account_tax(osv.osv):
         return res
 
     def _unit_compute(self, cr, uid, taxes, price_unit, product=None, partner=None, quantity=0):
-        taxes = self._applicable(cr, uid, taxes, price_unit product, partner)
+        taxes = self._applicable(cr, uid, taxes, price_unit ,product, partner)
         res = []
         cur_price_unit=price_unit
         for tax in taxes:
