@@ -31,6 +31,8 @@
             <field name="arch" type="xml">
                 <field name="task" position="after">
                     <field name="timesheets"/>
+                    <field name="total_hours"/>
+                    <field name="effective_hours"/>
                 </field>
 		<xpath expr="//t[@t-name='tasks']" position="after">
                     <t t-name="timesheets">
@@ -54,7 +56,10 @@
 			    </div>
 			</button>
 		    </div>
-			
+			<div class="sequence">
+				<kbd class="user">Hours</kbd>
+                <div class="manager"><t t-esc="Math.round(record.total_hours.raw_value-record.effective_hours.raw_value)"/></div>
+                </div>
                 </xpath>
             </field>
         </record>
