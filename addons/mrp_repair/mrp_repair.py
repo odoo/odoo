@@ -117,7 +117,7 @@ class mrp_repair(osv.osv):
         'name': fields.char('Repair Reference',size=24, required=True),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'partner_id' : fields.many2one('res.partner', 'Partner', select=True, help='This field allow you to choose the parner that will be invoiced and delivered'),
-        'address_id': fields.many2one('res.partner', 'Delivery Address'),
+        'address_id': fields.many2one('res.partner', 'Delivery Address', domain="[('parent_id','=',partner_id)]"),
         'default_address_id': fields.function(_get_default_address, type="many2one", relation="res.partner"),
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number', select=True, domain="[('product_id','=',product_id)]"),
         'state': fields.selection([
