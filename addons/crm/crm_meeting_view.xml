@@ -171,7 +171,7 @@
                                                        
                                 
                                 <separator string="End of recurrency" colspan="4"/>
-                                <field name="end_type" />
+                                <field name="end_type" required="1" />
                                 <label string=" " colspan="2" />
                                 <newline />
                                 <field name="count" attrs="{'invisible' : [('end_type', '!=', 'count')] }"/>
