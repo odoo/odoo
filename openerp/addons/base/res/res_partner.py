@@ -391,7 +391,7 @@ class res_partner(osv.osv):
                                                 ('name','=','main_partner')])[0],
                 ).res_id
 
-    def _display_address(self, cr, uid, address, type, context=None):
+    def _display_address(self, cr, uid, address, type='', context=None):
 
         '''
         The purpose of this function is to build and return an address formatted accordingly to the
