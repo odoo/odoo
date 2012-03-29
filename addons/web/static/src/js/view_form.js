@@ -2566,6 +2566,7 @@ var commands = {
 };
 openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
     multi_selection: false,
+    disable_utility_classes: true,
     init: function(view, node) {
         this._super(view, node);
         this.is_loaded = $.Deferred();
@@ -2573,7 +2574,6 @@ openerp.web.form.FieldOne2Many = openerp.web.form.AbstractField.extend({
         this.is_setted = $.Deferred();
         this.form_last_update = $.Deferred();
         this.init_form_last_update = this.form_last_update;
-        this.disable_utility_classes = true;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -2934,6 +2934,7 @@ openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
  */
 openerp.web.form.FieldMany2Many = openerp.web.form.AbstractField.extend({
     multi_selection: false,
+    disable_utility_classes: true,
     init: function(view, node) {
         this._super(view, node);
         this.is_loaded = $.Deferred();
