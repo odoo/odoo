@@ -187,11 +187,10 @@
                                             <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" height="40px" width="40px" /></button><br/>
                                             <div class="manager"><field name="user_id"/></div>
                                         </td>
-                                        <td align="left" valign="middle">
-                                            <div class="oe_module_desc oe_project_border">
+                                        <td align="left" valign="middle" width="220px">
+                                            <div class="oe_project_border">
                                                 <h4 class="oe_project_font1">
-                                                    <div class="oe_project_font"><t t-esc="record.name.value.substr(0,28)"/><t t-if="record.name.value.length > 28">...</t><a string="Edit" icon="gtk-edit" type="edit"/></div>
-                                                    
+                                                    <a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,26)"/><t t-if="record.name.value.length > 26">...</t></div></a>
                                                 </h4>
                                                 <table >
                                                     <tr>
@@ -204,7 +203,7 @@
                                                 </table>
                                             </div>
                                         </td>
-                                        <td width="60px" valign="top" align="right">
+                                        <td width="70px" valign="top" align="right">
                                             <t t-if="record.date.raw_value">
                                                 <div class="sequence">
                                                     <kbd class="user">Deadline</kbd>

@@ -44,6 +44,12 @@
                         <button name="open_timesheets" class="oe_project_buttons" type="object" tooltip="timesheets"><img src="/project_timesheet/static/src/img/timesheet_icon.png" class="project_icon"/></button>
                     </t>
                 </xpath>
+                <xpath expr="//div[@class='sequence']" position="after">
+                	<div class="sequence">
+                   <kbd class="user">To invoice</kbd>
+                   <div class="manager"><field name="amount_invoiced"/></div>
+                   </div>
+                </xpath>
             </field>
         </record>
 
