@@ -45,8 +45,13 @@ class res_users(osv.osv):
     
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
+        user = self.browse(cr, uid, [user_id], context=context)[0]
         # make user follow itself
         self.message_subscribe(cr, uid, [user_id], [user_id], context=context)
+        # create a welcome message to broadcast
+        company_name = user.company_id.name if user.company_id else 'the company'
+        message = _('%s has joined %s! You may leave him a message to celebrate his arrival and help him doing its first steps !') % (user.name, company_name)
+        self.message_append_note(cr, uid, [user.id], 'Welcome notification', message, context=context)
         return user_id
 
     def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
