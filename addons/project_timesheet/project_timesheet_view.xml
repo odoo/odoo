@@ -31,6 +31,8 @@
             <field name="arch" type="xml">
                 <field name="task" position="after">
                     <field name="timesheets"/>
+                    <field name="total_hours"/>
+                    <field name="effective_hours"/>
                 </field>
 		<xpath expr="//t[@t-name='tasks']" position="after">
                     <t t-name="timesheets">
@@ -47,7 +49,11 @@
                 <xpath expr="//div[@class='sequence']" position="after">
                 	<div class="sequence">
                    <kbd class="user">To invoice</kbd>
-                   <div class="manager"><field name="amount_invoiced"/></div>
+                   <div class="manager"><field name="amount_invoiced"/> <field name="currency_id"/></div>
+                   </div>
+                   <div class="sequence">
+	                   <kbd class="user">Hours</kbd>
+	                   <div class="manager"><t t-esc="Math.round(record.total_hours.raw_value-record.effective_hours.raw_value)"/> h</div>
                    </div>
                 </xpath>
             </field>
