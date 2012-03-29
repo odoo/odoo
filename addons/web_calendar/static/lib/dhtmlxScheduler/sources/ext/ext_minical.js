@@ -207,7 +207,7 @@ scheduler._render_calendar=function(obj,sd,conf, previous){
 	if (!previous)
 		obj.appendChild(d);
 
-	d.childNodes[1].style.height = (d.childNodes[1].childNodes[0].offsetHeight-1)+"px"; // dhx_year_week should have height property so that day dates would get correct position. dhx_year_week height = height of it's child (with the day name)
+	d.childNodes[1].style.height = g.childNodes[1].childNodes[0].offsetHeight <= 0 ? "0px" : (d.childNodes[1].childNodes[0].offsetHeight-1)+"px"; // dhx_year_week should have height property so that day dates would get correct position. dhx_year_week height = height of it's child (with the day name)
 	
 	/*restore*/ this._cols=temp; this._mode = temp2; this._colsS = temp3; this._min_date=temp4; this._max_date=temp5; scheduler._date = temp6; ts.month_day=temp7;
 	return d;
