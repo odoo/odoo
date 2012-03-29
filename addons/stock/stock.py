@@ -663,14 +663,14 @@ class stock_picking(osv.osv):
             ("none", "Not Applicable")], "Invoice Control",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'force_assign': fields.boolean('Force Assign'),
+        'force_assign_in': fields.boolean('Force Assign'),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
         'state': 'draft',
         'move_type': 'direct',
         'type': 'in',
-        'force_assign': False,
+        'force_assign_in': False,
         'invoice_state': 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
@@ -683,8 +683,8 @@ class stock_picking(osv.osv):
         res = super(stock_picking, self).default_get(cr, uid, fields, context=context)
         type = context.get('default_type', False)
         if type == 'in':
-            if 'force_assign' in fields:
-                res.update({'force_assign': True})
+            if 'force_assign_in' in fields:
+                res.update({'force_assign_in': True})
         return res
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -896,7 +896,7 @@ class stock_picking(osv.osv):
     def test_assigned_pick_in(self, cr, uid, ids):
         ok = False
         for pick in self.browse(cr, uid, ids):
-            if pick.force_assign:
+            if pick.force_assign_in:
                 ok = True
             else:
                 ok = self.test_assigned(cr, uid, ids)
@@ -909,7 +909,7 @@ class stock_picking(osv.osv):
         #TOFIX: assignment of move lines should be call before testing assigment otherwise picking never gone in assign state
         ok = True
         for pick in self.browse(cr, uid, ids):
-            if pick.force_assign:
+            if pick.force_assign_in:
                 ok = True
             else:
                 mt = pick.move_type
