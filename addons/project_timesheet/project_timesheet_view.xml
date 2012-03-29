@@ -44,14 +44,13 @@
                         <button name="open_timesheets" class="oe_project_buttons" type="object" tooltip="timesheets"><img src="/project_timesheet/static/src/img/timesheet_icon.png" class="project_icon"/></button>
                     </t>
                 </xpath>
-                <xpath expr="//div[@class='sequence']" position="after">
+                <xpath expr="//div[@id='sequence']" position="inside">
 		    
                     <div class="sequence">
 			<button name="open_timesheets" class="oe_to_invoice_buttons" type="object">
-			    <!--<kbd class="to_invoice">To invoice</kbd>-->
+			    <small>To invoice</small>
 			    <div class="manager">
-				<code>To invoice</code>
-				<strong><field name="amount_invoiced"/></strong>
+				<field name="amount_invoiced"/>
 			    </div>
 			</button>
 		    </div>
