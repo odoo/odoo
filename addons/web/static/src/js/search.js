@@ -97,6 +97,8 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         this.hidden = !!hidden;
         this.headless = this.hidden && !this.has_defaults;
 
+        this.filter_data = {};
+
         this.ready = $.Deferred();
     },
     start: function() {
@@ -507,7 +509,12 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
                         group_by instanceof Array ? group_by : group_by.split(','),
                         function (el) { return { group_by: el }; });
                 }
-                this.on_search([filter.domain], [filter.context], groupbys);
+                this.filter_data = {
+                    domains: [filter.domain],
+                    contexts: [filter.context],
+                    groupbys: groupbys
+                };
+                this.do_search();
             }, this));
         } else {
             select.val('');
@@ -1141,8 +1148,8 @@ openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @
             ['false', _t("No")]
         ];
     },
-    get_value: function () {
-        switch (this.$element.val()) {
+    get_value: function (facet) {
+        switch (this._super(facet)) {
             case 'false': return false;
             case 'true': return true;
             default: return null;

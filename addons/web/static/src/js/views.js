@@ -411,6 +411,9 @@ session.web.ViewManager =  session.web.OldWidget.extend(/** @lends session.web.V
             var groupby = results.group_by.length
                         ? results.group_by
                         : action_context.group_by;
+            if (_.isString(groupby)) {
+                groupby = [groupby];
+            }
             controller.do_search(results.domain, results.context, groupby || []);
         });
     },
@@ -760,7 +763,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
         _(log_records.reverse()).each(function (record) {
             var context = {};
             if (record.context) {
-                try { context = py.eval(record.context).toJSON(); }
+                try { context = py.eval(record.context); }
                 catch (e) { /* TODO: what do I do now? */ }
             }
             $(_.str.sprintf('<li><a href="#">%s</a></li>', record.name))

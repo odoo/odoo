@@ -1605,15 +1605,10 @@ openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
     init: function (view, node) {
         this._super(view, node);
         if (node.attrs.digits) {
-            this.parse_digits(node.attrs.digits);
+            this.digits = py.eval(node.attrs.digits);
         } else {
             this.digits = view.fields_view.fields[node.attrs.name].digits;
         }
-    },
-    parse_digits: function (digits_attr) {
-        // could use a Python parser instead.
-        var match = /^\s*[\(\[](\d+),\s*(\d+)/.exec(digits_attr);
-        return [parseInt(match[1], 10), parseInt(match[2], 10)];
     },
     set_value: function(value) {
         if (value === false || value === undefined) {
@@ -2919,6 +2914,10 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         } else { // "form"
             this.new_object();
         }
+    },
+    stop: function () {
+        this.$element.dialog('close');
+        this._super();
     },
     setup_search_view: function(search_defaults) {
         var self = this;

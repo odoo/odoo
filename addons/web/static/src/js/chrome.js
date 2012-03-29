@@ -351,44 +351,6 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
         return result;
     },
     /**
-     * Waits until the new database is done creating, then unblocks the UI and
-     * logs the user in as admin
-     *
-     * @param {Number} db_creation_id identifier for the db-creation operation, used to fetch the current installation progress
-     * @param {Object} info info fields for this database creation
-     * @param {String} info.db name of the database being created
-     * @param {String} info.password super-admin password for the database
-     */
-    wait_for_newdb: function (db_creation_id, info) {
-        var self = this;
-        self.rpc('/web/database/progress', {
-            id: db_creation_id,
-            password: info.password
-        }, function (result) {
-            var progress = result[0];
-            // I'd display a progress bar, but turns out the progress status
-            // the server report kind-of blows goats: it's at 0 for ~75% of
-            // the installation, then jumps to 75%, then jumps down to either
-            // 0 or ~40%, then back up to 75%, then terminates. Let's keep that
-            // mess hidden behind a not-very-useful but not overly weird
-            // message instead.
-            if (progress < 1) {
-                setTimeout(function () {
-                    self.wait_for_newdb(db_creation_id, info);
-                }, 500);
-                return;
-            }
-
-            var admin = result[1][0];
-            setTimeout(function () {
-                self.getParent().do_login(
-                        info.db, admin.login, admin.password);
-                self.destroy();
-                self.unblockUI();
-            });
-        });
-    },
-    /**
      * Blocks UI and replaces $.unblockUI by a noop to prevent third parties
      * from unblocking the UI
      */
@@ -427,23 +389,19 @@ openerp.web.Database = openerp.web.OldWidget.extend(/** @lends openerp.web.Datab
         self.$option_id.find("form[name=create_db_form]").validate({
             submitHandler: function (form) {
                 var fields = $(form).serializeArray();
-                self.blockUI();
                 self.rpc("/web/database/create", {'fields': fields}, function(result) {
-                    if (result.error) {
-                        self.unblockUI();
-                        self.display_error(result);
-                        return;
-                    }
                     if (self.db_list) {
                         self.db_list.push(self.to_object(fields)['db_name']);
                         self.db_list.sort();
                         self.getParent().set_db_list(self.db_list);
                     }
+
                     var form_obj = self.to_object(fields);
-                    self.wait_for_newdb(result, {
-                        password: form_obj['super_admin_pwd'],
-                        db: form_obj['db_name']
-                    });
+                    self.getParent().do_login(
+                            form_obj['db_name'],
+                            'admin',
+                            form_obj['create_admin_pwd']);
+                    self.destroy();
                 });
             }
         });
@@ -677,11 +635,13 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     init: function() {
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
+        this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
     },
     start: function() {
         this._super.apply(this, arguments);
         this.$secondary_menus = this.getParent().$element.find('.oe_secondary_menus_container');
         this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
+        $('html').bind('click', this.do_hide_more);
     },
     do_reload: function() {
         var self = this;
@@ -692,13 +652,39 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         });
     },
     on_loaded: function(data) {
+        var self = this;
         this.data = data;
         this.renderElement();
+        this.limit_entries();
         this.$element.on('click', 'a[data-menu]', this.on_menu_click);
+        this.$element.on('click', 'a.oe_menu_more_link', function() {
+            self.$element.find('.oe_menu_more').toggle();
+            return false;
+        });
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
         this.has_been_loaded.resolve();
+    },
+    limit_entries: function() {
+        var maximum_visible_links = this.maximum_visible_links;
+        if (maximum_visible_links === 'auto') {
+            maximum_visible_links = this.auto_limit_entries();
+        }
+        if (maximum_visible_links < this.data.data.children.length) {
+            var $more = $(QWeb.render('Menu.more')),
+                $index = this.$element.find('li').eq(maximum_visible_links - 1);
+            $index.after($more);
+            $more.find('.oe_menu_more').append($index.next().nextAll());
+        }
+    },
+    auto_limit_entries: function() {
+        // TODO: auto detect overflow and bind window on resize
+        var width = $(window).width();
+        return Math.floor(width / 125);
+    },
+    do_hide_more: function() {
+        this.$element.find('.oe_menu_more').hide();
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
@@ -744,6 +730,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         }
     },
     on_menu_click: function(ev, id) {
+        this.do_hide_more();
         id = id || 0;
         var $clicked_menu, manual = false;
 
@@ -856,8 +843,9 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
                 return;
             var func = new openerp.web.Model("res.users").get_func("read");
             return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
-                // TODO: Only show company if multicompany in use
-                self.$element.find('.oe_topbar_name').text(res.name + '/' + res.company_id[1]);
+                // TODO: Show company if multicompany is in use
+                var topbar_name = _.str.sprintf("%s (%s)", res.name, openerp.connection.db, res.company_id[1]);
+                self.$element.find('.oe_topbar_name').text(topbar_name);
                 return self.shortcut_load();
             });
         };
@@ -950,7 +938,7 @@ openerp.web.UserMenu =  openerp.web.Widget.extend(/** @lends openerp.web.UserMen
                 }
             ]
         }).open();
-       action_manager.appendTo(this.dialog);
+       action_manager.appendTo(this.dialog.$element);
        action_manager.render(this.dialog);
     },
     on_menu_about: function() {
