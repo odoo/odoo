@@ -33,18 +33,6 @@ class account_config_settings(osv.osv_memory):
     _name = 'account.config.settings'
     _inherit = 'res.config.settings'
 
-    def _get_charts(self, cr, uid, context=None):
-        modules = self.pool.get('ir.module.module')
-        # Looking for the module with the 'Account Charts' category
-        category_name, category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'module_category_localization_account_charts')
-        ids = modules.search(cr, uid, [('category_id', '=', category_id)], context=context)
-        charts = list(
-            sorted(((m.name, m.shortdesc)
-                    for m in modules.browse(cr, uid, ids, context=context)),
-                   key=itemgetter(1)))
-        charts.insert(0, ('configurable', 'Generic Chart Of Accounts'))
-        return charts
-
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'has_default_company': fields.boolean('Has default company', readonly=True),
@@ -57,9 +45,6 @@ class account_config_settings(osv.osv_memory):
             string='Footer of reports', help="Footer of reports based on your bank accounts."),
 
         'has_account_chart': fields.boolean('Has a chart of accounts'),
-        'charts': fields.selection(_get_uninstalled_charts, 'Chart Template to install',
-            help="""Installs localized accounting charts to match as closely as
-                possible the accounting needs of your company based on your country."""),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', domain="[('visible','=', True)]"),
         'code_digits': fields.integer('# of Digits', help="No. of Digits to use for account code"),
         'seq_journal': fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
