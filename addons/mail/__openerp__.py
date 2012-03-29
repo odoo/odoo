@@ -74,6 +74,7 @@ The main features are:
         'images/messages_form.jpeg',
         'images/messages_list.jpeg',
         'static/src/img/email_icong.png',
+        'static/src/img/groupdefault.png',
     ],
     'css': [
         'static/src/css/mail.css',
