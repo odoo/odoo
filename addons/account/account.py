@@ -1841,7 +1841,7 @@ class account_tax(osv.osv):
         PERCENT: tax = price * amount
         FIXED: tax = price + amount
         NONE: no tax line
-        CODE: execute python code. localcontext = {'price_unit':pu, 'address':address_object}
+        CODE: execute python code. localcontext = {'price_unit':pu}
             return result in the context
             Ex: result=round(price_unit*0.21,4)
     """
@@ -1981,12 +1981,11 @@ class account_tax(osv.osv):
     }
     _order = 'sequence'
 
-    def _applicable(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
+    def _applicable(self, cr, uid, taxes, price_unit, product=None, partner=None):
         res = []
-        obj_partener_address = self.pool.get('res.partner')
         for tax in taxes:
             if tax.applicable_type=='code':
-                localdict = {'price_unit':price_unit, 'address':obj_partener_address.browse(cr, uid, address_id), 'product':product, 'partner':partner}
+                localdict = {'price_unit':price_unit, 'product':product, 'partner':partner}
                 exec tax.python_applicable in localdict
                 if localdict.get('result', False):
                     res.append(tax)
@@ -1994,7 +1993,7 @@ class account_tax(osv.osv):
                 res.append(tax)
         return res
 
-    def _unit_compute(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None, quantity=0):
+    def _unit_compute(self, cr, uid, taxes, price_unit, product=None, partner=None, quantity=0):
         taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
         res = []
         cur_price_unit=price_unit
@@ -2026,8 +2025,7 @@ class account_tax(osv.osv):
                 data['tax_amount']=quantity
                # data['amount'] = quantity
             elif tax.type=='code':
-                address = address_id and obj_partener_address.browse(cr, uid, address_id) or None
-                localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
+                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
                 exec tax.python_compute in localdict
                 amount = localdict['result']
                 data['amount'] = amount
@@ -2040,7 +2038,7 @@ class account_tax(osv.osv):
                 if tax.child_depend:
                     latest = res.pop()
                 amount = amount2
-                child_tax = self._unit_compute(cr, uid, tax.child_ids, amount, address_id, product, partner, quantity)
+                child_tax = self._unit_compute(cr, uid, tax.child_ids, amount, product, partner, quantity)
                 res.extend(child_tax)
                 if tax.child_depend:
                     for r in res:
@@ -2101,7 +2099,7 @@ class account_tax(osv.osv):
         logger = netsvc.Logger()
         logger.notifyChannel("warning", netsvc.LOG_WARNING,
             "Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included")
-        return self._compute(cr, uid, taxes, price_unit, quantity, address_id, product, partner)
+        return self._compute(cr, uid, taxes, price_unit, quantity, product, partner)
 
     def _compute(self, cr, uid, taxes, price_unit, quantity,product=None, partner=None):
         """
