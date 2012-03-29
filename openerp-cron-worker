@@ -53,14 +53,36 @@ def setup_signal_handlers():
         import win32api
         win32api.SetConsoleCtrlHandler(lambda sig: signal_handler(sig, None), 1)
 
+def list_databases():
+    import subprocess
+    p1 = subprocess.Popen(["psql", "-lAt"], stdout=subprocess.PIPE)
+    p2 = subprocess.Popen(["cut", "-f", "1", "-d", "|"], stdin=p1.stdout, stdout=subprocess.PIPE)
+    p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
+    output = p2.communicate()[0]
+    databases = output.splitlines()
+    # TODO filter out non-OpenERP databases
+    databases = [d for d in databases if d not in ['template0', 'template1', 'postgres']]
+    databases = [d for d in databases if not d.startswith('postgres')]
+    return databases
+
 if __name__ == '__main__':
+    openerp.tools.config.parse_config(sys.argv[1:])
+    config = openerp.tools.config
+    if config['log_handler'] == [':INFO']:
+        # Replace the default value, which is suitable for openerp-server.
+        config['log_handler'].append('openerp.addons.base.ir.ir_cron:DEBUG')
+    if config['db_name']:
+        db_names = config['db_name'].split(',')
+        print "Monitoring %s databases." % len(db_names)
+    else:
+        db_names = list_databases
+        print "Monitored databases are auto-discovered."
     setup_signal_handlers()
     openerp.modules.module.initialize_sys_path()
     openerp.modules.loading.open_openerp_namespace()
-    openerp.tools.config['log_handler'] = ['openerp.addons.base.ir.ir_cron:DEBUG']
     openerp.netsvc.init_logger()
     import openerp.addons.base
     print "OpenERP cron jobs worker. Hit Ctrl-C to exit."
-    openerp.addons.base.ir.ir_cron.ir_cron._run(['xx'])
+    openerp.addons.base.ir.ir_cron.ir_cron._run(db_names)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

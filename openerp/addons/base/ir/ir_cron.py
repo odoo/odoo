@@ -230,6 +230,13 @@ class ir_cron(osv.osv):
                 registry[cls._name]._run_job(task_cr, job)
                 return True
 
+        except psycopg2.ProgrammingError, e:
+            if e.pgcode == '42P01':
+                # Class 42 — Syntax Error or Access Rule Violation; 42P01: undefined_table
+                # The table ir_cron does not exist; this is probably not an OpenERP database.
+                _logger.warning('Tried to poll an undefined table on database %s.', db_name)
+            else:
+                raise
         except Exception, ex:
             _logger.warning('Exception in cron:', exc_info=True)
 
@@ -244,23 +251,33 @@ class ir_cron(osv.osv):
         """
         Class method intended to be run in a dedicated process to handle jobs.
         This polls the database for jobs that can be run every 60 seconds.
+
+        :param db_names: list of database names to poll or callable to
+            generate such a list.
         """
         global quit_signal_received
         while not quit_signal_received:
-            t1 = time.time()
-            for db_name in db_names:
-                while(cls._acquire_job(db_name)):
-                    if quit_signal_received:
-                        return
-            t2 = time.time()
-            t = t2 - t1
-            global job_in_progress
-            if t > 60:
-                _logger.warning('Cron worker: processing all jobs took more than 1 minute to complete (%ss.).', int(t))
+            if callable(db_names):
+                names = db_names()
             else:
-                job_in_progress = False
-                time.sleep(60 - t)
-                job_in_progress = True
+                names = db_names
+            for x in xrange(5):
+                if quit_signal_received:
+                    return
+                t1 = time.time()
+                for db_name in names:
+                    while(cls._acquire_job(db_name)):
+                        if quit_signal_received:
+                            return
+                t2 = time.time()
+                t = t2 - t1
+                global job_in_progress
+                if t > 60:
+                    _logger.warning('Cron worker: processing all jobs took more than 1 minute to complete (%ss.).', int(t))
+                else:
+                    job_in_progress = False
+                    time.sleep(60 - t)
+                    job_in_progress = True
 
     def _try_lock(self, cr, uid, ids, context=None):
         """Try to grab a dummy exclusive write-lock to the rows with the given ids,
