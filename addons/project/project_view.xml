@@ -183,14 +183,14 @@
                         </t>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_box oe_kanban_color_border">
-                                <table border="0" width="350px">
+                                <table border="1" width="350px">
                                     <tr>
-                                        <td width="40px">
-                                            <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" height="55px" width="55px" /></button><br/>
-                                            <div class="manager" align="center"><field name="user_id"/></div>
+                                        <td width="60px">
+                                            <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" height="40px" width="40px" /></button><br/>
+                                            <div class="manager" align="left"><field name="user_id"/></div>
                                         </td>
                                         <td align="left" valign="middle">
-                                            <div class="oe_module_desc">
+                                            <div class="oe_module_desc oe_project_border">
                                                 <h4 class="oe_project_font1"><a type="edit"><div class="oe_project_font"><field name="name"/></div></a></h4>
                                                 <table >
                                                     <tr>
@@ -205,25 +205,28 @@
                                         </td>
                                         <td width="60px" valign="top" align="right">
                                             <t t-if="record.date.raw_value">
-                                                <kbd class="user">Deadline</kbd>
-                                                <div class="manager"><field name="date"/></div>
+                                                <div class="sequence">
+                                                    <kbd class="user">Deadline</kbd>
+                                                    <div class="manager"><field name="date"/></div>
+                                                </div>
                                             </t>
                                         </td>
                                     </tr>
                                 </table>
                                 <table border="0" width="350px">
                                     <tr>
-                                        <td align="left" width="140px" valign="middle">
-                                            <t t-foreach="record.members.raw_value" t-as="member">
-                                                <img t-att-src="kanban_image('res.users', 'avatar', member)" height="22px" width=" 22px"/>
-                                            </t>
-                                        </td>
-                                        <td align="right" valign="middle" width="110px">
+                                        <td align="left" width="120px" valign="middle">
                                             <div class="progress invoiced">
                                                 <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
                                                 <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
                                                 <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
                                             </div>
+                                            
+                                        </td>
+                                        <td align="right" valign="middle" width="130px">
+                                            <t t-foreach="record.members.raw_value" t-as="member">
+                                                <img t-att-src="kanban_image('res.users', 'avatar', member)" height="20px" width=" 20px"/>
+                                            </t>
                                         </td>
                                     </tr>
                                 </table>
