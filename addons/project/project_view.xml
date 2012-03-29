@@ -184,8 +184,10 @@
                                 <table class="project_table">
                                     <tr>
                                         <td class="td_image">
-                                            <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" class="avatar"/></button><br/>
-                                            <div class="manager"><field name="user_id"/></div>
+                                            <div class="sequence">
+                                                <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" class="avatar"/></button><br/>
+                                                <div class="manager"><field name="user_id"/></div>
+                                            </div>
                                           </td>
                                         <td class="td_name">
                                             <div class="oe_project_border">
@@ -200,10 +202,17 @@
                                                             </t>
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td height="45px">
+                                                            <t t-foreach="record.members.raw_value" t-as="member">
+                                                                <img t-att-src="kanban_image('res.users', 'avatar', member)" class="img_member"/>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
                                                 </table>
                                             </div>
                                         </td>
-                                        <td class="td_deadline" id="sequence">
+                                        <td class="td_deadline">
                                             <t t-if="record.date.raw_value">
                                                 <div class="sequence">
                                                     <kbd class="user">Deadline</kbd>
@@ -215,18 +224,18 @@
                                 </table>
                                 <table class="project_table">
                                     <tr>
-                                        <td class="td_hours">
+                                        <td class="td_hours" align="right">
                                             <div class="progress invoiced">
                                                 <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
                                                 <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
                                                 <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
                                             </div>
                                         </td>
-                                        <td class="td_member">
-                                            <t t-foreach="record.members.raw_value" t-as="member">
-                                                <img t-att-src="kanban_image('res.users', 'avatar', member)" class="img_member"/>
-                                            </t>
-                                        </td>
+                                        <!--<td class="td_member">-->
+                                        <!--    <t t-foreach="record.members.raw_value" t-as="member">-->
+                                        <!--        <img t-att-src="kanban_image('res.users', 'avatar', member)" class="img_member"/>-->
+                                        <!--    </t>-->
+                                        <!--</td>-->
                                     </tr>
                                 </table>
                             </div>
