@@ -32,7 +32,7 @@
             <field name="view_type">form</field>
             <field name="help">You can use the issues tracker in OpenERP to handle bugs in the software development project, to handle claims in after-sales services, etc. Define here the different versions of your products on which you can work on issues.</field>
         </record>
-        <menuitem action="project_issue_version_action" id="menu_project_issue_version_act" parent="menu_project_confi" />
+        <menuitem action="project_issue_version_action" id="menu_project_issue_version_act" parent="menu_project_confi" groups="base.group_no_one"/>
 
         <record id="project_issue_categ_action" model="ir.actions.act_window">
             <field name="name">Issue Categories</field>
@@ -43,7 +43,7 @@
             <field name="context" eval="{'object_id': ref('model_project_issue')}"/>
         </record>
 
-        <menuitem action="project_issue_categ_action" name="Categories" id="menu_project_issue_category_act" parent="menu_project_confi" />
+        <menuitem action="project_issue_categ_action" name="Categories" id="menu_project_issue_category_act" parent="menu_project_confi" groups="base.group_no_one"/>
 
         <record model="ir.ui.view" id="project_issue_form_view">
             <field name="name">Project Issue Tracker Form</field>
