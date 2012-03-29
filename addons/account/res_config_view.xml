@@ -14,17 +14,11 @@
 
                     <field name="has_account_chart" invisible="1"/>
                     <group string="Configure your Chart of Accounts" colspan="4" attrs="{'invisible': [('has_account_chart','=',True)]}">
-                        <group colspan="4">
-                            <label string="You have no chart of accounts or taxes defined for this company.  Please select a chart of accounts to proceed."/>
-                            <button name="install_chartofaccounts" string="Create Chart of Accounts" icon="gtk-execute" type="object"/>
-                        </group>
+                        <label string="You have no chart of accounts or taxes defined for this company.  Please select a chart of accounts to proceed." colspan="4"/>
                         <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
-                        <group colspan="2">
-                            <button string="Other Chart Templates" icon="gtk-execute"
-                                name="%(action_account_configuration_installer)d" type="action"
-                                context="{'default_company_id': company_id}"/>
-                            <label colspan="3"/>
-                        </group>
+                        <button string="Other Chart Templates" icon="gtk-jump-to"
+                            name="%(action_account_configuration_installer)d" type="action" context="{'default_company_id': company_id}"/>
+                        <button name="install_chartofaccounts" string="Create Chart of Accounts" icon="gtk-execute" type="object"/>
                         <field name ="code_digits" groups="account.group_account_user"/>
                         <field name ="seq_journal" groups="base.group_extended"/>
                         <newline/>
