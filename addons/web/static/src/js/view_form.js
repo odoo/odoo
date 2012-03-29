@@ -1015,7 +1015,7 @@ openerp.web.FormRenderingEngine = nova.Class.extend({
         var dict = {
             string: $label.attr('string') || (field_orm || {}).string || '',
             help: $label.attr('help') || (field_orm || {}).help || '',
-            _for: _.uniqueId('oe-field-input-'),
+            _for: name ? _.uniqueId('oe-field-input-') : undefined,
         };
         var align = parseFloat(dict.align);
         if (isNaN(align) || align === 1) {
@@ -1029,7 +1029,9 @@ openerp.web.FormRenderingEngine = nova.Class.extend({
         var $new_label = $(QWeb.render('FormRenderingLabel', dict));
         $label.before($new_label).remove();
         this.handle_common_properties($new_label, $label);
-        this.labels[name] = $new_label;
+        if (name) {
+            this.labels[name] = $new_label;
+        }
         return $new_label;
     },
     process_button: function($button) {
