@@ -181,24 +181,24 @@
                         </t>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_box oe_kanban_color_border">
-                                <table border="0" width="350px">
+                                <table class="project_table">
                                     <tr>
-                                        <td width="60px" align="center" valign="top">
-                                            <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" height="40px" width="40px" /></button><br/>
+                                        <td class="td_image">
+                                            <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" class="avatar"/></button><br/>
                                             <div class="manager"><field name="user_id"/></div>
                                             <t t-if="record.date.raw_value">
                                                 <kbd class="user">Deadline</kbd>
                                                 <div class="manager"><field name="date"/></div>
                                             </t>
                                         </td>
-                                        <td align="left" valign="middle" width="220px">
+                                        <td class="td_name">
                                             <div class="oe_project_border">
                                                 <h4 class="oe_project_font1">
                                                     <a type="edit"><div class="oe_project_font"><t t-esc="record.name.value.substr(0,26)"/><t t-if="record.name.value.length > 26">...</t></div></a>
                                                 </h4>
                                                 <table >
-                                                    <tr>
-                                                        <td align="left" valign="middle" class="buttons">
+                                                    <tr class ="task">
+                                                        <td class="buttons">
                                                             <t t-if="record.task.raw_value">
                                                                 <button name="open_tasks" class="oe_project_buttons" type="object" tooltip="tasks"><img src="/project/static/src/img/tasks_icon.png" class="project_icon"/></button>
                                                             </t>
@@ -207,7 +207,7 @@
                                                 </table>
                                             </div>
                                         </td>
-                                        <td width="70px" valign="top" align="right">
+                                        <td class="td_deadline">
                                                 <div id="sequence">
                                                     <!--<kbd class="user">Deadline</kbd>-->
                                                     <!--<div class="manager"><field name="date"/></div>-->
@@ -215,18 +215,18 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <table border="0" width="350px">
+                                <table class="project_table">
                                     <tr>
-                                        <td align="left" width="120px" valign="bottom">
+                                        <td class="td_hours">
                                             <div class="progress invoiced">
                                                 <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
                                                 <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
                                                 <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
                                             </div>
                                         </td>
-                                        <td align="right" valign="bottom" width="130px" height="20px">
+                                        <td class="td_member">
                                             <t t-foreach="record.members.raw_value" t-as="member">
-                                                <img t-att-src="kanban_image('res.users', 'avatar', member)" height="20px" width=" 20px"/>
+                                                <img t-att-src="kanban_image('res.users', 'avatar', member)" class="img_member"/>
                                             </t>
                                         </td>
                                     </tr>
