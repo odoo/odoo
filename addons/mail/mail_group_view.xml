@@ -26,15 +26,16 @@
                                     <span style="display: none;"><field name="joined"/></span>
                                     <ul>
                                         <li><field name="members_nbr"/> members</li>
-                                        <li t-if="record.joined.raw_value"><b>Joined</b></li>
-                                        <li t-if="! record.joined.raw_value"><a name="action_group_join" string="Join" type="object">Join</a></li>
-                                        <li t-if="record.joined.raw_value"><a name="action_group_leave" string="Join" type="object">Leave</a></li>
-                                        <li><field name="messages_nbr"/> messages in <field name="discussions_nbr"/> discussions</li>
+                                        <li t-if="! record.joined.raw_value"><a name="action_group_join" string="Join" type="object" class="oe_group_join">Not following</a></li>
+                                        <li t-if="record.joined.raw_value"><a name="action_group_leave" string="Join" type="object" class="oe_group_leave">Following</a></li>
+                                        <li><field name="last_month_msg_nbr"/> messages last month</li>
                                     </ul>
                                 </div>
                             </div>
                             <script>
                                 $('.oe_group_photo').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_group_photo_wide') } });
+                                $('.oe_group_join').mouseover(function () { $(this).html('Follow'); }).mouseleave(function () { $(this).html('Not following'); });
+                                $('.oe_group_leave').mouseover(function () { $(this).html('Unfollow'); }).mouseleave(function () { $(this).html('Following'); });
                             </script>
                         </t>
                     </templates>
@@ -60,7 +61,7 @@
                         </group>
                         <group colspan="1" col="2">
                             <separator string="Group image" colspan="2"/>
-                            <field name="photo_mini" widget='image' nolabel="1" on_change="onchange_photo_mini(photo_mini)"/>
+                            <field name="photo" widget='image' nolabel="1" on_change="onchange_photo(photo)"/>
                         </group>
                         <group colspan="1" col="2">
                             <separator string="Privacy settings" colspan="2"/>
