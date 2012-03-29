@@ -1260,6 +1260,38 @@ openerp.point_of_sale = function(db) {
                 return _ref = p.pos_categ_id[0], _.indexOf(c.subtree, _ref) >= 0;
             });
             (this.shop.get('products')).reset(products);
+            var checkEan = function(code) {
+                // EAN control digit calculation
+                var st1 = code.slice();
+                var st2 = st1.slice(0,st1.length-1).reverse();
+                // some EAN13 barcodes have a length of 12, as they start by 0
+                while (st2.length < 12) {
+                    st2.push(0);
+                }
+                console.log('code: '+code.join(','));
+                console.log('st1: '+st1.join(','));
+                console.log('st2: '+st2.join(','));
+                var countSt3 = 1;
+                var st3 = 0;
+                $.each(st2, function() {
+                    if (countSt3%2 === 1) {
+                        st3 +=  this;
+                    }
+                    countSt3 ++;
+                });
+                st3 *= 3;
+                var st4 = 0;
+                var countSt4 = 1;
+                $.each(st2, function() {
+                    if (countSt4%2 === 0) {
+                        st4 += this;
+                    }
+                    countSt4 ++;
+                });
+                var st5 = st3 + st4;
+                var cd = (10 - (st5%10)) % 10;
+                return code[code.length-1] === cd;
+            }
             var self = this;
             // bind barcode reader event
             var codeNumbers = [];
@@ -1281,30 +1313,7 @@ openerp.point_of_sale = function(db) {
                         // a barcode reader
                         var barcode = codeNumbers.join('');
                         var selectedOrder = self.shop.get('selectedOrder');
-                        // EAN digit control calculation
-                        var st1 = codeNumbers;
-                        var st2 = st1.slice(0,12).reverse();
-                        var countSt3 = 1;
-                        var st3 = 0;
-                        $.each(st2, function() {
-                            if (countSt3%2 === 1) {
-                                st3 +=  this;
-                            }
-                            countSt3 ++;
-                        });
-                        st3 *= 3;
-                        var st4 = 0;
-                        var countSt4 = 1;
-                        $.each(st2, function() {
-                            if (countSt4%2 === 0) {
-                                st4 += this;
-                            }
-                            countSt4 ++;
-                        });
-                        var st5 = st3 + st4;
-                        var dc = (10 - (st5%10)) % 10;
-                        // End of EAN digit control calculation
-                        if (Number(barcode.charAt(12)) !== dc) {
+                        if (!checkEan(codeNumbers)) {
                             // barcode read error, raise warning
                             $(QWeb.render('pos-scan-warning')).dialog({
                                 resizable: false,
