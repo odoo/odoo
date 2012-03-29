@@ -230,7 +230,9 @@ class project(osv.osv):
         'open_phases' : fields.function(_open_phase , type='integer',string="Open Phases"),
         
     }
-    
+    _defaults = {
+        'phases' : True,
+    }
     def open_phase(self, cr, uid, ids, context=None):
         #Open the View for the Tasks for the project
         """

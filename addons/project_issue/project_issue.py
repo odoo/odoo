@@ -502,6 +502,10 @@ class project(osv.osv):
         'issues' : fields.boolean('Issues',help = "If you check this field issues are appears in kanban view"),
         'open_issues': fields.function(_compute_issue , store=True,type='integer',string="Issue"),
     }
+    
+    _defaults = {
+        'issues' : True,
+    }
 
     def open_issues(self, cr, uid, ids, context=None):
         #Open the View for the Tasks for the project

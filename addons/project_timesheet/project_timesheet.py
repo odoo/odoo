@@ -32,6 +32,9 @@ class project_project(osv.osv):
     _columns = {
         'timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view")
     }
+    _defaults = {
+        'timesheets' : True,
+    }
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         res = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
         if part and res and ('value' in res):
