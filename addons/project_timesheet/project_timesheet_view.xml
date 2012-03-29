@@ -56,7 +56,10 @@
 			    </div>
 			</button>
 		    </div>
-			
+			<div class="sequence">
+				<kbd class="user">Hours</kbd>
+                <div class="manager"><t t-esc="Math.round(record.total_hours.raw_value-record.effective_hours.raw_value)"/></div>
+                </div>
                 </xpath>
             </field>
         </record>
