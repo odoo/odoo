@@ -126,11 +126,8 @@ class account_config_settings(osv.osv_memory):
             implied_group='base.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
 
-        #~ 'complete_tax_set': fields.boolean('Complete Set of Taxes'),
-        #~ 'sale_tax': fields.many2one('account.tax.template', 'Default Sale Tax', domain="[('type_tax_use','=','sale')]"),
-        #~ 'purchase_tax': fields.many2one('account.tax.template', 'Default Purchase Tax', domain="[('type_tax_use','=','purchase')]"),
-        #~ 'sale_tax_rate': fields.float('Sales Tax (%)'),
-        #~ 'purchase_tax_rate': fields.float('Purchase Tax (%)'),
+        'default_sale_tax': fields.many2one('account.tax', 'Default Sale Tax'),
+        'default_purchase_tax': fields.many2one('account.tax', 'Default Purchase Tax'),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -153,10 +150,10 @@ class account_config_settings(osv.osv_memory):
     def set_default_taxes(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
         config = self.browse(cr, uid, ids[0], context)
-        #~ ir_values.set_default(cr, uid, 'product.template', 'taxes_id',
-            #~ config.sale_tax and [config.sale_tax.id] or False, company_id=config.company_id.id)
-        #~ ir_values.set_default(cr, uid, 'product.template', 'supplier_taxes_id',
-            #~ config.purchase_tax and [config.purchase_tax.id] or False, company_id=config.company_id.id)
+        ir_values.set_default(cr, uid, 'product.product', 'taxes_id',
+            config.default_sale_tax and [config.default_sale_tax.id] or False, company_id=config.company_id.id)
+        ir_values.set_default(cr, uid, 'product.product', 'supplier_taxes_id',
+            config.default_purchase_tax and [config.default_purchase_tax.id] or False, company_id=config.company_id.id)
 
     def onchange_company_id(self, cr, uid, ids, company_id):
         # update related fields
@@ -188,19 +185,20 @@ class account_config_settings(osv.osv_memory):
                 })
         # update taxes
         ir_values = self.pool.get('ir.values')
-        #~ taxes_id = ir_values.get_default(cr, uid, 'product.template', 'taxes_id', company_id=company_id)
-        #~ supplier_taxes_id = ir_values.get_default(cr, uid, 'product.template', 'supplier_taxes_id', company_id=company_id)
+        taxes_id = ir_values.get_default(cr, uid, 'product.product', 'taxes_id', company_id=company_id)
+        supplier_taxes_id = ir_values.get_default(cr, uid, 'product.product', 'supplier_taxes_id', company_id=company_id)
         values.update({
-            #~ 'sale_tax': isinstance(taxes_id, list) and taxes_id[0] or taxes_id,
-            #~ 'purchase_tax': isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id,
-            'sale_tax_rate': 15.0,
-            'purchase_tax_rate': 15.0,
+            'default_sale_tax': isinstance(taxes_id, list) and taxes_id[0] or taxes_id,
+            'default_purchase_tax': isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id,
         })
         return {'value': values}
 
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id, context=None):
         tax_templ_obj = self.pool.get('account.tax.template')
-        res = {'value': {'complete_tax_set': False, 'sale_tax': False, 'purchase_tax': False}}
+        res = {'value': {
+            'complete_tax_set': False, 'sale_tax': False, 'purchase_tax': False,
+            'sale_tax_rate': 15, 'purchase_tax_rate': 15,
+        }}
         if chart_template_id:
             chart_template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
             res['value'].update({'complete_tax_set': chart_template.complete_tax_set})
