@@ -113,12 +113,6 @@ class account_config_settings(osv.osv_memory):
                     * draw horizontal lines and put page breaks.
                 This installs the module account_invoice_layout."""),
 
-        'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales',
-            implied_group='base.group_analytic_account_for_sales',
-            help="Allows you to specify an analytic account on sale orders."),
-        'group_analytic_account_for_purchase': fields.boolean('Analytic Accounting for Purchases',
-            implied_group='base.group_analytic_account_for_purchase',
-            help="Allows you to specify an analytic account on purchase orders."),
         'group_dates_periods': fields.boolean('Allow dates/periods',
             implied_group='base.group_dates_periods',
             help="Allows you to keep the period same as your invoice date when you validate the invoice."),

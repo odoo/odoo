@@ -23,6 +23,11 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="group_analytic_accounting" model="res.groups">
+        <field name="name">Analytic Accounting for Purchases</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
     <record model="ir.rule" id="purchase_order_comp_rule">
         <field name="name">Purchase Order multi-company</field>
         <field name="model_id" ref="model_purchase_order"/>

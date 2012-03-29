@@ -91,4 +91,14 @@ class purchase_config_settings(osv.osv_memory):
             'group_purchase_taxes_on_order_line': tax_policy == 'on_order_line',
         }}
 
+
+
+class account_config_settings(osv.osv_memory):
+    _inherit = 'account.config.settings'
+    _columns = {
+        'group_analytic_account_for_purchases': fields.boolean('Analytic Accounting for Purchases',
+            implied_group='purchase.group_analytic_accounting',
+            help="Allows you to specify an analytic account on purchase orders."),
+    }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

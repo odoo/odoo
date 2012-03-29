@@ -160,4 +160,14 @@ class sale_configuration(osv.osv_memory):
             'group_sale_taxes_on_order_line': tax_policy == 'on_order_line',
         }}
 
+
+
+class account_config_settings(osv.osv_memory):
+    _inherit = 'account.config.settings'
+    _columns = {
+        'group_analytic_account_for_sales': fields.boolean('Analytic Accounting for Sales',
+            implied_group='sale.group_analytic_accounting',
+            help="Allows you to specify an analytic account on sale orders."),
+    }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
