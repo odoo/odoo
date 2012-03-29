@@ -114,11 +114,11 @@
                             <field name="journal_id"/>
                             <field name="invoice_id" context="{'type':'in_invoice', 'journal_type': 'purchase'}"/>
                             </group>
-                            <group col="2" colspan="2">
-                            <separator colspan="2" string="Validation"/>
-                            <field name="date_confirm" readonly = "1"/>
-                            <field name="date_valid" readonly = "1"/>
-                            <field name="user_valid"/>
+                            <group col="2" colspan="2" groups="base.group_no_one">
+                                <separator colspan="2" string="Validation"/>
+                                <field name="date_confirm" readonly = "1"/>
+                                <field name="date_valid" readonly = "1"/>
+                                <field name="user_valid"/>
                             </group>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
@@ -177,7 +177,7 @@
             <field name="help">The OpenERP expenses management module allows you to track the full flow. Every month, the employees record their expenses. At the end of the month, their managers validates the expenses sheets which creates costs on projects/analytic accounts. The accountant validates the proposed entries and the employee can be reimbursed. You can also reinvoice the customer at the end of the flow.</field>
         </record>
 
-        <menuitem id="next_id_49" name="Expenses" sequence="4" parent="hr.menu_hr_root"/>
+        <menuitem id="next_id_49" name="Expenses" sequence="15" parent="hr.menu_hr_root"/>
         <menuitem action="expense_all" id="menu_expense_all" name="Expenses" parent="next_id_49"/>
 
         <record id="view_product_hr_expense_form" model="ir.ui.view">
