@@ -159,8 +159,10 @@ class account_config_settings(osv.osv_memory):
     def set_default_taxes(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
         config = self.browse(cr, uid, ids[0], context)
-        ir_values.set_default(cr, uid, 'product.template', 'taxes_id', config.sale_tax.id, company_id=config.company_id.id)
-        ir_values.set_default(cr, uid, 'product.template', 'supplier_taxes_id', config.purchase_tax.id, company_id=config.company_id.id)
+        ir_values.set_default(cr, uid, 'product.template', 'taxes_id',
+            config.sale_tax and [config.sale_tax.id] or False, company_id=config.company_id.id)
+        ir_values.set_default(cr, uid, 'product.template', 'supplier_taxes_id',
+            config.purchase_tax and [config.purchase_tax.id] or False, company_id=config.company_id.id)
 
     def on_change_start_date(self, cr, uid, id, start_date=False):
         if start_date:
@@ -174,7 +176,7 @@ class account_config_settings(osv.osv_memory):
         company = self.pool.get('res.company').browse(cr, uid, company_id)
         has_account_chart = company_id not in self.pool.get('account.installer').get_unconfigured_cmp(cr, uid)
         has_fiscal_year = self.pool.get('account.fiscalyear').search_count(cr, uid,
-            [('date_start', '=', time.strftime('%Y-01-01')), ('date_stop', '=', time.strftime('%Y-12-31')),
+            [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
              ('company_id', '=', company_id)])
         values = {
             'currency_id': company.currency_id.id,
