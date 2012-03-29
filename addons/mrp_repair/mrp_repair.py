@@ -70,12 +70,12 @@ class mrp_repair(osv.osv):
             for line in repair.operations:
                 #manage prices with tax included use compute_all instead of compute
                 if line.to_invoice:
-                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id)
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, line.product_id, repair.partner_id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             for line in repair.fees_lines:
                 if line.to_invoice:
-                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id)
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty,  line.product_id, repair.partner_id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             res[repair.id] = cur_obj.round(cr, uid, cur, val)
@@ -683,7 +683,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         location_id = location_id and location_id[0] or False
 
         if type == 'add':
-            # TOCHECK: Find stock location for user's company warehouse or 
+            # TOCHECK: Find stock location for user's company warehouse or
             # repair order's company's warehouse (company_id field is added in fix of lp:831583)
             args = company_id and [('company_id', '=', company_id)] or []
             warehouse_ids = warehouse_obj.search(cr, uid, args, context=context)
