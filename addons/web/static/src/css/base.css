@@ -215,19 +215,7 @@
 .openerp2 .oe_topbar .oe_topbar_avatar {
   vertical-align: top;
 }
-.openerp2 .oe_user_menu {
-  float: right;
-  padding: 0;
-  margin: 0;
-}
-.openerp2 .oe_user_menu li {
-  list-style-type: none;
-  float: left;
-}
-.openerp2 .oe_user_menu .oe_dropdown {
-  position: relative;
-}
-.openerp2 .oe_user_menu .oe_dropdown_toggle:after {
+.openerp2 .oe_topbar .oe_dropdown_toggle:after {
   width: 0;
   height: 0;
   display: inline-block;
@@ -241,6 +229,18 @@
   border-top: 4px solid white;
   filter: alpha(opacity=50);
   opacity: 0.5;
+}
+.openerp2 .oe_user_menu {
+  float: right;
+  padding: 0;
+  margin: 0;
+}
+.openerp2 .oe_user_menu li {
+  list-style-type: none;
+  float: left;
+}
+.openerp2 .oe_user_menu .oe_dropdown {
+  position: relative;
 }
 .openerp2 .oe_user_menu .oe_dropdown_options {
   float: left;
@@ -296,12 +296,13 @@
   -box-shadow: none;
 }
 .openerp2 .oe_leftbar {
-  width: 221px;
+  width: 220px;
   background: #f0eeee;
   border-right: 1px solid #afafb6;
   text-shadow: 0 1px 1px white;
 }
 .openerp2 a.oe_logo {
+  width: 220px;
   display: block;
   text-align: center;
   height: 70px;
@@ -468,6 +469,9 @@
   width: 100%;
   height: 100%;
   border-spacing: 0px;
+}
+.openerp2 .oe_application {
+  width: 100%;
 }
 .openerp2 .oe_application a {
   color: #8a89ba;

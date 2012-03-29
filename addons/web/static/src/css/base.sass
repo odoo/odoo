@@ -191,18 +191,6 @@ $colour4: #8a89ba
             @include radius(4px)
         .oe_topbar_avatar
             vertical-align: top
-    // }}}
-    // TopBarUserMenu {{{
-    .oe_user_menu
-        float: right
-        padding: 0
-        margin: 0
-        li
-            list-style-type: none
-            float: left
-        .oe_dropdown
-            position: relative
-
         .oe_dropdown_toggle:after
             width: 0
             height: 0
@@ -216,7 +204,17 @@ $colour4: #8a89ba
             border-right: 4px solid transparent
             border-top: 4px solid white
             @include opacity(0.5)
-
+    // }}}
+    // TopBarUserMenu {{{
+    .oe_user_menu
+        float: right
+        padding: 0
+        margin: 0
+        li
+            list-style-type: none
+            float: left
+        .oe_dropdown
+            position: relative
         .oe_dropdown_options
             float: left
             background: #333
@@ -255,11 +253,12 @@ $colour4: #8a89ba
     // }}}
     // Leftbar {{{
     .oe_leftbar
-        width: 221px
+        width: 220px
         background: #f0eeee
         border-right: 1px solid #afafb6
         text-shadow: 0 1px 1px white
     a.oe_logo
+        width: 220px
         display: block
         text-align: center
         height: 70px
@@ -396,6 +395,7 @@ $colour4: #8a89ba
     // }}}
     // Application to rename into action {{{
     .oe_application
+        width: 100%
         a
             color: $colour4
             &:hover

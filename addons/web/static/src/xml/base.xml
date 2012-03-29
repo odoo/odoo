@@ -19,12 +19,14 @@
 </t>
 <t t-name="WebClient">
     <div class="oe_webclient">
-        <div class="oe_topbar">
-            <div class="oe_menu_placeholder"/>
-            <div class="oe_user_menu_placeholder"/>
-            <div class="oe_systray"/>
-        </div>
         <table class="oe_main">
+            <tr>
+                <td colspan="2" class="oe_topbar">
+                    <div class="oe_menu_placeholder"/>
+                    <div class="oe_user_menu_placeholder"/>
+                    <div class="oe_systray"/>
+                </td>
+            </tr>
             <tr>
                 <td class="oe_leftbar" valign="top">
                     <a href="#" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
