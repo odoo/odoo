@@ -1963,8 +1963,8 @@ class account_tax(osv.osv):
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
-        'python_compute': '''# price_unit\n# address: res.partner object or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
-        'python_compute_inv': '''# price_unit\n# address: res.partner object or False\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
+        'python_compute': '''# price_unit\n# or False\n# product: product.product object or None\n# partner: res.partner object or None\n\nresult = price_unit * 0.10''',
+        'python_compute_inv': '''# price_unit\n# product: product.product object or False\n\nresult = price_unit * 0.10''',
         'applicable_type': 'true',
         'type': 'percent',
         'amount': 0,
@@ -1994,10 +1994,9 @@ class account_tax(osv.osv):
         return res
 
     def _unit_compute(self, cr, uid, taxes, price_unit, product=None, partner=None, quantity=0):
-        taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
+        taxes = self._applicable(cr, uid, taxes, price_unit product, partner)
         res = []
         cur_price_unit=price_unit
-        obj_partener_address = self.pool.get('res.partner')
         for tax in taxes:
             # we compute the amount for the current tax object and append it to the result
             data = {'id':tax.id,
