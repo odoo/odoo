@@ -14,9 +14,25 @@
 
                     <field name="has_account_chart" invisible="1"/>
                     <group string="Configure your Chart of Accounts" colspan="4" attrs="{'invisible': [('has_account_chart','=',True)]}">
-                        <label string="You have no chart of accounts or taxes defined for this company.  Please select a chart of accounts to proceed." colspan="4"/>
-                        <field name="charts"/>
-                        <button name="install_chartofaccounts" string="Configure" icon="gtk-execute" type="object"/>
+                        <group colspan="4">
+                            <label string="You have no chart of accounts or taxes defined for this company.  Please select a chart of accounts to proceed."/>
+                            <button name="install_chartofaccounts" string="Create Chart of Accounts" icon="gtk-execute" type="object"/>
+                        </group>
+                        <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
+                        <group colspan="2">
+                            <button string="Other Chart Templates" icon="gtk-execute"
+                                name="%(action_account_configuration_installer)d" type="action"
+                                context="{'default_company_id': company_id}"/>
+                            <label colspan="3"/>
+                        </group>
+                        <field name ="code_digits" groups="account.group_account_user"/>
+                        <field name ="seq_journal" groups="base.group_extended"/>
+                        <newline/>
+                        <field name ="complete_tax_set" invisible="1"/>
+                        <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
+                        <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                        <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}" on_change="onchange_tax_rate(sale_tax_rate)"/>
+                        <field name ="purchase_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                     </group>
 
                     <field name="has_fiscal_year" invisible="1"/>
@@ -35,15 +51,19 @@
                         <field name ="complete_tax_set" invisible="1"/>
                         <newline/>
                         <group colspan="2" col="2">
+                            <!--
                             <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}"/>
                             <field name="sale_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
+                            -->
                             <field name="module_account_accountant"/>
                             <field name="module_account_asset"/>
                             <field name="group_dates_periods"/>
                         </group>
                         <group colspan="2" col="2">
+                            <!--
                             <field name="purchase_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}"/>
                             <field name="purchase_tax_rate" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
+                            -->
                             <field name="currency_id" widget="selection"/>
                             <field name="module_account_budget"/>
                         </group>

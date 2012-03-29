@@ -57,10 +57,19 @@ class account_config_settings(osv.osv_memory):
             string='Footer of reports', help="Footer of reports based on your bank accounts."),
 
         'has_account_chart': fields.boolean('Has a chart of accounts'),
-        'has_fiscal_year': fields.boolean('Has a fiscal year'),
-        'charts': fields.selection(_get_charts, 'Chart of Accounts', required=True,
+        'charts': fields.selection(_get_uninstalled_charts, 'Chart Template to install',
             help="""Installs localized accounting charts to match as closely as
                 possible the accounting needs of your company based on your country."""),
+        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', domain="[('visible','=', True)]"),
+        'code_digits': fields.integer('# of Digits', help="No. of Digits to use for account code"),
+        'seq_journal': fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
+        'sale_tax': fields.many2one("account.tax.template", "Default Sale Tax"),
+        'purchase_tax': fields.many2one("account.tax.template", "Default Purchase Tax"),
+        'sale_tax_rate': fields.float('Sales Tax (%)'),
+        'purchase_tax_rate': fields.float('Purchase Tax (%)'),
+        'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
+
+        'has_fiscal_year': fields.boolean('Has a fiscal year'),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
@@ -132,11 +141,11 @@ class account_config_settings(osv.osv_memory):
             implied_group='base.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
 
-        'complete_tax_set': fields.boolean('Complete Set of Taxes'),
-        'sale_tax': fields.many2one('account.tax.template', 'Default Sale Tax', domain="[('type_tax_use','=','sale')]"),
-        'purchase_tax': fields.many2one('account.tax.template', 'Default Purchase Tax', domain="[('type_tax_use','=','purchase')]"),
-        'sale_tax_rate': fields.float('Sales Tax (%)'),
-        'purchase_tax_rate': fields.float('Purchase Tax (%)'),
+        #~ 'complete_tax_set': fields.boolean('Complete Set of Taxes'),
+        #~ 'sale_tax': fields.many2one('account.tax.template', 'Default Sale Tax', domain="[('type_tax_use','=','sale')]"),
+        #~ 'purchase_tax': fields.many2one('account.tax.template', 'Default Purchase Tax', domain="[('type_tax_use','=','purchase')]"),
+        #~ 'sale_tax_rate': fields.float('Sales Tax (%)'),
+        #~ 'purchase_tax_rate': fields.float('Purchase Tax (%)'),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -150,26 +159,19 @@ class account_config_settings(osv.osv_memory):
     _defaults = {
         'company_id': _default_company,
         'has_default_company': _default_has_default_company,
+        'seq_journal': True,
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
         'period': 'month',
-        'charts': 'configurable',
     }
 
     def set_default_taxes(self, cr, uid, ids, context=None):
         ir_values = self.pool.get('ir.values')
         config = self.browse(cr, uid, ids[0], context)
-        ir_values.set_default(cr, uid, 'product.template', 'taxes_id',
-            config.sale_tax and [config.sale_tax.id] or False, company_id=config.company_id.id)
-        ir_values.set_default(cr, uid, 'product.template', 'supplier_taxes_id',
-            config.purchase_tax and [config.purchase_tax.id] or False, company_id=config.company_id.id)
-
-    def on_change_start_date(self, cr, uid, id, start_date=False):
-        if start_date:
-            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-            end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
-            return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
-        return {}
+        #~ ir_values.set_default(cr, uid, 'product.template', 'taxes_id',
+            #~ config.sale_tax and [config.sale_tax.id] or False, company_id=config.company_id.id)
+        #~ ir_values.set_default(cr, uid, 'product.template', 'supplier_taxes_id',
+            #~ config.purchase_tax and [config.purchase_tax.id] or False, company_id=config.company_id.id)
 
     def onchange_company_id(self, cr, uid, ids, company_id):
         # update related fields
@@ -201,38 +203,69 @@ class account_config_settings(osv.osv_memory):
                 })
         # update taxes
         ir_values = self.pool.get('ir.values')
-        taxes_id = ir_values.get_default(cr, uid, 'product.template', 'taxes_id', company_id=company_id)
-        supplier_taxes_id = ir_values.get_default(cr, uid, 'product.template', 'supplier_taxes_id', company_id=company_id)
+        #~ taxes_id = ir_values.get_default(cr, uid, 'product.template', 'taxes_id', company_id=company_id)
+        #~ supplier_taxes_id = ir_values.get_default(cr, uid, 'product.template', 'supplier_taxes_id', company_id=company_id)
         values.update({
-            'sale_tax': isinstance(taxes_id, list) and taxes_id[0] or taxes_id,
-            'purchase_tax': isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id,
+            #~ 'sale_tax': isinstance(taxes_id, list) and taxes_id[0] or taxes_id,
+            #~ 'purchase_tax': isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id,
             'sale_tax_rate': 15.0,
             'purchase_tax_rate': 15.0,
         })
         return {'value': values}
 
+    def onchange_chart_template_id(self, cr, uid, ids, chart_template_id, context=None):
+        tax_templ_obj = self.pool.get('account.tax.template')
+        res = {'value': {'complete_tax_set': False, 'sale_tax': False, 'purchase_tax': False}}
+        if chart_template_id:
+            chart_template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
+            res['value'].update({'complete_tax_set': chart_template.complete_tax_set})
+            if chart_template.complete_tax_set:
+                # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
+                sale_tax_ids = tax_templ_obj.search(cr, uid,
+                    [("chart_template_id", "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))],
+                    order="sequence, id desc")
+                purchase_tax_ids = tax_templ_obj.search(cr, uid,
+                    [("chart_template_id", "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))],
+                    order="sequence, id desc")
+                res['value']['sale_tax'] = sale_tax_ids and sale_tax_ids[0] or False
+                res['value']['purchase_tax'] = purchase_tax_ids and purchase_tax_ids[0] or False
+            if chart_template.code_digits:
+                res['value']['code_digits'] = chart_template.code_digits
+        return res
+
+    def on_change_start_date(self, cr, uid, id, start_date):
+        if start_date:
+            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+            end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
+            return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
+        return {}
+
+    def onchange_tax_rate(self, cr, uid, ids, rate, context=None):
+        return {'value': {'purchase_tax_rate': rate or False}}
+
     def install_chartofaccounts(self, cr, uid, ids, context=None):
         config = self.browse(cr, uid, ids[0], context)
-        if config.charts == 'configurable':
-            #load generic chart of account
-            fp = tools.file_open(opj('account', 'configurable_account_chart.xml'))
-            tools.convert_xml_import(cr, 'account', fp, {}, 'init', True, None)
-            fp.close()
-        elif config.charts.startswith('l10n_'):
-            ir_module = self.pool.get('ir.module.module')
-            mod_ids = ir_module.search(cr, uid, [('name','=',config.charts)])
-            if mod_ids and ir_module.browse(cr, uid, mod_ids[0], context).state == 'uninstalled':
-                ir_module.button_immediate_install(cr, uid, mod_ids, context)
-        # launch the wizard that creates the account chart from a template
-        ir_model_data = self.pool.get('ir.model.data')
-        view = ir_model_data.get_object(cr, uid, 'account', 'view_wizard_multi_chart', context)
+        if config.chart_template_id:
+            wizard = self.pool.get('wizard.multi.charts.accounts')
+            wizard_id = wizard.create(cr, uid, {
+                    'company_id': config.company_id.id,
+                    'chart_template_id': config.chart_template_id.id,
+                    'code_digits': config.code_digits or 6,
+                    'seq_journal': config.seq_journal,
+                    'sale_tax': config.sale_tax.id,
+                    'purchase_tax': config.purchase_tax.id,
+                    'sale_tax_rate': config.sale_tax_rate,
+                    'purchase_tax_rate': config.purchase_tax_rate,
+                    'complete_tax_set': config.complete_tax_set,
+                }, context)
+            wizard.execute(cr, uid, [wizard_id], context)
+            self.configure_fiscalyear(cr, uid, ids, context)
+        # reopen the current wizard to refresh the view
         return {
             'type': 'ir.actions.act_window',
-            'res_model': 'wizard.multi.charts.accounts',
+            'res_model': 'account.config.settings',
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': view.id,
-            'target': 'new',
             'context': str({'default_company_id': config.company_id.id}),
         }
 
