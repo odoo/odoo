@@ -9,7 +9,7 @@
     "depends": ['web'],
     "js": [
         'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler_debug.js',
-        'static/lib/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js',
+        'static/lib/dhtmlxScheduler/sources/ext/ext_minical.js',
         'static/src/js/calendar.js'
     ],
     "css": [

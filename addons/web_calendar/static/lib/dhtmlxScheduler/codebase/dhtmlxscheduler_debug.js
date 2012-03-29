@@ -3409,7 +3409,9 @@ scheduler.render_event_bar=function(ev){
     var bg_color = (ev.color?("background-color:"+ev.color+";"):"");
     var color = (ev.textColor?("color:"+ev.textColor+";"):"");
 	
-	var html='<div event_id="'+ev.id+'" class="'+cs+'" style="position:absolute; top:'+y+'px; left:'+x+'px; width:'+(x2-x-15)+'px;'+color+''+bg_color+''+(ev._text_style||"")+'">';
+    var title_line = scheduler.templates.event_bar_text(ev.start_date,ev.end_date,ev);
+	
+	var html='<div title="'+ title_line +'" event_id="'+ev.id+'" class="'+cs+'" style="position:absolute; top:'+y+'px; left:'+x+'px; width:'+(x2-x-15)+'px;'+color+''+bg_color+''+(ev._text_style||"")+'">';
 	
 	if (ev._timed)
 		html+=scheduler.templates.event_bar_date(ev.start_date,ev.end_date,ev);
