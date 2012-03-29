@@ -32,9 +32,7 @@
                         <page string="Administration">
                             <group col="2" colspan="2" name="kanban">
                                 <separator colspan="2" string="Project Management"/>
-                                <!--<group col="2" colspan="2" name="kanban">-->
                                     <field name="task"/>
-                                <!--</group>-->
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="4" string="Performance"/>
@@ -171,7 +169,7 @@
                     <field name="effective_hours"/>
                     <field name="total_hours"/>
                     <field name="date"/>
-
+                    <field name="name"/>
                     <field name="members"/>
                     <field name="task"/>
                     <field name="user_id"/>
@@ -191,7 +189,10 @@
                                         </td>
                                         <td align="left" valign="middle">
                                             <div class="oe_module_desc oe_project_border">
-                                                <h4 class="oe_project_font1"><a type="edit"><div class="oe_project_font"><field name="name"/></div></a></h4>
+                                                <h4 class="oe_project_font1">
+                                                    <div class="oe_project_font"><t t-esc="record.name.value.substr(0,28)"/><t t-if="record.name.value.length > 28">...</t><a string="Edit" icon="gtk-edit" type="edit"/></div>
+                                                    
+                                                </h4>
                                                 <table >
                                                     <tr>
                                                         <td align="left" valign="middle" class="buttons">
