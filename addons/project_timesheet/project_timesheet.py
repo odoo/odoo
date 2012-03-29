@@ -63,7 +63,7 @@ class project_project(osv.osv):
             search_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_search_account_inherit')
             context.update({
                 #'search_default_user_id': uid,
-                'search_default_project_id':project.id,
+                'search_default_account_id':project.id,
                 #'search_default_open':1,
             })
             value = {
@@ -74,7 +74,7 @@ class project_project(osv.osv):
                 'res_model': 'account.analytic.line',
                 'view_id': False,
             #    'domain':[('project_id','=', context.get('active_id',False))],
-                'context': context,
+                #'context': context,
                 'views': [(tree_view and tree_view[1] or False, 'tree'),(form_view and form_view[1] or False, 'form')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': search_view and search_view[1] or False,
