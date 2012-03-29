@@ -1566,11 +1566,6 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
             this.do_attach_tooltip(this, this.$label || this.$element);
         }
         if (!this.disable_utility_classes) {
-            var set_disabled = function() {
-                this.$element.toggleClass('disabled', this.get("effective_readonly"));
-            };
-            this.on("change:effective_readonly", this, set_disabled);
-            _.bind(set_disabled, this)();
             var set_required = function() {
                 this.$element.toggleClass('oe_form_required', this.get("required"));
             };
