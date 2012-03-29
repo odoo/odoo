@@ -2123,7 +2123,6 @@ class account_tax(osv.osv):
 
     def _unit_compute_inv(self, cr, uid, taxes, price_unit, product=None, partner=None):
         taxes = self._applicable(cr, uid, taxes, price_unit,  product, partner)
-        obj_partener_address = self.pool.get('res.partner')
         res = []
         taxes.reverse()
         cur_price_unit = price_unit
