@@ -216,15 +216,16 @@ class event_event(osv.osv):
         user_pool = self.pool.get('res.users')
         user = user_pool.browse(cr, uid, uid, context=context)
         curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', user.id), ('event_id', '=' , ids[0])])
+        #the subscription is done with UID = 1 because in case we share the kanban view, we want anyone to be able to subscribe
         if not curr_reg_ids:
-            curr_reg_ids = [register_pool.create(cr, uid, {'event_id': ids[0] ,'email': user.user_email,
-                                                         'name':user.name, 'user_id': user.id,})]
-        return register_pool.confirm_registration(cr, uid, curr_reg_ids, context=context)
+            curr_reg_ids = [register_pool.create(cr, 1, {'event_id': ids[0] ,'email': user.user_email, 'name':user.name, 'user_id': user.id,})]
+        return register_pool.confirm_registration(cr, 1, curr_reg_ids, context=context)
 
-    def unsubscribe_to_event(self,cr,uid,ids,context=None):
+    def unsubscribe_to_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
-        curr_reg_ids = register_pool.search(cr, uid, [('user_id', '=', uid), ('event_id', '=', ids[0])])
-        return register_pool.button_reg_cancel(cr, uid, curr_reg_ids, context=context)
+        #the unsubscription is done with UID = 1 because in case we share the kanban view, we want anyone to be able to unsubscribe
+        curr_reg_ids = register_pool.search(cr, 1, [('user_id', '=', uid), ('event_id', '=', ids[0])])
+        return register_pool.button_reg_cancel(cr, 1, curr_reg_ids, context=context)
 
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
