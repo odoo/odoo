@@ -183,11 +183,11 @@
                         </t>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_box oe_kanban_color_border">
-                                <table border="1" width="350px">
+                                <table border="0" width="350px">
                                     <tr>
-                                        <td width="60px">
+                                        <td width="60px" align="center" valign="top">
                                             <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" height="40px" width="40px" /></button><br/>
-                                            <div class="manager" align="left"><field name="user_id"/></div>
+                                            <div class="manager"><field name="user_id"/></div>
                                         </td>
                                         <td align="left" valign="middle">
                                             <div class="oe_module_desc oe_project_border">
