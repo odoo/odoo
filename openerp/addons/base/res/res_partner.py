@@ -120,6 +120,13 @@ ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('email', 'phone', 'fax', 'mobile', 'we
 class res_partner(osv.osv):
     _description='Partner'
     _name = "res.partner"
+
+    def _address_display(self, cr, uid, ids, name, args, context=None):
+        res={}
+        for addr in self.browse(cr, uid, ids, context):
+            res[addr.id] =self._display_address(cr,uid,addr,context)
+        return res
+
     _order = "name"
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
@@ -165,6 +172,8 @@ class res_partner(osv.osv):
         'photo': fields.binary('Photo'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
+        'contact_address': fields.function(_address_display,  type='char', string='Address format'),
+
     }
 
     def _default_category(self, cr, uid, context=None):
@@ -243,7 +252,7 @@ class res_partner(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         if vals.get('is_company')==False:
-            vals.update({'child_ids' : [(5,)]}) 
+            vals.update({'child_ids' : [(5,)]})
         for partner in self.browse(cr, uid, ids, context=context):
             update_ids = []
             if partner.is_company:
@@ -299,8 +308,8 @@ class res_partner(osv.osv):
         if name and operator in ('=', 'ilike', '=ilike', 'like'):
             # search on the name of the contacts and of its company
             name2 = operator == '=' and name or '%' + name + '%'
-            cr.execute('''SELECT partner.id FROM res_partner partner 
-                          LEFT JOIN res_partner company ON partner.parent_id = company.id 
+            cr.execute('''SELECT partner.id FROM res_partner partner
+                          LEFT JOIN res_partner company ON partner.parent_id = company.id
                           WHERE partner.name || ' (' || COALESCE(company.name,'') || ')'
                           ''' + operator + ''' %s ''', (name2,))
             ids = map(lambda x: x[0], cr.fetchall())

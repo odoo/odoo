@@ -540,16 +540,8 @@
                                                         <h4><a type="edit"><field name="name"/></a>
                                                             <div t-if="record.parent_id.raw_value"><field name="parent_id"/></div>
                                                         </h4>
-                                                            <i><div t-if="record.street.raw_value"><field name="street"/><br/></div>
-                                                            <div t-if="record.street2.raw_value">
-                                                            <field name="street2"/><br/></div>
-                                                            <div t-if="record.city.raw_value"><field name="city"/><span>,</span>
-                                                            <field name="zip"/><br/></div>
-                                                            <div t-if="record.state_id.raw_value">
-                                                            <field name="state_id"/><br/>
-                                                            </div>
-                                                            <div t-if="record.country_id.raw_value">
-                                                            <field name="country_id"/><br/></div><div t-if="record.email.raw_value">
+                                                            <i><div t-if="record.contact_address.raw_value"><field name="contact_address"/><br/></div>
+															<div t-if="record.email.raw_value">
                                                             <field name="email"/><br/></div>
                                                             <div t-if="record.mobile.raw_value">
                                                             <field name="mobile"/><br/>
