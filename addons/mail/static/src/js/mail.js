@@ -1,4 +1,6 @@
 openerp.mail = function(session) {
+    var _t = session.web._t,
+       _lt = session.web._lt;
     
     var mail = session.mail = {};
 
@@ -90,33 +92,35 @@ openerp.mail = function(session) {
             });
             // event: click on 'reply' in msg
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
-               var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_act:first');
-               act_dom.toggle();
+                var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_act:first');
+                act_dom.toggle();
             });
             // event: click on 'delete' in msg
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_delete', 'click', function (event) {
-               //console.log('deleting');
-               var msg_id = event.srcElement.dataset.id;
-               if (! msg_id) return false;
-               var call_defer = self.ds_msg.unlink([parseInt(msg_id)]);
-               $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
-               if (self.params.thread_level > 0) {
-                   $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
-               }
-               return false;
+                //console.log('deleting');
+                if (! confirm(_t("Do you really want to delete this message?"))) { return false; }
+                var msg_id = event.srcElement.dataset.id;
+                if (! msg_id) return false;
+                var call_defer = self.ds_msg.unlink([parseInt(msg_id)]);
+                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
+                if (self.params.thread_level > 0) {
+                    $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
+                }
+                return false;
             });
             // event: click on 'hide' in msg
             this.$element.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide', 'click', function (event) {
-               //console.log('hiding');
-               var msg_id = event.srcElement.dataset.id;
-               if (! msg_id) return false;
-               //console.log(msg_id);
-               var call_defer = self.ds.call('message_remove_pushed_notif', [[self.params.res_id], [parseInt(msg_id)], true]);
-               $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
-               if (self.params.thread_level > 0) {
-                   $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
-               }
-               return false;
+                //console.log('hiding');
+                if (! confirm(_t("Do you really want to hide this thread ?"))) { return false; }
+                var msg_id = event.srcElement.dataset.id;
+                if (! msg_id) return false;
+                //console.log(msg_id);
+                var call_defer = self.ds.call('message_remove_pushed_notif', [[self.params.res_id], [parseInt(msg_id)], true]);
+                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
+                if (self.params.thread_level > 0) {
+                    $(event.srcElement).parents('ul.oe_mail_thread').eq(0).hide();
+                }
+                return false;
             });
             // event: click on an internal link
             this.$element.find('div.oe_mail_thread_display').delegate('a.intlink', 'click', function (event) {
