@@ -1328,14 +1328,14 @@ openerp.point_of_sale = function(db) {
                                 }
                             });
                         }
-                        if (barcode.substring(0,2) in ['02', '22', '24', '26', '28']) {
+                        if (barcode.substring(0,2) in {'02':'', '22':'', '24':'', '26':'', '28':''}) {
                             // product with a specific price - specified into the barcode
                             barcode = barcode.substring(2,5);
                             // TODO conversion euro - old local currencies
                             new db.web.Model('res.currency').get_func('_get_conversion_rate')(['FRF', 'EUR']).pipe(function(result){});
                             price = Number(barcode.substring(7,5))/100;
                             weight = '';
-                        } else if (barcode.substring(0,2) in ['21','23','27','29','25']) {
+                        } else if (barcode.substring(0,2) in {'21':'','23':'','27':'','29':'','25':''}) {
                             // product sold by weight
                             barcode = barcode.substring(2,5);
                             weight = Number(barcode.substring(7,5))/1000;
