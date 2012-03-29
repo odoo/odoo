@@ -186,11 +186,7 @@
                                         <td class="td_image">
                                             <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" class="avatar"/></button><br/>
                                             <div class="manager"><field name="user_id"/></div>
-                                            <t t-if="record.date.raw_value">
-                                                <kbd class="user">Deadline</kbd>
-                                                <div class="manager"><field name="date"/></div>
-                                            </t>
-                                        </td>
+                                          </td>
                                         <td class="td_name">
                                             <div class="oe_project_border">
                                                 <h4 class="oe_project_font1">
@@ -207,11 +203,13 @@
                                                 </table>
                                             </div>
                                         </td>
-                                        <td class="td_deadline">
-                                                <div id="sequence">
-                                                    <!--<kbd class="user">Deadline</kbd>-->
-                                                    <!--<div class="manager"><field name="date"/></div>-->
+                                        <td class="td_deadline" id="sequence">
+                                            <t t-if="record.date.raw_value">
+                                                <div class="sequence">
+                                                    <kbd class="user">Deadline</kbd>
+                                                    <div class="manager"><field name="date"/></div>
                                                 </div>
+                                            </t>
                                         </td>
                                     </tr>
                                 </table>
