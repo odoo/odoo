@@ -8,30 +8,30 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure Accounting">
-                    <field name="chart_template_id" invisible="1"/>
-                    <group col="4" colspan="4" string="Warning" attrs="{'invisible': [('chart_template_id','!=',False)]}">
-                       <label string="You have no chart of accounts or taxes defined for this company. Select a chart of account to proceed." colspan="4"/>
-                       <field name="charts"/>
-                       <button name="install_chartofaccounts" string="Install Chart of Account" icon="gtk-execute" type="object"/>
-                    </group>
-                    <field name="fiscalyear_id" invisible="1"/>
-                    <group col="4" colspan="4" string="Warning" attrs="{'invisible': [('fiscalyear_id','!=',False)]}">
-                       <field name="has_default_company" invisible="1" />
-                       <field name="date_start" on_change="on_change_start_date(date_start)"/>
-                       <field name="date_stop"/>
-                       <field name="period" colspan="4"/>
-                       <newline/>
-                       <group col="4" colspan="4">
-                            <label string="You have no fiscal year/period open for this date."/>
-                            <button name="configure_fiscalyear" string="Configure Fiscalyear" icon="gtk-execute" type="object"/>
-                       </group>
-                    </group>
+                    <field name="has_default_company" invisible="1" />
                     <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"
                         attrs="{'invisible': [('has_default_company', '=', True)]}"/>
+
+                    <field name="chart_template_id" invisible="1"/>
+                    <group string="Configure your Chart of Accounts" colspan="4" attrs="{'invisible': [('chart_template_id','!=',False)]}">
+                        <label string="You have no chart of accounts or taxes defined for this company.  Please select a chart of accounts to proceed." colspan="4"/>
+                        <field name="charts"/>
+                        <button name="install_chartofaccounts" string="Configure" icon="gtk-execute" type="object"/>
+                    </group>
+                    <field name="fiscalyear_id" invisible="1"/>
+                    <group string="Configure your Fiscal Year" colspan="4" attrs="{'invisible': [('fiscalyear_id','!=',False)]}">
+                        <group colspan="4">
+                            <label string="You have no fiscal year/period open for this date."/>
+                            <button name="configure_fiscalyear" string="Configure" icon="gtk-execute" type="object"/>
+                        </group>
+                        <field name="date_start" on_change="on_change_start_date(date_start)"/>
+                        <field name="date_stop"/>
+                        <field name="period" colspan="4"/>
+                    </group>
+
                     <group colspan="4">
                         <separator string="Accounting Configuration" colspan="4"/>
                         <field name ="complete_tax_set" invisible="1"/>
-                        <field name ="multi_charts_id" invisible="1"/>
                         <newline/>
                         <group colspan="2" col="2">
                             <field name="taxes_id" attrs="{'invisible': [('complete_tax_set', '!=', True)]}"/>

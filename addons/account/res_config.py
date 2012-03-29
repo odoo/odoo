@@ -29,7 +29,7 @@ from tools.translate import _
 from osv import osv, fields
 import tools
 
-class account_configuration(osv.osv_memory):
+class account_config_settings(osv.osv_memory):
     _name = 'account.config.settings'
     _inherit = 'res.config.settings'
 
@@ -56,14 +56,14 @@ class account_configuration(osv.osv_memory):
         'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
             string='Footer of reports', help="Footer of reports based on your bank accounts."),
 
+        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template'),
+        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year'),
         'charts': fields.selection(_get_charts, 'Chart of Accounts', required=True,
             help="""Installs localized accounting charts to match as closely as
                 possible the accounting needs of your company based on your country."""),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
-        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template'),
-        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year'),
 
         'sale_journal_id': fields.many2one('account.journal', 'Sale Journal'),
         'sale_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', string='Invoice Sequence'),
@@ -132,12 +132,11 @@ class account_configuration(osv.osv_memory):
             implied_group='base.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
 
-        'multi_charts_id':fields.many2one('wizard.multi.charts.accounts', 'Multi charts accounts'),
-        'taxes_id':fields.many2one('account.tax.template', 'Default Sale Tax', domain="[('type_tax_use','=','sale')]"),
-        'supplier_taxes_id':fields.many2one('account.tax.template', 'Default Purchase Tax', domain="[('type_tax_use','=','purchase')]"),
+        'complete_tax_set': fields.boolean('Complete Set of Taxes'),
+        'taxes_id': fields.many2one('account.tax.template', 'Default Sale Tax', domain="[('type_tax_use','=','sale')]"),
+        'supplier_taxes_id': fields.many2one('account.tax.template', 'Default Purchase Tax', domain="[('type_tax_use','=','purchase')]"),
         'sale_tax_rate': fields.float('Sales Tax(%)'),
         'purchase_tax_rate': fields.float('Purchase Tax(%)'),
-        'complete_tax_set': fields.boolean('Complete Set of Taxes'),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -157,59 +156,11 @@ class account_configuration(osv.osv_memory):
         'charts': 'configurable',
     }
 
-    def _check_default_tax(self, cr, uid, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        taxes = {}
-        for tax in ir_values_obj.get(cr, uid, 'default', False, ['product.template']):
-            if tax[1] == 'taxes_id':
-                taxes.update({'taxes_id': tax[2]})
-            if tax[1] == 'supplier_taxes_id':
-                taxes.update({'supplier_taxes_id': tax[2]})
-        return taxes
-
-    def set_tax_defaults(self, cr, uid, ids, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-
-        res = {}
-        wizard = self.browse(cr, uid, ids)[0]
-        if wizard.taxes_id.id:
-            ir_values_obj.set_default(cr, uid, 'product.template', 'taxes_id', wizard.taxes_id.id )
-
-        if wizard.supplier_taxes_id.id:
-            ir_values_obj.set_default(cr, uid, 'product.template', 'supplier_taxes_id', wizard.supplier_taxes_id.id )
-
-        return res
-
-    def default_get(self, cr, uid, fields_list, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        chart_template_obj = self.pool.get('account.chart.template')
-        fiscalyear_obj = self.pool.get('account.fiscalyear')
-        journal_obj = self.pool.get('account.journal')
-        res = super(account_configuration, self).default_get(cr, uid, fields_list, context=context)
-        taxes = self._check_default_tax(cr, uid, context)
-        chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
-        fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('date_start','=',time.strftime('%Y-01-01')),('date_stop','=',time.strftime('%Y-12-31'))])
-
-        if chart_template_ids:
-            res.update({'chart_template_id': chart_template_ids[0]})
-            data = chart_template_obj.browse(cr, uid, chart_template_ids[0], context=context)
-            res.update({'complete_tax_set': data.complete_tax_set})
-            supplier_taxes_id = ir_values_obj.get_default(cr, uid, 'product.template', 'supplier_taxes_id')
-            res.update({'supplier_taxes_id': supplier_taxes_id})
-            taxes_id = ir_values_obj.get_default(cr, uid, 'product.template', 'taxes_id')
-            res.update({'taxes_id': taxes_id})
-
-        if fiscalyear_ids:
-            res.update({'fiscalyear_id': fiscalyear_ids[0]})
-        if taxes:
-            if chart_template_ids:
-                sale_tax_id = taxes.get('taxes_id')
-                res.update({'taxes_id': isinstance(sale_tax_id,list) and sale_tax_id[0] or sale_tax_id})
-                purchase_tax_id = taxes.get('supplier_taxes_id')
-                res.update({'supplier_taxes_id': isinstance(purchase_tax_id,list) and purchase_tax_id[0] or purchase_tax_id})
-        else:
-            res.update({'sale_tax_rate': 15.0, 'purchase_tax_rate': 15.0})
-        return res
+    def set_default_taxes(self, cr, uid, ids, context=None):
+        ir_values = self.pool.get('ir.values')
+        config = self.browse(cr, uid, ids[0], context)
+        ir_values.set_default(cr, uid, 'product.template', 'taxes_id', config.taxes_id.id, company_id=config.company_id.id)
+        ir_values.set_default(cr, uid, 'product.template', 'supplier_taxes_id', config.supplier_taxes_id.id, company_id=config.company_id.id)
 
     def on_change_start_date(self, cr, uid, id, start_date=False):
         if start_date:
@@ -219,28 +170,51 @@ class account_configuration(osv.osv_memory):
         return {}
 
     def onchange_company_id(self, cr, uid, ids, company_id):
-        # change the value of all related fields
+        # update related fields
         company = self.pool.get('res.company').browse(cr, uid, company_id)
+        fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
+            [('date_start', '=', time.strftime('%Y-01-01')), ('date_stop', '=', time.strftime('%Y-12-31')),
+             ('company_id', '=', company_id)])
         values = {
             'currency_id': company.currency_id.id,
             'paypal_account': company.paypal_account,
             'company_footer': company.rml_footer2,
+            'chart_template_id': False,
+            'complete_tax_set': False,
+            'fiscalyear_id': fiscalyear_ids and fiscalyear_ids[0] or False,
         }
+        # update journals and sequences
         for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
-            values.update({
-                journal_type + '_journal_id': False,
-                journal_type + '_sequence_prefix': False,
-                journal_type + '_sequence_next': False,
-            })
+            for suffix in ('_journal_id', '_sequence_prefix', '_sequence_next'):
+                values[journal_type + suffix] = False
         journal_obj = self.pool.get('account.journal')
         journal_ids = journal_obj.search(cr, uid, [('company_id', '=', company_id)])
-        for journal in journal_obj.browse(cr, uid, journal_ids):
-            if journal.type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
+        if journal_ids:
+            for journal in journal_obj.browse(cr, uid, journal_ids):
+                if journal.type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
+                    values.update({
+                        journal.type + '_journal_id': journal.id,
+                        journal.type + '_sequence_prefix': journal.sequence_id.prefix,
+                        journal.type + '_sequence_next': journal.sequence_id.number_next,
+                    })
+            chart_template_obj = self.pool.get('account.chart.template')
+            chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)])
+            if chart_template_ids:
+                chart_template = chart_template_obj.browse(cr, uid, chart_template_ids[0])
                 values.update({
-                    journal.type + '_journal_id': journal.id,
-                    journal.type + '_sequence_prefix': journal.sequence_id.prefix,
-                    journal.type + '_sequence_next': journal.sequence_id.number_next,
+                    'chart_template_id': chart_template.id,
+                    'complete_tax_set': chart_template.complete_tax_set,
                 })
+        # update taxes
+        ir_values = self.pool.get('ir.values')
+        taxes_id = ir_values.get_default(cr, uid, 'product.template', 'taxes_id', company_id=company_id)
+        supplier_taxes_id = ir_values.get_default(cr, uid, 'product.template', 'supplier_taxes_id', company_id=company_id)
+        values.update({
+            'taxes_id': isinstance(taxes_id, list) and taxes_id[0] or taxes_id,
+            'supplier_taxes_id': isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id,
+            'sale_tax_rate': 15.0,
+            'purchase_tax_rate': 15.0,
+        })
         return {'value': values}
 
     def install_chartofaccounts(self, cr, uid, ids, context=None):
@@ -248,51 +222,63 @@ class account_configuration(osv.osv_memory):
         multi_chart_obj = self.pool.get('wizard.multi.charts.accounts')
         chart_template_obj = self.pool.get('account.chart.template')
         tax_templ_obj = self.pool.get('account.tax.template')
+        config = self.browse(cr, uid, ids[0], context)
 
-        if context is None:
-            context = {}
-        for res in self.read(cr, uid, ids, context=context):
-            chart = res.get('charts')
-            if chart == 'configurable':
-                #load generic chart of account
-                fp = tools.file_open(opj('account', 'configurable_account_chart.xml'))
-                tools.convert_xml_import(cr, 'account', fp, {}, 'init', True, None)
-                fp.close()
-            elif chart.startswith('l10n_'):
-                mod_ids = ir_module.search(cr, uid, [('name','=',chart)])
-                if mod_ids and ir_module.browse(cr, uid, mod_ids[0], context).state == 'uninstalled':
-                    ir_module.button_immediate_install(cr, uid, mod_ids, context)
+        if config.charts == 'configurable':
+            #load generic chart of account
+            fp = tools.file_open(opj('account', 'configurable_account_chart.xml'))
+            tools.convert_xml_import(cr, 'account', fp, {}, 'init', True, None)
+            fp.close()
+        elif config.charts.startswith('l10n_'):
+            mod_ids = ir_module.search(cr, uid, [('name','=',config.charts)])
+            if mod_ids and ir_module.browse(cr, uid, mod_ids[0], context).state == 'uninstalled':
+                ir_module.button_immediate_install(cr, uid, mod_ids, context)
 
-            chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
-            complete_tax_set = chart_template_obj.browse(cr, uid, chart_template_ids[0]).complete_tax_set
-            if not complete_tax_set:
-                code_digits = multi_chart_obj.onchange_chart_template_id(cr, uid, [], chart_template_ids[0], context=context)['value']['code_digits']
-                object_id = multi_chart_obj.create(cr, uid, {'code_digits': code_digits , 'sale_tax_rate': res.get('sale_tax_rate'), 'purchase_tax_rate': res.get('purchase_tax_rate')}, context=context)
-                multi_chart_obj.execute(cr, uid, [object_id], context=context)
+        chart_template_ids = chart_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
+        complete_tax_set = chart_template_obj.browse(cr, uid, chart_template_ids[0]).complete_tax_set
+        if not complete_tax_set:
+            code_digits = multi_chart_obj.onchange_chart_template_id(cr, uid, [], chart_template_ids[0], context=context)['value']['code_digits']
+            object_id = multi_chart_obj.create(cr, uid, {'code_digits': code_digits , 'sale_tax_rate': config.sale_tax_rate, 'purchase_tax_rate': config.purchase_tax_rate}, context=context)
+            multi_chart_obj.execute(cr, uid, [object_id], context=context)
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.config.settings',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'context': str({'default_company_id': config.company_id.id}),
+        }
 
     def configure_fiscalyear(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+        config = self.browse(cr, uid, ids[0], context)
         fy_obj = self.pool.get('account.fiscalyear')
-        for res in self.read(cr, uid, ids, context=context):
-            if 'date_start' in res and 'date_stop' in res:
-                f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'][0])], context=context)
-                if not f_ids:
-                    name = code = res['date_start'][:4]
-                    if int(name) != int(res['date_stop'][:4]):
-                        name = res['date_start'][:4] +'-'+ res['date_stop'][:4]
-                        code = res['date_start'][2:4] +'-'+ res['date_stop'][2:4]
-                    vals = {
-                        'name': name,
-                        'code': code,
-                        'date_start': res['date_start'],
-                        'date_stop': res['date_stop'],
-                        'company_id': res['company_id'][0]
-                    }
-                    fiscal_id = fy_obj.create(cr, uid, vals, context=context)
-                    if res['period'] == 'month':
-                        fy_obj.create_period(cr, uid, [fiscal_id])
-                    elif res['period'] == '3months':
-                        fy_obj.create_period3(cr, uid, [fiscal_id])
+        f_ids = fy_obj.search(cr, uid,
+            [('date_start', '<=', config.date_start), ('date_stop', '>=', config.date_stop),
+             ('company_id', '=', config.company_id.id)],
+            context=context)
+        if not f_ids:
+            name = code = config.date_start[:4]
+            if int(name) != int(config.date_stop[:4]):
+                name = config.date_start[:4] +'-'+ config.date_stop[:4]
+                code = config.date_start[2:4] +'-'+ config.date_stop[2:4]
+            vals = {
+                'name': name,
+                'code': code,
+                'date_start': config.date_start,
+                'date_stop': config.date_stop,
+                'company_id': config.company_id.id,
+            }
+            fiscal_id = fy_obj.create(cr, uid, vals, context=context)
+            if config.period == 'month':
+                fy_obj.create_period(cr, uid, [fiscal_id])
+            elif config.period == '3months':
+                fy_obj.create_period3(cr, uid, [fiscal_id])
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.config.settings',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'context': str({'default_company_id': config.company_id.id}),
+        }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
