@@ -830,7 +830,7 @@ openerp.web.FormRenderingEngine = nova.Class.extend({
             $tag.children().each(function() {
                 self.process($(this));
             });
-            self.handle_invisible($tag, $tag.attr("modifiers"));
+            self.handle_common_properties($tag, $tag);
             $tag.removeAttr("modifiers");
             return $tag;
         }
@@ -929,7 +929,7 @@ openerp.web.FormRenderingEngine = nova.Class.extend({
             var invisible = field_modifiers.invisible;
             field_modifiers.invisible = undefined;
             $child.attr('modifiers', JSON.stringify(field_modifiers));
-            self.handle_invisible($td, JSON.stringify({invisible: invisible}));
+            self.handle_common_properties($td, $("<dummy>").attr("modifiers", JSON.stringify({invisible: invisible})));
             
             $tr.append($td.append($child));
             children.push($child[0]);
@@ -976,7 +976,7 @@ openerp.web.FormRenderingEngine = nova.Class.extend({
         _.each(children, function(el) {
             self.process($(el));
         });
-        this.handle_invisible($new_group, $group.attr("modifiers"));
+        this.handle_common_properties($new_group, $group);
         return $new_group;
     },
     process_notebook: function($notebook) {
@@ -991,7 +991,7 @@ openerp.web.FormRenderingEngine = nova.Class.extend({
                 $dst = self.legacy_mode ? $new_page.find('group:first') : $new_page;
             $page.children().appendTo($dst);
             $page.before($new_page).remove();
-            self.handle_invisible($new_page, $page.attr("modifiers"));
+            self.handle_common_properties($new_page, $page);
         });
         var $new_notebook = $(QWeb.render('FormRenderingNotebook', { pages : pages }));
         $notebook.children().appendTo($new_notebook);
@@ -1000,13 +1000,13 @@ openerp.web.FormRenderingEngine = nova.Class.extend({
             self.process($(this));
         });
         $new_notebook.tabs();
-        this.handle_invisible($new_notebook, $notebook.attr("modifiers"));
+        this.handle_common_properties($new_notebook, $notebook);
         return $new_notebook;
     },
     process_separator: function($separator) {
         var $new_separator = $(QWeb.render('FormRenderingSeparator', $separator.getAttributes()));
         $separator.before($new_separator).remove();
-        this.handle_invisible($new_separator, $separator.attr("modifiers"));
+        this.handle_common_properties($new_separator, $separator);
         return $new_separator;
     },
     process_label: function($label) {
@@ -1028,7 +1028,7 @@ openerp.web.FormRenderingEngine = nova.Class.extend({
         dict.align = align;
         var $new_label = $(QWeb.render('FormRenderingLabel', dict));
         $label.before($new_label).remove();
-        this.handle_invisible($new_label, $label.attr("modifiers"));
+        this.handle_common_properties($new_label, $label);
         this.labels[name] = $new_label;
         return $new_label;
     },
@@ -1036,11 +1036,12 @@ openerp.web.FormRenderingEngine = nova.Class.extend({
         this.to_init.push($button);
         return $button;
     },
-    handle_invisible: function($element, str_modifiers) {
-        var modifiers = JSON.parse(str_modifiers || "{}");
-        if (modifiers.invisible === undefined)
-            return;
-        new openerp.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $element);
+    handle_common_properties: function($element, $node) {
+        var str_modifiers = $node.attr("modifiers") || "{}"
+        var modifiers = JSON.parse(str_modifiers);
+        if (modifiers.invisible !== undefined)
+            new openerp.web.form.InvisibilityChanger(this.view, this.view, modifiers.invisible, $element);
+        $element.addClass($node.attr("class") || "");
     },
 });
 
@@ -1257,6 +1258,10 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         openerp.web.form.InvisibilityChangerMixin.init.call(this, view, this.modifiers.invisible);
 
         this.view.on("view_content_has_changed", this, this.process_modifiers);
+    },
+    renderElement: function() {
+        this._super();
+        this.$element.addClass(this.node.attrs["class"] || "");
     },
     start: function() {
         this._super();
