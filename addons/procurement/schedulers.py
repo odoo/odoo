@@ -53,11 +53,12 @@ class procurement_order(osv.osv):
 
             procurement_obj = self.pool.get('procurement.order')
             if not ids:
-                ids = procurement_obj.search(cr, uid, [], order="date_planned")
-            for id in ids:
+                ids = procurement_obj.search(cr, uid, [('state', '=', 'exception')])
+            qty_procs = len(ids)
+            for i, id in enumerate(ids, 1):
                 wf_service.trg_validate(uid, 'procurement.order', id, 'button_restart', cr)
-            if use_new_cursor:
-                cr.commit()
+                if ((i%500 == 0) or (qty_procs == i)) and use_new_cursor:
+                    cr.commit()
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
             start_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
