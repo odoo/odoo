@@ -413,7 +413,7 @@ class browse_record(object):
             for result_line in field_values:
                 new_data = {}
                 for field_name, field_column in fields_to_fetch:
-                    if field_column._type in ('many2one', 'one2one'):
+                    if field_column._type == 'many2one':
                         if result_line[field_name]:
                             obj = self._table.pool.get(field_column._obj)
                             if isinstance(result_line[field_name], (list, tuple)):
@@ -544,10 +544,8 @@ def pg_varchar(size=0):
 FIELDS_TO_PGTYPES = {
     fields.boolean: 'bool',
     fields.integer: 'int4',
-    fields.integer_big: 'int8',
     fields.text: 'text',
     fields.date: 'date',
-    fields.time: 'time',
     fields.datetime: 'timestamp',
     fields.binary: 'bytea',
     fields.many2one: 'int4',
@@ -1530,11 +1528,11 @@ class BaseModel(object):
         for id, field, field_value in res:
             if field in fields_list:
                 fld_def = (field in self._columns) and self._columns[field] or self._inherit_fields[field][2]
-                if fld_def._type in ('many2one', 'one2one'):
+                if fld_def._type == 'many2one':
                     obj = self.pool.get(fld_def._obj)
                     if not obj.search(cr, uid, [('id', '=', field_value or False)]):
                         continue
-                if fld_def._type in ('many2many'):
+                if fld_def._type == 'many2many':
                     obj = self.pool.get(fld_def._obj)
                     field_value2 = []
                     for i in range(len(field_value)):
@@ -1543,18 +1541,18 @@ class BaseModel(object):
                             continue
                         field_value2.append(field_value[i])
                     field_value = field_value2
-                if fld_def._type in ('one2many'):
+                if fld_def._type == 'one2many':
                     obj = self.pool.get(fld_def._obj)
                     field_value2 = []
                     for i in range(len(field_value)):
                         field_value2.append({})
                         for field2 in field_value[i]:
-                            if field2 in obj._columns.keys() and obj._columns[field2]._type in ('many2one', 'one2one'):
+                            if field2 in obj._columns.keys() and obj._columns[field2]._type == 'many2one':
                                 obj2 = self.pool.get(obj._columns[field2]._obj)
                                 if not obj2.search(cr, uid,
                                         [('id', '=', field_value[i][field2])]):
                                     continue
-                            elif field2 in obj._inherit_fields.keys() and obj._inherit_fields[field2][2]._type in ('many2one', 'one2one'):
+                            elif field2 in obj._inherit_fields.keys() and obj._inherit_fields[field2][2]._type == 'many2one':
                                 obj2 = self.pool.get(obj._inherit_fields[field2][2]._obj)
                                 if not obj2.search(cr, uid,
                                         [('id', '=', field_value[i][field2])]):
@@ -4357,7 +4355,7 @@ class BaseModel(object):
                     for v in value:
                         if v not in val:
                             continue
-                        if self._columns[v]._type in ('many2one', 'one2one'):
+                        if self._columns[v]._type == 'many2one':
                             try:
                                 value[v] = value[v][0]
                             except:
@@ -4379,7 +4377,7 @@ class BaseModel(object):
                                 if f in field_dict[r]:
                                     result.pop(r)
                     for id, value in result.items():
-                        if self._columns[f]._type in ('many2one', 'one2one'):
+                        if self._columns[f]._type == 'many2one':
                             try:
                                 value = value[0]
                             except:
@@ -4656,7 +4654,7 @@ class BaseModel(object):
                     data[f] = data[f] and data[f][0]
                 except:
                     pass
-            elif ftype in ('one2many', 'one2one'):
+            elif ftype == 'one2many':
                 res = []
                 rel = self.pool.get(fields[f]['relation'])
                 if data[f]:
@@ -4707,7 +4705,7 @@ class BaseModel(object):
         translation_records = []
         for field_name, field_def in fields.items():
             # we must recursively copy the translations for o2o and o2m
-            if field_def['type'] in ('one2one', 'one2many'):
+            if field_def['type'] == 'one2many':
                 target_obj = self.pool.get(field_def['relation'])
                 old_record, new_record = self.read(cr, uid, [old_id, new_id], [field_name], context=context)
                 # here we rely on the order of the ids to match the translations
