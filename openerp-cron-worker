@@ -66,23 +66,25 @@ def list_databases():
     return databases
 
 if __name__ == '__main__':
+    os.environ['TZ'] = 'UTC'
     openerp.tools.config.parse_config(sys.argv[1:])
     config = openerp.tools.config
     if config['log_handler'] == [':INFO']:
         # Replace the default value, which is suitable for openerp-server.
         config['log_handler'].append('openerp.addons.base.ir.ir_cron:DEBUG')
+    setup_signal_handlers()
+    openerp.modules.module.initialize_sys_path()
+    openerp.modules.loading.open_openerp_namespace()
+    openerp.netsvc.init_logger()
+    openerp.cron.enable_schedule_wakeup = False
+    import openerp.addons.base
+    print "OpenERP cron jobs worker. Hit Ctrl-C to exit."
     if config['db_name']:
         db_names = config['db_name'].split(',')
         print "Monitoring %s databases." % len(db_names)
     else:
         db_names = list_databases
         print "Monitored databases are auto-discovered."
-    setup_signal_handlers()
-    openerp.modules.module.initialize_sys_path()
-    openerp.modules.loading.open_openerp_namespace()
-    openerp.netsvc.init_logger()
-    import openerp.addons.base
-    print "OpenERP cron jobs worker. Hit Ctrl-C to exit."
     openerp.addons.base.ir.ir_cron.ir_cron._run(db_names)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
