@@ -176,62 +176,63 @@
                     <field name="task"/>
                     <field name="user_id"/>
                     <templates>
-                        <!--<t t-name="ToolTips">-->
-                            <t t-name="tasks">
-                                <ul class="oe_kanban_tooltip">
-                                    <li><b>Tasks:</b> <field name="open_task"/></li>
-                                </ul>
-                            </t>
-                        <!--</t>-->
+                        <t t-name="tasks">
+                            <ul class="oe_kanban_tooltip">
+                                <li><b>Tasks:</b> <field name="open_task"/></li>
+                            </ul>
+                        </t>
                         <t t-name="kanban-box">
                             <div class="oe_module_vignette oe_kanban_box oe_kanban_color_border">
-                                <div class="oe_module_icon oe_project oe_project_border">
-                                    <div class="sequence">
-                                        <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" height="35px" width="40px" /></button>
-                                        <!--<a type="edit">-->
-                                        <!--    <img t-att-src="kanban_gravatar(record.user_id.value, 22)" data-default-src="/web/static/src/img/topbar-avatar.png" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>-->
-                                        <!--</a>-->
-                                    </div>
-                                    <kbd class="user">Manager</kbd><br/>
-                                    <div class="manager"><field name="user_id"/></div>
-<!--                                    <t t-if="record.date.raw_value">
-                                        <kbd class="user">Deadline</kbd><br/>
-                                        <div class="manager"><field name="date"/></div>
-                                    </t>-->
-                                </div>
-                                <div class="oe_module_desc oe_project_desc">
-                                    <h4 class="oe_project_font1"><a type="edit"><div class="oe_project_font"><field name="name"/></div></a></h4>
-                                    <table class="oe_project_desc">
-                                        <tr>
-                                            <td align="left" valign="top" class="buttons">
-                                                <t t-if="record.task.raw_value">
-                                                    <button name="open_tasks" class="oe_project_buttons" type="object" tooltip="tasks"><img src="/project/static/src/img/tasks_icon.png" class="project_icon"/></button>
-                                                </t>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <table border="0" width="360px">
+                                <table border="0" width="350px">
                                     <tr>
-                                        <td align="left">
-                                            <t t-foreach="record.members.raw_value" t-as="member">
-                                                <img t-att-src="kanban_image('res.users', 'avatar', member)" height="22px" width=" 22px"/>
-                                                <!--<img class="oe_topbar_avatar" data-default-src="/web/static/src/img/topbar-avatar.png" src="/web/static/src/img/topbar-avatar.png"/>-->
+                                        <td width="60px" align="center" valign="top">
+                                            <button name = "open_users" type="object" class="oe_project_buttons"><img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" height="40px" width="40px" /></button><br/>
+                                            <div class="manager"><field name="user_id"/></div>
+                                        </td>
+                                        <td align="left" valign="middle">
+                                            <div class="oe_module_desc oe_project_border">
+                                                <h4 class="oe_project_font1"><a type="edit"><div class="oe_project_font"><field name="name"/></div></a></h4>
+                                                <table >
+                                                    <tr>
+                                                        <td align="left" valign="middle" class="buttons">
+                                                            <t t-if="record.task.raw_value">
+                                                                <button name="open_tasks" class="oe_project_buttons" type="object" tooltip="tasks"><img src="/project/static/src/img/tasks_icon.png" class="project_icon"/></button>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                        <td width="60px" valign="top" align="right">
+                                            <t t-if="record.date.raw_value">
+                                                <div class="sequence">
+                                                    <kbd class="user">Deadline</kbd>
+                                                    <div class="manager"><field name="date"/></div>
+                                                </div>
                                             </t>
                                         </td>
-                                        <td align="right" valign="bottom">
+                                    </tr>
+                                </table>
+                                <table border="0" width="350px">
+                                    <tr>
+                                        <td align="left" width="120px" valign="middle">
                                             <div class="progress invoiced">
                                                 <t t-esc="Math.round(record.effective_hours.raw_value)"/> hrs
                                                 <progress t-att-value="record.effective_hours.raw_value" t-att-max="record.total_hours.raw_value"></progress>
                                                 <t t-esc="Math.round(record.total_hours.raw_value)"/> hrs
                                             </div>
+                                            
+                                        </td>
+                                        <td align="right" valign="middle" width="130px">
+                                            <t t-foreach="record.members.raw_value" t-as="member">
+                                                <img t-att-src="kanban_image('res.users', 'avatar', member)" height="20px" width=" 20px"/>
+                                            </t>
                                         </td>
                                     </tr>
                                 </table>
                             </div>
                         </t>
                     </templates>
-
                 </kanban>
             </field>
         </record>
