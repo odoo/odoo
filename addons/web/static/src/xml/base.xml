@@ -959,23 +959,23 @@
 </t>
 <t t-name="FieldChar">
     <t t-if="!widget.get('effective_readonly')">
-        <div t-attf-class="oe_form_field_#{widget.type}">
+        <div class="oe_form_field_char">
             <input t-att-type="widget.password ? 'password' : 'text'"
                 t-att-id="widget.id_for_label"
                 t-att-tabindex="widget.node.attrs.tabindex"
                 t-att-autofocus="widget.node.attrs.autofocus"
-                t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}"
+                t-attf-class="field_char #{widget.is_field_number ? 'oe-number' : ''}"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </div>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}">
+        <div t-attf-class="oe_form_field_char #{widget.is_field_number ? 'oe-number' : ''}">
         </div>
     </t>
 </t>
 <t t-name="FieldEmail">
     <t t-if="!widget.get('effective_readonly')">
-        <table t-attf-class="oe_form_field_#{widget.type}" cellpadding="0" cellspacing="0" border="0">
+        <table class="oe_form_field_email" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td>
                 <input type="text"
@@ -1000,7 +1000,7 @@
 </t>
 <t t-name="FieldUrl">
     <t t-if="!widget.get('effective_readonly')">
-        <table t-attf-class="oe_form_field_#{widget.type}" cellpadding="0" cellspacing="0" border="0">
+        <table class="oe_form_field_url" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td>
                 <input type="text"
@@ -1025,10 +1025,10 @@
 </t>
 <t t-name="FieldText">
     <t t-if="!widget.get('effective_readonly')">
-        <div t-attf-class="oe_form_field_#{widget.type}">
+        <div class="oe_form_field_text">
             <textarea rows="6"
                 t-att-name="widget.name"
-                t-attf-class="field_#{widget.type}"
+                class="field_text"
                 t-att-tabindex="widget.node.attrs.tabindex"
                 t-att-autofocus="widget.node.attrs.autofocus"
             ></textarea><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
@@ -1036,7 +1036,7 @@
     </t>
 </t>
 <t t-name="web.datetimepicker">
-    <div class="oe_datepicker_root" t-attf-class="oe_form_field_#{widget.type}">
+    <div class="oe_datepicker_root oe_form_field_datetime">
         <input type="text" class="oe_datepicker_container" disabled="disabled" style="display: none;"/>
         <input type="text"
             t-att-name="widget.name"
@@ -1047,7 +1047,7 @@
 </t>
 <t t-name="FieldSelection">
     <t t-if="!widget.get('effective_readonly')">
-        <div t-attf-class="oe_form_field_#{widget.type}">
+        <div class="oe_form_field_selection">
             <select
                 t-att-name="widget.name"
                 t-att-tabindex="widget.node.attrs.tabindex"
@@ -1060,13 +1060,13 @@
         </div>
     </t>
     <t t-if="widget.get('effective_readonly')">
-        <div t-attf-class="field_#{widget.type} #{_(['integer', 'float', 'float_time']).contains(widget.type) ? 'oe-number' : ''}">
+        <div class="field_selection">
         </div>
     </t>
 </t>
 <t t-name="FieldMany2One">
     <t t-if="!widget.get('effective_readonly')">
-        <table t-attf-class="oe_form_field_#{widget.type}" cellpadding="0" cellspacing="0" border="0">
+        <table class="oe_form_field_many2one" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td valign="top">
                 <input type="text"
@@ -1109,7 +1109,7 @@
 </t>
 <t t-name="FieldReference">
     <t t-if="!widget.get('effective_readonly')">
-        <table t-attf-class="oe_form_field_#{widget.type}" border="0" cellpadding="0" cellspacing="0" class="oe_frame oe_forms">
+        <table class="oe_form_field_reference oe_frame oe_forms" border="0" cellpadding="0" cellspacing="0">
         <tr>
             <td t-attf-class="oe_form_frame_cell oe_form_selection oe_form_view_reference_selection">
             </td>
@@ -1123,17 +1123,17 @@
     </t>
 </t>
 <t t-name="FieldBoolean">
-    <span t-attf-class="oe_form_field_#{widget.type}">
+    <span class="oe_form_field_boolean">
         <input type="checkbox"
             t-att-id="widget.id_for_label"
             t-att-name="widget.name"
             t-att-tabindex="widget.node.attrs.tabindex"
             t-att-autofocus="widget.node.attrs.autofocus"
-            t-attf-class="field_#{widget.type}"/>
+            class="field_boolean"/>
     </span>
 </t>
 <t t-name="FieldProgressBar">
-    <div t-attf-class="oe_form_field_#{widget.type}" t-opentag="true">
+    <div class="oe_form_field_progressbar" t-opentag="true">
         <span></span>
     </div>
 </t>
@@ -1194,10 +1194,9 @@
     </table>
 </t>
 <t t-name="FieldBinaryImage-img">
-    <img t-att-src='url' class="oe-binary-image"
+    <img t-att-src='url' class="oe-binary-image field_image"
         t-att-border="widget.readonly ? 0 : 1"
         t-att-name="widget.name"
-        t-attf-class="field_#{widget.type}"
         t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
         t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"
         t-att-style="'max-width: ' + (widget.$element.width() > 60 ? widget.$element.width() : 60) + 'px'"
@@ -1205,14 +1204,14 @@
 </t>
 <t t-name="FieldBinaryFile">
     <t t-if="!widget.get('effective_readonly')">
-        <table t-attf-class="oe_form_field_#{widget.type}" cellpadding="0" cellspacing="0" border="0">
+        <table class="oe_form_field_binary" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td>
                 <input type="text" size="1" readonly="readonly"
                     t-att-name="widget.name"
                     t-att-tabindex="widget.node.attrs.tabindex"
                     t-att-autofocus="widget.node.attrs.autofocus"
-                    t-attf-class="field_#{widget.type}"
+                    class="field_binary"
                 />
             </td>
             <td class="oe-binary" nowrap="true">

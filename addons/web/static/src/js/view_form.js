@@ -1540,7 +1540,6 @@ openerp.web.form.AbstractField = openerp.web.form.Widget.extend(/** @lends opene
         this.value = false;
         this.view.fields[this.name] = this;
         this.view.fields_order.push(this.name);
-        this.type = this.node.attrs.widget;
         this.field = this.view.fields_view.fields[this.name] || {};
         this.set({required: this.modifiers['required'] === true});
         this.invalid = this.dirty = false;
@@ -1781,6 +1780,7 @@ openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
 });
 
 openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
+    is_field_number: true,
     init: function (view, node) {
         this._super(view, node);
         this.value = 0;
