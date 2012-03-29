@@ -663,12 +663,14 @@ class stock_picking(osv.osv):
             ("none", "Not Applicable")], "Invoice Control",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+        'force_assign': fields.boolean('Force Assign'),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
         'state': 'draft',
         'move_type': 'direct',
         'type': 'in',
+        'force_assign': False,
         'invoice_state': 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
@@ -677,6 +679,14 @@ class stock_picking(osv.osv):
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
     ]
 
+    def default_get(self, cr, uid, fields, context):
+        res = super(stock_picking, self).default_get(cr, uid, fields, context=context)
+        type = context.get('default_type', False)
+        if type == 'in':
+            if 'force_assign' in fields:
+                res.update({'force_assign': True})
+        return res
+    
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:
             context = {}
@@ -883,6 +893,15 @@ class stock_picking(osv.osv):
                     move.write({'state': 'done'})
         return True
 
+    def test_assigned_pick_in(self, cr, uid, ids):
+        ok = False
+        for pick in self.browse(cr, uid, ids):
+            if pick.force_assign:
+                ok = True
+            else:
+                ok = self.test_assigned(cr, uid, ids)
+        return ok
+   
     def test_assigned(self, cr, uid, ids):
         """ Tests whether the move is in assigned state or not.
         @return: True or False
@@ -890,15 +909,16 @@ class stock_picking(osv.osv):
         #TOFIX: assignment of move lines should be call before testing assigment otherwise picking never gone in assign state
         ok = True
         for pick in self.browse(cr, uid, ids):
-            if pick.type == 'in':
-                return True
-            mt = pick.move_type
-            for move in pick.move_lines:
-                if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
-                    return False
-                if (mt == 'direct') and (move.state == 'assigned') and (move.product_qty):
-                    return True
-                ok = ok and (move.state in ('cancel', 'done', 'assigned'))
+            if pick.force_assign:
+                ok = True
+            else:
+                mt = pick.move_type
+                for move in pick.move_lines:
+                    if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
+                        return False
+                    if (mt == 'direct') and (move.state == 'assigned') and (move.product_qty):
+                        return True
+                    ok = ok and (move.state in ('cancel', 'done', 'assigned'))
         return ok
 
     def action_cancel(self, cr, uid, ids, context=None):
