@@ -77,9 +77,9 @@
             <field name="help">The Time Tracking functionality aims to manage employee attendances from Sign in/Sign out actions. You can also link this feature to an attendance device using OpenERP's web service features.</field>
         </record>
 
-        <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="3" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
+        <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="5" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
 
-        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root" sequence="4" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
+        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root" sequence="10" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
 
         <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance" sequence="20"/>
 
@@ -117,9 +117,9 @@
         </record>
 
         <menuitem
-            sequence="2" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" name="Attendance"
-            groups="base.group_extended"/>
-        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config"/>
+            sequence="35" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" name="Attendance"
+            groups="base.group_no_one"/>
+        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config" />
 
         <record id="hr_attendance_employee" model="ir.ui.view">
             <field name="name">hr.employee.form1</field>

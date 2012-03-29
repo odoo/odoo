@@ -1,23 +1,27 @@
 
 openerp.share = function(session) {
 
-function launch_wizard(self, view, user_type) {
+function launch_wizard(self, view, user_type, invite) {
         var action = view.getParent().action;
         var Share = new session.web.DataSet(self, 'share.wizard', view.dataset.get_context());
         var domain = new session.web.CompoundDomain(view.dataset.domain);
         if (view.fields_view.type == 'form') {
             domain = new session.web.CompoundDomain(domain, [['id', '=', view.datarecord.id]]);
         }
+        if (view.fields_view.type == 'form') rec_name = view.datarecord.name;
+        else rec_name = '';
         self.rpc('/web/session/eval_domain_and_context', {
             domains: [domain],
             contexts: [view.dataset.context]
         }, function (result) {
             Share.create({
                 name: action.name,
+                record_name: rec_name,
                 domain: result.domain,
                 action_id: action.id,
                 user_type: user_type || 'embedded',
                 view_type: view.fields_view.type,
+                invite: invite || false,
             }, function(result) {
                 var share_id = result.result;
                 var step1 = Share.call('go_step_1', [[share_id],], function(result) {
@@ -68,6 +72,7 @@ session.web.ViewManagerAction.include({
         has_share(function() {
             self.$element.find('a.oe-share_link').click(self.on_click_share_link);
             self.$element.find('a.oe-share').click(self.on_click_share);
+            self.$element.delegate('button.oe-share-mail', 'click', self.on_click_share_mail);
         }, function() {
             self.$element.find('a.oe-share_link').remove();
             self.$element.find('a.oe-share').remove();
@@ -76,11 +81,15 @@ session.web.ViewManagerAction.include({
     },
     on_click_share_link: function(e) {
         e.preventDefault();
-        launch_wizard(this, this.views[this.active_view].controller);
+        launch_wizard(this, this.views[this.active_view].controller, 'embedded', false);
     },
     on_click_share: function(e) {
         e.preventDefault();
-        launch_wizard(this, this.views[this.active_view].controller, 'emails');
+        launch_wizard(this, this.views[this.active_view].controller, 'emails', false);
+    },
+    on_click_share_mail: function(e) {
+        e.preventDefault();
+        launch_wizard(this, this.views[this.active_view].controller, 'emails', true);
     },
 });
 

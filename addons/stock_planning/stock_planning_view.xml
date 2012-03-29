@@ -69,9 +69,9 @@
 
         <menuitem
             id="menu_stock_period"
-            parent="menu_stock_period_main"
+            parent="stock.menu_stock_configuration"
             action="action_stock_period_form"
-            sequence = "10"/>
+            sequence = "25"/>
 
         <record id="view_stock_sale_forecast_form" model="ir.ui.view">
             <field name="name">stock.sale.forecast.form</field>
@@ -184,7 +184,7 @@
         <!-- Forecast section -->
 
         <menuitem id="menu_stock_sale_forecast" name="Sales Forecasts"
-                parent="base.menu_base_partner" sequence="6" groups="base.group_extended"/>
+                parent="base.menu_base_partner" sequence="5" groups="base.group_extended"/>
 
         <record id="view_stock_sale_forecast_filter" model="ir.ui.view">
             <field name="name">stock.sale.forecast.list.select</field>

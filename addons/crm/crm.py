@@ -529,8 +529,8 @@ class crm_case(crm_base):
             dest = case.user_id.user_email or ""
             body = case.description or ""
             for message in case.message_ids:
-                if message.email_from:
-                    body = message.description
+                if message.email_from and message.body_text:
+                    body = message.body_text
                     break
 
             if not destination:
@@ -557,7 +557,7 @@ class crm_case(crm_base):
                 [dest],
                 subject,
                 body,
-                model='crm.case',
+                model=self._name,
                 reply_to=case.section_id.reply_to,
                 res_id=case.id,
                 attachments=attach_to_send,

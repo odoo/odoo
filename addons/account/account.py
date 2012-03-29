@@ -1079,7 +1079,7 @@ class account_period(osv.osv):
 
     def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
         if period_from_id == period_to_id:
-            return period_from_id
+            return [period_from_id]
         period_from = self.browse(cr, uid, period_from_id)
         period_date_start = period_from.date_start
         company1_id = period_from.company_id.id
@@ -1652,7 +1652,7 @@ class account_move_reconcile(osv.osv):
         'create_date': fields.date('Creation date', readonly=True),
     }
     _defaults = {
-        'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/',
+        'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile', context=ctx) or '/',
     }
 
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
