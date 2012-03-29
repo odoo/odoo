@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2012-03-21 10:56+0000\n"
+"PO-Revision-Date: 2012-03-28 12:47+0000\n"
 "Last-Translator: Normunds (Alistek) <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-22 05:47+0000\n"
-"X-Generator: Launchpad (build 14981)\n"
+"X-Launchpad-Export-Date: 2012-03-29 04:52+0000\n"
+"X-Generator: Launchpad (build 15032)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -6075,6 +6075,13 @@ msgid ""
 "account. From this view, you can create and manage the account types you "
 "need for your company."
 msgstr ""
+"Un type de compte est utilisé pour déterminer comment un compte est utilisé "
+"dans chaque journal. La méthode d'ajournement d'un type de compte détermine "
+"le processus pour la clôture annuelle. Les rapports tels que le bilan et les "
+"pertes et profits utilisent la catégorie (pertes/profits ou bilan). Par "
+"exemple, le type de compte peut être associé à un compte d'actifs, un compte "
+"de dépense ou un compte fournisseur. De cette vue, vous pouvez créer et "
+"gérer les types de comptes dont vous avez besoin pour votre société."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_reconcile_tree
@@ -6083,6 +6090,9 @@ msgid ""
 "corresponds with the entries (or records) of that account in your accounting "
 "system."
 msgstr ""
+"Le rapprochement bancaire consiste à pointer votre relevé bancaire avec les "
+"écritures (ou pièces) comptables saisies pour ce compte bancaire dans votre "
+"système."
 
 #. module: account
 #: model:process.node,note:account.process_node_draftstatement0
@@ -6224,6 +6234,11 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
+"Une facture est considérée comme payée dès que ses lignes sont rapprochées "
+"de leurs contreparties (généralement des paiements). Avec la fonctionnalité "
+"de lettrage automatique, OpenERP recherche automatiquement les écritures à "
+"rapprocher dans une série de comptes. OpenERP repère les écritures dont les "
+"montants correspondent pour chaque partenaire."
 
 #. module: account
 #: view:account.move:0
