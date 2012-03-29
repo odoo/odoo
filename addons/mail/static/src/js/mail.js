@@ -548,8 +548,8 @@ openerp.mail = function(session) {
             this.display_show_more = true;
             /* DataSets */
             this.ds_msg = new session.web.DataSet(this, 'mail.message');
-            this.ds_thread = new session.web.DataSet(this, 'mail.thread');
             this.ds_groups = new session.web.DataSet(this, 'mail.group');
+            this.ds_thread = new session.web.DataSet(this, 'mail.thread');
             this.ds_users = new session.web.DataSet(this, 'res.users');
         },
 
@@ -603,7 +603,7 @@ openerp.mail = function(session) {
                 self.params.search['context'] = results.context;
                 self.params.search['domain'] = results.domain;
                 self.params.search['groupby'] = results.group_by;
-                self.init_comments(self.params.search['domain'], self.params.search['context']);
+                self.init_comments(self.params.search['domain'], self.params.search['context'], 0, self.params.limit);
             });
         },
 
@@ -750,8 +750,7 @@ openerp.mail = function(session) {
          */
         do_comment: function () {
             var body_text = this.$element.find('textarea.oe_mail_wall_action_textarea').val();
-            return this.ds_thread.call('message_append_note', [[], 'Tweet', body_text, false, 'comment']).then(this.init_comments());
-            //return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment']).then(this.init_comments());
+            return this.ds_users.call('message_append_note', [[this.session.uid], 'Tweet', body_text, false, 'comment']).then(this.init_comments(this.params.domain, {}, 0, this.params.limit));
         },
         
         /**

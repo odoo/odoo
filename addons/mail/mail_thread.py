@@ -135,28 +135,43 @@ class mail_thread(osv.osv):
         
         # create message
         msg_id = self.pool.get('mail.message').create(cr, uid, vals, context=context)
-        thread_obj = self.browse(cr, uid, [thread_id], context=context)[0]
         
         # automatically subscribe the writer of the message if not subscribed
         if vals['user_id'] and not self.message_is_subscriber(cr, vals['user_id'], [thread_id], context=context):
             self.message_subscribe(cr, uid, [thread_id], [vals['user_id']], context=context)
         
-        # push the message to suscribed users
-        users = self.message_get_subscribers(cr, uid, [thread_id], context=context)
-        user_to_push_ids += [user['id'] for user in users]
-        # parse message to get requested users
-        user_to_push_ids += self.message_parse_users(cr, uid, [msg_id], vals['body_text'], context=context)
-        # push to need_action_user_ids
-        if hasattr(self, 'get_needaction_user_ids'):
-            user_to_push_ids += self.get_needaction_user_ids(cr, uid, [thread_id], context=context)[thread_id]
-        # remove duplicate entries
-        user_to_push_ids = list(set(user_to_push_ids))
         # effectively push message to users
+        user_to_push_ids = self.message_create_get_notification_user_ids(cr, uid, [thread_id], msg_id, vals, context=context)
         for id in user_to_push_ids:
             notification_obj.create(cr, uid, {'user_id': id, 'message_id': msg_id}, context=context)
         
         return msg_id
     
+    def message_create_get_notification_user_ids(self, cr, uid, thread_ids, msg_id, new_msg_vals, context=None):
+        if context is None:
+            context = {}
+        
+        notif_user_ids = []
+        for thread_id in thread_ids:
+            # add subscribers
+            users = self.message_get_subscribers(cr, uid, [thread_id], context=context)
+            notif_user_ids += [user['id'] for user in users]
+            # add users requested via parsing message (@login)
+            notif_user_ids += self.message_parse_users(cr, uid, [thread_id], new_msg_vals['body_text'], context=context)
+            # add users requested to perform an action (need_action mechanism)
+            if hasattr(self, 'get_needaction_user_ids'):
+                notif_user_ids += self.get_needaction_user_ids(cr, uid, [thread_id], context=context)[thread_id]
+            # add users notified of the parent messages (because: if parent message contains @login, login must receive the replies)
+            if new_msg_vals.get('parent_id', False):
+                notif_obj = self.pool.get('mail.notification')
+                parent_notif_ids = notif_obj.search(cr, uid, [('message_id', '=', new_msg_vals.get('parent_id'))], context=context)
+                parent_notifs = notif_obj.read(cr, uid, parent_notif_ids, context=context)
+                notif_user_ids += [parent_notif['user_id'][0] for parent_notif in parent_notifs]
+        
+        # remove duplicate entries
+        notif_user_ids = list(set(notif_user_ids))
+        return notif_user_ids
+
     def message_parse_users(self, cr, uid, ids, string, context=None):
         """Parse message content
            - if find @login -(^|\s)@(\w*)-: returns the related ids
