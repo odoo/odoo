@@ -390,7 +390,7 @@ class users(osv.osv):
         return result
 
     def _get_avatar(self, cr, uid, context=None):
-        # default avatar file name: avatar0 -> avatar6.jpg, choose randomly
+        # default avatar file name: avatar0 -> avatar6.png, choose randomly
         avatar_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
         return self._avatar_resize(cr, uid, open(avatar_path, 'rb').read().encode('base64'), context=context)
     
