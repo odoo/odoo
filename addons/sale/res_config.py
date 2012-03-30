@@ -46,45 +46,46 @@ class sale_configuration(osv.osv_memory):
             [('manual', 'Invoice Based on Sales Orders'), ('picking', 'Invoice Based on Deliveries')],
             'Main Method Based On', required=True, default_model='sale.order',
             help="You can generate invoices based on sales orders or based on shippings."),
-        'module_delivery': fields.boolean('Charge delivery costs',
+        'module_delivery': fields.boolean('Charge Delivery Costs',
             help ="""Allows you to add delivery methods in sale orders and delivery orders.
                 You can define your own carrier and delivery grids for prices.
                 This installs the module delivery."""),
         'time_unit': fields.many2one('product.uom', 'Working Time Unit'),
-        'default_picking_policy' : fields.boolean("Deliver all products at once",
+        'default_picking_policy' : fields.boolean("Deliver all Products at Once",
             help = "You can set picking policy on sale order that will allow you to deliver all products at once."),
         'group_sale_pricelist':fields.boolean("Pricelist per Customer",
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers. 
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
-        'group_uom':fields.boolean("Allow different UoM per product",
+        'group_uom':fields.boolean("Allow Different Units of Measure per Product",
             implied_group='product.group_uom',
-            help="""Allows you to select and maintain different unit of measures per product."""),
-        'group_sale_delivery_address': fields.boolean("Specify delivery and invoice addresses",
+            help="""Allows you to select and maintain different units of measure per product."""),
+        'group_sale_delivery_address': fields.boolean("Allow Different Addresses for Delivery and Invoice",
             implied_group='sale.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a sale order."),
-        'group_discount_per_so_line': fields.boolean("Discount per sale order line",
+        'group_discount_per_so_line': fields.boolean("Discount per Line",
             implied_group='sale.group_discount_per_so_line',
-            help="Allows you to apply discount per sale order line."),
-        'module_sale_layout': fields.boolean("Notes & subtotals per line",
+            help="Allows you to apply some discount per sale order line."),
+        'module_sale_layout': fields.boolean("Notes & Subtotals per Line",
             help="""Allows to format sale order lines using notes, separators, titles and subtotals.
                 This installs the module sale_layout."""),
-        'module_warning': fields.boolean("Alerts by products or customers",
+        'module_warning': fields.boolean("Alerts by Products or Customers",
             help="""To raise user specific warning messages on different products used in Sales Orders, Purchase Orders, Invoices and Deliveries.
                 This installs the module warning."""),
-        'module_sale_margin': fields.boolean("Display Margins For Users",
+        'module_sale_margin': fields.boolean("Display Margins for Users",
             help="""This adds the 'Margin' on sales order.
                 This gives the profitability by calculating the difference between the Unit Price and Cost Price.
                 This installs the module sale_margin."""),
-        'module_sale_journal': fields.boolean("Invoice Journal",
-            help="""Allows you to categorize your sales and deliveries (picking lists) between different journals.
+        'module_sale_journal': fields.boolean("Allow Batch Invoicing through Journals",
+            help="""Allows you to categorize your sales and deliveries (picking lists) between different journals,
+                and perform batch operations on journals.
                 This installs the module sale_journal."""),
-        'module_analytic_user_function': fields.boolean("User function by contracts",
+        'module_analytic_user_function': fields.boolean("User Function by Contract",
             help="""Allows you to define what is the default function of a specific user on a given account.
                 This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
                 But the possibility to change these values is still available.
                 This installs the module analytic_user_function."""),
-        'module_analytic_journal_billing_rate': fields.boolean("Billing rates by contracts",
+        'module_analytic_journal_billing_rate': fields.boolean("Billing Rates by Contract",
             help="""Allows you to define the default invoicing rate for a specific journal on a given account.
                 This installs the module analytic_journal_billing_rate."""),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
