@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import logging
 import addons
-
-import io, StringIO
+import io
+import logging
+from osv import fields, osv
 from PIL import Image
+import StringIO
 
 class hr_employee_category(osv.osv):
 
