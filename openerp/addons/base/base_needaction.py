@@ -34,7 +34,7 @@ class base_needaction_users_rel(osv.osv):
     '''
     
     _name = 'base.needaction_users_rel'
-    _description = 'Relationships between records and users, for need action mechanism'
+    _description = 'Needaction relationship table'
     _rec_name = 'id'
     _order = 'res_model asc'
     _columns = {
