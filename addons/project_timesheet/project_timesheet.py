@@ -29,7 +29,7 @@ from tools.translate import _
 class project_project(osv.osv):
     _inherit = 'project.project'
 
-    def _amt_to_invoice(self, cr, uid, ids,field_name, arg, context=None):
+    def _to_invoice(self, cr, uid, ids,field_name, arg, context=None):
         res = {}
         aal_pool = self.pool.get("account.analytic.line")
         for project in self.browse(cr,uid,ids,context=context):
@@ -50,8 +50,8 @@ class project_project(osv.osv):
 
     _columns = {
         'timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view"),
-        'amt_to_invoice': fields.function(_amt_to_invoice,string="Amount to Invoice",multi="sums"),
-        'hrs_to_invoice': fields.function(_amt_to_invoice,string="Hours to Invoice",multi="sums")
+        'amt_to_invoice': fields.function(_to_invoice,string="Amount to Invoice",multi="sums"),
+        'hrs_to_invoice': fields.function(_to_invoice,string="Hours to Invoice",multi="sums")
     }
     _defaults = {
         'timesheets' : True,
