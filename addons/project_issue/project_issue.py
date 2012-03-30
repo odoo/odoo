@@ -255,7 +255,9 @@ class project_issue(crm.crm_case, osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.context_project_id:
             return user.context_project_id.id
-        return False
+        else:
+            project_id = context.get('active_id',False)
+            return project_id
 
     def on_change_project(self, cr, uid, ids, project_id, context=None):
         return {}
