@@ -733,7 +733,7 @@ class sale_order(osv.osv):
             'product_uos': (line.product_uos and line.product_uos.id)\
                     or line.product_uom.id,
             'product_packaging': line.product_packaging.id,
-            'address_id': line.address_allotment_id.id or order.partner_shipping_id.id,
+            'partner_id': line.address_allotment_id.id or order.partner_shipping_id.id,
             'location_id': location_id,
             'location_dest_id': output_id,
             'sale_line_id': line.id,
@@ -755,7 +755,7 @@ class sale_order(osv.osv):
             'state': 'auto',
             'move_type': order.picking_policy,
             'sale_id': order.id,
-            'address_id': order.partner_shipping_id.id,
+            'partner_id': order.partner_shipping_id.id,
             'note': order.note,
             'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
             'company_id': order.company_id.id,
