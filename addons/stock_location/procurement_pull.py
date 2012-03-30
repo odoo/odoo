@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,7 +14,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -63,7 +63,7 @@ class procurement_order(osv.osv):
                 'type': line.picking_type,
                 'stock_journal_id': line.journal_id and line.journal_id.id or False,
                 'move_type': 'one',
-                'address_id': line.partner_address_id.id,
+                'partner_id': line.partner_address_id.id,
                 'note': _('Picking for pulled procurement coming from original location %s, pull rule %s, via original Procurement %s (#%d)') % (proc.location_id.name, line.name, proc.name, proc.id),
                 'invoice_state': line.invoice_state,
             })
@@ -79,7 +79,7 @@ class procurement_order(osv.osv):
                         or proc.product_qty,
                 'product_uos': (proc.product_uos and proc.product_uos.id)\
                         or proc.product_uom.id,
-                'address_id': line.partner_address_id.id,
+                'partner_id': line.partner_address_id.id,
                 'location_id': line.location_src_id.id,
                 'location_dest_id': line.location_id.id,
                 'move_dest_id': proc.move_id and proc.move_id.id or False, # to verif, about history ?

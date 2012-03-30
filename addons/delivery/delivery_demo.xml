@@ -7,11 +7,6 @@
         <record id="delivery_partner" model="res.partner">
             <field name="name">The Poste</field>
         </record>
-        <record id="delivery_partner_address" model="res.partner.address">
-            <field name="type">default</field>
-            <field name="partner_id" ref="delivery_partner"/>
-        </record>
-
         <!-- Create a service product -->
 
         <record id="delivery_product" model="product.product">

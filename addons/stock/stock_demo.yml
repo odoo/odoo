@@ -10,7 +10,7 @@
  !record {model: stock.location, id: location_refrigerator_small}:
     name: Small Refrigerator
     usage: internal
-    location_id: location_refrigerator   
+    location_id: location_refrigerator
 -
  !record {model: stock.location, id: location_opening}:
     name: opening
@@ -75,7 +75,7 @@
     product_qty: 40.0
     prod_lot_id: lot_icecream_1
     location_id: location_refrigerator
-        
+
 -
  !record {model: stock.picking, id: outgoing_shipment}:
     type: out
@@ -92,7 +92,7 @@
  !record {model: stock.picking, id: incomming_shipment}:
     type: in
     invoice_state: 2binvoiced
-    address_id: base.res_partner_address_9
+    partner_id: base.res_partner_address_9
     location_dest_id: location_refrigerator
 -
  !record {model: stock.move, id: incomming_shipment_icecream}:
