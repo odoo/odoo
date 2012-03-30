@@ -29,12 +29,28 @@ from tools.translate import _
 class project_project(osv.osv):
     _inherit = 'project.project'
 
+    def _amt_to_invoiced(self, cr, uid, ids,field_name, arg, context=None):
+        res = {}
+        task_pool=self.pool.get('project.task')
+        for id in ids:
+            task_ids = task_pool.search(cr, uid, [('project_id', '=', id)])
+            total = 0.0
+            project_record = self.browse(cr,uid,id)
+            acc_model = self.pool.get("account.analytic.line")
+            acc_id = acc_model.search(cr, uid, [('account_id', '=', project_record.analytic_account_id.id),('to_invoice', '=', 1),('invoice_id', '=', False)])
+            if acc_id:
+                for record in acc_model.browse(cr,uid,acc_id):
+                    total += record.amount
+            res[id]= total
+        return res
     _columns = {
         'timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view"),
+        'to_amt_invoice': fields.function(_amt_to_invoiced,string="Open Tasks")
     }
     _defaults = {
         'timesheets' : True,
     }
+
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         res = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
         if part and res and ('value' in res):
