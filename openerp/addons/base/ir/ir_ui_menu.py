@@ -284,8 +284,8 @@ class ir_ui_menu(osv.osv):
         'web_icon_hover':fields.char('Web Icon File (hover)', size=128),
         'web_icon_data': fields.function(_get_image_icon, string='Web Icon Image', type='binary', readonly=True, store=True, multi='icon'),
         'web_icon_hover_data':fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
-        'has_needaction': fields.function(_get_needaction, string='User has actions to perform', type='boolean', help='', multi='has_action'),
-        'needaction_ctr': fields.function(_get_needaction, string='Action counter', type='integer', help='', multi='has_action'),
+        'has_needaction': fields.function(_get_needaction,store=True,string='User has actions to perform', type='boolean', help='', multi='has_action'),
+        'needaction_ctr': fields.function(_get_needaction,store=True, string='Action counter', type='integer', help='', multi='has_action'),
         'action': fields.function(_action, fnct_inv=_action_inv,
             type='reference', string='Action',
             selection=[
