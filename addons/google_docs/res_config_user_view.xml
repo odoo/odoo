@@ -10,7 +10,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <group name="default_filters" position="inside">
-                    <field name="context_model_id"/>
+                    <field name="model_id"/>
                 </group>
             </field>
         </record>
@@ -21,10 +21,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <group colspan='4'>
-                <field name="context_model_id"/>
-                <field name='context_gdocs_resource_id'/>
-                <field name='context_name'/>
-                <field name='context_name_template'/>
+                <field name="model_id"/>
+                <field name='gdocs_resource_id'/>
+                <field name='name_template'/>
             </group>
             </field>
         </record>
@@ -34,7 +33,7 @@
             <field name='res_model'>google.docs.config</field>
             <field name='type'>ir.actions.act_window</field>
             <field name='view_type'>form</field>
-            <field name='view_id' ref='view_google_docs_config_form'/>
+            <field name='view_id' ref='view_google_docs_config_tree'/>
         </record>
         <menuitem name='Google Docs configuration' id='menu_gdocs_config' parent='base.menu_administration'/>
         <menuitem name='Models configuration' id='menu_gdocs_model_config' parent='menu_gdocs_config' action='action_google_docs_users_config'/>

@@ -47,7 +47,7 @@ class google_docs_ir_attachment(osv.osv):
             raise osv.except_osv(('Google Docs Error!'),("Check your google configuration in users/synchronization") )
         return client
 
-    def create_empty_google_doc(self, cr, uid, model, ids, type_doc,context=None):
+    def create_empty_google_doc(self, cr, uid, name_gdocs, model, ids, type_doc,context=None):
         '''Associate a copy of the gdoc identified by 'gdocs_res_id' to the current entity.
            @param cr: the current row from the database cursor.
            @param uid: the current user ID, for security checks.
@@ -62,24 +62,22 @@ class google_docs_ir_attachment(osv.osv):
         local_resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL)
         #create a new doc in Google Docs 
         gdocs_resource = client.post(entry=local_resource, uri='https://docs.google.com/feeds/default/private/full/')
-        
         # register into the db
         self.create(cr, uid, {
             'res_model': model,
             'res_id': ids[0],
             'type': 'url',
-            'name': ('new_%s' % gdocs_resource.title.text),
+            'name': 'Google Doc',
             'url': gdocs_resource.get_alternate_link().href,
         },context=context)
         
         
         return 1
 
-    def copy_gdoc(self, cr, uid, model, google_res_id, ids,context=None):
+    def copy_gdoc(self, cr, uid, name_gdocs, model, google_res_id, ids,context=None):
         '''
         copy an existing document in google docs
         '''
-
         client = self._auth(cr, uid)
         # fetch and copy the original document
         try:
@@ -93,7 +91,7 @@ class google_docs_ir_attachment(osv.osv):
             'res_model': model,
             'res_id': ids[0],
             'type': 'url',
-            'name': 'copy_%s' % original_resource.title.text,
+            'name': name_gdocs,
             'url': copy_resource.get_alternate_link().href
         },context=context)
 
@@ -104,14 +102,20 @@ class google_docs(osv.osv):
 
     def doc_get(self, cr, uid, model, id, type_doc,context=None):
         ir_attachment_ref = self.pool.get('ir.attachment')
-        google_docs_config = self.pool.get('google.docs.config').search(cr, uid, [('context_model_id', '=', model)])
+        pool_gdoc_config = self.pool.get('google.docs.config')
+        google_docs_config = pool_gdoc_config.search(cr, uid, [('model_id', '=', model)])
+        name_gdocs=''
+        if google_docs_config:
+            name_gdocs = pool_gdoc_config.browse(cr,uid,google_docs_config,context=context)[0].name_template
+            print name_gdocs
+        
         # check if a model is configurate with a template
         if google_docs_config:
             for google_config in self.pool.get('google.docs.config').browse(cr,uid,google_docs_config,context=context):
-                google_res_id = google_config.context_gdocs_resource_id
-            google_document = ir_attachment_ref.copy_gdoc(cr, uid, model,google_res_id, id)
+                google_res_id = google_config.gdocs_resource_id
+            google_document = ir_attachment_ref.copy_gdoc(cr, uid,name_gdocs ,model,google_res_id, id)
         else:
-            google_document = ir_attachment_ref.create_empty_google_doc(cr, uid, model, id, type_doc)
+            google_document = ir_attachment_ref.create_empty_google_doc(cr, uid,name_gdocs, model, id, type_doc)
             return -1
 
 
@@ -120,23 +124,24 @@ class config(osv.osv):
     _description = "Google Docs templates config"
 
     _columns = {
-        'context_model_id': fields.many2one('ir.model', 'Model'),
-        'context_gdocs_resource_id': fields.char('Google resource ID', size=64,help='This is the id of the template document you kind find it in the URL'),
-        'context_name_template': fields.char('GDoc name template ', size=64, help='This is the name which appears on google side'),
-        'context_name': fields.char('Name', size=64, help='This is the attachment\'s name. As well, it appears on the panel.'),
+        'model_id': fields.many2one('ir.model', 'Model'),
+        'gdocs_resource_id': fields.char('Google resource ID', size=64,help='This is the id of the template document you kind find it in the URL'),
+        'name_template': fields.char('GDoc name template ', size=64, help='This is the name which appears on google side'),
     }
 
     _defaults = {
-        'context_name_template': 'Google Document',
-        'context_name': 'pr_%(name)',
+        'name_template': 'pr_%(name)',
     }
     def get_config(self, cr, uid, model):
         '''
         Method use with the js to hidde or show the add google doc button 
         @return : list of configuration ids or false
         '''
-        domain = [('context_model_id', '=', model)]
+        domain = [('model_id', '=', model)]
         if self.search_count(cr, uid, domain) != 0:
+            return False
+        # attached only one document to a model 
+        if self.pool.get('ir.attachment').search_count(cr,uid,[('url','like','https://docs.google.com/document%')]) !=0:
             return False
         else:
             return self.search(cr, uid, domain)
