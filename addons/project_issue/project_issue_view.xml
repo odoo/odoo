@@ -388,6 +388,7 @@
             <field name="arch" type="xml">
                 <field name="task" position="after">
                     <field name="issues"/>
+                    <field name="total_issues" invisible="1"/>
                 </field>
                 <xpath expr="//t[@t-name='tasks']" position="after">
                     <t t-name="issues">
