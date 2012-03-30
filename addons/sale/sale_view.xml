@@ -152,9 +152,8 @@
                                             <field name="discount" groups="sale.group_discount_per_so_line"/>
                                             <separator colspan="5" string="Notes" groups="base.group_sale_notes_subtotal"/>
                                             <field colspan="5" name="notes" nolabel="1" groups="base.group_sale_notes_subtotal"/>
-                                            <separator colspan="5" string="Taxes" groups="sale.group_taxes_on_order_line"/>
-                                            <field colspan="5" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" 
-                                                groups="sale.group_taxes_on_order_line" />
+                                            <separator colspan="5" string="Taxes"/>
+                                            <field colspan="5" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <group colspan="5" col="5" groups="base.group_extended">
                                                 <separator colspan="5" string="States"/>
                                                 <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
@@ -194,8 +193,8 @@
                             </field>
                             <newline/>
                             <group col="13" colspan="10">
-                                <field name="amount_untaxed" sum="Untaxed amount" groups="sale.group_taxes_on_order_line,sale.group_taxes_global_on_order"/>
-                                <field name="amount_tax" groups="sale.group_taxes_on_order_line,sale.group_taxes_global_on_order"/>
+                                <field name="amount_untaxed" sum="Untaxed amount"/>
+                                <field name="amount_tax"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                                 <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>

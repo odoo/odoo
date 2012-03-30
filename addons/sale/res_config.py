@@ -87,14 +87,6 @@ class sale_configuration(osv.osv_memory):
         'module_analytic_journal_billing_rate': fields.boolean("Billing rates by contracts",
             help="""Allows you to define the default invoicing rate for a specific journal on a given account.
                 This installs the module analytic_journal_billing_rate."""),
-        'tax_policy': fields.selection(
-            [('no_tax', 'No Tax'), ('global_on_order', 'Global On Order'), ('on_order_line', 'On Order Lines')],
-            'Taxes', required=True,
-            help="""Choose between either applying global taxes on a sale order, or applying different taxes on sale order lines, or applying no tax at all."""),
-        'group_sale_taxes_global_on_order': fields.boolean("Global on order",
-            implied_group='sale.group_taxes_global_on_order'),
-        'group_sale_taxes_on_order_line': fields.boolean("On order line",
-            implied_group='sale.group_taxes_on_order_line'),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
     }
@@ -102,15 +94,11 @@ class sale_configuration(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         ir_model_data = self.pool.get('ir.model.data')
         res = super(sale_configuration, self).default_get(cr, uid, fields, context)
-        # task_work, time_unit and tax_policy depend on other fields
+        # task_work, time_unit depend on other fields
         res['task_work'] = res.get('module_project_mrp') and res.get('module_project_timesheet')
         if res.get('module_account_analytic_analysis'):
             product = ir_model_data.get_object(cr, uid, 'product', 'product_consultant')
             res['time_unit'] = product.uom_id.id
-        res['tax_policy'] = \
-            (res.get('group_sale_taxes_global_on_order') and 'global_on_order') or \
-            (res.get('group_sale_taxes_on_order_line') and 'on_order_line') or \
-            'no_tax'
         return res
 
     def get_default_sale_config(self, cr, uid, ids, context=None):
@@ -127,7 +115,6 @@ class sale_configuration(osv.osv_memory):
     _defaults = {
         'default_order_policy': 'manual',
         'time_unit': _get_default_time_unit,
-        'tax_policy': 'no_tax',
     }
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
@@ -152,12 +139,6 @@ class sale_configuration(osv.osv_memory):
         return {'value': {
             'module_project_timesheet': task_work,
             'module_project_mrp': task_work,
-        }}
-
-    def onchange_tax_policy(self, cr, uid, ids, tax_policy, context=None):
-        return {'value': {
-            'group_sale_taxes_global_on_order': tax_policy == 'global_on_order',
-            'group_sale_taxes_on_order_line': tax_policy == 'on_order_line',
         }}
 
 

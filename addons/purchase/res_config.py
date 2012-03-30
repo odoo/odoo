@@ -62,34 +62,11 @@ class purchase_config_settings(osv.osv_memory):
             help="""When a purchase order is created, you have the opportunity to save the related requisition.
                 This object regroups and allows you to keep track and order all your purchase orders.
                 This installs the module purchase_requisition."""),
-        'tax_policy': fields.selection(
-            [('no_tax', 'No Tax'), ('global_on_order', 'Global On Order'), ('on_order_line', 'On Order Lines')],
-            'Taxes', required=True,
-            help="""Choose between either applying global taxes on a purchase order, or applying different taxes on purchase order lines, or applying no tax at all."""),
-        'group_purchase_taxes_global_on_order':fields.boolean("Global on order",
-            implied_group='purchase.group_taxes_global_on_order'),
-        'group_purchase_taxes_on_order_line':fields.boolean("On order line",
-            implied_group='purchase.group_taxes_on_order_line'),
     }
-
-    def default_get(self, cr, uid, fields, context=None):
-        res = super(purchase_config_settings, self).default_get(cr, uid, fields, context)
-        res['tax_policy'] = \
-            (res.get('group_purchase_taxes_global_on_order') and 'global_on_order') or \
-            (res.get('group_purchase_taxes_on_order_line') and 'on_order_line') or \
-            'no_tax'
-        return res
 
     _defaults = {
         'default_invoice_method': 'manual',
-        'tax_policy': 'no_tax',
     }
-
-    def onchange_tax_policy(self, cr, uid, ids, tax_policy, context=None):
-        return {'value': {
-            'group_purchase_taxes_global_on_order': tax_policy == 'global_on_order',
-            'group_purchase_taxes_on_order_line': tax_policy == 'on_order_line',
-        }}
 
 
 
