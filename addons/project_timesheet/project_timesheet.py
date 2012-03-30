@@ -29,21 +29,29 @@ from tools.translate import _
 class project_project(osv.osv):
     _inherit = 'project.project'
 
-    def _amt_to_invoice(self, cr, uid, ids,field_name, arg, context=None):
+    def _to_invoice(self, cr, uid, ids,field_name, arg, context=None):
         res = {}
         aal_pool = self.pool.get("account.analytic.line")
         for project in self.browse(cr,uid,ids,context=context):
             line_ids = aal_pool.search(cr, uid, [('account_id','=',project.analytic_account_id.id),('to_invoice','=',1),('invoice_id','=',False)])
-            amt_to_invoice = 0.0
+            res[project.id] = {
+                    'amt_to_invoice': 0.0,
+                    'hrs_to_invoice': 0.0,
+                }
             if line_ids:
+                amt_to_invoice,hrs_to_invoice = 0.0,0.0
                 for line in aal_pool.browse(cr,uid,line_ids,context=context):
                     amt_to_invoice += line.amount
-            res[project.id] = (amt_to_invoice)*-1
+                    hrs_to_invoice += line.unit_amount
+                res[project.id]['amt_to_invoice'] = (amt_to_invoice)*-1
+                res[project.id]['hrs_to_invoice'] = hrs_to_invoice
+            
         return res
 
     _columns = {
         'timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view"),
-        'amt_to_invoice': fields.function(_amt_to_invoice,string="Amount to Invoice")
+        'amt_to_invoice': fields.function(_to_invoice,string="Amount to Invoice",multi="sums"),
+        'hrs_to_invoice': fields.function(_to_invoice,string="Hours to Invoice",multi="sums")
     }
     _defaults = {
         'timesheets' : True,
