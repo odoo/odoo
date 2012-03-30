@@ -29,12 +29,26 @@ from tools.translate import _
 class project_project(osv.osv):
     _inherit = 'project.project'
 
+    def _amt_to_invoice(self, cr, uid, ids,field_name, arg, context=None):
+        res = {}
+        aal_pool = self.pool.get("account.analytic.line")
+        for project in self.browse(cr,uid,ids,context=context):
+            line_ids = aal_pool.search(cr, uid, [('account_id','=',project.analytic_account_id.id),('to_invoice','=',1),('invoice_id','=',False)])
+            amt_to_invoice = 0.0
+            if line_ids:
+                for line in aal_pool.browse(cr,uid,line_ids,context=context):
+                    amt_to_invoice += line.amount
+            res[project.id] = (amt_to_invoice)*-1
+        return res
+
     _columns = {
         'timesheets' : fields.boolean('Timesheets',help = "If you check this field timesheets appears in kanban view"),
+        'amt_to_invoice': fields.function(_amt_to_invoice,string="Amount to Invoice")
     }
     _defaults = {
         'timesheets' : True,
     }
+
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         res = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
         if part and res and ('value' in res):
@@ -56,19 +70,14 @@ class project_project(osv.osv):
             context = {}
         value = {}
         data_obj = self.pool.get('ir.model.data')
-        if context.get('btn'):
-            context.update({
-                'search_default_to_invoice':1,
-            })
+
         for project in self.browse(cr, uid, ids, context=context):
             # Get Timesheet views
             tree_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_tree_inherit_account_id')
             form_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_form_inherit_account_id')
             search_view = data_obj.get_object_reference(cr, uid, 'project_timesheet', 'view_account_analytic_line_search_account_inherit')
             context.update({
-                #'search_default_user_id': uid,
                 'search_default_account_id':project.analytic_account_id.id,
-                #'search_default_open':1,
             })
             value = {
                 'name': _('Bill Tasks Works'),
@@ -77,8 +86,6 @@ class project_project(osv.osv):
                 'view_mode': 'form,tree',
                 'res_model': 'account.analytic.line',
                 'view_id': False,
-            #    'domain':[('project_id','=', context.get('active_id',False))],
-                #'context': context,
                 'views': [(tree_view and tree_view[1] or False, 'tree'),(form_view and form_view[1] or False, 'form')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': search_view and search_view[1] or False,
