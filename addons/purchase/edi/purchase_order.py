@@ -106,7 +106,7 @@ class purchase_order(osv.osv, EDIMixin):
         address_id = res_partner_obj.edi_import(cr, uid, address_info, context=context)
 
         # modify edi_document to refer to new partner/address
-        partner_address = res_partner_address.browse(cr, uid, address_id, context=context)
+        partner_address = res_partner_obj.browse(cr, uid, address_id, context=context)
         edi_document.pop('partner_address', False) # ignored
         edi_document['partner_id'] = self.edi_m2o(cr, uid, partner_address, context=context)
 
