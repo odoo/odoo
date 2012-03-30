@@ -34,6 +34,7 @@ class base_needaction_users_rel(osv.osv):
     '''
     
     _name = 'base.needaction_users_rel'
+    _description = 'Needaction relationship table'
     _rec_name = 'id'
     _order = 'res_model asc'
     _columns = {
@@ -41,7 +42,7 @@ class base_needaction_users_rel(osv.osv):
                         select=1, required=True),
         'res_id': fields.integer('Related Document ID',
                         select=1, required=True),
-        'user_id': fields.many2one('res.users', string='Related User ID',
+        'user_id': fields.many2one('res.users', string='Related User',
                         ondelete='cascade', select=1, required=True),
     }
 
@@ -70,13 +71,18 @@ class base_needaction(osv.osv):
     
     This class also offers several global services,:
     - ``needaction_get_user_record_references``: for a given uid, get all
-      the records that asks this user to perform an action. Records
-    are given as references, a list of tuples (model_name, record_id).
-    This mechanism is used for instance to display the number of pending
-    actions in menus, such as Leads (12).
+      the records that ask this user to perform an action. Records
+      are given as references, a list of tuples (model_name, record_id).
+    - ``needaction_get_record_ids``: for a given model_name and uid, get
+      all record ids that ask this user to perform an action. This
+      mechanism is used for instance to display the number of pending
+      actions in menus, such as Leads (12).
+    - ``needaction_get_action_count``: as ``needaction_get_record_ids``
+      but returns only the number of action, not the ids (performs a
+      search with count=True)
     '''
     _name = 'base.needaction'
-    _description = 'Need action mechanism'
+    _description = 'Need action of users on records API'
     
     _columns = {
     }

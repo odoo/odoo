@@ -721,8 +721,18 @@ class BaseModel(object):
     def get_needaction_info(cr, uid, model_name, user_id, limit=None, order=None, domain=False, context=None):
         """Base method for needaction mechanism
            - see base.needaction for actual implementation
+           - if the model uses the need action mechanism
+             (hasattr(model_obj, 'needaction_get_record_ids'):
+              - get the record ids on which the user has actions to perform
+              - evaluate the menu domain
+              - compose a new domain: menu domain, limited to ids of
+                records requesting an action
+              - count the number of records maching that domain, that
+                is the number of actions the user has to perform
            - this method returns default values
-           :return: [has_needaction=False, needaction_ctr=0]
+           :param: model_name: the name of the model (ex: hr.holidays)
+           :param: user_id: the id of user
+           :return: [uses_needaction=True/False, needaction_uid_ctr=%d]
         """
         model_obj = pooler.get_pool(cr.dbname).get(model_name)
         if hasattr(model_obj, 'needaction_get_record_ids'):
@@ -730,8 +740,7 @@ class BaseModel(object):
             if not ids:
                 return [True, 0]
             if domain:
-                domain = eval(domain)
-                new_domain = domain + [('id', 'in', ids)]
+                new_domain = eval(domain) + [('id', 'in', ids)]
             else:
                 new_domain = [('ids', 'in', ids)]
             return [True, model_obj.search(cr, uid, new_domain, limit=limit, order=order, count=True)]
