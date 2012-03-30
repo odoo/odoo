@@ -38,10 +38,12 @@ class sale_configuration(osv.osv_memory):
                 the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways
                 and to automatically creates project tasks from procurement lines.
                 This installs the modules project_timesheet and project_mrp."""),
-        'module_account_analytic_analysis': fields.boolean('Based on Timesheet',
+        'timesheet': fields.boolean('Based on Timesheet',
             help = """For modifying account analytic view to show important data to project manager of services companies.
                 You can also view the report of account analytic summary user-wise as well as month wise.
                 This installs the module account_analytic_analysis."""),
+        'module_account_analytic_analysis': fields.boolean('Manage Contracts',
+            help = """This installs the module account_analytic_analysis."""),
         'default_order_policy': fields.selection(
             [('manual', 'Invoice Based on Sales Orders'), ('picking', 'Invoice Based on Deliveries')],
             'Main Method Based On', required=True, default_model='sale.order',
@@ -140,6 +142,12 @@ class sale_configuration(osv.osv_memory):
         return {'value': {
             'module_project_timesheet': task_work,
             'module_project_mrp': task_work,
+        }}
+
+    def onchange_timesheet(self, cr, uid, ids, timesheet, context=None):
+        return {'value': {
+            'timesheet': timesheet,
+            'module_account_analytic_analysis': timesheet,
         }}
 
 
