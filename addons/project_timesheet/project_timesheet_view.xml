@@ -33,6 +33,7 @@
             <field name="arch" type="xml">
                   <field name="task" position="after">
                     <field name="timesheets"/>
+		    <field name="currency_id"/>
                 </field>
 		<xpath expr="//t[@t-name='tasks']" position="after">
                     <t t-name="timesheets">
@@ -58,7 +59,7 @@
 			</div>
 			<div class="sequence">
 			    <kbd class="user">Amount</kbd>
-			    <div class="manager"><b><field name="amt_to_invoice"/> <field name="currency_id"/></b></div>
+			    <div class="manager"><b><field name="amt_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/></b></div>
 			</div>
 			<div class="sequence">
 			    <kbd class="user">Hours</kbd>
