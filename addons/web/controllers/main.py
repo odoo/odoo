@@ -875,13 +875,13 @@ class Menu(openerpweb.Controller):
         context = req.session.eval_context(req.context)
         Menus = req.session.model('ir.ui.menu')
 
-        menu_roots = Menus.read(self.do_get_user_roots(req), ['name', 'sequence', 'parent_id', 'action'], context)
+        menu_roots = Menus.read(self.do_get_user_roots(req), ['name', 'sequence', 'parent_id', 'action', 'needaction_uid_ctr', 'uses_needaction'], context)
         menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, ''], 'children' : menu_roots}
 
         # menus are loaded fully unlike a regular tree view, cause there are a
         # limited number of items (752 when all 6.1 addons are installed)
         menu_ids = Menus.search([], 0, False, False, context)
-        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id', 'action'], context)
+        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id', 'action', 'needaction_uid_ctr', 'uses_needaction'], context)
         # adds roots at the end of the sequence, so that they will overwrite
         # equivalent menu items from full menu read when put into id:item
         # mapping, resulting in children being correctly set on the roots.
