@@ -63,7 +63,7 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
             'The code of the country must be unique !')
     ]
     _defaults = {
-        'address_format': "%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s\n%(country_name)s",
+        'address_format': "%(company_name)s\n%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s\n%(country_name)s",
     }
     _order='name'
 
